@@ -70,14 +70,14 @@ test.describe('Tabs Block', () => {
     await expect(tabs).toHaveClass(/ant-tabs-card/);
   });
 
-  test('renders tabs with position left', async ({ page }) => {
-    const tabs = getTabs(page, 'tabs_position_left');
+  test('renders tabs with placement start', async ({ page }) => {
+    const tabs = getTabs(page, 'tabs_position_start');
     await expect(tabs).toBeVisible();
     await expect(tabs).toHaveClass(/ant-tabs-left/);
   });
 
-  test('renders tabs with position right', async ({ page }) => {
-    const tabs = getTabs(page, 'tabs_position_right');
+  test('renders tabs with placement end', async ({ page }) => {
+    const tabs = getTabs(page, 'tabs_position_end');
     await expect(tabs).toBeVisible();
     await expect(tabs).toHaveClass(/ant-tabs-right/);
   });

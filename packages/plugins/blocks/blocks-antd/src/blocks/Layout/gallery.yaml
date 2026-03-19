@@ -38,7 +38,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: layout_basic_content_text
               type: Paragraph
@@ -107,7 +107,7 @@
               type: Content
               style:
                 padding: 24px
-                background: '#fff'
+                background: var(--ant-color-bg-container)
               blocks:
                 - id: layout_sider_content_text
                   type: Paragraph
@@ -138,7 +138,7 @@
               type: Content
               style:
                 padding: 24px
-                background: '#fff'
+                background: var(--ant-color-bg-container)
               blocks:
                 - id: layout_right_sider_content_text
                   type: Paragraph
@@ -171,10 +171,7 @@
         minHeight: 280px
       properties:
         theme:
-          bodyBg: '#f0f5ff'
           headerBg: '#1d39c4'
-          footerBg: '#d6e4ff'
-          siderBg: '#e6f7ff'
           triggerBg: '#597ef7'
           triggerColor: '#ffffff'
           triggerHeight: 48
@@ -234,7 +231,7 @@
   blocks:
     - id: layout_tailwind_outer
       type: Layout
-      class: rounded-lg overflow-hidden shadow-lg border border-gray-200
+      class: rounded-lg overflow-hidden shadow-lg border border-border
       style:
         minHeight: 280px
       blocks:
@@ -255,7 +252,7 @@
                   margin: 0
         - id: layout_tailwind_content
           type: Content
-          class: bg-gray-50
+          class: bg-bg-layout
           style:
             padding: 24px
           blocks:
@@ -265,7 +262,7 @@
                 content: The Layout block has a single cssKey called "element". Use the class property to apply Tailwind utility classes directly to the Layout wrapper. Here the outer Layout uses rounded corners, shadow, and a border. Child blocks like Header, Content, and Footer can each have their own class applied.
         - id: layout_tailwind_footer
           type: Footer
-          class: bg-indigo-50 text-center
+          class: bg-bg-layout text-center
           blocks:
             - id: layout_tailwind_footer_text
               type: Paragraph
@@ -301,7 +298,7 @@
         - id: layout_csskey_content
           type: Content
           class:
-            element: bg-white
+            element: bg-bg-container
           style:
             padding: 24px
           blocks:
@@ -362,7 +359,6 @@
                     icon: AiOutlineUser
                     size: 32
                     color: '#001529'
-                    backgroundColor: '#ffffff'
         - id: layout_admin_inner
           type: Layout
           blocks:
@@ -410,7 +406,7 @@
               type: Content
               style:
                 padding: 24px
-                background: '#f5f5f5'
+                background: var(--ant-color-bg-layout)
               blocks:
                 - id: layout_admin_breadcrumb
                   type: Breadcrumb
@@ -486,9 +482,6 @@
       type: Layout
       style:
         minHeight: 450px
-      properties:
-        theme:
-          headerBg: '#ffffff'
       blocks:
         - id: layout_docs_header
           type: Header
@@ -597,7 +590,7 @@
               type: Content
               style:
                 padding: 32px 48px
-                background: '#ffffff'
+                background: var(--ant-color-bg-container)
                 maxWidth: 900px
               blocks:
                 - id: layout_docs_content_breadcrumb

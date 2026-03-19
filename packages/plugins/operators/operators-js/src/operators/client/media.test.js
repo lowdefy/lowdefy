@@ -27,6 +27,7 @@ test('_media full media object', () => {
     height: 300,
     size: 'xs',
     width: 500,
+    darkMode: false,
   });
 });
 
@@ -81,6 +82,64 @@ test('_media width', () => {
 
 test('_media height', () => {
   expect(media({ params: 'height', location: 'locationId', globals })).toEqual(300);
+});
+
+test('_media darkMode returns false when no localStorage and no matchMedia', () => {
+  expect(
+    media({
+      params: 'darkMode',
+      location: 'locationId',
+      globals: { window: { innerHeight: 300, innerWidth: 500 } },
+    })
+  ).toEqual(false);
+});
+
+test('_media darkMode reads from localStorage', () => {
+  expect(
+    media({
+      params: 'darkMode',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          localStorage: { getItem: () => 'true' },
+        },
+      },
+    })
+  ).toEqual(true);
+  expect(
+    media({
+      params: 'darkMode',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          localStorage: { getItem: () => 'false' },
+        },
+      },
+    })
+  ).toEqual(false);
+});
+
+test('_media darkMode falls back to prefers-color-scheme', () => {
+  expect(
+    media({
+      params: 'darkMode',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          localStorage: { getItem: () => null },
+          matchMedia: (query) => ({
+            matches: query === '(prefers-color-scheme: dark)',
+          }),
+        },
+      },
+    })
+  ).toEqual(true);
 });
 
 test('_media throw on no innerWidth', () => {

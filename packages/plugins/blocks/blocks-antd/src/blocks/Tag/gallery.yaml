@@ -364,7 +364,6 @@
       properties:
         title: Light Blue
         theme:
-          defaultBg: '#e6f7ff'
           defaultColor: '#1677ff'
     - id: theme_dark
       type: Tag
@@ -382,7 +381,6 @@
       properties:
         title: Warm Tone
         theme:
-          defaultBg: '#fff7e6'
           defaultColor: '#d46b08'
     - id: theme_solid_text
       type: Tag

@@ -453,7 +453,6 @@
       type: DateTimeSelector
       style:
         /element:
-          background: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -478,7 +477,7 @@
           disabled: true
     - id: dts_class_border
       type: DateTimeSelector
-      class: border-2 border-blue-200
+      class: border-2 border-border
       properties:
         title: Blue Border
         label:
@@ -509,8 +508,6 @@
         variant: filled
         label:
           disabled: true
-        theme:
-          colorBgContainer: '#f9f0ff'
     - id: dts_theme_tall
       type: DateTimeSelector
       properties:

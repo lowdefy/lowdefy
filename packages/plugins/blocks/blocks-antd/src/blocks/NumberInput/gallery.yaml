@@ -489,7 +489,6 @@
       type: NumberInput
       style:
         /element:
-          backgroundColor: '#f0f5ff'
       properties:
         title: Custom Background
         placeholder: Light blue background
@@ -569,7 +568,6 @@
         theme:
           handleHoverColor: '#eb2f96'
           handleBorderColor: '#d9d9d9'
-          handleBg: '#fff0f6'
     - id: theme_small_pill
       type: NumberInput
       properties:

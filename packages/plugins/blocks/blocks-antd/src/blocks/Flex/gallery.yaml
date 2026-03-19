@@ -215,7 +215,7 @@
         content: '**justify: flex-start**'
     - id: flex_j_start
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: flex-start
         gap: 8
@@ -253,7 +253,7 @@
         content: '**justify: center**'
     - id: flex_j_center
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: center
         gap: 8
@@ -291,7 +291,7 @@
         content: '**justify: flex-end**'
     - id: flex_j_end
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: flex-end
         gap: 8
@@ -329,7 +329,7 @@
         content: '**justify: space-between**'
     - id: flex_j_between
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: space-between
       blocks:
@@ -366,7 +366,7 @@
         content: '**justify: space-around**'
     - id: flex_j_around
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: space-around
       blocks:
@@ -403,7 +403,7 @@
         content: '**justify: space-evenly**'
     - id: flex_j_evenly
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         justify: space-evenly
       blocks:
@@ -444,7 +444,7 @@
         content: '**align: flex-start**'
     - id: flex_a_start
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       style:
         /element:
           minHeight: 80px
@@ -484,7 +484,7 @@
         content: '**align: center**'
     - id: flex_a_center
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       style:
         /element:
           minHeight: 80px
@@ -524,7 +524,7 @@
         content: '**align: flex-end**'
     - id: flex_a_end
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       style:
         /element:
           minHeight: 80px
@@ -564,7 +564,7 @@
         content: '**align: stretch**'
     - id: flex_a_stretch
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       style:
         /element:
           minHeight: 80px
@@ -600,7 +600,7 @@
         content: '**align: baseline**'
     - id: flex_a_baseline
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         align: baseline
         gap: 16
@@ -635,7 +635,7 @@
         content: '**wrap: true** - items wrap to next line when space runs out'
     - id: flex_wrap
       type: Flex
-      class: bg-gray-50 p-2 rounded
+      class: bg-bg-layout p-2 rounded
       properties:
         wrap: true
         gap: 8
@@ -737,7 +737,7 @@
           type: Flex
           layout:
             flex: 1 1 0
-          class: bg-blue-50 p-4 rounded
+          class: bg-bg-layout p-4 rounded
           properties:
             flex: 1
             justify: center
@@ -751,7 +751,7 @@
           type: Flex
           layout:
             flex: 0 0 auto
-          class: bg-green-50 p-4 rounded
+          class: bg-bg-layout p-4 rounded
           properties:
             flex: none
             justify: center
@@ -765,7 +765,7 @@
           type: Flex
           layout:
             flex: 2 1 0
-          class: bg-orange-50 p-4 rounded
+          class: bg-bg-layout p-4 rounded
           properties:
             flex: 2
             justify: center
@@ -841,8 +841,6 @@
       type: Flex
       properties:
         gap: 12
-        theme:
-          colorBgContainer: '#f6ffed'
       blocks:
         - id: flex_theme_bg_btn1
           type: Button
@@ -869,7 +867,6 @@
         theme:
           padding: 20
           margin: 4
-          colorBgContainer: '#e6f4ff'
       blocks:
         - id: flex_theme_combined_title
           type: Title
@@ -887,7 +884,6 @@
       type: Flex
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           padding: 16px
           borderRadius: 8px
           border: 1px dashed #91caff
@@ -947,7 +943,7 @@
     - id: flex_tw_gradient
       type: Flex
       class:
-        element: bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-xl shadow-lg
+        element: bg-gradient-to-r from-primary/100 to-purple-600 p-6 rounded-xl shadow-lg
       properties:
         gap: 16
         align: center
@@ -974,7 +970,7 @@
     - id: flex_tw_bordered
       type: Flex
       class:
-        element: border-2 border-dashed border-gray-300 p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
+        element: border-2 border-dashed border-border p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
       properties:
         gap: 12
         justify: center
@@ -1005,7 +1001,7 @@
     - id: flex_tw_ring
       type: Flex
       class:
-        element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-green-50
+        element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-bg-layout
       properties:
         gap: 8
         align: center
@@ -1030,7 +1026,7 @@
   blocks:
     - id: flex_app_toolbar
       type: Flex
-      class: bg-white p-3 rounded-lg shadow-sm border
+      class: bg-bg-container p-3 rounded-lg shadow-sm border
       properties:
         justify: space-between
         align: center
@@ -1168,7 +1164,7 @@
   blocks:
     - id: flex_profile_header
       type: Flex
-      class: bg-white p-6 rounded-xl shadow-sm border
+      class: bg-bg-container p-6 rounded-xl shadow-sm border
       properties:
         gap: 24
         align: center

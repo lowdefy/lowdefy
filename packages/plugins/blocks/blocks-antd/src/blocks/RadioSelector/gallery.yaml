@@ -335,7 +335,6 @@
           - label: Highlighted
             value: highlighted
             style:
-              backgroundColor: '#fffbe6'
               padding: '2px 8px'
               borderRadius: 4
           - label: Italic
@@ -366,21 +365,18 @@
             style:
               padding: '4px 12px'
               borderRadius: 6
-              backgroundColor: '#f5f5f5'
               marginBottom: 4
           - label: Pro Plan
             value: pro
             style:
               padding: '4px 12px'
               borderRadius: 6
-              backgroundColor: '#e6f7ff'
               marginBottom: 4
           - label: Enterprise Plan
             value: enterprise
             style:
               padding: '4px 12px'
               borderRadius: 6
-              backgroundColor: '#f9f0ff'
 
 - title: HTML Labels
   blocks:
@@ -525,7 +521,6 @@
       type: RadioSelector
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           padding: 12
           borderRadius: 6
       properties:
@@ -659,7 +654,6 @@
           - label: '<b>Recommended:</b> Standard Plan'
             value: standard
             style:
-              backgroundColor: '#f6ffed'
               padding: '4px 12px'
               borderRadius: 4
           - label: Basic Plan

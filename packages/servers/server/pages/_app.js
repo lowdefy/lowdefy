@@ -18,6 +18,7 @@ import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
+import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -36,19 +37,6 @@ initSentryClient({
   sentryConfig: loggerConfig.sentry,
 });
 
-const algorithmMap = {
-  default: antdTheme.defaultAlgorithm,
-  dark: antdTheme.darkAlgorithm,
-  compact: antdTheme.compactAlgorithm,
-};
-
-function resolveAlgorithm(algorithm) {
-  if (Array.isArray(algorithm)) {
-    return algorithm.map((a) => algorithmMap[a] || antdTheme.defaultAlgorithm);
-  }
-  return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
-}
-
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
   if (!lowdefyRef.current.theme) {
@@ -66,6 +54,8 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
+  const algorithm = useDarkMode(lowdefyRef.current.theme?.antd?.algorithm);
+
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
       lowdefyRef.current._internal.handleError(error);
@@ -81,7 +71,7 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
           ...lowdefyRef.current.theme?.antd,
           cssVar: { key: 'lowdefy' },
           hashed: false,
-          algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
+          algorithm,
         }}
       >
         <ThemeTokenResolver lowdefyRef={lowdefyRef}>

@@ -196,7 +196,7 @@
   blocks:
     - id: tl_css_tailwind_bg
       type: TimelineList
-      class: bg-blue-50 p-4 rounded-lg border border-blue-200
+      class: bg-bg-layout p-4 rounded-lg border border-border
       properties:
         data:
           - title: Project created
@@ -209,7 +209,7 @@
             content: Timeline item
     - id: tl_css_tailwind_shadow
       type: TimelineList
-      class: bg-white p-4 rounded-lg shadow-md
+      class: bg-bg-container p-4 rounded-lg shadow-md
       properties:
         data:
           - title: Order received
@@ -229,7 +229,6 @@
         /element:
           padding: 16px 24px
           borderRadius: 8px
-          backgroundColor: '#f6ffed'
           border: 1px solid #b7eb8f
       properties:
         data:
@@ -272,7 +271,6 @@
           - title: More spacing
         theme:
           dotBorderWidth: 4
-          dotBg: '#f0f5ff'
           itemPaddingBottom: 32
       blocks:
         - id: tl_theme_dot_content

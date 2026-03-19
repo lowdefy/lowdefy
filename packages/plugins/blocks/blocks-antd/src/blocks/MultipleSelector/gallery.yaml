@@ -629,8 +629,6 @@
               fontStyle: italic
           - label: Highlighted
             value: highlighted
-            style:
-              backgroundColor: '#fffbe6'
     - id: options_allow_clear_false
       type: MultipleSelector
       properties:
@@ -801,7 +799,6 @@
       type: MultipleSelector
       style:
         /element:
-          backgroundColor: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -848,7 +845,6 @@
         title: Custom Selection Colors
         renderTags: true
         theme:
-          optionSelectedBg: '#f6ffed'
           optionSelectedColor: '#389e0d'
           optionSelectedFontWeight: 700
         options:
@@ -884,7 +880,6 @@
       properties:
         title: Custom Tag Appearance
         theme:
-          multipleItemBg: '#e6f4ff'
           multipleItemBorderColor: '#91caff'
           multipleItemHeight: 28
         options:
@@ -983,12 +978,10 @@
         placeholder: Choose categories...
         renderTags: true
         theme:
-          optionSelectedBg: '#f9f0ff'
           optionSelectedColor: '#531dab'
           hoverBorderColor: '#b37feb'
           activeBorderColor: '#722ed1'
           activeOutlineColor: 'rgba(114, 46, 209, 0.1)'
-          multipleItemBg: '#f9f0ff'
           multipleItemBorderColor: '#d3adf7'
         options:
           - label: Analytics

@@ -362,7 +362,6 @@
       type: PhoneNumberInput
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           borderColor: '#adc6ff'
       properties:
         title: Custom Background
@@ -389,8 +388,6 @@
       properties:
         title: Custom Addon Background
         placeholder: Blue-tinted selector area
-        theme:
-          addonBg: '#e6f7ff'
         label:
           disabled: true
     - id: theme_combined_green
@@ -401,7 +398,6 @@
         defaultRegion: US
         theme:
           colorPrimary: '#52c41a'
-          colorBgContainer: '#f6ffed'
           colorBorder: '#b7eb8f'
           hoverBorderColor: '#73d13d'
           activeBorderColor: '#389e0d'
@@ -416,7 +412,6 @@
         defaultRegion: GB
         theme:
           colorPrimary: '#722ed1'
-          colorBgContainer: '#f9f0ff'
           colorBorder: '#d3adf7'
           hoverBorderColor: '#b37feb'
           activeBorderColor: '#531dab'
@@ -521,7 +516,6 @@
           color: '#52c41a'
         theme:
           colorPrimary: '#52c41a'
-          colorBgContainer: '#f6ffed'
           colorBorder: '#b7eb8f'
           hoverBorderColor: '#73d13d'
           activeBorderColor: '#389e0d'

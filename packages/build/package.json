@@ -49,7 +49,8 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
     "start": "node dist/scripts/run.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:u": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=snapshots -- -u"
   },
   "dependencies": {
     "@lowdefy/ajv": "4.7.0",

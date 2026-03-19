@@ -367,7 +367,6 @@
       properties:
         value: https://lowdefy.com
         theme:
-          colorBgContainer: '#f0f5ff'
           colorSplit: '#1677ff'
     - id: qr_theme_padding
       type: QRCode

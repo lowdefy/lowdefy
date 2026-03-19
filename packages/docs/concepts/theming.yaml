@@ -216,6 +216,33 @@ _ref:
                 # All blocks here will use dark theme
             ```
 
+            ### Programmatic dark mode toggle
+
+            Use the `SetDarkMode` action with `_media: darkMode` to let users toggle dark mode at runtime:
+
+            ```yaml
+            - id: dark_mode_toggle
+              type: Button
+              properties:
+                hideTitle: true
+                icon:
+                  _if:
+                    test:
+                      _media: darkMode
+                    then: AiOutlineSun
+                    else: AiOutlineMoon
+              events:
+                onClick:
+                  - id: toggle
+                    type: SetDarkMode
+            ```
+
+            The user's preference is persisted to `localStorage` and survives page refreshes. When no explicit preference is set, the app falls back to the OS `prefers-color-scheme` media query.
+
+            `SetDarkMode` automatically merges the `dark` algorithm with any existing algorithm configured in `theme.antd.algorithm`. For example, if your app uses `algorithm: compact`, toggling dark mode produces `[compact, dark]`.
+
+            See the [`SetDarkMode` action reference](/SetDarkMode) and [`_media` operator reference](/_media) for full documentation.
+
             ## Tailwind theme bridge (`theme.tailwind`)
 
             Lowdefy automatically bridges antd design tokens to Tailwind CSS theme variables. This means Tailwind utility classes like `text-primary` or `bg-bg-container` resolve to the current antd theme — including when you switch to dark mode.

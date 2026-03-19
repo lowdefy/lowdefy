@@ -257,7 +257,7 @@
       type: Statistic
       layout:
         flex: 0 0 auto
-      class: bg-green-50 p-4 rounded-lg border border-green-200
+      class: bg-bg-layout p-4 rounded-lg border border-border
       properties:
         title: Monthly Revenue
         value: 52800
@@ -266,7 +266,7 @@
       type: Statistic
       layout:
         flex: 0 0 auto
-      class: bg-blue-50 p-4 rounded-lg border border-blue-200
+      class: bg-bg-layout p-4 rounded-lg border border-border
       properties:
         title: Active Users
         value: 2847
@@ -275,7 +275,7 @@
       type: Statistic
       layout:
         flex: 0 0 auto
-      class: text-center bg-purple-50 p-4 rounded-lg border border-purple-200
+      class: text-center bg-bg-layout p-4 rounded-lg border border-border
       properties:
         title: Avg. Score
         value: 94.2
@@ -292,7 +292,6 @@
         /element:
           padding: 16px 24px
           borderRadius: 8px
-          backgroundColor: '#fff2f0'
           border: 1px solid #ffa39e
         /value:
           color: '#cf1322'
@@ -358,7 +357,7 @@
               type: Statistic
               layout:
                 flex: 1 1 0
-              class: bg-green-50 p-4 rounded-lg
+              class: bg-bg-layout p-4 rounded-lg
               properties:
                 title: Total Revenue
                 value: 126560
@@ -371,7 +370,7 @@
               type: Statistic
               layout:
                 flex: 1 1 0
-              class: bg-blue-50 p-4 rounded-lg
+              class: bg-bg-layout p-4 rounded-lg
               properties:
                 title: Active Users
                 value: 8920
@@ -382,7 +381,7 @@
               type: Statistic
               layout:
                 flex: 1 1 0
-              class: bg-red-50 p-4 rounded-lg
+              class: bg-bg-layout p-4 rounded-lg
               properties:
                 title: Error Rate
                 value: 0.12
@@ -395,7 +394,7 @@
               type: Statistic
               layout:
                 flex: 1 1 0
-              class: bg-green-50 p-4 rounded-lg
+              class: bg-bg-layout p-4 rounded-lg
               properties:
                 title: Uptime
                 value: 99.98

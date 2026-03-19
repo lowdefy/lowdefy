@@ -76,14 +76,14 @@ blocks:
       plain: true
 
   # ============================================
-  # TITLE PLACEMENT TESTS (left/center/right)
+  # TITLE PLACEMENT TESTS (start/center/end)
   # ============================================
 
-  - id: divider_left
+  - id: divider_start
     type: Divider
     properties:
-      title: Left Aligned
-      titlePlacement: left
+      title: Start Aligned
+      titlePlacement: start
 
   - id: divider_center
     type: Divider
@@ -91,11 +91,11 @@ blocks:
       title: Center Aligned
       titlePlacement: center
 
-  - id: divider_right
+  - id: divider_end
     type: Divider
     properties:
-      title: Right Aligned
-      titlePlacement: right
+      title: End Aligned
+      titlePlacement: end
 
   # ============================================
   # HTML TITLE

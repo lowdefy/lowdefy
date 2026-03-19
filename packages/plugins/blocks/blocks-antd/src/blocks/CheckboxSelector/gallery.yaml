@@ -281,19 +281,16 @@
           - label: Success
             value: success
             style:
-              backgroundColor: '#f6ffed'
               padding: '2px 8px'
               borderRadius: 4
           - label: Warning
             value: warning
             style:
-              backgroundColor: '#fffbe6'
               padding: '2px 8px'
               borderRadius: 4
           - label: Error
             value: error
             style:
-              backgroundColor: '#fff2f0'
               padding: '2px 8px'
               borderRadius: 4
 
@@ -514,12 +511,11 @@
       style:
         /element:
           padding: 12
-          backgroundColor: '#fafafa'
           borderRadius: 8
           border: '1px solid #d9d9d9'
     - id: custom_class
       type: CheckboxSelector
-      class: p-4 bg-blue-50 rounded-lg
+      class: p-4 bg-bg-layout rounded-lg
       properties:
         title: Tailwind Styled
         options:

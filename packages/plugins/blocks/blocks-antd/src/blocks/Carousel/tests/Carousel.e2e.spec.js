@@ -144,11 +144,15 @@ test.describe('Carousel Block', () => {
     // Ensure first dot is active before clicking
     await expect(dotItems.nth(0)).toHaveClass(/slick-active/);
 
+    // waitForAnimate: true blocks interactions during animations;
+    // wait for initialization animation to complete
+    await page.waitForTimeout(1000);
+
     // Click on second dot
     await dotItems.nth(1).click();
 
     // Wait for second dot to become active (slide transition complete)
-    await expect(dotItems.nth(1)).toHaveClass(/slick-active/, { timeout: 3000 });
+    await expect(dotItems.nth(1)).toHaveClass(/slick-active/, { timeout: 5000 });
 
     // Then verify event fired
     const display = getBlock(page, 'afterchange_display');

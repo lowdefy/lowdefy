@@ -361,7 +361,7 @@
         percent: 70
     - id: css_tailwind_dark_bg
       type: Box
-      class: bg-slate-800 p-4 rounded-lg
+      class: bg-bg-layout p-4 rounded-lg
       blocks:
         - id: css_on_dark
           type: Progress

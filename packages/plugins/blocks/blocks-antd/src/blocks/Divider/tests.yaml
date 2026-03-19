@@ -22,16 +22,16 @@
   type: Divider
   properties:
     dashed: true
-- id: 'properties.titlePlacement: left'
+- id: 'properties.titlePlacement: start'
   type: Divider
   properties:
     title: Divider title
-    titlePlacement: left
-- id: 'properties.titlePlacement: right'
+    titlePlacement: start
+- id: 'properties.titlePlacement: end'
   type: Divider
   properties:
     title: Divider title
-    titlePlacement: right
+    titlePlacement: end
 - id: 'properties.titlePlacement: center'
   type: Divider
   properties:

@@ -818,8 +818,6 @@
         flex: 0 0 auto
       properties:
         title: Custom Background
-        theme:
-          colorBgElevated: '#f0f5ff'
       slots:
         popover:
           blocks:
@@ -974,7 +972,7 @@
       layout:
         flex: 0 0 auto
       class:
-        title: font-bold text-blue-600 border-b border-blue-200 pb-2
+        title: font-bold text-blue-600 border-b border-border pb-2
       properties:
         title: Title CSS Key
       slots:
@@ -999,7 +997,7 @@
       layout:
         flex: 0 0 auto
       class:
-        content: bg-gray-50 p-4 rounded-md
+        content: bg-bg-layout p-4 rounded-md
       properties:
         title: Content CSS Key
       slots:
@@ -1035,7 +1033,7 @@
           blocks:
             - id: popover_usercard_header
               type: Box
-              class: bg-blue-50 p-4 rounded-t-lg
+              class: bg-bg-layout p-4 rounded-t-lg
               layout:
                 gap: 12
                 align: center
@@ -1267,7 +1265,7 @@
                     content: The monthly budget is the maximum amount your team can spend on resources each billing cycle. It resets on the 1st of every month.
                 - id: popover_help_note
                   type: Paragraph
-                  class: text-gray-500 text-sm
+                  class: text-text-secondary text-sm
                   properties:
                     content: You will receive a warning notification when 80% of the budget is used.
                 - id: popover_help_link

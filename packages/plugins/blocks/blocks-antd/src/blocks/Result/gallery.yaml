@@ -673,35 +673,35 @@
   blocks:
     - id: styled_success_card
       type: Result
-      class: bg-green-50 rounded-lg border border-green-200
+      class: bg-bg-layout rounded-lg border border-border
       properties:
         status: success
         title: Environment Ready
         subTitle: Your staging environment has been provisioned and is ready for deployment.
     - id: styled_error_card
       type: Result
-      class: bg-red-50 rounded-lg border border-red-200
+      class: bg-bg-layout rounded-lg border border-border
       properties:
         status: error
         title: Build Failed
         subTitle: The CI pipeline encountered 3 errors during the build step. Check the logs for details.
     - id: styled_warning_card
       type: Result
-      class: bg-amber-50 rounded-lg border border-amber-200
+      class: bg-bg-layout rounded-lg border border-border
       properties:
         status: warning
         title: Rate Limit Approaching
         subTitle: You have used 85% of your monthly API quota. Consider upgrading your plan.
     - id: styled_info_card
       type: Result
-      class: bg-blue-50 rounded-lg border border-blue-200
+      class: bg-bg-layout rounded-lg border border-border
       properties:
         status: info
         title: New Features Available
         subTitle: Version 4.2 includes real-time collaboration and improved dashboard analytics.
     - id: styled_gradient
       type: Result
-      class: bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg border border-indigo-100
+      class: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-border
       properties:
         status: success
         title: Welcome to Your Workspace
@@ -712,7 +712,7 @@
           size: 72
     - id: styled_dark
       type: Result
-      class: bg-gray-900 rounded-lg
+      class: bg-bg-layout rounded-lg
       style:
         /element:
           color: white

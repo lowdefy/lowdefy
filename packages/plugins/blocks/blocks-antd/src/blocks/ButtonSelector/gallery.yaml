@@ -573,7 +573,7 @@
             value: b
           - label: Option C
             value: c
-        class: bg-gray-50 p-3 rounded
+        class: bg-bg-layout p-3 rounded
 
 - title: Theme Token Overrides
   blocks:
@@ -604,7 +604,6 @@
           - label: Option C
             value: c
         theme:
-          buttonBg: '#f0f5ff'
           buttonSolidCheckedBg: '#531dab'
           buttonSolidCheckedHoverBg: '#722ed1'
           buttonSolidCheckedActiveBg: '#391085'
@@ -622,7 +621,6 @@
             value: c
         theme:
           buttonColor: '#531dab'
-          buttonCheckedBg: '#f9f0ff'
     - id: theme_pill_selector
       type: ButtonSelector
       properties:

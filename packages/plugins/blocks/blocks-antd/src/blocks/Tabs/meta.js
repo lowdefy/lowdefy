@@ -62,7 +62,7 @@ export default {
       tabPlacement: {
         type: 'string',
         default: 'top',
-        enum: ['top', 'right', 'bottom', 'left'],
+        enum: ['top', 'end', 'bottom', 'start'],
         description: 'Position of the tabs.',
       },
       tabType: {

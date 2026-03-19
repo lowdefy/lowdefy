@@ -341,7 +341,6 @@
       type: Slider
       style:
         /element:
-          background: '#f6ffed'
           borderRadius: 8
           padding: 12px 20px
         /label:
@@ -363,14 +362,14 @@
         max: 100
     - id: slider_class_border
       type: Slider
-      class: border-2 border-blue-200 p-2
+      class: border-2 border-border p-2
       properties:
         title: Blue Border
         min: 0
         max: 100
     - id: slider_class_background
       type: Slider
-      class: bg-gray-50 rounded-md p-3
+      class: bg-bg-layout rounded-md p-3
       properties:
         title: Gray Background
         min: 0
@@ -408,8 +407,6 @@
         max: 100
         theme:
           railSize: 8
-          railBg: '#f0f0f0'
-          railHoverBg: '#d9d9d9'
     - id: slider_theme_danger
       type: Slider
       properties:

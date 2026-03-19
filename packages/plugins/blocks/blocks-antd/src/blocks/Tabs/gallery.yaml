@@ -202,14 +202,14 @@
               type: Paragraph
               properties:
                 content: You have 3 saved drafts including the quarterly review document and team feedback form.
-    - id: pos_left_label
+    - id: pos_start_label
       type: Markdown
       properties:
-        content: '**Left:**'
+        content: '**Start:**'
     - id: pos_left_tabs
       type: Tabs
       properties:
-        tabPlacement: left
+        tabPlacement: start
         tabs:
           - key: pos_left_general
             title: General
@@ -244,14 +244,14 @@
               type: Paragraph
               properties:
                 content: Manage API keys for programmatic access. Create, revoke, and monitor usage of your tokens.
-    - id: pos_right_label
+    - id: pos_end_label
       type: Markdown
       properties:
-        content: '**Right:**'
+        content: '**End:**'
     - id: pos_right_tabs
       type: Tabs
       properties:
-        tabPlacement: right
+        tabPlacement: end
         tabs:
           - key: pos_right_desc
             title: Description
@@ -938,13 +938,13 @@
               properties:
                 content: December report - Year-end review. Annual revenue target exceeded by 22%. Holiday code freeze in effect.
 
-- title: Left Tabs with Card Type
+- title: Start Tabs with Card Type
   blocks:
     - id: left_card_tabs
       type: Tabs
       properties:
         tabType: card
-        tabPlacement: left
+        tabPlacement: start
         tabs:
           - key: lc_account
             title: Account
@@ -1040,7 +1040,6 @@
             title: Contact
       style:
         /element:
-          background: '#f6f8fa'
           padding: 16px
           borderRadius: 8px
         /tabBar:
@@ -1163,7 +1162,6 @@
       properties:
         tabType: card
         theme:
-          cardBg: '#fff7e6'
           cardHeight: 48
           cardPadding: '12px 24px'
           cardGutter: 4
@@ -1242,7 +1240,7 @@
     - id: theme_vertical_tabs
       type: Tabs
       properties:
-        tabPlacement: left
+        tabPlacement: start
         theme:
           verticalItemPadding: '12px 32px'
           verticalItemMargin: '8px 0 0 0'

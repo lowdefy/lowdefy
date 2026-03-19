@@ -314,7 +314,7 @@
         title: Styled Label
     - id: class_tailwind
       type: Switch
-      class: p-2 border border-gray-200 rounded
+      class: p-2 border border-border rounded
       properties:
         title: Tailwind Classes
         label:
@@ -359,8 +359,6 @@
         title: Colored Handle
         label:
           disabled: true
-        theme:
-          handleBg: '#f0f5ff'
     - id: theme_primary_color
       type: Switch
       properties:

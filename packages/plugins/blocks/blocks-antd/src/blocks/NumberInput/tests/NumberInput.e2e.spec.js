@@ -83,8 +83,9 @@ test.describe('NumberInput Block', () => {
 
   test('shows controls when controls is true', async ({ page }) => {
     const block = getBlock(page, 'numberinput_controls');
-    // Hover to show controls - antd v6 uses .ant-input-number-actions
-    await block.hover();
+    // antd v6: hover must target .ant-input-number directly for controls to appear
+    const numberInput = block.locator('.ant-input-number');
+    await numberInput.hover();
     const handler = block.locator('.ant-input-number-actions');
     await expect(handler).toBeVisible();
   });
@@ -156,8 +157,9 @@ test.describe('NumberInput Block', () => {
     // Initial value is 10
     await expect(input).toHaveValue('10');
 
-    // Hover to show controls - antd v6 uses .ant-input-number-action-up
-    await block.hover();
+    // antd v6: hover must target .ant-input-number directly for controls to appear
+    const numberInput = block.locator('.ant-input-number');
+    await numberInput.hover();
 
     // Click up handler
     const upHandler = block.locator('.ant-input-number-action-up');
@@ -174,8 +176,9 @@ test.describe('NumberInput Block', () => {
     // Initial value is 10
     await expect(input).toHaveValue('10');
 
-    // Hover to show controls - antd v6 uses .ant-input-number-action-down
-    await block.hover();
+    // antd v6: hover must target .ant-input-number directly for controls to appear
+    const numberInput = block.locator('.ant-input-number');
+    await numberInput.hover();
 
     // Click down handler
     const downHandler = block.locator('.ant-input-number-action-down');

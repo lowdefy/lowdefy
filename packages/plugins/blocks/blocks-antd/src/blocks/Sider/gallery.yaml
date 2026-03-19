@@ -53,7 +53,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: basic_content_text
               type: Paragraph
@@ -101,7 +101,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: dark_content_text
               type: Paragraph
@@ -149,7 +149,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: collapsible_content_text
               type: Paragraph
@@ -197,7 +197,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: init_collapsed_content_text
               type: Paragraph
@@ -241,7 +241,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: cw_content_text
               type: Paragraph
@@ -260,7 +260,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: reverse_content_text
               type: Paragraph
@@ -337,7 +337,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: bp_content_text
               type: Paragraph
@@ -385,7 +385,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: width_content_text
               type: Paragraph
@@ -439,7 +439,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: events_state_label
               type: Paragraph
@@ -471,7 +471,6 @@
             initialCollapsed: false
             designTokens:
               colorPrimary: '#722ed1'
-              colorBgContainer: '#f9f0ff'
               colorText: '#531dab'
           blocks:
             - id: token_menu
@@ -499,7 +498,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: token_content_text
               type: Paragraph
@@ -547,7 +546,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: token_dark_content_text
               type: Paragraph
@@ -570,7 +569,7 @@
             collapsible: false
             initialCollapsed: false
           class:
-            element: bg-gradient-to-b from-indigo-50 to-white border-r border-indigo-200
+            element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
           blocks:
             - id: css_menu
               type: Menu
@@ -597,7 +596,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: css_content_text
               type: Paragraph
@@ -617,7 +616,7 @@
             collapsible: false
             initialCollapsed: false
           class:
-            element: shadow-lg bg-white
+            element: shadow-lg bg-bg-container
           blocks:
             - id: css_shadow_menu
               type: Menu
@@ -639,7 +638,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: css_shadow_content_text
               type: Paragraph
@@ -733,7 +732,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#f5f5f5'
+            background: var(--ant-color-bg-layout)
           blocks:
             - id: admin_header_row
               type: Box
@@ -876,7 +875,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: settings_content_title
               type: Title
@@ -929,7 +928,7 @@
             initialCollapsed: false
             breakpoint: md
           class:
-            element: border-r border-gray-200
+            element: border-r border-border
           blocks:
             - id: docs_search
               type: TextInput
@@ -982,7 +981,7 @@
           type: Content
           style:
             padding: 32px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
           blocks:
             - id: docs_content_title
               type: Title

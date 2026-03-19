@@ -460,7 +460,6 @@
             value: c
       style:
         /element:
-          background: '#e6f7ff'
           borderRadius: 12
     - id: style_border
       type: SegmentedSelector
@@ -509,7 +508,6 @@
           itemSelectedBg: '#177ddc'
           itemSelectedColor: '#ffffff'
           itemHoverColor: '#ffffffd9'
-          itemHoverBg: '#ffffff1a'
     - id: theme_green
       type: SegmentedSelector
       properties:
@@ -522,7 +520,6 @@
           - label: Rejected
             value: rejected
         theme:
-          trackBg: '#f6ffed'
           itemSelectedBg: '#52c41a'
           itemSelectedColor: '#ffffff'
           itemHoverBg: '#b7eb8f80'
@@ -538,10 +535,8 @@
           - label: Enterprise
             value: enterprise
         theme:
-          trackBg: '#f9f0ff'
           itemSelectedBg: '#722ed1'
           itemSelectedColor: '#ffffff'
-          itemHoverBg: '#d3adf780'
     - id: theme_round_dark
       type: SegmentedSelector
       properties:
@@ -561,7 +556,6 @@
           itemSelectedBg: '#434343'
           itemSelectedColor: '#ffffff'
           itemHoverColor: '#ffffffd9'
-          itemHoverBg: '#ffffff14'
           borderRadius: 40
           borderRadiusLG: 40
     - id: theme_block_gradient
@@ -579,10 +573,8 @@
           - label: Calendar
             value: calendar
         theme:
-          trackBg: '#f0f5ff'
           itemSelectedBg: '#2f54eb'
           itemSelectedColor: '#ffffff'
-          itemHoverBg: '#adc6ff80'
           trackPadding: 4
 
 - title: SegmentedSelector in Dashboard View

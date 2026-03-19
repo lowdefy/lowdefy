@@ -690,3 +690,112 @@ areas:
   // unresolvedVars still not mutated
   expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
 });
+
+// Icon detection tests
+// Note: existing tests above implicitly cover the !iconImports guard path
+// since they do not set context.iconImports.
+
+test('buildPageJit detects missing icons and writes dynamic icon data', async () => {
+  const context = createTestContext();
+  // Set up iconImports with no IoAddCircle — simulating shallow build that missed it
+  context.iconImports = [
+    { icons: [], package: 'react-icons/ai' },
+    { icons: [], package: 'react-icons/io5' },
+  ];
+  context.dynamicIconData = {};
+  context.directories.server = '/test/server';
+
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: action_button
+    type: Button
+    properties:
+      title: Do Something
+      icon: IoAddCircle
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  expect(result.id).toBe('page:home');
+
+  // Icon imports should have been updated
+  const io5Entry = context.iconImports.find((e) => e.package === 'react-icons/io5');
+  expect(io5Entry.icons).toContain('IoAddCircle');
+
+  // plugins/iconsDynamic.js should have been written
+  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
+    (c) => c[0] === 'plugins/iconsDynamic.js'
+  );
+  expect(iconDynamicCall).toBeDefined();
+});
+
+test('buildPageJit does not write dynamic icons when all icons already present', async () => {
+  const context = createTestContext();
+  context.iconImports = [{ icons: ['AiFillHome'], package: 'react-icons/ai' }];
+  context.dynamicIconData = {};
+
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: btn
+    type: Button
+    properties:
+      title: Home
+      icon: AiFillHome
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  // plugins/iconsDynamic.js should NOT have been written
+  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
+    (c) => c[0] === 'plugins/iconsDynamic.js'
+  );
+  expect(iconDynamicCall).toBeUndefined();
+});

@@ -11434,8 +11434,8 @@
               "type": "string",
               "default": "center",
               "enum": [
-                "left",
-                "right",
+                "start",
+                "end",
                 "center"
               ],
               "description": "Position of title text within the divider."

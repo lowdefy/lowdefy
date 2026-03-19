@@ -77,11 +77,11 @@ test.describe('Divider Block', () => {
   });
 
   // ============================================
-  // TITLE PLACEMENT TESTS (left/center/right)
+  // TITLE PLACEMENT TESTS (start/center/end)
   // ============================================
 
-  test('renders with left title placement', async ({ page }) => {
-    const divider = getDivider(page, 'divider_left');
+  test('renders with start title placement', async ({ page }) => {
+    const divider = getDivider(page, 'divider_start');
     await expect(divider).toHaveClass(/ant-divider-with-text-start/);
   });
 
@@ -90,8 +90,8 @@ test.describe('Divider Block', () => {
     await expect(divider).toHaveClass(/ant-divider-with-text-center/);
   });
 
-  test('renders with right title placement', async ({ page }) => {
-    const divider = getDivider(page, 'divider_right');
+  test('renders with end title placement', async ({ page }) => {
+    const divider = getDivider(page, 'divider_end');
     await expect(divider).toHaveClass(/ant-divider-with-text-end/);
   });
 

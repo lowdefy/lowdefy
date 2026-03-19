@@ -32,7 +32,7 @@
           blocks:
             - id: basic_h_left
               type: Box
-              class: bg-blue-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: basic_h_left_text
                   type: Paragraph
@@ -42,7 +42,7 @@
           blocks:
             - id: basic_h_right
               type: Box
-              class: bg-cyan-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: basic_h_right_text
                   type: Paragraph
@@ -69,7 +69,7 @@
           blocks:
             - id: basic_v_top
               type: Box
-              class: bg-green-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: basic_v_top_text
                   type: Paragraph
@@ -79,7 +79,7 @@
           blocks:
             - id: basic_v_bottom
               type: Box
-              class: bg-amber-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: basic_v_bottom_text
                   type: Paragraph
@@ -108,7 +108,7 @@
           blocks:
             - id: three_h_first
               type: Box
-              class: bg-violet-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: three_h_first_text
                   type: Paragraph
@@ -118,7 +118,7 @@
           blocks:
             - id: three_h_second
               type: Box
-              class: bg-blue-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: three_h_second_text
                   type: Paragraph
@@ -128,7 +128,7 @@
           blocks:
             - id: three_h_third
               type: Box
-              class: bg-teal-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: three_h_third_text
                   type: Paragraph
@@ -152,7 +152,7 @@
           blocks:
             - id: pixel_sizes_fixed
               type: Box
-              class: bg-teal-100 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: pixel_sizes_fixed_text
                   type: Paragraph
@@ -162,7 +162,7 @@
           blocks:
             - id: pixel_sizes_flex
               type: Box
-              class: bg-teal-50 h-full flex items-center justify-center
+              class: bg-bg-layout h-full flex items-center justify-center
               blocks:
                 - id: pixel_sizes_flex_text
                   type: Paragraph
@@ -191,7 +191,7 @@
           blocks:
             - id: constrained_nav
               type: Box
-              class: bg-indigo-100 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: constrained_nav_title
                   type: Paragraph
@@ -205,7 +205,7 @@
           blocks:
             - id: constrained_main
               type: Box
-              class: bg-slate-50 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: constrained_main_title
                   type: Paragraph
@@ -240,7 +240,7 @@
           blocks:
             - id: constrained_px_left
               type: Box
-              class: bg-purple-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: constrained_px_left_text
                   type: Paragraph
@@ -250,7 +250,7 @@
           blocks:
             - id: constrained_px_center
               type: Box
-              class: bg-gray-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: constrained_px_center_text
                   type: Paragraph
@@ -260,7 +260,7 @@
           blocks:
             - id: constrained_px_right
               type: Box
-              class: bg-rose-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: constrained_px_right_text
                   type: Paragraph
@@ -288,7 +288,7 @@
           blocks:
             - id: collapsible_simple_sidebar
               type: Box
-              class: bg-blue-100 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: collapsible_simple_sidebar_text
                   type: Paragraph
@@ -302,7 +302,7 @@
           blocks:
             - id: collapsible_simple_body
               type: Box
-              class: bg-white h-full p-4
+              class: bg-bg-container h-full p-4
               blocks:
                 - id: collapsible_simple_body_text
                   type: Paragraph
@@ -331,7 +331,7 @@
           blocks:
             - id: collapsible_both_left
               type: Box
-              class: bg-emerald-100 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: collapsible_both_left_text
                   type: Paragraph
@@ -341,7 +341,7 @@
           blocks:
             - id: collapsible_both_center
               type: Box
-              class: bg-slate-50 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: collapsible_both_center_text
                   type: Paragraph
@@ -351,7 +351,7 @@
           blocks:
             - id: collapsible_both_right
               type: Box
-              class: bg-amber-100 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: collapsible_both_right_text
                   type: Paragraph
@@ -389,7 +389,7 @@
           blocks:
             - id: col_se_left
               type: Box
-              class: bg-pink-50 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: col_se_left_text
                   type: Paragraph
@@ -399,7 +399,7 @@
           blocks:
             - id: col_se_center
               type: Box
-              class: bg-sky-50 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: col_se_center_text
                   type: Paragraph
@@ -409,7 +409,7 @@
           blocks:
             - id: col_se_right
               type: Box
-              class: bg-lime-50 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: col_se_right_text
                   type: Paragraph
@@ -439,7 +439,7 @@
           blocks:
             - id: nonresizable_fixed
               type: Box
-              class: bg-red-100 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: nonresizable_fixed_text
                   type: Paragraph
@@ -449,7 +449,7 @@
           blocks:
             - id: nonresizable_flex_a
               type: Box
-              class: bg-gray-50 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: nonresizable_flex_a_text
                   type: Paragraph
@@ -459,7 +459,7 @@
           blocks:
             - id: nonresizable_flex_b
               type: Box
-              class: bg-gray-100 h-full p-3 flex items-center justify-center
+              class: bg-bg-layout h-full p-3 flex items-center justify-center
               blocks:
                 - id: nonresizable_flex_b_text
                   type: Paragraph
@@ -488,7 +488,7 @@
           blocks:
             - id: lazy_left_box
               type: Box
-              class: bg-orange-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: lazy_left_text
                   type: Paragraph
@@ -498,7 +498,7 @@
           blocks:
             - id: lazy_right_box
               type: Box
-              class: bg-orange-100 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: lazy_right_text
                   type: Paragraph
@@ -549,7 +549,7 @@
           blocks:
             - id: event_left_box
               type: Box
-              class: bg-indigo-50 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: event_left_title
                   type: Paragraph
@@ -563,7 +563,7 @@
           blocks:
             - id: event_right_box
               type: Box
-              class: bg-white h-full p-4
+              class: bg-bg-container h-full p-4
               blocks:
                 - id: event_right_desc
                   type: Paragraph
@@ -601,7 +601,7 @@
           blocks:
             - id: es_left_box
               type: Box
-              class: bg-cyan-50 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: es_left_title
                   type: Paragraph
@@ -615,7 +615,7 @@
           blocks:
             - id: es_right_box
               type: Box
-              class: bg-white h-full p-4
+              class: bg-bg-container h-full p-4
               blocks:
                 - id: es_right_title
                   type: Paragraph
@@ -658,7 +658,7 @@
           blocks:
             - id: nested_sidebar
               type: Box
-              class: bg-slate-100 h-full p-4
+              class: bg-bg-layout h-full p-4
               blocks:
                 - id: nested_sidebar_title
                   type: Paragraph
@@ -696,7 +696,7 @@
                   blocks:
                     - id: nested_content
                       type: Box
-                      class: bg-white h-full p-4
+                      class: bg-bg-container h-full p-4
                       blocks:
                         - id: nested_content_title
                           type: Paragraph
@@ -710,7 +710,7 @@
                   blocks:
                     - id: nested_footer
                       type: Box
-                      class: bg-blue-50 h-full p-4
+                      class: bg-bg-layout h-full p-4
                       blocks:
                         - id: nested_footer_title
                           type: Paragraph
@@ -745,7 +745,7 @@
           blocks:
             - id: theme_thick_left
               type: Box
-              class: bg-blue-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_thick_left_text
                   type: Paragraph
@@ -755,7 +755,7 @@
           blocks:
             - id: theme_thick_right
               type: Box
-              class: bg-blue-100 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_thick_right_text
                   type: Paragraph
@@ -787,7 +787,7 @@
           blocks:
             - id: theme_green_left
               type: Box
-              class: bg-green-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_green_left_text
                   type: Paragraph
@@ -797,7 +797,7 @@
           blocks:
             - id: theme_green_right
               type: Box
-              class: bg-green-100 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_green_right_text
                   type: Paragraph
@@ -826,7 +826,7 @@
           blocks:
             - id: theme_minimal_left
               type: Box
-              class: bg-gray-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_minimal_left_text
                   type: Paragraph
@@ -836,7 +836,7 @@
           blocks:
             - id: theme_minimal_right
               type: Box
-              class: bg-gray-100 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_minimal_right_text
                   type: Paragraph
@@ -860,14 +860,13 @@
           splitBarDraggableSize: 40
           colorFillTertiary: '#e6f4ff'
           colorFillSecondary: '#91caff'
-          colorBgElevated: '#bae0ff'
           borderRadius: 12
       slots:
         tch_left:
           blocks:
             - id: theme_handle_left
               type: Box
-              class: bg-sky-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_handle_left_text
                   type: Paragraph
@@ -877,7 +876,7 @@
           blocks:
             - id: theme_handle_right
               type: Box
-              class: bg-sky-100 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: theme_handle_right_text
                   type: Paragraph
@@ -904,7 +903,7 @@
           blocks:
             - id: css_rounded_left
               type: Box
-              class: bg-gradient-to-br from-blue-50 to-indigo-100 h-full p-4 flex items-center justify-center
+              class: bg-gradient-to-br from-primary/10 to-primary/10 h-full p-4 flex items-center justify-center
               blocks:
                 - id: css_rounded_left_text
                   type: Paragraph
@@ -914,7 +913,7 @@
           blocks:
             - id: css_rounded_right
               type: Box
-              class: bg-gradient-to-br from-indigo-100 to-purple-100 h-full p-4 flex items-center justify-center
+              class: bg-gradient-to-br from-primary/15 to-primary/10 h-full p-4 flex items-center justify-center
               blocks:
                 - id: css_rounded_right_text
                   type: Paragraph
@@ -939,7 +938,7 @@
           blocks:
             - id: css_border_left
               type: Box
-              class: bg-blue-50 h-full p-4 flex items-center justify-center
+              class: bg-bg-layout h-full p-4 flex items-center justify-center
               blocks:
                 - id: css_border_left_text
                   type: Paragraph
@@ -949,7 +948,7 @@
           blocks:
             - id: css_border_right
               type: Box
-              class: bg-white h-full p-4 flex items-center justify-center
+              class: bg-bg-container h-full p-4 flex items-center justify-center
               blocks:
                 - id: css_border_right_text
                   type: Paragraph
@@ -990,7 +989,7 @@
           blocks:
             - id: editor_files_box
               type: Box
-              class: bg-slate-800 h-full p-3
+              class: bg-bg-layout h-full p-3
               blocks:
                 - id: editor_files_title
                   type: Paragraph
@@ -1059,7 +1058,7 @@
                   blocks:
                     - id: editor_code_box
                       type: Box
-                      class: bg-slate-900 h-full p-4
+                      class: bg-bg-layout h-full p-4
                       blocks:
                         - id: editor_code_tab
                           type: Paragraph
@@ -1083,7 +1082,7 @@
                   blocks:
                     - id: editor_terminal_box
                       type: Box
-                      class: bg-gray-950 h-full p-3
+                      class: bg-bg-layout h-full p-3
                       blocks:
                         - id: editor_terminal_title
                           type: Paragraph
@@ -1147,7 +1146,7 @@
           blocks:
             - id: dash_nav_box
               type: Box
-              class: bg-slate-50 h-full p-0
+              class: bg-bg-layout h-full p-0
               blocks:
                 - id: dash_nav_card
                   type: Card
@@ -1239,7 +1238,7 @@
           blocks:
             - id: dash_detail_box
               type: Box
-              class: bg-gray-50 h-full p-0
+              class: bg-bg-layout h-full p-0
               blocks:
                 - id: dash_detail_card
                   type: Card
@@ -1308,7 +1307,7 @@
           blocks:
             - id: email_folders_box
               type: Box
-              class: bg-slate-50 h-full p-3
+              class: bg-bg-layout h-full p-3
               blocks:
                 - id: email_folders_title
                   type: Paragraph
@@ -1360,7 +1359,7 @@
               blocks:
                 - id: email_list_header
                   type: Box
-                  class: px-3 py-2 border-b border-gray-200
+                  class: px-3 py-2 border-b border-border
                   blocks:
                     - id: email_list_search
                       type: Paragraph
@@ -1371,7 +1370,7 @@
                         content: 'Inbox - 12 messages'
                 - id: email_msg1
                   type: Box
-                  class: px-3 py-2 border-b border-gray-100 bg-blue-50
+                  class: px-3 py-2 border-b border-border bg-bg-layout
                   blocks:
                     - id: email_msg1_from
                       type: Paragraph
@@ -1395,7 +1394,7 @@
                         content: 10:30 AM
                 - id: email_msg2
                   type: Box
-                  class: px-3 py-2 border-b border-gray-100
+                  class: px-3 py-2 border-b border-border
                   blocks:
                     - id: email_msg2_from
                       type: Paragraph
@@ -1419,7 +1418,7 @@
                         content: 9:15 AM
                 - id: email_msg3
                   type: Box
-                  class: px-3 py-2 border-b border-gray-100
+                  class: px-3 py-2 border-b border-border
                   blocks:
                     - id: email_msg3_from
                       type: Paragraph

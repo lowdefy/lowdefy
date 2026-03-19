@@ -856,7 +856,7 @@
         level: 3
         editable: true
       style:
-        className: rounded-lg bg-gray-50 p-3 shadow-sm
+        className: rounded-lg bg-bg-layout p-3 shadow-sm
       events:
         onMount:
           - id: set_default

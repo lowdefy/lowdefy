@@ -17,7 +17,8 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
-const getMarkdownBody = (page, blockId) => getBlock(page, blockId).locator('.markdown-body');
+const getMarkdownBody = (page, blockId) =>
+  getBlock(page, blockId).locator('[class*="markdown-body"]');
 
 test.describe('DangerousMarkdown Block', () => {
   test.beforeEach(async ({ page }) => {

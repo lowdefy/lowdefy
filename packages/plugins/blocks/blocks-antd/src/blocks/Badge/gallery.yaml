@@ -695,7 +695,7 @@
       blocks:
         - id: tw_badge_in_box_child
           type: Box
-          class: bg-gray-100 rounded-lg p-4
+          class: bg-bg-layout rounded-lg p-4
           blocks:
             - id: tw_badge_in_box_text
               type: Paragraph
@@ -760,7 +760,6 @@
         theme:
           colorError: '#1677ff'
           colorErrorHover: '#4096ff'
-          colorBorderBg: '#e6f4ff'
       blocks:
         - id: theme_blue_badge_child
           type: Avatar
@@ -806,7 +805,7 @@
         gap: 24
         align: center
         justify: end
-      class: bg-white p-4 rounded-lg shadow-sm border border-gray-200
+      class: bg-bg-container p-4 rounded-lg shadow-sm border border-border
       blocks:
         - id: rw_notif_search
           type: TextInput
@@ -898,7 +897,7 @@
           layout:
             gap: 16
             align: center
-          class: py-3 border-b border-gray-100
+          class: py-3 border-b border-border
           blocks:
             - id: rw_order1_id
               type: Paragraph
@@ -924,7 +923,7 @@
           layout:
             gap: 16
             align: center
-          class: py-3 border-b border-gray-100
+          class: py-3 border-b border-border
           blocks:
             - id: rw_order2_id
               type: Paragraph
@@ -950,7 +949,7 @@
           layout:
             gap: 16
             align: center
-          class: py-3 border-b border-gray-100
+          class: py-3 border-b border-border
           blocks:
             - id: rw_order3_id
               type: Paragraph
@@ -1005,7 +1004,7 @@
       layout:
         direction: column
         gap: 0
-      class: bg-white rounded-lg shadow-sm border border-gray-200 p-2 max-w-xs
+      class: bg-bg-container rounded-lg shadow-sm border border-border p-2 max-w-xs
       blocks:
         - id: rw_nav_inbox_btn
           type: Button

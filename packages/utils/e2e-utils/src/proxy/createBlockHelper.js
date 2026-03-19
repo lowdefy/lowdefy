@@ -22,6 +22,13 @@ import {
   expectValidationSuccess,
 } from '../core/validation.js';
 
+// Each block's e2e helper defines a `locator` function that targets the block element on the page.
+// Two locator patterns exist:
+//   - `#${escapeId(blockId)}` — for blocks that render `id={blockId}` on their root DOM element
+//     (e.g. AgGrid variants, ProgressBar, Markdown variants, QRScanner).
+//   - `#bl-${escapeId(blockId)}` — for blocks whose root element does not carry the blockId;
+//     targets the Lowdefy layout wrapper div instead
+//     (e.g. Skeleton variants, Spinner, EChart, DocSearch, ColorSelector, GoogleMaps variants).
 function createBlockHelper({ locator, do: doMethods, get: getMethods, expect: expectOverrides }) {
   const commonExpect = {
     visible: (page, blockId) => expect(locator(page, blockId)).toBeVisible(),

@@ -13,6 +13,8 @@
 
 .turbo
 
+_server/
+
 packages/servers/*/build/**
 packages/servers/*/lowdefy-build/**
 packages/servers/*/public/**

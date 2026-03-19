@@ -92,7 +92,7 @@ _ref:
           - id: gallery_grid
             type: Box
             style:
-              columnCount: 2
+              columnCount: {% if fullWidthExamples %}1{% else %}2{% endif %}
               columnGap: 16
 {% if onInit %}
             events:
@@ -112,7 +112,7 @@ _ref:
       - id: gallery_grid
         type: Box
         style:
-          columnCount: 2
+          columnCount: {% if fullWidthExamples %}1{% else %}2{% endif %}
           columnGap: 16
 {% if onInit %}
         events:

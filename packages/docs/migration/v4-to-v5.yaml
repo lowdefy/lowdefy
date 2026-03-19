@@ -435,7 +435,7 @@ _ref:
             | Collapse | `expandIconPosition` | `expandIconPlacement` |
             | Collapse | `bordered` | `variant` (`outlined` / `borderless`) |
             | Notification | `message` | `title` |
-            | Tabs | `tabPosition` | `tabPlacement` |
+            | Tabs | `tabPosition` | `tabPlacement` (`left` → `start`, `right` → `end`) |
             | Divider | `type` | `orientation` |
             | Divider | `orientation` | `titlePlacement` (`start` / `center` / `end`) |
 

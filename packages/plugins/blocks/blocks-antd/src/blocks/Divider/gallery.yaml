@@ -76,21 +76,21 @@
 - title: Title Placement
   fullWidth: true
   blocks:
-    - id: orient_left
+    - id: orient_start
       type: Divider
       properties:
-        title: Left
-        titlePlacement: left
+        title: Start
+        titlePlacement: start
     - id: orient_center
       type: Divider
       properties:
         title: Center (default)
         titlePlacement: center
-    - id: orient_right
+    - id: orient_end
       type: Divider
       properties:
-        title: Right
-        titlePlacement: right
+        title: End
+        titlePlacement: end
 
 - title: Dashed
   fullWidth: true
@@ -108,8 +108,8 @@
       type: Divider
       properties:
         dashed: true
-        title: Dashed Left
-        titlePlacement: left
+        title: Dashed Start
+        titlePlacement: start
 
 - title: Plain Style
   fullWidth: true
@@ -122,9 +122,9 @@
     - id: plain_left
       type: Divider
       properties:
-        title: Plain Left
+        title: Plain Start
         plain: true
-        titlePlacement: left
+        titlePlacement: start
     - id: plain_dashed
       type: Divider
       properties:
@@ -172,14 +172,14 @@
       type: Divider
       properties:
         title: Tight Orientation Margin
-        titlePlacement: left
+        titlePlacement: start
         theme:
           orientationMargin: 0
     - id: theme_orientation_wide
       type: Divider
       properties:
         title: Wide Orientation Margin
-        titlePlacement: left
+        titlePlacement: start
         theme:
           orientationMargin: 0.25
     - id: theme_vertical_margin
@@ -221,7 +221,7 @@
           type: Divider
           properties:
             title: Profile
-            titlePlacement: left
+            titlePlacement: start
             plain: true
         - id: settings_name
           type: TextInput
@@ -239,7 +239,7 @@
           type: Divider
           properties:
             title: Notifications
-            titlePlacement: left
+            titlePlacement: start
             plain: true
         - id: settings_notify_toggle
           type: Switch
@@ -250,7 +250,7 @@
           type: Divider
           properties:
             title: '<span style="color: #ff4d4f">Danger Zone</span>'
-            titlePlacement: left
+            titlePlacement: start
             plain: true
             dashed: true
           style:
@@ -338,7 +338,7 @@
           type: Divider
           properties:
             title: Key Takeaways
-            titlePlacement: left
+            titlePlacement: start
             plain: true
         - id: article_takeaways
           type: Markdown

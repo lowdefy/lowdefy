@@ -79,7 +79,7 @@
       blocks:
         - id: ml_gutter_tight.$.card
           type: Card
-          class: bg-blue-50
+          class: bg-bg-layout
           properties:
             size: small
           blocks:
@@ -96,7 +96,7 @@
       blocks:
         - id: ml_gutter_wide.$.card
           type: Card
-          class: bg-blue-50
+          class: bg-bg-layout
           properties:
             size: small
           blocks:

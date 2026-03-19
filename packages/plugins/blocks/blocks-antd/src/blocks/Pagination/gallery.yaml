@@ -376,7 +376,7 @@
       type: Pagination
       style:
         /element:
-          background: '#f5f5f5'
+          background: var(--ant-color-bg-layout)
           padding: 12
           borderRadius: 8
       properties:
@@ -417,7 +417,7 @@
         content: '**Tailwind background and padding:**'
     - id: class_bg
       type: Pagination
-      class: bg-blue-50 p-3 rounded-lg
+      class: bg-bg-layout p-3 rounded-lg
       properties:
         total: 100
     - id: class_border_label
@@ -426,7 +426,7 @@
         content: '**Tailwind border and centered:**'
     - id: class_border
       type: Pagination
-      class: border border-gray-300 rounded-lg p-3 flex justify-center
+      class: border border-border rounded-lg p-3 flex justify-center
       properties:
         total: 100
     - id: class_shadow_label
@@ -435,7 +435,7 @@
         content: '**Tailwind shadow:**'
     - id: class_shadow
       type: Pagination
-      class: shadow-md rounded-lg p-3 bg-white
+      class: shadow-md rounded-lg p-3 bg-bg-container
       properties:
         total: 100
 
@@ -484,7 +484,6 @@
       properties:
         total: 100
         theme:
-          itemActiveBg: '#e6f4ff'
           colorPrimary: '#0958d9'
     - id: theme_combined_label
       type: Markdown

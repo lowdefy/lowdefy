@@ -43,7 +43,7 @@ export default {
       titlePlacement: {
         type: 'string',
         default: 'center',
-        enum: ['left', 'right', 'center'],
+        enum: ['start', 'end', 'center'],
         description: 'Position of title text within the divider.',
       },
       plain: {

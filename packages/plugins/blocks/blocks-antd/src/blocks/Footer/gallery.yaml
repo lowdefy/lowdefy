@@ -22,7 +22,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 120px
           blocks:
             - id: footer_basic_content_text
@@ -49,7 +49,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_links_content_text
@@ -127,7 +127,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_theme_content_text
@@ -138,7 +138,6 @@
           type: Footer
           properties:
             theme:
-              colorBgContainer: '#e6f4ff'
               colorText: '#1677ff'
               paddingInline: 48
               paddingBlock: 24
@@ -157,7 +156,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_theme_warm_content_text
@@ -168,7 +167,6 @@
           type: Footer
           properties:
             theme:
-              colorBgContainer: '#fff7e6'
               colorText: '#d46b08'
           style:
             textAlign: center
@@ -188,7 +186,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_tw_content_text
@@ -198,7 +196,7 @@
         - id: footer_tw_el
           type: Footer
           class:
-            element: bg-slate-900 text-center
+            element: bg-bg-layout text-center
           blocks:
             - id: footer_tw_text
               type: Paragraph
@@ -213,7 +211,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_tw_accent_content_text
@@ -223,7 +221,7 @@
         - id: footer_tw_accent_el
           type: Footer
           class:
-            element: bg-green-50 border-t-4 border-t-green-500 text-center
+            element: bg-bg-layout border-t-4 border-t-green-500 text-center
           blocks:
             - id: footer_tw_accent_text
               type: Paragraph
@@ -241,7 +239,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 80px
           blocks:
             - id: footer_styled_content_text
@@ -273,7 +271,7 @@
           type: Content
           style:
             padding: 24px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             minHeight: 100px
           blocks:
             - id: footer_corp_content_text
@@ -283,7 +281,7 @@
         - id: footer_corp_el
           type: Footer
           class:
-            element: bg-gray-100
+            element: bg-bg-layout
           style:
             padding: 40px 50px 24px
           blocks:
@@ -471,7 +469,7 @@
               type: Content
               style:
                 padding: 24px
-                background: '#fff'
+                background: var(--ant-color-bg-container)
                 minHeight: 120px
               blocks:
                 - id: footer_admin_content_title

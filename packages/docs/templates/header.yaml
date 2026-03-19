@@ -130,3 +130,22 @@
     icon: AiFillGithub
     size: small
     href: https://github.com/lowdefy/lowdefy
+- id: dark_mode_toggle
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    hideTitle: true
+    color: default
+    variant: text
+    size: small
+    icon:
+      _if:
+        test:
+          _media: darkMode
+        then: AiOutlineSun
+        else: AiOutlineMoon
+  events:
+    onClick:
+      - id: toggle_dark_mode
+        type: SetDarkMode

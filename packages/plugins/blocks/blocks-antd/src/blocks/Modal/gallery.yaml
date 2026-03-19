@@ -672,8 +672,6 @@
       properties:
         title: Blue Theme Modal
         theme:
-          headerBg: '#e6f4ff'
-          contentBg: '#f0f5ff'
           titleColor: '#0958d9'
           titleFontSize: 20
           titleLineHeight: 1.8
@@ -705,9 +703,6 @@
       properties:
         title: Warm Theme Modal
         theme:
-          headerBg: '#fff7e6'
-          contentBg: '#fffbe6'
-          footerBg: '#fff7e6'
           titleColor: '#d46b08'
           colorBgMask: 'rgba(250, 173, 20, 0.1)'
           borderRadiusLG: 20
@@ -749,7 +744,6 @@
         title: Styled Modal
       style:
         /body:
-          backgroundColor: '#f6ffed'
           padding: 24px
         /mask:
           backgroundColor: 'rgba(0, 100, 0, 0.15)'
@@ -814,9 +808,9 @@
       properties:
         title: Tailwind Styled Modal
       class:
-        header: bg-blue-50
-        body: bg-gray-50 p-8
-        footer: bg-blue-50
+        header: bg-bg-layout
+        body: bg-bg-layout p-8
+        footer: bg-bg-layout
         content: rounded-2xl overflow-hidden
       blocks:
         - id: modal_css_keys_content
@@ -853,7 +847,6 @@
         cancelText: Cancel
         centered: true
         theme:
-          headerBg: '#fafafa'
           headerBorderBottom: 1px solid #f0f0f0
           headerMarginBottom: 0
       events:
@@ -947,7 +940,6 @@
         closable: false
         maskClosable: false
         theme:
-          headerBg: '#fff2f0'
           titleColor: '#cf1322'
       events:
         onOk:

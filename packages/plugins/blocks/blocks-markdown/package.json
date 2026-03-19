@@ -33,6 +33,7 @@
     "./*": "./dist/*",
     "./blocks": "./dist/blocks.js",
     "./metas": "./dist/metas.js",
+    "./e2e": "./dist/e2e.js",
     "./types": "./dist/types.js"
   },
   "files": [

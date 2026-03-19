@@ -509,7 +509,6 @@
         placeholder: Styled textarea element
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           borderColor: '#597ef7'
           borderRadius: 8
     - id: css_label
@@ -542,7 +541,6 @@
           extra: Custom styled textarea with extra text.
       style:
         /element:
-          backgroundColor: '#fff7e6'
           borderColor: '#ffa940'
         /label:
           color: '#d46b08'
@@ -597,7 +595,6 @@
         theme:
           colorPrimary: '#722ed1'
           colorPrimaryHover: '#9254de'
-          colorBgContainer: '#faf0ff'
           colorBorder: '#d3adf7'
           borderRadius: 12
     - id: theme_warm
@@ -608,7 +605,6 @@
         theme:
           colorPrimary: '#d4380d'
           colorPrimaryHover: '#ff7a45'
-          colorBgContainer: '#fff2e8'
           colorBorder: '#ffbb96'
           borderRadius: 10
           fontSize: 15

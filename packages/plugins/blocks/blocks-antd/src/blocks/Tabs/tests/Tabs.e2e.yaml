@@ -115,35 +115,35 @@ blocks:
   # TAB POSITION
   # ============================================
 
-  - id: tabs_position_left
+  - id: tabs_position_start
     type: Tabs
     properties:
-      tabPlacement: left
+      tabPlacement: start
       tabs:
-        - key: left1
-          title: Left Tab
+        - key: start1
+          title: Start Tab
     slots:
-      left1:
+      start1:
         blocks:
-          - id: tabs_position_left_content
+          - id: tabs_position_start_content
             type: Span
             properties:
-              content: Tabs on the left
+              content: Tabs at the start
 
-  - id: tabs_position_right
+  - id: tabs_position_end
     type: Tabs
     properties:
-      tabPlacement: right
+      tabPlacement: end
       tabs:
-        - key: right1
-          title: Right Tab
+        - key: end1
+          title: End Tab
     slots:
-      right1:
+      end1:
         blocks:
-          - id: tabs_position_right_content
+          - id: tabs_position_end_content
             type: Span
             properties:
-              content: Tabs on the right
+              content: Tabs at the end
 
   # ============================================
   # DISABLED TAB

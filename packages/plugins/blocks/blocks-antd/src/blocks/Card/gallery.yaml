@@ -98,7 +98,7 @@
   blocks:
     - id: border_wrapper
       type: Box
-      class: bg-gray-100 p-6 rounded-lg
+      class: bg-bg-layout p-6 rounded-lg
       layout:
         gap: 16
       blocks:
@@ -218,7 +218,6 @@
                   properties:
                     icon: AiOutlineUser
                     color: '#1677ff'
-                    backgroundColor: '#e6f4ff'
                 - id: title_slot_text
                   type: Title
                   layout:
@@ -805,7 +804,7 @@
       type: Card
       layout:
         flex: 1 1 0
-      class: bg-gradient-to-br from-blue-500 to-purple-600 text-white border-0 rounded-xl
+      class: bg-gradient-to-br from-primary/100 to-purple-600 text-white border-0 rounded-xl
       blocks:
         - id: styled_gradient_title
           type: Title
@@ -855,10 +854,8 @@
         title: Colored Header
       style:
         /header:
-          backgroundColor: '#e6f4ff'
           borderBottom: 1px solid #91caff
         /body:
-          backgroundColor: '#f0f5ff'
       blocks:
         - id: style_header_bg_p
           type: Paragraph
@@ -881,7 +878,7 @@
       blocks:
         - id: style_dark_p
           type: Paragraph
-          class: text-gray-300
+          class: text-text-secondary
           properties:
             content: A manually styled dark card using inline styles on the header and body. For app-wide dark themes, prefer antd theme tokens or ConfigProvider.
 
@@ -911,8 +908,8 @@
         flex: 1 1 0
       class:
         element: shadow-lg rounded-xl
-        header: bg-blue-50
-        body: bg-white
+        header: bg-bg-layout
+        body: bg-bg-container
       properties:
         title: Element + Header + Body
       blocks:
@@ -941,7 +938,7 @@
       layout:
         flex: 1 1 0
       class:
-        extra: bg-green-50 px-3 py-1 rounded-full
+        extra: bg-bg-layout px-3 py-1 rounded-full
       properties:
         title: Styled Extra Area
       slots:
@@ -984,7 +981,6 @@
       properties:
         title: Custom Header Background
         theme:
-          headerBg: '#f6ffed'
           colorTextHeading: '#389e0d'
       blocks:
         - id: theme_colored_header_p
@@ -1029,8 +1025,6 @@
       properties:
         title: Custom Color Scheme
         theme:
-          headerBg: '#fff7e6'
-          colorBgContainer: '#fffbe6'
           colorTextHeading: '#d46b08'
           colorText: '#874d00'
           colorBorderSecondary: '#ffd591'

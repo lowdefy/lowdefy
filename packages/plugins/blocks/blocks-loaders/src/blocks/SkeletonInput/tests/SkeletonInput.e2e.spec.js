@@ -17,7 +17,7 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
-const getSkeletons = (page, blockId) => getBlock(page, blockId).locator('.skeleton');
+const getSkeletons = (page, blockId) => getBlock(page, blockId).locator('[class*="skeleton"]');
 
 test.describe('SkeletonInput Block', () => {
   test.beforeEach(async ({ page }) => {

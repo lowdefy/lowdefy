@@ -856,8 +856,6 @@
       type: Collapse
       properties:
         theme:
-          headerBg: '#e6f4ff'
-          contentBg: '#f0f5ff'
           headerPadding: '16px 20px'
           contentPadding: '20px 20px'
         panels:
@@ -910,8 +908,6 @@
       properties:
         theme:
           borderRadiusLG: 16
-          headerBg: '#f6ffed'
-          contentBg: '#ffffff'
         panels:
           - key: tr_one
             title: Extra Rounded Corners

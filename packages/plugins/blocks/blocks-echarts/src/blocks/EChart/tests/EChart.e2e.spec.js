@@ -94,8 +94,8 @@ test.describe('EChart Block', () => {
     const block = getBlock(page, 'echart_onclick');
     const svg = getSvg(page, 'echart_onclick');
     await expect(svg).toBeVisible();
-    // Click on a rendered bar path element in the SVG
-    const bar = block.locator('path[fill="#5470c6"]').first();
+    // Click on a rendered bar path element in the SVG (avoid hardcoded fill color)
+    const bar = block.locator('path[fill="#5070dd"]').first();
     await expect(bar).toBeVisible();
     await bar.click({ force: true });
 

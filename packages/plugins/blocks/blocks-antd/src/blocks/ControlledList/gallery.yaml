@@ -254,7 +254,6 @@
           color: primary
           variant: dashed
         theme:
-          headerBg: '#fafafa'
           itemPadding: '16px 12px'
       blocks:
         - id: expenses.$.date

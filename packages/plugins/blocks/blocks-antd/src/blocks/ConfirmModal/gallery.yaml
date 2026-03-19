@@ -599,7 +599,9 @@
         content:
           _if:
             test:
-              _state: confirm_events_action
+              _not:
+                _not:
+                  _state: confirm_events_action
             then:
               _string.concat:
                 - 'Last action: '
@@ -680,10 +682,10 @@
     - id: confirm_css_body
       type: ConfirmModal
       class:
-        body: bg-blue-50 p-6
+        body: bg-bg-layout p-6
       properties:
         title: Styled Body
-        content: 'The body CSS key targets the modal body area. This modal uses bg-blue-50 and p-6 on the body key for a tinted content area.'
+        content: 'The body CSS key targets the modal body area. This modal uses bg-bg-layout and p-6 on the body key for a tinted content area.'
 
 - title: Theme Token Overrides
   blocks:
@@ -738,11 +740,8 @@
         title: Custom Color Theme
         content: This modal uses theme tokens to set a custom header background, title color, content background, and footer background.
         theme:
-          headerBg: '#e6f4ff'
           titleColor: '#0958d9'
           titleFontSize: 18
-          contentBg: '#f0f5ff'
-          footerBg: '#f0f5ff'
     - id: confirm_theme_padding
       type: ConfirmModal
       properties:

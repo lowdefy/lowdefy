@@ -39,13 +39,27 @@ import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
+import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+
+async function updateDynamicIcons({ page, context }) {
+  if (!context.iconImports) return;
+  const missingIcons = detectMissingIcons({ page, iconImports: context.iconImports });
+  if (missingIcons.length > 0) {
+    await updateIconImportsJit({
+      newIcons: missingIcons,
+      iconImports: context.iconImports,
+      context,
+    });
+  }
+}
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
   // Use provided context or create a minimal one for JIT builds
@@ -83,7 +97,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       const pagePath = path.join(buildContext.directories.build, 'pages', `${pageId}.json`);
       try {
         const content = await fs.promises.readFile(pagePath, 'utf8');
-        return serializer.deserialize(JSON.parse(content));
+        const page = serializer.deserialize(JSON.parse(content));
+
+        await updateDynamicIcons({ page, context: buildContext });
+        return page;
       } catch (err) {
         if (err.code !== 'ENOENT') throw err;
       }
@@ -247,6 +264,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
       return { installing: true, packages: [...missingPackages.keys()] };
     }
+
+    // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
+    // Placed after detectMissingPluginPackages so we skip this when packages are being
+    // installed (the server restarts and icons will be discovered on the next build).
+    await updateDynamicIcons({ page: processed, context: buildContext });
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);

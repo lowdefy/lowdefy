@@ -4025,9 +4025,9 @@
               "default": "top",
               "enum": [
                 "top",
-                "right",
+                "end",
                 "bottom",
-                "left"
+                "start"
               ],
               "description": "Position of the tabs."
             },

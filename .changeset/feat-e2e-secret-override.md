@@ -1,5 +1,5 @@
 ---
-'@lowdefy/server-e2e': minor
+'@lowdefy/server-e2e': patch
 ---
 
 feat(server-e2e): Add LOWDEFY*E2E_SECRET*\* override support.

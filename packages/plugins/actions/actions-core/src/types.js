@@ -29,6 +29,7 @@ export default {
     'Reset',
     'ResetValidation',
     'ScrollTo',
+    'SetDarkMode',
     'SetFocus',
     'SetGlobal',
     'SetState',

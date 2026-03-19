@@ -392,7 +392,6 @@
       type: MonthSelector
       style:
         /element:
-          background: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -417,7 +416,7 @@
           disabled: true
     - id: month_class_border
       type: MonthSelector
-      class: border-2 border-blue-200
+      class: border-2 border-border
       properties:
         title: Blue Border
         label:
@@ -448,8 +447,6 @@
         variant: filled
         label:
           disabled: true
-        theme:
-          colorBgContainer: '#f9f0ff'
     - id: month_theme_brand_color
       type: MonthSelector
       properties:
@@ -459,7 +456,6 @@
         theme:
           colorPrimary: '#722ed1'
           colorBorder: '#d3adf7'
-          colorBgContainer: '#faf0ff'
     - id: month_theme_tall
       type: MonthSelector
       properties:

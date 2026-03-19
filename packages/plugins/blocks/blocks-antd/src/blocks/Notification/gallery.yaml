@@ -735,7 +735,6 @@
         title: Custom Background
         description: This notification has a custom background color.
         notificationStyle:
-          background: '#fffbe6'
     - id: notif_style_shadow
       type: Notification
       layout:

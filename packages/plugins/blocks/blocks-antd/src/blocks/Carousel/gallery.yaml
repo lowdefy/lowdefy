@@ -807,7 +807,6 @@
           type: Box
           style:
             height: 140
-            background: '#bae0ff'
             display: flex
             alignItems: center
             justifyContent: center
@@ -824,7 +823,6 @@
           type: Box
           style:
             height: 140
-            background: '#e6f4ff'
             display: flex
             alignItems: center
             justifyContent: center
@@ -1246,7 +1244,6 @@
           type: Box
           style:
             height: 160
-            background: '#adc6ff'
             display: flex
             alignItems: center
             justifyContent: center
@@ -1348,7 +1345,7 @@
       blocks:
         - id: css_s1
           type: Box
-          class: bg-gradient-to-br from-blue-500 to-indigo-600
+          class: bg-gradient-to-br from-primary/100 to-indigo-600
           style:
             height: 200
             display: flex
@@ -1802,7 +1799,6 @@
           type: Box
           style:
             height: 160
-            background: '#ffadd2'
             display: flex
             alignItems: center
             justifyContent: center

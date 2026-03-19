@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import { theme as antdTheme } from 'antd';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -25,7 +26,7 @@ import markdownStyles from '../../style.module.css';
 import codeblockStyles from '../../codeblock.module.css';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
-import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';
+import { github, a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';
 import javascript from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript.js';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript.js';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python.js';
@@ -55,34 +56,51 @@ SyntaxHighlighter.registerLanguage('ts', lang(typescript));
 SyntaxHighlighter.registerLanguage('xml', lang(xml));
 SyntaxHighlighter.registerLanguage('yaml', lang(yaml));
 
-const components = {
-  code({ inline, className, children, ...props }) {
-    return !inline ? (
-      <SyntaxHighlighter
-        style={github}
-        language={String(className).replace('language-', '')}
-        {...props}
+function makeComponents(isDark) {
+  return {
+    code({ inline, className, children, ...props }) {
+      return !inline ? (
+        <SyntaxHighlighter
+          style={isDark ? a11yDark : github}
+          language={String(className).replace('language-', '')}
+          {...props}
+        >
+          {children}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+  };
+}
+
+const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => {
+  const { token } = antdTheme.useToken();
+  // Ant Design dark algorithm sets colorBgBase to '#000' or '#141414'.
+  // Parse the hex value and check if it's below mid-brightness.
+  let bgHex = (token.colorBgBase || '#ffffff').replace('#', '');
+  if (bgHex.length === 3) {
+    bgHex = bgHex[0] + bgHex[0] + bgHex[1] + bgHex[1] + bgHex[2] + bgHex[2];
+  }
+  const r = parseInt(bgHex.substring(0, 2) || 'ff', 16);
+  const g = parseInt(bgHex.substring(2, 4) || 'ff', 16);
+  const b = parseInt(bgHex.substring(4, 6) || 'ff', 16);
+  const isDark = (r * 299 + g * 587 + b * 114) / 1000 < 128;
+  const components = useMemo(() => makeComponents(isDark), [isDark]);
+  return (
+    <div id={blockId} className={classNames?.element} style={styles?.element}>
+      <ReactMarkdown
+        className={markdownStyles['markdown-body']}
+        skipHtml={properties.skipHtml}
+        remarkPlugins={[gfm]}
+        components={components}
       >
-        {children}
-      </SyntaxHighlighter>
-    ) : (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
-  },
+        {properties.content}
+      </ReactMarkdown>
+    </div>
+  );
 };
-const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => (
-  <div id={blockId} className={classNames?.element} style={styles?.element}>
-    <ReactMarkdown
-      className={markdownStyles['markdown-body']}
-      skipHtml={properties.skipHtml}
-      remarkPlugins={[gfm]}
-      components={components}
-    >
-      {properties.content}
-    </ReactMarkdown>
-  </div>
-);
 
 export default withBlockDefaults(MarkdownWithCode);

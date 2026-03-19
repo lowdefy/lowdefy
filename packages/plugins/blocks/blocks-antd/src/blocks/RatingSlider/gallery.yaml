@@ -430,7 +430,6 @@
         max: 10
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           padding: 8
           borderRadius: 8
     - id: style_wide
@@ -449,14 +448,14 @@
   blocks:
     - id: class_rounded
       type: RatingSlider
-      class: rounded-lg shadow-sm p-2 border border-gray-200
+      class: rounded-lg shadow-sm p-2 border border-border
       properties:
         title: Rounded Card Style
         min: 0
         max: 10
     - id: class_gradient_bg
       type: RatingSlider
-      class: bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-md
+      class: bg-gradient-to-r from-primary/10 to-primary/5 p-3 rounded-md
       properties:
         title: Gradient Background
         min: 0
@@ -493,8 +492,6 @@
           trackHoverBg: '#73d13d'
           handleColor: '#52c41a'
           handleActiveColor: '#389e0d'
-          railBg: '#f6ffed'
-          railHoverBg: '#d9f7be'
     - id: theme_large_dots
       type: RatingSlider
       properties:
@@ -512,12 +509,9 @@
         max: 10
         color: '#722ed1'
         theme:
-          trackBg: '#d3adf7'
           trackHoverBg: '#b37feb'
           handleColor: '#722ed1'
           handleActiveColor: '#531dab'
-          railBg: '#f9f0ff'
-          railHoverBg: '#efdbff'
           dotBorderColor: '#d3adf7'
           dotActiveBorderColor: '#722ed1'
 

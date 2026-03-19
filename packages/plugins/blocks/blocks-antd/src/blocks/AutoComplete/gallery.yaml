@@ -408,7 +408,6 @@
       type: AutoComplete
       style:
         /element:
-          backgroundColor: '#f6ffed'
       properties:
         title: Custom Background
         placeholder: Light green background
@@ -491,7 +490,6 @@
           - Cherry
           - Dragonfruit
         theme:
-          optionSelectedBg: '#f9f0ff'
           optionSelectedColor: '#531dab'
           optionSelectedFontWeight: 700
     - id: theme_option_height
@@ -532,7 +530,6 @@
           borderRadius: 12
           colorPrimary: '#52c41a'
           colorPrimaryHover: '#73d13d'
-          optionSelectedBg: '#f6ffed'
           fontSize: 15
           controlHeight: 40
 

@@ -425,7 +425,6 @@
       type: TreeSelector
       style:
         /element:
-          background: '#f0f5ff'
           border: '1px solid #adc6ff'
           borderRadius: 8
           padding: 12
@@ -480,40 +479,24 @@
         options:
           - label: '<span style="color: green;">Active Services</span>'
             value: active
-            style:
-              background: '#f6ffed'
             children:
               - label: '<span style="color: green;">Web Server</span>'
                 value: web_server
-                style:
-                  background: '#f6ffed'
               - label: '<span style="color: green;">Database</span>'
                 value: database
-                style:
-                  background: '#f6ffed'
           - label: '<span style="color: orange;">Warning</span>'
             value: warning
-            style:
-              background: '#fff7e6'
             children:
               - label: '<span style="color: orange;">Cache Server</span>'
                 value: cache
-                style:
-                  background: '#fff7e6'
               - label: '<span style="color: orange;">Queue Worker</span>'
                 value: queue
-                style:
-                  background: '#fff7e6'
           - label: '<span style="color: red;">Down</span>'
             value: down
-            style:
-              background: '#fff2f0'
             children:
               - label: '<span style="color: red;">Backup Service</span>'
                 value: backup
                 disabled: true
-                style:
-                  background: '#fff2f0'
 
 - title: Theme Token Overrides
   blocks:
@@ -523,8 +506,6 @@
         title: Custom Selection Color
         label:
           disabled: true
-        theme:
-          nodeSelectedBg: '#e6fffb'
         options:
           - label: Dashboard
             value: dashboard
@@ -546,8 +527,6 @@
         title: Custom Hover Color
         label:
           disabled: true
-        theme:
-          nodeHoverBg: '#fff0f6'
         options:
           - label: Inbox
             value: inbox
@@ -570,8 +549,6 @@
         label:
           disabled: true
         theme:
-          nodeSelectedBg: '#f9f0ff'
-          nodeHoverBg: '#fff7e6'
           titleHeight: 32
         options:
           - label: Modules

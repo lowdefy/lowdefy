@@ -25,7 +25,7 @@ const HeaderBlock = ({ blockId, classNames = {}, content, properties, styles = {
     id={blockId}
     className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
     style={{
-      backgroundColor: properties.theme === 'light' ? '#fff' : undefined,
+      backgroundColor: properties.theme === 'light' ? 'var(--ant-color-bg-container)' : undefined,
       ...styles.element,
     }}
   >

@@ -36,7 +36,12 @@ blocks:
     properties:
       title: {{ pageTitle }}
       header:
-        theme: light
+        theme:
+          _if:
+            test:
+              _media: darkMode
+            then: dark
+            else: light
       menu:
         forceSubMenuRender: true
       sider:
@@ -51,10 +56,10 @@ blocks:
                 - lg
       layout:
         style:
-          background: '#FFFFFF'
+          background: var(--ant-color-bg-base)
       footer:
         style:
-          background: '#FFFFFF'
+          background: var(--ant-color-bg-base)
           padding: 16px 0px 0px 0px
       breadcrumb:
         list:

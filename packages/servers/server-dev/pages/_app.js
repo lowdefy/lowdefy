@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
+import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -29,19 +30,6 @@ import request from '../lib/client/utils/request.js';
 
 // Must be in _app due to next specifications.
 import '../build/globals.css';
-
-const algorithmMap = {
-  default: antdTheme.defaultAlgorithm,
-  dark: antdTheme.darkAlgorithm,
-  compact: antdTheme.compactAlgorithm,
-};
-
-function resolveAlgorithm(algorithm) {
-  if (Array.isArray(algorithm)) {
-    return algorithm.map((a) => algorithmMap[a] || antdTheme.defaultAlgorithm);
-  }
-  return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
-}
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -63,6 +51,8 @@ function App({ Component }) {
   if (rootConfig?.theme) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
+
+  const algorithm = useDarkMode(lowdefyRef.current.theme?.antd?.algorithm);
 
   // Runtime error callback — pushes errors to state for ErrorBar display.
   // Accepts Error objects (with .name) or plain objects (with .type) from build warnings.
@@ -100,7 +90,7 @@ function App({ Component }) {
           ...lowdefyRef.current.theme?.antd,
           cssVar: { key: 'lowdefy' },
           hashed: false,
-          algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
+          algorithm,
         }}
       >
         <ThemeTokenResolver lowdefyRef={lowdefyRef}>

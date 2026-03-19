@@ -557,7 +557,6 @@
         mode: horizontal
         theme:
           itemSelectedColor: '#722ed1'
-          itemSelectedBg: '#f9f0ff'
           horizontalItemSelectedColor: '#722ed1'
           itemHoverColor: '#9254de'
           horizontalItemHoverColor: '#9254de'
@@ -679,7 +678,7 @@
           blocks:
             - id: admin_logo
               type: Markdown
-              class: px-4 py-3 font-bold text-lg border-b border-gray-200
+              class: px-4 py-3 font-bold text-lg border-b border-border
               properties:
                 content: Admin Panel
             - id: admin_menu
@@ -771,7 +770,7 @@
   blocks:
     - id: docs_header_box
       type: Box
-      class: border-b border-gray-200
+      class: border-b border-border
       blocks:
         - id: docs_nav_menu
           type: Menu

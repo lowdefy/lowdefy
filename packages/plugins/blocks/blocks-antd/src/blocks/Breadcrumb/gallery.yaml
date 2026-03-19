@@ -247,7 +247,7 @@
   blocks:
     - id: css_tailwind_bg
       type: Breadcrumb
-      class: bg-gray-100 p-3 rounded-lg
+      class: bg-bg-layout p-3 rounded-lg
       properties:
         list:
           - Home
@@ -283,7 +283,6 @@
       style:
         /element:
           padding: 10px 20px
-          backgroundColor: '#f0f5ff'
           borderRadius: 8
 
 - title: Theme Token Overrides
@@ -418,7 +417,7 @@
   blocks:
     - id: ecommerce_breadcrumb
       type: Breadcrumb
-      class: bg-gray-50 px-4 py-2 rounded-md
+      class: bg-bg-layout px-4 py-2 rounded-md
       properties:
         list:
           - label: Shop

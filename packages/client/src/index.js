@@ -17,3 +17,4 @@
 import Client from './Client.js';
 
 export default Client;
+export { default as useDarkMode } from './useDarkMode.js';

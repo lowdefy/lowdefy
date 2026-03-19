@@ -227,7 +227,6 @@
       style:
         /element:
           padding: 12px
-          backgroundColor: '#f6ffed'
           borderRadius: 8px
           border: '1px solid #b7eb8f'
       properties:
@@ -240,7 +239,6 @@
       style:
         /element:
           padding: 10px
-          backgroundColor: '#fff7e6'
           borderRadius: 6px
           border: '1px solid #ffd591'
       properties:
@@ -262,7 +260,7 @@
   blocks:
     - id: class_blue
       type: CheckboxSwitch
-      class: p-2 rounded-lg border border-blue-200 bg-blue-50
+      class: p-2 rounded-lg border border-border bg-bg-layout
       properties:
         title: Blue Card
         description: Using Tailwind CSS classes for a blue card style
@@ -270,7 +268,7 @@
           disabled: true
     - id: class_green
       type: CheckboxSwitch
-      class: p-3 rounded-xl border border-green-300 bg-green-50
+      class: p-3 rounded-xl border border-border bg-bg-layout
       properties:
         title: Green Card
         description: Tailwind green card styling
@@ -278,7 +276,7 @@
           disabled: true
     - id: class_shadow
       type: CheckboxSwitch
-      class: p-3 rounded-lg shadow-md bg-white
+      class: p-3 rounded-lg shadow-md bg-bg-container
       properties:
         title: Shadow Card
         description: Elevated card with a box shadow
@@ -339,7 +337,6 @@
           colorPrimaryHover: '#13c2c2'
           lineWidth: 2
           colorBorder: '#87e8de'
-          colorBgContainer: '#e6fffb'
 
 - title: CheckboxSwitch in Registration Form
   blocks:

@@ -660,10 +660,8 @@
         title: Styled Drawer
       style:
         /header:
-          backgroundColor: '#e6f4ff'
           borderBottom: 1px solid #91caff
         /body:
-          backgroundColor: '#f0f5ff'
       blocks:
         - id: drawer_inline_style_content
           type: Paragraph
@@ -694,8 +692,8 @@
       properties:
         title: Tailwind CSS Keys
       class:
-        header: bg-blue-50
-        body: bg-gray-50
+        header: bg-bg-layout
+        body: bg-bg-layout
       blocks:
         - id: drawer_css_keys_content
           type: Paragraph
@@ -724,8 +722,8 @@
       properties:
         title: Accent Header
       class:
-        header: bg-gradient-to-r from-purple-500 to-indigo-600 text-white
-        body: bg-slate-50
+        header: bg-gradient-to-r from-primary/100 to-indigo-600 text-white
+        body: bg-bg-layout
       blocks:
         - id: drawer_css_accent_content
           type: Paragraph
@@ -786,7 +784,6 @@
       properties:
         title: Custom Theme Drawer
         theme:
-          colorBgElevated: '#f6ffed'
           colorBgMask: 'rgba(0, 100, 0, 0.15)'
       blocks:
         - id: drawer_theme_green_content
@@ -825,7 +822,7 @@
       blocks:
         - id: drawer_theme_dark_content
           type: Paragraph
-          class: text-gray-300
+          class: text-text-secondary
           properties:
             content: A dark-themed drawer using design token overrides for background, text, and icon colors.
 

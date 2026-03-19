@@ -273,7 +273,7 @@
   blocks:
     - id: css_tailwind_bg
       type: Title
-      class: bg-blue-50 px-4 py-2 rounded-lg
+      class: bg-bg-layout px-4 py-2 rounded-lg
       properties:
         content: Tailwind Background
         level: 4

@@ -16,6 +16,12 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
+function getDarkMode(window) {
+  const stored = window.localStorage?.getItem('lowdefy_darkMode');
+  if (stored !== null) return stored === 'true';
+  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+}
+
 const breakpoints = {
   xs: 640,
   sm: 768,
@@ -54,6 +60,7 @@ function _media({ arrayIndices, location, params, globals }) {
     size,
     width: window.innerWidth,
     height: window.innerHeight,
+    darkMode: getDarkMode(window),
   };
   return getFromObject({
     arrayIndices,

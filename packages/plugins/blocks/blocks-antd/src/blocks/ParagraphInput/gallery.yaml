@@ -1030,7 +1030,6 @@
       type: ParagraphInput
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           padding: 12
           borderRadius: 8
       properties:
@@ -1074,7 +1073,6 @@
       type: ParagraphInput
       style:
         /element:
-          backgroundColor: '#fff7e6'
           border: 2px solid
           borderRadius: 12
           color: '#d46b08'
@@ -1092,7 +1090,6 @@
       type: ParagraphInput
       style:
         /element:
-          backgroundColor: '#ffffff'
           boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
           borderRadius: 8
           padding: 20
@@ -1108,7 +1105,7 @@
   blocks:
     - id: class_rounded
       type: ParagraphInput
-      class: rounded-lg bg-blue-50 p-4
+      class: rounded-lg bg-bg-layout p-4
       properties:
         editable: true
       events:
@@ -1130,7 +1127,7 @@
               class_shadow: Tailwind shadow, padding, and rounded corners.
     - id: class_border
       type: ParagraphInput
-      class: border border-gray-300 rounded-lg p-4
+      class: border border-border rounded-lg p-4
       properties:
         editable: true
       events:
@@ -1141,7 +1138,7 @@
               class_border: Tailwind border with rounded corners.
     - id: class_gradient_bg
       type: ParagraphInput
-      class: bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg
+      class: bg-gradient-to-r from-primary/10 to-primary/5 p-4 rounded-lg
       properties:
         editable: true
       events:
@@ -1431,7 +1428,7 @@
               full_themed: Fully featured paragraph with custom theme token overrides. Purple text color, serif font, and heavy bold weight combined with editable, copyable, and ellipsis features for a complete demonstration.
     - id: full_danger_card
       type: ParagraphInput
-      class: border border-red-200 bg-red-50 p-4 rounded-lg
+      class: border border-border bg-bg-layout p-4 rounded-lg
       properties:
         type: danger
         strong: true

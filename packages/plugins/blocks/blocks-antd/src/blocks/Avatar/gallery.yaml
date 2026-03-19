@@ -431,7 +431,6 @@
             size: large
           style:
             /element:
-              backgroundColor: '#fff'
               color: '#1677ff'
               border: 2px dashed #1677ff
 
@@ -581,7 +580,6 @@
           style:
             /max:
               color: '#f56a00'
-              backgroundColor: '#fde3cf'
         - id: group_dark_overflow
           type: Avatar
           layout:
@@ -751,7 +749,6 @@
               style:
                 /max:
                   color: '#f56a00'
-                  backgroundColor: '#fde3cf'
             - id: team_info
               type: Box
               layout:

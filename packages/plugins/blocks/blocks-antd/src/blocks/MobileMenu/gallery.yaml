@@ -716,7 +716,7 @@
       type: MobileMenu
       layout:
         flex: 0 0 auto
-      class: bg-slate-100 p-1 rounded-md
+      class: bg-bg-layout p-1 rounded-md
       properties:
         links:
           - id: ctb_home
@@ -736,7 +736,6 @@
       style:
         /element:
           padding: 4px
-          background: '#f0f5ff'
           borderRadius: 8
           border: '1px solid #d6e4ff'
       properties:
@@ -812,7 +811,7 @@
   blocks:
     - id: admin_header
       type: Box
-      class: bg-white border-b border-gray-200 px-4 py-3
+      class: bg-bg-container border-b border-border px-4 py-3
       layout:
         direction: row
         align: center

@@ -32,6 +32,16 @@ async function fetchJsEntries(basePath) {
   }
 }
 
+async function fetchDynamicIcons(basePath) {
+  try {
+    const res = await fetch(`${basePath}/api/icons/dynamic`);
+    if (!res.ok) return {};
+    return parseJsModule(await res.text());
+  } catch {
+    return {};
+  }
+}
+
 async function fetchPageConfig(url) {
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
@@ -50,11 +60,16 @@ async function fetchPageConfig(url) {
     throw new Error(data.message || 'Request error');
   }
 
-  // Fetch jsMap after page build completes (JIT build may have added new entries).
-  // Extract basePath from the URL to construct the jsMap endpoint.
+  // Fetch jsMap and dynamic icons after page build completes
+  // (JIT build may have added new entries).
+  // Extract basePath from the URL to construct the endpoints.
   const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const jsEntries = await fetchJsEntries(basePath);
+  const [jsEntries, dynamicIcons] = await Promise.all([
+    fetchJsEntries(basePath),
+    fetchDynamicIcons(basePath),
+  ]);
   data._jsEntries = jsEntries;
+  data._dynamicIcons = dynamicIcons;
 
   // Bust CSS cache so the browser picks up newly compiled Tailwind classes
   const cssLink = document.getElementById('tailwind-jit-css');

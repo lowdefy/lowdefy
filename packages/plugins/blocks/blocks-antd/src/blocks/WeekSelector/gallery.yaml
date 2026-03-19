@@ -301,7 +301,6 @@
       type: WeekSelector
       style:
         /element:
-          background: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -326,7 +325,7 @@
           disabled: true
     - id: ws_class_border
       type: WeekSelector
-      class: border-2 border-blue-200
+      class: border-2 border-border
       properties:
         title: Blue Border
         label:
@@ -369,7 +368,6 @@
         theme:
           colorPrimary: '#722ed1'
           colorBorder: '#d3adf7'
-          colorBgContainer: '#faf0ff'
     - id: ws_theme_popup_highlight
       type: WeekSelector
       properties:
@@ -377,7 +375,6 @@
         label:
           disabled: true
         theme:
-          cellActiveWithRangeBg: '#ffe7ba'
           activeBorderColor: '#fa8c16'
           cellHoverBg: 'rgba(250, 140, 22, 0.1)'
 

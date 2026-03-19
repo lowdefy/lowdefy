@@ -349,7 +349,6 @@
         status: success
         content: Custom background color
         messageStyle:
-          backgroundColor: '#f6ffed'
           border: '1px solid #b7eb8f'
     - id: mstyle_font_msg
       type: Message
@@ -596,8 +595,6 @@
       properties:
         status: success
         content: Custom background via theme token
-        theme:
-          contentBg: '#e6f4ff'
     - id: theme_padding_msg
       type: Message
       properties:
@@ -618,7 +615,6 @@
         status: info
         content: Combined theme overrides
         theme:
-          contentBg: '#fff7e6'
           contentPadding: '16px 24px'
     - id: btn_theme_bg
       type: Button

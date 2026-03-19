@@ -382,7 +382,6 @@
       type: DateSelector
       style:
         /element:
-          background: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -407,7 +406,7 @@
           disabled: true
     - id: class_border
       type: DateSelector
-      class: border-2 border-blue-200
+      class: border-2 border-border
       properties:
         title: Blue Border
         label:
@@ -438,8 +437,6 @@
         variant: filled
         label:
           disabled: true
-        theme:
-          colorBgContainer: '#f9f0ff'
     - id: theme_tall
       type: DateSelector
       properties:
@@ -459,7 +456,6 @@
         theme:
           colorPrimary: '#722ed1'
           colorBorder: '#d3adf7'
-          colorBgContainer: '#faf0ff'
 
 - title: Combined Features
   blocks:

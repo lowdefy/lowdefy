@@ -294,7 +294,7 @@
     - id: css_gradient_bg
       type: Watermark
       class:
-        element: bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-4
+        element: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4
       properties:
         text: Preview
         font:
@@ -311,7 +311,7 @@
     - id: css_dark_surface
       type: Watermark
       class:
-        element: bg-slate-800 rounded-lg p-4
+        element: bg-bg-layout rounded-lg p-4
       properties:
         text: Dark Theme
         font:
@@ -337,7 +337,7 @@
     - id: css_bordered_area
       type: Watermark
       class:
-        element: border-2 border-dashed border-gray-300 rounded-xl p-6
+        element: border-2 border-dashed border-border rounded-xl p-6
       properties:
         text: Upload Area
         font:
@@ -360,7 +360,7 @@
   blocks:
     - id: report_wrapper
       type: Box
-      class: bg-white rounded-lg shadow-sm
+      class: bg-bg-container rounded-lg shadow-sm
       blocks:
         - id: report_watermark
           type: Watermark

@@ -529,7 +529,6 @@
           colorPrimary: '#fa541c'
           fontSize: 16
           borderRadius: 8
-          colorBgContainer: '#fff7e6'
       blocks:
         - id: cp_tokens_card
           type: Card
@@ -622,7 +621,7 @@
   blocks:
     - id: cp_styled_gradient
       type: ConfigProvider
-      class: bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-200
+      class: bg-gradient-to-r from-primary/10 to-primary/5 p-6 rounded-xl border border-border
       properties:
         token:
           colorPrimary: '#6366f1'
@@ -660,7 +659,7 @@
 
     - id: cp_styled_shadow
       type: ConfigProvider
-      class: shadow-lg p-8 rounded-2xl bg-white
+      class: shadow-lg p-8 rounded-2xl bg-bg-container
       properties:
         token:
           colorPrimary: '#059669'
@@ -700,7 +699,7 @@
       blocks:
         - id: cp_brand_header
           type: Box
-          class: bg-rose-50 p-6 rounded-lg border border-rose-200
+          class: bg-bg-layout p-6 rounded-lg border border-border
           layout:
             gap: 16
           blocks:

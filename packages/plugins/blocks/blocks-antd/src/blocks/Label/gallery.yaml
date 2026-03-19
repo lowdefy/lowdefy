@@ -397,7 +397,7 @@
       properties:
         title: Bordered Container
       class:
-        element: border border-gray-300 p-3 rounded-lg
+        element: border border-border p-3 rounded-lg
       blocks:
         - id: label_css_element_input
           type: TextInput

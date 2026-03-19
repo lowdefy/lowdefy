@@ -415,7 +415,6 @@
       type: DateRangeSelector
       style:
         /element:
-          background: '#f0f5ff'
       properties:
         title: Custom Background
         label:
@@ -440,7 +439,7 @@
           disabled: true
     - id: drs_class_border
       type: DateRangeSelector
-      class: border-2 border-blue-200
+      class: border-2 border-border
       properties:
         title: Blue Border
         label:
@@ -478,8 +477,6 @@
         variant: filled
         label:
           disabled: true
-        theme:
-          colorBgContainer: '#f9f0ff'
     - id: drs_theme_brand
       type: DateRangeSelector
       properties:
@@ -489,7 +486,6 @@
         theme:
           colorPrimary: '#722ed1'
           colorBorder: '#d3adf7'
-          colorBgContainer: '#faf0ff'
     - id: drs_theme_cell_range
       type: DateRangeSelector
       properties:
@@ -497,7 +493,6 @@
         label:
           disabled: true
         theme:
-          cellActiveWithRangeBg: '#d9f7be'
           colorPrimary: '#52c41a'
 
 - title: Combined Features
@@ -568,7 +563,6 @@
           borderRadius: 20
           controlHeightLG: 48
           fontSize: 16
-          cellActiveWithRangeBg: '#fff0f6'
     - id: drs_combo_contract
       type: DateRangeSelector
       properties:

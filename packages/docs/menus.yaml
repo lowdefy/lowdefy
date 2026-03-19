@@ -786,6 +786,9 @@
         - id: ScrollTo
           type: MenuLink
           pageId: ScrollTo
+        - id: SetDarkMode
+          type: MenuLink
+          pageId: SetDarkMode
         - id: SetFocus
           type: MenuLink
           pageId: SetFocus

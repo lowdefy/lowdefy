@@ -17,9 +17,12 @@
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
-const getContainer = (page, blockId) => getBlock(page, blockId).locator('.progress-bar-container');
-const getLoader = (page, blockId) => getBlock(page, blockId).locator('.progress-bar-loader');
-const getShadow = (page, blockId) => getBlock(page, blockId).locator('.progress-bar-shadow');
+const getContainer = (page, blockId) =>
+  getBlock(page, blockId).locator('[class*="progress-bar-container"]');
+const getLoader = (page, blockId) =>
+  getBlock(page, blockId).locator('[class*="progress-bar-loader"]');
+const getShadow = (page, blockId) =>
+  getBlock(page, blockId).locator('[class*="progress-bar-shadow"]');
 
 test.describe('ProgressBar Block', () => {
   test.beforeEach(async ({ page }) => {

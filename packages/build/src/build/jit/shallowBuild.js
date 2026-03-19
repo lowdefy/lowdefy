@@ -170,6 +170,13 @@ async function shallowBuild(options) {
       serializer.serializeToString(context.modules ?? {})
     );
     await writePluginImports({ components, context });
+    // Persist icon imports snapshot for JIT icon detection.
+    // When buildPageJit resolves a page, it compares discovered icons against
+    // this snapshot and regenerates plugins/icons.js if new icons are found.
+    await context.writeBuildArtifact(
+      'iconImports.json',
+      JSON.stringify(components.imports.icons)
+    );
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
 

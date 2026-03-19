@@ -251,10 +251,10 @@
       blocks:
         - id: ex_1_block_3
           type: Test
-- id: 'properties.tabPlacement: right - top is default'
+- id: 'properties.tabPlacement: end - top is default'
   type: Tabs
   properties:
-    tabPlacement: right
+    tabPlacement: end
     tabs:
       - key: content_one
         title: Title One
@@ -299,10 +299,10 @@
       blocks:
         - id: ex_1_block_3
           type: Test
-- id: 'properties.tabPlacement: left'
+- id: 'properties.tabPlacement: start'
   type: Tabs
   properties:
-    tabPlacement: left
+    tabPlacement: start
     tabs:
       - key: content_one
         title: Title One

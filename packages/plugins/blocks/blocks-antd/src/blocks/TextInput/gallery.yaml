@@ -345,7 +345,6 @@
       type: TextInput
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           borderColor: '#adc6ff'
       properties:
         title: Custom Background
@@ -354,7 +353,6 @@
       type: TextInput
       style:
         /element:
-          backgroundColor: '#fff7e6'
           borderColor: '#ffa940'
           borderRadius: 12
           color: '#d46b08'
@@ -382,7 +380,6 @@
         prefixIcon: AiOutlineCheck
         theme:
           colorPrimary: '#52c41a'
-          colorBgContainer: '#f6ffed'
           colorBorder: '#b7eb8f'
           borderRadius: 8
           hoverBorderColor: '#73d13d'
@@ -396,7 +393,6 @@
         prefixIcon: AiOutlineStar
         theme:
           colorPrimary: '#722ed1'
-          colorBgContainer: '#f9f0ff'
           colorBorder: '#d3adf7'
           borderRadius: 12
           hoverBorderColor: '#b37feb'

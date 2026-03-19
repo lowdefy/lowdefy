@@ -13,6 +13,7 @@
 # limitations under the License.
 
 - title: Basic Descriptions
+  fullWidth: true
   blocks:
     - id: basic_array_items
       type: Descriptions
@@ -44,6 +45,7 @@
           Team: Growth
 
 - title: Bordered vs Borderless
+  fullWidth: true
   blocks:
     - id: bordered_default
       type: Descriptions
@@ -82,6 +84,7 @@
             value: 1 TB NVMe
 
 - title: Sizes
+  fullWidth: true
   blocks:
     - id: size_default
       type: Descriptions
@@ -123,6 +126,7 @@
             value: 3,480 units
 
 - title: Vertical Layout
+  fullWidth: true
   blocks:
     - id: vertical_borderless
       type: Descriptions
@@ -159,6 +163,7 @@
             value: Wire Transfer
 
 - title: Column Configurations
+  fullWidth: true
   blocks:
     - id: columns_1
       type: Descriptions
@@ -219,6 +224,7 @@
             value: 72
 
 - title: Responsive Columns
+  fullWidth: true
   blocks:
     - id: responsive_columns
       type: Descriptions
@@ -250,6 +256,7 @@
             value: L5
 
 - title: Item Spanning
+  fullWidth: true
   blocks:
     - id: spanning_basic
       type: Descriptions
@@ -311,6 +318,7 @@
             span: 3
 
 - title: Colon Control
+  fullWidth: true
   blocks:
     - id: colon_true
       type: Descriptions
@@ -338,6 +346,7 @@
             value: Platform
 
 - title: No Title
+  fullWidth: true
   blocks:
     - id: no_title_borderless
       type: Descriptions
@@ -374,6 +383,7 @@
             value: us-west-2a
 
 - title: HTML in Labels and Values
+  fullWidth: true
   blocks:
     - id: html_content
       type: Descriptions
@@ -392,6 +402,7 @@
             span: 3
 
 - title: With Extra Slot
+  fullWidth: true
   blocks:
     - id: desc_with_extra
       type: Descriptions
@@ -425,6 +436,7 @@
                 size: small
 
 - title: Realistic - User Account
+  fullWidth: true
   blocks:
     - id: user_account
       type: Descriptions
@@ -454,6 +466,7 @@
             span: 2
 
 - title: Realistic - Order Details
+  fullWidth: true
   blocks:
     - id: order_details
       type: Descriptions
@@ -497,6 +510,7 @@
             value: 456 Oak Avenue, Portland, OR 97201
 
 - title: Realistic - System Information
+  fullWidth: true
   blocks:
     - id: system_info
       type: Descriptions
@@ -531,6 +545,7 @@
             value: v2.14.3-rc1
 
 - title: Per-Item Styles
+  fullWidth: true
   blocks:
     - id: item_label_styles
       type: Descriptions
@@ -556,7 +571,6 @@
             value: $175,100
             labelStyle:
               fontWeight: bold
-              backgroundColor: '#f6ffed'
             contentStyle:
               color: '#52c41a'
               fontWeight: bold
@@ -569,18 +583,13 @@
         items:
           - label: Critical
             value: 2 issues
-            style:
-              backgroundColor: '#fff2f0'
           - label: Warning
             value: 5 issues
-            style:
-              backgroundColor: '#fffbe6'
           - label: Info
             value: 12 issues
-            style:
-              backgroundColor: '#e6f4ff'
 
 - title: CSS Key Styling
+  fullWidth: true
   blocks:
     - id: css_element
       type: Descriptions
@@ -619,6 +628,7 @@
           fontStyle: italic
 
 - title: Tailwind Classes
+  fullWidth: true
   blocks:
     - id: tailwind_shadow
       type: Descriptions
@@ -641,7 +651,7 @@
             value: $48M ARR
     - id: tailwind_dark_bg
       type: Box
-      class: bg-slate-800 p-4 rounded-lg
+      class: bg-bg-layout p-4 rounded-lg
       blocks:
         - id: tailwind_on_dark
           type: Descriptions
@@ -657,6 +667,7 @@
                 value: '<span style="color: #fc8181;">us-west-2</span>'
 
 - title: Theme Token Overrides
+  fullWidth: true
   blocks:
     - id: theme_custom_colors
       type: Descriptions
@@ -664,7 +675,6 @@
         title: Custom Label Colors
         bordered: true
         theme:
-          labelBg: '#e6f4ff'
           labelColor: '#0958d9'
           contentColor: '#434343'
         items:
@@ -686,7 +696,6 @@
         title: Warm Color Palette
         bordered: true
         theme:
-          labelBg: '#fff7e6'
           labelColor: '#ad4e00'
           titleColor: '#ad4e00'
           contentColor: '#613400'
@@ -732,7 +741,6 @@
         title: Success Theme
         bordered: true
         theme:
-          labelBg: '#f6ffed'
           labelColor: '#135200'
           titleColor: '#135200'
           contentColor: '#237804'
@@ -765,6 +773,7 @@
             value: Design
 
 - title: Combined Features
+  fullWidth: true
   blocks:
     - id: combined_full_profile
       type: Descriptions
@@ -775,7 +784,6 @@
         column: 2
         size: small
         theme:
-          labelBg: '#f0f5ff'
           labelColor: '#1d39c4'
         items:
           - label: Employee ID

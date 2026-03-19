@@ -528,7 +528,7 @@
   blocks:
     - id: css_tailwind_bg
       type: Steps
-      class: bg-gray-50 p-4 rounded-lg
+      class: bg-bg-layout p-4 rounded-lg
       properties:
         current: 1
         items:

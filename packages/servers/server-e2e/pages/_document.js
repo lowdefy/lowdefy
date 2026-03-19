@@ -27,6 +27,15 @@ class LowdefyDocument extends Document {
     return (
       <Html className="lowdefy">
         <Head>
+          {/* CSS cascade layer order — must appear before any other CSS so that
+              antd's CSS-in-JS layer overrides Tailwind's base/preflight layer.
+              Next.js strips the @layer statement from globals.css during bundling,
+              so we declare it here to guarantee it loads first. */}
+          <style
+            dangerouslySetInnerHTML={{
+              __html: '@layer theme, base, antd, components, utilities;',
+            }}
+          />
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
           <link rel="icon" type="image/svg+xml" href={`${basePath}/icon.svg`} />
           <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />

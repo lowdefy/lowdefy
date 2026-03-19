@@ -216,7 +216,6 @@
       style:
         /element:
           borderColor: '#722ed1'
-          backgroundColor: '#f9f0ff'
     - id: style_label
       type: PasswordInput
       properties:

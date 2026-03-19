@@ -308,7 +308,6 @@
         columns: 2
         gutter: 12
         theme:
-          colorBgContainer: '#f0f5ff'
           colorBorderSecondary: '#adc6ff'
           borderRadiusLG: 16
       blocks:
@@ -342,7 +341,6 @@
         columns: 2
         gutter: 12
         theme:
-          colorBgContainer: '#fffbe6'
           colorBorderSecondary: '#ffd591'
           colorTextHeading: '#d46b08'
           colorText: '#874d00'
@@ -373,7 +371,7 @@
     - id: mas_tw
       type: Masonry
       class:
-        element: bg-gray-100 p-6 rounded-xl
+        element: bg-bg-layout p-6 rounded-xl
       properties:
         columns: 2
         gutter: 12
@@ -790,7 +788,7 @@
     - id: mas_products
       type: Masonry
       class:
-        element: bg-gray-50 p-6 rounded-xl
+        element: bg-bg-layout p-6 rounded-xl
       properties:
         columns:
           xs: 1

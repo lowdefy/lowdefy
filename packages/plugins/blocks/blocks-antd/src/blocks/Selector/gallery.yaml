@@ -482,7 +482,6 @@
             value: cherry
       style:
         /element:
-          backgroundColor: '#f0f5ff'
           borderColor: '#4096ff'
           borderRadius: 8
     - id: css_label
@@ -666,7 +665,6 @@
           - label: Elderberry
             value: elderberry
         theme:
-          optionSelectedBg: '#f9f0ff'
           optionSelectedColor: '#722ed1'
           optionSelectedFontWeight: 700
     - id: theme_border_colors
@@ -734,14 +732,11 @@
           colorPrimary: '#722ed1'
           borderRadius: 12
           fontSize: 15
-          optionSelectedBg: '#f9f0ff'
           optionSelectedColor: '#531dab'
-          optionActiveBg: '#efdbff'
           hoverBorderColor: '#b37feb'
           activeBorderColor: '#722ed1'
           activeOutlineColor: rgba(114, 46, 209, 0.1)
           optionHeight: 40
-          selectorBg: '#fafafa'
 - title: Combined Features
   blocks:
     - id: combined_search_styled
@@ -796,7 +791,6 @@
             filterString: Support Help Customer Service
         theme:
           borderRadius: 12
-          optionSelectedBg: '#e6f7ff'
           optionHeight: 40
     - id: combined_borderless_small
       type: Selector
@@ -835,7 +829,6 @@
         theme:
           colorPrimary: '#13c2c2'
           borderRadius: 8
-          optionSelectedBg: '#e6fffb'
           hoverBorderColor: '#13c2c2'
           activeBorderColor: '#08979c'
 

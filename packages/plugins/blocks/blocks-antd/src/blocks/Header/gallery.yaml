@@ -376,7 +376,7 @@
               type: Content
               style:
                 padding: 24px
-                background: '#fff'
+                background: var(--ant-color-bg-container)
               blocks:
                 - id: header_app_shell_content_title
                   type: Title
@@ -504,7 +504,7 @@
           type: Content
           style:
             padding: 64px 48px
-            background: '#fff'
+            background: var(--ant-color-bg-container)
             textAlign: center
           blocks:
             - id: header_marketing_hero_title

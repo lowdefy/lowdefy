@@ -302,7 +302,7 @@
   blocks:
     - id: css_tailwind_bg
       type: Paragraph
-      class: bg-blue-50 p-3 rounded-lg
+      class: bg-bg-layout p-3 rounded-lg
       properties:
         content: Paragraph styled with Tailwind classes for background, padding, and border radius.
     - id: css_tailwind_border

@@ -497,7 +497,7 @@
         type: success
     - id: css_dark_bg
       type: Box
-      class: bg-gray-900 p-6 rounded-xl
+      class: bg-bg-layout p-6 rounded-xl
       blocks:
         - id: css_on_dark_info
           type: Alert
@@ -554,42 +554,6 @@
         theme:
           defaultPadding: '16px 24px'
           withDescriptionPadding: '28px 32px'
-    - id: theme_success_colors
-      type: Alert
-      properties:
-        message: Custom success colors
-        description: Overriding the success background and border colors to use a deeper green tone.
-        type: success
-        theme:
-          colorSuccessBg: '#d4edda'
-          colorSuccessBorder: '#28a745'
-    - id: theme_info_colors
-      type: Alert
-      properties:
-        message: Custom info colors
-        description: A purple-tinted info alert achieved by overriding the info background and border tokens.
-        type: info
-        theme:
-          colorInfoBg: '#f0e6ff'
-          colorInfoBorder: '#722ed1'
-    - id: theme_warning_colors
-      type: Alert
-      properties:
-        message: Custom warning colors
-        description: Warmer amber tones applied to the warning alert for a distinct visual identity.
-        type: warning
-        theme:
-          colorWarningBg: '#fff8e1'
-          colorWarningBorder: '#ff8f00'
-    - id: theme_error_colors
-      type: Alert
-      properties:
-        message: Custom error colors
-        description: A darker red theme for critical error alerts that demand immediate attention.
-        type: error
-        theme:
-          colorErrorBg: '#fce4e4'
-          colorErrorBorder: '#c0392b'
     - id: theme_no_radius
       type: Alert
       properties:
@@ -610,13 +574,11 @@
       type: Alert
       properties:
         message: Fully customized alert
-        description: This alert combines multiple theme token overrides including colors, padding, radius, and font size for a completely custom appearance.
+        description: This alert combines multiple theme token overrides including padding, radius, font size, and icon size for a completely custom appearance.
         type: info
         theme:
           borderRadius: 12
           fontSize: 15
-          colorInfoBg: '#e8f4fd'
-          colorInfoBorder: '#0288d1'
           withDescriptionPadding: '24px 28px'
           withDescriptionIconSize: 28
 
@@ -737,6 +699,3 @@
         closable: true
         closeText: Understood
         icon: AiOutlineExperiment
-        theme:
-          colorInfoBg: '#f3e8ff'
-          colorInfoBorder: '#7c3aed'

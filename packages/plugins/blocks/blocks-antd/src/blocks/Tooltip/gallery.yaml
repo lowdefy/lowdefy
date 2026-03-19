@@ -961,7 +961,7 @@
           blocks:
             - id: tooltip_table_header_labels
               type: Box
-              class: bg-gray-50 px-4 py-2 border-b border-gray-200
+              class: bg-bg-layout px-4 py-2 border-b border-border
               layout:
                 gap: 0
               blocks:
@@ -975,7 +975,7 @@
                   blocks:
                     - id: tooltip_table_hdr_product_text
                       type: Paragraph
-                      class: font-semibold text-gray-600 text-sm m-0
+                      class: font-semibold text-text-secondary text-sm m-0
                       properties:
                         content: Product
                 - id: tooltip_table_hdr_revenue
@@ -988,7 +988,7 @@
                   blocks:
                     - id: tooltip_table_hdr_revenue_text
                       type: Paragraph
-                      class: font-semibold text-gray-600 text-sm m-0
+                      class: font-semibold text-text-secondary text-sm m-0
                       properties:
                         content: Revenue
                 - id: tooltip_table_hdr_units
@@ -1001,12 +1001,12 @@
                   blocks:
                     - id: tooltip_table_hdr_units_text
                       type: Paragraph
-                      class: font-semibold text-gray-600 text-sm m-0
+                      class: font-semibold text-text-secondary text-sm m-0
                       properties:
                         content: Units Sold
             - id: tooltip_table_row_1
               type: Box
-              class: px-4 py-2 border-b border-gray-100
+              class: px-4 py-2 border-b border-border
               layout:
                 gap: 0
               blocks:
@@ -1137,7 +1137,7 @@
                   type: Paragraph
                   layout:
                     flex: 1 1 0
-                  class: text-gray-500 text-sm m-0
+                  class: text-text-secondary text-sm m-0
                   properties:
                     content: Active Users
                 - id: tooltip_dashboard_users_info
@@ -1183,7 +1183,7 @@
                   type: Paragraph
                   layout:
                     flex: 1 1 0
-                  class: text-gray-500 text-sm m-0
+                  class: text-text-secondary text-sm m-0
                   properties:
                     content: Monthly Revenue
                 - id: tooltip_dashboard_revenue_info
