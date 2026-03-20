@@ -259,3 +259,108 @@ test('builds multiple tools from multiple endpoint configs', async () => {
   expect(mockTool).toHaveBeenCalledTimes(2);
   expect(Object.keys(lastAgentConfig.tools)).toEqual(['search', 'write']);
 });
+
+test('tool execute returns null when endpoint response is null', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Nullable endpoint',
+    payloadSchema: { type: 'object' },
+  });
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: null });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: ['nullable'], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig },
+  });
+
+  const toolDef = mockTool.mock.calls[0][0];
+  const executeResult = await toolDef.execute({});
+  expect(executeResult).toBeNull();
+});
+
+test('cleanBuildArtifact strips non-enumerable serializer markers from payload schema', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const payloadSchema = { type: 'object', properties: { query: { type: 'string' } } };
+  Object.defineProperty(payloadSchema, '~k', { value: 'some.config.key', enumerable: false });
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Schema test endpoint',
+    payloadSchema,
+  });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: ['schema-test'], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+
+  const cleanedSchema = mockJsonSchema.mock.calls[0][0];
+  expect(cleanedSchema['~k']).toBeUndefined();
+  expect(cleanedSchema).toEqual({ type: 'object', properties: { query: { type: 'string' } } });
+});
+
+test('tool execute cleans build artifact markers from response', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const response = { data: 'result value', count: 42 };
+  Object.defineProperty(response, '~k', { value: 'response.config.key', enumerable: false });
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Response cleaning endpoint',
+    payloadSchema: { type: 'object' },
+  });
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: ['response-test'], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig },
+  });
+
+  const toolDef = mockTool.mock.calls[0][0];
+  const executeResult = await toolDef.execute({});
+  expect(executeResult['~k']).toBeUndefined();
+  expect(executeResult).toEqual({ data: 'result value', count: 42 });
+});
+
+test('empty tools array produces empty tools object', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getEndpointConfig = jest.fn();
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+
+  expect(lastAgentConfig.tools).toEqual({});
+  expect(mockTool).not.toHaveBeenCalled();
+});
