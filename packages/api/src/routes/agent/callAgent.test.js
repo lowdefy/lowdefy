@@ -395,3 +395,188 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
   expect(endpointResult.success).toBe(true);
   expect(endpointResult.status).toBe('success');
 });
+
+test('callAgent propagates error when connection.create throws', async () => {
+  const mockCreate = jest.fn().mockImplementation(() => {
+    throw new Error('Invalid API key');
+  });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'AnthropicChat',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-invalid' },
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { AnthropicChat: { resolver: jest.fn(), schema: {} } };
+
+  await expect(
+    callAgent(context, {
+      agentId: 'my-agent',
+      pageId: 'my-page',
+      messages: [],
+    })
+  ).rejects.toThrow('Invalid API key');
+});
+
+test('callAgent propagates error when resolver throws', async () => {
+  const mockResolver = jest.fn().mockRejectedValue(new Error('Model not available'));
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'AnthropicChat',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+
+  await expect(
+    callAgent(context, {
+      agentId: 'my-agent',
+      pageId: 'my-page',
+      messages: [],
+    })
+  ).rejects.toThrow('Model not available');
+});
+
+test('callAgent resolver context callEndpoint returns error when routine fails', async () => {
+  let capturedResolverContext;
+  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+    capturedResolverContext = resolverCtx;
+    return { toUIMessageStreamResponse: jest.fn() };
+  });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'AnthropicChat',
+    connectionId: 'my-anthropic',
+    tools: ['failing-tool'],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+  const endpointConfigs = {
+    'failing-tool': {
+      endpointId: 'failing-tool',
+      type: 'Api',
+      auth: { public: true },
+      description: 'Failing endpoint',
+      payloadSchema: { type: 'object' },
+      routine: { ':throw': 'Something went wrong' },
+    },
+  };
+
+  const readConfigFile = createMockReadConfigFile({
+    agentConfig,
+    connectionConfig,
+    endpointConfigs,
+  });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'my-page',
+    messages: [],
+  });
+
+  const endpointResult = await capturedResolverContext.callEndpoint('failing-tool', {
+    payload: {},
+  });
+  expect(endpointResult.success).toBe(false);
+  expect(endpointResult.status).not.toBe('success');
+});
+
+test('callAgent resolver context getEndpointConfig throws for missing endpoint', async () => {
+  let capturedResolverContext;
+  const mockResolver = jest.fn().mockImplementation(({ context: resolverCtx }) => {
+    capturedResolverContext = resolverCtx;
+    return { toUIMessageStreamResponse: jest.fn() };
+  });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'AnthropicChat',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'my-page',
+    messages: [],
+  });
+
+  await expect(
+    capturedResolverContext.getEndpointConfig({ endpointId: 'non-existent' })
+  ).rejects.toThrow();
+});
