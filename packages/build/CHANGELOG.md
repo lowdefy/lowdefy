@@ -1,5 +1,25 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- 1ce9f9a56: fix(build): Dev server dynamically loads icons discovered during JIT page builds.
+
+  Icons referenced only inside page blocks (e.g., `icon: FiAperture` on a Button) were not available in the dev server's static bundle, causing a fallback icon to render. The JIT page builder now detects missing icons when a page is compiled, extracts their SVG data from react-icons, and serves it via a dynamic API endpoint. The client fetches and merges these icons at runtime without triggering a Next.js rebuild or server restart.
+
+- ca26d3441: Resolve sibling refs in parallel using Promise.all to interleave CPU and I/O during build.
+- Updated dependencies [fac48c10a]
+  - @lowdefy/operators-js@4.7.1
+  - @lowdefy/blocks-basic@4.7.1
+  - @lowdefy/blocks-loaders@4.7.1
+  - @lowdefy/operators@4.7.1
+  - @lowdefy/ajv@4.7.1
+  - @lowdefy/errors@4.7.1
+  - @lowdefy/helpers@4.7.1
+  - @lowdefy/node-utils@4.7.1
+  - @lowdefy/nunjucks@4.7.1
+
 ## 4.7.0
 
 ### Minor Changes

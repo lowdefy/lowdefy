@@ -409,4 +409,25 @@ describe('getModuleRefContent', () => {
     result1.content[0].id = 'consumer-a/home';
     expect(result2.content[0].id).toBe('consumer-a/home');
   });
+
+  test('returns non-UI data content from component export', async () => {
+    const dataContent = {
+      timestamp: { _date: 'now' },
+      user: { name: { _user: 'profile.name' } },
+    };
+    const context = createContext({
+      modules: {
+        events: createModuleEntry({
+          id: 'events',
+          components: [{ id: 'change_stamp', component: dataContent }],
+        }),
+      },
+    });
+    const result = await getModuleRefContent({
+      context,
+      refDef: { module: 'events', component: 'change_stamp' },
+      referencedFrom: 'lowdefy.yaml',
+    });
+    expect(result).toEqual({ content: dataContent, entryId: 'events' });
+  });
 });

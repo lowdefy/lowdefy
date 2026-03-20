@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { GithubOutlined, LinkedinOutlined } from '@ant-design/icons';
@@ -131,7 +132,9 @@ export default function ArticlePage({ article }) {
       {/* Article Body */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-3xl mx-auto article-content">
-          <Markdown components={markdownComponents}>{article.markdown}</Markdown>
+          <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {article.markdown}
+          </Markdown>
         </div>
       </div>
 

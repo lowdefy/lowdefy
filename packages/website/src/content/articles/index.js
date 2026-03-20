@@ -1,6 +1,7 @@
 import matter from 'gray-matter';
 
 import buildFasterRaw from '../../../content/articles/lowdefy-4-6-build-faster-break-less.md';
+import jsonParseRaw from '../../../content/articles/lowdefy-4-7-faster-builds-json-parse.md';
 
 function parseArticle(slug, raw) {
   const { data, content } = matter(raw);
@@ -17,7 +18,10 @@ function parseArticle(slug, raw) {
   };
 }
 
-const articles = [parseArticle('lowdefy-4-6-build-faster-break-less', buildFasterRaw)]
+const articles = [
+  parseArticle('lowdefy-4-6-build-faster-break-less', buildFasterRaw),
+  parseArticle('lowdefy-4-7-faster-builds-json-parse', jsonParseRaw),
+]
   .filter((a) => !a.draft)
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 

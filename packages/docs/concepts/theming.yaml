@@ -129,11 +129,11 @@ _ref:
                   primaryColor: '#6366f1'
             ```
 
-            Under the hood, `properties.theme` wraps the block in a scoped `ConfigProvider` with the specified component tokens.
+            Under the hood, `properties.theme` wraps the block in a scoped [ConfigProvider](/ConfigProvider) with the specified component tokens.
 
             ## ConfigProvider block
 
-            For scoped theming of a group of blocks, use the `ConfigProvider` container block:
+            For scoped theming of a group of blocks, use the [ConfigProvider](/ConfigProvider) container block:
 
             ```yaml
             - id: dark_section
@@ -205,7 +205,7 @@ _ref:
                 algorithm: dark
             ```
 
-            Or scope dark mode to a section using ConfigProvider:
+            Or scope dark mode to a section using [ConfigProvider](/ConfigProvider):
 
             ```yaml
             - id: dark_section
@@ -325,7 +325,7 @@ _ref:
               - Use `algorithm: dark` or `algorithm: compact` for theme variants.
               - Override tokens per component type via `theme.antd.components`.
               - Override tokens per block via `properties.theme`.
-              - Use `ConfigProvider` block for scoped theming of block groups.
+              - Use [ConfigProvider](/ConfigProvider) block for scoped theming of block groups.
               - Access tokens in expressions with the `_theme` operator.
               - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
               - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.

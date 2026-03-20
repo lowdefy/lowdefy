@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- @lowdefy/engine@4.7.1
+- @lowdefy/layout@4.7.1
+- @lowdefy/block-utils@4.7.1
+- @lowdefy/errors@4.7.1
+- @lowdefy/helpers@4.7.1
+- @lowdefy/logger@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

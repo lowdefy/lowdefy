@@ -31,7 +31,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or role based access controlled (RBAC) configuration. Blocks such as `PageSiderMenu` render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
+            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or role based access controlled (RBAC) configuration. Blocks such as [PageSiderMenu](/PageSiderMenu) render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
 
             By default blocks using a menu, like `PageSiderMenu`, will use the menu with `id: default`. This means that if you create a menu object with `id: default`, this will be used unless another menu is configured and referenced under the block properties, allowing for page specific menu configurations.
 
@@ -41,7 +41,7 @@ _ref:
 
             The schema for a menu object is:
 
-            - `id: string`: __Required__ - A identifier for the menu. If it is `default`, it will be used as default by blocks, like `PageHeaderMenu`, which display a menu.
+            - `id: string`: __Required__ - A identifier for the menu. If it is `default`, it will be used as default by blocks, like [PageHeaderMenu](/PageHeaderMenu), which display a menu.
             - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that form the links in the menu. `MenuGroups` can be two levels deep.
 
             The schema for a `MenuLink` is:

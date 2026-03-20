@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- Updated dependencies [fac48c10a]
+  - @lowdefy/operators-js@4.7.1
+  - @lowdefy/operators@4.7.1
+  - @lowdefy/ajv@4.7.1
+  - @lowdefy/errors@4.7.1
+  - @lowdefy/helpers@4.7.1
+  - @lowdefy/node-utils@4.7.1
+  - @lowdefy/nunjucks@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

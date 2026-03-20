@@ -44,7 +44,7 @@ _ref:
             | Comment block removed | Apps using Comment | Use Card + Flex + Avatar |
             | Property renames | Various blocks | See table below |
 
-            ## `_moment` renamed to `_dayjs`
+            ## `_moment` renamed to [`_dayjs`](/_dayjs)
 
             The `_moment` operator has been renamed to `_dayjs`. The underlying library has changed from [Moment.js](https://momentjs.com/) to [Day.js](https://day.js.org/), which is significantly smaller (~2KB vs ~70KB).
 
@@ -118,7 +118,7 @@ _ref:
                   format: 'D MMM YYYY'
             ```
 
-            ## Layout Grid System
+            ## [Layout Grid System](/layout-overview)
 
             The layout grid system has been rewritten from the Ant Design Row/Col grid to a standalone CSS custom properties grid using Tailwind CSS breakpoints.
 
@@ -218,7 +218,7 @@ _ref:
 
             Setting `span: 0` now hides the block (`display: none`) instead of making it full-width.
 
-            ### `_media` operator
+            ### [`_media`](/_media) operator
 
             The `_media` operator now returns `"2xl"` instead of `"xxl"` for the largest breakpoint. Update any comparisons:
 
@@ -346,14 +346,14 @@ _ref:
 
             | Block | Remove | Use instead |
             |---|---|---|
-            | Card | `headerStyle`, `bodyStyle` | `style: { /header }`, `style: { /body }` |
-            | Modal | `bodyStyle`, `maskStyle` | `style: { /body }`, `style: { /mask }` |
-            | Drawer | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `style: { /wrapper }`, `style: { /header }`, `style: { /body }`, `style: { /mask }`, `style: { /content }` |
-            | Tabs | `tabBarStyle` | `style: { /tabBar }` |
+            | [Card](/Card) | `headerStyle`, `bodyStyle` | `style: { /header }`, `style: { /body }` |
+            | [Modal](/Modal) | `bodyStyle`, `maskStyle` | `style: { /body }`, `style: { /mask }` |
+            | [Drawer](/Drawer) | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `style: { /wrapper }`, `style: { /header }`, `style: { /body }`, `style: { /mask }`, `style: { /content }` |
+            | [Tabs](/Tabs) | `tabBarStyle` | `style: { /tabBar }` |
             | ConfirmModal | `bodyStyle` | `style: { /body }` |
-            | Statistic | `valueStyle` | `style: { /value }` |
-            | Descriptions | `contentStyle`, `labelStyle` | `style: { /content }`, `style: { /label }` |
-            | Tooltip | `overlayStyle` | `style: { /inner }` |
+            | [Statistic](/Statistic) | `valueStyle` | `style: { /value }` |
+            | [Descriptions](/Descriptions) | `contentStyle`, `labelStyle` | `style: { /content }`, `style: { /label }` |
+            | [Tooltip](/Tooltip) | `overlayStyle` | `style: { /inner }` |
 
             #### Before (v4)
             ```yaml
@@ -427,16 +427,16 @@ _ref:
 
             | Block | Old property | New property |
             |---|---|---|
-            | Modal | `visible` | `open` |
-            | Tooltip | `defaultVisible` | `defaultOpen` |
+            | [Modal](/Modal) | `visible` | `open` |
+            | [Tooltip](/Tooltip) | `defaultVisible` | `defaultOpen` |
             | Tooltip | event `onVisibleChange` | event `onOpenChange` |
-            | Progress | `gapPosition` | `gapPlacement` |
-            | Carousel | `dotPosition` | `dotPlacement` |
-            | Collapse | `expandIconPosition` | `expandIconPlacement` |
+            | [Progress](/Progress) | `gapPosition` | `gapPlacement` |
+            | [Carousel](/Carousel) | `dotPosition` | `dotPlacement` |
+            | [Collapse](/Collapse) | `expandIconPosition` | `expandIconPlacement` |
             | Collapse | `bordered` | `variant` (`outlined` / `borderless`) |
-            | Notification | `message` | `title` |
-            | Tabs | `tabPosition` | `tabPlacement` (`left` → `start`, `right` → `end`) |
-            | Divider | `type` | `orientation` |
+            | [Notification](/Notification) | `message` | `title` |
+            | [Tabs](/Tabs) | `tabPosition` | `tabPlacement` (`left` → `start`, `right` → `end`) |
+            | [Divider](/Divider) | `type` | `orientation` |
             | Divider | `orientation` | `titlePlacement` (`start` / `center` / `end`) |
 
             ## `bordered` → `variant`
@@ -449,9 +449,9 @@ _ref:
             | `bordered: false` | `variant: borderless` |
             | — | `variant: filled` (new option) |
 
-            Affected blocks: AutoComplete, Card, Collapse, Descriptions, DateSelector, DateRangeSelector, DateTimeSelector, MonthSelector, WeekSelector, MultipleSelector, NumberInput, PasswordInput, PhoneNumberInput, Selector, TextArea, TextInput.
+            Affected blocks: [AutoComplete](/AutoComplete), [Card](/Card), [Collapse](/Collapse), [Descriptions](/Descriptions), [DateSelector](/DateSelector), [DateRangeSelector](/DateRangeSelector), [DateTimeSelector](/DateTimeSelector), [MonthSelector](/MonthSelector), [WeekSelector](/WeekSelector), [MultipleSelector](/MultipleSelector), [NumberInput](/NumberInput), [PasswordInput](/PasswordInput), [PhoneNumberInput](/PhoneNumberInput), [Selector](/Selector), [TextArea](/TextArea), [TextInput](/TextInput).
 
-            ## Button `type`/`danger` → `color`/`variant`
+            ## [Button](/Button) `type`/`danger` → `color`/`variant`
 
             The Button block has a new property API:
 
@@ -487,13 +487,13 @@ _ref:
 
             The internal date library has changed from Moment.js to Day.js. Standard date format strings (`YYYY-MM-DD`, `YYYY-MM-DD HH:mm:ss`) work identically. If you use custom format strings, verify they produce the expected output — some moment.js-specific tokens may differ in dayjs.
 
-            Date blocks also have the `bordered` → `variant` change described above.
+            The date blocks — [DateSelector](/DateSelector), [DateRangeSelector](/DateRangeSelector), [DateTimeSelector](/DateTimeSelector), [MonthSelector](/MonthSelector), and [WeekSelector](/WeekSelector) — also have the `bordered` → `variant` change described above.
 
             ## Removed blocks
 
             ### Comment
 
-            The Comment block has been removed (it was removed from antd v5). Use a composition pattern with Card, Flex, Avatar, and Paragraph instead:
+            The Comment block has been removed (it was removed from antd v5). Use a composition pattern with [Card](/Card), [Flex](/Flex), [Avatar](/Avatar), and [Paragraph](/Paragraph) instead:
 
             ```yaml
             - id: comment
@@ -570,7 +570,7 @@ _ref:
             - **`properties.theme`** — Override antd design tokens per block.
             - **`_theme` operator** — Access theme seed tokens in expressions. See [`_theme`](/_theme).
             - **Theming system** — App-level, component-level, and block-level theme customization. See [Theming](/theming).
-            - **Keyboard shortcuts** — Add `events.onClick.shortcut: 'mod+k'` to any event for platform-aware keyboard shortcuts. Blocks like Button, Anchor, Tag, and Menu render a `ShortcutBadge` automatically.
+            - **Keyboard shortcuts** — Add `events.onClick.shortcut: 'mod+k'` to any event for platform-aware keyboard shortcuts. Blocks like [Button](/Button), [Anchor](/Anchor), [Tag](/Tag), and [Menu](/Menu) render a `ShortcutBadge` automatically.
             - **`lowdefy upgrade` CLI** — Run `lowdefy upgrade` to automatically migrate your config from v4 to v5. Includes 20 codemods covering antd prop renames, layout grid migration, dayjs migration, and more. Supports `--plan`, `--dry-run`, and `--resume`.
             - **ECharts v6** — Upgraded to echarts 6.0.0 with improved flex container sizing.
 

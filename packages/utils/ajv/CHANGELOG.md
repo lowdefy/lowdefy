@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- @lowdefy/nunjucks@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

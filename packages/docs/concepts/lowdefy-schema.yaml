@@ -123,7 +123,7 @@ _ref:
 
             ## Menus
 
-            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as `PageSiderMenu` render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
+            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as [PageSiderMenu](/PageSiderMenu) render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
 
             See more about how menu objects are used and defined [here](/menus).
 

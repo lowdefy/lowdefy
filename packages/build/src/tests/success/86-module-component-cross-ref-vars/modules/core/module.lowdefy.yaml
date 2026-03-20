@@ -1,0 +1,32 @@
+name: Core
+description: Core shared components
+
+vars:
+  stamp:
+    type: object
+    description: Audit stamp template
+
+exports:
+  pages:
+    - id: core-home
+  components:
+    - id: stamp
+    - id: link_to_home
+
+pages:
+  - id: core-home
+    type: Box
+    blocks:
+      - id: placeholder
+        type: Paragraph
+        properties:
+          content: Core Home
+
+components:
+  - id: stamp
+    component:
+      _ref: defaults/stamp.yaml
+  - id: link_to_home
+    component:
+      pageId:
+        _module.pageId: core-home

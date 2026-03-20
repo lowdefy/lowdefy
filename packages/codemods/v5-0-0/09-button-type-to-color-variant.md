@@ -20,8 +20,12 @@ For each Button block, replace `type` and `danger` with the equivalent `color` a
 | `text`               | `true`       | `danger`    | `text`        |
 | `link`               | —            | _(omit)_    | `link`        |
 | `link`               | `true`       | `danger`    | `link`        |
+| `ghost`              | —            | _(omit)_    | _(omit)_      |
+| `ghost`              | `true`       | `danger`    | _(omit)_      |
 
 Remove both old properties (`type` under Button properties, and `danger`) and add the new `color` and `variant` properties.
+
+For `type: ghost`, also add `ghost: true` — the `ghost` boolean property still exists in antd v6 and makes the button background transparent.
 
 ## Files to Check
 
@@ -91,6 +95,26 @@ Grep: `type: Button`
   properties:
     title: Cancel
     variant: link
+```
+
+### Before — ghost button
+
+```yaml
+- id: ghost_btn
+  type: Button
+  properties:
+    title: Ghost
+    type: ghost
+```
+
+### After
+
+```yaml
+- id: ghost_btn
+  type: Button
+  properties:
+    title: Ghost
+    ghost: true
 ```
 
 ### Before — default button with danger

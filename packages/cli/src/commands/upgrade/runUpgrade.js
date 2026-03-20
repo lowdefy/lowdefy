@@ -68,6 +68,8 @@ async function runUpgrade({ chain, targetDirectory, codemodsDirectory, logger, r
 
     const result = await executePhase({
       phase,
+      phaseIndex: i,
+      totalPhases: phases.length,
       targetDirectory,
       codemodsDirectory,
       logger,

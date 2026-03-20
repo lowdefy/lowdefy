@@ -22,6 +22,9 @@ import path from 'node:path';
 // The isolated _server/ copy has its own pnpm-workspace.yaml and lockfile.
 // Next.js 16 detects multiple lockfiles and warns about the workspace root.
 // Setting outputFileTracingRoot tells Next.js where the real root is.
+//
+// Turbopack's resolveAlias does not handle absolute paths (it prepends "./"),
+// so we resolve paths relative to __dirname at runtime in next.config.js.
 function patchNextConfig({ targetDir }) {
   const nextConfigPath = path.join(targetDir, 'next.config.js');
   let content = fs.readFileSync(nextConfigPath, 'utf8');
@@ -31,7 +34,15 @@ function patchNextConfig({ targetDir }) {
   if (content.includes('turbopack: {},')) {
     content = content.replace(
       'turbopack: {},',
-      `outputFileTracingRoot: require('path').resolve(__dirname, '../..'),\n  turbopack: {},`
+      [
+        `outputFileTracingRoot: require('path').resolve(__dirname, '../..'),`,
+        `  turbopack: {`,
+        `    resolveAlias: {`,
+        `      react: './' + require('path').relative(__dirname, require('path').dirname(require.resolve('react/package.json'))),`,
+        `      'react-dom': './' + require('path').relative(__dirname, require('path').dirname(require.resolve('react-dom/package.json'))),`,
+        `    },`,
+        `  },`,
+      ].join('\n')
     );
   }
 

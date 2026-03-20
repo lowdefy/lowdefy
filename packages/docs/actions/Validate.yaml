@@ -33,7 +33,7 @@ _ref:
       The `Validate` action is used to validate a users input, usually before information is inserted into a database using a request.
       It is used in conjunction with the `required` and `validate` fields on input blocks. If the validation fails, the `Validate` action will fail, and this will stop the execution of actions that are defined after it.
 
-      The first time a `Validate` action is called, validation errors and warnings are shown to the user. The `Reset` action resets the validation status and the page `state`. The `ResetValidation` action resets only the validation status.
+      The first time a `Validate` action is called, validation errors and warnings are shown to the user. The [`Reset`](/Reset) action resets the validation status and the page `state`. The [`ResetValidation`](/ResetValidation) action resets only the validation status.
 
       The `Validate` action `blockIds` or `regex` params are used to limit which blocks are validated. Only the matched blocks will be validated, and validation results are shown for only those matched blocks.
 

@@ -50,44 +50,45 @@ function copyToClipboard(text) {
   }
 }
 
-async function handlePrompt({ path: filePath, codemodId, logger }) {
+async function handlePrompt({ path: filePath, codemodId, stepLabel, logger }) {
+  const prefix = stepLabel ? `  ${stepLabel}` : '   ';
   const aiTool = detectAiTool();
 
   if (!filePath || !fs.existsSync(filePath)) {
-    logger.warn(`No prompt/guide found for ${codemodId}. Skipping.`);
+    logger.warn(`${prefix} No prompt/guide found for ${codemodId}. Skipping.`);
     return { status: 'skipped' };
   }
 
   const content = fs.readFileSync(filePath, 'utf8');
 
   if (aiTool) {
-    logger.info(`    ${aiTool} detected.`);
+    logger.info(`${prefix} ${aiTool} detected.`);
   }
 
-  logger.info('    [1] Copy migration prompt to clipboard');
-  logger.info('    [2] View migration guide');
-  logger.info('    [3] Skip for now');
+  logger.info(`${prefix} [1] Copy migration prompt to clipboard`);
+  logger.info(`${prefix} [2] View migration guide`);
+  logger.info(`${prefix} [3] Skip for now`);
 
-  const answer = await askQuestion('    > ');
+  const answer = await askQuestion(`${prefix} > `);
   const choice = parseInt(answer, 10);
 
   if (choice === 1) {
     const copied = copyToClipboard(content);
     if (copied) {
       logger.info(
-        '    Prompt copied to clipboard. Paste into your AI tool, then press Enter when done.'
+        `${prefix} Prompt copied to clipboard. Paste into your AI tool, then press Enter when done.`
       );
     } else {
-      logger.info('    Could not copy to clipboard. Content:');
+      logger.info(`${prefix} Could not copy to clipboard. Content:`);
       logger.info(content);
     }
-    await askQuestion('    Press Enter when done...');
+    await askQuestion(`${prefix} Press Enter when done...`);
     return { status: 'completed' };
   }
 
   if (choice === 2) {
     logger.info(content);
-    await askQuestion('    Press Enter when done...');
+    await askQuestion(`${prefix} Press Enter when done...`);
     return { status: 'completed' };
   }
 
