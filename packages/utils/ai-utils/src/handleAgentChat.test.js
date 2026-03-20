@@ -16,27 +16,30 @@
 
 import { jest } from '@jest/globals';
 
-const mockStreamText = jest.fn();
 const mockTool = jest.fn();
 const mockJsonSchema = jest.fn();
-const mockConvertToModelMessages = jest.fn();
 const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
+const mockCreateAgentUIStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
+
+let lastAgentConfig = null;
+class MockToolLoopAgent {
+  constructor(config) {
+    this.config = config;
+    lastAgentConfig = config;
+  }
+}
 
 jest.unstable_mockModule('ai', () => ({
-  streamText: mockStreamText,
+  ToolLoopAgent: MockToolLoopAgent,
+  createAgentUIStreamResponse: mockCreateAgentUIStreamResponse,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  convertToModelMessages: mockConvertToModelMessages,
   stepCountIs: mockStepCountIs,
 }));
 
-const STREAM_RESULT = { stream: 'mock-stream' };
-const MODEL_MESSAGES = [{ role: 'user', content: 'Hello' }];
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
-test('calls streamText with correct parameters', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
+test('creates ToolLoopAgent with correct parameters', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
@@ -69,26 +72,26 @@ test('calls streamText with correct parameters', async () => {
     context: { callEndpoint, getEndpointConfig },
   });
 
-  expect(mockConvertToModelMessages).toHaveBeenCalledWith(messages);
   expect(provider).toHaveBeenCalledWith('claude-3-5-sonnet');
   expect(mockStepCountIs).toHaveBeenCalledWith(5);
-  expect(mockStreamText).toHaveBeenCalledWith(
+  expect(lastAgentConfig).toEqual(
     expect.objectContaining({
       model: mockModel,
       system: 'You are a helpful assistant.',
-      messages: MODEL_MESSAGES,
       stopWhen: { type: 'stepCount', count: 5 },
       maxOutputTokens: 1024,
       temperature: 0.7,
       toolChoice: 'required',
     })
   );
-  expect(result).toBe(STREAM_RESULT);
+  expect(mockCreateAgentUIStreamResponse).toHaveBeenCalledWith({
+    agent: expect.any(MockToolLoopAgent),
+    uiMessages: messages,
+  });
+  expect(result).toEqual({ type: 'web-response' });
 });
 
 test('builds tools from endpoint configs', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
 
@@ -120,7 +123,7 @@ test('builds tools from endpoint configs', async () => {
     })
   );
 
-  // Verify execute calls callEndpoint correctly and returns the response
+  // Verify execute calls callEndpoint correctly and cleans the response
   const toolDef = mockTool.mock.calls[0][0];
   const input = { query: 'test' };
   const executeResult = await toolDef.execute(input);
@@ -129,8 +132,6 @@ test('builds tools from endpoint configs', async () => {
 });
 
 test('uses default stopWhen and toolChoice when optional properties missing', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
@@ -149,7 +150,7 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
   });
 
   expect(mockStepCountIs).toHaveBeenCalledWith(10);
-  expect(mockStreamText).toHaveBeenCalledWith(
+  expect(lastAgentConfig).toEqual(
     expect.objectContaining({
       stopWhen: { type: 'stepCount', count: 10 },
       toolChoice: 'auto',
@@ -158,9 +159,6 @@ test('uses default stopWhen and toolChoice when optional properties missing', as
 });
 
 test('handles agent with no tools property defined', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
-
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const getEndpointConfig = jest.fn();
@@ -176,16 +174,10 @@ test('handles agent with no tools property defined', async () => {
   });
 
   expect(getEndpointConfig).not.toHaveBeenCalled();
-  expect(mockStreamText).toHaveBeenCalledWith(
-    expect.objectContaining({
-      tools: {},
-    })
-  );
+  expect(lastAgentConfig.tools).toEqual({});
 });
 
 test('throws when tool endpoint execution fails with error message', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
 
@@ -209,7 +201,6 @@ test('throws when tool endpoint execution fails with error message', async () =>
     context: { callEndpoint, getEndpointConfig },
   });
 
-  // Extract the execute function from the tool definition and invoke it
   const toolDef = mockTool.mock.calls[0][0];
   await expect(toolDef.execute({ query: 'SELECT 1' })).rejects.toThrow(
     'Database connection refused'
@@ -217,8 +208,6 @@ test('throws when tool endpoint execution fails with error message', async () =>
 });
 
 test('throws generic message when tool endpoint fails without error message', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
 
@@ -244,8 +233,6 @@ test('throws generic message when tool endpoint fails without error message', as
 });
 
 test('builds multiple tools from multiple endpoint configs', async () => {
-  mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
-  mockStreamText.mockReturnValue(STREAM_RESULT);
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
 
@@ -270,7 +257,5 @@ test('builds multiple tools from multiple endpoint configs', async () => {
   expect(getEndpointConfig).toHaveBeenNthCalledWith(1, { endpointId: 'search' });
   expect(getEndpointConfig).toHaveBeenNthCalledWith(2, { endpointId: 'write' });
   expect(mockTool).toHaveBeenCalledTimes(2);
-
-  const streamCall = mockStreamText.mock.calls[0][0];
-  expect(Object.keys(streamCall.tools)).toEqual(['search', 'write']);
+  expect(Object.keys(lastAgentConfig.tools)).toEqual(['search', 'write']);
 });
