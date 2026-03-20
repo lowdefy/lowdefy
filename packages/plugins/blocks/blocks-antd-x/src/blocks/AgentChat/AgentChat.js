@@ -20,6 +20,7 @@ import { Sender } from '@ant-design/x';
 
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
+import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({ blockId, methods, pageId, properties }) {
@@ -33,9 +34,15 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const { messages, sendMessage, status, stop } = useChat({
     transport,
     experimental_throttle: 50,
+    onError: (error) => {
+      methods.triggerEvent({
+        name: 'onError',
+        event: { error: error.message, message: error.message },
+      });
+    },
   });
 
-  // useAgentEvents hook will be added in Task 10
+  useAgentEvents({ messages, status, methods });
 
   const isEmpty = messages.length === 0;
   const isStreaming = status === 'streaming';
