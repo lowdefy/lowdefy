@@ -63,6 +63,8 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
         id: 'endpoint:tool1',
         endpointId: 'tool1',
         type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
         routine: [],
       },
     ],
@@ -109,11 +111,13 @@ test('buildAgents multiple valid agents', () => {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
       },
       {
         id: 'agent2',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -124,12 +128,14 @@ test('buildAgents multiple valid agents', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      properties: { model: 'test-model' },
     },
     {
       id: 'agent:agent2',
       agentId: 'agent2',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      properties: { model: 'test-model' },
     },
   ]);
   expect(context.agentIds).toEqual(new Set(['agent1', 'agent2']));
@@ -150,6 +156,7 @@ test('buildAgents agent with no tools works fine', () => {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -160,6 +167,7 @@ test('buildAgents agent with no tools works fine', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      properties: { model: 'test-model' },
     },
   ]);
 });
@@ -179,11 +187,13 @@ test('buildAgents throws on duplicate agentId', () => {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
       },
       {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -266,6 +276,8 @@ test('buildAgents throws when tool endpoint does not exist', () => {
         id: 'endpoint:tool1',
         endpointId: 'tool1',
         type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
         routine: [],
       },
     ],
@@ -275,6 +287,7 @@ test('buildAgents throws when tool endpoint does not exist', () => {
         type: 'AnthropicAgent',
         connectionId: 'conn1',
         tools: ['tool1', 'nonExistentTool'],
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -299,6 +312,7 @@ test('buildAgents matches connectionId against connection.connectionId (post-bui
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'myConn',
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -322,6 +336,8 @@ test('buildAgents matches tool against endpoint.endpointId (post-buildApi)', () 
         id: 'endpoint:myTool',
         endpointId: 'myTool',
         type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
         routine: [],
       },
     ],
@@ -331,6 +347,7 @@ test('buildAgents matches tool against endpoint.endpointId (post-buildApi)', () 
         type: 'AnthropicAgent',
         connectionId: 'conn1',
         tools: ['myTool'],
+        properties: { model: 'test-model' },
       },
     ],
   };
@@ -396,18 +413,21 @@ test('buildAgents tracks agent type usage', () => {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
         '~k': 'agents.0',
       },
       {
         id: 'agent2',
         type: 'OpenAIAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
         '~k': 'agents.1',
       },
       {
         id: 'agent3',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
+        properties: { model: 'test-model' },
         '~k': 'agents.2',
       },
     ],
@@ -436,6 +456,7 @@ test('buildAgents throws when tool endpoint not found and api is undefined', () 
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: ['missing-tool'],
+      properties: { model: 'test-model' },
     }],
   };
   expect(() => buildAgents({ components, context })).toThrow(
@@ -448,16 +469,116 @@ test('buildAgents validates multiple tools all referencing existing endpoints', 
   const components = {
     connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
     api: [
-      { id: 'endpoint:tool1', endpointId: 'tool1', type: 'Api', routine: [] },
-      { id: 'endpoint:tool2', endpointId: 'tool2', type: 'Api', routine: [] },
+      { id: 'endpoint:tool1', endpointId: 'tool1', type: 'Api', description: 'Tool 1', payloadSchema: { type: 'object' }, routine: [] },
+      { id: 'endpoint:tool2', endpointId: 'tool2', type: 'Api', description: 'Tool 2', payloadSchema: { type: 'object' }, routine: [] },
     ],
     agents: [{
       id: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: ['tool1', 'tool2'],
+      properties: { model: 'test-model' },
     }],
   };
   const res = buildAgents({ components, context });
   expect(res.agents[0].tools).toEqual(['tool1', 'tool2']);
+});
+
+test('buildAgents throws when model is not defined', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "model" is not defined at "agent1".'
+  );
+});
+
+test('buildAgents throws when model is not defined with empty properties', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: {},
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "model" is not defined at "agent1".'
+  );
+});
+
+test('buildAgents throws when tool endpoint is missing description', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['tool1'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Endpoint "tool1" is used as an agent tool but does not have a "description".'
+  );
+});
+
+test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['tool1'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Endpoint "tool1" is used as an agent tool but does not have a "payloadSchema".'
+  );
 });

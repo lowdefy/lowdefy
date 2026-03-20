@@ -61,15 +61,34 @@ function buildAgents({ components, context }) {
       );
     }
 
-    // Validate tools reference existing API endpoints
+    // Validate model is defined
+    if (type.isNone(agent.properties?.model)) {
+      throw new ConfigError(`Agent "model" is not defined at "${agent.id}".`, {
+        configKey,
+      });
+    }
+
+    // Validate tools reference existing API endpoints with required tool metadata
     (agent.tools ?? []).forEach((toolEndpointId) => {
-      const endpointExists = (components.api ?? []).some(
+      const endpoint = (components.api ?? []).find(
         (e) => e.id === toolEndpointId || e.endpointId === toolEndpointId
       );
-      if (!endpointExists) {
+      if (!endpoint) {
         throw new ConfigError(
           `Agent "${agent.id}" references tool endpoint "${toolEndpointId}" which does not exist.`,
           { configKey }
+        );
+      }
+      if (type.isNone(endpoint.description)) {
+        throw new ConfigError(
+          `Endpoint "${toolEndpointId}" is used as an agent tool but does not have a "description".`,
+          { configKey: endpoint['~k'] }
+        );
+      }
+      if (type.isNone(endpoint.payloadSchema)) {
+        throw new ConfigError(
+          `Endpoint "${toolEndpointId}" is used as an agent tool but does not have a "payloadSchema".`,
+          { configKey: endpoint['~k'] }
         );
       }
     });
