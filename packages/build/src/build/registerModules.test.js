@@ -27,6 +27,7 @@ function createTestContext(overrides = {}) {
   });
   context.modules = {};
   context.plugins = overrides.plugins ?? [];
+  context.defaultPackageNames = overrides.defaultPackageNames ?? new Set();
   context.errors = [];
   context.typesMap = overrides.typesMap ?? {};
   return context;
@@ -210,7 +211,7 @@ test('resolveLocalManifest throws when required plugin is missing from app', asy
       path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 plugins:
-  - name: "@lowdefy/blocks-antd"
+  - name: "@example/custom-blocks"
     version: ">=4.0.0"
 pages: []
 `,
@@ -228,19 +229,19 @@ pages: []
       },
       context,
     })
-  ).rejects.toThrow('requires plugin "@lowdefy/blocks-antd"');
+  ).rejects.toThrow('requires plugin "@example/custom-blocks"');
 });
 
 test('resolveLocalManifest throws when plugin version does not satisfy range', async () => {
   const context = createTestContext({
-    plugins: [{ name: '@lowdefy/blocks-antd', version: '3.0.0' }],
+    plugins: [{ name: '@example/custom-blocks', version: '3.0.0' }],
   });
   const files = [
     {
       path: '/modules/my-mod/module.lowdefy.yaml',
       content: `
 plugins:
-  - name: "@lowdefy/blocks-antd"
+  - name: "@example/custom-blocks"
     version: ">=4.0.0"
 pages: []
 `,
@@ -263,7 +264,40 @@ pages: []
 
 test('resolveLocalManifest accepts plugin when version satisfies range', async () => {
   const context = createTestContext({
-    plugins: [{ name: '@lowdefy/blocks-antd', version: '4.5.2' }],
+    plugins: [{ name: '@example/custom-blocks', version: '4.5.2' }],
+  });
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+plugins:
+  - name: "@example/custom-blocks"
+    version: ">=4.0.0"
+pages:
+  - id: test-page
+    type: Box
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod']).toBeDefined();
+});
+
+test('resolveLocalManifest skips validation for default plugins', async () => {
+  const context = createTestContext({
+    plugins: [],
+    defaultPackageNames: new Set(['@lowdefy/blocks-antd']),
   });
   const files = [
     {
