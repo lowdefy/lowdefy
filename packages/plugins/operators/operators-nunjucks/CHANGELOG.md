@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- @lowdefy/operators@4.7.1
+- @lowdefy/helpers@4.7.1
+- @lowdefy/nunjucks@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

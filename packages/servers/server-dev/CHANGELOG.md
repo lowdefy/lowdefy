@@ -1,5 +1,46 @@
 # Change Log
 
+## 4.7.1
+
+### Patch Changes
+
+- 1ce9f9a56: fix(build): Dev server dynamically loads icons discovered during JIT page builds.
+
+  Icons referenced only inside page blocks (e.g., `icon: FiAperture` on a Button) were not available in the dev server's static bundle, causing a fallback icon to render. The JIT page builder now detects missing icons when a page is compiled, extracts their SVG data from react-icons, and serves it via a dynamic API endpoint. The client fetches and merges these icons at runtime without triggering a Next.js rebuild or server restart.
+
+- Updated dependencies [18d1c3bfa]
+- Updated dependencies [fac48c10a]
+- Updated dependencies [1ce9f9a56]
+- Updated dependencies [ca26d3441]
+  - @lowdefy/blocks-antd@4.7.1
+  - @lowdefy/operators-js@4.7.1
+  - @lowdefy/build@4.7.1
+  - @lowdefy/blocks-color-selectors@4.7.1
+  - @lowdefy/api@4.7.1
+  - @lowdefy/engine@4.7.1
+  - @lowdefy/blocks-aggrid@4.7.1
+  - @lowdefy/blocks-basic@4.7.1
+  - @lowdefy/blocks-echarts@4.7.1
+  - @lowdefy/blocks-loaders@4.7.1
+  - @lowdefy/blocks-markdown@4.7.1
+  - @lowdefy/blocks-qr@4.7.1
+  - @lowdefy/client@4.7.1
+  - @lowdefy/layout@4.7.1
+  - @lowdefy/actions-core@4.7.1
+  - @lowdefy/operators-change-case@4.7.1
+  - @lowdefy/operators-diff@4.7.1
+  - @lowdefy/operators-moment@4.7.1
+  - @lowdefy/operators-mql@4.7.1
+  - @lowdefy/operators-nunjucks@4.7.1
+  - @lowdefy/operators-uuid@4.7.1
+  - @lowdefy/operators-yaml@4.7.1
+  - @lowdefy/plugin-next-auth@4.7.1
+  - @lowdefy/block-utils@4.7.1
+  - @lowdefy/errors@4.7.1
+  - @lowdefy/helpers@4.7.1
+  - @lowdefy/logger@4.7.1
+  - @lowdefy/node-utils@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

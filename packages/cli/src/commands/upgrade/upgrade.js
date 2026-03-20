@@ -18,6 +18,7 @@ import path from 'path';
 import axios from 'axios';
 import semver from 'semver';
 
+import { updateLowdefyVersion } from './executePhase.js';
 import getCodemods from './getCodemods.js';
 import resolveChain from './resolveChain.js';
 import runUpgrade from './runUpgrade.js';
@@ -53,8 +54,30 @@ async function upgrade({ context }) {
     throw new Error(`Target version "${targetVersion}" is not a valid semver version.`);
   }
 
-  if (semver.gte(currentVersion, targetVersion)) {
+  const targetIsPrerelease = semver.prerelease(targetVersion) !== null;
+
+  if (!targetIsPrerelease && semver.gt(currentVersion, targetVersion)) {
     logger.info(`Already up to date (${currentVersion}).`);
+    return;
+  }
+
+  if (!targetIsPrerelease && semver.eq(currentVersion, targetVersion)) {
+    logger.info(`Version ${currentVersion} is already set in lowdefy.yaml.`);
+    const runCodemods = await askQuestion('Still run codemods for this version? [y/N] ');
+    if (!runCodemods || runCodemods.toLowerCase() !== 'y') {
+      logger.info('Upgrade skipped.');
+      return;
+    }
+  }
+
+  if (targetIsPrerelease) {
+    logger.warn(`
+---------------------------------------------------
+  Upgrading to prerelease version ${targetVersion}.
+  Features may change at any time.
+---------------------------------------------------`);
+    updateLowdefyVersion(configDirectory, targetVersion);
+    logger.info(`Updated lowdefy.yaml to version ${targetVersion}.`);
     return;
   }
 

@@ -1,5 +1,31 @@
 # @lowdefy/server-enterprise
 
+## 4.7.1
+
+### Patch Changes
+
+- Updated dependencies [18d1c3bfa]
+- Updated dependencies [fac48c10a]
+  - @lowdefy/blocks-antd@4.7.1
+  - @lowdefy/operators-js@4.7.1
+  - @lowdefy/api@4.7.1
+  - @lowdefy/blocks-basic@4.7.1
+  - @lowdefy/blocks-loaders@4.7.1
+  - @lowdefy/blocks-markdown@4.7.1
+  - @lowdefy/client@4.7.1
+  - @lowdefy/layout@4.7.1
+  - @lowdefy/actions-core@4.7.1
+  - @lowdefy/connection-axios-http@4.7.1
+  - @lowdefy/connection-mongodb@4.7.1
+  - @lowdefy/operators-nunjucks@4.7.1
+  - @lowdefy/operators-uuid@4.7.1
+  - @lowdefy/plugin-next-auth@4.7.1
+  - @lowdefy/block-utils@4.7.1
+  - @lowdefy/errors@4.7.1
+  - @lowdefy/helpers@4.7.1
+  - @lowdefy/logger@4.7.1
+  - @lowdefy/node-utils@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes

@@ -25,7 +25,7 @@ _ref:
     description: |
       The `SetGlobal` action sets values to the `global` object. It takes an object as parameters, and sets each of those values to the `global` object.
       This is useful if you need to set a value that needs to be available across multiple pages in the app, like the id of a currently selected
-      object. `SetGlobal` works just like `SetState`, except it sets to the `global` object and not `state`.
+      object. `SetGlobal` works just like [`SetState`](/SetState), except it sets to the `global` object and not `state`.
     params: |
       ###### object
       Object with key value pairs to set in `global`.

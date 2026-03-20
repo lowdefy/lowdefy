@@ -118,7 +118,7 @@ _ref:
             | Focus search input | `/` | Suppressed while typing |
             | Navigate home | `alt+H` | |
 
-            > Ant Design's Modal and Drawer components already handle Escape internally. Adding `shortcut: Escape` on an `onClose` event lets you run custom Lowdefy actions (like [`SetState`](/SetState)) when Escape is pressed, but may cause the event to fire twice if the component also closes itself. Use this when you need custom close behavior beyond the component's built-in Escape handling.
+            > Ant Design's [Modal](/Modal) and [Drawer](/Drawer) components already handle Escape internally. Adding `shortcut: Escape` on an `onClose` event lets you run custom Lowdefy actions (like [`SetState`](/SetState)) when Escape is pressed, but may cause the event to fire twice if the component also closes itself. Use this when you need custom close behavior beyond the component's built-in Escape handling.
 
             ## Input field behavior
 

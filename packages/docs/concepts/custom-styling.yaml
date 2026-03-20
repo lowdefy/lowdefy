@@ -125,7 +125,7 @@ _ref:
 
             ## CSS keys
 
-            Each block declares named style targets in its `meta.cssKeys`. For example, the Card block supports: `element`, `header`, `body`, `cover`, `actions`, `extra`.
+            Each block declares named style targets in its `meta.cssKeys`. For example, the [Card](/Card) block supports: `element`, `header`, `body`, `cover`, `actions`, `extra`.
 
             Both `class` (object form) and `style` use `--`-prefixed versions of these keys to target specific parts of a block. The `--` prefix mirrors CSS custom property convention and avoids confusion with CSS property names.
 

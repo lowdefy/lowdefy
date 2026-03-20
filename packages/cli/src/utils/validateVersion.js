@@ -112,7 +112,12 @@ async function validateVersion({
 }
 
 function isExperimentalVersion(version) {
-  return version.includes('alpha') || version.includes('beta') || version.includes('rc');
+  return (
+    version.includes('alpha') ||
+    version.includes('beta') ||
+    version.includes('rc') ||
+    version.includes('experimental')
+  );
 }
 
 export default validateVersion;
