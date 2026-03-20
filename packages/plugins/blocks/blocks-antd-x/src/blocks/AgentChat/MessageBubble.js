@@ -31,9 +31,24 @@ function getToolInfo(part) {
   };
 }
 
+function summarizeToolOutput(output) {
+  if (output === null || output === undefined) return 'Completed (no data)';
+  if (Array.isArray(output)) return `Returned ${output.length} result${output.length === 1 ? '' : 's'}`;
+  if (typeof output === 'object') {
+    const keys = Object.keys(output);
+    if (keys.length <= 3) return `Returned: ${keys.join(', ')}`;
+    return `Returned object with ${keys.length} fields`;
+  }
+  if (typeof output === 'string') {
+    return output.length > 80 ? `${output.substring(0, 80)}...` : output;
+  }
+  return String(output);
+}
+
 function MessageBubble({ content, isStreaming, parts, config }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
+  const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
 
   if (!parts || parts.length === 0) {
     return (
@@ -63,13 +78,22 @@ function MessageBubble({ content, isStreaming, parts, config }) {
         } else if (tool.state === 'output-error') {
           status = 'error';
         }
+        let description;
+        if (status === 'loading') {
+          description = tool.input
+            ? `Called with: ${JSON.stringify(tool.input)}`
+            : 'Running...';
+        } else if (status === 'error') {
+          description = 'Tool execution failed';
+        } else if (toolResultDisplay === 'full') {
+          description = JSON.stringify(tool.output, null, 2);
+        } else {
+          description = summarizeToolOutput(tool.output);
+        }
         toolItems.push({
           key: tool.toolCallId,
           title: tool.toolName,
-          description:
-            status === 'success'
-              ? JSON.stringify(tool.output, null, 2)
-              : JSON.stringify(tool.input),
+          description,
           status,
         });
       }

@@ -20,12 +20,14 @@ const mockStreamText = jest.fn();
 const mockTool = jest.fn();
 const mockJsonSchema = jest.fn();
 const mockConvertToModelMessages = jest.fn();
+const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
 
 jest.unstable_mockModule('ai', () => ({
   streamText: mockStreamText,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
   convertToModelMessages: mockConvertToModelMessages,
+  stepCountIs: mockStepCountIs,
 }));
 
 const STREAM_RESULT = { stream: 'mock-stream' };
@@ -69,12 +71,13 @@ test('calls streamText with correct parameters', async () => {
 
   expect(mockConvertToModelMessages).toHaveBeenCalledWith(messages);
   expect(provider).toHaveBeenCalledWith('claude-3-5-sonnet');
+  expect(mockStepCountIs).toHaveBeenCalledWith(5);
   expect(mockStreamText).toHaveBeenCalledWith(
     expect.objectContaining({
       model: mockModel,
       system: 'You are a helpful assistant.',
       messages: MODEL_MESSAGES,
-      maxSteps: 5,
+      stopWhen: { type: 'stepCount', count: 5 },
       maxOutputTokens: 1024,
       temperature: 0.7,
       toolChoice: 'required',
@@ -112,7 +115,7 @@ test('builds tools from endpoint configs', async () => {
   expect(mockTool).toHaveBeenCalledWith(
     expect.objectContaining({
       description: 'A search endpoint',
-      parameters: payloadSchema,
+      inputSchema: payloadSchema,
       execute: expect.any(Function),
     })
   );
@@ -125,7 +128,7 @@ test('builds tools from endpoint configs', async () => {
   expect(executeResult).toEqual({ hits: [] });
 });
 
-test('uses default maxSteps and toolChoice when optional properties missing', async () => {
+test('uses default stopWhen and toolChoice when optional properties missing', async () => {
   mockConvertToModelMessages.mockResolvedValue(MODEL_MESSAGES);
   mockStreamText.mockReturnValue(STREAM_RESULT);
   mockTool.mockImplementation((def) => def);
@@ -145,9 +148,10 @@ test('uses default maxSteps and toolChoice when optional properties missing', as
     context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
+  expect(mockStepCountIs).toHaveBeenCalledWith(10);
   expect(mockStreamText).toHaveBeenCalledWith(
     expect.objectContaining({
-      maxSteps: 10,
+      stopWhen: { type: 'stepCount', count: 10 },
       toolChoice: 'auto',
     })
   );

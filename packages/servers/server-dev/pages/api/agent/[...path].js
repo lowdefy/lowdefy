@@ -31,8 +31,7 @@ async function handler({ context, req, res }) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ color: 'gray' }, `Agent: ${pageId} → ${agentId}`);
   const { messages } = req.body;
-  const result = await callAgent(context, { agentId, pageId, messages });
-  const webResponse = result.toUIMessageStreamResponse();
+  const webResponse = await callAgent(context, { agentId, pageId, messages });
 
   // Stream the Web Response body to the Next.js response
   res.setHeader('Content-Type', 'text/event-stream');

@@ -910,6 +910,18 @@ export default {
             type: 'Api endpoint "type" should be a string.',
           },
         },
+        description: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "description" should be a string.',
+          },
+        },
+        payloadSchema: {
+          type: 'object',
+          errorMessage: {
+            type: 'Api endpoint "payloadSchema" should be an object.',
+          },
+        },
         routine: {
           anyOf: [
             {

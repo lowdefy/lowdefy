@@ -14,42 +14,56 @@
   limitations under the License.
 */
 
-import { streamText, tool, jsonSchema, convertToModelMessages } from 'ai';
+import {
+  ToolLoopAgent,
+  createAgentUIStreamResponse,
+  tool,
+  jsonSchema,
+  stepCountIs,
+} from 'ai';
+
+// Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
+// properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
+// strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
+function cleanBuildArtifact(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
 async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages } = properties;
-  const modelMessages = await convertToModelMessages(messages);
 
   const tools = {};
   for (const endpointId of agent.tools ?? []) {
     const endpointConfig = await context.getEndpointConfig({ endpointId });
     tools[endpointId] = tool({
       description: endpointConfig.description,
-      parameters: jsonSchema(endpointConfig.payloadSchema),
+      inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
       execute: async (input) => {
         const result = await context.callEndpoint(endpointId, { payload: input });
         if (!result.success) {
           throw new Error(result.error?.message ?? 'Endpoint execution failed');
         }
-        return result.response;
+        return cleanBuildArtifact(result.response);
       },
     });
   }
 
   const model = connection.provider(agent.properties.model);
 
-  const result = streamText({
+  const agentInstance = new ToolLoopAgent({
     model,
     system: agent.properties.instructions,
-    messages: modelMessages,
     tools,
-    maxSteps: agent.properties.maxSteps ?? 10,
+    stopWhen: stepCountIs(agent.properties.maxSteps ?? 10),
     maxOutputTokens: agent.properties.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
   });
 
-  return result;
+  return createAgentUIStreamResponse({
+    agent: agentInstance,
+    uiMessages: messages,
+  });
 }
 
 export default handleAgentChat;
