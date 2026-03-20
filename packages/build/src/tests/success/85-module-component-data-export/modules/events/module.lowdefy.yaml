@@ -1,0 +1,32 @@
+name: Events
+description: Event logging module with data exports
+
+vars:
+  change_stamp:
+    type: object
+    description: Audit metadata template
+  event_types:
+    type: object
+    description: Additional event type display metadata
+
+exports:
+  components:
+    - id: change_stamp
+    - id: event_types
+    - id: regions
+
+components:
+  - id: change_stamp
+    component:
+      _ref: defaults/change_stamp.yaml
+  - id: event_types
+    component:
+      _build.object.assign:
+        - _ref: enums/event_types.yaml
+        - _module.var:
+            key: event_types
+            default: {}
+  - id: regions
+    component:
+      - name: North
+      - name: South
