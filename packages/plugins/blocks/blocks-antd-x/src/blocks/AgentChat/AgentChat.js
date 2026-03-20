@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Sender } from '@ant-design/x';
 
@@ -25,11 +25,9 @@ import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({ blockId, methods, pageId, properties }) {
   const { agentId, welcome, messages: messagesConfig, sender } = properties;
+  const senderRef = useRef(null);
 
-  const transport = useMemo(
-    () => new LowdefyChatTransport({ pageId, agentId }),
-    [pageId, agentId]
-  );
+  const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
   const { messages, sendMessage, status, stop } = useChat({
     transport,
@@ -50,6 +48,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   function handleSend(text) {
     if (!text.trim()) return;
     sendMessage({ text });
+    senderRef.current?.clear();
   }
 
   function handlePromptClick(prompt) {
@@ -59,25 +58,31 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   return (
     <div
       id={blockId}
-      style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 64px)',
+        maxWidth: 800,
+        margin: '0 auto',
+        width: '100%',
+      }}
     >
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+      <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
         {isEmpty ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
-          <MessageList
-            messages={messages}
-            isStreaming={isStreaming}
-            config={messagesConfig}
-          />
+          <MessageList messages={messages} isStreaming={isStreaming} config={messagesConfig} />
         )}
       </div>
-      <Sender
-        placeholder={sender?.placeholder ?? 'Type a message...'}
-        onSubmit={handleSend}
-        onCancel={stop}
-        loading={isStreaming}
-      />
+      <div style={{ padding: '8px 0 16px' }}>
+        <Sender
+          ref={senderRef}
+          placeholder={sender?.placeholder ?? 'Type a message...'}
+          onSubmit={handleSend}
+          onCancel={stop}
+          loading={isStreaming}
+        />
+      </div>
     </div>
   );
 }

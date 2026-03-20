@@ -25,14 +25,11 @@ function MessageList({ messages, isStreaming, config }) {
   // item key — it does not receive the full message object with its parts array. This map
   // bridges that gap so MessageBubble can render tool calls, reasoning, etc.
   const partsMap = new Map(
-    messages
-      .filter((msg) => msg.role === 'assistant')
-      .map((msg) => [msg.id, msg.parts])
+    messages.filter((msg) => msg.role === 'assistant').map((msg) => [msg.id, msg.parts])
   );
 
   const items = messages.map((msg) => {
-    const isLastAssistant =
-      msg === messages[messages.length - 1] && msg.role === 'assistant';
+    const isLastAssistant = msg === messages[messages.length - 1] && msg.role === 'assistant';
     const textContent =
       msg.parts
         ?.filter((part) => part.type === 'text')
@@ -74,7 +71,7 @@ function MessageList({ messages, isStreaming, config }) {
         },
       }}
       autoScroll
-      style={{ flex: 1, overflow: 'auto' }}
+      style={{ height: '100%' }}
     />
   );
 }
