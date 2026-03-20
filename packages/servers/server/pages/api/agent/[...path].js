@@ -30,7 +30,8 @@ async function handler({ context, req, res }) {
   const agentId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
-  const result = await callAgent(context, { agentId, pageId, messages: req.body });
+  const { messages } = req.body;
+  const result = await callAgent(context, { agentId, pageId, messages });
   const webResponse = result.toUIMessageStreamResponse();
 
   // Stream the Web Response body to the Next.js response

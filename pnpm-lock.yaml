@@ -83,7 +83,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
@@ -243,7 +243,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
       pino:
         specifier: 8.16.2
         version: 8.16.2
@@ -1986,6 +1986,9 @@ importers:
       swr:
         specifier: 2.2.4
         version: 2.2.4(react@18.2.0)
+      tailwindcss:
+        specifier: 4.2.2
+        version: 4.2.2
       uuid:
         specifier: 13.0.0
         version: 13.0.0
@@ -11559,6 +11562,9 @@ packages:
 
   tailwindcss@4.2.1:
     resolution: {integrity: sha512-/tBrSQ36vCleJkAOsy9kbNTgaxvGbyOamC30PRePTQe/o1MFwEKHQk4Cn7BNGaPtjp+PuUrByJehM1hgxfq4sw==}
+
+  tailwindcss@4.2.2:
+    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -23591,6 +23597,8 @@ snapshots:
       - yaml
 
   tailwindcss@4.2.1: {}
+
+  tailwindcss@4.2.2: {}
 
   tapable@2.2.1: {}
 

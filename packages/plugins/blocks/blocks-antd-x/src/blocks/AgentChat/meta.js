@@ -14,8 +14,24 @@
   limitations under the License.
 */
 
-import { extractBlockTypes } from '@lowdefy/block-utils';
-
-import * as metas from './metas.js';
-
-export default extractBlockTypes(metas);
+export default {
+  category: 'display',
+  icons: [],
+  valueType: null,
+  events: {
+    onMessageComplete: 'Trigger when a message finishes streaming.',
+    onToolCall: 'Trigger when a tool is invoked.',
+    onToolResult: 'Trigger when a tool completes.',
+    onError: 'Trigger on stream error.',
+  },
+  properties: {
+    type: 'object',
+    properties: {
+      agentId: {
+        type: 'string',
+        description: 'ID of the agent to chat with.',
+      },
+    },
+    required: ['agentId'],
+  },
+};

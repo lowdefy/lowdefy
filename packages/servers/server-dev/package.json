@@ -72,6 +72,7 @@
     "@lowdefy/operators-yaml": "4.7.0",
     "@lowdefy/plugin-next-auth": "4.7.0",
     "@tailwindcss/postcss": "4.2.1",
+    "tailwindcss": "4.2.2",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
     "next": "16.1.6",
