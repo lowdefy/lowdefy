@@ -61,8 +61,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: 'calc(100vh - 64px)',
-        maxWidth: 800,
+        height: properties.height ?? 'calc(100dvh - 170px)',
+        maxWidth: properties.maxWidth ?? 800,
         margin: '0 auto',
         width: '100%',
       }}
