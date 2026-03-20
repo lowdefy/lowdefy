@@ -20,6 +20,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
+import agents from '../../build/plugins/agents.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
@@ -65,6 +66,7 @@ function apiWrapper(handler) {
     const context = {
       // Important to give absolute path so Next can trace build files
       rid: uuid(),
+      agents,
       buildDirectory,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
       config,
