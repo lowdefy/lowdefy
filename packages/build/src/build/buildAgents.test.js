@@ -418,3 +418,46 @@ test('buildAgents tracks agent type usage', () => {
     OpenAIAgent: 1,
   });
 });
+
+test('buildAgents empty agents array initialises agentIds', () => {
+  const context = createTestContext();
+  const components = { connections: [], agents: [] };
+  const res = buildAgents({ components, context });
+  expect(res.agents).toEqual([]);
+  expect(context.agentIds).toEqual(new Set());
+});
+
+test('buildAgents throws when tool endpoint not found and api is undefined', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [{
+      id: 'agent1',
+      type: 'AnthropicAgent',
+      connectionId: 'conn1',
+      tools: ['missing-tool'],
+    }],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" references tool endpoint "missing-tool" which does not exist.'
+  );
+});
+
+test('buildAgents validates multiple tools all referencing existing endpoints', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      { id: 'endpoint:tool1', endpointId: 'tool1', type: 'Api', routine: [] },
+      { id: 'endpoint:tool2', endpointId: 'tool2', type: 'Api', routine: [] },
+    ],
+    agents: [{
+      id: 'agent1',
+      type: 'AnthropicAgent',
+      connectionId: 'conn1',
+      tools: ['tool1', 'tool2'],
+    }],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual(['tool1', 'tool2']);
+});
