@@ -30,7 +30,8 @@
   },
   "type": "module",
   "exports": {
-    "./blocks": "./dist/blocks.js"
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

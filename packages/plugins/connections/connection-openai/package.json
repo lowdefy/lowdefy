@@ -29,7 +29,8 @@
   "type": "module",
   "exports": {
     "./connections": "./dist/connections.js",
-    "./agents": "./dist/agents.js"
+    "./agents": "./dist/agents.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
