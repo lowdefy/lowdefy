@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@lowdefy/ajv": "4.7.1",
-    "@lowdefy/block-utils": "4.7.0",
+    "@lowdefy/block-utils": "4.7.1",
     "@lowdefy/blocks-basic": "4.7.1",
     "@lowdefy/blocks-loaders": "4.7.1",
     "@lowdefy/errors": "4.7.1",
