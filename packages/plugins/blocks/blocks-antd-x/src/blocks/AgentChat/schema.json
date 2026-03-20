@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "agentId": { "type": "string" },
+    "welcome": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": {},
+        "prompts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "description": { "type": "string" },
+              "icon": {}
+            }
+          }
+        }
+      }
+    },
+    "messages": {
+      "type": "object",
+      "properties": {
+        "markdownRendering": { "type": "boolean", "default": true },
+        "showThoughtChain": { "type": "boolean", "default": true },
+        "showReasoning": { "type": "boolean", "default": true }
+      }
+    },
+    "sender": {
+      "type": "object",
+      "properties": {
+        "placeholder": { "type": "string" }
+      }
+    }
+  },
+  "required": ["agentId"]
+}
