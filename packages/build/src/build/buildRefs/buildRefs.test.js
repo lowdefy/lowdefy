@@ -2330,4 +2330,240 @@ size: large`,
       properties: { color: null, size: 'large' },
     });
   });
+
+  test('component ref with consumer _module.pageId passes through unresolved', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { type: 'PageHeaderMenu', blocks: { _var: 'blocks' } },
+            },
+          ],
+          pages: [{ id: 'dashboard' }],
+          connections: [],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    blocks:
+      - id: user-link
+        type: Anchor
+        properties:
+          pageId:
+            _module.pageId: users-list`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual({
+      type: 'PageHeaderMenu',
+      blocks: [
+        {
+          id: 'user-link',
+          type: 'Anchor',
+          properties: {
+            pageId: { '_module.pageId': 'users-list' },
+          },
+        },
+      ],
+    });
+  });
+
+  test('component ref with consumer _module.connectionId passes through unresolved', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { type: 'Box', content: { _var: 'content' } },
+            },
+          ],
+          pages: [],
+          connections: [],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    content:
+      connectionId:
+        _module.connectionId: user-contacts`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual({
+      type: 'Box',
+      content: {
+        connectionId: { '_module.connectionId': 'user-contacts' },
+      },
+    });
+  });
+
+  test('component ref with consumer _module.endpointId passes through unresolved', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { type: 'Box', endpoint: { _var: 'endpoint' } },
+            },
+          ],
+          pages: [],
+          connections: [],
+          api: [],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    endpoint:
+      endpointId:
+        _module.endpointId: update-user`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual({
+      type: 'Box',
+      endpoint: {
+        endpointId: { '_module.endpointId': 'update-user' },
+      },
+    });
+  });
+
+  test('menu ref with _module.pageId still resolves', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          menus: [
+            {
+              id: 'main',
+              links: [
+                {
+                  id: 'dashboard-link',
+                  type: 'MenuLink',
+                  pageId: { '_module.pageId': 'dashboard' },
+                },
+              ],
+            },
+          ],
+          pages: [{ id: 'dashboard' }],
+          connections: [],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  menu: main`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual([
+      {
+        id: 'layout/dashboard-link',
+        type: 'MenuLink',
+        pageId: 'layout/dashboard',
+      },
+    ]);
+  });
+
+  test('menu ref with _module.connectionId still resolves', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          menus: [
+            {
+              id: 'main',
+              links: [
+                {
+                  id: 'data-link',
+                  type: 'MenuLink',
+                  connectionId: { '_module.connectionId': 'db' },
+                },
+              ],
+            },
+          ],
+          pages: [],
+          connections: [{ id: 'db' }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  menu: main`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual([
+      {
+        id: 'layout/data-link',
+        type: 'MenuLink',
+        connectionId: 'layout/db',
+      },
+    ]);
+  });
 });

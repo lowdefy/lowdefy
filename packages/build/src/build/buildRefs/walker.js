@@ -439,7 +439,9 @@ async function resolveRef(node, ctx) {
     content = await resolve(content, childCtx);
 
     // 10. Module ref post-processing — resolve ID operators and scope menu IDs
-    if (refDef.module) {
+    // Component refs skip this: their content mixes module template with consumer vars,
+    // so _module.* operators reference the consumer's module, not the target.
+    if (refDef.module && !refDef.component) {
       const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
       content = resolveModuleOperators({
         input: content,
