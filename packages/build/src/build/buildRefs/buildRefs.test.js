@@ -1985,3 +1985,349 @@ c:
     });
   });
 });
+
+describe('module component refs', () => {
+  test('component ref with vars resolves through deferred _ref', async () => {
+    const componentContent = { _ref: '/mod/components/page.yaml' };
+    Object.defineProperty(componentContent, '~deferredFrom', {
+      value: '/mod/module.lowdefy.yaml',
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: componentContent }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    title: Users`,
+      },
+      {
+        path: '/mod/components/page.yaml',
+        content: `
+heading:
+  _var: title`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ heading: 'Users' });
+  });
+
+  test('component ref with vars resolves inline content', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: { heading: { _var: 'title' } } }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    title: Users`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ heading: 'Users' });
+  });
+
+  test('component ref vars override inner _ref vars', async () => {
+    const componentContent = {
+      _ref: { path: '/mod/components/page.yaml', vars: { color: 'blue' } },
+    };
+    Object.defineProperty(componentContent, '~deferredFrom', {
+      value: '/mod/module.lowdefy.yaml',
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: componentContent }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    title: Users
+    color: red`,
+      },
+      {
+        path: '/mod/components/page.yaml',
+        content: `
+heading:
+  _var: title
+color:
+  _var: color`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ heading: 'Users', color: 'red' });
+  });
+
+  test('component ref with no vars resolves through deferred _ref', async () => {
+    const componentContent = { _ref: '/mod/components/page.yaml' };
+    Object.defineProperty(componentContent, '~deferredFrom', {
+      value: '/mod/module.lowdefy.yaml',
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: componentContent }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page`,
+      },
+      {
+        path: '/mod/components/page.yaml',
+        content: `
+heading:
+  _var: title`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ heading: null });
+  });
+
+  test('two consumers of same deferred component do not leak vars', async () => {
+    const componentContent = { _ref: '/mod/components/page.yaml' };
+    Object.defineProperty(componentContent, '~deferredFrom', {
+      value: '/mod/module.lowdefy.yaml',
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: componentContent }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+consumerA:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      id: users
+consumerB:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      title: Orders`,
+      },
+      {
+        path: '/mod/components/page.yaml',
+        content: `
+id:
+  _var: id
+title:
+  _var: title`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.consumerA).toEqual({ id: 'users', title: null });
+    expect(res.consumerB).toEqual({ id: null, title: 'Orders' });
+  });
+
+  test('two consumers of same inline component do not cross-contaminate', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { id: { _var: 'id' }, type: 'PageHeaderMenu' },
+            },
+          ],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+consumerA:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      id: users
+consumerB:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      id: orders`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.consumerA).toEqual({ id: 'users', type: 'PageHeaderMenu' });
+    expect(res.consumerB).toEqual({ id: 'orders', type: 'PageHeaderMenu' });
+  });
+
+  test('two consumers of same inline component with different var sets', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { id: { _var: 'id' }, title: { _var: 'title' }, type: 'Box' },
+            },
+          ],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+consumerA:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      id: users
+      title: User List
+consumerB:
+  _ref:
+    module: layout
+    component: page
+    vars:
+      id: orders`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res.consumerA).toEqual({ id: 'users', title: 'User List', type: 'Box' });
+    expect(res.consumerB).toEqual({ id: 'orders', title: null, type: 'Box' });
+  });
+
+  test('inline component with nested _ref does not leak consumer vars into nested ref scope', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: {
+                id: 'static-id',
+                type: 'Title',
+                properties: { _ref: '/mod/properties.yaml' },
+              },
+            },
+          ],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    color: red`,
+      },
+      {
+        path: '/mod/properties.yaml',
+        content: `
+color:
+  _var: color
+size: large`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      id: 'static-id',
+      type: 'Title',
+      properties: { color: null, size: 'large' },
+    });
+  });
+});
