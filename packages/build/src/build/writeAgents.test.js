@@ -97,3 +97,9 @@ test('writeAgents agents not an array', async () => {
   };
   await expect(writeAgents({ components, context })).rejects.toThrow('Agents is not an array.');
 });
+
+test('writeAgents agents null', async () => {
+  const components = { agents: null };
+  await writeAgents({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
+});
