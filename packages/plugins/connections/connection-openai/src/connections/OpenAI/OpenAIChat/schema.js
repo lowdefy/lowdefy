@@ -66,6 +66,13 @@ export default {
     toolChoice: {
       description: 'Tool choice configuration.',
     },
+    providerOptions: {
+      type: 'object',
+      description: 'Provider-specific options passed to the AI SDK (e.g. OpenAI reasoningEffort).',
+      errorMessage: {
+        type: 'OpenAIChat agent property "providerOptions" should be an object.',
+      },
+    },
   },
   errorMessage: {
     type: 'OpenAIChat agent properties should be an object.',

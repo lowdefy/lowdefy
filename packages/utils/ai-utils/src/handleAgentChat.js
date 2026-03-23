@@ -52,6 +52,7 @@ async function handleAgentChat({ connection, properties, context }) {
     maxOutputTokens: agent.properties.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
+    providerOptions: agent.properties.providerOptions,
   });
 
   return createAgentUIStreamResponse({

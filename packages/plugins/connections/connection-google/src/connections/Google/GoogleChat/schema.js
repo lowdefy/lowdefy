@@ -66,6 +66,13 @@ export default {
     toolChoice: {
       description: 'Tool choice configuration.',
     },
+    providerOptions: {
+      type: 'object',
+      description: 'Provider-specific options passed to the AI SDK (e.g. Google thinkingConfig).',
+      errorMessage: {
+        type: 'GoogleChat agent property "providerOptions" should be an object.',
+      },
+    },
   },
   errorMessage: {
     type: 'GoogleChat agent properties should be an object.',
