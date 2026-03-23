@@ -25,13 +25,17 @@ const defaultPackages = [
   '@lowdefy/actions-pdf-make',
   '@lowdefy/blocks-aggrid',
   '@lowdefy/blocks-antd',
+  '@lowdefy/blocks-antd-x',
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/blocks-qr',
+  '@lowdefy/connection-anthropic',
   '@lowdefy/connection-axios-http',
+  '@lowdefy/connection-google',
+  '@lowdefy/connection-openai',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-test',
   '@lowdefy/connection-google-sheets',
@@ -59,6 +63,7 @@ async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
   const defaultTypesMap = {
     actions: {},
+    agents: {},
     auth: {
       adapters: {},
       callbacks: {},

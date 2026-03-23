@@ -154,6 +154,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 4.7.1
         version: link:../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-antd-x':
+        specifier: 4.7.1
+        version: link:../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-echarts':
         specifier: 4.7.1
         version: link:../plugins/blocks/blocks-echarts
@@ -166,12 +169,18 @@ importers:
       '@lowdefy/blocks-qr':
         specifier: 4.7.1
         version: link:../plugins/blocks/blocks-qr
+      '@lowdefy/connection-anthropic':
+        specifier: 4.7.1
+        version: link:../plugins/connections/connection-anthropic
       '@lowdefy/connection-axios-http':
         specifier: 4.7.1
         version: link:../plugins/connections/connection-axios-http
       '@lowdefy/connection-elasticsearch':
         specifier: 4.7.1
         version: link:../plugins/connections/connection-elasticsearch
+      '@lowdefy/connection-google':
+        specifier: 4.7.1
+        version: link:../plugins/connections/connection-google
       '@lowdefy/connection-google-sheets':
         specifier: 4.7.1
         version: link:../plugins/connections/connection-google-sheets
@@ -181,6 +190,9 @@ importers:
       '@lowdefy/connection-mongodb':
         specifier: 4.7.1
         version: link:../plugins/connections/connection-mongodb
+      '@lowdefy/connection-openai':
+        specifier: 4.7.1
+        version: link:../plugins/connections/connection-openai
       '@lowdefy/connection-redis':
         specifier: 4.7.1
         version: link:../plugins/connections/connection-redis
@@ -1793,6 +1805,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-antd-x':
+        specifier: 4.7.1
+        version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
         specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-basic
@@ -1802,6 +1817,15 @@ importers:
       '@lowdefy/client':
         specifier: 4.7.1
         version: link:../../client
+      '@lowdefy/connection-anthropic':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-anthropic
+      '@lowdefy/connection-google':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-google
+      '@lowdefy/connection-openai':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-openai
       '@lowdefy/errors':
         specifier: 4.7.1
         version: link:../../utils/errors
@@ -1887,6 +1911,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-antd-x':
+        specifier: 4.7.1
+        version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
         specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-basic
@@ -1905,9 +1932,18 @@ importers:
       '@lowdefy/client':
         specifier: 4.7.1
         version: link:../../client
+      '@lowdefy/connection-anthropic':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-anthropic
       '@lowdefy/connection-axios-http':
         specifier: 4.7.1
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-google':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-google
+      '@lowdefy/connection-openai':
+        specifier: 4.7.1
+        version: link:../../plugins/connections/connection-openai
       '@lowdefy/engine':
         specifier: 4.7.1
         version: link:../../engine
