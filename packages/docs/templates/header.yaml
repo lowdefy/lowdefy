@@ -15,7 +15,7 @@
   type: Box
   layout:
     flex: 0 1 auto
-    align: middle
+    selfAlign: middle
   style:
     marginRight: 8
   blocks:
@@ -23,7 +23,7 @@
       type: Search
       layout:
         flex: 0 1 auto
-        align: middle
+        selfAlign: middle
       properties:
         indexUrl: /search-index.json
         placeholder: Search docs...

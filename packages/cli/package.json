@@ -39,10 +39,10 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "4.7.1",
-    "@lowdefy/helpers": "4.7.1",
-    "@lowdefy/logger": "4.7.1",
-    "@lowdefy/node-utils": "4.7.1",
+    "@lowdefy/errors": "workspace:*",
+    "@lowdefy/helpers": "workspace:*",
+    "@lowdefy/logger": "workspace:*",
+    "@lowdefy/node-utils": "workspace:*",
     "axios": "1.8.2",
     "commander": "11.1.0",
     "decompress": "4.2.1",

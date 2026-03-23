@@ -34,7 +34,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/e2e-utils": "4.7.1",
+    "@lowdefy/e2e-utils": "workspace:*",
     "@playwright/test": "1.50.1"
   },
   "devDependencies": {

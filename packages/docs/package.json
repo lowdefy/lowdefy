@@ -42,7 +42,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.7.1",
+    "@lowdefy/helpers": "workspace:*",
     "minisearch": "^7.0.0",
     "yaml": "2.3.4"
   },

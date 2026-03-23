@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { get, type } from '@lowdefy/helpers';
+import { get, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
@@ -411,6 +411,22 @@ async function resolveRef(node, ctx) {
         moduleDependencies: moduleEntry.moduleDependencies,
         extraRefChainKeys: [cycleKey],
       });
+
+      // Clone so each consumer gets an independent copy — getModuleRefContent
+      // returns a shared reference, and resolve() mutates in place.
+      // deferredFrom was read above before the clone (serializer.copy strips
+      // non-enumerable properties).
+      content = serializer.copy(content);
+
+      // When preserved content is a deferred file _ref, the inner ref would
+      // create a fresh var scope and lose the consumer's vars. Inject them.
+      if ((refDef.component || refDef.menu) && deferredFrom && type.isObject(content) && content._ref) {
+        if (type.isObject(content._ref)) {
+          content._ref.vars = { ...(content._ref.vars ?? {}), ...refDef.vars };
+        } else if (type.isString(content._ref) && Object.keys(refDef.vars).length > 0) {
+          content._ref = { path: content._ref, vars: refDef.vars };
+        }
+      }
     } else {
       childCtx = ctx.forRef({
         refId: refDef.id,
@@ -423,7 +439,9 @@ async function resolveRef(node, ctx) {
     content = await resolve(content, childCtx);
 
     // 10. Module ref post-processing — resolve ID operators and scope menu IDs
-    if (refDef.module) {
+    // Component refs skip this: their content mixes module template with consumer vars,
+    // so _module.* operators reference the consumer's module, not the target.
+    if (refDef.module && !refDef.component) {
       const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
       content = resolveModuleOperators({
         input: content,

@@ -32,6 +32,7 @@ Beyond production server:
 - `dotenv` (16.3.1) - Env loading
 - `opener` (1.5.2) - Browser opener
 - `swr` (2.2.4) - Data fetching
+- `postcss`, `tailwindcss`, `@tailwindcss/postcss` - JIT CSS compilation (used by `compileCss.mjs` and `lib/server/compileCss.js`)
 
 Additional block packages:
 
@@ -49,6 +50,16 @@ Additional operators:
 - `@lowdefy/operators-nunjucks`
 - `@lowdefy/operators-uuid`
 - `@lowdefy/operators-yaml`
+
+### CRITICAL: Dependency Singleton Constraints
+
+**`antd` and `@ant-design/cssinjs` must NOT be direct dependencies of server-dev.** They must only be available as transitive dependencies via `@lowdefy/blocks-antd`, `@lowdefy/client`, etc.
+
+**Why:** The local dev setup (`scripts/dev.mjs`) copies server-dev to `_server/dev/`, rewrites `@lowdefy/*` deps to `link:` paths, then runs `pnpm install --no-lockfile`. The `rewriteDeps` script only rewrites `@lowdefy/*` packages — non-lowdefy deps like `antd` are installed from npm. If `antd` is a direct dep, pnpm installs a separate copy in `_server/dev/node_modules/antd`, while linked `@lowdefy/client` uses the monorepo's `antd`. Two antd instances = broken CSS-in-JS context sharing = dark mode and theming silently fail (only some antd components respond to theme changes).
+
+**Symptoms of duplicate antd:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
+
+This constraint applies to any package that uses React context for cross-component coordination (antd, @ant-design/cssinjs). Standard utility packages (postcss, tailwindcss, yaml, etc.) are safe as direct deps.
 
 ## Scripts
 

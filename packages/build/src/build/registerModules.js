@@ -159,6 +159,9 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     new Map()
   );
   for (const plugin of requiredPlugins) {
+    if (context.defaultPackageNames.has(plugin.name)) {
+      continue;
+    }
     const appVersion = appPlugins.get(plugin.name);
     if (!appVersion) {
       throw new ConfigError(
