@@ -23,6 +23,45 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+// Strip non-serializable fields from AI SDK event objects before sending as payload.
+function cleanHookEvent(event) {
+  const clean = {};
+  for (const [key, value] of Object.entries(event)) {
+    if (key === 'messages' || key === 'abortSignal') continue;
+    if (typeof value === 'function') continue;
+    clean[key] = value;
+  }
+  return clean;
+}
+
+// Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
+const hookMapping = {
+  onStart: 'experimental_onStart',
+  onStepStart: 'experimental_onStepStart',
+  onToolCallStart: 'experimental_onToolCallStart',
+  onToolCallFinish: 'experimental_onToolCallFinish',
+  onStepFinish: 'onStepFinish',
+  onFinish: 'onFinish',
+};
+
+function createHookCallbacks({ hooks, callEndpoint }) {
+  if (!hooks) return {};
+
+  const callbacks = {};
+  for (const [yamlKey, sdkKey] of Object.entries(hookMapping)) {
+    const endpointIds = hooks[yamlKey];
+    if (!endpointIds || endpointIds.length === 0) continue;
+
+    callbacks[sdkKey] = (event) => {
+      const payload = cleanHookEvent(event);
+      for (const endpointId of endpointIds) {
+        callEndpoint(endpointId, { payload }).catch(() => {});
+      }
+    };
+  }
+  return callbacks;
+}
+
 async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages } = properties;
 
@@ -44,6 +83,11 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const model = connection.provider(agent.properties.model);
 
+  const hookCallbacks = createHookCallbacks({
+    hooks: agent.hooks,
+    callEndpoint: context.callEndpoint,
+  });
+
   const agentInstance = new ToolLoopAgent({
     model,
     instructions: agent.properties.instructions,
@@ -53,6 +97,7 @@ async function handleAgentChat({ connection, properties, context }) {
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
     providerOptions: agent.properties.providerOptions,
+    ...hookCallbacks,
   });
 
   return createAgentUIStreamResponse({

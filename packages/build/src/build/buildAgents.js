@@ -93,6 +93,29 @@ function buildAgents({ components, context }) {
       }
     });
 
+    // Validate hooks reference existing API endpoints
+    const hookNames = [
+      'onStart',
+      'onStepStart',
+      'onToolCallStart',
+      'onToolCallFinish',
+      'onStepFinish',
+      'onFinish',
+    ];
+    hookNames.forEach((hookName) => {
+      (agent.hooks?.[hookName] ?? []).forEach((endpointId) => {
+        const endpoint = (components.api ?? []).find(
+          (e) => e.id === endpointId || e.endpointId === endpointId
+        );
+        if (!endpoint) {
+          throw new ConfigError(
+            `Agent "${agent.id}" hook "${hookName}" references endpoint "${endpointId}" which does not exist.`,
+            { configKey }
+          );
+        }
+      });
+    });
+
     // Rename id to internal format
     agent.agentId = agent.id;
     context.agentIds.add(agent.agentId);

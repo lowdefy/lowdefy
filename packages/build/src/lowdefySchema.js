@@ -123,6 +123,20 @@ export default {
             type: 'Agent "tools" should be an array.',
           },
         },
+        hooks: {
+          type: 'object',
+          properties: {
+            onStart: { type: 'array', items: { type: 'string' } },
+            onStepStart: { type: 'array', items: { type: 'string' } },
+            onToolCallStart: { type: 'array', items: { type: 'string' } },
+            onToolCallFinish: { type: 'array', items: { type: 'string' } },
+            onStepFinish: { type: 'array', items: { type: 'string' } },
+            onFinish: { type: 'array', items: { type: 'string' } },
+          },
+          errorMessage: {
+            type: 'Agent "hooks" should be an object.',
+          },
+        },
       },
       errorMessage: {
         type: 'Agent should be an object.',

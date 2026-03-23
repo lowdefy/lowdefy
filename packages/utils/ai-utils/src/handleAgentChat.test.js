@@ -392,6 +392,119 @@ test('undefined providerOptions does not break agent creation', async () => {
   expect(lastAgentConfig.providerOptions).toBeUndefined();
 });
 
+test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: {
+          onToolCallFinish: ['save-data'],
+          onFinish: ['log-usage'],
+        },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.experimental_onToolCallFinish).toEqual(expect.any(Function));
+  expect(lastAgentConfig.onFinish).toEqual(expect.any(Function));
+  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
+});
+
+test('hook callback calls callEndpoint with cleaned event payload', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['log-usage'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const onFinish = lastAgentConfig.onFinish;
+  onFinish({
+    text: 'Hello',
+    totalUsage: { totalTokens: 100 },
+    messages: [{ role: 'user', content: 'hi' }],
+    abortSignal: new AbortController().signal,
+  });
+
+  expect(callEndpoint).toHaveBeenCalledWith('log-usage', {
+    payload: { text: 'Hello', totalUsage: { totalTokens: 100 } },
+  });
+});
+
+test('hook callback errors do not propagate', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockRejectedValue(new Error('endpoint failed'));
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['failing-endpoint'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const onFinish = lastAgentConfig.onFinish;
+  // Should not throw
+  expect(() => onFinish({ text: 'Hello' })).not.toThrow();
+});
+
+test('no hooks produces no callbacks on ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
+  expect(lastAgentConfig.experimental_onToolCallFinish).toBeUndefined();
+  expect(lastAgentConfig.onStepFinish).toBeUndefined();
+  expect(lastAgentConfig.onFinish).toBeUndefined();
+});
+
 test('empty tools array produces empty tools object', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);

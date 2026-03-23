@@ -582,3 +582,97 @@ test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
     'Endpoint "tool1" is used as an agent tool but does not have a "payloadSchema".'
   );
 });
+
+test('buildAgents with valid hook endpoint IDs passes', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:save-data',
+        endpointId: 'save-data',
+        type: 'Api',
+        description: 'Save data',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        hooks: {
+          onToolCallFinish: ['save-data'],
+        },
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents throws when hook references non-existent endpoint', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        hooks: {
+          onFinish: ['non-existent'],
+        },
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" hook "onFinish" references endpoint "non-existent" which does not exist.'
+  );
+});
+
+test('buildAgents with no hooks passes', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents with empty hooks arrays passes', () => {
+  const context = createTestContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        hooks: {
+          onStart: [],
+          onFinish: [],
+        },
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
