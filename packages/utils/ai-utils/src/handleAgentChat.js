@@ -14,13 +14,7 @@
   limitations under the License.
 */
 
-import {
-  ToolLoopAgent,
-  createAgentUIStreamResponse,
-  tool,
-  jsonSchema,
-  stepCountIs,
-} from 'ai';
+import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
 
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
@@ -52,7 +46,7 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const agentInstance = new ToolLoopAgent({
     model,
-    system: agent.properties.instructions,
+    instructions: agent.properties.instructions,
     tools,
     stopWhen: stepCountIs(agent.properties.maxSteps ?? 10),
     maxOutputTokens: agent.properties.maxOutputTokens,

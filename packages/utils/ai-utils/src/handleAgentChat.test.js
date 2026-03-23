@@ -77,7 +77,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
   expect(lastAgentConfig).toEqual(
     expect.objectContaining({
       model: mockModel,
-      system: 'You are a helpful assistant.',
+      instructions: 'You are a helpful assistant.',
       stopWhen: { type: 'stepCount', count: 5 },
       maxOutputTokens: 1024,
       temperature: 0.7,
