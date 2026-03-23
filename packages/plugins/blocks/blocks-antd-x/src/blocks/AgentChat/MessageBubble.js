@@ -33,7 +33,8 @@ function getToolInfo(part) {
 
 function summarizeToolOutput(output) {
   if (output === null || output === undefined) return 'Completed (no data)';
-  if (Array.isArray(output)) return `Returned ${output.length} result${output.length === 1 ? '' : 's'}`;
+  if (Array.isArray(output))
+    return `Returned ${output.length} result${output.length === 1 ? '' : 's'}`;
   if (typeof output === 'object') {
     const keys = Object.keys(output);
     if (keys.length <= 3) return `Returned: ${keys.join(', ')}`;
@@ -48,77 +49,116 @@ function summarizeToolOutput(output) {
 function MessageBubble({ content, isStreaming, parts, config }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
+  const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
 
   if (!parts || parts.length === 0) {
     return (
-      <Markdown
-        streaming={isStreaming ? { hasNextChunk: true } : undefined}
-      >
-        {content}
-      </Markdown>
+      <Markdown streaming={isStreaming ? { hasNextChunk: true } : undefined}>{content}</Markdown>
     );
   }
 
-  const toolItems = [];
-  const textParts = [];
-  const reasoningParts = [];
+  // Build segments of consecutive same-type parts.
+  // 'interleaved': preserves the natural ordering from the AI SDK
+  //   (reasoning → tool calls → reasoning → text).
+  // 'grouped': collects all parts by type into three fixed buckets
+  //   (all reasoning → all tools → all text), matching the original rendering.
+  let segments;
 
-  for (const part of parts) {
-    if (part.type === 'text') {
-      textParts.push(part.text);
-    } else if (part.type === 'reasoning') {
-      reasoningParts.push(part.text);
-    } else {
-      const tool = getToolInfo(part);
-      if (tool) {
-        let status = 'loading';
-        if (tool.state === 'output-available') {
-          status = 'success';
-        } else if (tool.state === 'output-error') {
-          status = 'error';
-        }
-        let description;
-        if (status === 'loading') {
-          description = tool.input
-            ? `Called with: ${JSON.stringify(tool.input)}`
-            : 'Running...';
-        } else if (status === 'error') {
-          description = 'Tool execution failed';
-        } else if (toolResultDisplay === 'full') {
-          description = JSON.stringify(tool.output, null, 2);
-        } else {
-          description = summarizeToolOutput(tool.output);
-        }
-        toolItems.push({
-          key: tool.toolCallId,
-          title: tool.toolName,
-          description,
-          status,
-        });
+  if (reasoningDisplay === 'grouped') {
+    const reasoning = { category: 'reasoning', parts: [] };
+    const tools = { category: 'tool', parts: [] };
+    const text = { category: 'text', parts: [] };
+    for (const part of parts) {
+      if (part.type === 'reasoning') reasoning.parts.push(part);
+      else if (part.type === 'text') text.parts.push(part);
+      else if (getToolInfo(part)) tools.parts.push(part);
+    }
+    segments = [reasoning, tools, text].filter((s) => s.parts.length > 0);
+  } else {
+    segments = [];
+    let current = null;
+    for (const part of parts) {
+      if (part.type === 'step-start') continue;
+
+      let category;
+      if (part.type === 'text') {
+        category = 'text';
+      } else if (part.type === 'reasoning') {
+        category = 'reasoning';
+      } else if (getToolInfo(part)) {
+        category = 'tool';
+      } else {
+        continue;
       }
+
+      if (!current || current.category !== category) {
+        current = { category, parts: [] };
+        segments.push(current);
+      }
+      current.parts.push(part);
     }
   }
 
-  const reasoningText = reasoningParts.join('');
+  const lastTextIdx = segments.findLastIndex((s) => s.category === 'text');
 
   return (
     <div>
-      {showReasoning && reasoningText.length > 0 && (
-        <Think title="Reasoning" defaultExpanded={false}>
-          {reasoningText}
-        </Think>
-      )}
-      {showThoughtChain && toolItems.length > 0 && (
-        <ThoughtChain items={toolItems} />
-      )}
-      {textParts.length > 0 && (
-        <Markdown
-          streaming={isStreaming ? { hasNextChunk: true } : undefined}
-        >
-          {textParts.join('')}
-        </Markdown>
-      )}
+      {segments.map((segment, idx) => {
+        if (segment.category === 'reasoning' && showReasoning) {
+          const text = segment.parts.map((p) => p.text).join('');
+          if (text.length === 0) return null;
+          return (
+            <Think key={idx} title="Reasoning" defaultExpanded={false}>
+              {text}
+            </Think>
+          );
+        }
+        if (segment.category === 'tool' && showThoughtChain) {
+          const items = segment.parts.map((part) => {
+            const tool = getToolInfo(part);
+            let status = 'loading';
+            if (tool.state === 'output-available') {
+              status = 'success';
+            } else if (tool.state === 'output-error') {
+              status = 'error';
+            }
+            let description;
+            if (status === 'loading') {
+              description = tool.input
+                ? `Called with: ${JSON.stringify(tool.input)}`
+                : 'Running...';
+            } else if (status === 'error') {
+              description = 'Tool execution failed';
+            } else if (toolResultDisplay === 'full') {
+              description = JSON.stringify(tool.output, null, 2);
+            } else {
+              description = summarizeToolOutput(tool.output);
+            }
+            return {
+              key: tool.toolCallId,
+              title: tool.toolName,
+              description,
+              status,
+            };
+          });
+          return <ThoughtChain key={idx} items={items} />;
+        }
+        if (segment.category === 'text') {
+          const text = segment.parts.map((p) => p.text).join('');
+          if (text.length === 0) return null;
+          const isLastText = idx === lastTextIdx;
+          return (
+            <Markdown
+              key={idx}
+              streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
+            >
+              {text}
+            </Markdown>
+          );
+        }
+        return null;
+      })}
     </div>
   );
 }

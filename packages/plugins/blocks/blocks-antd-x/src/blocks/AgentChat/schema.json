@@ -27,7 +27,16 @@
         "markdownRendering": { "type": "boolean", "default": true },
         "showThoughtChain": { "type": "boolean", "default": true },
         "showReasoning": { "type": "boolean", "default": true },
-        "toolResultDisplay": { "type": "string", "enum": ["summary", "full", "none"], "default": "summary" }
+        "reasoningDisplay": {
+          "type": "string",
+          "enum": ["interleaved", "grouped"],
+          "default": "interleaved"
+        },
+        "toolResultDisplay": {
+          "type": "string",
+          "enum": ["summary", "full", "none"],
+          "default": "summary"
+        }
       }
     },
     "sender": {
