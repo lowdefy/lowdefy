@@ -104,6 +104,11 @@
           "id": "comment-block-removal",
           "description": "Replace removed Comment block with Flex + Avatar + Paragraph composition",
           "path": "v5-0-0/20-comment-block-removal.md"
+        },
+        {
+          "id": "migrate-custom-block-plugins",
+          "description": "Migrate custom block plugin architecture: types.js, meta.js, withBlockDefaults",
+          "path": "v5-0-0/21-migrate-custom-block-plugins.md"
         }
       ]
     }
