@@ -16,5 +16,5 @@
 
 export default {
   connections: ['Anthropic'],
-  agents: ['AnthropicChat'],
+  agents: ['ClaudeAgent'],
 };

@@ -17,9 +17,20 @@
 import { handleAgentChat } from '@lowdefy/ai-utils';
 import schema from './schema.js';
 
-async function resolver(args) {
-  return handleAgentChat(args);
+async function resolver({ connection, properties, context }) {
+  const props = properties.agent.properties;
+  const openai = {};
+  if (props.reasoningEffort) openai.reasoningEffort = props.reasoningEffort;
+  if (props.reasoningSummary) openai.reasoningSummary = props.reasoningSummary;
+
+  if (Object.keys(openai).length > 0) {
+    props.providerOptions = {
+      ...props.providerOptions,
+      openai: { ...props.providerOptions?.openai, ...openai },
+    };
+  }
+  return handleAgentChat({ connection, properties, context });
 }
 
-const AnthropicChat = { schema, resolver };
-export default AnthropicChat;
+const OpenAIAgent = { schema, resolver };
+export default OpenAIAgent;

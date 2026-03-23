@@ -26,8 +26,8 @@ beforeEach(() => {
 
 test('getAgentResolver returns agent type from registry', () => {
   const mockAgentType = { run: jest.fn() };
-  const agents = { AnthropicChat: mockAgentType };
-  const agentConfig = { type: 'AnthropicChat', agentId: 'my-agent' };
+  const agents = { ClaudeAgent: mockAgentType };
+  const agentConfig = { type: 'ClaudeAgent', agentId: 'my-agent' };
 
   const result = getAgentResolver({ agents, logger }, { agentConfig });
 

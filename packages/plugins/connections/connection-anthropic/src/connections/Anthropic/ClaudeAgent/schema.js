@@ -16,7 +16,7 @@
 
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  title: 'Lowdefy Agent Schema - AnthropicChat',
+  title: 'Lowdefy Agent Schema - ClaudeAgent',
   type: 'object',
   required: ['model'],
   properties: {
@@ -24,14 +24,14 @@ export default {
       type: 'string',
       description: 'Anthropic model identifier (e.g. "claude-3-5-sonnet-20241022").',
       errorMessage: {
-        type: 'AnthropicChat agent property "model" should be a string.',
+        type: 'ClaudeAgent agent property "model" should be a string.',
       },
     },
     instructions: {
       type: 'string',
       description: 'System instructions for the agent.',
       errorMessage: {
-        type: 'AnthropicChat agent property "instructions" should be a string.',
+        type: 'ClaudeAgent agent property "instructions" should be a string.',
       },
     },
     maxSteps: {
@@ -39,8 +39,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of agentic steps.',
       errorMessage: {
-        type: 'AnthropicChat agent property "maxSteps" should be an integer.',
-        minimum: 'AnthropicChat agent property "maxSteps" should be at least 1.',
+        type: 'ClaudeAgent agent property "maxSteps" should be an integer.',
+        minimum: 'ClaudeAgent agent property "maxSteps" should be at least 1.',
       },
     },
     maxOutputTokens: {
@@ -48,8 +48,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of output tokens.',
       errorMessage: {
-        type: 'AnthropicChat agent property "maxOutputTokens" should be an integer.',
-        minimum: 'AnthropicChat agent property "maxOutputTokens" should be at least 1.',
+        type: 'ClaudeAgent agent property "maxOutputTokens" should be an integer.',
+        minimum: 'ClaudeAgent agent property "maxOutputTokens" should be at least 1.',
       },
     },
     temperature: {
@@ -58,26 +58,43 @@ export default {
       maximum: 2,
       description: 'Sampling temperature between 0 and 2.',
       errorMessage: {
-        type: 'AnthropicChat agent property "temperature" should be a number.',
-        minimum: 'AnthropicChat agent property "temperature" should be at least 0.',
-        maximum: 'AnthropicChat agent property "temperature" should be at most 2.',
+        type: 'ClaudeAgent agent property "temperature" should be a number.',
+        minimum: 'ClaudeAgent agent property "temperature" should be at least 0.',
+        maximum: 'ClaudeAgent agent property "temperature" should be at most 2.',
       },
     },
     toolChoice: {
       description: 'Tool choice configuration.',
     },
+    thinking: {
+      type: 'object',
+      description:
+        'Anthropic extended thinking configuration (e.g. { type: "enabled", budgetTokens: 10000 }).',
+      errorMessage: {
+        type: 'ClaudeAgent agent property "thinking" should be an object.',
+      },
+    },
+    effort: {
+      type: 'string',
+      enum: ['low', 'medium', 'high'],
+      description: 'Anthropic thinking effort level.',
+      errorMessage: {
+        type: 'ClaudeAgent agent property "effort" should be a string.',
+        enum: 'ClaudeAgent agent property "effort" should be one of "low", "medium", or "high".',
+      },
+    },
     providerOptions: {
       type: 'object',
-      description: 'Provider-specific options passed to the AI SDK (e.g. Anthropic thinking).',
+      description: 'Provider-specific options passed to the AI SDK.',
       errorMessage: {
-        type: 'AnthropicChat agent property "providerOptions" should be an object.',
+        type: 'ClaudeAgent agent property "providerOptions" should be an object.',
       },
     },
   },
   errorMessage: {
-    type: 'AnthropicChat agent properties should be an object.',
+    type: 'ClaudeAgent agent properties should be an object.',
     required: {
-      model: 'AnthropicChat agent should have required property "model".',
+      model: 'ClaudeAgent agent should have required property "model".',
     },
   },
 };

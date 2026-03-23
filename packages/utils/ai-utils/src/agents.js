@@ -14,7 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['OpenAI'],
-  agents: ['OpenAIAgent'],
-};
+export { default as AISDKAgent } from './AISDKAgent.js';

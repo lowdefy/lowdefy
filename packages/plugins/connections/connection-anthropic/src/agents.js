@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as AnthropicChat } from './connections/Anthropic/AnthropicChat/AnthropicChat.js';
+export { default as ClaudeAgent } from './connections/Anthropic/ClaudeAgent/ClaudeAgent.js';

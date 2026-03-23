@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as GoogleChat } from './connections/Google/GoogleChat/GoogleChat.js';
+export { default as GeminiAgent } from './connections/Google/GeminiAgent/GeminiAgent.js';

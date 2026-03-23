@@ -16,22 +16,22 @@
 
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  title: 'Lowdefy Agent Schema - OpenAIChat',
+  title: 'Lowdefy Agent Schema - GeminiAgent',
   type: 'object',
   required: ['model'],
   properties: {
     model: {
       type: 'string',
-      description: 'OpenAI model identifier (e.g. "gpt-4o").',
+      description: 'Google model identifier (e.g. "gemini-1.5-pro").',
       errorMessage: {
-        type: 'OpenAIChat agent property "model" should be a string.',
+        type: 'GeminiAgent agent property "model" should be a string.',
       },
     },
     instructions: {
       type: 'string',
       description: 'System instructions for the agent.',
       errorMessage: {
-        type: 'OpenAIChat agent property "instructions" should be a string.',
+        type: 'GeminiAgent agent property "instructions" should be a string.',
       },
     },
     maxSteps: {
@@ -39,8 +39,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of agentic steps.',
       errorMessage: {
-        type: 'OpenAIChat agent property "maxSteps" should be an integer.',
-        minimum: 'OpenAIChat agent property "maxSteps" should be at least 1.',
+        type: 'GeminiAgent agent property "maxSteps" should be an integer.',
+        minimum: 'GeminiAgent agent property "maxSteps" should be at least 1.',
       },
     },
     maxOutputTokens: {
@@ -48,8 +48,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of output tokens.',
       errorMessage: {
-        type: 'OpenAIChat agent property "maxOutputTokens" should be an integer.',
-        minimum: 'OpenAIChat agent property "maxOutputTokens" should be at least 1.',
+        type: 'GeminiAgent agent property "maxOutputTokens" should be an integer.',
+        minimum: 'GeminiAgent agent property "maxOutputTokens" should be at least 1.',
       },
     },
     temperature: {
@@ -58,9 +58,9 @@ export default {
       maximum: 2,
       description: 'Sampling temperature between 0 and 2.',
       errorMessage: {
-        type: 'OpenAIChat agent property "temperature" should be a number.',
-        minimum: 'OpenAIChat agent property "temperature" should be at least 0.',
-        maximum: 'OpenAIChat agent property "temperature" should be at most 2.',
+        type: 'GeminiAgent agent property "temperature" should be a number.',
+        minimum: 'GeminiAgent agent property "temperature" should be at least 0.',
+        maximum: 'GeminiAgent agent property "temperature" should be at most 2.',
       },
     },
     toolChoice: {
@@ -68,16 +68,16 @@ export default {
     },
     providerOptions: {
       type: 'object',
-      description: 'Provider-specific options passed to the AI SDK (e.g. OpenAI reasoningEffort).',
+      description: 'Provider-specific options passed to the AI SDK (e.g. Google thinkingConfig).',
       errorMessage: {
-        type: 'OpenAIChat agent property "providerOptions" should be an object.',
+        type: 'GeminiAgent agent property "providerOptions" should be an object.',
       },
     },
   },
   errorMessage: {
-    type: 'OpenAIChat agent properties should be an object.',
+    type: 'GeminiAgent agent properties should be an object.',
     required: {
-      model: 'OpenAIChat agent should have required property "model".',
+      model: 'GeminiAgent agent should have required property "model".',
     },
   },
 };

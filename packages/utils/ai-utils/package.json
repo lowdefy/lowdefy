@@ -4,7 +4,9 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./agents": "./dist/agents.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"

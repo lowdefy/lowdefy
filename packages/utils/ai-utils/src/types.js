@@ -15,6 +15,5 @@
 */
 
 export default {
-  connections: ['OpenAI'],
-  agents: ['OpenAIAgent'],
+  agents: ['AISDKAgent'],
 };

@@ -21,5 +21,5 @@ async function resolver(args) {
   return handleAgentChat(args);
 }
 
-const GoogleChat = { schema, resolver };
-export default GoogleChat;
+const GeminiAgent = { schema, resolver };
+export default GeminiAgent;

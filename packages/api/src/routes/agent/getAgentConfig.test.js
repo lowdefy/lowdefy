@@ -28,7 +28,7 @@ beforeEach(() => {
 });
 
 test('getAgentConfig returns agent config when file exists', async () => {
-  const agentConfig = { agentId: 'my-agent', type: 'AnthropicChat' };
+  const agentConfig = { agentId: 'my-agent', type: 'ClaudeAgent' };
   const readConfigFile = jest.fn().mockResolvedValue(agentConfig);
 
   const result = await getAgentConfig({ logger, readConfigFile }, { agentId: 'my-agent' });
@@ -49,7 +49,7 @@ test('getAgentConfig throws ConfigError when agent file returns null', async () 
 });
 
 test('getAgentConfig does not log debug on success', async () => {
-  const agentConfig = { agentId: 'my-agent', type: 'AnthropicChat' };
+  const agentConfig = { agentId: 'my-agent', type: 'ClaudeAgent' };
   const readConfigFile = jest.fn().mockResolvedValue(agentConfig);
 
   await getAgentConfig({ logger, readConfigFile }, { agentId: 'my-agent' });

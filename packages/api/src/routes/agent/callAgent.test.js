@@ -58,7 +58,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
     properties: { model: 'claude-3-5-sonnet', instructions: 'Be helpful.' },
@@ -79,7 +79,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   const messages = [{ role: 'user', content: 'Hello' }];
   const result = await callAgent(context, {
@@ -173,7 +173,7 @@ test('callAgent throws when connection type not found in registry', async () => 
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-conn',
     properties: {},
   };
@@ -191,7 +191,7 @@ test('callAgent throws when connection type not found in registry', async () => 
     connections: {},
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: jest.fn(), schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
 
   await expect(
     callAgent(context, {
@@ -220,7 +220,7 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['search'],
     properties: { model: 'claude-3-5-sonnet' },
@@ -255,7 +255,7 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await callAgent(context, {
     agentId: 'my-agent',
@@ -282,7 +282,7 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['search'],
     properties: { model: 'claude-3-5-sonnet' },
@@ -317,7 +317,7 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await callAgent(context, {
     agentId: 'my-agent',
@@ -345,7 +345,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['internal-tool'],
     properties: { model: 'claude-3-5-sonnet' },
@@ -380,7 +380,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await callAgent(context, {
     agentId: 'my-agent',
@@ -404,7 +404,7 @@ test('callAgent propagates error when connection.create throws', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
     properties: { model: 'claude-3-5-sonnet' },
@@ -425,7 +425,7 @@ test('callAgent propagates error when connection.create throws', async () => {
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: jest.fn(), schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
 
   await expect(
     callAgent(context, {
@@ -443,7 +443,7 @@ test('callAgent propagates error when resolver throws', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
     properties: { model: 'claude-3-5-sonnet' },
@@ -464,7 +464,7 @@ test('callAgent propagates error when resolver throws', async () => {
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await expect(
     callAgent(context, {
@@ -486,7 +486,7 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['failing-tool'],
     properties: { model: 'claude-3-5-sonnet' },
@@ -521,7 +521,7 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await callAgent(context, {
     agentId: 'my-agent',
@@ -547,7 +547,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
-    type: 'AnthropicChat',
+    type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
     properties: { model: 'claude-3-5-sonnet' },
@@ -568,7 +568,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
     },
     session: { user: { id: 'user_1' } },
   });
-  context.agents = { AnthropicChat: { resolver: mockResolver, schema: {} } };
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
   await callAgent(context, {
     agentId: 'my-agent',

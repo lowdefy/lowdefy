@@ -82,6 +82,7 @@
     "@lowdefy/blocks-google-maps": "4.7.1",
     "@lowdefy/blocks-markdown": "4.7.1",
     "@lowdefy/blocks-qr": "4.7.1",
+    "@lowdefy/ai-utils": "4.7.1",
     "@lowdefy/connection-anthropic": "4.7.1",
     "@lowdefy/connection-axios-http": "4.7.1",
     "@lowdefy/connection-google": "4.7.1",

@@ -14,7 +14,12 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['OpenAI'],
-  agents: ['OpenAIAgent'],
-};
+import handleAgentChat from './handleAgentChat.js';
+import schema from './AISDKAgentSchema.js';
+
+async function resolver(args) {
+  return handleAgentChat(args);
+}
+
+const AISDKAgent = { schema, resolver };
+export default AISDKAgent;

@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as OpenAIChat } from './connections/OpenAI/OpenAIChat/OpenAIChat.js';
+export { default as OpenAIAgent } from './connections/OpenAI/OpenAIAgent/OpenAIAgent.js';

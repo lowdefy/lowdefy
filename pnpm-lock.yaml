@@ -148,6 +148,9 @@ importers:
       '@lowdefy/actions-pdf-make':
         specifier: 4.7.1
         version: link:../plugins/actions/actions-pdf-make
+      '@lowdefy/ai-utils':
+        specifier: 4.7.1
+        version: link:../utils/ai-utils
       '@lowdefy/blocks-aggrid':
         specifier: 4.7.1
         version: link:../plugins/blocks/blocks-aggrid
@@ -1817,15 +1820,6 @@ importers:
       '@lowdefy/client':
         specifier: 4.7.1
         version: link:../../client
-      '@lowdefy/connection-anthropic':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-anthropic
-      '@lowdefy/connection-google':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-google
-      '@lowdefy/connection-openai':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-openai
       '@lowdefy/errors':
         specifier: 4.7.1
         version: link:../../utils/errors
@@ -1932,18 +1926,9 @@ importers:
       '@lowdefy/client':
         specifier: 4.7.1
         version: link:../../client
-      '@lowdefy/connection-anthropic':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-anthropic
       '@lowdefy/connection-axios-http':
         specifier: 4.7.1
         version: link:../../plugins/connections/connection-axios-http
-      '@lowdefy/connection-google':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-google
-      '@lowdefy/connection-openai':
-        specifier: 4.7.1
-        version: link:../../plugins/connections/connection-openai
       '@lowdefy/engine':
         specifier: 4.7.1
         version: link:../../engine

@@ -16,22 +16,22 @@
 
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  title: 'Lowdefy Agent Schema - GoogleChat',
+  title: 'Lowdefy Agent Schema - AISDKAgent',
   type: 'object',
   required: ['model'],
   properties: {
     model: {
       type: 'string',
-      description: 'Google model identifier (e.g. "gemini-1.5-pro").',
+      description: 'Model identifier (e.g. "claude-3-5-sonnet", "gpt-4o", "gemini-1.5-pro").',
       errorMessage: {
-        type: 'GoogleChat agent property "model" should be a string.',
+        type: 'AISDKAgent agent property "model" should be a string.',
       },
     },
     instructions: {
       type: 'string',
       description: 'System instructions for the agent.',
       errorMessage: {
-        type: 'GoogleChat agent property "instructions" should be a string.',
+        type: 'AISDKAgent agent property "instructions" should be a string.',
       },
     },
     maxSteps: {
@@ -39,8 +39,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of agentic steps.',
       errorMessage: {
-        type: 'GoogleChat agent property "maxSteps" should be an integer.',
-        minimum: 'GoogleChat agent property "maxSteps" should be at least 1.',
+        type: 'AISDKAgent agent property "maxSteps" should be an integer.',
+        minimum: 'AISDKAgent agent property "maxSteps" should be at least 1.',
       },
     },
     maxOutputTokens: {
@@ -48,8 +48,8 @@ export default {
       minimum: 1,
       description: 'Maximum number of output tokens.',
       errorMessage: {
-        type: 'GoogleChat agent property "maxOutputTokens" should be an integer.',
-        minimum: 'GoogleChat agent property "maxOutputTokens" should be at least 1.',
+        type: 'AISDKAgent agent property "maxOutputTokens" should be an integer.',
+        minimum: 'AISDKAgent agent property "maxOutputTokens" should be at least 1.',
       },
     },
     temperature: {
@@ -58,9 +58,9 @@ export default {
       maximum: 2,
       description: 'Sampling temperature between 0 and 2.',
       errorMessage: {
-        type: 'GoogleChat agent property "temperature" should be a number.',
-        minimum: 'GoogleChat agent property "temperature" should be at least 0.',
-        maximum: 'GoogleChat agent property "temperature" should be at most 2.',
+        type: 'AISDKAgent agent property "temperature" should be a number.',
+        minimum: 'AISDKAgent agent property "temperature" should be at least 0.',
+        maximum: 'AISDKAgent agent property "temperature" should be at most 2.',
       },
     },
     toolChoice: {
@@ -68,16 +68,16 @@ export default {
     },
     providerOptions: {
       type: 'object',
-      description: 'Provider-specific options passed to the AI SDK (e.g. Google thinkingConfig).',
+      description: 'Provider-specific options passed to the AI SDK.',
       errorMessage: {
-        type: 'GoogleChat agent property "providerOptions" should be an object.',
+        type: 'AISDKAgent agent property "providerOptions" should be an object.',
       },
     },
   },
   errorMessage: {
-    type: 'GoogleChat agent properties should be an object.',
+    type: 'AISDKAgent agent properties should be an object.',
     required: {
-      model: 'GoogleChat agent should have required property "model".',
+      model: 'AISDKAgent agent should have required property "model".',
     },
   },
 };

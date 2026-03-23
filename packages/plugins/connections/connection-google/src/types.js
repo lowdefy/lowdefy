@@ -16,5 +16,5 @@
 
 export default {
   connections: ['Google'],
-  agents: ['GoogleChat'],
+  agents: ['GeminiAgent'],
 };
