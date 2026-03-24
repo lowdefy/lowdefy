@@ -51,6 +51,7 @@
     "@lowdefy/api": "workspace:*",
     "@lowdefy/block-utils": "workspace:*",
     "@lowdefy/blocks-antd": "workspace:*",
+    "@lowdefy/blocks-antd-x": "workspace:*",
     "@lowdefy/blocks-basic": "workspace:*",
     "@lowdefy/blocks-loaders": "workspace:*",
     "@lowdefy/client": "workspace:*",

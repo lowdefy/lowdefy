@@ -45,11 +45,13 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "2.1.2",
     "@lowdefy/actions-core": "workspace:*",
     "@lowdefy/api": "workspace:*",
     "@lowdefy/block-utils": "workspace:*",
     "@lowdefy/blocks-aggrid": "workspace:*",
     "@lowdefy/blocks-antd": "workspace:*",
+    "@lowdefy/blocks-antd-x": "workspace:*",
     "@lowdefy/blocks-basic": "workspace:*",
     "@lowdefy/blocks-echarts": "workspace:*",
     "@lowdefy/blocks-loaders": "workspace:*",
@@ -71,6 +73,8 @@
     "@lowdefy/operators-uuid": "workspace:*",
     "@lowdefy/operators-yaml": "workspace:*",
     "@lowdefy/plugin-next-auth": "workspace:*",
+    "@tailwindcss/postcss": "4.2.1",
+    "antd": "6.3.1",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
     "next": "16.1.6",

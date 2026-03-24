@@ -38,6 +38,14 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
+    typeNames: packageTypes.agents,
+    store: typesMap.agents,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
     typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.adapters : [],
     store: typesMap.auth.adapters,
     packageName,

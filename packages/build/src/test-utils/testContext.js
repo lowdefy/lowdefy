@@ -33,6 +33,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     },
     typeCounters: {
       actions: createCounter(),
+      agents: createCounter(),
       auth: {
         adapters: createCounter(),
         callbacks: createCounter(),
@@ -53,6 +54,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     refMap: {},
     keyMap: {},
     jsMap: {},
+    agentIds: new Set(),
     connectionIds: new Set(),
   };
 

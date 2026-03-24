@@ -14,6 +14,7 @@
 '@lowdefy/connection-redis': major
 '@lowdefy/connection-sendgrid': major
 '@lowdefy/connection-stripe': major
+'@lowdefy/connection-mongodb': major
 '@lowdefy/connection-test': major
 '@lowdefy/operators-js': major
 '@lowdefy/operators-jsonata': major

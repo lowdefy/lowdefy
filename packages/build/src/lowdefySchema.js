@@ -62,6 +62,91 @@ export default {
         },
       },
     },
+    agent: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type', 'connectionId'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Agent "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Agent "type" should be a string.',
+          },
+        },
+        connectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Agent "connectionId" should be a string.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Agent "properties" should be an object.',
+          },
+        },
+        tools: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          errorMessage: {
+            type: 'Agent "tools" should be an array.',
+          },
+        },
+        hooks: {
+          type: 'object',
+          properties: {
+            onStart: { type: 'array', items: { type: 'string' } },
+            onStepStart: { type: 'array', items: { type: 'string' } },
+            onToolCallStart: { type: 'array', items: { type: 'string' } },
+            onToolCallFinish: { type: 'array', items: { type: 'string' } },
+            onStepFinish: { type: 'array', items: { type: 'string' } },
+            onFinish: { type: 'array', items: { type: 'string' } },
+          },
+          errorMessage: {
+            type: 'Agent "hooks" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Agent should be an object.',
+        required: {
+          id: 'Agent should have required property "id".',
+          type: 'Agent should have required property "type".',
+          connectionId: 'Agent should have required property "connectionId".',
+        },
+      },
+    },
     app: {
       type: 'object',
       additionalProperties: false,
@@ -839,6 +924,18 @@ export default {
             type: 'Api endpoint "type" should be a string.',
           },
         },
+        description: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "description" should be a string.',
+          },
+        },
+        payloadSchema: {
+          type: 'object',
+          errorMessage: {
+            type: 'Api endpoint "payloadSchema" should be an object.',
+          },
+        },
         routine: {
           anyOf: [
             {
@@ -1379,6 +1476,15 @@ export default {
       type: 'object',
       errorMessage: {
         type: 'App "global" should be an object.',
+      },
+    },
+    agents: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/agent',
+      },
+      errorMessage: {
+        type: 'App "agents" should be an array.',
       },
     },
     connections: {

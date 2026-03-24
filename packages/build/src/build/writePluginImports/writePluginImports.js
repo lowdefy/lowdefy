@@ -16,6 +16,7 @@
 
 import writeActionImports from './writeActionImports.js';
 import writeActionSchemaMap from './writeActionSchemaMap.js';
+import writeAgentImports from './writeAgentImports.js';
 import writeAuthImports from './writeAuthImports.js';
 import writeBlockImports from './writeBlockImports.js';
 import writeBlockSchemaMap from './writeBlockSchemaMap.js';
@@ -28,6 +29,7 @@ import writeGlobalsCss from './writeGlobalsCss.js';
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
   await writeActionSchemaMap({ components, context });
+  await writeAgentImports({ components, context });
   await writeAuthImports({ components, context });
   await writeBlockImports({ components, context });
   await writeBlockSchemaMap({ components, context });
