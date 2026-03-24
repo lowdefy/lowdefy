@@ -60,7 +60,6 @@ import addInstalledTypes from './addInstalledTypes.js';
 import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
-import stripPageContent from './stripPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -93,6 +92,12 @@ async function shallowBuild(options) {
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(testSchema, 'testSchema', { components, context });
+
+    logCollectedErrors(context);
+
+    // Collect page content strings for Tailwind to scan.
+    // Runs after testSchema so null block entries are caught before walking.
     context.tailwindContentMap = new Map();
     for (const page of components.pages ?? []) {
       const content = collectPageContent([page]);
@@ -100,10 +105,6 @@ async function shallowBuild(options) {
         context.tailwindContentMap.set(page.id, content);
       }
     }
-    stripPageContent({ components, context });
-    tryBuildStep(testSchema, 'testSchema', { components, context });
-
-    logCollectedErrors(context);
 
     // Build skeleton steps (everything except page content)
     tryBuildStep(buildApp, 'buildApp', { components, context });
