@@ -19,6 +19,7 @@ const defaultPackages = [
   '@lowdefy/actions-pdf-make',
   '@lowdefy/blocks-aggrid',
   '@lowdefy/blocks-antd',
+  '@lowdefy/blocks-antd-x',
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
