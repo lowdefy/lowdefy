@@ -123,7 +123,7 @@ test('buildModules skips remapped connections', () => {
   ]);
 });
 
-test('buildModules resolves _module.pageId operators in pages', () => {
+test('buildModules preserves pre-resolved _module.pageId strings in pages', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -140,7 +140,7 @@ test('buildModules resolves _module.pageId operators in pages', () => {
                   {
                     id: 'go',
                     type: 'Link',
-                    params: { pageId: { '_module.pageId': 'user-detail' } },
+                    params: { pageId: 'team-users/user-detail' },
                   },
                 ],
               },
@@ -163,7 +163,7 @@ test('buildModules resolves _module.pageId operators in pages', () => {
   );
 });
 
-test('buildModules resolves _module.connectionId with remapping in connections', () => {
+test('buildModules preserves pre-resolved connectionId strings', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -175,7 +175,7 @@ test('buildModules resolves _module.connectionId with remapping in connections',
             {
               id: 'get-users',
               type: 'MongoDBFind',
-              connectionId: { '_module.connectionId': 'users-db' },
+              connectionId: 'my-app-mongodb',
             },
           ],
         },
@@ -337,7 +337,7 @@ test('buildModules initializes pages array when components.pages is undefined', 
   expect(result.pages).toEqual([{ id: 'team-users/users-list', type: 'PageHeaderMenu' }]);
 });
 
-test('buildModules resolves _module.endpointId in API endpoints', () => {
+test('buildModules preserves pre-resolved endpointId strings in API endpoints', () => {
   const moduleEntry = makeModuleEntry({
     id: 'notifications',
     manifest: {
@@ -346,7 +346,7 @@ test('buildModules resolves _module.endpointId in API endpoints', () => {
           id: 'send-notification',
           type: 'Custom',
           properties: {
-            callbackEndpoint: { '_module.endpointId': 'send-notification' },
+            callbackEndpoint: 'notifications/send-notification',
           },
         },
       ],
@@ -363,7 +363,7 @@ test('buildModules resolves _module.endpointId in API endpoints', () => {
   expect(result.api[0].properties.callbackEndpoint).toBe('notifications/send-notification');
 });
 
-test('buildModules resolves _module.id in page content', () => {
+test('buildModules preserves pre-resolved _module.id strings in page content', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -372,7 +372,7 @@ test('buildModules resolves _module.id in page content', () => {
           id: 'users-list',
           type: 'PageHeaderMenu',
           properties: {
-            title: { '_module.id': true },
+            title: 'team-users',
           },
         },
       ],

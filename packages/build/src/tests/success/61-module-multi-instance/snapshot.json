@@ -139,9 +139,7 @@
     },
     "18": {
       "key": "root.pages[4:client-users/user-edit:Box]",
-      "~k_parent": "a",
-      "~r": "6",
-      "~l": 1
+      "~k_parent": "a"
     },
     "19": {
       "key": "root.pages[4:client-users/user-edit:Box].blocks",
@@ -412,9 +410,7 @@
     },
     "f": {
       "key": "root.pages[1:team-users/users-list:Box]",
-      "~k_parent": "a",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "a"
     },
     "g": {
       "key": "root.pages[1:team-users/users-list:Box].blocks",
@@ -466,9 +462,7 @@
     },
     "o": {
       "key": "root.pages[2:team-users/user-edit:Box]",
-      "~k_parent": "a",
-      "~r": "pages.1",
-      "~l": 1
+      "~k_parent": "a"
     },
     "p": {
       "key": "root.pages[2:team-users/user-edit:Box].blocks",
@@ -532,9 +526,7 @@
     },
     "z": {
       "key": "root.pages[3:client-users/users-list:Box]",
-      "~k_parent": "a",
-      "~r": "5",
-      "~l": 1
+      "~k_parent": "a"
     },
     "1a": {
       "key": "root.pages[4:client-users/user-edit:Box].blocks[0:back-link:Button]",
@@ -596,9 +588,7 @@
     },
     "1k": {
       "key": "root.connections[0:team-users/users-db:MongoDBCollection]",
-      "~k_parent": "1j",
-      "~r": "connections.0",
-      "~l": 1
+      "~k_parent": "1j"
     },
     "1l": {
       "key": "root.connections[0:team-users/users-db:MongoDBCollection].properties",
@@ -614,9 +604,7 @@
     },
     "1n": {
       "key": "root.connections[1:client-users/users-db:MongoDBCollection]",
-      "~k_parent": "1j",
-      "~r": "4",
-      "~l": 1
+      "~k_parent": "1j"
     },
     "1o": {
       "key": "root.connections[1:client-users/users-db:MongoDBCollection].properties",
@@ -7046,17 +7034,17 @@
     },
     "4": {
       "parent": "3",
-      "lineNumber": 19,
+      "lineNumber": 26,
       "path": "<CONFIG_DIR>/modules/user-admin/connections/users-db.yaml"
     },
     "5": {
       "parent": "3",
-      "lineNumber": 22,
+      "lineNumber": 29,
       "path": "<CONFIG_DIR>/modules/user-admin/pages/users-list.yaml"
     },
     "6": {
       "parent": "3",
-      "lineNumber": 23,
+      "lineNumber": 30,
       "path": "<CONFIG_DIR>/modules/user-admin/pages/user-edit.yaml"
     },
     "7": {
@@ -7064,17 +7052,17 @@
     },
     "connections.0": {
       "parent": "2",
-      "lineNumber": 19,
+      "lineNumber": 26,
       "path": "<CONFIG_DIR>/modules/user-admin/connections/users-db.yaml"
     },
     "pages.0": {
       "parent": "2",
-      "lineNumber": 22,
+      "lineNumber": 29,
       "path": "<CONFIG_DIR>/modules/user-admin/pages/users-list.yaml"
     },
     "pages.1": {
       "parent": "2",
-      "lineNumber": 23,
+      "lineNumber": 30,
       "path": "<CONFIG_DIR>/modules/user-admin/pages/user-edit.yaml"
     }
   },

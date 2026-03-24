@@ -118,9 +118,7 @@
     },
     "8": {
       "key": "root.pages[1:inviter/invite:Box]",
-      "~k_parent": "6",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "6"
     },
     "9": {
       "key": "root.pages[1:inviter/invite:Box].blocks",
@@ -414,9 +412,7 @@
     },
     "j": {
       "key": "root.connections[0:inviter/email-conn:SendGridMail]",
-      "~k_parent": "i",
-      "~r": "connections.0",
-      "~l": 1
+      "~k_parent": "i"
     },
     "k": {
       "key": "root.connections[0:inviter/email-conn:SendGridMail].properties",
@@ -436,9 +432,7 @@
     },
     "n": {
       "key": "root.api[0:inviter/send-invite:Api]",
-      "~k_parent": "m",
-      "~r": "api.0",
-      "~l": 1
+      "~k_parent": "m"
     },
     "o": {
       "key": "root.api[0:inviter/send-invite:Api].routine",
@@ -5830,17 +5824,17 @@
     },
     "connections.0": {
       "parent": "2",
-      "lineNumber": 14,
+      "lineNumber": 22,
       "path": "<CONFIG_DIR>/modules/inviter/connections/email.yaml"
     },
     "pages.0": {
       "parent": "2",
-      "lineNumber": 17,
+      "lineNumber": 25,
       "path": "<CONFIG_DIR>/modules/inviter/pages/invite.yaml"
     },
     "api.0": {
       "parent": "2",
-      "lineNumber": 20,
+      "lineNumber": 28,
       "path": "<CONFIG_DIR>/modules/inviter/api/send-invite.yaml"
     }
   },

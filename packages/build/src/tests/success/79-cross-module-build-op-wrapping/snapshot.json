@@ -73,9 +73,7 @@
     },
     "9": {
       "key": "root.pages[1:contacts/contact-list:Box]",
-      "~k_parent": "7",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "7"
     },
     "10": {
       "key": "root.pages[0:home:Box].auth",

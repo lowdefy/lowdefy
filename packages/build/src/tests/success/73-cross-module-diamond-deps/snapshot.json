@@ -297,9 +297,7 @@
     },
     "c": {
       "key": "root.pages[1:contacts/contact-list:Box]",
-      "~k_parent": "a",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "a"
     },
     "d": {
       "key": "root.pages[1:contacts/contact-list:Box].blocks",
@@ -345,9 +343,7 @@
     },
     "k": {
       "key": "root.pages[2:companies/company-list:Box]",
-      "~k_parent": "a",
-      "~r": "5",
-      "~l": 1
+      "~k_parent": "a"
     },
     "l": {
       "key": "root.pages[2:companies/company-list:Box].blocks",

@@ -23,7 +23,6 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
-import resolveModuleOperators from '../resolveModuleOperators.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
@@ -138,6 +137,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         vars: {},
         moduleVars,
         moduleDependencies,
+        moduleEntry: moduleEntry ?? null,
         packageRoot: moduleEntry?.packageRoot ?? null,
         path: '',
         currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
@@ -177,6 +177,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       vars: refDef.vars ?? {},
       moduleVars,
       moduleDependencies,
+      moduleEntry: moduleEntry ?? null,
       packageRoot: moduleEntry?.packageRoot ?? null,
       path: '',
       currentFile: refDef.path ?? '',
@@ -192,15 +193,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       input: processed,
       refDef,
     });
-
-    // Resolve module ID operators (if module page)
-    if (moduleEntry) {
-      processed = resolveModuleOperators({
-        input: processed,
-        moduleEntry,
-        context: buildContext,
-      });
-    }
 
     // When resolving from a collection file (with vars), the result is an array of pages.
     // Find the specific page by ID. For module pages, source IDs are unscoped.

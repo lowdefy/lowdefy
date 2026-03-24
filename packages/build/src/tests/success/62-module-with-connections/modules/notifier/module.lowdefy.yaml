@@ -10,6 +10,12 @@ secrets:
   - name: SENDGRID_KEY
     description: SendGrid API key
 
+exports:
+  pages:
+    - id: inbox
+  connections:
+    - id: email
+
 connections:
   - _ref: connections/email.yaml
 

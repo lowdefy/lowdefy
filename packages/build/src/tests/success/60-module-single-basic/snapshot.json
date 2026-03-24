@@ -288,9 +288,7 @@
     },
     "b": {
       "key": "root.pages[1:greet/welcome:Box]",
-      "~k_parent": "6",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "6"
     },
     "c": {
       "key": "root.pages[1:greet/welcome:Box].blocks",

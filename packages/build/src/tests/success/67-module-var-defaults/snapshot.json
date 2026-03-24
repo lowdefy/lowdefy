@@ -67,9 +67,7 @@
     },
     "7": {
       "key": "root.pages[0:settings/preferences:Box]",
-      "~k_parent": "6",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "6"
     },
     "8": {
       "key": "root.pages[0:settings/preferences:Box].blocks",

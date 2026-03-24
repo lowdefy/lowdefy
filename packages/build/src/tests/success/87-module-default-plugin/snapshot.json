@@ -73,9 +73,7 @@
     },
     "8": {
       "key": "root.pages[1:widget/main:Box]",
-      "~k_parent": "6",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "6"
     },
     "10": {
       "key": "root.pages[2:404:Result].style",

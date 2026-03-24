@@ -4,6 +4,8 @@ description: Event logging module
 exports:
   api:
     - id: log-event
+  connections:
+    - id: event-store
 
 connections:
   - id: event-store

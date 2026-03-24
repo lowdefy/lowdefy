@@ -73,9 +73,7 @@
     },
     "8": {
       "key": "root.pages[1:dash/overview:Box]",
-      "~k_parent": "6",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "6"
     },
     "9": {
       "key": "root.pages[1:dash/overview:Box].blocks",

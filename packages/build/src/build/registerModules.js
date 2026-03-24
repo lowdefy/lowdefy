@@ -213,6 +213,7 @@ async function resolveFullManifest({ entryId, context }) {
     vars: {},
     moduleVars: vars,
     moduleDependencies,
+    moduleEntry,
     packageRoot,
     path: '',
     currentFile: moduleYamlPath,

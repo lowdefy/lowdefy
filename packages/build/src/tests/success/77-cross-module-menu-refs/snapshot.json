@@ -285,9 +285,7 @@
     },
     "b": {
       "key": "root.pages[1:contacts/contact-list:Box]",
-      "~k_parent": "9",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "9"
     },
     "c": {
       "key": "root.pages[1:contacts/contact-list:Box].blocks",
@@ -309,9 +307,7 @@
     },
     "f": {
       "key": "root.pages[2:contacts/contact-detail:Box]",
-      "~k_parent": "9",
-      "~r": "pages.1",
-      "~l": 1
+      "~k_parent": "9"
     },
     "g": {
       "key": "root.pages[2:contacts/contact-detail:Box].blocks",
@@ -333,9 +329,7 @@
     },
     "j": {
       "key": "root.pages[3:companies/company-list:Box]",
-      "~k_parent": "9",
-      "~r": "5",
-      "~l": 1
+      "~k_parent": "9"
     },
     "k": {
       "key": "root.pages[3:companies/company-list:Box].blocks",

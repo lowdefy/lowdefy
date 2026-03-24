@@ -2331,7 +2331,7 @@ size: large`,
     });
   });
 
-  test('component ref with consumer _module.pageId passes through unresolved', async () => {
+  test('consumer _module.pageId in vars resolves against template module', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2342,8 +2342,13 @@ size: large`,
               component: { type: 'PageHeaderMenu', blocks: { _var: 'blocks' } },
             },
           ],
-          pages: [{ id: 'dashboard' }],
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
           connections: [],
+        },
+        exports: {
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
+          connections: [],
+          api: [],
         },
         moduleRoot: '/mod',
         packageRoot: '/mod',
@@ -2377,14 +2382,14 @@ _ref:
           id: 'user-link',
           type: 'Anchor',
           properties: {
-            pageId: { '_module.pageId': 'users-list' },
+            pageId: 'layout/users-list',
           },
         },
       ],
     });
   });
 
-  test('component ref with consumer _module.connectionId passes through unresolved', async () => {
+  test('consumer _module.connectionId in vars resolves against template module', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2396,7 +2401,12 @@ _ref:
             },
           ],
           pages: [],
-          connections: [],
+          connections: [{ id: 'user-contacts' }],
+        },
+        exports: {
+          pages: [],
+          connections: [{ id: 'user-contacts' }],
+          api: [],
         },
         moduleRoot: '/mod',
         packageRoot: '/mod',
@@ -2423,12 +2433,12 @@ _ref:
     expect(res).toEqual({
       type: 'Box',
       content: {
-        connectionId: { '_module.connectionId': 'user-contacts' },
+        connectionId: 'layout/user-contacts',
       },
     });
   });
 
-  test('component ref with consumer _module.endpointId passes through unresolved', async () => {
+  test('consumer _module.endpointId in vars resolves against template module', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2441,7 +2451,12 @@ _ref:
           ],
           pages: [],
           connections: [],
-          api: [],
+          api: [{ id: 'update-user' }],
+        },
+        exports: {
+          pages: [],
+          connections: [],
+          api: [{ id: 'update-user' }],
         },
         moduleRoot: '/mod',
         packageRoot: '/mod',
@@ -2468,7 +2483,7 @@ _ref:
     expect(res).toEqual({
       type: 'Box',
       endpoint: {
-        endpointId: { '_module.endpointId': 'update-user' },
+        endpointId: 'layout/update-user',
       },
     });
   });
@@ -2492,6 +2507,11 @@ _ref:
           ],
           pages: [{ id: 'dashboard' }],
           connections: [],
+        },
+        exports: {
+          pages: [{ id: 'dashboard' }],
+          connections: [],
+          api: [],
         },
         moduleRoot: '/mod',
         packageRoot: '/mod',
@@ -2540,6 +2560,11 @@ _ref:
           pages: [],
           connections: [{ id: 'db' }],
         },
+        exports: {
+          pages: [],
+          connections: [{ id: 'db' }],
+          api: [],
+        },
         moduleRoot: '/mod',
         packageRoot: '/mod',
         vars: {},
@@ -2567,7 +2592,7 @@ _ref:
     ]);
   });
 
-  test('component ref with deferred _ref, vars, and _module.* operators', async () => {
+  test('component ref with deferred _ref, vars, and _module.* operators resolves', async () => {
     const componentContent = { _ref: '/mod/components/page.yaml' };
     Object.defineProperty(componentContent, '~deferredFrom', {
       value: '/mod/module.lowdefy.yaml',
@@ -2580,8 +2605,13 @@ _ref:
         id: 'layout',
         manifest: {
           components: [{ id: 'page', component: componentContent }],
-          pages: [{ id: 'dashboard' }],
-          connections: [{ id: 'db' }],
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
+          connections: [{ id: 'db' }, { id: 'user-contacts' }],
+        },
+        exports: {
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
+          connections: [{ id: 'db' }, { id: 'user-contacts' }],
+          api: [],
         },
         moduleRoot: '/mod',
         packageRoot: '/mod',
@@ -2628,8 +2658,8 @@ blocks:
           id: 'user-link',
           type: 'Anchor',
           properties: {
-            pageId: { '_module.pageId': 'users-list' },
-            connectionId: { '_module.connectionId': 'user-contacts' },
+            pageId: 'layout/users-list',
+            connectionId: 'layout/user-contacts',
           },
         },
       ],

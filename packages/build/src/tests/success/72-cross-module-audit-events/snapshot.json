@@ -111,9 +111,7 @@
     },
     "9": {
       "key": "root.pages[1:companies/company-detail:Box]",
-      "~k_parent": "7",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "7"
     },
     "10": {
       "key": "root.pages[2:404:Result].slots.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
@@ -347,13 +345,12 @@
     },
     "g": {
       "key": "root.connections[0:events/event-store:AxiosHttp]",
-      "~k_parent": "f",
-      "~l": 9
+      "~k_parent": "f"
     },
     "h": {
       "key": "root.connections[0:events/event-store:AxiosHttp].properties",
       "~k_parent": "g",
-      "~l": 11
+      "~l": 13
     },
     "i": {
       "key": "root.api",
@@ -361,9 +358,7 @@
     },
     "j": {
       "key": "root.api[0:events/log-event:Api]",
-      "~k_parent": "i",
-      "~r": "api.0",
-      "~l": 1
+      "~k_parent": "i"
     },
     "k": {
       "key": "root.api[0:events/log-event:Api].routine",
@@ -5628,7 +5623,7 @@
     },
     "api.0": {
       "parent": "2",
-      "lineNumber": 15,
+      "lineNumber": 17,
       "path": "<CONFIG_DIR>/modules/events/api/log-event.yaml"
     },
     "pages.0": {

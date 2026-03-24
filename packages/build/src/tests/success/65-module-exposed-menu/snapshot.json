@@ -320,9 +320,7 @@
     },
     "h": {
       "key": "root.pages[1:admin/settings:Box]",
-      "~k_parent": "f",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "f"
     },
     "i": {
       "key": "root.pages[1:admin/settings:Box].blocks",
@@ -344,9 +342,7 @@
     },
     "l": {
       "key": "root.pages[2:admin/users:Box]",
-      "~k_parent": "f",
-      "~r": "pages.1",
-      "~l": 1
+      "~k_parent": "f"
     },
     "m": {
       "key": "root.pages[2:admin/users:Box].blocks",
@@ -5644,17 +5640,17 @@
     },
     "menus.0": {
       "parent": "2",
-      "lineNumber": 10,
+      "lineNumber": 17,
       "path": "<CONFIG_DIR>/modules/admin/menus/default.yaml"
     },
     "pages.0": {
       "parent": "2",
-      "lineNumber": 13,
+      "lineNumber": 20,
       "path": "<CONFIG_DIR>/modules/admin/pages/settings.yaml"
     },
     "pages.1": {
       "parent": "2",
-      "lineNumber": 14,
+      "lineNumber": 21,
       "path": "<CONFIG_DIR>/modules/admin/pages/users.yaml"
     },
     "menus.0.links._build.array.concat.1": {

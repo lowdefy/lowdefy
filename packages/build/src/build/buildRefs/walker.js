@@ -24,9 +24,8 @@ import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
-import resolveModuleOperators, {
-  scopeMenuItemIds,
-} from '../resolveModuleOperators.js';
+import { scopeMenuItemIds } from '../resolveModuleOperators.js';
+import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 
@@ -38,6 +37,7 @@ class WalkContext {
     vars,
     moduleVars,
     moduleDependencies,
+    moduleEntry,
     packageRoot,
     path,
     currentFile,
@@ -53,6 +53,7 @@ class WalkContext {
     this.vars = vars;
     this.moduleVars = moduleVars;
     this.moduleDependencies = moduleDependencies;
+    this.moduleEntry = moduleEntry ?? null;
     this.packageRoot = packageRoot;
     this.path = path;
     this.currentFile = currentFile;
@@ -71,6 +72,7 @@ class WalkContext {
       vars: this.vars,
       moduleVars: this.moduleVars,
       moduleDependencies: this.moduleDependencies,
+      moduleEntry: this.moduleEntry,
       packageRoot: this.packageRoot,
       path: this.path ? `${this.path}.${segment}` : segment,
       currentFile: this.currentFile,
@@ -82,7 +84,7 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleVars, packageRoot, moduleDependencies, extraRefChainKeys }) {
+  forRef({ refId, vars, filePath, moduleVars, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -99,6 +101,7 @@ class WalkContext {
       vars: vars ?? {},
       moduleVars: moduleVars ?? this.moduleVars,
       moduleDependencies: moduleDependencies ?? this.moduleDependencies,
+      moduleEntry: moduleEntry ?? this.moduleEntry,
       packageRoot: packageRoot ?? this.packageRoot,
       path: this.path,
       currentFile: filePath ?? this.currentFile,
@@ -294,7 +297,138 @@ function resolveModuleVar(node, ctx) {
   );
 }
 
-// Resolve a _ref node (12-step ref handling)
+// Detect _module.*Id operators
+const MODULE_ID_OPERATOR_KEYS = [
+  '_module.pageId',
+  '_module.connectionId',
+  '_module.endpointId',
+  '_module.id',
+];
+
+function isModuleIdOperator(node) {
+  return MODULE_ID_OPERATOR_KEYS.some((key) => !type.isUndefined(node[key]));
+}
+
+// Resolve _module.pageId
+function resolveModulePageId(arg, moduleEntry, context) {
+  if (type.isString(arg)) {
+    if (!(moduleEntry.exports?.pages ?? []).some((p) => p.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export page "${arg}".`);
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    if (!(targetEntry.exports?.pages ?? []).some((p) => p.id === arg.id)) {
+      throw new ConfigError(
+        `Module "${moduleEntry.id}" references page "${arg.id}" ` +
+          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export page "${arg.id}".`
+      );
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.pageId requires a string or object { id, module }.');
+}
+
+// Resolve _module.connectionId
+function resolveModuleConnectionId(arg, moduleEntry, context) {
+  if (type.isString(arg)) {
+    if (!(moduleEntry.exports?.connections ?? []).some((c) => c.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export connection "${arg}".`);
+    }
+    const remapping = moduleEntry.connections ?? {};
+    if (remapping[arg]) {
+      return remapping[arg];
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    if (!(targetEntry.exports?.connections ?? []).some((c) => c.id === arg.id)) {
+      throw new ConfigError(
+        `Module "${moduleEntry.id}" references connection "${arg.id}" ` +
+          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export connection "${arg.id}".`
+      );
+    }
+    const targetRemapping = targetEntry.connections ?? {};
+    if (targetRemapping[arg.id]) {
+      return targetRemapping[arg.id];
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.connectionId requires a string or object { id, module }.');
+}
+
+// Resolve _module.endpointId
+function resolveModuleEndpointId(arg, moduleEntry, context) {
+  if (type.isString(arg)) {
+    if (!(moduleEntry.exports?.api ?? []).some((e) => e.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export endpoint "${arg}".`);
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    if (!(targetEntry.exports?.api ?? []).some((e) => e.id === arg.id)) {
+      throw new ConfigError(
+        `Module "${moduleEntry.id}" references endpoint "${arg.id}" ` +
+          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export endpoint "${arg.id}".`
+      );
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.endpointId requires a string or object { id, module }.');
+}
+
+// Resolve _module.id
+function resolveModuleId(arg, moduleEntry, context) {
+  if (!type.isObject(arg)) {
+    return moduleEntry.id;
+  }
+
+  if (type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    return targetEntry.id;
+  }
+
+  throw new ConfigError('_module.id requires a truthy value or object { module }.');
+}
+
+// Dispatch _module.*Id operators
+function resolveModuleIdOperator(node, ctx) {
+  if (!ctx.moduleEntry) {
+    return node;
+  }
+
+  const { moduleEntry } = ctx;
+  const context = ctx.buildContext;
+
+  if (!type.isUndefined(node['_module.pageId'])) {
+    return resolveModulePageId(node['_module.pageId'], moduleEntry, context);
+  }
+  if (!type.isUndefined(node['_module.connectionId'])) {
+    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, context);
+  }
+  if (!type.isUndefined(node['_module.endpointId'])) {
+    return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context);
+  }
+  if (!type.isUndefined(node['_module.id'])) {
+    return resolveModuleId(node['_module.id'], moduleEntry, context);
+  }
+
+  return node;
+}
+
+// Resolve a _ref node (16-step ref handling)
 async function resolveRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
@@ -334,14 +468,14 @@ async function resolveRef(node, ctx) {
     ctx.refMap[refDef.id].original = refDef.original;
   }
 
-  // 5b. Path escape constraint: module refs cannot escape the package root
+  // 6. Path escape constraint: module refs cannot escape the package root
   if (ctx.packageRoot && refDef.path) {
     if (!refDef.path.startsWith(ctx.packageRoot + '/') && refDef.path !== ctx.packageRoot) {
       throw new ConfigError(`Module ref path "${refDef.path}" escapes the package root.`);
     }
   }
 
-  // 6. Circular detection
+  // 7. Circular detection
   if (refDef.path && ctx.refChain.has(refDef.path)) {
     const chainDisplay = [...ctx.refChain, refDef.path].join('\n  -> ');
     throw new ConfigError(
@@ -351,11 +485,11 @@ async function resolveRef(node, ctx) {
   }
 
 
-  // Steps 7-14: File operations that can fail independently per ref.
+  // Steps 8-16: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
   // allowing multiple errors to be reported at once.
   try {
-    // 7. Load content
+    // 8. Load content
     let content;
     let resolvedEntryId = null;
 
@@ -376,8 +510,8 @@ async function resolveRef(node, ctx) {
       });
     }
 
-    // 7b. Circular detection for cross-module component/menu refs.
-    // File-based cycle detection (step 6) misses these because each module
+    // 9. Circular detection for cross-module component/menu refs.
+    // File-based cycle detection (step 7) misses these because each module
     // has a different file path. Use a synthetic key with the resolved
     // concrete entry ID: "module:<entryId>/<type>:<name>".
     if (resolvedEntryId && (refDef.component || refDef.menu)) {
@@ -394,7 +528,7 @@ async function resolveRef(node, ctx) {
       }
     }
 
-    // 8. Create child context for the ref
+    // 10. Create child context for the ref
     let childCtx;
     if (refDef.module && (refDef.component || refDef.menu)) {
       const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
@@ -409,6 +543,7 @@ async function resolveRef(node, ctx) {
         moduleVars: moduleEntry.vars,
         packageRoot: moduleEntry.packageRoot,
         moduleDependencies: moduleEntry.moduleDependencies,
+        moduleEntry,
         extraRefChainKeys: [cycleKey],
       });
 
@@ -435,39 +570,29 @@ async function resolveRef(node, ctx) {
       });
     }
 
-    // 9. Walk the content
+    // 11. Walk the content
     content = await resolve(content, childCtx);
 
-    // 10. Module ref post-processing — resolve ID operators and scope menu IDs
-    // Component refs skip this: their content mixes module template with consumer vars,
-    // so _module.* operators reference the consumer's module, not the target.
-    if (refDef.module && !refDef.component) {
+    // 12. Scope menu item IDs (module menu refs only)
+    if (refDef.module && refDef.menu) {
       const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
-      content = resolveModuleOperators({
-        input: content,
-        moduleEntry,
-        context: ctx.buildContext,
-      });
-
-      if (refDef.menu) {
-        scopeMenuItemIds(content, moduleEntry.id);
-      }
+      scopeMenuItemIds(content, moduleEntry.id);
     }
 
-    // 11. Run transformer
+    // 13. Run transformer
     content = await runTransformer({
       context: ctx.buildContext,
       input: content,
       refDef,
     });
 
-    // 12. Extract key
+    // 14. Extract key
     content = getKey({ input: content, refDef });
 
-    // 13. Tag all nodes with ~r for provenance
+    // 15. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
 
-    // 14. Propagate ~ignoreBuildChecks
+    // 16. Propagate ~ignoreBuildChecks
     if (refDef.ignoreBuildChecks !== undefined) {
       if (type.isObject(content)) {
         content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
@@ -495,37 +620,12 @@ async function resolve(node, ctx) {
   // 1. Primitives pass through
   if (!type.isObject(node) && !type.isArray(node)) return node;
 
-  // 2. Object with _ref
+  // 2. _ref — top-down (only operator that needs it)
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
     return resolveRef(node, ctx);
   }
 
-  // 4. Object with _var — resolve, then re-walk the result so any
-  //    _ref or _build.* operators inside the default value get processed.
-  if (type.isObject(node) && !type.isUndefined(node._var)) {
-    try {
-      const varResult = resolveVar(node, ctx);
-      return await resolve(varResult, ctx);
-    } catch (error) {
-      if (error instanceof ConfigError) {
-        ctx.collectError(error);
-        return null;
-      }
-      throw error;
-    }
-  }
-
-  // 4b. Object with _module.var — resolve, then re-walk the result
-  if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
-    if (!ctx.moduleVars) {
-      // Not in a module context — pass through unchanged, don't re-walk
-      return node;
-    }
-    const moduleVarResult = resolveModuleVar(node, ctx);
-    return resolve(moduleVarResult, ctx);
-  }
-
-  // 5. Array — walk children in parallel
+  // 3. Array — walk children in parallel
   if (type.isArray(node)) {
     await Promise.all(
       node.map(async (item, i) => {
@@ -535,7 +635,7 @@ async function resolve(node, ctx) {
     return node;
   }
 
-  // 6. Object — walk children in parallel
+  // 4. Object — walk children in parallel (with shouldStop)
   const keys = Object.keys(node);
   await Promise.all(
     keys.map(async (key) => {
@@ -557,7 +657,32 @@ async function resolve(node, ctx) {
     }),
   );
 
-  // Check if this is a _build.* operator
+  // 5. _var — substitution (children already resolved)
+  if (!type.isUndefined(node._var)) {
+    try {
+      const varResult = resolveVar(node, ctx);
+      return await resolve(varResult, ctx);
+    } catch (error) {
+      if (error instanceof ConfigError) {
+        ctx.collectError(error);
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  // 6. _module.var — module variable substitution
+  if (!type.isUndefined(node['_module.var'])) {
+    if (!ctx.moduleVars) return node;
+    return resolve(resolveModuleVar(node, ctx), ctx);
+  }
+
+  // 7. _module.*Id — resolve to scoped ID string
+  if (isModuleIdOperator(node)) {
+    return resolveModuleIdOperator(node, ctx);
+  }
+
+  // 8. _build.* operator
   if (isBuildOperator(node)) {
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);

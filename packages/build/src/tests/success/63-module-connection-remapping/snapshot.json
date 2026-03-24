@@ -363,9 +363,7 @@
     },
     "e": {
       "key": "root.connections[2:notify2/email:SendGridMail]",
-      "~k_parent": "9",
-      "~r": "4",
-      "~l": 1
+      "~k_parent": "9"
     },
     "f": {
       "key": "root.connections[2:notify2/email:SendGridMail].properties",
@@ -391,9 +389,7 @@
     },
     "j": {
       "key": "root.pages[1:notify/inbox:Box]",
-      "~k_parent": "h",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "h"
     },
     "k": {
       "key": "root.pages[1:notify/inbox:Box].blocks",
@@ -433,9 +429,7 @@
     },
     "q": {
       "key": "root.pages[2:notify2/inbox:Box]",
-      "~k_parent": "h",
-      "~r": "5",
-      "~l": 1
+      "~k_parent": "h"
     },
     "r": {
       "key": "root.pages[2:notify2/inbox:Box].blocks",
@@ -5849,12 +5843,12 @@
     },
     "4": {
       "parent": "3",
-      "lineNumber": 14,
+      "lineNumber": 20,
       "path": "<CONFIG_DIR>/modules/notifier/connections/email.yaml"
     },
     "5": {
       "parent": "3",
-      "lineNumber": 17,
+      "lineNumber": 23,
       "path": "<CONFIG_DIR>/modules/notifier/pages/inbox.yaml"
     },
     "6": {
@@ -5862,12 +5856,12 @@
     },
     "connections.0": {
       "parent": "2",
-      "lineNumber": 14,
+      "lineNumber": 20,
       "path": "<CONFIG_DIR>/modules/notifier/connections/email.yaml"
     },
     "pages.0": {
       "parent": "2",
-      "lineNumber": 17,
+      "lineNumber": 23,
       "path": "<CONFIG_DIR>/modules/notifier/pages/inbox.yaml"
     }
   },

@@ -269,9 +269,7 @@
     },
     "c": {
       "key": "root.pages[1:contacts/contact-list:Box]",
-      "~k_parent": "a",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "a"
     },
     "d": {
       "key": "root.pages[1:contacts/contact-list:Box].blocks",

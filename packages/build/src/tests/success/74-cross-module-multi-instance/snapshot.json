@@ -313,9 +313,7 @@
     },
     "e": {
       "key": "root.pages[1:internal-contacts/contact-detail:Box]",
-      "~k_parent": "c",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "c"
     },
     "f": {
       "key": "root.pages[1:internal-contacts/contact-detail:Box].blocks",
@@ -349,9 +347,7 @@
     },
     "k": {
       "key": "root.pages[2:external-contacts/contact-detail:Box]",
-      "~k_parent": "c",
-      "~r": "6",
-      "~l": 1
+      "~k_parent": "c"
     },
     "l": {
       "key": "root.pages[2:external-contacts/contact-detail:Box].blocks",
@@ -385,9 +381,7 @@
     },
     "q": {
       "key": "root.pages[3:internal-companies/company-detail:Box]",
-      "~k_parent": "c",
-      "~r": "7",
-      "~l": 1
+      "~k_parent": "c"
     },
     "r": {
       "key": "root.pages[3:internal-companies/company-detail:Box].blocks",
@@ -421,9 +415,7 @@
     },
     "w": {
       "key": "root.pages[4:external-companies/company-detail:Box]",
-      "~k_parent": "c",
-      "~r": "8",
-      "~l": 1
+      "~k_parent": "c"
     },
     "x": {
       "key": "root.pages[4:external-companies/company-detail:Box].blocks",

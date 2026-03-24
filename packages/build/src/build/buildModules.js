@@ -19,8 +19,6 @@
 import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
-import resolveModuleOperators from './resolveModuleOperators.js';
-
 function validateModuleSecrets({ content, manifest, entryId }) {
   const declaredSecrets = new Set((manifest.secrets ?? []).map((s) => s.name));
 
@@ -86,39 +84,24 @@ function buildModules({ components, context }) {
 
     // Process pages
     for (const page of manifest.pages ?? []) {
-      const processed = resolveModuleOperators({
-        input: page,
-        moduleEntry,
-        context,
-      });
-      processed.id = `${entry.id}/${processed.id}`;
+      const scoped = { ...page, id: `${entry.id}/${page.id}` };
       components.pages = components.pages ?? [];
-      components.pages.push(processed);
+      components.pages.push(scoped);
     }
 
     // Process connections (skip remapped -- app provides those)
     for (const conn of manifest.connections ?? []) {
       if (remapping[conn.id]) continue;
-      const processed = resolveModuleOperators({
-        input: conn,
-        moduleEntry,
-        context,
-      });
-      processed.id = `${entry.id}/${processed.id}`;
+      const scoped = { ...conn, id: `${entry.id}/${conn.id}` };
       components.connections = components.connections ?? [];
-      components.connections.push(processed);
+      components.connections.push(scoped);
     }
 
     // Process API endpoints
     for (const endpoint of manifest.api ?? []) {
-      const processed = resolveModuleOperators({
-        input: endpoint,
-        moduleEntry,
-        context,
-      });
-      processed.id = `${entry.id}/${processed.id}`;
+      const scoped = { ...endpoint, id: `${entry.id}/${endpoint.id}` };
       components.api = components.api ?? [];
-      components.api.push(processed);
+      components.api.push(scoped);
     }
   }
 

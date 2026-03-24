@@ -340,13 +340,13 @@
       "key": "root.menus[0:main].links[2:app-a/settings:MenuLink]",
       "~k_parent": "c",
       "~r": "3",
-      "~l": 19
+      "~l": 20
     },
     "i": {
       "key": "root.menus[0:main].links[2:app-a/settings:MenuLink].properties",
       "~k_parent": "h",
       "~r": "3",
-      "~l": 23
+      "~l": 24
     },
     "j": {
       "key": "root.menus[0:main].links[3:app-b/nav/dashboard:MenuLink]",
@@ -364,13 +364,13 @@
       "key": "root.menus[0:main].links[4:app-b/reports:MenuLink]",
       "~k_parent": "c",
       "~r": "4",
-      "~l": 19
+      "~l": 20
     },
     "m": {
       "key": "root.menus[0:main].links[4:app-b/reports:MenuLink].properties",
       "~k_parent": "l",
       "~r": "4",
-      "~l": 23
+      "~l": 24
     },
     "n": {
       "key": "root.pages",
@@ -384,14 +384,11 @@
     },
     "p": {
       "key": "root.pages[1:nav/dashboard:Box]",
-      "~k_parent": "n",
-      "~l": 20
+      "~k_parent": "n"
     },
     "q": {
       "key": "root.pages[2:app-a/dashboard:Box]",
-      "~k_parent": "n",
-      "~r": "pages.0",
-      "~l": 1
+      "~k_parent": "n"
     },
     "r": {
       "key": "root.pages[2:app-a/dashboard:Box].blocks",
@@ -413,14 +410,11 @@
     },
     "u": {
       "key": "root.pages[3:app-a/settings:Box]",
-      "~k_parent": "n",
-      "~l": 28
+      "~k_parent": "n"
     },
     "v": {
       "key": "root.pages[4:app-b/dashboard:Box]",
-      "~k_parent": "n",
-      "~r": "6",
-      "~l": 1
+      "~k_parent": "n"
     },
     "w": {
       "key": "root.pages[4:app-b/dashboard:Box].blocks",
@@ -442,8 +436,7 @@
     },
     "z": {
       "key": "root.pages[5:app-b/reports:Box]",
-      "~k_parent": "n",
-      "~l": 28
+      "~k_parent": "n"
     },
     "1a": {
       "key": "root.pages[6:404:Result].slots.extra.blocks[0:home:Button].events",
@@ -5801,17 +5794,17 @@
     },
     "5": {
       "parent": "4",
-      "lineNumber": 16,
+      "lineNumber": 17,
       "path": null,
       "original": {
         "module": "nav",
         "menu": "shared-nav",
-        "~l": 16
+        "~l": 17
       }
     },
     "6": {
       "parent": "4",
-      "lineNumber": 27,
+      "lineNumber": 28,
       "path": "<CONFIG_DIR>/modules/app-b/pages/dashboard.yaml"
     },
     "7": {
@@ -5819,17 +5812,17 @@
     },
     "menus.0.links._build.array.concat.0": {
       "parent": "3",
-      "lineNumber": 16,
+      "lineNumber": 17,
       "path": null,
       "original": {
         "module": "nav",
         "menu": "shared-nav",
-        "~l": 16
+        "~l": 17
       }
     },
     "pages.0": {
       "parent": "3",
-      "lineNumber": 27,
+      "lineNumber": 28,
       "path": "<CONFIG_DIR>/modules/app-a/pages/dashboard.yaml"
     },
     "menus.0.links._build.array.concat.1": {
