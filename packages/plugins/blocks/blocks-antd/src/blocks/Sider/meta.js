@@ -55,12 +55,6 @@ export default {
         default: false,
         description: 'Direction of arrow, for a sider that expands from the right',
       },
-      theme: {
-        type: 'string',
-        enum: ['light', 'dark'],
-        default: 'dark',
-        description: 'Color theme of the sidebar',
-      },
       width: {
         type: ['string', 'number'],
         description: 'width of the sidebar',

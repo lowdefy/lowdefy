@@ -119,6 +119,11 @@
           "id": "aggrid-dark-blocks-removal",
           "description": "Replace removed AgGrid*Dark block types with auto-detecting light variants",
           "path": "v5-0-0/23-aggrid-dark-blocks-removal.md"
+        },
+        {
+          "id": "page-layout-theme-removal",
+          "description": "Remove header.theme, sider.theme, menu.theme from page layout blocks and migrate nested style props",
+          "path": "v5-0-0/24-page-layout-theme-removal.md"
         }
       ]
     }

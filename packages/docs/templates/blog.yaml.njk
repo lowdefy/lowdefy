@@ -32,13 +32,6 @@ events:
 properties:
   title: {{ pageTitle }}
   darkModeToggle: true
-  header:
-    theme:
-      _if:
-        test:
-          _media: darkMode
-        then: dark
-        else: light
   menu:
     forceSubMenuRender: true
     links: []
@@ -52,13 +45,12 @@ properties:
         - _eq:
             - _media: size
             - lg
-  content:
-    style:
-      background: '#FFFFFF'
-  footer:
-    style:
-      background: '#FFFFFF'
-      padding: 16px 0px 0px 0px
+style:
+  /content:
+    background: var(--ant-color-bg-container)
+  /footer:
+    background: var(--ant-color-bg-container)
+    padding: 16px 0px 0px 0px
 slots:
   header:
     blocks:
@@ -82,12 +74,12 @@ slots:
       - id: affix_breadcrumb
         type: Affix
         style:
-          background: '#FFFFFF'
+          background: var(--ant-color-bg-container)
         blocks:
           - id: breadcrumb
             type: Breadcrumb
             style:
-              background: '#FFFFFF'
+              background: var(--ant-color-bg-container)
               margin: 0px -32px 0px -32px
               padding: 8px 32px 8px 32px
             properties:

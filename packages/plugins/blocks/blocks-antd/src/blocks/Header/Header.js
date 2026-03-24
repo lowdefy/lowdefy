@@ -20,12 +20,12 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 const Header = Layout.Header;
 
-const HeaderBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
+const HeaderBlock = ({ blockId, classNames = {}, content, styles = {} }) => (
   <Header
     id={blockId}
     className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
     style={{
-      backgroundColor: properties.theme === 'light' ? 'var(--ant-color-bg-container)' : undefined,
+      backgroundColor: 'var(--ant-color-bg-container)',
       ...styles.element,
     }}
   >

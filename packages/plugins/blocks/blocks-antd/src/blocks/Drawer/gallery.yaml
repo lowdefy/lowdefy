@@ -30,7 +30,7 @@
               blockId: drawer_basic
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_basic
       type: Drawer
       properties:
@@ -63,7 +63,7 @@
               blockId: drawer_place_right
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_place_left_btn
       type: Button
       layout:
@@ -80,7 +80,7 @@
               blockId: drawer_place_left
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_place_top_btn
       type: Button
       layout:
@@ -97,7 +97,7 @@
               blockId: drawer_place_top
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_place_bottom_btn
       type: Button
       layout:
@@ -114,7 +114,7 @@
               blockId: drawer_place_bottom
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_place_right
       type: Drawer
       properties:
@@ -177,7 +177,7 @@
               blockId: drawer_narrow
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_wide_btn
       type: Button
       layout:
@@ -195,7 +195,7 @@
               blockId: drawer_wide
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_pct_btn
       type: Button
       layout:
@@ -213,7 +213,7 @@
               blockId: drawer_pct
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_narrow
       type: Drawer
       properties:
@@ -263,7 +263,7 @@
               blockId: drawer_closable
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_not_closable_btn
       type: Button
       layout:
@@ -280,7 +280,7 @@
               blockId: drawer_not_closable
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_closable
       type: Drawer
       properties:
@@ -315,7 +315,7 @@
                   blockId: drawer_not_closable
                   method: setOpen
                   args:
-                    open: false
+                    - open: false
 
 - title: Mask Options
   blocks:
@@ -335,7 +335,7 @@
               blockId: drawer_mask_default
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_no_mask_btn
       type: Button
       layout:
@@ -352,7 +352,7 @@
               blockId: drawer_no_mask
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_mask_no_close_btn
       type: Button
       layout:
@@ -369,7 +369,7 @@
               blockId: drawer_mask_no_close
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_mask_default
       type: Drawer
       properties:
@@ -421,7 +421,7 @@
               blockId: drawer_keyboard_on
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_keyboard_off_btn
       type: Button
       layout:
@@ -438,7 +438,7 @@
               blockId: drawer_keyboard_off
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_keyboard_on
       type: Drawer
       properties:
@@ -478,7 +478,7 @@
               blockId: drawer_zindex
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_zindex
       type: Drawer
       properties:
@@ -508,7 +508,7 @@
               blockId: drawer_extra
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_extra
       type: Drawer
       properties:
@@ -538,7 +538,7 @@
                           blockId: drawer_extra
                           method: setOpen
                           args:
-                            open: false
+                            - open: false
                 - id: drawer_extra_submit_btn
                   type: Button
                   layout:
@@ -600,7 +600,7 @@
               blockId: drawer_events
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_events
       type: Drawer
       properties:
@@ -653,7 +653,7 @@
               blockId: drawer_inline_style
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_inline_style
       type: Drawer
       properties:
@@ -686,7 +686,7 @@
               blockId: drawer_css_keys
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_css_keys
       type: Drawer
       properties:
@@ -716,7 +716,7 @@
               blockId: drawer_css_accent
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_css_accent
       type: Drawer
       properties:
@@ -746,7 +746,7 @@
               blockId: drawer_css_mask
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_css_mask
       type: Drawer
       properties:
@@ -778,7 +778,7 @@
               blockId: drawer_theme_green
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_theme_green
       type: Drawer
       properties:
@@ -807,7 +807,7 @@
               blockId: drawer_theme_dark
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_theme_dark
       type: Drawer
       properties:
@@ -842,7 +842,7 @@
               blockId: drawer_theme_spacing
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_theme_spacing
       type: Drawer
       properties:
@@ -876,7 +876,7 @@
               blockId: drawer_edit_form
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_edit_form
       type: Drawer
       properties:
@@ -907,7 +907,7 @@
                           blockId: drawer_edit_form
                           method: setOpen
                           args:
-                            open: false
+                            - open: false
                 - id: drawer_edit_form_save_btn
                   type: Button
                   layout:
@@ -931,7 +931,7 @@
                           blockId: drawer_edit_form
                           method: setOpen
                           args:
-                            open: false
+                            - open: false
       blocks:
         - id: drawer_edit_form_name
           type: TextInput
@@ -986,7 +986,7 @@
               blockId: drawer_filter_panel
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_filter_panel
       type: Drawer
       properties:
@@ -1080,7 +1080,7 @@
                   blockId: drawer_filter_panel
                   method: setOpen
                   args:
-                    open: false
+                    - open: false
 
 - title: Drawer as User Profile Panel
   blocks:
@@ -1101,7 +1101,7 @@
               blockId: drawer_profile
               method: setOpen
               args:
-                open: true
+                - open: true
     - id: drawer_profile
       type: Drawer
       properties:

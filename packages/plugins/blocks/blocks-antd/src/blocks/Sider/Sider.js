@@ -58,8 +58,11 @@ const SiderBlock = ({
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
-      style={{ overflow: 'auto', ...styles.element }}
-      theme={properties.theme}
+      style={{
+        overflow: 'auto',
+        backgroundColor: 'var(--ant-color-bg-container)',
+        ...styles.element,
+      }}
       width={properties.width}
       onBreakpoint={() => methods.triggerEvent({ name: 'onBreakpoint' })}
     >

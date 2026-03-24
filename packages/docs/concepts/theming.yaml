@@ -258,6 +258,22 @@ _ref:
 
             See the [`SetDarkMode` action reference](/SetDarkMode) and [`_media` operator reference](/_media) for full documentation.
 
+            ### Tip: Use CSS variables for dark-mode-safe colors
+
+            When styling blocks with custom colors (e.g. `cellStyle` in AgGrid, or `style` on any block), avoid hardcoded hex values — they won't adapt to dark mode. Use antd CSS variables instead:
+
+            ```yaml
+            # Bad — hardcoded colors look washed out in dark mode
+            cellStyle:
+              backgroundColor: '#e6f7ff'
+
+            # Good — antd palette tokens adapt automatically
+            cellStyle:
+              backgroundColor: var(--ant-blue-1)
+            ```
+
+            Useful palette variables: `var(--ant-blue-1)`, `var(--ant-green-1)`, `var(--ant-orange-1)`, `var(--ant-red-1)`, etc. For semantic colors, use `var(--ant-color-primary-bg)`, `var(--ant-color-success-bg)`, `var(--ant-color-warning-bg)`, `var(--ant-color-error-bg)`.
+
             ## Tailwind theme bridge (`theme.tailwind`)
 
             Lowdefy automatically bridges antd design tokens to Tailwind CSS theme variables. This means Tailwind utility classes like `text-primary` or `bg-bg-container` resolve to the current antd theme — including when you switch to dark mode.

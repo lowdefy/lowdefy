@@ -15,6 +15,16 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import {
+  disabled,
+  placeholder,
+  inputTitle,
+  autoFocus,
+  variant,
+  bordered,
+  sizeSmallDefaultLarge,
+} from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -39,88 +49,14 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      autoFocus: {
-        type: 'boolean',
-        default: false,
-        description: 'Autofocus to the block on page load.',
-      },
-      bordered: {
-        type: 'boolean',
-        default: true,
-        description:
-          'Whether or not the input has a border style. Deprecated, use variant instead.',
-      },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
-      placeholder: {
-        type: 'string',
-        description: 'Placeholder text inside the block before user types input.',
-      },
-      label: {
-        type: 'object',
-        description: 'Label properties.',
-        additionalProperties: false,
-        properties: {
-          align: {
-            type: 'string',
-            enum: ['left', 'right'],
-            default: 'left',
-            description: 'Align label left or right when inline.',
-          },
-          colon: {
-            type: 'boolean',
-            default: true,
-            description: 'Append label with colon.',
-          },
-          extra: {
-            type: 'string',
-            description: 'Extra text to display beneath the content - supports html.',
-          },
-          title: {
-            type: 'string',
-            description: 'Label title - supports html.',
-          },
-          span: {
-            type: 'number',
-            description: 'Label inline span.',
-          },
-          disabled: {
-            type: 'boolean',
-            default: false,
-            description: 'Hide input label.',
-          },
-          hasFeedback: {
-            type: 'boolean',
-            default: true,
-            description:
-              'Display feedback extra from validation, this does not disable validation.',
-          },
-          inline: {
-            type: 'boolean',
-            default: false,
-            description: 'Render input and label inline.',
-          },
-        },
-      },
-      size: {
-        type: 'string',
-        enum: ['small', 'default', 'large'],
-        default: 'default',
-        description: 'Size of the block.',
-      },
-      title: {
-        type: 'string',
-        description:
-          'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
-      },
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        description: 'Input visual variant. When set, takes precedence over bordered.',
-      },
+      autoFocus,
+      bordered,
+      disabled,
+      placeholder,
+      label,
+      size: sizeSmallDefaultLarge,
+      title: inputTitle,
+      variant,
       visibilityToggle: {
         type: 'boolean',
         default: true,

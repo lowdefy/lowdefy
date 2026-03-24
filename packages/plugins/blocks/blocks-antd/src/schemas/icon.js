@@ -15,15 +15,10 @@
 */
 
 export default {
-  category: 'container',
-  icons: [],
-  valueType: null,
-  cssKeys: {
-    element: 'The Header element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {},
+  type: ['string', 'object'],
+  description:
+    "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon.",
+  docs: {
+    displayType: 'icon',
   },
 };

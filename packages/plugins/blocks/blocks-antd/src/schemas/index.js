@@ -14,16 +14,20 @@
   limitations under the License.
 */
 
-export default {
-  category: 'container',
-  icons: [],
-  valueType: null,
-  cssKeys: {
-    element: 'The Header element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {},
-  },
-};
+export { default as breadcrumbList } from './breadcrumbList.js';
+export { default as disabledDates } from './disabledDates.js';
+export { default as icon } from './icon.js';
+export { default as label } from './label.js';
+export { default as menuLinks } from './menuLinks.js';
+export { default as options } from './options.js';
+export {
+  disabled,
+  placeholder,
+  inputTitle,
+  autoFocus,
+  variant,
+  bordered,
+  allowClear,
+  sizeSmallMiddleLarge,
+  sizeSmallDefaultLarge,
+} from './inputProperties.js';

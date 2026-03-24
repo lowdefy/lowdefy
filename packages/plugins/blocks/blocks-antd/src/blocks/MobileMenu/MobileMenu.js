@@ -100,7 +100,6 @@ const MobileMenu = ({
               pageId={pageId}
               properties={{
                 collapsed: false,
-                theme: 'light',
                 ...properties,
                 mode: 'inline',
               }}
