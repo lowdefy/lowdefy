@@ -47,11 +47,11 @@
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/operators": "workspace:*",
+    "@lowdefy/operators": "4.7.1",
     "dayjs": "1.11.19"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "workspace:*",
+    "@lowdefy/node-utils": "4.7.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",

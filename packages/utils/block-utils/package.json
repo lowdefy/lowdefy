@@ -41,8 +41,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "workspace:*",
-    "@lowdefy/helpers": "workspace:*",
+    "@lowdefy/errors": "4.7.1",
+    "@lowdefy/helpers": "4.7.1",
     "clsx": "2.1.1",
     "dompurify": "3.2.4",
     "react": "18.2.0",

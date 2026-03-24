@@ -43,8 +43,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests"
   },
   "dependencies": {
-    "@lowdefy/errors": "workspace:*",
-    "@lowdefy/helpers": "workspace:*",
+    "@lowdefy/errors": "4.7.1",
+    "@lowdefy/helpers": "4.7.1",
     "ora": "7.0.1",
     "pino": "8.16.2"
   },

@@ -40,13 +40,13 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "workspace:*",
-    "@lowdefy/errors": "workspace:*",
-    "@lowdefy/helpers": "workspace:*",
-    "@lowdefy/node-utils": "workspace:*",
-    "@lowdefy/nunjucks": "workspace:*",
-    "@lowdefy/operators": "workspace:*",
-    "@lowdefy/operators-js": "workspace:*"
+    "@lowdefy/ajv": "4.7.1",
+    "@lowdefy/errors": "4.7.1",
+    "@lowdefy/helpers": "4.7.1",
+    "@lowdefy/node-utils": "4.7.1",
+    "@lowdefy/nunjucks": "4.7.1",
+    "@lowdefy/operators": "4.7.1",
+    "@lowdefy/operators-js": "4.7.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

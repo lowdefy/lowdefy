@@ -37,7 +37,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "workspace:*",
+    "@lowdefy/errors": "4.7.1",
     "lodash.merge": "4.6.2"
   },
   "devDependencies": {

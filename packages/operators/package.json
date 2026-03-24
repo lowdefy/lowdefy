@@ -40,8 +40,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=10000"
   },
   "dependencies": {
-    "@lowdefy/errors": "workspace:*",
-    "@lowdefy/helpers": "workspace:*"
+    "@lowdefy/errors": "4.7.1",
+    "@lowdefy/helpers": "4.7.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
