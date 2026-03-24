@@ -512,9 +512,6 @@ export default {
       type: 'object',
       additionalProperties: false,
       required: ['id', 'type'],
-      errorMessage: {
-        type: 'Block must be an object with "id" and "type" properties. A _ref, _var, or _module.var may have resolved to null.',
-      },
       properties: {
         '~ignoreBuildChecks': {
           oneOf: [

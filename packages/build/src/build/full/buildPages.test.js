@@ -259,7 +259,7 @@ test('block not an object', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Expected block to be an object on page "page1".'
+    'Block should be an object on page "page1".'
   );
 });
 
