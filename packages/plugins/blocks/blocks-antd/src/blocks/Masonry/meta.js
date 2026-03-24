@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks arranged in a masonry grid.',
+  },
   cssKeys: {
     element: 'The Masonry element.',
   },

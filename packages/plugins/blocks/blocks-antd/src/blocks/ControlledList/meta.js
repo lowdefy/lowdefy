@@ -18,6 +18,9 @@ export default {
   category: 'list',
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
   valueType: 'array',
+  slots: {
+    content: 'Blocks rendered for each list item.',
+  },
   cssKeys: {
     element: 'The ControlledList element.',
     header: 'The ControlledList header.',

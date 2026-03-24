@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Content blocks in the confirm modal body.',
+  },
   cssKeys: {
     element: 'The ConfirmModal element.',
     body: 'The ConfirmModal body.',

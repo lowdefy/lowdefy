@@ -129,11 +129,24 @@ function buildCssKeysTable(cssKeys) {
   return `| Key | Target |\n| --- | --- |\n${rows.join('\n')}`;
 }
 
+function buildSlotsTable(slots) {
+  if (slots === false)
+    return 'Slots are **dynamic** — defined by properties (e.g. `tabs`, `panels`). See the Properties table.';
+  if (!slots) return 'No slots defined.';
+  const entries = Array.isArray(slots) ? slots.map((key) => [key, '']) : Object.entries(slots);
+  if (entries.length === 0) return 'No slots defined.';
+  const rows = entries.map(([key, desc]) => {
+    return `| \`${key}\` | ${escapeMarkdownCell(desc ?? '')} |`;
+  });
+  return `| Slot | Description |\n| --- | --- |\n${rows.join('\n')}`;
+}
+
 function transformer(schema, vars) {
   const table = vars?.table;
   if (table === 'properties') return buildPropertiesTable(schema.properties?.properties);
   if (table === 'events') return buildEventsTable(schema.events);
   if (table === 'cssKeys') return buildCssKeysTable(schema.cssKeys);
+  if (table === 'slots') return buildSlotsTable(schema.slots);
   return '';
 }
 

@@ -21,8 +21,12 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 const Content = Layout.Content;
 
 const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Content id={blockId} className={classNames.element} style={styles.element}>
-    {content.content && content.content()}
+  <Content
+    id={blockId}
+    className={classNames.element}
+    style={{ flex: '1 1 auto', minWidth: 0, ...styles.element }}
+  >
+    {content.content && content.content({ flexDirection: 'column', flex: '1 1 auto' })}
   </Content>
 );
 

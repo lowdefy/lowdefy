@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'infoWindow'],
+  slots: {
+    content: 'Marker blocks on the map.',
+    infoWindow: 'Info window popup content.',
+  },
   cssKeys: {
     element: 'The map container element.',
   },

@@ -18,7 +18,12 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'cover', 'extra', 'title'],
+  slots: {
+    content: 'Main Card body.',
+    cover: 'Image or content above the body.',
+    extra: 'Extra content in the top-right header.',
+    title: 'Title area. Overrides the title property.',
+  },
   cssKeys: {
     element: 'The Card element.',
     header: 'The Card header.',

@@ -14,23 +14,59 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout } from 'antd';
+import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+
+import { renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
 
 const Header = Layout.Header;
 
-const HeaderBlock = ({ blockId, classNames = {}, content, styles = {} }) => (
-  <Header
-    id={blockId}
-    className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
-    style={{
-      backgroundColor: 'var(--ant-color-bg-container)',
-      ...styles.element,
-    }}
-  >
-    {content.content && content.content()}
-  </Header>
-);
+const HeaderBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon, Link, ShortcutBadge } = {},
+  content,
+  events = {},
+  methods = {},
+  properties = {},
+  styles = {},
+}) => {
+  useEffect(() => {
+    if (properties.darkModeToggle && methods.registerEvent) {
+      registerDarkModeMethod(methods);
+    }
+  });
+
+  const hasActions =
+    !type.isNone(properties.notifications) ||
+    !type.isNone(properties.profile) ||
+    properties.darkModeToggle;
+
+  return (
+    <Header
+      id={blockId}
+      className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        ...styles.element,
+      }}
+    >
+      {content.content && content.content({ flex: '1 1 auto', minWidth: 0, alignItems: 'center' })}
+      {hasActions &&
+        renderHeaderActions({
+          blockId,
+          classNames,
+          styles,
+          properties,
+          methods,
+          events,
+          components: { Icon, Link, ShortcutBadge },
+        })}
+    </Header>
+  );
+};
 
 export default withBlockDefaults(HeaderBlock);

@@ -25,5 +25,6 @@ _ref:
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Layout
     schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Layout/gallery.yaml
+    fullWidthExamples: true
     description: >
       Ant Design layout container for structuring page sections.

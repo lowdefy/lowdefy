@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'extra'],
+  slots: {
+    content: 'Main Drawer body.',
+    extra: 'Extra content in the header.',
+  },
   cssKeys: {
     element: 'The Drawer element.',
     header: 'The Drawer header.',

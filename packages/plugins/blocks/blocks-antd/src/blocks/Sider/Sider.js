@@ -60,7 +60,7 @@ const SiderBlock = ({
       reverseArrow={properties.reverseArrow}
       style={{
         overflow: 'auto',
-        backgroundColor: 'var(--ant-color-bg-container)',
+        background: 'var(--ant-color-bg-container)',
         ...styles.element,
       }}
       width={properties.width}

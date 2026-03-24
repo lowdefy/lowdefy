@@ -129,3 +129,37 @@ test('validateSlots falls back to block configKey when slot has no configKey', (
   validateSlots(block, pageContext);
   expect(pageContext.context.handleWarning.mock.calls[0][0].configKey).toBe('block-key');
 });
+
+test('validateSlots allows valid slot names with object format', () => {
+  const pageContext = createPageContext({
+    Card: { slots: { content: 'Main body.', title: 'Title area.', extra: 'Extra content.' } },
+  });
+  const block = {
+    blockId: 'b1',
+    type: 'Card',
+    slots: {
+      content: { blocks: [] },
+      title: { blocks: [] },
+      extra: { blocks: [] },
+    },
+  };
+  validateSlots(block, pageContext);
+  expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validateSlots warns on unknown slot name with object format', () => {
+  const pageContext = createPageContext({
+    Card: { slots: { content: 'Main body.', title: 'Title area.' } },
+  });
+  const block = {
+    blockId: 'b1',
+    type: 'Card',
+    slots: { footer: { blocks: [] } },
+  };
+  validateSlots(block, pageContext);
+  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
+    'Unknown slot "footer"'
+  );
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('content, title');
+});

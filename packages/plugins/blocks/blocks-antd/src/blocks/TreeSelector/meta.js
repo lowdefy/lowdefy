@@ -18,7 +18,9 @@ export default {
   category: 'input',
   icons: [],
   valueType: 'array',
-  slots: ['options'],
+  slots: {
+    options: 'Custom option content.',
+  },
   cssKeys: {
     element: 'The TreeSelector element.',
   },

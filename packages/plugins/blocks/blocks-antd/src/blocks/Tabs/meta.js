@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: false,
   cssKeys: {
     element: 'The Tabs element.',
     icon: 'The icon in the Tabs.',

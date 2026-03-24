@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks in the footer.',
+  },
   cssKeys: {
     element: 'The Footer element.',
   },

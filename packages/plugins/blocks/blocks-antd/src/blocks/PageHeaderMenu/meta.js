@@ -29,7 +29,11 @@ export default {
     ...MobileMenuMeta.icons,
   ],
   valueType: null,
-  slots: ['content', 'footer', 'header'],
+  slots: {
+    content: 'Main page content.',
+    footer: 'Page footer.',
+    header: 'Additional header content.',
+  },
   cssKeys: {
     element: 'The PageHeaderMenu element.',
     header: 'The PageHeaderMenu header.',

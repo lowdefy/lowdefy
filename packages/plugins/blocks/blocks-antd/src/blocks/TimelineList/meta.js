@@ -18,6 +18,9 @@ export default {
   category: 'list',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Blocks rendered for each timeline item.',
+  },
   cssKeys: {
     element: 'The TimelineList element.',
     icon: 'The icon in the TimelineList items.',

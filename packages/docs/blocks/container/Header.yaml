@@ -25,5 +25,6 @@ _ref:
     github_path: packages/plugins/blocks/blocks-antd/src/blocks/Header
     schema: ../plugins/blocks/blocks-antd/src/blocks/Header/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Header/gallery.yaml
+    fullWidthExamples: true
     description: >
-      Page header layout section.
+      Page header layout section. Supports built-in notifications, profile avatar, and dark mode toggle.

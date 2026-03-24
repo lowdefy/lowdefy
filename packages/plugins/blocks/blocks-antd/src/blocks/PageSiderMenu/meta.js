@@ -31,7 +31,12 @@ export default {
     ...MobileMenuMeta.icons,
   ],
   valueType: null,
-  slots: ['content', 'footer', 'header', 'sider'],
+  slots: {
+    content: 'Main page content.',
+    footer: 'Page footer.',
+    header: 'Additional header content.',
+    sider: 'Sider content below the menu.',
+  },
   cssKeys: {
     element: 'The PageSiderMenu element.',
     header: 'The PageSiderMenu header.',

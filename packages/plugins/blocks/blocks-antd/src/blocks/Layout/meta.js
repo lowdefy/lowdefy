@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Layout child blocks (Header, Sider, Content, Footer).',
+  },
   cssKeys: {
     element: 'The Layout element.',
   },

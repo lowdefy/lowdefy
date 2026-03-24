@@ -190,4 +190,21 @@ _ref:
                       transformer: templates/blocks/galleryTransformer.js
                       vars:
                         table: cssKeys
+          - id: gallery_slots_card
+            type: Card
+            layout:
+              flex: 1 1 0
+            properties:
+              title: Slots
+            blocks:
+              - id: gallery_slots_table
+                type: Markdown
+                properties:
+                  content:
+                    _ref:
+                      path:
+                        _var: schema
+                      transformer: templates/blocks/galleryTransformer.js
+                      vars:
+                        table: slots
 

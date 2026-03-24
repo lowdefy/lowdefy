@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks that trigger the tooltip.',
+  },
   cssKeys: {
     element: 'The Tooltip element.',
     inner: 'The Tooltip inner.',

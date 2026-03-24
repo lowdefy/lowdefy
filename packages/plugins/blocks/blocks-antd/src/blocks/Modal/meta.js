@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'footer'],
+  slots: {
+    content: 'Main Modal body.',
+    footer: 'Custom footer. Overrides default Ok/Cancel buttons.',
+  },
   cssKeys: {
     element: 'The Modal element.',
     header: 'The Modal header.',

@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks in the sider panel.',
+  },
   cssKeys: {
     element: 'The Sider element.',
   },
@@ -60,6 +63,14 @@ export default {
         description: 'width of the sidebar',
         docs: {
           displayType: 'string',
+        },
+      },
+      theme: {
+        type: 'object',
+        description:
+          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+        docs: {
+          displayType: 'yaml',
         },
       },
     },

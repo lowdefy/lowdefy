@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
   valueType: null,
+  slots: {
+    content: 'The labeled input or content blocks.',
+  },
   cssKeys: {
     element: 'The Label element.',
     label: 'The Label label.',

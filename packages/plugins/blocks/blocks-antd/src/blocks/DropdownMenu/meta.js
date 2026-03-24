@@ -18,7 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content'],
+  slots: {
+    content: 'Blocks that trigger the dropdown.',
+  },
   cssKeys: {
     element: 'The trigger wrapper element.',
     menu: 'The floating menu container.',
