@@ -177,6 +177,29 @@ test('nested schema error 2', () => {
   );
 });
 
+test('null item in blocks array throws with helpful message', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          { id: 'valid', type: 'Box' },
+          null,
+        ],
+      },
+    ],
+  };
+  try {
+    testSchema({ components, context });
+    throw new Error('Expected testSchema to throw');
+  } catch (e) {
+    expect(e.message).toBe('Block should be an object.');
+    expect(e.received).toBeNull();
+  }
+});
+
 test('connections schema error', () => {
   const components = {
     lowdefy: '1.0.0',

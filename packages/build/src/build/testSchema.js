@@ -15,10 +15,20 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
+
+function getValueAtPath(obj, pathParts) {
+  let current = obj;
+  for (const part of pathParts) {
+    if (type.isNone(current)) return undefined;
+    current = type.isArray(current) ? current[parseInt(part, 10)] : current[part];
+  }
+  return current;
+}
 
 function testSchema({ components, context }) {
   const { valid, errors } = validate({
@@ -63,7 +73,8 @@ function testSchema({ components, context }) {
         message = `${message} - "${error.params.additionalProperty}"`;
       }
 
-      const configError = new ConfigError(message, { configKey, checkSlug: 'schema' });
+      const received = getValueAtPath(components, instancePath);
+      const configError = new ConfigError(message, { configKey, checkSlug: 'schema', received });
       if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
         if (!context.errors) {
           // If no error collection array, throw immediately (fallback for tests)
