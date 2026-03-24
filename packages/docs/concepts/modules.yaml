@@ -155,24 +155,28 @@ _ref:
                 key: login.icon
             ```
 
-            **Menus** are included via `_ref` with the `module` and `menu` arguments. Use [`_build.array.concat`](/_build) to splice module menu items into your app menu:
+            **Menus** are included via `_ref` with the `module` and `menu` arguments. Use a `MenuGroup` to wrap each module's menu items:
 
             ```yaml
             menus:
-              - id: main
+              - id: default
                 links:
-                  _build.array.concat:
-                    - - id: home
-                        type: MenuLink
-                        pageId: home
-
-                    - _ref:
-                        module: team-users
+                  - id: companies
+                    type: MenuGroup
+                    properties:
+                      title: Companies
+                    links:
+                      _ref:
+                        module: companies
                         menu: default
-
-                    - - id: settings
-                        type: MenuLink
-                        pageId: settings
+                  - id: user-admin
+                    type: MenuGroup
+                    properties:
+                      title: User Admin
+                    links:
+                      _ref:
+                        module: user-admin
+                        menu: default
             ```
 
             ## ID Scoping

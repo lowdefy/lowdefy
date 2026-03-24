@@ -311,6 +311,8 @@ _ref:
 
             ### Including Menus from Another Module
 
+            Use `_build.array.concat` to combine module and local links:
+
             ```yaml
             links:
               _build.array.concat:
@@ -321,6 +323,47 @@ _ref:
             ```
 
             Cross-module `_ref` supports `component` and `menu` types only. Pages, connections, and APIs have dedicated ID operators.
+
+            ## Menu Export Convention
+
+            Module menus should export only one level of links — flat MenuLink items, no nested MenuGroups. The app controls grouping. This keeps module menus composable: the app can wrap the links in any MenuGroup structure it needs.
+
+            ```yaml
+            # menus.yaml — good: flat links only
+            id: default
+            links:
+              - id: users
+                type: MenuLink
+                pageId:
+                  _module.pageId: users-list
+                properties:
+                  title: Users
+                  icon: AiOutlineUser
+              - id: invite
+                type: MenuLink
+                pageId:
+                  _module.pageId: user-invite
+                properties:
+                  title: Invite User
+                  icon: AiOutlineUserAdd
+            ```
+
+            The app wraps these in a MenuGroup:
+
+            ```yaml
+            # lowdefy.yaml — app controls grouping
+            menus:
+              - id: default
+                links:
+                  - id: user-admin
+                    type: MenuGroup
+                    properties:
+                      title: User Admin
+                    links:
+                      _ref:
+                        module: user-admin
+                        menu: default
+            ```
 
             ## Data-Like Exports
 

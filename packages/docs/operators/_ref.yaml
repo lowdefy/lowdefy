@@ -314,21 +314,22 @@ _ref:
                   field_id: company_id
           ```
 
-          ###### Reference a module menu and splice into app menu:
+          ###### Module menu inside a MenuGroup:
           ```yaml
           menus:
             - id: main
               links:
-                _build.array.concat:
-                  - - id: home
-                      type: MenuLink
-                      pageId: home
-                  - _ref:
+                - id: home
+                  type: MenuLink
+                  pageId: home
+                - id: team-admin
+                  type: MenuGroup
+                  properties:
+                    title: Team Admin
+                  links:
+                    _ref:
                       module: team-users
                       menu: default
-                  - - id: settings
-                      type: MenuLink
-                      pageId: settings
           ```
 
           ###### Using ES Modules with `.mjs` file extension:
