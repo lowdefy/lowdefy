@@ -103,11 +103,9 @@ _ref:
 
             components:
               - id: user-avatar
-                type: Component
                 component:
                   _ref: components/user-avatar.yaml
               - id: user-search
-                type: Component
                 component:
                   _ref: components/user-search.yaml
 
@@ -198,7 +196,6 @@ _ref:
             ```yaml
             components:
               - id: user-avatar
-                type: Component
                 component:
                   _ref: components/user-avatar.yaml
             ```
@@ -324,6 +321,45 @@ _ref:
             ```
 
             Cross-module `_ref` supports `component` and `menu` types only. Pages, connections, and APIs have dedicated ID operators.
+
+            ## Data-Like Exports
+
+            Components can export any config — not just UI blocks. Enum maps, config templates, and schema fragments all work through the same `components` mechanism:
+
+            ```yaml
+            # In module.lowdefy.yaml
+            components:
+              # Enum map merged with app additions
+              - id: event_types
+                component:
+                  _build.object.assign:
+                    - _ref: ../shared/enums/event_types.yaml
+                    - _module.var:
+                        key: event_types
+                        default: {}
+
+              # Config template with var override
+              - id: change_stamp
+                component:
+                  _ref: defaults/change_stamp.yaml
+            ```
+
+            Consumers use the same `_ref: { module, component }` syntax. The `key` argument lets consumers extract nested values from the resolved content:
+
+            ```yaml
+            # Get the full enum map
+            event_types:
+              _ref:
+                module: events
+                component: event_types
+
+            # Get a single event type's icon
+            icon:
+              _ref:
+                module: events
+                component: event_types
+                key: login.icon
+            ```
 
             ## Declaring Plugin Dependencies
 

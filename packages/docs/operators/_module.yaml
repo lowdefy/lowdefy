@@ -36,7 +36,7 @@ _ref:
     description: |
       The `_module` operator family provides access to module-scoped values during the build. These operators are only available inside module config files — they have no effect in app-level config.
 
-      `_module.var` resolves during the ref-walking phase (same phase as `_var`). The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`) resolve during module processing, after the walker completes.
+      `_module.var` and the ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) all resolve during the walker pass — the same phase as `_var` and `_ref`. They work at any depth within module files.
 
       > The `_module` operators are build-time operators: they are evaluated when the app configuration is being built. They can be used anywhere in module configuration files.
 

@@ -34,6 +34,7 @@ _ref:
         module: string,
         component: string,
         vars?: object,
+        key?: string,
       }): any
       (arguments: {
         module: string,
@@ -90,8 +91,11 @@ _ref:
         - `module: string`: The module entry ID (as defined in `lowdefy.yaml` `modules` array). When `module` is specified, `path` is not used — the reference resolves from the module's exported components or menus. See [Modules](/modules).
         - `component: string`: The component name exported by the module (defined in `module.lowdefy.yaml` `components` array). Used with `module`.
         - `menu: string`: The menu ID exported by the module (defined in `module.lowdefy.yaml` `menus` array). Used with `module`. Returns the menu's `links` array.
+        - `key: string`: Dot-notation path to extract from the resolved content. Works for both file refs and module component refs.
 
       > When referencing a module component, `vars` are accessed via `_var` inside the component (same as standard `_ref`). Module-level configuration is accessed via [`_module.var`](/_module). Both are available simultaneously.
+
+      > Within module content, the `module` field can reference a declared dependency name (from the module's `dependencies` in `module.lowdefy.yaml`). The build resolves abstract names to concrete entry IDs via the dependency wiring. From app-level config, `module` is always a concrete entry ID.
 
     examples:
       _nunjucks:
@@ -288,6 +292,26 @@ _ref:
                 component: notification-badge
                 vars:
                   position: top-right
+          ```
+
+          ###### Data export with key extraction:
+          ```yaml
+          icon:
+            _ref:
+              module: events
+              component: event_types
+              key: login.icon
+          ```
+
+          ###### Cross-module component ref within a module:
+          ```yaml
+          # contacts module embedding companies' selector
+          blocks:
+            - _ref:
+                module: companies    # abstract dependency name
+                component: company-selector
+                vars:
+                  field_id: company_id
           ```
 
           ###### Reference a module menu and splice into app menu:

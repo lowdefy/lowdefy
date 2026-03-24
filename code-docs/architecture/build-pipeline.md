@@ -52,9 +52,9 @@ Uses `@lowdefy/server-dev` instead of `@lowdefy/server`, outputs to `directories
 │       ├── keyMap.json
 │       ├── refMap.json
 │       ├── types.json
-│       ├── pages/{pageId}/
+│       ├── pages/
 │       │   ├── {pageId}.json
-│       │   └── requests/{requestId}.json
+│       │   └── {pageId}/requests/{requestId}.json
 │       ├── connections/{connectionId}.json
 │       ├── api/{endpointId}.json
 │       └── plugins/
@@ -95,7 +95,7 @@ Processes modules in three steps to support mutual dependencies (e.g., contacts 
 2. **Validate wiring** — `resolveModuleDependencies` auto-wires dependencies by exact name match, then validates all mappings (no unmapped deps, no unknown keys, targets exist, no self-references).
 3. **Full resolve** — Walk each manifest again with `moduleDependencies` set. Cross-module `_ref: { module, component }` looks up content in concrete arrays from step 1. `_module.*Id: { id, module }` operators validate against target exports.
 
-After Phase 1, `context.modules` contains fully resolved manifests with all cross-module refs inlined. ID operators (`_module.pageId`, etc.) remain as operator objects — resolved in Phase 3. See [module-system.md](module-system.md) for details.
+After Phase 1, `context.modules` contains fully resolved manifests with all cross-module refs inlined and all `_module.*Id` operators resolved to concrete string IDs. See [module-system.md](module-system.md) for details.
 
 ### Phase 2: Ref Resolution
 
@@ -110,10 +110,10 @@ When the walker encounters `_ref: { module, component }`, it calls `getModuleRef
 ### Phase 3: Build Modules
 
 ```javascript
-buildModules()      // Scope IDs, resolve _module ID operators (string + object form), merge
+buildModules()      // Scope IDs, merge into app components
 ```
 
-For each module entry: resolves `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` operators in both string form (`"page-id"` → same module) and object form (`{ id: "page-id", module: "dep-name" }` → cross-module); prefixes page/connection/API/menu IDs with `{entryId}/`; appends to app's `components`. See [module-system.md](module-system.md).
+By Phase 3, all `_module.*Id` operators have already been resolved to concrete string IDs by the walker (Phase 1 full resolve and Phase 2 component/menu refs). Phase 3 only does structural work: prefixes page/connection/API/menu IDs with `{entryId}/` and appends module content to the app's `components`. See [module-system.md](module-system.md).
 
 ### Phase 4: Schema Validation
 
@@ -171,17 +171,19 @@ The `_ref` operator system resolves all configuration file references in a singl
 The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ `serializer.copy` JSON round-trips per ref) with a single `resolve()` function that handles `_ref`, `_var`, `_module.var`, and `_build.*` operators in one traversal.
 
 **Traversal order:**
-- **Top-down:** `_ref`, `_var`, and `_module.var` are detected _before_ descending into children
-- **Bottom-up:** `_build.*` operators evaluate _after_ all children have resolved
+- **Top-down:** `_ref` is detected _before_ descending into children (intercepts the whole subtree)
+- **Bottom-up:** `_var`, `_module.var`, `_module.*Id`, and `_build.*` operators evaluate _after_ all children have resolved
 
 **Core `resolve(node, ctx)` flow:**
 
 1. Primitives pass through unchanged
 2. `_ref` objects → `resolveRef()` (or create `~shallow` marker if `ctx.shouldStop` matches)
    - For `_ref: { module, component/menu }` → `getModuleRefContent()` looks up the export in the resolved manifest
-3. `_var` objects → `resolveVar()`, then re-walk result for nested operators
-4. `_module.var` objects → `resolveModuleVar()`, then re-walk result (reads from `ctx.moduleVars`)
-5. Arrays/objects → walk children in-place, then check for `_build.*` operator evaluation
+3. Arrays/objects → walk children in-place, then:
+   a. `_var` → `resolveVar()`, re-walk result
+   b. `_module.var` → `resolveModuleVar()`, re-walk result (reads from `ctx.moduleVars`)
+   c. `_module.*Id` → `resolveModuleIdOperator()` (reads from `ctx.moduleEntry`, validates against exports)
+   d. `_build.*` → `evaluateOperators()` with `_build.` prefix
 
 **`resolveRef()` steps:**
 
@@ -200,8 +202,10 @@ The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ 
 
 **`WalkContext`** carries immutable context through the walk:
 - `child(segment)` — appends to JSON path for stop-path matching
-- `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy)
+- `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy); for cross-module refs, switches `moduleVars`, `moduleDependencies`, `moduleEntry`, and `packageRoot` to the target module's values
 - `moduleVars` — module entry vars, propagated through both `child()` and `forRef()` (constant across all nesting depths within a module)
+- `moduleEntry` — the module entry object (carries `id`, `connections` for remapping, `exports` for validation)
+- `moduleDependencies` — maps abstract dependency names to concrete entry IDs
 - Path tracks through ref boundaries, enabling `shouldStop` to match `pages.*.blocks` paths
 
 **`evaluateStaticOperators`** runs once at the end (not per-file) using `evaluateOperators` from `@lowdefy/operators`.
@@ -376,8 +380,8 @@ createContext() → buildRefs()
   └─ Evaluate _build.* operators
      ↓
 buildModules()
-  ├─ Resolve _module ID operators
-  ├─ Scope IDs (pages, connections, APIs, menus)
+  ├─ Scope IDs (prefix pages, connections, APIs, menus with entryId/)
+  ├─ Scope menu item IDs (scopeMenuItemIds)
   └─ Merge into app components
      ↓
 testSchema() → buildApp() → buildAuth() → buildConnections()
@@ -450,10 +454,11 @@ pages:
 | `packages/build/src/index.js` | Main pipeline |
 | `packages/build/src/build/fetchModules.js` | Module source fetching (GitHub tarballs, local paths) |
 | `packages/build/src/build/buildModuleDefs.js` | Module manifest parsing, var resolution, validation |
-| `packages/build/src/build/buildModules.js` | ID scoping, operator resolution, merging |
-| `packages/build/src/build/resolveModuleOperators.js` | `_module.*` ID operator resolution |
+| `packages/build/src/build/buildModules.js` | ID scoping (prefix with entryId), merging into components |
+| `packages/build/src/build/resolveModuleOperators.js` | `scopeMenuItemIds` — prefixes menu item IDs with entry ID |
+| `packages/build/src/build/resolveDepTarget.js` | Shared utility for cross-module dependency name resolution |
 | `packages/build/src/build/buildRefs/buildRefs.js` | _ref resolution entry point |
-| `packages/build/src/build/buildRefs/walker.js` | Single-pass async tree walker (`resolve`, `resolveRef`, `resolveVar`, `resolveModuleVar`, `WalkContext`) |
+| `packages/build/src/build/buildRefs/walker.js` | Single-pass async tree walker (`resolve`, `resolveRef`, `resolveVar`, `resolveModuleVar`, `resolveModuleIdOperator`, `WalkContext`) |
 | `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` |
 | `packages/operators/src/evaluateOperators.js` | In-place operator evaluator (replaces `BuildParser`) |
 | `packages/build/src/build/buildRefs/evaluateStaticOperators.js` | Post-walk static operator pass |
