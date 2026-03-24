@@ -47,6 +47,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "2.1.2",
     "@lowdefy/actions-core": "workspace:*",
     "@lowdefy/api": "workspace:*",
     "@lowdefy/block-utils": "workspace:*",
@@ -61,6 +62,7 @@
     "@lowdefy/node-utils": "workspace:*",
     "@lowdefy/operators-js": "workspace:*",
     "@lowdefy/plugin-next-auth": "workspace:*",
+    "antd": "6.3.1",
     "@sentry/nextjs": "8.53.0",
     "@tailwindcss/postcss": "4.2.1",
     "next": "16.1.6",

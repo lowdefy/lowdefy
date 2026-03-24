@@ -18,7 +18,13 @@ import MobileMenuMeta from '../MobileMenu/meta.js';
 
 export default {
   category: 'container',
-  icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenuMeta.icons],
+  icons: [
+    'AiOutlineMenuFold',
+    'AiOutlineMenuUnfold',
+    'AiOutlineMoon',
+    'AiOutlineSun',
+    ...MobileMenuMeta.icons,
+  ],
   valueType: null,
   slots: ['content', 'footer', 'header', 'sider'],
   cssKeys: {
@@ -277,6 +283,12 @@ export default {
         docs: {
           displayType: 'yaml',
         },
+      },
+      darkModeToggle: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage.',
       },
       theme: {
         type: 'object',

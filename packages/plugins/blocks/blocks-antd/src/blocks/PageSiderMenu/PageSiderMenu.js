@@ -29,6 +29,12 @@ import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
 import Sider from '../Sider/Sider.js';
 
+function getDarkMode() {
+  const stored = window.localStorage?.getItem('lowdefy_darkMode');
+  if (stored !== null) return stored === 'true';
+  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+}
+
 const PageSiderMenu = ({
   basePath,
   blockId,
@@ -44,6 +50,13 @@ const PageSiderMenu = ({
 }) => {
   const [openSiderState, setSiderOpen] = useState(!properties.sider?.initialCollapsed);
   useEffect(() => {
+    methods.registerEvent({
+      name: '__toggleDarkMode',
+      actions: [{ id: '__set_dark_mode', type: 'SetDarkMode' }],
+    });
+    methods.registerMethod('toggleDarkMode', () => {
+      methods.triggerEvent({ name: '__toggleDarkMode' });
+    });
     methods.registerMethod('toggleSiderOpen', () => {
       methods._toggleSiderOpen({ open: !openSiderState });
       setSiderOpen(!openSiderState);
@@ -91,6 +104,24 @@ const PageSiderMenu = ({
                             properties.header?.contentStyle,
                           ])
                         )}
+                      {properties.darkModeToggle && (
+                        <Button
+                          blockId={`${blockId}_dark_mode_toggle`}
+                          components={{ Icon, Link, ShortcutBadge }}
+                          events={events}
+                          properties={{
+                            hideTitle: true,
+                            color: 'default',
+                            variant: 'text',
+                            size: 'small',
+                            icon: {
+                              name: getDarkMode() ? 'AiOutlineSun' : 'AiOutlineMoon',
+                            },
+                          }}
+                          methods={methods}
+                          onClick={() => methods.triggerEvent({ name: '__toggleDarkMode' })}
+                        />
+                      )}
                       <div className="block lg:hidden pl-4">
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}

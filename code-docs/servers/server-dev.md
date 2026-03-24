@@ -51,15 +51,19 @@ Additional operators:
 - `@lowdefy/operators-uuid`
 - `@lowdefy/operators-yaml`
 
-### CRITICAL: Dependency Singleton Constraints
+### CRITICAL: Singleton Packages in Local Dev
 
-**`antd` and `@ant-design/cssinjs` must NOT be direct dependencies of server-dev.** They must only be available as transitive dependencies via `@lowdefy/blocks-antd`, `@lowdefy/client`, etc.
+**`antd` and `@ant-design/cssinjs` use React context for cross-component coordination.** Multiple instances break CSS-in-JS context sharing between `ConfigProvider`, `StyleProvider`, and `useDarkMode` — dark mode and theming silently fail (only some antd components respond to theme changes, no console errors).
 
-**Why:** The local dev setup (`scripts/dev.mjs`) copies server-dev to `_server/dev/`, rewrites `@lowdefy/*` deps to `link:` paths, then runs `pnpm install --no-lockfile`. The `rewriteDeps` script only rewrites `@lowdefy/*` packages — non-lowdefy deps like `antd` are installed from npm. If `antd` is a direct dep, pnpm installs a separate copy in `_server/dev/node_modules/antd`, while linked `@lowdefy/client` uses the monorepo's `antd`. Two antd instances = broken CSS-in-JS context sharing = dark mode and theming silently fail (only some antd components respond to theme changes).
+Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct dependencies. This is correct — the published packages need them for pnpm strict mode resolution.
 
-**Symptoms of duplicate antd:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
+**The singleton risk only exists in the local monorepo dev setup** (`scripts/dev.mjs`), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the dev server while linked `@lowdefy/client` uses the monorepo's copy — two instances.
 
-This constraint applies to any package that uses React context for cross-component coordination (antd, @ant-design/cssinjs). Standard utility packages (postcss, tailwindcss, yaml, etc.) are safe as direct deps.
+**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`) that adds `pnpm.overrides` entries pointing to the monorepo's `node_modules/` copies. This forces a single instance across the dev server and all linked packages.
+
+**If you add a new package that uses React context across components** (like a UI library), add it to `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs`.
+
+**Symptoms of duplicate instances:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
 
 ## Scripts
 

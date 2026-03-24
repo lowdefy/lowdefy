@@ -109,6 +109,16 @@
           "id": "migrate-custom-block-plugins",
           "description": "Migrate custom block plugin architecture: types.js, meta.js, withBlockDefaults",
           "path": "v5-0-0/21-migrate-custom-block-plugins.md"
+        },
+        {
+          "id": "migrate-nested-css-selectors",
+          "description": "Replace Emotion-style nested CSS selectors (&:hover, & > *) with Tailwind classes",
+          "path": "v5-0-0/22-migrate-nested-css-selectors.md"
+        },
+        {
+          "id": "aggrid-dark-blocks-removal",
+          "description": "Replace removed AgGrid*Dark block types with auto-detecting light variants",
+          "path": "v5-0-0/23-aggrid-dark-blocks-removal.md"
         }
       ]
     }

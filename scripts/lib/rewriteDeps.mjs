@@ -17,7 +17,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-function rewritePackageJson({ filePath, targetDir, packageMap }) {
+// Packages that use React context for cross-component coordination (e.g., antd's
+// CSS-in-JS StyleProvider/ConfigProvider). These MUST resolve to a single instance
+// across the isolated dev server and all linked @lowdefy/* packages. Without these
+// overrides, pnpm installs a separate npm copy for the dev server while linked
+// packages use the monorepo's copy — two instances = broken theming/dark mode.
+const SINGLETON_PACKAGES = ['antd', '@ant-design/cssinjs'];
+
+function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
   const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   const overrides = {};
 
@@ -37,22 +44,33 @@ function rewritePackageJson({ filePath, targetDir, packageMap }) {
     overrides[name] = `link:${relPath}`;
   }
 
+  // Force singleton packages to resolve from the monorepo's node_modules.
+  for (const name of SINGLETON_PACKAGES) {
+    const pkgDir = path.join(repoRoot, 'node_modules', name);
+    if (fs.existsSync(pkgDir)) {
+      const relPath = path.relative(targetDir, pkgDir);
+      overrides[name] = `link:${relPath}`;
+    }
+  }
+
   pkg.pnpm = pkg.pnpm ?? {};
   pkg.pnpm.overrides = overrides;
 
   fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-function rewriteDeps({ targetDir, packageMap }) {
+function rewriteDeps({ targetDir, packageMap, repoRoot }) {
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.json'),
     targetDir,
     packageMap,
+    repoRoot,
   });
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.original.json'),
     targetDir,
     packageMap,
+    repoRoot,
   });
 }
 

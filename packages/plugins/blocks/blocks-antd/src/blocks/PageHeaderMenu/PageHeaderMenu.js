@@ -14,17 +14,24 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
+import Button from '../Button/Button.js';
 import Content from '../Content/Content.js';
 import Footer from '../Footer/Footer.js';
 import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
+
+function getDarkMode() {
+  const stored = window.localStorage?.getItem('lowdefy_darkMode');
+  if (stored !== null) return stored === 'true';
+  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+}
 
 const PageHeaderMenu = ({
   basePath,
@@ -39,6 +46,15 @@ const PageHeaderMenu = ({
   properties,
   styles = {},
 }) => {
+  useEffect(() => {
+    methods.registerEvent({
+      name: '__toggleDarkMode',
+      actions: [{ id: '__set_dark_mode', type: 'SetDarkMode' }],
+    });
+    methods.registerMethod('toggleDarkMode', () => {
+      methods.triggerEvent({ name: '__toggleDarkMode' });
+    });
+  });
   return (
     <Layout
       blockId={blockId}
@@ -129,6 +145,24 @@ const PageHeaderMenu = ({
                             properties.header?.contentStyle,
                           ])
                         )}
+                      {properties.darkModeToggle && (
+                        <Button
+                          blockId={`${blockId}_dark_mode_toggle`}
+                          components={{ Icon, Link, ShortcutBadge }}
+                          events={events}
+                          properties={{
+                            hideTitle: true,
+                            color: 'default',
+                            variant: 'text',
+                            size: 'small',
+                            icon: {
+                              name: getDarkMode() ? 'AiOutlineSun' : 'AiOutlineMoon',
+                            },
+                          }}
+                          methods={methods}
+                          onClick={() => methods.triggerEvent({ name: '__toggleDarkMode' })}
+                        />
+                      )}
                       <div className="flex lg:hidden shrink pl-4">
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}

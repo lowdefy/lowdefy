@@ -19,17 +19,20 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-material.css';
+import antdStyles from '../../ag-grid-antd.module.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridMaterial = ({ blockId, events, loading, methods, properties, styles }) => (
-  <div
-    id={blockId}
-    className="ag-theme-material"
-    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
-  >
-    <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
-  </div>
-);
+const AgGridMaterial = ({ blockId, events, loading, methods, properties, styles }) => {
+  return (
+    <div
+      id={blockId}
+      className={`ag-theme-material ${antdStyles.antdTheme}`}
+      style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
+    >
+      <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
+    </div>
+  );
+};
 
 export default withBlockDefaults(AgGridMaterial);

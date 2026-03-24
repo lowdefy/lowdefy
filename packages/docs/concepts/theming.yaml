@@ -216,6 +216,21 @@ _ref:
                 # All blocks here will use dark theme
             ```
 
+            ### Easy dark mode toggle
+
+            Add a built-in dark mode toggle to your page layout with a single property:
+
+            ```yaml
+            - id: my_page
+              type: PageHeaderMenu  # or PageSiderMenu
+              properties:
+                darkModeToggle: true
+            ```
+
+            This renders a moon/sun icon in the header that toggles Ant Design's dark theme. The preference is persisted to `localStorage` and respects the OS dark mode setting as default.
+
+            For custom toggle implementations, see the programmatic approach below.
+
             ### Programmatic dark mode toggle
 
             Use the `SetDarkMode` action with `_media: darkMode` to let users toggle dark mode at runtime:

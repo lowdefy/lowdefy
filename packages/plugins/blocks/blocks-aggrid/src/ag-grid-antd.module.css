@@ -1,0 +1,22 @@
+.antdTheme {
+  --ag-background-color: var(--ant-color-bg-container);
+  --ag-foreground-color: var(--ant-color-text);
+  --ag-border-color: var(--ant-color-border);
+  --ag-secondary-border-color: var(--ant-color-border-secondary);
+  --ag-header-background-color: var(--ant-color-fill-quaternary);
+  --ag-header-foreground-color: var(--ant-color-text);
+  --ag-tooltip-background-color: var(--ant-color-bg-spotlight);
+  --ag-odd-row-background-color: var(--ant-color-fill-quaternary);
+  --ag-control-panel-background-color: var(--ant-color-bg-elevated);
+  --ag-subheader-background-color: var(--ant-color-bg-layout);
+  --ag-selected-row-background-color: var(--ant-color-primary-bg);
+  --ag-row-hover-color: var(--ant-color-primary-bg-hover);
+  --ag-column-hover-color: var(--ant-color-primary-bg-hover);
+  --ag-modal-overlay-background-color: var(--ant-color-bg-mask);
+  --ag-input-disabled-background-color: var(--ant-color-bg-container-disabled);
+  --ag-input-disabled-border-color: var(--ant-color-border);
+  --ag-disabled-foreground-color: var(--ant-color-text-disabled);
+  --ag-chip-background-color: var(--ant-color-fill-secondary);
+  --ag-input-focus-box-shadow: 0 0 0 2px var(--ant-color-primary-bg);
+  --ag-card-shadow: var(--ant-box-shadow-secondary);
+}

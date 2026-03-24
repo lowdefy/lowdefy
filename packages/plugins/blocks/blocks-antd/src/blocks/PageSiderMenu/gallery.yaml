@@ -12,6 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Dark Mode Toggle
+  fullWidth: true
+  blocks:
+    - id: psm_dark_toggle
+      type: PageSiderMenu
+      properties:
+        darkModeToggle: true
+        header:
+          theme: dark
+        sider:
+          theme: dark
+          initialCollapsed: false
+          width: 220
+        menu:
+          theme: dark
+          links:
+            - id: psm_dt_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_dt_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: psm_dt_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psm_dt_content
+          type: Paragraph
+          properties:
+            content: Set darkModeToggle to true to add a dark mode toggle button in the header. Click the moon/sun icon to switch between light and dark themes. The preference is persisted to localStorage.
+
 - title: Basic PageSiderMenu
   fullWidth: true
   blocks:

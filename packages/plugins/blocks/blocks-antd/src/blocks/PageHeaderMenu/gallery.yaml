@@ -12,6 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Dark Mode Toggle
+  fullWidth: true
+  blocks:
+    - id: phm_dark_toggle
+      type: PageHeaderMenu
+      properties:
+        darkModeToggle: true
+        header:
+          theme: dark
+        menu:
+          theme: dark
+          links:
+            - id: phm_dt_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_dt_about
+              type: MenuLink
+              properties:
+                title: About
+            - id: phm_dt_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: phm_dt_content
+          type: Paragraph
+          properties:
+            content: Set darkModeToggle to true to add a dark mode toggle button in the header. Click the moon/sun icon to switch between light and dark themes. The preference is persisted to localStorage.
+
 - title: Basic PageHeaderMenu
   fullWidth: true
   blocks:

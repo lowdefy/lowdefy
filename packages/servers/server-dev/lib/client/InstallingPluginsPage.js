@@ -26,6 +26,8 @@ const InstallingPluginsPage = ({ packages }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'var(--ant-color-bg-layout)',
+        color: 'var(--ant-color-text)',
         fontFamily:
           "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       }}

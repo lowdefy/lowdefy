@@ -18,7 +18,7 @@
   .skeleton {
     position: relative;
     overflow: hidden;
-    background: #f1f1f1;
+    background: var(--ant-color-fill-tertiary);
   }
 
   .skeleton::before {
@@ -30,8 +30,12 @@
     top: 0;
     height: 200%;
     width: 100%;
-    background: linear-gradient(to right, transparent 0%, #eaeaea 50%, transparent 100%);
-    background: -webkit-linear-gradient(to right, transparent 0%, #eaeaea 50%, transparent 100%);
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--ant-color-fill-secondary) 50%,
+      transparent 100%
+    );
     animation: load 1.8s infinite;
     /* transform: rotate(45deg); */
   }

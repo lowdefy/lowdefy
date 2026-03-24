@@ -25,7 +25,7 @@ const typeColors = {
 };
 
 function getTypeColor(type) {
-  return typeColors[type] ?? '#595959';
+  return typeColors[type] ?? 'var(--ant-color-text-secondary)';
 }
 
 const ErrorItem = ({ type, message, source }) => {
@@ -50,7 +50,9 @@ const ErrorItem = ({ type, message, source }) => {
         {type}
       </span>
       <p style={{ fontSize: 14, margin: '4px 0', fontFamily: 'monospace' }}>{message}</p>
-      {source && <p style={{ fontSize: 13, color: '#8c8c8c', margin: 0 }}>{source}</p>}
+      {source && (
+        <p style={{ fontSize: 13, color: 'var(--ant-color-text-tertiary)', margin: 0 }}>{source}</p>
+      )}
     </div>
   );
 };
@@ -67,6 +69,8 @@ const BuildErrorPage = ({ errors, message, source }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'var(--ant-color-bg-layout)',
+        color: 'var(--ant-color-text)',
         fontFamily:
           "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
         padding: '0 24px',
@@ -79,7 +83,7 @@ const BuildErrorPage = ({ errors, message, source }) => {
         {errorList.map((err, i) => (
           <ErrorItem key={i} type={err.type} message={err.message} source={err.source} />
         ))}
-        <p style={{ fontSize: 13, color: '#8c8c8c', marginTop: 24 }}>
+        <p style={{ fontSize: 13, color: 'var(--ant-color-text-tertiary)', marginTop: 24 }}>
           Fix the error{errorList.length > 1 ? 's' : ''} in your config and the page will rebuild
           automatically.
         </p>

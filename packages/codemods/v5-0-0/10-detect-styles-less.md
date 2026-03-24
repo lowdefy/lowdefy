@@ -100,6 +100,17 @@ theme:
 - Some apps may import antd Less files (`@import '~antd/dist/antd.less'`) — these lines can be removed entirely (antd v6 doesn't use Less)
 - If `lowdefy.yaml` already has a `theme:` section, merge the tokens into it
 
+## CRITICAL: Delete `public/styles.less`
+
+**After migrating, you MUST delete `public/styles.less`.** The v5 build checks for this file and throws a fatal `ConfigError` if it exists — even if it's empty. The build will not proceed until the file is removed.
+
+```bash
+rm public/styles.less
+```
+
 ## Verification
 
-After migration, `public/styles.less` should be renamed or deleted. The app should build without Less processing errors.
+1. `public/styles.less` must NOT exist — the build will fail if it does
+2. Theme tokens are in `lowdefy.yaml` under `theme.antd.token`
+3. Custom CSS (if any) is in `public/styles.css`
+4. The app builds without Less processing errors
