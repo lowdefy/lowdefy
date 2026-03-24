@@ -17,14 +17,23 @@
 import React, { useRef, useMemo, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Sender } from '@ant-design/x';
+import { type } from '@lowdefy/helpers';
 
+import ConversationSidebar from './ConversationSidebar.js';
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({ blockId, methods, pageId, properties }) {
-  const { agentId, welcome, messages: messagesConfig, sender } = properties;
+  const {
+    agentId,
+    welcome,
+    messageDisplay,
+    sender,
+    conversations: conversationsConfig,
+    messages: externalMessages,
+  } = properties;
   const senderRef = useRef(null);
   const toolConfirmModesRef = useRef({});
 
@@ -46,7 +55,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     status,
     stop,
     addToolApprovalResponse,
-    setMessages, // Used by Task 4 (conversations) — keep destructured
+    setMessages,
   } = useChat({
     transport,
     experimental_throttle: 50,
@@ -71,10 +80,30 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }, [methods, addToolApprovalResponse]);
 
+  // Sync external messages when provided — undefined means "not provided" (no sync),
+  // null means "clear messages", array means "load these messages".
+  useEffect(() => {
+    if (!type.isUndefined(externalMessages)) {
+      setMessages(externalMessages ?? []);
+    }
+  }, [externalMessages, setMessages]);
+
   useAgentEvents({ messages, status, methods, toolConfirmModes: toolConfirmModesRef });
 
   const isEmpty = messages.length === 0;
   const isStreaming = status === 'streaming';
+  const showSidebar = conversationsConfig?.enabled;
+
+  function handleConversationChange(key, previousKey) {
+    methods.triggerEvent({
+      name: 'onConversationChange',
+      event: { key, previousKey },
+    });
+  }
+
+  function handleNewConversation() {
+    methods.triggerEvent({ name: 'onNewConversation', event: {} });
+  }
 
   function handleSend(text) {
     if (!text.trim()) return;
@@ -91,34 +120,49 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       id={blockId}
       style={{
         display: 'flex',
-        flexDirection: 'column',
         height: properties.height ?? 'calc(100dvh - 170px)',
-        maxWidth: properties.maxWidth ?? 800,
-        margin: '0 auto',
-        width: '100%',
       }}
     >
-      <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty ? (
-          <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
-        ) : (
-          <MessageList
-            messages={messages}
-            isStreaming={isStreaming}
-            config={messagesConfig}
-            toolConfirmModes={toolConfirmModesRef}
-            addToolApprovalResponse={addToolApprovalResponse}
-          />
-        )}
-      </div>
-      <div style={{ padding: '8px 0 16px' }}>
-        <Sender
-          ref={senderRef}
-          placeholder={sender?.placeholder ?? 'Type a message...'}
-          onSubmit={handleSend}
-          onCancel={stop}
-          loading={isStreaming}
+      {showSidebar && (
+        <ConversationSidebar
+          config={conversationsConfig}
+          onConversationChange={handleConversationChange}
+          onNewConversation={handleNewConversation}
         />
+      )}
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: properties.maxWidth ?? 800,
+          margin: '0 auto',
+          width: '100%',
+        }}
+      >
+        <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
+          {isEmpty ? (
+            <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
+          ) : (
+            <MessageList
+              messages={messages}
+              isStreaming={isStreaming}
+              config={messageDisplay}
+              toolConfirmModes={toolConfirmModesRef}
+              addToolApprovalResponse={addToolApprovalResponse}
+            />
+          )}
+        </div>
+        <div style={{ padding: '8px 0 16px' }}>
+          <Sender
+            ref={senderRef}
+            placeholder={sender?.placeholder ?? 'Type a message...'}
+            onSubmit={handleSend}
+            onCancel={stop}
+            loading={isStreaming}
+          />
+        </div>
       </div>
     </div>
   );

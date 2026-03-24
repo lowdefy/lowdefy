@@ -21,7 +21,7 @@
         }
       }
     },
-    "messages": {
+    "messageDisplay": {
       "type": "object",
       "properties": {
         "markdownRendering": { "type": "boolean", "default": true },
@@ -37,6 +37,17 @@
           "enum": ["summary", "full", "none"],
           "default": "summary"
         }
+      }
+    },
+    "messages": {
+      "type": "array"
+    },
+    "conversations": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "items": { "type": "array" },
+        "activeKey": { "type": "string" }
       }
     },
     "sender": {
