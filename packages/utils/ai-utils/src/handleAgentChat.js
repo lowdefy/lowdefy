@@ -15,6 +15,7 @@
 */
 
 import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
+import { createMCPClient } from '@ai-sdk/mcp';
 import { serializer } from '@lowdefy/helpers';
 
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
@@ -94,12 +95,60 @@ async function handleAgentChat({ connection, properties, context }) {
     });
   }
 
+  // Create MCP clients
+  const mcpClients = [];
+
+  for (const mcpSource of agent.mcp ?? []) {
+    const evaluatedSource = context.evaluateOperators(mcpSource);
+
+    try {
+      const client = await createMCPClient({
+        transport: {
+          type: evaluatedSource.transport ?? 'http',
+          url: evaluatedSource.url,
+          ...(evaluatedSource.headers ? { headers: evaluatedSource.headers } : {}),
+        },
+      });
+      mcpClients.push({ client, source: evaluatedSource });
+    } catch (err) {
+      console.warn(`MCP server at ${evaluatedSource.url} unreachable: ${err.message}`);
+    }
+  }
+
+  // Merge MCP tools with endpoint tools
+  for (const { client, source } of mcpClients) {
+    const mcpTools = await client.tools();
+    for (const [name, mcpTool] of Object.entries(mcpTools)) {
+      if (tools[name]) {
+        console.warn(
+          `MCP tool "${name}" from ${source.url} conflicts with endpoint tool — skipped.`
+        );
+        continue;
+      }
+      if (source.confirm) {
+        tools[name] = { ...mcpTool, needsApproval: true };
+        toolConfirmModes[name] = source.confirm;
+      } else {
+        tools[name] = mcpTool;
+      }
+    }
+  }
+
   const model = connection.provider(agent.properties.model);
 
   const hookCallbacks = createHookCallbacks({
     hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
   });
+
+  // Compose MCP cleanup with existing onFinish hook
+  if (mcpClients.length > 0) {
+    const originalOnFinish = hookCallbacks.onFinish;
+    hookCallbacks.onFinish = async (event) => {
+      if (originalOnFinish) await originalOnFinish(event);
+      await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+    };
+  }
 
   const agentInstance = new ToolLoopAgent({
     model,
