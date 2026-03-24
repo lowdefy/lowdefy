@@ -2029,6 +2029,42 @@ heading:
     expect(res).toEqual({ heading: 'Users' });
   });
 
+  test('component ref without ~deferredFrom resolves consumer vars (JIT path)', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [{ id: 'page', component: { _ref: '/mod/components/page.yaml' } }],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: my-page`,
+      },
+      {
+        path: '/mod/components/page.yaml',
+        content: `
+id:
+  _var: id
+type: PageHeaderMenu`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({ id: 'my-page', type: 'PageHeaderMenu' });
+  });
+
   test('component ref with vars resolves inline content', async () => {
     context.modules = {
       layout: {

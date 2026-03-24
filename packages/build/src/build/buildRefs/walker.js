@@ -553,9 +553,9 @@ async function resolveRef(node, ctx) {
       // non-enumerable properties).
       content = serializer.copy(content);
 
-      // When preserved content is a deferred file _ref, the inner ref would
-      // create a fresh var scope and lose the consumer's vars. Inject them.
-      if ((refDef.component || refDef.menu) && deferredFrom && type.isObject(content) && content._ref) {
+      // When component/menu content is a file _ref, the inner ref would create
+      // a fresh var scope and lose the consumer's vars. Inject them into the clone.
+      if ((refDef.component || refDef.menu) && type.isObject(content) && content._ref) {
         if (type.isObject(content._ref)) {
           content._ref.vars = { ...(content._ref.vars ?? {}), ...refDef.vars };
         } else if (type.isString(content._ref) && Object.keys(refDef.vars).length > 0) {
