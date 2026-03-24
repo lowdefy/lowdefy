@@ -35,7 +35,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
-        event: { error: error.message, message: error.message },
+        event: { message: error.message },
       });
     },
   });

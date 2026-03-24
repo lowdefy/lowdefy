@@ -16,40 +16,30 @@
 
 import buildAgents from './buildAgents.js';
 import testContext from '../test-utils/testContext.js';
-import createCounter from '../utils/createCounter.js';
-
-// testContext does not include typeCounters.agents — add it for these tests.
-// This is a known gap: when buildAgents is integrated into the pipeline,
-// typeCounters.agents must be added to createContext.js and testContext.js.
-function createTestContext() {
-  const context = testContext();
-  context.typeCounters.agents = createCounter();
-  return context;
-}
 
 test('buildAgents no agents', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {};
   const res = buildAgents({ components, context });
   expect(res.agents).toBe(undefined);
 });
 
 test('buildAgents undefined agents', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = { agents: undefined };
   const res = buildAgents({ components, context });
   expect(res.agents).toBe(undefined);
 });
 
 test('buildAgents null agents', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = { agents: null };
   const res = buildAgents({ components, context });
   expect(res.agents).toBe(null);
 });
 
 test('buildAgents valid agent renames id and adds to agentIds', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -97,7 +87,7 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
 });
 
 test('buildAgents multiple valid agents', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -142,7 +132,7 @@ test('buildAgents multiple valid agents', () => {
 });
 
 test('buildAgents agent with no tools works fine', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -173,7 +163,7 @@ test('buildAgents agent with no tools works fine', () => {
 });
 
 test('buildAgents throws on duplicate agentId', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -201,7 +191,7 @@ test('buildAgents throws on duplicate agentId', () => {
 });
 
 test('buildAgents throws when connectionId is not defined', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -223,7 +213,7 @@ test('buildAgents throws when connectionId is not defined', () => {
 });
 
 test('buildAgents throws when connectionId references non-existent connection', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -246,7 +236,7 @@ test('buildAgents throws when connectionId references non-existent connection', 
 });
 
 test('buildAgents throws when connectionId references non-existent connection with no connections', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     agents: [
       {
@@ -262,7 +252,7 @@ test('buildAgents throws when connectionId references non-existent connection wi
 });
 
 test('buildAgents throws when tool endpoint does not exist', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -297,7 +287,7 @@ test('buildAgents throws when tool endpoint does not exist', () => {
 });
 
 test('buildAgents matches connectionId against connection.connectionId (post-buildConnections)', () => {
-  const context = createTestContext();
+  const context = testContext();
   // After buildConnections, connections have both id (prefixed) and connectionId (original)
   const components = {
     connections: [
@@ -321,7 +311,7 @@ test('buildAgents matches connectionId against connection.connectionId (post-bui
 });
 
 test('buildAgents matches tool against endpoint.endpointId (post-buildApi)', () => {
-  const context = createTestContext();
+  const context = testContext();
   // After buildApi, endpoints have both id (prefixed) and endpointId (original)
   const components = {
     connections: [
@@ -356,7 +346,7 @@ test('buildAgents matches tool against endpoint.endpointId (post-buildApi)', () 
 });
 
 test('buildAgents counts operators in properties', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -399,7 +389,7 @@ test('buildAgents counts operators in properties', () => {
 });
 
 test('buildAgents tracks agent type usage', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       {
@@ -440,7 +430,7 @@ test('buildAgents tracks agent type usage', () => {
 });
 
 test('buildAgents empty agents array initialises agentIds', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = { connections: [], agents: [] };
   const res = buildAgents({ components, context });
   expect(res.agents).toEqual([]);
@@ -448,7 +438,7 @@ test('buildAgents empty agents array initialises agentIds', () => {
 });
 
 test('buildAgents throws when tool endpoint not found and api is undefined', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
     agents: [{
@@ -465,7 +455,7 @@ test('buildAgents throws when tool endpoint not found and api is undefined', () 
 });
 
 test('buildAgents validates multiple tools all referencing existing endpoints', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
     api: [
@@ -485,7 +475,7 @@ test('buildAgents validates multiple tools all referencing existing endpoints', 
 });
 
 test('buildAgents throws when model is not defined', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -504,7 +494,7 @@ test('buildAgents throws when model is not defined', () => {
 });
 
 test('buildAgents throws when model is not defined with empty properties', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -524,7 +514,7 @@ test('buildAgents throws when model is not defined with empty properties', () =>
 });
 
 test('buildAgents throws when tool endpoint is missing description', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -554,7 +544,7 @@ test('buildAgents throws when tool endpoint is missing description', () => {
 });
 
 test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -584,7 +574,7 @@ test('buildAgents throws when tool endpoint is missing payloadSchema', () => {
 });
 
 test('buildAgents with valid hook endpoint IDs passes', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -615,7 +605,7 @@ test('buildAgents with valid hook endpoint IDs passes', () => {
 });
 
 test('buildAgents throws when hook references non-existent endpoint', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -638,7 +628,7 @@ test('buildAgents throws when hook references non-existent endpoint', () => {
 });
 
 test('buildAgents with no hooks passes', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
@@ -656,7 +646,7 @@ test('buildAgents with no hooks passes', () => {
 });
 
 test('buildAgents with empty hooks arrays passes', () => {
-  const context = createTestContext();
+  const context = testContext();
   const components = {
     connections: [
       { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },

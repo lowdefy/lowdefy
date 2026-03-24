@@ -27,6 +27,7 @@ import defaultTypesMap from './defaultTypesMap.js';
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
+    agentIds: new Set(),
     connectionIds: new Set(),
     directories,
     errors: [],

@@ -123,6 +123,42 @@ test('GeminiAgent resolver merges sugar with existing providerOptions', async ()
   });
 });
 
+test('GeminiAgent resolver maps both thinkingConfig and safetySettings together', async () => {
+  mockHandleAgentChat.mockResolvedValue({});
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const thinkingConfig = { thinkingBudget: 8192, includeThoughts: true };
+  const safetySettings = [
+    { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+  ];
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        properties: {
+          model: 'gemini-2.5-flash',
+          thinkingConfig,
+          safetySettings,
+          providerOptions: { google: { cachedContent: 'cachedContents/abc' } },
+        },
+      },
+      messages: [],
+    },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(args.properties.agent.properties.providerOptions).toEqual({
+    google: {
+      cachedContent: 'cachedContents/abc',
+      thinkingConfig,
+      safetySettings,
+    },
+  });
+});
+
 test('GeminiAgent resolver does not modify providerOptions when no sugar props', async () => {
   mockHandleAgentChat.mockResolvedValue({});
 

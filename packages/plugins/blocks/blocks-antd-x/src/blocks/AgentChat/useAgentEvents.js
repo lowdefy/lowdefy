@@ -25,9 +25,7 @@ function useAgentEvents({ messages, status, methods }) {
   // Fire onMessageComplete when streaming finishes
   useEffect(() => {
     if (prevStatusRef.current === 'streaming' && status === 'idle') {
-      const lastAssistantMessage = [...messages]
-        .reverse()
-        .find((m) => m.role === 'assistant');
+      const lastAssistantMessage = [...messages].reverse().find((m) => m.role === 'assistant');
       if (lastAssistantMessage) {
         const textContent = lastAssistantMessage.parts
           ?.filter((p) => p.type === 'text')
@@ -68,7 +66,7 @@ function useAgentEvents({ messages, status, methods }) {
           }
 
           if (
-            part.state === 'output-available' &&
+            (part.state === 'output-available' || part.state === 'output-error') &&
             !firedToolResultIds.current.has(toolCallId)
           ) {
             firedToolResultIds.current.add(toolCallId);
@@ -78,6 +76,7 @@ function useAgentEvents({ messages, status, methods }) {
                 toolName: part.toolName ?? part.type?.replace('tool-', ''),
                 toolCallId,
                 output: part.output,
+                error: part.state === 'output-error',
               },
             });
           }

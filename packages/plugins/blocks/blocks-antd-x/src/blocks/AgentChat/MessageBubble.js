@@ -109,7 +109,7 @@ function MessageBubble({ content, isStreaming, parts, config }) {
           const text = segment.parts.map((p) => p.text).join('');
           if (text.length === 0) return null;
           return (
-            <Think key={idx} title="Reasoning" defaultExpanded={false}>
+            <Think key={`reasoning-${idx}`} title="Reasoning" defaultExpanded={false}>
               {text}
             </Think>
           );
@@ -142,7 +142,7 @@ function MessageBubble({ content, isStreaming, parts, config }) {
               status,
             };
           });
-          return <ThoughtChain key={idx} items={items} />;
+          return <ThoughtChain key={`tool-${idx}`} items={items} />;
         }
         if (segment.category === 'text') {
           const text = segment.parts.map((p) => p.text).join('');
@@ -150,7 +150,7 @@ function MessageBubble({ content, isStreaming, parts, config }) {
           const isLastText = idx === lastTextIdx;
           return (
             <Markdown
-              key={idx}
+              key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
             >
               {text}

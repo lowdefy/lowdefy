@@ -31,6 +31,10 @@ async function handler({ context, req, res }) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
   const { messages } = req.body;
+  if (!Array.isArray(messages)) {
+    res.status(400).json({ error: 'messages must be an array' });
+    return;
+  }
   const webResponse = await callAgent(context, { agentId, pageId, messages });
 
   // Stream the Web Response body to the Next.js response

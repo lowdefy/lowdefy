@@ -15,6 +15,7 @@
 */
 
 import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
+import { serializer } from '@lowdefy/helpers';
 
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
@@ -74,7 +75,8 @@ async function handleAgentChat({ connection, properties, context }) {
       execute: async (input) => {
         const result = await context.callEndpoint(endpointId, { payload: input });
         if (!result.success) {
-          throw new Error(result.error?.message ?? 'Endpoint execution failed');
+          const err = serializer.deserialize(result.error);
+          throw new Error(err?.message ?? 'Endpoint execution failed');
         }
         return cleanBuildArtifact(result.response);
       },

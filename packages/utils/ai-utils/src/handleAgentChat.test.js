@@ -189,7 +189,7 @@ test('throws when tool endpoint execution fails with error message', async () =>
   });
   const callEndpoint = jest.fn().mockResolvedValue({
     success: false,
-    error: { message: 'Database connection refused' },
+    error: { '~e': { message: 'Database connection refused', name: 'Error' } },
   });
 
   await handleAgentChat({
