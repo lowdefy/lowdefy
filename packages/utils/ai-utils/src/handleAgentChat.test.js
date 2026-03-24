@@ -55,7 +55,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
 
   const messages = [{ role: 'user', content: 'Hello' }];
   const agent = {
-    tools: ['search'],
+    tools: [{ endpointId: 'search' }],
     properties: {
       model: 'claude-3-5-sonnet',
       instructions: 'You are a helpful assistant.',
@@ -88,7 +88,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
     agent: expect.any(MockToolLoopAgent),
     uiMessages: messages,
   });
-  expect(result).toEqual({ type: 'web-response' });
+  expect(result).toEqual({ response: { type: 'web-response' }, toolConfirmModes: {} });
 });
 
 test('builds tools from endpoint configs', async () => {
@@ -107,7 +107,7 @@ test('builds tools from endpoint configs', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['search'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'search' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -195,7 +195,7 @@ test('throws when tool endpoint execution fails with error message', async () =>
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['db-query'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -222,7 +222,7 @@ test('throws generic message when tool endpoint fails without error message', as
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['db-query'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -247,7 +247,7 @@ test('builds multiple tools from multiple endpoint configs', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['search', 'write'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'search' }, { endpointId: 'write' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -275,7 +275,7 @@ test('tool execute returns null when endpoint response is null', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['nullable'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'nullable' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -303,7 +303,7 @@ test('cleanBuildArtifact strips non-enumerable serializer markers from payload s
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['schema-test'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'schema-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint: jest.fn(), getEndpointConfig },
@@ -332,7 +332,7 @@ test('tool execute cleans build artifact markers from response', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['response-test'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'response-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -524,4 +524,74 @@ test('empty tools array produces empty tools object', async () => {
 
   expect(lastAgentConfig.tools).toEqual({});
   expect(mockTool).not.toHaveBeenCalled();
+});
+
+test('tool with confirm true sets needsApproval and populates toolConfirmModes', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Dangerous tool',
+    payloadSchema: { type: 'object' },
+  });
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'dangerous', confirm: true }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+  expect(mockTool).toHaveBeenCalledWith(expect.objectContaining({ needsApproval: true }));
+  expect(result.toolConfirmModes).toEqual({ dangerous: true });
+});
+
+test('tool with confirm event populates toolConfirmModes with event', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Custom confirm tool',
+    payloadSchema: { type: 'object' },
+  });
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'custom', confirm: 'event' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+  expect(result.toolConfirmModes).toEqual({ custom: 'event' });
+});
+
+test('tool without confirm does not set needsApproval', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Normal tool',
+    payloadSchema: { type: 'object' },
+  });
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'normal' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+  expect(mockTool).toHaveBeenCalledWith(
+    expect.not.objectContaining({ needsApproval: expect.anything() })
+  );
+  expect(result.toolConfirmModes).toEqual({});
 });

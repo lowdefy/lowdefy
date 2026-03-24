@@ -35,7 +35,11 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
   }
-  const webResponse = await callAgent(context, { agentId, pageId, messages });
+  const { response: webResponse, toolConfirmModes } = await callAgent(context, {
+    agentId,
+    pageId,
+    messages,
+  });
 
   // Stream the Web Response body to the Next.js response
   res.setHeader('Content-Type', 'text/event-stream');
@@ -43,6 +47,7 @@ async function handler({ context, req, res }) {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Content-Encoding', 'none');
   res.setHeader('Transfer-Encoding', 'chunked');
+  res.setHeader('X-Tool-Confirm-Modes', JSON.stringify(toolConfirmModes ?? {}));
 
   const reader = webResponse.body.getReader();
   const decoder = new TextDecoder();

@@ -17,10 +17,22 @@
 import { DefaultChatTransport } from 'ai';
 
 class LowdefyChatTransport extends DefaultChatTransport {
-  constructor({ pageId, agentId }) {
+  constructor({ pageId, agentId, onToolConfirmModes }) {
     super({
       api: `/api/agent/${pageId}/${agentId}`,
       credentials: 'include',
+      fetch: async (url, init) => {
+        const response = await globalThis.fetch(url, init);
+        const modesHeader = response.headers.get('X-Tool-Confirm-Modes');
+        if (modesHeader && onToolConfirmModes) {
+          try {
+            onToolConfirmModes(JSON.parse(modesHeader));
+          } catch {
+            // ignore parse errors
+          }
+        }
+        return response;
+      },
     });
   }
 }

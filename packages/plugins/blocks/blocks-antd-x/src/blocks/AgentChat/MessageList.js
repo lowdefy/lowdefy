@@ -19,7 +19,7 @@ import { Bubble } from '@ant-design/x';
 
 import MessageBubble from './MessageBubble.js';
 
-function MessageList({ messages, isStreaming, config }) {
+function MessageList({ messages, isStreaming, config, toolConfirmModes, addToolApprovalResponse }) {
   // Build a lookup map for assistant message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -65,6 +65,8 @@ function MessageList({ messages, isStreaming, config }) {
                 isStreaming={isStreaming}
                 parts={parts}
                 config={config}
+                toolConfirmModes={toolConfirmModes}
+                addToolApprovalResponse={addToolApprovalResponse}
               />
             );
           },

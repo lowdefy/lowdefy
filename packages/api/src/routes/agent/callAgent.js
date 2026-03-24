@@ -62,6 +62,13 @@ async function callAgent(context, { agentId, pageId, messages }) {
 
   // Build resolver context with callEndpoint that allows InternalApi endpoints
   const resolverContext = {
+    evaluateOperators: (input) =>
+      context.evaluateOperators({
+        input,
+        location: agentConfig.agentId,
+        payload: {},
+        steps: {},
+      }),
     callEndpoint: async (endpointId, { payload }) => {
       const endpointConfig = await getEndpointConfig(context, { endpointId });
       authorizeApiEndpoint(context, { endpointConfig });
@@ -89,13 +96,13 @@ async function callAgent(context, { agentId, pageId, messages }) {
   };
 
   // Call the agent resolver
-  const result = await agentType.resolver({
+  const { response, toolConfirmModes } = await agentType.resolver({
     connection: connectionInstance,
     properties: { agent: agentConfig, messages },
     context: resolverContext,
   });
 
-  return result;
+  return { response, toolConfirmModes };
 }
 
 export default callAgent;

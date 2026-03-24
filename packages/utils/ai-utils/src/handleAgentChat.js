@@ -67,11 +67,22 @@ async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages } = properties;
 
   const tools = {};
-  for (const endpointId of agent.tools ?? []) {
+  const toolConfirmModes = {};
+
+  for (const toolConfig of agent.tools ?? []) {
+    const { endpointId, confirm } = toolConfig;
     const endpointConfig = await context.getEndpointConfig({ endpointId });
+
+    if (confirm) {
+      toolConfirmModes[endpointId] = confirm;
+    }
+
     tools[endpointId] = tool({
       description: endpointConfig.description,
       inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
+      // Both confirm: true (built-in UI) and confirm: 'event' (developer-controlled)
+      // need SDK-level approval pause — the tool must not execute until approved.
+      ...(confirm ? { needsApproval: true } : {}),
       execute: async (input) => {
         const result = await context.callEndpoint(endpointId, { payload: input });
         if (!result.success) {
@@ -102,10 +113,11 @@ async function handleAgentChat({ connection, properties, context }) {
     ...hookCallbacks,
   });
 
-  return createAgentUIStreamResponse({
+  const response = createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
   });
+  return { response, toolConfirmModes };
 }
 
 export default handleAgentChat;

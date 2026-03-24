@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Sender } from '@ant-design/x';
 
@@ -26,10 +26,28 @@ import WelcomeScreen from './WelcomeScreen.js';
 function AgentChat({ blockId, methods, pageId, properties }) {
   const { agentId, welcome, messages: messagesConfig, sender } = properties;
   const senderRef = useRef(null);
+  const toolConfirmModesRef = useRef({});
 
-  const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
+  const transport = useMemo(
+    () =>
+      new LowdefyChatTransport({
+        pageId,
+        agentId,
+        onToolConfirmModes: (modes) => {
+          toolConfirmModesRef.current = modes;
+        },
+      }),
+    [pageId, agentId]
+  );
 
-  const { messages, sendMessage, status, stop } = useChat({
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    addToolApprovalResponse,
+    setMessages, // Used by Task 4 (conversations) — keep destructured
+  } = useChat({
     transport,
     experimental_throttle: 50,
     onError: (error) => {
@@ -40,7 +58,20 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     },
   });
 
-  useAgentEvents({ messages, status, methods });
+  useEffect(() => {
+    methods.registerMethod('confirmTool', ({ approvalId }) => {
+      if (approvalId && addToolApprovalResponse) {
+        addToolApprovalResponse({ toolCallId: approvalId, approve: true });
+      }
+    });
+    methods.registerMethod('rejectTool', ({ approvalId }) => {
+      if (approvalId && addToolApprovalResponse) {
+        addToolApprovalResponse({ toolCallId: approvalId, approve: false });
+      }
+    });
+  }, [methods, addToolApprovalResponse]);
+
+  useAgentEvents({ messages, status, methods, toolConfirmModes: toolConfirmModesRef });
 
   const isEmpty = messages.length === 0;
   const isStreaming = status === 'streaming';
@@ -71,7 +102,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         {isEmpty ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
-          <MessageList messages={messages} isStreaming={isStreaming} config={messagesConfig} />
+          <MessageList
+            messages={messages}
+            isStreaming={isStreaming}
+            config={messagesConfig}
+            toolConfirmModes={toolConfirmModesRef}
+            addToolApprovalResponse={addToolApprovalResponse}
+          />
         )}
       </div>
       <div style={{ padding: '8px 0 16px' }}>
