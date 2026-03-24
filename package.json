@@ -49,7 +49,7 @@
     "release:experimental": "(npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- ."
   },
   "devDependencies": {
-    "@changesets/cli": "2.26.2",
+    "@changesets/cli": "2.30.0",
     "eslint": "8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-node": "0.3.9",
