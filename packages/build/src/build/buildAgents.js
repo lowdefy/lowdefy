@@ -68,27 +68,46 @@ function buildAgents({ components, context }) {
       });
     }
 
+    // Normalize tool strings to objects
+    agent.tools = (agent.tools ?? []).map((tool) => {
+      if (type.isString(tool)) {
+        return { endpointId: tool };
+      }
+      return tool;
+    });
+
     // Validate tools reference existing API endpoints with required tool metadata
-    (agent.tools ?? []).forEach((toolEndpointId) => {
+    agent.tools.forEach((toolConfig) => {
       const endpoint = (components.api ?? []).find(
-        (e) => e.id === toolEndpointId || e.endpointId === toolEndpointId
+        (e) => e.id === toolConfig.endpointId || e.endpointId === toolConfig.endpointId
       );
       if (!endpoint) {
         throw new ConfigError(
-          `Agent "${agent.id}" references tool endpoint "${toolEndpointId}" which does not exist.`,
+          `Agent "${agent.id}" references tool endpoint "${toolConfig.endpointId}" which does not exist.`,
           { configKey }
         );
       }
       if (type.isNone(endpoint.description)) {
         throw new ConfigError(
-          `Endpoint "${toolEndpointId}" is used as an agent tool but does not have a "description".`,
+          `Endpoint "${toolConfig.endpointId}" is used as an agent tool but does not have a "description".`,
           { configKey: endpoint['~k'] }
         );
       }
       if (type.isNone(endpoint.payloadSchema)) {
         throw new ConfigError(
-          `Endpoint "${toolEndpointId}" is used as an agent tool but does not have a "payloadSchema".`,
+          `Endpoint "${toolConfig.endpointId}" is used as an agent tool but does not have a "payloadSchema".`,
           { configKey: endpoint['~k'] }
+        );
+      }
+    });
+
+    // Validate MCP sources — belt-and-suspenders with schema required: ['url'],
+    // provides a better error message including the agent ID.
+    (agent.mcp ?? []).forEach((mcpSource, index) => {
+      if (type.isNone(mcpSource.url)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" "mcp" source at index ${index} is missing "url".`,
+          { configKey }
         );
       }
     });

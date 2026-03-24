@@ -117,10 +117,46 @@ export default {
         tools: {
           type: 'array',
           items: {
-            type: 'string',
+            anyOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                required: ['endpointId'],
+                properties: {
+                  endpointId: { type: 'string' },
+                  confirm: {
+                    anyOf: [{ const: true }, { const: 'event' }],
+                  },
+                },
+                additionalProperties: false,
+              },
+            ],
           },
           errorMessage: {
             type: 'Agent "tools" should be an array.',
+          },
+        },
+        mcp: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['url'],
+            properties: {
+              url: { type: 'string' },
+              transport: {
+                type: 'string',
+                enum: ['http', 'sse'],
+                default: 'http',
+              },
+              headers: { type: 'object' },
+              confirm: {
+                anyOf: [{ const: true }, { const: 'event' }],
+              },
+            },
+            additionalProperties: false,
+          },
+          errorMessage: {
+            type: 'Agent "mcp" should be an array.',
           },
         },
         hooks: {
