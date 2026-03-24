@@ -73,6 +73,7 @@
     "@lowdefy/operators-uuid": "4.7.1",
     "@lowdefy/operators-yaml": "4.7.1",
     "@lowdefy/plugin-next-auth": "4.7.1",
+    "@tailwindcss/postcss": "4.2.1",
     "antd": "6.3.1",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
