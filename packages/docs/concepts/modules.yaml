@@ -96,10 +96,9 @@ _ref:
             menus:
               - _ref: menus.yaml
 
+            # Default Lowdefy plugins do not need to be declared.
             plugins:
-              - name: "@lowdefy/blocks-antd"
-                version: "^4"
-              - name: "@lowdefy/connection-mongodb"
+              - name: "@lowdefy/blocks-aggrid"
                 version: "^4"
 
             secrets:
@@ -121,11 +120,11 @@ _ref:
             - `plugins: object[]` — Required plugin dependencies with semver version constraints.
             - `secrets: object[]` — Allowlist of secrets the module may access.
 
-            ## Using Module Exports
+            ## Consuming Module Resources
 
             **Pages and APIs** are auto-included and auto-scoped — they appear in the app with the entry ID prefix.
 
-            **Components** are reusable config fragments included via [`_ref`](/_ref) with the `module` and `component` arguments:
+            **Components** are reusable config fragments included via [`_ref`](/_ref) with the `module` and `component` arguments. You can pass `vars` to customize the component at the point of inclusion:
 
             ```yaml
             blocks:
@@ -135,8 +134,6 @@ _ref:
                   vars:
                     position: top-right
             ```
-
-            Components support both `_module.var` (module-level configuration) and `_var` (per-ref variables passed at the point of inclusion).
 
             Components can export any config — not just UI blocks. Enum maps, config templates, and schema fragments all work:
 
@@ -274,7 +271,7 @@ _ref:
 
             ## Secret Allowlist
 
-            Modules declare which secrets they access. The build validates that all `_secret` references in module config match declared secrets. Undeclared `_secret` references cause build errors.
+            Modules declare which secrets they access. Undeclared `_secret` references cause build errors.
 
             When a connection is remapped, the module's secret references for that connection are skipped — the app connection handles its own secrets. See [Secrets](/secrets) for more on secret management.
 

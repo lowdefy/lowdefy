@@ -112,10 +112,10 @@ _ref:
             menus:
               - _ref: menus.yaml
 
+            # Default Lowdefy plugins (blocks-antd, blocks-basic, etc.) do not
+            # need to be declared — only declare non-default plugins.
             plugins:
-              - name: "@lowdefy/blocks-antd"
-                version: "^4"
-              - name: "@lowdefy/connection-mongodb"
+              - name: "@lowdefy/blocks-aggrid"
                 version: "^4"
 
             secrets:
@@ -406,13 +406,11 @@ _ref:
 
             ## Declaring Plugin Dependencies
 
-            Modules declare required plugins with semver version constraints. The build validates these against the app's `plugins` array:
+            Modules declare required plugins with semver version constraints. The build validates these against the app's `plugins` array. Default Lowdefy plugins do not need to be declared — only declare non-default plugins your module requires:
 
             ```yaml
             plugins:
               - name: "@lowdefy/blocks-aggrid"
-                version: "^4"
-              - name: "@lowdefy/connection-mongodb"
                 version: "^4"
             ```
 
@@ -430,8 +428,6 @@ _ref:
                 description: SendGrid API key
                 required: false
             ```
-
-            The build validates that all `_secret` references in module config match declared secrets.
 
             ## Testing Locally
 
