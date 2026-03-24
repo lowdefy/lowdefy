@@ -31,7 +31,7 @@ test('GeminiAgent resolver delegates to handleAgentChat', async () => {
 
   const args = {
     connection: { provider: jest.fn() },
-    properties: { agent: {}, messages: [] },
+    properties: { agent: { properties: { model: 'gemini-2.5-flash' } }, messages: [] },
     context: {},
   };
 
@@ -39,6 +39,107 @@ test('GeminiAgent resolver delegates to handleAgentChat', async () => {
 
   expect(mockHandleAgentChat).toHaveBeenCalledWith(args);
   expect(result).toBe(mockResult);
+});
+
+test('GeminiAgent resolver maps thinkingConfig to providerOptions.google', async () => {
+  mockHandleAgentChat.mockResolvedValue({});
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        properties: {
+          model: 'gemini-2.5-flash',
+          thinkingConfig: { thinkingBudget: 8192, includeThoughts: true },
+        },
+      },
+      messages: [],
+    },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(args.properties.agent.properties.providerOptions).toEqual({
+    google: { thinkingConfig: { thinkingBudget: 8192, includeThoughts: true } },
+  });
+});
+
+test('GeminiAgent resolver maps safetySettings to providerOptions.google', async () => {
+  mockHandleAgentChat.mockResolvedValue({});
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const safetySettings = [
+    { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+  ];
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        properties: { model: 'gemini-2.5-flash', safetySettings },
+      },
+      messages: [],
+    },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(args.properties.agent.properties.providerOptions).toEqual({
+    google: { safetySettings },
+  });
+});
+
+test('GeminiAgent resolver merges sugar with existing providerOptions', async () => {
+  mockHandleAgentChat.mockResolvedValue({});
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        properties: {
+          model: 'gemini-2.5-flash',
+          thinkingConfig: { thinkingBudget: 4096 },
+          providerOptions: { google: { cachedContent: 'cachedContents/abc' } },
+        },
+      },
+      messages: [],
+    },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(args.properties.agent.properties.providerOptions).toEqual({
+    google: {
+      cachedContent: 'cachedContents/abc',
+      thinkingConfig: { thinkingBudget: 4096 },
+    },
+  });
+});
+
+test('GeminiAgent resolver does not modify providerOptions when no sugar props', async () => {
+  mockHandleAgentChat.mockResolvedValue({});
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: { properties: { model: 'gemini-2.5-flash' } },
+      messages: [],
+    },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(args.properties.agent.properties.providerOptions).toBeUndefined();
 });
 
 test('GeminiAgent has schema', async () => {
@@ -148,4 +249,58 @@ test('temperature below minimum', async () => {
   expect(() => validate({ schema, data: { model: 'gemini-1.5-pro', temperature: -1 } })).toThrow(
     'GeminiAgent agent property "temperature" should be at least 0.'
   );
+});
+
+test('valid schema with thinkingConfig', async () => {
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+  const schema = GeminiAgent.schema;
+
+  const agent = {
+    model: 'gemini-2.5-flash',
+    thinkingConfig: { thinkingBudget: 8192, includeThoughts: true },
+  };
+  expect(validate({ schema, data: agent })).toEqual({ valid: true });
+});
+
+test('valid schema with thinkingConfig thinkingLevel', async () => {
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+  const schema = GeminiAgent.schema;
+
+  const agent = {
+    model: 'gemini-3-pro-preview',
+    thinkingConfig: { thinkingLevel: 'high', includeThoughts: true },
+  };
+  expect(validate({ schema, data: agent })).toEqual({ valid: true });
+});
+
+test('valid schema with safetySettings', async () => {
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+  const schema = GeminiAgent.schema;
+
+  const agent = {
+    model: 'gemini-2.5-flash',
+    safetySettings: [
+      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+    ],
+  };
+  expect(validate({ schema, data: agent })).toEqual({ valid: true });
+});
+
+test('thinkingConfig is not an object', async () => {
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+  const schema = GeminiAgent.schema;
+
+  expect(() =>
+    validate({ schema, data: { model: 'gemini-2.5-flash', thinkingConfig: 'enabled' } })
+  ).toThrow('GeminiAgent agent property "thinkingConfig" should be an object.');
+});
+
+test('safetySettings is not an array', async () => {
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+  const schema = GeminiAgent.schema;
+
+  expect(() =>
+    validate({ schema, data: { model: 'gemini-2.5-flash', safetySettings: {} } })
+  ).toThrow('GeminiAgent agent property "safetySettings" should be an array.');
 });

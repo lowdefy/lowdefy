@@ -66,9 +66,52 @@ export default {
     toolChoice: {
       description: 'Tool choice configuration.',
     },
+    thinkingConfig: {
+      type: 'object',
+      description: 'Configuration for the model thinking process.',
+      properties: {
+        thinkingBudget: {
+          type: 'integer',
+          minimum: 0,
+          description: 'Maximum thinking tokens (Gemini 2.5 models). Set to 0 to disable.',
+        },
+        thinkingLevel: {
+          type: 'string',
+          enum: ['minimal', 'low', 'medium', 'high'],
+          description: 'Thinking depth (Gemini 3 models).',
+        },
+        includeThoughts: {
+          type: 'boolean',
+          description: 'If true, return thought summaries in the response.',
+        },
+      },
+      errorMessage: {
+        type: 'GeminiAgent agent property "thinkingConfig" should be an object.',
+      },
+    },
+    safetySettings: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          category: {
+            type: 'string',
+            description: 'Safety category (e.g. "HARM_CATEGORY_DANGEROUS_CONTENT").',
+          },
+          threshold: {
+            type: 'string',
+            description: 'Block threshold (e.g. "BLOCK_ONLY_HIGH", "BLOCK_NONE").',
+          },
+        },
+      },
+      description: 'Safety settings for the model.',
+      errorMessage: {
+        type: 'GeminiAgent agent property "safetySettings" should be an array.',
+      },
+    },
     providerOptions: {
       type: 'object',
-      description: 'Provider-specific options passed to the AI SDK (e.g. Google thinkingConfig).',
+      description: 'Provider-specific options passed to the AI SDK.',
       errorMessage: {
         type: 'GeminiAgent agent property "providerOptions" should be an object.',
       },
