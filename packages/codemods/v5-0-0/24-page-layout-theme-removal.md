@@ -14,13 +14,13 @@ Find all `PageSiderMenu` and `PageHeaderMenu` blocks and remove `theme` from the
 
 **Properties to remove:**
 
-| Block | Property to Remove |
-| --- | --- |
-| PageSiderMenu | `properties.header.theme` |
-| PageSiderMenu | `properties.sider.theme` |
-| PageSiderMenu | `properties.menu.theme` |
+| Block          | Property to Remove        |
+| -------------- | ------------------------- |
+| PageSiderMenu  | `properties.header.theme` |
+| PageSiderMenu  | `properties.sider.theme`  |
+| PageSiderMenu  | `properties.menu.theme`   |
 | PageHeaderMenu | `properties.header.theme` |
-| PageHeaderMenu | `properties.menu.theme` |
+| PageHeaderMenu | `properties.menu.theme`   |
 
 If `header` becomes empty after removing `theme`, remove the entire `header:` key.
 
@@ -28,18 +28,18 @@ Also remove any `_if: { _media: darkMode }` conditional patterns used to switch 
 
 ### Step 2: Migrate nested style properties to cssKey style slots
 
-Move style properties from inside `properties:` to the block-level `style:` with `/`-prefixed cssKey names.
+Move style properties from inside `properties:` to the block-level `style:` with `.`-prefixed cssKey names.
 
 **Mapping table:**
 
-| Old Property Location | New Location |
-| --- | --- |
-| `properties.header.style` | `style: { /header }` |
-| `properties.header.contentStyle` | `style: { /headerContent }` |
-| `properties.sider.style` | `style: { /sider }` |
-| `properties.footer.style` | `style: { /footer }` |
-| `properties.content.style` | `style: { /content }` |
-| `properties.logo.style` | `style: { /logo }` |
+| Old Property Location            | New Location                |
+| -------------------------------- | --------------------------- |
+| `properties.header.style`        | `style: { .header }`        |
+| `properties.header.contentStyle` | `style: { .headerContent }` |
+| `properties.sider.style`         | `style: { .sider }`         |
+| `properties.footer.style`        | `style: { .footer }`        |
+| `properties.content.style`       | `style: { .content }`       |
+| `properties.logo.style`          | `style: { .logo }`          |
 
 ## Files to Check
 
@@ -47,6 +47,7 @@ Glob: `**/*.{yaml,yml,njk}`
 Grep: `type: PageSiderMenu|type: PageHeaderMenu`
 
 Then within matched files, look for:
+
 - `header:\s+theme:` (theme properties)
 - `header:\s+style:` or `header:\s+contentStyle:` (nested styles)
 - `sider:\s+theme:` or `sider:\s+style:` (sider theme/style)
@@ -126,12 +127,12 @@ Then within matched files, look for:
   type: PageSiderMenu
   properties: {}
   style:
-    /headerContent:
+    .headerContent:
       gap: 12px
-    /footer:
+    .footer:
       background: var(--ant-color-bg-base)
       padding: 16px 0 0 0
-    /content:
+    .content:
       maxWidth: 960px
 ```
 
@@ -165,7 +166,7 @@ Then within matched files, look for:
 - Operator expressions inside theme values (like `_if: { _media: darkMode }`) should be removed entirely — the conditional is no longer needed
 - The `menu.theme` inside `properties.menu` should be removed, but other menu properties (`links`, `forceSubMenuRender`, etc.) should be kept
 - Hardcoded color values like `background: '#FFFFFF'` in style properties should be replaced with `var(--ant-color-bg-container)` for dark mode compatibility
-- If the block already has a top-level `style:` block, merge the new `/slot` entries into it
+- If the block already has a top-level `style:` block, merge the new `.slot` entries into it
 
 ## Verification
 

@@ -62,6 +62,7 @@
           type: Header
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_full_page_header_title
               type: Title
@@ -69,7 +70,6 @@
                 content: My Application
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_full_page_main
           type: Content
@@ -109,6 +109,7 @@
           type: Header
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_sider_header_title
               type: Title
@@ -116,7 +117,6 @@
                 content: App with Sidebar
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_sider_inner
           type: Layout
@@ -125,6 +125,8 @@
           blocks:
             - id: content_sider_nav
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 width: 200
               style:
@@ -147,6 +149,8 @@
                         icon: AiOutlineSetting
             - id: content_sider_main
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-container)
@@ -315,6 +319,7 @@
           type: Header
           style:
             justifyContent: space-between
+            borderBottom: 1px solid var(--ant-color-border)
             paddingInline: 24px
           blocks:
             - id: content_dashboard_header_title
@@ -325,7 +330,6 @@
                 content: Analytics Dashboard
                 level: 4
                 style:
-                  color: white
                   margin: 0
             - id: content_dashboard_header_btn
               type: Button
@@ -344,6 +348,8 @@
           blocks:
             - id: content_dashboard_sider
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 width: 200
               style:
@@ -369,6 +375,8 @@
                         icon: AiOutlineTeam
             - id: content_dashboard_main
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-layout)
@@ -446,6 +454,7 @@
           type: Header
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_settings_header_title
               type: Title
@@ -453,7 +462,6 @@
                 content: Account Settings
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_settings_main
           type: Content

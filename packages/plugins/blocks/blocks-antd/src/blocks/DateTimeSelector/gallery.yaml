@@ -452,7 +452,7 @@
     - id: dts_style_element
       type: DateTimeSelector
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         label:
@@ -460,7 +460,7 @@
     - id: dts_style_label
       type: DateTimeSelector
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:

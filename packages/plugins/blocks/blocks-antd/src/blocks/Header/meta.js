@@ -56,6 +56,22 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      color: {
+        type: 'string',
+        description:
+          'Header background color. Accepts any CSS color value. Defaults to the antd container background color (light in light mode, dark in dark mode).',
+        docs: {
+          displayType: 'color',
+        },
+      },
+      iconsColor: {
+        type: 'string',
+        description:
+          'Color for the notification, profile, and dark mode toggle icons. Use when the header has a dark background color.',
+        docs: {
+          displayType: 'color',
+        },
+      },
       notifications: {
         type: 'object',
         description:

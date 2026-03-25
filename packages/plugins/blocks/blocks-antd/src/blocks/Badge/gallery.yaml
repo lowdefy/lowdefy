@@ -613,7 +613,7 @@
       properties:
         count: 5
       style:
-        /indicator:
+        .indicator:
           boxShadow: 0 0 0 2px #1677ff
       blocks:
         - id: css_indicator_shadow_child
@@ -628,7 +628,7 @@
       properties:
         count: 5
       style:
-        /indicator:
+        .indicator:
           backgroundColor: '#52c41a'
       blocks:
         - id: css_indicator_green_child
@@ -643,7 +643,7 @@
       properties:
         count: 42
       style:
-        /indicator:
+        .indicator:
           fontWeight: bold
           fontSize: 14px
       blocks:

@@ -371,9 +371,9 @@ _ref:
             - id: my_card
               type: Card
               style:
-                /body:
+                .body:
                   backgroundColor: "#f0f0f0"
-                /header:
+                .header:
                   fontWeight: bold
             ```
 
@@ -566,7 +566,7 @@ _ref:
             ## New features
 
             - **`class` property** — Apply Tailwind CSS classes to any block. See [Custom Styling](/custom-styling).
-            - **`style` with `/` keys** — Apply inline styles to specific parts of a block using CSS slot keys (e.g. `style: { /header: {...} }`).
+            - **`style` with `.` keys** — Apply inline styles to specific parts of a block using CSS slot keys (e.g. `style: { .header: {...} }`).
             - **`properties.theme`** — Override antd design tokens per block.
             - **`_theme` operator** — Access theme seed tokens in expressions. See [`_theme`](/_theme).
             - **Theming system** — App-level, component-level, and block-level theme customization. See [Theming](/theming).

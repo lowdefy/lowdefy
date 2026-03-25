@@ -387,7 +387,7 @@
     - id: style_element
       type: MarkdownWithCode
       style:
-        /element:
+        .element:
           backgroundColor: '#f6ffed'
           padding: 16
           borderRadius: 8
@@ -400,7 +400,7 @@
 
           ```yaml
           style:
-            /element:
+            .element:
               backgroundColor: '#f6ffed'
               padding: 16
               borderRadius: 8

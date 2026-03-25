@@ -72,7 +72,7 @@
     - id: span_click_basic
       type: Span
       style:
-        /element:
+        .element:
           color: '#1677ff'
           textDecoration: underline
           cursor: pointer
@@ -89,7 +89,7 @@
     - id: span_click_set_state
       type: Span
       style:
-        /element:
+        .element:
           background: '#e6f4ff'
           padding: 4px 12px
           borderRadius: 4
@@ -109,7 +109,7 @@
     - id: span_click_link
       type: Span
       style:
-        /element:
+        .element:
           color: '#722ed1'
           textDecoration: underline
       properties:
@@ -129,7 +129,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           textDecoration: underline
           textDecorationColor: '#1677ff'
           textUnderlineOffset: 4px
@@ -140,7 +140,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           textTransform: uppercase
           letterSpacing: 2
           fontSize: 12
@@ -153,7 +153,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           fontFamily: monospace
           background: '#f5f5f5'
           padding: 2px 6px
@@ -167,7 +167,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: linear-gradient(90deg, #1677ff, #722ed1)
           color: '#ffffff'
           padding: 4px 12px
@@ -227,7 +227,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#1677ff'
               fontWeight: bold
           properties:
@@ -249,7 +249,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               fontWeight: bold
           properties:
             content: 'Hello, '
@@ -258,7 +258,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#1677ff'
           properties:
             content: 'world'
@@ -274,7 +274,7 @@
     - id: span_nested_outer
       type: Span
       style:
-        /element:
+        .element:
           padding: 8px 12px
           background: '#f5f5f5'
           borderRadius: 6
@@ -287,7 +287,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               fontWeight: bold
               color: '#262626'
           properties:
@@ -297,7 +297,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#52c41a'
           blocks:
             - id: span_nested_value_icon
@@ -322,7 +322,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#e6f4ff'
           color: '#1677ff'
           padding: 2px 8px
@@ -336,7 +336,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           color: '#52c41a'
           padding: 2px 8px
@@ -350,7 +350,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#fff2f0'
           color: '#ff4d4f'
           padding: 2px 8px
@@ -367,7 +367,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#1677ff'
           color: '#ffffff'
           padding: 2px 10px
@@ -381,7 +381,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#ff4d4f'
           color: '#ffffff'
           padding: 2px 10px
@@ -395,7 +395,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#52c41a'
           color: '#ffffff'
           padding: 2px 10px
@@ -410,7 +410,7 @@
     - id: span_icon_smile
       type: Span
       style:
-        /element:
+        .element:
           display: inline-flex
           alignItems: center
           gap: 6
@@ -432,7 +432,7 @@
     - id: span_icon_check
       type: Span
       style:
-        /element:
+        .element:
           display: inline-flex
           alignItems: center
           gap: 6
@@ -454,7 +454,7 @@
     - id: span_icon_warning
       type: Span
       style:
-        /element:
+        .element:
           display: inline-flex
           alignItems: center
           gap: 6
@@ -487,7 +487,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               fontWeight: bold
               color: '#262626'
           properties:
@@ -497,7 +497,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               display: inline-flex
               alignItems: center
               gap: 6
@@ -528,7 +528,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#8c8c8c'
               fontSize: 13
           properties:
@@ -547,7 +547,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#1677ff'
               cursor: pointer
           properties:
@@ -563,7 +563,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#d9d9d9'
           properties:
             content: /
@@ -572,7 +572,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#1677ff'
               cursor: pointer
           properties:
@@ -588,7 +588,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#d9d9d9'
           properties:
             content: /
@@ -597,7 +597,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               color: '#595959'
               fontWeight: 500
           properties:
@@ -624,7 +624,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               fontWeight: bold
               fontSize: 14
               color: '#262626'
@@ -643,7 +643,7 @@
           layout:
             flex: 0 0 auto
           style:
-            /element:
+            .element:
               display: inline-flex
               alignItems: center
               gap: 4

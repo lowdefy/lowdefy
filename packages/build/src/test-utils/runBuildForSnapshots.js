@@ -32,6 +32,7 @@ const snapshotTypesMap = {
     Reset: { package: '@lowdefy/actions-core' },
     ResetValidation: { package: '@lowdefy/actions-core' },
     ScrollTo: { package: '@lowdefy/actions-core' },
+    SetDarkMode: { package: '@lowdefy/actions-core' },
     SetFocus: { package: '@lowdefy/actions-core' },
     SetGlobal: { package: '@lowdefy/actions-core' },
     SetState: { package: '@lowdefy/actions-core' },

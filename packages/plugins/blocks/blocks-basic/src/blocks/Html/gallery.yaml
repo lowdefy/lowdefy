@@ -179,7 +179,7 @@
     - id: style_padded
       type: Html
       style:
-        /element:
+        .element:
           padding: 20
           background: '#f0f5ff'
           borderRadius: 8
@@ -188,7 +188,7 @@
     - id: style_bordered
       type: Html
       style:
-        /element:
+        .element:
           border: 2px solid #1677ff
           padding: 16
           borderRadius: 8
@@ -197,7 +197,7 @@
     - id: style_shadow
       type: Html
       style:
-        /element:
+        .element:
           padding: 20
           borderRadius: 12
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
@@ -207,7 +207,7 @@
     - id: style_max_width
       type: Html
       style:
-        /element:
+        .element:
           maxWidth: 350
           margin: 0 auto
           textAlign: center
@@ -219,7 +219,7 @@
     - id: style_left_accent
       type: Html
       style:
-        /element:
+        .element:
           borderLeft: 4px solid #fa8c16
           paddingLeft: 16
           paddingTop: 8
@@ -229,7 +229,7 @@
     - id: style_dark
       type: Html
       style:
-        /element:
+        .element:
           background: '#1a1a2e'
           color: '#e0e0e0'
           padding: 20

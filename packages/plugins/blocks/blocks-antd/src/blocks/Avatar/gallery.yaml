@@ -400,7 +400,7 @@
             content: BD
             color: '#1677ff'
           style:
-            /element:
+            .element:
               border: 2px solid #1677ff
         - id: css_box_shadow
           type: Avatar
@@ -410,7 +410,7 @@
             content: SH
             color: '#722ed1'
           style:
-            /element:
+            .element:
               boxShadow: 0 2px 8px rgba(114, 46, 209, 0.4)
         - id: css_gradient
           type: Avatar
@@ -420,7 +420,7 @@
             icon: AiOutlineStar
             size: large
           style:
-            /element:
+            .element:
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
         - id: css_dashed_outline
           type: Avatar
@@ -430,7 +430,7 @@
             icon: AiOutlinePlus
             size: large
           style:
-            /element:
+            .element:
               color: '#1677ff'
               border: 2px dashed #1677ff
 
@@ -578,7 +578,7 @@
                 - content: N
                   color: '#eb2f96'
           style:
-            /max:
+            .max:
               color: '#f56a00'
         - id: group_dark_overflow
           type: Avatar
@@ -598,7 +598,7 @@
                 - content: EF
                   color: '#fa8c16'
           style:
-            /max:
+            .max:
               color: '#fff'
               backgroundColor: '#1677ff'
         - id: group_red_overflow
@@ -620,7 +620,7 @@
                 - content: T
                   color: '#eb2f96'
           style:
-            /max:
+            .max:
               color: '#fff'
               backgroundColor: '#f5222d'
               fontWeight: bold
@@ -648,7 +648,7 @@
                 size: large
                 alt: Sarah Chen
               style:
-                /element:
+                .element:
                   border: 2px solid #1677ff
               events:
                 onClick:
@@ -747,7 +747,7 @@
                     - content: KP
                       color: '#fa8c16'
               style:
-                /max:
+                .max:
                   color: '#f56a00'
             - id: team_info
               type: Box
@@ -777,7 +777,7 @@
             align: flex-start
             wrap: nowrap
           style:
-            /element:
+            .element:
               padding: 16px 0
           blocks:
             - id: c1_avatar
@@ -787,7 +787,7 @@
               properties:
                 src: https://api.dicebear.com/7.x/miniavs/svg?seed=sarah
               style:
-                /element:
+                .element:
                   border: 2px solid #1677ff
               events:
                 onClick:
@@ -815,7 +815,7 @@
                   layout:
                     gap: 16
                   style:
-                    /element:
+                    .element:
                       marginTop: 4
                   blocks:
                     - id: c1_like
@@ -826,7 +826,7 @@
                         icon: AiOutlineLike
                         title: Like
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
                     - id: c1_reply
@@ -837,13 +837,13 @@
                         icon: AiOutlineMessage
                         title: Reply
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
         - id: c_divider_1
           type: Divider
           style:
-            /element:
+            .element:
               margin: 0
         - id: c2
           type: Box
@@ -852,7 +852,7 @@
             align: flex-start
             wrap: nowrap
           style:
-            /element:
+            .element:
               padding: 16px 0
           blocks:
             - id: c2_avatar
@@ -888,7 +888,7 @@
                   layout:
                     gap: 16
                   style:
-                    /element:
+                    .element:
                       marginTop: 4
                   blocks:
                     - id: c2_like
@@ -899,7 +899,7 @@
                         icon: AiOutlineLike
                         title: Like
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
                     - id: c2_reply
@@ -910,13 +910,13 @@
                         icon: AiOutlineMessage
                         title: Reply
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
         - id: c_divider_2
           type: Divider
           style:
-            /element:
+            .element:
               margin: 0
         - id: c3
           type: Box
@@ -925,7 +925,7 @@
             align: flex-start
             wrap: nowrap
           style:
-            /element:
+            .element:
               padding: 16px 0
           blocks:
             - id: c3_avatar
@@ -960,7 +960,7 @@
                   layout:
                     gap: 16
                   style:
-                    /element:
+                    .element:
                       marginTop: 4
                   blocks:
                     - id: c3_like
@@ -971,7 +971,7 @@
                         icon: AiOutlineLike
                         title: Like
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
                     - id: c3_reply
@@ -982,13 +982,13 @@
                         icon: AiOutlineMessage
                         title: Reply
                       style:
-                        /element:
+                        .element:
                           fontSize: 13px
                           color: '#8c8c8c'
         - id: c_divider_3
           type: Divider
           style:
-            /element:
+            .element:
               margin: 0
         - id: reply_row
           type: Box
@@ -997,7 +997,7 @@
             align: flex-start
             wrap: nowrap
           style:
-            /element:
+            .element:
               paddingTop: 16
           blocks:
             - id: reply_avatar

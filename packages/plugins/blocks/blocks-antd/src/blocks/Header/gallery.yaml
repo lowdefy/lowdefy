@@ -12,18 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Basic Header
+  fullWidth: true
+  blocks:
+    - id: header_basic
+      type: Header
+      style:
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: header_basic_logo
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: '<span class="text-lg font-bold">MyApp</span>'
+
 - title: Header with Navigation
   fullWidth: true
   blocks:
     - id: header_nav
       type: Header
+      style:
+        borderBottom: 1px solid var(--ant-color-border)
       blocks:
         - id: header_nav_logo
           type: Html
           layout:
             flex: 0 0 auto
           properties:
-            html: '<span class="text-white text-lg font-bold mr-8">MyApp</span>'
+            html: '<span class="text-lg font-bold mr-6">MyApp</span>'
         - id: header_nav_home
           type: Button
           layout:
@@ -33,8 +50,6 @@
             icon: AiOutlineHome
             color: default
             variant: link
-            style:
-              color: rgba(255,255,255,0.85)
         - id: header_nav_about
           type: Button
           layout:
@@ -43,8 +58,6 @@
             title: About
             color: default
             variant: link
-            style:
-              color: rgba(255,255,255,0.65)
         - id: header_nav_contact
           type: Button
           layout:
@@ -53,8 +66,6 @@
             title: Contact
             color: default
             variant: link
-            style:
-              color: rgba(255,255,255,0.65)
 
 - title: Profile & Notifications
   fullWidth: true
@@ -89,7 +100,6 @@
                 icon: AiOutlineLogout
                 danger: true
       style:
-        background: var(--ant-color-bg-container)
         borderBottom: 1px solid var(--ant-color-border)
       blocks:
         - id: header_profile_logo
@@ -117,47 +127,6 @@
             color: default
             variant: link
 
-- title: Dark Header with Actions
-  fullWidth: true
-  blocks:
-    - id: header_dark_actions
-      type: Header
-      properties:
-        notifications:
-          dot: true
-        profile:
-          avatar:
-            icon: AiOutlineUser
-      blocks:
-        - id: header_dark_actions_logo
-          type: Html
-          layout:
-            flex: 0 0 auto
-          properties:
-            html: '<span class="text-white text-lg font-bold mr-6">WorkspaceApp</span>'
-        - id: header_dark_actions_dash
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Dashboard
-            icon: AiOutlineDashboard
-            color: default
-            variant: link
-            style:
-              color: rgba(255,255,255,0.85)
-        - id: header_dark_actions_proj
-          type: Button
-          layout:
-            flex: 0 0 auto
-          properties:
-            title: Projects
-            icon: AiOutlineProject
-            color: default
-            variant: link
-            style:
-              color: rgba(255,255,255,0.65)
-
 - title: Header in Marketing Page
   fullWidth: true
   blocks:
@@ -169,7 +138,6 @@
         - id: header_marketing_el
           type: Header
           style:
-            background: var(--ant-color-bg-container)
             borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: header_marketing_brand
@@ -236,7 +204,7 @@
             - id: header_marketing_hero_subtitle
               type: Paragraph
               properties:
-                content: A light-themed Header for marketing pages with button navigation and call-to-action buttons.
+                content: A Header for marketing pages with button navigation and call-to-action buttons.
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -245,11 +213,9 @@
       type: Header
       properties:
         theme:
-          colorBgLayout: '#0958d9'
+          headerBg: '#0958d9'
           headerHeight: 56
           headerPadding: '0 24px'
-      style:
-        backgroundColor: '#0958d9'
       blocks:
         - id: header_token_branded_title
           type: Html
@@ -266,7 +232,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            html: '<span style="color:#bae0ff">Using blue colorBgLayout token</span>'
+            html: '<span style="color:#bae0ff">Using headerBg token</span>'
 
     - id: header_token_compact
       type: Header
@@ -274,31 +240,10 @@
         theme:
           headerHeight: 40
           headerPadding: '0 16px'
+      style:
+        borderBottom: 1px solid var(--ant-color-border)
       blocks:
         - id: header_token_compact_title
           type: Html
           properties:
-            html: '<span class="text-white text-sm">Compact Header (40px height)</span>'
-
-- title: Style and CSS Classes
-  fullWidth: true
-  blocks:
-    - id: header_css_gradient
-      type: Header
-      class:
-        element: bg-gradient-to-r from-indigo-600 to-purple-600
-      blocks:
-        - id: header_css_gradient_title
-          type: Html
-          properties:
-            html: '<span class="text-white">Gradient Header via Tailwind on element CSS key</span>'
-
-    - id: header_css_bordered
-      type: Header
-      class:
-        element: border-b-2 border-blue-500 shadow-sm
-      blocks:
-        - id: header_css_bordered_title
-          type: Html
-          properties:
-            html: '<span>Light Header with Bottom Accent Border and Shadow</span>'
+            html: '<span class="text-sm">Compact Header (40px height)</span>'

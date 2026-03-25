@@ -24,14 +24,12 @@
           type: Header
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: layout_basic_header_text
-              type: Paragraph
+              type: Html
               properties:
-                content: Header
-                style:
-                  color: white
-                  margin: 0
+                html: '<span class="text-base font-semibold">Header</span>'
         - id: layout_basic_content
           type: Content
           style:
@@ -64,14 +62,12 @@
           type: Header
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: layout_sider_header_text
-              type: Paragraph
+              type: Html
               properties:
-                content: Header
-                style:
-                  color: white
-                  margin: 0
+                html: '<span class="text-base font-semibold">Header</span>'
         - id: layout_sider_inner
           type: Layout
           properties:
@@ -79,11 +75,11 @@
           blocks:
             - id: layout_sider_side
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 theme: light
                 width: 200
-                initialCollapsed: false
-                collapsible: false
               blocks:
                 - id: layout_sider_side_menu
                   type: Menu
@@ -103,6 +99,8 @@
                           icon: AiOutlineSetting
             - id: layout_sider_content
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-container)
@@ -136,6 +134,8 @@
           blocks:
             - id: layout_right_sider_content
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-container)
@@ -146,11 +146,11 @@
                     content: Main content area with a right-side panel. The Sider is placed after Content to render on the right.
             - id: layout_right_sider_side
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 theme: light
                 width: 250
-                initialCollapsed: false
-                collapsible: false
                 reverseArrow: true
               style:
                 borderLeft: 1px solid #f0f0f0
@@ -182,12 +182,9 @@
             paddingInline: 24px
           blocks:
             - id: layout_theme_header_text
-              type: Paragraph
+              type: Html
               properties:
-                content: Custom themed header via Layout design tokens
-                style:
-                  color: white
-                  margin: 0
+                html: '<span class="text-base font-semibold">Custom themed header via Layout design tokens</span>'
         - id: layout_theme_inner
           type: Layout
           properties:
@@ -195,11 +192,11 @@
           blocks:
             - id: layout_theme_sider
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 theme: light
                 width: 180
-                initialCollapsed: false
-                collapsible: true
               blocks:
                 - id: layout_theme_sider_text
                   type: Paragraph
@@ -209,6 +206,8 @@
                     content: Sider with custom background color set via the siderBg token. The trigger bar uses triggerBg and triggerColor tokens.
             - id: layout_theme_content
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
               blocks:
@@ -237,20 +236,20 @@
       blocks:
         - id: layout_tailwind_header
           type: Header
-          class: bg-indigo-700
+          properties:
+            color: '#4338ca'
           style:
             paddingInline: 24px
+            color: white
           blocks:
             - id: layout_tailwind_header_text
-              type: Paragraph
+              type: Html
               properties:
-                content: Tailwind-styled Layout
-                style:
-                  color: white
-                  margin: 0
+                html: '<span class="text-white text-base font-semibold">Tailwind-styled Layout</span>'
         - id: layout_tailwind_content
           type: Content
-          class: bg-bg-layout
+          class:
+            .element: bg-bg-layout
           style:
             padding: 24px
           blocks:
@@ -260,7 +259,8 @@
                 content: The Layout block has a single cssKey called "element". Use the class property to apply Tailwind utility classes directly to the Layout wrapper. Here the outer Layout uses rounded corners, shadow, and a border. Child blocks like Header, Content, and Footer can each have their own class applied.
         - id: layout_tailwind_footer
           type: Footer
-          class: bg-bg-layout text-center
+          class:
+            .element: bg-bg-layout text-center
           blocks:
             - id: layout_tailwind_footer_text
               type: Paragraph
@@ -285,13 +285,14 @@
                 icon: AiOutlineUser
           style:
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: layout_admin_header_title
               type: Html
               layout:
                 flex: 0 0 auto
               properties:
-                html: '<span class="text-white text-base font-bold">Acme Admin</span>'
+                html: '<span class="text-base font-bold">Acme Admin</span>'
         - id: layout_admin_inner
           type: Layout
           properties:
@@ -299,11 +300,11 @@
           blocks:
             - id: layout_admin_sider
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 theme: dark
                 width: 220
-                initialCollapsed: false
-                collapsible: true
                 breakpoint: lg
               blocks:
                 - id: layout_admin_menu
@@ -339,6 +340,8 @@
                           icon: AiOutlineSetting
             - id: layout_admin_content_area
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-layout)
@@ -470,11 +473,11 @@
           blocks:
             - id: layout_docs_sider
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 theme: light
                 width: 260
-                initialCollapsed: false
-                collapsible: false
                 breakpoint: md
               style:
                 borderRight: 1px solid #f0f0f0
@@ -514,10 +517,11 @@
                           icon: AiOutlineCloudUpload
             - id: layout_docs_content_area
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 32px 48px
                 background: var(--ant-color-bg-container)
-                maxWidth: 900px
               blocks:
                 - id: layout_docs_content_breadcrumb
                   type: Breadcrumb

@@ -49,6 +49,7 @@ const HeaderBlock = ({
       id={blockId}
       className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
       style={{
+        background: properties.color ?? 'var(--ant-color-bg-container)',
         display: 'flex',
         alignItems: 'center',
         ...styles.element,
@@ -64,6 +65,7 @@ const HeaderBlock = ({
           methods,
           events,
           components: { Icon, Link, ShortcutBadge },
+          iconsColor: properties.iconsColor,
         })}
     </Header>
   );

@@ -143,19 +143,19 @@
     - id: css_inline_color
       type: Divider
       style:
-        /element:
+        .element:
           borderColor: '#1677ff'
     - id: css_inline_thick
       type: Divider
       style:
-        /element:
+        .element:
           borderWidth: 3px
     - id: css_inline_title_color
       type: Divider
       properties:
         title: Styled Title
       style:
-        /element:
+        .element:
           color: '#722ed1'
           borderColor: '#722ed1'
 
@@ -254,7 +254,7 @@
             plain: true
             dashed: true
           style:
-            /element:
+            .element:
               borderColor: '#ff4d4f'
         - id: settings_delete_row
           type: Box

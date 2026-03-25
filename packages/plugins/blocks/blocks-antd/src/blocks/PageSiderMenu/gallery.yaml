@@ -19,7 +19,6 @@
       type: PageSiderMenu
       properties:
         sider:
-          initialCollapsed: false
           width: 220
           hideToggleButton: true
         menu:
@@ -89,7 +88,6 @@
       properties:
         darkModeToggle: true
         sider:
-          initialCollapsed: false
           width: 230
           hideToggleButton: true
         breadcrumb:
@@ -144,7 +142,6 @@
       type: PageSiderMenu
       properties:
         sider:
-          initialCollapsed: false
           width: 240
           hideToggleButton: false
         menu:
@@ -272,7 +269,6 @@
       properties:
         darkModeToggle: true
         sider:
-          initialCollapsed: false
           width: 220
           hideToggleButton: true
         notifications:
@@ -361,7 +357,6 @@
       properties:
         darkModeToggle: true
         sider:
-          initialCollapsed: false
           width: 240
           hideToggleButton: true
         notifications:

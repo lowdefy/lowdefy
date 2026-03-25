@@ -544,7 +544,7 @@
           - title: Process
           - title: Complete
       style:
-        /element:
+        .element:
           padding: 16px
           border: 1px solid #d9d9d9
           borderRadius: 8

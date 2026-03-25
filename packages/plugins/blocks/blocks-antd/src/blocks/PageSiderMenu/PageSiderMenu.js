@@ -101,6 +101,7 @@ const PageSiderMenu = ({
                         methods,
                         events,
                         components: { Icon, Link, ShortcutBadge },
+                        iconsColor: properties.iconsColor,
                       })}
                       <MobileMenu
                         classNames={{ element: classNames.mobileMenu ?? 'block lg:hidden pl-4' }}

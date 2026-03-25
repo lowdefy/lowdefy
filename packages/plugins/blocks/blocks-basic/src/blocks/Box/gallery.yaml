@@ -55,7 +55,7 @@
     - id: box_onclick
       type: Box
       style:
-        /element:
+        .element:
           background: '#e6f4ff'
           border: 1px solid #91caff
           padding: 16
@@ -77,7 +77,7 @@
     - id: box_onclick_setstate
       type: Box
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           border: 1px solid #b7eb8f
           padding: 16
@@ -101,7 +101,7 @@
     - id: box_onclick_link
       type: Box
       style:
-        /element:
+        .element:
           background: '#fff7e6'
           border: 1px solid #ffd591
           padding: 16
@@ -124,7 +124,7 @@
     - id: box_onpaste
       type: Box
       style:
-        /element:
+        .element:
           background: '#f0f5ff'
           border: 1px dashed #adc6ff
           padding: 16
@@ -430,7 +430,7 @@
         align: flex-start
       class: bg-gray-100 p-3 rounded-lg
       style:
-        /element:
+        .element:
           minHeight: 100
       blocks:
         - id: box_as_tall
@@ -439,7 +439,7 @@
             flex: 0 0 auto
           class: bg-blue-500 text-white px-4 py-2 rounded-md flex items-center
           style:
-            /element:
+            .element:
               height: 80
           properties:
             content: Tall
@@ -461,7 +461,7 @@
         align: center
       class: bg-gray-100 p-3 rounded-lg
       style:
-        /element:
+        .element:
           minHeight: 100
       blocks:
         - id: box_ac_tall
@@ -470,7 +470,7 @@
             flex: 0 0 auto
           class: bg-green-500 text-white px-4 py-2 rounded-md flex items-center
           style:
-            /element:
+            .element:
               height: 80
           properties:
             content: Tall
@@ -492,7 +492,7 @@
         align: flex-end
       class: bg-gray-100 p-3 rounded-lg
       style:
-        /element:
+        .element:
           minHeight: 100
       blocks:
         - id: box_ae_tall
@@ -501,7 +501,7 @@
             flex: 0 0 auto
           class: bg-red-500 text-white px-4 py-2 rounded-md flex items-center
           style:
-            /element:
+            .element:
               height: 80
           properties:
             content: Tall
@@ -557,7 +557,7 @@
         gap: 8
       class: bg-green-50 p-3 rounded-lg
       style:
-        /element:
+        .element:
           display: flex
           flexDirection: column
       blocks:
@@ -784,7 +784,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           padding: 20
           borderRadius: 12
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
@@ -799,7 +799,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#1a1a2e'
           color: '#e0e0e0'
           padding: 20
@@ -818,7 +818,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
           color: '#ffffff'
           padding: 20
@@ -958,7 +958,7 @@
     - id: box_page_layout
       type: Box
       style:
-        /element:
+        .element:
           display: flex
           flexDirection: column
           minHeight: 300
@@ -1057,7 +1057,7 @@
       type: Box
       class: bg-white rounded-lg border border-gray-200 overflow-hidden
       style:
-        /element:
+        .element:
           display: flex
           flexDirection: column
           maxWidth: 480
@@ -1212,7 +1212,7 @@
         gap: 0
       class: rounded-lg border border-gray-200 overflow-hidden
       style:
-        /element:
+        .element:
           minHeight: 320
       blocks:
         - id: box_sidebar_nav
@@ -1221,7 +1221,7 @@
             flex: 0 0 200px
           class: bg-gray-50 border-r border-gray-200
           style:
-            /element:
+            .element:
               display: flex
               flexDirection: column
           blocks:

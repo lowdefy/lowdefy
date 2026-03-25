@@ -659,9 +659,9 @@
       properties:
         title: Styled Drawer
       style:
-        /header:
+        .header:
           borderBottom: 1px solid #91caff
-        /body:
+        .body:
       blocks:
         - id: drawer_inline_style_content
           type: Paragraph

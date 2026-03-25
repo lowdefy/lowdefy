@@ -26,7 +26,16 @@ function getDarkMode() {
   return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
 }
 
-function renderNotifications({ blockId, classNames, styles, properties, methods, events, Icon }) {
+function renderNotifications({
+  blockId,
+  classNames,
+  styles,
+  properties,
+  methods,
+  events,
+  Icon,
+  iconsColor,
+}) {
   if (type.isNone(properties.notifications)) return null;
   const notif = properties.notifications;
   return (
@@ -49,7 +58,7 @@ function renderNotifications({ blockId, classNames, styles, properties, methods,
           blockId={`${blockId}_notifications_icon`}
           events={events}
           properties={notif.icon ?? { name: 'AiOutlineBell' }}
-          styles={{ element: { fontSize: 16, ...styles.notificationsIcon } }}
+          styles={{ element: { fontSize: 16, color: iconsColor, ...styles.notificationsIcon } }}
         />
       </Badge>
     </div>
@@ -151,7 +160,7 @@ function renderProfile({
   );
 }
 
-function renderDarkModeToggle({ blockId, classNames, styles, methods, events, Icon }) {
+function renderDarkModeToggle({ blockId, classNames, styles, methods, events, Icon, iconsColor }) {
   return (
     <div
       className={classNames.darkModeToggle}
@@ -162,7 +171,7 @@ function renderDarkModeToggle({ blockId, classNames, styles, methods, events, Ic
         blockId={`${blockId}_dark_mode_toggle_icon`}
         events={events}
         properties={{ name: getDarkMode() ? 'AiOutlineSun' : 'AiOutlineMoon' }}
-        styles={{ element: { fontSize: 16 } }}
+        styles={{ element: { fontSize: 16, color: iconsColor } }}
       />
     </div>
   );
@@ -176,6 +185,7 @@ function renderHeaderActions({
   methods,
   events,
   components: { Icon, Link, ShortcutBadge },
+  iconsColor,
 }) {
   const hasNotifications = !type.isNone(properties.notifications);
   const hasProfile = !type.isNone(properties.profile);
@@ -193,6 +203,7 @@ function renderHeaderActions({
     Icon,
     Link,
     ShortcutBadge,
+    iconsColor,
   };
 
   return (

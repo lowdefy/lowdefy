@@ -145,6 +145,7 @@ const PageHeaderMenu = ({
                         methods,
                         events,
                         components: { Icon, Link, ShortcutBadge },
+                        iconsColor: properties.iconsColor,
                       })}
                       <MobileMenu
                         classNames={{

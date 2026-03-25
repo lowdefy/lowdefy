@@ -508,7 +508,7 @@
         title: Custom Element Style
         placeholder: Styled textarea element
       style:
-        /element:
+        .element:
           borderColor: '#597ef7'
           borderRadius: 8
     - id: css_label
@@ -517,7 +517,7 @@
         title: Custom Label Style
         placeholder: Styled label text
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
           fontSize: 16
@@ -529,7 +529,7 @@
         label:
           extra: This extra text has custom styling.
       style:
-        /extra:
+        .extra:
           color: '#08979c'
           fontStyle: italic
     - id: css_combined
@@ -540,12 +540,12 @@
         label:
           extra: Custom styled textarea with extra text.
       style:
-        /element:
+        .element:
           borderColor: '#ffa940'
-        /label:
+        .label:
           color: '#d46b08'
           fontWeight: 600
-        /extra:
+        .extra:
           color: '#ad6800'
 - title: CSS Class Names
   blocks:

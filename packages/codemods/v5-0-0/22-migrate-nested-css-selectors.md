@@ -101,7 +101,7 @@ Grep: `'&:` or `'& ` inside style blocks
 - id: my_upload
   type: S3UploadDragger
   style:
-    /element:
+    .element:
       '& > *':
         padding: 3px !important
         color: '#8C8C8C'
@@ -125,7 +125,7 @@ Grep: `'&:` or `'& ` inside style blocks
     position: fixed
     bottom: 0
     width: 100%
-    /element:
+    .element:
       '& > div':
         background: '#fff'
         borderTop: '3px solid #001528'
@@ -191,7 +191,7 @@ For selectors that can't be expressed as Tailwind classes:
 
 - **Multiple pseudo-selectors on one block**: combine into a single `class:` string (e.g., `'hover:bg-[#f7f9fc] active:bg-[#e8ecf1]'`)
 - **`!important` in nested values**: use Tailwind's `!` prefix (e.g., `[&>*]:!p-[3px]`)
-- **Nested selectors inside `/element` or `/label` style slots**: convert the slot-specific selector to `class:` with the matching slot key
+- **Nested selectors inside `.element` or `.label` style slots**: convert the slot-specific selector to `class:` with the matching slot key
 - **Selectors targeting antd internal elements** (e.g., `& .ant-card-body`): move to `public/styles.css` — Tailwind arbitrary selectors can work but are harder to read for complex antd class targeting
 - **`transition` property**: if moving `cursor` and `transition` to class, use Tailwind equivalents (`cursor-pointer`, `transition-[background]`, `duration-150`, `ease-in-out`) or keep `transition` in `style:` — both work
 - **Wrapper Box approach**: when wrapping Affix/Layout children in a Box, ensure the child blocks are re-indented correctly under the new Box's `blocks:`

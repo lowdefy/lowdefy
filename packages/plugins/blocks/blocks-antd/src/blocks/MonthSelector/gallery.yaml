@@ -391,7 +391,7 @@
     - id: month_style_element
       type: MonthSelector
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         label:
@@ -399,7 +399,7 @@
     - id: month_style_label
       type: MonthSelector
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:

@@ -429,7 +429,7 @@
         min: 0
         max: 10
       style:
-        /element:
+        .element:
           padding: 8
           borderRadius: 8
     - id: style_wide
@@ -440,7 +440,7 @@
         max: 10
         disableNotApplicable: true
       style:
-        /element:
+        .element:
           paddingLeft: 16
           paddingRight: 16
 

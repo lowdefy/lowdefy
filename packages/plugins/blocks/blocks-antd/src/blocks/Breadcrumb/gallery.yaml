@@ -269,7 +269,7 @@
           - Analytics
           - Reports
       style:
-        /element:
+        .element:
           padding: 8px 16px
           border: 1px solid #d9d9d9
           borderRadius: 6
@@ -281,7 +281,7 @@
           - Products
           - Checkout
       style:
-        /element:
+        .element:
           padding: 10px 20px
           borderRadius: 8
 

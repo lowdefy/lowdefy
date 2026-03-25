@@ -43,7 +43,7 @@ function readJsFiles(distDir) {
 
 function collectBlockSourceContent({ components }) {
   const packages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
+    ...new Set((components.imports?.blocks ?? []).map((b) => b.package)),
   ];
 
   const allContent = [];

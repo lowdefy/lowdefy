@@ -267,6 +267,8 @@
       blocks:
         - id: footer_admin_sider
           type: Sider
+          layout:
+            flex: 0 0 auto
           properties:
             width: 200
             theme: dark
@@ -296,6 +298,8 @@
                       icon: AiOutlineSetting
         - id: footer_admin_inner_layout
           type: Layout
+          layout:
+            flex: 1 1 auto
           blocks:
             - id: footer_admin_content
               type: Content

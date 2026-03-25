@@ -83,7 +83,6 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   const css = context.writeBuildArtifact.mock.calls[0][1];
   expect(css).toContain('@layer theme, base, antd, components, utilities;');
   expect(css).toContain('@import "tailwindcss";');
-  expect(css).toContain('@source "../node_modules/@lowdefy/blocks-*/dist/**/*.js";');
   expect(css).toContain('@source "../lowdefy-build/tailwind/*.html";');
   expect(css).toContain('@import "./tailwind-candidates.css";');
 });

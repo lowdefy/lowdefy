@@ -344,7 +344,7 @@
     - id: css_custom_bg
       type: TextInput
       style:
-        /element:
+        .element:
           borderColor: '#adc6ff'
       properties:
         title: Custom Background
@@ -352,7 +352,7 @@
     - id: css_full_custom
       type: TextInput
       style:
-        /element:
+        .element:
           borderColor: '#ffa940'
           borderRadius: 12
           color: '#d46b08'

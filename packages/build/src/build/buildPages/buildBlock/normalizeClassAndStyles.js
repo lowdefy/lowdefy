@@ -31,25 +31,25 @@ function isOperator(value) {
   return operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator);
 }
 
-function stripSlashPrefix(key) {
-  return key.startsWith('/') ? key.slice(1) : key;
+function stripDotPrefix(key) {
+  return key.startsWith('.') ? key.slice(1) : key;
 }
 
 function normalizeStyle(block) {
-  // properties.style → element slot (deprecation: component's own style maps to /element)
+  // properties.style → element slot (deprecation: component's own style maps to .element)
   if (!type.isNone(block.properties?.style)) {
     if (!block.style) block.style = {};
-    const existing = block.style['/element'];
-    block.style['/element'] = existing
+    const existing = block.style['.element'];
+    block.style['.element'] = existing
       ? { ...block.properties.style, ...existing }
       : block.properties.style;
     delete block.properties.style;
   }
 
-  // Partition plain CSS → block slot, / keys → strip prefix (single pass)
+  // Partition plain CSS → block slot, . keys → strip prefix (single pass)
   if (type.isObject(block.style)) {
     const invalidKeys = Object.keys(block.style).filter(
-      (k) => !k.startsWith('/') && breakpointKeys.has(k)
+      (k) => !k.startsWith('.') && breakpointKeys.has(k)
     );
     if (invalidKeys.length > 0) {
       throw new ConfigError(
@@ -61,8 +61,8 @@ function normalizeStyle(block) {
     const result = {};
     const plainCSS = {};
     for (const [key, value] of Object.entries(block.style)) {
-      if (key.startsWith('/')) {
-        result[stripSlashPrefix(key)] = value;
+      if (key.startsWith('.')) {
+        result[stripDotPrefix(key)] = value;
       } else {
         plainCSS[key] = value;
       }
@@ -93,10 +93,10 @@ function normalizeClass(block) {
     block.class = { block: block.class };
     return;
   }
-  if (type.isObject(block.class) && Object.keys(block.class).some((k) => k.startsWith('/'))) {
+  if (type.isObject(block.class) && Object.keys(block.class).some((k) => k.startsWith('.'))) {
     const normalized = {};
     for (const [key, value] of Object.entries(block.class)) {
-      normalized[stripSlashPrefix(key)] = value;
+      normalized[stripDotPrefix(key)] = value;
     }
     block.class = normalized;
   }

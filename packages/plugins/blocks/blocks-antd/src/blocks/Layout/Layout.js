@@ -28,8 +28,7 @@ const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {
     {content.content &&
       content.content({
         flexDirection: properties.hasSider ? 'row' : 'column',
-        flexWrap: 'nowrap',
-        flex: '1 1 auto',
+        flexWrap: properties.hasSider ? 'nowrap' : undefined,
       })}
   </Layout>
 );

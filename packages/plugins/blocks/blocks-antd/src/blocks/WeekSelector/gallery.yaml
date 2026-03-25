@@ -300,7 +300,7 @@
     - id: ws_style_element_bg
       type: WeekSelector
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         label:
@@ -308,7 +308,7 @@
     - id: ws_style_label
       type: WeekSelector
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:

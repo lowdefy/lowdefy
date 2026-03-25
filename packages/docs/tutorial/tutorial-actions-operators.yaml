@@ -142,7 +142,7 @@ _ref:
           menu:
             links: []
         style:
-          /element:
+          .element:
             minHeight: 300px
         blocks:
           - id: content_card
@@ -318,7 +318,7 @@ _ref:
           menu:
             links: []
         style:
-          /element:
+          .element:
             minHeight: 300px
         blocks:
           - id: example_3_content_card

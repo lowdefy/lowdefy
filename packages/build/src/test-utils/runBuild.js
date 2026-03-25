@@ -28,6 +28,7 @@ const testTypesMap = {
     SetState: { package: '@lowdefy/actions-core' },
     Request: { package: '@lowdefy/actions-core' },
     Reset: { package: '@lowdefy/actions-core' },
+    SetDarkMode: { package: '@lowdefy/actions-core' },
     Throw: { package: '@lowdefy/actions-core' },
     Log: { package: '@lowdefy/actions-core' },
     Return: { package: '@lowdefy/api' },

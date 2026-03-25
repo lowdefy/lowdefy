@@ -214,7 +214,7 @@
         title: Custom Element Style
         placeholder: Custom border and background
       style:
-        /element:
+        .element:
           borderColor: '#722ed1'
     - id: style_label
       type: PasswordInput
@@ -222,7 +222,7 @@
         title: Custom Label Style
         placeholder: Styled label above
       style:
-        /label:
+        .label:
           color: '#1677ff'
           fontWeight: bold
           fontSize: 16
@@ -234,7 +234,7 @@
           extra: This extra text is styled.
         placeholder: Enter password
       style:
-        /extra:
+        .extra:
           color: '#fa8c16'
           fontStyle: italic
     - id: style_feedback
@@ -245,7 +245,7 @@
           hasFeedback: true
         placeholder: Enter password
       style:
-        /feedback:
+        .feedback:
           color: '#52c41a'
           fontWeight: bold
     - id: class_element

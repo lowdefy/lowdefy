@@ -1,32 +1,32 @@
-# Migration: Move Block-Specific Style Properties to `style: { /* }` Sub-Slots
+# Migration: Move Block-Specific Style Properties to `style: { .* }` Sub-Slots
 
 ## Context
 
-Several blocks had dedicated style properties under `properties:` (like `headerStyle`, `bodyStyle`, `maskStyle`). These move to the unified `style:` block with `/`-prefixed slot keys.
+Several blocks had dedicated style properties under `properties:` (like `headerStyle`, `bodyStyle`, `maskStyle`). These move to the unified `style:` block with `.`-prefixed slot keys.
 
 ## What to Do
 
-For each block, find the old style property under `properties:` and move its value to the corresponding `style: { /slot }` entry. Remove the old property from `properties:`.
+For each block, find the old style property under `properties:` and move its value to the corresponding `style: { .slot }` entry. Remove the old property from `properties:`.
 
 **Full mapping table:**
 
 | Block        | Old Property                     | New Location          |
 | ------------ | -------------------------------- | --------------------- |
-| Card         | `properties.headerStyle`         | `style: { /header }`  |
-| Card         | `properties.bodyStyle`           | `style: { /body }`    |
-| Modal        | `properties.bodyStyle`           | `style: { /body }`    |
-| Modal        | `properties.maskStyle`           | `style: { /mask }`    |
-| Drawer       | `properties.drawerStyle`         | `style: { /wrapper }` |
-| Drawer       | `properties.headerStyle`         | `style: { /header }`  |
-| Drawer       | `properties.bodyStyle`           | `style: { /body }`    |
-| Drawer       | `properties.maskStyle`           | `style: { /mask }`    |
-| Drawer       | `properties.contentWrapperStyle` | `style: { /content }` |
-| Tabs         | `properties.tabBarStyle`         | `style: { /tabBar }`  |
-| ConfirmModal | `properties.bodyStyle`           | `style: { /body }`    |
-| Statistic    | `properties.valueStyle`          | `style: { /value }`   |
-| Descriptions | `properties.contentStyle`        | `style: { /content }` |
-| Descriptions | `properties.labelStyle`          | `style: { /label }`   |
-| Tooltip      | `properties.overlayStyle`        | `style: { /inner }`   |
+| Card         | `properties.headerStyle`         | `style: { .header }`  |
+| Card         | `properties.bodyStyle`           | `style: { .body }`    |
+| Modal        | `properties.bodyStyle`           | `style: { .body }`    |
+| Modal        | `properties.maskStyle`           | `style: { .mask }`    |
+| Drawer       | `properties.drawerStyle`         | `style: { .wrapper }` |
+| Drawer       | `properties.headerStyle`         | `style: { .header }`  |
+| Drawer       | `properties.bodyStyle`           | `style: { .body }`    |
+| Drawer       | `properties.maskStyle`           | `style: { .mask }`    |
+| Drawer       | `properties.contentWrapperStyle` | `style: { .content }` |
+| Tabs         | `properties.tabBarStyle`         | `style: { .tabBar }`  |
+| ConfirmModal | `properties.bodyStyle`           | `style: { .body }`    |
+| Statistic    | `properties.valueStyle`          | `style: { .value }`   |
+| Descriptions | `properties.contentStyle`        | `style: { .content }` |
+| Descriptions | `properties.labelStyle`          | `style: { .label }`   |
+| Tooltip      | `properties.overlayStyle`        | `style: { .inner }`   |
 
 ## Files to Check
 
@@ -56,9 +56,9 @@ Grep: `headerStyle:|bodyStyle:|maskStyle:|drawerStyle:|contentWrapperStyle:|tabB
   properties:
     title: Details
   style:
-    /header:
+    .header:
       backgroundColor: '#fafafa'
-    /body:
+    .body:
       padding: 24
 ```
 
@@ -85,18 +85,18 @@ Grep: `headerStyle:|bodyStyle:|maskStyle:|drawerStyle:|contentWrapperStyle:|tabB
   properties:
     title: Settings
   style:
-    /wrapper:
+    .wrapper:
       backgroundColor: '#f5f5f5'
-    /header:
+    .header:
       borderBottom: '1px solid #e8e8e8'
-    /body:
+    .body:
       padding: 16
 ```
 
 ## Edge Cases
 
-- If the block already has a top-level `style:` block, merge the new `/slot` entries into it
-- If a block already has `style: { /element }` from prompt 02, add the new slots alongside it
+- If the block already has a top-level `style:` block, merge the new `.slot` entries into it
+- If a block already has `style: { .element }` from prompt 02, add the new slots alongside it
 - These property names are unique to their respective blocks — `headerStyle` only appears on Card and Drawer, so block-type checking is optional but recommended for safety
 - Operator expressions inside style values should be moved as-is
 

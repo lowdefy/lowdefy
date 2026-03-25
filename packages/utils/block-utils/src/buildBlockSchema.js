@@ -46,14 +46,14 @@ function buildBlockSchema(meta) {
 
   const classProperties = Object.fromEntries(
     cssEntries.map(([key, desc]) => [
-      `/${key}`,
+      `.${key}`,
       { ...classValueSchema, description: desc },
     ])
   );
 
   const styleProperties = Object.fromEntries(
     cssEntries.map(([key, desc]) => [
-      `/${key}`,
+      `.${key}`,
       { ...styleValueSchema, description: desc },
     ])
   );
@@ -99,7 +99,7 @@ function buildBlockSchema(meta) {
           {
             type: 'object',
             patternProperties: {
-              '^(?!_)(?!/)': {},
+              '^(?!_)(?!\\.)': {},
             },
             additionalProperties: false,
             minProperties: 1,

@@ -146,7 +146,7 @@
     - id: style_element_bg
       type: S3UploadDragger
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           borderRadius: 12
           padding: 8
@@ -156,7 +156,7 @@
     - id: style_element_border
       type: S3UploadDragger
       style:
-        /element:
+        .element:
           border: 2px solid #d9d9d9
           boxShadow: 0 2px 8px rgba(0,0,0,0.1)
       properties:

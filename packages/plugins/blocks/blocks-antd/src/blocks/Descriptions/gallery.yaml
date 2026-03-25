@@ -604,7 +604,7 @@
           - label: Phone
             value: +1 (555) 444-7890
       style:
-        /element:
+        .element:
           border: 2px solid #1677ff
           borderRadius: 8px
           padding: 4px
@@ -621,10 +621,10 @@
           - label: Tier
             value: Premium
       style:
-        /label:
+        .label:
           fontWeight: bold
           color: '#1677ff'
-        /content:
+        .content:
           fontStyle: italic
 
 - title: Tailwind Classes

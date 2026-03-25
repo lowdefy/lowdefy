@@ -297,7 +297,7 @@
     - id: style_element
       type: Markdown
       style:
-        /element:
+        .element:
           backgroundColor: '#f0f5ff'
           padding: 16
           borderRadius: 8

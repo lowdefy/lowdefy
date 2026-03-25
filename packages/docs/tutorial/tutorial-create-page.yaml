@@ -108,7 +108,7 @@ _ref:
                   title: welcome
 
         style:
-          /element:
+          .element:
             minHeight: 300px
         blocks:
           - id: content_card

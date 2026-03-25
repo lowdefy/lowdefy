@@ -213,7 +213,7 @@
     - id: style_element
       type: DangerousMarkdown
       style:
-        /element:
+        .element:
           backgroundColor: '#fff7e6'
           padding: 16
           borderRadius: 8

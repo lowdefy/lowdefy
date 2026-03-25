@@ -96,7 +96,7 @@ _ref:
           menu:
             links: []
         style:
-          /element:
+          .element:
             minHeight: 300px
         blocks:
           - id: content_card

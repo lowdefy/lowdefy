@@ -424,7 +424,7 @@
     - id: tree_custom_style
       type: TreeSelector
       style:
-        /element:
+        .element:
           border: '1px solid #adc6ff'
           borderRadius: 8
           padding: 12

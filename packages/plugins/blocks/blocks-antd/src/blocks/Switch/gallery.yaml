@@ -298,7 +298,7 @@
     - id: style_margin
       type: Switch
       style:
-        /element:
+        .element:
           marginTop: 8
       properties:
         title: Styled Element
@@ -307,7 +307,7 @@
     - id: style_label
       type: Switch
       style:
-        /label:
+        .label:
           fontWeight: bold
           color: '#1677ff'
       properties:
