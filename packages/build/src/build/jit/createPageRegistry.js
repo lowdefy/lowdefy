@@ -69,6 +69,29 @@ function getModuleEntryId(pageId, context) {
   return null;
 }
 
+// For module pages where findPageSourceRef fails (the ~r marker is lost
+// during buildModules spread), find the page's source file by searching
+// the refMap for a ref whose path is inside the module's root directory
+// and whose filename matches a page YAML convention.
+function findModulePageRefPath(pageId, moduleEntryId, context) {
+  const moduleEntry = context.modules[moduleEntryId];
+  if (!moduleEntry?.moduleRoot) return null;
+
+  const unscopedId = pageId.slice(`${moduleEntryId}/`.length);
+
+  // Search refMap for a ref whose path is inside the module root
+  // and contains the unscoped page id in the filename
+  for (const [refId, entry] of Object.entries(context.refMap)) {
+    if (!entry.path) continue;
+    if (!entry.path.startsWith(moduleEntry.moduleRoot)) continue;
+    // Match page YAML files (e.g., pages/contacts.yaml, pages/contact-detail.yaml)
+    if (entry.path.endsWith(`/${unscopedId}.yaml`) || entry.path.endsWith(`/${unscopedId}.yml`)) {
+      return { refId, path: entry.path };
+    }
+  }
+  return null;
+}
+
 function createPageRegistry({ components, context }) {
   const registry = new Map();
   const unresolvedRefVars = context.unresolvedRefVars ?? {};
@@ -91,14 +114,28 @@ function createPageRegistry({ components, context }) {
       !type.isNone(context.refMap[refId]) &&
       type.isNone(context.refMap[refId].parent);
 
+    const moduleEntryId = getModuleEntryId(page.id, context);
+
+    // For module pages where ~r was lost during buildModules (object spread
+    // drops non-enumerable markers), recover the source file from refMap.
+    let finalRefId = isInline ? null : refId;
+    let finalRefPath = sourceRef?.path ?? null;
+    if (!finalRefPath && moduleEntryId) {
+      const recovered = findModulePageRefPath(page.id, moduleEntryId, context);
+      if (recovered) {
+        finalRefId = finalRefId ?? recovered.refId;
+        finalRefPath = recovered.path;
+      }
+    }
+
     registry.set(page.id, {
       pageId: page.id,
       auth: page.auth,
-      refId: isInline ? null : refId,
-      refPath: sourceRef?.path ?? null,
+      refId: finalRefId,
+      refPath: finalRefPath,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
       resolverOriginal: sourceRef?.original ?? null,
-      moduleEntryId: getModuleEntryId(page.id, context),
+      moduleEntryId,
     });
   });
 
