@@ -1201,6 +1201,27 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@20.6.2)
 
+  packages/plugins/connections/connection-mcp:
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@lowdefy/ajv':
+        specifier: 4.7.0
+        version: 4.7.0
+      '@swc/cli':
+        specifier: 0.8.0
+        version: 0.8.0(@swc/core@1.15.18)
+      '@swc/core':
+        specifier: 1.15.18
+        version: 1.15.18
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.18)
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
+
   packages/plugins/connections/connection-mongodb:
     dependencies:
       '@lowdefy/helpers':
