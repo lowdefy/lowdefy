@@ -16,6 +16,7 @@
 
 import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
 import { type } from '@lowdefy/helpers';
 
@@ -24,14 +25,6 @@ import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
-
-let conversationCounter = 0;
-
-function createConversation(label) {
-  conversationCounter += 1;
-  const key = `conv_${Date.now()}_${conversationCounter}`;
-  return { key, label: label ?? `Chat ${conversationCounter}` };
-}
 
 function AgentChat({ blockId, methods, pageId, properties }) {
   const {
@@ -46,7 +39,16 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   // --- Conversation state (managed internally when conversations.enabled) ---
   const conversationsEnabled = conversationsConfig?.enabled;
+  const conversationCounterRef = useRef(0);
   const conversationMapRef = useRef(new Map());
+
+  function createConversation(label) {
+    conversationCounterRef.current += 1;
+    const count = conversationCounterRef.current;
+    const key = `conv_${Date.now()}_${count}`;
+    return { key, label: label ?? `Chat ${count}` };
+  }
+
   const [conversationItems, setConversationItems] = useState(() => {
     if (!conversationsEnabled) return [];
     const first = createConversation();
@@ -61,15 +63,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
     transport,
     experimental_throttle: 50,
-    // Auto-resubmit to the server after tool approvals are responded to.
-    // Without this, addToolApprovalResponse only updates local state.
-    sendAutomaticallyWhen({ messages: msgs }) {
-      const lastMessage = msgs[msgs.length - 1];
-      if (lastMessage?.role !== 'assistant') return false;
-      return lastMessage.parts.some(
-        (part) => part.state === 'approval-responded' && part.approval?.approved !== undefined
-      );
-    },
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',

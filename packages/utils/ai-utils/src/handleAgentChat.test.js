@@ -826,3 +826,37 @@ test('no mcp config produces no MCP clients', async () => {
 
   expect(mockCreateMCPClient).not.toHaveBeenCalled();
 });
+
+test('MCP tool listing failure logs warning and continues', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const mockClient = {
+    tools: jest.fn().mockRejectedValue(new Error('Tool listing timed out')),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://mcp.example.com' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('tool listing failed'));
+  expect(result.response).toEqual({ type: 'web-response' });
+  consoleSpy.mockRestore();
+});

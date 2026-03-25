@@ -110,13 +110,13 @@ function buildAgents({ components, context }) {
     });
 
     // Validate MCP sources
-    (agent.mcp ?? []).forEach((mcpSource, index) => {
+    agent.mcp.forEach((mcpSource, index) => {
       if (!type.isNone(mcpSource.connectionId)) {
         // Validate connectionId references an existing connection
-        const connectionExists = (components.connections ?? []).some(
+        const mcpConnectionExists = (components.connections ?? []).some(
           (c) => c.id === mcpSource.connectionId || c.connectionId === mcpSource.connectionId
         );
-        if (!connectionExists) {
+        if (!mcpConnectionExists) {
           throw new ConfigError(
             `Agent "${agent.id}" "mcp" source at index ${index} references connection "${mcpSource.connectionId}" which does not exist.`,
             { configKey }

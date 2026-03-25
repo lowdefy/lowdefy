@@ -121,21 +121,26 @@ async function handleAgentChat({ connection, properties, context }) {
 
   // Merge MCP tools with endpoint tools
   for (const { client, source } of mcpClients) {
-    const mcpTools = await client.tools();
-    for (const [name, mcpTool] of Object.entries(mcpTools)) {
-      if (tools[name]) {
-        console.warn(
-          `MCP tool "${name}" from ${
-            source.url ?? source.command
-          } conflicts with endpoint tool — skipped.`
-        );
-        continue;
+    try {
+      const mcpTools = await client.tools();
+      for (const [name, mcpTool] of Object.entries(mcpTools)) {
+        if (tools[name]) {
+          console.warn(
+            `MCP tool "${name}" from ${
+              source.url ?? source.command
+            } conflicts with endpoint tool — skipped.`
+          );
+          continue;
+        }
+        if (source.confirm) {
+          tools[name] = { ...mcpTool, needsApproval: true };
+        } else {
+          tools[name] = mcpTool;
+        }
       }
-      if (source.confirm) {
-        tools[name] = { ...mcpTool, needsApproval: true };
-      } else {
-        tools[name] = mcpTool;
-      }
+    } catch (err) {
+      const label = source.transport === 'stdio' ? source.command : source.url;
+      console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
     }
   }
 
