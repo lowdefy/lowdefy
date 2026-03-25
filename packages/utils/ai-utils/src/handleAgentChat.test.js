@@ -42,6 +42,15 @@ jest.unstable_mockModule('@ai-sdk/mcp', () => ({
   createMCPClient: mockCreateMCPClient,
 }));
 
+class MockStdioMCPTransport {
+  constructor(config) {
+    this.config = config;
+  }
+}
+jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
+  Experimental_StdioMCPTransport: MockStdioMCPTransport,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
 test('creates ToolLoopAgent with correct parameters', async () => {
@@ -749,6 +758,51 @@ test('MCP clients closed on finish', async () => {
   expect(lastAgentConfig.onFinish).toEqual(expect.any(Function));
   await lastAgentConfig.onFinish({ text: 'done' });
   expect(mockClose).toHaveBeenCalled();
+});
+
+test('stdio MCP source creates StdioMCPTransport with command and args', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({ 'aws-docs': { description: 'Search AWS docs' } }),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [
+          {
+            transport: 'stdio',
+            command: 'npx',
+            args: ['-y', '@awslabs/aws-documentation-mcp-server'],
+            env: { AWS_REGION: 'us-east-1' },
+          },
+        ],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(mockCreateMCPClient).toHaveBeenCalledWith({
+    transport: expect.any(MockStdioMCPTransport),
+  });
+  const transport = mockCreateMCPClient.mock.calls[0][0].transport;
+  expect(transport.config.command).toBe('npx');
+  expect(transport.config.args).toEqual(['-y', '@awslabs/aws-documentation-mcp-server']);
+  expect(transport.config.env).toEqual(expect.objectContaining({ AWS_REGION: 'us-east-1' }));
+  expect(lastAgentConfig.tools['aws-docs']).toBeDefined();
 });
 
 test('no mcp config produces no MCP clients', async () => {

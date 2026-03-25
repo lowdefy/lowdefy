@@ -886,6 +886,54 @@ test('buildAgents throws when mcp source is missing url', () => {
   );
 });
 
+test('buildAgents valid stdio mcp source passes validation', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ transport: 'stdio', command: 'npx', args: ['-y', 'some-mcp-server'] }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents throws when stdio mcp source is missing command', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ transport: 'stdio' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" "mcp" source at index 0 uses stdio transport but is missing "command".'
+  );
+});
+
 test('buildAgents with no mcp array works fine', () => {
   const context = testContext();
   const components = {

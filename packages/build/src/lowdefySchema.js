@@ -140,15 +140,17 @@ export default {
           type: 'array',
           items: {
             type: 'object',
-            required: ['url'],
             properties: {
               url: { type: 'string' },
               transport: {
                 type: 'string',
-                enum: ['http', 'sse'],
+                enum: ['http', 'sse', 'stdio'],
                 default: 'http',
               },
               headers: { type: 'object' },
+              command: { type: 'string' },
+              args: { type: 'array', items: { type: 'string' } },
+              env: { type: 'object' },
               confirm: {
                 const: true,
               },

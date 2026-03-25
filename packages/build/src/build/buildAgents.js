@@ -101,14 +101,22 @@ function buildAgents({ components, context }) {
       }
     });
 
-    // Validate MCP sources — belt-and-suspenders with schema required: ['url'],
-    // provides a better error message including the agent ID.
+    // Validate MCP sources — provides better error messages including the agent ID.
     (agent.mcp ?? []).forEach((mcpSource, index) => {
-      if (type.isNone(mcpSource.url)) {
-        throw new ConfigError(
-          `Agent "${agent.id}" "mcp" source at index ${index} is missing "url".`,
-          { configKey }
-        );
+      if (mcpSource.transport === 'stdio') {
+        if (type.isNone(mcpSource.command)) {
+          throw new ConfigError(
+            `Agent "${agent.id}" "mcp" source at index ${index} uses stdio transport but is missing "command".`,
+            { configKey }
+          );
+        }
+      } else {
+        if (type.isNone(mcpSource.url)) {
+          throw new ConfigError(
+            `Agent "${agent.id}" "mcp" source at index ${index} is missing "url".`,
+            { configKey }
+          );
+        }
       }
     });
 

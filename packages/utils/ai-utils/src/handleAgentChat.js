@@ -16,6 +16,7 @@
 
 import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
+import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { serializer } from '@lowdefy/helpers';
 
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
@@ -95,16 +96,26 @@ async function handleAgentChat({ connection, properties, context }) {
     const evaluatedSource = context.evaluateOperators(mcpSource);
 
     try {
-      const client = await createMCPClient({
-        transport: {
+      let transport;
+      if (evaluatedSource.transport === 'stdio') {
+        transport = new Experimental_StdioMCPTransport({
+          command: evaluatedSource.command,
+          args: evaluatedSource.args,
+          env: { ...process.env, ...(evaluatedSource.env ?? {}) },
+        });
+      } else {
+        transport = {
           type: evaluatedSource.transport ?? 'http',
           url: evaluatedSource.url,
           ...(evaluatedSource.headers ? { headers: evaluatedSource.headers } : {}),
-        },
-      });
+        };
+      }
+      const client = await createMCPClient({ transport });
       mcpClients.push({ client, source: evaluatedSource });
     } catch (err) {
-      console.warn(`MCP server at ${evaluatedSource.url} unreachable: ${err.message}`);
+      const label =
+        evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
+      console.warn(`MCP server "${label}" unreachable: ${err.message}`);
     }
   }
 
@@ -114,7 +125,9 @@ async function handleAgentChat({ connection, properties, context }) {
     for (const [name, mcpTool] of Object.entries(mcpTools)) {
       if (tools[name]) {
         console.warn(
-          `MCP tool "${name}" from ${source.url} conflicts with endpoint tool — skipped.`
+          `MCP tool "${name}" from ${
+            source.url ?? source.command
+          } conflicts with endpoint tool — skipped.`
         );
         continue;
       }
