@@ -45,9 +45,7 @@
     "conversations": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean" },
-        "items": { "type": "array" },
-        "activeKey": { "type": "string" }
+        "enabled": { "type": "boolean" }
       }
     },
     "sender": {

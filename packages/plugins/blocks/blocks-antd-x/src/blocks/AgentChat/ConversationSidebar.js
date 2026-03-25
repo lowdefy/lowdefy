@@ -18,7 +18,7 @@ import React from 'react';
 import { Conversations } from '@ant-design/x';
 import { Button } from 'antd';
 
-function ConversationSidebar({ config, onConversationChange, onNewConversation }) {
+function ConversationSidebar({ items, activeKey, onConversationChange, onNewConversation }) {
   return (
     <div style={{ width: 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}>
       <div style={{ padding: '12px 16px' }}>
@@ -27,10 +27,10 @@ function ConversationSidebar({ config, onConversationChange, onNewConversation }
         </Button>
       </div>
       <Conversations
-        items={config.items ?? []}
-        activeKey={config.activeKey}
+        items={items ?? []}
+        activeKey={activeKey}
         onActiveChange={(key) => {
-          onConversationChange(key, config.activeKey);
+          onConversationChange(key, activeKey);
         }}
       />
     </div>

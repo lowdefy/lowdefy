@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Sender } from '@ant-design/x';
 import { type } from '@lowdefy/helpers';
@@ -24,6 +24,14 @@ import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
+
+let conversationCounter = 0;
+
+function createConversation(label) {
+  conversationCounter += 1;
+  const key = `conv_${Date.now()}_${conversationCounter}`;
+  return { key, label: label ?? `Chat ${conversationCounter}` };
+}
 
 function AgentChat({ blockId, methods, pageId, properties }) {
   const {
@@ -37,6 +45,18 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const senderRef = useRef(null);
   const toolConfirmModesRef = useRef({});
 
+  // --- Conversation state (managed internally when conversations.enabled) ---
+  const conversationsEnabled = conversationsConfig?.enabled;
+  const conversationMapRef = useRef(new Map());
+  const [conversationItems, setConversationItems] = useState(() => {
+    if (!conversationsEnabled) return [];
+    const first = createConversation();
+    return [first];
+  });
+  const [activeConversationKey, setActiveConversationKey] = useState(
+    () => conversationItems[0]?.key ?? null
+  );
+
   const transport = useMemo(
     () =>
       new LowdefyChatTransport({
@@ -49,14 +69,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     [pageId, agentId]
   );
 
-  const {
-    messages,
-    sendMessage,
-    status,
-    stop,
-    addToolApprovalResponse,
-    setMessages,
-  } = useChat({
+  const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
     transport,
     experimental_throttle: 50,
     onError: (error) => {
@@ -92,9 +105,19 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   const isEmpty = messages.length === 0;
   const isStreaming = status === 'streaming';
-  const showSidebar = conversationsConfig?.enabled;
+
+  // Save current messages into the conversation map.
+  const saveCurrentMessages = useCallback(() => {
+    if (activeConversationKey) {
+      conversationMapRef.current.set(activeConversationKey, [...messages]);
+    }
+  }, [activeConversationKey, messages]);
 
   function handleConversationChange(key, previousKey) {
+    saveCurrentMessages();
+    const restored = conversationMapRef.current.get(key) ?? [];
+    setMessages(restored);
+    setActiveConversationKey(key);
     methods.triggerEvent({
       name: 'onConversationChange',
       event: { key, previousKey },
@@ -102,7 +125,15 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   }
 
   function handleNewConversation() {
-    methods.triggerEvent({ name: 'onNewConversation', event: {} });
+    saveCurrentMessages();
+    const conversation = createConversation();
+    setConversationItems((prev) => [...prev, conversation]);
+    setActiveConversationKey(conversation.key);
+    setMessages([]);
+    methods.triggerEvent({
+      name: 'onNewConversation',
+      event: { key: conversation.key, label: conversation.label },
+    });
   }
 
   function handleSend(text) {
@@ -123,9 +154,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         height: properties.height ?? 'calc(100dvh - 170px)',
       }}
     >
-      {showSidebar && (
+      {conversationsEnabled && (
         <ConversationSidebar
-          config={conversationsConfig}
+          items={conversationItems}
+          activeKey={activeConversationKey}
           onConversationChange={handleConversationChange}
           onNewConversation={handleNewConversation}
         />
