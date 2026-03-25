@@ -4,6 +4,7 @@
 '@lowdefy/connection-anthropic': minor
 '@lowdefy/connection-openai': minor
 '@lowdefy/connection-google': minor
+'@lowdefy/connection-mcp': minor
 '@lowdefy/api': minor
 '@lowdefy/build': minor
 '@lowdefy/server': minor
@@ -30,6 +31,13 @@ feat: Add AI agent support with multi-provider chat and tool use
 - `@lowdefy/connection-anthropic`: Anthropic connection with `AnthropicAgent` resolver supporting Claude models
 - `@lowdefy/connection-openai`: OpenAI connection with `OpenAIAgent` resolver supporting GPT models
 - `@lowdefy/connection-google`: Google AI connection with `GeminiAgent` resolver, including `thinkingConfig` and `safetySettings` sugar props
+
+**MCP Integration (`@lowdefy/connection-mcp`, `@lowdefy/ai-utils`, `@lowdefy/build`)**
+
+- New `Mcp` connection type for defining MCP server transport config (HTTP, SSE, stdio)
+- Agents can reference MCP connections via `connectionId` or inline config with build-time validation
+- Runtime MCP client creation with automatic tool discovery, merging, and cleanup
+- Tool approval support via `confirm: true` on both endpoint tools and MCP sources
 
 **Build Pipeline (`@lowdefy/build`)**
 
