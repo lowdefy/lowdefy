@@ -162,7 +162,7 @@ async function handleAgentChat({ connection, properties, context }) {
     ...hookCallbacks,
   });
 
-  const response = createAgentUIStreamResponse({
+  const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
   });
