@@ -48,14 +48,7 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageBubble({
-  content,
-  isStreaming,
-  parts,
-  config,
-  toolConfirmModes,
-  addToolApprovalResponse,
-}) {
+function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
@@ -126,7 +119,6 @@ function MessageBubble({
         if (segment.category === 'tool' && showThoughtChain) {
           const items = segment.parts.map((part) => {
             const tool = getToolInfo(part);
-            const confirmMode = toolConfirmModes?.current?.[tool.toolName ?? ''];
 
             if (tool.state === 'output-denied') {
               return {
@@ -138,23 +130,20 @@ function MessageBubble({
             }
 
             if (tool.state === 'approval-requested' && part.approval?.id) {
-              if (confirmMode === true) {
-                return {
-                  key: tool.toolCallId,
-                  title: tool.toolName,
-                  description: (
-                    <ToolApproval
-                      toolName={tool.toolName}
-                      input={tool.input}
-                      approvalId={part.approval.id}
-                      onApprove={(id) => addToolApprovalResponse?.({ id, approved: true })}
-                      onReject={(id) => addToolApprovalResponse?.({ id, approved: false })}
-                    />
-                  ),
-                  status: 'loading',
-                };
-              }
-              // For 'event' mode, fall through to loading state
+              return {
+                key: tool.toolCallId,
+                title: tool.toolName,
+                description: (
+                  <ToolApproval
+                    toolName={tool.toolName}
+                    input={tool.input}
+                    approvalId={part.approval.id}
+                    onApprove={(id) => addToolApprovalResponse?.({ id, approved: true })}
+                    onReject={(id) => addToolApprovalResponse?.({ id, approved: false })}
+                  />
+                ),
+                status: 'loading',
+              };
             }
 
             let status = 'loading';

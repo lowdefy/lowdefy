@@ -16,11 +16,10 @@
 
 import { useRef, useEffect } from 'react';
 
-function useAgentEvents({ messages, status, methods, toolConfirmModes }) {
+function useAgentEvents({ messages, status, methods }) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
-  const firedApprovalIds = useRef(new Set());
   const lastMessageCountRef = useRef(0);
 
   // Fire onMessageComplete when streaming finishes
@@ -83,27 +82,6 @@ function useAgentEvents({ messages, status, methods, toolConfirmModes }) {
               },
             });
           }
-
-          if (
-            part.state === 'approval-requested' &&
-            part.approval?.id &&
-            !firedApprovalIds.current.has(part.approval.id)
-          ) {
-            const confirmMode =
-              toolConfirmModes?.current?.[part.toolName ?? ''];
-            if (confirmMode === 'event') {
-              firedApprovalIds.current.add(part.approval.id);
-              methods.triggerEvent({
-                name: 'onToolConfirm',
-                event: {
-                  toolName,
-                  toolCallId,
-                  approvalId: part.approval.id,
-                  input: part.input,
-                },
-              });
-            }
-          }
         }
       }
     }
@@ -114,7 +92,6 @@ function useAgentEvents({ messages, status, methods, toolConfirmModes }) {
     if (messages.length < lastMessageCountRef.current) {
       firedToolCallIds.current.clear();
       firedToolResultIds.current.clear();
-      firedApprovalIds.current.clear();
     }
     lastMessageCountRef.current = messages.length;
   }, [messages.length]);

@@ -43,7 +43,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     messages: externalMessages,
   } = properties;
   const senderRef = useRef(null);
-  const toolConfirmModesRef = useRef({});
 
   // --- Conversation state (managed internally when conversations.enabled) ---
   const conversationsEnabled = conversationsConfig?.enabled;
@@ -57,17 +56,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     () => conversationItems[0]?.key ?? null
   );
 
-  const transport = useMemo(
-    () =>
-      new LowdefyChatTransport({
-        pageId,
-        agentId,
-        onToolConfirmModes: (modes) => {
-          toolConfirmModesRef.current = modes;
-        },
-      }),
-    [pageId, agentId]
-  );
+  const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
   const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
     transport,
@@ -89,19 +78,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     },
   });
 
-  useEffect(() => {
-    methods.registerMethod('confirmTool', ({ approvalId }) => {
-      if (approvalId && addToolApprovalResponse) {
-        addToolApprovalResponse({ id: approvalId, approved: true });
-      }
-    });
-    methods.registerMethod('rejectTool', ({ approvalId, reason }) => {
-      if (approvalId && addToolApprovalResponse) {
-        addToolApprovalResponse({ id: approvalId, approved: false, reason });
-      }
-    });
-  }, [methods, addToolApprovalResponse]);
-
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
   useEffect(() => {
@@ -110,7 +86,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     }
   }, [externalMessages, setMessages]);
 
-  useAgentEvents({ messages, status, methods, toolConfirmModes: toolConfirmModesRef });
+  useAgentEvents({ messages, status, methods });
 
   const isEmpty = messages.length === 0;
   const isStreaming = status === 'streaming';
@@ -190,7 +166,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               messages={messages}
               isStreaming={isStreaming}
               config={messageDisplay}
-              toolConfirmModes={toolConfirmModesRef}
               addToolApprovalResponse={addToolApprovalResponse}
             />
           )}

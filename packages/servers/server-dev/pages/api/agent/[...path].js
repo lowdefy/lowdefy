@@ -35,7 +35,7 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
   }
-  const { response: webResponse, toolConfirmModes } = await callAgent(context, {
+  const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
     messages,
@@ -47,7 +47,6 @@ async function handler({ context, req, res }) {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Content-Encoding', 'none');
   res.setHeader('Transfer-Encoding', 'chunked');
-  res.setHeader('X-Tool-Confirm-Modes', JSON.stringify(toolConfirmModes ?? {}));
 
   const reader = webResponse.body.getReader();
   const decoder = new TextDecoder();

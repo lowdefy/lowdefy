@@ -93,7 +93,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
     agent: expect.any(MockToolLoopAgent),
     uiMessages: messages,
   });
-  expect(result).toEqual({ response: { type: 'web-response' }, toolConfirmModes: {} });
+  expect(result).toEqual({ response: { type: 'web-response' } });
 });
 
 test('builds tools from endpoint configs', async () => {
@@ -252,7 +252,10 @@ test('builds multiple tools from multiple endpoint configs', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: [{ endpointId: 'search' }, { endpointId: 'write' }], properties: { model: 'gpt-4o' } },
+      agent: {
+        tools: [{ endpointId: 'search' }, { endpointId: 'write' }],
+        properties: { model: 'gpt-4o' },
+      },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -531,7 +534,7 @@ test('empty tools array produces empty tools object', async () => {
   expect(mockTool).not.toHaveBeenCalled();
 });
 
-test('tool with confirm true sets needsApproval and populates toolConfirmModes', async () => {
+test('tool with confirm true sets needsApproval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -539,7 +542,7 @@ test('tool with confirm true sets needsApproval and populates toolConfirmModes',
     description: 'Dangerous tool',
     payloadSchema: { type: 'object' },
   });
-  const result = await handleAgentChat({
+  await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
       agent: {
@@ -551,29 +554,6 @@ test('tool with confirm true sets needsApproval and populates toolConfirmModes',
     context: { callEndpoint: jest.fn(), getEndpointConfig },
   });
   expect(mockTool).toHaveBeenCalledWith(expect.objectContaining({ needsApproval: true }));
-  expect(result.toolConfirmModes).toEqual({ dangerous: true });
-});
-
-test('tool with confirm event populates toolConfirmModes with event', async () => {
-  mockJsonSchema.mockImplementation((schema) => schema);
-  mockTool.mockImplementation((def) => def);
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const getEndpointConfig = jest.fn().mockResolvedValue({
-    description: 'Custom confirm tool',
-    payloadSchema: { type: 'object' },
-  });
-  const result = await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [{ endpointId: 'custom', confirm: 'event' }],
-        properties: { model: 'gpt-4o' },
-      },
-      messages: [],
-    },
-    context: { callEndpoint: jest.fn(), getEndpointConfig },
-  });
-  expect(result.toolConfirmModes).toEqual({ custom: 'event' });
 });
 
 test('tool without confirm does not set needsApproval', async () => {
@@ -584,7 +564,7 @@ test('tool without confirm does not set needsApproval', async () => {
     description: 'Normal tool',
     payloadSchema: { type: 'object' },
   });
-  const result = await handleAgentChat({
+  await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
       agent: {
@@ -598,7 +578,6 @@ test('tool without confirm does not set needsApproval', async () => {
   expect(mockTool).toHaveBeenCalledWith(
     expect.not.objectContaining({ needsApproval: expect.anything() })
   );
-  expect(result.toolConfirmModes).toEqual({});
 });
 
 test('creates MCP clients from agent mcp config', async () => {
@@ -667,9 +646,7 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
     },
   });
 
-  expect(consoleSpy).toHaveBeenCalledWith(
-    expect.stringContaining('MCP tool "search"')
-  );
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP tool "search"'));
   consoleSpy.mockRestore();
 });
 
@@ -704,10 +681,6 @@ test('MCP source with confirm applies needsApproval to all tools', async () => {
     },
   });
 
-  expect(result.toolConfirmModes).toEqual({
-    'mcp-tool-a': true,
-    'mcp-tool-b': true,
-  });
   expect(lastAgentConfig.tools['mcp-tool-a']).toEqual(
     expect.objectContaining({ needsApproval: true })
   );
@@ -738,9 +711,7 @@ test('unreachable MCP server logs warning and continues', async () => {
     },
   });
 
-  expect(consoleSpy).toHaveBeenCalledWith(
-    expect.stringContaining('unreachable')
-  );
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('unreachable'));
   expect(result.response).toEqual({ type: 'web-response' });
   consoleSpy.mockRestore();
 });

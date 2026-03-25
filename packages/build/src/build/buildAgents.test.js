@@ -801,7 +801,7 @@ test('buildAgents normalizes mixed tool array', () => {
         id: 'agent1',
         type: 'AnthropicAgent',
         connectionId: 'conn1',
-        tools: ['tool1', { endpointId: 'tool2', confirm: 'event' }],
+        tools: ['tool1', { endpointId: 'tool2', confirm: true }],
         properties: { model: 'test-model' },
       },
     ],
@@ -809,7 +809,7 @@ test('buildAgents normalizes mixed tool array', () => {
   const res = buildAgents({ components, context });
   expect(res.agents[0].tools).toEqual([
     { endpointId: 'tool1' },
-    { endpointId: 'tool2', confirm: 'event' },
+    { endpointId: 'tool2', confirm: true },
   ]);
 });
 

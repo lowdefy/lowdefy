@@ -22,14 +22,9 @@ export default {
     onMessageComplete: 'Trigger when a message finishes streaming.',
     onToolCall: 'Trigger when a tool is invoked.',
     onToolResult: 'Trigger when a tool completes.',
-    onToolConfirm: 'Trigger when a tool requires approval (confirm: event mode).',
     onConversationChange: 'Trigger when the user switches conversations.',
     onNewConversation: 'Trigger when the user clicks New Chat.',
     onError: 'Trigger on stream error.',
-  },
-  methods: {
-    confirmTool: 'Approve a pending tool execution.',
-    rejectTool: 'Reject a pending tool execution.',
   },
   properties: {
     type: 'object',

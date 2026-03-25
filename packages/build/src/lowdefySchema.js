@@ -125,7 +125,7 @@ export default {
                 properties: {
                   endpointId: { type: 'string' },
                   confirm: {
-                    anyOf: [{ const: true }, { const: 'event' }],
+                    const: true,
                   },
                 },
                 additionalProperties: false,
@@ -150,7 +150,7 @@ export default {
               },
               headers: { type: 'object' },
               confirm: {
-                anyOf: [{ const: true }, { const: 'event' }],
+                const: true,
               },
             },
             additionalProperties: false,

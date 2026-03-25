@@ -96,13 +96,13 @@ async function callAgent(context, { agentId, pageId, messages }) {
   };
 
   // Call the agent resolver
-  const { response, toolConfirmModes } = await agentType.resolver({
+  const { response } = await agentType.resolver({
     connection: connectionInstance,
     properties: { agent: agentConfig, messages },
     context: resolverContext,
   });
 
-  return { response, toolConfirmModes };
+  return { response };
 }
 
 export default callAgent;

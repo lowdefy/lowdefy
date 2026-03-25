@@ -19,7 +19,7 @@ import { Bubble } from '@ant-design/x';
 
 import MessageBubble from './MessageBubble.js';
 
-function MessageList({ messages, isStreaming, config, toolConfirmModes, addToolApprovalResponse }) {
+function MessageList({ messages, isStreaming, config, addToolApprovalResponse }) {
   // Build a lookup map for assistant message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -39,9 +39,13 @@ function MessageList({ messages, isStreaming, config, toolConfirmModes, addToolA
       key: msg.id,
       content: textContent,
       role: msg.role === 'user' ? 'user' : 'ai',
-      // Only show loading dots when streaming has started but no text has arrived yet.
-      // Once the first token appears, loading flips to false and content renders progressively.
-      loading: isStreaming && isLastAssistant && textContent.length === 0,
+      // Only show loading dots when streaming has started but no content has arrived yet.
+      // Once the first token or tool part appears, loading flips to false and content renders.
+      loading:
+        isStreaming &&
+        isLastAssistant &&
+        textContent.length === 0 &&
+        !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
     };
   });
 
@@ -65,7 +69,6 @@ function MessageList({ messages, isStreaming, config, toolConfirmModes, addToolA
                 isStreaming={isStreaming}
                 parts={parts}
                 config={config}
-                toolConfirmModes={toolConfirmModes}
                 addToolApprovalResponse={addToolApprovalResponse}
               />
             );
