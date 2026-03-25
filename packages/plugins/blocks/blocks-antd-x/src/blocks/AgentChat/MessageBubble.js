@@ -147,12 +147,8 @@ function MessageBubble({
                       toolName={tool.toolName}
                       input={tool.input}
                       approvalId={part.approval.id}
-                      onApprove={(id) =>
-                        addToolApprovalResponse?.({ toolCallId: id, approve: true })
-                      }
-                      onReject={(id) =>
-                        addToolApprovalResponse?.({ toolCallId: id, approve: false })
-                      }
+                      onApprove={(id) => addToolApprovalResponse?.({ id, approved: true })}
+                      onReject={(id) => addToolApprovalResponse?.({ id, approved: false })}
                     />
                   ),
                   status: 'loading',

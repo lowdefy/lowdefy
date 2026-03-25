@@ -72,6 +72,15 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
     transport,
     experimental_throttle: 50,
+    // Auto-resubmit to the server after tool approvals are responded to.
+    // Without this, addToolApprovalResponse only updates local state.
+    sendAutomaticallyWhen({ messages: msgs }) {
+      const lastMessage = msgs[msgs.length - 1];
+      if (lastMessage?.role !== 'assistant') return false;
+      return lastMessage.parts.some(
+        (part) => part.state === 'approval-responded' && part.approval?.approved !== undefined
+      );
+    },
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
@@ -83,12 +92,12 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   useEffect(() => {
     methods.registerMethod('confirmTool', ({ approvalId }) => {
       if (approvalId && addToolApprovalResponse) {
-        addToolApprovalResponse({ toolCallId: approvalId, approve: true });
+        addToolApprovalResponse({ id: approvalId, approved: true });
       }
     });
-    methods.registerMethod('rejectTool', ({ approvalId }) => {
+    methods.registerMethod('rejectTool', ({ approvalId, reason }) => {
       if (approvalId && addToolApprovalResponse) {
-        addToolApprovalResponse({ toolCallId: approvalId, approve: false });
+        addToolApprovalResponse({ id: approvalId, approved: false, reason });
       }
     });
   }, [methods, addToolApprovalResponse]);
