@@ -89,7 +89,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   useAgentEvents({ messages, status, methods });
 
   const isEmpty = messages.length === 0;
-  const isStreaming = status === 'streaming';
+  const isBusy = status === 'streaming' || status === 'submitted';
 
   // Save current messages into the conversation map.
   const saveCurrentMessages = useCallback(() => {
@@ -164,7 +164,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           ) : (
             <MessageList
               messages={messages}
-              isStreaming={isStreaming}
+              isStreaming={isBusy}
               config={messageDisplay}
               addToolApprovalResponse={addToolApprovalResponse}
             />
@@ -176,7 +176,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             placeholder={sender?.placeholder ?? 'Type a message...'}
             onSubmit={handleSend}
             onCancel={stop}
-            loading={isStreaming}
+            loading={isBusy}
           />
         </div>
       </div>

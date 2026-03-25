@@ -28,8 +28,9 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse })
     messages.filter((msg) => msg.role === 'assistant').map((msg) => [msg.id, msg.parts])
   );
 
+  const lastMessage = messages[messages.length - 1];
   const items = messages.map((msg) => {
-    const isLastAssistant = msg === messages[messages.length - 1] && msg.role === 'assistant';
+    const isLastAssistant = msg === lastMessage && msg.role === 'assistant';
     const textContent =
       msg.parts
         ?.filter((part) => part.type === 'text')
@@ -48,6 +49,12 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse })
         !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
     };
   });
+
+  // When busy but no assistant message exists yet (submitted, waiting for first chunk),
+  // append a placeholder so loading dots are visible immediately.
+  if (isStreaming && lastMessage?.role !== 'assistant') {
+    items.push({ key: '__loading', content: '', role: 'ai', loading: true });
+  }
 
   return (
     <Bubble.List
