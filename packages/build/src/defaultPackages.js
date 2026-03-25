@@ -30,6 +30,7 @@ const defaultPackages = [
   '@lowdefy/connection-anthropic',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-google',
+  '@lowdefy/connection-mcp',
   '@lowdefy/connection-openai',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-test',

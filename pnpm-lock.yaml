@@ -190,6 +190,9 @@ importers:
       '@lowdefy/connection-knex':
         specifier: workspace:*
         version: link:../plugins/connections/connection-knex
+      '@lowdefy/connection-mcp':
+        specifier: workspace:*
+        version: link:../plugins/connections/connection-mcp
       '@lowdefy/connection-mongodb':
         specifier: workspace:*
         version: link:../plugins/connections/connection-mongodb

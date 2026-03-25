@@ -88,6 +88,7 @@
     "@lowdefy/connection-elasticsearch": "workspace:*",
     "@lowdefy/connection-google": "workspace:*",
     "@lowdefy/connection-google-sheets": "workspace:*",
+    "@lowdefy/connection-mcp": "workspace:*",
     "@lowdefy/connection-knex": "workspace:*",
     "@lowdefy/connection-mongodb": "workspace:*",
     "@lowdefy/connection-openai": "workspace:*",
