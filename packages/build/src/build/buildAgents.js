@@ -101,9 +101,28 @@ function buildAgents({ components, context }) {
       }
     });
 
-    // Validate MCP sources — provides better error messages including the agent ID.
+    // Normalize MCP string shorthand to connectionId objects (same pattern as tools)
+    agent.mcp = (agent.mcp ?? []).map((mcp) => {
+      if (type.isString(mcp)) {
+        return { connectionId: mcp };
+      }
+      return mcp;
+    });
+
+    // Validate MCP sources
     (agent.mcp ?? []).forEach((mcpSource, index) => {
-      if (mcpSource.transport === 'stdio') {
+      if (!type.isNone(mcpSource.connectionId)) {
+        // Validate connectionId references an existing connection
+        const connectionExists = (components.connections ?? []).some(
+          (c) => c.id === mcpSource.connectionId || c.connectionId === mcpSource.connectionId
+        );
+        if (!connectionExists) {
+          throw new ConfigError(
+            `Agent "${agent.id}" "mcp" source at index ${index} references connection "${mcpSource.connectionId}" which does not exist.`,
+            { configKey }
+          );
+        }
+      } else if (mcpSource.transport === 'stdio') {
         if (type.isNone(mcpSource.command)) {
           throw new ConfigError(
             `Agent "${agent.id}" "mcp" source at index ${index} uses stdio transport but is missing "command".`,

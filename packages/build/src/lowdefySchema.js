@@ -139,23 +139,27 @@ export default {
         mcp: {
           type: 'array',
           items: {
-            type: 'object',
-            properties: {
-              url: { type: 'string' },
-              transport: {
-                type: 'string',
-                enum: ['http', 'sse', 'stdio'],
-                default: 'http',
+            anyOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  connectionId: { type: 'string' },
+                  url: { type: 'string' },
+                  transport: {
+                    type: 'string',
+                    enum: ['http', 'sse', 'stdio'],
+                    default: 'http',
+                  },
+                  headers: { type: 'object' },
+                  command: { type: 'string' },
+                  args: { type: 'array', items: { type: 'string' } },
+                  env: { type: 'object' },
+                  confirm: { const: true },
+                },
+                additionalProperties: false,
               },
-              headers: { type: 'object' },
-              command: { type: 'string' },
-              args: { type: 'array', items: { type: 'string' } },
-              env: { type: 'object' },
-              confirm: {
-                const: true,
-              },
-            },
-            additionalProperties: false,
+            ],
           },
           errorMessage: {
             type: 'Agent "mcp" should be an array.',

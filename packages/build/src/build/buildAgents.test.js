@@ -78,6 +78,7 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: [{ endpointId: 'tool1' }],
+      mcp: [],
       properties: {
         model: 'claude-sonnet-4-20250514',
       },
@@ -119,6 +120,7 @@ test('buildAgents multiple valid agents', () => {
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
     {
@@ -127,6 +129,7 @@ test('buildAgents multiple valid agents', () => {
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -160,6 +163,7 @@ test('buildAgents agent with no tools works fine', () => {
       type: 'AnthropicAgent',
       connectionId: 'conn1',
       tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -932,6 +936,94 @@ test('buildAgents throws when stdio mcp source is missing command', () => {
   expect(() => buildAgents({ components, context })).toThrow(
     'Agent "agent1" "mcp" source at index 0 uses stdio transport but is missing "command".'
   );
+});
+
+test('buildAgents normalizes mcp string to connectionId object', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['my_mcp'],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([{ connectionId: 'my_mcp' }]);
+});
+
+test('buildAgents passes through mcp object with connectionId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ connectionId: 'my_mcp', confirm: true }],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([{ connectionId: 'my_mcp', confirm: true }]);
+});
+
+test('buildAgents throws when mcp connectionId does not exist', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['nonexistent'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" "mcp" source at index 0 references connection "nonexistent" which does not exist.'
+  );
+});
+
+test('buildAgents allows mixed mcp inline and connectionId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['my_mcp', { url: 'https://example.com/mcp' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([
+    { connectionId: 'my_mcp' },
+    { url: 'https://example.com/mcp' },
+  ]);
 });
 
 test('buildAgents with no mcp array works fine', () => {
