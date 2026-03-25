@@ -52,7 +52,7 @@ function createMockReadConfigFile({ agentConfig, connectionConfig, endpointConfi
 
 test('callAgent loads agent config, creates connection, and calls resolver', async () => {
   const mockStream = { toUIMessageStreamResponse: jest.fn() };
-  const mockResolver = jest.fn().mockResolvedValue(mockStream);
+  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
@@ -99,7 +99,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
       getEndpointConfig: expect.any(Function),
     }),
   });
-  expect(result).toBe(mockStream);
+  expect(result).toEqual({ response: mockStream });
 });
 
 test('callAgent throws ConfigError when agent does not exist', async () => {
