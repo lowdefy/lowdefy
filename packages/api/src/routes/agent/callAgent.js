@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import authorizeApiEndpoint from '../endpoints/authorizeApiEndpoint.js';
@@ -94,6 +94,36 @@ async function callAgent(context, { agentId, pageId, messages }) {
       return getEndpointConfig(context, { endpointId });
     },
   };
+
+  // Resolve MCP connection references to inline config.
+  // Agent-level overrides (like confirm) may still contain operators —
+  // handleAgentChat evaluates those via its existing evaluateOperators call.
+  const resolvedMcp = [];
+  for (const mcpSource of agentConfig.mcp ?? []) {
+    if (!type.isNone(mcpSource.connectionId)) {
+      const mcpConnConfig = await getConnectionConfig(context, {
+        requestConfig: {
+          connectionId: mcpSource.connectionId,
+          requestId: agentConfig.agentId,
+          '~k': agentConfig['~k'],
+        },
+      });
+      const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
+      const mcpConnProps = context.evaluateOperators({
+        input: mcpConnConfig.properties || {},
+        location: mcpConnConfig.connectionId,
+        payload: {},
+        steps: {},
+      });
+      const mcpConfig = mcpConnection.create({ connection: mcpConnProps });
+      // Merge: connection properties as base, agent-level overrides on top
+      const { connectionId: _, ...overrides } = mcpSource;
+      resolvedMcp.push({ ...mcpConfig, ...overrides });
+    } else {
+      resolvedMcp.push(mcpSource);
+    }
+  }
+  agentConfig.mcp = resolvedMcp;
 
   // Call the agent resolver
   const { response } = await agentType.resolver({
