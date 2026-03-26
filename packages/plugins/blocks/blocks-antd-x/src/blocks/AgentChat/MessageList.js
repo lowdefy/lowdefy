@@ -64,10 +64,18 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
           placement: 'end',
           variant: 'filled',
           shape: 'round',
+          ...(config?.roles?.user?.avatar != null && {
+            avatar: { src: config.roles.user.avatar },
+          }),
+          ...(config?.roles?.user?.name != null && { header: config.roles.user.name }),
         },
         ai: {
           placement: 'start',
           variant: 'outlined',
+          ...(config?.roles?.assistant?.avatar != null && {
+            avatar: { src: config.roles.assistant.avatar },
+          }),
+          ...(config?.roles?.assistant?.name != null && { header: config.roles.assistant.name }),
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             return (
