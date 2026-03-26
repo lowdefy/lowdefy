@@ -24,6 +24,7 @@ export default {
     onToolResult: 'Trigger when a tool completes.',
     onConversationChange: 'Trigger when the user switches conversations.',
     onNewConversation: 'Trigger when the user clicks New Chat.',
+    onUserMessage: 'Trigger when the user sends a message.',
     onError: 'Trigger on stream error.',
     onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
   },

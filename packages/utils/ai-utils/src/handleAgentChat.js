@@ -17,6 +17,7 @@
 import {
   ToolLoopAgent,
   createAgentUIStreamResponse,
+  consumeStream,
   tool,
   jsonSchema,
   stepCountIs,
@@ -33,11 +34,13 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-// Strip non-serializable fields from AI SDK event objects before sending as payload.
+// Strip non-serializable fields from agent-level hook events before sending as payload.
+// messages excluded here — the stream-level onFinish sends UIMessage[] directly.
 function cleanHookEvent(event) {
   const clean = {};
   for (const [key, value] of Object.entries(event)) {
-    if (key === 'messages' || key === 'abortSignal') continue;
+    if (key === 'abortSignal') continue;
+    if (key === 'messages') continue;
     if (typeof value === 'function') continue;
     clean[key] = value;
   }
@@ -45,13 +48,15 @@ function cleanHookEvent(event) {
 }
 
 // Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
+// onFinish is intentionally excluded — it is handled at the stream level via
+// createAgentUIStreamResponse so that endpoints receive UIMessage[] (the persisted
+// format developers need) rather than the agent-level CoreMessage[].
 const hookMapping = {
   onStart: 'experimental_onStart',
   onStepStart: 'experimental_onStepStart',
   onToolCallStart: 'experimental_onToolCallStart',
   onToolCallFinish: 'experimental_onToolCallFinish',
   onStepFinish: 'onStepFinish',
-  onFinish: 'onFinish',
 };
 
 function createHookCallbacks({ hooks, callEndpoint }) {
@@ -158,15 +163,6 @@ async function handleAgentChat({ connection, properties, context, format }) {
     callEndpoint: context.callEndpoint,
   });
 
-  // Compose MCP cleanup with existing onFinish hook
-  if (mcpClients.length > 0) {
-    const originalOnFinish = hookCallbacks.onFinish;
-    hookCallbacks.onFinish = async (event) => {
-      if (originalOnFinish) await originalOnFinish(event);
-      await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
-    };
-  }
-
   const agentInstance = new ToolLoopAgent({
     model,
     instructions: agent.properties.instructions,
@@ -178,6 +174,10 @@ async function handleAgentChat({ connection, properties, context, format }) {
     providerOptions: agent.properties.providerOptions,
     ...hookCallbacks,
   });
+
+  const onFinishEndpointIds = agent.hooks?.onFinish;
+  const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
+  const hasMcpClients = mcpClients.length > 0;
 
   if (format === 'text') {
     const result = await agentInstance.stream({
@@ -191,6 +191,24 @@ async function handleAgentChat({ connection, properties, context, format }) {
     agent: agentInstance,
     uiMessages: messages,
     sendSources: agent.properties.sendSources,
+    ...(hasOnFinishHooks || hasMcpClients
+      ? {
+          onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
+            if (hasOnFinishHooks) {
+              const payload = { messages: finishedMessages, finishReason, isAborted };
+              for (const endpointId of onFinishEndpointIds) {
+                context.callEndpoint(endpointId, { payload }).catch(() => {});
+              }
+            }
+            if (hasMcpClients) {
+              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+            }
+          },
+        }
+      : {}),
+    consumeSseStream: async ({ stream }) => {
+      consumeStream({ stream }).catch(() => {});
+    },
   });
   return { response };
 }
