@@ -18,7 +18,8 @@ import React, { useRef, useMemo, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
-import { Button } from 'antd';
+import { Button, Tag, Upload } from 'antd';
+import { PaperClipOutlined } from '@ant-design/icons';
 import { type } from '@lowdefy/helpers';
 
 import ConversationSidebar from './ConversationSidebar.js';
@@ -37,6 +38,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     messages: externalMessages,
   } = properties;
   const senderRef = useRef(null);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const attachmentsConfig = sender?.attachments;
 
   // Sidebar driven entirely by external config
   const showSidebar = conversationsConfig?.enabled;
@@ -94,9 +97,34 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
-  function handleSend(text) {
-    if (!text.trim()) return;
-    sendMessage({ text });
+  function fileToContentPart(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        if (file.type.startsWith('image/')) {
+          resolve({ type: 'image', image: dataUrl });
+        } else {
+          resolve({ type: 'file', data: dataUrl.split(',')[1], mimeType: file.type });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleSend(text) {
+    if (!text.trim() && attachedFiles.length === 0) return;
+    if (attachedFiles.length > 0) {
+      const parts = [{ type: 'text', text }];
+      for (const file of attachedFiles) {
+        const part = await fileToContentPart(file);
+        parts.push(part);
+      }
+      sendMessage({ parts });
+      setAttachedFiles([]);
+    } else {
+      sendMessage({ text });
+    }
     senderRef.current?.clear();
   }
 
@@ -171,12 +199,43 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               ))}
             </div>
           )}
+          {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
+              {attachedFiles.map((file, i) => (
+                <Tag
+                  key={i}
+                  closable
+                  onClose={() => setAttachedFiles((prev) => prev.filter((_, j) => j !== i))}
+                >
+                  {file.name}
+                </Tag>
+              ))}
+            </div>
+          )}
           <Sender
             ref={senderRef}
             placeholder={sender?.placeholder ?? 'Type a message...'}
             onSubmit={handleSend}
             onCancel={stop}
             loading={isBusy}
+            prefix={
+              attachmentsConfig?.enabled ? (
+                <Upload
+                  beforeUpload={(file) => {
+                    if (attachmentsConfig.maxSize && file.size > attachmentsConfig.maxSize) {
+                      return false;
+                    }
+                    setAttachedFiles((prev) => [...prev, file]);
+                    return false;
+                  }}
+                  accept={attachmentsConfig.accept}
+                  showUploadList={false}
+                  multiple
+                >
+                  <Button type="text" icon={<PaperClipOutlined />} />
+                </Upload>
+              ) : undefined
+            }
           />
         </div>
       </div>
