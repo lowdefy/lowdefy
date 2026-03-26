@@ -175,6 +175,7 @@ async function handleAgentChat({ connection, properties, context }) {
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
+    sendSources: agent.properties.sendSources,
   });
   return { response };
 }

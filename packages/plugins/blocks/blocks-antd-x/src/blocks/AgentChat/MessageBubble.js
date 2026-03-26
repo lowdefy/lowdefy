@@ -111,6 +111,11 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
 
   const showActions = actions && actions.length > 0 && !isStreaming;
 
+  const showSources = config?.showSources;
+  const sourceParts = showSources
+    ? (parts ?? []).filter((p) => p.type === 'source-url' || p.type === 'source-document')
+    : [];
+
   if (!parts || parts.length === 0) {
     return (
       <div>
@@ -120,6 +125,31 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
         >
           {content}
         </Markdown>
+        {sourceParts.length > 0 && (
+          <div style={{ marginTop: 8 }}>
+            <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+              {sourceParts.map((source, i) => (
+                <a
+                  key={`source-${i}`}
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 12,
+                    padding: '2px 8px',
+                    background: '#f5f5f5',
+                    borderRadius: 4,
+                    color: '#1677ff',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {source.title ?? source.url ?? `Source ${i + 1}`}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
         {showActions && (
           <MessageActions
             actions={actions}
@@ -266,6 +296,31 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
         }
         return null;
       })}
+      {sourceParts.length > 0 && (
+        <div style={{ marginTop: 8 }}>
+          <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {sourceParts.map((source, i) => (
+              <a
+                key={`source-${i}`}
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: 12,
+                  padding: '2px 8px',
+                  background: '#f5f5f5',
+                  borderRadius: 4,
+                  color: '#1677ff',
+                  textDecoration: 'none',
+                }}
+              >
+                {source.title ?? source.url ?? `Source ${i + 1}`}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
       {showActions && (
         <MessageActions
           actions={actions}
