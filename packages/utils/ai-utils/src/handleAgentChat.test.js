@@ -476,7 +476,6 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
   });
 });
 
-
 test('non-onFinish hook callbacks strip messages from event payload', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
