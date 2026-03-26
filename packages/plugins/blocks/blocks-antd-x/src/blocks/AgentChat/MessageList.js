@@ -19,7 +19,7 @@ import { Bubble } from '@ant-design/x';
 
 import MessageBubble from './MessageBubble.js';
 
-function MessageList({ messages, isStreaming, config }) {
+function MessageList({ messages, isStreaming, config, addToolApprovalResponse }) {
   // Build a lookup map for assistant message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -28,8 +28,9 @@ function MessageList({ messages, isStreaming, config }) {
     messages.filter((msg) => msg.role === 'assistant').map((msg) => [msg.id, msg.parts])
   );
 
+  const lastMessage = messages[messages.length - 1];
   const items = messages.map((msg) => {
-    const isLastAssistant = msg === messages[messages.length - 1] && msg.role === 'assistant';
+    const isLastAssistant = msg === lastMessage && msg.role === 'assistant';
     const textContent =
       msg.parts
         ?.filter((part) => part.type === 'text')
@@ -39,11 +40,21 @@ function MessageList({ messages, isStreaming, config }) {
       key: msg.id,
       content: textContent,
       role: msg.role === 'user' ? 'user' : 'ai',
-      // Only show loading dots when streaming has started but no text has arrived yet.
-      // Once the first token appears, loading flips to false and content renders progressively.
-      loading: isStreaming && isLastAssistant && textContent.length === 0,
+      // Only show loading dots when streaming has started but no content has arrived yet.
+      // Once the first token or tool part appears, loading flips to false and content renders.
+      loading:
+        isStreaming &&
+        isLastAssistant &&
+        textContent.length === 0 &&
+        !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
     };
   });
+
+  // When busy but no assistant message exists yet (submitted, waiting for first chunk),
+  // append a placeholder so loading dots are visible immediately.
+  if (isStreaming && lastMessage?.role !== 'assistant') {
+    items.push({ key: '__loading', content: '', role: 'ai', loading: true });
+  }
 
   return (
     <Bubble.List
@@ -65,6 +76,7 @@ function MessageList({ messages, isStreaming, config }) {
                 isStreaming={isStreaming}
                 parts={parts}
                 config={config}
+                addToolApprovalResponse={addToolApprovalResponse}
               />
             );
           },

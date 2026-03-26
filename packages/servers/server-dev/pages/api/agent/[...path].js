@@ -35,7 +35,11 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
   }
-  const webResponse = await callAgent(context, { agentId, pageId, messages });
+  const { response: webResponse } = await callAgent(context, {
+    agentId,
+    pageId,
+    messages,
+  });
 
   // Stream the Web Response body to the Next.js response
   res.setHeader('Content-Type', 'text/event-stream');

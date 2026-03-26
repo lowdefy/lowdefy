@@ -77,7 +77,8 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
-      tools: ['tool1'],
+      tools: [{ endpointId: 'tool1' }],
+      mcp: [],
       properties: {
         model: 'claude-sonnet-4-20250514',
       },
@@ -118,6 +119,8 @@ test('buildAgents multiple valid agents', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
     {
@@ -125,6 +128,8 @@ test('buildAgents multiple valid agents', () => {
       agentId: 'agent2',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -157,6 +162,8 @@ test('buildAgents agent with no tools works fine', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
+      tools: [],
+      mcp: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -440,14 +447,22 @@ test('buildAgents empty agents array initialises agentIds', () => {
 test('buildAgents throws when tool endpoint not found and api is undefined', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
-    agents: [{
-      id: 'agent1',
-      type: 'AnthropicAgent',
-      connectionId: 'conn1',
-      tools: ['missing-tool'],
-      properties: { model: 'test-model' },
-    }],
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['missing-tool'],
+        properties: { model: 'test-model' },
+      },
+    ],
   };
   expect(() => buildAgents({ components, context })).toThrow(
     'Agent "agent1" references tool endpoint "missing-tool" which does not exist.'
@@ -457,21 +472,43 @@ test('buildAgents throws when tool endpoint not found and api is undefined', () 
 test('buildAgents validates multiple tools all referencing existing endpoints', () => {
   const context = testContext();
   const components = {
-    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
-    api: [
-      { id: 'endpoint:tool1', endpointId: 'tool1', type: 'Api', description: 'Tool 1', payloadSchema: { type: 'object' }, routine: [] },
-      { id: 'endpoint:tool2', endpointId: 'tool2', type: 'Api', description: 'Tool 2', payloadSchema: { type: 'object' }, routine: [] },
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
     ],
-    agents: [{
-      id: 'agent1',
-      type: 'AnthropicAgent',
-      connectionId: 'conn1',
-      tools: ['tool1', 'tool2'],
-      properties: { model: 'test-model' },
-    }],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'Tool 1',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+      {
+        id: 'endpoint:tool2',
+        endpointId: 'tool2',
+        type: 'Api',
+        description: 'Tool 2',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['tool1', 'tool2'],
+        properties: { model: 'test-model' },
+      },
+    ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[0].tools).toEqual(['tool1', 'tool2']);
+  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1' }, { endpointId: 'tool2' }]);
 });
 
 test('buildAgents throws when model is not defined', () => {
@@ -660,6 +697,350 @@ test('buildAgents with empty hooks arrays passes', () => {
           onStart: [],
           onFinish: [],
         },
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents normalizes string tools to objects', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['tool1'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1' }]);
+});
+
+test('buildAgents passes through object tools with confirm', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'tool1', confirm: true }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1', confirm: true }]);
+});
+
+test('buildAgents normalizes mixed tool array', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'Tool 1',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+      {
+        id: 'endpoint:tool2',
+        endpointId: 'tool2',
+        type: 'Api',
+        description: 'Tool 2',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['tool1', { endpointId: 'tool2', confirm: true }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual([
+    { endpointId: 'tool1' },
+    { endpointId: 'tool2', confirm: true },
+  ]);
+});
+
+test('buildAgents throws when object tool references non-existent endpoint', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'nonexistent', confirm: true }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" references tool endpoint "nonexistent" which does not exist.'
+  );
+});
+
+test('buildAgents valid mcp sources pass validation', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ url: 'https://mcp.example.com' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents throws when mcp source is missing url', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ transport: 'sse' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" "mcp" source at index 0 is missing "url".'
+  );
+});
+
+test('buildAgents valid stdio mcp source passes validation', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ transport: 'stdio', command: 'npx', args: ['-y', 'some-mcp-server'] }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents throws when stdio mcp source is missing command', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ transport: 'stdio' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" "mcp" source at index 0 uses stdio transport but is missing "command".'
+  );
+});
+
+test('buildAgents normalizes mcp string to connectionId object', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['my_mcp'],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([{ connectionId: 'my_mcp' }]);
+});
+
+test('buildAgents passes through mcp object with connectionId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: [{ connectionId: 'my_mcp', confirm: true }],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([{ connectionId: 'my_mcp', confirm: true }]);
+});
+
+test('buildAgents throws when mcp connectionId does not exist', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['nonexistent'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" "mcp" source at index 0 references connection "nonexistent" which does not exist.'
+  );
+});
+
+test('buildAgents allows mixed mcp inline and connectionId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+      { id: 'connection:my_mcp', connectionId: 'my_mcp', type: 'Mcp' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        mcp: ['my_mcp', { url: 'https://example.com/mcp' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].mcp).toEqual([
+    { connectionId: 'my_mcp' },
+    { url: 'https://example.com/mcp' },
+  ]);
+});
+
+test('buildAgents with no mcp array works fine', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
         properties: { model: 'test-model' },
       },
     ],

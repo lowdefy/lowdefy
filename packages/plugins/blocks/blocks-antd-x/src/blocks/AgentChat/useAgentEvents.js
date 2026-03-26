@@ -53,12 +53,14 @@ function useAgentEvents({ messages, status, methods }) {
           const toolCallId = part.toolCallId;
           if (!toolCallId) continue;
 
+          const toolName = part.toolName ?? part.type?.replace('tool-', '');
+
           if (!firedToolCallIds.current.has(toolCallId)) {
             firedToolCallIds.current.add(toolCallId);
             methods.triggerEvent({
               name: 'onToolCall',
               event: {
-                toolName: part.toolName ?? part.type?.replace('tool-', ''),
+                toolName,
                 toolCallId,
                 input: part.input,
               },
@@ -73,7 +75,7 @@ function useAgentEvents({ messages, status, methods }) {
             methods.triggerEvent({
               name: 'onToolResult',
               event: {
-                toolName: part.toolName ?? part.type?.replace('tool-', ''),
+                toolName,
                 toolCallId,
                 output: part.output,
                 error: part.state === 'output-error',

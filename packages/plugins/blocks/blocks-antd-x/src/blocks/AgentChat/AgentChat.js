@@ -14,24 +14,56 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo } from 'react';
+import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
+import { type } from '@lowdefy/helpers';
 
+import ConversationSidebar from './ConversationSidebar.js';
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({ blockId, methods, pageId, properties }) {
-  const { agentId, welcome, messages: messagesConfig, sender } = properties;
+  const {
+    agentId,
+    welcome,
+    messageDisplay,
+    sender,
+    conversations: conversationsConfig,
+    messages: externalMessages,
+  } = properties;
   const senderRef = useRef(null);
+
+  // --- Conversation state (managed internally when conversations.enabled) ---
+  const conversationsEnabled = conversationsConfig?.enabled;
+  const conversationCounterRef = useRef(0);
+  const conversationMapRef = useRef(new Map());
+
+  function createConversation(label) {
+    conversationCounterRef.current += 1;
+    const count = conversationCounterRef.current;
+    const key = `conv_${Date.now()}_${count}`;
+    return { key, label: label ?? `Chat ${count}` };
+  }
+
+  const [conversationItems, setConversationItems] = useState(() => {
+    if (!conversationsEnabled) return [];
+    const first = createConversation();
+    return [first];
+  });
+  const [activeConversationKey, setActiveConversationKey] = useState(
+    () => conversationItems[0]?.key ?? null
+  );
 
   const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
     transport,
     experimental_throttle: 50,
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
@@ -40,10 +72,48 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     },
   });
 
+  // Sync external messages when provided — undefined means "not provided" (no sync),
+  // null means "clear messages", array means "load these messages".
+  useEffect(() => {
+    if (!type.isUndefined(externalMessages)) {
+      setMessages(externalMessages ?? []);
+    }
+  }, [externalMessages, setMessages]);
+
   useAgentEvents({ messages, status, methods });
 
   const isEmpty = messages.length === 0;
-  const isStreaming = status === 'streaming';
+  const isBusy = status === 'streaming' || status === 'submitted';
+
+  // Save current messages into the conversation map.
+  const saveCurrentMessages = useCallback(() => {
+    if (activeConversationKey) {
+      conversationMapRef.current.set(activeConversationKey, [...messages]);
+    }
+  }, [activeConversationKey, messages]);
+
+  function handleConversationChange(key, previousKey) {
+    saveCurrentMessages();
+    const restored = conversationMapRef.current.get(key) ?? [];
+    setMessages(restored);
+    setActiveConversationKey(key);
+    methods.triggerEvent({
+      name: 'onConversationChange',
+      event: { key, previousKey },
+    });
+  }
+
+  function handleNewConversation() {
+    saveCurrentMessages();
+    const conversation = createConversation();
+    setConversationItems((prev) => [...prev, conversation]);
+    setActiveConversationKey(conversation.key);
+    setMessages([]);
+    methods.triggerEvent({
+      name: 'onNewConversation',
+      event: { key: conversation.key, label: conversation.label },
+    });
+  }
 
   function handleSend(text) {
     if (!text.trim()) return;
@@ -60,28 +130,49 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       id={blockId}
       style={{
         display: 'flex',
-        flexDirection: 'column',
         height: properties.height ?? 'calc(100dvh - 170px)',
-        maxWidth: properties.maxWidth ?? 800,
-        margin: '0 auto',
-        width: '100%',
       }}
     >
-      <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty ? (
-          <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
-        ) : (
-          <MessageList messages={messages} isStreaming={isStreaming} config={messagesConfig} />
-        )}
-      </div>
-      <div style={{ padding: '8px 0 16px' }}>
-        <Sender
-          ref={senderRef}
-          placeholder={sender?.placeholder ?? 'Type a message...'}
-          onSubmit={handleSend}
-          onCancel={stop}
-          loading={isStreaming}
+      {conversationsEnabled && (
+        <ConversationSidebar
+          items={conversationItems}
+          activeKey={activeConversationKey}
+          onConversationChange={handleConversationChange}
+          onNewConversation={handleNewConversation}
         />
+      )}
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: properties.maxWidth ?? 800,
+          margin: '0 auto',
+          width: '100%',
+        }}
+      >
+        <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
+          {isEmpty ? (
+            <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
+          ) : (
+            <MessageList
+              messages={messages}
+              isStreaming={isBusy}
+              config={messageDisplay}
+              addToolApprovalResponse={addToolApprovalResponse}
+            />
+          )}
+        </div>
+        <div style={{ padding: '8px 0 16px' }}>
+          <Sender
+            ref={senderRef}
+            placeholder={sender?.placeholder ?? 'Type a message...'}
+            onSubmit={handleSend}
+            onCancel={stop}
+            loading={isBusy}
+          />
+        </div>
       </div>
     </div>
   );

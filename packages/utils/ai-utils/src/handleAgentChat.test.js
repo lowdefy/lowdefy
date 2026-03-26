@@ -37,6 +37,20 @@ jest.unstable_mockModule('ai', () => ({
   stepCountIs: mockStepCountIs,
 }));
 
+const mockCreateMCPClient = jest.fn();
+jest.unstable_mockModule('@ai-sdk/mcp', () => ({
+  createMCPClient: mockCreateMCPClient,
+}));
+
+class MockStdioMCPTransport {
+  constructor(config) {
+    this.config = config;
+  }
+}
+jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
+  Experimental_StdioMCPTransport: MockStdioMCPTransport,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
 test('creates ToolLoopAgent with correct parameters', async () => {
@@ -55,7 +69,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
 
   const messages = [{ role: 'user', content: 'Hello' }];
   const agent = {
-    tools: ['search'],
+    tools: [{ endpointId: 'search' }],
     properties: {
       model: 'claude-3-5-sonnet',
       instructions: 'You are a helpful assistant.',
@@ -88,7 +102,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
     agent: expect.any(MockToolLoopAgent),
     uiMessages: messages,
   });
-  expect(result).toEqual({ type: 'web-response' });
+  expect(result).toEqual({ response: { type: 'web-response' } });
 });
 
 test('builds tools from endpoint configs', async () => {
@@ -107,7 +121,7 @@ test('builds tools from endpoint configs', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['search'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'search' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -195,7 +209,7 @@ test('throws when tool endpoint execution fails with error message', async () =>
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['db-query'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -222,7 +236,7 @@ test('throws generic message when tool endpoint fails without error message', as
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['db-query'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'db-query' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -247,7 +261,10 @@ test('builds multiple tools from multiple endpoint configs', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['search', 'write'], properties: { model: 'gpt-4o' } },
+      agent: {
+        tools: [{ endpointId: 'search' }, { endpointId: 'write' }],
+        properties: { model: 'gpt-4o' },
+      },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -275,7 +292,7 @@ test('tool execute returns null when endpoint response is null', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['nullable'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'nullable' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -303,7 +320,7 @@ test('cleanBuildArtifact strips non-enumerable serializer markers from payload s
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['schema-test'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'schema-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint: jest.fn(), getEndpointConfig },
@@ -332,7 +349,7 @@ test('tool execute cleans build artifact markers from response', async () => {
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: ['response-test'], properties: { model: 'gpt-4o' } },
+      agent: { tools: [{ endpointId: 'response-test' }], properties: { model: 'gpt-4o' } },
       messages: [],
     },
     context: { callEndpoint, getEndpointConfig },
@@ -524,4 +541,322 @@ test('empty tools array produces empty tools object', async () => {
 
   expect(lastAgentConfig.tools).toEqual({});
   expect(mockTool).not.toHaveBeenCalled();
+});
+
+test('tool with confirm true sets needsApproval', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Dangerous tool',
+    payloadSchema: { type: 'object' },
+  });
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'dangerous', confirm: true }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+  expect(mockTool).toHaveBeenCalledWith(expect.objectContaining({ needsApproval: true }));
+});
+
+test('tool without confirm does not set needsApproval', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Normal tool',
+    payloadSchema: { type: 'object' },
+  });
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'normal' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig },
+  });
+  expect(mockTool).toHaveBeenCalledWith(
+    expect.not.objectContaining({ needsApproval: expect.anything() })
+  );
+});
+
+test('creates MCP clients from agent mcp config', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({ 'mcp-search': { description: 'MCP search' } }),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const evaluateOperators = jest.fn((input) => input);
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://mcp.example.com', transport: 'http' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn(), evaluateOperators },
+  });
+
+  expect(mockCreateMCPClient).toHaveBeenCalledWith({
+    transport: { type: 'http', url: 'https://mcp.example.com' },
+  });
+  expect(lastAgentConfig.tools).toHaveProperty('mcp-search');
+});
+
+test('endpoint tools take precedence over MCP tools on name conflict', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({ search: { description: 'MCP search' } }),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Endpoint search',
+    payloadSchema: { type: 'object' },
+  });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [{ endpointId: 'search' }],
+        mcp: [{ url: 'https://mcp.example.com' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig,
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP tool "search"'));
+  consoleSpy.mockRestore();
+});
+
+test('MCP source with confirm applies needsApproval to all tools', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({
+      'mcp-tool-a': { description: 'A' },
+      'mcp-tool-b': { description: 'B' },
+    }),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://mcp.example.com', confirm: true }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(lastAgentConfig.tools['mcp-tool-a']).toEqual(
+    expect.objectContaining({ needsApproval: true })
+  );
+});
+
+test('unreachable MCP server logs warning and continues', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  mockCreateMCPClient.mockRejectedValue(new Error('Connection refused'));
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://unreachable.example.com' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('unreachable'));
+  expect(result.response).toEqual({ type: 'web-response' });
+  consoleSpy.mockRestore();
+});
+
+test('MCP clients closed on finish', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const mockClose = jest.fn().mockResolvedValue(undefined);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({ 'mcp-tool': { description: 'Tool' } }),
+    close: mockClose,
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://mcp.example.com' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  // Trigger the composed onFinish callback
+  expect(lastAgentConfig.onFinish).toEqual(expect.any(Function));
+  await lastAgentConfig.onFinish({ text: 'done' });
+  expect(mockClose).toHaveBeenCalled();
+});
+
+test('stdio MCP source creates StdioMCPTransport with command and args', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const mockClient = {
+    tools: jest.fn().mockResolvedValue({ 'aws-docs': { description: 'Search AWS docs' } }),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [
+          {
+            transport: 'stdio',
+            command: 'npx',
+            args: ['-y', '@awslabs/aws-documentation-mcp-server'],
+            env: { AWS_REGION: 'us-east-1' },
+          },
+        ],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(mockCreateMCPClient).toHaveBeenCalledWith({
+    transport: expect.any(MockStdioMCPTransport),
+  });
+  const transport = mockCreateMCPClient.mock.calls[0][0].transport;
+  expect(transport.config.command).toBe('npx');
+  expect(transport.config.args).toEqual(['-y', '@awslabs/aws-documentation-mcp-server']);
+  expect(transport.config.env).toEqual(expect.objectContaining({ AWS_REGION: 'us-east-1' }));
+  expect(lastAgentConfig.tools['aws-docs']).toBeDefined();
+});
+
+test('no mcp config produces no MCP clients', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(mockCreateMCPClient).not.toHaveBeenCalled();
+});
+
+test('MCP tool listing failure logs warning and continues', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+  const mockClient = {
+    tools: jest.fn().mockRejectedValue(new Error('Tool listing timed out')),
+    close: jest.fn().mockResolvedValue(undefined),
+  };
+  mockCreateMCPClient.mockResolvedValue(mockClient);
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const result = await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        mcp: [{ url: 'https://mcp.example.com' }],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      evaluateOperators: jest.fn((x) => x),
+    },
+  });
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('tool listing failed'));
+  expect(result.response).toEqual({ type: 'web-response' });
+  consoleSpy.mockRestore();
 });

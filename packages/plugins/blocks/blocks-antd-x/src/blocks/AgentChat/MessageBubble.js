@@ -18,6 +18,8 @@ import React from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { ThoughtChain, Think } from '@ant-design/x';
 
+import ToolApproval from './ToolApproval.js';
+
 // Detects tool-call parts from AI SDK v6's dynamic part types.
 // Tool parts have type `tool-${toolName}` or `dynamic-tool`, not a generic `tool-invocation`.
 function getToolInfo(part) {
@@ -46,7 +48,7 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageBubble({ content, isStreaming, parts, config }) {
+function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
@@ -117,6 +119,33 @@ function MessageBubble({ content, isStreaming, parts, config }) {
         if (segment.category === 'tool' && showThoughtChain) {
           const items = segment.parts.map((part) => {
             const tool = getToolInfo(part);
+
+            if (tool.state === 'output-denied') {
+              return {
+                key: tool.toolCallId,
+                title: tool.toolName,
+                description: 'Tool execution was rejected',
+                status: 'error',
+              };
+            }
+
+            if (tool.state === 'approval-requested' && part.approval?.id) {
+              return {
+                key: tool.toolCallId,
+                title: tool.toolName,
+                description: (
+                  <ToolApproval
+                    toolName={tool.toolName}
+                    input={tool.input}
+                    approvalId={part.approval.id}
+                    onApprove={(id) => addToolApprovalResponse?.({ id, approved: true })}
+                    onReject={(id) => addToolApprovalResponse?.({ id, approved: false })}
+                  />
+                ),
+                status: 'loading',
+              };
+            }
+
             let status = 'loading';
             if (tool.state === 'output-available') {
               status = 'success';
