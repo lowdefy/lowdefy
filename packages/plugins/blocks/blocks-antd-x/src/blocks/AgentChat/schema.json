@@ -42,6 +42,25 @@
         "actions": {
           "type": "array",
           "items": { "type": "string", "enum": ["copy", "feedback"] }
+        },
+        "roles": {
+          "type": "object",
+          "properties": {
+            "assistant": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" }
+              }
+            }
+          }
         }
       }
     },
