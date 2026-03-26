@@ -23,6 +23,9 @@ async function writeTheme({ components, context }) {
   if (!type.isObject(components.theme)) {
     throw new Error('Theme is not an object.');
   }
+  if (type.isNone(components.theme.darkMode)) {
+    components.theme.darkMode = 'system';
+  }
   await context.writeBuildArtifact('theme.json', serializer.serializeToString(components.theme));
 }
 

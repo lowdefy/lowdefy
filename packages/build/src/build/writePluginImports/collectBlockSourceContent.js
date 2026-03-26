@@ -18,8 +18,6 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'node:module';
 
-const require = createRequire(import.meta.url);
-
 // Extract all string literals from JS source that could be Tailwind class candidates.
 // We read the raw JS text — no AST parsing needed. Tailwind's scanner does the same:
 // it treats every word-like token as a potential class candidate.
@@ -41,7 +39,17 @@ function readJsFiles(distDir) {
   return content.join('\n');
 }
 
-function collectBlockSourceContent({ components }) {
+function collectBlockSourceContent({ components, serverDirectory }) {
+  // Resolve packages from the server directory, not from @lowdefy/build's own location.
+  // In production, @lowdefy/build is installed inside .lowdefy/server/node_modules/.
+  // With pnpm, import.meta.url resolves to the .pnpm store where only @lowdefy/build's
+  // own declared deps are visible. Block packages are deps of the server, not of
+  // @lowdefy/build, so require.resolve from import.meta.url silently fails.
+  // Rooting at the server's package.json ensures block packages are always reachable.
+  const requireFromServer = createRequire(
+    path.join(serverDirectory, 'package.json')
+  );
+
   const packages = [
     ...new Set((components.imports?.blocks ?? []).map((b) => b.package)),
   ];
@@ -52,11 +60,11 @@ function collectBlockSourceContent({ components }) {
     try {
       // Resolve the package entry to find its real location on disk.
       // This follows pnpm symlinks, yarn PnP, npm hoisting — any install strategy.
-      const entryPath = require.resolve(`${packageName}/blocks`);
+      const entryPath = requireFromServer.resolve(`${packageName}/blocks`);
       const distDir = path.dirname(entryPath);
       allContent.push(readJsFiles(distDir));
     } catch {
-      // Package not resolvable from build context (e.g., custom plugin not installed) — skip.
+      // Package not resolvable from server context (e.g., custom plugin not installed) — skip.
     }
   }
 

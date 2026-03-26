@@ -28,6 +28,7 @@ test('_media full media object', () => {
     size: 'xs',
     width: 500,
     darkMode: false,
+    darkModePreference: 'system',
   });
 });
 
@@ -94,7 +95,7 @@ test('_media darkMode returns false when no localStorage and no matchMedia', () 
   ).toEqual(false);
 });
 
-test('_media darkMode reads from localStorage', () => {
+test('_media darkMode returns true when preference is dark', () => {
   expect(
     media({
       params: 'darkMode',
@@ -103,11 +104,14 @@ test('_media darkMode reads from localStorage', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'true' },
+          localStorage: { getItem: () => 'dark' },
         },
       },
     })
   ).toEqual(true);
+});
+
+test('_media darkMode returns false when preference is light', () => {
   expect(
     media({
       params: 'darkMode',
@@ -116,14 +120,14 @@ test('_media darkMode reads from localStorage', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'false' },
+          localStorage: { getItem: () => 'light' },
         },
       },
     })
   ).toEqual(false);
 });
 
-test('_media darkMode falls back to prefers-color-scheme', () => {
+test('_media darkMode follows system preference when preference is system', () => {
   expect(
     media({
       params: 'darkMode',
@@ -132,7 +136,7 @@ test('_media darkMode falls back to prefers-color-scheme', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => null },
+          localStorage: { getItem: () => 'system' },
           matchMedia: (query) => ({
             matches: query === '(prefers-color-scheme: dark)',
           }),
@@ -140,6 +144,63 @@ test('_media darkMode falls back to prefers-color-scheme', () => {
       },
     })
   ).toEqual(true);
+});
+
+test('_media darkMode falls back to system preference when no localStorage', () => {
+  expect(
+    media({
+      params: 'darkMode',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          matchMedia: (query) => ({
+            matches: query === '(prefers-color-scheme: dark)',
+          }),
+        },
+      },
+    })
+  ).toEqual(true);
+});
+
+test('_media darkModePreference returns system when no localStorage', () => {
+  expect(
+    media({
+      params: 'darkModePreference',
+      location: 'locationId',
+      globals: { window: { innerHeight: 300, innerWidth: 500 } },
+    })
+  ).toEqual('system');
+});
+
+test('_media darkModePreference returns stored preference', () => {
+  expect(
+    media({
+      params: 'darkModePreference',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          localStorage: { getItem: () => 'dark' },
+        },
+      },
+    })
+  ).toEqual('dark');
+  expect(
+    media({
+      params: 'darkModePreference',
+      location: 'locationId',
+      globals: {
+        window: {
+          innerHeight: 300,
+          innerWidth: 500,
+          localStorage: { getItem: () => 'light' },
+        },
+      },
+    })
+  ).toEqual('light');
 });
 
 test('_media throw on no innerWidth', () => {

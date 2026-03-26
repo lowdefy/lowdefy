@@ -16,9 +16,14 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
+function getDarkModePreference(window) {
+  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+}
+
 function getDarkMode(window) {
-  const stored = window.localStorage?.getItem('lowdefy_darkMode');
-  if (stored !== null) return stored === 'true';
+  const preference = getDarkModePreference(window);
+  if (preference === 'dark') return true;
+  if (preference === 'light') return false;
   return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
 }
 
@@ -61,6 +66,7 @@ function _media({ arrayIndices, location, params, globals }) {
     width: window.innerWidth,
     height: window.innerHeight,
     darkMode: getDarkMode(window),
+    darkModePreference: getDarkModePreference(window),
   };
   return getFromObject({
     arrayIndices,

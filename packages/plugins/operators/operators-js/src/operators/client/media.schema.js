@@ -20,7 +20,7 @@ export default {
     oneOf: [
       {
         type: 'string',
-        enum: ['size', 'width', 'height', 'darkMode'],
+        enum: ['size', 'width', 'height', 'darkMode', 'darkModePreference'],
         description: 'Media property to return.',
       },
       { type: 'boolean', enum: [true], description: 'Return all media data.' },
@@ -29,7 +29,7 @@ export default {
         properties: {
           key: {
             type: 'string',
-            enum: ['size', 'width', 'height', 'darkMode'],
+            enum: ['size', 'width', 'height', 'darkMode', 'darkModePreference'],
             description: 'Media property to return.',
           },
           default: {

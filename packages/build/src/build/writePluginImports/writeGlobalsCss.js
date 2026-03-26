@@ -124,10 +124,12 @@ ${themeVars}
   }
 
   // Collect Tailwind class candidates from block plugin JS source files.
-  // This resolves real paths (follows pnpm/yarn symlinks) so it works with
-  // any package manager. Replaces the @source node_modules glob which can't
-  // follow pnpm symlinks to the .pnpm store.
-  const blockContent = collectBlockSourceContent({ components });
+  // Resolves from the server directory so block packages are reachable regardless
+  // of package manager (pnpm strict isolation, yarn PnP, npm hoisting).
+  const blockContent = collectBlockSourceContent({
+    components,
+    serverDirectory: context.directories.server,
+  });
   if (blockContent) {
     await writeFile(
       path.join(context.directories.server, 'lowdefy-build', 'tailwind', '_blocks.html'),

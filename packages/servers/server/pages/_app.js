@@ -54,7 +54,10 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
-  const algorithm = useDarkMode(lowdefyRef.current.theme?.antd?.algorithm);
+  const algorithm = useDarkMode({
+    baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+    configDarkMode: lowdefyRef.current.theme?.darkMode,
+  });
 
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {

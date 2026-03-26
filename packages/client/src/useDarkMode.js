@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { theme as antdTheme } from 'antd';
 
 const algorithmMap = {
@@ -30,22 +30,60 @@ function resolveAlgorithm(algorithm) {
   return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
 }
 
-function mergeAlgorithm(baseAlgorithm, darkMode) {
-  if (!darkMode) return baseAlgorithm;
+function stripDarkFromAlgorithm(algorithm) {
+  if (Array.isArray(algorithm)) {
+    const filtered = algorithm.filter((a) => a !== 'dark');
+    return filtered.length > 0 ? filtered : 'default';
+  }
+  if (algorithm === 'dark') return 'default';
+  return algorithm;
+}
+
+function mergeAlgorithm(baseAlgorithm, isDark) {
+  if (!isDark) return baseAlgorithm;
   const base = Array.isArray(baseAlgorithm) ? baseAlgorithm : baseAlgorithm ? [baseAlgorithm] : [];
-  if (base.includes('dark')) return base;
   return [...base, 'dark'];
 }
 
-function useDarkMode(baseAlgorithm) {
-  const [darkMode, setDarkMode] = useState(() => {
-    const stored = window.localStorage?.getItem('lowdefy_darkMode');
-    if (stored !== null) return stored === 'true';
+function resolveIsDark({ configDarkMode, userPreference, systemIsDark }) {
+  if (configDarkMode === 'dark') return true;
+  if (configDarkMode === 'light') return false;
+  // configDarkMode is 'system' or undefined — user preference decides
+  if (userPreference === 'dark') return true;
+  if (userPreference === 'light') return false;
+  // userPreference is 'system' — follow OS
+  return systemIsDark;
+}
+
+function useDarkMode({ baseAlgorithm, configDarkMode }) {
+  const cleanAlgorithm = stripDarkFromAlgorithm(baseAlgorithm);
+
+  const [userPreference, setUserPreference] = useState(() => {
+    return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+  });
+
+  const [systemIsDark, setSystemIsDark] = useState(() => {
     return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
   });
-  window.__lowdefy_setDarkMode = setDarkMode;
 
-  return resolveAlgorithm(mergeAlgorithm(baseAlgorithm, darkMode));
+  // Listen for OS theme changes
+  useEffect(() => {
+    const mql = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!mql?.addEventListener) return;
+    const handler = (e) => setSystemIsDark(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  const setPreference = useCallback((newPref) => {
+    window.localStorage?.setItem('lowdefy_darkMode', newPref);
+    setUserPreference(newPref);
+  }, []);
+
+  window.__lowdefy_setDarkMode = setPreference;
+
+  const isDark = resolveIsDark({ configDarkMode, userPreference, systemIsDark });
+  return resolveAlgorithm(mergeAlgorithm(cleanAlgorithm, isDark));
 }
 
 export default useDarkMode;

@@ -118,14 +118,14 @@ import { buildBlockSchema } from '@lowdefy/block-utils';
 
 const schema = buildBlockSchema(meta);
 // Generates schema with: id, type, layout, visible, required, properties,
-// class (with /block + /{cssKey} entries), style, events
+// class (with .block + .{cssKey} entries), style, events
 // Containers also get: blocks, areas
 ```
 
 The generated schema includes:
 
-- **`class`** — validates `/block` and `/{cssKey}` entries from `meta.cssKeys`
-- **`style`** — validates `/block` and `/{cssKey}` entries for inline styles
+- **`class`** — validates `.block` and `.{cssKey}` entries from `meta.cssKeys`
+- **`style`** — validates `.block` and `.{cssKey}` entries for inline styles
 - **`events`** — validates event names from `meta.events`
 - **`properties`** — uses `meta.properties` directly
 - **Container blocks** (`meta.category === 'container'`) also get `blocks` and `areas` properties
