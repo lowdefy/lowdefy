@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
@@ -37,26 +37,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   } = properties;
   const senderRef = useRef(null);
 
-  // --- Conversation state (managed internally when conversations.enabled) ---
-  const conversationsEnabled = conversationsConfig?.enabled;
-  const conversationCounterRef = useRef(0);
-  const conversationMapRef = useRef(new Map());
-
-  function createConversation(label) {
-    conversationCounterRef.current += 1;
-    const count = conversationCounterRef.current;
-    const key = `conv_${Date.now()}_${count}`;
-    return { key, label: label ?? `Chat ${count}` };
-  }
-
-  const [conversationItems, setConversationItems] = useState(() => {
-    if (!conversationsEnabled) return [];
-    const first = createConversation();
-    return [first];
-  });
-  const [activeConversationKey, setActiveConversationKey] = useState(
-    () => conversationItems[0]?.key ?? null
-  );
+  // Sidebar driven entirely by external config
+  const showSidebar = conversationsConfig?.enabled;
+  const sidebarItems = conversationsConfig?.items ?? [];
+  const activeKey = conversationsConfig?.activeKey;
 
   const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
@@ -85,18 +69,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
 
-  // Save current messages into the conversation map.
-  const saveCurrentMessages = useCallback(() => {
-    if (activeConversationKey) {
-      conversationMapRef.current.set(activeConversationKey, [...messages]);
-    }
-  }, [activeConversationKey, messages]);
-
   function handleConversationChange(key, previousKey) {
-    saveCurrentMessages();
-    const restored = conversationMapRef.current.get(key) ?? [];
-    setMessages(restored);
-    setActiveConversationKey(key);
     methods.triggerEvent({
       name: 'onConversationChange',
       event: { key, previousKey },
@@ -104,14 +77,9 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   }
 
   function handleNewConversation() {
-    saveCurrentMessages();
-    const conversation = createConversation();
-    setConversationItems((prev) => [...prev, conversation]);
-    setActiveConversationKey(conversation.key);
-    setMessages([]);
     methods.triggerEvent({
       name: 'onNewConversation',
-      event: { key: conversation.key, label: conversation.label },
+      event: {},
     });
   }
 
@@ -133,10 +101,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         height: properties.height ?? 'calc(100dvh - 170px)',
       }}
     >
-      {conversationsEnabled && (
+      {showSidebar && (
         <ConversationSidebar
-          items={conversationItems}
-          activeKey={activeConversationKey}
+          items={sidebarItems}
+          activeKey={activeKey}
           onConversationChange={handleConversationChange}
           onNewConversation={handleNewConversation}
         />
