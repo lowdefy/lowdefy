@@ -14,7 +14,14 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
+import {
+  ToolLoopAgent,
+  createAgentUIStreamResponse,
+  tool,
+  jsonSchema,
+  stepCountIs,
+  convertToModelMessages,
+} from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { serializer } from '@lowdefy/helpers';
@@ -65,7 +72,7 @@ function createHookCallbacks({ hooks, callEndpoint }) {
   return callbacks;
 }
 
-async function handleAgentChat({ connection, properties, context }) {
+async function handleAgentChat({ connection, properties, context, format }) {
   const { agent, messages } = properties;
 
   const tools = {};
@@ -172,6 +179,14 @@ async function handleAgentChat({ connection, properties, context }) {
     ...hookCallbacks,
   });
 
+  if (format === 'text') {
+    const result = await agentInstance.stream({
+      messages: convertToModelMessages(messages),
+    });
+    return { response: result.toTextStreamResponse() };
+  }
+
+  // Default: ui-message (existing behavior)
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
