@@ -37,6 +37,12 @@ function useAgentEvents({ messages, status, methods }) {
             role: lastAssistantMessage.role,
             content: textContent,
             messageId: lastAssistantMessage.id,
+            parts: lastAssistantMessage.parts,
+            messages: messages.map((m) => ({
+              id: m.id,
+              role: m.role,
+              parts: m.parts,
+            })),
           },
         });
       }
