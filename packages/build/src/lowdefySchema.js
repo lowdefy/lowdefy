@@ -1648,6 +1648,43 @@ export default {
         type: 'App "agents" should be an array.',
       },
     },
+    mcp: {
+      type: 'object',
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+      },
+      properties: {
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        description: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "description" should be a string.',
+          },
+        },
+        tools: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          errorMessage: {
+            type: 'MCP "tools" should be an array of strings.',
+          },
+        },
+      },
+    },
     connections: {
       type: 'array',
       items: {
