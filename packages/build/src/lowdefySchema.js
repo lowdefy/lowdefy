@@ -304,6 +304,83 @@ export default {
             },
           },
         },
+        agents: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.agents" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.agents.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Agent ids for which authentication is required. When specified, all unspecified agents will not have an external API.',
+                errorMessage: {
+                  type: 'App "auth.agents.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.agents.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Agent ids for which authentication is not required. When specified, all unspecified agents will be protected.',
+                errorMessage: {
+                  type: 'App "auth.agents.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.agents.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.agents.roles" should be an object.',
+              },
+            },
+          },
+        },
         api: {
           type: 'object',
           additionalProperties: false,
@@ -498,6 +575,48 @@ export default {
               required: {
                 id: 'Auth event should have required property "id".',
                 type: 'Auth event should have required property "type".',
+              },
+            },
+          },
+        },
+        jwt: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "auth.jwt" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            secret: {},
+            algorithm: {
+              type: 'string',
+              enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512'],
+              default: 'HS256',
+              errorMessage: {
+                type: 'App "auth.jwt.algorithm" should be a string.',
+                enum: 'App "auth.jwt.algorithm" should be one of HS256, HS384, HS512, RS256, RS384, RS512.',
               },
             },
           },

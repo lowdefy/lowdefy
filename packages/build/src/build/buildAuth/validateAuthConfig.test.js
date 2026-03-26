@@ -24,12 +24,16 @@ test('validateAuthConfig no auth defined', () => {
   const result = validateAuthConfig({ components, context });
   expect(result).toEqual({
     auth: {
+      agents: {
+        roles: {},
+      },
       api: {
         roles: {},
       },
       authPages: {},
       callbacks: [],
       events: [],
+      jwt: {},
       pages: {
         roles: {},
       },
