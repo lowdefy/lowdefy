@@ -97,6 +97,18 @@
           }
         }
       }
+    },
+    "display": {
+      "type": "string",
+      "enum": ["inline", "drawer"]
+    },
+    "drawer": {
+      "type": "object",
+      "properties": {
+        "placement": { "type": "string", "enum": ["left", "right", "top", "bottom"] },
+        "width": { "type": "number" },
+        "title": { "type": "string" }
+      }
     }
   },
   "required": ["agentId"]
