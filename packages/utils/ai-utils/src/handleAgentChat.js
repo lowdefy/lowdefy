@@ -181,6 +181,7 @@ async function handleAgentChat({ connection, properties, context }) {
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
+    sendSources: agent.properties.sendSources,
     ...(hasOnFinishHooks || hasMcpClients
       ? {
           onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {

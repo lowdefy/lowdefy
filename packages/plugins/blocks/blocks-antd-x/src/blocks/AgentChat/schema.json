@@ -39,6 +39,7 @@
           "enum": ["summary", "full", "none"],
           "default": "summary"
         },
+        "showSources": { "type": "boolean" },
         "actions": {
           "type": "array",
           "items": { "type": "string", "enum": ["copy", "feedback"] }
