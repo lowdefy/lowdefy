@@ -33,8 +33,8 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-// Strip non-serializable fields from AI SDK event objects before sending as payload.
-// messages are excluded — hook endpoints receive only step-level metadata, not full message history.
+// Strip non-serializable fields from agent-level hook events before sending as payload.
+// messages excluded here — the stream-level onFinish sends UIMessage[] directly.
 function cleanHookEvent(event) {
   const clean = {};
   for (const [key, value] of Object.entries(event)) {
@@ -181,7 +181,7 @@ async function handleAgentChat({ connection, properties, context }) {
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
-    ...((hasOnFinishHooks || hasMcpClients)
+    ...(hasOnFinishHooks || hasMcpClients
       ? {
           onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
             if (hasOnFinishHooks) {
