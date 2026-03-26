@@ -84,24 +84,24 @@ function buildModules({ components, context }) {
 
     // Process pages
     for (const page of manifest.pages ?? []) {
-      const scoped = { ...page, id: `${entry.id}/${page.id}` };
+      page.id = `${entry.id}/${page.id}`;
       components.pages = components.pages ?? [];
-      components.pages.push(scoped);
+      components.pages.push(page);
     }
 
     // Process connections (skip remapped -- app provides those)
     for (const conn of manifest.connections ?? []) {
       if (remapping[conn.id]) continue;
-      const scoped = { ...conn, id: `${entry.id}/${conn.id}` };
+      conn.id = `${entry.id}/${conn.id}`;
       components.connections = components.connections ?? [];
-      components.connections.push(scoped);
+      components.connections.push(conn);
     }
 
     // Process API endpoints
     for (const endpoint of manifest.api ?? []) {
-      const scoped = { ...endpoint, id: `${entry.id}/${endpoint.id}` };
+      endpoint.id = `${entry.id}/${endpoint.id}`;
       components.api = components.api ?? [];
-      components.api.push(scoped);
+      components.api.push(endpoint);
     }
   }
 

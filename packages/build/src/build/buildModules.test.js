@@ -292,13 +292,24 @@ test('buildModules processes multiple module entries without ID collisions', () 
 });
 
 test('buildModules processes same module package with different entry IDs', () => {
-  const manifest = {
-    pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
-    connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
-    api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
-  };
-  const entry1 = makeModuleEntry({ id: 'team-users', manifest });
-  const entry2 = makeModuleEntry({ id: 'client-users', manifest });
+  // Each module entry gets its own resolved manifest (per-entry vars in Phase 1),
+  // so manifests are never shared across entries.
+  const entry1 = makeModuleEntry({
+    id: 'team-users',
+    manifest: {
+      pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
+      api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
+    },
+  });
+  const entry2 = makeModuleEntry({
+    id: 'client-users',
+    manifest: {
+      pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
+      api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
+    },
+  });
   const context = makeContext([entry1, entry2]);
   const components = {
     modules: [{ id: 'team-users' }, { id: 'client-users' }],
@@ -651,4 +662,27 @@ test('buildModules handles module with no pages, connections, or api', () => {
   expect(result.pages).toEqual([{ id: 'home' }]);
   expect(result.connections).toBeUndefined();
   expect(result.api).toBeUndefined();
+});
+
+test('buildModules preserves non-enumerable ~r marker on pages', () => {
+  const page = { id: 'dashboard', type: 'PageHeaderMenu', blocks: [] };
+  Object.defineProperty(page, '~r', {
+    value: 'modules/team-users/pages/dashboard.yaml',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const moduleEntry = makeModuleEntry({
+    id: 'team-users',
+    manifest: { pages: [page] },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'team-users' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.pages[0].id).toBe('team-users/dashboard');
+  expect(result.pages[0]['~r']).toBe('modules/team-users/pages/dashboard.yaml');
 });
