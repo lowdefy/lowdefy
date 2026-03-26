@@ -98,7 +98,7 @@ async function writeGlobalsCss({ components, context }) {
 @import "@lowdefy/layout/grid.css";
 
 ${userStylesImport}/* Content sources for Tailwind JIT — block JS content collected at build time */
-@source "../lowdefy-build/tailwind/*.html";
+@source "../lowdefy-build/tailwind/**/*.html";
 
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source */
 @import "./tailwind-candidates.css";
