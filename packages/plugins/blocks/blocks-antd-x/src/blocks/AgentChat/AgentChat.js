@@ -56,6 +56,16 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     },
   });
 
+  // Clear messages when activeKey changes so the new conversation starts clean.
+  // Developers load saved messages via the messages property if needed.
+  const prevActiveKeyRef = useRef(activeKey);
+  useEffect(() => {
+    if (activeKey !== prevActiveKeyRef.current) {
+      prevActiveKeyRef.current = activeKey;
+      setMessages([]);
+    }
+  }, [activeKey, setMessages]);
+
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
   useEffect(() => {
