@@ -18,6 +18,7 @@ import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react'
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
+import { Button } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import ConversationSidebar from './ConversationSidebar.js';
@@ -179,6 +180,19 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           )}
         </div>
         <div style={{ padding: '8px 0 16px' }}>
+          {sender?.suggestions?.length > 0 && isEmpty && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+              {sender.suggestions.map((s, i) => (
+                <Button
+                  key={`suggestion-${i}`}
+                  size="small"
+                  onClick={() => handleSend(s.value ?? s.label)}
+                >
+                  {s.label}
+                </Button>
+              ))}
+            </div>
+          )}
           <Sender
             ref={senderRef}
             placeholder={sender?.placeholder ?? 'Type a message...'}
