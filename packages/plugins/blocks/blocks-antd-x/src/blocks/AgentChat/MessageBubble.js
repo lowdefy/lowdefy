@@ -17,6 +17,8 @@
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { ThoughtChain, Think } from '@ant-design/x';
+import { Button } from 'antd';
+import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
 
@@ -60,7 +62,38 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse }) {
+function MessageActions({ actions, textContent, messageId, onFeedback }) {
+  return (
+    <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+      {actions.includes('copy') && (
+        <Button
+          type="text"
+          size="small"
+          icon={<CopyOutlined />}
+          onClick={() => navigator.clipboard.writeText(textContent)}
+        />
+      )}
+      {actions.includes('feedback') && (
+        <>
+          <Button
+            type="text"
+            size="small"
+            icon={<LikeOutlined />}
+            onClick={() => onFeedback?.({ messageId, rating: 'positive' })}
+          />
+          <Button
+            type="text"
+            size="small"
+            icon={<DislikeOutlined />}
+            onClick={() => onFeedback?.({ messageId, rating: 'negative' })}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse, actions, messageId, onFeedback }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
@@ -76,14 +109,26 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
     return { code: PlainCodeBlock };
   }, [renderMermaid, codeHighlighter]);
 
+  const showActions = actions && actions.length > 0 && !isStreaming;
+
   if (!parts || parts.length === 0) {
     return (
-      <Markdown
-        streaming={isStreaming ? { hasNextChunk: true } : undefined}
-        components={markdownComponents}
-      >
-        {content}
-      </Markdown>
+      <div>
+        <Markdown
+          streaming={isStreaming ? { hasNextChunk: true } : undefined}
+          components={markdownComponents}
+        >
+          {content}
+        </Markdown>
+        {showActions && (
+          <MessageActions
+            actions={actions}
+            textContent={content}
+            messageId={messageId}
+            onFeedback={onFeedback}
+          />
+        )}
+      </div>
     );
   }
 
@@ -130,6 +175,11 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
   }
 
   const lastTextIdx = segments.findLastIndex((s) => s.category === 'text');
+
+  const allTextContent = parts
+    .filter((p) => p.type === 'text')
+    .map((p) => p.text)
+    .join('');
 
   return (
     <div>
@@ -216,6 +266,14 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
         }
         return null;
       })}
+      {showActions && (
+        <MessageActions
+          actions={actions}
+          textContent={allTextContent}
+          messageId={messageId}
+          onFeedback={onFeedback}
+        />
+      )}
     </div>
   );
 }

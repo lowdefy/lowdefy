@@ -125,6 +125,19 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     sendMessage({ text: prompt.label });
   }
 
+  function handleFeedback({ messageId, rating }) {
+    const message = messages.find((msg) => msg.id === messageId);
+    const messageContent =
+      message?.parts
+        ?.filter((part) => part.type === 'text')
+        .map((part) => part.text)
+        .join('') ?? '';
+    methods.triggerEvent({
+      name: 'onFeedback',
+      event: { messageId, messageContent, rating },
+    });
+  }
+
   return (
     <div
       id={blockId}
@@ -161,6 +174,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               isStreaming={isBusy}
               config={messageDisplay}
               addToolApprovalResponse={addToolApprovalResponse}
+              onFeedback={handleFeedback}
             />
           )}
         </div>

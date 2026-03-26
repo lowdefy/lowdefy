@@ -25,6 +25,7 @@ export default {
     onConversationChange: 'Trigger when the user switches conversations.',
     onNewConversation: 'Trigger when the user clicks New Chat.',
     onError: 'Trigger on stream error.',
+    onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
   },
   properties: {
     type: 'object',
