@@ -27,10 +27,11 @@ function cleanBuildArtifact(obj) {
 }
 
 // Strip non-serializable fields from AI SDK event objects before sending as payload.
-function cleanHookEvent(event) {
+function cleanHookEvent(event, { preserveMessages = false } = {}) {
   const clean = {};
   for (const [key, value] of Object.entries(event)) {
-    if (key === 'messages' || key === 'abortSignal') continue;
+    if (key === 'abortSignal') continue;
+    if (key === 'messages' && !preserveMessages) continue;
     if (typeof value === 'function') continue;
     clean[key] = value;
   }
@@ -56,7 +57,8 @@ function createHookCallbacks({ hooks, callEndpoint }) {
     if (!endpointIds || endpointIds.length === 0) continue;
 
     callbacks[sdkKey] = (event) => {
-      const payload = cleanHookEvent(event);
+      const preserveMessages = yamlKey === 'onFinish';
+      const payload = cleanHookEvent(event, { preserveMessages });
       for (const endpointId of endpointIds) {
         callEndpoint(endpointId, { payload }).catch(() => {});
       }

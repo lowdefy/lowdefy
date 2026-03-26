@@ -468,7 +468,86 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
   });
 
   expect(callEndpoint).toHaveBeenCalledWith('log-usage', {
-    payload: { text: 'Hello', totalUsage: { totalTokens: 100 } },
+    payload: {
+      text: 'Hello',
+      totalUsage: { totalTokens: 100 },
+      messages: [{ role: 'user', content: 'hi' }],
+    },
+  });
+});
+
+test('onFinish hook callback preserves messages in cleaned event payload', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const onFinish = lastAgentConfig.onFinish;
+  const messagesPayload = [
+    { role: 'user', content: 'hi' },
+    { role: 'assistant', content: 'hello' },
+  ];
+  onFinish({
+    text: 'hello',
+    totalUsage: { totalTokens: 100 },
+    messages: messagesPayload,
+    abortSignal: new AbortController().signal,
+  });
+
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
+    payload: {
+      text: 'hello',
+      totalUsage: { totalTokens: 100 },
+      messages: messagesPayload,
+    },
+  });
+});
+
+test('non-onFinish hook callbacks strip messages from event payload', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onStepFinish: ['log-step'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const onStepFinish = lastAgentConfig.onStepFinish;
+  onStepFinish({
+    stepType: 'tool-result',
+    messages: [{ role: 'user', content: 'hi' }],
+    abortSignal: new AbortController().signal,
+  });
+
+  expect(callEndpoint).toHaveBeenCalledWith('log-step', {
+    payload: { stepType: 'tool-result' },
   });
 });
 
