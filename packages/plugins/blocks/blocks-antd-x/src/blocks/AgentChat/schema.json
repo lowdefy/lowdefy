@@ -38,6 +38,10 @@
           "type": "string",
           "enum": ["summary", "full", "none"],
           "default": "summary"
+        },
+        "actions": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["copy", "feedback"] }
         }
       }
     },
