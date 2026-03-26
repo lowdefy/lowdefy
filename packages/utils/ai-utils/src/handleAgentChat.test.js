@@ -427,7 +427,6 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
         tools: [],
         hooks: {
           onToolCallFinish: ['save-data'],
-          onFinish: ['log-usage'],
         },
         properties: { model: 'gpt-4o' },
       },
@@ -437,7 +436,6 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
   });
 
   expect(lastAgentConfig.experimental_onToolCallFinish).toEqual(expect.any(Function));
-  expect(lastAgentConfig.onFinish).toEqual(expect.any(Function));
   expect(lastAgentConfig.experimental_onStart).toBeUndefined();
 });
 
@@ -454,7 +452,7 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
     properties: {
       agent: {
         tools: [],
-        hooks: { onFinish: ['log-usage'] },
+        hooks: { onStepFinish: ['log-step'] },
         properties: { model: 'gpt-4o' },
       },
       messages: [],
@@ -462,64 +460,22 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
     context: { callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onFinish = lastAgentConfig.onFinish;
-  onFinish({
-    text: 'Hello',
-    totalUsage: { totalTokens: 100 },
+  const onStepFinish = lastAgentConfig.onStepFinish;
+  onStepFinish({
+    stepType: 'tool-result',
+    usage: { totalTokens: 100 },
     messages: [{ role: 'user', content: 'hi' }],
     abortSignal: new AbortController().signal,
   });
 
-  expect(callEndpoint).toHaveBeenCalledWith('log-usage', {
+  expect(callEndpoint).toHaveBeenCalledWith('log-step', {
     payload: {
-      text: 'Hello',
-      totalUsage: { totalTokens: 100 },
-      messages: [{ role: 'user', content: 'hi' }],
+      stepType: 'tool-result',
+      usage: { totalTokens: 100 },
     },
   });
 });
 
-test('onFinish hook callback preserves messages in cleaned event payload', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
-  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
-
-  await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [],
-        hooks: { onFinish: ['save-conversation'] },
-        properties: { model: 'gpt-4o' },
-      },
-      messages: [],
-    },
-    context: { callEndpoint, getEndpointConfig: jest.fn() },
-  });
-
-  const onFinish = lastAgentConfig.onFinish;
-  const messagesPayload = [
-    { role: 'user', content: 'hi' },
-    { role: 'assistant', content: 'hello' },
-  ];
-  onFinish({
-    text: 'hello',
-    totalUsage: { totalTokens: 100 },
-    messages: messagesPayload,
-    abortSignal: new AbortController().signal,
-  });
-
-  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
-    payload: {
-      text: 'hello',
-      totalUsage: { totalTokens: 100 },
-      messages: messagesPayload,
-    },
-  });
-});
 
 test('non-onFinish hook callbacks strip messages from event payload', async () => {
   mockTool.mockImplementation((def) => def);
@@ -567,7 +523,7 @@ test('hook callback errors do not propagate', async () => {
     properties: {
       agent: {
         tools: [],
-        hooks: { onFinish: ['failing-endpoint'] },
+        hooks: { onStepFinish: ['failing-endpoint'] },
         properties: { model: 'gpt-4o' },
       },
       messages: [],
@@ -575,9 +531,9 @@ test('hook callback errors do not propagate', async () => {
     context: { callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onFinish = lastAgentConfig.onFinish;
+  const onStepFinish = lastAgentConfig.onStepFinish;
   // Should not throw
-  expect(() => onFinish({ text: 'Hello' })).not.toThrow();
+  expect(() => onStepFinish({ stepType: 'tool-result' })).not.toThrow();
 });
 
 test('no hooks produces no callbacks on ToolLoopAgent', async () => {
@@ -817,6 +773,12 @@ test('MCP clients closed on finish', async () => {
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
 
+  let capturedStreamOnFinish;
+  mockCreateAgentUIStreamResponse.mockImplementation((opts) => {
+    capturedStreamOnFinish = opts.onFinish;
+    return { type: 'web-response' };
+  });
+
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
@@ -836,9 +798,9 @@ test('MCP clients closed on finish', async () => {
     },
   });
 
-  // Trigger the composed onFinish callback
-  expect(lastAgentConfig.onFinish).toEqual(expect.any(Function));
-  await lastAgentConfig.onFinish({ text: 'done' });
+  // MCP cleanup now happens via stream-level onFinish
+  expect(capturedStreamOnFinish).toEqual(expect.any(Function));
+  await capturedStreamOnFinish({ messages: [], finishReason: 'stop', isAborted: false });
   expect(mockClose).toHaveBeenCalled();
 });
 

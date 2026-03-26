@@ -34,11 +34,12 @@ function cleanBuildArtifact(obj) {
 }
 
 // Strip non-serializable fields from AI SDK event objects before sending as payload.
-function cleanHookEvent(event, { preserveMessages = false } = {}) {
+// messages are excluded — hook endpoints receive only step-level metadata, not full message history.
+function cleanHookEvent(event) {
   const clean = {};
   for (const [key, value] of Object.entries(event)) {
     if (key === 'abortSignal') continue;
-    if (key === 'messages' && !preserveMessages) continue;
+    if (key === 'messages') continue;
     if (typeof value === 'function') continue;
     clean[key] = value;
   }
@@ -46,13 +47,15 @@ function cleanHookEvent(event, { preserveMessages = false } = {}) {
 }
 
 // Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
+// onFinish is intentionally excluded — it is handled at the stream level via
+// createAgentUIStreamResponse so that endpoints receive UIMessage[] (the persisted
+// format developers need) rather than the agent-level CoreMessage[].
 const hookMapping = {
   onStart: 'experimental_onStart',
   onStepStart: 'experimental_onStepStart',
   onToolCallStart: 'experimental_onToolCallStart',
   onToolCallFinish: 'experimental_onToolCallFinish',
   onStepFinish: 'onStepFinish',
-  onFinish: 'onFinish',
 };
 
 function createHookCallbacks({ hooks, callEndpoint }) {
@@ -64,8 +67,7 @@ function createHookCallbacks({ hooks, callEndpoint }) {
     if (!endpointIds || endpointIds.length === 0) continue;
 
     callbacks[sdkKey] = (event) => {
-      const preserveMessages = yamlKey === 'onFinish';
-      const payload = cleanHookEvent(event, { preserveMessages });
+      const payload = cleanHookEvent(event);
       for (const endpointId of endpointIds) {
         callEndpoint(endpointId, { payload }).catch(() => {});
       }
@@ -160,15 +162,6 @@ async function handleAgentChat({ connection, properties, context }) {
     callEndpoint: context.callEndpoint,
   });
 
-  // Compose MCP cleanup with existing onFinish hook
-  if (mcpClients.length > 0) {
-    const originalOnFinish = hookCallbacks.onFinish;
-    hookCallbacks.onFinish = async (event) => {
-      if (originalOnFinish) await originalOnFinish(event);
-      await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
-    };
-  }
-
   const agentInstance = new ToolLoopAgent({
     model,
     instructions: agent.properties.instructions,
@@ -183,16 +176,22 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
+  const hasMcpClients = mcpClients.length > 0;
 
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
-    ...(hasOnFinishHooks
+    ...((hasOnFinishHooks || hasMcpClients)
       ? {
           onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
-            const payload = { messages: finishedMessages, finishReason, isAborted };
-            for (const endpointId of onFinishEndpointIds) {
-              context.callEndpoint(endpointId, { payload }).catch(() => {});
+            if (hasOnFinishHooks) {
+              const payload = { messages: finishedMessages, finishReason, isAborted };
+              for (const endpointId of onFinishEndpointIds) {
+                context.callEndpoint(endpointId, { payload }).catch(() => {});
+              }
+            }
+            if (hasMcpClients) {
+              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
             }
           },
         }
