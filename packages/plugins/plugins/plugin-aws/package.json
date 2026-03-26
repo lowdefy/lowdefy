@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-aws",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,18 +46,18 @@
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\""
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.7.1",
-    "@lowdefy/blocks-antd": "4.7.1",
-    "@lowdefy/helpers": "4.7.1",
+    "@lowdefy/block-utils": "4.7.2",
+    "@lowdefy/blocks-antd": "4.7.2",
+    "@lowdefy/helpers": "4.7.2",
     "antd": "6.3.1",
     "aws-sdk": "2.1459.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.7.1",
-    "@lowdefy/block-dev": "4.7.1",
-    "@lowdefy/jest-yaml-transform": "4.7.1",
+    "@lowdefy/ajv": "4.7.2",
+    "@lowdefy/block-dev": "4.7.2",
+    "@lowdefy/jest-yaml-transform": "4.7.2",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",

@@ -87,6 +87,11 @@ async function shallowBuild(options) {
       throw err;
     }
 
+    // Stop early if buildRefs collected errors (e.g., YAML parse errors).
+    // Failed _ref resolutions leave null entries in arrays — logging now
+    // surfaces the real error before downstream code crashes on nulls.
+    logCollectedErrors(context);
+
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
 

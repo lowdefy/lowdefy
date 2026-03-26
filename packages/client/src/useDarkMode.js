@@ -83,6 +83,7 @@ function useDarkMode({ baseAlgorithm, configDarkMode }) {
   window.__lowdefy_setDarkMode = setPreference;
 
   const isDark = resolveIsDark({ configDarkMode, userPreference, systemIsDark });
+  window.__lowdefy_isDark = isDark;
   return resolveAlgorithm(mergeAlgorithm(cleanAlgorithm, isDark));
 }
 

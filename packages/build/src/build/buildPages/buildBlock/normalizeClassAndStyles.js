@@ -35,7 +35,13 @@ function stripDotPrefix(key) {
   return key.startsWith('.') ? key.slice(1) : key;
 }
 
-function normalizeStyle(block) {
+function getCssKeyNames(block, pageContext) {
+  const blockMeta = pageContext?.context?.blockMetas?.[block.type];
+  if (!blockMeta?.cssKeys) return new Set();
+  return new Set(Object.keys(blockMeta.cssKeys));
+}
+
+function normalizeStyle(block, pageContext) {
   // properties.style → element slot (deprecation: component's own style maps to .element)
   if (!type.isNone(block.properties?.style)) {
     if (!block.style) block.style = {};
@@ -73,13 +79,17 @@ function normalizeStyle(block) {
     block.style = result;
 
     // Validate no nested objects in style slot values (except operators)
+    const validCssKeys = getCssKeyNames(block, pageContext);
     for (const [slotKey, slotStyle] of Object.entries(block.style)) {
       if (!type.isObject(slotStyle) || isOperator(slotStyle)) continue;
       for (const [cssKey, cssValue] of Object.entries(slotStyle)) {
         if (cssKey.startsWith('~')) continue;
         if (type.isObject(cssValue) && !isOperator(cssValue)) {
+          const hint = validCssKeys.has(cssKey)
+            ? ` Did you mean ".${cssKey}"? Use a dot prefix to target CSS slot keys.`
+            : '';
           throw new ConfigError(
-            `Block "${block.blockId}": Style property "${cssKey}" has a nested object value. CSS properties must be simple values (strings, numbers) or operators.`,
+            `Block "${block.blockId}": Style property "${cssKey}" has a nested object value.${hint} CSS properties must be simple values (strings, numbers) or operators.`,
             { configKey: block['~k'] }
           );
         }
@@ -88,23 +98,35 @@ function normalizeStyle(block) {
   }
 }
 
-function normalizeClass(block) {
+function normalizeClass(block, pageContext) {
   if (type.isString(block.class) || type.isArray(block.class)) {
     block.class = { block: block.class };
     return;
   }
-  if (type.isObject(block.class) && Object.keys(block.class).some((k) => k.startsWith('.'))) {
-    const normalized = {};
-    for (const [key, value] of Object.entries(block.class)) {
-      normalized[stripDotPrefix(key)] = value;
+  if (!type.isObject(block.class)) return;
+
+  // Validate: non-dot keys that match cssKeys are likely missing the dot prefix
+  const validCssKeys = getCssKeyNames(block, pageContext);
+  for (const key of Object.keys(block.class)) {
+    if (!key.startsWith('.') && !key.startsWith('~') && validCssKeys.has(key)) {
+      throw new ConfigError(
+        `Block "${block.blockId}": Class key "${key}" matches a CSS slot key but is missing the dot prefix. Did you mean ".${key}"?`,
+        { configKey: block['~k'] }
+      );
     }
-    block.class = normalized;
   }
+
+  // Strip dot prefixes
+  const normalized = {};
+  for (const [key, value] of Object.entries(block.class)) {
+    normalized[stripDotPrefix(key)] = value;
+  }
+  block.class = normalized;
 }
 
 function normalizeClassAndStyles(block, pageContext) {
-  normalizeStyle(block);
-  normalizeClass(block);
+  normalizeStyle(block, pageContext);
+  normalizeClass(block, pageContext);
 }
 
 export default normalizeClassAndStyles;

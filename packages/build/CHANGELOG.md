@@ -1,5 +1,23 @@
 # Change Log
 
+## 4.7.2
+
+### Patch Changes
+
+- 30616048d: fix: Fix dev server build hang when page files contain top-level \_ref.
+
+  The dev server could hang indefinitely at "Building config..." when a page YAML file's entire content was a `_ref`. This caused a self-referencing parent in the ref map, leading to an infinite loop during page source resolution. Also fixed null `lowdefy.yaml` handling in custom plugin type map generation.
+
+  - @lowdefy/operators@4.7.2
+  - @lowdefy/blocks-basic@4.7.2
+  - @lowdefy/blocks-loaders@4.7.2
+  - @lowdefy/operators-js@4.7.2
+  - @lowdefy/ajv@4.7.2
+  - @lowdefy/errors@4.7.2
+  - @lowdefy/helpers@4.7.2
+  - @lowdefy/node-utils@4.7.2
+  - @lowdefy/nunjucks@4.7.2
+
 ## 4.7.1
 
 ### Patch Changes

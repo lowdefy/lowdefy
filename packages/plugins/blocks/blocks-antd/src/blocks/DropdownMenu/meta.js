@@ -127,7 +127,7 @@ export default {
                 shortcut: {
                   type: 'string',
                   description:
-                    'Keyboard shortcut to select this menu item. Use "mod" for Cmd/Ctrl.',
+                    'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
                 },
               },
             },
@@ -176,7 +176,8 @@ export default {
                       },
                       shortcut: {
                         type: 'string',
-                        description: 'Keyboard shortcut. Use "mod" for Cmd/Ctrl.',
+                        description:
+                          'Keyboard shortcut. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
                       },
                     },
                   },

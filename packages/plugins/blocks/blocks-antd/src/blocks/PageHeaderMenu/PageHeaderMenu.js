@@ -115,7 +115,9 @@ const PageHeaderMenu = ({
                             properties.menu,
                             properties.menuLg,
                           ])}
-                          styles={{ element: styles.menu }}
+                          styles={{
+                            element: mergeObjects([{ borderBottom: 'none' }, styles.menu]),
+                          }}
                           rename={{
                             events: {
                               onClick: 'onMenuItemClick',

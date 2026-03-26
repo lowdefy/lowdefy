@@ -21,10 +21,7 @@ import { type } from '@lowdefy/helpers';
 import { buildMenuItems, flattenLinks } from './buildMenuItems.js';
 
 function getDarkMode() {
-  const preference = window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
-  if (preference === 'dark') return true;
-  if (preference === 'light') return false;
-  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+  return window.__lowdefy_isDark ?? false;
 }
 
 function renderNotifications({

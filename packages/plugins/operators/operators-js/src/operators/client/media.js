@@ -21,10 +21,7 @@ function getDarkModePreference(window) {
 }
 
 function getDarkMode(window) {
-  const preference = getDarkModePreference(window);
-  if (preference === 'dark') return true;
-  if (preference === 'light') return false;
-  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+  return window.__lowdefy_isDark ?? false;
 }
 
 const breakpoints = {

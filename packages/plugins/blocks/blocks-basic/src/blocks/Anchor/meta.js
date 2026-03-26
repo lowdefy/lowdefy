@@ -23,7 +23,8 @@ export default {
     icon: 'The icon in the Anchor.',
   },
   events: {
-    onClick: 'Called when Anchor is clicked.',
+    onClick:
+      'Called when Anchor is clicked. Renders a shortcut badge when a shortcut is configured.',
   },
   properties: {
     type: 'object',

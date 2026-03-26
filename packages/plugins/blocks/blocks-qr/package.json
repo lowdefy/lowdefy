@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-qr",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "license": "Apache-2.0",
   "description": "Lowdefy qr blocks.",
   "homepage": "https://lowdefy.com",
@@ -51,14 +51,14 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.7.1",
+    "@lowdefy/block-utils": "4.7.2",
     "html5-qrcode": "2.3.8",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "4.7.1",
-    "@lowdefy/e2e-utils": "4.7.1",
+    "@lowdefy/block-dev-e2e": "4.7.2",
+    "@lowdefy/e2e-utils": "4.7.2",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",

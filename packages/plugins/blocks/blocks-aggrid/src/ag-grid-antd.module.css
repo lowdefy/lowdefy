@@ -1,4 +1,4 @@
-.antdTheme {
+.antdTheme.antdTheme {
   --ag-background-color: var(--ant-color-bg-container);
   --ag-foreground-color: var(--ant-color-text);
   --ag-border-color: var(--ant-color-border);

@@ -139,7 +139,7 @@ export default {
       shortcut: {
         type: 'string',
         description:
-          'Keyboard shortcut to open the modal. Use "mod" for Cmd on Mac, Ctrl elsewhere.',
+          'Keyboard shortcut to open the modal. Renders a shortcut badge on the trigger button (see showShortcut). Use "mod" for Cmd on Mac, Ctrl elsewhere.',
         default: 'mod+k',
       },
       width: {

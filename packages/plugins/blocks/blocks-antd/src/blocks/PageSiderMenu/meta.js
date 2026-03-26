@@ -139,16 +139,6 @@ export default {
             description:
               'Width of the collapsed sidebar, by setting to 0 a special trigger will appear.',
           },
-          collapsible: {
-            type: 'boolean',
-            default: true,
-            description: 'Whether can be collapsed.',
-          },
-          initialCollapsed: {
-            type: 'boolean',
-            default: true,
-            description: 'Set the initial collapsed state.',
-          },
           reverseArrow: {
             type: 'boolean',
             default: false,

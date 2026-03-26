@@ -276,17 +276,17 @@
           - title: Undo
             eventName: onUndo
             icon: AiOutlineUndo
-            shortcut: mod+Z
+            shortcut: alt+z
           - title: Redo
             eventName: onRedo
             icon: AiOutlineRedo
-            shortcut: mod+shift+Z
+            shortcut: alt+shift+z
           - type: divider
           - title: Delete
             eventName: onDelete
             icon: AiOutlineDelete
             danger: true
-            shortcut: mod+Backspace
+            shortcut: alt+Backspace
       events:
         onUndo:
           - id: db_sc_undo_msg

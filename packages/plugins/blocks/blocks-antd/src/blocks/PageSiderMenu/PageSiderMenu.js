@@ -43,7 +43,7 @@ const PageSiderMenu = ({
   properties,
   styles = {},
 }) => {
-  const [openSiderState, setSiderOpen] = useState(!properties.sider?.initialCollapsed);
+  const [openSiderState, setSiderOpen] = useState(true);
   useEffect(() => {
     registerDarkModeMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {

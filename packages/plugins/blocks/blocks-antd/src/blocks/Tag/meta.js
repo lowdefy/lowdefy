@@ -23,7 +23,7 @@ export default {
     icon: 'The icon in the Tag.',
   },
   events: {
-    onClick: 'Called when Tag is clicked.',
+    onClick: 'Called when Tag is clicked. Renders a shortcut badge when a shortcut is configured.',
     onClose: 'Called when Tag close icon is clicked.',
   },
   properties: {

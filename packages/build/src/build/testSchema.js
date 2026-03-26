@@ -68,9 +68,12 @@ function testSchema({ components, context }) {
       const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
       const configKey = findConfigKey({ components, instancePath });
 
+      const propertyName = instancePath[instancePath.length - 1];
       let message = error.message;
       if (error.params?.additionalProperty) {
         message = `${message} - "${error.params.additionalProperty}"`;
+      } else if (propertyName) {
+        message = `"${propertyName}" ${message}`;
       }
 
       const received = getValueAtPath(components, instancePath);

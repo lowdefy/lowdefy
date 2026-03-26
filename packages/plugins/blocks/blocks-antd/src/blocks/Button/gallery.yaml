@@ -465,7 +465,7 @@
         variant: solid
       events:
         onClick:
-          shortcut: mod+s
+          shortcut: mod+shift+s
           try:
             - id: save_msg
               type: DisplayMessage
@@ -483,7 +483,7 @@
         variant: outlined
       events:
         onClick:
-          shortcut: mod+n
+          shortcut: alt+n
           try:
             - id: new_msg
               type: DisplayMessage

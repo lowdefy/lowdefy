@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-utils",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "license": "Apache-2.0",
   "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
@@ -41,8 +41,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "4.7.1",
-    "@lowdefy/helpers": "4.7.1",
+    "@lowdefy/errors": "4.7.2",
+    "@lowdefy/helpers": "4.7.2",
     "clsx": "2.1.1",
     "dompurify": "3.2.4",
     "react": "18.2.0",
