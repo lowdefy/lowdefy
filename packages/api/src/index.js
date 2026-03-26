@@ -24,6 +24,7 @@ import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import verifyJwt from './utils/verifyJwt.js';
 
 export {
   callAgent,
@@ -36,4 +37,5 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  verifyJwt,
 };
