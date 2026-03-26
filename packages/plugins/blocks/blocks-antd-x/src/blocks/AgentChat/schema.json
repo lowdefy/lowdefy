@@ -25,6 +25,8 @@
       "type": "object",
       "properties": {
         "markdownRendering": { "type": "boolean", "default": true },
+        "renderMermaid": { "type": "boolean", "default": true },
+        "codeHighlighter": { "type": "boolean", "default": true },
         "showThoughtChain": { "type": "boolean", "default": true },
         "showReasoning": { "type": "boolean", "default": true },
         "reasoningDisplay": {

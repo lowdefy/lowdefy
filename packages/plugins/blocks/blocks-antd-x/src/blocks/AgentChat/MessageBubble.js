@@ -14,11 +14,23 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { ThoughtChain, Think } from '@ant-design/x';
 
 import ToolApproval from './ToolApproval.js';
+
+// Renders a code block as plain text without syntax highlighting or mermaid rendering.
+function PlainCodeBlock({ children, block, lang }) {
+  if (!block) {
+    return <code>{children}</code>;
+  }
+  return (
+    <pre>
+      <code className={lang ? `language-${lang}` : undefined}>{children}</code>
+    </pre>
+  );
+}
 
 // Detects tool-call parts from AI SDK v6's dynamic part types.
 // Tool parts have type `tool-${toolName}` or `dynamic-tool`, not a generic `tool-invocation`.
@@ -53,10 +65,25 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
+  const renderMermaid = config?.renderMermaid !== false;
+  const codeHighlighter = config?.codeHighlighter !== false;
+
+  // When either mermaid rendering or code highlighting is disabled, override the code component
+  // to render plain code blocks. This prevents mermaid diagrams from being rendered as diagrams
+  // and disables syntax highlighting respectively.
+  const markdownComponents = useMemo(() => {
+    if (renderMermaid && codeHighlighter) return undefined;
+    return { code: PlainCodeBlock };
+  }, [renderMermaid, codeHighlighter]);
 
   if (!parts || parts.length === 0) {
     return (
-      <Markdown streaming={isStreaming ? { hasNextChunk: true } : undefined}>{content}</Markdown>
+      <Markdown
+        streaming={isStreaming ? { hasNextChunk: true } : undefined}
+        components={markdownComponents}
+      >
+        {content}
+      </Markdown>
     );
   }
 
@@ -181,6 +208,7 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
             <Markdown
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
+              components={markdownComponents}
             >
               {text}
             </Markdown>
