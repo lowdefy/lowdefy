@@ -23,6 +23,7 @@ import { PaperClipOutlined } from '@ant-design/icons';
 import { type } from '@lowdefy/helpers';
 
 import ConversationSidebar from './ConversationSidebar.js';
+import DrawerWrapper from './DrawerWrapper.js';
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
@@ -36,6 +37,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     sender,
     conversations: conversationsConfig,
     messages: externalMessages,
+    display,
+    drawer: drawerConfig,
   } = properties;
   const senderRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
@@ -145,12 +148,12 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
-  return (
+  const chatContent = (
     <div
       id={blockId}
       style={{
         display: 'flex',
-        height: properties.height ?? 'calc(100dvh - 170px)',
+        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
       }}
     >
       {showSidebar && (
@@ -241,6 +244,12 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       </div>
     </div>
   );
+
+  if (display === 'drawer') {
+    return <DrawerWrapper config={drawerConfig}>{chatContent}</DrawerWrapper>;
+  }
+
+  return chatContent;
 }
 
 AgentChat.meta = {
