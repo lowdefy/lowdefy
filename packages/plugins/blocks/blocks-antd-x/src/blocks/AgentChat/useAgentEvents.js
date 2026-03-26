@@ -20,6 +20,7 @@ function useAgentEvents({ messages, status, methods }) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
+  const firedUserMessageIds = useRef(new Set());
   const lastMessageCountRef = useRef(0);
 
   // Fire onMessageComplete when streaming finishes
@@ -49,6 +50,36 @@ function useAgentEvents({ messages, status, methods }) {
     }
     prevStatusRef.current = status;
   }, [status, messages, methods]);
+
+  // Fire onUserMessage when a new user message appears
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (
+      lastMessage &&
+      lastMessage.role === 'user' &&
+      !firedUserMessageIds.current.has(lastMessage.id)
+    ) {
+      firedUserMessageIds.current.add(lastMessage.id);
+      const textContent = lastMessage.parts
+        ?.filter((p) => p.type === 'text')
+        .map((p) => p.text)
+        .join('');
+      methods.triggerEvent({
+        name: 'onUserMessage',
+        event: {
+          role: 'user',
+          messageId: lastMessage.id,
+          content: textContent,
+          parts: lastMessage.parts,
+          messages: messages.map((m) => ({
+            id: m.id,
+            role: m.role,
+            parts: m.parts,
+          })),
+        },
+      });
+    }
+  }, [messages, methods]);
 
   // Scan for new tool calls and results
   useEffect(() => {
@@ -98,6 +129,7 @@ function useAgentEvents({ messages, status, methods }) {
     if (messages.length < lastMessageCountRef.current) {
       firedToolCallIds.current.clear();
       firedToolResultIds.current.clear();
+      firedUserMessageIds.current.clear();
     }
     lastMessageCountRef.current = messages.length;
   }, [messages.length]);
