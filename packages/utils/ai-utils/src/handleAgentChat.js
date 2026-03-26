@@ -21,6 +21,7 @@ import {
   tool,
   jsonSchema,
   stepCountIs,
+  convertToModelMessages,
 } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
@@ -76,7 +77,7 @@ function createHookCallbacks({ hooks, callEndpoint }) {
   return callbacks;
 }
 
-async function handleAgentChat({ connection, properties, context }) {
+async function handleAgentChat({ connection, properties, context, format }) {
   const { agent, messages } = properties;
 
   const tools = {};
@@ -173,6 +174,13 @@ async function handleAgentChat({ connection, properties, context }) {
     providerOptions: agent.properties.providerOptions,
     ...hookCallbacks,
   });
+
+  if (format === 'text') {
+    const result = await agentInstance.stream({
+      messages: convertToModelMessages(messages),
+    });
+    return { response: result.toTextStreamResponse() };
+  }
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
