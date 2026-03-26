@@ -153,7 +153,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       id={blockId}
       style={{
         display: 'flex',
-        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
+        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
       }}
     >
       {showSidebar && (
