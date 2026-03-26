@@ -14,7 +14,14 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, createAgentUIStreamResponse, tool, jsonSchema, stepCountIs } from 'ai';
+import {
+  ToolLoopAgent,
+  createAgentUIStreamResponse,
+  consumeStream,
+  tool,
+  jsonSchema,
+  stepCountIs,
+} from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { serializer } from '@lowdefy/helpers';
@@ -174,9 +181,25 @@ async function handleAgentChat({ connection, properties, context }) {
     ...hookCallbacks,
   });
 
+  const onFinishEndpointIds = agent.hooks?.onFinish;
+  const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
+
   const response = await createAgentUIStreamResponse({
     agent: agentInstance,
     uiMessages: messages,
+    ...(hasOnFinishHooks
+      ? {
+          onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
+            const payload = { messages: finishedMessages, finishReason, isAborted };
+            for (const endpointId of onFinishEndpointIds) {
+              context.callEndpoint(endpointId, { payload }).catch(() => {});
+            }
+          },
+        }
+      : {}),
+    consumeSseStream: async ({ stream }) => {
+      consumeStream({ stream }).catch(() => {});
+    },
   });
   return { response };
 }
