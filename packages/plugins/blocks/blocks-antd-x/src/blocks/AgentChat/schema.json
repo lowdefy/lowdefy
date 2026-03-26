@@ -87,6 +87,14 @@
               "value": { "type": "string" }
             }
           }
+        },
+        "attachments": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "accept": { "type": "string" },
+            "maxSize": { "type": "number" }
+          }
         }
       }
     }
