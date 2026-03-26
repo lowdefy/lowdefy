@@ -46,7 +46,8 @@
     "@lowdefy/node-utils": "workspace:*",
     "@lowdefy/nunjucks": "workspace:*",
     "@lowdefy/operators": "workspace:*",
-    "@lowdefy/operators-js": "workspace:*"
+    "@lowdefy/operators-js": "workspace:*",
+    "jose": "4.15.9"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
