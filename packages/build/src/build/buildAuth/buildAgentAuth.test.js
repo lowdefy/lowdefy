@@ -26,15 +26,12 @@ test('buildAgentAuth sets externalApi enabled false when agent not in any auth l
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
-    { agentId: 'agent1', id: 'agent:agent1', externalApi: { enabled: false } },
-    { agentId: 'agent2', id: 'agent:agent2', externalApi: { enabled: false } },
+    { id: 'agent1', externalApi: { enabled: false } },
+    { id: 'agent2', externalApi: { enabled: false } },
   ]);
 });
 
@@ -46,19 +43,15 @@ test('buildAgentAuth sets externalApi enabled true with auth public false when i
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'agent1',
-      id: 'agent:agent1',
+      id: 'agent1',
       externalApi: { enabled: true, auth: { public: false } },
     },
-    { agentId: 'agent2', id: 'agent:agent2', externalApi: { enabled: false } },
+    { id: 'agent2', externalApi: { enabled: false } },
   ]);
 });
 
@@ -70,21 +63,16 @@ test('buildAgentAuth sets externalApi enabled true with auth public true when in
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'agent1',
-      id: 'agent:agent1',
+      id: 'agent1',
       externalApi: { enabled: true, auth: { public: true } },
     },
     {
-      agentId: 'agent2',
-      id: 'agent:agent2',
+      id: 'agent2',
       externalApi: { enabled: true, auth: { public: false } },
     },
   ]);
@@ -99,19 +87,15 @@ test('buildAgentAuth sets externalApi enabled true with roles when in roles conf
         },
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'agent1',
-      id: 'agent:agent1',
+      id: 'agent1',
       externalApi: { enabled: true, auth: { public: false, roles: ['admin'] } },
     },
-    { agentId: 'agent2', id: 'agent:agent2', externalApi: { enabled: false } },
+    { id: 'agent2', externalApi: { enabled: false } },
   ]);
 });
 
@@ -122,11 +106,11 @@ test('buildAgentAuth handles no auth.agents config', () => {
         roles: {},
       },
     },
-    agents: [{ agentId: 'agent1', id: 'agent:agent1' }],
+    agents: [{ id: 'agent1' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
-    { agentId: 'agent1', id: 'agent:agent1', externalApi: { enabled: false } },
+    { id: 'agent1', externalApi: { enabled: false } },
   ]);
 });
 
@@ -163,21 +147,16 @@ test('buildAgentAuth all agents protected when protected is true', () => {
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'agent1',
-      id: 'agent:agent1',
+      id: 'agent1',
       externalApi: { enabled: true, auth: { public: false } },
     },
     {
-      agentId: 'agent2',
-      id: 'agent:agent2',
+      id: 'agent2',
       externalApi: { enabled: true, auth: { public: false } },
     },
   ]);
@@ -191,10 +170,7 @@ test('buildAgentAuth public list makes unlisted agents protected', () => {
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents[0].externalApi).toEqual({
@@ -217,7 +193,7 @@ test('buildAgentAuth throws when agent is both in roles and public', () => {
         public: ['agent1'],
       },
     },
-    agents: [{ agentId: 'agent1', id: 'agent:agent1' }],
+    agents: [{ id: 'agent1' }],
   };
   expect(() => buildAgentAuth({ components, context })).toThrow(
     'Agent "agent1" is both protected by roles and public.'
@@ -232,27 +208,20 @@ test('buildAgentAuth supports glob patterns', () => {
         roles: {},
       },
     },
-    agents: [
-      { agentId: 'chat-support', id: 'agent:chat-support' },
-      { agentId: 'chat-sales', id: 'agent:chat-sales' },
-      { agentId: 'search-agent', id: 'agent:search-agent' },
-    ],
+    agents: [{ id: 'chat-support' }, { id: 'chat-sales' }, { id: 'search-agent' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'chat-support',
-      id: 'agent:chat-support',
+      id: 'chat-support',
       externalApi: { enabled: true, auth: { public: false } },
     },
     {
-      agentId: 'chat-sales',
-      id: 'agent:chat-sales',
+      id: 'chat-sales',
       externalApi: { enabled: true, auth: { public: false } },
     },
     {
-      agentId: 'search-agent',
-      id: 'agent:search-agent',
+      id: 'search-agent',
       externalApi: { enabled: false },
     },
   ]);
@@ -268,27 +237,20 @@ test('buildAgentAuth multiple roles on single agent', () => {
         },
       },
     },
-    agents: [
-      { agentId: 'agent1', id: 'agent:agent1' },
-      { agentId: 'agent2', id: 'agent:agent2' },
-      { agentId: 'agent3', id: 'agent:agent3' },
-    ],
+    agents: [{ id: 'agent1' }, { id: 'agent2' }, { id: 'agent3' }],
   };
   const res = buildAgentAuth({ components, context });
   expect(res.agents).toEqual([
     {
-      agentId: 'agent1',
-      id: 'agent:agent1',
+      id: 'agent1',
       externalApi: { enabled: true, auth: { public: false, roles: ['admin', 'editor'] } },
     },
     {
-      agentId: 'agent2',
-      id: 'agent:agent2',
+      id: 'agent2',
       externalApi: { enabled: true, auth: { public: false, roles: ['editor'] } },
     },
     {
-      agentId: 'agent3',
-      id: 'agent:agent3',
+      id: 'agent3',
       externalApi: { enabled: false },
     },
   ]);

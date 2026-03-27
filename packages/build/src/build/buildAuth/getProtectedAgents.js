@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { isInPatternList } from './matchPattern.js';
 
 function getProtectedAgents({ components }) {
-  const agentIds = (components.agents ?? []).map((agent) => agent.agentId);
+  const agentIds = (components.agents ?? []).map((agent) => agent.id);
   let protectedAgents = [];
 
   if (type.isArray(components.auth.agents.public)) {

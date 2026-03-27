@@ -18,7 +18,7 @@ import { matchesPattern } from './matchPattern.js';
 
 function getAgentRoles({ components }) {
   const roles = components.auth.agents.roles;
-  const agentIds = (components.agents ?? []).map((a) => a.agentId);
+  const agentIds = (components.agents ?? []).map((a) => a.id);
   const agentRoles = {};
   Object.keys(roles).forEach((roleName) => {
     roles[roleName].forEach((pattern) => {

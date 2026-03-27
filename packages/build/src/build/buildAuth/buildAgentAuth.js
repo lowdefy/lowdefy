@@ -31,12 +31,12 @@ function buildAgentAuth({ components, context }) {
   }
 
   (components.agents || []).forEach((agent) => {
-    if (agentRoles[agent.agentId]) {
-      if (isInPatternList(agent.agentId, configPublicAgents)) {
+    if (agentRoles[agent.id]) {
+      if (isInPatternList(agent.id, configPublicAgents)) {
         throw new ConfigError(
-          `Agent "${agent.agentId}" is both protected by roles and public.`,
+          `Agent "${agent.id}" is both protected by roles and public.`,
           {
-            received: agentRoles[agent.agentId],
+            received: agentRoles[agent.id],
             configKey: agent['~k'],
           }
         );
@@ -45,17 +45,17 @@ function buildAgentAuth({ components, context }) {
         enabled: true,
         auth: {
           public: false,
-          roles: agentRoles[agent.agentId],
+          roles: agentRoles[agent.id],
         },
       };
-    } else if (protectedAgents.includes(agent.agentId)) {
+    } else if (protectedAgents.includes(agent.id)) {
       agent.externalApi = {
         enabled: true,
         auth: {
           public: false,
         },
       };
-    } else if (isInPatternList(agent.agentId, configPublicAgents)) {
+    } else if (isInPatternList(agent.id, configPublicAgents)) {
       agent.externalApi = {
         enabled: true,
         auth: {
