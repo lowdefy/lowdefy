@@ -431,7 +431,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 2px solid #1677ff
           borderRadius: 8px
       properties:
@@ -441,7 +441,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           boxShadow: 0 2px 8px rgba(0, 0, 0, 0.15)
           borderRadius: 8px
       properties:
@@ -458,7 +458,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           transform: scale(1.5)
           transformOrigin: left center
 

@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'footer'],
+  slots: {
+    content: 'Main Modal body.',
+    footer: 'Custom footer. Overrides default Ok/Cancel buttons.',
+  },
   cssKeys: {
     element: 'The Modal element.',
     header: 'The Modal header.',
@@ -99,13 +102,6 @@ export default {
         description: 'Width of the modal dialog.',
         docs: {
           displayType: 'string',
-        },
-      },
-      wrapperStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal wrapper.',
-        docs: {
-          displayType: 'yaml',
         },
       },
       zIndex: {

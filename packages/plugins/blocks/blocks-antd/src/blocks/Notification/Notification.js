@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { notification } from 'antd';
+import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
@@ -30,6 +30,7 @@ const NotificationBlock = ({
   properties,
   styles = {},
 }) => {
+  const { notification } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({

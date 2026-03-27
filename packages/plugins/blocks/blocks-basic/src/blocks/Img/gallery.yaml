@@ -208,7 +208,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           objectFit: cover
       properties:
         src: https://placehold.co/600x400
@@ -224,7 +224,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           objectFit: contain
           background: '#f5f5f5'
       properties:
@@ -241,7 +241,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           objectFit: fill
       properties:
         src: https://placehold.co/600x400
@@ -256,7 +256,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           borderRadius: 8
       properties:
         src: https://placehold.co/150x150/1677ff/ffffff?text=Rounded
@@ -268,7 +268,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           borderRadius: 20
       properties:
         src: https://placehold.co/150x150/52c41a/ffffff?text=More+Round
@@ -280,7 +280,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           borderRadius: 50%
       properties:
         src: https://placehold.co/150x150/722ed1/ffffff?text=Circle
@@ -295,7 +295,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 1px solid #d9d9d9
       properties:
         src: https://placehold.co/200x150
@@ -307,7 +307,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 3px solid #1677ff
           borderRadius: 8
       properties:
@@ -320,7 +320,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 2px dashed #fa8c16
           borderRadius: 8
       properties:
@@ -333,7 +333,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           borderRadius: 12
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
       properties:
@@ -351,7 +351,7 @@
     - id: responsive_full
       type: Img
       style:
-        /element:
+        .element:
           width: 100%
           height: auto
           borderRadius: 8
@@ -365,7 +365,7 @@
     - id: responsive_half
       type: Img
       style:
-        /element:
+        .element:
           width: 50%
           height: auto
           borderRadius: 8
@@ -379,7 +379,7 @@
     - id: responsive_max
       type: Img
       style:
-        /element:
+        .element:
           maxWidth: 300
           width: 100%
           height: auto
@@ -395,7 +395,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           opacity: 0.5
       properties:
         src: https://placehold.co/200x150/1677ff/ffffff?text=50%25+Opacity
@@ -407,7 +407,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           filter: grayscale(100%)
       properties:
         src: https://placehold.co/200x150/ff4d4f/ffffff?text=Grayscale
@@ -419,7 +419,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           transform: rotate(5deg)
           borderRadius: 8
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
@@ -433,7 +433,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           padding: 8
           background: '#ffffff'
           border: 1px solid #d9d9d9

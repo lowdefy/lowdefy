@@ -35,6 +35,7 @@ function walkValue(value, strings) {
 function walkBlockProperties(blocks, strings) {
   if (!Array.isArray(blocks)) return;
   for (const block of blocks) {
+    if (!block) continue;
     if (block.class) {
       walkValue(block.class, strings);
     }

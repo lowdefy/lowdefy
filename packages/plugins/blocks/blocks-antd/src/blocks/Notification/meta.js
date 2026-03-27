@@ -75,13 +75,6 @@ export default {
         type: 'string',
         description: 'The title of notification box - supports html.',
       },
-      notificationStyle: {
-        type: 'object',
-        description: 'Css style to applied to notification.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       placement: {
         type: 'string',
         enum: ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'],

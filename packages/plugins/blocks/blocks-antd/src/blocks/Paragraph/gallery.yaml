@@ -317,7 +317,7 @@
       properties:
         content: PARAGRAPH WITH WIDE LETTER SPACING
       style:
-        /element:
+        .element:
           letterSpacing: 3px
           textTransform: uppercase
           fontSize: 12px
@@ -326,7 +326,7 @@
       properties:
         content: This paragraph has increased line height for better readability. When you have dense text content, increasing the line height makes it easier for users to follow lines of text across the page.
       style:
-        /element:
+        .element:
           lineHeight: 2.0
     - id: css_inline_blockquote
       type: Paragraph
@@ -334,7 +334,7 @@
         content: A blockquote-style paragraph using inline styles with a left border and padding.
         italic: true
       style:
-        /element:
+        .element:
           borderLeft: 3px solid #1677ff
           paddingLeft: 12px
 

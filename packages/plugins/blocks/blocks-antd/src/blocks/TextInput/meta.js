@@ -15,6 +15,17 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import icon from '../../schemas/icon.js';
+import {
+  disabled,
+  placeholder,
+  inputTitle,
+  autoFocus,
+  variant,
+  allowClear,
+  sizeSmallMiddleLarge,
+} from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -41,11 +52,7 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      allowClear: {
-        type: 'boolean',
-        default: false,
-        description: 'Allow the user to clear their input.',
-      },
+      allowClear: { ...allowClear, default: false },
       type: {
         type: 'string',
         enum: ['text', 'number', 'password', 'tel', 'email', 'url'],
@@ -53,87 +60,28 @@ export default {
         description:
           "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>).",
       },
-      autoFocus: {
-        type: 'boolean',
-        default: false,
-        description: 'Autofocus to the block on page load.',
-      },
+      autoFocus,
       bordered: {
         type: 'boolean',
         default: true,
         description: 'Whether or not the text input has a border style.',
       },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
+      disabled,
       maxLength: {
         type: 'integer',
         description: 'The max number of input characters.',
       },
-      placeholder: {
-        type: 'string',
-        description: 'Placeholder text inside the block before user types input.',
-      },
+      placeholder,
       prefix: {
         type: 'string',
         description: 'Prefix text for the block, priority over $prefix_con.',
       },
       prefixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
           "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
-        docs: {
-          displayType: 'icon',
-        },
       },
-      label: {
-        type: 'object',
-        description: 'Label properties.',
-        additionalProperties: false,
-        properties: {
-          align: {
-            type: 'string',
-            enum: ['left', 'right'],
-            default: 'left',
-            description: 'Align label left or right when inline.',
-          },
-          colon: {
-            type: 'boolean',
-            default: true,
-            description: 'Append label with colon.',
-          },
-          extra: {
-            type: 'string',
-            description: 'Extra text to display beneath the content - supports html.',
-          },
-          title: {
-            type: 'string',
-            description: 'Label title - supports html.',
-          },
-          span: {
-            type: 'number',
-            description: 'Label inline span.',
-          },
-          disabled: {
-            type: 'boolean',
-            default: false,
-            description: 'Hide input label.',
-          },
-          hasFeedback: {
-            type: 'boolean',
-            default: true,
-            description:
-              'Display feedback extra from validation, this does not disable validation.',
-          },
-          inline: {
-            type: 'boolean',
-            default: false,
-            description: 'Render input and label inline.',
-          },
-        },
-      },
+      label,
       replaceInput: {
         type: 'object',
         description: 'Regex used to sanitize input.',
@@ -156,12 +104,7 @@ export default {
           displayType: 'yaml',
         },
       },
-      size: {
-        type: 'string',
-        enum: ['small', 'middle', 'large'],
-        default: 'middle',
-        description: 'Size of the block.',
-      },
+      size: sizeSmallMiddleLarge,
       showCount: {
         type: 'boolean',
         default: false,
@@ -172,23 +115,12 @@ export default {
         description: 'Suffix text for the block, priority over suffixIcon.',
       },
       suffixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
           "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
-        docs: {
-          displayType: 'icon',
-        },
       },
-      title: {
-        type: 'string',
-        description:
-          'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
-      },
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        description: 'Input visual variant. When set, takes precedence over bordered.',
-      },
+      title: inputTitle,
+      variant,
       theme: {
         type: 'object',
         description:

@@ -107,7 +107,7 @@ logger.info({ spin: 'succeed' }, `Found ${packageMap.size} @lowdefy/* packages.`
 // -- Step 5: Rewrite deps + add pnpm.overrides --
 
 logger.info({ spin: 'start' }, 'Rewriting package.json files with link: paths...');
-rewriteDeps({ targetDir: devDir, packageMap });
+rewriteDeps({ targetDir: devDir, packageMap, repoRoot: REPO_ROOT });
 logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
 // -- Step 6: Handle custom plugins from lowdefy.yaml --

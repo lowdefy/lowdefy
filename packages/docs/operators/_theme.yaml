@@ -76,7 +76,7 @@ _ref:
         properties:
           content: The theme's primary color is set to...
         style:
-          /element:
+          .element:
             color:
               _theme: colorPrimary
       ```

@@ -226,7 +226,7 @@
     - id: tl_css_inline
       type: TimelineList
       style:
-        /element:
+        .element:
           padding: 16px 24px
           borderRadius: 8px
           border: 1px solid #b7eb8f

@@ -100,11 +100,10 @@ const MobileMenu = ({
               pageId={pageId}
               properties={{
                 collapsed: false,
-                theme: 'light',
                 ...properties,
                 mode: 'inline',
               }}
-              styles={{ element: { marginTop: 24 } }}
+              styles={{ element: { marginTop: 24, background: 'transparent' } }}
               rename={{
                 events: {
                   onClick: 'onMenuItemClick',

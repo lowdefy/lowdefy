@@ -1500,6 +1500,12 @@ export default {
       properties: {
         antd: { type: 'object' },
         tailwind: { type: 'object' },
+        darkMode: {
+          type: 'string',
+          enum: ['system', 'light', 'dark'],
+          description:
+            'Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
+        },
       },
       errorMessage: {
         type: 'App "theme" should be an object.',

@@ -297,11 +297,11 @@
     - id: style_element
       type: Markdown
       style:
-        /element:
-          backgroundColor: '#f0f5ff'
+        .element:
+          backgroundColor: var(--ant-color-primary-bg)
           padding: 16
           borderRadius: 8
-          border: '1px solid #adc6ff'
+          border: 1px solid var(--ant-color-primary-border)
       properties:
         content: |
           ### Styled Container

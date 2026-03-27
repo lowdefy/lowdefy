@@ -1,6 +1,11 @@
 name: Alerts Module
 description: Alert management
 
+exports:
+  pages:
+    - id: alert-list
+    - id: alert-detail
+
 vars:
   alert_type:
     type: string

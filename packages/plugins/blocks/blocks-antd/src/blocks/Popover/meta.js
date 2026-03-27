@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'popover'],
+  slots: {
+    content: 'Blocks that trigger the Popover.',
+    popover: 'Blocks inside the popup.',
+  },
   cssKeys: {
     element: 'The Popover element.',
     inner: 'The Popover inner.',

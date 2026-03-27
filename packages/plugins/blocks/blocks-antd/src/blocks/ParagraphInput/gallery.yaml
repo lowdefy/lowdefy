@@ -1029,7 +1029,7 @@
     - id: style_custom_bg
       type: ParagraphInput
       style:
-        /element:
+        .element:
           padding: 12
           borderRadius: 8
       properties:
@@ -1043,7 +1043,7 @@
     - id: style_custom_border
       type: ParagraphInput
       style:
-        /element:
+        .element:
           border: 1px solid
           padding: 16
           borderRadius: 8
@@ -1058,7 +1058,7 @@
     - id: style_custom_text_color
       type: ParagraphInput
       style:
-        /element:
+        .element:
           color: '#722ed1'
           fontSize: 16
       properties:
@@ -1072,7 +1072,7 @@
     - id: style_full_custom
       type: ParagraphInput
       style:
-        /element:
+        .element:
           border: 2px solid
           borderRadius: 12
           color: '#d46b08'
@@ -1089,7 +1089,7 @@
     - id: style_card_like
       type: ParagraphInput
       style:
-        /element:
+        .element:
           boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1)
           borderRadius: 8
           padding: 20

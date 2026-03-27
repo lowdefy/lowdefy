@@ -125,7 +125,7 @@
     - id: style_element_bg
       type: S3UploadPhoto
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           borderRadius: 8
           padding: 8
@@ -135,7 +135,7 @@
     - id: style_element_border
       type: S3UploadPhoto
       style:
-        /element:
+        .element:
           border: 2px solid #d3adf7
           borderRadius: 12
       properties:

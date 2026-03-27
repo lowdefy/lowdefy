@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: false,
   cssKeys: {
     element: 'The Tabs element.',
     icon: 'The icon in the Tabs.',
@@ -103,13 +104,6 @@ export default {
               description: 'Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl.',
             },
           },
-        },
-      },
-      tabBarStyle: {
-        type: 'object',
-        description: 'Css style to apply to the tab bar.',
-        docs: {
-          displayType: 'yaml',
         },
       },
       extraAreaKey: {

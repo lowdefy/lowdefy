@@ -33,17 +33,15 @@ test.describe('Sider Block', () => {
     await expect(sider).toContainText('Sider content');
   });
 
-  test('renders sider with light theme', async ({ page }) => {
+  test('renders sider with light background', async ({ page }) => {
     const sider = getSider(page, 'sider_theme_light_sider');
     await expect(sider).toBeVisible();
-    await expect(sider).toHaveClass(/ant-layout-sider-light/);
     await expect(sider).toContainText('Light sider');
   });
 
-  test('renders sider with dark theme', async ({ page }) => {
+  test('renders sider with dark background', async ({ page }) => {
     const sider = getSider(page, 'sider_theme_dark_sider');
     await expect(sider).toBeVisible();
-    await expect(sider).toHaveClass(/ant-layout-sider-dark/);
     await expect(sider).toContainText('Dark sider');
   });
 

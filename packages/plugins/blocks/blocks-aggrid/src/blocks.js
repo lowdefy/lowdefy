@@ -15,12 +15,8 @@
 */
 
 export { default as AgGridAlpine } from './blocks/AgGridAlpine/AgGridAlpine.js';
-export { default as AgGridAlpineDark } from './blocks/AgGridAlpineDark/AgGridAlpineDark.js';
 export { default as AgGridBalham } from './blocks/AgGridBalham/AgGridBalham.js';
-export { default as AgGridBalhamDark } from './blocks/AgGridBalhamDark/AgGridBalhamDark.js';
 export { default as AgGridInputAlpine } from './blocks/AgGridInputAlpine/AgGridInputAlpine.js';
-export { default as AgGridInputAlpineDark } from './blocks/AgGridInputAlpineDark/AgGridInputAlpineDark.js';
 export { default as AgGridInputBalham } from './blocks/AgGridInputBalham/AgGridInputBalham.js';
-export { default as AgGridInputBalhamDark } from './blocks/AgGridInputBalhamDark/AgGridInputBalhamDark.js';
 export { default as AgGridInputMaterial } from './blocks/AgGridInputMaterial/AgGridInputMaterial.js';
 export { default as AgGridMaterial } from './blocks/AgGridMaterial/AgGridMaterial.js';

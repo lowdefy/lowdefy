@@ -18,6 +18,9 @@ export default {
   category: 'list',
   icons: [],
   valueType: 'array',
+  slots: {
+    content: 'Blocks rendered for each list item.',
+  },
   cssKeys: {
     element: 'The List element.',
   },

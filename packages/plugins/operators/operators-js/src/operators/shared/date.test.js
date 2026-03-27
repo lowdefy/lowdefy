@@ -54,15 +54,20 @@ test('_date negative int', () => {
   expect(_date({ params: -1000, location })).toEqual(new Date(-1000));
 });
 
+test('_date from Date object', () => {
+  const input = new Date('2024-06-15T12:00:00.000Z');
+  expect(_date({ params: input, location })).toEqual(new Date('2024-06-15T12:00:00.000Z'));
+});
+
 test('_date null', () => {
   expect(() => _date({ params: null, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_date.__default accepts one of the following types: number, string."`
+    `"_date.__default accepts one of the following types: number, string, date."`
   );
 });
 
 test('_date invalid operator type', () => {
   expect(() => _date({ params: {}, location })).toThrowErrorMatchingInlineSnapshot(
-    `"_date.__default accepts one of the following types: number, string."`
+    `"_date.__default accepts one of the following types: number, string, date."`
   );
 });
 

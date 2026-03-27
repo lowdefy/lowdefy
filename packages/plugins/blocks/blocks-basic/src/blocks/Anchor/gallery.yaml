@@ -246,7 +246,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           fontWeight: bold
           fontSize: 16
       properties:
@@ -257,7 +257,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           color: '#52c41a'
       properties:
         title: Green Link
@@ -267,7 +267,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           textDecoration: underline
           color: '#722ed1'
       properties:
@@ -278,7 +278,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#1677ff'
           color: '#ffffff'
           padding: 8px 16px
@@ -293,7 +293,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 1px solid #1677ff
           color: '#1677ff'
           padding: 8px 16px
@@ -307,7 +307,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           fontSize: 20
           color: '#ff4d4f'
       properties:

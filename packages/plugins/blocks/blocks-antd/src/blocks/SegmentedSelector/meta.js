@@ -15,6 +15,8 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -42,11 +44,7 @@ export default {
         default: false,
         description: "Option to fit width to its parent's width.",
       },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
+      disabled,
       options: {
         default: [],
         oneOf: [
@@ -133,68 +131,14 @@ export default {
         default: 'default',
         description: 'Shape of the segmented control.',
       },
-      size: {
-        type: 'string',
-        enum: ['small', 'default', 'large'],
-        default: 'default',
-        description: 'Size of the block.',
-      },
+      size: sizeSmallDefaultLarge,
       vertical: {
         type: 'boolean',
         default: false,
         description: 'Display the segmented control vertically.',
       },
-      label: {
-        type: 'object',
-        description: 'Label properties.',
-        additionalProperties: false,
-        properties: {
-          align: {
-            type: 'string',
-            enum: ['left', 'right'],
-            default: 'left',
-            description: 'Align label left or right when inline.',
-          },
-          colon: {
-            type: 'boolean',
-            default: true,
-            description: 'Append label with colon.',
-          },
-          extra: {
-            type: 'string',
-            description: 'Extra text to display beneath the content - supports html.',
-          },
-          title: {
-            type: 'string',
-            description: 'Label title - supports html.',
-          },
-          span: {
-            type: 'number',
-            description: 'Label inline span.',
-          },
-          disabled: {
-            type: 'boolean',
-            default: false,
-            description: 'Hide input label.',
-          },
-          hasFeedback: {
-            type: 'boolean',
-            default: true,
-            description:
-              'Display feedback extra from validation, this does not disable validation.',
-          },
-          inline: {
-            type: 'boolean',
-            default: false,
-            description: 'Render input and label inline.',
-          },
-        },
-      },
-      title: {
-        type: 'string',
-        description:
-          'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
-      },
+      label,
+      title: inputTitle,
       theme: {
         type: 'object',
         description:

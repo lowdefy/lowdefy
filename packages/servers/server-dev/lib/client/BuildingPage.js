@@ -26,6 +26,8 @@ const BuildingPage = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'var(--ant-color-bg-layout)',
+        color: 'var(--ant-color-text)',
         fontFamily:
           "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       }}
@@ -45,7 +47,7 @@ const BuildingPage = () => {
           left: 0,
           width: '100%',
           height: 3,
-          backgroundColor: '#f0f0f0',
+          backgroundColor: 'var(--ant-color-fill-quaternary)',
           overflow: 'hidden',
         }}
       >
@@ -53,7 +55,7 @@ const BuildingPage = () => {
           style={{
             width: '40%',
             height: '100%',
-            backgroundColor: '#1890ff',
+            backgroundColor: 'var(--ant-color-primary)',
             animation: 'building-progress 1.5s ease-in-out infinite',
           }}
         />

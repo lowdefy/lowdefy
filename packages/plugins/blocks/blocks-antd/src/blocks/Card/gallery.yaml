@@ -853,9 +853,9 @@
       properties:
         title: Colored Header
       style:
-        /header:
+        .header:
           borderBottom: 1px solid #91caff
-        /body:
+        .body:
       blocks:
         - id: style_header_bg_p
           type: Paragraph
@@ -869,11 +869,11 @@
       properties:
         title: Dark Theme Card
       style:
-        /header:
+        .header:
           backgroundColor: '#1f1f1f'
           color: '#ffffff'
           borderBottom: 1px solid #333
-        /body:
+        .body:
           backgroundColor: '#2a2a2a'
       blocks:
         - id: style_dark_p
@@ -889,10 +889,10 @@
       properties:
         title: Compact Custom Padding
       style:
-        /header:
+        .header:
           padding: 8px 16px
           minHeight: 40px
-        /body:
+        .body:
           padding: 12px 16px
       blocks:
         - id: style_compact_p

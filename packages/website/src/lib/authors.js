@@ -26,6 +26,15 @@ const authors = {
     github: 'https://github.com/ACvWyk',
     linkedin: 'https://www.linkedin.com/in/albert-van-wyk-43667919/',
   },
+  salahuddin: {
+    id: 'salahuddin',
+    name: 'Salahuddin Saiet',
+    title: 'Software Developer at Lowdefy',
+    bio: 'Salahuddin is a software developer at Lowdefy, building and maintaining enterprise web applications using the Lowdefy framework.',
+    image: 'https://avatars.githubusercontent.com/u/80051168?v=4',
+    github: 'https://github.com/Saiby100',
+    linkedin: 'https://www.linkedin.com/in/salahuddin-saiet-2a7190241/',
+  },
   lowdefy: {
     id: 'lowdefy',
     name: 'Lowdefy',

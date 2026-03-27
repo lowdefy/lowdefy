@@ -206,7 +206,7 @@
     - id: style_element_bg
       type: S3UploadButton
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           border: 1px solid #b7eb8f
           borderRadius: 8
@@ -220,7 +220,7 @@
     - id: style_label
       type: S3UploadButton
       style:
-        /label:
+        .label:
           color: '#722ed1'
           fontWeight: bold
       properties:

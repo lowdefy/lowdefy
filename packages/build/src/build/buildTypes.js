@@ -62,6 +62,8 @@ function buildTypes({ components, context }) {
   loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
   // Used for DisplayMessage in @lowdefy/client
   typeCounters.blocks.increment('Message');
+  // Used by blocks-antd Header/PageHeaderMenu/PageSiderMenu darkModeToggle
+  typeCounters.actions.increment('SetDarkMode');
 
   components.types = {
     actions: {},

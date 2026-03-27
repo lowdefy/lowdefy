@@ -18,8 +18,8 @@ fetch → local resolve → validate wiring → full resolve → scope IDs → m
 2. **Local resolve** (Phase 1a) — Read `module.lowdefy.yaml`, resolve local `_ref` and `_module.var`, extract exports and dependencies
 3. **Validate wiring** (Phase 1b) — Auto-wire dependencies by name match, validate all mappings
 4. **Full resolve** (Phase 1c) — Resolve cross-module `_ref: { module }` and `_module.*Id` operators with dependencies set
-5. **Resolve refs** (Phase 2) — Handle `_ref: { module, component/menu }` during the app's `buildRefs` pass
-6. **Scope IDs** (Phase 3) — Resolve `_module.*` ID operators, prefix pages/connections/APIs/menus with entry ID
+5. **Resolve refs** (Phase 2) — Handle `_ref: { module, component/menu }` during the app's `buildRefs` pass (walker resolves `_module.*Id` operators in the content)
+6. **Scope IDs** (Phase 3) — Prefix pages/connections/APIs/menus with entry ID
 7. **Merge** (Phase 3) — Append module pages, connections, APIs to the app's `components`
 
 ## Module Entry Configuration
@@ -80,6 +80,33 @@ if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
 
 Outside module context (`moduleVars` is `undefined`), `_module.var` passes through unchanged.
 
+## ID Operator Resolution (Walker-Based)
+
+The `_module.*Id` operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve during the walker pass in `walker.js`, alongside `_module.var`. They are detected **after** child walking (bottom-up) — after `_module.var` but before `_build.*`.
+
+```javascript
+const MODULE_ID_OPERATOR_KEYS = [
+  '_module.pageId',
+  '_module.connectionId',
+  '_module.endpointId',
+  '_module.id',
+];
+```
+
+Each operator supports both string form (same-module) and object form (cross-module):
+
+- `_module.pageId: users-list` → `team-users/users-list`
+- `_module.pageId: { id: contact-detail, module: contacts }` → `contacts/contact-detail`
+- `_module.connectionId: users-db` → `team-users/users-db` (or remapped ID)
+- `_module.connectionId: { id: contacts-db, module: contacts }` → scoped via target entry
+- `_module.endpointId: invite-user` → `team-users/invite-user`
+- `_module.id: true` → `team-users`
+- `_module.id: { module: contacts }` → target entry's ID
+
+The object form uses `resolveDepTarget()` (shared utility in `resolveDepTarget.js`) to resolve the abstract dependency name to a concrete module entry. Each operator validates that the referenced ID exists in the target module's `exports` declarations.
+
+Outside module context (`moduleEntry` is `undefined`), the operators pass through unchanged.
+
 ## ID Scoping Algorithm
 
 Phase 3 (`buildModules`) scopes IDs by prefixing with `{entryId}/`:
@@ -93,14 +120,7 @@ Phase 3 (`buildModules`) scopes IDs by prefixing with `{entryId}/`:
 | Block ID        | No      | Unchanged                  |
 | Request ID      | No      | Inherited from parent page |
 
-The `_module.*` ID operators resolve to scoped IDs:
-
-- `_module.pageId: users-list` → `team-users/users-list`
-- `_module.connectionId: users-db` → `team-users/users-db` (or remapped ID)
-- `_module.endpointId: invite-user` → `team-users/invite-user`
-- `_module.id: true` → `team-users`
-
-ID operators are resolved by `resolveModuleOperators` using a `serializer.copy` reviver pass.
+By Phase 3, all `_module.*Id` operators have already been resolved to concrete string IDs by the walker. Phase 3 only does structural ID scoping (prefixing) and merging into the app's `components`.
 
 ## Connection Remapping
 
@@ -156,12 +176,12 @@ The app wires slots to concrete entries. Auto-wiring matches dependency names to
 # lowdefy.yaml
 modules:
   - id: contacts
-    source: "github:org/crm/contacts@v1"
+    source: 'github:org/crm/contacts@v1'
   - id: companies
-    source: "github:org/crm/companies@v1"
+    source: 'github:org/crm/companies@v1'
     # "contacts" auto-wires (name matches entry ID)
     dependencies:
-      layout: app-layout  # Explicit — no entry called "layout"
+      layout: app-layout # Explicit — no entry called "layout"
 ```
 
 ### Dependency Resolution (`resolveModuleDependencies`)
@@ -192,12 +212,12 @@ _module.pageId:
   # → "contacts/contact-detail" (resolved concrete entry's scoped page ID)
 ```
 
-| Operator | String Form (same module) | Object Form (cross module) |
-|----------|--------------------------|---------------------------|
-| `_module.pageId` | `"pageId"` → `"{entryId}/pageId"` | `{ id, module }` → `"{targetEntryId}/pageId"` |
-| `_module.connectionId` | `"connId"` → scoped or remapped | `{ id, module }` → scoped via target entry |
-| `_module.endpointId` | `"apiId"` → `"{entryId}/apiId"` | `{ id, module }` → `"{targetEntryId}/apiId"` |
-| `_module.id` | `true` → `"{entryId}"` | `{ module }` → `"{targetEntryId}"` |
+| Operator               | String Form (same module)         | Object Form (cross module)                    |
+| ---------------------- | --------------------------------- | --------------------------------------------- |
+| `_module.pageId`       | `"pageId"` → `"{entryId}/pageId"` | `{ id, module }` → `"{targetEntryId}/pageId"` |
+| `_module.connectionId` | `"connId"` → scoped or remapped   | `{ id, module }` → scoped via target entry    |
+| `_module.endpointId`   | `"apiId"` → `"{entryId}/apiId"`   | `{ id, module }` → `"{targetEntryId}/apiId"`  |
+| `_module.id`           | `true` → `"{entryId}"`            | `{ module }` → `"{targetEntryId}"`            |
 
 **`_ref: { module }` refs** — for embedding components and menus:
 
@@ -279,14 +299,35 @@ The cycle key uses the **resolved concrete entry ID**, not the abstract dependen
 - **Multi-instance**: Two instances of the same module wired to different dependencies
 - **Multiple layout variants**: Different layout modules expose the same component interface; the app chooses which
 
+## Component Export Model
+
+All named exports live in the `components` section — UI blocks, config templates, enum maps, schema fragments. The unified structure is `{ id, component }` (no `type: Component`).
+
+- `key` extraction uses the existing walker mechanism (`_ref.key`)
+- Per-ref `vars` customize the component at the point of inclusion
+- Runtime operators in component content are preserved (not resolved at build time)
+- Content is deep-cloned before processing to prevent mutation of the manifest entry
+
+### Deferred Resolution
+
+During Phase 1 local resolve, component content stays preserved (the walker's `shouldStop` skips into `component:` fields). Content is walked at consumption time — either during Phase 1 full resolve (for cross-module refs within module manifests) or during Phase 2 (for `_ref: { module, component }` in app-level config).
+
+### Cross-Module Cycle Detection
+
+The walker's file-based cycle detection checks `refDef.path` against the `refChain` Set. Module refs (`_ref: { module, component }`) have no `path`, so cross-module cycle detection uses synthetic keys.
+
+After loading module ref content, the walker constructs a key `module:<entryId>/<type>:<name>` (e.g., `module:contacts/component:contact-selector`) and checks it against `refChain`. The cycle key uses the **resolved concrete entry ID**, not the abstract dependency name — `internal-contacts/component:contact-selector` and `external-contacts/component:contact-selector` are distinct keys even when both come from the same source.
+
 ## Key Files
 
-| File                                                        | Purpose                                                                         |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `packages/build/src/build/fetchModules.js`                  | Fetch module sources (GitHub tarballs, local paths)                             |
-| `packages/build/src/build/buildModuleDefs.js`               | Three-phase module processing: local resolve → validate → full resolve          |
-| `packages/build/src/build/resolveModuleDependencies.js`     | Auto-wire and validate cross-module dependency mappings                         |
-| `packages/build/src/build/buildModules.js`                  | Scope IDs, resolve ID operators (string + object form), merge into components   |
-| `packages/build/src/build/resolveModuleOperators.js`        | Resolve `_module.*` ID operators via reviver (string + object form)             |
-| `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }`, deep copy content                  |
-| `packages/build/src/build/buildRefs/walker.js`              | Module context switching, `resolveModuleVar`, cycle detection for module refs   |
+| File                                                        | Purpose                                                                            |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `packages/build/src/build/fetchModules.js`                  | Fetch module sources (GitHub tarballs, local paths)                                |
+| `packages/build/src/build/buildModuleDefs.js`               | Three-phase module processing: local resolve → validate → full resolve             |
+| `packages/build/src/build/resolveModuleDependencies.js`     | Auto-wire and validate cross-module dependency mappings                            |
+| `packages/build/src/build/registerModules.js`               | `resolveLocalManifest` and `resolveFullManifest` — two-pass walker invocation      |
+| `packages/build/src/build/buildModules.js`                  | Scope IDs (prefix with entryId), merge module content into app components          |
+| `packages/build/src/build/resolveModuleOperators.js`        | `scopeMenuItemIds` only — prefixes menu item IDs with entry ID                     |
+| `packages/build/src/build/resolveDepTarget.js`              | Shared utility for resolving abstract dependency names to concrete entry IDs       |
+| `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }`, deep copy content                      |
+| `packages/build/src/build/buildRefs/walker.js`              | `_module.var`, `_module.*Id` resolution, module context switching, cycle detection |

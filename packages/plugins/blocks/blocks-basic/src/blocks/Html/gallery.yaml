@@ -94,11 +94,11 @@
     - id: styled_colored_text
       type: Html
       properties:
-        html: '<p><span style="color: #1890ff;">Blue text</span>, <span style="color: #52c41a;">green text</span>, <span style="color: #ff4d4f;">red text</span>, and <span style="color: #fa8c16;">orange text</span>.</p>'
+        html: '<p><span style="color: var(--ant-color-primary);">Primary text</span>, <span style="color: var(--ant-color-success);">success text</span>, <span style="color: var(--ant-color-error);">error text</span>, and <span style="color: var(--ant-color-warning);">warning text</span>.</p>'
     - id: styled_background
       type: Html
       properties:
-        html: '<p><span style="background: #e6f4ff; padding: 2px 6px; border-radius: 3px;">Blue highlight</span> and <span style="background: #f6ffed; padding: 2px 6px; border-radius: 3px;">Green highlight</span>.</p>'
+        html: '<p><span style="background: var(--ant-color-primary-bg); padding: 2px 6px; border-radius: 3px;">Primary highlight</span> and <span style="background: var(--ant-color-success-bg); padding: 2px 6px; border-radius: 3px;">Success highlight</span>.</p>'
     - id: styled_sizes
       type: Html
       properties:
@@ -113,29 +113,29 @@
     - id: blockquote_styled
       type: Html
       properties:
-        html: '<blockquote style="border-left: 4px solid #1890ff; padding-left: 16px; margin: 0; color: #595959;">This is a styled blockquote with a blue left border accent and subdued text color.</blockquote>'
+        html: '<blockquote style="border-left: 4px solid var(--ant-color-primary); padding-left: 16px; margin: 0; color: var(--ant-color-text-secondary);">This is a styled blockquote with a primary color left border accent and subdued text color.</blockquote>'
     - id: blockquote_attribution
       type: Html
       properties:
-        html: '<blockquote style="border-left: 4px solid #d9d9d9; padding-left: 16px; margin: 0;"><p style="margin: 0 0 4px 0; font-style: italic; color: #595959;">"The best way to predict the future is to invent it."</p><footer style="color: #8c8c8c; font-size: 13px;">-- Alan Kay</footer></blockquote>'
+        html: '<blockquote style="border-left: 4px solid var(--ant-color-border); padding-left: 16px; margin: 0;"><p style="margin: 0 0 4px 0; font-style: italic; color: var(--ant-color-text-secondary);">"The best way to predict the future is to invent it."</p><footer style="color: var(--ant-color-text-tertiary); font-size: 13px;">-- Alan Kay</footer></blockquote>'
 
 - title: Code Blocks
   blocks:
     - id: code_inline
       type: Html
       properties:
-        html: '<p>Use the <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> block for safe HTML rendering.</p>'
+        html: '<p>Use the <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> block for safe HTML rendering.</p>'
     - id: code_block
       type: Html
       properties:
         html: |
-          <pre style="background: #282c34; color: #abb2bf; padding: 16px; border-radius: 6px; overflow-x: auto; font-family: monospace; font-size: 14px;"><code>function greet(name) {
+          <pre style="background: var(--ant-color-bg-elevated); color: var(--ant-color-text); padding: 16px; border-radius: 6px; overflow-x: auto; font-family: monospace; font-size: 14px; border: 1px solid var(--ant-color-border);"><code>function greet(name) {
             return "Hello, " + name + "!";
           }</code></pre>
     - id: code_multi_inline
       type: Html
       properties:
-        html: '<p>Set <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">type</code> to <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> and provide the <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: monospace;">html</code> property.</p>'
+        html: '<p>Set <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px; border-radius: 4px; font-family: monospace;">type</code> to <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code> and provide the <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px; border-radius: 4px; font-family: monospace;">html</code> property.</p>'
 
 - title: Links
   blocks:
@@ -146,7 +146,7 @@
     - id: link_styled
       type: Html
       properties:
-        html: '<p><a href="https://lowdefy.com" style="color: #722ed1; text-decoration: none; font-weight: bold;">Purple styled link</a> within a paragraph.</p>'
+        html: '<p><a href="https://lowdefy.com" style="color: var(--ant-color-primary); text-decoration: none; font-weight: bold;">Primary styled link</a> within a paragraph.</p>'
     - id: link_multiple
       type: Html
       properties:
@@ -165,74 +165,75 @@
     - id: nested_mixed
       type: Html
       properties:
-        html: '<div><p>This block mixes <strong>bold</strong>, <em>italic</em>, and <code style="background: #f5f5f5; padding: 2px 4px; border-radius: 3px;">code</code> formatting.</p><blockquote style="border-left: 3px solid #d9d9d9; padding-left: 12px; margin: 12px 0; color: #595959;">It also includes a blockquote with <strong>bold text</strong>.</blockquote><ol><li>And a numbered list</li><li>With multiple items</li></ol></div>'
+        html: '<div><p>This block mixes <strong>bold</strong>, <em>italic</em>, and <code style="background: var(--ant-color-fill-tertiary); padding: 2px 4px; border-radius: 3px;">code</code> formatting.</p><blockquote style="border-left: 3px solid var(--ant-color-border); padding-left: 12px; margin: 12px 0; color: var(--ant-color-text-secondary);">It also includes a blockquote with <strong>bold text</strong>.</blockquote><ol><li>And a numbered list</li><li>With multiple items</li></ol></div>'
 
 - title: Tables
   blocks:
     - id: table_simple
       type: Html
       properties:
-        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Feature</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Html block</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Safe</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">DangerousHtml</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Powerful</td></tr></tbody></table>'
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid var(--ant-color-border); padding: 8px; background: var(--ant-color-fill-quaternary); text-align: left;">Feature</th><th style="border: 1px solid var(--ant-color-border); padding: 8px; background: var(--ant-color-fill-quaternary); text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Html block</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Safe</td></tr><tr><td style="border: 1px solid var(--ant-color-border); padding: 8px;">DangerousHtml</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Powerful</td></tr></tbody></table>'
 
 - title: Style Overrides
   blocks:
     - id: style_padded
       type: Html
       style:
-        /element:
+        .element:
           padding: 20
-          background: '#f0f5ff'
+          background: var(--ant-color-primary-bg)
           borderRadius: 8
       properties:
-        html: '<p style="margin: 0;">Content inside a styled Html container with blue background.</p>'
+        html: '<p style="margin: 0;">Content inside a styled Html container with primary background.</p>'
     - id: style_bordered
       type: Html
       style:
-        /element:
-          border: 2px solid #1677ff
+        .element:
+          border: 2px solid var(--ant-color-primary)
           padding: 16
           borderRadius: 8
       properties:
-        html: '<p style="margin: 0;">Content with a blue border applied via style override.</p>'
+        html: '<p style="margin: 0;">Content with a primary color border applied via style override.</p>'
     - id: style_shadow
       type: Html
       style:
-        /element:
+        .element:
           padding: 20
           borderRadius: 12
-          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
-          background: '#ffffff'
+          boxShadow: var(--ant-box-shadow)
+          background: var(--ant-color-bg-container)
       properties:
-        html: '<h4 style="margin: 0 0 8px 0;">Elevated Html Block</h4><p style="margin: 0; color: #595959;">An Html block styled with box-shadow for an elevated card look.</p>'
+        html: '<h4 style="margin: 0 0 8px 0;">Elevated Html Block</h4><p style="margin: 0; color: var(--ant-color-text-secondary);">An Html block styled with box-shadow for an elevated card look.</p>'
     - id: style_max_width
       type: Html
       style:
-        /element:
+        .element:
           maxWidth: 350
           margin: 0 auto
           textAlign: center
           padding: 16
-          background: '#f6ffed'
+          background: var(--ant-color-success-bg)
           borderRadius: 8
       properties:
-        html: '<p style="margin: 0; color: #52c41a; font-weight: bold;">Centered and constrained width.</p>'
+        html: '<p style="margin: 0; color: var(--ant-color-success); font-weight: bold;">Centered and constrained width.</p>'
     - id: style_left_accent
       type: Html
       style:
-        /element:
-          borderLeft: 4px solid #fa8c16
+        .element:
+          borderLeft: 4px solid var(--ant-color-warning)
           paddingLeft: 16
           paddingTop: 8
           paddingBottom: 8
       properties:
-        html: '<p style="margin: 0; color: #fa8c16; font-weight: 500;">Orange accent border on the left side.</p>'
-    - id: style_dark
+        html: '<p style="margin: 0; color: var(--ant-color-warning); font-weight: 500;">Warning accent border on the left side.</p>'
+    - id: style_elevated
       type: Html
       style:
-        /element:
-          background: '#1a1a2e'
-          color: '#e0e0e0'
+        .element:
+          background: var(--ant-color-bg-elevated)
+          color: var(--ant-color-text)
           padding: 20
           borderRadius: 8
+          border: 1px solid var(--ant-color-border)
       properties:
-        html: '<h4 style="margin: 0 0 8px 0; color: #ffffff;">Dark Themed Block</h4><p style="margin: 0;">Light text on a dark background for contrast.</p>'
+        html: '<h4 style="margin: 0 0 8px 0;">Elevated Block</h4><p style="margin: 0;">Uses bg-elevated token for a surface that adapts to light and dark mode.</p>'

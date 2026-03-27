@@ -12,6 +12,51 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Custom Theme Colors
+  fullWidth: true
+  blocks:
+    - id: custom_theme
+      type: AgGridAlpine
+      style:
+        --ag-header-background-color: '#1a1a2e'
+        --ag-header-foreground-color: '#e0e0ff'
+        --ag-selected-row-background-color: 'rgba(108, 99, 255, 0.2)'
+        --ag-row-hover-color: 'rgba(108, 99, 255, 0.1)'
+        --ag-border-color: '#2a2a4a'
+      properties:
+        height: 300
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: department
+            headerName: Department
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            department: Engineering
+            status: Active
+          - name: Bob Smith
+            role: Designer
+            department: Design
+            status: Active
+          - name: Charlie Lee
+            role: Manager
+            department: Sales
+            status: On Leave
+          - name: Diana Patel
+            role: Analyst
+            department: Finance
+            status: Active
+          - name: Erik Johansson
+            role: DevOps
+            department: Engineering
+            status: Active
+
 - title: Basic Table
   fullWidth: true
   blocks:
@@ -476,22 +521,22 @@
           - field: q1
             headerName: Q1
             cellStyle:
-              backgroundColor: '#e6f7ff'
+              backgroundColor: var(--ant-blue-1)
               textAlign: right
           - field: q2
             headerName: Q2
             cellStyle:
-              backgroundColor: '#f6ffed'
+              backgroundColor: var(--ant-green-1)
               textAlign: right
           - field: q3
             headerName: Q3
             cellStyle:
-              backgroundColor: '#fff7e6'
+              backgroundColor: var(--ant-orange-1)
               textAlign: right
           - field: q4
             headerName: Q4
             cellStyle:
-              backgroundColor: '#fff1f0'
+              backgroundColor: var(--ant-red-1)
               textAlign: right
         rowData:
           - metric: Revenue ($K)

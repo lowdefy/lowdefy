@@ -197,15 +197,20 @@ _ref:
 
             ## Dark mode
 
-            Enable dark mode app-wide with a single configuration line:
+            Lowdefy supports three dark mode behaviors, configured via `theme.darkMode`:
 
             ```yaml
             theme:
-              antd:
-                algorithm: dark
+              darkMode: system  # 'system' (default), 'light', or 'dark'
             ```
 
-            Or scope dark mode to a section using [ConfigProvider](/ConfigProvider):
+            | Value | Behavior |
+            |---|---|
+            | `system` | Follows the OS dark mode preference and updates live when it changes. Users can override with `SetDarkMode`. This is the default. |
+            | `light` | Forces light mode. `SetDarkMode` preferences are stored but have no visual effect. |
+            | `dark` | Forces dark mode. `SetDarkMode` preferences are stored but have no visual effect. |
+
+            You can also scope dark mode to a section using [ConfigProvider](/ConfigProvider):
 
             ```yaml
             - id: dark_section
@@ -216,9 +221,24 @@ _ref:
                 # All blocks here will use dark theme
             ```
 
+            ### Easy dark mode toggle
+
+            Add a built-in dark mode toggle to your page layout with a single property:
+
+            ```yaml
+            - id: my_page
+              type: PageHeaderMenu  # or PageSiderMenu
+              properties:
+                darkModeToggle: true
+            ```
+
+            This renders a moon/sun icon in the header that cycles through light, dark, and system preferences. The preference is persisted to `localStorage`.
+
+            For custom toggle implementations, see the programmatic approach below.
+
             ### Programmatic dark mode toggle
 
-            Use the `SetDarkMode` action with `_media: darkMode` to let users toggle dark mode at runtime:
+            Use the `SetDarkMode` action with `_media: darkMode` to let users control dark mode at runtime:
 
             ```yaml
             - id: dark_mode_toggle
@@ -237,11 +257,36 @@ _ref:
                     type: SetDarkMode
             ```
 
-            The user's preference is persisted to `localStorage` and survives page refreshes. When no explicit preference is set, the app falls back to the OS `prefers-color-scheme` media query.
+            Without params, `SetDarkMode` cycles through `light`, `dark`, and `system`. You can also set a specific preference:
+
+            ```yaml
+            - id: set_system
+              type: SetDarkMode
+              params:
+                darkMode: system
+            ```
+
+            The user's preference is persisted to `localStorage` and survives page refreshes. Use `_media: darkModePreference` to read the current preference (`'system'`, `'light'`, or `'dark'`), and `_media: darkMode` for the effective boolean state.
 
             `SetDarkMode` automatically merges the `dark` algorithm with any existing algorithm configured in `theme.antd.algorithm`. For example, if your app uses `algorithm: compact`, toggling dark mode produces `[compact, dark]`.
 
             See the [`SetDarkMode` action reference](/SetDarkMode) and [`_media` operator reference](/_media) for full documentation.
+
+            ### Tip: Use CSS variables for dark-mode-safe colors
+
+            When styling blocks with custom colors (e.g. `cellStyle` in AgGrid, or `style` on any block), avoid hardcoded hex values — they won't adapt to dark mode. Use antd CSS variables instead:
+
+            ```yaml
+            # Bad — hardcoded colors look washed out in dark mode
+            cellStyle:
+              backgroundColor: '#e6f7ff'
+
+            # Good — antd palette tokens adapt automatically
+            cellStyle:
+              backgroundColor: var(--ant-blue-1)
+            ```
+
+            Useful palette variables: `var(--ant-blue-1)`, `var(--ant-green-1)`, `var(--ant-orange-1)`, `var(--ant-red-1)`, etc. For semantic colors, use `var(--ant-color-primary-bg)`, `var(--ant-color-success-bg)`, `var(--ant-color-warning-bg)`, `var(--ant-color-error-bg)`.
 
             ## Tailwind theme bridge (`theme.tailwind`)
 
@@ -322,7 +367,8 @@ _ref:
             ## TLDR
               - Configure app theme via `theme.antd` in `lowdefy.yaml`.
               - Seed tokens (`colorPrimary`, `fontSize`, etc.) drive all derived tokens automatically.
-              - Use `algorithm: dark` or `algorithm: compact` for theme variants.
+              - Use `algorithm: compact` for compact mode. Use `theme.darkMode` for dark mode control.
+              - Dark mode defaults to `system` (follows OS preference). Set to `light` or `dark` to lock.
               - Override tokens per component type via `theme.antd.components`.
               - Override tokens per block via `properties.theme`.
               - Use [ConfigProvider](/ConfigProvider) block for scoped theming of block groups.

@@ -20,7 +20,7 @@ import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@lowdefy/block-utils';
 import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
-import { ConfigProvider, theme as antdTheme } from 'antd';
+import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
@@ -54,7 +54,10 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
-  const algorithm = useDarkMode(lowdefyRef.current.theme?.antd?.algorithm);
+  const algorithm = useDarkMode({
+    baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+    configDarkMode: lowdefyRef.current.theme?.darkMode,
+  });
 
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
@@ -74,28 +77,30 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
           algorithm,
         }}
       >
-        <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-          <ErrorBoundary fullPage onError={handleError}>
-            <Auth session={session}>
-              {(auth) => {
-                usageDataRef.current.user = auth.session?.hashed_id;
-                // Set Sentry user context when auth changes
-                setSentryUser({
-                  user: auth.session,
-                  sentryConfig: loggerConfig.sentry,
-                });
-                return (
-                  <Component
-                    auth={auth}
-                    lowdefy={lowdefyRef.current}
-                    rootConfig={rootConfig}
-                    pageConfig={pageConfig}
-                  />
-                );
-              }}
-            </Auth>
-          </ErrorBoundary>
-        </ThemeTokenResolver>
+        <AntdApp>
+          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+            <ErrorBoundary fullPage onError={handleError}>
+              <Auth session={session}>
+                {(auth) => {
+                  usageDataRef.current.user = auth.session?.hashed_id;
+                  // Set Sentry user context when auth changes
+                  setSentryUser({
+                    user: auth.session,
+                    sentryConfig: loggerConfig.sentry,
+                  });
+                  return (
+                    <Component
+                      auth={auth}
+                      lowdefy={lowdefyRef.current}
+                      rootConfig={rootConfig}
+                      pageConfig={pageConfig}
+                    />
+                  );
+                }}
+              </Auth>
+            </ErrorBoundary>
+          </ThemeTokenResolver>
+        </AntdApp>
       </ConfigProvider>
     </StyleProvider>
   );

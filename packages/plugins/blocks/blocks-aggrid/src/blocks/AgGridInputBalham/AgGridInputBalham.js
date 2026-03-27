@@ -19,6 +19,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-balham.css';
+import antdStyles from '../../ag-grid-antd.module.css';
 
 import AgGridInput from '../../AgGridInput.js';
 
@@ -32,23 +33,25 @@ const AgGridInputBalham = ({
   styles,
   validation,
   value,
-}) => (
-  <div
-    id={blockId}
-    className="ag-theme-balham"
-    style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
-  >
-    <AgGridInput
-      blockId={blockId}
-      events={events}
-      loading={loading}
-      methods={methods}
-      properties={properties}
-      required={required}
-      validation={validation}
-      value={value}
-    />
-  </div>
-);
+}) => {
+  return (
+    <div
+      id={blockId}
+      className={`ag-theme-balham ${antdStyles.antdTheme}`}
+      style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
+    >
+      <AgGridInput
+        blockId={blockId}
+        events={events}
+        loading={loading}
+        methods={methods}
+        properties={properties}
+        required={required}
+        validation={validation}
+        value={value}
+      />
+    </div>
+  );
+};
 
 export default withBlockDefaults(AgGridInputBalham);

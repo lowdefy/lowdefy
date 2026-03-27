@@ -17,7 +17,13 @@
 import { getFromArray } from '@lowdefy/operators';
 
 function _menu({ params, menus, location }) {
-  return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
+  const result = getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
+  // When selecting a single menu, return its links array directly.
+  // _menu: true and { all: true } return the full menus array (result is an array).
+  if (result && !Array.isArray(result)) {
+    return result.links ?? [];
+  }
+  return result;
 }
 
 _menu.dynamic = true;

@@ -259,7 +259,7 @@
       properties:
         offsetTop: 10
       style:
-        /element:
+        .element:
           zIndex: 200
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
       blocks:

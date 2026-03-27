@@ -25,7 +25,11 @@ const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {
     hasSider={properties.hasSider}
     style={styles.element}
   >
-    {content.content && content.content()}
+    {content.content &&
+      content.content({
+        flexDirection: properties.hasSider ? 'row' : 'column',
+        flexWrap: properties.hasSider ? 'nowrap' : undefined,
+      })}
   </Layout>
 );
 

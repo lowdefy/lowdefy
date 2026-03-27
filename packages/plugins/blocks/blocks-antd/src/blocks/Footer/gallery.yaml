@@ -75,12 +75,6 @@
                     title: Privacy Policy
                     color: default
                     variant: link
-                  events:
-                    onClick:
-                      - id: footer_links_privacy_link
-                        type: Link
-                        params:
-                          url: /privacy
                 - id: footer_links_terms
                   type: Button
                   layout:
@@ -89,12 +83,6 @@
                     title: Terms of Service
                     color: default
                     variant: link
-                  events:
-                    onClick:
-                      - id: footer_links_terms_link
-                        type: Link
-                        params:
-                          url: /terms
                 - id: footer_links_contact
                   type: Button
                   layout:
@@ -103,12 +91,6 @@
                     title: Contact Us
                     color: default
                     variant: link
-                  events:
-                    onClick:
-                      - id: footer_links_contact_link
-                        type: Link
-                        params:
-                          url: /contact
             - id: footer_links_copyright
               type: Paragraph
               properties:
@@ -116,150 +98,6 @@
                 style:
                   marginTop: 8px
                   color: '#999'
-
-- title: Theme Token Overrides
-  fullWidth: true
-  blocks:
-    - id: footer_theme_layout
-      type: Layout
-      blocks:
-        - id: footer_theme_content
-          type: Content
-          style:
-            padding: 24px
-            background: var(--ant-color-bg-container)
-            minHeight: 80px
-          blocks:
-            - id: footer_theme_content_text
-              type: Paragraph
-              properties:
-                content: The theme property passes antd design token overrides scoped to this Footer instance.
-        - id: footer_theme_el
-          type: Footer
-          properties:
-            theme:
-              colorText: '#1677ff'
-              paddingInline: 48
-              paddingBlock: 24
-          style:
-            textAlign: center
-          blocks:
-            - id: footer_theme_text
-              type: Paragraph
-              properties:
-                content: Footer with custom theme tokens - blue background, adjusted padding.
-
-    - id: footer_theme_warm_layout
-      type: Layout
-      blocks:
-        - id: footer_theme_warm_content
-          type: Content
-          style:
-            padding: 24px
-            background: var(--ant-color-bg-container)
-            minHeight: 80px
-          blocks:
-            - id: footer_theme_warm_content_text
-              type: Paragraph
-              properties:
-                content: Theme tokens let you customize colors, spacing, and typography through the antd design system.
-        - id: footer_theme_warm_el
-          type: Footer
-          properties:
-            theme:
-              colorText: '#d46b08'
-          style:
-            textAlign: center
-          blocks:
-            - id: footer_theme_warm_text
-              type: Paragraph
-              properties:
-                content: Warm-toned footer using colorBgContainer and colorText tokens.
-
-- title: Styled Footer (Tailwind CSS)
-  fullWidth: true
-  blocks:
-    - id: footer_tw_layout
-      type: Layout
-      blocks:
-        - id: footer_tw_content
-          type: Content
-          style:
-            padding: 24px
-            background: var(--ant-color-bg-container)
-            minHeight: 80px
-          blocks:
-            - id: footer_tw_content_text
-              type: Paragraph
-              properties:
-                content: Use the class property to apply Tailwind CSS classes to the Footer element via the element CSS key.
-        - id: footer_tw_el
-          type: Footer
-          class:
-            element: bg-bg-layout text-center
-          blocks:
-            - id: footer_tw_text
-              type: Paragraph
-              class: text-white
-              properties:
-                content: Dark footer styled with Tailwind classes on the element CSS key.
-
-    - id: footer_tw_accent_layout
-      type: Layout
-      blocks:
-        - id: footer_tw_accent_content
-          type: Content
-          style:
-            padding: 24px
-            background: var(--ant-color-bg-container)
-            minHeight: 80px
-          blocks:
-            - id: footer_tw_accent_content_text
-              type: Paragraph
-              properties:
-                content: Combine Tailwind border, background, and text utilities for accent styling.
-        - id: footer_tw_accent_el
-          type: Footer
-          class:
-            element: bg-bg-layout border-t-4 border-t-green-500 text-center
-          blocks:
-            - id: footer_tw_accent_text
-              type: Paragraph
-              class: text-green-800
-              properties:
-                content: Footer with a green top accent border using Tailwind utility classes.
-
-- title: Footer with Inline Styles
-  fullWidth: true
-  blocks:
-    - id: footer_styled_layout
-      type: Layout
-      blocks:
-        - id: footer_styled_content
-          type: Content
-          style:
-            padding: 24px
-            background: var(--ant-color-bg-container)
-            minHeight: 80px
-          blocks:
-            - id: footer_styled_content_text
-              type: Paragraph
-              properties:
-                content: The style property applies inline CSS to the Footer. The block adds margin auto by default and hides on print via the hide-on-print class.
-        - id: footer_styled_el
-          type: Footer
-          style:
-            background: '#001529'
-            textAlign: center
-            padding: 24px 50px
-          blocks:
-            - id: footer_styled_text
-              type: Paragraph
-              properties:
-                content: Dark styled footer with custom background and padding
-                style:
-                  color: white
-                  margin: 0
 
 - title: Footer in Corporate Site
   fullWidth: true
@@ -408,13 +246,6 @@
                         variant: text
                         size: small
                         hideTitle: true
-                      events:
-                        onClick:
-                          - id: footer_corp_social_github_link
-                            type: Link
-                            params:
-                              url: https://github.com
-                              newTab: true
                     - id: footer_corp_social_twitter
                       type: Button
                       layout:
@@ -425,22 +256,19 @@
                         variant: text
                         size: small
                         hideTitle: true
-                      events:
-                        onClick:
-                          - id: footer_corp_social_twitter_link
-                            type: Link
-                            params:
-                              url: https://twitter.com
-                              newTab: true
 
 - title: Footer in Admin Dashboard
   fullWidth: true
   blocks:
     - id: footer_admin_layout
       type: Layout
+      properties:
+        hasSider: true
       blocks:
         - id: footer_admin_sider
           type: Sider
+          layout:
+            flex: 0 0 auto
           properties:
             width: 200
             theme: dark
@@ -452,18 +280,26 @@
               properties:
                 theme: dark
                 mode: inline
-                options:
+                links:
                   - id: footer_admin_menu_dashboard
-                    title: Dashboard
-                    icon: AiOutlineDashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
                   - id: footer_admin_menu_users
-                    title: Users
-                    icon: AiOutlineUser
+                    type: MenuLink
+                    properties:
+                      title: Users
+                      icon: AiOutlineUser
                   - id: footer_admin_menu_settings
-                    title: Settings
-                    icon: AiOutlineSetting
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
         - id: footer_admin_inner_layout
           type: Layout
+          layout:
+            flex: 1 1 auto
           blocks:
             - id: footer_admin_content
               type: Content

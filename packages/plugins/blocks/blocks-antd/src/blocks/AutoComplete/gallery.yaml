@@ -395,7 +395,7 @@
     - id: style_element
       type: AutoComplete
       style:
-        /element:
+        .element:
           borderColor: '#722ed1'
       properties:
         title: Custom Border Color
@@ -407,7 +407,7 @@
     - id: style_background
       type: AutoComplete
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         placeholder: Light green background
@@ -418,7 +418,7 @@
     - id: style_label
       type: AutoComplete
       style:
-        /label:
+        .label:
           fontWeight: bold
           color: '#1677ff'
       properties:

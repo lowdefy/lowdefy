@@ -8,6 +8,7 @@ exports:
     - id: default
   pages:
     - id: dashboard
+    - id: reports
 
 menus:
   - id: default

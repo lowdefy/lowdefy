@@ -23,7 +23,8 @@ export default {
     icon: 'The icon in the Button.',
   },
   events: {
-    onClick: 'Trigger action when button is clicked.',
+    onClick:
+      'Trigger action when button is clicked. Renders a shortcut badge when a shortcut is configured.',
   },
   properties: {
     type: 'object',

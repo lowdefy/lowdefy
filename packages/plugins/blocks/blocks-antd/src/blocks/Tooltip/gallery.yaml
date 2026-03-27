@@ -885,7 +885,7 @@
       properties:
         title: Styled with element CSS key
       style:
-        /element:
+        .element:
           cursor: help
       blocks:
         - id: tooltip_style_element_p
@@ -899,7 +899,7 @@
       properties:
         title: Custom inner styling
       style:
-        /inner:
+        .inner:
           backgroundColor: '#1a1a2e'
           color: '#e94560'
           borderRadius: 12

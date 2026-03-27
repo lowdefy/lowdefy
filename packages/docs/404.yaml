@@ -20,7 +20,13 @@ _ref:
     content:
       - id: result404
         type: Result
+        style:
+          background: var(--ant-color-bg-layout)
         properties:
-          status: '404'
+          status: info
+          icon:
+            name: AiOutlineFileSearch
+            size: 80
+            color: var(--ant-color-primary)
           title: '404'
           subTitle: Sorry, the page you are visiting does not exist.

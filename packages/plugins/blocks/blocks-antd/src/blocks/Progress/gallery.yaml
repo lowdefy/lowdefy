@@ -372,7 +372,7 @@
     - id: css_inline_max_width
       type: Progress
       style:
-        /element:
+        .element:
           maxWidth: 300
       properties:
         percent: 55
@@ -381,7 +381,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15))
       properties:
         type: circle

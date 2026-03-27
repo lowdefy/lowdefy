@@ -4,9 +4,10 @@ export default {
     type: 'object',
     properties: {
       darkMode: {
-        type: 'boolean',
+        type: 'string',
+        enum: ['system', 'light', 'dark'],
         description:
-          'Set dark mode on or off. When not provided, toggles the current dark mode state.',
+          'Set dark mode preference. When not provided, cycles through light, dark, and system.',
       },
     },
     additionalProperties: false,

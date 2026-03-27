@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -47,6 +47,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "2.1.2",
     "@lowdefy/actions-core": "workspace:*",
     "@lowdefy/api": "workspace:*",
     "@lowdefy/block-utils": "workspace:*",
@@ -64,6 +65,7 @@
     "@lowdefy/plugin-next-auth": "workspace:*",
     "@sentry/nextjs": "8.53.0",
     "@tailwindcss/postcss": "4.2.1",
+    "antd": "6.3.1",
     "next": "16.1.6",
     "next-auth": "4.24.10",
     "pino": "8.16.2",
@@ -73,7 +75,7 @@
     "uuid": "13.0.0"
   },
   "devDependencies": {
-    "@lowdefy/build": "workspace:*",
+    "@lowdefy/build": "4.7.2",
     "@next/eslint-plugin-next": "16.1.6",
     "webpack": "5.94.0",
     "yaml": "2.3.4",

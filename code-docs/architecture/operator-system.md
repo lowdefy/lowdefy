@@ -232,18 +232,22 @@ columnDefs:
 
 ### \_module.\* ID Operators
 
-**File:** `packages/build/src/build/resolveModuleOperators.js`
+**File:** `packages/build/src/build/buildRefs/walker.js`
 
-The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve **after** the walker completes, during Phase 3 (`buildModules`). They are not standard build operators — they need access to the module entry's ID and connection remapping, which aren't available in the standard build operator context.
+The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve during the walker pass, alongside `_module.var`. They are detected **after** child walking (bottom-up) — after `_var` and `_module.var` but before `_build.*`.
 
-Resolution uses a `serializer.copy` reviver pass:
+Both string form (same-module) and object form (cross-module `{ id, module }`) are supported:
 
 - `_module.pageId: users-list` → `team-users/users-list`
+- `_module.pageId: { id: contact-detail, module: contacts }` → `contacts/contact-detail`
 - `_module.connectionId: users-db` → `team-users/users-db` (or remapped app connection ID)
 - `_module.endpointId: invite-user` → `team-users/invite-user`
 - `_module.id: true` → `team-users`
+- `_module.id: { module: contacts }` → resolved dependency entry ID
 
-This two-phase resolution (walker for `_module.var`, post-walker for ID operators) allows `_module.var` to be used in `_ref` paths and structural positions, while ID operators can validate against the fully resolved manifest.
+The object form uses `resolveDepTarget()` (`packages/build/src/build/resolveDepTarget.js`) to resolve the abstract dependency name to a concrete module entry via the `moduleDependencies` map on `WalkContext`. Each operator validates that the referenced ID exists in the target module's `exports` declarations.
+
+The `moduleEntry` property on `WalkContext` propagates through `child()` unchanged, and is overridden in `forRef()` for component/menu refs — switching to the source module's context when entering cross-module content.
 
 ### \_build.\* Operators
 

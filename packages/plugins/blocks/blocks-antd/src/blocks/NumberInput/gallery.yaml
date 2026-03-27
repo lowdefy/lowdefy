@@ -480,7 +480,7 @@
     - id: style_width
       type: NumberInput
       style:
-        /element:
+        .element:
           width: 200px
       properties:
         title: Fixed Width (200px)
@@ -488,14 +488,14 @@
     - id: style_background
       type: NumberInput
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         placeholder: Light blue background
     - id: style_border
       type: NumberInput
       style:
-        /element:
+        .element:
           borderColor: '#52c41a'
           borderWidth: 2px
       properties:
@@ -504,7 +504,7 @@
     - id: style_font
       type: NumberInput
       style:
-        /element:
+        .element:
           fontSize: 18px
           fontWeight: bold
       properties:
@@ -513,7 +513,7 @@
     - id: style_label
       type: NumberInput
       style:
-        /label:
+        .label:
           color: '#722ed1'
           fontWeight: bold
       properties:

@@ -18,6 +18,7 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: false,
   cssKeys: {
     element: 'The Carousel element.',
   },

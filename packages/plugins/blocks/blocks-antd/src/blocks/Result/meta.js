@@ -18,7 +18,10 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content', 'extra'],
+  slots: {
+    content: 'Additional content below the Result.',
+    extra: 'Extra content, typically action buttons.',
+  },
   cssKeys: {
     element: 'The Result element.',
     icon: 'The icon in the Result.',

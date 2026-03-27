@@ -340,7 +340,7 @@
         title: Bold Text
         color: volcano
       style:
-        /element:
+        .element:
           fontWeight: bold
           fontSize: 14px
     - id: style_inline_padding
@@ -351,7 +351,7 @@
         title: Extra Padding
         color: cyan
       style:
-        /element:
+        .element:
           padding: 4px 16px
           borderWidth: 2px
 
@@ -426,7 +426,7 @@
                 icon: AiOutlineArrowUp
                 color: error
               style:
-                /element:
+                .element:
                   fontWeight: bold
             - id: issue_label_bug
               type: Tag
@@ -520,7 +520,7 @@
                 title: NEW
                 color: '#52c41a'
               style:
-                /element:
+                .element:
                   fontWeight: bold
                   letterSpacing: 1px
             - id: catalog_category
@@ -577,7 +577,7 @@
                 title: 20% OFF
                 color: red
               style:
-                /element:
+                .element:
                   fontWeight: bold
             - id: catalog_add_btn
               type: Button

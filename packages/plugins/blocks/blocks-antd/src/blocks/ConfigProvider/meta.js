@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks wrapped by the ConfigProvider.',
+  },
   properties: {
     type: 'object',
     additionalProperties: false,
