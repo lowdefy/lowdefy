@@ -19,12 +19,22 @@ feat: Add AI agent support with multi-provider chat and tool use
 - `createAgentUIStreamResponse` converts agent output to a streaming HTTP response for the client
 - `handleAgentChat` orchestrates the full agent lifecycle with configurable hooks
 - Provider-agnostic design using the Vercel AI SDK — supports reasoning/thinking display and `providerOptions` passthrough
+- `sendSources` option for source citation streaming
+- Strip `data:` URL prefix from file attachments before AI SDK processing
 
 **AgentChat Block (`@lowdefy/blocks-antd-x`)**
 
 - New `AgentChat` block built on Ant Design X components with real-time streaming display
 - Sequential message part rendering with configurable reasoning/thinking display
 - Event bridging for agent lifecycle events (onSuccess, onError, onFinish)
+- Copy and feedback message actions with `onFeedback` event for capturing user ratings
+- Sender suggestion chips that populate the input on click
+- File attachment support with configurable accept types and max size
+- Configurable roles, avatars, and names per message role
+- Drawer display mode with a FloatButton trigger for embedding chat on any page
+- AI SDK source citation rendering for `source-url` and `source-document` parts
+- Mermaid diagram rendering in code blocks with `renderMermaid` config toggle
+- Syntax-highlighted code blocks with copy button, language label, and `codeHighlighter` config toggle
 
 **Connection Plugins**
 
