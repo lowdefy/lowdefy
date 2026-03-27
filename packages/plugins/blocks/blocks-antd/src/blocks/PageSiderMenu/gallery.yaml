@@ -468,3 +468,49 @@
                   properties:
                     title: Orders
                     value: 384
+
+- title: Profile Links from _menu Operator
+  description: Use the _menu operator to populate profile dropdown links from a menu defined in lowdefy.yaml. This keeps profile menus consistent with navigation menus and supports access-controlled filtering.
+  fullWidth: true
+  blocks:
+    - id: psm_menu_op
+      type: PageSiderMenu
+      properties:
+        darkModeToggle: true
+        sider:
+          width: 220
+          hideToggleButton: true
+        notifications:
+          count: 4
+          link:
+            pageId: home
+        profile:
+          avatar:
+            content: JC
+            color: '#6366f1'
+          links:
+            _menu: default
+        menu:
+          links:
+            - id: psm_mo_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psm_mo_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineTeam
+      blocks:
+        - id: psm_mo_title
+          type: Title
+          properties:
+            content: Profile from _menu
+            level: 3
+        - id: psm_mo_info
+          type: Alert
+          properties:
+            message: The profile dropdown links are populated using _menu operator, pulling from the menus defined in lowdefy.yaml. Click the avatar to see the dropdown.
+            type: info
+            showIcon: true

@@ -237,7 +237,8 @@ const PageSiderMenu = ({
                                       events={events}
                                       properties={{
                                         hideTitle: true,
-                                        type: 'link',
+                                        color: 'default',
+                                        variant: 'filled',
                                         block: true,
                                         icon: {
                                           name: openSiderState

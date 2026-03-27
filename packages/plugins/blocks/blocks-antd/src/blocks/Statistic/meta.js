@@ -88,13 +88,6 @@ export default {
           },
         ],
       },
-      valueStyle: {
-        type: 'object',
-        description: 'Css style to applied to value.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       theme: {
         type: 'object',
         description:

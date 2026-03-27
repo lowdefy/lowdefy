@@ -42,13 +42,6 @@ export default {
         default: true,
         description: 'Whether to adjust popup placement automatically when popup is off screen.',
       },
-      overlayStyle: {
-        type: 'object',
-        description: 'Style of the tooltip card.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       color: {
         type: 'string',
         description: 'The background color.',

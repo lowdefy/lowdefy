@@ -65,10 +65,7 @@ export default {
     onClose: 'Trigger action when menu is closed.',
     onMenuItemSelect: 'Trigger action when menu item is selected.',
     onMenuItemClick: 'Trigger action when menu item is clicked.',
-    onNotificationClick: 'Trigger action when the notification bell is clicked.',
     onOpen: 'Trigger action when menu is open.',
-    onProfileClick:
-      'Trigger action when the profile avatar is clicked (when no links are configured).',
     onProfileMenuClick: {
       description: 'Trigger action when a profile dropdown menu item is clicked.',
       event: {
@@ -214,9 +211,28 @@ export default {
       notifications: {
         type: 'object',
         description:
-          'Notification bell icon with badge in the header. Renders when configured. Clicking triggers the onNotificationClick event.',
+          'Notification bell icon with badge in the header. Renders when configured. Use the link property to navigate when clicked.',
         additionalProperties: false,
         properties: {
+          link: {
+            type: 'object',
+            description: 'Link to navigate to when the notification bell is clicked.',
+            additionalProperties: false,
+            properties: {
+              pageId: {
+                type: 'string',
+                description: 'Page to link to.',
+              },
+              url: {
+                type: 'string',
+                description: 'External URL to link to.',
+              },
+              newTab: {
+                type: 'boolean',
+                description: 'Open link in new tab.',
+              },
+            },
+          },
           count: {
             type: 'number',
             description:
@@ -308,7 +324,7 @@ export default {
           links: {
             type: 'array',
             description:
-              'Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider pattern as DropdownMenu. When links are provided, clicking the avatar opens a dropdown menu.',
+              'Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider schema as Menu. Compatible with _menu operator output for access-filtered menus.',
             items: {
               type: 'object',
               required: ['id', 'type'],
@@ -335,6 +351,13 @@ export default {
                   type: 'boolean',
                   description: 'Open link in new tab.',
                 },
+                style: {
+                  type: 'object',
+                  description: 'CSS style applied to the link.',
+                  docs: {
+                    displayType: 'yaml',
+                  },
+                },
                 properties: {
                   type: 'object',
                   description: 'Properties for the menu item.',
@@ -357,7 +380,21 @@ export default {
                       default: false,
                       description: 'Disable the menu item.',
                     },
+                    dashed: {
+                      type: 'boolean',
+                      default: false,
+                      description: 'Whether the divider line is dashed.',
+                    },
+                    shortcut: {
+                      type: 'string',
+                      description:
+                        'Keyboard shortcut. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                    },
                   },
+                },
+                links: {
+                  type: 'array',
+                  description: 'Nested menu items for MenuGroup.',
                 },
               },
             },

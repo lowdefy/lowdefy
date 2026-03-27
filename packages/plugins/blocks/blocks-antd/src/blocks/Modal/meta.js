@@ -104,13 +104,6 @@ export default {
           displayType: 'string',
         },
       },
-      wrapperStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal wrapper.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       zIndex: {
         type: 'integer',
         default: 1000,

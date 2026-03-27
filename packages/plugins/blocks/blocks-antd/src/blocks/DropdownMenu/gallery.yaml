@@ -560,3 +560,19 @@
                 flex: 0 0 auto
               properties:
                 content: Jane Doe
+
+- title: Links from _menu Operator
+  description: Use the _menu operator to populate dropdown links from a menu defined in lowdefy.yaml. This keeps dropdown menus consistent with navigation menus and supports access-controlled filtering.
+  blocks:
+    - id: dropdown_menu_op
+      type: DropdownMenu
+      properties:
+        trigger: click
+        links:
+          _menu: default
+      blocks:
+        - id: dropdown_menu_op_trigger
+          type: Button
+          properties:
+            title: Open Menu
+            icon: AiOutlineMenu

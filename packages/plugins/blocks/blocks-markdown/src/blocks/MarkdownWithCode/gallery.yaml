@@ -388,10 +388,10 @@
       type: MarkdownWithCode
       style:
         .element:
-          backgroundColor: '#f6ffed'
+          backgroundColor: var(--ant-color-success-bg)
           padding: 16
           borderRadius: 8
-          border: '1px solid #b7eb8f'
+          border: 1px solid var(--ant-color-success-border)
       properties:
         content: |
           ### Styled Code Container
@@ -401,7 +401,7 @@
           ```yaml
           style:
             .element:
-              backgroundColor: '#f6ffed'
+              backgroundColor: var(--ant-color-success-bg)
               padding: 16
               borderRadius: 8
           ```

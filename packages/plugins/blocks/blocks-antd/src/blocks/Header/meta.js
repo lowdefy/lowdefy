@@ -35,9 +35,6 @@ export default {
     darkModeToggle: 'The dark mode toggle wrapper.',
   },
   events: {
-    onNotificationClick: 'Trigger action when the notification bell is clicked.',
-    onProfileClick:
-      'Trigger action when the profile avatar is clicked (when no links are configured).',
     onProfileMenuClick: {
       description: 'Trigger action when a profile dropdown menu item is clicked.',
       event: {
@@ -75,9 +72,28 @@ export default {
       notifications: {
         type: 'object',
         description:
-          'Notification bell icon with badge in the header. Renders when configured. Clicking triggers the onNotificationClick event.',
+          'Notification bell icon with badge in the header. Renders when configured. Use the link property to navigate when clicked.',
         additionalProperties: false,
         properties: {
+          link: {
+            type: 'object',
+            description: 'Link to navigate to when the notification bell is clicked.',
+            additionalProperties: false,
+            properties: {
+              pageId: {
+                type: 'string',
+                description: 'Page to link to.',
+              },
+              url: {
+                type: 'string',
+                description: 'External URL to link to.',
+              },
+              newTab: {
+                type: 'boolean',
+                description: 'Open link in new tab.',
+              },
+            },
+          },
           count: {
             type: 'number',
             description:

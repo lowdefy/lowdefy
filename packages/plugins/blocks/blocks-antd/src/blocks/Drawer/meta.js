@@ -78,20 +78,6 @@ export default {
           displayType: 'string',
         },
       },
-      contentWrapperStyle: {
-        type: 'object',
-        description: 'Css style to applied to content area.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-      drawerStyle: {
-        type: 'object',
-        description: 'Css style to applied to drawer.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       zIndex: {
         type: 'integer',
         default: 1000,

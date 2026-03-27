@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { message } from 'antd';
+import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
@@ -28,6 +28,7 @@ const MessageBlock = ({
   properties,
   styles = {},
 }) => {
+  const { message } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       return message[args.status ?? properties.status ?? 'success']({

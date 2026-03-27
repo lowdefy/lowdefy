@@ -435,3 +435,46 @@
               type: Paragraph
               properties:
                 content: '3. Start the development server to preview your application.'
+
+- title: Profile Links from _menu Operator
+  description: Use the _menu operator to populate profile dropdown links from a menu defined in lowdefy.yaml. This keeps profile menus consistent with navigation menus and supports access-controlled filtering.
+  fullWidth: true
+  blocks:
+    - id: phm_menu_op
+      type: PageHeaderMenu
+      properties:
+        darkModeToggle: true
+        notifications:
+          count: 2
+          link:
+            pageId: home
+        profile:
+          avatar:
+            content: JD
+            color: '#6366f1'
+          links:
+            _menu: default
+        menu:
+          links:
+            - id: phm_mo_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_mo_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: phm_mo_title
+          type: Title
+          properties:
+            content: Profile from _menu
+            level: 3
+        - id: phm_mo_info
+          type: Alert
+          properties:
+            message: The profile dropdown links are populated using _menu operator, pulling from the menus defined in lowdefy.yaml. Click the avatar to see the dropdown.
+            type: info
+            showIcon: true

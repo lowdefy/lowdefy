@@ -24,41 +24,66 @@ function getDarkMode() {
   return window.__lowdefy_isDark ?? false;
 }
 
+function getDarkModePreference() {
+  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+}
+
+function getDarkModeIcon() {
+  const pref = getDarkModePreference();
+  if (pref === 'dark') return 'AiOutlineSun';
+  if (pref === 'light') return 'AiOutlineMoon';
+  return 'AiOutlineLaptop';
+}
+
 function renderNotifications({
   blockId,
   classNames,
   styles,
   properties,
-  methods,
   events,
   Icon,
+  Link,
   iconsColor,
 }) {
   if (type.isNone(properties.notifications)) return null;
   const notif = properties.notifications;
-  return (
-    <div
-      className={classNames.notifications}
-      style={{ cursor: 'pointer', lineHeight: 1, ...styles.notifications }}
-      onClick={() => methods.triggerEvent({ name: 'onNotificationClick' })}
+  const badge = (
+    <Badge
+      count={notif.count}
+      dot={notif.dot}
+      showZero={notif.showZero}
+      overflowCount={notif.overflowCount ?? 99}
+      color={notif.color}
+      className={classNames.notificationsBadge}
+      style={styles.notificationsBadge}
+      size="small"
     >
-      <Badge
-        count={notif.count}
-        dot={notif.dot}
-        showZero={notif.showZero}
-        overflowCount={notif.overflowCount ?? 99}
-        color={notif.color}
-        className={classNames.notificationsBadge}
-        style={styles.notificationsBadge}
-        size="small"
+      <Icon
+        blockId={`${blockId}_notifications_icon`}
+        events={events}
+        properties={notif.icon ?? { name: 'AiOutlineBell' }}
+        styles={{ element: { fontSize: 16, color: iconsColor, ...styles.notificationsIcon } }}
+      />
+    </Badge>
+  );
+  const link = notif.link;
+  if (link) {
+    return (
+      <Link
+        id={`${blockId}_notifications_link`}
+        pageId={link.pageId}
+        url={link.url}
+        newTab={link.newTab}
+        className={classNames.notifications}
+        style={{ lineHeight: 1, ...styles.notifications }}
       >
-        <Icon
-          blockId={`${blockId}_notifications_icon`}
-          events={events}
-          properties={notif.icon ?? { name: 'AiOutlineBell' }}
-          styles={{ element: { fontSize: 16, color: iconsColor, ...styles.notificationsIcon } }}
-        />
-      </Badge>
+        {badge}
+      </Link>
+    );
+  }
+  return (
+    <div className={classNames.notifications} style={{ lineHeight: 1, ...styles.notifications }}>
+      {badge}
     </div>
   );
 }
@@ -108,11 +133,7 @@ function renderProfile({
   const links = prof.links ?? [];
   if (links.length === 0) {
     return (
-      <div
-        className={classNames.profile}
-        style={{ cursor: 'pointer', ...styles.profile }}
-        onClick={() => methods.triggerEvent({ name: 'onProfileClick' })}
-      >
+      <div className={classNames.profile} style={styles.profile}>
         {avatar}
       </div>
     );
@@ -168,7 +189,7 @@ function renderDarkModeToggle({ blockId, classNames, styles, methods, events, Ic
       <Icon
         blockId={`${blockId}_dark_mode_toggle_icon`}
         events={events}
-        properties={{ name: getDarkMode() ? 'AiOutlineSun' : 'AiOutlineMoon' }}
+        properties={{ name: getDarkModeIcon() }}
         styles={{ element: { fontSize: 16, color: iconsColor } }}
       />
     </div>

@@ -22,7 +22,7 @@ import useSWR from 'swr';
 import { ErrorBoundary } from '@lowdefy/block-utils';
 import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
-import { ConfigProvider, theme as antdTheme } from 'antd';
+import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
 import Auth from '../lib/client/auth/Auth.js';
 import ErrorBar from '../lib/client/ErrorBar.js';
@@ -96,18 +96,29 @@ function App({ Component }) {
           algorithm,
         }}
       >
-        <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-          <ErrorBoundary fullPage onError={handleError}>
-            <Suspense fallback="">
-              <Auth>
-                {(auth) => {
-                  return <Component auth={auth} lowdefy={lowdefyRef.current} />;
-                }}
-              </Auth>
-            </Suspense>
-          </ErrorBoundary>
-          <ErrorBar errors={runtimeErrors} />
-        </ThemeTokenResolver>
+        <AntdApp>
+          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+            <ErrorBoundary fullPage onError={handleError}>
+              <Suspense
+                fallback={
+                  <div
+                    style={{
+                      minHeight: '100vh',
+                      background: 'var(--ant-color-bg-layout)',
+                    }}
+                  />
+                }
+              >
+                <Auth>
+                  {(auth) => {
+                    return <Component auth={auth} lowdefy={lowdefyRef.current} />;
+                  }}
+                </Auth>
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBar errors={runtimeErrors} />
+          </ThemeTokenResolver>
+        </AntdApp>
       </ConfigProvider>
     </StyleProvider>
   );

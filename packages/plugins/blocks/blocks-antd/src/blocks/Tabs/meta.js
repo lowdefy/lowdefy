@@ -106,13 +106,6 @@ export default {
           },
         },
       },
-      tabBarStyle: {
-        type: 'object',
-        description: 'Css style to apply to the tab bar.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       extraAreaKey: {
         type: 'string',
         description: 'Area key for the extra area blocks.',

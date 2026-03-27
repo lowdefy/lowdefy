@@ -36,23 +36,23 @@
     - id: styled_colored
       type: DangerousHtml
       properties:
-        html: '<p style="color: #1890ff; font-weight: bold; font-size: 18px;">Blue bold text with inline styles</p>'
+        html: '<p style="color: var(--ant-color-primary); font-weight: bold; font-size: 18px;">Blue bold text with inline styles</p>'
     - id: styled_box_success
       type: DangerousHtml
       properties:
-        html: '<div style="padding: 16px; background-color: #f6ffed; border: 1px solid #b7eb8f; border-radius: 6px;"><strong>Success:</strong> Your changes have been saved.</div>'
+        html: '<div style="padding: 16px; background-color: var(--ant-color-success-bg); border: 1px solid var(--ant-color-success-border); border-radius: 6px;"><strong>Success:</strong> Your changes have been saved.</div>'
     - id: styled_box_warning
       type: DangerousHtml
       properties:
-        html: '<div style="padding: 16px; background-color: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px;"><strong>Warning:</strong> Please review your settings before proceeding.</div>'
+        html: '<div style="padding: 16px; background-color: var(--ant-color-warning-bg); border: 1px solid var(--ant-color-warning-border); border-radius: 6px;"><strong>Warning:</strong> Please review your settings before proceeding.</div>'
     - id: styled_box_error
       type: DangerousHtml
       properties:
-        html: '<div style="padding: 16px; background-color: #fff2f0; border: 1px solid #ffccc7; border-radius: 6px;"><strong>Error:</strong> Unable to complete the operation.</div>'
+        html: '<div style="padding: 16px; background-color: var(--ant-color-error-bg); border: 1px solid var(--ant-color-error-border); border-radius: 6px;"><strong>Error:</strong> Unable to complete the operation.</div>'
     - id: styled_box_info
       type: DangerousHtml
       properties:
-        html: '<div style="padding: 16px; background-color: #e6f4ff; border: 1px solid #91caff; border-radius: 6px;"><strong>Info:</strong> The system will undergo maintenance at midnight.</div>'
+        html: '<div style="padding: 16px; background-color: var(--ant-color-info-bg); border: 1px solid var(--ant-color-info-border); border-radius: 6px;"><strong>Info:</strong> The system will undergo maintenance at midnight.</div>'
 
 - title: Lists
   blocks:
@@ -67,7 +67,7 @@
     - id: list_colored
       type: DangerousHtml
       properties:
-        html: '<ul style="list-style-type: disc; padding-left: 20px;"><li style="color: #52c41a;">Completed</li><li style="color: #faad14;">In Progress</li><li style="color: #ff4d4f;">Overdue</li></ul>'
+        html: '<ul style="list-style-type: disc; padding-left: 20px;"><li style="color: var(--ant-color-success);">Completed</li><li style="color: var(--ant-color-warning);">In Progress</li><li style="color: var(--ant-color-error);">Overdue</li></ul>'
     - id: list_nested
       type: DangerousHtml
       properties:
@@ -75,44 +75,44 @@
     - id: list_definition
       type: DangerousHtml
       properties:
-        html: '<dl><dt style="font-weight: bold;">Term 1</dt><dd style="margin-left: 20px; color: #595959;">Definition of the first term.</dd><dt style="font-weight: bold;">Term 2</dt><dd style="margin-left: 20px; color: #595959;">Definition of the second term.</dd></dl>'
+        html: '<dl><dt style="font-weight: bold;">Term 1</dt><dd style="margin-left: 20px; color: var(--ant-color-text-secondary);">Definition of the first term.</dd><dt style="font-weight: bold;">Term 2</dt><dd style="margin-left: 20px; color: var(--ant-color-text-secondary);">Definition of the second term.</dd></dl>'
 
 - title: HTML Table
   blocks:
     - id: table_simple
       type: DangerousHtml
       properties:
-        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Name</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Role</th><th style="border: 1px solid #d9d9d9; padding: 8px; background: #fafafa; text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Alice</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Developer</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Active</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Bob</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Designer</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Active</td></tr><tr><td style="border: 1px solid #d9d9d9; padding: 8px;">Charlie</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Manager</td><td style="border: 1px solid #d9d9d9; padding: 8px;">Away</td></tr></tbody></table>'
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid var(--ant-color-border); padding: 8px; background: var(--ant-color-fill-quaternary); text-align: left;">Name</th><th style="border: 1px solid var(--ant-color-border); padding: 8px; background: var(--ant-color-fill-quaternary); text-align: left;">Role</th><th style="border: 1px solid var(--ant-color-border); padding: 8px; background: var(--ant-color-fill-quaternary); text-align: left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Alice</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Developer</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Active</td></tr><tr><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Bob</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Designer</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Active</td></tr><tr><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Charlie</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Manager</td><td style="border: 1px solid var(--ant-color-border); padding: 8px;">Away</td></tr></tbody></table>'
     - id: table_striped
       type: DangerousHtml
       properties:
-        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: left;">Product</th><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: right;">Price</th><th style="border: 1px solid #d9d9d9; padding: 10px; background: #1677ff; color: white; text-align: center;">Stock</th></tr></thead><tbody><tr style="background: #ffffff;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget A</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$29.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">150</td></tr><tr style="background: #f5f5f5;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget B</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$49.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">85</td></tr><tr style="background: #ffffff;"><td style="border: 1px solid #d9d9d9; padding: 10px;">Widget C</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: right;">$19.99</td><td style="border: 1px solid #d9d9d9; padding: 10px; text-align: center;">320</td></tr></tbody></table>'
+        html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="border: 1px solid var(--ant-color-border); padding: 10px; background: var(--ant-color-primary); color: white; text-align: left;">Product</th><th style="border: 1px solid var(--ant-color-border); padding: 10px; background: var(--ant-color-primary); color: white; text-align: right;">Price</th><th style="border: 1px solid var(--ant-color-border); padding: 10px; background: var(--ant-color-primary); color: white; text-align: center;">Stock</th></tr></thead><tbody><tr><td style="border: 1px solid var(--ant-color-border); padding: 10px;">Widget A</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: right;">$29.99</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: center;">150</td></tr><tr style="background: var(--ant-color-fill-quaternary);"><td style="border: 1px solid var(--ant-color-border); padding: 10px;">Widget B</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: right;">$49.99</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: center;">85</td></tr><tr><td style="border: 1px solid var(--ant-color-border); padding: 10px;">Widget C</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: right;">$19.99</td><td style="border: 1px solid var(--ant-color-border); padding: 10px; text-align: center;">320</td></tr></tbody></table>'
 
 - title: Embedded Media Placeholders
   blocks:
     - id: media_video_placeholder
       type: DangerousHtml
       properties:
-        html: '<div style="width: 100%; max-width: 560px; aspect-ratio: 16/9; background: #f0f0f0; border: 2px dashed #d9d9d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #8c8c8c; font-size: 16px;">Video Placeholder (16:9)</div>'
+        html: '<div style="width: 100%; max-width: 560px; aspect-ratio: 16/9; background: var(--ant-color-fill-tertiary); border: 2px dashed var(--ant-color-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--ant-color-text-tertiary); font-size: 16px;">Video Placeholder (16:9)</div>'
     - id: media_iframe_placeholder
       type: DangerousHtml
       properties:
-        html: '<div style="width: 100%; max-width: 400px; height: 300px; background: #f5f5f5; border: 2px dashed #d9d9d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #8c8c8c;">Embedded Content Area</div>'
+        html: '<div style="width: 100%; max-width: 400px; height: 300px; background: var(--ant-color-fill-quaternary); border: 2px dashed var(--ant-color-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--ant-color-text-tertiary);">Embedded Content Area</div>'
 
 - title: Complex Layout
   blocks:
     - id: layout_card
       type: DangerousHtml
       properties:
-        html: '<div style="max-width: 400px; border: 1px solid #d9d9d9; border-radius: 8px; overflow: hidden;"><div style="padding: 16px; background: #fafafa; border-bottom: 1px solid #d9d9d9;"><h4 style="margin: 0;">Card Title</h4></div><div style="padding: 16px;"><p style="margin: 0 0 12px 0; color: #595959;">This is a card-like layout created purely with HTML and inline styles.</p><div style="display: flex; gap: 8px;"><span style="background: #e6f4ff; color: #1677ff; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 1</span><span style="background: #f6ffed; color: #52c41a; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 2</span></div></div></div>'
+        html: '<div style="max-width: 400px; border: 1px solid var(--ant-color-border); border-radius: 8px; overflow: hidden;"><div style="padding: 16px; background: var(--ant-color-fill-quaternary); border-bottom: 1px solid var(--ant-color-border);"><h4 style="margin: 0;">Card Title</h4></div><div style="padding: 16px;"><p style="margin: 0 0 12px 0; color: var(--ant-color-text-secondary);">This is a card-like layout created purely with HTML and inline styles.</p><div style="display: flex; gap: 8px;"><span style="background: var(--ant-color-primary-bg); color: var(--ant-color-primary); padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 1</span><span style="background: var(--ant-color-success-bg); color: var(--ant-color-success); padding: 2px 8px; border-radius: 4px; font-size: 12px;">Tag 2</span></div></div></div>'
     - id: layout_flex_row
       type: DangerousHtml
       properties:
-        html: '<div style="display: flex; gap: 16px; flex-wrap: wrap;"><div style="flex: 1; min-width: 150px; padding: 16px; background: #e6f4ff; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #1677ff;">42</div><div style="color: #595959; font-size: 12px;">Active Users</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: #f6ffed; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #52c41a;">128</div><div style="color: #595959; font-size: 12px;">Completed</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: #fff7e6; border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: #fa8c16;">7</div><div style="color: #595959; font-size: 12px;">Pending</div></div></div>'
+        html: '<div style="display: flex; gap: 16px; flex-wrap: wrap;"><div style="flex: 1; min-width: 150px; padding: 16px; background: var(--ant-color-primary-bg); border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: var(--ant-color-primary);">42</div><div style="color: var(--ant-color-text-secondary); font-size: 12px;">Active Users</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: var(--ant-color-success-bg); border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: var(--ant-color-success);">128</div><div style="color: var(--ant-color-text-secondary); font-size: 12px;">Completed</div></div><div style="flex: 1; min-width: 150px; padding: 16px; background: var(--ant-color-warning-bg); border-radius: 8px; text-align: center;"><div style="font-size: 24px; font-weight: bold; color: var(--ant-color-warning);">7</div><div style="color: var(--ant-color-text-secondary); font-size: 12px;">Pending</div></div></div>'
     - id: layout_timeline
       type: DangerousHtml
       properties:
-        html: '<div style="padding-left: 20px; border-left: 2px solid #1677ff;"><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #1677ff;"></div><div style="font-weight: bold;">Step 1: Setup</div><div style="color: #595959; font-size: 13px;">Configure your project settings.</div></div><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #1677ff;"></div><div style="font-weight: bold;">Step 2: Build</div><div style="color: #595959; font-size: 13px;">Run the build pipeline.</div></div><div style="position: relative;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #d9d9d9;"></div><div style="font-weight: bold; color: #8c8c8c;">Step 3: Deploy</div><div style="color: #bfbfbf; font-size: 13px;">Deploy to production.</div></div></div>'
+        html: '<div style="padding-left: 20px; border-left: 2px solid var(--ant-color-primary);"><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--ant-color-primary);"></div><div style="font-weight: bold;">Step 1: Setup</div><div style="color: var(--ant-color-text-secondary); font-size: 13px;">Configure your project settings.</div></div><div style="position: relative; padding-bottom: 16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--ant-color-primary);"></div><div style="font-weight: bold;">Step 2: Build</div><div style="color: var(--ant-color-text-secondary); font-size: 13px;">Run the build pipeline.</div></div><div style="position: relative;"><div style="position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--ant-color-border);"></div><div style="font-weight: bold; color: var(--ant-color-text-tertiary);">Step 3: Deploy</div><div style="color: var(--ant-color-text-quaternary); font-size: 13px;">Deploy to production.</div></div></div>'
 
 - title: DOMPurify Options
   blocks:
@@ -143,9 +143,9 @@
       style:
         .element:
           padding: 20
-          background: '#f9f9f9'
+          background: var(--ant-color-fill-quaternary)
           borderRadius: 8
-          border: 1px solid #e8e8e8
+          border: 1px solid var(--ant-color-border)
       properties:
         html: '<p style="margin: 0;">Content inside a styled DangerousHtml container with padding and background.</p>'
     - id: style_max_width
@@ -155,28 +155,28 @@
           maxWidth: 400
           margin: 0 auto
           padding: 16
-          background: '#e6f4ff'
+          background: var(--ant-color-primary-bg)
           borderRadius: 8
           textAlign: center
       properties:
-        html: '<p style="margin: 0; color: #1677ff; font-weight: bold;">Centered container with max-width constraint.</p>'
+        html: '<p style="margin: 0; color: var(--ant-color-primary); font-weight: bold;">Centered container with max-width constraint.</p>'
     - id: style_shadow
       type: DangerousHtml
       style:
         .element:
           padding: 20
           borderRadius: 12
-          boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
-          background: '#ffffff'
+          boxShadow: var(--ant-box-shadow)
+          background: var(--ant-color-bg-container)
       properties:
-        html: '<h4 style="margin: 0 0 8px 0;">Elevated Card</h4><p style="margin: 0; color: #595959;">A DangerousHtml block styled with a box shadow for an elevated card appearance.</p>'
+        html: '<h4 style="margin: 0 0 8px 0;">Elevated Card</h4><p style="margin: 0; color: var(--ant-color-text-secondary);">A DangerousHtml block styled with a box shadow for an elevated card appearance.</p>'
     - id: style_border_left
       type: DangerousHtml
       style:
         .element:
-          borderLeft: 4px solid #722ed1
+          borderLeft: 4px solid var(--ant-color-primary)
           paddingLeft: 16
           paddingTop: 8
           paddingBottom: 8
       properties:
-        html: '<p style="margin: 0; color: #722ed1; font-weight: 500;">Highlighted with a purple left border accent.</p>'
+        html: '<p style="margin: 0; color: var(--ant-color-primary); font-weight: 500;">Highlighted with a primary color left border accent.</p>'

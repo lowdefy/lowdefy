@@ -76,13 +76,6 @@ export default {
         description:
           'Whether to close the modal dialog when the mask (area outside the modal) is clicked.',
       },
-      modalStyle: {
-        type: 'object',
-        description: 'Css style to applied to modal.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       okText: {
         type: 'string',
         default: 'Ok',

@@ -348,14 +348,16 @@
       properties:
         status: success
         content: Custom background color
-        messageStyle:
+      style:
+        .element:
           border: '1px solid #b7eb8f'
     - id: mstyle_font_msg
       type: Message
       properties:
         status: info
         content: Larger font with custom padding
-        messageStyle:
+      style:
+        .element:
           fontSize: 16
           padding: '12px 24px'
     - id: mstyle_shadow_msg
@@ -363,7 +365,8 @@
       properties:
         status: warning
         content: Shadow and rounded corners
-        messageStyle:
+      style:
+        .element:
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
           borderRadius: 12
     - id: btn_mstyle_bg
