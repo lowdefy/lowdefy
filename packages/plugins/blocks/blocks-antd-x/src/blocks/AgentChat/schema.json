@@ -25,6 +25,8 @@
       "type": "object",
       "properties": {
         "markdownRendering": { "type": "boolean", "default": true },
+        "renderMermaid": { "type": "boolean", "default": true },
+        "codeHighlighter": { "type": "boolean", "default": true },
         "showThoughtChain": { "type": "boolean", "default": true },
         "showReasoning": { "type": "boolean", "default": true },
         "reasoningDisplay": {
@@ -36,6 +38,30 @@
           "type": "string",
           "enum": ["summary", "full", "none"],
           "default": "summary"
+        },
+        "showSources": { "type": "boolean" },
+        "actions": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["copy", "feedback"] }
+        },
+        "roles": {
+          "type": "object",
+          "properties": {
+            "assistant": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" }
+              }
+            }
+          }
         }
       }
     },
@@ -51,7 +77,27 @@
     "sender": {
       "type": "object",
       "properties": {
-        "placeholder": { "type": "string" }
+        "placeholder": { "type": "string" },
+        "attachments": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "accept": { "type": "string" },
+            "maxSize": { "type": "number" }
+          }
+        }
+      }
+    },
+    "display": {
+      "type": "string",
+      "enum": ["inline", "drawer"]
+    },
+    "drawer": {
+      "type": "object",
+      "properties": {
+        "placement": { "type": "string", "enum": ["left", "right", "top", "bottom"] },
+        "width": { "type": "number" },
+        "title": { "type": "string" }
       }
     }
   },

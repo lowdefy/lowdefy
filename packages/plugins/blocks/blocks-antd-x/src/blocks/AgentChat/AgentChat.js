@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
 import { Sender } from '@ant-design/x';
@@ -104,12 +104,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const dataUrl = reader.result;
-        if (file.type.startsWith('image/')) {
-          resolve({ type: 'image', image: dataUrl });
-        } else {
-          resolve({ type: 'file', data: dataUrl.split(',')[1], mimeType: file.type });
-        }
+        resolve({ type: 'file', url: reader.result, mediaType: file.type });
       };
       reader.readAsDataURL(file);
     });
@@ -188,20 +183,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             />
           )}
         </div>
-        <div style={{ padding: '8px 0 16px' }}>
-          {sender?.suggestions?.length > 0 && isEmpty && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
-              {sender.suggestions.map((s, i) => (
-                <Button
-                  key={`suggestion-${i}`}
-                  size="small"
-                  onClick={() => handleSend(s.value ?? s.label)}
-                >
-                  {s.label}
-                </Button>
-              ))}
-            </div>
-          )}
+        <div style={{ padding: '8px 16px 24px' }}>
           {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
               {attachedFiles.map((file, i) => (

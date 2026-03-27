@@ -14,11 +14,54 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { ThoughtChain, Think } from '@ant-design/x';
+import { CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
+import { Button } from 'antd';
+import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
+
+// Renders a code block as plain text without syntax highlighting or mermaid rendering.
+function PlainCodeBlock({ children, block, lang }) {
+  if (!block) {
+    return <code>{children}</code>;
+  }
+  return (
+    <pre>
+      <code className={lang ? `language-${lang}` : undefined}>{children}</code>
+    </pre>
+  );
+}
+
+// Renders code blocks with syntax highlighting via CodeHighlighter and
+// mermaid diagrams via the Mermaid component from @ant-design/x.
+function RichCodeBlock({ renderMermaid, codeHighlighter }) {
+  return function CodeBlock({ children, block, lang }) {
+    if (!block) {
+      return <code>{children}</code>;
+    }
+    if (renderMermaid && lang === 'mermaid') {
+      return (
+        <div style={{ width: '100%' }}>
+          <Mermaid>{children}</Mermaid>
+        </div>
+      );
+    }
+    if (codeHighlighter) {
+      return (
+        <CodeHighlighter lang={lang} prismLightMode={false}>
+          {children}
+        </CodeHighlighter>
+      );
+    }
+    return (
+      <pre>
+        <code className={lang ? `language-${lang}` : undefined}>{children}</code>
+      </pre>
+    );
+  };
+}
 
 // Detects tool-call parts from AI SDK v6's dynamic part types.
 // Tool parts have type `tool-${toolName}` or `dynamic-tool`, not a generic `tool-invocation`.
@@ -48,15 +91,109 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse }) {
+function MessageActions({ actions, textContent, messageId, onFeedback }) {
+  return (
+    <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+      {actions.includes('copy') && (
+        <Button
+          type="text"
+          size="small"
+          icon={<CopyOutlined />}
+          onClick={() => navigator.clipboard.writeText(textContent)}
+        />
+      )}
+      {actions.includes('feedback') && (
+        <>
+          <Button
+            type="text"
+            size="small"
+            icon={<LikeOutlined />}
+            onClick={() => onFeedback?.({ messageId, rating: 'positive' })}
+          />
+          <Button
+            type="text"
+            size="small"
+            icon={<DislikeOutlined />}
+            onClick={() => onFeedback?.({ messageId, rating: 'negative' })}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+function MessageBubble({
+  content,
+  isStreaming,
+  parts,
+  config,
+  addToolApprovalResponse,
+  actions,
+  messageId,
+  onFeedback,
+}) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
+  const renderMermaid = config?.renderMermaid !== false;
+  const codeHighlighter = config?.codeHighlighter !== false;
+
+  const markdownComponents = useMemo(() => {
+    if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
+    return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
+  }, [renderMermaid, codeHighlighter]);
+
+  const showActions = actions && actions.length > 0 && !isStreaming;
+
+  const showSources = config?.showSources;
+  const sourceParts = showSources
+    ? (parts ?? []).filter((p) => p.type === 'source-url' || p.type === 'source-document')
+    : [];
 
   if (!parts || parts.length === 0) {
     return (
-      <Markdown streaming={isStreaming ? { hasNextChunk: true } : undefined}>{content}</Markdown>
+      <div>
+        <Markdown
+          streaming={isStreaming ? { hasNextChunk: true } : undefined}
+          components={markdownComponents}
+        >
+          {content}
+        </Markdown>
+        {sourceParts.length > 0 && (
+          <div style={{ marginTop: 8 }}>
+            <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+              {sourceParts.map((source, i) => (
+                <a
+                  key={`source-${i}`}
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 12,
+                    padding: '2px 8px',
+                    background: '#f5f5f5',
+                    borderRadius: 4,
+                    color: '#1677ff',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {source.title ?? source.url ?? `Source ${i + 1}`}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        {showActions && (
+          <MessageActions
+            actions={actions}
+            textContent={content}
+            messageId={messageId}
+            onFeedback={onFeedback}
+          />
+        )}
+      </div>
     );
   }
 
@@ -103,6 +240,11 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
   }
 
   const lastTextIdx = segments.findLastIndex((s) => s.category === 'text');
+
+  const allTextContent = parts
+    .filter((p) => p.type === 'text')
+    .map((p) => p.text)
+    .join('');
 
   return (
     <div>
@@ -181,6 +323,7 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
             <Markdown
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
+              components={markdownComponents}
             >
               {text}
             </Markdown>
@@ -188,6 +331,39 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
         }
         return null;
       })}
+      {sourceParts.length > 0 && (
+        <div style={{ marginTop: 8 }}>
+          <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {sourceParts.map((source, i) => (
+              <a
+                key={`source-${i}`}
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: 12,
+                  padding: '2px 8px',
+                  background: '#f5f5f5',
+                  borderRadius: 4,
+                  color: '#1677ff',
+                  textDecoration: 'none',
+                }}
+              >
+                {source.title ?? source.url ?? `Source ${i + 1}`}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+      {showActions && (
+        <MessageActions
+          actions={actions}
+          textContent={allTextContent}
+          messageId={messageId}
+          onFeedback={onFeedback}
+        />
+      )}
     </div>
   );
 }
