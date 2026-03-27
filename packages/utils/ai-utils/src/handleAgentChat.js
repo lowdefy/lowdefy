@@ -76,8 +76,27 @@ function createHookCallbacks({ hooks, callEndpoint }) {
   return callbacks;
 }
 
+// Convert data: URLs in file parts to raw base64 so the AI SDK does not attempt
+// to download them (it only supports http/https).  The mediaType field already
+// carries the MIME type, so nothing is lost.
+function convertDataUrlsToBase64(messages) {
+  return messages.map((msg) => {
+    if (!msg.parts) return msg;
+    const converted = msg.parts.map((part) => {
+      if (part.type !== 'file' || typeof part.url !== 'string' || !part.url.startsWith('data:')) {
+        return part;
+      }
+      const commaIndex = part.url.indexOf(',');
+      if (commaIndex === -1) return part;
+      return { ...part, url: part.url.slice(commaIndex + 1) };
+    });
+    return { ...msg, parts: converted };
+  });
+}
+
 async function handleAgentChat({ connection, properties, context }) {
-  const { agent, messages } = properties;
+  const { agent, messages: rawMessages } = properties;
+  const messages = convertDataUrlsToBase64(rawMessages);
 
   const tools = {};
 

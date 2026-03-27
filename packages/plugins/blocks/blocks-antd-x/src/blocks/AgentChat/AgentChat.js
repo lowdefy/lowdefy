@@ -104,12 +104,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const dataUrl = reader.result;
-        if (file.type.startsWith('image/')) {
-          resolve({ type: 'image', image: dataUrl });
-        } else {
-          resolve({ type: 'file', data: dataUrl.split(',')[1], mimeType: file.type });
-        }
+        resolve({ type: 'file', url: reader.result, mediaType: file.type });
       };
       reader.readAsDataURL(file);
     });
@@ -153,7 +148,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       id={blockId}
       style={{
         display: 'flex',
-        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
+        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
       }}
     >
       {showSidebar && (
