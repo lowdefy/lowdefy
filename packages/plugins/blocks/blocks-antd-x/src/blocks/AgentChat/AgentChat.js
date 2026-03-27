@@ -188,20 +188,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             />
           )}
         </div>
-        <div style={{ padding: '8px 0 16px' }}>
-          {sender?.suggestions?.length > 0 && isEmpty && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
-              {sender.suggestions.map((s, i) => (
-                <Button
-                  key={`suggestion-${i}`}
-                  size="small"
-                  onClick={() => handleSend(s.value ?? s.label)}
-                >
-                  {s.label}
-                </Button>
-              ))}
-            </div>
-          )}
+        <div style={{ padding: '8px 16px 24px' }}>
           {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
               {attachedFiles.map((file, i) => (

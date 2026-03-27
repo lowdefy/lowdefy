@@ -16,7 +16,7 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { ThoughtChain, Think } from '@ant-design/x';
+import { CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
 import { Button } from 'antd';
 import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 
@@ -32,6 +32,31 @@ function PlainCodeBlock({ children, block, lang }) {
       <code className={lang ? `language-${lang}` : undefined}>{children}</code>
     </pre>
   );
+}
+
+// Renders code blocks with syntax highlighting via CodeHighlighter and
+// mermaid diagrams via the Mermaid component from @ant-design/x.
+function RichCodeBlock({ renderMermaid, codeHighlighter }) {
+  return function CodeBlock({ children, block, lang }) {
+    if (!block) {
+      return <code>{children}</code>;
+    }
+    if (renderMermaid && lang === 'mermaid') {
+      return <Mermaid>{children}</Mermaid>;
+    }
+    if (codeHighlighter) {
+      return (
+        <CodeHighlighter lang={lang} prismLightMode={false}>
+          {children}
+        </CodeHighlighter>
+      );
+    }
+    return (
+      <pre>
+        <code className={lang ? `language-${lang}` : undefined}>{children}</code>
+      </pre>
+    );
+  };
 }
 
 // Detects tool-call parts from AI SDK v6's dynamic part types.
@@ -93,7 +118,16 @@ function MessageActions({ actions, textContent, messageId, onFeedback }) {
   );
 }
 
-function MessageBubble({ content, isStreaming, parts, config, addToolApprovalResponse, actions, messageId, onFeedback }) {
+function MessageBubble({
+  content,
+  isStreaming,
+  parts,
+  config,
+  addToolApprovalResponse,
+  actions,
+  messageId,
+  onFeedback,
+}) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
@@ -101,12 +135,9 @@ function MessageBubble({ content, isStreaming, parts, config, addToolApprovalRes
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
 
-  // When either mermaid rendering or code highlighting is disabled, override the code component
-  // to render plain code blocks. This prevents mermaid diagrams from being rendered as diagrams
-  // and disables syntax highlighting respectively.
   const markdownComponents = useMemo(() => {
-    if (renderMermaid && codeHighlighter) return undefined;
-    return { code: PlainCodeBlock };
+    if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
+    return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
   }, [renderMermaid, codeHighlighter]);
 
   const showActions = actions && actions.length > 0 && !isStreaming;

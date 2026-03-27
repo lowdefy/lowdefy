@@ -16,8 +16,22 @@
 
 import React from 'react';
 import { Bubble } from '@ant-design/x';
+import { Avatar } from 'antd';
+import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
 import MessageBubble from './MessageBubble.js';
+
+function roleAvatar(roleConfig, fallbackIcon) {
+  if (roleConfig?.avatar) {
+    return <Avatar src={roleConfig.avatar} />;
+  }
+  return <Avatar icon={fallbackIcon} />;
+}
+
+function roleHeader(roleConfig, fallback) {
+  const name = roleConfig?.name ?? fallback;
+  return <h5 style={{ margin: 0 }}>{name}</h5>;
+}
 
 function MessageList({ messages, isStreaming, config, addToolApprovalResponse, onFeedback }) {
   // Build a lookup map for assistant message parts.
@@ -64,18 +78,14 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
           placement: 'end',
           variant: 'filled',
           shape: 'round',
-          ...(config?.roles?.user?.avatar != null && {
-            avatar: { src: config.roles.user.avatar },
-          }),
-          ...(config?.roles?.user?.name != null && { header: config.roles.user.name }),
+          avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
+          header: roleHeader(config?.roles?.user, 'You'),
         },
         ai: {
           placement: 'start',
           variant: 'outlined',
-          ...(config?.roles?.assistant?.avatar != null && {
-            avatar: { src: config.roles.assistant.avatar },
-          }),
-          ...(config?.roles?.assistant?.name != null && { header: config.roles.assistant.name }),
+          avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
+          header: roleHeader(config?.roles?.assistant, 'Assistant'),
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             return (
