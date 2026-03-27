@@ -42,7 +42,11 @@ function RichCodeBlock({ renderMermaid, codeHighlighter }) {
       return <code>{children}</code>;
     }
     if (renderMermaid && lang === 'mermaid') {
-      return <Mermaid>{children}</Mermaid>;
+      return (
+        <div style={{ width: '100%' }}>
+          <Mermaid>{children}</Mermaid>
+        </div>
+      );
     }
     if (codeHighlighter) {
       return (

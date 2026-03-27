@@ -84,6 +84,7 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
         ai: {
           placement: 'start',
           variant: 'outlined',
+          style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'Assistant'),
           contentRender: (content, info) => {
