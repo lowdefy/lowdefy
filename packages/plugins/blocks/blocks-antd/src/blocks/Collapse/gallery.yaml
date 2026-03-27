@@ -790,12 +790,12 @@
     - id: css_styled_collapse
       type: Collapse
       style:
-        /element:
+        .element:
           background: transparent
           borderColor: '#d9d9d9'
-        /header:
+        .header:
           fontWeight: 600
-        /content:
+        .content:
           color: '#595959'
       properties:
         panels:

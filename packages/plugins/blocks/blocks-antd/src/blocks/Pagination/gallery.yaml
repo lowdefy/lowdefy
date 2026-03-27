@@ -375,7 +375,7 @@
     - id: style_background
       type: Pagination
       style:
-        /element:
+        .element:
           background: var(--ant-color-bg-layout)
           padding: 12
           borderRadius: 8
@@ -388,7 +388,7 @@
     - id: style_centered
       type: Pagination
       style:
-        /element:
+        .element:
           border: 1px solid #d9d9d9
           borderRadius: 8
           padding: 12
@@ -403,7 +403,7 @@
     - id: style_right
       type: Pagination
       style:
-        /element:
+        .element:
           display: flex
           justifyContent: flex-end
       properties:

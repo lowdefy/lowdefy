@@ -381,7 +381,7 @@
     - id: style_element
       type: DateSelector
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         label:
@@ -389,7 +389,7 @@
     - id: style_label
       type: DateSelector
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:

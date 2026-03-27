@@ -52,13 +52,6 @@ export default {
         default: 'info',
         description: 'Message status type.',
       },
-      messageStyle: {
-        type: 'object',
-        description: 'Css style to applied to message.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
       theme: {
         type: 'object',
         description:

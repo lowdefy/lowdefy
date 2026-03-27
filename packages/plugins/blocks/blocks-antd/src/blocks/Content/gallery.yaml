@@ -28,8 +28,8 @@
             - id: content_basic_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: The Content block is the main content area within a Layout. It maps to Ant Design's Layout.Content component and holds the primary page content.
+                content: |
+                  The Content block is the main content area within a Layout. It maps to Ant Design's Layout.Content component and holds the primary page content.
 
     - id: content_empty_layout
       type: Layout
@@ -47,8 +47,8 @@
             - id: content_empty_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: Content without any special configuration. It fills the available space within its parent Layout.
+                content: |
+                  Content without any special configuration. It fills the available space within its parent Layout.
 
 - title: Content in Full Page Layout
   fullWidth: true
@@ -61,18 +61,15 @@
         - id: content_full_page_header
           type: Header
           style:
-            display: flex
-            alignItems: center
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_full_page_header_title
               type: Title
               properties:
-                content:
-                  _nunjucks: My Application
+                content: My Application
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_full_page_main
           type: Content
@@ -83,14 +80,13 @@
             - id: content_full_page_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Welcome Back
+                content: Welcome Back
                 level: 3
             - id: content_full_page_desc
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: Content works within a Layout alongside Header and Footer blocks to form a complete page structure. It automatically fills the available vertical space between other layout sections.
+                content: |
+                  Content works within a Layout alongside Header and Footer blocks to form a complete page structure. It automatically fills the available vertical space between other layout sections.
         - id: content_full_page_footer
           type: Footer
           style:
@@ -99,8 +95,7 @@
             - id: content_full_page_footer_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: '© 2026 My Application'
+                content: '© 2026 My Application'
 
 - title: Content with Sider Layout
   fullWidth: true
@@ -113,24 +108,25 @@
         - id: content_sider_header
           type: Header
           style:
-            display: flex
-            alignItems: center
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_sider_header_title
               type: Title
               properties:
-                content:
-                  _nunjucks: App with Sidebar
+                content: App with Sidebar
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_sider_inner
           type: Layout
+          properties:
+            hasSider: true
           blocks:
             - id: content_sider_nav
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 width: 200
               style:
@@ -153,6 +149,8 @@
                         icon: AiOutlineSetting
             - id: content_sider_main
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-container)
@@ -161,14 +159,13 @@
                 - id: content_sider_main_title
                   type: Title
                   properties:
-                    content:
-                      _nunjucks: Dashboard
+                    content: Dashboard
                     level: 3
                 - id: content_sider_main_text
                   type: Paragraph
                   properties:
-                    content:
-                      _nunjucks: When used alongside a Sider block, Content fills the remaining horizontal space. This is the standard layout pattern for admin dashboards and applications with navigation sidebars.
+                    content: |
+                      When used alongside a Sider block, Content fills the remaining horizontal space. This is the standard layout pattern for admin dashboards and applications with navigation sidebars.
 
 - title: Theme Token Overrides
   fullWidth: true
@@ -188,14 +185,13 @@
             - id: content_theme_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Themed Content Area
+                content: Themed Content Area
                 level: 4
             - id: content_theme_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: Use the theme property to override antd design tokens. The colorBgLayout token changes the background of the Content block, and colorText adjusts the default text color within it.
+                content: |
+                  Use the theme property to override antd design tokens. The colorBgLayout token changes the background of the Content block, and colorText adjusts the default text color within it.
 
     - id: content_theme_warm_layout
       type: Layout
@@ -212,14 +208,13 @@
             - id: content_theme_warm_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Warm Color Scheme
+                content: Warm Color Scheme
                 level: 4
             - id: content_theme_warm_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: A warm-toned content area using orange theme tokens. Theme tokens cascade through the antd design system and affect all child blocks within this Content.
+                content: |
+                  A warm-toned content area using orange theme tokens. Theme tokens cascade through the antd design system and affect all child blocks within this Content.
 
     - id: content_theme_dark_layout
       type: Layout
@@ -238,15 +233,14 @@
               type: Title
               class: text-text-secondary
               properties:
-                content:
-                  _nunjucks: Dark Content Area
+                content: Dark Content Area
                 level: 4
             - id: content_theme_dark_text
               type: Paragraph
               class: text-text-secondary
               properties:
-                content:
-                  _nunjucks: Dark-themed content using colorBgLayout and colorText tokens. For app-wide dark themes, prefer using a global ConfigProvider rather than per-block overrides.
+                content: |
+                  Dark-themed content using colorBgLayout and colorText tokens. For app-wide dark themes, prefer using a global ConfigProvider rather than per-block overrides.
 
 - title: Style and CSS Classes
   fullWidth: true
@@ -264,14 +258,12 @@
             - id: content_css_rounded_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Rounded Content with Tailwind
+                content: Rounded Content with Tailwind
                 level: 4
             - id: content_css_rounded_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: 'Use the element CSS key to apply Tailwind classes directly to the Content element. Content has one CSS key: element, which targets the Layout.Content wrapper.'
+                content: 'Use the element CSS key to apply Tailwind classes directly to the Content element. Content has one CSS key: element, which targets the Layout.Content wrapper.'
 
     - id: content_css_gradient_layout
       type: Layout
@@ -286,14 +278,13 @@
             - id: content_css_gradient_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Gradient Background
+                content: Gradient Background
                 level: 4
             - id: content_css_gradient_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: Tailwind gradient and shadow utilities applied via the element CSS key create a visually distinct content area without needing custom CSS.
+                content: |
+                  Tailwind gradient and shadow utilities applied via the element CSS key create a visually distinct content area without needing custom CSS.
 
     - id: content_css_border_layout
       type: Layout
@@ -308,14 +299,13 @@
             - id: content_css_border_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Accent Border Content
+                content: Accent Border Content
                 level: 4
             - id: content_css_border_text
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: A left accent border highlights the content area. Combine Tailwind border utilities with background colors for status-aware content regions.
+                content: |
+                  A left accent border highlights the content area. Combine Tailwind border utilities with background colors for status-aware content regions.
 
 - title: Content in Dashboard Layout
   fullWidth: true
@@ -328,9 +318,8 @@
         - id: content_dashboard_header
           type: Header
           style:
-            display: flex
-            alignItems: center
             justifyContent: space-between
+            borderBottom: 1px solid var(--ant-color-border)
             paddingInline: 24px
           blocks:
             - id: content_dashboard_header_title
@@ -338,11 +327,9 @@
               layout:
                 flex: 0 0 auto
               properties:
-                content:
-                  _nunjucks: Analytics Dashboard
+                content: Analytics Dashboard
                 level: 4
                 style:
-                  color: white
                   margin: 0
             - id: content_dashboard_header_btn
               type: Button
@@ -356,9 +343,13 @@
                 size: small
         - id: content_dashboard_inner
           type: Layout
+          properties:
+            hasSider: true
           blocks:
             - id: content_dashboard_sider
               type: Sider
+              layout:
+                flex: 0 0 auto
               properties:
                 width: 200
               style:
@@ -384,6 +375,8 @@
                         icon: AiOutlineTeam
             - id: content_dashboard_main
               type: Content
+              layout:
+                flex: 1 1 auto
               style:
                 padding: 24px
                 background: var(--ant-color-bg-layout)
@@ -439,18 +432,15 @@
                     - id: content_dashboard_activity_1
                       type: Paragraph
                       properties:
-                        content:
-                          _nunjucks: 'User John updated the project settings — 2 minutes ago'
+                        content: 'User John updated the project settings — 2 minutes ago'
                     - id: content_dashboard_activity_2
                       type: Paragraph
                       properties:
-                        content:
-                          _nunjucks: 'Deployment to production completed — 15 minutes ago'
+                        content: 'Deployment to production completed — 15 minutes ago'
                     - id: content_dashboard_activity_3
                       type: Paragraph
                       properties:
-                        content:
-                          _nunjucks: 'New team member Sarah joined — 1 hour ago'
+                        content: 'New team member Sarah joined — 1 hour ago'
 
 - title: Content in Settings Page
   fullWidth: true
@@ -463,18 +453,15 @@
         - id: content_settings_header
           type: Header
           style:
-            display: flex
-            alignItems: center
             paddingInline: 24px
+            borderBottom: 1px solid var(--ant-color-border)
           blocks:
             - id: content_settings_header_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Account Settings
+                content: Account Settings
                 level: 4
                 style:
-                  color: white
                   margin: 0
         - id: content_settings_main
           type: Content
@@ -485,14 +472,12 @@
             - id: content_settings_title
               type: Title
               properties:
-                content:
-                  _nunjucks: Profile Information
+                content: Profile Information
                 level: 3
             - id: content_settings_desc
               type: Paragraph
               properties:
-                content:
-                  _nunjucks: Update your personal details and preferences below.
+                content: Update your personal details and preferences below.
             - id: content_settings_form_name
               type: TextInput
               properties:

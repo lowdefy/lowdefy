@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import AWS from 'aws-sdk';
+import { S3Client } from '@aws-sdk/client-s3';
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import schema from './schema.js';
 import { type } from '@lowdefy/helpers';
 
-function AwsS3PresignedPostPolicy({ request, connection }) {
+async function AwsS3PresignedPostPolicy({ request, connection }) {
   const { accessKeyId, secretAccessKey, region, bucket } = connection;
   const { acl, conditions, expires, key, fields = {} } = request;
   const params = {
     Bucket: bucket,
-    Fields: {
-      key,
-    },
+    Key: key,
+    Fields: {},
   };
   if (conditions) {
     params.Conditions = conditions;
@@ -44,8 +44,11 @@ function AwsS3PresignedPostPolicy({ request, connection }) {
       params.Fields[field] = fields[field];
     }
   });
-  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-  return s3.createPresignedPost(params);
+  const s3 = new S3Client({
+    credentials: { accessKeyId, secretAccessKey },
+    region,
+  });
+  return createPresignedPost(s3, params);
 }
 
 AwsS3PresignedPostPolicy.schema = schema;

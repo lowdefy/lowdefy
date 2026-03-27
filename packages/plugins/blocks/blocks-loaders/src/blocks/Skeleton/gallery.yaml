@@ -244,7 +244,7 @@
         width: 200
         height: 20
       style:
-        /element:
+        .element:
           borderRadius: 10
     - id: style_square
       type: Skeleton
@@ -254,7 +254,7 @@
         width: 60
         height: 60
       style:
-        /element:
+        .element:
           borderRadius: 8
     - id: style_circle
       type: Skeleton
@@ -264,5 +264,5 @@
         width: 60
         height: 60
       style:
-        /element:
+        .element:
           borderRadius: 30

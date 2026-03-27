@@ -714,7 +714,7 @@
     - id: mask_custom_tour
       type: Tour
       style:
-        /mask:
+        .mask:
           boxShadow: inset 0 0 15px #333
       properties:
         open:
@@ -1848,7 +1848,7 @@
           - title: Inline Style
             description: The element style key controls the tour card appearance.
       style:
-        /element:
+        .element:
           maxWidth: 320px
       events:
         onClose:

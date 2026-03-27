@@ -65,8 +65,14 @@ blocks:
     type: PageSiderMenu
     properties:
       title: {{ block_type }}
+      darkModeToggle: true
       header:
-        theme: light
+        theme:
+          _if:
+            test:
+              _media: darkMode
+            then: dark
+            else: light
       menu:
         forceSubMenuRender: true
       sider:
@@ -445,7 +451,7 @@ blocks:
                           size: small
                           placeholder: |
                             border: 1px solid red
-                            /element:
+                            .element:
                               border: 1px solid blue
                           label:
                             span: 8

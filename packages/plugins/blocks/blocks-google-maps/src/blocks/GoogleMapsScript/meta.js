@@ -18,7 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content'],
+  slots: {
+    content: 'Child blocks wrapped by the script provider.',
+  },
   properties: {
     type: 'object',
     additionalProperties: false,

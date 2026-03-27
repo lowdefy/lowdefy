@@ -724,7 +724,8 @@
         status: success
         title: Custom Border
         description: This notification has a left green border.
-        notificationStyle:
+      style:
+        .element:
           borderLeft: 4px solid #52c41a
     - id: notif_style_bg
       type: Notification
@@ -734,7 +735,9 @@
         status: warning
         title: Custom Background
         description: This notification has a custom background color.
-        notificationStyle:
+      style:
+        .element:
+          background: rgba(250, 173, 20, 0.1)
     - id: notif_style_shadow
       type: Notification
       layout:
@@ -743,7 +746,8 @@
         status: info
         title: Heavy Shadow
         description: This notification has an elevated shadow.
-        notificationStyle:
+      style:
+        .element:
           boxShadow: 0 6px 24px rgba(0, 0, 0, 0.2)
     - id: btn_style_border
       type: Button
@@ -994,7 +998,7 @@
       layout:
         span: 0
       style:
-        /element:
+        .element:
           borderRadius: 12
           border: 2px solid #1890ff
       properties:

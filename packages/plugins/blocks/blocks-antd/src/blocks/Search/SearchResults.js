@@ -60,8 +60,7 @@ function groupResults(results, groups, resultMapping) {
 }
 
 function SearchResults({
-  results,
-  groups,
+  grouped,
   resultMapping,
   selectedIndex,
   highlightTerms,
@@ -78,7 +77,6 @@ function SearchResults({
     }
   }, [selectedIndex]);
 
-  const grouped = groupResults(results, groups, resultMapping);
   const titleField = resultMapping?.title ?? 'title';
   const descField = resultMapping?.description;
   const iconField = resultMapping?.icon;
@@ -165,3 +163,4 @@ function SearchResults({
 }
 
 export default SearchResults;
+export { groupResults };

@@ -414,7 +414,7 @@
     - id: drs_style_element
       type: DateRangeSelector
       style:
-        /element:
+        .element:
       properties:
         title: Custom Background
         label:
@@ -422,7 +422,7 @@
     - id: drs_style_label
       type: DateRangeSelector
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:

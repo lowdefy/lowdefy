@@ -19,9 +19,15 @@ export default {
   type: 'Result',
   style: {
     minHeight: '100vh',
+    background: 'var(--ant-color-bg-layout)',
   },
   properties: {
     status: 'info',
+    icon: {
+      name: 'AiOutlineFileSearch',
+      size: 80,
+      color: 'var(--ant-color-primary)',
+    },
     title: '404',
     subTitle: 'Sorry, the page you are visiting does not exist.',
   },

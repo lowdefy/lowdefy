@@ -15,32 +15,35 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import AWS from 'aws-sdk';
 
 import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy.js';
 
-jest.mock('aws-sdk');
+const mockCreatePresignedPost = jest.fn();
+const mockS3ClientConstructor = jest.fn();
+
+jest.mock('@aws-sdk/client-s3', () => ({
+  S3Client: jest.fn().mockImplementation((...args) => {
+    mockS3ClientConstructor(...args);
+    return {};
+  }),
+}));
+
+jest.mock('@aws-sdk/s3-presigned-post', () => ({
+  createPresignedPost: (...args) => mockCreatePresignedPost(...args),
+}));
 
 const schema = AwsS3PresignedPostPolicy.schema;
 const { checkRead, checkWrite } = AwsS3PresignedPostPolicy.meta;
 
-const mockCreatePresignedPost = jest.fn();
 const createPresignedPostMockImp = () => 'res';
-const mockS3Constructor = jest.fn();
-const s3ConstructorMockImp = () => ({
-  createPresignedPost: mockCreatePresignedPost,
-});
-
-AWS.S3 = mockS3Constructor;
 
 beforeEach(() => {
   mockCreatePresignedPost.mockReset();
-  mockS3Constructor.mockReset();
+  mockS3ClientConstructor.mockReset();
   mockCreatePresignedPost.mockImplementation(createPresignedPostMockImp);
-  mockS3Constructor.mockImplementation(s3ConstructorMockImp);
 });
 
-test('AwsS3PresignedPostPolicy', () => {
+test('AwsS3PresignedPostPolicy', async () => {
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -49,31 +52,32 @@ test('AwsS3PresignedPostPolicy', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = AwsS3PresignedPostPolicy({ request, connection });
-  expect(mockS3Constructor.mock.calls).toEqual([
+  const res = await AwsS3PresignedPostPolicy({ request, connection });
+  expect(mockS3ClientConstructor.mock.calls).toEqual([
     [
       {
-        accessKeyId: 'accessKeyId',
-        bucket: 'bucket',
+        credentials: {
+          accessKeyId: 'accessKeyId',
+          secretAccessKey: 'secretAccessKey',
+        },
         region: 'region',
-        secretAccessKey: 'secretAccessKey',
       },
     ],
   ]);
   expect(mockCreatePresignedPost.mock.calls).toEqual([
     [
+      {},
       {
         Bucket: 'bucket',
-        Fields: {
-          key: 'key',
-        },
+        Key: 'key',
+        Fields: {},
       },
     ],
   ]);
   expect(res).toEqual('res');
 });
 
-test('AwsS3PresignedPostPolicy options ', async () => {
+test('AwsS3PresignedPostPolicy options', async () => {
   const request = {
     key: 'key',
     acl: 'private',
@@ -87,25 +91,27 @@ test('AwsS3PresignedPostPolicy options ', async () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = AwsS3PresignedPostPolicy({ request, connection });
-  expect(mockS3Constructor.mock.calls).toEqual([
+  const res = await AwsS3PresignedPostPolicy({ request, connection });
+  expect(mockS3ClientConstructor.mock.calls).toEqual([
     [
       {
-        accessKeyId: 'accessKeyId',
-        bucket: 'bucket',
+        credentials: {
+          accessKeyId: 'accessKeyId',
+          secretAccessKey: 'secretAccessKey',
+        },
         region: 'region',
-        secretAccessKey: 'secretAccessKey',
       },
     ],
   ]);
   expect(mockCreatePresignedPost.mock.calls).toEqual([
     [
+      {},
       {
         Bucket: 'bucket',
+        Key: 'key',
         Conditions: [['condition']],
         Expires: 1,
         Fields: {
-          key: 'key',
           acl: 'private',
         },
       },
@@ -126,7 +132,7 @@ test('Error from s3 client', async () => {
     bucket: 'bucket',
     write: true,
   };
-  await expect(() => AwsS3PresignedPostPolicy({ request, connection })).toThrow(
+  await expect(AwsS3PresignedPostPolicy({ request, connection })).rejects.toThrow(
     'Test S3 client error.'
   );
 });

@@ -1,8 +1,8 @@
-# Migration: Move `properties.style` → `style: { /element }`
+# Migration: Move `properties.style` → `style: { .element }`
 
 ## Context
 
-In the old system, inline styles on a block's root element lived under `properties.style`. In Lowdefy v4.8, all styling moves to a top-level `style:` block with `/`-prefixed slot keys. The root element slot is `/element`.
+In the old system, inline styles on a block's root element lived under `properties.style`. In Lowdefy v4.8, all styling moves to a top-level `style:` block with `.`-prefixed slot keys. The root element slot is `.element`.
 
 The build auto-normalizes `properties.style` with a deprecation warning, but migrating now produces cleaner configs.
 
@@ -11,9 +11,9 @@ The build auto-normalizes `properties.style` with a deprecation warning, but mig
 For each block that has a `style:` key under `properties:`:
 
 1. Remove the `style:` entry from `properties:`
-2. Add a sibling `style:` block (at the same level as `properties:`) with the content nested under `/element:`
+2. Add a sibling `style:` block (at the same level as `properties:`) with the content nested under `.element:`
 
-If the block already has a top-level `style:` block, merge the `/element` entry into it.
+If the block already has a top-level `style:` block, merge the `.element` entry into it.
 
 ## Files to Check
 
@@ -39,7 +39,7 @@ Grep: `properties:` then check for `style:` child
 - id: header
   type: Box
   style:
-    /element:
+    .element:
       backgroundColor: '#f0f0f0'
       padding: 16
 ```
@@ -59,7 +59,7 @@ Grep: `properties:` then check for `style:` child
 - id: divider
   type: Divider
   style:
-    /element: { marginTop: 24, marginBottom: 24 }
+    .element: { marginTop: 24, marginBottom: 24 }
 ```
 
 ### Before — block with other properties
@@ -83,14 +83,14 @@ Grep: `properties:` then check for `style:` child
     title: My Card
     bordered: true
   style:
-    /element:
+    .element:
       borderRadius: 8
 ```
 
 ## Edge Cases
 
 - Do not move `style:` keys that are already at the block top level (not under `properties:`)
-- If a block already has a top-level `style:` with other `/` slots, add `/element` to it rather than creating a duplicate `style:` block
+- If a block already has a top-level `style:` with other `.` slots, add `.element` to it rather than creating a duplicate `style:` block
 - Do not touch `style:` inside markdown code blocks, string values, or `_ref` content
 - Operator expressions inside `style:` (like `_if`, `_state`) should be moved as-is
 

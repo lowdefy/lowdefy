@@ -429,7 +429,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#1a1a2e'
           padding: 16
           borderRadius: 8
@@ -450,7 +450,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#0d2818'
           padding: 16
           borderRadius: 8
@@ -471,7 +471,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#2a1215'
           padding: 16
           borderRadius: 8
@@ -492,7 +492,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#1a0a2e'
           padding: 16
           borderRadius: 8
@@ -516,7 +516,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           border: 1px solid #b7eb8f
           padding: 16
@@ -538,7 +538,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#fffbe6'
           border: 1px solid #ffe58f
           padding: 16
@@ -560,7 +560,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#fff2f0'
           border: 1px solid #ffccc7
           padding: 16
@@ -582,7 +582,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#e6f4ff'
           border: 1px solid #91caff
           padding: 16
@@ -607,7 +607,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#f0f5ff'
           padding: 12
           borderRadius: 50%
@@ -620,7 +620,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           border: 2px solid #d9d9d9
           padding: 10
           borderRadius: 8
@@ -633,7 +633,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#ffffff'
           padding: 14
           borderRadius: 12
@@ -647,7 +647,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
           padding: 14
           borderRadius: 12
@@ -660,7 +660,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           background: '#ff4d4f'
           padding: 12
           borderRadius: 50%

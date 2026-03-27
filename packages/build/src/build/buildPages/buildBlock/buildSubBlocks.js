@@ -31,7 +31,8 @@ function buildSubBlocks(block, pageContext) {
           { received: block.slots[key].blocks, configKey: block.slots[key]['~k'] ?? block['~k'] }
         );
       }
-      block.slots[key].blocks.map((blk) => buildBlock(blk, pageContext));
+      const slotConfigKey = block.slots[key].blocks['~k'] ?? block.slots[key]['~k'] ?? block['~k'];
+      block.slots[key].blocks.map((blk) => buildBlock(blk, pageContext, slotConfigKey));
     });
   }
 }

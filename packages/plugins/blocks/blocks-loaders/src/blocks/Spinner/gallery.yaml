@@ -128,7 +128,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           color: '#fa8c16'
       properties:
         size: large
@@ -137,7 +137,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           padding: 16px
           backgroundColor: '#f6ffed'
           borderRadius: 12px
@@ -179,7 +179,7 @@
             justify: center
             gap: 12
           style:
-            /element:
+            .element:
               minHeight: 200px
           blocks:
             - id: spinner_loading_overlay_spinner

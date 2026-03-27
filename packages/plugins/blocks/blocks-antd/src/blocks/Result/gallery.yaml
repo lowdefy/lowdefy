@@ -640,7 +640,7 @@
         status: success
         title: Saved
       style:
-        /element:
+        .element:
           padding: 16px 24px
     - id: compact_error
       type: Result
@@ -649,7 +649,7 @@
         title: Failed
         subTitle: Please try again.
       style:
-        /element:
+        .element:
           padding: 16px 24px
     - id: compact_warning
       type: Result
@@ -657,7 +657,7 @@
         status: warning
         title: Attention Required
       style:
-        /element:
+        .element:
           padding: 16px 24px
     - id: compact_info
       type: Result
@@ -666,7 +666,7 @@
         title: Processing
         subTitle: Please wait a moment.
       style:
-        /element:
+        .element:
           padding: 16px 24px
 
 - title: Style and CSS
@@ -714,7 +714,7 @@
       type: Result
       class: bg-bg-layout rounded-lg
       style:
-        /element:
+        .element:
           color: white
       properties:
         status: success
@@ -730,7 +730,7 @@
         title: Verification Required
         subTitle: Please verify your identity to continue. Check your email for the verification code.
       style:
-        /element:
+        .element:
           border: 2px solid #1677ff
           borderRadius: 12px
           padding: 32px
@@ -741,7 +741,7 @@
         title: Connected
         subTitle: Your database connection has been established successfully.
       style:
-        /element:
+        .element:
           boxShadow: 0 4px 16px rgba(0, 0, 0, 0.08)
           borderRadius: 12px
           padding: 32px
@@ -752,7 +752,7 @@
         title: Storage Almost Full
         subTitle: You have used 9.2 GB of your 10 GB storage limit. Delete files or upgrade your plan.
       style:
-        /element:
+        .element:
           maxWidth: 480px
           margin: 0 auto
           border: 1px solid #faad14
@@ -806,7 +806,7 @@
     - id: fullpage_404
       type: Result
       style:
-        /element:
+        .element:
           minHeight: 320px
           display: flex
           flexDirection: column
@@ -846,7 +846,7 @@
     - id: fullpage_500
       type: Result
       style:
-        /element:
+        .element:
           minHeight: 320px
           display: flex
           flexDirection: column
@@ -886,7 +886,7 @@
     - id: fullpage_403
       type: Result
       style:
-        /element:
+        .element:
           minHeight: 320px
           display: flex
           flexDirection: column

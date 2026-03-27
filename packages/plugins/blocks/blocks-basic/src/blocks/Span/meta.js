@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks in the Span.',
+  },
   cssKeys: {
     element: 'The Span element.',
   },

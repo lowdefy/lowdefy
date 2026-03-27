@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks laid out by the Flex container.',
+  },
   cssKeys: {
     element: 'The Flex element.',
   },

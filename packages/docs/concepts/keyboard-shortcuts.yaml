@@ -44,6 +44,22 @@ _ref:
                         searchOpen: true
             ```
 
+            ## Shortcut badge
+
+            Some blocks render a visual keyboard shortcut badge next to the action label. This helps users discover available shortcuts at a glance.
+
+            | Block | Shortcut source | Badge location |
+            |---|---|---|
+            | [Button](/Button) | `events.onClick.shortcut` | Next to button title |
+            | [Tag](/Tag) | `events.onClick.shortcut` | Next to tag content |
+            | [Anchor](/Anchor) | `events.onClick.shortcut` | Next to anchor text |
+            | [Search](/Search) | `properties.shortcut` | Inside search trigger |
+            | [Menu](/Menu) | `links[].properties.shortcut` | Next to menu item label |
+            | [DropdownMenu](/DropdownMenu) | `links[].properties.shortcut` | Next to dropdown item label |
+            | [DropdownButton](/DropdownButton) | `items[].shortcut` | Next to dropdown item label |
+
+            All blocks can bind keyboard shortcuts to events — the badge is just a visual indicator that these blocks render automatically. See the individual block documentation for examples.
+
             ## Shortcut string format
 
             Format: `modifier+modifier+key`

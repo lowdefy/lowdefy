@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import breadcrumbList from '../../schemas/breadcrumbList.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -37,54 +39,7 @@ export default {
         default: '/',
         description: 'Use a custom separator string.',
       },
-      list: {
-        oneOf: [
-          {
-            type: 'array',
-            description: 'List of breadcrumb links.',
-            items: {
-              type: 'string',
-              description: 'Title of the breadcrumb link.',
-            },
-          },
-          {
-            type: 'array',
-            description: 'List of breadcrumb links.',
-            items: {
-              type: 'object',
-              properties: {
-                label: {
-                  type: 'string',
-                  description: 'Label of the breadcrumb link.',
-                },
-                pageId: {
-                  type: 'string',
-                  description: 'Page id to link to when clicked.',
-                },
-                url: {
-                  type: 'string',
-                  description: 'External url link.',
-                },
-                style: {
-                  type: 'object',
-                  description: 'Css style to apply to link.',
-                  docs: {
-                    displayType: 'yaml',
-                  },
-                },
-                icon: {
-                  type: ['string', 'object'],
-                  description:
-                    "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in breadcrumb link.",
-                  docs: {
-                    displayType: 'icon',
-                  },
-                },
-              },
-            },
-          },
-        ],
-      },
+      list: breadcrumbList,
       theme: {
         type: 'object',
         description:

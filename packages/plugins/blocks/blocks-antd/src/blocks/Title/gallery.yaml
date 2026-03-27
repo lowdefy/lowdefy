@@ -295,7 +295,7 @@
         content: Inline Border Bottom
         level: 4
       style:
-        /element:
+        .element:
           borderBottom: 2px solid #1677ff
           paddingBottom: 8px
     - id: css_inline_shadow
@@ -305,7 +305,7 @@
         level: 3
         color: '#1677ff'
       style:
-        /element:
+        .element:
           textShadow: 2px 2px 4px rgba(22, 119, 255, 0.3)
 
 - title: Theme Token Overrides

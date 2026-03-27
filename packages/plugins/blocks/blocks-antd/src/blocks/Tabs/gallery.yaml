@@ -1039,12 +1039,12 @@
           - key: css_contact
             title: Contact
       style:
-        /element:
+        .element:
           padding: 16px
           borderRadius: 8px
-        /tabBar:
+        .tabBar:
           marginBottom: 24px
-        /tabPane:
+        .tabPane:
           padding: 12px
       slots:
         css_overview:
@@ -1076,12 +1076,12 @@
           - key: cssd_logs
             title: Logs
       style:
-        /element:
+        .element:
           background: '#1e1e2e'
           padding: 16px
           borderRadius: 8px
           color: '#cdd6f4'
-        /tabBar:
+        .tabBar:
           color: '#cdd6f4'
       slots:
         cssd_code:
@@ -1091,7 +1091,7 @@
               properties:
                 content: Dark-themed tabs using CSS overrides. Suitable for code editors, terminal views, or developer tool interfaces.
               style:
-                /element:
+                .element:
                   color: '#cdd6f4'
         cssd_output:
           blocks:
@@ -1100,7 +1100,7 @@
               properties:
                 content: Output panel with matching dark theme. The element and tabBar CSS keys are styled together for a cohesive look.
               style:
-                /element:
+                .element:
                   color: '#cdd6f4'
         cssd_logs:
           blocks:
@@ -1109,7 +1109,7 @@
               properties:
                 content: Log viewer panel. Monospaced fonts and dark backgrounds reduce eye strain during extended debugging sessions.
               style:
-                /element:
+                .element:
                   color: '#cdd6f4'
                   fontFamily: monospace
 

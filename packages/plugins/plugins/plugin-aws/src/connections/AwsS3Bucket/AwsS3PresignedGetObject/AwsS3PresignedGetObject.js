@@ -14,22 +14,26 @@
   limitations under the License.
 */
 
-import AWS from 'aws-sdk';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import schema from './schema.js';
 
-function AwsS3PresignedGetObject({ request, connection }) {
-  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+async function AwsS3PresignedGetObject({ request, connection }) {
+  const { accessKeyId, secretAccessKey, region } = connection;
   const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
   const params = {
-    Bucket: bucket,
+    Bucket: connection.bucket,
     Key: key,
-    Expires: expires,
     VersionId: versionId,
     ResponseContentDisposition: responseContentDisposition,
     ResponseContentType: responseContentType,
   };
-  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-  return s3.getSignedUrl('getObject', params);
+  const s3 = new S3Client({
+    credentials: { accessKeyId, secretAccessKey },
+    region,
+  });
+  const command = new GetObjectCommand(params);
+  return getSignedUrl(s3, command, { expiresIn: expires });
 }
 
 AwsS3PresignedGetObject.schema = schema;

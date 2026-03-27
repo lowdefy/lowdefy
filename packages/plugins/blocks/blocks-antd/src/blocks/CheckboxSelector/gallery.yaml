@@ -509,7 +509,7 @@
           - Beta
           - Gamma
       style:
-        /element:
+        .element:
           padding: 12
           borderRadius: 8
           border: '1px solid #d9d9d9'

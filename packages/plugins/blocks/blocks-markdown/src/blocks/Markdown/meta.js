@@ -15,7 +15,7 @@
 */
 
 export default {
-  category: 'container',
+  category: 'display',
   icons: [],
   valueType: null,
   cssKeys: {

@@ -225,7 +225,7 @@
     - id: style_background
       type: CheckboxSwitch
       style:
-        /element:
+        .element:
           padding: 12px
           borderRadius: 8px
           border: '1px solid #b7eb8f'
@@ -237,7 +237,7 @@
     - id: style_warning_bg
       type: CheckboxSwitch
       style:
-        /element:
+        .element:
           padding: 10px
           borderRadius: 6px
           border: '1px solid #ffd591'
@@ -249,7 +249,7 @@
     - id: style_bold_label
       type: CheckboxSwitch
       style:
-        /label:
+        .label:
           fontWeight: bold
           color: '#1677ff'
       properties:

@@ -36,7 +36,8 @@ _ref:
 
       - `width: number`: The width of the window in pixels.
       - `height: number`: The height of the window in pixels.
-      - `darkMode: boolean`: Whether dark mode is active. Reads from localStorage (`lowdefy_darkMode`), falling back to the OS `prefers-color-scheme` preference.
+      - `darkMode: boolean`: Whether dark mode is currently active. Resolves from the user's preference (`'dark'` → true, `'light'` → false, `'system'` → follows OS `prefers-color-scheme`).
+      - `darkModePreference: 'system' | 'light' | 'dark'`: The user's dark mode preference. `'system'` means the OS preference is being followed.
       - `size: enum`: One of `xs`, `sm`, `md`, `lg`, `xl`, `2xl`. The sizes are determined by comparing the window width to the following breakpoints (in pixels):
         - `xs`: `width < 640px`
         - `sm`: `640px <= width < 768px`
@@ -85,6 +86,12 @@ _ref:
       _media: darkMode
       ```
       Returns: `true` or `false`.
+
+      ###### Get the current dark mode preference:
+      ```yaml
+      _media: darkModePreference
+      ```
+      Returns: `'system'`, `'light'`, or `'dark'`.
 
       ###### Return a default value if the value is not found:
       ```yaml

@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks with a watermark overlay.',
+  },
   cssKeys: {
     element: 'The Watermark element.',
   },

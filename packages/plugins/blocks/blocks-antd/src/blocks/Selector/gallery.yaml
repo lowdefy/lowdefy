@@ -481,7 +481,7 @@
           - label: Cherry
             value: cherry
       style:
-        /element:
+        .element:
           borderColor: '#4096ff'
           borderRadius: 8
     - id: css_label
@@ -494,7 +494,7 @@
           - label: Beta
             value: beta
       style:
-        /label:
+        .label:
           color: '#722ed1'
           fontWeight: bold
           fontSize: 16
@@ -509,7 +509,7 @@
           - Green
           - Blue
       style:
-        /extra:
+        .extra:
           color: '#8c8c8c'
           fontStyle: italic
     - id: css_options
@@ -525,7 +525,7 @@
           - label: Styled Option C
             value: c
       style:
-        /options:
+        .options:
           padding: 8px 16px
           fontSize: 15
 - title: Class Names

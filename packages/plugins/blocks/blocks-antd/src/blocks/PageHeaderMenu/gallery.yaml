@@ -18,46 +18,75 @@
     - id: phm_basic
       type: PageHeaderMenu
       properties:
-        header:
-          theme: dark
         menu:
-          theme: dark
           links:
             - id: phm_basic_home
               type: MenuLink
               properties:
                 title: Home
                 icon: AiOutlineHome
-            - id: phm_basic_about
+            - id: phm_basic_products
               type: MenuLink
               properties:
-                title: About
+                title: Products
+                icon: AiOutlineAppstore
+            - id: phm_basic_pricing
+              type: MenuLink
+              properties:
+                title: Pricing
             - id: phm_basic_contact
               type: MenuLink
               properties:
                 title: Contact
       blocks:
-        - id: phm_basic_content
-          type: Paragraph
+        - id: phm_basic_title
+          type: Title
           properties:
-            content: PageHeaderMenu provides a full page layout with a horizontal navigation menu in the header. On mobile screens, the menu collapses into a drawer.
+            content: Welcome
+            level: 2
+        - id: phm_basic_cards
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: phm_basic_card_1
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Getting Started
+              blocks:
+                - id: phm_basic_card_1_text
+                  type: Paragraph
+                  properties:
+                    content: Follow the quick start guide to set up your first project in minutes.
+            - id: phm_basic_card_2
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Documentation
+              blocks:
+                - id: phm_basic_card_2_text
+                  type: Paragraph
+                  properties:
+                    content: Browse the full API reference and configuration guides.
 
-- title: Grouped Menu with Breadcrumb
+- title: Menu Groups & Breadcrumb
   fullWidth: true
   blocks:
     - id: phm_grouped
       type: PageHeaderMenu
       properties:
-        header:
-          theme: dark
+        darkModeToggle: true
         breadcrumb:
           separator: /
           list:
-            - Dashboard
-            - Analytics
-            - Overview
+            - label: Home
+              icon: AiOutlineHome
+            - label: Analytics
+            - label: Overview
         menu:
-          theme: dark
           links:
             - id: phm_g_dash
               type: MenuLink
@@ -87,13 +116,6 @@
               properties:
                 title: Settings
                 icon: AiOutlineSetting
-      events:
-        onMenuItemClick:
-          - id: phm_g_nav
-            type: DisplayMessage
-            params:
-              content: Navigating...
-              duration: 1
       blocks:
         - id: phm_g_title
           type: Title
@@ -106,195 +128,255 @@
             gap: 16
           blocks:
             - id: phm_g_card_visits
-              type: Statistic
+              type: Card
               layout:
                 flex: 1 1 200px
               properties:
-                title: Page Views
-                value: 12,847
+                size: small
+              blocks:
+                - id: phm_g_stat_visits
+                  type: Statistic
+                  properties:
+                    title: Page Views
+                    value: 12847
             - id: phm_g_card_users
-              type: Statistic
+              type: Card
               layout:
                 flex: 1 1 200px
               properties:
-                title: Active Users
-                value: 1,024
+                size: small
+              blocks:
+                - id: phm_g_stat_users
+                  type: Statistic
+                  properties:
+                    title: Active Users
+                    value: 1024
             - id: phm_g_card_rate
-              type: Statistic
+              type: Card
               layout:
                 flex: 1 1 200px
               properties:
-                title: Bounce Rate
-                value: 23.4%
+                size: small
+              blocks:
+                - id: phm_g_stat_rate
+                  type: Statistic
+                  properties:
+                    title: Bounce Rate
+                    value: 23.4
+                    suffix: '%'
 
-- title: Intranet Portal
+- title: Profile & Notifications
   fullWidth: true
   blocks:
-    - id: phm_intranet
+    - id: phm_profile
       type: PageHeaderMenu
       properties:
+        darkModeToggle: true
+        notifications:
+          count: 3
+        profile:
+          avatar:
+            content: JD
+            color: '#1677ff'
+          links:
+            - id: phm_prof_my_profile
+              type: MenuLink
+              properties:
+                title: My Profile
+                icon: AiOutlineUser
+            - id: phm_prof_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+            - id: phm_prof_divider
+              type: MenuDivider
+            - id: phm_prof_logout
+              type: MenuLink
+              properties:
+                title: Logout
+                icon: AiOutlineLogout
+                danger: true
+        menu:
+          links:
+            - id: phm_prof_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_prof_projects
+              type: MenuLink
+              properties:
+                title: Projects
+                icon: AiOutlineProject
+            - id: phm_prof_reports
+              type: MenuLink
+              properties:
+                title: Reports
+                icon: AiOutlineBarChart
+      blocks:
+        - id: phm_prof_title
+          type: Title
+          properties:
+            content: Dashboard
+            level: 3
+        - id: phm_prof_cards
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: phm_prof_card_1
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: phm_prof_stat_1
+                  type: Statistic
+                  properties:
+                    title: Active Projects
+                    value: 12
+            - id: phm_prof_card_2
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: phm_prof_stat_2
+                  type: Statistic
+                  properties:
+                    title: Pending Tasks
+                    value: 8
+
+- title: Full Layout with All Slots
+  fullWidth: true
+  blocks:
+    - id: phm_full
+      type: PageHeaderMenu
+      properties:
+        darkModeToggle: true
         logo:
           alt: Acme Corp
-        header:
-          theme: dark
-          contentStyle:
-            alignItems: center
-            gap: 12px
+        notifications:
+          dot: true
+        profile:
+          avatar:
+            icon: AiOutlineUser
         breadcrumb:
           list:
             - Intranet
             - Team Directory
         menu:
-          theme: dark
           links:
-            - id: phm_intranet_home
+            - id: phm_full_home
               type: MenuLink
               properties:
                 title: Home
                 icon: AiOutlineHome
-            - id: phm_intranet_directory
+            - id: phm_full_directory
               type: MenuLink
               properties:
-                title: Team Directory
+                title: Directory
                 icon: AiOutlineTeam
-            - id: phm_intranet_resources
+            - id: phm_full_resources
               type: MenuGroup
               properties:
                 title: Resources
                 icon: AiOutlineBook
               links:
-                - id: phm_intranet_policies
+                - id: phm_full_policies
                   type: MenuLink
                   properties:
                     title: Company Policies
-                - id: phm_intranet_benefits
+                - id: phm_full_benefits
                   type: MenuLink
                   properties:
                     title: Benefits Guide
-            - id: phm_intranet_help
+            - id: phm_full_help
               type: MenuLink
               properties:
                 title: IT Support
                 icon: AiOutlineQuestionCircle
       slots:
-        header:
-          blocks:
-            - id: phm_intranet_header_row
-              type: Box
-              layout:
-                gap: 12
-                align: center
-                flex: 0 0 auto
-              blocks:
-                - id: phm_intranet_notif_btn
-                  type: Button
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    icon: AiOutlineBell
-                    color: default
-                    variant: text
-                    hideTitle: true
-                    size: small
-                - id: phm_intranet_avatar
-                  type: Avatar
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    icon: AiOutlineUser
-                    size: small
         footer:
           blocks:
-            - id: phm_intranet_footer_row
-              type: Box
-              layout:
-                justify: center
-              blocks:
-                - id: phm_intranet_footer_copy
-                  type: Paragraph
-                  properties:
-                    content: Acme Corp Intranet - Internal Use Only
-                    style:
-                      margin: 0
-                      color: '#888'
+            - id: phm_full_footer_text
+              type: Paragraph
+              properties:
+                content: Acme Corp Intranet - Internal Use Only
+                style:
+                  margin: 0
+                  color: '#888'
+                  textAlign: center
       blocks:
-        - id: phm_intranet_welcome
+        - id: phm_full_welcome
           type: Title
           properties:
             content: Welcome back, Jane
             level: 3
-        - id: phm_intranet_cards
+        - id: phm_full_cards
           type: Box
           layout:
             gap: 16
           blocks:
-            - id: phm_intranet_card_announce
+            - id: phm_full_card_announce
               type: Card
               layout:
                 flex: 1 1 300px
               properties:
                 title: Announcements
               blocks:
-                - id: phm_intranet_announce_1
+                - id: phm_full_announce_1
                   type: Paragraph
                   properties:
                     content: 'Office hours updated: Building opens at 7:00 AM starting next Monday.'
-                - id: phm_intranet_announce_2
+                - id: phm_full_announce_2
                   type: Paragraph
                   properties:
                     content: 'Q1 All-Hands meeting scheduled for March 28 at 2:00 PM.'
-            - id: phm_intranet_card_links
+            - id: phm_full_card_links
               type: Card
               layout:
                 flex: 1 1 300px
               properties:
                 title: Quick Links
               blocks:
-                - id: phm_intranet_link_1
+                - id: phm_full_link_1
                   type: Paragraph
                   properties:
                     content: Submit a Time-Off Request
-                - id: phm_intranet_link_2
+                - id: phm_full_link_2
                   type: Paragraph
                   properties:
                     content: View Expense Reports
-                - id: phm_intranet_link_3
-                  type: Paragraph
-                  properties:
-                    content: Book a Meeting Room
 
-- title: Documentation Site
+- title: Dark Mode Toggle with Breadcrumb
   fullWidth: true
   blocks:
-    - id: phm_docs_site
+    - id: phm_light
       type: PageHeaderMenu
       properties:
-        logo:
-          alt: DevDocs
-        header:
-          theme: dark
-          contentStyle:
-            alignItems: center
-            gap: 8px
+        darkModeToggle: true
         menu:
-          theme: dark
           links:
-            - id: phm_docs_guide
+            - id: phm_light_guide
               type: MenuLink
               properties:
                 title: Guide
                 icon: AiOutlineBook
-            - id: phm_docs_api_ref
+            - id: phm_light_api
               type: MenuLink
               properties:
                 title: API Reference
                 icon: AiOutlineApi
-            - id: phm_docs_examples
+            - id: phm_light_examples
               type: MenuLink
               properties:
                 title: Examples
                 icon: AiOutlineCode
-            - id: phm_docs_community
+            - id: phm_light_community
               type: MenuLink
               properties:
                 title: Community
@@ -305,15 +387,10 @@
             - Docs
             - Getting Started
             - Installation
-        content:
-          style:
-            maxWidth: 960px
-            margin: 0 auto
-            padding: 0 40px 40px 40px
       slots:
         header:
           blocks:
-            - id: phm_docs_search_btn
+            - id: phm_light_search_btn
               type: Button
               layout:
                 flex: 0 0 auto
@@ -323,48 +400,81 @@
                 color: default
                 variant: outlined
                 size: small
-            - id: phm_docs_github_btn
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                icon: AiOutlineGithub
-                color: default
-                variant: text
-                hideTitle: true
-                size: small
       blocks:
-        - id: phm_docs_title
+        - id: phm_light_title
           type: Title
           properties:
             content: Installation
             level: 2
-        - id: phm_docs_intro
+        - id: phm_light_intro
           type: Paragraph
           properties:
             content: Get started by installing the framework via npm or yarn. Follow the steps below to set up your development environment.
-        - id: phm_docs_alert
+        - id: phm_light_alert
           type: Alert
           properties:
             message: Prerequisites
             description: Make sure you have Node.js version 18 or higher installed before proceeding.
             type: info
             showIcon: true
-        - id: phm_docs_steps_card
+        - id: phm_light_steps
           type: Card
           properties:
             title: Setup Steps
             size: small
           blocks:
-            - id: phm_docs_step_1
+            - id: phm_light_step_1
               type: Paragraph
               properties:
                 content: '1. Initialize a new project directory and run the setup command.'
-            - id: phm_docs_step_2
+            - id: phm_light_step_2
               type: Paragraph
               properties:
                 content: '2. Configure your lowdefy.yaml file with pages and connections.'
-            - id: phm_docs_step_3
+            - id: phm_light_step_3
               type: Paragraph
               properties:
                 content: '3. Start the development server to preview your application.'
+
+- title: Profile Links from _menu Operator
+  description: Use the _menu operator to populate profile dropdown links from a menu defined in lowdefy.yaml. This keeps profile menus consistent with navigation menus and supports access-controlled filtering.
+  fullWidth: true
+  blocks:
+    - id: phm_menu_op
+      type: PageHeaderMenu
+      properties:
+        darkModeToggle: true
+        notifications:
+          count: 2
+          link:
+            pageId: home
+        profile:
+          avatar:
+            content: JD
+            color: '#6366f1'
+          links:
+            _menu: default
+        menu:
+          links:
+            - id: phm_mo_home
+              type: MenuLink
+              properties:
+                title: Home
+                icon: AiOutlineHome
+            - id: phm_mo_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: phm_mo_title
+          type: Title
+          properties:
+            content: Profile from _menu
+            level: 3
+        - id: phm_mo_info
+          type: Alert
+          properties:
+            message: The profile dropdown links are populated using _menu operator, pulling from the menus defined in lowdefy.yaml. Click the avatar to see the dropdown.
+            type: info
+            showIcon: true

@@ -29,12 +29,15 @@ const context = {
       menus: [
         {
           menuId: 'default',
+          links: [{ id: 'home', type: 'MenuLink', properties: { title: 'Home' } }],
         },
         {
           menuId: 'm_1',
+          links: [{ id: 'page1', type: 'MenuLink', properties: { title: 'Page 1' } }],
         },
         {
           menuId: 'm_2',
+          links: [{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }],
         },
       ],
       urlQuery: { urlQuery: true },
@@ -72,56 +75,34 @@ const operators = {
 
 console.error = () => {};
 
-test('_menu using string menuId', () => {
+test('_menu using string menuId returns links array', () => {
   const input = { a: { _menu: 'default' } };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: {
-      menuId: 'default',
-    },
+    a: [{ id: 'home', type: 'MenuLink', properties: { title: 'Home' } }],
   });
   expect(res.errors).toEqual([]);
 });
 
-test('_menu using index', () => {
+test('_menu using index returns links array', () => {
   const input = { a: { _menu: 1 } };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: {
-      menuId: 'm_1',
-    },
+    a: [{ id: 'page1', type: 'MenuLink', properties: { title: 'Page 1' } }],
   });
   expect(res.errors).toEqual([]);
 });
 
-test('_menu in object', () => {
-  const input = { a: { _menu: 'default' } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: {
-      menuId: 'default',
-    },
-  });
-  expect(res.errors).toEqual([]);
-});
-
-test('_menu full menus', () => {
+test('_menu true returns full menus array', () => {
   const input = { _menu: true };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
+    { menuId: 'default', links: [{ id: 'home', type: 'MenuLink', properties: { title: 'Home' } }] },
+    { menuId: 'm_1', links: [{ id: 'page1', type: 'MenuLink', properties: { title: 'Page 1' } }] },
+    { menuId: 'm_2', links: [{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }] },
   ]);
   expect(res.errors).toEqual([]);
 });
@@ -138,7 +119,7 @@ test('_menu null', () => {
   );
 });
 
-test('_menu param object value', () => {
+test('_menu param object value returns links array', () => {
   const input = {
     _menu: {
       value: 'm_2',
@@ -146,11 +127,11 @@ test('_menu param object value', () => {
   };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ menuId: 'm_2' });
+  expect(res.output).toEqual([{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }]);
   expect(res.errors).toEqual([]);
 });
 
-test('_menu param object index', () => {
+test('_menu param object index returns links array', () => {
   const input = {
     _menu: {
       index: 2,
@@ -158,7 +139,7 @@ test('_menu param object index', () => {
   };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ menuId: 'm_2' });
+  expect(res.output).toEqual([{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }]);
   expect(res.errors).toEqual([]);
 });
 
@@ -190,7 +171,7 @@ test('_menu params object index not number', () => {
   expect(res.errors[0].message).toBe('_menu.index must be of type number. at locationId.');
 });
 
-test('_menu param object all', () => {
+test('_menu param object all returns full menus array', () => {
   const input = {
     _menu: {
       all: true,
@@ -199,20 +180,14 @@ test('_menu param object all', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
+    { menuId: 'default', links: [{ id: 'home', type: 'MenuLink', properties: { title: 'Home' } }] },
+    { menuId: 'm_1', links: [{ id: 'page1', type: 'MenuLink', properties: { title: 'Page 1' } }] },
+    { menuId: 'm_2', links: [{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }] },
   ]);
   expect(res.errors).toEqual([]);
 });
 
-test('_menu param object all and value', () => {
+test('_menu param object all and value returns full menus array', () => {
   const input = {
     _menu: {
       all: true,
@@ -222,15 +197,9 @@ test('_menu param object all and value', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
+    { menuId: 'default', links: [{ id: 'home', type: 'MenuLink', properties: { title: 'Home' } }] },
+    { menuId: 'm_1', links: [{ id: 'page1', type: 'MenuLink', properties: { title: 'Page 1' } }] },
+    { menuId: 'm_2', links: [{ id: 'page2', type: 'MenuLink', properties: { title: 'Page 2' } }] },
   ]);
   expect(res.errors).toEqual([]);
 });

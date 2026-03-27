@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { get, mergeObjects, type } from '@lowdefy/helpers';
+import React, { useEffect } from 'react';
+import { mergeObjects, type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
@@ -25,6 +25,7 @@ import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
+import { getDarkMode, renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
 
 const PageHeaderMenu = ({
   basePath,
@@ -39,6 +40,10 @@ const PageHeaderMenu = ({
   properties,
   styles = {},
 }) => {
+  useEffect(() => {
+    registerDarkModeMethod(methods);
+  });
+
   return (
     <Layout
       blockId={blockId}
@@ -55,12 +60,11 @@ const PageHeaderMenu = ({
               events={events}
               components={{ Icon, Link, ShortcutBadge }}
               classNames={{ element: classNames.header }}
-              properties={properties.header ?? {}}
+              properties={{}}
               styles={{
                 element: mergeObjects([
                   {
-                    display: 'flex',
-                    alignItems: 'center',
+                    background: 'var(--ant-color-bg-container)',
                   },
                   styles.header,
                 ]),
@@ -74,23 +78,21 @@ const PageHeaderMenu = ({
                           media={`(min-width:${properties.logo?.breakpoint ?? 577}px)`}
                           srcSet={
                             properties.logo?.src ??
-                            `${basePath}/logo-${properties.header?.theme ?? 'dark'}-theme.png`
+                            `${basePath}/logo-${getDarkMode() ? 'dark' : 'light'}-theme.png`
                           }
                         />
                         <img
                           src={
                             properties.logo?.srcMobile ??
                             properties.logo?.src ??
-                            `${basePath}/logo-square-${
-                              properties.header?.theme ?? 'dark'
-                            }-theme.png`
+                            `${basePath}/logo-square-${getDarkMode() ? 'dark' : 'light'}-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
                             classNames.logo ??
                             'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]'
                           }
-                          style={mergeObjects([properties.logo?.style, styles.logo])}
+                          style={styles.logo}
                         />
                       </picture>
                     </Link>
@@ -109,12 +111,20 @@ const PageHeaderMenu = ({
                             {
                               mode: 'horizontal',
                               collapsed: false,
-                              theme: get(properties, 'header.theme') ?? 'dark',
                             },
                             properties.menu,
                             properties.menuLg,
                           ])}
-                          styles={{ element: styles.menu }}
+                          styles={{
+                            element: mergeObjects([{ borderBottom: 'none' }, styles.menu]),
+                          }}
+                          rename={{
+                            events: {
+                              onClick: 'onMenuItemClick',
+                              onSelect: 'onMenuItemSelect',
+                              onToggleMenuGroup: 'onToggleMenuGroup',
+                            },
+                          }}
                         />
                       </div>
                       {content.header &&
@@ -126,21 +136,43 @@ const PageHeaderMenu = ({
                               alignItems: 'center',
                               flexWrap: 'nowrap',
                             },
-                            properties.header?.contentStyle,
+                            styles.headerContent,
                           ])
                         )}
-                      <div className="flex lg:hidden shrink pl-4">
-                        <MobileMenu
-                          blockId={`${blockId}_mobile_menu`}
-                          basePath={basePath}
-                          components={{ Icon, Link, ShortcutBadge }}
-                          events={events}
-                          methods={methods}
-                          menus={menus}
-                          pageId={pageId}
-                          properties={mergeObjects([properties.menu, properties.menuMd])}
-                        />
-                      </div>
+                      {renderHeaderActions({
+                        blockId,
+                        classNames,
+                        styles,
+                        properties,
+                        methods,
+                        events,
+                        components: { Icon, Link, ShortcutBadge },
+                        iconsColor: properties.iconsColor,
+                      })}
+                      <MobileMenu
+                        classNames={{
+                          element: classNames.mobileMenu ?? 'flex lg:hidden shrink pl-4',
+                        }}
+                        styles={{ element: styles.mobileMenu }}
+                        blockId={`${blockId}_mobile_menu`}
+                        basePath={basePath}
+                        components={{ Icon, Link, ShortcutBadge }}
+                        events={events}
+                        methods={methods}
+                        menus={menus}
+                        pageId={pageId}
+                        properties={mergeObjects([properties.menu, properties.menuMd])}
+                        rename={{
+                          methods: {
+                            toggleOpen: 'toggleMobileMenuOpen',
+                            setOpen: 'setMobileMenuOpen',
+                          },
+                          events: {
+                            onClose: 'onMobileMenuClose',
+                            onOpen: 'onMobileMenuOpen',
+                          },
+                        }}
+                      />
                     </div>
                   </>
                 ),
@@ -198,7 +230,7 @@ const PageHeaderMenu = ({
                 events={events}
                 properties={properties.footer}
                 styles={{
-                  element: mergeObjects([properties.footer?.style, styles.footer]),
+                  element: styles.footer,
                 }}
                 content={{
                   content: () => content.footer(),

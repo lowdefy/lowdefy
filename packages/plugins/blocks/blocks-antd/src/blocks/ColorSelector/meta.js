@@ -15,6 +15,7 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import { allowClear } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -68,11 +69,7 @@ export default {
         default: false,
         description: 'Disable the color picker.',
       },
-      allowClear: {
-        type: 'boolean',
-        default: false,
-        description: 'Allow clearing the color.',
-      },
+      allowClear: { ...allowClear, default: false },
       arrow: {
         type: 'boolean',
         default: true,

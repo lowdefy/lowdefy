@@ -159,14 +159,6 @@
         value: 49.99
         precision: 2
         prefix: $
-    - id: precision_4
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Exchange Rate
-        value: 1.3245
-        precision: 4
 
 - title: Separators
   blocks:
@@ -289,11 +281,11 @@
         value: 0.12
         suffix: '%'
       style:
-        /element:
+        .element:
           padding: 16px 24px
           borderRadius: 8px
           border: 1px solid #ffa39e
-        /value:
+        .value:
           color: '#cf1322'
           fontSize: 28
 
@@ -329,17 +321,6 @@
         theme:
           colorText: '#722ed1'
           colorTextDescription: '#531dab'
-    - id: theme_font_family
-      type: Statistic
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Custom Font
-        value: 88750
-        theme:
-          contentFontFamily: Georgia, serif
-          contentFontWeight: '600'
-
 - title: Statistic in Dashboard Overview
   blocks:
     - id: dashboard_card
@@ -390,19 +371,6 @@
                 prefixIcon:
                   name: AiOutlineBug
                   color: '#ff4d4f'
-            - id: dash_uptime
-              type: Statistic
-              layout:
-                flex: 1 1 0
-              class: bg-bg-layout p-4 rounded-lg
-              properties:
-                title: Uptime
-                value: 99.98
-                suffix: '%'
-                precision: 2
-                prefixIcon:
-                  name: AiOutlineCheckCircle
-                  color: '#52c41a'
         - id: dashboard_updated
           type: Markdown
           properties:

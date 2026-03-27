@@ -21,11 +21,13 @@ function validateSlots(block, pageContext) {
   const blockMeta = pageContext.context.blockMetas?.[block.type];
   if (!blockMeta) return;
   if (blockMeta.slots === false) return;
-  if (!type.isArray(blockMeta.slots)) return;
+  if (!type.isArray(blockMeta.slots) && !type.isObject(blockMeta.slots)) return;
 
   if (!type.isObject(block.slots)) return;
 
-  const validSlots = new Set(blockMeta.slots);
+  const validSlots = type.isArray(blockMeta.slots)
+    ? new Set(blockMeta.slots)
+    : new Set(Object.keys(blockMeta.slots));
   for (const slotKey of Object.keys(block.slots)) {
     if (!validSlots.has(slotKey)) {
       pageContext.context.handleWarning(

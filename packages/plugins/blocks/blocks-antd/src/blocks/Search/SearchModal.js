@@ -19,7 +19,7 @@ import { Empty, Input, Modal, Skeleton } from 'antd';
 import { ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { cn } from '@lowdefy/block-utils';
 
-import SearchResults from './SearchResults.js';
+import SearchResults, { groupResults } from './SearchResults.js';
 import useListKeyboardNav from './useListKeyboardNav.js';
 
 function SearchModal({
@@ -47,6 +47,11 @@ function SearchModal({
   const flatResults = results.slice(0, maxResults);
   const highlightTerms = flatResults.length > 0 ? flatResults[0].terms : [];
 
+  // Build display-ordered array (grouped order) for keyboard navigation.
+  // groupResults reorders items by group — the keyboard index must match display order.
+  const grouped = groupResults(flatResults, groups, resultMapping);
+  const displayOrderResults = grouped.flatMap((group) => group.items);
+
   const handleSelect = useCallback(
     (item) => {
       recentSearches.addSearch(query);
@@ -61,15 +66,15 @@ function SearchModal({
 
   const handleSelectByIndex = useCallback(
     (index) => {
-      if (flatResults[index]) {
-        handleSelect(flatResults[index]);
+      if (displayOrderResults[index]) {
+        handleSelect(displayOrderResults[index]);
       }
     },
-    [flatResults, handleSelect]
+    [displayOrderResults, handleSelect]
   );
 
   const { selectedIndex, onKeyDown } = useListKeyboardNav({
-    itemCount: flatResults.length,
+    itemCount: displayOrderResults.length,
     onSelect: handleSelectByIndex,
   });
 
@@ -156,8 +161,7 @@ function SearchModal({
       )}
       {!searchIndex.loading && flatResults.length > 0 && (
         <SearchResults
-          results={flatResults}
-          groups={groups}
+          grouped={grouped}
           resultMapping={resultMapping}
           selectedIndex={selectedIndex}
           highlightTerms={properties.highlightMatches !== false ? highlightTerms : null}

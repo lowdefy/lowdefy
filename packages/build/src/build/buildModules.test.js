@@ -123,7 +123,7 @@ test('buildModules skips remapped connections', () => {
   ]);
 });
 
-test('buildModules resolves _module.pageId operators in pages', () => {
+test('buildModules preserves pre-resolved _module.pageId strings in pages', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -140,7 +140,7 @@ test('buildModules resolves _module.pageId operators in pages', () => {
                   {
                     id: 'go',
                     type: 'Link',
-                    params: { pageId: { '_module.pageId': 'user-detail' } },
+                    params: { pageId: 'team-users/user-detail' },
                   },
                 ],
               },
@@ -163,7 +163,7 @@ test('buildModules resolves _module.pageId operators in pages', () => {
   );
 });
 
-test('buildModules resolves _module.connectionId with remapping in connections', () => {
+test('buildModules preserves pre-resolved connectionId strings', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -175,7 +175,7 @@ test('buildModules resolves _module.connectionId with remapping in connections',
             {
               id: 'get-users',
               type: 'MongoDBFind',
-              connectionId: { '_module.connectionId': 'users-db' },
+              connectionId: 'my-app-mongodb',
             },
           ],
         },
@@ -292,13 +292,24 @@ test('buildModules processes multiple module entries without ID collisions', () 
 });
 
 test('buildModules processes same module package with different entry IDs', () => {
-  const manifest = {
-    pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
-    connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
-    api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
-  };
-  const entry1 = makeModuleEntry({ id: 'team-users', manifest });
-  const entry2 = makeModuleEntry({ id: 'client-users', manifest });
+  // Each module entry gets its own resolved manifest (per-entry vars in Phase 1),
+  // so manifests are never shared across entries.
+  const entry1 = makeModuleEntry({
+    id: 'team-users',
+    manifest: {
+      pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
+      api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
+    },
+  });
+  const entry2 = makeModuleEntry({
+    id: 'client-users',
+    manifest: {
+      pages: [{ id: 'users-list', type: 'PageHeaderMenu' }],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection' }],
+      api: [{ id: 'invite-user', type: 'MongoDBInsertOne' }],
+    },
+  });
   const context = makeContext([entry1, entry2]);
   const components = {
     modules: [{ id: 'team-users' }, { id: 'client-users' }],
@@ -337,7 +348,7 @@ test('buildModules initializes pages array when components.pages is undefined', 
   expect(result.pages).toEqual([{ id: 'team-users/users-list', type: 'PageHeaderMenu' }]);
 });
 
-test('buildModules resolves _module.endpointId in API endpoints', () => {
+test('buildModules preserves pre-resolved endpointId strings in API endpoints', () => {
   const moduleEntry = makeModuleEntry({
     id: 'notifications',
     manifest: {
@@ -346,7 +357,7 @@ test('buildModules resolves _module.endpointId in API endpoints', () => {
           id: 'send-notification',
           type: 'Custom',
           properties: {
-            callbackEndpoint: { '_module.endpointId': 'send-notification' },
+            callbackEndpoint: 'notifications/send-notification',
           },
         },
       ],
@@ -363,7 +374,7 @@ test('buildModules resolves _module.endpointId in API endpoints', () => {
   expect(result.api[0].properties.callbackEndpoint).toBe('notifications/send-notification');
 });
 
-test('buildModules resolves _module.id in page content', () => {
+test('buildModules preserves pre-resolved _module.id strings in page content', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
@@ -372,7 +383,7 @@ test('buildModules resolves _module.id in page content', () => {
           id: 'users-list',
           type: 'PageHeaderMenu',
           properties: {
-            title: { '_module.id': true },
+            title: 'team-users',
           },
         },
       ],
@@ -651,4 +662,27 @@ test('buildModules handles module with no pages, connections, or api', () => {
   expect(result.pages).toEqual([{ id: 'home' }]);
   expect(result.connections).toBeUndefined();
   expect(result.api).toBeUndefined();
+});
+
+test('buildModules preserves non-enumerable ~r marker on pages', () => {
+  const page = { id: 'dashboard', type: 'PageHeaderMenu', blocks: [] };
+  Object.defineProperty(page, '~r', {
+    value: 'modules/team-users/pages/dashboard.yaml',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const moduleEntry = makeModuleEntry({
+    id: 'team-users',
+    manifest: { pages: [page] },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'team-users' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.pages[0].id).toBe('team-users/dashboard');
+  expect(result.pages[0]['~r']).toBe('modules/team-users/pages/dashboard.yaml');
 });

@@ -203,7 +203,7 @@
       properties:
         size: medium
       style:
-        /input:
+        .input:
           borderRadius: 8
     - id: style_custom_bg
       type: SkeletonInput
@@ -211,5 +211,5 @@
         size: medium
         label: false
       style:
-        /element:
+        .element:
           maxWidth: 400

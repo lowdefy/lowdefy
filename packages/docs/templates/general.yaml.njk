@@ -35,13 +35,7 @@ blocks:
     type: PageSiderMenu
     properties:
       title: {{ pageTitle }}
-      header:
-        theme:
-          _if:
-            test:
-              _media: darkMode
-            then: dark
-            else: light
+      darkModeToggle: true
       menu:
         forceSubMenuRender: true
       sider:
@@ -54,13 +48,6 @@ blocks:
             - _eq:
                 - _media: size
                 - lg
-      layout:
-        style:
-          background: var(--ant-color-bg-base)
-      footer:
-        style:
-          background: var(--ant-color-bg-base)
-          padding: 16px 0px 0px 0px
       breadcrumb:
         list:
           - _ref: version.yaml
@@ -68,6 +55,13 @@ blocks:
           - {{ section }}
           - {{ pageTitle }}
       {% endif %}
+
+    style:
+      .layout:
+        background: var(--ant-color-bg-base)
+      .footer:
+        background: var(--ant-color-bg-base)
+        padding: 16px 0px 0px 0px
 
     slots:
       header:

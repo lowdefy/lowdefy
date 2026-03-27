@@ -62,7 +62,7 @@
     - id: styled_download
       type: S3Download
       style:
-        /element:
+        .element:
           background: '#f6ffed'
           border: 1px solid #b7eb8f
           borderRadius: 8

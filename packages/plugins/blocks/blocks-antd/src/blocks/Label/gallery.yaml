@@ -418,14 +418,14 @@
         title: Inline Style Overrides
         extra: Styled with inline CSS
       style:
-        /label:
+        .label:
           color: '#d46b08'
           fontWeight: bold
           fontSize: 16px
-        /extra:
+        .extra:
           color: '#d48806'
           fontStyle: italic
-        /element:
+        .element:
           border: 1px solid #ffd591
           padding: 12px
           borderRadius: 8px

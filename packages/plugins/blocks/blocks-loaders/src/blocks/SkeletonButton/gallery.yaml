@@ -217,7 +217,7 @@
         size: medium
         width: 140
       style:
-        /element:
+        .element:
           borderRadius: 4
     - id: style_no_radius
       type: SkeletonButton
@@ -227,7 +227,7 @@
         size: medium
         width: 140
       style:
-        /element:
+        .element:
           borderRadius: 0
     - id: style_circle
       type: SkeletonButton
@@ -237,5 +237,5 @@
         size: large
         width: 40
       style:
-        /element:
+        .element:
           borderRadius: 20

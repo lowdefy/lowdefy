@@ -26,4 +26,6 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/Pagination/gallery.yaml
     description: >
-      Pagination control with page size changer and quick jumper.
+      Pagination control with page size changer and quick jumper. Maintains `current`, `pageSize`, and `skip` in block state, making it easy to wire into database queries for server-side pagination. See the guide below for a full MongoDB + AgGrid example.
+    guide:
+      _ref: blocks/input/PaginationGuide.md

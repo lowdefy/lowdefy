@@ -178,11 +178,11 @@ At build time, if a block has `areas`, it is copied to `slots` and the `areas` k
 
 #### `normalizeClassAndStyles` (styling normalization)
 
-Normalizes the various `class` and `style`/`styles` config forms into a canonical shape:
+Normalizes `class` and `style` config into a canonical shape. Both use `.` (dot) prefix for slot targeting:
 
-1. **`properties.style`** is moved to `styles.element` (the component's own style, distinct from the layout wrapper).
-2. **`block.style`** (top-level) is moved to `styles.block` (the layout wrapper style). Responsive breakpoint keys in `style` are rejected with a `ConfigError` — use Tailwind classes instead.
-3. **`block.class`** as a string or array is normalized to `{ block: value }` (object form).
+1. **`properties.style`** is merged into `style['.element']` (deprecation migration — the component's own style).
+2. **`block.style`** plain CSS keys (no `.` prefix) are moved to the `block` slot. `.` prefixed keys (e.g., `.element`, `.label`) have their prefix stripped. Responsive breakpoint keys are rejected with a `ConfigError`.
+3. **`block.class`** as a string or array is normalized to `{ block: value }`. Object keys with `.` prefix have the prefix stripped.
 
 The `breakpointKeys` used for validation are: `['xs', 'sm', 'md', 'lg', 'xl', '2xl']`. Note: `xxl` has been replaced with `2xl` to align with Tailwind v4 conventions.
 
@@ -287,13 +287,15 @@ Replaces the old `writeStyleImports`. Generates `globals.css` which is imported 
 2. **Tailwind CSS v4 import** — `@import "tailwindcss";`
 3. **Grid CSS import** — `@import "@lowdefy/layout/grid.css";` for the layout grid system.
 4. **Optional user styles** — imports `public/styles.css` if present (in the `components` layer).
-5. **Content sources** — `@source` directives for Tailwind to scan block packages and per-page HTML content files for class usage.
+5. **Content source** — `@source "../lowdefy-build/tailwind/*.html"` for Tailwind to scan per-page content files and block JS content.
 6. **Trigger import** — `@import './tailwind-candidates.css'` that is rewritten on page changes to trigger CSS recompilation.
+7. **Antd-to-Tailwind theme bridge** — `@theme inline` block that maps `--ant-*` CSS variables to Tailwind design tokens (colors, radius, font-size, font-family). Users can override these via `theme.tailwind` in `lowdefy.yaml`.
 
-Also writes per-page tailwind HTML files from `context.tailwindContentMap` to `lowdefy-build/tailwind/{pageId}.html` for Tailwind v4 to scan via `@source "../lowdefy-build/tailwind/*.html"`.
-6. **Antd-to-Tailwind theme bridge** — `@theme` block that maps `--ant-*` CSS variables to Tailwind design tokens (colors, radius, font-size, font-family). Users can override these via `theme.tailwind` in `lowdefy.yaml`.
+Also writes:
+- Per-page tailwind HTML files from `context.tailwindContentMap` to `lowdefy-build/tailwind/{pageId}.html`
+- Block plugin JS content via `collectBlockSourceContent()` to `lowdefy-build/tailwind/_blocks.html` (follows pnpm/yarn symlinks to resolve real paths)
 
-If `public/styles.less` is detected, a `ConfigWarning` with `prodError: true` is emitted, advising migration.
+If `public/styles.less` is detected, a `ConfigError` is thrown, advising migration.
 
 ### Plugin Schema Map Generation
 

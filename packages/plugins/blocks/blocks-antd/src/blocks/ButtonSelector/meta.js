@@ -15,6 +15,9 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import options from '../../schemas/options.js';
+import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -49,147 +52,11 @@ export default {
           displayType: 'color',
         },
       },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
-      options: {
-        default: [],
-        oneOf: [
-          {
-            type: 'array',
-            description:
-              'Options can either be an array of primitive values, on an array of label, value pairs - supports html.',
-            items: {
-              type: 'string',
-            },
-          },
-          {
-            type: 'array',
-            description:
-              'Options can either be an array of primitive values, on an array of label, value pairs.',
-            items: {
-              type: 'number',
-            },
-          },
-          {
-            type: 'array',
-            description:
-              'Options can either be an array of primitive values, on an array of label, value pairs.',
-            items: {
-              type: 'boolean',
-            },
-          },
-          {
-            type: 'array',
-            description:
-              'Options can either be an array of primitive values, on an array of label, value pairs.',
-            items: {
-              type: 'object',
-              required: ['value'],
-              properties: {
-                label: {
-                  type: 'string',
-                  description: 'Value label shown to user - supports html.',
-                },
-                value: {
-                  description: 'Value selected. Can be of any type.',
-                  oneOf: [
-                    {
-                      type: 'string',
-                    },
-                    {
-                      type: 'number',
-                    },
-                    {
-                      type: 'boolean',
-                    },
-                    {
-                      type: 'object',
-                    },
-                    {
-                      type: 'array',
-                    },
-                  ],
-                  docs: {
-                    displayType: 'yaml',
-                  },
-                },
-                disabled: {
-                  type: 'boolean',
-                  default: false,
-                  description: 'Disable the option if true.',
-                },
-                style: {
-                  type: 'object',
-                  description: 'Css style to applied to option.',
-                  docs: {
-                    displayType: 'yaml',
-                  },
-                },
-              },
-            },
-          },
-        ],
-      },
-      size: {
-        type: 'string',
-        enum: ['small', 'default', 'large'],
-        default: 'default',
-        description: 'Size of the block.',
-      },
-      label: {
-        type: 'object',
-        description: 'Label properties.',
-        additionalProperties: false,
-        properties: {
-          align: {
-            type: 'string',
-            enum: ['left', 'right'],
-            default: 'left',
-            description: 'Align label left or right when inline.',
-          },
-          colon: {
-            type: 'boolean',
-            default: true,
-            description: 'Append label with colon.',
-          },
-          extra: {
-            type: 'string',
-            description: 'Extra text to display beneath the content - supports html.',
-          },
-          title: {
-            type: 'string',
-            description: 'Label title - supports html.',
-          },
-          span: {
-            type: 'number',
-            description: 'Label inline span.',
-          },
-          disabled: {
-            type: 'boolean',
-            default: false,
-            description: 'Hide input label.',
-          },
-          hasFeedback: {
-            type: 'boolean',
-            default: true,
-            description:
-              'Display feedback extra from validation, this does not disable validation.',
-          },
-          inline: {
-            type: 'boolean',
-            default: false,
-            description: 'Render input and label inline.',
-          },
-        },
-      },
-      title: {
-        type: 'string',
-        description:
-          'Title to describe the input component, if no title is specified the block id is displayed - supports html.',
-      },
+      disabled,
+      options,
+      size: sizeSmallDefaultLarge,
+      label,
+      title: inputTitle,
       theme: {
         type: 'object',
         description:

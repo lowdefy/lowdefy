@@ -333,7 +333,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           borderColor: '#1677ff'
           borderWidth: 2
       properties:
@@ -344,7 +344,7 @@
       layout:
         flex: 0 0 auto
       style:
-        /element:
+        .element:
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.15)
           borderRadius: 16
       properties:

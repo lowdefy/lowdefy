@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { Modal } from 'antd';
+import { App } from 'antd';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 const ConfirmModal = ({
@@ -28,6 +28,7 @@ const ConfirmModal = ({
   properties,
   styles = {},
 }) => {
+  const { modal } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
@@ -45,7 +46,7 @@ const ConfirmModal = ({
         );
       }
       methods.triggerEvent({ name: 'onOpen' });
-      Modal[args.status || properties.status || 'confirm']({
+      modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
         content:

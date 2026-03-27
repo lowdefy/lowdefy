@@ -34,6 +34,18 @@ const auth = {
 
 const context = testContext({ logger });
 
+// Context with blockMetas for "did you mean" hint tests
+const contextWithMetas = testContext({ logger });
+contextWithMetas.blockMetas = {
+  Input: {
+    cssKeys: {
+      element: 'The element.',
+      header: 'The header.',
+      body: 'The body.',
+    },
+  },
+};
+
 beforeEach(() => {
   mockLogWarn.mockReset();
   mockLog.mockReset();
@@ -144,7 +156,7 @@ test('normalizeClassAndStyles strips / prefix from class object keys', () => {
           {
             id: 'block_1',
             type: 'Input',
-            class: { '/block': 'a', '/element': 'b' },
+            class: { '.block': 'a', '.element': 'b' },
           },
         ],
       },
@@ -197,7 +209,7 @@ test('normalizeClassAndStyles handles / prefixed keys in style', () => {
           {
             id: 'block_1',
             type: 'Input',
-            style: { '/element': { color: 'red' }, '/block': { marginTop: 20 } },
+            style: { '.element': { color: 'red' }, '.block': { marginTop: 20 } },
           },
         ],
       },
@@ -225,7 +237,7 @@ test('normalizeClassAndStyles merges properties.style and /element (/element ove
             properties: {
               style: { color: 'red', fontSize: 14 },
             },
-            style: { '/element': { fontSize: 16, fontWeight: 'bold' } },
+            style: { '.element': { fontSize: 16, fontWeight: 'bold' } },
           },
         ],
       },
@@ -316,7 +328,7 @@ test('normalizeClassAndStyles throws for nested object in /block slot', () => {
           {
             id: 'block_1',
             type: 'Input',
-            style: { '/block': { color: 'red', typography: { fontSize: 14 } } },
+            style: { '.block': { color: 'red', typography: { fontSize: 14 } } },
           },
         ],
       },
@@ -338,7 +350,7 @@ test('normalizeClassAndStyles throws for nested object in /element slot', () => 
           {
             id: 'block_1',
             type: 'Input',
-            style: { '/element': { padding: 10, wrapper: { margin: 5 } } },
+            style: { '.element': { padding: 10, wrapper: { margin: 5 } } },
           },
         ],
       },
@@ -360,7 +372,7 @@ test('normalizeClassAndStyles allows operator object as style value', () => {
           {
             id: 'block_1',
             type: 'Input',
-            style: { '/block': { color: { _state: 'theme.color' } } },
+            style: { '.block': { color: { _state: 'theme.color' } } },
           },
         ],
       },
@@ -384,7 +396,7 @@ test('normalizeClassAndStyles allows operator as entire slot value', () => {
             id: 'block_1',
             type: 'Input',
             style: {
-              '/block': {
+              '.block': {
                 _if: { test: true, then: { color: 'red' }, else: { color: 'blue' } },
               },
             },
@@ -410,7 +422,7 @@ test('normalizeClassAndStyles does not treat _id as an operator in style validat
           {
             id: 'block_1',
             type: 'Input',
-            style: { '/block': { color: 'red', nested: { _id: 'some_id' } } },
+            style: { '.block': { color: 'red', nested: { _id: 'some_id' } } },
           },
         ],
       },
@@ -471,4 +483,122 @@ test('normalizeClassAndStyles handles both flat style and properties.style toget
   });
   expect(get(res, 'pages.0.slots.content.blocks.0.styles')).toBeUndefined();
   expect(get(res, 'pages.0.slots.content.blocks.0.properties.style')).toBeUndefined();
+});
+
+// ── "Did you mean" hint tests ──
+
+test('style nested object matching cssKey includes "Did you mean" hint', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { header: { background: 'red' } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithMetas })).toThrow(
+    'Did you mean ".header"?'
+  );
+});
+
+test('style nested object not matching cssKey has no hint', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            style: { hover: { color: 'blue' } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithMetas })).toThrow(
+    'Style property "hover" has a nested object value'
+  );
+  expect(() => buildPages({ components, context: contextWithMetas })).not.toThrow(
+    'Did you mean'
+  );
+});
+
+test('class non-dot key matching cssKey throws with "Did you mean" hint', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: { element: 'text-lg', header: 'bg-red' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithMetas })).toThrow(
+    'Did you mean ".element"?'
+  );
+});
+
+test('class non-dot key not matching cssKey passes through', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: { custom: 'text-lg' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithMetas });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
+    custom: 'text-lg',
+  });
+});
+
+test('class dot-prefixed keys are always stripped', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: { '.element': 'text-lg', '.header': 'bg-red' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithMetas });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
+    element: 'text-lg',
+    header: 'bg-red',
+  });
 });

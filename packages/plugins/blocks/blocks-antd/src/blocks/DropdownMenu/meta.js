@@ -18,7 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
-  slots: ['content'],
+  slots: {
+    content: 'Blocks that trigger the dropdown.',
+  },
   cssKeys: {
     element: 'The trigger wrapper element.',
     menu: 'The floating menu container.',
@@ -125,7 +127,7 @@ export default {
                 shortcut: {
                   type: 'string',
                   description:
-                    'Keyboard shortcut to select this menu item. Use "mod" for Cmd/Ctrl.',
+                    'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
                 },
               },
             },
@@ -174,7 +176,8 @@ export default {
                       },
                       shortcut: {
                         type: 'string',
-                        description: 'Keyboard shortcut. Use "mod" for Cmd/Ctrl.',
+                        description:
+                          'Keyboard shortcut. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
                       },
                     },
                   },

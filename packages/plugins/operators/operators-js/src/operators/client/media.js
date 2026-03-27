@@ -16,10 +16,12 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
+function getDarkModePreference(window) {
+  return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
+}
+
 function getDarkMode(window) {
-  const stored = window.localStorage?.getItem('lowdefy_darkMode');
-  if (stored !== null) return stored === 'true';
-  return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
+  return window.__lowdefy_isDark ?? false;
 }
 
 const breakpoints = {
@@ -61,6 +63,7 @@ function _media({ arrayIndices, location, params, globals }) {
     width: window.innerWidth,
     height: window.innerHeight,
     darkMode: getDarkMode(window),
+    darkModePreference: getDarkModePreference(window),
   };
   return getFromObject({
     arrayIndices,

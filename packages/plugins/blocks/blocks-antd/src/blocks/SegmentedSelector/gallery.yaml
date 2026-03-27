@@ -459,7 +459,7 @@
           - label: Tab C
             value: c
       style:
-        /element:
+        .element:
           borderRadius: 12
     - id: style_border
       type: SegmentedSelector
@@ -473,7 +473,7 @@
           - label: Right
             value: right
       style:
-        /element:
+        .element:
           border: '2px solid #91caff'
           borderRadius: 8
     - id: class_shadow

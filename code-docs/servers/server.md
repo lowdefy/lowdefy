@@ -165,6 +165,22 @@ function serverSidePropsWrapper(handler) {
 }
 ```
 
+## CSS Layer Order
+
+**File:** `pages/_document.js`
+
+The production server declares the CSS cascade layer order in an inline `<style>` tag in `_document.js`:
+
+```jsx
+<style
+  dangerouslySetInnerHTML={{
+    __html: '@layer theme, base, antd, components, utilities;',
+  }}
+/>
+```
+
+This is necessary because Next.js strips the `@layer` order declaration from `globals.css` during CSS bundling. Without this, antd's CSS-in-JS styles and Tailwind utilities compete unpredictably. See [Theme and Styling Architecture](../architecture/theme-and-styling.md) for the full CSS layer system.
+
 ## Page Rendering
 
 **File:** `pages/[pageId].js`

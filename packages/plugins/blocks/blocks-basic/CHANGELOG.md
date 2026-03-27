@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.7.2
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.7.2
+- @lowdefy/helpers@4.7.2
+
 ## 4.7.1
 
 ### Patch Changes

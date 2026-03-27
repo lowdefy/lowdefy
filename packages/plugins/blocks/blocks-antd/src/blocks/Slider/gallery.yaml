@@ -178,7 +178,7 @@
         gap: 40
         align: flex-start
       style:
-        /element:
+        .element:
           height: 250px
           padding: 20px
       blocks:
@@ -321,7 +321,7 @@
     - id: slider_style_element
       type: Slider
       style:
-        /element:
+        .element:
           padding: 0 20px
       properties:
         title: Custom Rail Padding
@@ -330,7 +330,7 @@
     - id: slider_style_label
       type: Slider
       style:
-        /label:
+        .label:
           color: '#531dab'
           fontWeight: bold
       properties:
@@ -340,10 +340,10 @@
     - id: slider_style_combined
       type: Slider
       style:
-        /element:
+        .element:
           borderRadius: 8
           padding: 12px 20px
-        /label:
+        .label:
           color: '#389e0d'
       properties:
         title: Combined Element and Label Styles

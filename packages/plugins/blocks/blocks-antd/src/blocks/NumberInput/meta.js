@@ -15,6 +15,14 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import {
+  disabled,
+  autoFocus,
+  variant,
+  bordered,
+  sizeSmallDefaultLarge,
+} from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -39,14 +47,9 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
-      autoFocus: {
-        type: 'boolean',
-        default: false,
-        description: 'Autofocus to the block on page load.',
-      },
+      autoFocus,
       bordered: {
-        type: 'boolean',
-        default: true,
+        ...bordered,
         description:
           'Whether or not the number input has a border style. Deprecated, use variant instead.',
       },
@@ -55,11 +58,7 @@ export default {
         default: true,
         description: 'Whether or not to show the +- controls.',
       },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
+      disabled,
       formatter: {
         type: 'object',
         description: 'A function specifying the format of the value presented.',
@@ -72,52 +71,7 @@ export default {
         default: true,
         description: 'If enabled, control input with keyboard up and down.',
       },
-      label: {
-        type: 'object',
-        description: 'Label properties.',
-        additionalProperties: false,
-        properties: {
-          align: {
-            type: 'string',
-            enum: ['left', 'right'],
-            default: 'left',
-            description: 'Align label left or right when inline.',
-          },
-          colon: {
-            type: 'boolean',
-            default: true,
-            description: 'Append label with colon.',
-          },
-          extra: {
-            type: 'string',
-            description: 'Extra text to display beneath the content - supports html.',
-          },
-          title: {
-            type: 'string',
-            description: 'Label title - supports html.',
-          },
-          span: {
-            type: 'number',
-            description: 'Label inline span.',
-          },
-          disabled: {
-            type: 'boolean',
-            default: false,
-            description: 'Hide input label.',
-          },
-          hasFeedback: {
-            type: 'boolean',
-            default: true,
-            description:
-              'Display feedback extra from validation, this does not disable validation.',
-          },
-          inline: {
-            type: 'boolean',
-            default: false,
-            description: 'Render input and label inline.',
-          },
-        },
-      },
+      label,
       min: {
         type: 'number',
         description: 'Minimum value allowed by the block.',
@@ -146,12 +100,7 @@ export default {
         type: 'integer',
         description: 'Precision (number of decimal places) allowed by the block.',
       },
-      size: {
-        type: 'string',
-        enum: ['small', 'default', 'large'],
-        default: 'default',
-        description: 'Size of the block.',
-      },
+      size: sizeSmallDefaultLarge,
       step: {
         type: 'number',
         default: 1,
@@ -162,11 +111,7 @@ export default {
         type: 'string',
         description: 'Number input label title - supports html.',
       },
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        description: 'Input visual variant. When set, takes precedence over bordered.',
-      },
+      variant,
       theme: {
         type: 'object',
         description:

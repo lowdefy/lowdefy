@@ -83,8 +83,7 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   const css = context.writeBuildArtifact.mock.calls[0][1];
   expect(css).toContain('@layer theme, base, antd, components, utilities;');
   expect(css).toContain('@import "tailwindcss";');
-  expect(css).toContain('@source "../node_modules/@lowdefy/blocks-*/dist/**/*.js";');
-  expect(css).toContain('@source "../lowdefy-build/tailwind/*.html";');
+  expect(css).toContain('@source "../lowdefy-build/tailwind/**/*.html";');
   expect(css).toContain('@import "./tailwind-candidates.css";');
 });
 
@@ -182,12 +181,12 @@ test('writeGlobalsCss omits styles.css import when file does not exist', async (
   expect(css).not.toContain('styles.css');
 });
 
-test('writeGlobalsCss includes @source for lowdefy-build/tailwind/*.html', async () => {
+test('writeGlobalsCss includes @source for lowdefy-build/tailwind/**/*.html', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });
 
   const css = context.writeBuildArtifact.mock.calls[0][1];
-  expect(css).toContain('@source "../lowdefy-build/tailwind/*.html";');
+  expect(css).toContain('@source "../lowdefy-build/tailwind/**/*.html";');
 });
 
 test('writeGlobalsCss writes per-page content files to server directory', async () => {

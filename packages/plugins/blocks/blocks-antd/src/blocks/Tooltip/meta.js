@@ -18,6 +18,9 @@ export default {
   category: 'container',
   icons: [],
   valueType: null,
+  slots: {
+    content: 'Child blocks that trigger the tooltip.',
+  },
   cssKeys: {
     element: 'The Tooltip element.',
     inner: 'The Tooltip inner.',
@@ -38,13 +41,6 @@ export default {
         type: 'boolean',
         default: true,
         description: 'Whether to adjust popup placement automatically when popup is off screen.',
-      },
-      overlayStyle: {
-        type: 'object',
-        description: 'Style of the tooltip card.',
-        docs: {
-          displayType: 'yaml',
-        },
       },
       color: {
         type: 'string',
