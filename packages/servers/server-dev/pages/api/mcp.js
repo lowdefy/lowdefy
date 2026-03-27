@@ -16,7 +16,7 @@
 
 import { callEndpoint, verifyJwt } from '@lowdefy/api';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
+import apiWrapper from '../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
   // DELETE: session cleanup (MCP protocol requirement)
