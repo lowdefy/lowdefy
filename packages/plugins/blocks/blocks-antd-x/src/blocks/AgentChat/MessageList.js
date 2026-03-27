@@ -16,10 +16,24 @@
 
 import React from 'react';
 import { Bubble } from '@ant-design/x';
+import { Avatar } from 'antd';
+import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
 import MessageBubble from './MessageBubble.js';
 
-function MessageList({ messages, isStreaming, config, addToolApprovalResponse }) {
+function roleAvatar(roleConfig, fallbackIcon) {
+  if (roleConfig?.avatar) {
+    return <Avatar src={roleConfig.avatar} />;
+  }
+  return <Avatar icon={fallbackIcon} />;
+}
+
+function roleHeader(roleConfig, fallback) {
+  const name = roleConfig?.name ?? fallback;
+  return <h5 style={{ margin: 0 }}>{name}</h5>;
+}
+
+function MessageList({ messages, isStreaming, config, addToolApprovalResponse, onFeedback }) {
   // Build a lookup map for assistant message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -64,10 +78,15 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse })
           placement: 'end',
           variant: 'filled',
           shape: 'round',
+          avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
+          header: roleHeader(config?.roles?.user, 'You'),
         },
         ai: {
           placement: 'start',
           variant: 'outlined',
+          style: { maxWidth: '100%' },
+          avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
+          header: roleHeader(config?.roles?.assistant, 'Assistant'),
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             return (
@@ -77,6 +96,9 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse })
                 parts={parts}
                 config={config}
                 addToolApprovalResponse={addToolApprovalResponse}
+                actions={config?.actions}
+                messageId={info.key}
+                onFeedback={onFeedback}
               />
             );
           },
