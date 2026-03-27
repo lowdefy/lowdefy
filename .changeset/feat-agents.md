@@ -28,7 +28,6 @@ feat: Add AI agent support with multi-provider chat and tool use
 - Sequential message part rendering with configurable reasoning/thinking display
 - Event bridging for agent lifecycle events (onSuccess, onError, onFinish)
 - Copy and feedback message actions with `onFeedback` event for capturing user ratings
-- Sender suggestion chips that populate the input on click
 - File attachment support with configurable accept types and max size
 - Configurable roles, avatars, and names per message role
 - Drawer display mode with a FloatButton trigger for embedding chat on any page

@@ -78,16 +78,6 @@
       "type": "object",
       "properties": {
         "placeholder": { "type": "string" },
-        "suggestions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "label": { "type": "string" },
-              "value": { "type": "string" }
-            }
-          }
-        },
         "attachments": {
           "type": "object",
           "properties": {
