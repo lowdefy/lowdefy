@@ -9,3 +9,5 @@ Docs app refactored for antd v6.
 - Created custom `_yaml_parse` and `_yaml_stringify` operators for YAML handling in docs examples.
 - Applied antd v6 style codemods across all page templates and example configurations.
 - Updated migration guide covering all breaking changes.
+- Rewrote block gallery pages for 70+ blocks with real-world examples, theme token overrides, style/CSS sections with Tailwind examples, and copy-to-clipboard.
+- Gallery examples use `var(--ant-*)` tokens instead of hardcoded colors for dark mode compatibility.

@@ -11,6 +11,7 @@ The development server provides:
 - Extended plugin set for development
 - Environment file watching
 - Process management
+- In-browser ErrorBar for build errors and warnings
 
 ## Key Differences from Production
 
@@ -633,6 +634,12 @@ function App({ children }) {
   );
 }
 ```
+
+### ErrorBar
+
+**File:** `lib/client/ErrorBar.js`
+
+Fixed bottom bar that displays build errors and warnings in the browser. Build warnings propagate from the build pipeline through the SSE reload channel to the client, giving developers immediate feedback without checking the terminal. Includes a copy-to-clipboard button for sharing error details with stack traces.
 
 ### SWR Hooks
 

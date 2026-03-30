@@ -33,3 +33,21 @@ Remove per-component `header.theme`, `sider.theme`, and `menu.theme` string prop
 | PageHeaderMenu | `properties.footer.style`        | `style: { .footer }`        |
 | PageHeaderMenu | `properties.content.style`       | `style: { .content }`       |
 | PageHeaderMenu | `properties.logo.style`          | `style: { .logo }`          |
+
+**Events removed:**
+
+| Block          | Removed Event         | Replacement                               |
+| -------------- | --------------------- | ----------------------------------------- |
+| PageSiderMenu  | `onNotificationClick` | Use `notifications.link` property instead |
+| PageSiderMenu  | `onProfileClick`      | Removed                                   |
+| PageHeaderMenu | `onNotificationClick` | Use `notifications.link` property instead |
+| PageHeaderMenu | `onProfileClick`      | Removed                                   |
+
+**Other removals:**
+
+- `collapsible` and `initialCollapsed` properties removed from PageSiderMenu sider
+- Horizontal menu border removed from PageHeaderMenu header
+
+**Added:**
+
+- `notifications.link` property for notification item navigation

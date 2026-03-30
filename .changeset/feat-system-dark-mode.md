@@ -8,7 +8,7 @@
 '@lowdefy/server-dev': minor
 ---
 
-feat: Add `theme.darkMode` config with system preference support.
+Add `theme.darkMode` config with system preference support.
 
 **System Dark Mode (`theme.darkMode`)**
 
@@ -25,3 +25,10 @@ feat: Add `theme.darkMode` config with system preference support.
 
 - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
 - `_media: darkMode` continues to return the effective boolean state
+
+**Dark Mode Rendering**
+
+- Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+- Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+- 404 page and loading states use theme-aware backgrounds
+- Mobile menu drawer background matches the active theme

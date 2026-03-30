@@ -11,3 +11,4 @@ Upgrade Next.js to 16 with Turbopack.
 - **Less removed**: `next-with-less` wrapper is removed. Styling uses CSS Modules and antd CSS-in-JS.
 - **SWC 1.15.18**: Updated SWC compiler.
 - **Dynamic transpilePackages**: Server resolves block packages for transpilation from a build artifact, supporting custom block plugins with CSS imports.
+- **antd as direct server dependency**: Both server packages list `antd` and `@ant-design/cssinjs` as direct dependencies for pnpm strict mode compatibility.

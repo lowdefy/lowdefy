@@ -68,6 +68,7 @@
     "@lowdefy/operators-nunjucks": "4.7.2",
     "@lowdefy/operators-uuid": "4.7.2",
     "antd": "6.3.1",
+    "dayjs": "1.11.19",
     "next": "16.1.6",
     "pino": "8.16.2",
     "process": "0.11.10",

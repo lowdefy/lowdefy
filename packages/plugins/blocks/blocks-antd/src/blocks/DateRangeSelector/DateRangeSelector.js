@@ -95,9 +95,11 @@ const DateRangeSelector = ({
               onChange={(newVal) => {
                 const val = !newVal
                   ? null
-                  : newVal.map((val) =>
-                      dayjs.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
-                    );
+                  : newVal.map((v) => {
+                      // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+                      const d = dayjs(v);
+                      return dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('day').toDate();
+                    });
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}

@@ -22,6 +22,7 @@ export { default as Badge } from './blocks/Badge/meta.js';
 export { default as Breadcrumb } from './blocks/Breadcrumb/meta.js';
 export { default as Button } from './blocks/Button/meta.js';
 export { default as ButtonSelector } from './blocks/ButtonSelector/meta.js';
+export { default as Calendar } from './blocks/Calendar/meta.js';
 export { default as Card } from './blocks/Card/meta.js';
 export { default as Carousel } from './blocks/Carousel/meta.js';
 export { default as CheckboxSelector } from './blocks/CheckboxSelector/meta.js';

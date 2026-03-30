@@ -93,6 +93,29 @@ blocks:
         extra: Select a date from the calendar
 
   # ============================================
+  # DISABLED DATES TESTS
+  # ============================================
+
+  - id: ds_disabled_dates_min_max
+    type: DateSelector
+    properties:
+      title: Min/Max Range
+      disabledDates:
+        min:
+          _date: '2024-06-01'
+        max:
+          _date: '2024-06-30'
+
+  - id: ds_disabled_specific_dates
+    type: DateSelector
+    properties:
+      title: Specific Disabled Dates
+      disabledDates:
+        dates:
+          - _date: '2024-06-10'
+          - _date: '2024-06-20'
+
+  # ============================================
   # EVENT TESTS
   # ============================================
 

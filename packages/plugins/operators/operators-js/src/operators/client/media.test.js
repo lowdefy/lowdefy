@@ -95,7 +95,7 @@ test('_media darkMode returns false when no localStorage and no matchMedia', () 
   ).toEqual(false);
 });
 
-test('_media darkMode returns true when preference is dark', () => {
+test('_media darkMode returns true when __lowdefy_isDark is true', () => {
   expect(
     media({
       params: 'darkMode',
@@ -104,14 +104,14 @@ test('_media darkMode returns true when preference is dark', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'dark' },
+          __lowdefy_isDark: true,
         },
       },
     })
   ).toEqual(true);
 });
 
-test('_media darkMode returns false when preference is light', () => {
+test('_media darkMode returns false when __lowdefy_isDark is false', () => {
   expect(
     media({
       params: 'darkMode',
@@ -120,14 +120,14 @@ test('_media darkMode returns false when preference is light', () => {
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'light' },
+          __lowdefy_isDark: false,
         },
       },
     })
   ).toEqual(false);
 });
 
-test('_media darkMode follows system preference when preference is system', () => {
+test('_media darkMode defaults to false when __lowdefy_isDark is not set', () => {
   expect(
     media({
       params: 'darkMode',
@@ -136,32 +136,10 @@ test('_media darkMode follows system preference when preference is system', () =
         window: {
           innerHeight: 300,
           innerWidth: 500,
-          localStorage: { getItem: () => 'system' },
-          matchMedia: (query) => ({
-            matches: query === '(prefers-color-scheme: dark)',
-          }),
         },
       },
     })
-  ).toEqual(true);
-});
-
-test('_media darkMode falls back to system preference when no localStorage', () => {
-  expect(
-    media({
-      params: 'darkMode',
-      location: 'locationId',
-      globals: {
-        window: {
-          innerHeight: 300,
-          innerWidth: 500,
-          matchMedia: (query) => ({
-            matches: query === '(prefers-color-scheme: dark)',
-          }),
-        },
-      },
-    })
-  ).toEqual(true);
+  ).toEqual(false);
 });
 
 test('_media darkModePreference returns system when no localStorage', () => {
