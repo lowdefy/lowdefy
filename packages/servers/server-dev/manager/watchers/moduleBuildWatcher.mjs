@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 function moduleBuildWatcher(context) {
@@ -45,11 +46,18 @@ function moduleBuildWatcher(context) {
     );
 
     try {
-      if (moduleYamlChanged) {
-        context.logger.info('module.lowdefy.yaml changed, running full shallow rebuild.');
+      const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
+      const hasSkeletonChanges = changedFiles.some((f) => skeletonSourceFiles.has(f));
+
+      if (moduleYamlChanged || hasSkeletonChanges) {
+        context.logger.info(
+          moduleYamlChanged
+            ? 'module.lowdefy.yaml changed, running full shallow rebuild.'
+            : 'Module skeleton files changed, running shallow rebuild.'
+        );
         await context.lowdefyBuild();
+        await context.compileCss();
       } else {
-        // Module page content changed — invalidate all pages so JIT rebuilds them
         const invalidatePath = path.join(context.directories.build, 'invalidatePages');
         fs.writeFileSync(invalidatePath, String(Date.now()));
         context.logger.info('Module files changed, invalidated all pages.');
