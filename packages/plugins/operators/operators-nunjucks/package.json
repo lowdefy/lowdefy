@@ -48,7 +48,7 @@
     "@lowdefy/operators": "4.7.3"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "4.7.2",
+    "@lowdefy/node-utils": "4.7.3",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",
