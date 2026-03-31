@@ -112,8 +112,8 @@ server-dev/
 │   ├── utils/
 │   │   └── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
 │   └── watchers/
-│       ├── startWatchers.mjs
 │       ├── lowdefyBuildWatcher.mjs   # Skeleton vs page change classification
+│       ├── moduleBuildWatcher.mjs    # Local module file change classification
 │       ├── envWatcher.mjs
 │       └── nextBuildWatcher.mjs
 ├── pages/
@@ -332,6 +332,8 @@ When a file changes, the watcher classifies it using the `skeletonSourceFiles.js
 
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
+Both `lowdefyBuildWatcher` and `moduleBuildWatcher` use the same `loadSkeletonSourceFiles` helper and the same classification logic. The set contains relative paths for main config refs and absolute paths for module refs — matching the path formats each watcher receives from chokidar.
+
 ### Cross-Process Cache Invalidation
 
 The manager and server run in separate processes with separate `PageCache` instances. When a file change only affects pages (not skeleton):
@@ -417,18 +419,18 @@ async function installPlugins(context) {
 
 ### Watcher Orchestration
 
-**File:** `manager/watchers/startWatchers.mjs`
+**File:** `manager/processes/startWatchers.mjs`
 
 ```javascript
 function startWatchers(context) {
-  // Config changes → soft reload
-  lowdefyBuildWatcher(context);
-
-  // .env changes → hard restart
-  envWatcher(context);
-
-  // Plugin changes → rebuild + restart
-  nextBuildWatcher(context);
+  return async () => {
+    await Promise.all([
+      envWatcher(context),          // .env changes → hard restart
+      lowdefyBuildWatcher(context), // Config changes → soft reload
+      moduleBuildWatcher(context),  // Local module changes → soft reload
+      nextBuildWatcher(context),    // Plugin changes → rebuild + restart
+    ]);
+  };
 }
 ```
 
@@ -462,6 +464,37 @@ const callback = async (filePaths) => {
   context.reloadClients();
 };
 ```
+
+### Module Build Watcher
+
+**File:** `manager/watchers/moduleBuildWatcher.mjs`
+
+Watches local module directories (modules with `isLocal: true` in `buildContext.modules`). Uses the same `skeletonSourceFiles.json` artifact as the lowdefy build watcher to classify changes:
+
+```javascript
+const callback = async (filePaths) => {
+  const changedFiles = filePaths.flat(); // Absolute paths from chokidar
+
+  const moduleYamlChanged = changedFiles.some(
+    (filePath) => path.basename(filePath) === 'module.lowdefy.yaml'
+  );
+
+  const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
+  const hasSkeletonChanges = changedFiles.some((f) => skeletonSourceFiles.has(f));
+
+  if (moduleYamlChanged || hasSkeletonChanges) {
+    await context.lowdefyBuild();
+    await context.compileCss();
+  } else {
+    fs.writeFileSync(invalidatePath, String(Date.now()));
+  }
+  context.reloadClients();
+};
+```
+
+Module refs in the `skeletonSourceFiles` set are absolute paths (the walker resolves them via `path.resolve`), matching chokidar's absolute output. No path normalization needed.
+
+The watcher only starts when local modules exist. If `buildContext.modules` is empty or has no local entries, `moduleBuildWatcher` returns immediately.
 
 ### Environment Watcher
 
@@ -732,6 +765,7 @@ const nextConfig = {
 | `manager/processes/lowdefyBuild.mjs`       | Calls `shallowBuild`, captures result      |
 | `manager/utils/loadSkeletonSourceFiles.mjs`| Load skeleton source file set from build artifact |
 | `manager/watchers/lowdefyBuildWatcher.mjs` | Skeleton vs page change classification     |
+| `manager/watchers/moduleBuildWatcher.mjs`  | Local module file change classification    |
 | `lib/server/jitPageBuilder.js`             | JIT page build on API request              |
 | `lib/server/pageCache.mjs`                 | PageCache class (compiled tracking, locks) |
 | `pages/api/page/[pageId].js`               | Page API (triggers JIT build)              |
@@ -745,13 +779,16 @@ const nextConfig = {
 
 ## Reload Types
 
-| Trigger                      | Watcher             | Action                      | Result                              |
-| ---------------------------- | ------------------- | --------------------------- | ----------------------------------- |
-| Page-level config change     | lowdefyBuildWatcher | Signal file + SSE           | Soft reload (all pages invalidated, rebuilt JIT) |
-| Skeleton-level config change | lowdefyBuildWatcher | Full skeleton rebuild + SSE | Soft reload (all pages invalidated)              |
-| .env change                  | envWatcher          | Read env                    | Hard restart                        |
-| Plugin change                | nextBuildWatcher    | Next build                  | Hard restart                        |
-| package.json                 | nextBuildWatcher    | Install + build             | Hard restart                        |
+| Trigger                         | Watcher             | Action                      | Result                              |
+| ------------------------------- | ------------------- | --------------------------- | ----------------------------------- |
+| Page-level config change        | lowdefyBuildWatcher | Signal file + SSE           | Soft reload (all pages invalidated, rebuilt JIT) |
+| Skeleton-level config change    | lowdefyBuildWatcher | Full skeleton rebuild + SSE | Soft reload (all pages invalidated)              |
+| Module skeleton file change     | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                     |
+| Module page content change      | moduleBuildWatcher  | Signal file + SSE           | Soft reload (all pages invalidated, rebuilt JIT) |
+| `module.lowdefy.yaml` change   | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                     |
+| .env change                     | envWatcher          | Read env                    | Hard restart                        |
+| Plugin change                   | nextBuildWatcher    | Next build                  | Hard restart                        |
+| package.json                    | nextBuildWatcher    | Install + build             | Hard restart                        |
 
 ## Mock User for Testing
 
