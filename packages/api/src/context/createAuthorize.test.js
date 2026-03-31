@@ -91,6 +91,40 @@ test('throws ConfigError with received value when auth.public is wrong type', ()
   }
 });
 
+test('throws ConfigError when session.user.roles is a string', () => {
+  try {
+    createAuthorize({ session: { user: { sub: 'sub', roles: 'admin' } } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.message).toBe('session.user.roles must be an array of strings.');
+    expect(e.received).toBe('admin');
+    return;
+  }
+  throw new Error('Expected ConfigError to be thrown');
+});
+
+test('throws ConfigError when session.user.roles is a number', () => {
+  try {
+    createAuthorize({ session: { user: { sub: 'sub', roles: 42 } } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.received).toBe(42);
+    return;
+  }
+  throw new Error('Expected ConfigError to be thrown');
+});
+
+test('throws ConfigError when session.user.roles is an object', () => {
+  try {
+    createAuthorize({ session: { user: { sub: 'sub', roles: { admin: true } } } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.received).toEqual({ admin: true });
+    return;
+  }
+  throw new Error('Expected ConfigError to be thrown');
+});
+
 test('throws ConfigError with configKey for location tracing', () => {
   const authorize = createAuthorize({});
   try {

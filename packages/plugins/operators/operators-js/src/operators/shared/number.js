@@ -33,7 +33,7 @@ const meta = {
   parseInt: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] },
   toExponential: { namedArgs: ['on', 'fractionDigits'], validTypes: ['array', 'object'] },
   toFixed: { namedArgs: ['on', 'digits'], validTypes: ['array', 'object'] },
-  toLocaleString: { namedArgs: ['on', 'locales'], validTypes: ['array', 'object'] },
+  toLocaleString: { namedArgs: ['on', 'locales'], validTypes: ['array', 'object'], dynamic: true },
   toPrecision: { namedArgs: ['on', 'precision'], validTypes: ['array', 'object'] },
   toString: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] },
 };
@@ -62,5 +62,6 @@ function _number({ params, location, methodName }) {
 }
 
 _number.dynamic = false;
+_number.meta = meta;
 
 export default _number;

@@ -241,6 +241,10 @@ async function sessionCallback({ session, token, user }) {
     session = await plugin.fn({ session, token, user });
   }
 
+  // Validate roles after all sources have written to the session.
+  // Throws ConfigError if roles is present but not an array of strings.
+  validateSessionRoles({ session });
+
   // Create anonymized hash for analytics
   session.hashed_id = crypto.createHash('sha256')
     .update(identifier ?? '')
@@ -309,6 +313,14 @@ function createAuthorize({ session }) {
   const authenticated = !!session;
   const roles = session?.user?.roles ?? [];
 
+  // Defense-in-depth: throw if roles bypassed session callback validation.
+  // A string would cause silent authorization bypass via substring matching.
+  if (!Array.isArray(roles)) {
+    throw new ConfigError('session.user.roles must be an array of strings.', {
+      received: roles,
+    });
+  }
+
   function authorize({ auth }) {
     if (auth.public === true) return true;
 
@@ -321,7 +333,10 @@ function createAuthorize({ session }) {
       return authenticated;
     }
 
-    throw new ServerError('Invalid auth configuration');
+    throw new ConfigError('auth.public must be true or false.', {
+      received: auth.public,
+      configKey: config['~k'],
+    });
   }
 
   return authorize;
@@ -668,6 +683,7 @@ See [server-e2e.md](../servers/server-e2e.md) for full server architecture.
 1. **404 for Unauthorized**: Returns 404 instead of 403 to hide existence
 2. **Session Hashing**: `hashed_id` for privacy-preserving analytics
 3. **Role Checking**: Array-based role matching
-4. **Secret Operator**: `_secret` for credentials in config
-5. **PKCE & State**: OAuth security via Auth.js
-6. **Cookie Security**: Configurable via `auth.advanced.cookies`
+4. **Roles Validation**: `validateSessionRoles` in the session callback throws `ConfigError` if `session.user.roles` is not an array of strings. Without this, a misconfigured string value (e.g., `roles: "admin"`) causes `String.prototype.includes` to do substring matching — a silent authorization bypass. `createAuthorize` has a defense-in-depth guard for the same check.
+5. **Secret Operator**: `_secret` for credentials in config
+6. **PKCE & State**: OAuth security via Auth.js
+7. **Cookie Security**: Configurable via `auth.advanced.cookies`

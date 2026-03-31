@@ -1,5 +1,45 @@
 # Change Log
 
+## 4.7.3
+
+### Patch Changes
+
+- 8779686f9: fix(build,server-dev): Improved accuracy of dev server skeleton rebuild detection.
+
+  The dev server previously used a path-based heuristic to decide which file changes required a skeleton rebuild. This could miss changes to API endpoints referenced from page directories, and unnecessarily rebuild for non-skeleton page templates. Skeleton rebuild classification now uses the build's ref map as the source of truth, ensuring only the correct file changes trigger skeleton rebuilds.
+
+- Updated dependencies [c5ce5b972]
+- Updated dependencies [9de3276dc]
+- Updated dependencies [8779686f9]
+  - @lowdefy/operators-js@4.7.3
+  - @lowdefy/api@4.7.3
+  - @lowdefy/build@4.7.3
+  - @lowdefy/engine@4.7.3
+  - @lowdefy/client@4.7.3
+  - @lowdefy/layout@4.7.3
+  - @lowdefy/actions-core@4.7.3
+  - @lowdefy/blocks-aggrid@4.7.3
+  - @lowdefy/blocks-antd@4.7.3
+  - @lowdefy/blocks-basic@4.7.3
+  - @lowdefy/blocks-color-selectors@4.7.3
+  - @lowdefy/blocks-echarts@4.7.3
+  - @lowdefy/blocks-loaders@4.7.3
+  - @lowdefy/blocks-markdown@4.7.3
+  - @lowdefy/blocks-qr@4.7.3
+  - @lowdefy/operators-change-case@4.7.3
+  - @lowdefy/operators-diff@4.7.3
+  - @lowdefy/operators-moment@4.7.3
+  - @lowdefy/operators-mql@4.7.3
+  - @lowdefy/operators-nunjucks@4.7.3
+  - @lowdefy/operators-uuid@4.7.3
+  - @lowdefy/operators-yaml@4.7.3
+  - @lowdefy/plugin-next-auth@4.7.3
+  - @lowdefy/block-utils@4.7.3
+  - @lowdefy/errors@4.7.3
+  - @lowdefy/helpers@4.7.3
+  - @lowdefy/logger@4.7.3
+  - @lowdefy/node-utils@4.7.3
+
 ## 4.7.2
 
 ### Patch Changes

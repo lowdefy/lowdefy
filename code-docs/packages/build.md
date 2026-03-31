@@ -106,6 +106,7 @@ async function build(options) {
 | `buildPageJit.js` | Dev-only: resolve page content on demand |
 | `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
 | `createFileDependencyMap.js` | Dev-only: map files → pages for invalidation |
+| `collectSkeletonSourceFiles.js` | Dev-only: derive skeleton source file set from refMap |
 
 ### Reference Resolution (`buildRefs/`)
 
@@ -404,7 +405,7 @@ const typesMap = createPluginTypesMap(plugins);
 import { shallowBuild, buildPageJit, createContext } from '@lowdefy/build/dev';
 
 // Phase 1: Skeleton build (resolves everything except page content)
-const { components, pageRegistry, fileDependencyMap, context } = await shallowBuild({
+const { components, pageRegistry, context } = await shallowBuild({
   customTypesMap,
   directories,
   logger,
@@ -436,6 +437,7 @@ await buildPageJit({
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
 | `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files + per-page tailwind HTML |
 | `collectPageContent` | `collectPageContent.js` | Extract all string content from page blocks for Tailwind scanning |
+| `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walk `~r` markers on non-page components to derive skeleton source files |
 | `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |
 | `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys used by `isPageContentPath` |
 

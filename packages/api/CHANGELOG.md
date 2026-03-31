@@ -1,5 +1,22 @@
 # Change Log
 
+## 4.7.3
+
+### Patch Changes
+
+- 9de3276dc: fix(api): Validate session.user.roles is an array of strings.
+
+  Misconfigured `auth.userFields` mapping roles to a non-array provider field (e.g., a string) caused silent authorization bypasses via `String.prototype.includes` substring matching. Session roles are now validated after session assembly, throwing a clear `ConfigError` pointing to the auth configuration. Added a defense-in-depth guard in `createAuthorize` for the same check.
+
+- Updated dependencies [c5ce5b972]
+  - @lowdefy/operators-js@4.7.3
+  - @lowdefy/operators@4.7.3
+  - @lowdefy/ajv@4.7.3
+  - @lowdefy/errors@4.7.3
+  - @lowdefy/helpers@4.7.3
+  - @lowdefy/node-utils@4.7.3
+  - @lowdefy/nunjucks@4.7.3
+
 ## 4.7.2
 
 ### Patch Changes
