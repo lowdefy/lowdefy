@@ -27,6 +27,11 @@ class LowdefyDocument extends Document {
     return (
       <Html className="lowdefy">
         <Head>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: '@layer theme, base, antd, components, utilities;',
+            }}
+          />
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
           <link rel="icon" type="image/svg+xml" href={`${basePath}/icon.svg`} />
           <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />
