@@ -22,6 +22,11 @@ export default {
     element: 'The upload wrapper element.',
   },
   events: {
+    onBeforeUpload: {
+      description:
+        'Triggered before upload starts. If any action throws, the upload is cancelled.',
+      event: { file: 'The raw File object selected by the user.' },
+    },
     onChange: 'Triggered when the upload state is changing.',
     onProgress: {
       description: 'Triggered when the upload state is in progress.',
