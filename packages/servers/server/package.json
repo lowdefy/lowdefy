@@ -64,6 +64,7 @@
     "@lowdefy/plugin-next-auth": "4.7.3",
     "@sentry/nextjs": "8.53.0",
     "@tailwindcss/postcss": "4.2.1",
+    "tailwindcss": "4.2.1",
     "antd": "6.3.1",
     "dayjs": "1.11.19",
     "next": "16.1.6",

@@ -29,7 +29,11 @@ async function compileCss(buildDirectory) {
     from: inputPath,
     to: outputPath,
   });
-  fs.writeFileSync(outputPath, result.css);
+  // The Tailwind PostCSS plugin consumes the @layer order declaration from
+  // globals.css during compilation. Re-inject it as the first line so the
+  // browser establishes the correct cascade priority (antd > base/preflight).
+  const layerOrder = '@layer theme, base, antd, components, utilities;\n';
+  fs.writeFileSync(outputPath, layerOrder + result.css);
 }
 
 export default compileCss;

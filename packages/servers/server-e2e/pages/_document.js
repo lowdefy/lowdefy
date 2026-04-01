@@ -27,13 +27,15 @@ class LowdefyDocument extends Document {
     return (
       <Html className="lowdefy">
         <Head>
-          {/* CSS cascade layer order — must appear before any other CSS so that
-              antd's CSS-in-JS layer overrides Tailwind's base/preflight layer.
-              Next.js strips the @layer statement from globals.css during bundling,
-              so we declare it here to guarantee it loads first. */}
-          <style
+          {/* Synchronous script that creates the @layer order declaration and keeps
+              it as the first child of <head> via MutationObserver. antd's CSS-in-JS
+              uses prependQueue to inject <style> tags at the top of <head>, which
+              would otherwise make @layer antd the first (lowest priority) layer.
+              MutationObserver fires before paint, so the browser never sees the
+              wrong cascade order. */}
+          <script
             dangerouslySetInnerHTML={{
-              __html: '@layer theme, base, antd, components, utilities;',
+              __html: `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`,
             }}
           />
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
