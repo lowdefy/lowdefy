@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import React, { useCallback, useRef, useState } from 'react';
+// CSS layer order — MUST be the first CSS import. Next.js treats this as critical
+// CSS that loads before hydration, locking the cascade priority (antd > base/preflight)
+// before antd's StyleProvider injects @layer antd {} at runtime.
+import '../build/layer-order.css';
+
+import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { getOrCreateAntdCssContainer } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -44,8 +48,6 @@ function resolveAlgorithm(algorithm) {
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
-  const [antdCssContainer] = useState(getOrCreateAntdCssContainer);
-
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
       lowdefyRef.current._internal.handleError(error);
@@ -55,7 +57,7 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   }, []);
 
   return (
-    <StyleProvider layer container={antdCssContainer}>
+    <StyleProvider layer>
       <ConfigProvider
         theme={{
           ...lowdefyRef.current.theme?.antd,

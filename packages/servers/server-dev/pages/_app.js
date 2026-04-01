@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
+// CSS layer order — MUST be the first CSS import. Turbopack treats this as critical
+// CSS that loads before hydration, locking the cascade priority (antd > base/preflight)
+// before antd's StyleProvider injects @layer antd {} at runtime.
+import '../build/layer-order.css';
+
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { getOrCreateAntdCssContainer, useDarkMode } from '@lowdefy/client';
+import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -28,11 +33,9 @@ import Auth from '../lib/client/auth/Auth.js';
 import ErrorBar from '../lib/client/ErrorBar.js';
 import request from '../lib/client/utils/request.js';
 
-// NOTE: server-dev does NOT import globals.css here (unlike server/server-e2e).
-// The compiled CSS is loaded via <link href="tailwind-jit.css"> in _document.js,
-// which is compiled from globals.css by compileCss.mjs with correct @layer wrappers.
-// Importing globals.css here would cause Turbopack to re-compile and inject a second
-// copy of Tailwind CSS, which can break antd styling due to CSS chunking artifacts.
+// Full Tailwind CSS — also loaded via <link href="tailwind-jit.css"> in _document.js
+// for hot-reloading. The Turbopack chunk provides layer ordering guarantee on initial load.
+import '../build/globals.css';
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -47,8 +50,6 @@ function App({ Component }) {
   const router = useRouter();
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
-  const [antdCssContainer] = useState(getOrCreateAntdCssContainer);
-
   // Subscribe to rootConfig SWR cache — deduplicates with inner App.js fetch.
   // Without suspense so _app.js doesn't suspend — just re-renders when data arrives.
   const { data: rootConfig } = useSWR(`${router.basePath}/api/root`, (url) => request({ url }));
@@ -91,7 +92,7 @@ function App({ Component }) {
   }, []);
 
   return (
-    <StyleProvider layer container={antdCssContainer}>
+    <StyleProvider layer>
       <ConfigProvider
         theme={{
           ...lowdefyRef.current.theme?.antd,
