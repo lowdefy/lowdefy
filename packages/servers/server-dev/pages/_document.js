@@ -28,6 +28,7 @@ class LowdefyDocument extends Document {
       <Html className="lowdefy">
         <Head>
           <style
+            id="__lf-layer-order"
             dangerouslySetInnerHTML={{
               __html: '@layer theme, base, antd, components, utilities;',
             }}

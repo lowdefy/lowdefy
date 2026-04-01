@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
+import { getOrCreateAntdCssContainer } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -43,6 +44,7 @@ function resolveAlgorithm(algorithm) {
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+  const [antdCssContainer] = useState(getOrCreateAntdCssContainer);
 
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
@@ -53,7 +55,7 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   }, []);
 
   return (
-    <StyleProvider layer>
+    <StyleProvider layer container={antdCssContainer}>
       <ConfigProvider
         theme={{
           ...lowdefyRef.current.theme?.antd,

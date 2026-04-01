@@ -32,6 +32,7 @@ class LowdefyDocument extends Document {
               Next.js strips the @layer statement from globals.css during bundling,
               so we declare it here to guarantee it loads first. */}
           <style
+            id="__lf-layer-order"
             dangerouslySetInnerHTML={{
               __html: '@layer theme, base, antd, components, utilities;',
             }}

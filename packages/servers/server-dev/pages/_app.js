@@ -20,7 +20,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode } from '@lowdefy/client';
+import { getOrCreateAntdCssContainer, useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -44,6 +44,7 @@ function App({ Component }) {
   const router = useRouter();
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
+  const [antdCssContainer] = useState(getOrCreateAntdCssContainer);
 
   // Subscribe to rootConfig SWR cache — deduplicates with inner App.js fetch.
   // Without suspense so _app.js doesn't suspend — just re-renders when data arrives.
@@ -87,7 +88,7 @@ function App({ Component }) {
   }, []);
 
   return (
-    <StyleProvider layer>
+    <StyleProvider layer container={antdCssContainer}>
       <ConfigProvider
         theme={{
           ...lowdefyRef.current.theme?.antd,
