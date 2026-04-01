@@ -28,8 +28,11 @@ import Auth from '../lib/client/auth/Auth.js';
 import ErrorBar from '../lib/client/ErrorBar.js';
 import request from '../lib/client/utils/request.js';
 
-// Must be in _app due to next specifications.
-import '../build/globals.css';
+// NOTE: server-dev does NOT import globals.css here (unlike server/server-e2e).
+// The compiled CSS is loaded via <link href="tailwind-jit.css"> in _document.js,
+// which is compiled from globals.css by compileCss.mjs with correct @layer wrappers.
+// Importing globals.css here would cause Turbopack to re-compile and inject a second
+// copy of Tailwind CSS, which can break antd styling due to CSS chunking artifacts.
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
