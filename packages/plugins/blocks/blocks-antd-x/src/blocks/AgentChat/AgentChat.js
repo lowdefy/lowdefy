@@ -153,11 +153,46 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
+
+    // Build file metadata for the event payload
+    const filesMeta = attachedFiles.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
+
+    // Fire onBeforeSend — blocking event. If success is false, cancel the send.
+    const response = await methods.triggerEvent({
+      name: 'onBeforeSend',
+      event: { text, files: filesMeta, messages },
+    });
+    if (response.success === false) return;
+
+    // Check if any action response contains replacement file URLs.
+    // Developers upload files to S3 in their action chain and return URLs.
+    let replacementFiles = null;
+    if (response.responses) {
+      for (const actionResult of Object.values(response.responses)) {
+        if (actionResult.response?.files && Array.isArray(actionResult.response.files)) {
+          replacementFiles = actionResult.response.files;
+          break;
+        }
+      }
+    }
+
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
-      for (const file of attachedFiles) {
-        const part = await fileToContentPart(file);
-        parts.push(part);
+      if (replacementFiles) {
+        // Use URL-based file parts from onBeforeSend response
+        for (const file of replacementFiles) {
+          parts.push({ type: 'file', url: file.url, mediaType: file.mediaType });
+        }
+      } else {
+        // Fall back to base64 data URLs
+        for (const file of attachedFiles) {
+          const part = await fileToContentPart(file);
+          parts.push(part);
+        }
       }
       sendMessage({ parts });
       setAttachedFiles([]);
