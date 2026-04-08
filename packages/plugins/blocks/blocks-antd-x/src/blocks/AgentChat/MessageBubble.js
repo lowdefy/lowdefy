@@ -16,9 +16,18 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { Actions, CodeHighlighter, Mermaid, Sources, ThoughtChain, Think } from '@ant-design/x';
+import {
+  Actions,
+  CodeHighlighter,
+  FileCard,
+  Mermaid,
+  Sources,
+  ThoughtChain,
+  Think,
+} from '@ant-design/x';
 import { DeleteOutlined, DislikeOutlined, LikeOutlined, ReloadOutlined } from '@ant-design/icons';
 
+import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import ToolApproval from './ToolApproval.js';
 
 // Module-level singleton for the LaTeX marked extension.
@@ -251,13 +260,15 @@ function MessageBubble({
   if (reasoningDisplay === 'grouped') {
     const reasoning = { category: 'reasoning', parts: [] };
     const tools = { category: 'tool', parts: [] };
+    const files = { category: 'file', parts: [] };
     const text = { category: 'text', parts: [] };
     for (const part of parts) {
       if (part.type === 'reasoning') reasoning.parts.push(part);
       else if (part.type === 'text') text.parts.push(part);
       else if (getToolInfo(part)) tools.parts.push(part);
+      else if (part.type === 'file') files.parts.push(part);
     }
-    segments = [reasoning, tools, text].filter((s) => s.parts.length > 0);
+    segments = [reasoning, tools, files, text].filter((s) => s.parts.length > 0);
   } else {
     segments = [];
     let current = null;
@@ -271,6 +282,8 @@ function MessageBubble({
         category = 'reasoning';
       } else if (getToolInfo(part)) {
         category = 'tool';
+      } else if (part.type === 'file') {
+        category = 'file';
       } else {
         continue;
       }
@@ -366,6 +379,25 @@ function MessageBubble({
             };
           });
           return <ThoughtChain key={`tool-${idx}`} items={items} />;
+        }
+        if (segment.category === 'file') {
+          const fileItems = segment.parts.map((part, i) => {
+            const cardType = getFileCardType(part.mediaType);
+            return {
+              key: `file-${idx}-${i}`,
+              name: getFileName(part),
+              type: cardType,
+              icon: getFileCardIcon(part.mediaType, part.filename),
+              src:
+                cardType === 'image' || cardType === 'video' || cardType === 'audio'
+                  ? part.url
+                  : undefined,
+            };
+          });
+          if (fileItems.length === 1) {
+            return <FileCard key={`file-${idx}`} {...fileItems[0]} />;
+          }
+          return <FileCard.List key={`file-${idx}`} items={fileItems} overflow="wrap" />;
         }
         if (segment.category === 'text') {
           const text = segment.parts.map((p) => p.text).join('');
