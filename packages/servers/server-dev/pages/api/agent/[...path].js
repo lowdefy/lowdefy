@@ -61,4 +61,12 @@ async function handler({ context, req, res }) {
   res.end();
 }
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+};
+
 export default apiWrapper(handler);

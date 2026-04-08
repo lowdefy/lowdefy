@@ -17,10 +17,13 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { Sender } from '@ant-design/x';
-import { Button, Tag, Upload } from 'antd';
+import { FileCard, Sender } from '@ant-design/x';
+import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
+
 import { type } from '@lowdefy/helpers';
+
+import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
 import ConversationSidebar from './ConversationSidebar.js';
 import DrawerWrapper from './DrawerWrapper.js';
@@ -41,6 +44,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     drawer: drawerConfig,
   } = properties;
   const senderRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
 
@@ -104,7 +108,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => {
-        resolve({ type: 'file', url: reader.result, mediaType: file.type });
+        resolve({ type: 'file', url: reader.result, mediaType: file.type, filename: file.name });
       };
       reader.readAsDataURL(file);
     });
@@ -185,17 +189,46 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         </div>
         <div style={{ padding: '8px 16px 24px' }}>
           {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
-              {attachedFiles.map((file, i) => (
-                <Tag
-                  key={i}
-                  closable
-                  onClose={() => setAttachedFiles((prev) => prev.filter((_, j) => j !== i))}
-                >
-                  {file.name}
-                </Tag>
-              ))}
-            </div>
+            <FileCard.List
+              style={{ marginBottom: 4 }}
+              items={attachedFiles.map((file, i) => {
+                const cardType = getFileCardType(file.type);
+                return {
+                  key: `${i}`,
+                  name: file.name,
+                  byte: file.size,
+                  type: cardType,
+                  icon: getFileCardIcon(file.type, file.name),
+                  src: cardType === 'image' ? URL.createObjectURL(file) : undefined,
+                };
+              })}
+              removable
+              onRemove={(item) => {
+                setAttachedFiles((prev) => {
+                  const idx = prev.findIndex((f) => f.name === item.name && f.size === item.byte);
+                  return idx !== -1 ? prev.filter((_, j) => j !== idx) : prev;
+                });
+              }}
+              overflow="wrap"
+              size="small"
+            />
+          )}
+          {attachmentsConfig?.enabled && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              style={{ display: 'none' }}
+              accept={attachmentsConfig.accept}
+              multiple
+              onChange={(e) => {
+                const files = Array.from(e.target.files);
+                const valid = files.filter(
+                  (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+                );
+                setAttachedFiles((prev) => [...prev, ...valid]);
+                e.target.value = '';
+              }}
+            />
           )}
           <Sender
             ref={senderRef}
@@ -205,20 +238,11 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             loading={isBusy}
             prefix={
               attachmentsConfig?.enabled ? (
-                <Upload
-                  beforeUpload={(file) => {
-                    if (attachmentsConfig.maxSize && file.size > attachmentsConfig.maxSize) {
-                      return false;
-                    }
-                    setAttachedFiles((prev) => [...prev, file]);
-                    return false;
-                  }}
-                  accept={attachmentsConfig.accept}
-                  showUploadList={false}
-                  multiple
-                >
-                  <Button type="text" icon={<PaperClipOutlined />} />
-                </Upload>
+                <Button
+                  type="text"
+                  icon={<PaperClipOutlined />}
+                  onClick={() => fileInputRef.current?.click()}
+                />
               ) : undefined
             }
           />

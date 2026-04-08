@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import { Bubble } from '@ant-design/x';
+import { Bubble, FileCard } from '@ant-design/x';
 import { Avatar } from 'antd';
 import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
+import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import MessageBubble from './MessageBubble.js';
 
 function roleAvatar(roleConfig, fallbackIcon) {
@@ -34,13 +35,12 @@ function roleHeader(roleConfig, fallback) {
 }
 
 function MessageList({ messages, isStreaming, config, addToolApprovalResponse, onFeedback }) {
-  // Build a lookup map for assistant message parts.
+  // Build a lookup map for message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
-  // bridges that gap so MessageBubble can render tool calls, reasoning, etc.
-  const partsMap = new Map(
-    messages.filter((msg) => msg.role === 'assistant').map((msg) => [msg.id, msg.parts])
-  );
+  // bridges that gap so MessageBubble can render tool calls, reasoning, etc. for assistant
+  // messages and FileCard previews for user file attachments.
+  const partsMap = new Map(messages.map((msg) => [msg.id, msg.parts]));
 
   const lastMessage = messages[messages.length - 1];
   const items = messages.map((msg) => {
@@ -80,6 +80,34 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
           shape: 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
+          contentRender: (content, info) => {
+            const parts = partsMap.get(info.key);
+            const fileParts = (parts ?? []).filter((p) => p.type === 'file');
+            if (fileParts.length === 0) return content;
+            const fileItems = fileParts.map((part, i) => {
+              const cardType = getFileCardType(part.mediaType);
+              return {
+                key: `file-${i}`,
+                name: getFileName(part),
+                type: cardType,
+                icon: getFileCardIcon(part.mediaType, part.filename),
+                src: cardType === 'image' ? part.url : undefined,
+                size: 'small',
+              };
+            });
+            return (
+              <div>
+                <div style={{ marginBottom: content ? 8 : 0 }}>
+                  {fileItems.length === 1 ? (
+                    <FileCard {...fileItems[0]} />
+                  ) : (
+                    <FileCard.List items={fileItems} overflow="wrap" size="small" />
+                  )}
+                </div>
+                {content && <div>{content}</div>}
+              </div>
+            );
+          },
         },
         ai: {
           placement: 'start',
