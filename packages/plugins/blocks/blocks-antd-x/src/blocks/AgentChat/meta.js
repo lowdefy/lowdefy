@@ -33,6 +33,7 @@ export default {
     onBeforeSend: 'Trigger before a message is sent. Return success: false to cancel.',
     onStop: 'Trigger when the user stops generation.',
     onConversationMenuClick: 'Trigger when the user clicks a conversation menu item.',
+    onSuggestionClick: 'Trigger when the user clicks a follow-up suggestion.',
   },
   methods: {
     regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',

@@ -17,7 +17,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { Sender } from '@ant-design/x';
+import { Prompts, Sender } from '@ant-design/x';
 import { Button, Tag, Upload } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 import { type } from '@lowdefy/helpers';
@@ -39,8 +39,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     messages: externalMessages,
     display,
     drawer: drawerConfig,
+    suggestions,
   } = properties;
   const senderRef = useRef(null);
+  const finishMetaRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
 
@@ -71,6 +73,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         name: 'onError',
         event: { message: error.message },
       });
+    },
+    onFinish: (options) => {
+      finishMetaRef.current = {
+        finishReason: options.finishReason,
+        isAbort: options.isAbort,
+        isDisconnect: options.isDisconnect,
+      };
     },
   });
 
@@ -122,7 +131,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }, []);
 
-  useAgentEvents({ messages, status, methods });
+  useAgentEvents({ messages, status, methods, finishMetaRef });
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
@@ -221,6 +230,14 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     sendMessage({ text: prompt.label });
   }
 
+  function handleSuggestionClick(suggestion) {
+    methods.triggerEvent({
+      name: 'onSuggestionClick',
+      event: { suggestion },
+    });
+    sendMessage({ text: suggestion.label });
+  }
+
   function handleFeedback({ messageId, rating }) {
     const message = messages.find((msg) => msg.id === messageId);
     const messageContent =
@@ -315,6 +332,19 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             />
           )}
         </div>
+        {!isEmpty && suggestions && suggestions.length > 0 && !isBusy && (
+          <div style={{ padding: '0 16px 8px' }}>
+            <Prompts
+              items={suggestions.map((s, i) => ({
+                key: s.key ?? `suggestion-${i}`,
+                label: s.label,
+                description: s.description,
+              }))}
+              onItemClick={({ data }) => handleSuggestionClick(data)}
+              wrap
+            />
+          </div>
+        )}
         <div style={{ padding: '8px 16px 24px' }}>
           {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>

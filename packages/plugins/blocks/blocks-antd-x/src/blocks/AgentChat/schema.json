@@ -155,6 +155,18 @@
         "width": { "type": "number" },
         "title": { "type": "string" }
       }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": {}
+        }
+      }
     }
   },
   "required": ["agentId"]
