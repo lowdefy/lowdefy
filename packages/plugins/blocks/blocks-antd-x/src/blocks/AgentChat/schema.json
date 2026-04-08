@@ -37,7 +37,7 @@
         },
         "toolResultDisplay": {
           "type": "string",
-          "enum": ["summary", "full", "none"],
+          "enum": ["summary", "full", "none", "readable"],
           "default": "summary"
         },
         "showSources": { "type": "boolean" },
@@ -103,6 +103,20 @@
       "type": "object",
       "properties": {
         "enabled": { "type": "boolean" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "disabled": { "type": "boolean" },
+              "timestamp": { "type": "number" }
+            }
+          }
+        },
+        "activeKey": { "type": "string" },
         "menu": {
           "type": "array",
           "items": {
@@ -168,6 +182,14 @@
           "icon": {}
         }
       }
+    },
+    "height": {
+      "type": "string",
+      "description": "CSS height of the chat container (e.g. '600px', '80vh')."
+    },
+    "maxWidth": {
+      "type": "number",
+      "description": "Maximum width of the chat container in pixels."
     }
   },
   "required": ["agentId"]
