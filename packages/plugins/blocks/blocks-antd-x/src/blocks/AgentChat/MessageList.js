@@ -34,7 +34,7 @@ function roleHeader(roleConfig, fallback) {
 }
 
 const MessageList = React.forwardRef(function MessageList(
-  { messages, isStreaming, config, addToolApprovalResponse, onFeedback },
+  { messages, isStreaming, config, addToolApprovalResponse, onFeedback, onRegenerate, onDelete },
   ref
 ) {
   // Build a lookup map for assistant message parts.
@@ -103,6 +103,8 @@ const MessageList = React.forwardRef(function MessageList(
                 actions={config?.actions}
                 messageId={info.key}
                 onFeedback={onFeedback}
+                onRegenerate={onRegenerate}
+                onDelete={onDelete}
               />
             );
           },

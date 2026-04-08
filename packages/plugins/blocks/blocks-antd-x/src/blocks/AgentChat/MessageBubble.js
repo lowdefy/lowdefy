@@ -16,9 +16,8 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
-import { Button } from 'antd';
-import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import { Actions, CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
+import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
 
@@ -91,35 +90,61 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageActions({ actions, textContent, messageId, onFeedback }) {
-  return (
-    <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-      {actions.includes('copy') && (
-        <Button
-          type="text"
-          size="small"
-          icon={<CopyOutlined />}
-          onClick={() => navigator.clipboard.writeText(textContent)}
+function normalizeActions(actions) {
+  if (Array.isArray(actions)) {
+    const obj = {};
+    for (const action of actions) {
+      obj[action] = true;
+    }
+    return obj;
+  }
+  return actions ?? {};
+}
+
+function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenerate, onDelete }) {
+  const normalized = normalizeActions(actions);
+  const items = [];
+
+  if (normalized.copy) {
+    items.push({
+      key: 'copy',
+      label: 'Copy',
+      actionRender: () => <Actions.Copy text={textContent} />,
+    });
+  }
+  if (normalized.feedback) {
+    items.push({
+      key: 'feedback',
+      label: 'Feedback',
+      actionRender: () => (
+        <Actions.Feedback
+          onChange={(value) =>
+            onFeedback?.({ messageId, rating: value === 'like' ? 'positive' : 'negative' })
+          }
         />
-      )}
-      {actions.includes('feedback') && (
-        <>
-          <Button
-            type="text"
-            size="small"
-            icon={<LikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'positive' })}
-          />
-          <Button
-            type="text"
-            size="small"
-            icon={<DislikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'negative' })}
-          />
-        </>
-      )}
-    </div>
-  );
+      ),
+    });
+  }
+  if (normalized.regenerate) {
+    items.push({
+      key: 'regenerate',
+      icon: <ReloadOutlined />,
+      label: 'Regenerate',
+      onItemClick: () => onRegenerate?.({ messageId }),
+    });
+  }
+  if (normalized.delete) {
+    items.push({
+      key: 'delete',
+      icon: <DeleteOutlined />,
+      label: 'Delete',
+      danger: true,
+      onItemClick: () => onDelete?.({ messageId }),
+    });
+  }
+
+  if (items.length === 0) return null;
+  return <Actions items={items} />;
 }
 
 function MessageBubble({
@@ -131,6 +156,8 @@ function MessageBubble({
   actions,
   messageId,
   onFeedback,
+  onRegenerate,
+  onDelete,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -144,7 +171,8 @@ function MessageBubble({
     return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
   }, [renderMermaid, codeHighlighter]);
 
-  const showActions = actions && actions.length > 0 && !isStreaming;
+  const normalizedActions = normalizeActions(actions);
+  const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;
 
   const showSources = config?.showSources;
   const sourceParts = showSources
@@ -186,11 +214,13 @@ function MessageBubble({
           </div>
         )}
         {showActions && (
-          <MessageActions
-            actions={actions}
+          <BubbleActions
+            actions={normalizedActions}
             textContent={content}
             messageId={messageId}
             onFeedback={onFeedback}
+            onRegenerate={onRegenerate}
+            onDelete={onDelete}
           />
         )}
       </div>
@@ -357,11 +387,13 @@ function MessageBubble({
         </div>
       )}
       {showActions && (
-        <MessageActions
-          actions={actions}
+        <BubbleActions
+          actions={normalizedActions}
           textContent={allTextContent}
           messageId={messageId}
           onFeedback={onFeedback}
+          onRegenerate={onRegenerate}
+          onDelete={onDelete}
         />
       )}
     </div>

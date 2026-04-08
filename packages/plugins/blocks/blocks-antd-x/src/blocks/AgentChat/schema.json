@@ -41,8 +41,15 @@
         },
         "showSources": { "type": "boolean" },
         "actions": {
-          "type": "array",
-          "items": { "type": "string", "enum": ["copy", "feedback"] }
+          "type": "object",
+          "properties": {
+            "copy": { "type": "boolean", "default": true },
+            "feedback": { "type": "boolean", "default": true },
+            "regenerate": { "type": "boolean", "default": false },
+            "edit": { "type": "boolean", "default": false },
+            "delete": { "type": "boolean", "default": false },
+            "audio": { "type": "boolean", "default": false }
+          }
         },
         "roles": {
           "type": "object",

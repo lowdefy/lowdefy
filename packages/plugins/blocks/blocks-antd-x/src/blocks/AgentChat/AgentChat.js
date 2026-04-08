@@ -227,6 +227,28 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
+  function handleRegenerate({ messageId }) {
+    methods.triggerEvent({
+      name: 'onRegenerate',
+      event: { messageId, messages },
+    });
+    regenerate({ messageId });
+  }
+
+  function handleDelete({ messageId }) {
+    const message = messages.find((m) => m.id === messageId);
+    const textContent =
+      message?.parts
+        ?.filter((p) => p.type === 'text')
+        .map((p) => p.text)
+        .join('') ?? '';
+    methods.triggerEvent({
+      name: 'onDeleteMessage',
+      event: { messageId, content: textContent, messages },
+    });
+    setMessages((prev) => prev.filter((m) => m.id !== messageId));
+  }
+
   const chatContent = (
     <div
       id={blockId}
@@ -265,6 +287,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               config={messageDisplay}
               addToolApprovalResponse={addToolApprovalResponse}
               onFeedback={handleFeedback}
+              onRegenerate={handleRegenerate}
+              onDelete={handleDelete}
             />
           )}
         </div>
