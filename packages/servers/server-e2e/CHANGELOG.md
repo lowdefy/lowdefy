@@ -1,5 +1,30 @@
 # @lowdefy/server-e2e
 
+## 4.7.3
+
+### Patch Changes
+
+- Updated dependencies [c5ce5b972]
+- Updated dependencies [9de3276dc]
+  - @lowdefy/operators-js@4.7.3
+  - @lowdefy/api@4.7.3
+  - @lowdefy/client@4.7.3
+  - @lowdefy/layout@4.7.3
+  - @lowdefy/actions-core@4.7.3
+  - @lowdefy/blocks-antd@4.7.3
+  - @lowdefy/blocks-basic@4.7.3
+  - @lowdefy/blocks-loaders@4.7.3
+  - @lowdefy/blocks-markdown@4.7.3
+  - @lowdefy/connection-axios-http@4.7.3
+  - @lowdefy/connection-mongodb@4.7.3
+  - @lowdefy/operators-nunjucks@4.7.3
+  - @lowdefy/operators-uuid@4.7.3
+  - @lowdefy/block-utils@4.7.3
+  - @lowdefy/errors@4.7.3
+  - @lowdefy/helpers@4.7.3
+  - @lowdefy/logger@4.7.3
+  - @lowdefy/node-utils@4.7.3
+
 ## 4.7.2
 
 ### Patch Changes

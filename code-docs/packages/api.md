@@ -156,6 +156,15 @@ Client Action (Endpoint)
 
 Handles Auth.js (NextAuth) configuration retrieval.
 
+| Module                                        | Purpose                                                        |
+| --------------------------------------------- | -------------------------------------------------------------- |
+| `callbacks/createSessionCallback.js`          | Assembles session from OIDC claims, userFields, and plugins    |
+| `callbacks/validateSessionRoles.js`           | Validates `session.user.roles` is an array of strings          |
+| `callbacks/createJWTCallback.js`              | JWT token assembly                                             |
+| `callbacks/addUserFieldsToSession.js`         | Maps provider fields to session via `auth.userFields`          |
+| `callbacks/addUserFieldsToToken.js`           | Maps provider fields to JWT token via `auth.userFields`        |
+| `callbacks/createCallbackPlugins.js`          | Filters callback plugins by type                               |
+
 ### `/routes/page/`
 
 Serves page configuration to the client.

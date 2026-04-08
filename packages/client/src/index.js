@@ -17,4 +17,5 @@
 import Client from './Client.js';
 
 export default Client;
+export { default as getOrCreateAntdCssContainer } from './getOrCreateAntdCssContainer.js';
 export { default as useDarkMode } from './useDarkMode.js';

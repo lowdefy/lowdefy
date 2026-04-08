@@ -40,9 +40,15 @@ test('addDefaultPages, no pages array', () => {
         id: '404',
         type: 'Result',
         style: {
+          background: 'var(--ant-color-bg-layout)',
           minHeight: '100vh',
         },
         properties: {
+          icon: {
+            color: 'var(--ant-color-primary)',
+            name: 'AiOutlineFileSearch',
+            size: 80,
+          },
           status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
@@ -85,9 +91,15 @@ test('addDefaultPages, empty pages array', () => {
         id: '404',
         type: 'Result',
         style: {
+          background: 'var(--ant-color-bg-layout)',
           minHeight: '100vh',
         },
         properties: {
+          icon: {
+            color: 'var(--ant-color-primary)',
+            name: 'AiOutlineFileSearch',
+            size: 80,
+          },
           status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
@@ -134,9 +146,15 @@ test('addDefaultPages, pages without 404 page', () => {
         id: '404',
         type: 'Result',
         style: {
+          background: 'var(--ant-color-bg-layout)',
           minHeight: '100vh',
         },
         properties: {
+          icon: {
+            color: 'var(--ant-color-primary)',
+            name: 'AiOutlineFileSearch',
+            size: 80,
+          },
           status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',

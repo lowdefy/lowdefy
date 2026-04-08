@@ -14,9 +14,26 @@
   limitations under the License.
 */
 
-import { getFromArray } from '@lowdefy/operators';
+import { getFromArray, getFromObject } from '@lowdefy/operators';
+import { type } from '@lowdefy/helpers';
 
-function _menu({ params, menus, location }) {
+function _menu({ params, arrayIndices, menus, location }) {
+  // Support dot-path access: _menu: menuId.path.into.links
+  if (type.isString(params) && params.includes('.')) {
+    const dotIndex = params.indexOf('.');
+    const menuId = params.slice(0, dotIndex);
+    const path = params.slice(dotIndex + 1);
+    const menu = menus.find((item) => item.menuId === menuId);
+    if (!menu) return undefined;
+    const links = menu.links ?? [];
+    return getFromObject({
+      params: path,
+      object: links,
+      arrayIndices,
+      operator: '_menu',
+      location,
+    });
+  }
   const result = getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
   // When selecting a single menu, return its links array directly.
   // _menu: true and { all: true } return the full menus array (result is an array).

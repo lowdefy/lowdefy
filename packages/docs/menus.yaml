@@ -452,6 +452,9 @@
         - id: Button
           type: MenuLink
           pageId: Button
+        - id: Calendar
+          type: MenuLink
+          pageId: Calendar
         - id: DangerousHtml
           type: MenuLink
           pageId: DangerousHtml

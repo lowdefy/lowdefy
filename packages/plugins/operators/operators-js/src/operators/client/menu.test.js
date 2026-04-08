@@ -219,3 +219,27 @@ test('_menu param object invalid', () => {
     '_menu must be of type string, number or object. at locationId.'
   );
 });
+
+test('_menu dot-path access into links', () => {
+  const input = { a: { _menu: 'default.0.id' } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ a: 'home' });
+  expect(res.errors).toEqual([]);
+});
+
+test('_menu dot-path access nested property', () => {
+  const input = { a: { _menu: 'default.0.properties.title' } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ a: 'Home' });
+  expect(res.errors).toEqual([]);
+});
+
+test('_menu dot-path with nonexistent menu returns undefined', () => {
+  const input = { a: { _menu: 'nonexistent.0.id' } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ a: undefined });
+  expect(res.errors).toEqual([]);
+});

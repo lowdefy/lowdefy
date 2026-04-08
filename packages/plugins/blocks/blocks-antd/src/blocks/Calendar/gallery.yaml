@@ -1,0 +1,128 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Full Size Calendar
+  blocks:
+    - id: fullsize_default
+      type: Calendar
+
+- title: Compact (Card) Calendar
+  blocks:
+    - id: compact_default
+      type: Calendar
+      properties:
+        fullscreen: false
+
+- title: Year Panel Mode
+  blocks:
+    - id: year_mode
+      type: Calendar
+      properties:
+        mode: year
+
+- title: Valid Date Range
+  blocks:
+    - id: valid_range
+      type: Calendar
+      properties:
+        validRange:
+          - '2026-01-01'
+          - '2026-12-31'
+
+- title: Disabled Dates
+  blocks:
+    - id: disabled_min_max
+      type: Calendar
+      properties:
+        disabledDates:
+          min: '2026-03-10'
+          max: '2026-03-25'
+    - id: disabled_specific
+      type: Calendar
+      properties:
+        fullscreen: false
+        disabledDates:
+          dates:
+            - '2026-03-15'
+            - '2026-03-20'
+            - '2026-03-25'
+
+- title: Date Cell Data (Badges)
+  blocks:
+    - id: cell_data_badges
+      type: Calendar
+      properties:
+        dateCellData:
+          - date: '2026-03-05'
+            content: Team standup
+            status: processing
+          - date: '2026-03-05'
+            content: Code review
+            status: success
+          - date: '2026-03-12'
+            content: Sprint planning
+            status: warning
+          - date: '2026-03-15'
+            content: Release deadline
+            status: error
+          - date: '2026-03-20'
+            content: Demo day
+            status: success
+          - date: '2026-03-20'
+            content: Retrospective
+            status: default
+          - date: '2026-03-25'
+            content: Team lunch
+            color: '#52c41a'
+
+- title: Compact with Badges
+  blocks:
+    - id: compact_badges
+      type: Calendar
+      properties:
+        fullscreen: false
+        dateCellData:
+          - date: '2026-03-10'
+            content: Meeting
+            status: success
+          - date: '2026-03-18'
+            content: Deadline
+            status: error
+
+- title: Calendar with Events
+  blocks:
+    - id: calendar_events
+      type: Calendar
+      properties:
+        fullscreen: false
+      events:
+        onSelect:
+          - id: show_date
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Selected: '
+                  - _event: date
+              duration: 2
+
+- title: Custom Theme
+  blocks:
+    - id: themed_calendar
+      type: Calendar
+      properties:
+        fullscreen: false
+        theme:
+          itemActiveBg: '#f9f0ff'
+          colorPrimary: '#722ed1'
