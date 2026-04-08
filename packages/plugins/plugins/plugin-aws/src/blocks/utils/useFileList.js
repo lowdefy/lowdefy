@@ -103,14 +103,33 @@ const useFileList = ({ properties, methods, value = {} }) => {
     ) {
       return false;
     }
-    const result = await methods.triggerEvent({ name: 'onBeforeUpload', event: { file } });
+    // Extract file properties into a serialization-safe plain object.
+    // Raw File/Blob objects are destroyed by serializer.copy() in _event resolution.
+    const fileData = {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      lastModified: file.lastModified,
+      uid: file.uid,
+    };
+    if (file instanceof Blob || file instanceof File) {
+      fileData.url = URL.createObjectURL(file);
+    }
+    const result = await methods.triggerEvent({
+      name: 'onBeforeUpload',
+      event: {
+        file: fileData,
+      },
+    });
     if (result.success === false) {
       return false;
     }
-    setValue({
-      file,
+    const nextState = {
+      file: fileData,
       fileList: [...nextFiles, ...state.fileList],
-    });
+    };
+    setValue(nextState);
+    methods.setValue(nextState);
   };
   const removeFile = (file) => {
     state.fileList.splice(

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ServiceError } from '@lowdefy/errors';
+
 const getS3Upload =
   ({ methods, setFileList, setLoading = () => null }) =>
   async ({ file }) => {
@@ -45,28 +47,45 @@ const getS3Upload =
       });
       formData.append('file', file);
 
-      const xhr = new XMLHttpRequest();
-      xhr.upload.onprogress = async (event) => {
-        if (event.lengthComputable) {
-          await setFileList({
-            event: 'onProgress',
-            file,
-            percent: (event.loaded / event.total) * 80 + 20,
-          });
-        }
-      };
-      xhr.addEventListener('error', async () => {
-        await setFileList({ event: 'onError', file });
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = async (event) => {
+          if (event.lengthComputable) {
+            await setFileList({
+              event: 'onProgress',
+              file,
+              percent: (event.loaded / event.total) * 80 + 20,
+            });
+          }
+        };
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(new Error(`S3 upload failed with status ${xhr.status}.`));
+          }
+        });
+        xhr.addEventListener('error', () => {
+          reject(
+            new ServiceError(
+              `S3 upload failed for "${name}" — CORS or network error. ` +
+                `Check that the S3 bucket CORS configuration allows requests from this origin.`,
+              { service: 'S3' }
+            )
+          );
+        });
+        xhr.addEventListener('abort', () => {
+          reject(new Error(`S3 upload aborted for "${name}".`));
+        });
+        xhr.open('post', url);
+        xhr.send(formData);
       });
-      xhr.addEventListener('loadend', async () => {
-        await setFileList({ event: 'onSuccess', file });
-        setLoading(false);
-      });
-      xhr.open('post', url);
-      xhr.send(formData);
+      await setFileList({ event: 'onSuccess', file });
+      setLoading(false);
     } catch (error) {
-      console.error(error);
       await setFileList({ event: 'onError', file });
+      setLoading(false);
+      throw error;
     }
   };
 

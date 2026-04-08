@@ -25,8 +25,10 @@ export default {
   events: {
     onBeforeUpload: {
       description:
-        'Triggered before upload starts. If any action throws, the upload is cancelled.',
-      event: { file: 'The raw File object selected by the user.' },
+        'Triggered before a file is uploaded. If an action throws, the upload is cancelled.',
+      event: {
+        file: 'The file metadata (name, type, size, lastModified, uid, url).',
+      },
     },
     onChange: 'Triggered when the upload state is changing.',
     onProgress: {
