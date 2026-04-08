@@ -101,7 +101,8 @@ const MessageList = React.forwardRef(function MessageList(
         },
         ai: {
           placement: 'start',
-          variant: 'outlined',
+          variant: config?.roles?.assistant?.variant ?? 'outlined',
+          shape: config?.roles?.assistant?.shape ?? 'default',
           style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'Assistant'),

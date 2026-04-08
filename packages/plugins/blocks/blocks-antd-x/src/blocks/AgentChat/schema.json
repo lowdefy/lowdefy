@@ -65,14 +65,30 @@
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             },
             "user": {
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             }
           }

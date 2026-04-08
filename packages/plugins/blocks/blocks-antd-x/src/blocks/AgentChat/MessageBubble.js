@@ -275,9 +275,16 @@ function MessageBubble({
       {segments.map((segment, idx) => {
         if (segment.category === 'reasoning' && showReasoning) {
           const text = segment.parts.map((p) => p.text).join('');
-          if (text.length === 0) return null;
+          if (text.length === 0 && !isStreaming) return null;
+          const isActiveReasoning = isStreaming && segment.parts.some((p) => p.state === 'streaming');
           return (
-            <Think key={`reasoning-${idx}`} title="Reasoning" defaultExpanded={false}>
+            <Think
+              key={`reasoning-${idx}`}
+              title="Reasoning"
+              defaultExpanded={false}
+              loading={isActiveReasoning}
+              blink={isActiveReasoning}
+            >
               {text}
             </Think>
           );
