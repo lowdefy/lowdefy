@@ -20,6 +20,11 @@ export default {
     type: 'object',
     required: ['s3PostPolicyRequestId'],
     properties: {
+      height: {
+        type: 'number',
+        description:
+          'Height of the dragger area in pixels. Defaults to the antd control height. Overridden by style .element height if set.',
+      },
       title: {
         type: 'string',
         description: 'Title of the file input to be displayed on the draggable area.',

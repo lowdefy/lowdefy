@@ -583,7 +583,7 @@ All Sentry functions are no-ops when `SENTRY_DSN` is not set.
 
 The `@lowdefy/helpers` serializer handles error serialization via the `~e` marker:
 
-- **Replacer:** `extractErrorProps(error)` captures `message`, `name`, `stack`, `cause` (non-enumerable) + all enumerable properties → wraps as `{ '~e': props }`. Error `cause` values are recursively serialized via `extractErrorProps`.
+- **Replacer:** `extractErrorProps(error)` captures `message`, `name`, `stack`, `cause` (non-enumerable) + all enumerable properties → wraps as `{ '~e': props }`. Error `cause` values are recursively serialized via `extractErrorProps`. Plain objects, arrays, and non-Error causes are deep-cleaned via `cleanValue` — stripping class instances (replaced with `'[Object: ClassName]'`), detecting circular references (`'[Circular]'`), and capping nesting at 5 levels (`'[Truncated]'`). This prevents `JSON.stringify` crashes on errors with circular structures (e.g., Axios error responses containing Node.js request/response cycles).
 - **Reviver:** `Object.create(ErrorClass.prototype)` + property assignment — reconstructs correct Lowdefy class without calling constructors
 
 ```javascript

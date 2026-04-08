@@ -23,6 +23,7 @@ import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
+import formatPhoneNumber from './formatPhoneNumber.js';
 
 const Option = Select.Option;
 
@@ -75,7 +76,7 @@ function AddOnSelect({
       onChange={(newVal) => {
         const input = value?.input ?? '';
         const region = uniqueValueOptions[newVal]?.value ?? {};
-        const phone_number = `${region?.dial_code ?? ''}${input}`;
+        const phone_number = formatPhoneNumber(region?.dial_code, input);
 
         methods.setValue({
           input,
@@ -164,7 +165,6 @@ const PhoneNumberInput = ({
     methods.setValue({
       input: '',
       region: allowedRegions[defaultValue],
-      phone_number: allowedRegions[defaultValue].dial_code,
     });
   }
 
@@ -221,7 +221,7 @@ const PhoneNumberInput = ({
                 }
 
                 const region = value?.region ?? {};
-                const phone_number = `${region?.dial_code ?? ''}${input}`;
+                const phone_number = formatPhoneNumber(region?.dial_code, input);
 
                 methods.setValue({
                   input,

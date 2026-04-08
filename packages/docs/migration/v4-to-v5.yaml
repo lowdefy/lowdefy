@@ -40,7 +40,7 @@ _ref:
             | `bordered` → `variant` | 16 input/display blocks | Update property |
             | `visible` → `open` | Modal | Update property |
             | Button `type`/`danger` → `color`/`variant` | Button blocks | Update properties |
-            | Inline style props → `style: { /key }` | Card, Modal, Drawer, etc. | Update properties |
+            | Inline style props → `style: { .key }` | Card, Modal, Drawer, etc. | Update properties |
             | Comment block removed | Apps using Comment | Use Card + Flex + Avatar |
             | `_menu` returns links directly | Apps using `_menu` with `_get` | Simplify to `_menu: menuId` |
             | Property renames | Various blocks | See table below |
@@ -371,20 +371,20 @@ _ref:
               class: "p-16 sm:p-8"
             ```
 
-            ### Inline style props → `style: { /key }`
+            ### Inline style props → `style: { .key }`
 
-            Block-specific inline style properties have been replaced with the unified `style` property using `/`-prefixed CSS slot keys:
+            Block-specific inline style properties have been replaced with the unified `style` property using `.`-prefixed CSS slot keys:
 
             | Block | Remove | Use instead |
             |---|---|---|
-            | [Card](/Card) | `headerStyle`, `bodyStyle` | `style: { /header }`, `style: { /body }` |
-            | [Modal](/Modal) | `bodyStyle`, `maskStyle` | `style: { /body }`, `style: { /mask }` |
-            | [Drawer](/Drawer) | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `style: { /wrapper }`, `style: { /header }`, `style: { /body }`, `style: { /mask }`, `style: { /content }` |
-            | [Tabs](/Tabs) | `tabBarStyle` | `style: { /tabBar }` |
-            | ConfirmModal | `bodyStyle` | `style: { /body }` |
-            | [Statistic](/Statistic) | `valueStyle` | `style: { /value }` |
-            | [Descriptions](/Descriptions) | `contentStyle`, `labelStyle` | `style: { /content }`, `style: { /label }` |
-            | [Tooltip](/Tooltip) | `overlayStyle` | `style: { /inner }` |
+            | [Card](/Card) | `headerStyle`, `bodyStyle` | `style: { .header }`, `style: { .body }` |
+            | [Modal](/Modal) | `bodyStyle`, `maskStyle` | `style: { .body }`, `style: { .mask }` |
+            | [Drawer](/Drawer) | `drawerStyle`, `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle` | `style: { .wrapper }`, `style: { .header }`, `style: { .body }`, `style: { .mask }`, `style: { .content }` |
+            | [Tabs](/Tabs) | `tabBarStyle` | `style: { .tabBar }` |
+            | ConfirmModal | `bodyStyle` | `style: { .body }` |
+            | [Statistic](/Statistic) | `valueStyle` | `style: { .value }` |
+            | [Descriptions](/Descriptions) | `contentStyle`, `labelStyle` | `style: { .content }`, `style: { .label }` |
+            | [Tooltip](/Tooltip) | `overlayStyle` | `style: { .inner }` |
 
             #### Before (v4)
             ```yaml
