@@ -93,11 +93,8 @@ const MessageList = React.forwardRef(function MessageList(
           shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
-          editable: config?.actions?.edit ? true : false,
-          onEditConfirm: (newContent, info) => {
-            const originalContent = items.find((item) => item.key === info.key)?.content ?? '';
-            onEditMessage?.({ messageId: info.key, originalContent, newContent });
-          },
+          // TODO: Bubble editable shows Cancel/OK on all messages when set on the role.
+          // Edit needs per-message state management. Deferred to a follow-up task.
         },
         ai: {
           placement: 'start',
@@ -129,6 +126,6 @@ const MessageList = React.forwardRef(function MessageList(
       style={{ height: '100%' }}
     />
   );
-}
+});
 
 export default MessageList;

@@ -14,26 +14,27 @@
   limitations under the License.
 */
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { Actions, CodeHighlighter, Mermaid, Sources, ThoughtChain, Think } from '@ant-design/x';
-import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DislikeOutlined, LikeOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
 
-// Module-level singleton so all MessageBubble instances share the same loaded plugins.
-let latexPlugins = null;
-async function getLatexPlugins() {
-  if (latexPlugins) return latexPlugins;
-  const [remarkMath, rehypeKatex] = await Promise.all([
-    import('remark-math'),
-    import('rehype-katex'),
-  ]);
-  latexPlugins = {
-    remarkPlugins: [remarkMath.default],
-    rehypePlugins: [rehypeKatex.default],
-  };
-  return latexPlugins;
+// Module-level singleton for the LaTeX marked extension.
+// Loaded once on first use — the Latex plugin from @ant-design/x-markdown
+// includes KaTeX CSS import and handles $...$ inline and $$...$$ display math.
+let latexConfig = null;
+function getLatexConfig() {
+  if (latexConfig) return latexConfig;
+  try {
+    // eslint-disable-next-line global-require
+    const Latex = require('@ant-design/x-markdown/plugins/Latex').default;
+    latexConfig = { extensions: Latex() };
+  } catch {
+    latexConfig = {};
+  }
+  return latexConfig;
 }
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
@@ -129,15 +130,16 @@ function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenera
   }
   if (normalized.feedback) {
     items.push({
-      key: 'feedback',
-      label: 'Feedback',
-      actionRender: () => (
-        <Actions.Feedback
-          onChange={(value) =>
-            onFeedback?.({ messageId, rating: value === 'like' ? 'positive' : 'negative' })
-          }
-        />
-      ),
+      key: 'like',
+      icon: <LikeOutlined />,
+      label: 'Like',
+      onItemClick: () => onFeedback?.({ messageId, rating: 'positive' }),
+    });
+    items.push({
+      key: 'dislike',
+      icon: <DislikeOutlined />,
+      label: 'Dislike',
+      onItemClick: () => onFeedback?.({ messageId, rating: 'negative' }),
     });
   }
   if (normalized.regenerate) {
@@ -199,18 +201,7 @@ function MessageBubble({
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
   const renderLatex = config?.renderLatex ?? false;
-
-  const latexPluginsRef = useRef(null);
-  const [latexReady, setLatexReady] = useState(!renderLatex);
-
-  useEffect(() => {
-    if (renderLatex && !latexPluginsRef.current) {
-      getLatexPlugins().then((plugins) => {
-        latexPluginsRef.current = plugins;
-        setLatexReady(true);
-      });
-    }
-  }, [renderLatex]);
+  const markdownConfig = renderLatex ? getLatexConfig() : undefined;
 
   const markdownComponents = useMemo(() => {
     if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
@@ -231,8 +222,7 @@ function MessageBubble({
         <Markdown
           streaming={isStreaming ? { hasNextChunk: true } : undefined}
           components={markdownComponents}
-          remarkPlugins={latexPluginsRef.current?.remarkPlugins}
-          rehypePlugins={latexPluginsRef.current?.rehypePlugins}
+          config={markdownConfig}
         >
           {content}
         </Markdown>
@@ -306,7 +296,8 @@ function MessageBubble({
         if (segment.category === 'reasoning' && showReasoning) {
           const text = segment.parts.map((p) => p.text).join('');
           if (text.length === 0 && !isStreaming) return null;
-          const isActiveReasoning = isStreaming && segment.parts.some((p) => p.state === 'streaming');
+          const isActiveReasoning =
+            isStreaming && segment.parts.some((p) => p.state === 'streaming');
           return (
             <Think
               key={`reasoning-${idx}`}
@@ -385,8 +376,7 @@ function MessageBubble({
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
               components={markdownComponents}
-              remarkPlugins={latexPluginsRef.current?.remarkPlugins}
-              rehypePlugins={latexPluginsRef.current?.rehypePlugins}
+              config={markdownConfig}
             >
               {text}
             </Markdown>

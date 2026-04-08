@@ -49,10 +49,7 @@
     "@ant-design/x-markdown": "2.4.0",
     "@lowdefy/block-utils": "4.7.0",
     "@lowdefy/helpers": "workspace:*",
-    "ai": "6.0.116",
-    "katex": "0.16.21",
-    "rehype-katex": "7.0.1",
-    "remark-math": "6.0.0"
+    "ai": "6.0.116"
   },
   "devDependencies": {
     "@swc/cli": "0.8.0",

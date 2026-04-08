@@ -95,9 +95,17 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
+  // Compare by count + last ID to avoid re-syncing on every Lowdefy re-render
+  // (operators like _state create new array references even when data hasn't changed).
+  const prevExternalRef = useRef({ count: 0, lastId: null });
   useEffect(() => {
-    if (!type.isUndefined(externalMessages)) {
-      setMessages(externalMessages ?? []);
+    if (type.isUndefined(externalMessages)) return;
+    const msgs = externalMessages ?? [];
+    const count = msgs.length;
+    const lastId = count > 0 ? msgs[count - 1]?.id : null;
+    if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
+      prevExternalRef.current = { count, lastId };
+      setMessages(msgs);
     }
   }, [externalMessages, setMessages]);
 
