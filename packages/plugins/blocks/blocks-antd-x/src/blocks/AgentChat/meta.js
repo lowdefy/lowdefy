@@ -32,6 +32,7 @@ export default {
     onEditMessage: 'Trigger when the user edits and resubmits a message.',
     onBeforeSend: 'Trigger before a message is sent. Return success: false to cancel.',
     onStop: 'Trigger when the user stops generation.',
+    onConversationMenuClick: 'Trigger when the user clicks a conversation menu item.',
   },
   methods: {
     regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',

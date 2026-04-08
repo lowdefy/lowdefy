@@ -101,7 +101,27 @@
     "conversations": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean" }
+        "enabled": { "type": "boolean" },
+        "menu": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "danger": { "type": "boolean" }
+            }
+          }
+        },
+        "creation": {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string" },
+            "icon": {},
+            "align": { "type": "string", "enum": ["start", "center", "end"] }
+          }
+        }
       }
     },
     "sender": {

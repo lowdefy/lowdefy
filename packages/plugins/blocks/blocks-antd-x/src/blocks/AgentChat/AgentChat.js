@@ -141,6 +141,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
+  function handleConversationMenuClick({ action, conversationKey, conversation }) {
+    methods.triggerEvent({
+      name: 'onConversationMenuClick',
+      event: { action, conversationKey, conversation },
+    });
+  }
+
   function fileToContentPart(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -275,6 +282,9 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           activeKey={activeKey}
           onConversationChange={handleConversationChange}
           onNewConversation={handleNewConversation}
+          onMenuClick={handleConversationMenuClick}
+          menu={conversationsConfig?.menu}
+          creation={conversationsConfig?.creation}
         />
       )}
       <div
