@@ -78,6 +78,12 @@
       "type": "object",
       "properties": {
         "placeholder": { "type": "string" },
+        "submitType": {
+          "type": "string",
+          "enum": ["enter", "shiftEnter"],
+          "default": "enter"
+        },
+        "allowSpeech": { "type": "boolean", "default": false },
         "attachments": {
           "type": "object",
           "properties": {

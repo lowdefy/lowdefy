@@ -28,6 +28,7 @@ export default {
     onError: 'Trigger on stream error.',
     onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
     onBeforeSend: 'Trigger before a message is sent. Return success: false to cancel.',
+    onStop: 'Trigger when the user stops generation.',
   },
   methods: {
     regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',

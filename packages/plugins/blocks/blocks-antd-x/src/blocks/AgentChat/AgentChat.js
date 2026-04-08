@@ -202,6 +202,14 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     senderRef.current?.clear();
   }
 
+  function handleStop() {
+    stop();
+    methods.triggerEvent({
+      name: 'onStop',
+      event: { messages },
+    });
+  }
+
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
   }
@@ -277,8 +285,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           <Sender
             ref={senderRef}
             placeholder={sender?.placeholder ?? 'Type a message...'}
+            submitType={sender?.submitType ?? 'enter'}
+            allowSpeech={sender?.allowSpeech ?? false}
             onSubmit={handleSend}
-            onCancel={stop}
+            onCancel={handleStop}
             loading={isBusy}
             prefix={
               attachmentsConfig?.enabled ? (
