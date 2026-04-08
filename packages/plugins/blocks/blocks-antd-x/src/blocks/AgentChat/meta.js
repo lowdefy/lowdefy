@@ -29,6 +29,7 @@ export default {
     onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
     onRegenerate: 'Trigger when the user clicks regenerate on a message.',
     onDeleteMessage: 'Trigger when the user deletes a message.',
+    onEditMessage: 'Trigger when the user edits and resubmits a message.',
     onBeforeSend: 'Trigger before a message is sent. Return success: false to cancel.',
     onStop: 'Trigger when the user stops generation.',
   },

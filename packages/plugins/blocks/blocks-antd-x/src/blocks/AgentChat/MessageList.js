@@ -34,7 +34,16 @@ function roleHeader(roleConfig, fallback) {
 }
 
 const MessageList = React.forwardRef(function MessageList(
-  { messages, isStreaming, config, addToolApprovalResponse, onFeedback, onRegenerate, onDelete },
+  {
+    messages,
+    isStreaming,
+    config,
+    addToolApprovalResponse,
+    onFeedback,
+    onRegenerate,
+    onDelete,
+    onEditMessage,
+  },
   ref
 ) {
   // Build a lookup map for assistant message parts.
@@ -80,10 +89,15 @@ const MessageList = React.forwardRef(function MessageList(
       role={{
         user: {
           placement: 'end',
-          variant: 'filled',
-          shape: 'round',
+          variant: config?.roles?.user?.variant ?? 'filled',
+          shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
+          editable: config?.actions?.edit ? true : false,
+          onEditConfirm: (newContent, info) => {
+            const originalContent = items.find((item) => item.key === info.key)?.content ?? '';
+            onEditMessage?.({ messageId: info.key, originalContent, newContent });
+          },
         },
         ai: {
           placement: 'start',

@@ -235,6 +235,18 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     regenerate({ messageId });
   }
 
+  function handleEditMessage({ messageId, originalContent, newContent }) {
+    methods.triggerEvent({
+      name: 'onEditMessage',
+      event: { messageId, originalContent, newContent, messages },
+    });
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex >= 0) {
+      setMessages((prev) => prev.slice(0, messageIndex));
+      sendMessage({ text: newContent });
+    }
+  }
+
   function handleDelete({ messageId }) {
     const message = messages.find((m) => m.id === messageId);
     const textContent =
@@ -289,6 +301,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               onFeedback={handleFeedback}
               onRegenerate={handleRegenerate}
               onDelete={handleDelete}
+              onEditMessage={handleEditMessage}
             />
           )}
         </div>
