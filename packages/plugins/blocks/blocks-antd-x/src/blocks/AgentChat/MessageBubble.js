@@ -14,12 +14,27 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { Actions, CodeHighlighter, Mermaid, Sources, ThoughtChain, Think } from '@ant-design/x';
 import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
+
+// Module-level singleton so all MessageBubble instances share the same loaded plugins.
+let latexPlugins = null;
+async function getLatexPlugins() {
+  if (latexPlugins) return latexPlugins;
+  const [remarkMath, rehypeKatex] = await Promise.all([
+    import('remark-math'),
+    import('rehype-katex'),
+  ]);
+  latexPlugins = {
+    remarkPlugins: [remarkMath.default],
+    rehypePlugins: [rehypeKatex.default],
+  };
+  return latexPlugins;
+}
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
 function PlainCodeBlock({ children, block, lang }) {
@@ -183,6 +198,19 @@ function MessageBubble({
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
+  const renderLatex = config?.renderLatex ?? false;
+
+  const latexPluginsRef = useRef(null);
+  const [latexReady, setLatexReady] = useState(!renderLatex);
+
+  useEffect(() => {
+    if (renderLatex && !latexPluginsRef.current) {
+      getLatexPlugins().then((plugins) => {
+        latexPluginsRef.current = plugins;
+        setLatexReady(true);
+      });
+    }
+  }, [renderLatex]);
 
   const markdownComponents = useMemo(() => {
     if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
@@ -203,6 +231,8 @@ function MessageBubble({
         <Markdown
           streaming={isStreaming ? { hasNextChunk: true } : undefined}
           components={markdownComponents}
+          remarkPlugins={latexPluginsRef.current?.remarkPlugins}
+          rehypePlugins={latexPluginsRef.current?.rehypePlugins}
         >
           {content}
         </Markdown>
@@ -355,6 +385,8 @@ function MessageBubble({
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
               components={markdownComponents}
+              remarkPlugins={latexPluginsRef.current?.remarkPlugins}
+              rehypePlugins={latexPluginsRef.current?.rehypePlugins}
             >
               {text}
             </Markdown>
