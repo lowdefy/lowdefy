@@ -1,0 +1,136 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: calendar
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        cal_with_value:
+          _date: '2026-03-15'
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: cal_basic
+    type: Calendar
+
+  - id: cal_compact
+    type: Calendar
+    properties:
+      fullscreen: false
+
+  - id: cal_with_value
+    type: Calendar
+    properties:
+      fullscreen: false
+
+  # ============================================
+  # DISABLED DATES
+  # ============================================
+
+  - id: cal_disabled_dates
+    type: Calendar
+    properties:
+      fullscreen: false
+      disabledDates:
+        min:
+          _date: '2026-03-10'
+        max:
+          _date: '2026-03-25'
+
+  - id: cal_disabled_specific
+    type: Calendar
+    properties:
+      fullscreen: false
+      disabledDates:
+        dates:
+          - _date: '2026-03-15'
+          - _date: '2026-03-20'
+
+  # ============================================
+  # DATE CELL DATA
+  # ============================================
+
+  - id: cal_cell_data
+    type: Calendar
+    properties:
+      dateCellData:
+        - date:
+            _date: '2026-03-15'
+          content: Meeting
+          status: success
+        - date:
+            _date: '2026-03-20'
+          content: Deadline
+          status: error
+
+  # ============================================
+  # EVENTS
+  # ============================================
+
+  - id: cal_onselect
+    type: Calendar
+    properties:
+      fullscreen: false
+    events:
+      onSelect:
+        - id: set_selected
+          type: SetState
+          params:
+            cal_selected_date:
+              _event: date
+
+  - id: cal_selected_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: cal_selected_date
+              - null
+          then:
+            _state: cal_selected_date
+          else: ''
+
+  - id: cal_onchange
+    type: Calendar
+    properties:
+      fullscreen: false
+    events:
+      onChange:
+        - id: set_changed
+          type: SetState
+          params:
+            cal_changed_date:
+              _event: date
+
+  - id: cal_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: cal_changed_date
+              - null
+          then:
+            _state: cal_changed_date
+          else: ''

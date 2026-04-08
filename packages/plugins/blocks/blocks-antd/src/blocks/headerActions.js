@@ -30,8 +30,8 @@ function getDarkModePreference() {
 
 function getDarkModeIcon() {
   const pref = getDarkModePreference();
-  if (pref === 'dark') return 'AiOutlineSun';
-  if (pref === 'light') return 'AiOutlineMoon';
+  if (pref === 'dark') return 'AiOutlineMoon';
+  if (pref === 'light') return 'AiOutlineSun';
   return 'AiOutlineLaptop';
 }
 

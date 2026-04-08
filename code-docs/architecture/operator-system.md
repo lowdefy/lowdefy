@@ -726,6 +726,64 @@ _type.isUndefined: value
 | MQL Operators      | `packages/plugins/operators/operators-mql/`      |
 | Nunjucks Operators | `packages/plugins/operators/operators-nunjucks/` |
 
+## Dynamic Operator Flags
+
+Operators declare whether they can be safely evaluated at build time or must be deferred to runtime. This is controlled by the `dynamic` flag and enforced by `collectDynamicIdentifiers` and `evaluateOperators`.
+
+**Files:**
+- `packages/build/src/build/collectDynamicIdentifiers.js` — Builds the `Set` of dynamic identifiers
+- `packages/build/src/build/validateOperatorsDynamic.js` — Validates all operators have the flag
+- `packages/build/src/build/buildRefs/evaluateStaticOperators.js` — Runs static evaluation pass
+
+### How It Works
+
+1. **At module load**, `evaluateStaticOperators.js` imports operators from `@lowdefy/operators-js/operators/build` (the `operatorsBuild.js` export). Only operators in this set are subject to build-time static evaluation.
+2. `collectDynamicIdentifiers` builds a `Set` of identifiers to skip.
+3. During `evaluateOperators`, the walker checks each operator against this set. Matches are marked with `~dyn` and preserved for runtime.
+
+### Operator-Level vs Method-Level
+
+```javascript
+// Operator-level: ALL usages are dynamic
+_date.dynamic = true;
+
+// Method-level: only specific methods are dynamic
+_number.dynamic = false;
+_number.meta = meta; // must expose meta for collectDynamicIdentifiers
+// where meta contains: toLocaleString: { ..., dynamic: true }
+```
+
+`collectDynamicIdentifiers` processes these in order:
+
+1. If `operatorFn.dynamic === true` → adds operator name (e.g. `_date`) and **returns early** (skips method check)
+2. If `operatorFn.dynamic === false` and `operatorFn.meta` exists → checks each method for `dynamic: true`, adds qualified names (e.g. `_number.toLocaleString`)
+
+At evaluation time, the check is:
+```javascript
+dynamicIdentifiers.has(fullIdentifier) || dynamicIdentifiers.has(op)
+```
+So operator-level `true` catches all usages (with or without method), while method-level only catches specific methods.
+
+### When to Use Each
+
+| Scenario | Flag Level | Example |
+|---|---|---|
+| All methods need runtime context | Operator-level `dynamic = true` | `_date` (time-dependent), `_intl` (locale-dependent) |
+| Most methods are pure, a few need runtime | Method-level `dynamic: true` | `_math.random`, `_number.toLocaleString` |
+| All methods are pure transformations | Operator-level `dynamic = false`, no method flags | `_string`, `_array`, `_json` |
+
+### Which Operators Are in the Build Set
+
+Only operators exported from `packages/plugins/operators/operators-js/src/operatorsBuild.js` are subject to static evaluation. Other plugin operators (`_nunjucks`, `_moment`, `_mql`, `_yaml`, etc.) are **not** in this set, so their `dynamic` flag has no effect on build-time behavior.
+
+### Common Reasons for Dynamic
+
+- **Time-dependent**: Result changes with current time (`_date`)
+- **Locale-dependent**: Result depends on runtime locale (`_intl`, `_number.toLocaleString`)
+- **Random**: Non-deterministic output (`_random`, `_math.random`)
+- **State-dependent**: Reads runtime state/context (`_state`, `_regex`, `_type`)
+- **Side effects**: Performs observable actions (`_log`)
+
 ## Architectural Patterns
 
 1. **Context-Specific Evaluation**: `evaluateOperators` for build-time, `WebParser`/`ServerParser` for runtime

@@ -35,6 +35,15 @@ const authors = {
     github: 'https://github.com/Saiby100',
     linkedin: 'https://www.linkedin.com/in/salahuddin-saiet-2a7190241/',
   },
+  ioannis: {
+    id: 'ioannis',
+    name: 'Ioannis Ktistakis',
+    title: 'Software Developer at Lowdefy',
+    bio: 'Ioannis is a software developer at Lowdefy, building enterprise web applications and creating developer-focused content for the Lowdefy community.',
+    image: 'https://avatars.githubusercontent.com/u/47716028?v=4',
+    github: 'https://github.com/Yianni99',
+    linkedin: 'https://www.linkedin.com/in/ioannis-ktistakis-38a750183/',
+  },
   lowdefy: {
     id: 'lowdefy',
     name: 'Lowdefy',

@@ -90,7 +90,7 @@ const useFileList = ({ properties, methods, value = {} }) => {
     setValue(nextState);
     methods.setValue(nextState);
   };
-  const loadFileList = (file, nextFiles) => {
+  const loadFileList = async (file, nextFiles) => {
     if (
       properties.singleFile === true &&
       nextFiles.filter((f) => type.isString(f.uid)).length > 1
@@ -101,6 +101,10 @@ const useFileList = ({ properties, methods, value = {} }) => {
       type.isInt(properties.maxCount) &&
       nextFiles.filter((f) => type.isString(f.uid)).length > properties.maxCount
     ) {
+      return false;
+    }
+    const result = await methods.triggerEvent({ name: 'onBeforeUpload', event: { file } });
+    if (result.success === false) {
       return false;
     }
     setValue({

@@ -55,6 +55,6 @@ function intl({ params, location, methodName }) {
   });
 }
 
-intl.dynamic = false;
+intl.dynamic = true;
 
 export default intl;

@@ -42,7 +42,38 @@ _ref:
             | Button `type`/`danger` → `color`/`variant` | Button blocks | Update properties |
             | Inline style props → `style: { /key }` | Card, Modal, Drawer, etc. | Update properties |
             | Comment block removed | Apps using Comment | Use Card + Flex + Avatar |
+            | `_menu` returns links directly | Apps using `_menu` with `_get` | Simplify to `_menu: menuId` |
             | Property renames | Various blocks | See table below |
+
+            ## `_menu` returns links array directly
+
+            The `_menu` operator now returns the `links` array directly when selecting a single menu by ID. It also supports dot-path access into the result.
+
+            ### Before (v4)
+            ```yaml
+            # Get links required _get wrapper
+            _get:
+              key: links
+              from:
+                _menu: profile_menu
+
+            # Access through links
+            _get:
+              key: links.0.pageId
+              from:
+                _menu: search_links
+            ```
+
+            ### After (v5)
+            ```yaml
+            # Links returned directly
+            _menu: profile_menu
+
+            # Dot-path access
+            _menu: search_links.0.pageId
+            ```
+
+            `_menu: true` and `_menu: { all: true }` still return the full menus array. A codemod is available to automate the conversion.
 
             ## `_moment` renamed to [`_dayjs`](/_dayjs)
 

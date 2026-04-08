@@ -506,13 +506,14 @@ When the walker encounters a `_ref` at a matching path, it creates a `~shallow` 
 The walker also deletes page content keys (`blocks`, `areas`, `events`, `requests`, `layout`) from page objects during traversal, preventing unnecessary `_build.*` evaluation on content that will be resolved later by JIT.
 
 The shallow build then:
-1. Collects all string content from pages via `collectPageContent()` into `context.tailwindContentMap` (before stripping)
-2. Strips page content keys from pages (`stripPageContent`)
-3. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
-4. Creates a **page registry** with page metadata and source file references
-5. Adds all types from installed packages (since page-level types aren't counted)
-6. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json`
-7. Writes per-page tailwind HTML files via `writeGlobalsCss` (from `tailwindContentMap`)
+1. Collects **skeleton source files** from `~r` markers on non-page components (before `addKeys` removes them)
+2. Collects all string content from pages via `collectPageContent()` into `context.tailwindContentMap` (before stripping)
+3. Strips page content keys from pages (`stripPageContent`)
+4. Runs skeleton build steps (buildApp, buildAuth, buildConnections, buildApi, buildMenu)
+5. Creates a **page registry** with page metadata and source file references
+6. Adds all types from installed packages (since page-level types aren't counted)
+7. Writes skeleton artifacts + `pageRegistry.json` + `jsMap.json` + `skeletonSourceFiles.json`
+8. Writes per-page tailwind HTML files via `writeGlobalsCss` (from `tailwindContentMap`)
 
 **Output:** `{ components, pageRegistry, context }`
 
@@ -541,6 +542,7 @@ When a page is requested, uses the walker to resolve page content:
 
 | Module | File | Purpose |
 |--------|------|---------|
+| `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walks `~r` markers to derive skeleton source file set for watcher |
 | `createPageRegistry` | `jit/createPageRegistry.js` | Extracts page metadata + raw content from shallow-built components |
 | `createFileDependencyMap` | `jit/createFileDependencyMap.js` | Maps config files → page IDs for targeted invalidation |
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serializes page registry to `pageRegistry.json` |
@@ -572,6 +574,7 @@ In dev mode, the build directory contains additional JIT artifacts:
 ├── build/
 │   ├── pageRegistry.json      # Page metadata + source refs for JIT
 │   ├── jsMap.json             # JS hash maps (restored by JIT build context)
+│   ├── skeletonSourceFiles.json # Source files that affect skeleton (for watcher)
 │   ├── invalidatePages        # Timestamp file — triggers JIT cache invalidation
 │   ├── globals.css            # Generated CSS with @source, @theme, layer order
 │   ├── tailwind-candidates.css # Trigger file for CSS recompilation

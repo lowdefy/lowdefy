@@ -14,6 +14,11 @@
   limitations under the License.
 */
 
+// CSS layer order — MUST be the first CSS import. Turbopack treats this as critical
+// CSS that loads before hydration, locking the cascade priority (antd > base/preflight)
+// before antd's StyleProvider injects @layer antd {} at runtime.
+import '../build/layer-order.css';
+
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -28,7 +33,8 @@ import Auth from '../lib/client/auth/Auth.js';
 import ErrorBar from '../lib/client/ErrorBar.js';
 import request from '../lib/client/utils/request.js';
 
-// Must be in _app due to next specifications.
+// Full Tailwind CSS — also loaded via <link href="tailwind-jit.css"> in _document.js
+// for hot-reloading. The Turbopack chunk provides layer ordering guarantee on initial load.
 import '../build/globals.css';
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
@@ -44,7 +50,6 @@ function App({ Component }) {
   const router = useRouter();
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
-
   // Subscribe to rootConfig SWR cache — deduplicates with inner App.js fetch.
   // Without suspense so _app.js doesn't suspend — just re-renders when data arrives.
   const { data: rootConfig } = useSWR(`${router.basePath}/api/root`, (url) => request({ url }));

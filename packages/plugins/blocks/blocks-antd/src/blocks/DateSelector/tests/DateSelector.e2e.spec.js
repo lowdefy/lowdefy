@@ -95,6 +95,36 @@ test.describe('DateSelector Block', () => {
   });
 
   // ============================================
+  // DISABLED DATES TESTS
+  // ============================================
+
+  test('renders with disabledDates min/max without errors', async ({ page }) => {
+    // This test catches dayjs plugin issues — disabledDate callback receives
+    // antd's internal dayjs instances and calls .utc() on them.
+    const input = getInput(page, 'ds_disabled_dates_min_max');
+    await expect(input).toBeVisible();
+
+    // Open the picker to trigger disabledDate calls on all visible cells
+    await input.click();
+    const dropdown = page.locator('.ant-picker-dropdown:visible');
+    await expect(dropdown).toBeVisible();
+
+    // Verify disabled cells exist (dates outside Jun 2024 range)
+    const disabledCells = dropdown.locator('.ant-picker-cell-disabled');
+    await expect(disabledCells.first()).toBeVisible();
+  });
+
+  test('renders with specific disabled dates without errors', async ({ page }) => {
+    const input = getInput(page, 'ds_disabled_specific_dates');
+    await expect(input).toBeVisible();
+
+    // Open picker to trigger disabledDate on all visible cells
+    await input.click();
+    const dropdown = page.locator('.ant-picker-dropdown:visible');
+    await expect(dropdown).toBeVisible();
+  });
+
+  // ============================================
   // EVENT TESTS
   // ============================================
 

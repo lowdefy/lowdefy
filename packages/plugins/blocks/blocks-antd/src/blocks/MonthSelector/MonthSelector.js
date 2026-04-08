@@ -81,9 +81,11 @@ const MonthSelector = ({
                 />
               }
               onChange={(newVal) => {
-                const val = !newVal
+                // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+                const d = newVal ? dayjs(newVal) : null;
+                const val = !d
                   ? null
-                  : dayjs.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('month').toDate();
+                  : dayjs.utc(d.add(d.utcOffset(), 'minutes')).startOf('month').toDate();
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}

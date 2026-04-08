@@ -22,6 +22,12 @@ function createAuthorize({ session }) {
 
   const authenticated = !!session;
   const roles = session?.user?.roles ?? [];
+  if (!Array.isArray(roles)) {
+    throw new ConfigError('session.user.roles must be an array of strings.', {
+      received: roles,
+    });
+  }
+
   function authorize(config) {
     const { auth } = config;
     if (auth.public === true) return true;

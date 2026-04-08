@@ -14,6 +14,11 @@
   limitations under the License.
 */
 
+// CSS layer order — MUST be the first CSS import. Next.js treats this as critical
+// CSS that loads before hydration, locking the cascade priority (antd > base/preflight)
+// before antd's StyleProvider injects @layer antd {} at runtime.
+import '../build/layer-order.css';
+
 import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -49,7 +54,6 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
-
   if (rootConfig?.theme) {
     lowdefyRef.current.theme = rootConfig.theme;
   }

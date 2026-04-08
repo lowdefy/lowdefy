@@ -37,7 +37,7 @@ test('writeTheme writes theme.json', async () => {
   };
   await writeTheme({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    ['theme.json', '{"antd":{"token":{"colorPrimary":"#00b96b"}}}'],
+    ['theme.json', '{"antd":{"token":{"colorPrimary":"#00b96b"}},"darkMode":"system"}'],
   ]);
 });
 
@@ -46,13 +46,13 @@ test('writeTheme writes empty object when theme is empty', async () => {
     theme: {},
   };
   await writeTheme({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{}']]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"system"}']]);
 });
 
 test('writeTheme defaults to empty object when theme is undefined', async () => {
   const components = {};
   await writeTheme({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{}']]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"system"}']]);
 });
 
 test('writeTheme throws when theme is not an object', async () => {

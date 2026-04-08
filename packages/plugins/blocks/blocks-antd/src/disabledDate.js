@@ -42,7 +42,9 @@ const disabledDate = (disabledDates = {}) => {
     .filter((range) => range !== null);
 
   return (currentDate) => {
-    const utcCurrentData = currentDate.utc();
+    // Wrap with our dayjs to ensure utc plugin is available — antd v6's internal
+    // dayjs instance may not have it loaded.
+    const utcCurrentData = dayjs(currentDate).utc();
     if (min && utcCurrentData.isBefore(min)) return true;
     if (max && utcCurrentData.isAfter(max)) return true;
     let match = dates.find((date) => date.isSame(utcCurrentData.startOf('day')));

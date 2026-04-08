@@ -167,7 +167,10 @@ function writeSnapshot(fixtureDir, artifacts) {
 const allFixtures = discoverFixtures();
 
 // Check if we should update snapshots
-const updateSnapshots = process.argv.includes('-u') || process.argv.includes('--updateSnapshot');
+const updateSnapshots =
+  process.env.UPDATE_SNAPSHOTS === 'true' ||
+  process.argv.includes('-u') ||
+  process.argv.includes('--updateSnapshot');
 
 describe('Build Artifact Snapshots', () => {
   test.each(allFixtures)('%s', async (fixtureDir) => {

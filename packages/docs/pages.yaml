@@ -96,6 +96,7 @@
 - _ref: blocks/display/Avatar.yaml
 - _ref: blocks/display/Breadcrumb.yaml
 - _ref: blocks/display/Button.yaml
+- _ref: blocks/display/Calendar.yaml
 - _ref: blocks/display/DangerousHtml.yaml
 - _ref: blocks/display/DangerousMarkdown.yaml
 - _ref: blocks/display/Divider.yaml

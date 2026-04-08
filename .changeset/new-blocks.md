@@ -2,7 +2,9 @@
 '@lowdefy/blocks-antd': minor
 ---
 
-Add 12 new blocks leveraging Ant Design v6 components: FloatButton, Tour, QRCode, Watermark, ColorSelector, Flex, Splitter, ConfigProvider, Masonry, MasonryList, DropdownMenu, and DropdownButton.
+Add 13 new blocks leveraging Ant Design v6 components: Calendar, FloatButton, Tour, QRCode, Watermark, ColorSelector, Flex, Splitter, ConfigProvider, Masonry, MasonryList, DropdownMenu, and DropdownButton.
+
+**Calendar** — Full-size and compact date calendar with selection events (onChange, onSelect, onPanelChange), disabled dates, valid range, and date cell badge data.
 
 **DropdownMenu** — Container block that wraps any content with a dropdown menu triggered by click, hover, or right-click (context menu). Supports MenuLink, MenuGroup, and MenuDivider item types with icons, keyboard shortcuts, danger/disabled states, and nested groups.
 

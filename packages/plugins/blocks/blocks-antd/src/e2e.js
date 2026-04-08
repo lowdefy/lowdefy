@@ -22,6 +22,7 @@ export { default as Badge } from './blocks/Badge/e2e.js';
 export { default as Breadcrumb } from './blocks/Breadcrumb/e2e.js';
 export { default as Button } from './blocks/Button/e2e.js';
 export { default as ButtonSelector } from './blocks/ButtonSelector/e2e.js';
+export { default as Calendar } from './blocks/Calendar/e2e.js';
 export { default as Card } from './blocks/Card/e2e.js';
 export { default as Carousel } from './blocks/Carousel/e2e.js';
 export { default as CheckboxSelector } from './blocks/CheckboxSelector/e2e.js';

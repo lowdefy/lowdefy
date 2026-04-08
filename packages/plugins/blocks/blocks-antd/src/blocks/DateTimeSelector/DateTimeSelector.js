@@ -49,10 +49,12 @@ const DateTimeSelector = ({
         ? 'hour'
         : 'minute';
   const onChange = (newVal) => {
-    const val = !newVal
+    // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+    const d = newVal ? dayjs(newVal) : null;
+    const val = !d
       ? null
       : dayjs
-          .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
+          .utc(d.add(properties.selectUTC ? d.utcOffset() : 0, 'minutes'))
           .startOf(timeUnit)
           .toDate();
     methods.setValue(val);

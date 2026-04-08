@@ -56,3 +56,5 @@ log.txt
 *.vsix
 
 temp.md
+
+_server
