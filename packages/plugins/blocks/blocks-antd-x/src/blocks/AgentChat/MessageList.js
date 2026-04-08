@@ -33,7 +33,10 @@ function roleHeader(roleConfig, fallback) {
   return <h5 style={{ margin: 0 }}>{name}</h5>;
 }
 
-function MessageList({ messages, isStreaming, config, addToolApprovalResponse, onFeedback }) {
+const MessageList = React.forwardRef(function MessageList(
+  { messages, isStreaming, config, addToolApprovalResponse, onFeedback },
+  ref
+) {
   // Build a lookup map for assistant message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -72,6 +75,7 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
 
   return (
     <Bubble.List
+      ref={ref}
       items={items}
       role={{
         user: {

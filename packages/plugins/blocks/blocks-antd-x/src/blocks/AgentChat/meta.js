@@ -28,6 +28,16 @@ export default {
     onError: 'Trigger on stream error.',
     onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
   },
+  methods: {
+    regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
+    setMessages: 'Replace the message list. Accepts args.messages array.',
+    sendMessage: 'Send a message programmatically. Accepts args.text string.',
+    clearMessages: 'Clear all messages from the chat.',
+    deleteMessage: 'Delete a specific message. Accepts args.messageId string.',
+    stop: 'Stop the current streaming response.',
+    clearError: 'Clear the current error state.',
+    scrollToBottom: 'Scroll the message list to the bottom.',
+  },
   properties: {
     type: 'object',
     properties: {

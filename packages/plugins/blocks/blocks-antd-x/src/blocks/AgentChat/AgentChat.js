@@ -51,7 +51,18 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
-  const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
+  const bubbleListRef = useRef(null);
+
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    addToolApprovalResponse,
+    setMessages,
+    regenerate,
+    clearError,
+  } = useChat({
     transport,
     experimental_throttle: 50,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -80,6 +91,36 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       setMessages(externalMessages ?? []);
     }
   }, [externalMessages, setMessages]);
+
+  // Register CallMethod methods so YAML actions can control the chat.
+  useEffect(() => {
+    methods.registerMethod('regenerate', (args) => {
+      regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
+    });
+    methods.registerMethod('setMessages', (args) => {
+      setMessages(args?.messages ?? []);
+    });
+    methods.registerMethod('sendMessage', (args) => {
+      if (args?.text) sendMessage({ text: args.text });
+    });
+    methods.registerMethod('clearMessages', () => {
+      setMessages([]);
+    });
+    methods.registerMethod('deleteMessage', (args) => {
+      if (args?.messageId) {
+        setMessages((prev) => prev.filter((m) => m.id !== args.messageId));
+      }
+    });
+    methods.registerMethod('stop', () => {
+      stop();
+    });
+    methods.registerMethod('clearError', () => {
+      clearError();
+    });
+    methods.registerMethod('scrollToBottom', () => {
+      bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+  }, []);
 
   useAgentEvents({ messages, status, methods });
 
@@ -175,6 +216,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
           ) : (
             <MessageList
+              ref={bubbleListRef}
               messages={messages}
               isStreaming={isBusy}
               config={messageDisplay}
