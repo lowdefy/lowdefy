@@ -5,6 +5,10 @@ vars:
   theme:
     type: object
     description: Theme configuration
+    properties:
+      primary_color:
+        type: string
+        default: gray
   page_size:
     type: number
     default: 25

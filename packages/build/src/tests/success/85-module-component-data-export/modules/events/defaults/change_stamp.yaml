@@ -1,10 +1,1 @@
-_module.var:
-  key: change_stamp
-  default:
-    timestamp:
-      _user: updated_at
-    user:
-      name:
-        _user: profile.name
-      id:
-        _user: id
+_module.var: change_stamp

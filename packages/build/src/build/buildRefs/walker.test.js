@@ -86,49 +86,13 @@ describe('_module.var resolution', () => {
     expect(result).toBeNull();
   });
 
-  test('resolves object form with key', async () => {
+  test('resolves pre-merged default from moduleVars', async () => {
     const ctx = createWalkContext({
-      moduleVars: { theme: 'dark' },
+      moduleVars: { page_size: 25 },
     });
-    const node = { '_module.var': { key: 'theme' } };
+    const node = { '_module.var': 'page_size' };
     const result = await resolve(node, ctx);
-    expect(result).toBe('dark');
-  });
-
-  test('resolves object form with default when key missing', async () => {
-    const ctx = createWalkContext({
-      moduleVars: {},
-    });
-    const node = { '_module.var': { key: 'components.table_columns', default: [] } };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual([]);
-  });
-
-  test('uses value over default when key exists', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { title: 'My Page' },
-    });
-    const node = { '_module.var': { key: 'title', default: 'Default Title' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBe('My Page');
-  });
-
-  test('uses value even when null (not undefined)', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { title: null },
-    });
-    const node = { '_module.var': { key: 'title', default: 'Default Title' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBeNull();
-  });
-
-  test('returns null when default is not provided and key missing', async () => {
-    const ctx = createWalkContext({
-      moduleVars: {},
-    });
-    const node = { '_module.var': { key: 'missing' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBeNull();
+    expect(result).toBe(25);
   });
 
   test('passes through unchanged when moduleVars is null', async () => {
@@ -153,17 +117,17 @@ describe('_module.var resolution', () => {
     });
     const node = { '_module.var': 123 };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      '_module.var operator takes a string or object with "key" field as arguments.'
+      '_module.var operator takes a string argument.'
     );
   });
 
-  test('throws on object without key field', async () => {
+  test('throws on object form (no longer supported)', async () => {
     const ctx = createWalkContext({
-      moduleVars: { roles: ['admin'] },
+      moduleVars: { theme: 'dark' },
     });
-    const node = { '_module.var': { value: 'something' } };
+    const node = { '_module.var': { key: 'theme' } };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      '_module.var operator takes a string or object with "key" field as arguments.'
+      '_module.var operator takes a string argument.'
     );
   });
 

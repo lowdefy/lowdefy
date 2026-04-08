@@ -5,6 +5,11 @@ vars:
   stamp:
     type: object
     description: Audit stamp template
+    default:
+      timestamp:
+        _user: updated_at
+      user:
+        _user: id
 
 exports:
   pages:

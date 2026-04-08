@@ -273,26 +273,15 @@ function resolveModuleVar(node, ctx) {
     return node;
   }
 
-  const varDef = node['_module.var'];
+  const key = node['_module.var'];
 
-  // String form: { "_module.var": "key" }
-  if (type.isString(varDef)) {
-    const value = get(ctx.moduleVars, varDef, { default: null });
+  if (type.isString(key)) {
+    const value = get(ctx.moduleVars, key, { default: null });
     return cloneVarValue(value, ctx.sourceRefId);
   }
 
-  // Object form: { "_module.var": { key, default } }
-  if (type.isObject(varDef) && type.isString(varDef.key)) {
-    const varFromModule = get(ctx.moduleVars, varDef.key);
-    if (!type.isUndefined(varFromModule)) {
-      return cloneVarValue(varFromModule, ctx.sourceRefId);
-    }
-    const defaultValue = type.isNone(varDef.default) ? null : varDef.default;
-    return cloneVarValue(defaultValue, null);
-  }
-
   throw new ConfigError(
-    '_module.var operator takes a string or object with "key" field as arguments.',
+    '_module.var operator takes a string argument.',
     { filePath: ctx.currentFile },
   );
 }

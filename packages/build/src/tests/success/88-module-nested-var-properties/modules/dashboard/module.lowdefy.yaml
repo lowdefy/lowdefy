@@ -1,0 +1,43 @@
+name: Dashboard
+description: Dashboard with nested var properties
+
+vars:
+  page_size:
+    type: number
+    default: 25
+  components:
+    type: object
+    description: Component visibility toggles
+    properties:
+      contacts_table:
+        type: boolean
+        default: true
+      contacts_filter:
+        type: boolean
+        default: true
+      contacts_detail:
+        type: boolean
+        default: true
+  theme:
+    type: object
+    properties:
+      colors:
+        type: object
+        properties:
+          primary:
+            type: string
+            default: '#1890ff'
+          background:
+            type: string
+            default: '#ffffff'
+      font_size:
+        type: number
+        default: 14
+  custom_styles:
+    type: object
+    default:
+      border: 1px solid #eee
+      padding: 16
+
+pages:
+  - _ref: pages/overview.yaml

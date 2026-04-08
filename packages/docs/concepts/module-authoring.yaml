@@ -133,25 +133,40 @@ _ref:
             - `required` — Whether the consuming app must provide this variable. Defaults to `false`.
             - `default` — Default value used when the app does not provide one.
             - `description` — Documentation for the variable's purpose.
+            - `properties` — For `object` vars, declares nested keys with their own type, default, required, and description. Consumer values are merged at the property level — only overridden keys change.
 
-            The build validates that required vars are provided and that types match.
+            The build applies manifest defaults at registration time, then validates the effective values. A var with `properties` merges recursively — the consumer overrides only the keys they provide, and the rest keep their defaults.
+
+            ```yaml
+            vars:
+              collection:
+                type: string
+                default: contacts
+              components:
+                type: object
+                properties:
+                  table:
+                    type: boolean
+                    default: true
+                  filter:
+                    type: boolean
+                    default: true
+            ```
+
+            If the consumer provides `components: { filter: false }`, the effective value is `{ table: true, filter: false }`.
 
             ## Using _module.var
 
-            The [`_module.var`](/_module) operator accesses module entry variables — the values passed by the app developer. It works at any depth within module files, without threading vars through nested `_ref`s:
+            The [`_module.var`](/_module) operator accesses module entry variables — the values passed by the app developer, merged with manifest defaults. It takes a string argument and works at any depth within module files, without threading vars through nested `_ref`s:
 
             ```yaml
             # Any file in the module, at any nesting depth
             collection:
               _module.var: collection
 
-            # With nested key path and default
-            columnDefs:
-              _module.var:
-                key: components.table_columns
-                default:
-                  - field: name
-                  - field: email
+            # Nested path access (dot notation)
+            show_filter:
+              _module.var: components.filter
             ```
 
             `_var` continues to work for normal `_ref`-level vars (local composition between files within the module). `_module.var` is specifically for the vars passed by the app developer.
@@ -371,20 +386,28 @@ _ref:
 
             ```yaml
             # In module.lowdefy.yaml
+            vars:
+              event_types:
+                type: object
+                default: {}
+              change_stamp:
+                type: object
+                default:
+                  timestamp:
+                    _user: updated_at
+
             components:
               # Enum map merged with app additions
               - id: event_types
                 component:
                   _build.object.assign:
                     - _ref: ../shared/enums/event_types.yaml
-                    - _module.var:
-                        key: event_types
-                        default: {}
+                    - _module.var: event_types
 
               # Config template with var override
               - id: change_stamp
                 component:
-                  _ref: defaults/change_stamp.yaml
+                  _module.var: change_stamp
             ```
 
             Consumers use the same `_ref: { module, component }` syntax. The `key` argument lets consumers extract nested values from the resolved content:
