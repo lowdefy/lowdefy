@@ -16,7 +16,7 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { Actions, CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
+import { Actions, CodeHighlighter, Mermaid, Sources, ThoughtChain, Think } from '@ant-design/x';
 import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import ToolApproval from './ToolApproval.js';
@@ -147,6 +147,24 @@ function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenera
   return <Actions items={items} />;
 }
 
+function SourcesDisplay({ sourceParts, config }) {
+  if (sourceParts.length === 0) return null;
+  const items = sourceParts.map((source, i) => ({
+    key: `source-${i}`,
+    title: source.title ?? source.url ?? `Source ${i + 1}`,
+    url: source.url,
+    description: source.url,
+  }));
+  return (
+    <Sources
+      items={items}
+      title="Sources"
+      inline={config?.sourcesDisplay?.inline ?? false}
+      expandIconPosition={config?.sourcesDisplay?.expandIconPosition ?? 'end'}
+    />
+  );
+}
+
 function MessageBubble({
   content,
   isStreaming,
@@ -188,31 +206,7 @@ function MessageBubble({
         >
           {content}
         </Markdown>
-        {sourceParts.length > 0 && (
-          <div style={{ marginTop: 8 }}>
-            <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {sourceParts.map((source, i) => (
-                <a
-                  key={`source-${i}`}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: 12,
-                    padding: '2px 8px',
-                    background: '#f5f5f5',
-                    borderRadius: 4,
-                    color: '#1677ff',
-                    textDecoration: 'none',
-                  }}
-                >
-                  {source.title ?? source.url ?? `Source ${i + 1}`}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+        <SourcesDisplay sourceParts={sourceParts} config={config} />
         {showActions && (
           <BubbleActions
             actions={normalizedActions}
@@ -361,31 +355,7 @@ function MessageBubble({
         }
         return null;
       })}
-      {sourceParts.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {sourceParts.map((source, i) => (
-              <a
-                key={`source-${i}`}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: 12,
-                  padding: '2px 8px',
-                  background: '#f5f5f5',
-                  borderRadius: 4,
-                  color: '#1677ff',
-                  textDecoration: 'none',
-                }}
-              >
-                {source.title ?? source.url ?? `Source ${i + 1}`}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <SourcesDisplay sourceParts={sourceParts} config={config} />
       {showActions && (
         <BubbleActions
           actions={normalizedActions}

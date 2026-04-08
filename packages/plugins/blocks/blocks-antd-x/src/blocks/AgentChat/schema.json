@@ -40,6 +40,13 @@
           "default": "summary"
         },
         "showSources": { "type": "boolean" },
+        "sourcesDisplay": {
+          "type": "object",
+          "properties": {
+            "inline": { "type": "boolean", "default": false },
+            "expandIconPosition": { "type": "string", "enum": ["start", "end"], "default": "end" }
+          }
+        },
         "actions": {
           "type": "object",
           "properties": {
