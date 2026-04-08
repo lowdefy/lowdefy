@@ -200,6 +200,44 @@ test('null item in blocks array throws with helpful message', () => {
   }
 });
 
+test('custom error messages are not prefixed with property name', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    global: 'global',
+  };
+  try {
+    testSchema({ components, context });
+    throw new Error('Expected testSchema to throw');
+  } catch (e) {
+    expect(e.message).toBe('App "global" should be an object.');
+  }
+});
+
+test('default AJV messages are prefixed with property name', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          {
+            id: 'button_1',
+            type: 'Button',
+            events: { onClick: 42 },
+          },
+        ],
+      },
+    ],
+  };
+  try {
+    testSchema({ components, context });
+    throw new Error('Expected testSchema to throw');
+  } catch (e) {
+    expect(e.message).toBe('"onClick" must be array');
+  }
+});
+
 test('connections schema error', () => {
   const components = {
     lowdefy: '1.0.0',
