@@ -17,7 +17,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { Attachments, FileCard, Prompts, Sender } from '@ant-design/x';
+import { Attachments, FileCard, Prompts, Sender, Suggestion } from '@ant-design/x';
 
 import { type } from '@lowdefy/helpers';
 
@@ -381,6 +381,66 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     setMessages((prev) => prev.filter((m) => m.id !== messageId));
   }
 
+  const useSuggestionDropdown =
+    sender?.suggestions?.enabled && activeSuggestions && activeSuggestions.length > 0 && !isBusy;
+
+  function renderSender({ onKeyDown, onFocus } = {}) {
+    return (
+      <Sender
+        ref={senderRef}
+        placeholder={sender?.placeholder ?? 'Type a message...'}
+        submitType={sender?.submitType ?? 'enter'}
+        allowSpeech={sender?.allowSpeech ?? false}
+        onSubmit={handleSend}
+        onCancel={handleStop}
+        loading={isBusy}
+        onKeyDown={onKeyDown}
+        onFocus={onFocus}
+        prefix={
+          attachmentsConfig?.enabled ? (
+            <Attachments
+              accept={attachmentsConfig.accept}
+              maxCount={attachmentsConfig.maxCount}
+              items={attachedFiles.map((file, i) => ({
+                uid: `${i}`,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                originFileObj: file,
+              }))}
+              onChange={({ fileList }) => {
+                const files = fileList
+                  .map((f) => f.originFileObj)
+                  .filter(Boolean)
+                  .filter(
+                    (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+                  );
+                setAttachedFiles(files);
+              }}
+              beforeUpload={() => false}
+              overflow="scrollX"
+              placeholder={{
+                icon: '📎',
+                title: attachmentsConfig.placeholder?.title ?? 'Drop files here',
+                description:
+                  attachmentsConfig.placeholder?.description ?? 'Click or drag files to upload',
+              }}
+            />
+          ) : undefined
+        }
+      >
+        {switchConfigs.map((sw) => (
+          <Sender.Switch
+            key={sw.key}
+            checked={switchState[sw.key] ?? false}
+            onChange={(checked) => handleSwitchChange(sw.key, checked)}
+            title={sw.label}
+          />
+        ))}
+      </Sender>
+    );
+  }
+
   const chatContent = (
     <div
       id={blockId}
@@ -469,56 +529,21 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               size="small"
             />
           )}
-          <Sender
-            ref={senderRef}
-            placeholder={sender?.placeholder ?? 'Type a message...'}
-            submitType={sender?.submitType ?? 'enter'}
-            allowSpeech={sender?.allowSpeech ?? false}
-            onSubmit={handleSend}
-            onCancel={handleStop}
-            loading={isBusy}
-            prefix={
-              attachmentsConfig?.enabled ? (
-                <Attachments
-                  accept={attachmentsConfig.accept}
-                  maxCount={attachmentsConfig.maxCount}
-                  items={attachedFiles.map((file, i) => ({
-                    uid: `${i}`,
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    originFileObj: file,
-                  }))}
-                  onChange={({ fileList }) => {
-                    const files = fileList
-                      .map((f) => f.originFileObj)
-                      .filter(Boolean)
-                      .filter(
-                        (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-                      );
-                    setAttachedFiles(files);
-                  }}
-                  beforeUpload={() => false}
-                  overflow="scrollX"
-                  placeholder={{
-                    icon: '📎',
-                    title: attachmentsConfig.placeholder?.title ?? 'Drop files here',
-                    description:
-                      attachmentsConfig.placeholder?.description ?? 'Click or drag files to upload',
-                  }}
-                />
-              ) : undefined
-            }
-          >
-            {switchConfigs.map((sw) => (
-              <Sender.Switch
-                key={sw.key}
-                checked={switchState[sw.key] ?? false}
-                onChange={(checked) => handleSwitchChange(sw.key, checked)}
-                title={sw.label}
-              />
-            ))}
-          </Sender>
+          {useSuggestionDropdown ? (
+            <Suggestion
+              items={activeSuggestions.map((s, i) => ({
+                key: s.key ?? `suggestion-${i}`,
+                label: s.label,
+                value: s.label,
+              }))}
+              onSelect={(value) => handleSuggestionClick({ label: value })}
+              block
+            >
+              {({ onTrigger, onKeyDown }) => renderSender({ onKeyDown, onFocus: onTrigger })}
+            </Suggestion>
+          ) : (
+            renderSender()
+          )}
         </div>
       </div>
     </div>
