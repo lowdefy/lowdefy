@@ -19,26 +19,11 @@ import {
   createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  tool,
-  jsonSchema,
   stepCountIs,
   hasToolCall,
 } from 'ai';
-import { createMCPClient } from '@ai-sdk/mcp';
-import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
-import { serializer } from '@lowdefy/helpers';
 
-// Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
-// properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
-// strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(
-    JSON.stringify(obj, (key, value) => {
-      if (key.startsWith('~')) return undefined;
-      return value;
-    })
-  );
-}
+import buildAgentTools from './buildAgentTools.js';
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -105,81 +90,7 @@ async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages: rawMessages } = properties;
   const messages = convertDataUrlsToBase64(rawMessages);
 
-  const tools = {};
-
-  for (const toolConfig of agent.tools ?? []) {
-    const { endpointId, confirm } = toolConfig;
-    const endpointConfig = await context.getEndpointConfig({ endpointId });
-
-    tools[endpointId] = tool({
-      description: endpointConfig.description,
-      inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-      ...(confirm ? { needsApproval: true } : {}),
-      execute: async (input) => {
-        const result = await context.callEndpoint(endpointId, { payload: input });
-        if (!result.success) {
-          const err = serializer.deserialize(result.error);
-          throw new Error(err?.message ?? 'Endpoint execution failed');
-        }
-        return cleanBuildArtifact(result.response);
-      },
-    });
-  }
-
-  // Create MCP clients
-  const mcpClients = [];
-
-  for (const mcpSource of agent.mcp ?? []) {
-    const evaluatedSource = context.evaluateOperators(mcpSource);
-
-    try {
-      let transport;
-      if (evaluatedSource.transport === 'stdio') {
-        transport = new Experimental_StdioMCPTransport({
-          command: evaluatedSource.command,
-          args: evaluatedSource.args,
-          env: { ...process.env, ...(evaluatedSource.env ?? {}) },
-        });
-      } else {
-        transport = {
-          type: evaluatedSource.transport ?? 'http',
-          url: evaluatedSource.url,
-          ...(evaluatedSource.headers ? { headers: evaluatedSource.headers } : {}),
-        };
-      }
-      const client = await createMCPClient({ transport });
-      mcpClients.push({ client, source: evaluatedSource });
-    } catch (err) {
-      const label =
-        evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
-      console.warn(`MCP server "${label}" unreachable: ${err.message}`);
-    }
-  }
-
-  // Merge MCP tools with endpoint tools
-  for (const { client, source } of mcpClients) {
-    try {
-      const mcpTools = await client.tools();
-      for (const [name, mcpTool] of Object.entries(mcpTools)) {
-        if (tools[name]) {
-          console.warn(
-            `MCP tool "${name}" from ${
-              source.url ?? source.command
-            } conflicts with endpoint tool — skipped.`
-          );
-          continue;
-        }
-        if (source.confirm) {
-          tools[name] = { ...mcpTool, needsApproval: true };
-        } else {
-          tools[name] = mcpTool;
-        }
-      }
-    } catch (err) {
-      const label = source.transport === 'stdio' ? source.command : source.url;
-      console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
-    }
-  }
+  const { tools, mcpClients } = await buildAgentTools({ agent, context });
 
   const model = connection.provider(agent.properties.model);
 

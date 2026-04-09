@@ -17,9 +17,43 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+
+function detectCycles(agents) {
+  const graph = {};
+  for (const agent of agents) {
+    graph[agent.agentId] = (agent.agents ?? []).map((ref) => ref.agentId);
+  }
+
+  const visited = new Set();
+  const inStack = new Set();
+
+  function dfs(id) {
+    if (inStack.has(id)) return id;
+    if (visited.has(id)) return null;
+
+    visited.add(id);
+    inStack.add(id);
+
+    for (const neighbor of graph[id] ?? []) {
+      const cycleNode = dfs(neighbor);
+      if (cycleNode !== null) return cycleNode;
+    }
+
+    inStack.delete(id);
+    return null;
+  }
+
+  for (const id of Object.keys(graph)) {
+    const cycleNode = dfs(id);
+    if (cycleNode !== null) {
+      return cycleNode;
+    }
+  }
+  return null;
+}
 
 function buildAgents({ components, context }) {
   if (type.isNone(components.agents)) {
@@ -162,6 +196,14 @@ function buildAgents({ components, context }) {
       });
     });
 
+    // Normalize sub-agent strings to objects (same pattern as tools/mcp)
+    agent.agents = (agent.agents ?? []).map((ref) => {
+      if (type.isString(ref)) {
+        return { agentId: ref };
+      }
+      return ref;
+    });
+
     // Rename id to internal format
     agent.agentId = agent.id;
     context.agentIds.add(agent.agentId);
@@ -172,6 +214,53 @@ function buildAgents({ components, context }) {
       counter: context.typeCounters.operators.server,
     });
   });
+
+  // Second pass: validate sub-agent references (needs all agentIds collected)
+  (components.agents ?? []).forEach((agent) => {
+    const configKey = agent['~k'];
+
+    agent.agents.forEach((subAgentRef) => {
+      // Validate sub-agent reference exists
+      if (!context.agentIds.has(subAgentRef.agentId)) {
+        throw new ConfigError(
+          `Agent "${agent.agentId}" references sub-agent "${subAgentRef.agentId}" which does not exist.`,
+          { configKey }
+        );
+      }
+
+      // Check for name collision with endpoint tools
+      const hasToolCollision = agent.tools.some(
+        (toolConfig) => toolConfig.endpointId === subAgentRef.agentId
+      );
+      if (hasToolCollision) {
+        throw new ConfigError(
+          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" conflicts with an endpoint tool of the same name.`,
+          { configKey }
+        );
+      }
+
+      // Warn if sub-agent has tools with confirm: true (unsupported in sub-agent context)
+      const subAgent = components.agents.find((a) => a.agentId === subAgentRef.agentId);
+      const hasConfirmTools = (subAgent?.tools ?? []).some((t) => t.confirm);
+      if (hasConfirmTools) {
+        context.handleWarning(
+          new ConfigWarning(
+            `Agent "${subAgentRef.agentId}" has tools with confirm: true, but tool approval is not supported in sub-agent context. Tools will auto-execute when called as a sub-agent.`,
+            { configKey }
+          )
+        );
+      }
+    });
+  });
+
+  // Detect circular sub-agent references
+  const cycleNode = detectCycles(components.agents);
+  if (cycleNode !== null) {
+    const agent = components.agents.find((a) => a.agentId === cycleNode);
+    throw new ConfigError(`Circular sub-agent reference detected involving "${cycleNode}".`, {
+      configKey: agent?.['~k'],
+    });
+  }
 
   return components;
 }

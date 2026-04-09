@@ -93,6 +93,53 @@ async function callAgent(context, { agentId, pageId, messages }) {
     getEndpointConfig: async ({ endpointId }) => {
       return getEndpointConfig(context, { endpointId });
     },
+    getAgentConfig: async ({ agentId }) => {
+      return getAgentConfig(context, { agentId });
+    },
+    getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
+      const subConnectionConfig = await getConnectionConfig(context, {
+        requestConfig: {
+          connectionId: subAgentConfig.connectionId,
+          requestId: subAgentConfig.agentId,
+          '~k': subAgentConfig['~k'],
+        },
+      });
+      const subConnection = getConnection(context, { connectionConfig: subConnectionConfig });
+      const subConnectionProperties = context.evaluateOperators({
+        input: subConnectionConfig.properties || {},
+        location: subConnectionConfig.connectionId,
+        payload: {},
+        steps: {},
+      });
+      return subConnection.create({ connection: subConnectionProperties });
+    },
+    resolveMcpSources: async ({ agentConfig: subAgentConfig }) => {
+      const resolvedMcp = [];
+      for (const mcpSource of subAgentConfig.mcp ?? []) {
+        if (!type.isNone(mcpSource.connectionId)) {
+          const mcpConnConfig = await getConnectionConfig(context, {
+            requestConfig: {
+              connectionId: mcpSource.connectionId,
+              requestId: subAgentConfig.agentId,
+              '~k': subAgentConfig['~k'],
+            },
+          });
+          const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
+          const mcpConnProps = context.evaluateOperators({
+            input: mcpConnConfig.properties || {},
+            location: mcpConnConfig.connectionId,
+            payload: {},
+            steps: {},
+          });
+          const mcpConfig = mcpConnection.create({ connection: mcpConnProps });
+          const { connectionId: _, ...overrides } = mcpSource;
+          resolvedMcp.push({ ...mcpConfig, ...overrides });
+        } else {
+          resolvedMcp.push(mcpSource);
+        }
+      }
+      return resolvedMcp;
+    },
   };
 
   // Resolve MCP connection references to inline config.

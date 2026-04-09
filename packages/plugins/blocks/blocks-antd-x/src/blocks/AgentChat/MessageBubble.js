@@ -25,7 +25,13 @@ import {
   ThoughtChain,
   Think,
 } from '@ant-design/x';
-import { DeleteOutlined, DislikeOutlined, LikeOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  DislikeOutlined,
+  LikeOutlined,
+  ReloadOutlined,
+  RobotOutlined,
+} from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
@@ -372,7 +378,14 @@ function MessageBubble({
             } else if (tool.state === 'output-error') {
               status = 'error';
             }
+
+            // Detect sub-agent results
+            const isSubAgent = tool.output?._subAgent === true;
+            const toolOutput = isSubAgent ? tool.output.text : tool.output;
+
             let description;
+            let content;
+            let collapsible = false;
             if (status === 'loading') {
               const showInput = config?.showToolInputStreaming !== false;
               if (showInput && tool.input && Object.keys(tool.input).length > 0) {
@@ -382,28 +395,64 @@ function MessageBubble({
               }
             } else if (status === 'error') {
               description = 'Tool execution failed';
-            } else if (tool.output?.display && typeof tool.output.display === 'string') {
-              description = (
+            } else if (toolOutput?.display && typeof toolOutput.display === 'string') {
+              description = summarizeToolOutput(toolOutput.display);
+              content = (
                 <Markdown components={markdownComponents} config={markdownConfig}>
-                  {tool.output.display}
+                  {toolOutput.display}
                 </Markdown>
               );
+              collapsible = true;
+            } else if (isSubAgent) {
+              // Sub-agent results: short status in description, full response in styled content
+              description = 'Completed';
+              const subAgentText =
+                typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2);
+              content = (
+                <div
+                  style={{
+                    fontSize: '0.85em',
+                    color: 'rgba(0, 0, 0, 0.65)',
+                    borderLeft: '2px solid #d9d9d9',
+                    paddingLeft: 12,
+                  }}
+                >
+                  <Markdown components={markdownComponents} config={markdownConfig}>
+                    {subAgentText}
+                  </Markdown>
+                </div>
+              );
+              collapsible = true;
             } else {
               const mode = resolveToolResultMode(toolResultDisplay, tool.toolName);
               if (mode === 'readable') {
-                description = formatToolResult(tool.output);
+                description = summarizeToolOutput(toolOutput);
+                content = formatToolResult(toolOutput);
+                collapsible = true;
               } else if (mode === 'full') {
-                description = JSON.stringify(tool.output, null, 2);
+                description = summarizeToolOutput(toolOutput);
+                content = JSON.stringify(toolOutput, null, 2);
+                collapsible = true;
               } else if (mode === 'none') {
                 description = 'Completed';
               } else {
-                description = summarizeToolOutput(tool.output);
+                // summary mode: show summary, add readable content behind collapse
+                description = summarizeToolOutput(toolOutput);
+                const readable = formatToolResult(toolOutput);
+                if (readable != null) {
+                  content = readable;
+                  collapsible = true;
+                }
               }
             }
             return {
               key: tool.toolCallId,
               title: tool.toolName,
               description,
+              ...(content != null ? { content } : {}),
+              ...(collapsible ? { collapsible: true } : {}),
+              ...(isSubAgent ? { icon: <RobotOutlined /> } : {}),
+              ...(status === 'loading' ? { blink: true } : {}),
               status,
             };
           });
