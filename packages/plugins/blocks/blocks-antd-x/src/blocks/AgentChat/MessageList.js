@@ -105,8 +105,24 @@ const MessageList = React.forwardRef(function MessageList(
           shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
-          // TODO: Bubble editable shows Cancel/OK on all messages when set on the role.
-          // Edit needs per-message state management. Deferred to a follow-up task.
+          editable:
+            config?.editableMessages !== false
+              ? {
+                  onEditConfirm: (key, newContent) => {
+                    const parts = partsMap.get(key);
+                    const originalContent =
+                      (parts ?? [])
+                        .filter((p) => p.type === 'text')
+                        .map((p) => p.text)
+                        .join('') ?? '';
+                    onEditMessage?.({
+                      messageId: key,
+                      originalContent,
+                      newContent,
+                    });
+                  },
+                }
+              : undefined,
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             const fileParts = (parts ?? []).filter((p) => p.type === 'file');
