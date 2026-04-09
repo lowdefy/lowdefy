@@ -1392,3 +1392,84 @@ test('buildAgents allows diamond-shaped sub-agent graphs (not a cycle)', () => {
   };
   expect(() => buildAgents({ components, context })).not.toThrow();
 });
+
+test('buildAgents warns when sub-agent has tools with confirm: true', () => {
+  const warnings = [];
+  const context = testContext({
+    logger: { warn: (msg) => warnings.push(msg) },
+  });
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:dangerous-tool',
+        endpointId: 'dangerous-tool',
+        type: 'Api',
+        description: 'A dangerous tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'worker',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        tools: [{ endpointId: 'dangerous-tool', confirm: true }],
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['worker'],
+      },
+    ],
+  };
+  buildAgents({ components, context });
+  expect(warnings.some((w) => w.includes('confirm'))).toBe(true);
+  expect(warnings.some((w) => w.includes('worker'))).toBe(true);
+});
+
+test('buildAgents does not warn when sub-agent has no confirm tools', () => {
+  const warnings = [];
+  const context = testContext({
+    logger: { warn: (msg) => warnings.push(msg) },
+  });
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:safe-tool',
+        endpointId: 'safe-tool',
+        type: 'Api',
+        description: 'A safe tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'worker',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        tools: [{ endpointId: 'safe-tool' }],
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['worker'],
+      },
+    ],
+  };
+  buildAgents({ components, context });
+  expect(warnings.some((w) => w.includes('confirm'))).toBe(false);
+});

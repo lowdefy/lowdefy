@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
@@ -236,6 +236,18 @@ function buildAgents({ components, context }) {
         throw new ConfigError(
           `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" conflicts with an endpoint tool of the same name.`,
           { configKey }
+        );
+      }
+
+      // Warn if sub-agent has tools with confirm: true (unsupported in sub-agent context)
+      const subAgent = components.agents.find((a) => a.agentId === subAgentRef.agentId);
+      const hasConfirmTools = (subAgent?.tools ?? []).some((t) => t.confirm);
+      if (hasConfirmTools) {
+        context.handleWarning(
+          new ConfigWarning(
+            `Agent "${subAgentRef.agentId}" has tools with confirm: true, but tool approval is not supported in sub-agent context. Tools will auto-execute when called as a sub-agent.`,
+            { configKey }
+          )
         );
       }
     });
