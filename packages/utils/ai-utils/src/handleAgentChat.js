@@ -16,6 +16,7 @@
 
 import {
   ToolLoopAgent,
+  createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
   tool,
@@ -30,7 +31,10 @@ import { serializer } from '@lowdefy/helpers';
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
 // strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
 function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj, (key, value) => {
+    if (key.startsWith('~')) return undefined;
+    return value;
+  }));
 }
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
@@ -199,11 +203,15 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
-      const result = await agentInstance.stream({
-        messages,
+      // createAgentUIStream validates UIMessages, converts to ModelMessages,
+      // runs the agent, and returns a UIMessageStream — handling the full
+      // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+      const agentStream = await createAgentUIStream({
+        agent: agentInstance,
+        uiMessages: messages,
       });
 
-      writer.merge(result.toUIMessageStream());
+      writer.merge(agentStream);
 
       // After merge resolves the agent stream is complete.
       // Call onFinish hooks — awaited so dataParts can be written to stream.

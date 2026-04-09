@@ -24,6 +24,7 @@ const mockWriter = {
   write: jest.fn(),
   merge: jest.fn().mockResolvedValue(undefined),
 };
+const mockCreateAgentUIStream = jest.fn().mockResolvedValue({ type: 'agent-ui-stream' });
 const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => {
   mockCreateUIMessageStream._lastExecute = execute;
   return { type: 'readable-stream' };
@@ -31,21 +32,16 @@ const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => 
 const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
 
 let lastAgentConfig = null;
-let lastAgentStreamOpts = null;
-const mockToUIMessageStream = jest.fn().mockReturnValue({ type: 'ui-message-stream' });
 class MockToolLoopAgent {
   constructor(config) {
     this.config = config;
     lastAgentConfig = config;
   }
-  async stream(opts) {
-    lastAgentStreamOpts = opts;
-    return { toUIMessageStream: mockToUIMessageStream };
-  }
 }
 
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
+  createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
   tool: mockTool,
