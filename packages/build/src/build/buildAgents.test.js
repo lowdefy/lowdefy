@@ -79,6 +79,7 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
       connectionId: 'conn1',
       tools: [{ endpointId: 'tool1' }],
       mcp: [],
+      agents: [],
       properties: {
         model: 'claude-sonnet-4-20250514',
       },
@@ -121,6 +122,7 @@ test('buildAgents multiple valid agents', () => {
       connectionId: 'conn1',
       tools: [],
       mcp: [],
+      agents: [],
       properties: { model: 'test-model' },
     },
     {
@@ -130,6 +132,7 @@ test('buildAgents multiple valid agents', () => {
       connectionId: 'conn1',
       tools: [],
       mcp: [],
+      agents: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -164,6 +167,7 @@ test('buildAgents agent with no tools works fine', () => {
       connectionId: 'conn1',
       tools: [],
       mcp: [],
+      agents: [],
       properties: { model: 'test-model' },
     },
   ]);
@@ -1046,4 +1050,192 @@ test('buildAgents with no mcp array works fine', () => {
     ],
   };
   expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents normalizes string agents to objects with agentId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'researcher',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['researcher'],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[1].agents).toEqual([{ agentId: 'researcher' }]);
+});
+
+test('buildAgents passes through object agents with agentId', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'researcher',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: [{ agentId: 'researcher', description: 'Research topics' }],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[1].agents).toEqual([
+    { agentId: 'researcher', description: 'Research topics' },
+  ]);
+});
+
+test('buildAgents normalizes mixed agents array', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'researcher',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'analyzer',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['researcher', { agentId: 'analyzer', description: 'Analyze data' }],
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[2].agents).toEqual([
+    { agentId: 'researcher' },
+    { agentId: 'analyzer', description: 'Analyze data' },
+  ]);
+});
+
+test('buildAgents throws when agents references non-existent agent', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['nonexistent'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "orchestrator" references sub-agent "nonexistent" which does not exist.'
+  );
+});
+
+test('buildAgents throws when agents object references non-existent agent', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: [{ agentId: 'nonexistent' }],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "orchestrator" references sub-agent "nonexistent" which does not exist.'
+  );
+});
+
+test('buildAgents with no agents property works fine', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].agents).toEqual([]);
+});
+
+test('buildAgents throws when sub-agent tool name collides with endpoint tool', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:researcher',
+        endpointId: 'researcher',
+        type: 'Api',
+        description: 'A tool named researcher',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'researcher',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'orchestrator',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        tools: ['researcher'],
+        agents: ['researcher'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "orchestrator" sub-agent "researcher" conflicts with an endpoint tool of the same name.'
+  );
 });

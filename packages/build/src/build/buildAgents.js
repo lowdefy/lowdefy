@@ -162,6 +162,14 @@ function buildAgents({ components, context }) {
       });
     });
 
+    // Normalize sub-agent strings to objects (same pattern as tools/mcp)
+    agent.agents = (agent.agents ?? []).map((ref) => {
+      if (type.isString(ref)) {
+        return { agentId: ref };
+      }
+      return ref;
+    });
+
     // Rename id to internal format
     agent.agentId = agent.id;
     context.agentIds.add(agent.agentId);
@@ -170,6 +178,32 @@ function buildAgents({ components, context }) {
     // Count server operators in properties
     countOperators(agent.properties ?? {}, {
       counter: context.typeCounters.operators.server,
+    });
+  });
+
+  // Second pass: validate sub-agent references (needs all agentIds collected)
+  (components.agents ?? []).forEach((agent) => {
+    const configKey = agent['~k'];
+
+    agent.agents.forEach((subAgentRef) => {
+      // Validate sub-agent reference exists
+      if (!context.agentIds.has(subAgentRef.agentId)) {
+        throw new ConfigError(
+          `Agent "${agent.agentId}" references sub-agent "${subAgentRef.agentId}" which does not exist.`,
+          { configKey }
+        );
+      }
+
+      // Check for name collision with endpoint tools
+      const hasToolCollision = agent.tools.some(
+        (toolConfig) => toolConfig.endpointId === subAgentRef.agentId
+      );
+      if (hasToolCollision) {
+        throw new ConfigError(
+          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" conflicts with an endpoint tool of the same name.`,
+          { configKey }
+        );
+      }
     });
   });
 
