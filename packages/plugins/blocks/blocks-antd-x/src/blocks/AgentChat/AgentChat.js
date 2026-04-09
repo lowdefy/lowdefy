@@ -17,7 +17,9 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { Attachments, FileCard, Prompts, Sender, Suggestion } from '@ant-design/x';
+import { FileCard, Prompts, Sender } from '@ant-design/x';
+import { Button } from 'antd';
+import { PaperClipOutlined } from '@ant-design/icons';
 
 import { type } from '@lowdefy/helpers';
 
@@ -44,6 +46,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   } = properties;
   const senderRef = useRef(null);
   const finishMetaRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
@@ -213,8 +216,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       throw new Error('S3 post policy request failed.');
     }
 
-    const { url, fields = {} } =
-      s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
+    const { url, fields = {} } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
     const { key } = fields;
 
     const formData = new FormData();
@@ -381,74 +383,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     setMessages((prev) => prev.filter((m) => m.id !== messageId));
   }
 
-  const useSuggestionDropdown =
-    sender?.suggestions?.enabled && activeSuggestions && activeSuggestions.length > 0 && !isBusy;
-
-  function renderSender({ onKeyDown, onFocus } = {}) {
-    return (
-      <Sender
-        ref={senderRef}
-        placeholder={sender?.placeholder ?? 'Type a message...'}
-        submitType={sender?.submitType ?? 'enter'}
-        allowSpeech={sender?.allowSpeech ?? false}
-        onSubmit={handleSend}
-        onCancel={handleStop}
-        loading={isBusy}
-        onKeyDown={onKeyDown}
-        onFocus={onFocus}
-        prefix={
-          attachmentsConfig?.enabled ? (
-            <Attachments
-              accept={attachmentsConfig.accept}
-              maxCount={attachmentsConfig.maxCount}
-              items={attachedFiles.map((file, i) => ({
-                uid: `${i}`,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                originFileObj: file,
-              }))}
-              onChange={({ fileList }) => {
-                const files = fileList
-                  .map((f) => f.originFileObj)
-                  .filter(Boolean)
-                  .filter(
-                    (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-                  );
-                setAttachedFiles(files);
-              }}
-              beforeUpload={() => false}
-              overflow="scrollX"
-              placeholder={{
-                icon: '📎',
-                title: attachmentsConfig.placeholder?.title ?? 'Drop files here',
-                description:
-                  attachmentsConfig.placeholder?.description ?? 'Click or drag files to upload',
-              }}
-            />
-          ) : undefined
-        }
-      >
-        {sender?.header && (
-          <Sender.Header
-            title={sender.header.title}
-            closable={sender.header.closable ?? true}
-          >
-            {sender.header.content}
-          </Sender.Header>
-        )}
-        {switchConfigs.map((sw) => (
-          <Sender.Switch
-            key={sw.key}
-            checked={switchState[sw.key] ?? false}
-            onChange={(checked) => handleSwitchChange(sw.key, checked)}
-            title={sw.label}
-          />
-        ))}
-      </Sender>
-    );
-  }
-
   const chatContent = (
     <div
       id={blockId}
@@ -537,21 +471,64 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               size="small"
             />
           )}
-          {useSuggestionDropdown ? (
-            <Suggestion
-              items={activeSuggestions.map((s, i) => ({
-                key: s.key ?? `suggestion-${i}`,
-                label: s.label,
-                value: s.label,
-              }))}
-              onSelect={(value) => handleSuggestionClick({ label: value })}
-              block
-            >
-              {({ onTrigger, onKeyDown }) => renderSender({ onKeyDown, onFocus: onTrigger })}
-            </Suggestion>
-          ) : (
-            renderSender()
+          {attachmentsConfig?.enabled && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              style={{ display: 'none' }}
+              accept={attachmentsConfig.accept}
+              multiple
+              onChange={(e) => {
+                const files = Array.from(e.target.files);
+                const valid = files.filter(
+                  (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+                );
+                setAttachedFiles((prev) => [...prev, ...valid]);
+                e.target.value = '';
+              }}
+            />
           )}
+          <Sender
+            ref={senderRef}
+            placeholder={sender?.placeholder ?? 'Type a message...'}
+            submitType={sender?.submitType ?? 'enter'}
+            allowSpeech={sender?.allowSpeech ?? false}
+            onSubmit={handleSend}
+            onCancel={handleStop}
+            loading={isBusy}
+            prefix={
+              attachmentsConfig?.enabled ? (
+                <Button
+                  type="text"
+                  icon={<PaperClipOutlined />}
+                  onClick={() => fileInputRef.current?.click()}
+                />
+              ) : undefined
+            }
+            header={
+              sender?.header ? (
+                <Sender.Header
+                  title={sender.header.title}
+                  closable={sender.header.closable ?? true}
+                >
+                  {sender.header.content}
+                </Sender.Header>
+              ) : undefined
+            }
+            footer={
+              switchConfigs.length > 0
+                ? switchConfigs.map((sw) => (
+                    <Sender.Switch
+                      key={sw.key}
+                      value={switchState[sw.key] ?? false}
+                      onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                    >
+                      {sw.label}
+                    </Sender.Switch>
+                  ))
+                : undefined
+            }
+          />
         </div>
       </div>
     </div>
