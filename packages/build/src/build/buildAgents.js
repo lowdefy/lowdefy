@@ -21,6 +21,40 @@ import { ConfigError } from '@lowdefy/errors';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
+function detectCycles(agents) {
+  const graph = {};
+  for (const agent of agents) {
+    graph[agent.agentId] = (agent.agents ?? []).map((ref) => ref.agentId);
+  }
+
+  const visited = new Set();
+  const inStack = new Set();
+
+  function dfs(id) {
+    if (inStack.has(id)) return id;
+    if (visited.has(id)) return null;
+
+    visited.add(id);
+    inStack.add(id);
+
+    for (const neighbor of graph[id] ?? []) {
+      const cycleNode = dfs(neighbor);
+      if (cycleNode !== null) return cycleNode;
+    }
+
+    inStack.delete(id);
+    return null;
+  }
+
+  for (const id of Object.keys(graph)) {
+    const cycleNode = dfs(id);
+    if (cycleNode !== null) {
+      return cycleNode;
+    }
+  }
+  return null;
+}
+
 function buildAgents({ components, context }) {
   if (type.isNone(components.agents)) {
     return components;
@@ -206,6 +240,15 @@ function buildAgents({ components, context }) {
       }
     });
   });
+
+  // Detect circular sub-agent references
+  const cycleNode = detectCycles(components.agents);
+  if (cycleNode !== null) {
+    const agent = components.agents.find((a) => a.agentId === cycleNode);
+    throw new ConfigError(`Circular sub-agent reference detected involving "${cycleNode}".`, {
+      configKey: agent?.['~k'],
+    });
+  }
 
   return components;
 }

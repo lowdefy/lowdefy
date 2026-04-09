@@ -1239,3 +1239,156 @@ test('buildAgents throws when sub-agent tool name collides with endpoint tool', 
     'Agent "orchestrator" sub-agent "researcher" conflicts with an endpoint tool of the same name.'
   );
 });
+
+test('buildAgents throws on direct circular reference (A -> B -> A)', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agentA',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentB'],
+      },
+      {
+        id: 'agentB',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentA'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Circular sub-agent reference detected involving "agentA".'
+  );
+});
+
+test('buildAgents throws on self-referencing agent', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agentA',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentA'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Circular sub-agent reference detected involving "agentA".'
+  );
+});
+
+test('buildAgents throws on transitive circular reference (A -> B -> C -> A)', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'agentA',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentB'],
+      },
+      {
+        id: 'agentB',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentC'],
+      },
+      {
+        id: 'agentC',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['agentA'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(/Circular sub-agent reference/);
+});
+
+test('buildAgents allows valid non-circular sub-agent chains', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'worker',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'supervisor',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['worker'],
+      },
+      {
+        id: 'director',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['supervisor'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
+
+test('buildAgents allows diamond-shaped sub-agent graphs (not a cycle)', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    agents: [
+      {
+        id: 'worker',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'teamA',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['worker'],
+      },
+      {
+        id: 'teamB',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['worker'],
+      },
+      {
+        id: 'director',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+        agents: ['teamA', 'teamB'],
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).not.toThrow();
+});
