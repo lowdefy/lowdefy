@@ -429,6 +429,14 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           ) : undefined
         }
       >
+        {sender?.header && (
+          <Sender.Header
+            title={sender.header.title}
+            closable={sender.header.closable ?? true}
+          >
+            {sender.header.content}
+          </Sender.Header>
+        )}
         {switchConfigs.map((sw) => (
           <Sender.Switch
             key={sw.key}
