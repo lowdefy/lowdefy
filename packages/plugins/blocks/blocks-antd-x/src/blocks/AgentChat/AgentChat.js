@@ -17,9 +17,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { FileCard, Prompts, Sender } from '@ant-design/x';
-import { Button } from 'antd';
-import { PaperClipOutlined } from '@ant-design/icons';
+import { Attachments, FileCard, Prompts, Sender } from '@ant-design/x';
 
 import { type } from '@lowdefy/helpers';
 
@@ -46,7 +44,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   } = properties;
   const senderRef = useRef(null);
   const finishMetaRef = useRef(null);
-  const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
@@ -472,23 +469,6 @@ function AgentChat({ blockId, methods, pageId, properties }) {
               size="small"
             />
           )}
-          {attachmentsConfig?.enabled && (
-            <input
-              ref={fileInputRef}
-              type="file"
-              style={{ display: 'none' }}
-              accept={attachmentsConfig.accept}
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files);
-                const valid = files.filter(
-                  (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-                );
-                setAttachedFiles((prev) => [...prev, ...valid]);
-                e.target.value = '';
-              }}
-            />
-          )}
           <Sender
             ref={senderRef}
             placeholder={sender?.placeholder ?? 'Type a message...'}
@@ -499,10 +479,33 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             loading={isBusy}
             prefix={
               attachmentsConfig?.enabled ? (
-                <Button
-                  type="text"
-                  icon={<PaperClipOutlined />}
-                  onClick={() => fileInputRef.current?.click()}
+                <Attachments
+                  accept={attachmentsConfig.accept}
+                  maxCount={attachmentsConfig.maxCount}
+                  items={attachedFiles.map((file, i) => ({
+                    uid: `${i}`,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    originFileObj: file,
+                  }))}
+                  onChange={({ fileList }) => {
+                    const files = fileList
+                      .map((f) => f.originFileObj)
+                      .filter(Boolean)
+                      .filter(
+                        (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+                      );
+                    setAttachedFiles(files);
+                  }}
+                  beforeUpload={() => false}
+                  overflow="scrollX"
+                  placeholder={{
+                    icon: '📎',
+                    title: attachmentsConfig.placeholder?.title ?? 'Drop files here',
+                    description:
+                      attachmentsConfig.placeholder?.description ?? 'Click or drag files to upload',
+                  }}
                 />
               ) : undefined
             }
