@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { tool, jsonSchema } from 'ai';
+import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { serializer } from '@lowdefy/helpers';
@@ -31,7 +31,12 @@ function cleanBuildArtifact(obj) {
   );
 }
 
-async function buildAgentTools({ agent, context }) {
+async function buildAgentTools({ agent, context, depth = 0 }) {
+  const MAX_DEPTH = 5;
+  if (depth > MAX_DEPTH) {
+    throw new Error(`Sub-agent nesting exceeds maximum depth of ${MAX_DEPTH}.`);
+  }
+
   const tools = {};
   const mcpClients = [];
 
@@ -106,6 +111,58 @@ async function buildAgentTools({ agent, context }) {
       const label = source.transport === 'stdio' ? source.command : source.url;
       console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
     }
+  }
+
+  // Build sub-agent tools
+  for (const subAgentRef of agent.agents ?? []) {
+    const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
+    const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
+    subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
+
+    // Recursively build sub-agent's tools
+    const { tools: subTools, mcpClients: subMcpClients } = await buildAgentTools({
+      agent: subAgentConfig,
+      context,
+      depth: depth + 1,
+    });
+
+    const subModel = subConnection.provider(subAgentConfig.properties.model);
+
+    const subAgent = new ToolLoopAgent({
+      model: subModel,
+      instructions: subAgentConfig.properties.instructions,
+      tools: subTools,
+      stopWhen: stepCountIs(subAgentConfig.properties.maxSteps ?? 10),
+      maxOutputTokens: subAgentConfig.properties.maxOutputTokens,
+      temperature: subAgentConfig.properties.temperature,
+      toolChoice: subAgentConfig.properties.toolChoice ?? 'auto',
+      providerOptions: subAgentConfig.properties.providerOptions,
+    });
+
+    const description =
+      subAgentRef.description ?? `Delegate task to the ${subAgentRef.agentId} agent`;
+
+    const inputSchema = subAgentRef.inputSchema
+      ? jsonSchema(subAgentRef.inputSchema)
+      : jsonSchema({
+          type: 'object',
+          properties: { task: { type: 'string', description: 'The task to delegate' } },
+          required: ['task'],
+        });
+
+    tools[subAgentRef.agentId] = tool({
+      description,
+      inputSchema,
+      execute: async (input, { abortSignal }) => {
+        const prompt = input.task ?? JSON.stringify(input);
+        const result = await subAgent.generate({ prompt, abortSignal });
+
+        // Cleanup sub-agent's MCP clients
+        await Promise.all(subMcpClients.map(({ client }) => client.close().catch(() => {})));
+
+        return result.text;
+      },
+    });
   }
 
   return { tools, mcpClients };
