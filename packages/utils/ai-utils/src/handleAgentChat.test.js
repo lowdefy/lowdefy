@@ -1427,3 +1427,37 @@ test('repairToolCall is not set when not configured', async () => {
 
   expect(lastAgentConfig.experimental_repairToolCall).toBeUndefined();
 });
+
+test('onFinish hook receives original input messages in payload', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const inputMessages = [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }];
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: inputMessages,
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  // Execute the stream to trigger onFinish
+  await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
+
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
+    payload: expect.objectContaining({
+      messages: inputMessages,
+      finishReason: 'stop',
+      isAborted: false,
+    }),
+  });
+});
