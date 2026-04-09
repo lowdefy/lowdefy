@@ -160,11 +160,11 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
         // Cleanup sub-agent's MCP clients
         await Promise.all(subMcpClients.map(({ client }) => client.close().catch(() => {})));
 
-        return result.text;
+        return { _subAgent: true, agentId: subAgentRef.agentId, text: result.text };
       },
       toModelOutput: ({ output }) => ({
         type: 'text',
-        value: output,
+        value: output.text ?? String(output),
       }),
     });
   }

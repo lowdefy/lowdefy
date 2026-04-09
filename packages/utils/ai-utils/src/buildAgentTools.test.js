@@ -162,7 +162,7 @@ test('buildAgentTools sub-agent tool execute calls generate and returns text', a
   // Execute the sub-agent tool
   const result = await tools.researcher.execute({ task: 'Research AI' }, { abortSignal: null });
   expect(mockGenerate).toHaveBeenCalledWith({ prompt: 'Research AI', abortSignal: null });
-  expect(result).toBe('Sub-agent result');
+  expect(result).toEqual({ _subAgent: true, agentId: 'researcher', text: 'Sub-agent result' });
 });
 
 test('buildAgentTools sub-agent tool uses custom inputSchema', async () => {
@@ -266,7 +266,9 @@ test('buildAgentTools sub-agent tool has toModelOutput that returns text type', 
   const { tools } = await buildAgentTools({ agent, context });
 
   expect(tools.researcher.toModelOutput).toBeDefined();
-  const result = tools.researcher.toModelOutput({ output: 'Sub-agent findings here' });
+  const result = tools.researcher.toModelOutput({
+    output: { _subAgent: true, agentId: 'researcher', text: 'Sub-agent findings here' },
+  });
   expect(result).toEqual({ type: 'text', value: 'Sub-agent findings here' });
 });
 
