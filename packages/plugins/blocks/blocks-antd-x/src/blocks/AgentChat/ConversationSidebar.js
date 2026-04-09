@@ -26,6 +26,8 @@ function ConversationSidebar({
   onMenuClick,
   menu,
   creation,
+  width,
+  groupable,
 }) {
   const menuConfig = menu
     ? (conversation) => ({
@@ -44,8 +46,18 @@ function ConversationSidebar({
       }
     : undefined;
 
+  const groupableConfig = groupable
+    ? {
+        label: groupable.label,
+        collapsible: groupable.collapsible ?? true,
+        ...(groupable.defaultExpandedKeys
+          ? { defaultExpandedKeys: groupable.defaultExpandedKeys }
+          : {}),
+      }
+    : undefined;
+
   return (
-    <div style={{ width: 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}>
+    <div style={{ width: width ?? 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}>
       {!creationConfig && (
         <div style={{ padding: '12px 16px' }}>
           <Button block onClick={onNewConversation}>
@@ -61,6 +73,7 @@ function ConversationSidebar({
         }}
         menu={menuConfig}
         creation={creationConfig}
+        groupable={groupableConfig}
       />
     </div>
   );

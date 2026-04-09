@@ -401,6 +401,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           onMenuClick={handleConversationMenuClick}
           menu={conversationsConfig?.menu}
           creation={conversationsConfig?.creation}
+          width={conversationsConfig?.width}
+          groupable={conversationsConfig?.groupable}
         />
       )}
       <div
