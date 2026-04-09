@@ -1354,3 +1354,34 @@ test('undefined new properties do not break agent creation', async () => {
   expect(lastAgentConfig.stopSequences).toBeUndefined();
   expect(lastAgentConfig.maxRetries).toBeUndefined();
 });
+
+test('tool execute passes abortSignal to callEndpoint', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Signal test',
+    payloadSchema: { type: 'object' },
+  });
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: { ok: true } });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [{ endpointId: 'signal-test' }], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig },
+  });
+
+  const toolDef = mockTool.mock.calls[0][0];
+  const mockSignal = new AbortController().signal;
+  await toolDef.execute({ query: 'test' }, { abortSignal: mockSignal });
+
+  expect(callEndpoint).toHaveBeenCalledWith('signal-test', {
+    payload: { query: 'test' },
+    abortSignal: mockSignal,
+  });
+});
