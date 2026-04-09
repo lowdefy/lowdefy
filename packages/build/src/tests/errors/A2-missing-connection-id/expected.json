@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "should have required property \"id\""
+        "Connection id missing"
       ],
       "errorContains": [
-        "Connection should have required property \"id\".",
+        "Connection id missing.",
         "lowdefy.yaml:13"
       ]
     }

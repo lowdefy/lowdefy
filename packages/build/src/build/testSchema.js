@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
+import { ConfigWarning, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
@@ -30,6 +30,11 @@ function getValueAtPath(obj, pathParts) {
   return current;
 }
 
+// Schema validation emits warnings rather than errors. Focused validations
+// in each build step (validateBlock, buildConnections, buildEvents, etc.)
+// provide better error messages with full context (pageId, blockId, etc.).
+// Schema warnings still surface useful hints like typos caught by
+// additionalProperties and property type mismatches.
 function testSchema({ components, context }) {
   const { valid, errors } = validate({
     schema: lowdefySchema,
@@ -77,14 +82,9 @@ function testSchema({ components, context }) {
       }
 
       const received = getValueAtPath(components, instancePath);
-      const configError = new ConfigError(message, { configKey, checkSlug: 'schema', received });
-      if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
-        if (!context.errors) {
-          // If no error collection array, throw immediately (fallback for tests)
-          throw configError;
-        }
-        // Collect error object - logging happens at checkpoints in index.js
-        context.errors.push(configError);
+      const warning = new ConfigWarning(message, { configKey, checkSlug: 'schema', received });
+      if (!shouldSuppressBuildCheck(warning, context.keyMap)) {
+        context.handleWarning(warning);
       }
     });
   }

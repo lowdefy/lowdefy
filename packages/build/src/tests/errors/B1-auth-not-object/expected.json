@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "should be an object"
+        "lowdefy.auth is not an object"
       ],
       "errorContains": [
-        "App \"auth\" should be an object.",
+        "lowdefy.auth is not an object.",
         "lowdefy.yaml:11"
       ]
     }
