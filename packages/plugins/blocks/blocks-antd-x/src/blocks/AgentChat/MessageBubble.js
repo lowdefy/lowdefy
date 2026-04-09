@@ -373,6 +373,8 @@ function MessageBubble({
               status = 'error';
             }
             let description;
+            let content;
+            let collapsible = false;
             if (status === 'loading') {
               const showInput = config?.showToolInputStreaming !== false;
               if (showInput && tool.input && Object.keys(tool.input).length > 0) {
@@ -383,17 +385,23 @@ function MessageBubble({
             } else if (status === 'error') {
               description = 'Tool execution failed';
             } else if (tool.output?.display && typeof tool.output.display === 'string') {
-              description = (
+              description = summarizeToolOutput(tool.output.display);
+              content = (
                 <Markdown components={markdownComponents} config={markdownConfig}>
                   {tool.output.display}
                 </Markdown>
               );
+              collapsible = true;
             } else {
               const mode = resolveToolResultMode(toolResultDisplay, tool.toolName);
               if (mode === 'readable') {
-                description = formatToolResult(tool.output);
+                description = summarizeToolOutput(tool.output);
+                content = formatToolResult(tool.output);
+                collapsible = true;
               } else if (mode === 'full') {
-                description = JSON.stringify(tool.output, null, 2);
+                description = summarizeToolOutput(tool.output);
+                content = JSON.stringify(tool.output, null, 2);
+                collapsible = true;
               } else if (mode === 'none') {
                 description = 'Completed';
               } else {
@@ -404,6 +412,8 @@ function MessageBubble({
               key: tool.toolCallId,
               title: tool.toolName,
               description,
+              ...(content != null ? { content } : {}),
+              ...(collapsible ? { collapsible: true } : {}),
               status,
             };
           });
