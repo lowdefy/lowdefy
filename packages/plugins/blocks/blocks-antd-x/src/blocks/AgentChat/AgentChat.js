@@ -141,6 +141,18 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     methods.registerMethod('scrollToBottom', () => {
       bubbleListRef.current?.scrollTo({ top: 'bottom' });
     });
+    if (attachmentsConfig?.s3PostPolicyRequestId) {
+      methods.registerEvent({
+        name: '__getS3PostPolicy',
+        actions: [
+          {
+            id: '__getS3PostPolicy',
+            type: 'Request',
+            params: [attachmentsConfig.s3PostPolicyRequestId],
+          },
+        ],
+      });
+    }
   }, []);
 
   useAgentEvents({ messages, status, methods, finishMetaRef });
@@ -179,49 +191,91 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
+  async function uploadFileToS3(file) {
+    const { name, size, type: fileType } = file;
+    const s3PostPolicyResponse = await methods.triggerEvent({
+      name: '__getS3PostPolicy',
+      event: { file: { name, size, type: fileType } },
+    });
+
+    if (s3PostPolicyResponse.success !== true) {
+      throw new Error('S3 post policy request failed.');
+    }
+
+    const { url, fields = {} } =
+      s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
+    const { key } = fields;
+
+    const formData = new FormData();
+    Object.keys(fields).forEach((field) => {
+      formData.append(field, fields[field]);
+    });
+    formData.append('file', file);
+
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`S3 upload failed with status ${xhr.status}`));
+        }
+      });
+      xhr.addEventListener('error', () => reject(new Error('S3 upload network error')));
+      xhr.open('POST', url);
+      xhr.send(formData);
+    });
+
+    const objectUrl = url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
+    return { url: objectUrl, mediaType: fileType, filename: name };
+  }
+
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
 
-    // Build file metadata for the event payload
     const filesMeta = attachedFiles.map((file) => ({
       name: file.name,
       size: file.size,
       type: file.type,
     }));
 
-    // Fire onBeforeSend — blocking event. If success is false, cancel the send.
+    // onBeforeSend — validation and cancellation only
     const response = await methods.triggerEvent({
       name: 'onBeforeSend',
       event: { text, files: filesMeta, messages },
     });
     if (response.success === false) return;
 
-    // Check if any action response contains replacement file URLs.
-    // Developers upload files to S3 in their action chain and return URLs.
-    let replacementFiles = null;
-    if (response.responses) {
-      for (const actionResult of Object.values(response.responses)) {
-        if (actionResult.response?.files && Array.isArray(actionResult.response.files)) {
-          replacementFiles = actionResult.response.files;
-          break;
-        }
-      }
-    }
-
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
-      if (replacementFiles) {
-        // Use URL-based file parts from onBeforeSend response
-        for (const file of replacementFiles) {
-          parts.push({ type: 'file', url: file.url, mediaType: file.mediaType });
+
+      if (attachmentsConfig?.s3PostPolicyRequestId) {
+        try {
+          const uploadResults = await Promise.all(
+            attachedFiles.map((file) => uploadFileToS3(file))
+          );
+          for (const result of uploadResults) {
+            parts.push({
+              type: 'file',
+              url: result.url,
+              mediaType: result.mediaType,
+              filename: result.filename,
+            });
+          }
+        } catch (error) {
+          methods.triggerEvent({
+            name: 'onError',
+            event: { message: error.message ?? 'File upload to S3 failed.' },
+          });
+          return;
         }
       } else {
-        // Fall back to base64 data URLs
         for (const file of attachedFiles) {
           const part = await fileToContentPart(file);
           parts.push(part);
         }
       }
+
       sendMessage({ parts });
       setAttachedFiles([]);
     } else {

@@ -154,7 +154,11 @@
           "properties": {
             "enabled": { "type": "boolean" },
             "accept": { "type": "string" },
-            "maxSize": { "type": "number" }
+            "maxSize": { "type": "number" },
+            "s3PostPolicyRequestId": {
+              "type": "string",
+              "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
+            }
           }
         }
       }
