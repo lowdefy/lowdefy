@@ -17,7 +17,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { FileCard, Sender } from '@ant-design/x';
+import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
@@ -42,8 +42,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     messages: externalMessages,
     display,
     drawer: drawerConfig,
+    suggestions,
   } = properties;
   const senderRef = useRef(null);
+  const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
@@ -55,7 +57,18 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
 
-  const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
+  const bubbleListRef = useRef(null);
+
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    addToolApprovalResponse,
+    setMessages,
+    regenerate,
+    clearError,
+  } = useChat({
     transport,
     experimental_throttle: 50,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -64,6 +77,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         name: 'onError',
         event: { message: error.message },
       });
+    },
+    onFinish: (options) => {
+      finishMetaRef.current = {
+        finishReason: options.finishReason,
+        isAbort: options.isAbort,
+        isDisconnect: options.isDisconnect,
+      };
     },
   });
 
@@ -79,13 +99,51 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
+  // Compare by count + last ID to avoid re-syncing on every Lowdefy re-render
+  // (operators like _state create new array references even when data hasn't changed).
+  const prevExternalRef = useRef({ count: 0, lastId: null });
   useEffect(() => {
-    if (!type.isUndefined(externalMessages)) {
-      setMessages(externalMessages ?? []);
+    if (type.isUndefined(externalMessages)) return;
+    const msgs = externalMessages ?? [];
+    const count = msgs.length;
+    const lastId = count > 0 ? msgs[count - 1]?.id : null;
+    if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
+      prevExternalRef.current = { count, lastId };
+      setMessages(msgs);
     }
   }, [externalMessages, setMessages]);
 
-  useAgentEvents({ messages, status, methods });
+  // Register CallMethod methods so YAML actions can control the chat.
+  useEffect(() => {
+    methods.registerMethod('regenerate', (args) => {
+      regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
+    });
+    methods.registerMethod('setMessages', (args) => {
+      setMessages(args?.messages ?? []);
+    });
+    methods.registerMethod('sendMessage', (args) => {
+      if (args?.text) sendMessage({ text: args.text });
+    });
+    methods.registerMethod('clearMessages', () => {
+      setMessages([]);
+    });
+    methods.registerMethod('deleteMessage', (args) => {
+      if (args?.messageId) {
+        setMessages((prev) => prev.filter((m) => m.id !== args.messageId));
+      }
+    });
+    methods.registerMethod('stop', () => {
+      stop();
+    });
+    methods.registerMethod('clearError', () => {
+      clearError();
+    });
+    methods.registerMethod('scrollToBottom', () => {
+      bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+  }, []);
+
+  useAgentEvents({ messages, status, methods, finishMetaRef });
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
@@ -104,6 +162,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
+  function handleConversationMenuClick({ action, conversationKey, conversation }) {
+    methods.triggerEvent({
+      name: 'onConversationMenuClick',
+      event: { action, conversationKey, conversation },
+    });
+  }
+
   function fileToContentPart(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -116,11 +181,46 @@ function AgentChat({ blockId, methods, pageId, properties }) {
 
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
+
+    // Build file metadata for the event payload
+    const filesMeta = attachedFiles.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
+
+    // Fire onBeforeSend — blocking event. If success is false, cancel the send.
+    const response = await methods.triggerEvent({
+      name: 'onBeforeSend',
+      event: { text, files: filesMeta, messages },
+    });
+    if (response.success === false) return;
+
+    // Check if any action response contains replacement file URLs.
+    // Developers upload files to S3 in their action chain and return URLs.
+    let replacementFiles = null;
+    if (response.responses) {
+      for (const actionResult of Object.values(response.responses)) {
+        if (actionResult.response?.files && Array.isArray(actionResult.response.files)) {
+          replacementFiles = actionResult.response.files;
+          break;
+        }
+      }
+    }
+
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
-      for (const file of attachedFiles) {
-        const part = await fileToContentPart(file);
-        parts.push(part);
+      if (replacementFiles) {
+        // Use URL-based file parts from onBeforeSend response
+        for (const file of replacementFiles) {
+          parts.push({ type: 'file', url: file.url, mediaType: file.mediaType });
+        }
+      } else {
+        // Fall back to base64 data URLs
+        for (const file of attachedFiles) {
+          const part = await fileToContentPart(file);
+          parts.push(part);
+        }
       }
       sendMessage({ parts });
       setAttachedFiles([]);
@@ -130,8 +230,24 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     senderRef.current?.clear();
   }
 
+  function handleStop() {
+    stop();
+    methods.triggerEvent({
+      name: 'onStop',
+      event: { messages },
+    });
+  }
+
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
+  }
+
+  function handleSuggestionClick(suggestion) {
+    methods.triggerEvent({
+      name: 'onSuggestionClick',
+      event: { suggestion },
+    });
+    sendMessage({ text: suggestion.label });
   }
 
   function handleFeedback({ messageId, rating }) {
@@ -145,6 +261,40 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       name: 'onFeedback',
       event: { messageId, messageContent, rating },
     });
+  }
+
+  function handleRegenerate({ messageId }) {
+    methods.triggerEvent({
+      name: 'onRegenerate',
+      event: { messageId, messages },
+    });
+    regenerate({ messageId });
+  }
+
+  function handleEditMessage({ messageId, originalContent, newContent }) {
+    methods.triggerEvent({
+      name: 'onEditMessage',
+      event: { messageId, originalContent, newContent, messages },
+    });
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex >= 0) {
+      setMessages((prev) => prev.slice(0, messageIndex));
+      sendMessage({ text: newContent });
+    }
+  }
+
+  function handleDelete({ messageId }) {
+    const message = messages.find((m) => m.id === messageId);
+    const textContent =
+      message?.parts
+        ?.filter((p) => p.type === 'text')
+        .map((p) => p.text)
+        .join('') ?? '';
+    methods.triggerEvent({
+      name: 'onDeleteMessage',
+      event: { messageId, content: textContent, messages },
+    });
+    setMessages((prev) => prev.filter((m) => m.id !== messageId));
   }
 
   const chatContent = (
@@ -161,6 +311,9 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           activeKey={activeKey}
           onConversationChange={handleConversationChange}
           onNewConversation={handleNewConversation}
+          onMenuClick={handleConversationMenuClick}
+          menu={conversationsConfig?.menu}
+          creation={conversationsConfig?.creation}
         />
       )}
       <div
@@ -179,14 +332,31 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
           ) : (
             <MessageList
+              ref={bubbleListRef}
               messages={messages}
               isStreaming={isBusy}
               config={messageDisplay}
               addToolApprovalResponse={addToolApprovalResponse}
               onFeedback={handleFeedback}
+              onRegenerate={handleRegenerate}
+              onDelete={handleDelete}
+              onEditMessage={handleEditMessage}
             />
           )}
         </div>
+        {!isEmpty && suggestions && suggestions.length > 0 && !isBusy && (
+          <div style={{ padding: '0 16px 8px' }}>
+            <Prompts
+              items={suggestions.map((s, i) => ({
+                key: s.key ?? `suggestion-${i}`,
+                label: s.label,
+                description: s.description,
+              }))}
+              onItemClick={({ data }) => handleSuggestionClick(data)}
+              wrap
+            />
+          </div>
+        )}
         <div style={{ padding: '8px 16px 24px' }}>
           {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
             <FileCard.List
@@ -233,8 +403,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           <Sender
             ref={senderRef}
             placeholder={sender?.placeholder ?? 'Type a message...'}
+            submitType={sender?.submitType ?? 'enter'}
+            allowSpeech={sender?.allowSpeech ?? false}
             onSubmit={handleSend}
-            onCancel={stop}
+            onCancel={handleStop}
             loading={isBusy}
             prefix={
               attachmentsConfig?.enabled ? (

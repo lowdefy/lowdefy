@@ -16,7 +16,7 @@
 
 import { useRef, useEffect } from 'react';
 
-function useAgentEvents({ messages, status, methods }) {
+function useAgentEvents({ messages, status, methods, finishMetaRef }) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
@@ -32,6 +32,7 @@ function useAgentEvents({ messages, status, methods }) {
           ?.filter((p) => p.type === 'text')
           .map((p) => p.text)
           .join('');
+        const finishMeta = finishMetaRef?.current ?? {};
         methods.triggerEvent({
           name: 'onMessageComplete',
           event: {
@@ -39,6 +40,9 @@ function useAgentEvents({ messages, status, methods }) {
             content: textContent,
             messageId: lastAssistantMessage.id,
             parts: lastAssistantMessage.parts,
+            finishReason: finishMeta.finishReason,
+            isAbort: finishMeta.isAbort ?? false,
+            isDisconnect: finishMeta.isDisconnect ?? false,
             messages: messages.map((m) => ({
               id: m.id,
               role: m.role,
@@ -46,6 +50,7 @@ function useAgentEvents({ messages, status, methods }) {
             })),
           },
         });
+        finishMetaRef.current = null;
       }
     }
     prevStatusRef.current = status;

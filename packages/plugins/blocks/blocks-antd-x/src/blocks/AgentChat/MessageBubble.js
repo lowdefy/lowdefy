@@ -16,12 +16,35 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { CodeHighlighter, FileCard, Mermaid, ThoughtChain, Think } from '@ant-design/x';
-import { Button } from 'antd';
-import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import {
+  Actions,
+  CodeHighlighter,
+  FileCard,
+  Mermaid,
+  Sources,
+  ThoughtChain,
+  Think,
+} from '@ant-design/x';
+import { DeleteOutlined, DislikeOutlined, LikeOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import ToolApproval from './ToolApproval.js';
+
+// Module-level singleton for the LaTeX marked extension.
+// Loaded once on first use — the Latex plugin from @ant-design/x-markdown
+// includes KaTeX CSS import and handles $...$ inline and $$...$$ display math.
+let latexConfig = null;
+function getLatexConfig() {
+  if (latexConfig) return latexConfig;
+  try {
+    // eslint-disable-next-line global-require
+    const Latex = require('@ant-design/x-markdown/plugins/Latex').default;
+    latexConfig = { extensions: Latex() };
+  } catch {
+    latexConfig = {};
+  }
+  return latexConfig;
+}
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
 function PlainCodeBlock({ children, block, lang }) {
@@ -92,34 +115,79 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageActions({ actions, textContent, messageId, onFeedback }) {
+function normalizeActions(actions) {
+  if (Array.isArray(actions)) {
+    const obj = {};
+    for (const action of actions) {
+      obj[action] = true;
+    }
+    return obj;
+  }
+  return actions ?? {};
+}
+
+function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenerate, onDelete }) {
+  const normalized = normalizeActions(actions);
+  const items = [];
+
+  if (normalized.copy) {
+    items.push({
+      key: 'copy',
+      label: 'Copy',
+      actionRender: () => <Actions.Copy text={textContent} />,
+    });
+  }
+  if (normalized.feedback) {
+    items.push({
+      key: 'like',
+      icon: <LikeOutlined />,
+      label: 'Like',
+      onItemClick: () => onFeedback?.({ messageId, rating: 'positive' }),
+    });
+    items.push({
+      key: 'dislike',
+      icon: <DislikeOutlined />,
+      label: 'Dislike',
+      onItemClick: () => onFeedback?.({ messageId, rating: 'negative' }),
+    });
+  }
+  if (normalized.regenerate) {
+    items.push({
+      key: 'regenerate',
+      icon: <ReloadOutlined />,
+      label: 'Regenerate',
+      onItemClick: () => onRegenerate?.({ messageId }),
+    });
+  }
+  if (normalized.delete) {
+    items.push({
+      key: 'delete',
+      icon: <DeleteOutlined />,
+      label: 'Delete',
+      danger: true,
+      onItemClick: () => onDelete?.({ messageId }),
+    });
+  }
+
+  if (items.length === 0) return null;
+  return <Actions items={items} />;
+}
+
+function SourcesDisplay({ sourceParts, config }) {
+  if (sourceParts.length === 0) return null;
+  const items = sourceParts.map((source, i) => ({
+    key: `source-${i}`,
+    title: source.title ?? source.url ?? `Source ${i + 1}`,
+    url: source.url,
+    description: source.url,
+  }));
   return (
-    <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-      {actions.includes('copy') && (
-        <Button
-          type="text"
-          size="small"
-          icon={<CopyOutlined />}
-          onClick={() => navigator.clipboard.writeText(textContent)}
-        />
-      )}
-      {actions.includes('feedback') && (
-        <>
-          <Button
-            type="text"
-            size="small"
-            icon={<LikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'positive' })}
-          />
-          <Button
-            type="text"
-            size="small"
-            icon={<DislikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'negative' })}
-          />
-        </>
-      )}
-    </div>
+    <Sources
+      items={items}
+      title="Sources"
+      inline={config?.sourcesDisplay?.inline ?? false}
+      expandIconPosition={config?.sourcesDisplay?.expandIconPosition ?? 'end'}
+    />
   );
 }
 
@@ -132,6 +200,8 @@ function MessageBubble({
   actions,
   messageId,
   onFeedback,
+  onRegenerate,
+  onDelete,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -139,13 +209,16 @@ function MessageBubble({
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
+  const renderLatex = config?.renderLatex ?? false;
+  const markdownConfig = renderLatex ? getLatexConfig() : undefined;
 
   const markdownComponents = useMemo(() => {
     if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
     return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
   }, [renderMermaid, codeHighlighter]);
 
-  const showActions = actions && actions.length > 0 && !isStreaming;
+  const normalizedActions = normalizeActions(actions);
+  const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;
 
   const showSources = config?.showSources;
   const sourceParts = showSources
@@ -158,40 +231,19 @@ function MessageBubble({
         <Markdown
           streaming={isStreaming ? { hasNextChunk: true } : undefined}
           components={markdownComponents}
+          config={markdownConfig}
         >
           {content}
         </Markdown>
-        {sourceParts.length > 0 && (
-          <div style={{ marginTop: 8 }}>
-            <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {sourceParts.map((source, i) => (
-                <a
-                  key={`source-${i}`}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: 12,
-                    padding: '2px 8px',
-                    background: '#f5f5f5',
-                    borderRadius: 4,
-                    color: '#1677ff',
-                    textDecoration: 'none',
-                  }}
-                >
-                  {source.title ?? source.url ?? `Source ${i + 1}`}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+        <SourcesDisplay sourceParts={sourceParts} config={config} />
         {showActions && (
-          <MessageActions
-            actions={actions}
+          <BubbleActions
+            actions={normalizedActions}
             textContent={content}
             messageId={messageId}
             onFeedback={onFeedback}
+            onRegenerate={onRegenerate}
+            onDelete={onDelete}
           />
         )}
       </div>
@@ -256,9 +308,17 @@ function MessageBubble({
       {segments.map((segment, idx) => {
         if (segment.category === 'reasoning' && showReasoning) {
           const text = segment.parts.map((p) => p.text).join('');
-          if (text.length === 0) return null;
+          if (text.length === 0 && !isStreaming) return null;
+          const isActiveReasoning =
+            isStreaming && segment.parts.some((p) => p.state === 'streaming');
           return (
-            <Think key={`reasoning-${idx}`} title="Reasoning" defaultExpanded={false}>
+            <Think
+              key={`reasoning-${idx}`}
+              title="Reasoning"
+              defaultExpanded={false}
+              loading={isActiveReasoning}
+              blink={isActiveReasoning}
+            >
               {text}
             </Think>
           );
@@ -348,6 +408,7 @@ function MessageBubble({
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
               components={markdownComponents}
+              config={markdownConfig}
             >
               {text}
             </Markdown>
@@ -355,37 +416,15 @@ function MessageBubble({
         }
         return null;
       })}
-      {sourceParts.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {sourceParts.map((source, i) => (
-              <a
-                key={`source-${i}`}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: 12,
-                  padding: '2px 8px',
-                  background: '#f5f5f5',
-                  borderRadius: 4,
-                  color: '#1677ff',
-                  textDecoration: 'none',
-                }}
-              >
-                {source.title ?? source.url ?? `Source ${i + 1}`}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <SourcesDisplay sourceParts={sourceParts} config={config} />
       {showActions && (
-        <MessageActions
-          actions={actions}
+        <BubbleActions
+          actions={normalizedActions}
           textContent={allTextContent}
           messageId={messageId}
           onFeedback={onFeedback}
+          onRegenerate={onRegenerate}
+          onDelete={onDelete}
         />
       )}
     </div>

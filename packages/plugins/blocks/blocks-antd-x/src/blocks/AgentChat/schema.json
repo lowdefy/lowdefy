@@ -27,6 +27,7 @@
         "markdownRendering": { "type": "boolean", "default": true },
         "renderMermaid": { "type": "boolean", "default": true },
         "codeHighlighter": { "type": "boolean", "default": true },
+        "renderLatex": { "type": "boolean", "default": false },
         "showThoughtChain": { "type": "boolean", "default": true },
         "showReasoning": { "type": "boolean", "default": true },
         "reasoningDisplay": {
@@ -36,13 +37,27 @@
         },
         "toolResultDisplay": {
           "type": "string",
-          "enum": ["summary", "full", "none"],
+          "enum": ["summary", "full", "none", "readable"],
           "default": "summary"
         },
         "showSources": { "type": "boolean" },
+        "sourcesDisplay": {
+          "type": "object",
+          "properties": {
+            "inline": { "type": "boolean", "default": false },
+            "expandIconPosition": { "type": "string", "enum": ["start", "end"], "default": "end" }
+          }
+        },
         "actions": {
-          "type": "array",
-          "items": { "type": "string", "enum": ["copy", "feedback"] }
+          "type": "object",
+          "properties": {
+            "copy": { "type": "boolean", "default": true },
+            "feedback": { "type": "boolean", "default": true },
+            "regenerate": { "type": "boolean", "default": false },
+            "edit": { "type": "boolean", "default": false },
+            "delete": { "type": "boolean", "default": false },
+            "audio": { "type": "boolean", "default": false }
+          }
         },
         "roles": {
           "type": "object",
@@ -51,14 +66,30 @@
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             },
             "user": {
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             }
           }
@@ -71,13 +102,53 @@
     "conversations": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean" }
+        "enabled": { "type": "boolean" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "disabled": { "type": "boolean" },
+              "timestamp": { "type": "number" }
+            }
+          }
+        },
+        "activeKey": { "type": "string" },
+        "menu": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "danger": { "type": "boolean" }
+            }
+          }
+        },
+        "creation": {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string" },
+            "icon": {},
+            "align": { "type": "string", "enum": ["start", "center", "end"] }
+          }
+        }
       }
     },
     "sender": {
       "type": "object",
       "properties": {
         "placeholder": { "type": "string" },
+        "submitType": {
+          "type": "string",
+          "enum": ["enter", "shiftEnter"],
+          "default": "enter"
+        },
+        "allowSpeech": { "type": "boolean", "default": false },
         "attachments": {
           "type": "object",
           "properties": {
@@ -99,6 +170,26 @@
         "width": { "type": "number" },
         "title": { "type": "string" }
       }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": {}
+        }
+      }
+    },
+    "height": {
+      "type": "string",
+      "description": "CSS height of the chat container (e.g. '600px', '80vh')."
+    },
+    "maxWidth": {
+      "type": "number",
+      "description": "Maximum width of the chat container in pixels."
     }
   },
   "required": ["agentId"]

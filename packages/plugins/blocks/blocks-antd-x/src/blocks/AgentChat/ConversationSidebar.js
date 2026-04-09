@@ -18,20 +18,49 @@ import React from 'react';
 import { Conversations } from '@ant-design/x';
 import { Button } from 'antd';
 
-function ConversationSidebar({ items, activeKey, onConversationChange, onNewConversation }) {
+function ConversationSidebar({
+  items,
+  activeKey,
+  onConversationChange,
+  onNewConversation,
+  onMenuClick,
+  menu,
+  creation,
+}) {
+  const menuConfig = menu
+    ? (conversation) => ({
+        items: menu,
+        onClick: ({ key }) =>
+          onMenuClick?.({ action: key, conversationKey: conversation.key, conversation }),
+      })
+    : undefined;
+
+  const creationConfig = creation
+    ? {
+        label: creation.label ?? 'New Chat',
+        icon: creation.icon,
+        align: creation.align ?? 'start',
+        onClick: onNewConversation,
+      }
+    : undefined;
+
   return (
     <div style={{ width: 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}>
-      <div style={{ padding: '12px 16px' }}>
-        <Button block onClick={onNewConversation}>
-          + New Chat
-        </Button>
-      </div>
+      {!creationConfig && (
+        <div style={{ padding: '12px 16px' }}>
+          <Button block onClick={onNewConversation}>
+            + New Chat
+          </Button>
+        </div>
+      )}
       <Conversations
         items={items ?? []}
         activeKey={activeKey}
         onActiveChange={(key) => {
           onConversationChange(key, activeKey);
         }}
+        menu={menuConfig}
+        creation={creationConfig}
       />
     </div>
   );

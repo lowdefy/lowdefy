@@ -34,7 +34,19 @@ function roleHeader(roleConfig, fallback) {
   return <h5 style={{ margin: 0 }}>{name}</h5>;
 }
 
-function MessageList({ messages, isStreaming, config, addToolApprovalResponse, onFeedback }) {
+const MessageList = React.forwardRef(function MessageList(
+  {
+    messages,
+    isStreaming,
+    config,
+    addToolApprovalResponse,
+    onFeedback,
+    onRegenerate,
+    onDelete,
+    onEditMessage,
+  },
+  ref
+) {
   // Build a lookup map for message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -72,14 +84,17 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
 
   return (
     <Bubble.List
+      ref={ref}
       items={items}
       role={{
         user: {
           placement: 'end',
-          variant: 'filled',
-          shape: 'round',
+          variant: config?.roles?.user?.variant ?? 'filled',
+          shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
+          // TODO: Bubble editable shows Cancel/OK on all messages when set on the role.
+          // Edit needs per-message state management. Deferred to a follow-up task.
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             const fileParts = (parts ?? []).filter((p) => p.type === 'file');
@@ -111,7 +126,8 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
         },
         ai: {
           placement: 'start',
-          variant: 'outlined',
+          variant: config?.roles?.assistant?.variant ?? 'outlined',
+          shape: config?.roles?.assistant?.shape ?? 'default',
           style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'Assistant'),
@@ -127,6 +143,8 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
                 actions={config?.actions}
                 messageId={info.key}
                 onFeedback={onFeedback}
+                onRegenerate={onRegenerate}
+                onDelete={onDelete}
               />
             );
           },
@@ -136,6 +154,6 @@ function MessageList({ messages, isStreaming, config, addToolApprovalResponse, o
       style={{ height: '100%' }}
     />
   );
-}
+});
 
 export default MessageList;
