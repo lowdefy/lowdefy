@@ -49,6 +49,14 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
+  const switchConfigs = sender?.switches ?? [];
+  const [switchState, setSwitchState] = useState(() => {
+    const initial = {};
+    for (const sw of switchConfigs) {
+      initial[sw.key] = sw.default ?? false;
+    }
+    return initial;
+  });
 
   // Sidebar driven entirely by external config
   const showSidebar = conversationsConfig?.enabled;
@@ -122,7 +130,13 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       setMessages(args?.messages ?? []);
     });
     methods.registerMethod('sendMessage', (args) => {
-      if (args?.text) sendMessage({ text: args.text });
+      if (args?.text) {
+        sendMessage({
+          text: args.text,
+          ...(args.files ? { experimental_attachments: args.files } : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+        });
+      }
     });
     methods.registerMethod('clearMessages', () => {
       setMessages([]);
@@ -192,7 +206,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     // Fire onBeforeSend — blocking event. If success is false, cancel the send.
     const response = await methods.triggerEvent({
       name: 'onBeforeSend',
-      event: { text, files: filesMeta, messages },
+      event: { text, files: filesMeta, messages, switches: switchState },
     });
     if (response.success === false) return;
 
@@ -249,6 +263,25 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
     sendMessage({ text: suggestion.label });
   }
+
+  function handleSwitchChange(key, checked) {
+    setSwitchState((prev) => ({ ...prev, [key]: checked }));
+    methods.triggerEvent({
+      name: 'onSwitchChange',
+      event: { key, checked },
+    });
+  }
+
+  const agentSuggestions = useMemo(() => {
+    const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
+    if (!lastAssistant?.parts) return null;
+    const suggestionPart = [...lastAssistant.parts]
+      .reverse()
+      .find((p) => p.type === 'data-suggestions');
+    return suggestionPart?.data?.items ?? null;
+  }, [messages]);
+
+  const activeSuggestions = agentSuggestions ?? suggestions;
 
   function handleFeedback({ messageId, rating }) {
     const message = messages.find((msg) => msg.id === messageId);
@@ -344,10 +377,10 @@ function AgentChat({ blockId, methods, pageId, properties }) {
             />
           )}
         </div>
-        {!isEmpty && suggestions && suggestions.length > 0 && !isBusy && (
+        {!isEmpty && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
           <div style={{ padding: '0 16px 8px' }}>
             <Prompts
-              items={suggestions.map((s, i) => ({
+              items={activeSuggestions.map((s, i) => ({
                 key: s.key ?? `suggestion-${i}`,
                 label: s.label,
                 description: s.description,
@@ -417,7 +450,16 @@ function AgentChat({ blockId, methods, pageId, properties }) {
                 />
               ) : undefined
             }
-          />
+          >
+            {switchConfigs.map((sw) => (
+              <Sender.Switch
+                key={sw.key}
+                checked={switchState[sw.key] ?? false}
+                onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                title={sw.label}
+              />
+            ))}
+          </Sender>
         </div>
       </div>
     </div>

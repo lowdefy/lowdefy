@@ -55,14 +55,25 @@ const MessageList = React.forwardRef(function MessageList(
   const partsMap = new Map(messages.map((msg) => [msg.id, msg.parts]));
 
   const lastMessage = messages[messages.length - 1];
-  const items = messages.map((msg) => {
+  const showStepSeparators = config?.showStepSeparators ?? false;
+
+  const items = [];
+  for (const msg of messages) {
     const isLastAssistant = msg === lastMessage && msg.role === 'assistant';
     const textContent =
       msg.parts
         ?.filter((part) => part.type === 'text')
         .map((part) => part.text)
         .join('') ?? '';
-    return {
+
+    if (showStepSeparators && msg.role === 'assistant') {
+      const stepParts = (msg.parts ?? []).filter((p) => p.type === 'step-start');
+      if (stepParts.length > 1) {
+        items.push({ key: `divider-${msg.id}`, role: 'divider' });
+      }
+    }
+
+    items.push({
       key: msg.id,
       content: textContent,
       role: msg.role === 'user' ? 'user' : 'ai',
@@ -73,8 +84,8 @@ const MessageList = React.forwardRef(function MessageList(
         isLastAssistant &&
         textContent.length === 0 &&
         !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
-    };
-  });
+    });
+  }
 
   // When busy but no assistant message exists yet (submitted, waiting for first chunk),
   // append a placeholder so loading dots are visible immediately.

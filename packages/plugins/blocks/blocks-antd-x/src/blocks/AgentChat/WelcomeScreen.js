@@ -41,6 +41,7 @@ function WelcomeScreen({ config, onPromptClick }) {
         title={config.title}
         description={config.description}
         icon={config.icon}
+        variant={config.variant}
       />
       {promptItems.length > 0 && (
         <Prompts
