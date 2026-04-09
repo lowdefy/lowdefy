@@ -237,6 +237,39 @@ test('buildAgentTools throws when sub-agent nesting exceeds max depth', async ()
   );
 });
 
+test('buildAgentTools sub-agent tool has toModelOutput that returns text type', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const subAgentConfig = {
+    agentId: 'researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [],
+    properties: { model: 'test', maxSteps: 5 },
+  };
+
+  const agent = {
+    tools: [],
+    mcp: [],
+    agents: [{ agentId: 'researcher' }],
+  };
+
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn().mockReturnValue({}) }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(tools.researcher.toModelOutput).toBeDefined();
+  const result = tools.researcher.toModelOutput({ output: 'Sub-agent findings here' });
+  expect(result).toEqual({ type: 'text', value: 'Sub-agent findings here' });
+});
+
 test('buildAgentTools with no agents property returns only endpoint tools', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

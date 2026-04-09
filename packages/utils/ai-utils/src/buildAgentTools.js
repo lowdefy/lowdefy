@@ -162,6 +162,10 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
 
         return result.text;
       },
+      toModelOutput: ({ output }) => ({
+        type: 'text',
+        value: output,
+      }),
     });
   }
 
