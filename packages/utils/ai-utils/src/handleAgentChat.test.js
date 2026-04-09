@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 const mockTool = jest.fn();
 const mockJsonSchema = jest.fn();
 const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
+const mockHasToolCall = jest.fn((name) => ({ type: 'hasToolCall', toolName: name }));
 
 const mockWriter = {
   write: jest.fn(),
@@ -47,6 +48,7 @@ jest.unstable_mockModule('ai', () => ({
   tool: mockTool,
   jsonSchema: mockJsonSchema,
   stepCountIs: mockStepCountIs,
+  hasToolCall: mockHasToolCall,
 }));
 
 const mockCreateMCPClient = jest.fn();
@@ -487,7 +489,6 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
   });
 });
 
-
 test('non-onFinish hook callbacks strip messages from event payload', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
@@ -918,9 +919,7 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
-  const messages = [
-    { id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] },
-  ];
+  const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
@@ -1077,4 +1076,281 @@ test('onFinish hook without dataParts does not write to stream', async () => {
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', expect.any(Object));
   expect(localWriter.write).not.toHaveBeenCalled();
+});
+
+test('stopOnToolCall with single string creates array stopWhen', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopOnToolCall: 'submit_form' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
+  expect(lastAgentConfig.stopWhen).toEqual([
+    { type: 'stepCount', count: 10 },
+    { type: 'hasToolCall', toolName: 'submit_form' },
+  ]);
+});
+
+test('stopOnToolCall with array creates stopWhen with multiple conditions', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopOnToolCall: ['submit_form', 'cancel'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
+  expect(mockHasToolCall).toHaveBeenCalledWith('cancel');
+  expect(lastAgentConfig.stopWhen).toEqual([
+    { type: 'stepCount', count: 10 },
+    { type: 'hasToolCall', toolName: 'submit_form' },
+    { type: 'hasToolCall', toolName: 'cancel' },
+  ]);
+});
+
+test('no stopOnToolCall produces single stopWhen condition', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.stopWhen).toEqual({ type: 'stepCount', count: 10 });
+});
+
+test('activeTools passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', activeTools: ['search', 'write'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.activeTools).toEqual(['search', 'write']);
+});
+
+test('sampling parameters passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'gpt-4o',
+          topP: 0.9,
+          topK: 40,
+          frequencyPenalty: 0.5,
+          presencePenalty: -0.3,
+          seed: 42,
+        },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.topP).toBe(0.9);
+  expect(lastAgentConfig.topK).toBe(40);
+  expect(lastAgentConfig.frequencyPenalty).toBe(0.5);
+  expect(lastAgentConfig.presencePenalty).toBe(-0.3);
+  expect(lastAgentConfig.seed).toBe(42);
+});
+
+test('stopSequences passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopSequences: ['END', 'STOP'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.stopSequences).toEqual(['END', 'STOP']);
+});
+
+test('maxRetries passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', maxRetries: 5 },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.maxRetries).toBe(5);
+});
+
+test('timeout as number passed to createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', timeout: 30000 },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(expect.objectContaining({ timeout: 30000 }));
+});
+
+test('timeout as object passed to createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const timeout = { totalMs: 60000, stepMs: 10000 };
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', timeout },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({ timeout: { totalMs: 60000, stepMs: 10000 } })
+  );
+});
+
+test('no timeout omits key from createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  const streamCallArgs =
+    mockCreateAgentUIStream.mock.calls[mockCreateAgentUIStream.mock.calls.length - 1][0];
+  expect(streamCallArgs).not.toHaveProperty('timeout');
+});
+
+test('undefined new properties do not break agent creation', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.activeTools).toBeUndefined();
+  expect(lastAgentConfig.topP).toBeUndefined();
+  expect(lastAgentConfig.topK).toBeUndefined();
+  expect(lastAgentConfig.frequencyPenalty).toBeUndefined();
+  expect(lastAgentConfig.presencePenalty).toBeUndefined();
+  expect(lastAgentConfig.seed).toBeUndefined();
+  expect(lastAgentConfig.stopSequences).toBeUndefined();
+  expect(lastAgentConfig.maxRetries).toBeUndefined();
 });

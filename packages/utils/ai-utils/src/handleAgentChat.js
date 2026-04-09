@@ -22,6 +22,7 @@ import {
   tool,
   jsonSchema,
   stepCountIs,
+  hasToolCall,
 } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
@@ -31,10 +32,12 @@ import { serializer } from '@lowdefy/helpers';
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
 // strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
 function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(obj, (key, value) => {
-    if (key.startsWith('~')) return undefined;
-    return value;
-  }));
+  return JSON.parse(
+    JSON.stringify(obj, (key, value) => {
+      if (key.startsWith('~')) return undefined;
+      return value;
+    })
+  );
 }
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
@@ -185,15 +188,33 @@ async function handleAgentChat({ connection, properties, context }) {
     callEndpoint: context.callEndpoint,
   });
 
+  // Build stop conditions
+  const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
+  const stopOnToolCall = agent.properties.stopOnToolCall;
+  if (stopOnToolCall) {
+    const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
+    for (const name of toolNames) {
+      stopConditions.push(hasToolCall(name));
+    }
+  }
+
   const agentInstance = new ToolLoopAgent({
     model,
     instructions: agent.properties.instructions,
     tools,
-    stopWhen: stepCountIs(agent.properties.maxSteps ?? 10),
+    stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
     maxOutputTokens: agent.properties.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
     providerOptions: agent.properties.providerOptions,
+    activeTools: agent.properties.activeTools,
+    topP: agent.properties.topP,
+    topK: agent.properties.topK,
+    frequencyPenalty: agent.properties.frequencyPenalty,
+    presencePenalty: agent.properties.presencePenalty,
+    seed: agent.properties.seed,
+    stopSequences: agent.properties.stopSequences,
+    maxRetries: agent.properties.maxRetries,
     ...hookCallbacks,
   });
 
@@ -209,6 +230,7 @@ async function handleAgentChat({ connection, properties, context }) {
       const agentStream = await createAgentUIStream({
         agent: agentInstance,
         uiMessages: messages,
+        ...(agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {}),
       });
 
       writer.merge(agentStream);

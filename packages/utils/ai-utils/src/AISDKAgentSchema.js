@@ -73,6 +73,108 @@ export default {
         type: 'AISDKAgent agent property "providerOptions" should be an object.',
       },
     },
+    stopOnToolCall: {
+      oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' }, minItems: 1 }],
+      description:
+        'Stop the agent loop when a tool with this name is called. Can be a single tool name or an array of tool names.',
+      errorMessage: {
+        oneOf:
+          'AISDKAgent agent property "stopOnToolCall" should be a string or an array of strings.',
+      },
+    },
+    activeTools: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'Restrict which tools are available to the model in each step.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "activeTools" should be an array of strings.',
+      },
+    },
+    topP: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1,
+      description: 'Nucleus sampling probability between 0 and 1.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "topP" should be a number.',
+        minimum: 'AISDKAgent agent property "topP" should be at least 0.',
+        maximum: 'AISDKAgent agent property "topP" should be at most 1.',
+      },
+    },
+    topK: {
+      type: 'integer',
+      minimum: 1,
+      description: 'Only sample from top K options for each token.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "topK" should be an integer.',
+        minimum: 'AISDKAgent agent property "topK" should be at least 1.',
+      },
+    },
+    frequencyPenalty: {
+      type: 'number',
+      minimum: -1,
+      maximum: 1,
+      description: 'Frequency penalty between -1 and 1. 0 means no penalty.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "frequencyPenalty" should be a number.',
+        minimum: 'AISDKAgent agent property "frequencyPenalty" should be at least -1.',
+        maximum: 'AISDKAgent agent property "frequencyPenalty" should be at most 1.',
+      },
+    },
+    presencePenalty: {
+      type: 'number',
+      minimum: -1,
+      maximum: 1,
+      description: 'Presence penalty between -1 and 1. 0 means no penalty.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "presencePenalty" should be a number.',
+        minimum: 'AISDKAgent agent property "presencePenalty" should be at least -1.',
+        maximum: 'AISDKAgent agent property "presencePenalty" should be at most 1.',
+      },
+    },
+    seed: {
+      type: 'integer',
+      description: 'Seed for deterministic random sampling.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "seed" should be an integer.',
+      },
+    },
+    stopSequences: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'Stop sequences. Generation stops when one is produced.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "stopSequences" should be an array of strings.',
+      },
+    },
+    maxRetries: {
+      type: 'integer',
+      minimum: 0,
+      description: 'Maximum number of retries. Set to 0 to disable retries. Default is 2.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "maxRetries" should be an integer.',
+        minimum: 'AISDKAgent agent property "maxRetries" should be at least 0.',
+      },
+    },
+    timeout: {
+      oneOf: [
+        { type: 'number', minimum: 0 },
+        {
+          type: 'object',
+          properties: {
+            totalMs: { type: 'number', minimum: 0 },
+            stepMs: { type: 'number', minimum: 0 },
+            chunkMs: { type: 'number', minimum: 0 },
+          },
+          additionalProperties: false,
+        },
+      ],
+      description: 'Timeout in milliseconds, or an object with totalMs, stepMs, and/or chunkMs.',
+      errorMessage: {
+        oneOf:
+          'AISDKAgent agent property "timeout" should be a number or an object with totalMs, stepMs, and/or chunkMs.',
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',
