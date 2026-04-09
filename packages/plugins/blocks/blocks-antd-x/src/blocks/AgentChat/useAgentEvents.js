@@ -21,6 +21,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
   const firedUserMessageIds = useRef(new Set());
+  const firedTitleIds = useRef(new Set());
   const lastMessageCountRef = useRef(0);
 
   // Fire onMessageComplete when streaming finishes
@@ -129,12 +130,32 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
     }
   }, [messages, methods]);
 
+  // Fire onTitleGenerated when a data-chat-title part appears
+  useEffect(() => {
+    for (const message of messages) {
+      if (message.role !== 'assistant') continue;
+      for (const part of message.parts ?? []) {
+        if (part.type === 'data-chat-title' && part.data?.title) {
+          const titleKey = `${message.id}-${part.data.title}`;
+          if (!firedTitleIds.current.has(titleKey)) {
+            firedTitleIds.current.add(titleKey);
+            methods.triggerEvent({
+              name: 'onTitleGenerated',
+              event: { title: part.data.title },
+            });
+          }
+        }
+      }
+    }
+  }, [messages, methods]);
+
   // Reset tracking when messages are cleared (conversation switch)
   useEffect(() => {
     if (messages.length < lastMessageCountRef.current) {
       firedToolCallIds.current.clear();
       firedToolResultIds.current.clear();
       firedUserMessageIds.current.clear();
+      firedTitleIds.current.clear();
     }
     lastMessageCountRef.current = messages.length;
   }, [messages.length]);
