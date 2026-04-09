@@ -25,13 +25,7 @@ import {
   ThoughtChain,
   Think,
 } from '@ant-design/x';
-import {
-  DeleteOutlined,
-  DislikeOutlined,
-  LikeOutlined,
-  ReloadOutlined,
-  RobotOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
@@ -154,16 +148,11 @@ function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenera
   }
   if (normalized.feedback) {
     items.push({
-      key: 'like',
-      icon: <LikeOutlined />,
-      label: 'Like',
-      onItemClick: () => onFeedback?.({ messageId, rating: 'positive' }),
-    });
-    items.push({
-      key: 'dislike',
-      icon: <DislikeOutlined />,
-      label: 'Dislike',
-      onItemClick: () => onFeedback?.({ messageId, rating: 'negative' }),
+      key: 'feedback',
+      label: 'Feedback',
+      actionRender: () => (
+        <Actions.Feedback onChange={(rating) => onFeedback?.({ messageId, rating })} />
+      ),
     });
   }
   if (normalized.regenerate) {
