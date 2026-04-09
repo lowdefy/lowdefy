@@ -175,6 +175,14 @@ export default {
           'AISDKAgent agent property "timeout" should be a number or an object with totalMs, stepMs, and/or chunkMs.',
       },
     },
+    repairToolCall: {
+      type: 'boolean',
+      description:
+        'Enable automatic tool call repair. When the model generates invalid tool input, the error is sent back to the model for self-correction.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "repairToolCall" should be a boolean.',
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',

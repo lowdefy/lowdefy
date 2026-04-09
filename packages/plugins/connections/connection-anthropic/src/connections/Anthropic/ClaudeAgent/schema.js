@@ -90,6 +90,14 @@ export default {
         type: 'ClaudeAgent agent property "providerOptions" should be an object.',
       },
     },
+    repairToolCall: {
+      type: 'boolean',
+      description:
+        'Enable automatic tool call repair. When the model generates invalid tool input, the error is sent back to the model for self-correction.',
+      errorMessage: {
+        type: 'ClaudeAgent agent property "repairToolCall" should be a boolean.',
+      },
+    },
   },
   errorMessage: {
     type: 'ClaudeAgent agent properties should be an object.',

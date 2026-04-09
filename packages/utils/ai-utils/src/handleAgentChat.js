@@ -127,6 +127,13 @@ async function handleAgentChat({ connection, properties, context }) {
     stopSequences: agent.properties.stopSequences,
     maxRetries: agent.properties.maxRetries,
     ...hookCallbacks,
+    ...(agent.properties.repairToolCall
+      ? {
+          experimental_repairToolCall: async ({ toolCall }) => {
+            return { ...toolCall };
+          },
+        }
+      : {}),
   });
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
