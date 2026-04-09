@@ -50,12 +50,14 @@
   "dependencies": {
     "@lowdefy/block-utils": "4.7.3",
     "dompurify": "3.2.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "react-markdown": "8.0.7",
     "react-syntax-highlighter": "15.5.0",
     "rehype-raw": "6.1.1",
     "remark-gfm": "3.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "4.7.3",
