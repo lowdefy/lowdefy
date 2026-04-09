@@ -84,13 +84,14 @@ const MessageList = React.forwardRef(function MessageList(
         isLastAssistant &&
         textContent.length === 0 &&
         !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
+      streaming: isStreaming && isLastAssistant,
     });
   }
 
   // When busy but no assistant message exists yet (submitted, waiting for first chunk),
   // append a placeholder so loading dots are visible immediately.
   if (isStreaming && lastMessage?.role !== 'assistant') {
-    items.push({ key: '__loading', content: '', role: 'ai', loading: true });
+    items.push({ key: '__loading', content: '', role: 'ai', loading: true, streaming: true });
   }
 
   return (
@@ -142,6 +143,9 @@ const MessageList = React.forwardRef(function MessageList(
           style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'Assistant'),
+          typing: config?.roles?.assistant?.typing
+            ? config.roles.assistant.typing
+            : { effect: 'fade-in' },
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             return (
