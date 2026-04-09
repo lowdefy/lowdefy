@@ -18,6 +18,10 @@
               "icon": {}
             }
           }
+        },
+        "variant": {
+          "type": "string",
+          "enum": ["filled", "borderless"]
         }
       }
     },
@@ -36,11 +40,31 @@
           "default": "interleaved"
         },
         "toolResultDisplay": {
-          "type": "string",
-          "enum": ["summary", "full", "none", "readable"],
-          "default": "summary"
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["summary", "full", "none", "readable"],
+              "default": "summary"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "enum": ["summary", "full", "none", "readable"]
+                }
+              },
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["summary", "full", "none", "readable"]
+              }
+            }
+          ]
         },
         "showSources": { "type": "boolean" },
+        "showStatusUpdates": { "type": "boolean", "default": true },
+        "showStepSeparators": { "type": "boolean", "default": false },
+        "showToolInputStreaming": { "type": "boolean", "default": true },
         "sourcesDisplay": {
           "type": "object",
           "properties": {
@@ -159,6 +183,19 @@
               "type": "string",
               "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
             }
+          }
+        },
+        "switches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "default": { "type": "boolean", "default": false }
+            },
+            "required": ["key", "label"]
           }
         }
       }

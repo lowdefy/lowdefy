@@ -16,8 +16,9 @@
 
 import {
   ToolLoopAgent,
-  createAgentUIStreamResponse,
-  consumeStream,
+  createAgentUIStream,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
   tool,
   jsonSchema,
   stepCountIs,
@@ -30,7 +31,10 @@ import { serializer } from '@lowdefy/helpers';
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
 // strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
 function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj, (key, value) => {
+    if (key.startsWith('~')) return undefined;
+    return value;
+  }));
 }
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
@@ -47,9 +51,9 @@ function cleanHookEvent(event) {
 }
 
 // Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
-// onFinish is intentionally excluded — it is handled at the stream level via
-// createAgentUIStreamResponse so that endpoints receive UIMessage[] (the persisted
-// format developers need) rather than the agent-level CoreMessage[].
+// onFinish is intentionally excluded — it is handled at the stream level inside the
+// createUIMessageStream execute function so that hooks are awaited and can return
+// dataParts to be written to the response stream.
 const hookMapping = {
   onStart: 'experimental_onStart',
   onStepStart: 'experimental_onStepStart',
@@ -197,29 +201,44 @@ async function handleAgentChat({ connection, properties, context }) {
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
   const hasMcpClients = mcpClients.length > 0;
 
-  const response = await createAgentUIStreamResponse({
-    agent: agentInstance,
-    uiMessages: messages,
-    sendSources: agent.properties.sendSources,
-    ...(hasOnFinishHooks || hasMcpClients
-      ? {
-          onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
-            if (hasOnFinishHooks) {
-              const payload = { messages: finishedMessages, finishReason, isAborted };
-              for (const endpointId of onFinishEndpointIds) {
-                context.callEndpoint(endpointId, { payload }).catch(() => {});
+  const stream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      // createAgentUIStream validates UIMessages, converts to ModelMessages,
+      // runs the agent, and returns a UIMessageStream — handling the full
+      // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+      const agentStream = await createAgentUIStream({
+        agent: agentInstance,
+        uiMessages: messages,
+      });
+
+      writer.merge(agentStream);
+
+      // After merge resolves the agent stream is complete.
+      // Call onFinish hooks — awaited so dataParts can be written to stream.
+      if (hasOnFinishHooks) {
+        for (const endpointId of onFinishEndpointIds) {
+          try {
+            const hookResponse = await context.callEndpoint(endpointId, {
+              payload: { messages, finishReason: 'stop', isAborted: false },
+            });
+            if (hookResponse?.dataParts) {
+              for (const part of hookResponse.dataParts) {
+                writer.write(part);
               }
             }
-            if (hasMcpClients) {
-              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
-            }
-          },
+          } catch (error) {
+            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+          }
         }
-      : {}),
-    consumeSseStream: async ({ stream }) => {
-      consumeStream({ stream }).catch(() => {});
+      }
+
+      if (hasMcpClients) {
+        await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+      }
     },
   });
+
+  const response = createUIMessageStreamResponse({ stream });
   return { response };
 }
 

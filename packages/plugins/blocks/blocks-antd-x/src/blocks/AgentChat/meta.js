@@ -34,6 +34,8 @@ export default {
     onStop: 'Trigger when the user stops generation.',
     onConversationMenuClick: 'Trigger when the user clicks a conversation menu item.',
     onSuggestionClick: 'Trigger when the user clicks a follow-up suggestion.',
+    onTitleGenerated: 'Trigger when the agent generates a conversation title.',
+    onSwitchChange: 'Trigger when the user toggles a sender switch.',
   },
   methods: {
     regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
