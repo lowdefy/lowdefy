@@ -404,12 +404,23 @@ function MessageBubble({
               );
               collapsible = true;
             } else if (isSubAgent) {
-              // Sub-agent results: show as collapsible markdown
-              description = summarizeToolOutput(toolOutput);
+              // Sub-agent results: short status in description, full response in styled content
+              description = 'Completed';
+              const subAgentText =
+                typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2);
               content = (
-                <Markdown components={markdownComponents} config={markdownConfig}>
-                  {typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2)}
-                </Markdown>
+                <div
+                  style={{
+                    fontSize: '0.85em',
+                    color: 'rgba(0, 0, 0, 0.65)',
+                    borderLeft: '2px solid #d9d9d9',
+                    paddingLeft: 12,
+                  }}
+                >
+                  <Markdown components={markdownComponents} config={markdownConfig}>
+                    {subAgentText}
+                  </Markdown>
+                </div>
               );
               collapsible = true;
             } else {
