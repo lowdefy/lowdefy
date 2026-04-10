@@ -49,12 +49,14 @@
     "@lowdefy/block-utils": "4.7.3",
     "@lowdefy/blocks-antd": "4.7.3",
     "@lowdefy/helpers": "4.7.3",
-    "antd": "6.3.1",
     "@aws-sdk/client-s3": "3.797.0",
     "@aws-sdk/s3-presigned-post": "3.797.0",
-    "@aws-sdk/s3-request-presigner": "3.797.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "@aws-sdk/s3-request-presigner": "3.797.0"
+  },
+  "peerDependencies": {
+    "antd": ">=6",
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.7.3",

@@ -45,9 +45,11 @@
     "@lowdefy/helpers": "4.7.3",
     "clsx": "2.1.1",
     "dompurify": "3.2.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "tailwind-merge": "2.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@babel/core": "7.23.3",
