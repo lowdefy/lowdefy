@@ -1194,3 +1194,35 @@ test('copy preserves non-Error cause values as-is', () => {
   const res = serializer.copy({ err });
   expect(res.err.cause).toBe('string cause');
 });
+
+test('serializer.serialize handles error with circular Axios-style response', () => {
+  class ClientRequest {
+    constructor() {
+      this.res = null;
+    }
+  }
+  class IncomingMessage {
+    constructor(req) {
+      this.req = req;
+    }
+  }
+  const req = new ClientRequest();
+  const res = new IncomingMessage(req);
+  req.res = res;
+
+  const axiosError = new Error('Request failed with status code 502');
+  axiosError.name = 'AxiosError';
+  axiosError.code = 'ERR_BAD_RESPONSE';
+  axiosError.response = { status: 502, statusText: 'Bad Gateway', request: req };
+
+  const cause = new Error('Http response 502', { cause: axiosError });
+
+  const result = serializer.serialize(cause);
+  expect(result['~e'].message).toBe('Http response 502');
+  expect(result['~e'].cause.message).toBe('Request failed with status code 502');
+  expect(result['~e'].cause.code).toBe('ERR_BAD_RESPONSE');
+  expect(result['~e'].cause.response.status).toBe(502);
+  expect(result['~e'].cause.response.request).toBe('[Object: ClientRequest]');
+  // The whole point: JSON.stringify doesn't crash
+  expect(() => JSON.stringify(result)).not.toThrow();
+});

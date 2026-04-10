@@ -1,0 +1,12 @@
+# OB: Non-object value for namespace var with properties
+lowdefy: local
+
+modules:
+  - id: dashboard
+    source: 'file:modules/dashboard'
+    vars:
+      components: disabled
+
+pages:
+  - id: home
+    type: Box

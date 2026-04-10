@@ -152,3 +152,122 @@ test('extractErrorProps caps cause chain depth at 3', () => {
   expect(props.cause.cause.cause.message).toBe('depth 1');
   expect(props.cause.cause.cause.cause).toBeUndefined();
 });
+
+test('extractErrorProps deep-cleans plain objects containing class instances with circular refs', () => {
+  class FakeClientRequest {
+    constructor() {
+      this.res = null; // set below to create cycle
+    }
+  }
+  class FakeIncomingMessage {
+    constructor(req) {
+      this.req = req;
+    }
+  }
+  const req = new FakeClientRequest();
+  const res = new FakeIncomingMessage(req);
+  req.res = res; // circular: req.res.req === req
+
+  const err = new Error('Http response 502: Bad Gateway');
+  err.response = {
+    status: 502,
+    statusText: 'Bad Gateway',
+    request: req,
+    headers: { 'content-type': 'text/html' },
+  };
+
+  const props = extractErrorProps(err);
+  expect(props.message).toBe('Http response 502: Bad Gateway');
+  expect(props.response.status).toBe(502);
+  expect(props.response.statusText).toBe('Bad Gateway');
+  expect(props.response.headers).toEqual({ 'content-type': 'text/html' });
+  expect(props.response.request).toBe('[Object: FakeClientRequest]');
+  expect(() => JSON.stringify(props)).not.toThrow();
+});
+
+test('extractErrorProps replaces circular refs within plain objects with marker', () => {
+  const a = { name: 'a' };
+  const b = { name: 'b', ref: a };
+  a.ref = b; // circular
+
+  const err = new Error('circular plain objects');
+  err.data = a;
+
+  const props = extractErrorProps(err);
+  expect(props.data.name).toBe('a');
+  expect(props.data.ref.name).toBe('b');
+  expect(props.data.ref.ref).toBe('[Circular]');
+  expect(() => JSON.stringify(props)).not.toThrow();
+});
+
+test('extractErrorProps truncates plain objects nested beyond MAX_OBJECT_DEPTH', () => {
+  // Build a chain 7 levels deep
+  let obj = { value: 'leaf' };
+  for (let i = 0; i < 7; i++) {
+    obj = { nested: obj };
+  }
+  const err = new Error('deep nesting');
+  err.data = obj;
+
+  const props = extractErrorProps(err);
+  // data is objectDepth 1, each .nested increments
+  // At depth > 5, cleanValue returns '[Truncated]'
+  let cursor = props.data;
+  let depth = 1; // data itself is depth 1
+  while (cursor && typeof cursor === 'object' && cursor.nested) {
+    cursor = cursor.nested;
+    depth++;
+  }
+  expect(cursor).toBe('[Truncated]');
+  expect(() => JSON.stringify(props)).not.toThrow();
+});
+
+test('extractErrorProps cleans arrays containing class instances', () => {
+  class FakeSocket {
+    constructor() {
+      this.connected = true;
+    }
+  }
+  const err = new Error('mixed array');
+  err.items = ['ok', 42, new FakeSocket(), { nested: true }, null];
+
+  const props = extractErrorProps(err);
+  expect(props.items[0]).toBe('ok');
+  expect(props.items[1]).toBe(42);
+  expect(props.items[2]).toBe('[Object: FakeSocket]');
+  expect(props.items[3]).toEqual({ nested: true });
+  expect(props.items[4]).toBeNull();
+  expect(() => JSON.stringify(props)).not.toThrow();
+});
+
+test('extractErrorProps cleans non-Error cause with nested class instances', () => {
+  class FakeAgent {
+    constructor() {
+      this.sockets = {};
+    }
+  }
+  const err = new Error('request failed');
+  err.cause = { response: { status: 500 }, agent: new FakeAgent() };
+
+  const props = extractErrorProps(err);
+  expect(props.cause.response).toEqual({ status: 500 });
+  expect(props.cause.agent).toBe('[Object: FakeAgent]');
+  expect(() => JSON.stringify(props)).not.toThrow();
+});
+
+test('extractErrorProps extracts errors nested inside plain object properties', () => {
+  const deep = new Error('deep cause');
+  deep.code = 'DEEP';
+  const inner = new Error('inner error', { cause: deep });
+  inner.code = 'INNER';
+  const err = new Error('outer');
+  err.context = { operation: 'save', inner: inner };
+
+  const props = extractErrorProps(err);
+  expect(props.context.operation).toBe('save');
+  expect(props.context.inner.message).toBe('inner error');
+  expect(props.context.inner.code).toBe('INNER');
+  expect(props.context.inner.cause.message).toBe('deep cause');
+  expect(props.context.inner.cause.code).toBe('DEEP');
+  expect(() => JSON.stringify(props)).not.toThrow();
+});

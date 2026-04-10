@@ -1,5 +1,4 @@
-# 67: Module with var defaults and _module.var object form
-# Tests that default var values are used when vars are not provided, and nested key access works.
+# 67: Module with var defaults — manifest defaults and properties merging
 lowdefy: local
 name: Var Defaults Test
 

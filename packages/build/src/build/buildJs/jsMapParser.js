@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 import crypto from 'crypto';
 
@@ -35,7 +36,10 @@ function JsMapParser({ input, jsMap, env }) {
     if (key !== '_js') return value;
 
     if (!type.isString(value[key])) {
-      throw new Error('_js operator expects the JavaScript definition as a string.');
+      throw new ConfigError(
+        `_js operator expects the JavaScript definition as a string. Received ${JSON.stringify(value[key])}.`,
+        { configKey: value['~k'] }
+      );
     }
     return makeHash({ jsMap, env, value: value[key] });
   };

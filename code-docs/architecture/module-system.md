@@ -73,10 +73,11 @@ if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
 }
 ```
 
-`resolveModuleVar` mirrors `resolveVar` but reads from `ctx.moduleVars`:
+`resolveModuleVar` takes a string argument and reads from `ctx.moduleVars`:
 
-- String form: `{ "_module.var": "key" }` — dot-notation lookup in `moduleVars`
-- Object form: `{ "_module.var": { key, default } }` — with fallback value
+- `{ "_module.var": "key" }` — dot-notation lookup in `moduleVars`, returns `null` if missing
+
+Defaults are applied before the walker runs. In `registerModules.js`, `applyVarDefaults(varDefs, consumerVars)` merges manifest defaults with consumer-provided vars at registration time. Vars with `properties` merge recursively at the property level. The effective vars (with defaults applied) are stored in `context.modules` and passed to the walker as `moduleVars`.
 
 Outside module context (`moduleVars` is `undefined`), `_module.var` passes through unchanged.
 

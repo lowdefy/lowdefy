@@ -18,13 +18,13 @@ import _math from './math.js';
 
 test('_math called with no method or params', () => {
   expect(() => _math({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
   );
 });
 
 test('_math invalid method or params', () => {
   expect(() => _math({ params: 'X', location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
-    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `"_math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
   );
 });
 
@@ -32,7 +32,7 @@ test('_math invalid method', () => {
   expect(() =>
     _math({ params: [1], methodName: 'X', location: 'locationId' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_math.X is not supported, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
+    `"_math.X is not supported, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, mod, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2."`
   );
 });
 
@@ -96,6 +96,10 @@ test('_math valid functions', () => {
   expect(_math({ methodName: 'log2', params: 2, location: 'locationId' })).toBe(1);
   expect(_math({ methodName: 'max', params: [2, 4], location: 'locationId' })).toBe(4);
   expect(_math({ methodName: 'min', params: [2, 1], location: 'locationId' })).toBe(1);
+  expect(_math({ methodName: 'mod', params: [10, 3], location: 'locationId' })).toBe(1);
+  expect(
+    _math({ methodName: 'mod', params: { dividend: 10, divisor: 3 }, location: 'locationId' })
+  ).toBe(1);
   expect(_math({ methodName: 'pow', params: [2, 3], location: 'locationId' })).toBe(8);
   expect(
     _math({ methodName: 'pow', params: { base: 2, exponent: 3 }, location: 'locationId' })

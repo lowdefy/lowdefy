@@ -23,7 +23,6 @@ _ref:
     types: |
       ```
       _module.var: (key: string): any
-      _module.var: (arguments: { key: string, default?: any }): any
       _module.pageId: (pageId: string): string
       _module.pageId: (arguments: { id: string, module: string }): string
       _module.connectionId: (connectionId: string): string
@@ -47,23 +46,17 @@ _ref:
         types: |
           ```
           (key: string): any
-          (arguments: {
-            key: string,
-            default?: any,
-          }): any
           ```
         description: |
-          The `_module.var` operator gets a value from the module entry's `vars` object — the values passed by the app developer in `lowdefy.yaml`.
+          The `_module.var` operator gets a value from the module entry's `vars` object — the values passed by the app developer in `lowdefy.yaml`, merged with defaults declared in `module.lowdefy.yaml`.
 
           Unlike `_var`, which requires threading variables through each `_ref`, `_module.var` works at any depth within module files. It accesses the same vars regardless of `_ref` nesting.
 
+          Defaults are declared in `module.lowdefy.yaml` and applied at registration time. If the consumer does not provide a value, the manifest default is used. Vars with `properties` are merged at the property level — only overridden keys change.
+
         arguments: |
           ###### string
-          The key in the module entry's `vars` object. Dot notation is supported.
-
-          ###### object
-            - `key: string`: The key in the module entry's `vars` object. Dot notation is supported.
-            - `default: any`: A value to return if the key is not found. By default, `null` is returned.
+          The key in the module entry's `vars` object. Dot notation is supported for nested access (e.g., `theme.colors.primary`).
 
         examples: |
           ###### Simple string access:
@@ -73,16 +66,12 @@ _ref:
           ```
           If the app provides `vars: { collection: "team_users" }`, returns `"team_users"`.
 
-          ###### Nested path with default:
+          ###### Nested path access:
           ```yaml
-          columnDefs:
-            _module.var:
-              key: components.table_columns
-              default:
-                - field: name
-                - field: email
+          primary_color:
+            _module.var: theme.colors.primary
           ```
-          If `components.table_columns` is not provided, returns the default array.
+          Accesses nested values using dot notation. If the module manifest declares defaults via `properties`, unset values resolve to their defaults.
 
       - name: pageId
         types: |

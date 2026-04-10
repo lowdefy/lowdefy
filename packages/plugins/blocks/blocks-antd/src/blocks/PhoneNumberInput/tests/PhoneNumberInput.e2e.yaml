@@ -226,3 +226,54 @@ blocks:
               - 'Input: '
               - _state: phone_interaction.input
           else: ''
+
+  # ============================================
+  # FORMATTING TESTS
+  # ============================================
+
+  - id: phone_format_test
+    type: PhoneNumberInput
+    properties:
+      title: Format Test
+      defaultRegion: ZA
+      allowedRegions:
+        - ZA
+
+  - id: format_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: phone_format_test.phone_number
+              - null
+          then:
+            _string.concat:
+              - 'Formatted: '
+              - _state: phone_format_test.phone_number
+          else: ''
+
+  - id: phone_empty_test
+    type: PhoneNumberInput
+    properties:
+      title: Empty Init Test
+      defaultRegion: ZA
+      allowedRegions:
+        - ZA
+
+  - id: empty_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: phone_empty_test
+              - null
+          then:
+            _string.concat:
+              - 'PhoneNumber: ['
+              - _state: phone_empty_test.phone_number
+              - ']'
+          else: 'null'

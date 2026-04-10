@@ -420,27 +420,27 @@
       "key": "root.pages[0:app-home:Box].blocks[3:link-section:Box].properties.link",
       "~k_parent": "u",
       "~r": "pages.0.blocks.3.properties.link",
-      "~l": 30
+      "~l": 35
     },
     "w": {
       "key": "root.pages[1:core/core-home:Box]",
       "~k_parent": "a",
-      "~l": 17
+      "~l": 22
     },
     "x": {
       "key": "root.pages[1:core/core-home:Box].blocks",
       "~k_parent": "w",
-      "~l": 19
+      "~l": 24
     },
     "y": {
       "key": "root.pages[1:core/core-home:Box].blocks[0:placeholder:Paragraph]",
       "~k_parent": "x",
-      "~l": 20
+      "~l": 25
     },
     "z": {
       "key": "root.pages[1:core/core-home:Box].blocks[0:placeholder:Paragraph].properties",
       "~k_parent": "y",
-      "~l": 22
+      "~l": 27
     },
     "1a": {
       "key": "root.pages[3:404:Result].slots",
@@ -5902,17 +5902,17 @@
     },
     "5": {
       "parent": "pages.0.blocks.0.properties.stamp",
-      "lineNumber": 27,
+      "lineNumber": 32,
       "path": "<CONFIG_DIR>/modules/core/defaults/stamp.yaml"
     },
     "6": {
       "parent": "pages.0.blocks.1.properties.summary.audit",
-      "lineNumber": 27,
+      "lineNumber": 32,
       "path": "<CONFIG_DIR>/modules/core/defaults/stamp.yaml"
     },
     "7": {
       "parent": "pages.0.blocks.2.properties.just_audit.audit",
-      "lineNumber": 27,
+      "lineNumber": 32,
       "path": "<CONFIG_DIR>/modules/core/defaults/stamp.yaml"
     },
     "pages.0.blocks.0.properties.stamp": {

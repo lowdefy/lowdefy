@@ -5,9 +5,18 @@ vars:
   change_stamp:
     type: object
     description: Audit metadata template
+    default:
+      timestamp:
+        _user: updated_at
+      user:
+        name:
+          _user: profile.name
+        id:
+          _user: id
   event_types:
     type: object
     description: Additional event type display metadata
+    default: {}
 
 exports:
   components:
@@ -23,9 +32,7 @@ components:
     component:
       _build.object.assign:
         - _ref: enums/event_types.yaml
-        - _module.var:
-            key: event_types
-            default: {}
+        - _module.var: event_types
   - id: regions
     component:
       - name: North

@@ -59,7 +59,7 @@
     "5": {
       "key": "root",
       "~k_parent": "4",
-      "~l": 3
+      "~l": 2
     },
     "6": {
       "key": "root.pages",
@@ -293,25 +293,25 @@
       "key": "root.pages[0:settings/preferences:Box].blocks[1:page-size-display:Paragraph]",
       "~k_parent": "8",
       "~r": "pages.0",
-      "~l": 11
+      "~l": 9
     },
     "c": {
       "key": "root.pages[0:settings/preferences:Box].blocks[1:page-size-display:Paragraph].properties",
       "~k_parent": "b",
       "~r": "pages.0",
-      "~l": 13
+      "~l": 11
     },
     "d": {
       "key": "root.pages[0:settings/preferences:Box].blocks[2:missing-var:Paragraph]",
       "~k_parent": "8",
       "~r": "pages.0",
-      "~l": 18
+      "~l": 14
     },
     "e": {
       "key": "root.pages[0:settings/preferences:Box].blocks[2:missing-var:Paragraph].properties",
       "~k_parent": "d",
       "~r": "pages.0",
-      "~l": 20
+      "~l": 16
     },
     "g": {
       "key": "root.pages",
@@ -975,7 +975,7 @@
               "id": "block:settings/preferences:page-size-display:0",
               "type": "Paragraph",
               "properties": {
-                "content": 10,
+                "content": 25,
                 "~k": "c"
               },
               "blockId": "page-size-display",
@@ -985,7 +985,7 @@
               "id": "block:settings/preferences:missing-var:0",
               "type": "Paragraph",
               "properties": {
-                "content": "fallback-value",
+                "content": null,
                 "~k": "e"
               },
               "blockId": "missing-var",
@@ -5534,7 +5534,7 @@
     },
     "pages.0": {
       "parent": "2",
-      "lineNumber": 14,
+      "lineNumber": 18,
       "path": "<CONFIG_DIR>/modules/settings/pages/settings.yaml"
     }
   },

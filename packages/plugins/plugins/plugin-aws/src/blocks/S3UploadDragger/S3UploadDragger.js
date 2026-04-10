@@ -61,6 +61,7 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
         beforeUpload={loadFileList}
         className={classNames.element}
         style={styles.element}
+        height={properties.height}
         customRequest={s3UploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}

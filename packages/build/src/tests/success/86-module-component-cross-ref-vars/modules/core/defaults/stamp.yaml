@@ -1,7 +1,1 @@
-_module.var:
-  key: stamp
-  default:
-    timestamp:
-      _user: updated_at
-    user:
-      _user: id
+_module.var: stamp

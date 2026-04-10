@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "expectThrow": true,
+      "errorContains": ["undeclared property \"charts\"", "dashboard"]
+    }
+  ]
+}

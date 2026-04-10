@@ -86,49 +86,13 @@ describe('_module.var resolution', () => {
     expect(result).toBeNull();
   });
 
-  test('resolves object form with key', async () => {
+  test('resolves pre-merged default from moduleVars', async () => {
     const ctx = createWalkContext({
-      moduleVars: { theme: 'dark' },
+      moduleVars: { page_size: 25 },
     });
-    const node = { '_module.var': { key: 'theme' } };
+    const node = { '_module.var': 'page_size' };
     const result = await resolve(node, ctx);
-    expect(result).toBe('dark');
-  });
-
-  test('resolves object form with default when key missing', async () => {
-    const ctx = createWalkContext({
-      moduleVars: {},
-    });
-    const node = { '_module.var': { key: 'components.table_columns', default: [] } };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual([]);
-  });
-
-  test('uses value over default when key exists', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { title: 'My Page' },
-    });
-    const node = { '_module.var': { key: 'title', default: 'Default Title' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBe('My Page');
-  });
-
-  test('uses value even when null (not undefined)', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { title: null },
-    });
-    const node = { '_module.var': { key: 'title', default: 'Default Title' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBeNull();
-  });
-
-  test('returns null when default is not provided and key missing', async () => {
-    const ctx = createWalkContext({
-      moduleVars: {},
-    });
-    const node = { '_module.var': { key: 'missing' } };
-    const result = await resolve(node, ctx);
-    expect(result).toBeNull();
+    expect(result).toBe(25);
   });
 
   test('passes through unchanged when moduleVars is null', async () => {
@@ -153,17 +117,17 @@ describe('_module.var resolution', () => {
     });
     const node = { '_module.var': 123 };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      '_module.var operator takes a string or object with "key" field as arguments.'
+      '_module.var operator takes a string argument.'
     );
   });
 
-  test('throws on object without key field', async () => {
+  test('throws on object form (no longer supported)', async () => {
     const ctx = createWalkContext({
-      moduleVars: { roles: ['admin'] },
+      moduleVars: { theme: 'dark' },
     });
-    const node = { '_module.var': { value: 'something' } };
+    const node = { '_module.var': { key: 'theme' } };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      '_module.var operator takes a string or object with "key" field as arguments.'
+      '_module.var operator takes a string argument.'
     );
   });
 
@@ -693,6 +657,73 @@ describe('_module.*Id propagation through WalkContext', () => {
   });
 });
 
+describe('moduleRoot propagation through WalkContext', () => {
+  test('moduleRoot propagates through child()', () => {
+    const ctx = new WalkContext({
+      buildContext: createBuildContext(),
+      refId: 'test:mod:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/dash/module.lowdefy.yaml',
+      moduleRoot: '/modules/dash',
+      packageRoot: '/modules/dash',
+      refChain: new Set(),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+    const child = ctx.child('pages');
+    expect(child.moduleRoot).toBe('/modules/dash');
+  });
+
+  test('moduleRoot propagates through forRef() when not overridden', () => {
+    const ctx = new WalkContext({
+      buildContext: createBuildContext(),
+      refId: 'test:mod:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/dash/module.lowdefy.yaml',
+      moduleRoot: '/modules/dash',
+      packageRoot: '/modules/dash',
+      refChain: new Set(),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+    const refCtx = ctx.forRef({ refId: 'ref:test:1', vars: {}, filePath: 'other.yaml' });
+    expect(refCtx.moduleRoot).toBe('/modules/dash');
+  });
+
+  test('moduleRoot can be overridden in forRef()', () => {
+    const ctx = new WalkContext({
+      buildContext: createBuildContext(),
+      refId: 'test:mod:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/dash/module.lowdefy.yaml',
+      moduleRoot: '/modules/dash',
+      packageRoot: '/modules/dash',
+      refChain: new Set(),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+    const refCtx = ctx.forRef({
+      refId: 'ref:test:1',
+      vars: {},
+      filePath: '/modules/other/page.yaml',
+      moduleRoot: '/modules/other',
+    });
+    expect(refCtx.moduleRoot).toBe('/modules/other');
+  });
+});
+
 describe('module path resolution stores absolute path in refMap', () => {
   test('refMap stores absolute path for _ref inside a module with packageRoot', async () => {
     const buildContext = createBuildContext();
@@ -713,6 +744,7 @@ describe('module path resolution stores absolute path in refMap', () => {
       vars: {},
       path: '',
       currentFile: '/modules/dashboard/module.lowdefy.yaml',
+      moduleRoot,
       packageRoot: moduleRoot,
       refChain: new Set(['/modules/dashboard/module.lowdefy.yaml']),
       operators,
@@ -727,6 +759,141 @@ describe('module path resolution stores absolute path in refMap', () => {
     // Find the refMap entry for the resolved _ref
     const refEntry = Object.values(buildContext.refMap).find(
       (entry) => entry.path === '/modules/dashboard/pages/overview.yaml'
+    );
+    expect(refEntry).toBeDefined();
+  });
+
+  test('nested file _ref resolves from moduleRoot, not from the file directory', async () => {
+    const buildContext = createBuildContext();
+    buildContext.modules = {};
+
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === '/modules/dashboard/shared/stat-card.yaml') {
+        return { id: 'stat', type: 'Box' };
+      }
+      return null;
+    });
+
+    // currentFile is in a subdirectory of moduleRoot — this is the scenario
+    // where the old path.dirname(currentFile) behavior would produce a wrong path.
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'test:overview.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/dashboard/pages/overview.yaml',
+      moduleRoot: '/modules/dashboard',
+      packageRoot: '/modules/dashboard',
+      refChain: new Set(['/modules/dashboard/pages/overview.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: 'shared/stat-card.yaml' };
+    await resolve(node, ctx);
+
+    // Should resolve from moduleRoot: /modules/dashboard/shared/stat-card.yaml
+    // NOT from currentFile dir: /modules/dashboard/pages/shared/stat-card.yaml
+    const refEntry = Object.values(buildContext.refMap).find(
+      (entry) => entry.path === '/modules/dashboard/shared/stat-card.yaml'
+    );
+    expect(refEntry).toBeDefined();
+  });
+
+  test('deeply nested file _ref resolves from moduleRoot', async () => {
+    const buildContext = createBuildContext();
+    buildContext.modules = {};
+
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === '/modules/app/components/button.yaml') {
+        return { id: 'btn', type: 'Button' };
+      }
+      return null;
+    });
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'test:form.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/app/pages/settings/forms/form.yaml',
+      moduleRoot: '/modules/app',
+      packageRoot: '/modules/app',
+      refChain: new Set(['/modules/app/pages/settings/forms/form.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: 'components/button.yaml' };
+    await resolve(node, ctx);
+
+    const refEntry = Object.values(buildContext.refMap).find(
+      (entry) => entry.path === '/modules/app/components/button.yaml'
+    );
+    expect(refEntry).toBeDefined();
+  });
+
+  test('module _ref path escaping throws with moduleRoot resolution', async () => {
+    const buildContext = createBuildContext();
+    buildContext.modules = {};
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'test:page.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: '/modules/app/pages/page.yaml',
+      moduleRoot: '/modules/app',
+      packageRoot: '/modules/app',
+      refChain: new Set(['/modules/app/pages/page.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: '../escape.yaml' };
+    await expect(resolve(node, ctx)).rejects.toThrow('escapes the package root');
+  });
+
+  test('_ref without moduleRoot does not apply module path resolution', async () => {
+    const buildContext = createBuildContext();
+
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === 'components/header.yaml') {
+        return { id: 'header', type: 'Box' };
+      }
+      return null;
+    });
+
+    // Standard app context: no moduleRoot, no packageRoot
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'test:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: 'components/header.yaml' };
+    await resolve(node, ctx);
+
+    // Path should be passed through as-is (resolved by readConfigFile from config root)
+    const refEntry = Object.values(buildContext.refMap).find(
+      (entry) => entry.path === 'components/header.yaml'
     );
     expect(refEntry).toBeDefined();
   });

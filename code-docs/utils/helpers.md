@@ -343,7 +343,7 @@ await wait(1000); // Wait 1 second
 
 ## extractErrorProps
 
-Extracts all properties from an error object for serialization. Captures non-enumerable properties (`message`, `name`, `stack`, `cause`) plus all enumerable properties.
+Extracts all properties from an error object for serialization. Captures non-enumerable properties (`message`, `name`, `stack`, `cause`) plus all enumerable properties. Returns a clean, JSON-serialisable object — no circular references, no class instances.
 
 ```javascript
 import { extractErrorProps } from '@lowdefy/helpers';
@@ -354,11 +354,24 @@ const props = extractErrorProps(someError);
 
 **Cause chain handling:** Recursively serializes `error.cause` when the cause is an `Error` instance. Guarded by:
 
-- **MAX_CAUSE_DEPTH = 3** — stops recursion after 3 levels
-- **Circular reference detection** — uses a `seen` Set; skips already-visited errors
-- **Non-Error causes** — preserved as-is (strings, plain objects, etc.)
+- **MAX_CAUSE_DEPTH = 3** — stops recursion after 3 levels of Error causes
+- **Circular reference detection** — uses a `seen` Set shared across all recursive calls
+- **Non-Error causes** — deep-cleaned via `cleanValue` (see below)
 
 Error objects found in other enumerable properties (not just `cause`) are also recursively extracted with the same circular reference protection.
+
+**Deep cleaning via `cleanValue`:** Plain objects, arrays, and non-Error causes on error properties are recursively cleaned before inclusion. This prevents `JSON.stringify` crashes when error properties contain circular structures (e.g., Axios error responses with Node.js `ClientRequest`/`IncomingMessage` cycles). The cleaning rules:
+
+- **Primitives and null** — returned as-is
+- **Already seen objects** — replaced with `'[Circular]'`
+- **Arrays** — recursively cleaned element-by-element
+- **Dates** — returned as-is
+- **Errors** — recursively extracted via `_extractErrorProps`
+- **Plain objects** — recursively cloned, cleaning each property
+- **Class instances** (Socket, ClientRequest, etc.) — replaced with `'[Object: ClassName]'`
+- **Depth > MAX_OBJECT_DEPTH (5)** — replaced with `'[Truncated]'`
+
+The `seen` Set is shared between `cleanValue` and `_extractErrorProps`, so circular references between error cause chains and nested plain objects are tracked in one pass. `objectDepth` and `causeDepth` are independent counters — object nesting always gets 5 levels regardless of cause chain position.
 
 Used by:
 

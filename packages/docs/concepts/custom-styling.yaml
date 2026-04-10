@@ -92,7 +92,7 @@ _ref:
                 margin: "0 auto"
             ```
 
-            To target specific parts of a block, use `/`-prefixed **CSS slot keys**. Each block declares which slots it supports in its `meta.cssKeys`. Common keys include `/block` (layout wrapper), `/element` (main component), `/header`, `/body`, `/footer`, etc.
+            To target specific parts of a block, use `.`-prefixed **CSS slot keys**. Each block declares which slots it supports in its `meta.cssKeys`. Common keys include `.block` (layout wrapper), `.element` (main component), `.header`, `.body`, `.footer`, etc.
 
             ```yaml
             - id: my_card
@@ -107,7 +107,7 @@ _ref:
                   padding: 32
             ```
 
-            You can mix flat CSS (which targets `/block`) with explicit slot keys:
+            You can mix flat CSS (which targets `.block`) with explicit slot keys:
 
             ```yaml
             - id: my_card
