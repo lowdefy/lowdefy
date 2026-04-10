@@ -682,6 +682,7 @@ async function resolve(node, ctx) {
   // 6. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
     if (!ctx.moduleVars) {
+      if (ctx.moduleRoot) return node;
       throw new ConfigError('_module.var cannot be used at the app level.');
     }
     return resolve(resolveModuleVar(node, ctx), ctx);

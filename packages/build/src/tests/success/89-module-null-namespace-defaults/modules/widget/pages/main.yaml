@@ -1,0 +1,22 @@
+id: main
+type: Box
+blocks:
+  - id: fields
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.extra_fields
+  - id: header
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.show_header
+  - id: custom
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.custom_field
+  - id: detail_content
+    type: Box
+    blocks:
+      _module.var: components.detail

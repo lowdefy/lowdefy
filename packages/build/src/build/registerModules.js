@@ -35,11 +35,12 @@ function applyVarDefaults(varDefs, consumerVars) {
 
   for (const [name, def] of Object.entries(varDefs)) {
     if (def.properties) {
-      if (type.isObject(result[name]) || type.isUndefined(result[name])) {
+      if (type.isObject(result[name]) || type.isNone(result[name])) {
         const consumerObj = type.isObject(result[name]) ? result[name] : {};
         result[name] = applyVarDefaults(def.properties, consumerObj);
       }
-      // Non-object consumer values pass through — validateVars catches the type mismatch.
+      // Non-none, non-object values (false, "disabled", 42, etc.)
+      // pass through — validateVars catches the type mismatch.
     } else if (type.isNone(result[name]) && !type.isUndefined(def.default)) {
       result[name] = def.default;
     }
@@ -127,7 +128,6 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     refId: refDef.id,
     sourceRefId: null,
     vars: {},
-    moduleVars: entry.vars ?? {},
     moduleRoot,
     packageRoot,
     path: '',
