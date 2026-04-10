@@ -15,7 +15,7 @@
 */
 
 export default {
-  blocks: ['AgentChat'],
-  icons: { AgentChat: [] },
-  blockMetas: { AgentChat: { category: 'display' } },
+  blocks: ['AgentChat', 'AgentConversations'],
+  icons: { AgentChat: [], AgentConversations: [] },
+  blockMetas: { AgentChat: { category: 'display' }, AgentConversations: { category: 'agent' } },
 };

@@ -15,3 +15,4 @@
 */
 
 export { default as AgentChat } from './blocks/AgentChat/AgentChat.js';
+export { default as AgentConversations } from './blocks/AgentConversations/AgentConversations.js';
