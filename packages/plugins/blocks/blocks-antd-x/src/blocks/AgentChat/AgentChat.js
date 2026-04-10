@@ -25,7 +25,6 @@ import { type } from '@lowdefy/helpers';
 
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
-import ConversationSidebar from './ConversationSidebar.js';
 import DrawerWrapper from './DrawerWrapper.js';
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
@@ -38,7 +37,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     welcome,
     messageDisplay,
     sender,
-    conversations: conversationsConfig,
+    conversationId,
     messages: externalMessages,
     display,
     drawer: drawerConfig,
@@ -59,12 +58,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
-  // Sidebar driven entirely by external config
-  const showSidebar = conversationsConfig?.enabled;
-  const sidebarItems = conversationsConfig?.items ?? [];
-  const activeKey = conversationsConfig?.activeKey;
-
-  const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
+  const transport = useMemo(
+    () => new LowdefyChatTransport({ pageId, agentId, conversationId }),
+    [pageId, agentId, conversationId]
+  );
 
   const bubbleListRef = useRef(null);
 
@@ -96,15 +93,15 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     },
   });
 
-  // Clear messages when activeKey changes so the new conversation starts clean.
+  // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
-  const prevActiveKeyRef = useRef(activeKey);
+  const prevConversationIdRef = useRef(conversationId);
   useEffect(() => {
-    if (activeKey !== prevActiveKeyRef.current) {
-      prevActiveKeyRef.current = activeKey;
+    if (conversationId !== prevConversationIdRef.current) {
+      prevConversationIdRef.current = conversationId;
       setMessages([]);
     }
-  }, [activeKey, setMessages]);
+  }, [conversationId, setMessages]);
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
@@ -174,27 +171,6 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
-
-  function handleConversationChange(key, previousKey) {
-    methods.triggerEvent({
-      name: 'onConversationChange',
-      event: { key, previousKey },
-    });
-  }
-
-  function handleNewConversation() {
-    methods.triggerEvent({
-      name: 'onNewConversation',
-      event: {},
-    });
-  }
-
-  function handleConversationMenuClick({ action, conversationKey, conversation }) {
-    methods.triggerEvent({
-      name: 'onConversationMenuClick',
-      event: { action, conversationKey, conversation },
-    });
-  }
 
   function fileToContentPart(file) {
     return new Promise((resolve) => {
@@ -389,159 +365,138 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       id={blockId}
       style={{
         display: 'flex',
+        flexDirection: 'column',
         height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+        maxWidth: properties.maxWidth ?? 800,
+        margin: '0 auto',
+        width: '100%',
       }}
     >
-      {showSidebar && (
-        <ConversationSidebar
-          items={sidebarItems}
-          activeKey={activeKey}
-          onConversationChange={handleConversationChange}
-          onNewConversation={handleNewConversation}
-          onMenuClick={handleConversationMenuClick}
-          menu={conversationsConfig?.menu}
-          creation={conversationsConfig?.creation}
-          width={conversationsConfig?.width}
-          groupable={conversationsConfig?.groupable}
-        />
-      )}
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          maxWidth: properties.maxWidth ?? 800,
-          margin: '0 auto',
-          width: '100%',
-        }}
-      >
-        <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-          {isEmpty ? (
-            <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
-          ) : (
-            <MessageList
-              ref={bubbleListRef}
-              messages={messages}
-              isStreaming={isBusy}
-              config={messageDisplay}
-              addToolApprovalResponse={addToolApprovalResponse}
-              onFeedback={handleFeedback}
-              onRegenerate={handleRegenerate}
-              onDelete={handleDelete}
-              onEditMessage={handleEditMessage}
-            />
-          )}
-        </div>
-        {!isEmpty && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
-          <div style={{ padding: '0 16px 8px' }}>
-            <Prompts
-              items={activeSuggestions.map((s, i) => ({
-                key: s.key ?? `suggestion-${i}`,
-                label: s.label,
-                description: s.description,
-              }))}
-              onItemClick={({ data }) => handleSuggestionClick(data)}
-              wrap
-            />
-          </div>
+      <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
+        {isEmpty ? (
+          <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
+        ) : (
+          <MessageList
+            ref={bubbleListRef}
+            messages={messages}
+            isStreaming={isBusy}
+            config={messageDisplay}
+            addToolApprovalResponse={addToolApprovalResponse}
+            onFeedback={handleFeedback}
+            onRegenerate={handleRegenerate}
+            onDelete={handleDelete}
+            onEditMessage={handleEditMessage}
+          />
         )}
-        <div style={{ padding: '8px 16px 24px' }}>
-          {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
-            <FileCard.List
-              style={{ marginBottom: 4 }}
-              items={attachedFiles.map((file, i) => {
-                const cardType = getFileCardType(file.type);
-                return {
-                  key: `${i}`,
-                  name: file.name,
-                  byte: file.size,
-                  type: cardType,
-                  icon: getFileCardIcon(file.type, file.name),
-                  src: cardType === 'image' ? URL.createObjectURL(file) : undefined,
-                };
-              })}
-              removable
-              onRemove={(item) => {
-                setAttachedFiles((prev) => {
-                  const idx = prev.findIndex((f) => f.name === item.name && f.size === item.byte);
-                  return idx !== -1 ? prev.filter((_, j) => j !== idx) : prev;
-                });
-              }}
-              overflow="wrap"
-              size="small"
-            />
-          )}
-          {attachmentsConfig?.enabled && (
-            <input
-              ref={fileInputRef}
-              type="file"
-              style={{ display: 'none' }}
-              accept={attachmentsConfig.accept}
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files);
-                const valid = files.filter(
-                  (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-                );
-                setAttachedFiles((prev) => [...prev, ...valid]);
-                e.target.value = '';
-              }}
-            />
-          )}
-          <Sender
-            ref={senderRef}
-            placeholder={sender?.placeholder ?? 'Type a message...'}
-            submitType={sender?.submitType ?? 'enter'}
-            allowSpeech={sender?.allowSpeech ?? false}
-            onSubmit={handleSend}
-            onCancel={handleStop}
-            loading={isBusy}
-            prefix={
-              attachmentsConfig?.enabled ? (
-                <Button
-                  type="text"
-                  icon={<PaperClipOutlined />}
-                  onClick={() => fileInputRef.current?.click()}
-                />
-              ) : undefined
-            }
-            header={
-              sender?.header ? (
-                <Sender.Header
-                  title={sender.header.title}
-                  closable={sender.header.closable ?? true}
-                  open={headerOpen}
-                  onOpenChange={setHeaderOpen}
-                >
-                  {sender.header.content}
-                </Sender.Header>
-              ) : undefined
-            }
-            footer={
-              switchConfigs.length > 0
-                ? switchConfigs.map((sw) => (
-                    <Sender.Switch
-                      key={sw.key}
-                      value={switchState[sw.key] ?? false}
-                      onChange={(checked) => handleSwitchChange(sw.key, checked)}
-                      icon={
-                        sw.icon ? (
-                          <Icon
-                            blockId={`${blockId}_switch_${sw.key}_icon`}
-                            events={{}}
-                            properties={sw.icon}
-                          />
-                        ) : undefined
-                      }
-                    >
-                      {sw.label}
-                    </Sender.Switch>
-                  ))
-                : undefined
-            }
+      </div>
+      {!isEmpty && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
+        <div style={{ padding: '0 16px 8px' }}>
+          <Prompts
+            items={activeSuggestions.map((s, i) => ({
+              key: s.key ?? `suggestion-${i}`,
+              label: s.label,
+              description: s.description,
+            }))}
+            onItemClick={({ data }) => handleSuggestionClick(data)}
+            wrap
           />
         </div>
+      )}
+      <div style={{ padding: '8px 16px 24px' }}>
+        {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
+          <FileCard.List
+            style={{ marginBottom: 4 }}
+            items={attachedFiles.map((file, i) => {
+              const cardType = getFileCardType(file.type);
+              return {
+                key: `${i}`,
+                name: file.name,
+                byte: file.size,
+                type: cardType,
+                icon: getFileCardIcon(file.type, file.name),
+                src: cardType === 'image' ? URL.createObjectURL(file) : undefined,
+              };
+            })}
+            removable
+            onRemove={(item) => {
+              setAttachedFiles((prev) => {
+                const idx = prev.findIndex((f) => f.name === item.name && f.size === item.byte);
+                return idx !== -1 ? prev.filter((_, j) => j !== idx) : prev;
+              });
+            }}
+            overflow="wrap"
+            size="small"
+          />
+        )}
+        {attachmentsConfig?.enabled && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            style={{ display: 'none' }}
+            accept={attachmentsConfig.accept}
+            multiple
+            onChange={(e) => {
+              const files = Array.from(e.target.files);
+              const valid = files.filter(
+                (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+              );
+              setAttachedFiles((prev) => [...prev, ...valid]);
+              e.target.value = '';
+            }}
+          />
+        )}
+        <Sender
+          ref={senderRef}
+          placeholder={sender?.placeholder ?? 'Type a message...'}
+          submitType={sender?.submitType ?? 'enter'}
+          allowSpeech={sender?.allowSpeech ?? false}
+          onSubmit={handleSend}
+          onCancel={handleStop}
+          loading={isBusy}
+          prefix={
+            attachmentsConfig?.enabled ? (
+              <Button
+                type="text"
+                icon={<PaperClipOutlined />}
+                onClick={() => fileInputRef.current?.click()}
+              />
+            ) : undefined
+          }
+          header={
+            sender?.header ? (
+              <Sender.Header
+                title={sender.header.title}
+                closable={sender.header.closable ?? true}
+                open={headerOpen}
+                onOpenChange={setHeaderOpen}
+              >
+                {sender.header.content}
+              </Sender.Header>
+            ) : undefined
+          }
+          footer={
+            switchConfigs.length > 0
+              ? switchConfigs.map((sw) => (
+                  <Sender.Switch
+                    key={sw.key}
+                    value={switchState[sw.key] ?? false}
+                    onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                    icon={
+                      sw.icon ? (
+                        <Icon
+                          blockId={`${blockId}_switch_${sw.key}_icon`}
+                          events={{}}
+                          properties={sw.icon}
+                        />
+                      ) : undefined
+                    }
+                  >
+                    {sw.label}
+                  </Sender.Switch>
+                ))
+              : undefined
+          }
+        />
       </div>
     </div>
   );
