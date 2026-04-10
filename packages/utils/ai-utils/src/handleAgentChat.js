@@ -142,8 +142,18 @@ async function handleAgentChat({ connection, properties, context, format }) {
   });
 
   if (format === 'text') {
+    const hasMcpClients = mcpClients.length > 0;
     const result = await agentInstance.stream({
-      messages: convertToModelMessages(messages),
+      messages: await convertToModelMessages(messages, { tools }),
+      ...(hasMcpClients
+        ? {
+            onFinish: async () => {
+              await Promise.all(
+                mcpClients.map(({ client }) => client.close().catch(() => {}))
+              );
+            },
+          }
+        : {}),
     });
     return { response: result.toTextStreamResponse() };
   }

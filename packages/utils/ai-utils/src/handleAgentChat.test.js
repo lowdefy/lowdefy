@@ -40,6 +40,8 @@ class MockToolLoopAgent {
   }
 }
 
+const mockConvertToModelMessages = jest.fn((messages) => messages);
+
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   createAgentUIStream: mockCreateAgentUIStream,
@@ -49,6 +51,7 @@ jest.unstable_mockModule('ai', () => ({
   jsonSchema: mockJsonSchema,
   stepCountIs: mockStepCountIs,
   hasToolCall: mockHasToolCall,
+  convertToModelMessages: mockConvertToModelMessages,
 }));
 
 const mockCreateMCPClient = jest.fn();
