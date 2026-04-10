@@ -18,6 +18,7 @@ import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createAuthorize from './context/createAuthorize.js';
 import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
@@ -31,6 +32,7 @@ export {
   callEndpoint,
   callRequest,
   createApiContext,
+  createAuthorize,
   createSessionCallback,
   getHomeAndMenus,
   getNextAuthConfig,

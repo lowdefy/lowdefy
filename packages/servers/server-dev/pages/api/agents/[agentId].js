@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callAgent, verifyJwt } from '@lowdefy/api';
+import { callAgent, createAuthorize, verifyJwt } from '@lowdefy/api';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
@@ -55,7 +55,9 @@ async function handler({ context, req, res }) {
         }
       }
 
+      context.session = { user };
       context.user = user;
+      context.authorize = createAuthorize(context);
     } catch {
       res.status(404).json({ error: 'Agent not found' });
       return;

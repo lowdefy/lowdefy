@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callEndpoint, verifyJwt } from '@lowdefy/api';
+import { callEndpoint, createAuthorize, verifyJwt } from '@lowdefy/api';
 
 import apiWrapper from '../../lib/server/apiWrapper.js';
 
@@ -50,6 +50,10 @@ async function handler({ context, req, res }) {
     }
   }
   context.user = user;
+  if (user) {
+    context.session = { user };
+    context.authorize = createAuthorize(context);
+  }
 
   const { method, params, id } = req.body;
 
