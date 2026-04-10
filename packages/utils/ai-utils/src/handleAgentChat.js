@@ -141,7 +141,7 @@ async function handleAgentChat({ connection, properties, context, format }) {
       : {}),
   });
 
-  if (format === 'text') {
+  if (format === 'text' || format === 'stream') {
     const hasMcpClients = mcpClients.length > 0;
     const result = await agentInstance.stream({
       messages: await convertToModelMessages(messages, { tools }),
@@ -155,6 +155,9 @@ async function handleAgentChat({ connection, properties, context, format }) {
           }
         : {}),
     });
+    if (format === 'stream') {
+      return { response: result.fullStream };
+    }
     return { response: result.toTextStreamResponse() };
   }
 

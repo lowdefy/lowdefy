@@ -1712,6 +1712,29 @@ export default {
         },
       },
     },
+    channels: {
+      type: 'object',
+      errorMessage: {
+        type: 'App "channels" should be an object.',
+      },
+      additionalProperties: {
+        type: 'object',
+        properties: {
+          '~r': {},
+          '~l': {},
+          agentId: {
+            type: 'string',
+            errorMessage: {
+              type: 'Channel "agentId" should be a string.',
+            },
+          },
+        },
+        required: ['agentId'],
+        errorMessage: {
+          required: 'Channel requires "agentId" property.',
+        },
+      },
+    },
     connections: {
       type: 'array',
       items: {

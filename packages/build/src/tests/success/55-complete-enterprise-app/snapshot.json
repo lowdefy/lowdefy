@@ -112,18 +112,27 @@
       "roles": "roles",
       "~k": "z"
     },
-    "api": {
+    "agents": {
       "roles": {
         "~k": "aa"
       },
       "~k": "a9"
     },
-    "authPages": {
+    "api": {
+      "roles": {
+        "~k": "ac"
+      },
       "~k": "ab"
+    },
+    "authPages": {
+      "~k": "ad"
     },
     "events": {
       "~arr": [],
-      "~k": "ac"
+      "~k": "ae"
+    },
+    "jwt": {
+      "~k": "af"
     },
     "configured": true,
     "~k": "e"
@@ -2336,1280 +2345,1292 @@
       "~k_parent": "a6"
     },
     "a9": {
-      "key": "root.auth.api",
+      "key": "root.auth.agents",
       "~k_parent": "e"
     },
     "aa": {
-      "key": "root.auth.api.roles",
+      "key": "root.auth.agents.roles",
       "~k_parent": "a9"
     },
     "ab": {
-      "key": "root.auth.authPages",
+      "key": "root.auth.api",
       "~k_parent": "e"
     },
     "ac": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "ab"
+    },
+    "ad": {
+      "key": "root.auth.authPages",
+      "~k_parent": "e"
+    },
+    "ae": {
       "key": "root.auth.events",
       "~k_parent": "e"
     },
-    "ad": {
+    "af": {
+      "key": "root.auth.jwt",
+      "~k_parent": "e"
+    },
+    "ag": {
       "key": "root.menus[0:default].links",
       "~k_parent": "17"
     },
-    "ae": {
+    "ah": {
       "key": "root.menus[0:default].links[0:dashboard:MenuLink].auth",
       "~k_parent": "19"
     },
-    "af": {
+    "ai": {
       "key": "root.menus[0:default].links[1:customers:MenuGroup].links",
       "~k_parent": "1b"
     },
-    "ag": {
+    "aj": {
       "key": "root.menus[0:default].links[1:customers:MenuGroup].links[0:all-customers:MenuLink].auth",
       "~k_parent": "1e"
     },
-    "ah": {
+    "ak": {
       "key": "root.menus[0:default].links[1:customers:MenuGroup].links[0:all-customers:MenuLink].auth.roles",
-      "~k_parent": "ag"
+      "~k_parent": "aj"
     },
-    "ai": {
+    "al": {
       "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink].auth",
       "~k_parent": "1g"
     },
-    "aj": {
-      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink].auth.roles",
-      "~k_parent": "ai"
-    },
-    "ak": {
-      "key": "root.menus[0:default].links[1:customers:MenuGroup].auth",
-      "~k_parent": "1b"
-    },
-    "al": {
-      "key": "root.menus[0:default].links[2:orders:MenuLink].auth",
-      "~k_parent": "1i"
-    },
     "am": {
-      "key": "root.menus[0:default].links[2:orders:MenuLink].auth.roles",
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink].auth.roles",
       "~k_parent": "al"
     },
     "an": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].auth",
+      "~k_parent": "1b"
+    },
+    "ao": {
+      "key": "root.menus[0:default].links[2:orders:MenuLink].auth",
+      "~k_parent": "1i"
+    },
+    "ap": {
+      "key": "root.menus[0:default].links[2:orders:MenuLink].auth.roles",
+      "~k_parent": "ao"
+    },
+    "aq": {
       "key": "root.menus[0:default].links[3:reports:MenuLink].auth",
       "~k_parent": "1k"
     },
-    "ao": {
+    "ar": {
       "key": "root.menus[0:default].links[3:reports:MenuLink].auth.roles",
-      "~k_parent": "an"
+      "~k_parent": "aq"
     },
-    "ap": {
+    "as": {
       "key": "root.menus[0:default].links[4:settings:MenuLink].auth",
       "~k_parent": "1m"
     },
-    "aq": {
+    "at": {
       "key": "root.menus[0:default].links[4:settings:MenuLink].auth.roles",
-      "~k_parent": "ap"
+      "~k_parent": "as"
     },
-    "ar": {
+    "au": {
       "key": "root.pages",
       "~k_parent": "4"
     },
-    "as": {
+    "av": {
       "key": "root.pages[0:dashboard:PageHeaderMenu]",
-      "~k_parent": "ar"
+      "~k_parent": "au"
     },
-    "at": {
+    "aw": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].events.onInitAsync",
       "~k_parent": "1u"
     },
-    "au": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].events.onInitAsync.catch",
-      "~k_parent": "at"
-    },
-    "av": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].auth",
-      "~k_parent": "as"
-    },
-    "aw": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].slots",
-      "~k_parent": "24"
-    },
     "ax": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].slots.content",
+      "key": "root.pages[0:dashboard:PageHeaderMenu].events.onInitAsync.catch",
       "~k_parent": "aw"
     },
     "ay": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].auth",
+      "~k_parent": "av"
+    },
+    "az": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].slots",
+      "~k_parent": "24"
+    },
+    "b0": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].slots.content",
+      "~k_parent": "az"
+    },
+    "b1": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].slots",
       "~k_parent": "26"
     },
-    "az": {
+    "b2": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].slots.content",
-      "~k_parent": "ay"
+      "~k_parent": "b1"
     },
-    "b0": {
+    "b3": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].slots",
       "~k_parent": "2c"
     },
-    "b1": {
+    "b4": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].slots.content",
-      "~k_parent": "b0"
+      "~k_parent": "b3"
     },
-    "b2": {
+    "b5": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].slots",
       "~k_parent": "2i"
     },
-    "b3": {
+    "b6": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].slots.content",
-      "~k_parent": "b2"
+      "~k_parent": "b5"
     },
-    "b4": {
+    "b7": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].slots",
       "~k_parent": "2o"
     },
-    "b5": {
+    "b8": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].slots.content",
-      "~k_parent": "b4"
+      "~k_parent": "b7"
     },
-    "b6": {
+    "b9": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].requests",
-      "~k_parent": "as"
+      "~k_parent": "av"
     },
-    "b7": {
+    "ba": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].payload",
       "~k_parent": "1s"
     },
-    "b8": {
+    "bb": {
       "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].auth",
       "~k_parent": "1s"
     },
-    "b9": {
+    "bc": {
       "key": "root.pages[1:customers:PageHeaderMenu]",
-      "~k_parent": "ar"
+      "~k_parent": "au"
     },
-    "ba": {
+    "bd": {
       "key": "root.pages[1:customers:PageHeaderMenu].events.onInit",
       "~k_parent": "3k"
     },
-    "bb": {
+    "be": {
       "key": "root.pages[1:customers:PageHeaderMenu].events.onInit.catch",
-      "~k_parent": "ba"
+      "~k_parent": "bd"
     },
-    "bc": {
+    "bf": {
       "key": "root.pages[1:customers:PageHeaderMenu].auth",
-      "~k_parent": "b9"
-    },
-    "bd": {
-      "key": "root.pages[1:customers:PageHeaderMenu].auth.roles",
       "~k_parent": "bc"
     },
-    "be": {
+    "bg": {
+      "key": "root.pages[1:customers:PageHeaderMenu].auth.roles",
+      "~k_parent": "bf"
+    },
+    "bh": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].slots",
       "~k_parent": "3q"
     },
-    "bf": {
-      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].slots.content",
-      "~k_parent": "be"
-    },
-    "bg": {
-      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events.onChange.catch",
-      "~k_parent": "3w"
-    },
-    "bh": {
-      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange",
-      "~k_parent": "47"
-    },
     "bi": {
-      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange.catch",
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].slots.content",
       "~k_parent": "bh"
     },
     "bj": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events.onChange.catch",
+      "~k_parent": "3w"
+    },
+    "bk": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange",
+      "~k_parent": "47"
+    },
+    "bl": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange.catch",
+      "~k_parent": "bk"
+    },
+    "bm": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events.onClick",
       "~k_parent": "4d"
     },
-    "bk": {
+    "bn": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events.onClick.catch",
-      "~k_parent": "bj"
+      "~k_parent": "bm"
     },
-    "bl": {
+    "bo": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].slots",
       "~k_parent": "4h"
     },
-    "bm": {
+    "bp": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].slots.content",
-      "~k_parent": "bl"
+      "~k_parent": "bo"
     },
-    "bn": {
+    "bq": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick",
       "~k_parent": "4o"
     },
-    "bo": {
+    "br": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick.catch",
-      "~k_parent": "bn"
+      "~k_parent": "bq"
     },
-    "bp": {
+    "bs": {
       "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].slots",
       "~k_parent": "4l"
     },
-    "bq": {
-      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].slots.content",
-      "~k_parent": "bp"
-    },
-    "br": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests",
-      "~k_parent": "b9"
-    },
-    "bs": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth",
-      "~k_parent": "2x"
-    },
     "bt": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth.roles",
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].slots.content",
       "~k_parent": "bs"
     },
     "bu": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu]",
-      "~k_parent": "ar"
+      "key": "root.pages[1:customers:PageHeaderMenu].requests",
+      "~k_parent": "bc"
     },
     "bv": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit",
-      "~k_parent": "64"
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth",
+      "~k_parent": "2x"
     },
     "bw": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit.catch",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth.roles",
       "~k_parent": "bv"
     },
     "bx": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].auth",
-      "~k_parent": "bu"
+      "key": "root.pages[2:customer-detail:PageHeaderMenu]",
+      "~k_parent": "au"
     },
     "by": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].auth.roles",
-      "~k_parent": "bx"
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit",
+      "~k_parent": "64"
     },
     "bz": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit.catch",
+      "~k_parent": "by"
+    },
+    "c0": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].auth",
+      "~k_parent": "bx"
+    },
+    "c1": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].auth.roles",
+      "~k_parent": "c0"
+    },
+    "c2": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].slots",
       "~k_parent": "6p"
     },
-    "c0": {
+    "c3": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].slots.content",
-      "~k_parent": "bz"
+      "~k_parent": "c2"
     },
-    "c1": {
+    "c4": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].slots",
       "~k_parent": "79"
     },
-    "c2": {
+    "c5": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].slots.content",
-      "~k_parent": "c1"
+      "~k_parent": "c4"
     },
-    "c3": {
+    "c6": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick",
       "~k_parent": "7d"
     },
-    "c4": {
+    "c7": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick.catch",
-      "~k_parent": "c3"
+      "~k_parent": "c6"
     },
-    "c5": {
+    "c8": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick",
       "~k_parent": "7n"
     },
-    "c6": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick.catch",
-      "~k_parent": "c5"
-    },
-    "c7": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests",
-      "~k_parent": "bu"
-    },
-    "c8": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth",
-      "~k_parent": "5e"
-    },
     "c9": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth.roles",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick.catch",
       "~k_parent": "c8"
     },
     "ca": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests",
+      "~k_parent": "bx"
+    },
+    "cb": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth",
+      "~k_parent": "5e"
+    },
+    "cc": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth.roles",
+      "~k_parent": "cb"
+    },
+    "cd": {
       "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth",
       "~k_parent": "5k"
     },
-    "cb": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth.roles",
-      "~k_parent": "ca"
-    },
-    "cc": {
-      "key": "root.pages[3:orders:PageHeaderMenu]",
-      "~k_parent": "ar"
-    },
-    "cd": {
-      "key": "root.pages[3:orders:PageHeaderMenu].auth",
-      "~k_parent": "cc"
-    },
     "ce": {
-      "key": "root.pages[3:orders:PageHeaderMenu].auth.roles",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth.roles",
       "~k_parent": "cd"
     },
     "cf": {
-      "key": "root.pages[3:orders:PageHeaderMenu].slots",
-      "~k_parent": "cc"
+      "key": "root.pages[3:orders:PageHeaderMenu]",
+      "~k_parent": "au"
     },
     "cg": {
-      "key": "root.pages[3:orders:PageHeaderMenu].slots.content",
+      "key": "root.pages[3:orders:PageHeaderMenu].auth",
       "~k_parent": "cf"
     },
     "ch": {
-      "key": "root.pages[3:orders:PageHeaderMenu].requests",
-      "~k_parent": "cc"
+      "key": "root.pages[3:orders:PageHeaderMenu].auth.roles",
+      "~k_parent": "cg"
     },
     "ci": {
-      "key": "root.pages[4:reports:PageHeaderMenu]",
-      "~k_parent": "ar"
+      "key": "root.pages[3:orders:PageHeaderMenu].slots",
+      "~k_parent": "cf"
     },
     "cj": {
-      "key": "root.pages[4:reports:PageHeaderMenu].auth",
+      "key": "root.pages[3:orders:PageHeaderMenu].slots.content",
       "~k_parent": "ci"
     },
     "ck": {
-      "key": "root.pages[4:reports:PageHeaderMenu].auth.roles",
-      "~k_parent": "cj"
+      "key": "root.pages[3:orders:PageHeaderMenu].requests",
+      "~k_parent": "cf"
     },
     "cl": {
-      "key": "root.pages[4:reports:PageHeaderMenu].slots",
-      "~k_parent": "ci"
+      "key": "root.pages[4:reports:PageHeaderMenu]",
+      "~k_parent": "au"
     },
     "cm": {
-      "key": "root.pages[4:reports:PageHeaderMenu].slots.content",
+      "key": "root.pages[4:reports:PageHeaderMenu].auth",
       "~k_parent": "cl"
     },
     "cn": {
-      "key": "root.pages[4:reports:PageHeaderMenu].requests",
-      "~k_parent": "ci"
+      "key": "root.pages[4:reports:PageHeaderMenu].auth.roles",
+      "~k_parent": "cm"
     },
     "co": {
-      "key": "root.pages[5:settings:PageHeaderMenu]",
-      "~k_parent": "ar"
+      "key": "root.pages[4:reports:PageHeaderMenu].slots",
+      "~k_parent": "cl"
     },
     "cp": {
-      "key": "root.pages[5:settings:PageHeaderMenu].auth",
+      "key": "root.pages[4:reports:PageHeaderMenu].slots.content",
       "~k_parent": "co"
     },
     "cq": {
-      "key": "root.pages[5:settings:PageHeaderMenu].auth.roles",
-      "~k_parent": "cp"
+      "key": "root.pages[4:reports:PageHeaderMenu].requests",
+      "~k_parent": "cl"
     },
     "cr": {
-      "key": "root.pages[5:settings:PageHeaderMenu].slots",
-      "~k_parent": "co"
+      "key": "root.pages[5:settings:PageHeaderMenu]",
+      "~k_parent": "au"
     },
     "cs": {
-      "key": "root.pages[5:settings:PageHeaderMenu].slots.content",
+      "key": "root.pages[5:settings:PageHeaderMenu].auth",
       "~k_parent": "cr"
     },
     "ct": {
+      "key": "root.pages[5:settings:PageHeaderMenu].auth.roles",
+      "~k_parent": "cs"
+    },
+    "cu": {
+      "key": "root.pages[5:settings:PageHeaderMenu].slots",
+      "~k_parent": "cr"
+    },
+    "cv": {
+      "key": "root.pages[5:settings:PageHeaderMenu].slots.content",
+      "~k_parent": "cu"
+    },
+    "cw": {
       "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].slots",
       "~k_parent": "8a"
     },
-    "cu": {
+    "cx": {
       "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].slots.content",
-      "~k_parent": "ct"
+      "~k_parent": "cw"
     },
-    "cv": {
+    "cy": {
       "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick",
       "~k_parent": "8s"
     },
-    "cw": {
-      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick.catch",
-      "~k_parent": "cv"
-    },
-    "cx": {
-      "key": "root.pages[5:settings:PageHeaderMenu].requests",
-      "~k_parent": "co"
-    },
-    "cy": {
-      "key": "root.pages[6:login:Result]",
-      "~k_parent": "ar"
-    },
     "cz": {
-      "key": "root.pages[6:login:Result].auth",
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick.catch",
       "~k_parent": "cy"
     },
     "d0": {
+      "key": "root.pages[5:settings:PageHeaderMenu].requests",
+      "~k_parent": "cr"
+    },
+    "d1": {
+      "key": "root.pages[6:login:Result]",
+      "~k_parent": "au"
+    },
+    "d2": {
+      "key": "root.pages[6:login:Result].auth",
+      "~k_parent": "d1"
+    },
+    "d3": {
       "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events.onClick",
       "~k_parent": "98"
     },
-    "d1": {
+    "d4": {
       "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events.onClick.catch",
-      "~k_parent": "d0"
+      "~k_parent": "d3"
     },
-    "d2": {
+    "d5": {
       "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick",
       "~k_parent": "9k"
     },
-    "d3": {
-      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick.catch",
-      "~k_parent": "d2"
-    },
-    "d4": {
-      "key": "root.pages[6:login:Result].requests",
-      "~k_parent": "cy"
-    },
-    "d5": {
-      "key": "root.pages[7:404:Result]",
-      "~k_parent": "ar"
-    },
     "d6": {
-      "key": "root.pages[7:404:Result].style",
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick.catch",
       "~k_parent": "d5"
     },
     "d7": {
-      "key": "root.pages[7:404:Result].style.block",
-      "~k_parent": "d6"
+      "key": "root.pages[6:login:Result].requests",
+      "~k_parent": "d1"
     },
     "d8": {
-      "key": "root.pages[7:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
-      "~k_parent": "a2"
+      "key": "root.pages[7:404:Result]",
+      "~k_parent": "au"
     },
     "d9": {
-      "key": "root.pages[7:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
+      "key": "root.pages[7:404:Result].style",
       "~k_parent": "d8"
     },
     "da": {
-      "key": "root.pages[7:404:Result].auth",
-      "~k_parent": "d5"
+      "key": "root.pages[7:404:Result].style.block",
+      "~k_parent": "d9"
     },
     "db": {
-      "key": "root.pages[7:404:Result].requests",
-      "~k_parent": "d5"
+      "key": "root.pages[7:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "a2"
     },
     "dc": {
+      "key": "root.pages[7:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
+      "~k_parent": "db"
+    },
+    "dd": {
+      "key": "root.pages[7:404:Result].auth",
+      "~k_parent": "d8"
+    },
+    "de": {
+      "key": "root.pages[7:404:Result].requests",
+      "~k_parent": "d8"
+    },
+    "df": {
       "key": "root.types",
       "~k_parent": "4"
     },
-    "dd": {
-      "key": "root.types.actions",
-      "~k_parent": "dc"
-    },
-    "de": {
-      "key": "root.types.actions.Request",
-      "~k_parent": "dd"
-    },
-    "df": {
-      "key": "root.types.actions.Link",
-      "~k_parent": "dd"
-    },
     "dg": {
-      "key": "root.types.actions.SetState",
-      "~k_parent": "dd"
+      "key": "root.types.actions",
+      "~k_parent": "df"
     },
     "dh": {
-      "key": "root.types.actions.Validate",
-      "~k_parent": "dd"
+      "key": "root.types.actions.Request",
+      "~k_parent": "dg"
     },
     "di": {
-      "key": "root.types.actions.DisplayMessage",
-      "~k_parent": "dd"
+      "key": "root.types.actions.Link",
+      "~k_parent": "dg"
     },
     "dj": {
-      "key": "root.types.actions.SetGlobal",
-      "~k_parent": "dd"
+      "key": "root.types.actions.SetState",
+      "~k_parent": "dg"
     },
     "dk": {
-      "key": "root.types.actions.Login",
-      "~k_parent": "dd"
+      "key": "root.types.actions.Validate",
+      "~k_parent": "dg"
     },
     "dl": {
-      "key": "root.types.actions.SetDarkMode",
-      "~k_parent": "dd"
+      "key": "root.types.actions.DisplayMessage",
+      "~k_parent": "dg"
     },
     "dm": {
-      "key": "root.types.agents",
-      "~k_parent": "dc"
+      "key": "root.types.actions.SetGlobal",
+      "~k_parent": "dg"
     },
     "dn": {
-      "key": "root.types.auth",
-      "~k_parent": "dc"
+      "key": "root.types.actions.Login",
+      "~k_parent": "dg"
     },
     "do": {
-      "key": "root.types.auth.adapters",
-      "~k_parent": "dn"
+      "key": "root.types.actions.SetDarkMode",
+      "~k_parent": "dg"
     },
     "dp": {
-      "key": "root.types.auth.callbacks",
-      "~k_parent": "dn"
+      "key": "root.types.agents",
+      "~k_parent": "df"
     },
     "dq": {
-      "key": "root.types.auth.callbacks.JwtCallback",
-      "~k_parent": "dp"
+      "key": "root.types.auth",
+      "~k_parent": "df"
     },
     "dr": {
-      "key": "root.types.auth.callbacks.SessionCallback",
-      "~k_parent": "dp"
+      "key": "root.types.auth.adapters",
+      "~k_parent": "dq"
     },
     "ds": {
-      "key": "root.types.auth.events",
-      "~k_parent": "dn"
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "dq"
     },
     "dt": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "dn"
+      "key": "root.types.auth.callbacks.JwtCallback",
+      "~k_parent": "ds"
     },
     "du": {
-      "key": "root.types.auth.providers.GoogleProvider",
-      "~k_parent": "dt"
+      "key": "root.types.auth.callbacks.SessionCallback",
+      "~k_parent": "ds"
     },
     "dv": {
-      "key": "root.types.auth.providers.CredentialsProvider",
-      "~k_parent": "dt"
+      "key": "root.types.auth.events",
+      "~k_parent": "dq"
     },
     "dw": {
-      "key": "root.types.blocks",
-      "~k_parent": "dc"
+      "key": "root.types.auth.providers",
+      "~k_parent": "dq"
     },
     "dx": {
-      "key": "root.types.blocks.PageHeaderMenu",
+      "key": "root.types.auth.providers.GoogleProvider",
       "~k_parent": "dw"
     },
     "dy": {
-      "key": "root.types.blocks.Title",
+      "key": "root.types.auth.providers.CredentialsProvider",
       "~k_parent": "dw"
     },
     "dz": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "dw"
+      "key": "root.types.blocks",
+      "~k_parent": "df"
     },
     "e0": {
-      "key": "root.types.blocks.Card",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.PageHeaderMenu",
+      "~k_parent": "dz"
     },
     "e1": {
-      "key": "root.types.blocks.Statistic",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Title",
+      "~k_parent": "dz"
     },
     "e2": {
-      "key": "root.types.blocks.TextInput",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Box",
+      "~k_parent": "dz"
     },
     "e3": {
-      "key": "root.types.blocks.Selector",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Card",
+      "~k_parent": "dz"
     },
     "e4": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Statistic",
+      "~k_parent": "dz"
     },
     "e5": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "dz"
     },
     "e6": {
-      "key": "root.types.blocks.Paragraph",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Selector",
+      "~k_parent": "dz"
     },
     "e7": {
-      "key": "root.types.blocks.Tag",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Button",
+      "~k_parent": "dz"
     },
     "e8": {
-      "key": "root.types.blocks.TextArea",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.List",
+      "~k_parent": "dz"
     },
     "e9": {
-      "key": "root.types.blocks.NumberInput",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "dz"
     },
     "ea": {
-      "key": "root.types.blocks.Switch",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Tag",
+      "~k_parent": "dz"
     },
     "eb": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.TextArea",
+      "~k_parent": "dz"
     },
     "ec": {
-      "key": "root.types.blocks.Divider",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.NumberInput",
+      "~k_parent": "dz"
     },
     "ed": {
-      "key": "root.types.blocks.PasswordInput",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "dz"
     },
     "ee": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Result",
+      "~k_parent": "dz"
     },
     "ef": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Divider",
+      "~k_parent": "dz"
     },
     "eg": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.PasswordInput",
+      "~k_parent": "dz"
     },
     "eh": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "dz"
     },
     "ei": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "dz"
     },
     "ej": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Html",
+      "~k_parent": "dz"
     },
     "ek": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "dz"
     },
     "el": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Img",
+      "~k_parent": "dz"
     },
     "em": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Span",
+      "~k_parent": "dz"
     },
     "en": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "dz"
     },
     "eo": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "dz"
     },
     "ep": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "dz"
     },
     "eq": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "dz"
     },
     "er": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "dz"
     },
     "es": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "dw"
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "dz"
     },
     "et": {
-      "key": "root.types.connections",
-      "~k_parent": "dc"
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "dz"
     },
     "eu": {
-      "key": "root.types.connections.AxiosHttp",
-      "~k_parent": "et"
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "dz"
     },
     "ev": {
-      "key": "root.types.connections.MongoDBCollection",
-      "~k_parent": "et"
+      "key": "root.types.blocks.Message",
+      "~k_parent": "dz"
     },
     "ew": {
-      "key": "root.types.requests",
-      "~k_parent": "dc"
+      "key": "root.types.connections",
+      "~k_parent": "df"
     },
     "ex": {
-      "key": "root.types.requests.AxiosHttp",
+      "key": "root.types.connections.AxiosHttp",
       "~k_parent": "ew"
     },
     "ey": {
-      "key": "root.types.requests.MongoDBFind",
+      "key": "root.types.connections.MongoDBCollection",
       "~k_parent": "ew"
     },
     "ez": {
-      "key": "root.types.requests.MongoDBFindOne",
-      "~k_parent": "ew"
+      "key": "root.types.requests",
+      "~k_parent": "df"
     },
     "f0": {
-      "key": "root.types.requests.MongoDBUpdateOne",
-      "~k_parent": "ew"
+      "key": "root.types.requests.AxiosHttp",
+      "~k_parent": "ez"
     },
     "f1": {
-      "key": "root.types.api",
-      "~k_parent": "dc"
+      "key": "root.types.requests.MongoDBFind",
+      "~k_parent": "ez"
     },
     "f2": {
-      "key": "root.types.operators",
-      "~k_parent": "dc"
+      "key": "root.types.requests.MongoDBFindOne",
+      "~k_parent": "ez"
     },
     "f3": {
-      "key": "root.types.operators.client",
-      "~k_parent": "f2"
+      "key": "root.types.requests.MongoDBUpdateOne",
+      "~k_parent": "ez"
     },
     "f4": {
-      "key": "root.types.operators.client._user",
-      "~k_parent": "f3"
+      "key": "root.types.api",
+      "~k_parent": "df"
     },
     "f5": {
-      "key": "root.types.operators.client._request",
-      "~k_parent": "f3"
+      "key": "root.types.operators",
+      "~k_parent": "df"
     },
     "f6": {
-      "key": "root.types.operators.client._state",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client",
+      "~k_parent": "f5"
     },
     "f7": {
-      "key": "root.types.operators.client._if",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client._user",
+      "~k_parent": "f6"
     },
     "f8": {
-      "key": "root.types.operators.client._eq",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client._request",
+      "~k_parent": "f6"
     },
     "f9": {
-      "key": "root.types.operators.client._not",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client._state",
+      "~k_parent": "f6"
     },
     "fa": {
-      "key": "root.types.operators.client._url_query",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client._if",
+      "~k_parent": "f6"
     },
     "fb": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "f3"
+      "key": "root.types.operators.client._eq",
+      "~k_parent": "f6"
     },
     "fc": {
-      "key": "root.types.operators.server",
-      "~k_parent": "f2"
+      "key": "root.types.operators.client._not",
+      "~k_parent": "f6"
     },
     "fd": {
-      "key": "root.types.operators.server._payload",
-      "~k_parent": "fc"
+      "key": "root.types.operators.client._url_query",
+      "~k_parent": "f6"
     },
     "fe": {
-      "key": "root.types.operators.server._if",
-      "~k_parent": "fc"
+      "key": "root.types.operators.client._type",
+      "~k_parent": "f6"
     },
     "ff": {
-      "key": "root.types.operators.server._date",
-      "~k_parent": "fc"
+      "key": "root.types.operators.server",
+      "~k_parent": "f5"
     },
     "fg": {
+      "key": "root.types.operators.server._payload",
+      "~k_parent": "ff"
+    },
+    "fh": {
+      "key": "root.types.operators.server._if",
+      "~k_parent": "ff"
+    },
+    "fi": {
+      "key": "root.types.operators.server._date",
+      "~k_parent": "ff"
+    },
+    "fj": {
       "key": "root.imports",
       "~k_parent": "4"
     },
-    "fh": {
-      "key": "root.imports.actions",
-      "~k_parent": "fg"
-    },
-    "fi": {
-      "key": "root.imports.actions[0]",
-      "~k_parent": "fh"
-    },
-    "fj": {
-      "key": "root.imports.actions[1]",
-      "~k_parent": "fh"
-    },
     "fk": {
-      "key": "root.imports.actions[2]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions",
+      "~k_parent": "fj"
     },
     "fl": {
-      "key": "root.imports.actions[3]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions[0]",
+      "~k_parent": "fk"
     },
     "fm": {
-      "key": "root.imports.actions[4]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions[1]",
+      "~k_parent": "fk"
     },
     "fn": {
-      "key": "root.imports.actions[5]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions[2]",
+      "~k_parent": "fk"
     },
     "fo": {
-      "key": "root.imports.actions[6]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions[3]",
+      "~k_parent": "fk"
     },
     "fp": {
-      "key": "root.imports.actions[7]",
-      "~k_parent": "fh"
+      "key": "root.imports.actions[4]",
+      "~k_parent": "fk"
     },
     "fq": {
-      "key": "root.imports.agents",
-      "~k_parent": "fg"
+      "key": "root.imports.actions[5]",
+      "~k_parent": "fk"
     },
     "fr": {
-      "key": "root.imports.auth",
-      "~k_parent": "fg"
+      "key": "root.imports.actions[6]",
+      "~k_parent": "fk"
     },
     "fs": {
-      "key": "root.imports.auth.adapters",
-      "~k_parent": "fr"
+      "key": "root.imports.actions[7]",
+      "~k_parent": "fk"
     },
     "ft": {
-      "key": "root.imports.auth.callbacks",
-      "~k_parent": "fr"
+      "key": "root.imports.agents",
+      "~k_parent": "fj"
     },
     "fu": {
-      "key": "root.imports.auth.callbacks[0]",
-      "~k_parent": "ft"
+      "key": "root.imports.auth",
+      "~k_parent": "fj"
     },
     "fv": {
-      "key": "root.imports.auth.callbacks[1]",
-      "~k_parent": "ft"
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "fu"
     },
     "fw": {
-      "key": "root.imports.auth.events",
-      "~k_parent": "fr"
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "fu"
     },
     "fx": {
-      "key": "root.imports.auth.providers",
-      "~k_parent": "fr"
+      "key": "root.imports.auth.callbacks[0]",
+      "~k_parent": "fw"
     },
     "fy": {
-      "key": "root.imports.auth.providers[0]",
-      "~k_parent": "fx"
+      "key": "root.imports.auth.callbacks[1]",
+      "~k_parent": "fw"
     },
     "fz": {
-      "key": "root.imports.auth.providers[1]",
-      "~k_parent": "fx"
+      "key": "root.imports.auth.events",
+      "~k_parent": "fu"
     },
     "g0": {
-      "key": "root.imports.blocks",
-      "~k_parent": "fg"
+      "key": "root.imports.auth.providers",
+      "~k_parent": "fu"
     },
     "g1": {
-      "key": "root.imports.blocks[0]",
+      "key": "root.imports.auth.providers[0]",
       "~k_parent": "g0"
     },
     "g2": {
-      "key": "root.imports.blocks[1]",
+      "key": "root.imports.auth.providers[1]",
       "~k_parent": "g0"
     },
     "g3": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks",
+      "~k_parent": "fj"
     },
     "g4": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "g3"
     },
     "g5": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "g3"
     },
     "g6": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "g3"
     },
     "g7": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "g3"
     },
     "g8": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "g3"
     },
     "g9": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "g3"
     },
     "ga": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "g3"
     },
     "gb": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "g3"
     },
     "gc": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "g3"
     },
     "gd": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "g3"
     },
     "ge": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "g3"
     },
     "gf": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "g3"
     },
     "gg": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "g3"
     },
     "gh": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "g3"
     },
     "gi": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "g3"
     },
     "gj": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "g3"
     },
     "gk": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "g3"
     },
     "gl": {
-      "key": "root.imports.blocks[20]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "g3"
     },
     "gm": {
-      "key": "root.imports.blocks[21]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "g3"
     },
     "gn": {
-      "key": "root.imports.blocks[22]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "g3"
     },
     "go": {
-      "key": "root.imports.blocks[23]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "g3"
     },
     "gp": {
-      "key": "root.imports.blocks[24]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "g3"
     },
     "gq": {
-      "key": "root.imports.blocks[25]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "g3"
     },
     "gr": {
-      "key": "root.imports.blocks[26]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "g3"
     },
     "gs": {
-      "key": "root.imports.blocks[27]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[24]",
+      "~k_parent": "g3"
     },
     "gt": {
-      "key": "root.imports.blocks[28]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[25]",
+      "~k_parent": "g3"
     },
     "gu": {
-      "key": "root.imports.blocks[29]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[26]",
+      "~k_parent": "g3"
     },
     "gv": {
-      "key": "root.imports.blocks[30]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[27]",
+      "~k_parent": "g3"
     },
     "gw": {
-      "key": "root.imports.blocks[31]",
-      "~k_parent": "g0"
+      "key": "root.imports.blocks[28]",
+      "~k_parent": "g3"
     },
     "gx": {
-      "key": "root.imports.connections",
-      "~k_parent": "fg"
+      "key": "root.imports.blocks[29]",
+      "~k_parent": "g3"
     },
     "gy": {
-      "key": "root.imports.connections[0]",
-      "~k_parent": "gx"
+      "key": "root.imports.blocks[30]",
+      "~k_parent": "g3"
     },
     "gz": {
-      "key": "root.imports.connections[1]",
-      "~k_parent": "gx"
+      "key": "root.imports.blocks[31]",
+      "~k_parent": "g3"
     },
     "h0": {
-      "key": "root.imports.icons",
-      "~k_parent": "fg"
+      "key": "root.imports.connections",
+      "~k_parent": "fj"
     },
     "h1": {
-      "key": "root.imports.icons[0]",
+      "key": "root.imports.connections[0]",
       "~k_parent": "h0"
     },
     "h2": {
-      "key": "root.imports.icons[0].icons",
-      "~k_parent": "h1"
-    },
-    "h3": {
-      "key": "root.imports.icons[1]",
+      "key": "root.imports.connections[1]",
       "~k_parent": "h0"
     },
+    "h3": {
+      "key": "root.imports.icons",
+      "~k_parent": "fj"
+    },
     "h4": {
-      "key": "root.imports.icons[1].icons",
+      "key": "root.imports.icons[0]",
       "~k_parent": "h3"
     },
     "h5": {
-      "key": "root.imports.icons[2]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "h4"
     },
     "h6": {
-      "key": "root.imports.icons[2].icons",
-      "~k_parent": "h5"
+      "key": "root.imports.icons[1]",
+      "~k_parent": "h3"
     },
     "h7": {
-      "key": "root.imports.icons[3]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "h6"
     },
     "h8": {
-      "key": "root.imports.icons[3].icons",
-      "~k_parent": "h7"
+      "key": "root.imports.icons[2]",
+      "~k_parent": "h3"
     },
     "h9": {
-      "key": "root.imports.icons[4]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "h8"
     },
     "ha": {
-      "key": "root.imports.icons[4].icons",
-      "~k_parent": "h9"
+      "key": "root.imports.icons[3]",
+      "~k_parent": "h3"
     },
     "hb": {
-      "key": "root.imports.icons[5]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "ha"
     },
     "hc": {
-      "key": "root.imports.icons[5].icons",
-      "~k_parent": "hb"
+      "key": "root.imports.icons[4]",
+      "~k_parent": "h3"
     },
     "hd": {
-      "key": "root.imports.icons[6]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[4].icons",
+      "~k_parent": "hc"
     },
     "he": {
-      "key": "root.imports.icons[6].icons",
-      "~k_parent": "hd"
+      "key": "root.imports.icons[5]",
+      "~k_parent": "h3"
     },
     "hf": {
-      "key": "root.imports.icons[7]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "he"
     },
     "hg": {
-      "key": "root.imports.icons[7].icons",
-      "~k_parent": "hf"
+      "key": "root.imports.icons[6]",
+      "~k_parent": "h3"
     },
     "hh": {
-      "key": "root.imports.icons[8]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "hg"
     },
     "hi": {
-      "key": "root.imports.icons[8].icons",
-      "~k_parent": "hh"
+      "key": "root.imports.icons[7]",
+      "~k_parent": "h3"
     },
     "hj": {
-      "key": "root.imports.icons[9]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "hi"
     },
     "hk": {
-      "key": "root.imports.icons[9].icons",
-      "~k_parent": "hj"
+      "key": "root.imports.icons[8]",
+      "~k_parent": "h3"
     },
     "hl": {
-      "key": "root.imports.icons[10]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "hk"
     },
     "hm": {
-      "key": "root.imports.icons[10].icons",
-      "~k_parent": "hl"
+      "key": "root.imports.icons[9]",
+      "~k_parent": "h3"
     },
     "hn": {
-      "key": "root.imports.icons[11]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "hm"
     },
     "ho": {
-      "key": "root.imports.icons[11].icons",
-      "~k_parent": "hn"
+      "key": "root.imports.icons[10]",
+      "~k_parent": "h3"
     },
     "hp": {
-      "key": "root.imports.icons[12]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "ho"
     },
     "hq": {
-      "key": "root.imports.icons[12].icons",
-      "~k_parent": "hp"
+      "key": "root.imports.icons[11]",
+      "~k_parent": "h3"
     },
     "hr": {
-      "key": "root.imports.icons[13]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "hq"
     },
     "hs": {
-      "key": "root.imports.icons[13].icons",
-      "~k_parent": "hr"
+      "key": "root.imports.icons[12]",
+      "~k_parent": "h3"
     },
     "ht": {
-      "key": "root.imports.icons[14]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "hs"
     },
     "hu": {
-      "key": "root.imports.icons[14].icons",
-      "~k_parent": "ht"
+      "key": "root.imports.icons[13]",
+      "~k_parent": "h3"
     },
     "hv": {
-      "key": "root.imports.icons[15]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "hu"
     },
     "hw": {
-      "key": "root.imports.icons[15].icons",
-      "~k_parent": "hv"
+      "key": "root.imports.icons[14]",
+      "~k_parent": "h3"
     },
     "hx": {
-      "key": "root.imports.icons[16]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "hw"
     },
     "hy": {
-      "key": "root.imports.icons[16].icons",
-      "~k_parent": "hx"
+      "key": "root.imports.icons[15]",
+      "~k_parent": "h3"
     },
     "hz": {
-      "key": "root.imports.icons[17]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "hy"
     },
     "i0": {
-      "key": "root.imports.icons[17].icons",
-      "~k_parent": "hz"
+      "key": "root.imports.icons[16]",
+      "~k_parent": "h3"
     },
     "i1": {
-      "key": "root.imports.icons[18]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "i0"
     },
     "i2": {
-      "key": "root.imports.icons[18].icons",
-      "~k_parent": "i1"
+      "key": "root.imports.icons[17]",
+      "~k_parent": "h3"
     },
     "i3": {
-      "key": "root.imports.icons[19]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "i2"
     },
     "i4": {
-      "key": "root.imports.icons[19].icons",
-      "~k_parent": "i3"
+      "key": "root.imports.icons[18]",
+      "~k_parent": "h3"
     },
     "i5": {
-      "key": "root.imports.icons[20]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "i4"
     },
     "i6": {
-      "key": "root.imports.icons[20].icons",
-      "~k_parent": "i5"
+      "key": "root.imports.icons[19]",
+      "~k_parent": "h3"
     },
     "i7": {
-      "key": "root.imports.icons[21]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "i6"
     },
     "i8": {
-      "key": "root.imports.icons[21].icons",
-      "~k_parent": "i7"
+      "key": "root.imports.icons[20]",
+      "~k_parent": "h3"
     },
     "i9": {
-      "key": "root.imports.icons[22]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "i8"
     },
     "ia": {
-      "key": "root.imports.icons[22].icons",
-      "~k_parent": "i9"
+      "key": "root.imports.icons[21]",
+      "~k_parent": "h3"
     },
     "ib": {
-      "key": "root.imports.icons[23]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "ia"
     },
     "ic": {
-      "key": "root.imports.icons[23].icons",
-      "~k_parent": "ib"
+      "key": "root.imports.icons[22]",
+      "~k_parent": "h3"
     },
     "id": {
-      "key": "root.imports.icons[24]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "ic"
     },
     "ie": {
-      "key": "root.imports.icons[24].icons",
-      "~k_parent": "id"
+      "key": "root.imports.icons[23]",
+      "~k_parent": "h3"
     },
     "if": {
-      "key": "root.imports.icons[25]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "ie"
     },
     "ig": {
-      "key": "root.imports.icons[25].icons",
-      "~k_parent": "if"
+      "key": "root.imports.icons[24]",
+      "~k_parent": "h3"
     },
     "ih": {
-      "key": "root.imports.icons[26]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "ig"
     },
     "ii": {
-      "key": "root.imports.icons[26].icons",
-      "~k_parent": "ih"
+      "key": "root.imports.icons[25]",
+      "~k_parent": "h3"
     },
     "ij": {
-      "key": "root.imports.icons[27]",
-      "~k_parent": "h0"
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "ii"
     },
     "ik": {
-      "key": "root.imports.icons[27].icons",
-      "~k_parent": "ij"
+      "key": "root.imports.icons[26]",
+      "~k_parent": "h3"
     },
     "il": {
-      "key": "root.imports.requests",
-      "~k_parent": "fg"
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "ik"
     },
     "im": {
-      "key": "root.imports.requests[0]",
-      "~k_parent": "il"
+      "key": "root.imports.icons[27]",
+      "~k_parent": "h3"
     },
     "in": {
-      "key": "root.imports.requests[1]",
-      "~k_parent": "il"
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "im"
     },
     "io": {
-      "key": "root.imports.requests[2]",
-      "~k_parent": "il"
+      "key": "root.imports.requests",
+      "~k_parent": "fj"
     },
     "ip": {
-      "key": "root.imports.requests[3]",
-      "~k_parent": "il"
+      "key": "root.imports.requests[0]",
+      "~k_parent": "io"
     },
     "iq": {
-      "key": "root.imports.operators",
-      "~k_parent": "fg"
+      "key": "root.imports.requests[1]",
+      "~k_parent": "io"
     },
     "ir": {
-      "key": "root.imports.operators.client",
-      "~k_parent": "iq"
+      "key": "root.imports.requests[2]",
+      "~k_parent": "io"
     },
     "is": {
-      "key": "root.imports.operators.client[0]",
-      "~k_parent": "ir"
+      "key": "root.imports.requests[3]",
+      "~k_parent": "io"
     },
     "it": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators",
+      "~k_parent": "fj"
     },
     "iu": {
-      "key": "root.imports.operators.client[2]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client",
+      "~k_parent": "it"
     },
     "iv": {
-      "key": "root.imports.operators.client[3]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "iu"
     },
     "iw": {
-      "key": "root.imports.operators.client[4]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "iu"
     },
     "ix": {
-      "key": "root.imports.operators.client[5]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "iu"
     },
     "iy": {
-      "key": "root.imports.operators.client[6]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "iu"
     },
     "iz": {
-      "key": "root.imports.operators.client[7]",
-      "~k_parent": "ir"
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "iu"
     },
     "j0": {
-      "key": "root.imports.operators.server",
-      "~k_parent": "iq"
+      "key": "root.imports.operators.client[5]",
+      "~k_parent": "iu"
     },
     "j1": {
-      "key": "root.imports.operators.server[0]",
-      "~k_parent": "j0"
+      "key": "root.imports.operators.client[6]",
+      "~k_parent": "iu"
     },
     "j2": {
-      "key": "root.imports.operators.server[1]",
-      "~k_parent": "j0"
+      "key": "root.imports.operators.client[7]",
+      "~k_parent": "iu"
     },
     "j3": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "it"
+    },
+    "j4": {
+      "key": "root.imports.operators.server[0]",
+      "~k_parent": "j3"
+    },
+    "j5": {
+      "key": "root.imports.operators.server[1]",
+      "~k_parent": "j3"
+    },
+    "j6": {
       "key": "root.imports.operators.server[2]",
-      "~k_parent": "j0"
+      "~k_parent": "j3"
     }
   },
   "layer-order.css": "/* Generated by Lowdefy build */\n@layer theme, base, antd, components, utilities;\n",
@@ -3650,7 +3671,7 @@
               },
               "auth": {
                 "public": false,
-                "~k": "ae"
+                "~k": "ah"
               },
               "menuItemId": "dashboard",
               "~k": "19"
@@ -3679,9 +3700,9 @@
                         "~arr": [
                           "sales"
                         ],
-                        "~k": "ah"
+                        "~k": "ak"
                       },
-                      "~k": "ag"
+                      "~k": "aj"
                     },
                     "menuItemId": "all-customers",
                     "~k": "1e"
@@ -3700,19 +3721,19 @@
                         "~arr": [
                           "sales"
                         ],
-                        "~k": "aj"
+                        "~k": "am"
                       },
-                      "~k": "ai"
+                      "~k": "al"
                     },
                     "menuItemId": "add-customer",
                     "~k": "1g"
                   }
                 ],
-                "~k": "af"
+                "~k": "ai"
               },
               "auth": {
                 "public": true,
-                "~k": "ak"
+                "~k": "an"
               },
               "menuItemId": "customers",
               "~k": "1b"
@@ -3732,9 +3753,9 @@
                   "~arr": [
                     "sales"
                   ],
-                  "~k": "am"
+                  "~k": "ap"
                 },
-                "~k": "al"
+                "~k": "ao"
               },
               "menuItemId": "orders",
               "~k": "1i"
@@ -3754,9 +3775,9 @@
                   "~arr": [
                     "admin"
                   ],
-                  "~k": "ao"
+                  "~k": "ar"
                 },
-                "~k": "an"
+                "~k": "aq"
               },
               "menuItemId": "reports",
               "~k": "1k"
@@ -3776,15 +3797,15 @@
                   "~arr": [
                     "admin"
                   ],
-                  "~k": "aq"
+                  "~k": "at"
                 },
-                "~k": "ap"
+                "~k": "as"
               },
               "menuItemId": "settings",
               "~k": "1m"
             }
           ],
-          "~k": "ad"
+          "~k": "ag"
         },
         "menuId": "default",
         "~k": "17"
@@ -3799,9 +3820,9 @@
       "block": {
         "minHeight": "100vh",
         "background": "var(--ant-color-bg-layout)",
-        "~k": "d7"
+        "~k": "da"
       },
-      "~k": "d6"
+      "~k": "d9"
     },
     "properties": {
       "status": "info",
@@ -3844,9 +3865,9 @@
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "d9"
+                    "~k": "dc"
                   },
-                  "~k": "d8"
+                  "~k": "db"
                 },
                 "~k": "a2"
               },
@@ -3862,15 +3883,15 @@
     },
     "auth": {
       "public": true,
-      "~k": "da"
+      "~k": "dd"
     },
     "pageId": "404",
     "blockId": "404",
     "requests": {
       "~arr": [],
-      "~k": "db"
+      "~k": "de"
     },
-    "~k": "d5"
+    "~k": "d8"
   },
   "pages/customer-detail.json": {
     "id": "page:customer-detail",
@@ -3952,9 +3973,9 @@
         },
         "catch": {
           "~arr": [],
-          "~k": "bw"
+          "~k": "bz"
         },
-        "~k": "bv"
+        "~k": "by"
       },
       "~k": "64"
     },
@@ -3964,9 +3985,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "by"
+        "~k": "c1"
       },
-      "~k": "bx"
+      "~k": "c0"
     },
     "pageId": "customer-detail",
     "blockId": "customer-detail",
@@ -4125,9 +4146,9 @@
                                       },
                                       "catch": {
                                         "~arr": [],
-                                        "~k": "c4"
+                                        "~k": "c7"
                                       },
-                                      "~k": "c3"
+                                      "~k": "c6"
                                     },
                                     "~k": "7d"
                                   },
@@ -4159,9 +4180,9 @@
                                       },
                                       "catch": {
                                         "~arr": [],
-                                        "~k": "c6"
+                                        "~k": "c9"
                                       },
-                                      "~k": "c5"
+                                      "~k": "c8"
                                     },
                                     "~k": "7n"
                                   },
@@ -4171,18 +4192,18 @@
                               ],
                               "~k": "7a"
                             },
-                            "~k": "c2"
+                            "~k": "c5"
                           },
-                          "~k": "c1"
+                          "~k": "c4"
                         },
                         "~k": "79"
                       }
                     ],
                     "~k": "6u"
                   },
-                  "~k": "c0"
+                  "~k": "c3"
                 },
-                "~k": "bz"
+                "~k": "c2"
               },
               "~k": "6p"
             }
@@ -4242,9 +4263,9 @@
           "~k": "5k"
         }
       ],
-      "~k": "c7"
+      "~k": "ca"
     },
-    "~k": "bu"
+    "~k": "bx"
   },
   "pages/customer-detail/requests/getCustomer.json": {
     "id": "request:customer-detail:getCustomer",
@@ -4273,9 +4294,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "c9"
+        "~k": "cc"
       },
-      "~k": "c8"
+      "~k": "cb"
     },
     "requestId": "getCustomer",
     "pageId": "customer-detail",
@@ -4362,9 +4383,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "cb"
+        "~k": "ce"
       },
-      "~k": "ca"
+      "~k": "cd"
     },
     "requestId": "saveCustomer",
     "pageId": "customer-detail",
@@ -4392,9 +4413,9 @@
         },
         "catch": {
           "~arr": [],
-          "~k": "bb"
+          "~k": "be"
         },
-        "~k": "ba"
+        "~k": "bd"
       },
       "~k": "3k"
     },
@@ -4404,9 +4425,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "bd"
+        "~k": "bg"
       },
-      "~k": "bc"
+      "~k": "bf"
     },
     "pageId": "customers",
     "blockId": "customers",
@@ -4453,7 +4474,7 @@
                             },
                             "catch": {
                               "~arr": [],
-                              "~k": "bg"
+                              "~k": "bj"
                             },
                             "~k": "3w"
                           },
@@ -4509,9 +4530,9 @@
                             },
                             "catch": {
                               "~arr": [],
-                              "~k": "bi"
+                              "~k": "bl"
                             },
-                            "~k": "bh"
+                            "~k": "bk"
                           },
                           "~k": "47"
                         },
@@ -4549,9 +4570,9 @@
                             },
                             "catch": {
                               "~arr": [],
-                              "~k": "bk"
+                              "~k": "bn"
                             },
-                            "~k": "bj"
+                            "~k": "bm"
                           },
                           "~k": "4d"
                         },
@@ -4561,9 +4582,9 @@
                     ],
                     "~k": "3r"
                   },
-                  "~k": "bf"
+                  "~k": "bi"
                 },
-                "~k": "be"
+                "~k": "bh"
               },
               "~k": "3q"
             },
@@ -4618,9 +4639,9 @@
                             },
                             "catch": {
                               "~arr": [],
-                              "~k": "bo"
+                              "~k": "br"
                             },
-                            "~k": "bn"
+                            "~k": "bq"
                           },
                           "~k": "4o"
                         },
@@ -4699,18 +4720,18 @@
                               ],
                               "~k": "4u"
                             },
-                            "~k": "bq"
+                            "~k": "bt"
                           },
-                          "~k": "bp"
+                          "~k": "bs"
                         },
                         "~k": "4l"
                       }
                     ],
                     "~k": "4k"
                   },
-                  "~k": "bm"
+                  "~k": "bp"
                 },
-                "~k": "bl"
+                "~k": "bo"
               },
               "~k": "4h"
             }
@@ -4741,9 +4762,9 @@
           "~k": "2x"
         }
       ],
-      "~k": "br"
+      "~k": "bu"
     },
-    "~k": "b9"
+    "~k": "bc"
   },
   "pages/customers/requests/getCustomers.json": {
     "id": "request:customers:getCustomers",
@@ -4836,9 +4857,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "bt"
+        "~k": "bw"
       },
-      "~k": "bs"
+      "~k": "bv"
     },
     "requestId": "getCustomers",
     "pageId": "customers",
@@ -4866,15 +4887,15 @@
         },
         "catch": {
           "~arr": [],
-          "~k": "au"
+          "~k": "ax"
         },
-        "~k": "at"
+        "~k": "aw"
       },
       "~k": "1u"
     },
     "auth": {
       "public": false,
-      "~k": "av"
+      "~k": "ay"
     },
     "pageId": "dashboard",
     "blockId": "dashboard",
@@ -4936,9 +4957,9 @@
                               ],
                               "~k": "28"
                             },
-                            "~k": "az"
+                            "~k": "b2"
                           },
-                          "~k": "ay"
+                          "~k": "b1"
                         },
                         "~k": "26"
                       },
@@ -4971,9 +4992,9 @@
                               ],
                               "~k": "2e"
                             },
-                            "~k": "b1"
+                            "~k": "b4"
                           },
-                          "~k": "b0"
+                          "~k": "b3"
                         },
                         "~k": "2c"
                       },
@@ -5007,9 +5028,9 @@
                               ],
                               "~k": "2k"
                             },
-                            "~k": "b3"
+                            "~k": "b6"
                           },
-                          "~k": "b2"
+                          "~k": "b5"
                         },
                         "~k": "2i"
                       },
@@ -5043,18 +5064,18 @@
                               ],
                               "~k": "2q"
                             },
-                            "~k": "b5"
+                            "~k": "b8"
                           },
-                          "~k": "b4"
+                          "~k": "b7"
                         },
                         "~k": "2o"
                       }
                     ],
                     "~k": "25"
                   },
-                  "~k": "ax"
+                  "~k": "b0"
                 },
-                "~k": "aw"
+                "~k": "az"
               },
               "~k": "24"
             }
@@ -5070,16 +5091,16 @@
         {
           "id": "request:dashboard:getStats",
           "payload": {
-            "~k": "b7"
+            "~k": "ba"
           },
           "requestId": "getStats",
           "pageId": "dashboard",
           "~k": "1s"
         }
       ],
-      "~k": "b6"
+      "~k": "b9"
     },
-    "~k": "as"
+    "~k": "av"
   },
   "pages/dashboard/requests/getStats.json": {
     "id": "request:dashboard:getStats",
@@ -5090,11 +5111,11 @@
       "~k": "1t"
     },
     "payload": {
-      "~k": "b7"
+      "~k": "ba"
     },
     "auth": {
       "public": false,
-      "~k": "b8"
+      "~k": "bb"
     },
     "requestId": "getStats",
     "pageId": "dashboard",
@@ -5111,7 +5132,7 @@
     },
     "auth": {
       "public": true,
-      "~k": "cz"
+      "~k": "d2"
     },
     "pageId": "login",
     "blockId": "login",
@@ -5146,9 +5167,9 @@
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "d1"
+                    "~k": "d4"
                   },
-                  "~k": "d0"
+                  "~k": "d3"
                 },
                 "~k": "98"
               },
@@ -5222,9 +5243,9 @@
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "d3"
+                    "~k": "d6"
                   },
-                  "~k": "d2"
+                  "~k": "d5"
                 },
                 "~k": "9k"
               },
@@ -5240,9 +5261,9 @@
     },
     "requests": {
       "~arr": [],
-      "~k": "d4"
+      "~k": "d7"
     },
-    "~k": "cy"
+    "~k": "d1"
   },
   "pages/orders.json": {
     "id": "page:orders",
@@ -5257,9 +5278,9 @@
         "~arr": [
           "sales"
         ],
-        "~k": "ce"
+        "~k": "ch"
       },
-      "~k": "cd"
+      "~k": "cg"
     },
     "pageId": "orders",
     "blockId": "orders",
@@ -5290,15 +5311,15 @@
           ],
           "~k": "7t"
         },
-        "~k": "cg"
+        "~k": "cj"
       },
-      "~k": "cf"
+      "~k": "ci"
     },
     "requests": {
       "~arr": [],
-      "~k": "ch"
+      "~k": "ck"
     },
-    "~k": "cc"
+    "~k": "cf"
   },
   "pages/reports.json": {
     "id": "page:reports",
@@ -5313,9 +5334,9 @@
         "~arr": [
           "admin"
         ],
-        "~k": "ck"
+        "~k": "cn"
       },
-      "~k": "cj"
+      "~k": "cm"
     },
     "pageId": "reports",
     "blockId": "reports",
@@ -5346,15 +5367,15 @@
           ],
           "~k": "80"
         },
-        "~k": "cm"
+        "~k": "cp"
       },
-      "~k": "cl"
+      "~k": "co"
     },
     "requests": {
       "~arr": [],
-      "~k": "cn"
+      "~k": "cq"
     },
-    "~k": "ci"
+    "~k": "cl"
   },
   "pages/settings.json": {
     "id": "page:settings",
@@ -5369,9 +5390,9 @@
         "~arr": [
           "admin"
         ],
-        "~k": "cq"
+        "~k": "ct"
       },
-      "~k": "cp"
+      "~k": "cs"
     },
     "pageId": "settings",
     "blockId": "settings",
@@ -5514,9 +5535,9 @@
                             },
                             "catch": {
                               "~arr": [],
-                              "~k": "cw"
+                              "~k": "cz"
                             },
-                            "~k": "cv"
+                            "~k": "cy"
                           },
                           "~k": "8s"
                         },
@@ -5526,24 +5547,24 @@
                     ],
                     "~k": "8c"
                   },
-                  "~k": "cu"
+                  "~k": "cx"
                 },
-                "~k": "ct"
+                "~k": "cw"
               },
               "~k": "8a"
             }
           ],
           "~k": "87"
         },
-        "~k": "cs"
+        "~k": "cv"
       },
-      "~k": "cr"
+      "~k": "cu"
     },
     "requests": {
       "~arr": [],
-      "~k": "cx"
+      "~k": "d0"
     },
-    "~k": "co"
+    "~k": "cr"
   },
   "plugins/actionSchemas.json": {
     "Request": {
@@ -17183,333 +17204,333 @@
         "originalTypeName": "Request",
         "package": "@lowdefy/actions-core",
         "count": 6,
-        "~k": "de"
+        "~k": "dh"
       },
       "Link": {
         "originalTypeName": "Link",
         "package": "@lowdefy/actions-core",
         "count": 5,
-        "~k": "df"
+        "~k": "di"
       },
       "SetState": {
         "originalTypeName": "SetState",
         "package": "@lowdefy/actions-core",
         "count": 2,
-        "~k": "dg"
+        "~k": "dj"
       },
       "Validate": {
         "originalTypeName": "Validate",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "dh"
+        "~k": "dk"
       },
       "DisplayMessage": {
         "originalTypeName": "DisplayMessage",
         "package": "@lowdefy/actions-core",
         "count": 2,
-        "~k": "di"
+        "~k": "dl"
       },
       "SetGlobal": {
         "originalTypeName": "SetGlobal",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "dj"
+        "~k": "dm"
       },
       "Login": {
         "originalTypeName": "Login",
         "package": "@lowdefy/actions-core",
         "count": 2,
-        "~k": "dk"
+        "~k": "dn"
       },
       "SetDarkMode": {
         "originalTypeName": "SetDarkMode",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "dl"
+        "~k": "do"
       },
-      "~k": "dd"
+      "~k": "dg"
     },
     "agents": {
-      "~k": "dm"
+      "~k": "dp"
     },
     "auth": {
       "adapters": {
-        "~k": "do"
+        "~k": "dr"
       },
       "callbacks": {
         "JwtCallback": {
           "originalTypeName": "JwtCallback",
           "package": "@lowdefy/plugin-next-auth",
           "count": 1,
-          "~k": "dq"
+          "~k": "dt"
         },
         "SessionCallback": {
           "originalTypeName": "SessionCallback",
           "package": "@lowdefy/plugin-next-auth",
           "count": 1,
-          "~k": "dr"
+          "~k": "du"
         },
-        "~k": "dp"
+        "~k": "ds"
       },
       "events": {
-        "~k": "ds"
+        "~k": "dv"
       },
       "providers": {
         "GoogleProvider": {
           "originalTypeName": "GoogleProvider",
           "package": "next-auth",
           "count": 1,
-          "~k": "du"
+          "~k": "dx"
         },
         "CredentialsProvider": {
           "originalTypeName": "CredentialsProvider",
           "package": "next-auth",
           "count": 1,
-          "~k": "dv"
+          "~k": "dy"
         },
-        "~k": "dt"
+        "~k": "dw"
       },
-      "~k": "dn"
+      "~k": "dq"
     },
     "blocks": {
       "PageHeaderMenu": {
         "originalTypeName": "PageHeaderMenu",
         "package": "@lowdefy/blocks-antd",
         "count": 6,
-        "~k": "dx"
+        "~k": "e0"
       },
       "Title": {
         "originalTypeName": "Title",
         "package": "@lowdefy/blocks-basic",
         "count": 4,
-        "~k": "dy"
+        "~k": "e1"
       },
       "Box": {
         "originalTypeName": "Box",
         "package": "@lowdefy/blocks-basic",
         "count": 4,
-        "~k": "dz"
+        "~k": "e2"
       },
       "Card": {
         "originalTypeName": "Card",
         "package": "@lowdefy/blocks-antd",
         "count": 7,
-        "~k": "e0"
+        "~k": "e3"
       },
       "Statistic": {
         "originalTypeName": "Statistic",
         "package": "@lowdefy/blocks-antd",
         "count": 4,
-        "~k": "e1"
+        "~k": "e4"
       },
       "TextInput": {
         "originalTypeName": "TextInput",
         "package": "@lowdefy/blocks-antd",
         "count": 5,
-        "~k": "e2"
+        "~k": "e5"
       },
       "Selector": {
         "originalTypeName": "Selector",
         "package": "@lowdefy/blocks-antd",
         "count": 3,
-        "~k": "e3"
+        "~k": "e6"
       },
       "Button": {
         "originalTypeName": "Button",
         "package": "@lowdefy/blocks-basic",
         "count": 7,
-        "~k": "e4"
+        "~k": "e7"
       },
       "List": {
         "originalTypeName": "List",
         "package": "@lowdefy/blocks-basic",
         "count": 2,
-        "~k": "e5"
+        "~k": "e8"
       },
       "Paragraph": {
         "originalTypeName": "Paragraph",
         "package": "@lowdefy/blocks-basic",
         "count": 3,
-        "~k": "e6"
+        "~k": "e9"
       },
       "Tag": {
         "originalTypeName": "Tag",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "e7"
+        "~k": "ea"
       },
       "TextArea": {
         "originalTypeName": "TextArea",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "e8"
+        "~k": "eb"
       },
       "NumberInput": {
         "originalTypeName": "NumberInput",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "e9"
+        "~k": "ec"
       },
       "Switch": {
         "originalTypeName": "Switch",
         "package": "@lowdefy/blocks-antd",
         "count": 2,
-        "~k": "ea"
+        "~k": "ed"
       },
       "Result": {
         "originalTypeName": "Result",
         "package": "@lowdefy/blocks-antd",
         "count": 2,
-        "~k": "eb"
+        "~k": "ee"
       },
       "Divider": {
         "originalTypeName": "Divider",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "ec"
+        "~k": "ef"
       },
       "PasswordInput": {
         "originalTypeName": "PasswordInput",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "ed"
+        "~k": "eg"
       },
       "Anchor": {
         "originalTypeName": "Anchor",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "ee"
+        "~k": "eh"
       },
       "DangerousHtml": {
         "originalTypeName": "DangerousHtml",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "ef"
+        "~k": "ei"
       },
       "Html": {
         "originalTypeName": "Html",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "eg"
+        "~k": "ej"
       },
       "Icon": {
         "originalTypeName": "Icon",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "eh"
+        "~k": "ek"
       },
       "Img": {
         "originalTypeName": "Img",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "ei"
+        "~k": "el"
       },
       "Span": {
         "originalTypeName": "Span",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "ej"
+        "~k": "em"
       },
       "Throw": {
         "originalTypeName": "Throw",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "ek"
+        "~k": "en"
       },
       "ProgressBar": {
         "originalTypeName": "ProgressBar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "el"
+        "~k": "eo"
       },
       "Skeleton": {
         "originalTypeName": "Skeleton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "em"
+        "~k": "ep"
       },
       "SkeletonAvatar": {
         "originalTypeName": "SkeletonAvatar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "en"
+        "~k": "eq"
       },
       "SkeletonButton": {
         "originalTypeName": "SkeletonButton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "eo"
+        "~k": "er"
       },
       "SkeletonInput": {
         "originalTypeName": "SkeletonInput",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "ep"
+        "~k": "es"
       },
       "SkeletonParagraph": {
         "originalTypeName": "SkeletonParagraph",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "eq"
+        "~k": "et"
       },
       "Spinner": {
         "originalTypeName": "Spinner",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "er"
+        "~k": "eu"
       },
       "Message": {
         "originalTypeName": "Message",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "es"
+        "~k": "ev"
       },
-      "~k": "dw"
+      "~k": "dz"
     },
     "connections": {
       "AxiosHttp": {
         "originalTypeName": "AxiosHttp",
         "package": "@lowdefy/connection-axios-http",
         "count": 1,
-        "~k": "eu"
+        "~k": "ex"
       },
       "MongoDBCollection": {
         "originalTypeName": "MongoDBCollection",
         "package": "@lowdefy/connection-mongodb",
         "count": 2,
-        "~k": "ev"
+        "~k": "ey"
       },
-      "~k": "et"
+      "~k": "ew"
     },
     "requests": {
       "AxiosHttp": {
         "originalTypeName": "AxiosHttp",
         "package": "@lowdefy/connection-axios-http",
         "count": 1,
-        "~k": "ex"
+        "~k": "f0"
       },
       "MongoDBFind": {
         "originalTypeName": "MongoDBFind",
         "package": "@lowdefy/connection-mongodb",
         "count": 1,
-        "~k": "ey"
+        "~k": "f1"
       },
       "MongoDBFindOne": {
         "originalTypeName": "MongoDBFindOne",
         "package": "@lowdefy/connection-mongodb",
         "count": 1,
-        "~k": "ez"
+        "~k": "f2"
       },
       "MongoDBUpdateOne": {
         "originalTypeName": "MongoDBUpdateOne",
         "package": "@lowdefy/connection-mongodb",
         "count": 1,
-        "~k": "f0"
+        "~k": "f3"
       },
-      "~k": "ew"
+      "~k": "ez"
     },
     "api": {
-      "~k": "f1"
+      "~k": "f4"
     },
     "operators": {
       "client": {
@@ -17517,75 +17538,75 @@
           "originalTypeName": "_user",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "f4"
+          "~k": "f7"
         },
         "_request": {
           "originalTypeName": "_request",
           "package": "@lowdefy/operators-js",
           "count": 10,
-          "~k": "f5"
+          "~k": "f8"
         },
         "_state": {
           "originalTypeName": "_state",
           "package": "@lowdefy/operators-js",
           "count": 18,
-          "~k": "f6"
+          "~k": "f9"
         },
         "_if": {
           "originalTypeName": "_if",
           "package": "@lowdefy/operators-js",
           "count": 3,
-          "~k": "f7"
+          "~k": "fa"
         },
         "_eq": {
           "originalTypeName": "_eq",
           "package": "@lowdefy/operators-js",
           "count": 2,
-          "~k": "f8"
+          "~k": "fb"
         },
         "_not": {
           "originalTypeName": "_not",
           "package": "@lowdefy/operators-js",
           "count": 4,
-          "~k": "f9"
+          "~k": "fc"
         },
         "_url_query": {
           "originalTypeName": "_url_query",
           "package": "@lowdefy/operators-js",
           "count": 5,
-          "~k": "fa"
+          "~k": "fd"
         },
         "_type": {
           "originalTypeName": "_type",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "fb"
+          "~k": "fe"
         },
-        "~k": "f3"
+        "~k": "f6"
       },
       "server": {
         "_payload": {
           "originalTypeName": "_payload",
           "package": "@lowdefy/operators-js",
           "count": 11,
-          "~k": "fd"
+          "~k": "fg"
         },
         "_if": {
           "originalTypeName": "_if",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "fe"
+          "~k": "fh"
         },
         "_date": {
           "originalTypeName": "_date",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "ff"
+          "~k": "fi"
         },
-        "~k": "fc"
+        "~k": "ff"
       },
-      "~k": "f2"
+      "~k": "f5"
     },
-    "~k": "dc"
+    "~k": "df"
   }
 }
