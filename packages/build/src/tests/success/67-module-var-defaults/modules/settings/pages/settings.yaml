@@ -5,20 +5,14 @@ blocks:
     type: Paragraph
     properties:
       content:
-        _module.var:
-          key: theme.primary_color
-          default: gray
+        _module.var: theme.primary_color
   - id: page-size-display
     type: Paragraph
     properties:
       content:
-        _module.var:
-          key: page_size
-          default: 10
+        _module.var: page_size
   - id: missing-var
     type: Paragraph
     properties:
       content:
-        _module.var:
-          key: nonexistent.path
-          default: fallback-value
+        _module.var: nonexistent_path

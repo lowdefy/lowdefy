@@ -18,6 +18,10 @@
               "icon": {}
             }
           }
+        },
+        "variant": {
+          "type": "string",
+          "enum": ["filled", "borderless"]
         }
       }
     },
@@ -27,6 +31,7 @@
         "markdownRendering": { "type": "boolean", "default": true },
         "renderMermaid": { "type": "boolean", "default": true },
         "codeHighlighter": { "type": "boolean", "default": true },
+        "renderLatex": { "type": "boolean", "default": false },
         "showThoughtChain": { "type": "boolean", "default": true },
         "showReasoning": { "type": "boolean", "default": true },
         "reasoningDisplay": {
@@ -35,14 +40,68 @@
           "default": "interleaved"
         },
         "toolResultDisplay": {
-          "type": "string",
-          "enum": ["summary", "full", "none"],
-          "default": "summary"
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["summary", "full", "none", "readable"],
+              "default": "summary"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "enum": ["summary", "full", "none", "readable"]
+                }
+              },
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["summary", "full", "none", "readable"]
+              }
+            }
+          ]
         },
-        "showSources": { "type": "boolean" },
+        "showSources": {
+          "type": "boolean",
+          "description": "Show source citations from tool results. Defaults to false — set to true to display source-url and source-document parts."
+        },
+        "showStatusUpdates": { "type": "boolean", "default": true },
+        "showStepSeparators": { "type": "boolean", "default": false },
+        "showToolInputStreaming": { "type": "boolean", "default": true },
+        "editableMessages": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow inline editing of sent user messages by clicking on them."
+        },
+        "sourcesDisplay": {
+          "type": "object",
+          "properties": {
+            "inline": { "type": "boolean", "default": false },
+            "expandIconPosition": { "type": "string", "enum": ["start", "end"], "default": "end" }
+          }
+        },
         "actions": {
-          "type": "array",
-          "items": { "type": "string", "enum": ["copy", "feedback"] }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["copy", "feedback", "regenerate", "delete", "audio"]
+              },
+              "description": "Array shorthand — list the actions to enable."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "copy": { "type": "boolean", "default": true },
+                "feedback": { "type": "boolean", "default": true },
+                "regenerate": { "type": "boolean", "default": false },
+                "delete": { "type": "boolean", "default": false },
+                "audio": { "type": "boolean", "default": false }
+              },
+              "description": "Object form — set each action to true or false."
+            }
+          ]
         },
         "roles": {
           "type": "object",
@@ -51,14 +110,30 @@
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             },
             "user": {
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "avatar": { "type": "string" }
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
               }
             }
           }
@@ -68,29 +143,51 @@
     "messages": {
       "type": "array"
     },
-    "conversations": {
-      "type": "object",
-      "properties": {
-        "enabled": { "type": "boolean" }
-      }
+    "conversationId": {
+      "type": "string",
+      "description": "Active conversation ID. When this value changes, messages are automatically cleared."
     },
     "sender": {
       "type": "object",
       "properties": {
-        "placeholder": { "type": "string" },
+        "placeholder": { "type": "string", "default": "Type a message..." },
+        "submitType": {
+          "type": "string",
+          "enum": ["enter", "shiftEnter"],
+          "default": "enter"
+        },
+        "allowSpeech": { "type": "boolean", "default": false },
         "attachments": {
           "type": "object",
           "properties": {
             "enabled": { "type": "boolean" },
             "accept": { "type": "string" },
-            "maxSize": { "type": "number" }
+            "maxSize": { "type": "number" },
+            "s3PostPolicyRequestId": {
+              "type": "string",
+              "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
+            }
+          }
+        },
+        "switches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "default": { "type": "boolean", "default": false }
+            },
+            "required": ["key", "label"]
           }
         }
       }
     },
     "display": {
       "type": "string",
-      "enum": ["inline", "drawer"]
+      "enum": ["inline", "drawer"],
+      "default": "inline"
     },
     "drawer": {
       "type": "object",
@@ -99,6 +196,28 @@
         "width": { "type": "number" },
         "title": { "type": "string" }
       }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": {}
+        }
+      }
+    },
+    "height": {
+      "type": "string",
+      "default": "calc(100dvh - 170px)",
+      "description": "CSS height of the chat container. Only applies when display is 'inline'."
+    },
+    "maxWidth": {
+      "type": "number",
+      "default": 800,
+      "description": "Maximum width of the chat container in pixels."
     }
   },
   "required": ["agentId"]

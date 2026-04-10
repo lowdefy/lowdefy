@@ -179,6 +179,27 @@ export default {
             type: 'Agent "hooks" should be an object.',
           },
         },
+        agents: {
+          type: 'array',
+          items: {
+            anyOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                required: ['agentId'],
+                properties: {
+                  agentId: { type: 'string' },
+                  description: { type: 'string' },
+                  inputSchema: { type: 'object' },
+                },
+                additionalProperties: false,
+              },
+            ],
+          },
+          errorMessage: {
+            type: 'Agent "agents" should be an array.',
+          },
+        },
       },
       errorMessage: {
         type: 'Agent should be an object.',

@@ -201,4 +201,32 @@ test.describe('PhoneNumberInput Block', () => {
 
     await expect(input).toHaveValue('');
   });
+
+  // ============================================
+  // FORMATTING TESTS
+  // ============================================
+
+  test('strips leading zeros from phone number value', async ({ page }) => {
+    const input = getInput(page, 'phone_format_test');
+    await input.fill('0821234567');
+    await expect(input).toHaveValue('0821234567');
+
+    const display = getBlock(page, 'format_display');
+    await expect(display).toHaveText('Formatted: +27821234567');
+  });
+
+  test('strips non-digit characters from phone number value', async ({ page }) => {
+    const input = getInput(page, 'phone_format_test');
+    await input.fill('(082) 123-4567');
+    await expect(input).toHaveValue('(082) 123-4567');
+
+    const display = getBlock(page, 'format_display');
+    await expect(display).toHaveText('Formatted: +27821234567');
+  });
+
+  test('empty input produces empty phone_number, not just dial code', async ({ page }) => {
+    const display = getBlock(page, 'empty_display');
+    // On init with no input, phone_number should not be set to "+27"
+    await expect(display).not.toContainText('+27');
+  });
 });

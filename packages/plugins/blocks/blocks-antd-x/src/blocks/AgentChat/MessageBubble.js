@@ -16,11 +16,36 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import { CodeHighlighter, Mermaid, ThoughtChain, Think } from '@ant-design/x';
-import { Button } from 'antd';
-import { CopyOutlined, LikeOutlined, DislikeOutlined } from '@ant-design/icons';
+import {
+  Actions,
+  CodeHighlighter,
+  FileCard,
+  Mermaid,
+  Sources,
+  ThoughtChain,
+  Think,
+} from '@ant-design/x';
+import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
+import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
+import formatToolResult from './formatToolResult.js';
 import ToolApproval from './ToolApproval.js';
+
+// Module-level singleton for the LaTeX marked extension.
+// Loaded once on first use — the Latex plugin from @ant-design/x-markdown
+// includes KaTeX CSS import and handles $...$ inline and $$...$$ display math.
+let latexConfig = null;
+function getLatexConfig() {
+  if (latexConfig) return latexConfig;
+  try {
+    // eslint-disable-next-line global-require
+    const Latex = require('@ant-design/x-markdown/plugins/Latex').default;
+    latexConfig = { extensions: Latex() };
+  } catch {
+    latexConfig = {};
+  }
+  return latexConfig;
+}
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
 function PlainCodeBlock({ children, block, lang }) {
@@ -91,34 +116,82 @@ function summarizeToolOutput(output) {
   return String(output);
 }
 
-function MessageActions({ actions, textContent, messageId, onFeedback }) {
+function resolveToolResultMode(toolResultDisplay, toolName) {
+  if (typeof toolResultDisplay === 'string') return toolResultDisplay;
+  if (typeof toolResultDisplay === 'object') {
+    return toolResultDisplay[toolName] ?? toolResultDisplay.default ?? 'readable';
+  }
+  return 'summary';
+}
+
+function normalizeActions(actions) {
+  if (Array.isArray(actions)) {
+    const obj = {};
+    for (const action of actions) {
+      obj[action] = true;
+    }
+    return obj;
+  }
+  return actions ?? {};
+}
+
+function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenerate, onDelete }) {
+  const normalized = normalizeActions(actions);
+  const items = [];
+
+  if (normalized.copy) {
+    items.push({
+      key: 'copy',
+      label: 'Copy',
+      actionRender: () => <Actions.Copy text={textContent} />,
+    });
+  }
+  if (normalized.feedback) {
+    items.push({
+      key: 'feedback',
+      label: 'Feedback',
+      actionRender: () => (
+        <Actions.Feedback onChange={(rating) => onFeedback?.({ messageId, rating })} />
+      ),
+    });
+  }
+  if (normalized.regenerate) {
+    items.push({
+      key: 'regenerate',
+      icon: <ReloadOutlined />,
+      label: 'Regenerate',
+      onItemClick: () => onRegenerate?.({ messageId }),
+    });
+  }
+  if (normalized.delete) {
+    items.push({
+      key: 'delete',
+      icon: <DeleteOutlined />,
+      label: 'Delete',
+      danger: true,
+      onItemClick: () => onDelete?.({ messageId }),
+    });
+  }
+
+  if (items.length === 0) return null;
+  return <Actions items={items} />;
+}
+
+function SourcesDisplay({ sourceParts, config }) {
+  if (sourceParts.length === 0) return null;
+  const items = sourceParts.map((source, i) => ({
+    key: `source-${i}`,
+    title: source.title ?? source.url ?? `Source ${i + 1}`,
+    url: source.url,
+    description: source.url,
+  }));
   return (
-    <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-      {actions.includes('copy') && (
-        <Button
-          type="text"
-          size="small"
-          icon={<CopyOutlined />}
-          onClick={() => navigator.clipboard.writeText(textContent)}
-        />
-      )}
-      {actions.includes('feedback') && (
-        <>
-          <Button
-            type="text"
-            size="small"
-            icon={<LikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'positive' })}
-          />
-          <Button
-            type="text"
-            size="small"
-            icon={<DislikeOutlined />}
-            onClick={() => onFeedback?.({ messageId, rating: 'negative' })}
-          />
-        </>
-      )}
-    </div>
+    <Sources
+      items={items}
+      title="Sources"
+      inline={config?.sourcesDisplay?.inline ?? false}
+      expandIconPosition={config?.sourcesDisplay?.expandIconPosition ?? 'end'}
+    />
   );
 }
 
@@ -131,6 +204,8 @@ function MessageBubble({
   actions,
   messageId,
   onFeedback,
+  onRegenerate,
+  onDelete,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -138,13 +213,16 @@ function MessageBubble({
   const toolResultDisplay = config?.toolResultDisplay ?? 'summary';
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
+  const renderLatex = config?.renderLatex ?? false;
+  const markdownConfig = renderLatex ? getLatexConfig() : undefined;
 
   const markdownComponents = useMemo(() => {
     if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
     return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
   }, [renderMermaid, codeHighlighter]);
 
-  const showActions = actions && actions.length > 0 && !isStreaming;
+  const normalizedActions = normalizeActions(actions);
+  const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;
 
   const showSources = config?.showSources;
   const sourceParts = showSources
@@ -157,40 +235,19 @@ function MessageBubble({
         <Markdown
           streaming={isStreaming ? { hasNextChunk: true } : undefined}
           components={markdownComponents}
+          config={markdownConfig}
         >
           {content}
         </Markdown>
-        {sourceParts.length > 0 && (
-          <div style={{ marginTop: 8 }}>
-            <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {sourceParts.map((source, i) => (
-                <a
-                  key={`source-${i}`}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: 12,
-                    padding: '2px 8px',
-                    background: '#f5f5f5',
-                    borderRadius: 4,
-                    color: '#1677ff',
-                    textDecoration: 'none',
-                  }}
-                >
-                  {source.title ?? source.url ?? `Source ${i + 1}`}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+        <SourcesDisplay sourceParts={sourceParts} config={config} />
         {showActions && (
-          <MessageActions
-            actions={actions}
+          <BubbleActions
+            actions={normalizedActions}
             textContent={content}
             messageId={messageId}
             onFeedback={onFeedback}
+            onRegenerate={onRegenerate}
+            onDelete={onDelete}
           />
         )}
       </div>
@@ -207,13 +264,17 @@ function MessageBubble({
   if (reasoningDisplay === 'grouped') {
     const reasoning = { category: 'reasoning', parts: [] };
     const tools = { category: 'tool', parts: [] };
+    const files = { category: 'file', parts: [] };
+    const status = { category: 'status', parts: [] };
     const text = { category: 'text', parts: [] };
     for (const part of parts) {
       if (part.type === 'reasoning') reasoning.parts.push(part);
       else if (part.type === 'text') text.parts.push(part);
       else if (getToolInfo(part)) tools.parts.push(part);
+      else if (part.type === 'file') files.parts.push(part);
+      else if (part.type === 'data-status') status.parts.push(part);
     }
-    segments = [reasoning, tools, text].filter((s) => s.parts.length > 0);
+    segments = [reasoning, tools, files, status, text].filter((s) => s.parts.length > 0);
   } else {
     segments = [];
     let current = null;
@@ -227,6 +288,10 @@ function MessageBubble({
         category = 'reasoning';
       } else if (getToolInfo(part)) {
         category = 'tool';
+      } else if (part.type === 'file') {
+        category = 'file';
+      } else if (part.type === 'data-status') {
+        category = 'status';
       } else {
         continue;
       }
@@ -247,13 +312,21 @@ function MessageBubble({
     .join('');
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {segments.map((segment, idx) => {
         if (segment.category === 'reasoning' && showReasoning) {
           const text = segment.parts.map((p) => p.text).join('');
-          if (text.length === 0) return null;
+          if (text.length === 0 && !isStreaming) return null;
+          const isActiveReasoning =
+            isStreaming && segment.parts.some((p) => p.state === 'streaming');
           return (
-            <Think key={`reasoning-${idx}`} title="Reasoning" defaultExpanded={false}>
+            <Think
+              key={`reasoning-${idx}`}
+              title="Reasoning"
+              defaultExpanded={false}
+              loading={isActiveReasoning}
+              blink={isActiveReasoning}
+            >
               {text}
             </Think>
           );
@@ -294,26 +367,126 @@ function MessageBubble({
             } else if (tool.state === 'output-error') {
               status = 'error';
             }
+
+            // Detect sub-agent results
+            const isSubAgent = tool.output?._subAgent === true;
+            const toolOutput = isSubAgent ? tool.output.text : tool.output;
+
             let description;
+            let content;
+            let collapsible = false;
             if (status === 'loading') {
-              description = tool.input
-                ? `Called with: ${JSON.stringify(tool.input)}`
-                : 'Running...';
+              const showInput = config?.showToolInputStreaming !== false;
+              if (showInput && tool.input && Object.keys(tool.input).length > 0) {
+                description = `Input: ${JSON.stringify(tool.input, null, 2)}`;
+              } else {
+                description = 'Running...';
+              }
             } else if (status === 'error') {
               description = 'Tool execution failed';
-            } else if (toolResultDisplay === 'full') {
-              description = JSON.stringify(tool.output, null, 2);
+            } else if (toolOutput?.display && typeof toolOutput.display === 'string') {
+              description = summarizeToolOutput(toolOutput.display);
+              content = (
+                <Markdown components={markdownComponents} config={markdownConfig}>
+                  {toolOutput.display}
+                </Markdown>
+              );
+              collapsible = true;
+            } else if (isSubAgent) {
+              // Sub-agent results: short status in description, full response in styled content
+              description = 'Completed';
+              const subAgentText =
+                typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2);
+              content = (
+                <div
+                  style={{
+                    fontSize: '0.85em',
+                    color: 'rgba(0, 0, 0, 0.65)',
+                    borderLeft: '2px solid #d9d9d9',
+                    paddingLeft: 12,
+                  }}
+                >
+                  <Markdown components={markdownComponents} config={markdownConfig}>
+                    {subAgentText}
+                  </Markdown>
+                </div>
+              );
+              collapsible = true;
             } else {
-              description = summarizeToolOutput(tool.output);
+              const mode = resolveToolResultMode(toolResultDisplay, tool.toolName);
+              if (mode === 'readable') {
+                description = summarizeToolOutput(toolOutput);
+                content = formatToolResult(toolOutput);
+                collapsible = true;
+              } else if (mode === 'full') {
+                description = summarizeToolOutput(toolOutput);
+                content = JSON.stringify(toolOutput, null, 2);
+                collapsible = true;
+              } else if (mode === 'none') {
+                description = 'Completed';
+              } else {
+                // summary mode: show summary, add readable content behind collapse
+                description = summarizeToolOutput(toolOutput);
+                const readable = formatToolResult(toolOutput);
+                if (readable != null) {
+                  content = readable;
+                  collapsible = true;
+                }
+              }
             }
             return {
               key: tool.toolCallId,
               title: tool.toolName,
               description,
+              ...(content != null ? { content } : {}),
+              ...(collapsible ? { collapsible: true } : {}),
+              ...(isSubAgent ? { icon: <RobotOutlined /> } : {}),
+              ...(status === 'loading' ? { blink: true } : {}),
               status,
             };
           });
           return <ThoughtChain key={`tool-${idx}`} items={items} />;
+        }
+        if (segment.category === 'file') {
+          const fileItems = segment.parts.map((part, i) => {
+            const cardType = getFileCardType(part.mediaType);
+            return {
+              key: `file-${idx}-${i}`,
+              name: getFileName(part),
+              type: cardType,
+              icon: getFileCardIcon(part.mediaType, part.filename),
+              src:
+                cardType === 'image' || cardType === 'video' || cardType === 'audio'
+                  ? part.url
+                  : undefined,
+            };
+          });
+          if (fileItems.length === 1) {
+            return <FileCard key={`file-${idx}`} {...fileItems[0]} />;
+          }
+          return <FileCard.List key={`file-${idx}`} items={fileItems} overflow="wrap" />;
+        }
+        if (segment.category === 'status') {
+          const lastStatus = segment.parts[segment.parts.length - 1];
+          if (!isStreaming || config?.showStatusUpdates === false) return null;
+          return (
+            <div
+              key={`status-${idx}`}
+              style={{
+                color: '#8c8c8c',
+                fontSize: '0.85em',
+                padding: '4px 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>
+                ⟳
+              </span>
+              {lastStatus.data?.message ?? 'Processing...'}
+            </div>
+          );
         }
         if (segment.category === 'text') {
           const text = segment.parts.map((p) => p.text).join('');
@@ -324,6 +497,7 @@ function MessageBubble({
               key={`text-${idx}`}
               streaming={isStreaming && isLastText ? { hasNextChunk: true } : undefined}
               components={markdownComponents}
+              config={markdownConfig}
             >
               {text}
             </Markdown>
@@ -331,37 +505,15 @@ function MessageBubble({
         }
         return null;
       })}
-      {sourceParts.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>Sources:</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {sourceParts.map((source, i) => (
-              <a
-                key={`source-${i}`}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: 12,
-                  padding: '2px 8px',
-                  background: '#f5f5f5',
-                  borderRadius: 4,
-                  color: '#1677ff',
-                  textDecoration: 'none',
-                }}
-              >
-                {source.title ?? source.url ?? `Source ${i + 1}`}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <SourcesDisplay sourceParts={sourceParts} config={config} />
       {showActions && (
-        <MessageActions
-          actions={actions}
+        <BubbleActions
+          actions={normalizedActions}
           textContent={allTextContent}
           messageId={messageId}
           onFeedback={onFeedback}
+          onRegenerate={onRegenerate}
+          onDelete={onDelete}
         />
       )}
     </div>

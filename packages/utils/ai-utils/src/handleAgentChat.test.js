@@ -19,8 +19,18 @@ import { jest } from '@jest/globals';
 const mockTool = jest.fn();
 const mockJsonSchema = jest.fn();
 const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
-const mockCreateAgentUIStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
-const mockConsumeStream = jest.fn().mockResolvedValue(undefined);
+const mockHasToolCall = jest.fn((name) => ({ type: 'hasToolCall', toolName: name }));
+
+const mockWriter = {
+  write: jest.fn(),
+  merge: jest.fn().mockResolvedValue(undefined),
+};
+const mockCreateAgentUIStream = jest.fn().mockResolvedValue({ type: 'agent-ui-stream' });
+const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => {
+  mockCreateUIMessageStream._lastExecute = execute;
+  return { type: 'readable-stream' };
+});
+const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
 
 let lastAgentConfig = null;
 class MockToolLoopAgent {
@@ -32,11 +42,13 @@ class MockToolLoopAgent {
 
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
-  createAgentUIStreamResponse: mockCreateAgentUIStreamResponse,
-  consumeStream: mockConsumeStream,
+  createAgentUIStream: mockCreateAgentUIStream,
+  createUIMessageStream: mockCreateUIMessageStream,
+  createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
   stepCountIs: mockStepCountIs,
+  hasToolCall: mockHasToolCall,
 }));
 
 const mockCreateMCPClient = jest.fn();
@@ -100,10 +112,11 @@ test('creates ToolLoopAgent with correct parameters', async () => {
       toolChoice: 'required',
     })
   );
-  expect(mockCreateAgentUIStreamResponse).toHaveBeenCalledWith({
-    agent: expect.any(MockToolLoopAgent),
-    uiMessages: messages,
-    consumeSseStream: expect.any(Function),
+  expect(mockCreateUIMessageStream).toHaveBeenCalledWith({
+    execute: expect.any(Function),
+  });
+  expect(mockCreateUIMessageStreamResponse).toHaveBeenCalledWith({
+    stream: { type: 'readable-stream' },
   });
   expect(result).toEqual({ response: { type: 'web-response' } });
 });
@@ -772,12 +785,6 @@ test('MCP clients closed on finish', async () => {
   };
   mockCreateMCPClient.mockResolvedValue(mockClient);
 
-  let capturedStreamOnFinish;
-  mockCreateAgentUIStreamResponse.mockImplementation((opts) => {
-    capturedStreamOnFinish = opts.onFinish;
-    return { type: 'web-response' };
-  });
-
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
   await handleAgentChat({
@@ -797,9 +804,10 @@ test('MCP clients closed on finish', async () => {
     },
   });
 
-  // MCP cleanup now happens via stream-level onFinish
-  expect(capturedStreamOnFinish).toEqual(expect.any(Function));
-  await capturedStreamOnFinish({ messages: [], finishReason: 'stop', isAborted: false });
+  // MCP cleanup happens inside the execute function
+  const execute = mockCreateUIMessageStream._lastExecute;
+  expect(execute).toEqual(expect.any(Function));
+  await execute({ writer: mockWriter });
   expect(mockClose).toHaveBeenCalled();
 });
 
@@ -904,15 +912,146 @@ test('MCP tool listing failure logs warning and continues', async () => {
   consoleSpy.mockRestore();
 });
 
-test('stream-level onFinish calls hook endpoints with UIMessage array', async () => {
+test('stream-level onFinish calls hook endpoints with messages payload', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
-  let capturedStreamOnFinish;
-  mockCreateAgentUIStreamResponse.mockImplementation((opts) => {
-    capturedStreamOnFinish = opts.onFinish;
-    return { type: 'web-response' };
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages,
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
   });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  expect(execute).toEqual(expect.any(Function));
+
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
+    payload: {
+      messages,
+      finishReason: 'stop',
+      isAborted: false,
+    },
+  });
+});
+
+test('no onFinish hooks does not call callEndpoint in execute', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn();
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(callEndpoint).not.toHaveBeenCalled();
+  expect(localWriter.write).not.toHaveBeenCalled();
+});
+
+test('onFinish hook dataParts are written to the stream writer', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const dataParts = [
+    { type: 'data', value: { suggestions: ['How are you?'] } },
+    { type: 'data', value: { title: 'Greeting conversation' } },
+  ];
+  const callEndpoint = jest.fn().mockResolvedValue({ dataParts });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['generate-suggestions'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(localWriter.write).toHaveBeenCalledTimes(2);
+  expect(localWriter.write).toHaveBeenNthCalledWith(1, dataParts[0]);
+  expect(localWriter.write).toHaveBeenNthCalledWith(2, dataParts[1]);
+});
+
+test('onFinish hook failure logs warning and continues to next hook', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('Network timeout'))
+    .mockResolvedValueOnce({ dataParts: [{ type: 'data', value: { ok: true } }] });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['failing-hook', 'succeeding-hook'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(callEndpoint).toHaveBeenCalledTimes(2);
+  expect(consoleSpy).toHaveBeenCalledWith(
+    expect.stringContaining('onFinish hook "failing-hook" failed')
+  );
+  expect(localWriter.write).toHaveBeenCalledTimes(1);
+  expect(localWriter.write).toHaveBeenCalledWith({ type: 'data', value: { ok: true } });
+  consoleSpy.mockRestore();
+});
+
+test('onFinish hook without dataParts does not write to stream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
 
@@ -931,71 +1070,394 @@ test('stream-level onFinish calls hook endpoints with UIMessage array', async ()
     context: { callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  expect(capturedStreamOnFinish).toEqual(expect.any(Function));
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
 
-  const uiMessages = [
-    { id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] },
-    { id: 'msg-2', role: 'assistant', parts: [{ type: 'text', text: 'hello' }] },
-  ];
-  await capturedStreamOnFinish({
-    messages: uiMessages,
-    finishReason: 'stop',
-    isAborted: false,
-    isContinuation: false,
-    responseMessage: uiMessages[1],
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', expect.any(Object));
+  expect(localWriter.write).not.toHaveBeenCalled();
+});
+
+test('stopOnToolCall with single string creates array stopWhen', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopOnToolCall: 'submit_form' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
+
+  expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
+  expect(lastAgentConfig.stopWhen).toEqual([
+    { type: 'stepCount', count: 10 },
+    { type: 'hasToolCall', toolName: 'submit_form' },
+  ]);
+});
+
+test('stopOnToolCall with array creates stopWhen with multiple conditions', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopOnToolCall: ['submit_form', 'cancel'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(mockHasToolCall).toHaveBeenCalledWith('submit_form');
+  expect(mockHasToolCall).toHaveBeenCalledWith('cancel');
+  expect(lastAgentConfig.stopWhen).toEqual([
+    { type: 'stepCount', count: 10 },
+    { type: 'hasToolCall', toolName: 'submit_form' },
+    { type: 'hasToolCall', toolName: 'cancel' },
+  ]);
+});
+
+test('no stopOnToolCall produces single stopWhen condition', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.stopWhen).toEqual({ type: 'stepCount', count: 10 });
+});
+
+test('activeTools passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', activeTools: ['search', 'write'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.activeTools).toEqual(['search', 'write']);
+});
+
+test('sampling parameters passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'gpt-4o',
+          topP: 0.9,
+          topK: 40,
+          frequencyPenalty: 0.5,
+          presencePenalty: -0.3,
+          seed: 42,
+        },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.topP).toBe(0.9);
+  expect(lastAgentConfig.topK).toBe(40);
+  expect(lastAgentConfig.frequencyPenalty).toBe(0.5);
+  expect(lastAgentConfig.presencePenalty).toBe(-0.3);
+  expect(lastAgentConfig.seed).toBe(42);
+});
+
+test('stopSequences passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', stopSequences: ['END', 'STOP'] },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.stopSequences).toEqual(['END', 'STOP']);
+});
+
+test('maxRetries passed to ToolLoopAgent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', maxRetries: 5 },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.maxRetries).toBe(5);
+});
+
+test('timeout as number passed to createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', timeout: 30000 },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(expect.objectContaining({ timeout: 30000 }));
+});
+
+test('timeout as object passed to createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const timeout = { totalMs: 60000, stepMs: 10000 };
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', timeout },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({ timeout: { totalMs: 60000, stepMs: 10000 } })
+  );
+});
+
+test('no timeout omits key from createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const execute = mockCreateUIMessageStream._lastExecute;
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await execute({ writer: localWriter });
+
+  const streamCallArgs =
+    mockCreateAgentUIStream.mock.calls[mockCreateAgentUIStream.mock.calls.length - 1][0];
+  expect(streamCallArgs).not.toHaveProperty('timeout');
+});
+
+test('undefined new properties do not break agent creation', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.activeTools).toBeUndefined();
+  expect(lastAgentConfig.topP).toBeUndefined();
+  expect(lastAgentConfig.topK).toBeUndefined();
+  expect(lastAgentConfig.frequencyPenalty).toBeUndefined();
+  expect(lastAgentConfig.presencePenalty).toBeUndefined();
+  expect(lastAgentConfig.seed).toBeUndefined();
+  expect(lastAgentConfig.stopSequences).toBeUndefined();
+  expect(lastAgentConfig.maxRetries).toBeUndefined();
+});
+
+test('tool execute passes abortSignal to callEndpoint', async () => {
+  mockJsonSchema.mockImplementation((schema) => schema);
+  mockTool.mockImplementation((def) => def);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getEndpointConfig = jest.fn().mockResolvedValue({
+    description: 'Signal test',
+    payloadSchema: { type: 'object' },
+  });
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: { ok: true } });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [{ endpointId: 'signal-test' }], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig },
+  });
+
+  const toolDef = mockTool.mock.calls[0][0];
+  const mockSignal = new AbortController().signal;
+  await toolDef.execute({ query: 'test' }, { abortSignal: mockSignal });
+
+  expect(callEndpoint).toHaveBeenCalledWith('signal-test', {
+    payload: { query: 'test' },
+    abortSignal: mockSignal,
+  });
+});
+
+test('repairToolCall is passed to ToolLoopAgent when enabled', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', repairToolCall: true },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.experimental_repairToolCall).toEqual(expect.any(Function));
+});
+
+test('repairToolCall is not set when not configured', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  expect(lastAgentConfig.experimental_repairToolCall).toBeUndefined();
+});
+
+test('onFinish hook receives original input messages in payload', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+  const inputMessages = [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }];
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: inputMessages,
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  // Execute the stream to trigger onFinish
+  await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
-    payload: {
-      messages: uiMessages,
+    payload: expect.objectContaining({
+      messages: inputMessages,
       finishReason: 'stop',
       isAborted: false,
-    },
+    }),
   });
-});
-
-test('createAgentUIStreamResponse is called with consumeSseStream for disconnect safety', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  mockCreateAgentUIStreamResponse.mockReturnValue({ type: 'web-response' });
-
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
-  await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [],
-        properties: { model: 'gpt-4o' },
-      },
-      messages: [],
-    },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
-  });
-
-  const callArgs = mockCreateAgentUIStreamResponse.mock.calls[0][0];
-  expect(callArgs.consumeSseStream).toEqual(expect.any(Function));
-});
-
-test('no onFinish hooks produces no stream-level onFinish callback', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  mockCreateAgentUIStreamResponse.mockReturnValue({ type: 'web-response' });
-
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
-  await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [],
-        properties: { model: 'gpt-4o' },
-      },
-      messages: [],
-    },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
-  });
-
-  const callArgs = mockCreateAgentUIStreamResponse.mock.calls[0][0];
-  expect(callArgs.onFinish).toBeUndefined();
 });

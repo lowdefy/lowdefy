@@ -30,6 +30,68 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
+function applyVarDefaults(varDefs, consumerVars) {
+  const result = { ...consumerVars };
+
+  for (const [name, def] of Object.entries(varDefs)) {
+    if (def.properties) {
+      if (type.isObject(result[name]) || type.isUndefined(result[name])) {
+        const consumerObj = type.isObject(result[name]) ? result[name] : {};
+        result[name] = applyVarDefaults(def.properties, consumerObj);
+      }
+      // Non-object consumer values pass through — validateVars catches the type mismatch.
+    } else if (type.isNone(result[name]) && !type.isUndefined(def.default)) {
+      result[name] = def.default;
+    }
+  }
+
+  return result;
+}
+
+function validateVars(varDefs, values, entryId, source, prefix = '') {
+  for (const [varName, varDef] of Object.entries(varDefs)) {
+    const fullName = prefix ? `${prefix}.${varName}` : varName;
+    const value = values[varName];
+
+    if (varDef.required && type.isNone(value)) {
+      throw new ConfigError(
+        `Module "${entryId}" (${source}) requires var "${fullName}"` +
+          (varDef.description ? `\n  - ${varDef.description}` : '') +
+          `\n  - Define it in lowdefy.yaml under modules[id=${entryId}].vars.${fullName}`
+      );
+    }
+
+    if (varDef.properties && !type.isUndefined(value) && !type.isObject(value)) {
+      throw new ConfigError(
+        `Module "${entryId}" (${source}) var "${fullName}" must be type "object" ` +
+          `(has properties) but got "${type.typeOf(value)}".`
+      );
+    }
+
+    if (varDef.type && !type.isNone(value)) {
+      if (type.typeOf(value) !== varDef.type) {
+        throw new ConfigError(
+          `Module "${entryId}" (${source}) var "${fullName}" must be type ` +
+            `"${varDef.type}" but got "${type.typeOf(value)}".` +
+            (varDef.description ? `\n  - ${varDef.description}` : '')
+        );
+      }
+    }
+
+    if (varDef.properties && type.isObject(value)) {
+      for (const key of Object.keys(value)) {
+        if (!varDef.properties[key]) {
+          throw new ConfigError(
+            `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+          );
+        }
+      }
+      validateVars(varDef.properties, value, entryId, source, fullName);
+    }
+  }
+}
+
 async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   if (!entry.id || !type.isString(entry.id)) {
     throw new ConfigError("Module entry 'id' is required and must be a string.");
@@ -66,6 +128,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     sourceRefId: null,
     vars: {},
     moduleVars: entry.vars ?? {},
+    moduleRoot,
     packageRoot,
     path: '',
     currentFile: moduleYamlPath,
@@ -127,30 +190,10 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     }
   }
 
-  // Validate module vars against manifest var definitions
+  // Apply manifest defaults and validate vars
   const varDefs = manifest.vars ?? {};
-  for (const [varName, varDef] of Object.entries(varDefs)) {
-    const value = (entry.vars ?? {})[varName];
-
-    if (varDef.required && type.isUndefined(value)) {
-      throw new ConfigError(
-        `Module "${entry.id}" (${entry.source}) requires var "${varName}"` +
-          (varDef.description ? `\n  - ${varDef.description}` : '') +
-          `\n  - Define it in lowdefy.yaml under modules[id=${entry.id}].vars.${varName}`
-      );
-    }
-
-    if (varDef.type && !type.isUndefined(value)) {
-      const actual = Array.isArray(value) ? 'array' : typeof value;
-      if (actual !== varDef.type) {
-        throw new ConfigError(
-          `Module "${entry.id}" (${entry.source}) var "${varName}" must be type ` +
-            `"${varDef.type}" but got "${actual}".` +
-            (varDef.description ? `\n  - ${varDef.description}` : '')
-        );
-      }
-    }
-  }
+  const effectiveVars = applyVarDefaults(varDefs, entry.vars ?? {});
+  validateVars(varDefs, effectiveVars, entry.id, entry.source);
 
   // Validate plugin dependencies against app's declared plugins
   const requiredPlugins = manifest.plugins ?? [];
@@ -190,7 +233,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     packageRoot,
     moduleRoot,
     isLocal,
-    vars: entry.vars ?? {},
+    vars: effectiveVars,
     connections: entry.connections ?? {},
     manifest,
     dependencies,
@@ -214,6 +257,7 @@ async function resolveFullManifest({ entryId, context }) {
     moduleVars: vars,
     moduleDependencies,
     moduleEntry,
+    moduleRoot,
     packageRoot,
     path: '',
     currentFile: moduleYamlPath,

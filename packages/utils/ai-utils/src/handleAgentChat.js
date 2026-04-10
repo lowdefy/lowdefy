@@ -16,23 +16,16 @@
 
 import {
   ToolLoopAgent,
-  createAgentUIStreamResponse,
-  consumeStream,
-  tool,
-  jsonSchema,
+  createAgentUIStream,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
   stepCountIs,
   convertToModelMessages,
+  hasToolCall,
 } from 'ai';
-import { createMCPClient } from '@ai-sdk/mcp';
-import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
-import { serializer } from '@lowdefy/helpers';
 
-// Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
-// properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
-// strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+import buildAgentTools from './buildAgentTools.js';
+import buildPrepareStep from './buildPrepareStep.js';
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -48,9 +41,9 @@ function cleanHookEvent(event) {
 }
 
 // Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
-// onFinish is intentionally excluded — it is handled at the stream level via
-// createAgentUIStreamResponse so that endpoints receive UIMessage[] (the persisted
-// format developers need) rather than the agent-level CoreMessage[].
+// onFinish is intentionally excluded — it is handled at the stream level inside the
+// createUIMessageStream execute function so that hooks are awaited and can return
+// dataParts to be written to the response stream.
 const hookMapping = {
   onStart: 'experimental_onStart',
   onStepStart: 'experimental_onStepStart',
@@ -99,81 +92,7 @@ async function handleAgentChat({ connection, properties, context, format }) {
   const { agent, messages: rawMessages } = properties;
   const messages = convertDataUrlsToBase64(rawMessages);
 
-  const tools = {};
-
-  for (const toolConfig of agent.tools ?? []) {
-    const { endpointId, confirm } = toolConfig;
-    const endpointConfig = await context.getEndpointConfig({ endpointId });
-
-    tools[endpointId] = tool({
-      description: endpointConfig.description,
-      inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-      ...(confirm ? { needsApproval: true } : {}),
-      execute: async (input) => {
-        const result = await context.callEndpoint(endpointId, { payload: input });
-        if (!result.success) {
-          const err = serializer.deserialize(result.error);
-          throw new Error(err?.message ?? 'Endpoint execution failed');
-        }
-        return cleanBuildArtifact(result.response);
-      },
-    });
-  }
-
-  // Create MCP clients
-  const mcpClients = [];
-
-  for (const mcpSource of agent.mcp ?? []) {
-    const evaluatedSource = context.evaluateOperators(mcpSource);
-
-    try {
-      let transport;
-      if (evaluatedSource.transport === 'stdio') {
-        transport = new Experimental_StdioMCPTransport({
-          command: evaluatedSource.command,
-          args: evaluatedSource.args,
-          env: { ...process.env, ...(evaluatedSource.env ?? {}) },
-        });
-      } else {
-        transport = {
-          type: evaluatedSource.transport ?? 'http',
-          url: evaluatedSource.url,
-          ...(evaluatedSource.headers ? { headers: evaluatedSource.headers } : {}),
-        };
-      }
-      const client = await createMCPClient({ transport });
-      mcpClients.push({ client, source: evaluatedSource });
-    } catch (err) {
-      const label =
-        evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
-      console.warn(`MCP server "${label}" unreachable: ${err.message}`);
-    }
-  }
-
-  // Merge MCP tools with endpoint tools
-  for (const { client, source } of mcpClients) {
-    try {
-      const mcpTools = await client.tools();
-      for (const [name, mcpTool] of Object.entries(mcpTools)) {
-        if (tools[name]) {
-          console.warn(
-            `MCP tool "${name}" from ${
-              source.url ?? source.command
-            } conflicts with endpoint tool — skipped.`
-          );
-          continue;
-        }
-        if (source.confirm) {
-          tools[name] = { ...mcpTool, needsApproval: true };
-        } else {
-          tools[name] = mcpTool;
-        }
-      }
-    } catch (err) {
-      const label = source.transport === 'stdio' ? source.command : source.url;
-      console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
-    }
-  }
+  const { tools, mcpClients } = await buildAgentTools({ agent, context });
 
   const model = connection.provider(agent.properties.model);
 
@@ -182,16 +101,44 @@ async function handleAgentChat({ connection, properties, context, format }) {
     callEndpoint: context.callEndpoint,
   });
 
+  // Build stop conditions
+  const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
+  const stopOnToolCall = agent.properties.stopOnToolCall;
+  if (stopOnToolCall) {
+    const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
+    for (const name of toolNames) {
+      stopConditions.push(hasToolCall(name));
+    }
+  }
+
   const agentInstance = new ToolLoopAgent({
     model,
     instructions: agent.properties.instructions,
     tools,
-    stopWhen: stepCountIs(agent.properties.maxSteps ?? 10),
+    stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
     maxOutputTokens: agent.properties.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
     providerOptions: agent.properties.providerOptions,
+    activeTools: agent.properties.activeTools,
+    topP: agent.properties.topP,
+    topK: agent.properties.topK,
+    frequencyPenalty: agent.properties.frequencyPenalty,
+    presencePenalty: agent.properties.presencePenalty,
+    seed: agent.properties.seed,
+    stopSequences: agent.properties.stopSequences,
+    maxRetries: agent.properties.maxRetries,
+    ...(agent.properties.prepareStep
+      ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
+      : {}),
     ...hookCallbacks,
+    ...(agent.properties.repairToolCall
+      ? {
+          experimental_repairToolCall: async ({ toolCall }) => {
+            return { ...toolCall };
+          },
+        }
+      : {}),
   });
 
   if (format === 'text') {
@@ -205,29 +152,45 @@ async function handleAgentChat({ connection, properties, context, format }) {
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
   const hasMcpClients = mcpClients.length > 0;
 
-  const response = await createAgentUIStreamResponse({
-    agent: agentInstance,
-    uiMessages: messages,
-    sendSources: agent.properties.sendSources,
-    ...(hasOnFinishHooks || hasMcpClients
-      ? {
-          onFinish: async ({ messages: finishedMessages, finishReason, isAborted }) => {
-            if (hasOnFinishHooks) {
-              const payload = { messages: finishedMessages, finishReason, isAborted };
-              for (const endpointId of onFinishEndpointIds) {
-                context.callEndpoint(endpointId, { payload }).catch(() => {});
+  const stream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      // createAgentUIStream validates UIMessages, converts to ModelMessages,
+      // runs the agent, and returns a UIMessageStream — handling the full
+      // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+      const agentStream = await createAgentUIStream({
+        agent: agentInstance,
+        uiMessages: messages,
+        ...(agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {}),
+      });
+
+      writer.merge(agentStream);
+
+      // After merge resolves the agent stream is complete.
+      // Call onFinish hooks — awaited so dataParts can be written to stream.
+      if (hasOnFinishHooks) {
+        for (const endpointId of onFinishEndpointIds) {
+          try {
+            const hookResponse = await context.callEndpoint(endpointId, {
+              payload: { messages, finishReason: 'stop', isAborted: false },
+            });
+            if (hookResponse?.dataParts) {
+              for (const part of hookResponse.dataParts) {
+                writer.write(part);
               }
             }
-            if (hasMcpClients) {
-              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
-            }
-          },
+          } catch (error) {
+            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+          }
         }
-      : {}),
-    consumeSseStream: async ({ stream }) => {
-      consumeStream({ stream }).catch(() => {});
+      }
+
+      if (hasMcpClients) {
+        await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+      }
     },
   });
+
+  const response = createUIMessageStreamResponse({ stream });
   return { response };
 }
 

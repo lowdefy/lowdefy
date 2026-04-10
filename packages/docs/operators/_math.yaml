@@ -253,6 +253,14 @@ _ref:
           ```
         description: |
           The `_math.min` method returns the [smallest of the numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max) given as input parameters.
+      - name: mod
+        types: |
+          ```
+          ({dividend: number, divisor: number}): number
+          ([dividend: number, divisor: number]): number
+          ```
+        description: |
+          The `_math.mod` method returns the remainder of the `dividend` divided by the `divisor` (the [modulo operation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder)).
       - name: pow
         types: |
           ```

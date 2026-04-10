@@ -72,7 +72,7 @@ function testSchema({ components, context }) {
       let message = error.message;
       if (error.params?.additionalProperty) {
         message = `${message} - "${error.params.additionalProperty}"`;
-      } else if (propertyName) {
+      } else if (propertyName && error.keyword !== 'errorMessage') {
         message = `"${propertyName}" ${message}`;
       }
 

@@ -17,9 +17,11 @@
 import { DefaultChatTransport } from 'ai';
 
 class LowdefyChatTransport extends DefaultChatTransport {
-  constructor({ pageId, agentId }) {
+  constructor({ pageId, agentId, conversationId }) {
+    const base = `/api/agent/${pageId}/${agentId}`;
+    const api = conversationId ? `${base}?conversationId=${encodeURIComponent(conversationId)}` : base;
     super({
-      api: `/api/agent/${pageId}/${agentId}`,
+      api,
       credentials: 'include',
     });
   }

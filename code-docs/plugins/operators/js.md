@@ -248,7 +248,7 @@ absolute:
       - _state: number
 ```
 
-Supported methods: `abs`, `ceil`, `floor`, `round`, `max`, `min`, `pow`, `sqrt`, etc.
+Supported methods: `abs`, `ceil`, `floor`, `mod`, `round`, `max`, `min`, `pow`, `sqrt`, etc.
 
 ### \_random
 

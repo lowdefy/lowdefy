@@ -17,41 +17,64 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
-import { Sender } from '@ant-design/x';
-import { Button, Tag, Upload } from 'antd';
+import { FileCard, Prompts, Sender } from '@ant-design/x';
+import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
+
 import { type } from '@lowdefy/helpers';
 
-import ConversationSidebar from './ConversationSidebar.js';
+import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
+
 import DrawerWrapper from './DrawerWrapper.js';
 import LowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
     welcome,
     messageDisplay,
     sender,
-    conversations: conversationsConfig,
+    conversationId,
     messages: externalMessages,
     display,
     drawer: drawerConfig,
+    suggestions,
   } = properties;
   const senderRef = useRef(null);
+  const finishMetaRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
+  const switchConfigs = sender?.switches ?? [];
+  const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
+  const [switchState, setSwitchState] = useState(() => {
+    const initial = {};
+    for (const sw of switchConfigs) {
+      initial[sw.key] = sw.default ?? false;
+    }
+    return initial;
+  });
 
-  // Sidebar driven entirely by external config
-  const showSidebar = conversationsConfig?.enabled;
-  const sidebarItems = conversationsConfig?.items ?? [];
-  const activeKey = conversationsConfig?.activeKey;
+  const transport = useMemo(
+    () => new LowdefyChatTransport({ pageId, agentId, conversationId }),
+    [pageId, agentId, conversationId]
+  );
 
-  const transport = useMemo(() => new LowdefyChatTransport({ pageId, agentId }), [pageId, agentId]);
+  const bubbleListRef = useRef(null);
 
-  const { messages, sendMessage, status, stop, addToolApprovalResponse, setMessages } = useChat({
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    addToolApprovalResponse,
+    setMessages,
+    regenerate,
+    clearError,
+  } = useChat({
     transport,
     experimental_throttle: 50,
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -61,63 +84,188 @@ function AgentChat({ blockId, methods, pageId, properties }) {
         event: { message: error.message },
       });
     },
+    onFinish: (options) => {
+      finishMetaRef.current = {
+        finishReason: options.finishReason,
+        isAbort: options.isAbort,
+        isDisconnect: options.isDisconnect,
+      };
+    },
   });
 
-  // Clear messages when activeKey changes so the new conversation starts clean.
+  // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
-  const prevActiveKeyRef = useRef(activeKey);
+  const prevConversationIdRef = useRef(conversationId);
   useEffect(() => {
-    if (activeKey !== prevActiveKeyRef.current) {
-      prevActiveKeyRef.current = activeKey;
+    if (conversationId !== prevConversationIdRef.current) {
+      prevConversationIdRef.current = conversationId;
       setMessages([]);
     }
-  }, [activeKey, setMessages]);
+  }, [conversationId, setMessages]);
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
+  // Compare by count + last ID to avoid re-syncing on every Lowdefy re-render
+  // (operators like _state create new array references even when data hasn't changed).
+  const prevExternalRef = useRef({ count: 0, lastId: null });
   useEffect(() => {
-    if (!type.isUndefined(externalMessages)) {
-      setMessages(externalMessages ?? []);
+    if (type.isUndefined(externalMessages)) return;
+    const msgs = externalMessages ?? [];
+    const count = msgs.length;
+    const lastId = count > 0 ? msgs[count - 1]?.id : null;
+    if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
+      prevExternalRef.current = { count, lastId };
+      setMessages(msgs);
     }
   }, [externalMessages, setMessages]);
 
-  useAgentEvents({ messages, status, methods });
+  // Register CallMethod methods so YAML actions can control the chat.
+  useEffect(() => {
+    methods.registerMethod('regenerate', (args) => {
+      regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
+    });
+    methods.registerMethod('setMessages', (args) => {
+      setMessages(args?.messages ?? []);
+    });
+    methods.registerMethod('sendMessage', (args) => {
+      if (args?.text) {
+        sendMessage({
+          text: args.text,
+          ...(args.files ? { experimental_attachments: args.files } : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+        });
+      }
+    });
+    methods.registerMethod('clearMessages', () => {
+      setMessages([]);
+    });
+    methods.registerMethod('deleteMessage', (args) => {
+      if (args?.messageId) {
+        setMessages((prev) => prev.filter((m) => m.id !== args.messageId));
+      }
+    });
+    methods.registerMethod('stop', () => {
+      stop();
+    });
+    methods.registerMethod('clearError', () => {
+      clearError();
+    });
+    methods.registerMethod('scrollToBottom', () => {
+      bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+    if (attachmentsConfig?.s3PostPolicyRequestId) {
+      methods.registerEvent({
+        name: '__getS3PostPolicy',
+        actions: [
+          {
+            id: '__getS3PostPolicy',
+            type: 'Request',
+            params: [attachmentsConfig.s3PostPolicyRequestId],
+          },
+        ],
+      });
+    }
+  }, []);
+
+  useAgentEvents({ messages, status, methods, finishMetaRef });
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
-
-  function handleConversationChange(key, previousKey) {
-    methods.triggerEvent({
-      name: 'onConversationChange',
-      event: { key, previousKey },
-    });
-  }
-
-  function handleNewConversation() {
-    methods.triggerEvent({
-      name: 'onNewConversation',
-      event: {},
-    });
-  }
 
   function fileToContentPart(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = () => {
-        resolve({ type: 'file', url: reader.result, mediaType: file.type });
+        resolve({ type: 'file', url: reader.result, mediaType: file.type, filename: file.name });
       };
       reader.readAsDataURL(file);
     });
   }
 
+  async function uploadFileToS3(file) {
+    const { name, size, type: fileType } = file;
+    const s3PostPolicyResponse = await methods.triggerEvent({
+      name: '__getS3PostPolicy',
+      event: { file: { name, size, type: fileType } },
+    });
+
+    if (s3PostPolicyResponse.success !== true) {
+      throw new Error('S3 post policy request failed.');
+    }
+
+    const { url, fields = {} } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
+    const { key } = fields;
+
+    const formData = new FormData();
+    Object.keys(fields).forEach((field) => {
+      formData.append(field, fields[field]);
+    });
+    formData.append('file', file);
+
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`S3 upload failed with status ${xhr.status}`));
+        }
+      });
+      xhr.addEventListener('error', () => reject(new Error('S3 upload network error')));
+      xhr.open('POST', url);
+      xhr.send(formData);
+    });
+
+    const objectUrl = url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
+    return { url: objectUrl, mediaType: fileType, filename: name };
+  }
+
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
+
+    const filesMeta = attachedFiles.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    }));
+
+    // onBeforeSend — validation and cancellation only
+    const response = await methods.triggerEvent({
+      name: 'onBeforeSend',
+      event: { text, files: filesMeta, messages, switches: switchState },
+    });
+    if (response.success === false) return;
+
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
-      for (const file of attachedFiles) {
-        const part = await fileToContentPart(file);
-        parts.push(part);
+
+      if (attachmentsConfig?.s3PostPolicyRequestId) {
+        try {
+          const uploadResults = await Promise.all(
+            attachedFiles.map((file) => uploadFileToS3(file))
+          );
+          for (const result of uploadResults) {
+            parts.push({
+              type: 'file',
+              url: result.url,
+              mediaType: result.mediaType,
+              filename: result.filename,
+            });
+          }
+        } catch (error) {
+          methods.triggerEvent({
+            name: 'onError',
+            event: { message: error.message ?? 'File upload to S3 failed.' },
+          });
+          return;
+        }
+      } else {
+        for (const file of attachedFiles) {
+          const part = await fileToContentPart(file);
+          parts.push(part);
+        }
       }
+
       sendMessage({ parts });
       setAttachedFiles([]);
     } else {
@@ -126,9 +274,44 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     senderRef.current?.clear();
   }
 
+  function handleStop() {
+    stop();
+    methods.triggerEvent({
+      name: 'onStop',
+      event: { messages },
+    });
+  }
+
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
   }
+
+  function handleSuggestionClick(suggestion) {
+    methods.triggerEvent({
+      name: 'onSuggestionClick',
+      event: { suggestion },
+    });
+    sendMessage({ text: suggestion.label });
+  }
+
+  function handleSwitchChange(key, checked) {
+    setSwitchState((prev) => ({ ...prev, [key]: checked }));
+    methods.triggerEvent({
+      name: 'onSwitchChange',
+      event: { key, checked },
+    });
+  }
+
+  const agentSuggestions = useMemo(() => {
+    const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
+    if (!lastAssistant?.parts) return null;
+    const suggestionPart = [...lastAssistant.parts]
+      .reverse()
+      .find((p) => p.type === 'data-suggestions');
+    return suggestionPart?.data?.items ?? null;
+  }, [messages]);
+
+  const activeSuggestions = agentSuggestions ?? suggestions;
 
   function handleFeedback({ messageId, rating }) {
     const message = messages.find((msg) => msg.id === messageId);
@@ -143,86 +326,177 @@ function AgentChat({ blockId, methods, pageId, properties }) {
     });
   }
 
+  function handleRegenerate({ messageId }) {
+    methods.triggerEvent({
+      name: 'onRegenerate',
+      event: { messageId, messages },
+    });
+    regenerate({ messageId });
+  }
+
+  function handleEditMessage({ messageId, originalContent, newContent }) {
+    methods.triggerEvent({
+      name: 'onEditMessage',
+      event: { messageId, originalContent, newContent, messages },
+    });
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex >= 0) {
+      setMessages((prev) => prev.slice(0, messageIndex));
+      sendMessage({ text: newContent });
+    }
+  }
+
+  function handleDelete({ messageId }) {
+    const message = messages.find((m) => m.id === messageId);
+    const textContent =
+      message?.parts
+        ?.filter((p) => p.type === 'text')
+        .map((p) => p.text)
+        .join('') ?? '';
+    methods.triggerEvent({
+      name: 'onDeleteMessage',
+      event: { messageId, content: textContent, messages },
+    });
+    setMessages((prev) => prev.filter((m) => m.id !== messageId));
+  }
+
   const chatContent = (
     <div
       id={blockId}
       style={{
         display: 'flex',
+        flexDirection: 'column',
         height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+        maxWidth: properties.maxWidth ?? 800,
+        margin: '0 auto',
+        width: '100%',
       }}
     >
-      {showSidebar && (
-        <ConversationSidebar
-          items={sidebarItems}
-          activeKey={activeKey}
-          onConversationChange={handleConversationChange}
-          onNewConversation={handleNewConversation}
-        />
-      )}
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          maxWidth: properties.maxWidth ?? 800,
-          margin: '0 auto',
-          width: '100%',
-        }}
-      >
-        <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-          {isEmpty ? (
-            <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
-          ) : (
-            <MessageList
-              messages={messages}
-              isStreaming={isBusy}
-              config={messageDisplay}
-              addToolApprovalResponse={addToolApprovalResponse}
-              onFeedback={handleFeedback}
-            />
-          )}
-        </div>
-        <div style={{ padding: '8px 16px 24px' }}>
-          {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
-              {attachedFiles.map((file, i) => (
-                <Tag
-                  key={i}
-                  closable
-                  onClose={() => setAttachedFiles((prev) => prev.filter((_, j) => j !== i))}
-                >
-                  {file.name}
-                </Tag>
-              ))}
-            </div>
-          )}
-          <Sender
-            ref={senderRef}
-            placeholder={sender?.placeholder ?? 'Type a message...'}
-            onSubmit={handleSend}
-            onCancel={stop}
-            loading={isBusy}
-            prefix={
-              attachmentsConfig?.enabled ? (
-                <Upload
-                  beforeUpload={(file) => {
-                    if (attachmentsConfig.maxSize && file.size > attachmentsConfig.maxSize) {
-                      return false;
-                    }
-                    setAttachedFiles((prev) => [...prev, file]);
-                    return false;
-                  }}
-                  accept={attachmentsConfig.accept}
-                  showUploadList={false}
-                  multiple
-                >
-                  <Button type="text" icon={<PaperClipOutlined />} />
-                </Upload>
-              ) : undefined
-            }
+      <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
+        {isEmpty ? (
+          <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
+        ) : (
+          <MessageList
+            ref={bubbleListRef}
+            messages={messages}
+            isStreaming={isBusy}
+            config={messageDisplay}
+            addToolApprovalResponse={addToolApprovalResponse}
+            onFeedback={handleFeedback}
+            onRegenerate={handleRegenerate}
+            onDelete={handleDelete}
+            onEditMessage={handleEditMessage}
+          />
+        )}
+      </div>
+      {!isEmpty && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
+        <div style={{ padding: '0 16px 8px' }}>
+          <Prompts
+            items={activeSuggestions.map((s, i) => ({
+              key: s.key ?? `suggestion-${i}`,
+              label: s.label,
+              description: s.description,
+            }))}
+            onItemClick={({ data }) => handleSuggestionClick(data)}
+            wrap
           />
         </div>
+      )}
+      <div style={{ padding: '8px 16px 24px' }}>
+        {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
+          <FileCard.List
+            style={{ marginBottom: 4 }}
+            items={attachedFiles.map((file, i) => {
+              const cardType = getFileCardType(file.type);
+              return {
+                key: `${i}`,
+                name: file.name,
+                byte: file.size,
+                type: cardType,
+                icon: getFileCardIcon(file.type, file.name),
+                src: cardType === 'image' ? URL.createObjectURL(file) : undefined,
+              };
+            })}
+            removable
+            onRemove={(item) => {
+              setAttachedFiles((prev) => {
+                const idx = prev.findIndex((f) => f.name === item.name && f.size === item.byte);
+                return idx !== -1 ? prev.filter((_, j) => j !== idx) : prev;
+              });
+            }}
+            overflow="wrap"
+            size="small"
+          />
+        )}
+        {attachmentsConfig?.enabled && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            style={{ display: 'none' }}
+            accept={attachmentsConfig.accept}
+            multiple
+            onChange={(e) => {
+              const files = Array.from(e.target.files);
+              const valid = files.filter(
+                (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
+              );
+              setAttachedFiles((prev) => [...prev, ...valid]);
+              e.target.value = '';
+            }}
+          />
+        )}
+        <Sender
+          ref={senderRef}
+          placeholder={sender?.placeholder ?? 'Type a message...'}
+          submitType={sender?.submitType ?? 'enter'}
+          allowSpeech={sender?.allowSpeech ?? false}
+          onSubmit={handleSend}
+          onCancel={handleStop}
+          loading={isBusy}
+          prefix={
+            attachmentsConfig?.enabled ? (
+              <Button
+                type="text"
+                icon={<PaperClipOutlined />}
+                onClick={() => fileInputRef.current?.click()}
+              />
+            ) : undefined
+          }
+          header={
+            sender?.header ? (
+              <Sender.Header
+                title={sender.header.title}
+                closable={sender.header.closable ?? true}
+                open={headerOpen}
+                onOpenChange={setHeaderOpen}
+              >
+                {sender.header.content}
+              </Sender.Header>
+            ) : undefined
+          }
+          footer={
+            switchConfigs.length > 0
+              ? switchConfigs.map((sw) => (
+                  <Sender.Switch
+                    key={sw.key}
+                    value={switchState[sw.key] ?? false}
+                    onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                    icon={
+                      sw.icon ? (
+                        <Icon
+                          blockId={`${blockId}_switch_${sw.key}_icon`}
+                          events={{}}
+                          properties={sw.icon}
+                        />
+                      ) : undefined
+                    }
+                  >
+                    {sw.label}
+                  </Sender.Switch>
+                ))
+              : undefined
+          }
+        />
       </div>
     </div>
   );
