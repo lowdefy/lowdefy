@@ -143,45 +143,9 @@
     "messages": {
       "type": "array"
     },
-    "conversations": {
-      "type": "object",
-      "properties": {
-        "enabled": { "type": "boolean" },
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "key": { "type": "string" },
-              "label": { "type": "string" },
-              "icon": {},
-              "disabled": { "type": "boolean" },
-              "timestamp": { "type": "number" }
-            }
-          }
-        },
-        "activeKey": { "type": "string" },
-        "menu": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "key": { "type": "string" },
-              "label": { "type": "string" },
-              "icon": {},
-              "danger": { "type": "boolean" }
-            }
-          }
-        },
-        "creation": {
-          "type": "object",
-          "properties": {
-            "label": { "type": "string" },
-            "icon": {},
-            "align": { "type": "string", "enum": ["start", "center", "end"] }
-          }
-        }
-      }
+    "conversationId": {
+      "type": "string",
+      "description": "Active conversation ID. When this value changes, messages are automatically cleared."
     },
     "sender": {
       "type": "object",

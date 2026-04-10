@@ -18,22 +18,22 @@ import React from 'react';
 import { Conversations } from '@ant-design/x';
 import { Button } from 'antd';
 
-function ConversationSidebar({
-  items,
-  activeKey,
-  onConversationChange,
-  onNewConversation,
-  onMenuClick,
-  menu,
-  creation,
-  width,
-  groupable,
-}) {
+function AgentConversations({ blockId, methods, properties }) {
+  const { items, activeKey, menu, creation, groupable, width } = properties;
+
+  function handleNew() {
+    methods.triggerEvent({ name: 'onNew', event: {} });
+  }
+
   const menuConfig = menu
     ? (conversation) => ({
         items: menu,
-        onClick: ({ key }) =>
-          onMenuClick?.({ action: key, conversationKey: conversation.key, conversation }),
+        onClick: ({ key }) => {
+          methods.triggerEvent({
+            name: 'onMenuClick',
+            event: { action: key, conversationKey: conversation.key, conversation },
+          });
+        },
       })
     : undefined;
 
@@ -42,14 +42,14 @@ function ConversationSidebar({
         label: creation.label ?? 'New Chat',
         icon: creation.icon,
         align: creation.align ?? 'start',
-        onClick: onNewConversation,
+        onClick: handleNew,
       }
     : undefined;
 
   const groupableConfig = groupable
     ? {
-        label: groupable.label,
         collapsible: groupable.collapsible ?? true,
+        label: groupable.label,
         ...(groupable.defaultExpandedKeys
           ? { defaultExpandedKeys: groupable.defaultExpandedKeys }
           : {}),
@@ -57,10 +57,13 @@ function ConversationSidebar({
     : undefined;
 
   return (
-    <div style={{ width: width ?? 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}>
+    <div
+      id={blockId}
+      style={{ width: width ?? 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}
+    >
       {!creationConfig && (
         <div style={{ padding: '12px 16px' }}>
-          <Button block onClick={onNewConversation}>
+          <Button block onClick={handleNew}>
             + New Chat
           </Button>
         </div>
@@ -69,7 +72,10 @@ function ConversationSidebar({
         items={items ?? []}
         activeKey={activeKey}
         onActiveChange={(key) => {
-          onConversationChange(key, activeKey);
+          methods.triggerEvent({
+            name: 'onSelect',
+            event: { key, previousKey: activeKey },
+          });
         }}
         menu={menuConfig}
         creation={creationConfig}
@@ -79,4 +85,10 @@ function ConversationSidebar({
   );
 }
 
-export default ConversationSidebar;
+AgentConversations.meta = {
+  category: 'display',
+  icons: [],
+  styles: ['blocks/AgentConversations/style.less'],
+};
+
+export default AgentConversations;
