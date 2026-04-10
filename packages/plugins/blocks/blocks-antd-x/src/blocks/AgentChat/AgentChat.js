@@ -32,7 +32,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
     welcome,
@@ -50,6 +50,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
+  const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
   const [switchState, setSwitchState] = useState(() => {
     const initial = {};
     for (const sw of switchConfigs) {
@@ -510,6 +511,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
                 <Sender.Header
                   title={sender.header.title}
                   closable={sender.header.closable ?? true}
+                  open={headerOpen}
+                  onOpenChange={setHeaderOpen}
                 >
                   {sender.header.content}
                 </Sender.Header>
@@ -522,6 +525,15 @@ function AgentChat({ blockId, methods, pageId, properties }) {
                       key={sw.key}
                       value={switchState[sw.key] ?? false}
                       onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                      icon={
+                        sw.icon ? (
+                          <Icon
+                            blockId={`${blockId}_switch_${sw.key}_icon`}
+                            events={{}}
+                            properties={sw.icon}
+                          />
+                        ) : undefined
+                      }
                     >
                       {sw.label}
                     </Sender.Switch>
