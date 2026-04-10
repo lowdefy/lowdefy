@@ -310,6 +310,7 @@
     "c": {
       "key": "root.menus[0:main].links",
       "~k_parent": "b",
+      "~l": 20,
       "~r": "7"
     },
     "d": {

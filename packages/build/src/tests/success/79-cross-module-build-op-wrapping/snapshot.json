@@ -280,6 +280,7 @@
     "a": {
       "key": "root.pages[1:contacts/contact-list:Box].blocks",
       "~k_parent": "9",
+      "~l": 3,
       "~r": "pages.0"
     },
     "b": {

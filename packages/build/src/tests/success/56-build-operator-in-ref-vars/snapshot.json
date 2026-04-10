@@ -293,6 +293,7 @@
     "a": {
       "key": "root.pages[0:testPage:Box].blocks[0:button:Button].events.onClick",
       "~k_parent": "9",
+      "~l": 19,
       "~r": "2"
     },
     "b": {
