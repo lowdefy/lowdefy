@@ -143,13 +143,19 @@ async function handleChannelMessage({ bot, channelsConfig, thread, message }) {
   }
 
   try {
-    const { response: fullStream } = await callAgent(context, {
+    const { response: textStream } = await callAgent(context, {
       agentId: channelConfig.agentId,
       messages,
       format: 'stream',
     });
 
-    await thread.post(fullStream);
+    // Wrap as async generator — Chat SDK expects AsyncIterable<string>
+    async function* toAsyncIterable(stream) {
+      for await (const chunk of stream) {
+        yield chunk;
+      }
+    }
+    await thread.post(toAsyncIterable(textStream));
   } catch (error) {
     context.logger.error(error);
     await thread.post(`Sorry, something went wrong: ${error.message}`);
