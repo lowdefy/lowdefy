@@ -86,7 +86,7 @@ function AgentConversations({ blockId, methods, properties }) {
 }
 
 AgentConversations.meta = {
-  category: 'agent',
+  category: 'display',
   icons: [],
   styles: ['blocks/AgentConversations/style.less'],
 };

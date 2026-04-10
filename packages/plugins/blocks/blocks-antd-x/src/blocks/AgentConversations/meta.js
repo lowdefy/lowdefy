@@ -15,7 +15,7 @@
 */
 
 export default {
-  category: 'agent',
+  category: 'display',
   icons: [],
   valueType: null,
   events: {
@@ -28,7 +28,8 @@ export default {
     properties: {
       items: {
         type: 'array',
-        description: 'Conversation list. Each item: { key, label, icon?, disabled?, timestamp?, group? }.',
+        description:
+          'Conversation list. Each item: { key, label, icon?, disabled?, timestamp?, group? }.',
       },
       activeKey: {
         type: 'string',
