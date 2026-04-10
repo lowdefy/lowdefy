@@ -39,6 +39,7 @@ import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
+import copyFileSystemDirectories from '../copyFileSystemDirectories.js';
 import copyPublicFolder from '../copyPublicFolder.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
@@ -197,6 +198,7 @@ async function shallowBuild(options) {
     );
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
+    await copyFileSystemDirectories({ components, context });
 
     return { components, pageRegistry, context };
   } catch (err) {
