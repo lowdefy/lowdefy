@@ -84,13 +84,14 @@ const MessageList = React.forwardRef(function MessageList(
         isLastAssistant &&
         textContent.length === 0 &&
         !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
+      streaming: isStreaming && isLastAssistant,
     });
   }
 
   // When busy but no assistant message exists yet (submitted, waiting for first chunk),
   // append a placeholder so loading dots are visible immediately.
   if (isStreaming && lastMessage?.role !== 'assistant') {
-    items.push({ key: '__loading', content: '', role: 'ai', loading: true });
+    items.push({ key: '__loading', content: '', role: 'ai', loading: true, streaming: true });
   }
 
   return (
@@ -104,8 +105,24 @@ const MessageList = React.forwardRef(function MessageList(
           shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'You'),
-          // TODO: Bubble editable shows Cancel/OK on all messages when set on the role.
-          // Edit needs per-message state management. Deferred to a follow-up task.
+          editable:
+            config?.editableMessages !== false
+              ? {
+                  onEditConfirm: (key, newContent) => {
+                    const parts = partsMap.get(key);
+                    const originalContent =
+                      (parts ?? [])
+                        .filter((p) => p.type === 'text')
+                        .map((p) => p.text)
+                        .join('') ?? '';
+                    onEditMessage?.({
+                      messageId: key,
+                      originalContent,
+                      newContent,
+                    });
+                  },
+                }
+              : undefined,
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             const fileParts = (parts ?? []).filter((p) => p.type === 'file');
@@ -142,6 +159,9 @@ const MessageList = React.forwardRef(function MessageList(
           style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'Assistant'),
+          typing: config?.roles?.assistant?.typing
+            ? config.roles.assistant.typing
+            : { effect: 'fade-in' },
           contentRender: (content, info) => {
             const parts = partsMap.get(info.key);
             return (

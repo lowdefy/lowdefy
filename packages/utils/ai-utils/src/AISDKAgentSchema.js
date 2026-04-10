@@ -175,6 +175,61 @@ export default {
           'AISDKAgent agent property "timeout" should be a number or an object with totalMs, stepMs, and/or chunkMs.',
       },
     },
+    repairToolCall: {
+      type: 'boolean',
+      description:
+        'Enable automatic tool call repair. When the model generates invalid tool input, the error is sent back to the model for self-correction.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "repairToolCall" should be a boolean.',
+      },
+    },
+    prepareStep: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          steps: {
+            type: 'array',
+            items: { type: 'integer', minimum: 1 },
+            description: 'Specific step numbers this rule applies to.',
+          },
+          from: {
+            type: 'integer',
+            minimum: 1,
+            description: 'Start of step range (inclusive).',
+          },
+          to: {
+            type: 'integer',
+            minimum: 1,
+            description: 'End of step range (inclusive). Omit for open-ended.',
+          },
+          activeTools: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Restrict available tools for matching steps.',
+          },
+          toolChoice: {
+            description: 'Override tool choice for matching steps.',
+          },
+          maxOutputTokens: {
+            type: 'integer',
+            minimum: 1,
+            description: 'Override max output tokens for matching steps.',
+          },
+          temperature: {
+            type: 'number',
+            minimum: 0,
+            maximum: 2,
+            description: 'Override temperature for matching steps.',
+          },
+        },
+      },
+      description:
+        'Rules for dynamic per-step configuration. First matching rule wins. Use steps array or from/to range.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "prepareStep" should be an array of step rules.',
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',

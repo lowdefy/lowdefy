@@ -61,10 +61,18 @@
             }
           ]
         },
-        "showSources": { "type": "boolean" },
+        "showSources": {
+          "type": "boolean",
+          "description": "Show source citations from tool results. Defaults to false — set to true to display source-url and source-document parts."
+        },
         "showStatusUpdates": { "type": "boolean", "default": true },
         "showStepSeparators": { "type": "boolean", "default": false },
         "showToolInputStreaming": { "type": "boolean", "default": true },
+        "editableMessages": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow inline editing of sent user messages by clicking on them."
+        },
         "sourcesDisplay": {
           "type": "object",
           "properties": {
@@ -73,15 +81,27 @@
           }
         },
         "actions": {
-          "type": "object",
-          "properties": {
-            "copy": { "type": "boolean", "default": true },
-            "feedback": { "type": "boolean", "default": true },
-            "regenerate": { "type": "boolean", "default": false },
-            "edit": { "type": "boolean", "default": false },
-            "delete": { "type": "boolean", "default": false },
-            "audio": { "type": "boolean", "default": false }
-          }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["copy", "feedback", "regenerate", "delete", "audio"]
+              },
+              "description": "Array shorthand — list the actions to enable."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "copy": { "type": "boolean", "default": true },
+                "feedback": { "type": "boolean", "default": true },
+                "regenerate": { "type": "boolean", "default": false },
+                "delete": { "type": "boolean", "default": false },
+                "audio": { "type": "boolean", "default": false }
+              },
+              "description": "Object form — set each action to true or false."
+            }
+          ]
         },
         "roles": {
           "type": "object",
@@ -166,7 +186,7 @@
     "sender": {
       "type": "object",
       "properties": {
-        "placeholder": { "type": "string" },
+        "placeholder": { "type": "string", "default": "Type a message..." },
         "submitType": {
           "type": "string",
           "enum": ["enter", "shiftEnter"],
@@ -202,7 +222,8 @@
     },
     "display": {
       "type": "string",
-      "enum": ["inline", "drawer"]
+      "enum": ["inline", "drawer"],
+      "default": "inline"
     },
     "drawer": {
       "type": "object",
@@ -226,10 +247,12 @@
     },
     "height": {
       "type": "string",
-      "description": "CSS height of the chat container (e.g. '600px', '80vh')."
+      "default": "calc(100dvh - 170px)",
+      "description": "CSS height of the chat container. Only applies when display is 'inline'."
     },
     "maxWidth": {
       "type": "number",
+      "default": 800,
       "description": "Maximum width of the chat container in pixels."
     }
   },

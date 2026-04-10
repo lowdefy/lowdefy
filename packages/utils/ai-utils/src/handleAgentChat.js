@@ -24,6 +24,7 @@ import {
 } from 'ai';
 
 import buildAgentTools from './buildAgentTools.js';
+import buildPrepareStep from './buildPrepareStep.js';
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -126,7 +127,17 @@ async function handleAgentChat({ connection, properties, context }) {
     seed: agent.properties.seed,
     stopSequences: agent.properties.stopSequences,
     maxRetries: agent.properties.maxRetries,
+    ...(agent.properties.prepareStep
+      ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
+      : {}),
     ...hookCallbacks,
+    ...(agent.properties.repairToolCall
+      ? {
+          experimental_repairToolCall: async ({ toolCall }) => {
+            return { ...toolCall };
+          },
+        }
+      : {}),
   });
 
   const onFinishEndpointIds = agent.hooks?.onFinish;

@@ -69,7 +69,7 @@ async function callAgent(context, { agentId, pageId, messages }) {
         payload: {},
         steps: {},
       }),
-    callEndpoint: async (endpointId, { payload }) => {
+    callEndpoint: async (endpointId, { payload, abortSignal }) => {
       const endpointConfig = await getEndpointConfig(context, { endpointId });
       authorizeApiEndpoint(context, { endpointConfig });
       const routineContext = {

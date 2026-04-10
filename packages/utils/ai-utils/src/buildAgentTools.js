@@ -49,8 +49,8 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
       description: endpointConfig.description,
       inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
       ...(confirm ? { needsApproval: true } : {}),
-      execute: async (input) => {
-        const result = await context.callEndpoint(endpointId, { payload: input });
+      execute: async (input, { abortSignal } = {}) => {
+        const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
         if (!result.success) {
           const err = serializer.deserialize(result.error);
           throw new Error(err?.message ?? 'Endpoint execution failed');

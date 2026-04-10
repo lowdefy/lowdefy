@@ -32,7 +32,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
     welcome,
@@ -50,6 +50,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
+  const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
   const [switchState, setSwitchState] = useState(() => {
     const initial = {};
     for (const sw of switchConfigs) {
@@ -216,8 +217,7 @@ function AgentChat({ blockId, methods, pageId, properties }) {
       throw new Error('S3 post policy request failed.');
     }
 
-    const { url, fields = {} } =
-      s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
+    const { url, fields = {} } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
     const { key } = fields;
 
     const formData = new FormData();
@@ -401,6 +401,8 @@ function AgentChat({ blockId, methods, pageId, properties }) {
           onMenuClick={handleConversationMenuClick}
           menu={conversationsConfig?.menu}
           creation={conversationsConfig?.creation}
+          width={conversationsConfig?.width}
+          groupable={conversationsConfig?.groupable}
         />
       )}
       <div
@@ -504,16 +506,41 @@ function AgentChat({ blockId, methods, pageId, properties }) {
                 />
               ) : undefined
             }
-          >
-            {switchConfigs.map((sw) => (
-              <Sender.Switch
-                key={sw.key}
-                checked={switchState[sw.key] ?? false}
-                onChange={(checked) => handleSwitchChange(sw.key, checked)}
-                title={sw.label}
-              />
-            ))}
-          </Sender>
+            header={
+              sender?.header ? (
+                <Sender.Header
+                  title={sender.header.title}
+                  closable={sender.header.closable ?? true}
+                  open={headerOpen}
+                  onOpenChange={setHeaderOpen}
+                >
+                  {sender.header.content}
+                </Sender.Header>
+              ) : undefined
+            }
+            footer={
+              switchConfigs.length > 0
+                ? switchConfigs.map((sw) => (
+                    <Sender.Switch
+                      key={sw.key}
+                      value={switchState[sw.key] ?? false}
+                      onChange={(checked) => handleSwitchChange(sw.key, checked)}
+                      icon={
+                        sw.icon ? (
+                          <Icon
+                            blockId={`${blockId}_switch_${sw.key}_icon`}
+                            events={{}}
+                            properties={sw.icon}
+                          />
+                        ) : undefined
+                      }
+                    >
+                      {sw.label}
+                    </Sender.Switch>
+                  ))
+                : undefined
+            }
+          />
         </div>
       </div>
     </div>
