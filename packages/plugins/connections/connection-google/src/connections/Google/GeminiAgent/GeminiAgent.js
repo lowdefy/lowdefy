@@ -17,7 +17,7 @@
 import { handleAgentChat } from '@lowdefy/ai-utils';
 import schema from './schema.js';
 
-async function resolver({ connection, properties, context }) {
+async function resolver({ connection, properties, context, format }) {
   const props = properties.agent.properties;
   const google = {};
   if (props.thinkingConfig) google.thinkingConfig = props.thinkingConfig;
@@ -29,7 +29,7 @@ async function resolver({ connection, properties, context }) {
       google: { ...props.providerOptions?.google, ...google },
     };
   }
-  return handleAgentChat({ connection, properties, context });
+  return handleAgentChat({ connection, properties, context, format });
 }
 
 const GeminiAgent = { schema, resolver };

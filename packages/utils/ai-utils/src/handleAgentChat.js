@@ -148,15 +148,13 @@ async function handleAgentChat({ connection, properties, context, format }) {
       ...(hasMcpClients
         ? {
             onFinish: async () => {
-              await Promise.all(
-                mcpClients.map(({ client }) => client.close().catch(() => {}))
-              );
+              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
             },
           }
         : {}),
     });
     if (format === 'stream') {
-      return { response: result.fullStream };
+      return { response: result.textStream };
     }
     return { response: result.toTextStreamResponse() };
   }
