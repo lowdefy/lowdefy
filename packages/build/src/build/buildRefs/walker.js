@@ -272,11 +272,6 @@ function resolveVar(node, ctx) {
 
 // Resolve a _module.var node
 function resolveModuleVar(node, ctx) {
-  if (!ctx.moduleVars) {
-    // Not in a module context — pass through unchanged
-    return node;
-  }
-
   const key = node['_module.var'];
 
   if (type.isString(key)) {
@@ -305,6 +300,11 @@ function isModuleIdOperator(node) {
 // Resolve _module.pageId
 function resolveModulePageId(arg, moduleEntry, context) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.pageId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.'
+      );
+    }
     if (!(moduleEntry.exports?.pages ?? []).some((p) => p.id === arg)) {
       throw new ConfigError(`Module "${moduleEntry.id}" does not export page "${arg}".`);
     }
@@ -314,9 +314,10 @@ function resolveModulePageId(arg, moduleEntry, context) {
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
     const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
     if (!(targetEntry.exports?.pages ?? []).some((p) => p.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references page "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+        `${caller} references page "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
           `but that module does not export page "${arg.id}".`
       );
     }
@@ -329,6 +330,11 @@ function resolveModulePageId(arg, moduleEntry, context) {
 // Resolve _module.connectionId
 function resolveModuleConnectionId(arg, moduleEntry, context) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.connectionId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.'
+      );
+    }
     if (!(moduleEntry.exports?.connections ?? []).some((c) => c.id === arg)) {
       throw new ConfigError(`Module "${moduleEntry.id}" does not export connection "${arg}".`);
     }
@@ -342,9 +348,10 @@ function resolveModuleConnectionId(arg, moduleEntry, context) {
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
     const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
     if (!(targetEntry.exports?.connections ?? []).some((c) => c.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references connection "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+        `${caller} references connection "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
           `but that module does not export connection "${arg.id}".`
       );
     }
@@ -361,6 +368,11 @@ function resolveModuleConnectionId(arg, moduleEntry, context) {
 // Resolve _module.endpointId
 function resolveModuleEndpointId(arg, moduleEntry, context) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.endpointId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.'
+      );
+    }
     if (!(moduleEntry.exports?.api ?? []).some((e) => e.id === arg)) {
       throw new ConfigError(`Module "${moduleEntry.id}" does not export endpoint "${arg}".`);
     }
@@ -370,9 +382,10 @@ function resolveModuleEndpointId(arg, moduleEntry, context) {
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
     const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
     if (!(targetEntry.exports?.api ?? []).some((e) => e.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references endpoint "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
+        `${caller} references endpoint "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
           `but that module does not export endpoint "${arg.id}".`
       );
     }
@@ -385,6 +398,11 @@ function resolveModuleEndpointId(arg, moduleEntry, context) {
 // Resolve _module.id
 function resolveModuleId(arg, moduleEntry, context) {
   if (!type.isObject(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.id is ambiguous at the app level — no module to scope against. Use { module } to specify the target module.'
+      );
+    }
     return moduleEntry.id;
   }
 
@@ -398,10 +416,6 @@ function resolveModuleId(arg, moduleEntry, context) {
 
 // Dispatch _module.*Id operators
 function resolveModuleIdOperator(node, ctx) {
-  if (!ctx.moduleEntry) {
-    return node;
-  }
-
   const { moduleEntry } = ctx;
   const context = ctx.buildContext;
 
@@ -667,7 +681,9 @@ async function resolve(node, ctx) {
 
   // 6. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
-    if (!ctx.moduleVars) return node;
+    if (!ctx.moduleVars) {
+      throw new ConfigError('_module.var cannot be used at the app level.');
+    }
     return resolve(resolveModuleVar(node, ctx), ctx);
   }
 

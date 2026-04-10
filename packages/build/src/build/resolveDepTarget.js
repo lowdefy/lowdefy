@@ -17,6 +17,17 @@
 import { ConfigError } from '@lowdefy/errors';
 
 function resolveDepTarget({ moduleEntry, depName, context }) {
+  // App-level: module name IS the entry ID (no dependency mapping)
+  if (!moduleEntry) {
+    const targetEntry = context.modules[depName];
+    if (!targetEntry) {
+      throw new ConfigError(
+        `Module entry "${depName}" not found.`
+      );
+    }
+    return targetEntry;
+  }
+
   const wiring = moduleEntry.moduleDependencies ?? {};
   const targetEntryId = wiring[depName];
 

@@ -95,20 +95,22 @@ describe('_module.var resolution', () => {
     expect(result).toBe(25);
   });
 
-  test('passes through unchanged when moduleVars is null', async () => {
+  test('throws when moduleVars is null', async () => {
     const ctx = createWalkContext({
       moduleVars: null,
     });
     const node = { '_module.var': 'roles' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'roles' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
   });
 
-  test('passes through unchanged when moduleVars is undefined', async () => {
+  test('throws when moduleVars is undefined', async () => {
     const ctx = createWalkContext();
     const node = { '_module.var': 'roles' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'roles' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
   });
 
   test('throws on invalid argument type', async () => {
@@ -301,7 +303,7 @@ describe('_module.pageId resolution', () => {
     await expect(
       resolve({ '_module.pageId': { id: 'missing', module: 'events' } }, ctx)
     ).rejects.toThrow(
-      'Module "entry-id" references page "missing" from dependency "events" (entry "events-entry"), but that module does not export page "missing".'
+      'Module "entry-id" references page "missing" from "events" (entry "events-entry"), but that module does not export page "missing".'
     );
   });
 
@@ -447,19 +449,151 @@ describe('_module.id resolution', () => {
   });
 });
 
-describe('_module.*Id pass-through when moduleEntry is null', () => {
-  test('_module.pageId passes through', async () => {
-    const ctx = createWalkContext({ moduleEntry: null });
-    const node = { '_module.pageId': 'settings' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.pageId': 'settings' });
+describe('_module.*Id at app level (null moduleEntry)', () => {
+  test('_module.pageId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.pageId': 'settings' }, ctx)).rejects.toThrow(
+      '_module.pageId string form is ambiguous at the app level'
+    );
   });
 
-  test('_module.id passes through', async () => {
-    const ctx = createWalkContext({ moduleEntry: null });
-    const node = { '_module.id': true };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.id': true });
+  test('_module.connectionId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.connectionId': 'users-db' }, ctx)).rejects.toThrow(
+      '_module.connectionId string form is ambiguous at the app level'
+    );
+  });
+
+  test('_module.endpointId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.endpointId': 'invite-user' }, ctx)).rejects.toThrow(
+      '_module.endpointId string form is ambiguous at the app level'
+    );
+  });
+
+  test('_module.id non-object form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.id': true }, ctx)).rejects.toThrow(
+      '_module.id is ambiguous at the app level'
+    );
+  });
+
+  test('_module.pageId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.pageId': { id: 'event-log', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-log');
+  });
+
+  test('_module.connectionId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.connectionId': { id: 'events-db', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/events-db');
+  });
+
+  test('_module.connectionId object form resolves with remapping at app level', async () => {
+    const buildCtx = createBuildContext();
+    buildCtx.modules = {
+      'entry-id': testModuleEntry,
+      'events-entry': remappedEventsEntry,
+    };
+    const ctx = createWalkContext({ moduleEntry: null, buildContext: buildCtx });
+    const result = await resolve(
+      { '_module.connectionId': { id: 'events-db', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('shared-events-mongodb');
+  });
+
+  test('_module.endpointId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.endpointId': { id: 'send-event', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/send-event');
+  });
+
+  test('_module.id object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.id': { module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry');
+  });
+
+  test('object form throws for missing module entry at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve({ '_module.pageId': { id: 'page', module: 'nonexistent' } }, ctx)
+    ).rejects.toThrow('Module entry "nonexistent" not found.');
+  });
+
+  test('_module.id object form throws for missing module entry at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
+    ).rejects.toThrow('Module entry "nonexistent" not found.');
+  });
+
+  test('_module.var throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      moduleVars: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.var': 'some-var' }, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
+  });
+
+  test('_module.connectionId object form throws for nonexistent export at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve(
+        { '_module.connectionId': { id: 'nonexistent-connection', module: 'events-entry' } },
+        ctx
+      )
+    ).rejects.toThrow('does not export connection "nonexistent-connection"');
   });
 });
 
