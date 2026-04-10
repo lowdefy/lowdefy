@@ -230,6 +230,32 @@ export default {
         type: 'AISDKAgent agent property "prepareStep" should be an array of step rules.',
       },
     },
+    prune: {
+      type: 'object',
+      properties: {
+        reasoning: {
+          type: 'string',
+          enum: ['all', 'before-last-message', 'none'],
+          description:
+            'How to remove reasoning content from assistant messages. "all" removes all, "before-last-message" keeps only the last message reasoning, "none" keeps all.',
+        },
+        toolCalls: {
+          type: 'string',
+          description:
+            'How to prune tool call and result content. Use "all", "before-last-message", "before-last-N-messages", or "none".',
+        },
+        emptyMessages: {
+          type: 'string',
+          enum: ['keep', 'remove'],
+          description: 'Whether to keep or remove messages that are empty after pruning.',
+        },
+      },
+      description:
+        'Prune older messages to reduce context size. Strips reasoning and tool call/result parts from earlier messages before sending to the model.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "prune" should be an object.',
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',

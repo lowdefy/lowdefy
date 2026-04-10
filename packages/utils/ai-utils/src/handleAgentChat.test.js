@@ -40,15 +40,22 @@ class MockToolLoopAgent {
   }
 }
 
+const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
+const mockPruneMessages = jest.fn().mockReturnValue([]);
+const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
+
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
+  convertToModelMessages: mockConvertToModelMessages,
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
+  pruneMessages: mockPruneMessages,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
   stepCountIs: mockStepCountIs,
   hasToolCall: mockHasToolCall,
+  validateUIMessages: mockValidateUIMessages,
 }));
 
 const mockCreateMCPClient = jest.fn();

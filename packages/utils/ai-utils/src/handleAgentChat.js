@@ -16,11 +16,14 @@
 
 import {
   ToolLoopAgent,
+  convertToModelMessages,
   createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  pruneMessages,
   stepCountIs,
   hasToolCall,
+  validateUIMessages,
 } from 'ai';
 
 import buildAgentTools from './buildAgentTools.js';
@@ -144,16 +147,41 @@ async function handleAgentChat({ connection, properties, context }) {
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
   const hasMcpClients = mcpClients.length > 0;
 
+  const pruneConfig = agent.properties.prune;
+  const timeoutConfig = agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
+
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
-      // createAgentUIStream validates UIMessages, converts to ModelMessages,
-      // runs the agent, and returns a UIMessageStream — handling the full
-      // UI→model→UI conversion that ToolLoopAgent.stream() does not.
-      const agentStream = await createAgentUIStream({
-        agent: agentInstance,
-        uiMessages: messages,
-        ...(agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {}),
-      });
+      let agentStream;
+
+      if (pruneConfig) {
+        // Decompose createAgentUIStream so we can insert pruneMessages
+        // between the UIMessage→ModelMessage conversion and agent execution.
+        const validatedMessages = await validateUIMessages({
+          messages,
+          tools: agentInstance.tools,
+        });
+        const modelMessages = await convertToModelMessages(validatedMessages, {
+          tools: agentInstance.tools,
+        });
+        const prunedMessages = pruneMessages({
+          messages: modelMessages,
+          ...pruneConfig,
+        });
+        const result = await agentInstance.stream({
+          prompt: prunedMessages,
+          ...timeoutConfig,
+        });
+        agentStream = result.toUIMessageStream({
+          originalMessages: validatedMessages,
+        });
+      } else {
+        agentStream = await createAgentUIStream({
+          agent: agentInstance,
+          uiMessages: messages,
+          ...timeoutConfig,
+        });
+      }
 
       writer.merge(agentStream);
 
