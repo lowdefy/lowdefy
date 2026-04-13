@@ -25,6 +25,7 @@ const MAX_TOTAL_MATCHES = 200;
 
 async function FileSystemSearch({ connection, request }) {
   const absoluteBase = path.resolve(connection.basePath);
+  const baseWithSep = absoluteBase + path.sep;
   const pattern = request.glob ?? '**/*';
 
   const files = await glob(pattern, {
@@ -34,11 +35,15 @@ async function FileSystemSearch({ connection, request }) {
     absolute: true,
   });
 
+  // Post-filter: only keep files that resolve inside the base directory.
+  // Glob patterns like '../secret.txt' can escape the cwd boundary.
+  const safeFiles = files.filter((file) => file === absoluteBase || file.startsWith(baseWithSep));
+
   const results = [];
   let totalMatches = 0;
   const queryLower = request.query.toLowerCase();
 
-  for (const file of files.sort()) {
+  for (const file of safeFiles.sort()) {
     if (totalMatches >= MAX_TOTAL_MATCHES) break;
 
     const stats = await fs.stat(file);

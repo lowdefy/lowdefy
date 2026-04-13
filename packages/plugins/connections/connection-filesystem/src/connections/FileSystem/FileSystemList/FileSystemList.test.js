@@ -109,6 +109,36 @@ test('FileSystemList throws on path traversal', async () => {
   ).rejects.toThrow('resolves outside the base directory');
 });
 
+test('FileSystemList filters out glob results that escape basePath', async () => {
+  const secretPath = path.join(basePath, '..', 'secret-list.txt');
+  await fs.writeFile(secretPath, 'secret data');
+  try {
+    const result = await FileSystemList({
+      connection: { basePath },
+      request: { glob: '../*' },
+    });
+    const names = result.map((e) => e.name);
+    expect(names).not.toContain('secret-list.txt');
+  } finally {
+    await fs.rm(secretPath);
+  }
+});
+
+test('FileSystemList filters out files outside basePath even with deep traversal glob', async () => {
+  const secretPath = path.join(basePath, '..', 'deep-secret-list.txt');
+  await fs.writeFile(secretPath, 'secret');
+  try {
+    const result = await FileSystemList({
+      connection: { basePath },
+      request: { glob: '../../**/*' },
+    });
+    const names = result.map((e) => e.name);
+    expect(names).not.toContain('deep-secret-list.txt');
+  } finally {
+    await fs.rm(secretPath);
+  }
+});
+
 test('FileSystemList has correct meta', () => {
   expect(FileSystemList.meta).toEqual({
     checkRead: true,

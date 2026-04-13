@@ -95,6 +95,36 @@ test('FileSystemSearch context is null at file boundaries', async () => {
   expect(readme.matches[0].context.before).toBeNull();
 });
 
+test('FileSystemSearch filters out glob results that escape basePath', async () => {
+  const secretPath = path.join(basePath, '..', 'secret-search.txt');
+  await fs.writeFile(secretPath, 'secret governance data');
+  try {
+    const result = await FileSystemSearch({
+      connection: { basePath },
+      request: { query: 'governance', glob: '../*' },
+    });
+    const paths = result.map((r) => r.path);
+    expect(paths).not.toContain(expect.stringContaining('secret'));
+  } finally {
+    await fs.rm(secretPath);
+  }
+});
+
+test('FileSystemSearch filters out files outside basePath even with deep traversal glob', async () => {
+  const secretPath = path.join(basePath, '..', 'deep-secret.txt');
+  await fs.writeFile(secretPath, 'deep secret data');
+  try {
+    const result = await FileSystemSearch({
+      connection: { basePath },
+      request: { query: 'data', glob: '../../**/*' },
+    });
+    const paths = result.map((r) => r.path);
+    expect(paths).not.toContain(expect.stringContaining('deep-secret'));
+  } finally {
+    await fs.rm(secretPath);
+  }
+});
+
 test('FileSystemSearch has correct meta', () => {
   expect(FileSystemSearch.meta).toEqual({
     checkRead: true,

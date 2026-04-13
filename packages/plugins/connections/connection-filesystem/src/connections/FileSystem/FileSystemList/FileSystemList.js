@@ -30,8 +30,14 @@ async function FileSystemList({ connection, request }) {
       cwd: dirPath,
       dot: true,
     });
+    // Post-filter: only keep matches that resolve inside the base directory.
+    // Glob patterns like '../secret.txt' can escape the cwd boundary.
+    const safeMatches = matches.filter((match) => {
+      const abs = path.resolve(dirPath, match);
+      return abs === absoluteBase || abs.startsWith(absoluteBase + path.sep);
+    });
     const results = [];
-    for (const match of matches.sort()) {
+    for (const match of safeMatches.sort()) {
       const absoluteMatch = path.resolve(dirPath, match);
       const relativePath = path.relative(absoluteBase, absoluteMatch);
       const stats = await fs.stat(absoluteMatch);
