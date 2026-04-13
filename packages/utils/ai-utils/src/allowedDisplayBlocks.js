@@ -15,6 +15,7 @@
 */
 
 const ALLOWED_DISPLAY_BLOCKS = Object.freeze([
+  // Read-only (Phase A)
   'Alert',
   'Badge',
   'Card',
@@ -27,6 +28,15 @@ const ALLOWED_DISPLAY_BLOCKS = Object.freeze([
   'S3Table',
   'Tag',
   'Timeline',
+  // Interactive (Phase B)
+  'Button',
+  'ButtonGroup',
+  'CheckboxSelector',
+  'NumberInput',
+  'RadioSelector',
+  'Rate',
+  'Switch',
+  'TextInput',
 ]);
 
 export default ALLOWED_DISPLAY_BLOCKS;

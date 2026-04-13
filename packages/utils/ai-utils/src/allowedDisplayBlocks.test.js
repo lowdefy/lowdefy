@@ -44,3 +44,19 @@ test('ALLOWED_DISPLAY_BLOCKS contains expected Phase A block types', () => {
     expect(ALLOWED_DISPLAY_BLOCKS).toContain(block);
   });
 });
+
+test('ALLOWED_DISPLAY_BLOCKS contains expected Phase B interactive block types', () => {
+  const expected = [
+    'Button',
+    'ButtonGroup',
+    'CheckboxSelector',
+    'NumberInput',
+    'RadioSelector',
+    'Rate',
+    'Switch',
+    'TextInput',
+  ];
+  expected.forEach((block) => {
+    expect(ALLOWED_DISPLAY_BLOCKS).toContain(block);
+  });
+});

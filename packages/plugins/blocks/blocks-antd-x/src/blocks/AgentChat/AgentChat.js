@@ -387,6 +387,8 @@ function AgentChat({ blockId, components: { Icon, blockComponents }, methods, pa
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
             blockComponents={blockComponents}
+            sendMessage={sendMessage}
+            methods={methods}
           />
         )}
       </div>

@@ -208,6 +208,8 @@ function MessageBubble({
   onRegenerate,
   onDelete,
   blockComponents,
+  sendMessage,
+  methods,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -513,6 +515,8 @@ function MessageBubble({
                   input={part.data.input}
                   toolCallId={part.data.toolCallId}
                   blockComponents={blockComponents}
+                  sendMessage={sendMessage}
+                  methods={methods}
                 />
               ))}
             </React.Fragment>

@@ -26,6 +26,7 @@ import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 // Allowed display block types for agent tool displays.
 // Keep in sync with packages/utils/ai-utils/src/allowedDisplayBlocks.js.
 const ALLOWED_DISPLAY_BLOCKS = [
+  // Read-only (Phase A)
   'Alert',
   'Badge',
   'Card',
@@ -38,6 +39,15 @@ const ALLOWED_DISPLAY_BLOCKS = [
   'S3Table',
   'Tag',
   'Timeline',
+  // Interactive (Phase B)
+  'Button',
+  'ButtonGroup',
+  'CheckboxSelector',
+  'NumberInput',
+  'RadioSelector',
+  'Rate',
+  'Switch',
+  'TextInput',
 ];
 
 function detectCycles(agents) {

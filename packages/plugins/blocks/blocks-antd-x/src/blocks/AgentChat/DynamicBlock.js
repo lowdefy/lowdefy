@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { type } from '@lowdefy/helpers';
 
 // Lightweight dot-path accessor for resolving _get operators against a context object.
@@ -65,13 +65,97 @@ function resolveOperators(value, context) {
   return value;
 }
 
-function DynamicBlock({ config, output, input, toolCallId, blockComponents }) {
+// Build event handlers for a display block. For each event name configured in
+// agentEvents or events, creates a handler that:
+// - agentEvents: resolves a message template and calls sendMessage
+// - events: triggers a Lowdefy event via methods.triggerEvent
+// Both can fire on the same event name.
+function buildEventHandlers({ agentEvents, events, output, input, sendMessage, methods }) {
+  const handlers = {};
+  const eventNames = new Set([
+    ...Object.keys(agentEvents ?? {}),
+    ...Object.keys(events ?? {}),
+  ]);
+
+  for (const eventName of eventNames) {
+    handlers[eventName] = (eventData) => {
+      const context = { event: eventData, output, input };
+
+      // agentEvents: resolve message template, send as new user message to agent
+      const agentEventConfig = agentEvents?.[eventName];
+      if (agentEventConfig?.message) {
+        const message = resolveOperators(agentEventConfig.message, context);
+        if (type.isString(message) && message.length > 0) {
+          sendMessage({ text: message });
+        }
+      }
+
+      // events: fire Lowdefy actions via triggerEvent
+      if (events?.[eventName]) {
+        methods.triggerEvent({
+          name: eventName,
+          event: eventData,
+        });
+      }
+    };
+  }
+
+  return handlers;
+}
+
+function DynamicBlock({
+  config,
+  output,
+  input,
+  toolCallId,
+  blockComponents,
+  sendMessage,
+  methods,
+}) {
   const BlockComponent = blockComponents?.[config.type];
 
   const resolvedProperties = useMemo(() => {
     const context = { output, input };
     return resolveOperators(config.properties ?? {}, context);
   }, [config.properties, output, input]);
+
+  const hasInteraction = config.agentEvents || config.events;
+
+  const eventHandlers = useMemo(
+    () =>
+      hasInteraction
+        ? buildEventHandlers({
+            agentEvents: config.agentEvents,
+            events: config.events,
+            output,
+            input,
+            sendMessage,
+            methods,
+          })
+        : {},
+    [config.agentEvents, config.events, output, input, sendMessage, methods, hasInteraction]
+  );
+
+  // Build the methods object for the rendered block.
+  // For interactive blocks, triggerEvent dispatches to our built handlers.
+  // For read-only blocks, all methods are stubs.
+  const blockMethods = useMemo(() => {
+    const triggerEvent = hasInteraction
+      ? ({ name, event }) => {
+          const handler = eventHandlers[name];
+          if (handler) {
+            handler(event);
+          }
+        }
+      : () => {};
+
+    return {
+      makeCssClass: () => '',
+      triggerEvent,
+      registerMethod: () => {},
+      registerEvent: () => {},
+    };
+  }, [eventHandlers, hasInteraction]);
 
   if (!BlockComponent) {
     return (
@@ -81,17 +165,23 @@ function DynamicBlock({ config, output, input, toolCallId, blockComponents }) {
     );
   }
 
+  // For interactive blocks, build an events object so the block knows which
+  // events are registered (blocks check events[name] to decide if handlers fire).
+  const blockEvents = useMemo(() => {
+    if (!hasInteraction) return {};
+    const evts = {};
+    for (const name of Object.keys(eventHandlers)) {
+      evts[name] = { actions: [] };
+    }
+    return evts;
+  }, [eventHandlers, hasInteraction]);
+
   return (
     <div style={{ padding: '8px 0' }}>
       <BlockComponent
         blockId={`display-${toolCallId}`}
-        events={{}}
-        methods={{
-          makeCssClass: () => '',
-          triggerEvent: () => {},
-          registerMethod: () => {},
-          registerEvent: () => {},
-        }}
+        events={blockEvents}
+        methods={blockMethods}
         properties={resolvedProperties}
       />
     </div>
