@@ -254,6 +254,26 @@ function MessageBubble({
     );
   }
 
+  // OpenAI Responses API models (e.g. GPT-5.x) emit text parts with a 'commentary'
+  // phase (preambles before tool calls) and a 'final_answer' phase (the actual response).
+  // Commentary is intermediate output — treat it as reasoning so it renders in the
+  // collapsible reasoning section rather than duplicating the final answer text.
+  function isCommentary(part) {
+    return part.providerMetadata?.openai?.phase === 'commentary';
+  }
+
+  function partCategory(part) {
+    if (part.type === 'step-start') return null;
+    if (part.type === 'reasoning' || (part.type === 'text' && isCommentary(part))) {
+      return 'reasoning';
+    }
+    if (part.type === 'text') return 'text';
+    if (getToolInfo(part)) return 'tool';
+    if (part.type === 'file') return 'file';
+    if (part.type === 'data-status') return 'status';
+    return null;
+  }
+
   // Build segments of consecutive same-type parts.
   // 'interleaved': preserves the natural ordering from the AI SDK
   //   (reasoning → tool calls → reasoning → text).
@@ -268,33 +288,20 @@ function MessageBubble({
     const status = { category: 'status', parts: [] };
     const text = { category: 'text', parts: [] };
     for (const part of parts) {
-      if (part.type === 'reasoning') reasoning.parts.push(part);
-      else if (part.type === 'text') text.parts.push(part);
-      else if (getToolInfo(part)) tools.parts.push(part);
-      else if (part.type === 'file') files.parts.push(part);
-      else if (part.type === 'data-status') status.parts.push(part);
+      const cat = partCategory(part);
+      if (cat === 'reasoning') reasoning.parts.push(part);
+      else if (cat === 'text') text.parts.push(part);
+      else if (cat === 'tool') tools.parts.push(part);
+      else if (cat === 'file') files.parts.push(part);
+      else if (cat === 'status') status.parts.push(part);
     }
     segments = [reasoning, tools, files, status, text].filter((s) => s.parts.length > 0);
   } else {
     segments = [];
     let current = null;
     for (const part of parts) {
-      if (part.type === 'step-start') continue;
-
-      let category;
-      if (part.type === 'text') {
-        category = 'text';
-      } else if (part.type === 'reasoning') {
-        category = 'reasoning';
-      } else if (getToolInfo(part)) {
-        category = 'tool';
-      } else if (part.type === 'file') {
-        category = 'file';
-      } else if (part.type === 'data-status') {
-        category = 'status';
-      } else {
-        continue;
-      }
+      const category = partCategory(part);
+      if (!category) continue;
 
       if (!current || current.category !== category) {
         current = { category, parts: [] };

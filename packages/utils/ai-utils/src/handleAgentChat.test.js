@@ -33,22 +33,37 @@ const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => 
 const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
 
 let lastAgentConfig = null;
+let lastAgentInstance = null;
+const mockToUIMessageStream = jest.fn().mockReturnValue({ type: 'pruned-ui-stream' });
 class MockToolLoopAgent {
   constructor(config) {
     this.config = config;
+    this.tools = config.tools;
     lastAgentConfig = config;
+    lastAgentInstance = this;
   }
+
+  stream = jest.fn().mockResolvedValue({
+    toUIMessageStream: mockToUIMessageStream,
+  });
 }
+
+const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
+const mockPruneMessages = jest.fn().mockReturnValue([]);
+const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
 
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
+  convertToModelMessages: mockConvertToModelMessages,
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
+  pruneMessages: mockPruneMessages,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
   stepCountIs: mockStepCountIs,
   hasToolCall: mockHasToolCall,
+  validateUIMessages: mockValidateUIMessages,
 }));
 
 const mockCreateMCPClient = jest.fn();
@@ -1459,5 +1474,164 @@ test('onFinish hook receives original input messages in payload', async () => {
       finishReason: 'stop',
       isAborted: false,
     }),
+  });
+});
+
+test('prune config triggers decomposed stream pipeline instead of createAgentUIStream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockCreateAgentUIStream.mockClear();
+  mockValidateUIMessages.mockClear();
+  mockConvertToModelMessages.mockClear();
+  mockPruneMessages.mockClear();
+  mockToUIMessageStream.mockClear();
+
+  const mockValidated = [{ role: 'user', content: 'validated' }];
+  const mockModel = [{ role: 'user', content: 'model' }];
+  const mockPruned = [{ role: 'user', content: 'pruned' }];
+  mockValidateUIMessages.mockResolvedValue(mockValidated);
+  mockConvertToModelMessages.mockResolvedValue(mockModel);
+  mockPruneMessages.mockReturnValue(mockPruned);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const messages = [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }];
+  const pruneConfig = { reasoning: 'all', toolCalls: 'before-last-message' };
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', prune: pruneConfig },
+      },
+      messages,
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(mockValidateUIMessages).toHaveBeenCalledWith({
+    messages,
+    tools: lastAgentInstance.tools,
+  });
+  expect(mockConvertToModelMessages).toHaveBeenCalledWith(mockValidated, {
+    tools: lastAgentInstance.tools,
+  });
+  expect(mockPruneMessages).toHaveBeenCalledWith({
+    messages: mockModel,
+    ...pruneConfig,
+  });
+  expect(lastAgentInstance.stream).toHaveBeenCalledWith({
+    prompt: mockPruned,
+  });
+  expect(mockToUIMessageStream).toHaveBeenCalledWith({
+    originalMessages: mockValidated,
+  });
+  expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
+  expect(localWriter.merge).toHaveBeenCalledWith({ type: 'pruned-ui-stream' });
+});
+
+test('without prune config, createAgentUIStream is used and prune functions are not called', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockCreateAgentUIStream.mockClear();
+  mockValidateUIMessages.mockClear();
+  mockConvertToModelMessages.mockClear();
+  mockPruneMessages.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalled();
+  expect(mockValidateUIMessages).not.toHaveBeenCalled();
+  expect(mockConvertToModelMessages).not.toHaveBeenCalled();
+  expect(mockPruneMessages).not.toHaveBeenCalled();
+});
+
+test('all pruneConfig properties are spread into pruneMessages call', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockPruneMessages.mockClear();
+  mockValidateUIMessages.mockResolvedValue([]);
+  mockConvertToModelMessages.mockResolvedValue([]);
+  mockPruneMessages.mockReturnValue([]);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const pruneConfig = {
+    reasoning: 'before-last-message',
+    toolCalls: 'all',
+    emptyMessages: 'remove',
+  };
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', prune: pruneConfig },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({
+    writer: { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) },
+  });
+
+  expect(mockPruneMessages).toHaveBeenCalledWith({
+    messages: [],
+    reasoning: 'before-last-message',
+    toolCalls: 'all',
+    emptyMessages: 'remove',
+  });
+});
+
+test('prune branch passes timeout to agentInstance.stream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockValidateUIMessages.mockResolvedValue([]);
+  mockConvertToModelMessages.mockResolvedValue([]);
+  mockPruneMessages.mockReturnValue([]);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'gpt-4o', prune: { reasoning: 'all' }, timeout: 30000 },
+      },
+      messages: [],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({
+    writer: { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) },
+  });
+
+  expect(lastAgentInstance.stream).toHaveBeenCalledWith({
+    prompt: [],
+    timeout: 30000,
   });
 });

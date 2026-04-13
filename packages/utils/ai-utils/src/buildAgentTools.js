@@ -19,6 +19,11 @@ import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { serializer } from '@lowdefy/helpers';
 
+import listFiles from './fileSystem/listFiles.js';
+import readFile from './fileSystem/readFile.js';
+import searchFiles from './fileSystem/searchFiles.js';
+import statFile from './fileSystem/statFile.js';
+
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
 // strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
@@ -166,6 +171,74 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
         type: 'text',
         value: output.text ?? String(output),
       }),
+    });
+  }
+
+  // Build fileSystem tools
+  if (agent.properties?.fileSystem) {
+    const { basePath } = agent.properties.fileSystem;
+
+    tools['read-file'] = tool({
+      description:
+        'Read a file by path. Use list-files or search-files first to discover available paths.',
+      inputSchema: jsonSchema({
+        type: 'object',
+        properties: {
+          path: { type: 'string', description: 'File path relative to the base directory.' },
+        },
+        required: ['path'],
+      }),
+      execute: async ({ path }) => readFile(basePath, { path }),
+    });
+
+    tools['list-files'] = tool({
+      description: 'List files and directories. Supports optional glob patterns for filtering.',
+      inputSchema: jsonSchema({
+        type: 'object',
+        properties: {
+          path: {
+            type: 'string',
+            description: 'Directory path to list. Omit for root.',
+          },
+          glob: {
+            type: 'string',
+            description: 'Glob pattern to filter results, e.g. "**/*.md".',
+          },
+        },
+      }),
+      execute: async (params) => listFiles(basePath, params),
+    });
+
+    tools['search-files'] = tool({
+      description:
+        'Search for text across files. Returns matching files with line numbers and context.',
+      inputSchema: jsonSchema({
+        type: 'object',
+        properties: {
+          query: { type: 'string', description: 'Text to search for.' },
+          glob: {
+            type: 'string',
+            description: 'Glob pattern to limit which files are searched.',
+          },
+        },
+        required: ['query'],
+      }),
+      execute: async (params) => searchFiles(basePath, params),
+    });
+
+    tools['stat-file'] = tool({
+      description: 'Get metadata for a file or directory (size, type, modified date).',
+      inputSchema: jsonSchema({
+        type: 'object',
+        properties: {
+          path: {
+            type: 'string',
+            description: 'File or directory path relative to the base directory.',
+          },
+        },
+        required: ['path'],
+      }),
+      execute: async ({ path }) => statFile(basePath, { path }),
     });
   }
 

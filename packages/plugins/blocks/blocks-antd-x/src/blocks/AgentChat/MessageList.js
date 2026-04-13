@@ -62,7 +62,9 @@ const MessageList = React.forwardRef(function MessageList(
     const isLastAssistant = msg === lastMessage && msg.role === 'assistant';
     const textContent =
       msg.parts
-        ?.filter((part) => part.type === 'text')
+        ?.filter(
+          (part) => part.type === 'text' && part.providerMetadata?.openai?.phase !== 'commentary'
+        )
         .map((part) => part.text)
         .join('') ?? '';
 
