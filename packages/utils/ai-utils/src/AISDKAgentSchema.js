@@ -240,9 +240,39 @@ export default {
             'How to remove reasoning content from assistant messages. "all" removes all, "before-last-message" keeps only the last message reasoning, "none" keeps all.',
         },
         toolCalls: {
-          type: 'string',
+          oneOf: [
+            {
+              type: 'string',
+              description:
+                'How to prune tool calls globally. Use "all", "before-last-message", "before-last-N-messages", or "none".',
+            },
+            {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  type: {
+                    type: 'string',
+                    description:
+                      'How to prune tool calls. Use "all", "before-last-message", or "before-last-N-messages".',
+                  },
+                  tools: {
+                    type: 'array',
+                    items: { type: 'string' },
+                    description: 'Tool names this rule applies to. Omit to apply to all tools.',
+                  },
+                },
+                required: ['type'],
+              },
+              description: 'Per-tool pruning rules.',
+            },
+          ],
           description:
-            'How to prune tool call and result content. Use "all", "before-last-message", "before-last-N-messages", or "none".',
+            'How to prune tool call and result content. A string applies globally, an array allows per-tool rules.',
+          errorMessage: {
+            oneOf:
+              'AISDKAgent agent property "prune.toolCalls" should be a string or an array of { type, tools? } objects.',
+          },
         },
         emptyMessages: {
           type: 'string',
