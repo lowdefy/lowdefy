@@ -33,7 +33,7 @@ async function searchFiles(basePath, { query, glob: globPattern }) {
     absolute: true,
   });
 
-  const safeFiles = files.filter((file) => file === absoluteBase || file.startsWith(baseWithSep));
+  const safeFiles = files.filter((file) => file.startsWith(baseWithSep));
 
   const results = [];
   let totalMatches = 0;

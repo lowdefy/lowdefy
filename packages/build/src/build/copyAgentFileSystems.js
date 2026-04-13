@@ -31,7 +31,13 @@ async function copyAgentFileSystems({ components, context }) {
     if (!fs.existsSync(source)) continue;
 
     const dest = path.resolve(context.directories.server, basePath);
-    await copyFileOrDirectory(source, dest);
+    try {
+      await copyFileOrDirectory(source, dest);
+    } catch (err) {
+      throw new Error(
+        `Failed to copy fileSystem basePath "${basePath}" to server directory: ${err.message}`
+      );
+    }
     copied.add(basePath);
   }
 }

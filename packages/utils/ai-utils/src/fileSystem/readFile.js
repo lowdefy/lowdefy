@@ -18,9 +18,25 @@ import fs from 'fs/promises';
 
 import resolvePath from './resolvePath.js';
 
+const MAX_FILE_SIZE = 512 * 1024; // 512KB
+
 async function readFile(basePath, { path: filePath }) {
   const resolved = resolvePath(basePath, filePath);
-  return await fs.readFile(resolved, 'utf-8');
+  const stats = await fs.stat(resolved);
+  if (stats.size <= MAX_FILE_SIZE) {
+    return await fs.readFile(resolved, 'utf-8');
+  }
+  const handle = await fs.open(resolved, 'r');
+  try {
+    const buffer = Buffer.alloc(MAX_FILE_SIZE);
+    await handle.read(buffer, 0, MAX_FILE_SIZE, 0);
+    const content = buffer.toString('utf-8');
+    const shownKB = Math.round(MAX_FILE_SIZE / 1024);
+    const totalKB = Math.round(stats.size / 1024);
+    return `${content}\n\n[File truncated — showing first ${shownKB}KB of ${totalKB}KB. Use search-files to find specific content.]`;
+  } finally {
+    await handle.close();
+  }
 }
 
 export default readFile;

@@ -52,3 +52,12 @@ test('readFile throws on path traversal', async () => {
     'resolves outside the base directory'
   );
 });
+
+test('readFile truncates large files with notice', async () => {
+  const largeContent = 'x'.repeat(600 * 1024); // 600KB exceeds 512KB limit
+  await fs.writeFile(path.join(basePath, 'large.txt'), largeContent);
+  const result = await readFile(basePath, { path: 'large.txt' });
+  expect(result).toContain('[File truncated');
+  expect(result).toContain('Use search-files to find specific content.');
+  expect(result.length).toBeLessThan(largeContent.length);
+});
