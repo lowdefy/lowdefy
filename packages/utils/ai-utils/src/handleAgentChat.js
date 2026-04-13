@@ -148,7 +148,8 @@ async function handleAgentChat({ connection, properties, context }) {
   const hasMcpClients = mcpClients.length > 0;
 
   const pruneConfig = agent.properties.prune;
-  const timeoutConfig = agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
+  const timeoutConfig =
+    agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
