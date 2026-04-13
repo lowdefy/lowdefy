@@ -17,15 +17,14 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import resolvePath from '../resolvePath.js';
-import schema from './schema.js';
+import resolvePath from './resolvePath.js';
 
-async function FileSystemStat({ connection, request }) {
-  const filePath = resolvePath(connection.basePath, request.path);
-  const stats = await fs.stat(filePath);
+async function statFile(basePath, { path: filePath }) {
+  const resolved = resolvePath(basePath, filePath);
+  const stats = await fs.stat(resolved);
   return {
-    name: path.basename(filePath),
-    path: request.path,
+    name: path.basename(resolved),
+    path: filePath,
     size: stats.size,
     type: stats.isDirectory() ? 'directory' : 'file',
     modified: stats.mtime.toISOString(),
@@ -33,10 +32,4 @@ async function FileSystemStat({ connection, request }) {
   };
 }
 
-FileSystemStat.schema = schema;
-FileSystemStat.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
-
-export default FileSystemStat;
+export default statFile;

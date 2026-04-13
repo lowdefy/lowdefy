@@ -42,7 +42,7 @@ import buildRefs from './build/buildRefs/buildRefs.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
-import copyFileSystemDirectories from './build/copyFileSystemDirectories.js';
+import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
@@ -151,7 +151,7 @@ async function build(options) {
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
-    await copyFileSystemDirectories({ components, context });
+    await copyAgentFileSystems({ components, context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

@@ -33,7 +33,6 @@ const defaultPackages = [
   '@lowdefy/connection-mcp',
   '@lowdefy/connection-openai',
   '@lowdefy/connection-elasticsearch',
-  '@lowdefy/connection-filesystem',
   '@lowdefy/connection-test',
   '@lowdefy/connection-google-sheets',
   '@lowdefy/connection-knex',

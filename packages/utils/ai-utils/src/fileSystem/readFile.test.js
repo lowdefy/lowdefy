@@ -18,7 +18,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 
-import FileSystemRead from './FileSystemRead.js';
+import readFile from './readFile.js';
 
 let basePath;
 
@@ -33,48 +33,22 @@ afterAll(async () => {
   await fs.rm(basePath, { recursive: true });
 });
 
-test('FileSystemRead reads a file at the root', async () => {
-  const result = await FileSystemRead({
-    connection: { basePath },
-    request: { path: 'hello.md' },
-  });
+test('readFile reads a file at the root', async () => {
+  const result = await readFile(basePath, { path: 'hello.md' });
   expect(result).toBe('Hello, world!');
 });
 
-test('FileSystemRead reads a nested file', async () => {
-  const result = await FileSystemRead({
-    connection: { basePath },
-    request: { path: 'sub/nested.txt' },
-  });
+test('readFile reads a nested file', async () => {
+  const result = await readFile(basePath, { path: 'sub/nested.txt' });
   expect(result).toBe('Nested content');
 });
 
-test('FileSystemRead throws when file does not exist', async () => {
-  await expect(
-    FileSystemRead({
-      connection: { basePath },
-      request: { path: 'missing.md' },
-    })
-  ).rejects.toThrow();
+test('readFile throws when file does not exist', async () => {
+  await expect(readFile(basePath, { path: 'missing.md' })).rejects.toThrow();
 });
 
-test('FileSystemRead throws on path traversal', async () => {
-  await expect(
-    FileSystemRead({
-      connection: { basePath },
-      request: { path: '../../../etc/passwd' },
-    })
-  ).rejects.toThrow('resolves outside the base directory');
-});
-
-test('FileSystemRead has correct meta', () => {
-  expect(FileSystemRead.meta).toEqual({
-    checkRead: true,
-    checkWrite: false,
-  });
-});
-
-test('FileSystemRead has schema', () => {
-  expect(FileSystemRead.schema).toBeDefined();
-  expect(FileSystemRead.schema.properties.path).toBeDefined();
+test('readFile throws on path traversal', async () => {
+  await expect(readFile(basePath, { path: '../../../etc/passwd' })).rejects.toThrow(
+    'resolves outside the base directory'
+  );
 });

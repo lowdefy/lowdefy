@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+import fs from 'fs';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import countOperators from '../utils/countOperators.js';
@@ -203,6 +205,24 @@ function buildAgents({ components, context }) {
       }
       return ref;
     });
+
+    // Validate fileSystem basePath if present
+    if (agent.properties?.fileSystem) {
+      const basePath = agent.properties.fileSystem.basePath;
+      if (!type.isString(basePath)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
+          { received: basePath, configKey }
+        );
+      }
+      const resolved = path.resolve(context.directories.config, basePath);
+      if (!fs.existsSync(resolved)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" fileSystem.basePath "${basePath}" does not exist.`,
+          { configKey }
+        );
+      }
+    }
 
     // Rename id to internal format
     agent.agentId = agent.id;

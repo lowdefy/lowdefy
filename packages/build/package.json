@@ -86,7 +86,6 @@
     "@lowdefy/connection-anthropic": "workspace:*",
     "@lowdefy/connection-axios-http": "4.7.3",
     "@lowdefy/connection-elasticsearch": "4.7.3",
-    "@lowdefy/connection-filesystem": "workspace:*",
     "@lowdefy/connection-google": "workspace:*",
     "@lowdefy/connection-google-sheets": "4.7.3",
     "@lowdefy/connection-mcp": "workspace:*",

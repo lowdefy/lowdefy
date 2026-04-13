@@ -18,15 +18,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';
 
-import schema from './schema.js';
-
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB
 const MAX_TOTAL_MATCHES = 200;
 
-async function FileSystemSearch({ connection, request }) {
-  const absoluteBase = path.resolve(connection.basePath);
+async function searchFiles(basePath, { query, glob: globPattern }) {
+  const absoluteBase = path.resolve(basePath);
   const baseWithSep = absoluteBase + path.sep;
-  const pattern = request.glob ?? '**/*';
+  const pattern = globPattern ?? '**/*';
 
   const files = await glob(pattern, {
     cwd: absoluteBase,
@@ -35,13 +33,11 @@ async function FileSystemSearch({ connection, request }) {
     absolute: true,
   });
 
-  // Post-filter: only keep files that resolve inside the base directory.
-  // Glob patterns like '../secret.txt' can escape the cwd boundary.
   const safeFiles = files.filter((file) => file === absoluteBase || file.startsWith(baseWithSep));
 
   const results = [];
   let totalMatches = 0;
-  const queryLower = request.query.toLowerCase();
+  const queryLower = query.toLowerCase();
 
   for (const file of safeFiles.sort()) {
     if (totalMatches >= MAX_TOTAL_MATCHES) break;
@@ -85,10 +81,4 @@ async function FileSystemSearch({ connection, request }) {
   return results;
 }
 
-FileSystemSearch.schema = schema;
-FileSystemSearch.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
-
-export default FileSystemSearch;
+export default searchFiles;

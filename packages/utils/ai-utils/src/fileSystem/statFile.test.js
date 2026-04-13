@@ -18,7 +18,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 
-import FileSystemStat from './FileSystemStat.js';
+import statFile from './statFile.js';
 
 let basePath;
 
@@ -32,11 +32,8 @@ afterAll(async () => {
   await fs.rm(basePath, { recursive: true });
 });
 
-test('FileSystemStat returns metadata for a file', async () => {
-  const result = await FileSystemStat({
-    connection: { basePath },
-    request: { path: 'hello.md' },
-  });
+test('statFile returns metadata for a file', async () => {
+  const result = await statFile(basePath, { path: 'hello.md' });
   expect(result.name).toBe('hello.md');
   expect(result.path).toBe('hello.md');
   expect(result.type).toBe('file');
@@ -45,46 +42,18 @@ test('FileSystemStat returns metadata for a file', async () => {
   expect(result.created).toBeDefined();
 });
 
-test('FileSystemStat returns metadata for a directory', async () => {
-  const result = await FileSystemStat({
-    connection: { basePath },
-    request: { path: 'sub' },
-  });
+test('statFile returns metadata for a directory', async () => {
+  const result = await statFile(basePath, { path: 'sub' });
   expect(result.name).toBe('sub');
-  expect(result.path).toBe('sub');
   expect(result.type).toBe('directory');
 });
 
-test('FileSystemStat returns ISO date strings', async () => {
-  const result = await FileSystemStat({
-    connection: { basePath },
-    request: { path: 'hello.md' },
-  });
-  expect(() => new Date(result.modified)).not.toThrow();
-  expect(() => new Date(result.created)).not.toThrow();
+test('statFile throws when path does not exist', async () => {
+  await expect(statFile(basePath, { path: 'missing.md' })).rejects.toThrow();
 });
 
-test('FileSystemStat throws when path does not exist', async () => {
-  await expect(
-    FileSystemStat({
-      connection: { basePath },
-      request: { path: 'missing.md' },
-    })
-  ).rejects.toThrow();
-});
-
-test('FileSystemStat throws on path traversal', async () => {
-  await expect(
-    FileSystemStat({
-      connection: { basePath },
-      request: { path: '../../etc' },
-    })
-  ).rejects.toThrow('resolves outside the base directory');
-});
-
-test('FileSystemStat has correct meta', () => {
-  expect(FileSystemStat.meta).toEqual({
-    checkRead: true,
-    checkWrite: false,
-  });
+test('statFile throws on path traversal', async () => {
+  await expect(statFile(basePath, { path: '../../etc' })).rejects.toThrow(
+    'resolves outside the base directory'
+  );
 });

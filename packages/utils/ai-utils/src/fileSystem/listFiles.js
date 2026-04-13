@@ -18,27 +18,21 @@ import fs from 'fs/promises';
 import path from 'path';
 import { glob } from 'glob';
 
-import resolvePath from '../resolvePath.js';
-import schema from './schema.js';
+import resolvePath from './resolvePath.js';
 
-async function FileSystemList({ connection, request }) {
-  const absoluteBase = path.resolve(connection.basePath);
-  const dirPath = resolvePath(connection.basePath, request.path);
+async function listFiles(basePath, { path: dirPath, glob: globPattern } = {}) {
+  const absoluteBase = path.resolve(basePath);
+  const resolved = resolvePath(basePath, dirPath);
 
-  if (request.glob) {
-    const matches = await glob(request.glob, {
-      cwd: dirPath,
-      dot: true,
-    });
-    // Post-filter: only keep matches that resolve inside the base directory.
-    // Glob patterns like '../secret.txt' can escape the cwd boundary.
+  if (globPattern) {
+    const matches = await glob(globPattern, { cwd: resolved, dot: true });
     const safeMatches = matches.filter((match) => {
-      const abs = path.resolve(dirPath, match);
+      const abs = path.resolve(resolved, match);
       return abs === absoluteBase || abs.startsWith(absoluteBase + path.sep);
     });
     const results = [];
     for (const match of safeMatches.sort()) {
-      const absoluteMatch = path.resolve(dirPath, match);
+      const absoluteMatch = path.resolve(resolved, match);
       const relativePath = path.relative(absoluteBase, absoluteMatch);
       const stats = await fs.stat(absoluteMatch);
       results.push({
@@ -51,10 +45,10 @@ async function FileSystemList({ connection, request }) {
     return results;
   }
 
-  const entries = await fs.readdir(dirPath, { withFileTypes: true });
+  const entries = await fs.readdir(resolved, { withFileTypes: true });
   const results = [];
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
-    const absoluteEntry = path.join(dirPath, entry.name);
+    const absoluteEntry = path.join(resolved, entry.name);
     const relativePath = path.relative(absoluteBase, absoluteEntry);
     const stats = await fs.stat(absoluteEntry);
     results.push({
@@ -67,10 +61,4 @@ async function FileSystemList({ connection, request }) {
   return results;
 }
 
-FileSystemList.schema = schema;
-FileSystemList.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
-
-export default FileSystemList;
+export default listFiles;

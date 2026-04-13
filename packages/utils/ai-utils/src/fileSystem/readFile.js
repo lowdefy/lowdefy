@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['FileSystem'],
-  requests: ['FileSystemRead', 'FileSystemList', 'FileSystemSearch', 'FileSystemStat'],
-};
+import fs from 'fs/promises';
+
+import resolvePath from './resolvePath.js';
+
+async function readFile(basePath, { path: filePath }) {
+  const resolved = resolvePath(basePath, filePath);
+  return await fs.readFile(resolved, 'utf-8');
+}
+
+export default readFile;

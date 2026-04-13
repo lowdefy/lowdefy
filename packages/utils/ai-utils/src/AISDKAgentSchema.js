@@ -286,6 +286,29 @@ export default {
         type: 'AISDKAgent agent property "prune" should be an object.',
       },
     },
+    fileSystem: {
+      type: 'object',
+      required: ['basePath'],
+      properties: {
+        basePath: {
+          type: 'string',
+          description:
+            'Base directory path. The agent gets read-file, list-files, search-files, and stat-file tools scoped to this directory.',
+          errorMessage: {
+            type: 'AISDKAgent agent property "fileSystem.basePath" should be a string.',
+          },
+        },
+      },
+      description:
+        'Give the agent file system access scoped to a base directory. Automatically adds read-file, list-files, search-files, and stat-file tools.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "fileSystem" should be an object.',
+        required: {
+          basePath:
+            'AISDKAgent agent property "fileSystem" should have required property "basePath".',
+        },
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',

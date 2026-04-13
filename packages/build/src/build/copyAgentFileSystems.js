@@ -18,20 +18,22 @@ import path from 'path';
 import fs from 'fs';
 import { copyFileOrDirectory } from '@lowdefy/node-utils';
 
-async function copyFileSystemDirectories({ components, context }) {
+async function copyAgentFileSystems({ components, context }) {
   if (context.directories.config === context.directories.server) return;
 
-  for (const connection of components.connections ?? []) {
-    if (connection.type !== 'FileSystem') continue;
-    const basePath = connection.properties?.basePath;
+  const copied = new Set();
+  for (const agent of components.agents ?? []) {
+    const basePath = agent.properties?.fileSystem?.basePath;
     if (!basePath || typeof basePath !== 'string') continue;
+    if (copied.has(basePath)) continue;
 
     const source = path.resolve(context.directories.config, basePath);
     if (!fs.existsSync(source)) continue;
 
     const dest = path.resolve(context.directories.server, basePath);
     await copyFileOrDirectory(source, dest);
+    copied.add(basePath);
   }
 }
 
-export default copyFileSystemDirectories;
+export default copyAgentFileSystems;
