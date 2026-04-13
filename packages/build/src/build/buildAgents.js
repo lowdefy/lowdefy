@@ -23,6 +23,23 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
+// Allowed display block types for agent tool displays.
+// Keep in sync with packages/utils/ai-utils/src/allowedDisplayBlocks.js.
+const ALLOWED_DISPLAY_BLOCKS = [
+  'Alert',
+  'Badge',
+  'Card',
+  'Descriptions',
+  'Divider',
+  'List',
+  'Progress',
+  'Result',
+  'Statistic',
+  'S3Table',
+  'Tag',
+  'Timeline',
+];
+
 function detectCycles(agents) {
   const graph = {};
   for (const agent of agents) {
@@ -134,6 +151,24 @@ function buildAgents({ components, context }) {
           `Endpoint "${toolConfig.endpointId}" is used as an agent tool but does not have a "payloadSchema".`,
           { configKey: endpoint['~k'] }
         );
+      }
+
+      // Validate display config if present
+      if (toolConfig.display) {
+        if (type.isNone(toolConfig.display.type)) {
+          throw new ConfigError(
+            `Tool "${toolConfig.endpointId}" on agent "${agent.id}" has a display config without a "type" property.`,
+            { configKey }
+          );
+        }
+        if (!ALLOWED_DISPLAY_BLOCKS.includes(toolConfig.display.type)) {
+          throw new ConfigError(
+            `Tool "${toolConfig.endpointId}" on agent "${agent.id}" has display type "${toolConfig.display.type}" which is not an allowed display block.`,
+            { configKey }
+          );
+        }
+        // Count display block type for bundling
+        context.typeCounters.blocks.increment(toolConfig.display.type, configKey);
       }
     });
 

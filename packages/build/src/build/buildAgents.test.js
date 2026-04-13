@@ -1501,6 +1501,209 @@ test('buildAgents throws when fileSystem.basePath is not a string', () => {
   );
 });
 
+test('buildAgents preserves display config on tool', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        tools: [
+          {
+            endpointId: 'tool1',
+            display: {
+              type: 'Statistic',
+              properties: {
+                title: 'Test',
+                value: { _get: 'output.count' },
+              },
+            },
+          },
+        ],
+        properties: { model: 'claude-sonnet-4-6' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools[0].display).toEqual({
+    type: 'Statistic',
+    properties: {
+      title: 'Test',
+      value: { _get: 'output.count' },
+    },
+  });
+});
+
+test('buildAgents throws for display with invalid block type', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        tools: [
+          {
+            endpointId: 'tool1',
+            display: {
+              type: 'PageHeaderMenu',
+              properties: {},
+            },
+          },
+        ],
+        properties: { model: 'claude-sonnet-4-6' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Tool "tool1" on agent "agent1" has display type "PageHeaderMenu" which is not an allowed display block.'
+  );
+});
+
+test('buildAgents throws for display without type', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        tools: [
+          {
+            endpointId: 'tool1',
+            display: {
+              properties: { title: 'Test' },
+            },
+          },
+        ],
+        properties: { model: 'claude-sonnet-4-6' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Tool "tool1" on agent "agent1" has a display config without a "type" property.'
+  );
+});
+
+test('buildAgents counts display block types for bundling', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+      {
+        id: 'endpoint:tool2',
+        endpointId: 'tool2',
+        type: 'Api',
+        description: 'Another tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        tools: [
+          {
+            endpointId: 'tool1',
+            display: { type: 'Statistic', properties: {} },
+          },
+          {
+            endpointId: 'tool2',
+            display: { type: 'Descriptions', properties: {} },
+          },
+        ],
+        properties: { model: 'claude-sonnet-4-6' },
+      },
+    ],
+  };
+  buildAgents({ components, context });
+  const blockCounts = context.typeCounters.blocks.getCounts();
+  expect(blockCounts.Statistic).toBeDefined();
+  expect(blockCounts.Descriptions).toBeDefined();
+});
+
+test('buildAgents allows tool without display config', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      { id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' },
+    ],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'ClaudeAgent',
+        connectionId: 'conn1',
+        tools: ['tool1'],
+        properties: { model: 'claude-sonnet-4-6' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools[0].display).toBeUndefined();
+});
+
 test('buildAgents throws when fileSystem.basePath does not exist', () => {
   const context = testContext();
   const components = {
