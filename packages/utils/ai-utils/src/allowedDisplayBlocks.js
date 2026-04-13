@@ -14,5 +14,19 @@
   limitations under the License.
 */
 
-export { default as ALLOWED_DISPLAY_BLOCKS } from './allowedDisplayBlocks.js';
-export { default as handleAgentChat } from './handleAgentChat.js';
+const ALLOWED_DISPLAY_BLOCKS = Object.freeze([
+  'Alert',
+  'Badge',
+  'Card',
+  'Descriptions',
+  'Divider',
+  'List',
+  'Progress',
+  'Result',
+  'Statistic',
+  'S3Table',
+  'Tag',
+  'Timeline',
+]);
+
+export default ALLOWED_DISPLAY_BLOCKS;
