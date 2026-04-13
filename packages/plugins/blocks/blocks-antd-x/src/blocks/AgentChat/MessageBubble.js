@@ -503,16 +503,20 @@ function MessageBubble({
           );
         }
         if (segment.category === 'display') {
-          return segment.parts.map((part) => (
-            <DynamicBlock
-              key={part.id ?? `display-${idx}`}
-              config={part.data.display}
-              output={part.data.output}
-              input={part.data.input}
-              toolCallId={part.data.toolCallId}
-              blockComponents={blockComponents}
-            />
-          ));
+          return (
+            <React.Fragment key={`display-${idx}`}>
+              {segment.parts.map((part) => (
+                <DynamicBlock
+                  key={part.id ?? `display-${idx}-${part.data?.toolCallId}`}
+                  config={part.data.display}
+                  output={part.data.output}
+                  input={part.data.input}
+                  toolCallId={part.data.toolCallId}
+                  blockComponents={blockComponents}
+                />
+              ))}
+            </React.Fragment>
+          );
         }
         if (segment.category === 'text') {
           const text = segment.parts.map((p) => p.text).join('');
