@@ -44,6 +44,7 @@ const MessageList = React.forwardRef(function MessageList(
     onRegenerate,
     onDelete,
     onEditMessage,
+    blockComponents,
   },
   ref
 ) {
@@ -178,6 +179,7 @@ const MessageList = React.forwardRef(function MessageList(
                 onFeedback={onFeedback}
                 onRegenerate={onRegenerate}
                 onDelete={onDelete}
+                blockComponents={blockComponents}
               />
             );
           },

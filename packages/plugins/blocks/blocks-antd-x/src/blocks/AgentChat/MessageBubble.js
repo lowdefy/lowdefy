@@ -27,6 +27,7 @@ import {
 } from '@ant-design/x';
 import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
+import DynamicBlock from './DynamicBlock.js';
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
 import ToolApproval from './ToolApproval.js';
@@ -206,6 +207,7 @@ function MessageBubble({
   onFeedback,
   onRegenerate,
   onDelete,
+  blockComponents,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -264,6 +266,7 @@ function MessageBubble({
 
   function partCategory(part) {
     if (part.type === 'step-start') return null;
+    if (part.type === 'data-display') return 'display';
     if (part.type === 'reasoning' || (part.type === 'text' && isCommentary(part))) {
       return 'reasoning';
     }
@@ -284,6 +287,7 @@ function MessageBubble({
   if (reasoningDisplay === 'grouped') {
     const reasoning = { category: 'reasoning', parts: [] };
     const tools = { category: 'tool', parts: [] };
+    const display = { category: 'display', parts: [] };
     const files = { category: 'file', parts: [] };
     const status = { category: 'status', parts: [] };
     const text = { category: 'text', parts: [] };
@@ -292,10 +296,13 @@ function MessageBubble({
       if (cat === 'reasoning') reasoning.parts.push(part);
       else if (cat === 'text') text.parts.push(part);
       else if (cat === 'tool') tools.parts.push(part);
+      else if (cat === 'display') display.parts.push(part);
       else if (cat === 'file') files.parts.push(part);
       else if (cat === 'status') status.parts.push(part);
     }
-    segments = [reasoning, tools, files, status, text].filter((s) => s.parts.length > 0);
+    segments = [reasoning, tools, display, files, status, text].filter(
+      (s) => s.parts.length > 0
+    );
   } else {
     segments = [];
     let current = null;
@@ -494,6 +501,18 @@ function MessageBubble({
               {lastStatus.data?.message ?? 'Processing...'}
             </div>
           );
+        }
+        if (segment.category === 'display') {
+          return segment.parts.map((part) => (
+            <DynamicBlock
+              key={part.id ?? `display-${idx}`}
+              config={part.data.display}
+              output={part.data.output}
+              input={part.data.input}
+              toolCallId={part.data.toolCallId}
+              blockComponents={blockComponents}
+            />
+          ));
         }
         if (segment.category === 'text') {
           const text = segment.parts.map((p) => p.text).join('');

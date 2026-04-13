@@ -42,6 +42,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     display,
     drawer: drawerConfig,
     suggestions,
+    blockComponents,
   } = properties;
   const senderRef = useRef(null);
   const finishMetaRef = useRef(null);
@@ -386,6 +387,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
+            blockComponents={blockComponents}
           />
         )}
       </div>
