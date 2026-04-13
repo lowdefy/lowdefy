@@ -30,9 +30,20 @@ function resolveGet(path, context) {
   return current;
 }
 
-// Recursively walks a value tree and resolves operator objects ({ _get: "path" })
-// against the provided context. Non-operator objects and arrays are traversed;
-// primitives are returned as-is.
+// Lightweight {{ path }} template resolver. Replaces {{ output.field }} with the
+// resolved value from context. Only handles simple dot-path interpolation — not
+// the full Nunjucks template language.
+function resolveTemplate(template, context) {
+  if (!type.isString(template)) return template;
+  return template.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, path) => {
+    const value = resolveGet(path, context);
+    return type.isNone(value) ? '' : String(value);
+  });
+}
+
+// Recursively walks a value tree and resolves operator objects ({ _get: "path" },
+// { _nunjucks: "template" }) against the provided context. Non-operator objects
+// and arrays are traversed; primitives are returned as-is.
 function resolveOperators(value, context) {
   if (type.isNone(value)) return value;
   if (type.isArray(value)) {
@@ -41,6 +52,9 @@ function resolveOperators(value, context) {
   if (type.isObject(value)) {
     if (!type.isNone(value._get)) {
       return resolveGet(value._get, context);
+    }
+    if (!type.isNone(value._nunjucks)) {
+      return resolveTemplate(value._nunjucks, context);
     }
     const resolved = {};
     for (const [key, val] of Object.entries(value)) {

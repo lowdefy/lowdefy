@@ -31,7 +31,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon, blockComponents }, methods, pageId, properties }) {
   const {
     agentId,
     welcome,
@@ -42,7 +42,6 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     display,
     drawer: drawerConfig,
     suggestions,
-    blockComponents,
   } = properties;
   const senderRef = useRef(null);
   const finishMetaRef = useRef(null);
