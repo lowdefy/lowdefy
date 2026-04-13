@@ -36,6 +36,10 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
   }
+  if (urlQuery != null && (typeof urlQuery !== 'object' || Array.isArray(urlQuery))) {
+    res.status(400).json({ error: 'urlQuery must be an object' });
+    return;
+  }
   const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
