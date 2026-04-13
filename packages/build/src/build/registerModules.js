@@ -30,44 +30,45 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-function applyVarDefaults(varDefs, consumerVars) {
-  const result = { ...consumerVars };
-
-  for (const [name, def] of Object.entries(varDefs)) {
-    if (def.properties) {
-      if (type.isObject(result[name]) || type.isNone(result[name])) {
-        const consumerObj = type.isObject(result[name]) ? result[name] : {};
-        result[name] = applyVarDefaults(def.properties, consumerObj);
-      }
-      // Non-none, non-object values (false, "disabled", 42, etc.)
-      // pass through — validateVars catches the type mismatch.
-    } else if (type.isNone(result[name]) && !type.isUndefined(def.default)) {
-      result[name] = def.default;
-    }
-  }
-
-  return result;
-}
-
-function validateVars(varDefs, values, entryId, source, prefix = '') {
+function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
-    const value = values[varName];
 
-    if (varDef.required && type.isNone(value)) {
+    if (varDef.properties) {
+      if (!type.isNone(consumerVars[varName]) && !type.isObject(consumerVars[varName])) {
+        throw new ConfigError(
+          `Module "${entryId}" (${source}) var "${fullName}" must be type "object" ` +
+            `(has properties) but got "${type.typeOf(consumerVars[varName])}".`
+        );
+      }
+      const consumerObj = type.isObject(consumerVars[varName]) ? consumerVars[varName] : {};
+      for (const key of Object.keys(consumerObj)) {
+        if (!varDef.properties[key]) {
+          throw new ConfigError(
+            `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+          );
+        }
+      }
+      validateRequiredVars(varDef.properties, consumerObj, entryId, source, fullName);
+    } else if (
+      varDef.required &&
+      type.isUndefined(varDef.default) &&
+      type.isNone(consumerVars[varName])
+    ) {
       throw new ConfigError(
         `Module "${entryId}" (${source}) requires var "${fullName}"` +
           (varDef.description ? `\n  - ${varDef.description}` : '') +
           `\n  - Define it in lowdefy.yaml under modules[id=${entryId}].vars.${fullName}`
       );
     }
+  }
+}
 
-    if (varDef.properties && !type.isUndefined(value) && !type.isObject(value)) {
-      throw new ConfigError(
-        `Module "${entryId}" (${source}) var "${fullName}" must be type "object" ` +
-          `(has properties) but got "${type.typeOf(value)}".`
-      );
-    }
+function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '') {
+  for (const [varName, varDef] of Object.entries(varDefs)) {
+    const fullName = prefix ? `${prefix}.${varName}` : varName;
+    const value = resolvedVarCache[fullName];
 
     if (varDef.type && !type.isNone(value)) {
       if (type.typeOf(value) !== varDef.type) {
@@ -79,16 +80,8 @@ function validateVars(varDefs, values, entryId, source, prefix = '') {
       }
     }
 
-    if (varDef.properties && type.isObject(value)) {
-      for (const key of Object.keys(value)) {
-        if (!varDef.properties[key]) {
-          throw new ConfigError(
-            `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
-              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
-          );
-        }
-      }
-      validateVars(varDef.properties, value, entryId, source, fullName);
+    if (varDef.properties) {
+      validateVarTypes(varDef.properties, resolvedVarCache, entryId, source, fullName);
     }
   }
 }
@@ -137,6 +130,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     env: process.env,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
+      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
       if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
       if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
       if (/^api(\..*)?$/.test(childPath)) return 'preserve';
@@ -190,10 +184,10 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     }
   }
 
-  // Apply manifest defaults and validate vars
+  // Validate required vars without defaults (needs raw defs + consumer values only).
+  // Type validation moves to after Phase 2 because defaults are resolved lazily.
   const varDefs = manifest.vars ?? {};
-  const effectiveVars = applyVarDefaults(varDefs, entry.vars ?? {});
-  validateVars(varDefs, effectiveVars, entry.id, entry.source);
+  validateRequiredVars(varDefs, entry.vars ?? {}, entry.id, entry.source);
 
   // Validate plugin dependencies against app's declared plugins
   const requiredPlugins = manifest.plugins ?? [];
@@ -233,7 +227,9 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     packageRoot,
     moduleRoot,
     isLocal,
-    vars: effectiveVars,
+    consumerVars: entry.vars ?? {},
+    varDefs,
+    resolvedVarCache: {},
     connections: entry.connections ?? {},
     manifest,
     dependencies,
@@ -245,7 +241,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
 
 async function resolveFullManifest({ entryId, context }) {
   const moduleEntry = context.modules[entryId];
-  const { manifest, vars, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
+  const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
 
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
@@ -254,7 +250,6 @@ async function resolveFullManifest({ entryId, context }) {
     refId: refDef.id,
     sourceRefId: null,
     vars: {},
-    moduleVars: vars,
     moduleDependencies,
     moduleEntry,
     moduleRoot,
@@ -266,6 +261,7 @@ async function resolveFullManifest({ entryId, context }) {
     env: process.env,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
+      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
       if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
       return false;
     },
@@ -283,6 +279,12 @@ async function resolveFullManifest({ entryId, context }) {
   }
 
   moduleEntry.manifest = resolved;
+
+  // Validate var types against lazily-resolved values
+  const varDefs = moduleEntry.varDefs;
+  if (Object.keys(varDefs).length > 0) {
+    validateVarTypes(varDefs, moduleEntry.resolvedVarCache, entryId, moduleEntry.source);
+  }
 }
 
 export { resolveLocalManifest, resolveFullManifest };

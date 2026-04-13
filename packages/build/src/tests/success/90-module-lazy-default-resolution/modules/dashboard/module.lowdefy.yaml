@@ -1,0 +1,22 @@
+name: Dashboard
+
+vars:
+  show_title:
+    type: boolean
+    default: false
+  roles:
+    type: array
+    default:
+      - viewer
+  components:
+    type: object
+    properties:
+      form_fields:
+        default:
+          _ref: defaults/form_fields.yaml
+      header:
+        default:
+          _ref: defaults/header.yaml
+
+pages:
+  - _ref: pages/main.yaml
