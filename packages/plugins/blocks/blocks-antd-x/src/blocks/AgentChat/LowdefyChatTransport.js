@@ -17,12 +17,15 @@
 import { DefaultChatTransport } from 'ai';
 
 class LowdefyChatTransport extends DefaultChatTransport {
-  constructor({ pageId, agentId, conversationId }) {
+  constructor({ pageId, agentId, conversationId, urlQuery }) {
     const base = `/api/agent/${pageId}/${agentId}`;
-    const api = conversationId ? `${base}?conversationId=${encodeURIComponent(conversationId)}` : base;
+    const api = conversationId
+      ? `${base}?conversationId=${encodeURIComponent(conversationId)}`
+      : base;
     super({
       api,
       credentials: 'include',
+      body: urlQuery ? { urlQuery } : undefined,
     });
   }
 }

@@ -34,6 +34,7 @@ import WelcomeScreen from './WelcomeScreen.js';
 function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
+    urlQuery,
     welcome,
     messageDisplay,
     sender,
@@ -58,9 +59,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
+  const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => new LowdefyChatTransport({ pageId, agentId, conversationId }),
-    [pageId, agentId, conversationId]
+    () => new LowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }),
+    [pageId, agentId, conversationId, urlQueryKey]
   );
 
   const bubbleListRef = useRef(null);
@@ -90,6 +92,12 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         isAbort: options.isAbort,
         isDisconnect: options.isDisconnect,
       };
+    },
+    onData: (dataPart) => {
+      methods.triggerEvent({
+        name: 'onDataPart',
+        event: { type: dataPart.type, data: dataPart.data, id: dataPart.id },
+      });
     },
   });
 

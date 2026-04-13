@@ -30,7 +30,8 @@ async function handler({ context, req, res }) {
   const agentId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
-  const { messages } = req.body;
+  const { conversationId } = req.query;
+  const { messages, urlQuery } = req.body;
   if (!Array.isArray(messages)) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
@@ -39,6 +40,8 @@ async function handler({ context, req, res }) {
     agentId,
     pageId,
     messages,
+    conversationId: conversationId ?? undefined,
+    urlQuery: urlQuery ?? undefined,
   });
 
   // Stream the Web Response body to the Next.js response

@@ -175,6 +175,14 @@ export default {
           'AISDKAgent agent property "timeout" should be a number or an object with totalMs, stepMs, and/or chunkMs.',
       },
     },
+    pageContext: {
+      type: 'boolean',
+      description:
+        'When true, prepend page context (pageId, userId, conversationId, urlQuery) to instructions.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "pageContext" should be a boolean.',
+      },
+    },
     repairToolCall: {
       type: 'boolean',
       description:

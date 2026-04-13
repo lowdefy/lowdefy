@@ -26,6 +26,29 @@ import {
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 
+function createUsageAccumulator() {
+  const usage = {
+    inputTokens: 0,
+    outputTokens: 0,
+    totalTokens: 0,
+    reasoningTokens: 0,
+    cacheReadTokens: 0,
+    cacheWriteTokens: 0,
+  };
+
+  function add(stepUsage) {
+    if (!stepUsage) return;
+    usage.inputTokens += stepUsage.inputTokens ?? 0;
+    usage.outputTokens += stepUsage.outputTokens ?? 0;
+    usage.totalTokens += stepUsage.totalTokens ?? 0;
+    usage.reasoningTokens += stepUsage.outputTokenDetails?.reasoningTokens ?? 0;
+    usage.cacheReadTokens += stepUsage.inputTokenDetails?.cacheReadTokens ?? 0;
+    usage.cacheWriteTokens += stepUsage.inputTokenDetails?.cacheWriteTokens ?? 0;
+  }
+
+  return { usage, add };
+}
+
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
 function cleanHookEvent(event) {
@@ -100,6 +123,21 @@ async function handleAgentChat({ connection, properties, context }) {
     callEndpoint: context.callEndpoint,
   });
 
+  // Prepend page context to instructions when pageContext is enabled
+  let instructions = agent.properties.instructions;
+  if (agent.properties.pageContext && context.agentContext) {
+    const ctx = context.agentContext;
+    const contextLines = ['<context>'];
+    if (ctx.pageId) contextLines.push(`  pageId: ${ctx.pageId}`);
+    if (ctx.userId) contextLines.push(`  userId: ${ctx.userId}`);
+    if (ctx.conversationId) contextLines.push(`  conversationId: ${ctx.conversationId}`);
+    if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
+      contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
+    }
+    contextLines.push('</context>');
+    instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
+  }
+
   // Build stop conditions
   const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
   const stopOnToolCall = agent.properties.stopOnToolCall;
@@ -112,7 +150,7 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const agentInstance = new ToolLoopAgent({
     model,
-    instructions: agent.properties.instructions,
+    instructions,
     tools,
     stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
     maxOutputTokens: agent.properties.maxOutputTokens,
@@ -146,6 +184,8 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
+      const usageAccumulator = createUsageAccumulator();
+
       // createAgentUIStream validates UIMessages, converts to ModelMessages,
       // runs the agent, and returns a UIMessageStream — handling the full
       // UI→model→UI conversion that ToolLoopAgent.stream() does not.
@@ -153,6 +193,9 @@ async function handleAgentChat({ connection, properties, context }) {
         agent: agentInstance,
         uiMessages: messages,
         ...(agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {}),
+        onStepFinish: (stepResult) => {
+          usageAccumulator.add(stepResult.usage);
+        },
       });
 
       writer.merge(agentStream);
@@ -160,10 +203,17 @@ async function handleAgentChat({ connection, properties, context }) {
       // After merge resolves the agent stream is complete.
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
+        const finishPayload = {
+          messages,
+          finishReason: 'stop',
+          isAborted: false,
+          ...(context.agentContext ?? {}),
+          usage: usageAccumulator.usage,
+        };
         for (const endpointId of onFinishEndpointIds) {
           try {
             const hookResponse = await context.callEndpoint(endpointId, {
-              payload: { messages, finishReason: 'stop', isAborted: false },
+              payload: finishPayload,
             });
             if (hookResponse?.dataParts) {
               for (const part of hookResponse.dataParts) {

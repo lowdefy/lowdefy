@@ -147,6 +147,10 @@
       "type": "string",
       "description": "Active conversation ID. When this value changes, messages are automatically cleared."
     },
+    "urlQuery": {
+      "type": "object",
+      "description": "URL query parameters to send with each agent request. Available server-side in onFinish hook payload and via _payload operator in agent properties."
+    },
     "sender": {
       "type": "object",
       "properties": {
