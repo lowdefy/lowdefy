@@ -39,7 +39,13 @@ function createUsageAccumulator() {
     cacheWriteTokens: 0,
   };
 
-  function add(stepUsage) {
+  let finishReason = 'stop';
+
+  function add(stepResult) {
+    const stepUsage = stepResult?.usage ?? stepResult;
+    if (stepResult?.finishReason) {
+      finishReason = stepResult.finishReason;
+    }
     if (!stepUsage) return;
     usage.inputTokens += stepUsage.inputTokens ?? 0;
     usage.outputTokens += stepUsage.outputTokens ?? 0;
@@ -49,7 +55,7 @@ function createUsageAccumulator() {
     usage.cacheWriteTokens += stepUsage.inputTokenDetails?.cacheWriteTokens ?? 0;
   }
 
-  return { usage, add };
+  return { usage, add, getFinishReason: () => finishReason };
 }
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
@@ -212,7 +218,7 @@ async function handleAgentChat({ connection, properties, context }) {
           prompt: prunedMessages,
           ...timeoutConfig,
           onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult.usage);
+            usageAccumulator.add(stepResult);
           },
         });
         agentStream = result.toUIMessageStream({
@@ -227,7 +233,7 @@ async function handleAgentChat({ connection, properties, context }) {
           uiMessages: messages,
           ...timeoutConfig,
           onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult.usage);
+            usageAccumulator.add(stepResult);
           },
         });
       }
@@ -239,7 +245,7 @@ async function handleAgentChat({ connection, properties, context }) {
       if (hasOnFinishHooks) {
         const finishPayload = {
           messages,
-          finishReason: 'stop',
+          finishReason: usageAccumulator.getFinishReason(),
           isAborted: false,
           ...(context.agentContext ?? {}),
           usage: usageAccumulator.usage,
