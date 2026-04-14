@@ -26,7 +26,7 @@ import { type } from '@lowdefy/helpers';
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
 import DrawerWrapper from './DrawerWrapper.js';
-import LowdefyChatTransport from './LowdefyChatTransport.js';
+import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
@@ -61,7 +61,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => new LowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }),
+    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 
