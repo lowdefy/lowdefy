@@ -47,7 +47,7 @@
     "@ant-design/icons": "6.1.0",
     "@ant-design/x": "2.4.0",
     "@ant-design/x-markdown": "2.4.0",
-    "@lowdefy/block-utils": "4.7.0",
+    "@lowdefy/block-utils": "4.7.3",
     "@lowdefy/helpers": "workspace:*",
     "ai": "6.0.116"
   },

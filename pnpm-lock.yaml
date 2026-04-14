@@ -780,8 +780,8 @@ importers:
         specifier: 2.4.0
         version: 2.4.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: 4.7.3
+        version: link:../../../utils/block-utils
       '@lowdefy/helpers':
         specifier: workspace:*
         version: link:../../../utils/helpers
@@ -1033,15 +1033,15 @@ importers:
         specifier: 3.0.58
         version: 3.0.58(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 4.7.0
+        specifier: 4.7.1
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: 4.7.3
+        version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1114,15 +1114,15 @@ importers:
         specifier: 3.0.43
         version: 3.0.43(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 4.7.0
+        specifier: 4.7.1
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: 4.7.3
+        version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1216,8 +1216,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: 4.7.3
+        version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -1286,15 +1286,15 @@ importers:
         specifier: 3.0.41
         version: 3.0.41(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 4.7.0
+        specifier: 4.7.1
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.7.0
-        version: 4.7.0
+        specifier: 4.7.3
+        version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)
@@ -3460,41 +3460,11 @@ packages:
   '@emnapi/wasi-threads@1.1.0':
     resolution: {integrity: sha512-WI0DdZ8xFSbgMjR1sFsKABJ/C5OnRrjT06JXbZKexJGrDuPTzZdDYfFlsgcCXCyf+suG5QU2e/y1Wo2V/OapLQ==}
 
-  '@emotion/babel-plugin@11.13.5':
-    resolution: {integrity: sha512-pxHCpT2ex+0q+HH91/zsdHkw/lXd468DIN2zvfvLtPKLLMo6gQj7oLObq8PhkrxOZb/gGCq03S3Z7PDhS8pduQ==}
-
-  '@emotion/cache@11.14.0':
-    resolution: {integrity: sha512-L/B1lc/TViYk4DcpGxtAVbx0ZyiKM5ktoIyafGkH6zg/tj+mA+NE//aPYKG0k8kCHSHVJrpLpcAlOBEXQ3SavA==}
-
-  '@emotion/css@11.11.2':
-    resolution: {integrity: sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==}
-
   '@emotion/hash@0.8.0':
     resolution: {integrity: sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==}
 
-  '@emotion/hash@0.9.2':
-    resolution: {integrity: sha512-MyqliTZGuOm3+5ZRSaaBGP3USLw6+EGykkwZns2EPC5g8jJ4z9OrdZY9apkl3+UP9+sdz76YYkwCKP5gh8iY3g==}
-
-  '@emotion/memoize@0.9.0':
-    resolution: {integrity: sha512-30FAj7/EoJ5mwVPOWhAyCX+FPfMDrVecJAM+Iw9NRoSl4BBAQeqj4cApHHUXOVvIPgLVDsCFoz/hGD+5QQD1GQ==}
-
-  '@emotion/serialize@1.3.3':
-    resolution: {integrity: sha512-EISGqt7sSNWHGI76hC7x1CksiXPahbxEOrC5RjmFRJTqLyEK9/9hZvBbiYn70dw4wuwMKiEMCUlR6ZXTSWQqxA==}
-
-  '@emotion/sheet@1.4.0':
-    resolution: {integrity: sha512-fTBW9/8r2w3dXWYM4HCB1Rdp8NLibOw2+XELH5m5+AkWiL/KqYX6dc0kKYlaYyKjrQ6ds33MCdMPEwgs2z1rqg==}
-
-  '@emotion/unitless@0.10.0':
-    resolution: {integrity: sha512-dFoMUuQA20zvtVTuxZww6OHoJYgrzfKM1t52mVySDJnMSEa08ruEvdYQbhvyu6soU+NeLVd3yKfTfT0NeV6qGg==}
-
   '@emotion/unitless@0.7.5':
     resolution: {integrity: sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==}
-
-  '@emotion/utils@1.4.2':
-    resolution: {integrity: sha512-3vLclRofFziIa3J2wDh9jjbkUz9qk5Vi3IZ/FSTKViB0k+ef0fPV7dYrUIugbgupYDx7v9ud/SjrtEP8Y4xLoA==}
-
-  '@emotion/weak-memoize@0.4.0':
-    resolution: {integrity: sha512-snKqtPW01tN0ui7yu9rGv69aJXr/a/Ywvl11sUjNtEcRc+ng/mQriFL0wLXMef74iHa/EkftbDzU9F8iFbH+zg==}
 
   '@esbuild/aix-ppc64@0.25.0':
     resolution: {integrity: sha512-O7vun9Sf8DFjH2UtqK8Ku3LkquL9SZL8OLY1T5NZkA34+wG3OQF7cl4Ql8vdNzM6fzBbYfLaiRLIOZ+2FOCgBQ==}
@@ -4000,21 +3970,6 @@ packages:
 
   '@js-joda/core@5.5.3':
     resolution: {integrity: sha512-7dqNYwG8gCt4hfg5PKgM7xLEcgSBcx/UgC92OMnhMmvAnq11QzDFPrxUkNR/u5kn17WWLZ8beZ4A3Qrz4pZcmQ==}
-
-  '@lowdefy/ajv@4.7.0':
-    resolution: {integrity: sha512-MFWl9vm6nR9JwR0EMamARrYvoQ84PgNgYwAcl6XMLGEYe2j/CZ8rMcfQu7a0VREfQ75oSHXwI0/cuqRIq4p3vA==}
-
-  '@lowdefy/block-utils@4.7.0':
-    resolution: {integrity: sha512-477NnF9moaRV7KYgsryu8rS/Tp8nfFzgRl1RgYmNDhwXF52R9lKfDVrBLYY3g/FkptJ2ON9eba6oAh1uOBQoOQ==}
-
-  '@lowdefy/errors@4.7.0':
-    resolution: {integrity: sha512-X8kINil+eUmHIJzi2CxkxiJGyljgdYXUPZLiprCkV6I+zxlnZknuaEAoNTprD/ZjvP2pV43TAI9zNxxkqWtLdA==}
-
-  '@lowdefy/helpers@4.7.0':
-    resolution: {integrity: sha512-aYfwy5aNF+pwuXhrlaGUTAAs9QqiLBVCNOA0Zbgf6DrCG2ofI1nKxYBtnz0zlpoBqkPBHmNZvU2BZ4OvU1bq3w==}
-
-  '@lowdefy/nunjucks@4.7.0':
-    resolution: {integrity: sha512-mvGwSNUo2iRqWEkZTR956Syt1VLzcP13rZewDa38OX2qEzH9c9zN2X1017vskPpjUFO/O1ffrlNSiQAxxnbneg==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -6015,9 +5970,6 @@ packages:
   '@types/node@20.6.2':
     resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
 
-  '@types/parse-json@4.0.2':
-    resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
-
   '@types/parse5@6.0.3':
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
 
@@ -6821,10 +6773,6 @@ packages:
     resolution: {integrity: sha512-Ys3tUKAmfnkRUpPdpa98eYrAR0nV+sSFUZZEGuQ2EbFd1y4SOLtD5QDNHAq+bb9a+bbXvYQC4b+ID/THIMcU6Q==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
 
-  babel-plugin-macros@3.1.0:
-    resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
-    engines: {node: '>=10', npm: '>=6'}
-
   babel-preset-current-node-syntax@1.0.1:
     resolution: {integrity: sha512-M7LQ0bxarkxQoN+vz5aJPsLBn77n8QgTFmo8WK0/44auK2xlCXrYcUxHFxgU7qW5Yzw/CjmLRK2uJzaCd7LvqQ==}
     peerDependencies:
@@ -7334,10 +7282,6 @@ packages:
 
   cose-base@2.2.0:
     resolution: {integrity: sha512-AzlgcsCbUMymkADOJtQm3wO9S3ltPfYOFD5033keQn9NJzIbtnZj+UdBJe7DYml/8TdbtHJW3j58SOnKhWY/5g==}
-
-  cosmiconfig@7.1.0:
-    resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
-    engines: {node: '>=10'}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -8418,9 +8362,6 @@ packages:
   find-cache-dir@3.3.2:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
     engines: {node: '>=8'}
-
-  find-root@1.1.0:
-    resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
 
   find-up@4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
@@ -11897,9 +11838,6 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  stylis@4.2.0:
-    resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
-
   stylis@4.3.6:
     resolution: {integrity: sha512-yQ3rwFWRfwNUY7H5vpU0wfdkNSnvnJinhF9830Swlaxl03zsOjCfmX0ugac+3LtK0lYSgwL/KXc8oYL3mG4YFQ==}
 
@@ -12656,10 +12594,6 @@ packages:
   yaml-loader@0.8.0:
     resolution: {integrity: sha512-LjeKnTzVBKWiQBeE2L9ssl6WprqaUIxCSNs5tle8PaDydgu3wVFXTbMfsvF2MSErpy9TDVa092n4q6adYwJaWg==}
     engines: {node: '>= 12.13'}
-
-  yaml@1.10.3:
-    resolution: {integrity: sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA==}
-    engines: {node: '>= 6'}
 
   yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
@@ -14432,63 +14366,9 @@ snapshots:
       tslib: 2.6.2
     optional: true
 
-  '@emotion/babel-plugin@11.13.5':
-    dependencies:
-      '@babel/helper-module-imports': 7.28.6
-      '@babel/runtime': 7.29.2
-      '@emotion/hash': 0.9.2
-      '@emotion/memoize': 0.9.0
-      '@emotion/serialize': 1.3.3
-      babel-plugin-macros: 3.1.0
-      convert-source-map: 1.9.0
-      escape-string-regexp: 4.0.0
-      find-root: 1.1.0
-      source-map: 0.5.7
-      stylis: 4.2.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@emotion/cache@11.14.0':
-    dependencies:
-      '@emotion/memoize': 0.9.0
-      '@emotion/sheet': 1.4.0
-      '@emotion/utils': 1.4.2
-      '@emotion/weak-memoize': 0.4.0
-      stylis: 4.2.0
-
-  '@emotion/css@11.11.2':
-    dependencies:
-      '@emotion/babel-plugin': 11.13.5
-      '@emotion/cache': 11.14.0
-      '@emotion/serialize': 1.3.3
-      '@emotion/sheet': 1.4.0
-      '@emotion/utils': 1.4.2
-    transitivePeerDependencies:
-      - supports-color
-
   '@emotion/hash@0.8.0': {}
 
-  '@emotion/hash@0.9.2': {}
-
-  '@emotion/memoize@0.9.0': {}
-
-  '@emotion/serialize@1.3.3':
-    dependencies:
-      '@emotion/hash': 0.9.2
-      '@emotion/memoize': 0.9.0
-      '@emotion/unitless': 0.10.0
-      '@emotion/utils': 1.4.2
-      csstype: 3.2.3
-
-  '@emotion/sheet@1.4.0': {}
-
-  '@emotion/unitless@0.10.0': {}
-
   '@emotion/unitless@0.7.5': {}
-
-  '@emotion/utils@1.4.2': {}
-
-  '@emotion/weak-memoize@0.4.0': {}
 
   '@esbuild/aix-ppc64@0.25.0':
     optional: true
@@ -14997,35 +14877,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.4.15
 
   '@js-joda/core@5.5.3': {}
-
-  '@lowdefy/ajv@4.7.0':
-    dependencies:
-      '@lowdefy/nunjucks': 4.7.0
-      ajv: 8.12.0
-      ajv-errors: 3.0.0(ajv@8.12.0)
-
-  '@lowdefy/block-utils@4.7.0':
-    dependencies:
-      '@emotion/css': 11.11.2
-      '@lowdefy/errors': 4.7.0
-      '@lowdefy/helpers': 4.7.0
-      dompurify: 3.2.4
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - supports-color
-
-  '@lowdefy/errors@4.7.0': {}
-
-  '@lowdefy/helpers@4.7.0':
-    dependencies:
-      '@lowdefy/errors': 4.7.0
-      lodash.merge: 4.6.2
-
-  '@lowdefy/nunjucks@4.7.0':
-    dependencies:
-      '@lowdefy/helpers': 4.7.0
-      moment: 2.29.4
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -17378,8 +17229,6 @@ snapshots:
 
   '@types/node@20.6.2': {}
 
-  '@types/parse-json@4.0.2': {}
-
   '@types/parse5@6.0.3': {}
 
   '@types/pg-pool@2.0.6':
@@ -18345,12 +18194,6 @@ snapshots:
       '@types/babel__core': 7.1.20
       '@types/babel__traverse': 7.18.3
 
-  babel-plugin-macros@3.1.0:
-    dependencies:
-      '@babel/runtime': 7.29.2
-      cosmiconfig: 7.1.0
-      resolve: 1.22.11
-
   babel-preset-current-node-syntax@1.0.1(@babel/core@7.23.3):
     dependencies:
       '@babel/core': 7.23.3
@@ -18877,14 +18720,6 @@ snapshots:
   cose-base@2.2.0:
     dependencies:
       layout-base: 2.0.1
-
-  cosmiconfig@7.1.0:
-    dependencies:
-      '@types/parse-json': 4.0.2
-      import-fresh: 3.3.0
-      parse-json: 5.2.0
-      path-type: 4.0.0
-      yaml: 1.10.3
 
   cross-spawn@7.0.3:
     dependencies:
@@ -20301,8 +20136,6 @@ snapshots:
       commondir: 1.0.1
       make-dir: 3.1.0
       pkg-dir: 4.2.0
-
-  find-root@1.1.0: {}
 
   find-up@4.1.0:
     dependencies:
@@ -22667,7 +22500,8 @@ snapshots:
 
   module-details-from-path@1.0.4: {}
 
-  moment@2.29.4: {}
+  moment@2.29.4:
+    optional: true
 
   mongodb-connection-string-url@2.6.0:
     dependencies:
@@ -24577,8 +24411,6 @@ snapshots:
       client-only: 0.0.1
       react: 18.2.0
 
-  stylis@4.2.0: {}
-
   stylis@4.3.6: {}
 
   sucrase@3.35.1:
@@ -25558,8 +25390,6 @@ snapshots:
       javascript-stringify: 2.1.0
       loader-utils: 2.0.4
       yaml: 2.3.4
-
-  yaml@1.10.3: {}
 
   yaml@2.3.4: {}
 
