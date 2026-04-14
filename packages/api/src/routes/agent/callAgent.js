@@ -25,7 +25,7 @@ import getAgentResolver from './getAgentResolver.js';
 import getConnectionConfig from '../request/getConnectionConfig.js';
 import getConnection from '../request/getConnection.js';
 
-async function callAgent(context, { agentId, pageId, messages }) {
+async function callAgent(context, { agentId, pageId, messages, conversationId, urlQuery }) {
   const { logger } = context;
 
   context.pageId = pageId;
@@ -33,6 +33,21 @@ async function callAgent(context, { agentId, pageId, messages }) {
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
   const agentConfig = await getAgentConfig(context, { agentId });
+
+  const agentContext = {
+    conversationId: conversationId ?? undefined,
+    pageId,
+    urlQuery: urlQuery ?? {},
+    userId: context.user?.sub ?? context.user?.id ?? null,
+  };
+
+  // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
+  agentConfig.properties = context.evaluateOperators({
+    input: agentConfig.properties ?? {},
+    location: agentConfig.agentId,
+    payload: agentContext,
+    steps: {},
+  });
 
   // Load connection config from build artifacts using agent's connectionId
   const connectionConfig = await getConnectionConfig(context, {
@@ -62,11 +77,12 @@ async function callAgent(context, { agentId, pageId, messages }) {
 
   // Build resolver context with callEndpoint that allows InternalApi endpoints
   const resolverContext = {
+    agentContext,
     evaluateOperators: (input) =>
       context.evaluateOperators({
         input,
         location: agentConfig.agentId,
-        payload: {},
+        payload: agentContext,
         steps: {},
       }),
     callEndpoint: async (endpointId, { payload, abortSignal }) => {

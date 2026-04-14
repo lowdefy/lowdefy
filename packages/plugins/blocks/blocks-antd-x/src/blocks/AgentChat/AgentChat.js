@@ -26,7 +26,7 @@ import { type } from '@lowdefy/helpers';
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
 import DrawerWrapper from './DrawerWrapper.js';
-import LowdefyChatTransport from './LowdefyChatTransport.js';
+import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
@@ -34,6 +34,7 @@ import WelcomeScreen from './WelcomeScreen.js';
 function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
+    urlQuery,
     welcome,
     messageDisplay,
     sender,
@@ -58,9 +59,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
+  const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => new LowdefyChatTransport({ pageId, agentId, conversationId }),
-    [pageId, agentId, conversationId]
+    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }),
+    [pageId, agentId, conversationId, urlQueryKey]
   );
 
   const bubbleListRef = useRef(null);
@@ -90,6 +92,12 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         isAbort: options.isAbort,
         isDisconnect: options.isDisconnect,
       };
+    },
+    onData: (dataPart) => {
+      methods.triggerEvent({
+        name: 'onDataPart',
+        event: { type: dataPart.type, data: dataPart.data, id: dataPart.id },
+      });
     },
   });
 

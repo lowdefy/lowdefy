@@ -83,6 +83,14 @@ export default {
         enum: 'ClaudeAgent agent property "effort" should be one of "low", "medium", or "high".',
       },
     },
+    pageContext: {
+      type: 'boolean',
+      description:
+        'When true, prepend page context (pageId, userId, conversationId, urlQuery) to instructions.',
+      errorMessage: {
+        type: 'ClaudeAgent agent property "pageContext" should be a boolean.',
+      },
+    },
     providerOptions: {
       type: 'object',
       description: 'Provider-specific options passed to the AI SDK.',
