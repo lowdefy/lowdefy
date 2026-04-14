@@ -26,6 +26,8 @@ import {
   validateUIMessages,
 } from 'ai';
 
+import { serializer } from '@lowdefy/helpers';
+
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 
@@ -255,8 +257,9 @@ async function handleAgentChat({ connection, properties, context }) {
             const hookResponse = await context.callEndpoint(endpointId, {
               payload: finishPayload,
             });
-            if (hookResponse?.dataParts) {
-              for (const part of hookResponse.dataParts) {
+            const responseData = serializer.deserialize(hookResponse?.response);
+            if (Array.isArray(responseData?.dataParts)) {
+              for (const part of responseData.dataParts) {
                 writer.write(part);
               }
             }

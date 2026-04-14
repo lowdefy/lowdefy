@@ -1002,7 +1002,7 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
     { type: 'data', value: { suggestions: ['How are you?'] } },
     { type: 'data', value: { title: 'Greeting conversation' } },
   ];
-  const callEndpoint = jest.fn().mockResolvedValue({ dataParts });
+  const callEndpoint = jest.fn().mockResolvedValue({ response: { dataParts } });
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
@@ -1036,7 +1036,7 @@ test('onFinish hook failure logs warning and continues to next hook', async () =
   const callEndpoint = jest
     .fn()
     .mockRejectedValueOnce(new Error('Network timeout'))
-    .mockResolvedValueOnce({ dataParts: [{ type: 'data', value: { ok: true } }] });
+    .mockResolvedValueOnce({ response: { dataParts: [{ type: 'data', value: { ok: true } }] } });
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
