@@ -41,10 +41,10 @@ async function build(options) {
   // Phase 3: Module integration
   buildModules({ components, context });                 // Scope IDs, resolve _module operators, merge
 
-  // Phase 4: Validate
-  testSchema({ components, context });                   // Validate against schema
+  // Phase 4: Schema warnings + validate
+  testSchema({ components, context });                   // Emit schema warnings (non-blocking)
 
-  // Phase 5: Build specific domains
+  // Phase 5: Build specific domains (each has its own focused validation)
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
@@ -150,11 +150,24 @@ Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`,
 
 ### Schema Validation (`testSchema.js`)
 
-Validates config against the Lowdefy JSON schema:
-- Block types match their schemas
-- Required fields are present
-- Property types are correct
-- Enum values are valid
+Validates config against the Lowdefy JSON schema and emits **warnings** (not errors). Schema validation is non-blocking — it surfaces helpful hints like typos caught by `additionalProperties` and property type mismatches, but does not stop the build.
+
+Critical structural checks (required id/type, correct types) are handled by **focused validations** in each build step (`validateBlock`, `buildConnections`, `buildEvents`, etc.), which provide better error messages with full context (pageId, blockId, eventId).
+
+**Validation ownership:**
+
+| Check | Validated by | Error quality |
+|-------|-------------|---------------|
+| Block id/type required | `validateBlock.js` | Includes pageId |
+| Connection id/type required | `buildConnections.js` | Includes connectionId |
+| Request id/type required | `buildRequests.js` | Includes requestId, pageId |
+| Action id/type required | `buildEvents.js` | Includes eventId, blockId, pageId |
+| Endpoint id/type required | `validateEndpoint.js` | Includes endpointId |
+| Menu id required | `buildMenu.js` | Includes menuId |
+| Menu item id/type required | `buildMenu.js` | Includes menuItemId, menuId |
+| Auth plugin id/type required | `buildAuthPlugins.js` | Includes plugin type class |
+| Additional properties (typos) | `testSchema.js` (warning) | Generic AJV message |
+| Property type checks | `testSchema.js` (warning) | Generic AJV message |
 
 ### Page Building (`buildPages/`)
 

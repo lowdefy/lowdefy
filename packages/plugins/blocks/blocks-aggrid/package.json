@@ -58,9 +58,11 @@
     "@ag-grid-community/react": "30.2.0",
     "@ag-grid-community/styles": "30.2.0",
     "@lowdefy/block-utils": "4.7.3",
-    "@lowdefy/helpers": "4.7.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "@lowdefy/helpers": "4.7.3"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "4.7.3",

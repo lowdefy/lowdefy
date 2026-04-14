@@ -417,7 +417,7 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
 | `request-refs`    | Invalid Request action reference warnings   |
 | `connection-refs` | Nonexistent connection ID references        |
 | `types`           | All type validation                         |
-| `schema`          | JSON schema validation errors               |
+| `schema`          | JSON schema validation warnings (non-blocking) |
 
 **Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings.
 

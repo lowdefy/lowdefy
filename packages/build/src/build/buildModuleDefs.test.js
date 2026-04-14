@@ -144,7 +144,9 @@ pages:
   });
   expect(context.modules['team-users']).toBeDefined();
   expect(context.modules['team-users'].id).toBe('team-users');
-  expect(context.modules['team-users'].vars).toEqual({ apiUrl: 'https://api.example.com' });
+  expect(context.modules['team-users'].consumerVars).toEqual({
+    apiUrl: 'https://api.example.com',
+  });
 });
 
 test('buildModuleDefs registers multiple modules in order', async () => {
@@ -219,7 +221,7 @@ pages: []
 
   await buildModuleDefs({ context });
 
-  expect(context.modules['my-mod'].vars).toEqual({
+  expect(context.modules['my-mod'].consumerVars).toEqual({
     roles: ['admin', 'editor', 'viewer'],
   });
 });

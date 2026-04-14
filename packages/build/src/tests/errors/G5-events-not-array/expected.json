@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "must be array"
+        "Actions must be an array"
       ],
       "errorContains": [
-        "must be array",
+        "Actions must be an array at \"button\" in event \"onClick\" on page \"home\".",
         "lowdefy.yaml:21"
       ]
     }

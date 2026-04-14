@@ -1,0 +1,13 @@
+lowdefy: local
+name: Null Namespace Defaults Test
+
+modules:
+  - id: widget-partial
+    source: 'file:modules/widget'
+    vars:
+      components:
+        custom_field: hello
+  - id: widget-null
+    source: 'file:modules/widget'
+    vars:
+      components: null

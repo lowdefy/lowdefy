@@ -41,6 +41,58 @@ function buildDefaultMenu({ components, context }) {
   return menus;
 }
 
+function validateMenuItem(menuItem, menuId, context) {
+  const configKey = menuItem?.['~k'];
+  if (!type.isObject(menuItem)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Menu item should be an object on menu "${menuId}".`, {
+        received: menuItem,
+        configKey,
+      })
+    );
+    return false;
+  }
+  if (type.isUndefined(menuItem.id)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Menu item id missing on menu "${menuId}".`, { configKey })
+    );
+    return false;
+  }
+  if (!type.isString(menuItem.id)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Menu item id is not a string on menu "${menuId}".`, {
+        received: menuItem.id,
+        configKey,
+      })
+    );
+    return false;
+  }
+  if (type.isNone(menuItem.type)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Menu item type is not defined at "${menuItem.id}" on menu "${menuId}".`,
+        { configKey }
+      )
+    );
+    return false;
+  }
+  if (!type.isString(menuItem.type)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Menu item type is not a string at "${menuItem.id}" on menu "${menuId}".`,
+        { received: menuItem.type, configKey }
+      )
+    );
+    return false;
+  }
+  return true;
+}
+
 function loopItems({
   parent,
   menuId,
@@ -51,6 +103,10 @@ function loopItems({
 }) {
   if (type.isArray(parent.links)) {
     parent.links.forEach((menuItem) => {
+      if (!validateMenuItem(menuItem, menuId, context)) {
+        menuItem.remove = true;
+        return;
+      }
       const configKey = menuItem['~k'];
       if (menuItem.type === 'MenuLink') {
         if (type.isString(menuItem.pageId)) {
