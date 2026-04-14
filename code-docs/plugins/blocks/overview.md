@@ -33,6 +33,7 @@ Blocks are:
 | [@lowdefy/blocks-google-maps](./google-maps.md) | Google Maps                 | 1           |
 | [@lowdefy/blocks-loaders](./loaders.md)         | Loading spinners            | 1           |
 | [@lowdefy/blocks-qr](./qr.md)                   | QR code generation          | 1           |
+| [@lowdefy/blocks-antd-x](./antd-x.md)           | AI chat (Ant Design X)      | 2           |
 
 ## Block Package Structure
 
