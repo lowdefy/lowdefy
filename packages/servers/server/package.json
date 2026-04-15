@@ -52,7 +52,7 @@
     "@lowdefy/api": "4.7.3",
     "@lowdefy/block-utils": "4.7.3",
     "@lowdefy/blocks-antd": "4.7.3",
-    "@lowdefy/blocks-antd-x": "4.7.3",
+    "@lowdefy/blocks-antd-x": "workspace:*",
     "@lowdefy/blocks-basic": "4.7.3",
     "@lowdefy/blocks-loaders": "4.7.3",
     "@lowdefy/client": "4.7.3",
