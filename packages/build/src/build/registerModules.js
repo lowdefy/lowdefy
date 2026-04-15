@@ -191,6 +191,14 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
 
   // Validate plugin dependencies against app's declared plugins
   const requiredPlugins = manifest.plugins ?? [];
+  for (const plugin of requiredPlugins) {
+    if (!type.isString(plugin.version)) {
+      throw new ConfigError(
+        `Module "${entry.id}": plugin "${plugin.name}" must declare a "version" ` +
+          `(semver range) in module.lowdefy.yaml.`
+      );
+    }
+  }
   const appPlugins = (context.plugins ?? []).reduce(
     (map, p) => map.set(p.name, p.version),
     new Map()
