@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@ai-sdk/mcp": "1.0.30",
-    "@lowdefy/helpers": "workspace:*",
+    "@lowdefy/helpers": "4.7.1",
     "ai": "6.0.116",
     "glob": "11.0.2"
   },

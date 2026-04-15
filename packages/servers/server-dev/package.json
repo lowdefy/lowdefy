@@ -51,7 +51,7 @@
     "@lowdefy/block-utils": "4.7.3",
     "@lowdefy/blocks-aggrid": "4.7.3",
     "@lowdefy/blocks-antd": "4.7.3",
-    "@lowdefy/blocks-antd-x": "workspace:*",
+    "@lowdefy/blocks-antd-x": "4.7.1",
     "@lowdefy/blocks-basic": "4.7.3",
     "@lowdefy/blocks-echarts": "4.7.3",
     "@lowdefy/blocks-loaders": "4.7.3",
