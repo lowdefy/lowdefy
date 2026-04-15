@@ -338,7 +338,7 @@ describe('_module.pageId resolution', () => {
     await expect(
       resolve({ '_module.pageId': { id: 'x', module: 'unknown' } }, ctx)
     ).rejects.toThrow(
-      'Module "entry-id" references dependency "unknown" but no mapping exists.'
+      '_module.pageId { id: "x", module: "unknown" } in module "entry-id" references dependency "unknown" but no mapping exists.'
     );
   });
 
@@ -582,7 +582,9 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     });
     await expect(
       resolve({ '_module.pageId': { id: 'page', module: 'nonexistent' } }, ctx)
-    ).rejects.toThrow('Module entry "nonexistent" not found.');
+    ).rejects.toThrow(
+      '_module.pageId { id: "page", module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
+    );
   });
 
   test('_module.id object form throws for missing module entry at app level', async () => {
@@ -592,7 +594,9 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     });
     await expect(
       resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
-    ).rejects.toThrow('Module entry "nonexistent" not found.');
+    ).rejects.toThrow(
+      '_module.id { module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
+    );
   });
 
   test('_module.var throws at app level', async () => {
