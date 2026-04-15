@@ -15,17 +15,34 @@
 */
 
 import path from 'path';
+import { realpath } from 'fs/promises';
 import { cachedPromises, serializer } from '@lowdefy/helpers';
 import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 const validPathPattern = /^[A-Za-z0-9\-_/.:]+$/;
 
 function createReadConfigFile({ buildDirectory, fileCache }) {
+  const resolvedBuildDirectory = path.resolve(buildDirectory);
+
   async function readConfigFile(filePath) {
-    if (!validPathPattern.test(filePath) || filePath.includes('..')) {
+    if (!validPathPattern.test(filePath) || filePath.includes('..') || path.isAbsolute(filePath)) {
       return null;
     }
-    const fileContent = await readFile(path.resolve(buildDirectory, filePath));
+
+    const resolvedPath = path.resolve(resolvedBuildDirectory, filePath);
+    const [canonicalBuildDirectory, canonicalPath] = await Promise.all([
+      realpath(resolvedBuildDirectory),
+      realpath(resolvedPath),
+    ]);
+
+    if (
+      canonicalPath !== canonicalBuildDirectory &&
+      !canonicalPath.startsWith(`${canonicalBuildDirectory}${path.sep}`)
+    ) {
+      return null;
+    }
+
+    const fileContent = await readFile(canonicalPath);
     if (getFileExtension(filePath) === 'json') {
       return serializer.deserializeFromString(fileContent);
     }
