@@ -783,8 +783,8 @@ importers:
         specifier: 4.7.3
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.7.1
-        version: 4.7.1
+        specifier: 4.7.3
+        version: link:../../../utils/helpers
       ai:
         specifier: 6.0.116
         version: 6.0.116(zod@4.3.6)
@@ -2205,8 +2205,8 @@ importers:
         specifier: 1.0.30
         version: 1.0.30(zod@4.3.6)
       '@lowdefy/helpers':
-        specifier: 4.7.1
-        version: 4.7.1
+        specifier: 4.7.3
+        version: link:../helpers
       ai:
         specifier: 6.0.116
         version: 6.0.116(zod@4.3.6)
@@ -3970,12 +3970,6 @@ packages:
 
   '@js-joda/core@5.5.3':
     resolution: {integrity: sha512-7dqNYwG8gCt4hfg5PKgM7xLEcgSBcx/UgC92OMnhMmvAnq11QzDFPrxUkNR/u5kn17WWLZ8beZ4A3Qrz4pZcmQ==}
-
-  '@lowdefy/errors@4.7.1':
-    resolution: {integrity: sha512-XZSmm6YtT3MboDe4ZuUdo1zNI+aNnB4qEWxlvge7vHz8NzFHGKwrD0NIxdnJt9xwU9VIoU5V6BJzfUBotC3ybA==}
-
-  '@lowdefy/helpers@4.7.1':
-    resolution: {integrity: sha512-bjBekBjqQlsmDUIsX9BeLV7ANd/wl2U6Pu78q9Bitxhn6nRmNNgVu7SK9WVVNtSlieADuem3f1q90gopBQVZWQ==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -14883,13 +14877,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.4.15
 
   '@js-joda/core@5.5.3': {}
-
-  '@lowdefy/errors@4.7.1': {}
-
-  '@lowdefy/helpers@4.7.1':
-    dependencies:
-      '@lowdefy/errors': 4.7.1
-      lodash.merge: 4.6.2
 
   '@manypkg/find-root@1.1.0':
     dependencies:
