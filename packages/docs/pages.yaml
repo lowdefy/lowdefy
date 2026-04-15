@@ -31,6 +31,15 @@
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
 
+- _ref: agents/introduction.yaml
+- _ref: agents/agent-properties.yaml
+- _ref: agents/endpoint-tools.yaml
+- _ref: agents/mcp-tools.yaml
+- _ref: agents/multi-agent.yaml
+- _ref: agents/server-hooks.yaml
+- _ref: agents/AgentChat.yaml
+- _ref: agents/AgentConversations.yaml
+
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
 - _ref: deployment/vercel.yaml
@@ -167,6 +176,11 @@
 - _ref: blocks/list/List.yaml
 - _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
+
+- _ref: connections/Anthropic.yaml
+- _ref: connections/Google.yaml
+- _ref: connections/Mcp.yaml
+- _ref: connections/OpenAI.yaml
 
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml

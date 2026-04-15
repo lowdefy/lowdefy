@@ -1,0 +1,156 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: agent-mcp-tools
+    pageTitle: MCP Tools
+    section: Agents
+    filePath: agents/mcp-tools.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is an open standard for connecting AI models to external tools and data sources. Lowdefy agents can connect to any MCP server, giving the agent access to all the tools that server provides.
+
+            MCP tools can be configured by referencing an [`Mcp` connection](/Mcp) or by defining the server inline on the agent.
+
+            ## Using an Mcp Connection
+
+            Define an [`Mcp` connection](/Mcp), then reference it in the agent's `mcp` array:
+
+            ```yaml
+            connections:
+              - id: mcp_github
+                type: Mcp
+                properties:
+                  transport: stdio
+                  command: npx
+                  args:
+                    - '-y'
+                    - '@modelcontextprotocol/server-github'
+                  env:
+                    GITHUB_TOKEN:
+                      _secret: GITHUB_TOKEN
+
+            agents:
+              - id: dev_assistant
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: You help developers manage GitHub issues and PRs.
+                mcp:
+                  # String shorthand — just the connection id
+                  - mcp_github
+                  # Object form (equivalent)
+                  - connectionId: mcp_github
+            ```
+
+            The agent automatically discovers all tools the MCP server provides.
+
+            ## Inline MCP Configuration
+
+            Define MCP servers directly on the agent without creating a separate connection:
+
+            ###### Remote HTTP server:
+            ```yaml
+            mcp:
+              - url: https://mcp.example.com/tools
+                transport: http
+                headers:
+                  Authorization:
+                    _string.concat:
+                      - 'Bearer '
+                      - _secret: MCP_API_KEY
+            ```
+
+            ###### Local stdio server:
+            ```yaml
+            mcp:
+              - command: node
+                args:
+                  - ./mcp-server/index.js
+                transport: stdio
+                env:
+                  DATABASE_URL:
+                    _secret: DATABASE_URL
+            ```
+
+            ###### Multiple servers on one agent:
+            ```yaml
+            agents:
+              - id: assistant
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                mcp:
+                  - mcp_github
+                  - url: https://mcp.example.com/tools
+                    transport: http
+                  - command: npx
+                    args:
+                      - '-y'
+                      - '@modelcontextprotocol/server-filesystem'
+                      - '/data/documents'
+                    transport: stdio
+            ```
+
+            ## MCP Properties
+
+            - `mcp: array`: Each item is either:
+              - `string` — The [`Mcp` connection](/Mcp) `id`.
+              - `object`:
+                - `connectionId: string`: Reference an [`Mcp` connection](/Mcp) by `id`.
+                - `url: string`: URL for HTTP or SSE transport.
+                - `transport: string`: Default: `'http'` - `'http'`, `'sse'`, or `'stdio'`.
+                - `headers: object`: HTTP headers (for `http`/`sse`). __Operators are evaluated__.
+                - `command: string`: Command to run (for `stdio`).
+                - `args: string[]`: Command arguments (for `stdio`).
+                - `env: object`: Environment variables (for `stdio`). __Operators are evaluated__.
+                - `confirm: boolean`: Require user approval for all tools from this server.
+
+            ## Transports
+
+            | Transport | Use case | Required properties |
+            | --- | --- | --- |
+            | `http` (default) | Remote MCP servers | `url` |
+            | `sse` | Servers using Server-Sent Events | `url` |
+            | `stdio` | Local processes, npm packages | `command` |
+
+            For HTTP and SSE transports, use `headers` to pass authentication. For stdio, use `command`, `args`, and `env` to configure the process.
+
+            See the [`Mcp` connection](/Mcp) page for more details on configuring MCP servers as reusable connections.
+
+            ## Tool Confirmation
+
+            Setting `confirm: true` on an MCP source requires user approval for **all** tools from that server:
+
+            ```yaml
+            mcp:
+              - url: https://mcp.example.com/admin-tools
+                transport: http
+                confirm: true
+            ```
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Endpoint Tools
+            previous_page_id: agent-endpoint-tools
+            next_page_title: Multi-Agent
+            next_page_id: agent-multi-agent

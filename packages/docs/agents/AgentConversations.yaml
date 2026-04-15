@@ -1,0 +1,180 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: AgentConversations
+    pageTitle: AgentConversations
+    section: Agents
+    filePath: agents/AgentConversations.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The `AgentConversations` block renders a conversation list sidebar. It displays a list of conversations that the user can select, create, and manage. Use it alongside [`AgentChat`](/AgentChat) to build a full chat interface with conversation history.
+
+            > The `AgentConversations` block is provided by the `@lowdefy/blocks-antd-x` package, which is included by default.
+
+            The block does not manage data — you load conversations from your database and handle events to persist changes. This gives you full control over storage and retrieval.
+
+            ###### Example with grouped conversations and a context menu:
+            ```yaml
+            - id: conversations
+              type: AgentConversations
+              properties:
+                items:
+                  - key: conv-1
+                    label: How do I reset my password?
+                    group: Today
+                  - key: conv-2
+                    label: Billing question about Pro plan
+                    group: Today
+                  - key: conv-3
+                    label: API rate limits
+                    group: Yesterday
+                activeKey:
+                  _state: activeConversationId
+                creation:
+                  label: New Chat
+                  icon: AiOutlinePlus
+                menu:
+                  - key: rename
+                    label: Rename
+                  - key: delete
+                    label: Delete
+                    icon: AiOutlineDelete
+                    danger: true
+                groupable:
+                  collapsible: true
+                  defaultExpandedKeys:
+                    - Today
+              events:
+                onSelect:
+                  - id: switch
+                    type: SetState
+                    params:
+                      activeConversationId:
+                        _event: key
+                  - id: load
+                    type: Request
+                    params:
+                      - load_messages
+                onNew:
+                  - id: new_id
+                    type: SetState
+                    params:
+                      activeConversationId:
+                        _uuid: v4
+                onMenuClick:
+                  - id: handle_delete
+                    type: Request
+                    skip:
+                      _ne:
+                        - _event: key
+                        - delete
+                    params:
+                      - delete_conversation
+            ```
+
+            ## Properties
+
+            ### Items
+
+            - `items: object[]`: Default: `[]` - List of conversations to display. Each item:
+              - `key: string`: Unique conversation identifier.
+              - `label: string`: Conversation title.
+              - `icon`: Optional icon.
+              - `disabled: boolean`: Whether the item is disabled.
+              - `timestamp: number`: Timestamp for sorting or display.
+              - `group: string`: Group key (e.g. `'Today'`, `'Yesterday'`, `'Last week'`).
+
+            - `activeKey: string`: The `key` of the currently selected conversation. Highlights the active item.
+            - `width: number`: Default: `250` - Sidebar width in pixels.
+
+            ### Creation Button
+
+            - `creation: object`: Show a button for creating new conversations.
+              - `label: string`: Button label.
+              - `icon`: Button icon.
+              - `align: string`: `'start'`, `'center'`, or `'end'`.
+
+            ### Context Menu
+
+            - `menu: object[]`: Right-click or overflow menu on each conversation. Each item:
+              - `key: string`: Unique key for the action.
+              - `label: string`: Menu item label.
+              - `icon`: Menu item icon.
+              - `danger: boolean`: Style as a danger action (red).
+
+            ### Grouping
+
+            - `groupable: object`: Configure conversation grouping.
+              - `collapsible: boolean`: Default: `true` - Whether groups can be collapsed.
+              - `label: string`: Label for ungrouped items.
+              - `defaultExpandedKeys: string[]`: Groups expanded by default.
+
+            ## Events
+
+            | Event | When | Event data |
+            | --- | --- | --- |
+            | `onSelect` | User clicks a conversation. | `key` |
+            | `onNew` | User clicks the creation button. | |
+            | `onMenuClick` | User clicks a context menu item. | `key` (menu action), `item` (conversation) |
+
+            ###### Handle menu actions:
+            ```yaml
+            events:
+              onMenuClick:
+                - id: handle_rename
+                  type: CallMethod
+                  skip:
+                    _ne:
+                      - _event: key
+                      - rename
+                  params:
+                    blockId: rename_modal
+                    method: toggleOpen
+                    args:
+                      - open: true
+                - id: handle_delete
+                  type: Request
+                  skip:
+                    _ne:
+                      - _event: key
+                      - delete
+                  params:
+                    - delete_conversation
+                - id: refresh
+                  type: Request
+                  skip:
+                    _ne:
+                      - _event: key
+                      - delete
+                  params:
+                    - list_conversations
+            ```
+
+            ## Usage with AgentChat
+
+            See the [AgentChat conversation management](/AgentChat) section for a complete example showing `AgentConversations` and `AgentChat` wired together with database persistence.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: AgentChat
+            previous_page_id: AgentChat
+            next_page_title: Docker
+            next_page_id: docker
