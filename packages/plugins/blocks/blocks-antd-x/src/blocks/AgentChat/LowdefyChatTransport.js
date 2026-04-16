@@ -16,7 +16,7 @@
 
 import { DefaultChatTransport } from 'ai';
 
-function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }) {
+function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, pageStateRef }) {
   const base = `/api/agent/${pageId}/${agentId}`;
   const api = conversationId
     ? `${base}?conversationId=${encodeURIComponent(conversationId)}`
@@ -24,7 +24,13 @@ function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery 
   return new DefaultChatTransport({
     api,
     credentials: 'include',
-    body: urlQuery ? { urlQuery } : undefined,
+    body: () => {
+      const pageState = pageStateRef?.current;
+      return {
+        ...(urlQuery ? { urlQuery } : {}),
+        ...(pageState && Object.keys(pageState).length > 0 ? { pageState } : {}),
+      };
+    },
   });
 }
 
