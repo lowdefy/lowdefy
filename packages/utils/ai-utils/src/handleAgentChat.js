@@ -145,6 +145,9 @@ async function handleAgentChat({ connection, properties, context }) {
     if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
       contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
     }
+    if (ctx.pageState && Object.keys(ctx.pageState).length > 0) {
+      contextLines.push(`  pageState: ${JSON.stringify(ctx.pageState)}`);
+    }
     contextLines.push('</context>');
     instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
   }

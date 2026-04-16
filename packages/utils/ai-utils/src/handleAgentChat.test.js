@@ -1749,6 +1749,71 @@ test('pageContext omits empty urlQuery from context block', async () => {
   expect(lastAgentConfig.instructions).toContain('pageId: my-page');
 });
 
+test('pageContext includes pageState in context block', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'gpt-4o',
+          instructions: 'Be helpful.',
+          pageContext: true,
+        },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      agentContext: {
+        pageId: 'onboarding',
+        userId: 'user_abc',
+        pageState: { org_name: 'TestCorp', sector: 'private_security' },
+      },
+    },
+  });
+
+  expect(lastAgentConfig.instructions).toContain(
+    'pageState: {"org_name":"TestCorp","sector":"private_security"}'
+  );
+  expect(lastAgentConfig.instructions).toContain('<context>');
+});
+
+test('pageContext omits empty pageState from context block', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'gpt-4o',
+          instructions: 'Be helpful.',
+          pageContext: true,
+        },
+      },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      agentContext: { pageId: 'my-page', userId: 'user_1', pageState: {} },
+    },
+  });
+
+  expect(lastAgentConfig.instructions).not.toContain('pageState');
+});
+
 test('prune config triggers decomposed stream pipeline instead of createAgentUIStream', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
