@@ -31,7 +31,7 @@ async function handler({ context, req, res }) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ color: 'gray' }, `Agent: ${pageId} → ${agentId}`);
   const { conversationId } = req.query;
-  const { messages, urlQuery } = req.body;
+  const { messages, urlQuery, pageState } = req.body;
   if (!Array.isArray(messages)) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
@@ -40,11 +40,16 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'urlQuery must be an object' });
     return;
   }
+  if (pageState != null && (typeof pageState !== 'object' || Array.isArray(pageState))) {
+    res.status(400).json({ error: 'pageState must be an object' });
+    return;
+  }
   const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
     messages,
     conversationId: conversationId ?? undefined,
+    pageState: pageState ?? undefined,
     urlQuery: urlQuery ?? undefined,
   });
 

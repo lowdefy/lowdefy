@@ -145,6 +145,9 @@ async function handleAgentChat({ connection, properties, context }) {
     if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
       contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
     }
+    if (ctx.pageState && Object.keys(ctx.pageState).length > 0) {
+      contextLines.push(`  pageState: ${JSON.stringify(ctx.pageState)}`);
+    }
     contextLines.push('</context>');
     instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
   }
@@ -200,7 +203,19 @@ async function handleAgentChat({ connection, properties, context }) {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const usageAccumulator = createUsageAccumulator();
+      const steps = [];
       let agentStream;
+
+      function collectStep(stepResult) {
+        usageAccumulator.add(stepResult);
+        steps.push({
+          stepNumber: stepResult.stepNumber,
+          text: stepResult.text,
+          toolCalls: stepResult.toolCalls,
+          toolResults: stepResult.toolResults,
+          finishReason: stepResult.finishReason,
+        });
+      }
 
       if (pruneConfig) {
         // Decompose createAgentUIStream so we can insert pruneMessages
@@ -219,9 +234,7 @@ async function handleAgentChat({ connection, properties, context }) {
         const result = await agentInstance.stream({
           prompt: prunedMessages,
           ...timeoutConfig,
-          onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult);
-          },
+          onStepFinish: collectStep,
         });
         agentStream = result.toUIMessageStream({
           originalMessages: validatedMessages,
@@ -234,19 +247,29 @@ async function handleAgentChat({ connection, properties, context }) {
           agent: agentInstance,
           uiMessages: messages,
           ...timeoutConfig,
-          onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult);
-          },
+          onStepFinish: collectStep,
         });
       }
 
-      writer.merge(agentStream);
-
-      // After merge resolves the agent stream is complete.
+      // Read the agent stream to completion before running onFinish hooks.
+      // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
+      // manually read the stream to ensure hooks fire after the agent finishes.
+      const reader = agentStream.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          writer.write(value);
+        }
+      } catch (error) {
+        writer.write({ type: 'error', errorText: writer.onError(error) });
+      }
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
         const finishPayload = {
           messages,
+          steps,
+          toolResults: steps.flatMap((s) => s.toolResults ?? []),
           finishReason: usageAccumulator.getFinishReason(),
           isAborted: false,
           ...(context.agentContext ?? {}),
