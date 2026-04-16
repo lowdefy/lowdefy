@@ -21,11 +21,28 @@ const mockJsonSchema = jest.fn();
 const mockStepCountIs = jest.fn((n) => ({ type: 'stepCount', count: n }));
 const mockHasToolCall = jest.fn((name) => ({ type: 'hasToolCall', toolName: name }));
 
+function createMockReadableStream(chunks = []) {
+  return {
+    getReader: () => {
+      let index = 0;
+      return {
+        read: jest.fn().mockImplementation(async () => {
+          if (index < chunks.length) {
+            return { done: false, value: chunks[index++] };
+          }
+          return { done: true };
+        }),
+      };
+    },
+  };
+}
+
 const mockWriter = {
   write: jest.fn(),
-  merge: jest.fn().mockResolvedValue(undefined),
 };
-const mockCreateAgentUIStream = jest.fn().mockResolvedValue({ type: 'agent-ui-stream' });
+const mockCreateAgentUIStream = jest
+  .fn()
+  .mockImplementation(async () => createMockReadableStream());
 const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => {
   mockCreateUIMessageStream._lastExecute = execute;
   return { type: 'readable-stream' };
@@ -34,7 +51,7 @@ const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
-const mockToUIMessageStream = jest.fn().mockReturnValue({ type: 'pruned-ui-stream' });
+const mockToUIMessageStream = jest.fn().mockImplementation(() => createMockReadableStream());
 class MockToolLoopAgent {
   constructor(config) {
     this.config = config;
@@ -952,7 +969,7 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
   const execute = mockCreateUIMessageStream._lastExecute;
   expect(execute).toEqual(expect.any(Function));
 
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
@@ -985,7 +1002,7 @@ test('no onFinish hooks does not call callEndpoint in execute', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).not.toHaveBeenCalled();
@@ -1018,7 +1035,7 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(localWriter.write).toHaveBeenCalledTimes(2);
@@ -1052,7 +1069,7 @@ test('onFinish hook failure logs warning and continues to next hook', async () =
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledTimes(2);
@@ -1086,7 +1103,7 @@ test('onFinish hook without dataParts does not write to stream', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', expect.any(Object));
@@ -1280,7 +1297,7 @@ test('timeout as number passed to createAgentUIStream', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalledWith(expect.objectContaining({ timeout: 30000 }));
@@ -1307,7 +1324,7 @@ test('timeout as object passed to createAgentUIStream', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
@@ -1334,7 +1351,7 @@ test('no timeout omits key from createAgentUIStream', async () => {
   });
 
   const execute = mockCreateUIMessageStream._lastExecute;
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await execute({ writer: localWriter });
 
   const streamCallArgs =
@@ -1525,16 +1542,10 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
 
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
-  // Mock createAgentUIStream to capture onStepFinish and simulate multiple steps
-  let capturedOnStepFinish;
+  // Mock createAgentUIStream to simulate multiple steps completing during execution
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    capturedOnStepFinish = opts.onStepFinish;
-    return { type: 'agent-ui-stream' };
-  });
-  // Make merge call onStepFinish to simulate steps completing before merge resolves
-  mockWriter.merge.mockImplementation(async () => {
-    if (capturedOnStepFinish) {
-      capturedOnStepFinish({
+    if (opts.onStepFinish) {
+      opts.onStepFinish({
         usage: {
           inputTokens: 100,
           outputTokens: 50,
@@ -1543,7 +1554,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
           outputTokenDetails: { reasoningTokens: 5 },
         },
       });
-      capturedOnStepFinish({
+      opts.onStepFinish({
         usage: {
           inputTokens: 200,
           outputTokens: 80,
@@ -1553,6 +1564,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         },
       });
     }
+    return createMockReadableStream();
   });
 
   await handleAgentChat({
@@ -1584,8 +1596,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
   });
 
   // Restore default mock
-  mockCreateAgentUIStream.mockResolvedValue({ type: 'agent-ui-stream' });
-  mockWriter.merge.mockResolvedValue(undefined);
+  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
 });
 
 test('usage accumulator handles missing usage gracefully', async () => {
@@ -1596,16 +1607,12 @@ test('usage accumulator handles missing usage gracefully', async () => {
 
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
-  let capturedOnStepFinish;
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    capturedOnStepFinish = opts.onStepFinish;
-    return { type: 'agent-ui-stream' };
-  });
-  mockWriter.merge.mockImplementation(async () => {
-    if (capturedOnStepFinish) {
-      capturedOnStepFinish({ usage: undefined });
-      capturedOnStepFinish({ usage: { inputTokens: 50 } });
+    if (opts.onStepFinish) {
+      opts.onStepFinish({ usage: undefined });
+      opts.onStepFinish({ usage: { inputTokens: 50 } });
     }
+    return createMockReadableStream();
   });
 
   await handleAgentChat({
@@ -1637,8 +1644,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
   });
 
   // Restore default mocks
-  mockCreateAgentUIStream.mockResolvedValue({ type: 'agent-ui-stream' });
-  mockWriter.merge.mockResolvedValue(undefined);
+  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
 });
 
 test('pageContext true prepends context block to instructions', async () => {
@@ -1776,7 +1782,7 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
     context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockValidateUIMessages).toHaveBeenCalledWith({
@@ -1798,7 +1804,6 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
     originalMessages: mockValidated,
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
-  expect(localWriter.merge).toHaveBeenCalledWith({ type: 'pruned-ui-stream' });
 });
 
 test('without prune config, createAgentUIStream is used and prune functions are not called', async () => {
@@ -1823,7 +1828,7 @@ test('without prune config, createAgentUIStream is used and prune functions are 
     context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  const localWriter = { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) };
+  const localWriter = { write: jest.fn() };
   await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
 
   expect(mockCreateAgentUIStream).toHaveBeenCalled();
@@ -1861,7 +1866,7 @@ test('all pruneConfig properties are spread into pruneMessages call', async () =
   });
 
   await mockCreateUIMessageStream._lastExecute({
-    writer: { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) },
+    writer: { write: jest.fn() },
   });
 
   expect(mockPruneMessages).toHaveBeenCalledWith({
@@ -1894,7 +1899,7 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
   });
 
   await mockCreateUIMessageStream._lastExecute({
-    writer: { write: jest.fn(), merge: jest.fn().mockResolvedValue(undefined) },
+    writer: { write: jest.fn() },
   });
 
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({

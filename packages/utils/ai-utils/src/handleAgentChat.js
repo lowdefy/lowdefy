@@ -240,9 +240,19 @@ async function handleAgentChat({ connection, properties, context }) {
         });
       }
 
-      writer.merge(agentStream);
-
-      // After merge resolves the agent stream is complete.
+      // Read the agent stream to completion before running onFinish hooks.
+      // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
+      // manually read the stream to ensure hooks fire after the agent finishes.
+      const reader = agentStream.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          writer.write(value);
+        }
+      } catch (error) {
+        writer.write({ type: 'error', errorText: writer.onError(error) });
+      }
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
         const finishPayload = {
