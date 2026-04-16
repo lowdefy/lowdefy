@@ -1624,7 +1624,7 @@
                     "click",
                     "hover"
                   ],
-                  "default": "click",
+                  "default": "hover",
                   "description": "How the profile dropdown opens."
                 },
                 "placement": {

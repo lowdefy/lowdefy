@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "should not include a period"
+        "contains invalid characters"
       ],
       "errorContains": [
-        "Request id \"my.request\" at page \"home\" should not include a period (\".\").",
+        "Request id \"my.request\" at page \"home\" contains invalid characters.",
         "lowdefy.yaml:23"
       ]
     }

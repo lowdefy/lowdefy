@@ -1,5 +1,60 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Rename `areas` to `slots` throughout the framework.
+
+  ### Breaking Changes
+
+  - **`areas` renamed to `slots`**: All block area definitions use `slots` instead of `areas`. The build pipeline auto-migrates `areas` to `slots` with a deprecation warning in dev mode (error in production).
+  - **Engine internals**: `Areas.js` renamed to `Slots.js`. Block instances expose `.slots` instead of `.areas`.
+  - **Layout internals**: `layoutParamsToArea` renamed to `layoutParamsToSlot`.
+  - **Custom blocks**: Blocks that render child areas must use `content.slotName()` — the API is unchanged but the terminology in config and docs is now `slots`.
+
+- f430f02dde: Replace antd Row/Col grid with a pure CSS grid layout system.
+
+  ### Breaking Changes
+
+  - **antd Grid dependency removed**: `@lowdefy/layout` no longer imports antd's `Row`, `Col`, or `Grid` components.
+  - **CSS Grid implementation**: Layout uses a 24-column CSS grid with CSS custom properties and media queries. Responsive breakpoints align with Tailwind CSS v4.
+  - **`span: 0` hides block**: Setting `layout.span: 0` now applies `display: none` instead of making the block full-width.
+  - **Responsive `style` breakpoints removed**: `style.sm`, `style.md` etc. no longer work. Use Tailwind classes via `class: "p-16 sm:p-8"` instead.
+  - **`_media` operator**: Returns `"2xl"` instead of `"xxl"` for the largest breakpoint (1536px instead of 1600px).
+
+  ### Renamed Layout Properties
+
+  The `content*` prefix is dropped. Build normalizes old names with a deprecation warning.
+
+  | Old                       | New                | Purpose                        |
+  | ------------------------- | ------------------ | ------------------------------ |
+  | `layout.contentGutter`    | `layout.gap`       | Spacing between child blocks   |
+  | `layout.contentAlign`     | `layout.align`     | Vertical alignment of children |
+  | `layout.contentJustify`   | `layout.justify`   | Horizontal distribution        |
+  | `layout.contentDirection` | `layout.direction` | Flex direction                 |
+  | `layout.contentWrap`      | `layout.wrap`      | Flex wrap                      |
+  | `layout.contentOverflow`  | `layout.overflow`  | Overflow behavior              |
+  | `slots.*.gutter`          | `slots.*.gap`      | Gap within a slot              |
+  | `xxl` breakpoint          | `2xl`              | Aligns with Tailwind v4        |
+
+- f430f02dde: Migrate all blocks from `defaultProps` to `withBlockDefaults` wrapper for React 19 compatibility.
+
+  ### Breaking Changes
+
+  - **`defaultProps` removed**: React 19 silently ignores `defaultProps` on function components. All ~101 block components now use a `withBlockDefaults` wrapper from `@lowdefy/block-utils`.
+  - **`withBlockDefaults` API**: New export from `@lowdefy/block-utils` that wraps block components with default property injection. Antd blocks use `withTheme` which absorbs defaults; non-antd blocks use the generic wrapper.
+
+### Patch Changes
+
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [130a569d36]
+- Updated dependencies [905d5d406]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/helpers@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

@@ -78,6 +78,7 @@ const PageSiderMenu = ({
                   {
                     background: 'var(--ant-color-bg-container)',
                     flexDirection: 'row-reverse',
+                    borderBottom: '1px solid var(--ant-color-border)',
                   },
                   styles.header,
                 ]),
@@ -175,7 +176,12 @@ const PageSiderMenu = ({
                       methods={methods}
                       properties={properties.sider ?? {}}
                       classNames={{ element: classNames.sider ?? 'hidden lg:block' }}
-                      styles={{ element: styles.sider }}
+                      styles={{
+                        element: mergeObjects([
+                          { borderInlineEnd: '1px solid var(--ant-color-border)' },
+                          styles.sider,
+                        ]),
+                      }}
                       rename={{
                         methods: {
                           toggleOpen: '_toggleSiderOpen',

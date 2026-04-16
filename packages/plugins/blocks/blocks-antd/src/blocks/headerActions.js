@@ -162,7 +162,7 @@ function renderProfile({
           });
         },
       }}
-      trigger={[prof.trigger ?? 'click']}
+      trigger={[prof.trigger ?? 'hover']}
       placement={prof.placement ?? 'bottomRight'}
       arrow={prof.arrow}
       popupClassName={classNames.profileMenu}

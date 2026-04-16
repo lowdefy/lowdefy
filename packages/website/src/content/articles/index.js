@@ -4,6 +4,7 @@ import buildFasterRaw from '../../../content/articles/lowdefy-4-6-build-faster-b
 import jsonParseRaw from '../../../content/articles/lowdefy-4-7-faster-builds-json-parse.md';
 import yamlAiEraRaw from '../../../content/articles/yaml-best-language-ai-era.md';
 import fiftyLinesRaw from '../../../content/articles/what-can-you-build-in-50-lines-of-yaml.md';
+import configDrivenRaw from '../../../content/articles/case-for-config-driven-development.md';
 import v5WhatsNewRaw from '../../../content/articles/lowdefy-5-whats-new.md';
 
 function parseArticle(slug, raw) {
@@ -26,6 +27,7 @@ const articles = [
   parseArticle('lowdefy-4-7-faster-builds-json-parse', jsonParseRaw),
   parseArticle('yaml-best-language-ai-era', yamlAiEraRaw),
   parseArticle('what-can-you-build-in-50-lines-of-yaml', fiftyLinesRaw),
+  parseArticle('case-for-config-driven-development', configDrivenRaw),
   parseArticle('lowdefy-5-whats-new', v5WhatsNewRaw),
 ]
   .filter((a) => !a.draft)

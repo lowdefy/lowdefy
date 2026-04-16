@@ -124,6 +124,11 @@
           "id": "page-layout-theme-removal",
           "description": "Remove header.theme, sider.theme, menu.theme from page layout blocks and migrate nested style props",
           "path": "v5-0-0/24-page-layout-theme-removal.md"
+        },
+        {
+          "id": "plugin-peer-dependencies",
+          "description": "Move react, react-dom, and antd from dependencies to peerDependencies in custom block plugins",
+          "path": "v5-0-0/25-plugin-peer-dependencies.md"
         }
       ]
     }

@@ -35,6 +35,16 @@ test('createReadConfigFile returns file content for non-json files', async () =>
   expect(res).toEqual('config value');
 });
 
+test('createReadConfigFile returns null for invalid path characters', async () => {
+  const fileCache = new Map();
+  const createReadConfigFile = (await import('./createReadConfigFile.js')).default;
+  const readConfigFile = createReadConfigFile({ buildDirectory: '/build', fileCache });
+  expect(await readConfigFile('pages/../../etc/passwd')).toBeNull();
+  expect(await readConfigFile('../secret.json')).toBeNull();
+  expect(await readConfigFile('pages/foo bar/file.json')).toBeNull();
+  expect(await readConfigFile('pages/<script>/file.json')).toBeNull();
+});
+
 test('createReadConfigFile deserializes json files with ~arr markers', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
 

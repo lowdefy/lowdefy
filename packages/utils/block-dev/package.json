@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-dev",
-  "version": "4.7.3",
+  "version": "5.0.0",
   "license": "Apache-2.0",
   "description": "Lowdefy Block Development Tools",
   "homepage": "https://lowdefy.com",
@@ -36,8 +36,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.7.3",
-    "@lowdefy/helpers": "4.7.3",
+    "@lowdefy/block-utils": "5.0.0",
+    "@lowdefy/helpers": "5.0.0",
     "@testing-library/dom": "8.19.1",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.4.3",
