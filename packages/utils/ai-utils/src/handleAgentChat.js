@@ -203,7 +203,19 @@ async function handleAgentChat({ connection, properties, context }) {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const usageAccumulator = createUsageAccumulator();
+      const steps = [];
       let agentStream;
+
+      function collectStep(stepResult) {
+        usageAccumulator.add(stepResult);
+        steps.push({
+          stepNumber: stepResult.stepNumber,
+          text: stepResult.text,
+          toolCalls: stepResult.toolCalls,
+          toolResults: stepResult.toolResults,
+          finishReason: stepResult.finishReason,
+        });
+      }
 
       if (pruneConfig) {
         // Decompose createAgentUIStream so we can insert pruneMessages
@@ -222,9 +234,7 @@ async function handleAgentChat({ connection, properties, context }) {
         const result = await agentInstance.stream({
           prompt: prunedMessages,
           ...timeoutConfig,
-          onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult);
-          },
+          onStepFinish: collectStep,
         });
         agentStream = result.toUIMessageStream({
           originalMessages: validatedMessages,
@@ -237,9 +247,7 @@ async function handleAgentChat({ connection, properties, context }) {
           agent: agentInstance,
           uiMessages: messages,
           ...timeoutConfig,
-          onStepFinish: (stepResult) => {
-            usageAccumulator.add(stepResult);
-          },
+          onStepFinish: collectStep,
         });
       }
 
@@ -260,6 +268,8 @@ async function handleAgentChat({ connection, properties, context }) {
       if (hasOnFinishHooks) {
         const finishPayload = {
           messages,
+          steps,
+          toolResults: steps.flatMap((s) => s.toolResults ?? []),
           finishReason: usageAccumulator.getFinishReason(),
           isAborted: false,
           ...(context.agentContext ?? {}),

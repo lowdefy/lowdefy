@@ -975,6 +975,8 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
     payload: expect.objectContaining({
       messages,
+      steps: [],
+      toolResults: [],
       finishReason: 'stop',
       isAborted: false,
     }),
@@ -1546,6 +1548,11 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
     if (opts.onStepFinish) {
       opts.onStepFinish({
+        stepNumber: 0,
+        text: 'Looking up products...',
+        toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
+        toolResults: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' }, output: [{ name: 'MacBook' }] }],
+        finishReason: 'tool-calls',
         usage: {
           inputTokens: 100,
           outputTokens: 50,
@@ -1555,6 +1562,11 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         },
       });
       opts.onStepFinish({
+        stepNumber: 1,
+        text: 'Here are the results.',
+        toolCalls: [],
+        toolResults: [],
+        finishReason: 'stop',
         usage: {
           inputTokens: 200,
           outputTokens: 80,
@@ -1812,6 +1824,108 @@ test('pageContext omits empty pageState from context block', async () => {
   });
 
   expect(lastAgentConfig.instructions).not.toContain('pageState');
+});
+
+test('onFinish hook payload includes steps with toolCalls and toolResults', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  const mockToolCall = { toolCallId: 'tc1', toolName: 'set_form', input: { name: 'Acme' } };
+  const mockToolResult = { ...mockToolCall, output: { success: true } };
+
+  mockCreateAgentUIStream.mockImplementation(async (opts) => {
+    if (opts.onStepFinish) {
+      opts.onStepFinish({
+        stepNumber: 0,
+        text: 'Setting form fields.',
+        toolCalls: [mockToolCall],
+        toolResults: [mockToolResult],
+        finishReason: 'stop',
+        usage: { inputTokens: 50, outputTokens: 20, totalTokens: 70 },
+      });
+    }
+    return createMockReadableStream();
+  });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['process-results'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
+
+  const payload = callEndpoint.mock.calls[0][1].payload;
+
+  expect(payload.steps).toEqual([
+    {
+      stepNumber: 0,
+      text: 'Setting form fields.',
+      toolCalls: [mockToolCall],
+      toolResults: [mockToolResult],
+      finishReason: 'stop',
+    },
+  ]);
+  expect(payload.toolResults).toEqual([mockToolResult]);
+
+  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
+});
+
+test('onFinish hook payload has empty toolResults when no tools called', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  mockCreateAgentUIStream.mockImplementation(async (opts) => {
+    if (opts.onStepFinish) {
+      opts.onStepFinish({
+        stepNumber: 0,
+        text: 'Hello!',
+        toolCalls: [],
+        toolResults: [],
+        finishReason: 'stop',
+        usage: { inputTokens: 10, outputTokens: 5, totalTokens: 15 },
+      });
+    }
+    return createMockReadableStream();
+  });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages: [],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
+
+  const payload = callEndpoint.mock.calls[0][1].payload;
+
+  expect(payload.steps).toHaveLength(1);
+  expect(payload.steps[0].text).toBe('Hello!');
+  expect(payload.toolResults).toEqual([]);
+
+  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
 });
 
 test('prune config triggers decomposed stream pipeline instead of createAgentUIStream', async () => {
