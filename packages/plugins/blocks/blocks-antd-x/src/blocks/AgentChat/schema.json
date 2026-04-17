@@ -68,6 +68,23 @@
         "showStatusUpdates": { "type": "boolean", "default": true },
         "showStepSeparators": { "type": "boolean", "default": false },
         "showToolInputStreaming": { "type": "boolean", "default": true },
+        "thinkingMessages": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+          ],
+          "description": "Optional label shown next to the typing dots on a loading assistant bubble, after a short delay. Pass a string for a single label, or an array to rotate through several. Leave unset (default) to show dots only."
+        },
+        "thinkingMessageDelay": {
+          "type": "number",
+          "default": 3000,
+          "description": "Milliseconds of continuous loading state before the first thinkingMessages entry appears. Ignored when thinkingMessages is unset."
+        },
+        "thinkingMessageRotationInterval": {
+          "type": "number",
+          "default": 8000,
+          "description": "Milliseconds between label rotations when thinkingMessages is an array with 2 or more entries. Ignored for a single string."
+        },
         "editableMessages": {
           "type": "boolean",
           "default": true,

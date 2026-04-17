@@ -20,7 +20,10 @@ import { Avatar } from 'antd';
 import { RobotOutlined, UserOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
+import { hasVisibleContent } from './messageParts.js';
 import MessageBubble from './MessageBubble.js';
+import ThinkingIndicator from './ThinkingIndicator.js';
+import useThinkingMessage from './useThinkingMessage.js';
 
 function roleAvatar(roleConfig, fallbackIcon) {
   if (roleConfig?.avatar) {
@@ -32,6 +35,21 @@ function roleAvatar(roleConfig, fallbackIcon) {
 function roleHeader(roleConfig, fallback) {
   const name = roleConfig?.name ?? fallback;
   return <h5 style={{ margin: 0 }}>{name}</h5>;
+}
+
+// Rendered inside a bubble's loadingRender while it shows dots. Lives in its own
+// component so useThinkingMessage's timers mount/unmount with the loading state:
+// when a visible part arrives → loading flips false → this component unmounts →
+// effect cleanup clears the delay timeout and rotation interval.
+function ThinkingBubbleContent({ bubbleId, config }) {
+  const label = useThinkingMessage({
+    active: true,
+    messages: config?.thinkingMessages,
+    delay: config?.thinkingMessageDelay,
+    interval: config?.thinkingMessageRotationInterval,
+    resetKey: bubbleId,
+  });
+  return <ThinkingIndicator label={label} />;
 }
 
 const MessageList = React.forwardRef(function MessageList(
@@ -75,17 +93,20 @@ const MessageList = React.forwardRef(function MessageList(
       }
     }
 
+    // Show loading dots while the agent is working on the last assistant bubble and
+    // nothing visible has rendered yet. `hasVisibleContent` mirrors what MessageBubble
+    // paints, so tool-only messages with showThoughtChain: false also keep dots.
+    const showLoading =
+      isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
+
     items.push({
       key: msg.id,
       content: textContent,
       role: msg.role === 'user' ? 'user' : 'ai',
-      // Only show loading dots when streaming has started but no content has arrived yet.
-      // Once the first token or tool part appears, loading flips to false and content renders.
-      loading:
-        isStreaming &&
-        isLastAssistant &&
-        textContent.length === 0 &&
-        !msg.parts?.some((part) => part.type !== 'text' && part.type !== 'step-start'),
+      loading: showLoading,
+      loadingRender: showLoading
+        ? () => <ThinkingBubbleContent bubbleId={msg.id} config={config} />
+        : undefined,
       streaming: isStreaming && isLastAssistant,
     });
   }
@@ -93,7 +114,14 @@ const MessageList = React.forwardRef(function MessageList(
   // When busy but no assistant message exists yet (submitted, waiting for first chunk),
   // append a placeholder so loading dots are visible immediately.
   if (isStreaming && lastMessage?.role !== 'assistant') {
-    items.push({ key: '__loading', content: '', role: 'ai', loading: true, streaming: true });
+    items.push({
+      key: '__loading',
+      content: '',
+      role: 'ai',
+      loading: true,
+      loadingRender: () => <ThinkingBubbleContent bubbleId="__loading" config={config} />,
+      streaming: true,
+    });
   }
 
   return (

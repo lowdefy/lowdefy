@@ -29,6 +29,7 @@ import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
+import { getToolInfo, partCategory } from './messageParts.js';
 import ToolApproval from './ToolApproval.js';
 
 // Module-level singleton for the LaTeX marked extension.
@@ -85,19 +86,6 @@ function RichCodeBlock({ renderMermaid, codeHighlighter }) {
         <code className={lang ? `language-${lang}` : undefined}>{children}</code>
       </pre>
     );
-  };
-}
-
-// Detects tool-call parts from AI SDK v6's dynamic part types.
-// Tool parts have type `tool-${toolName}` or `dynamic-tool`, not a generic `tool-invocation`.
-function getToolInfo(part) {
-  if (!part.type?.startsWith?.('tool-') && part.type !== 'dynamic-tool') return null;
-  return {
-    toolCallId: part.toolCallId,
-    toolName: part.toolName ?? part.type?.replace('tool-', ''),
-    state: part.state,
-    input: part.input,
-    output: part.output,
   };
 }
 
@@ -252,26 +240,6 @@ function MessageBubble({
         )}
       </div>
     );
-  }
-
-  // OpenAI Responses API models (e.g. GPT-5.x) emit text parts with a 'commentary'
-  // phase (preambles before tool calls) and a 'final_answer' phase (the actual response).
-  // Commentary is intermediate output — treat it as reasoning so it renders in the
-  // collapsible reasoning section rather than duplicating the final answer text.
-  function isCommentary(part) {
-    return part.providerMetadata?.openai?.phase === 'commentary';
-  }
-
-  function partCategory(part) {
-    if (part.type === 'step-start') return null;
-    if (part.type === 'reasoning' || (part.type === 'text' && isCommentary(part))) {
-      return 'reasoning';
-    }
-    if (part.type === 'text') return 'text';
-    if (getToolInfo(part)) return 'tool';
-    if (part.type === 'file') return 'file';
-    if (part.type === 'data-status') return 'status';
-    return null;
   }
 
   // Build segments of consecutive same-type parts.
