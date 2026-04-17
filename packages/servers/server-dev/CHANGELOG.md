@@ -1,5 +1,131 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+- 29eb199c7f: Restructure block metadata from component static properties to dedicated `meta.js` files.
+
+  ### Breaking Changes
+
+  - **`schema.js` renamed to `meta.js`**: Block definitions moved from `schema.js` to `meta.js`. The `meta.js` files export `category`, `icons`, `valueType`, `cssKeys`, `events`, and `properties` (JSON Schema).
+  - **`schemas.js` barrel renamed to `metas.js`**: Block packages export `./metas` instead of `./schemas`.
+  - **`.meta` removed from components**: Block components no longer have a `.meta` static property. Metadata is loaded from the `blockMetas.json` build artifact at runtime.
+  - **`blockMetas.json` build artifact**: The build pipeline writes `plugins/blockMetas.json` containing category, valueType, and initValue for each block type.
+  - **`buildBlockSchema(meta)`**: New function in `@lowdefy/block-utils` generates complete JSON Schema from meta objects with operator support and CSS slot key validation.
+
+- f430f02dde: Upgrade Next.js to 16 with Turbopack.
+
+  ### Breaking Changes
+
+  - **Next.js 16**: Both production and development servers run on Next.js 16 with Turbopack as the default bundler.
+  - **Less removed**: `next-with-less` wrapper is removed. Styling uses CSS Modules and antd CSS-in-JS.
+  - **SWC 1.15.18**: Updated SWC compiler.
+  - **Dynamic transpilePackages**: Server resolves block packages for transpilation from a build artifact, supporting custom block plugins with CSS imports.
+  - **antd as direct server dependency**: Both server packages list `antd` and `@ant-design/cssinjs` as direct dependencies for pnpm strict mode compatibility.
+
+### Minor Changes
+
+- f430f02dde: Add ErrorBar component to the development server that displays build errors and warnings in a fixed bottom bar. Build warnings now propagate from the build pipeline to the browser for immediate developer feedback.
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+- f430f02dde: Extract Tailwind utility classes from block properties for CSS generation. All string values in block properties (HTML content, markdown, class names) are scanned at build time and written to per-page content files so Tailwind v4's Oxide engine generates CSS for all used utilities. Content files are regenerated on each JIT rebuild for hot reload.
+
+  Block plugin source files are resolved using `require.resolve` to follow pnpm symlinks correctly. The server package includes `postcss.config.js` so Tailwind compiles in production builds.
+
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- Updated dependencies [45964f1506]
+- Updated dependencies [52ea769811]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [155c0b9724]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [0fe1bc38dd]
+- Updated dependencies [130a569d36]
+- Updated dependencies [e3e922538]
+- Updated dependencies [c3b5b45ec5]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [fd8225b7a1]
+- Updated dependencies [43528a8b9]
+- Updated dependencies [905d5d406]
+- Updated dependencies [c1b5ddb33a]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [c570982e0f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/blocks-aggrid@5.0.0
+  - @lowdefy/blocks-basic@5.0.0
+  - @lowdefy/blocks-antd@5.0.0
+  - @lowdefy/build@5.0.0
+  - @lowdefy/engine@5.0.0
+  - @lowdefy/client@5.0.0
+  - @lowdefy/layout@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/blocks-loaders@5.0.0
+  - @lowdefy/blocks-echarts@5.0.0
+  - @lowdefy/blocks-markdown@5.0.0
+  - @lowdefy/operators-dayjs@5.0.0
+  - @lowdefy/operators-js@5.0.0
+  - @lowdefy/actions-core@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/connection-axios-http@5.0.0
+  - @lowdefy/operators-mql@5.0.0
+  - @lowdefy/operators-nunjucks@5.0.0
+  - @lowdefy/operators-uuid@5.0.0
+  - @lowdefy/operators-yaml@5.0.0
+  - @lowdefy/operators-change-case@5.0.0
+  - @lowdefy/operators-diff@5.0.0
+  - @lowdefy/plugin-next-auth@5.0.0
+  - @lowdefy/node-utils@5.0.0
+  - @lowdefy/api@5.0.0
+  - @lowdefy/logger@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

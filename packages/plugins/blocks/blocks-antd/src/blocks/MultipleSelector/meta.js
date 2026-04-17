@@ -28,7 +28,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineCloseCircle', 'AiOutlineDown'],
   valueType: 'array',
   cssKeys: {
     element: 'The MultipleSelector element.',

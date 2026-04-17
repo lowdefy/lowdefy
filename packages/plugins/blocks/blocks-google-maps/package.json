@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-google-maps",
-  "version": "4.7.3",
+  "version": "5.0.0",
   "license": "Apache-2.0",
   "description": "Google Maps Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.7.3",
+    "@lowdefy/block-utils": "5.0.0",
     "@react-google-maps/api": "2.19.2"
   },
   "peerDependencies": {
@@ -51,8 +51,8 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "4.7.3",
-    "@lowdefy/e2e-utils": "4.7.3",
+    "@lowdefy/block-dev-e2e": "5.0.0",
+    "@lowdefy/e2e-utils": "5.0.0",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",

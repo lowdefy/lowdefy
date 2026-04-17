@@ -58,6 +58,7 @@ export { default as MultipleSelector } from './blocks/MultipleSelector/meta.js';
 export { default as Notification } from './blocks/Notification/meta.js';
 export { default as NumberInput } from './blocks/NumberInput/meta.js';
 export { default as PageHeaderMenu } from './blocks/PageHeaderMenu/meta.js';
+export { default as PageSidebarLayout } from './blocks/PageSidebarLayout/meta.js';
 export { default as PageSiderMenu } from './blocks/PageSiderMenu/meta.js';
 export { default as Pagination } from './blocks/Pagination/meta.js';
 export { default as Paragraph } from './blocks/Paragraph/meta.js';

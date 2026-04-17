@@ -110,7 +110,6 @@
 - _ref: blocks/display/MarkdownWithCode.yaml
 - _ref: blocks/display/Menu.yaml
 - _ref: blocks/display/Message.yaml
-- _ref: blocks/display/MobileMenu.yaml
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
@@ -150,8 +149,10 @@
 - _ref: blocks/container/Label.yaml
 - _ref: blocks/container/Layout.yaml
 - _ref: blocks/container/Masonry.yaml
+- _ref: blocks/container/MobileMenu.yaml
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
+- _ref: blocks/container/PageSidebarLayout.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Popover.yaml
 - _ref: blocks/container/Result.yaml
