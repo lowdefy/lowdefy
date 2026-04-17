@@ -71,3 +71,10 @@
       blocks:
         - id: one
           type: Test
+- id: 'areas.footer:'
+  type: Drawer
+  areas:
+    footer:
+      blocks:
+        - id: one
+          type: Test

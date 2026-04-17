@@ -17,8 +17,8 @@ _ref:
   vars:
     pageId: MobileMenu
     pageTitle: MobileMenu
-    section: Display Blocks
-    filePath: blocks/display/MobileMenu.yaml
+    section: Container Blocks
+    filePath: blocks/container/MobileMenu.yaml
     block_type: MobileMenu
     antd_component: Menu
     antd_url: menu

@@ -21,12 +21,14 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
 import Menu from '../Menu/Menu.js';
+import { getDarkMode } from '../headerActions.js';
 
 const MobileMenu = ({
   basePath,
   blockId,
   classNames = {},
   components,
+  content,
   events,
   methods,
   menus,
@@ -89,29 +91,50 @@ const MobileMenu = ({
         methods={methods}
         onClose={() => methods[get(rename, 'methods.toggleOpen', { default: 'toggleOpen' })]()}
         content={{
+          extra: properties.logo
+            ? () => (
+                <div style={{ flex: '1 0 auto' }}>
+                  <components.Link home={true}>
+                    <img
+                      src={
+                        properties.logo?.srcMobile ??
+                        properties.logo?.src ??
+                        `${basePath}/logo-square-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                      }
+                      alt={properties.logo?.alt ?? 'Lowdefy'}
+                      style={properties.logo?.style}
+                    />
+                  </components.Link>
+                </div>
+              )
+            : undefined,
           content: () => (
-            <Menu
-              basePath={basePath}
-              components={components}
-              blockId={`${blockId}_menu`}
-              methods={methods}
-              events={events}
-              menus={menus}
-              pageId={pageId}
-              properties={{
-                collapsed: false,
-                ...properties,
-                mode: 'inline',
-              }}
-              styles={{ element: { marginTop: 24, background: 'transparent' } }}
-              rename={{
-                events: {
-                  onClick: 'onMenuItemClick',
-                  onSelect: 'onMenuItemSelect',
-                },
-              }}
-            />
+            <>
+              <Menu
+                basePath={basePath}
+                components={components}
+                blockId={`${blockId}_menu`}
+                methods={methods}
+                events={events}
+                menus={menus}
+                pageId={pageId}
+                properties={{
+                  collapsed: false,
+                  ...properties,
+                  mode: 'inline',
+                }}
+                styles={{ element: { marginTop: 24, background: 'transparent' } }}
+                rename={{
+                  events: {
+                    onClick: 'onMenuItemClick',
+                    onSelect: 'onMenuItemSelect',
+                  },
+                }}
+              />
+              {content?.drawerContent && content.drawerContent()}
+            </>
           ),
+          footer: content?.drawerFooter ? () => content.drawerFooter() : undefined,
         }}
       />
     </div>
