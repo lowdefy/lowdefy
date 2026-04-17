@@ -20,7 +20,21 @@ import SetState from './SetState.js';
 const mockSetState = jest.fn();
 const methods = { setState: mockSetState };
 
-test('SetState action invocation', () => {
+beforeEach(() => {
+  mockSetState.mockClear();
+});
+
+test('SetState passes params through to setState with flash false when not set', () => {
   SetState({ methods, params: { key: 'value' } });
-  expect(mockSetState.mock.calls).toEqual([[{ key: 'value' }]]);
+  expect(mockSetState.mock.calls).toEqual([[{ key: 'value' }, { flash: false }]]);
+});
+
+test('SetState destructures flash out of params and passes it as option', () => {
+  SetState({ methods, params: { flash: true, key: 'value', other: 1 } });
+  expect(mockSetState.mock.calls).toEqual([[{ key: 'value', other: 1 }, { flash: true }]]);
+});
+
+test('SetState coerces flash to boolean', () => {
+  SetState({ methods, params: { flash: 'truthy', key: 'value' } });
+  expect(mockSetState.mock.calls).toEqual([[{ key: 'value' }, { flash: true }]]);
 });

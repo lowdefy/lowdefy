@@ -15,7 +15,8 @@
 */
 
 function SetState({ methods: { setState }, params }) {
-  setState(params);
+  const { flash, ...rest } = params;
+  setState(rest, { flash: !!flash });
 }
 
 export default SetState;
