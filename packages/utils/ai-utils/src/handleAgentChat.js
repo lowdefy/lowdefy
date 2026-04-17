@@ -30,6 +30,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
+import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
 
 function createUsageAccumulator() {
   const usage = {
@@ -127,6 +128,12 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const { tools, mcpClients } = await buildAgentTools({ agent, context });
 
+  const sharedState = context.agentContext?.sharedState;
+  const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
+  if (updatePageStateTool) {
+    tools['update-page-state'] = updatePageStateTool;
+  }
+
   const model = connection.provider(agent.properties.model);
 
   const hookCallbacks = createHookCallbacks({
@@ -145,8 +152,8 @@ async function handleAgentChat({ connection, properties, context }) {
     if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
       contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
     }
-    if (ctx.pageState && Object.keys(ctx.pageState).length > 0) {
-      contextLines.push(`  pageState: ${JSON.stringify(ctx.pageState)}`);
+    if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
+      contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
     }
     contextLines.push('</context>');
     instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
