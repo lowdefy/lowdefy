@@ -149,7 +149,7 @@ importers:
         specifier: 4.7.3
         version: link:../plugins/actions/actions-pdf-make
       '@lowdefy/ai-utils':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../utils/ai-utils
       '@lowdefy/blocks-aggrid':
         specifier: 4.7.3
@@ -158,7 +158,7 @@ importers:
         specifier: 4.7.3
         version: link:../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-echarts':
         specifier: 4.7.3
@@ -173,7 +173,7 @@ importers:
         specifier: 4.7.3
         version: link:../plugins/blocks/blocks-qr
       '@lowdefy/connection-anthropic':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../plugins/connections/connection-anthropic
       '@lowdefy/connection-axios-http':
         specifier: 4.7.3
@@ -182,7 +182,7 @@ importers:
         specifier: 4.7.3
         version: link:../plugins/connections/connection-elasticsearch
       '@lowdefy/connection-google':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../plugins/connections/connection-google
       '@lowdefy/connection-google-sheets':
         specifier: 4.7.3
@@ -191,13 +191,13 @@ importers:
         specifier: 4.7.3
         version: link:../plugins/connections/connection-knex
       '@lowdefy/connection-mcp':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../plugins/connections/connection-mcp
       '@lowdefy/connection-mongodb':
         specifier: 4.7.3
         version: link:../plugins/connections/connection-mongodb
       '@lowdefy/connection-openai':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../plugins/connections/connection-openai
       '@lowdefy/connection-redis':
         specifier: 4.7.3
@@ -783,7 +783,7 @@ importers:
         specifier: 4.7.3
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: workspace:*
+        specifier: 4.7.3
         version: link:../../../utils/helpers
       ai:
         specifier: 6.0.116
@@ -1851,7 +1851,7 @@ importers:
         specifier: 4.7.3
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
         specifier: 4.7.3
@@ -1957,7 +1957,7 @@ importers:
         specifier: 4.7.3
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: workspace:*
+        specifier: 4.7.1
         version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
         specifier: 4.7.3
@@ -2208,7 +2208,7 @@ importers:
         specifier: 1.0.30
         version: 1.0.30(zod@4.3.6)
       '@lowdefy/helpers':
-        specifier: workspace:*
+        specifier: 4.7.3
         version: link:../helpers
       ai:
         specifier: 6.0.116
@@ -2365,6 +2365,9 @@ importers:
       '@testing-library/user-event':
         specifier: 14.4.3
         version: 14.4.3(@testing-library/dom@8.19.1)
+      ajv:
+        specifier: 8.12.0
+        version: 8.12.0
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1

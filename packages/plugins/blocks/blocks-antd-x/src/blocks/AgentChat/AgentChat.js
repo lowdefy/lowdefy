@@ -35,6 +35,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const {
     agentId,
     urlQuery,
+    pageState,
     welcome,
     messageDisplay,
     sender,
@@ -48,6 +49,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  const pageStateRef = useRef(pageState);
+  pageStateRef.current = pageState;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -61,7 +64,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery }),
+    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, pageStateRef }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 
