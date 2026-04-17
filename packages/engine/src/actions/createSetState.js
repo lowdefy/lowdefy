@@ -15,14 +15,21 @@
 */
 
 import { applyArrayIndices } from '@lowdefy/helpers';
+import { flashBlock } from '@lowdefy/block-utils';
 
 function createSetState({ arrayIndices, context }) {
-  return function setState(params) {
-    Object.keys(params).forEach((key) => {
+  return function setState(params, options) {
+    const keys = Object.keys(params);
+    keys.forEach((key) => {
       context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
     });
     context._internal.RootSlots.reset();
     context._internal.update();
+    if (options && options.flash) {
+      keys.forEach((key) => {
+        flashBlock(applyArrayIndices(arrayIndices, key));
+      });
+    }
   };
 }
 
