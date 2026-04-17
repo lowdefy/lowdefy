@@ -113,6 +113,14 @@ const MessageList = React.forwardRef(function MessageList(
 
   // When busy but no assistant message exists yet (submitted, waiting for first chunk),
   // append a placeholder so loading dots are visible immediately.
+  //
+  // Known cosmetic issue: the ThinkingBubbleContent here uses bubbleId="__loading",
+  // while the real assistant bubble (once its first chunk lands) uses msg.id. If the
+  // first chunk arrives after thinkingMessageDelay has already elapsed but brings
+  // only invisible parts (e.g. a tool call with showThoughtChain: false), the
+  // rotation timer resets and the label briefly disappears before the new bubble's
+  // delay elapses again. Accepted for v1 — a turn-stable resetKey (e.g. last user
+  // message id) would smooth this over but needs plumbing.
   if (isStreaming && lastMessage?.role !== 'assistant') {
     items.push({
       key: '__loading',

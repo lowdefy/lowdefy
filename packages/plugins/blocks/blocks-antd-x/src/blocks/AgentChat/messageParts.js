@@ -62,7 +62,15 @@ export function isPartVisible(part, config) {
   if (part.type === 'step-start') return false;
   const category = partCategory(part);
   if (category === 'text') return (part.text ?? '').length > 0;
-  if (category === 'reasoning') return config?.showReasoning !== false;
+  if (category === 'reasoning') {
+    if (config?.showReasoning === false) return false;
+    // Commentary-phase text parts are bucketed as 'reasoning' but still need the
+    // same empty-text guard: the AI SDK pushes text parts with text='' on text-start
+    // before any text-delta chunks arrive, so an empty commentary part shouldn't
+    // count as visible content — dots should keep showing until real text streams.
+    if (part.type === 'text') return (part.text ?? '').length > 0;
+    return true;
+  }
   if (category === 'tool') return config?.showThoughtChain !== false;
   if (category === 'file') return true;
   if (category === 'status') return config?.showStatusUpdates !== false;
