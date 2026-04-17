@@ -1722,6 +1722,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 4.7.3
         version: link:../../blocks/blocks-antd
+      '@lowdefy/errors':
+        specifier: 4.7.3
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.7.3
         version: link:../../../utils/helpers
