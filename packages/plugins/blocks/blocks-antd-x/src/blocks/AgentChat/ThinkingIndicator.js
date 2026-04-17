@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { useXProviderContext } from '@ant-design/x';
+import React, { useContext } from 'react';
+import { ConfigProvider } from 'antd';
 
 // Renders the three CSS-animated loading dots that @ant-design/x's Bubble shows by
 // default (same DOM structure as @ant-design/x/lib/bubble/loading.js so the existing
@@ -23,8 +23,12 @@ import { useXProviderContext } from '@ant-design/x';
 // in an aria-live region so screen readers announce rotations without interrupting.
 //
 // The dots are aria-hidden — they're decorative. Only the label is announced.
+//
+// We pull the bubble prefix class from antd's ConfigProvider directly (same route
+// @ant-design/x's internal useXProviderContext uses) so the CSS selectors line up
+// with whatever prefix the host app configures.
 function ThinkingIndicator({ label }) {
-  const { getPrefixCls } = useXProviderContext();
+  const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('bubble');
   return (
     <span
