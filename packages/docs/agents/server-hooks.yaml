@@ -69,6 +69,21 @@ _ref:
             1. **It is awaited** — the response stream stays open until all `onFinish` endpoints complete. This guarantees the conversation is saved before the client considers the response finished.
             2. **It can return data parts** — endpoints can return `dataParts` that are sent to the [`AgentChat`](/AgentChat) block as `onDataPart` events. This is how you send generated titles and other metadata back to the browser.
 
+            ### onFinish Payload
+
+            The hook endpoint receives the full turn in `_payload`:
+
+            | Field | Type | Description |
+            | --- | --- | --- |
+            | `messages` | array | All messages in the conversation, including the agent's latest response. |
+            | `steps` | array | One entry per agent step. Each step has `stepNumber`, `text`, `toolCalls`, `toolResults`, and `finishReason`. |
+            | `toolResults` | array | Flattened tool results across all steps — convenience for hooks that only care about what tools returned. |
+            | `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
+            | `isAborted` | boolean | `true` if the client cancelled the request. |
+            | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `pageState` | | Context values mirrored from the request. |
+
+            Use `steps` or `toolResults` to drive agent → page sync — for example, returning a `data-...` part that a form block consumes via `onDataPart`.
+
             ## Saving Conversations
 
             The most common use of `onFinish` is persisting the conversation to a database. The hook endpoint receives the conversation data in its payload:

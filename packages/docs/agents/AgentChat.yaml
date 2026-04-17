@@ -93,6 +93,7 @@ _ref:
             | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
             | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
+            | `pageState` | object | | Page state values sent with each request. Read at send time, so the latest form values are always forwarded. Included in the agent's context block when the agent has `pageContext: true`, and available server-side via `_payload`. |
             | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
             | `maxWidth` | number | `800` | Maximum width in pixels. |
             | `display` | string | `'inline'` | `'inline'` renders directly on the page. `'drawer'` renders in a slide-out drawer. |
@@ -141,6 +142,9 @@ _ref:
             | `showStepSeparators` | boolean | `false` | Show separators between agent steps. |
             | `showToolInputStreaming` | boolean | `true` | Show tool input as it streams. |
             | `editableMessages` | boolean | `true` | Allow editing sent messages by clicking on them. |
+            | `thinkingMessages` | string \| string[] | | Optional label shown next to the typing dots on a loading assistant bubble. Pass a string for a single label, or an array to rotate through several. Leave unset to show dots only. |
+            | `thinkingMessageDelay` | number | `3000` | Milliseconds of continuous loading before the first `thinkingMessages` label appears. Clamped to a 500 ms minimum. Ignored when `thinkingMessages` is unset. |
+            | `thinkingMessageRotationInterval` | number | `8000` | Milliseconds between label rotations when `thinkingMessages` is an array with 2 or more entries. Minimum 500 ms. Ignored for a single string. |
 
             #### Tool Result Display
 
