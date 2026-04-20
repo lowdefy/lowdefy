@@ -34,11 +34,11 @@ function createPhaseLogger({
   conversationId,
   turnId,
   turnStart,
-  extra = {},
+  fields = {},
 } = {}) {
   if (!logger || typeof logger.debug !== 'function') return noopLogger();
 
-  const ids = { agentId, pageId, conversationId, turnId, ...extra };
+  const ids = { agentId, pageId, conversationId, turnId, ...fields };
   const start = turnStart ?? Date.now();
 
   function emit(phase, data) {
@@ -71,7 +71,7 @@ function createPhaseLogger({
     }
   }
 
-  function child(moreExtra) {
+  function child(childFields) {
     return createPhaseLogger({
       logger,
       agentId,
@@ -79,7 +79,7 @@ function createPhaseLogger({
       conversationId,
       turnId,
       turnStart: start,
-      extra: { ...extra, ...moreExtra },
+      fields: { ...fields, ...childFields },
     });
   }
 
