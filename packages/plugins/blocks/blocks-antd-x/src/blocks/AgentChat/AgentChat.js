@@ -16,7 +16,10 @@
 
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
+import {
+  lastAssistantMessageIsCompleteWithApprovalResponses,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from 'ai';
 import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
@@ -35,7 +38,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const {
     agentId,
     urlQuery,
-    pageState,
+    sharedState,
     welcome,
     messageDisplay,
     sender,
@@ -49,8 +52,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
-  const pageStateRef = useRef(pageState);
-  pageStateRef.current = pageState;
+  // Keep ref in sync with current state when sharedState is enabled. Per-render
+  // update is cheap and ensures transport.body() sees fresh state at send time.
+  const sharedStateRef = useRef(null);
+  sharedStateRef.current = sharedState === true ? methods.getState() : null;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -64,7 +69,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, pageStateRef }),
+    () =>
+      createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 
@@ -76,13 +82,37 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     status,
     stop,
     addToolApprovalResponse,
+    addToolOutput,
     setMessages,
     regenerate,
     clearError,
   } = useChat({
     transport,
     experimental_throttle: 50,
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    sendAutomaticallyWhen: (args) =>
+      lastAssistantMessageIsCompleteWithToolCalls(args) ||
+      lastAssistantMessageIsCompleteWithApprovalResponses(args),
+    async onToolCall({ toolCall }) {
+      if (toolCall.dynamic) return;
+      if (toolCall.toolName === 'update-page-state') {
+        try {
+          const updates = toolCall.input?.updates ?? {};
+          methods.setState(updates, { flash: true });
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            output: { ok: true, written: Object.keys(updates) },
+          });
+        } catch (err) {
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            state: 'output-error',
+            errorText: err.message,
+          });
+        }
+      }
+    },
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
