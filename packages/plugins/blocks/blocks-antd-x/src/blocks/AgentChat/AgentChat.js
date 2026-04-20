@@ -56,9 +56,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
   sharedStateRef.current =
-    sharedState && typeof sharedState === 'object' && Object.keys(sharedState).length > 0
-      ? sharedState
-      : null;
+    type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -100,11 +98,28 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       if (toolCall.toolName === 'update-page-state') {
         try {
           const updates = toolCall.input?.updates ?? {};
-          await methods.triggerEvent({ name: '__updatePageState', event: updates });
+          // Allowlist writes against the keys currently exposed via sharedState —
+          // the tool's description tells the agent "keys must match field names
+          // visible in shared state", but we enforce it here so a hallucinated
+          // key can't mutate arbitrary page state.
+          const allowedKeys = new Set(Object.keys(sharedStateRef.current ?? {}));
+          const writable = {};
+          const ignored = [];
+          for (const [key, value] of Object.entries(updates)) {
+            if (allowedKeys.has(key)) writable[key] = value;
+            else ignored.push(key);
+          }
+          if (Object.keys(writable).length > 0) {
+            await methods.triggerEvent({ name: '__updatePageState', event: writable });
+          }
           addToolOutput({
             tool: 'update-page-state',
             toolCallId: toolCall.toolCallId,
-            output: { ok: true, written: Object.keys(updates) },
+            output: {
+              ok: true,
+              written: Object.keys(writable),
+              ...(ignored.length > 0 ? { ignored } : {}),
+            },
           });
         } catch (err) {
           addToolOutput({

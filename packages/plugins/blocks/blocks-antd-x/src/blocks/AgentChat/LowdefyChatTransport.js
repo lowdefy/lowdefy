@@ -28,7 +28,7 @@ function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery,
       const sharedState = sharedStateRef?.current;
       return {
         ...(urlQuery ? { urlQuery } : {}),
-        ...(sharedState && Object.keys(sharedState).length > 0 ? { sharedState } : {}),
+        ...(sharedState ? { sharedState } : {}),
       };
     },
   });

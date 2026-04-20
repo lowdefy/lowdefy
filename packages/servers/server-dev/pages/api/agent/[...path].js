@@ -15,6 +15,7 @@
 */
 
 import { callAgent } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
@@ -40,7 +41,7 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'urlQuery must be an object' });
     return;
   }
-  if (sharedState != null && (typeof sharedState !== 'object' || Array.isArray(sharedState))) {
+  if (sharedState != null && !type.isObject(sharedState)) {
     res.status(400).json({ error: 'sharedState must be an object' });
     return;
   }

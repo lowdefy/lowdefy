@@ -60,9 +60,9 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // Build endpoint tools
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
+    assertNotReserved(endpointId, 'Endpoint tool');
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
-    assertNotReserved(endpointId, 'Endpoint tool');
     tools[endpointId] = tool({
       description: endpointConfig.description,
       inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
@@ -106,7 +106,10 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
     }
   }
 
-  // Merge MCP tools with endpoint tools
+  // Merge MCP tools with endpoint tools.
+  // MCP tool names come from external servers at runtime — on collisions with
+  // reserved platform names or existing endpoint tools we warn + skip rather
+  // than fail, since the names aren't under app control.
   for (const { client, source } of mcpClients) {
     try {
       const mcpTools = await client.tools();
