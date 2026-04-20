@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@ai-sdk/mcp": "1.0.30",
+    "@lowdefy/errors": "5.0.0",
     "@lowdefy/helpers": "5.0.0",
     "ai": "6.0.116",
     "glob": "11.0.2"

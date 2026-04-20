@@ -2195,6 +2195,9 @@ importers:
       '@ai-sdk/mcp':
         specifier: 1.0.30
         version: 1.0.30(zod@4.3.6)
+      '@lowdefy/errors':
+        specifier: 5.0.0
+        version: link:../errors
       '@lowdefy/helpers':
         specifier: 5.0.0
         version: link:../helpers

@@ -623,6 +623,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
   expect(resolverContext.agentContext).toEqual({
     conversationId: 'conv_123',
     pageId: 'principle-view',
+    sharedState: {},
     urlQuery: { principle_id: 'P3' },
     userId: 'user_abc',
   });
@@ -900,6 +901,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
   expect(capturedPayload).toEqual({
     conversationId: 'conv_abc',
     pageId: 'principle-view',
+    sharedState: {},
     urlQuery: { principle_id: 'P3' },
     userId: 'user_xyz',
   });
