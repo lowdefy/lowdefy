@@ -15,6 +15,7 @@
 */
 
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
+import { flashBlock } from '@lowdefy/block-utils';
 import Events from './Events.js';
 import Slots from './Slots.js';
 
@@ -239,6 +240,26 @@ class Block {
 
   registerMethod = (methodName, method) => {
     this.methods[methodName] = method;
+  };
+
+  getState = () => {
+    return this.context.state;
+  };
+
+  setState = (params, options) => {
+    if (!type.isObject(params)) return;
+    const keys = Object.keys(params);
+    keys.forEach((key) => {
+      const path = applyArrayIndices(this.arrayIndices, key);
+      this.context._internal.State.set(path, params[key]);
+    });
+    this.context._internal.RootSlots.reset();
+    this.context._internal.update();
+    if (options && options.flash) {
+      keys.forEach((key) => {
+        flashBlock(applyArrayIndices(this.arrayIndices, key));
+      });
+    }
   };
 
   newSlots = ({ arrayIndices, initState }) => {

@@ -61,12 +61,14 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     >
       <Component
         methods={Object.assign(block.methods, {
+          getState: block.getState,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           removeItem: block.removeItem,
+          setState: block.setState,
           triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         })}

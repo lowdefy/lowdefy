@@ -79,8 +79,10 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
+              getState: block.getState,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
+              setState: block.setState,
               setValue: block.setValue,
               triggerEvent: block.triggerEvent,
             })}
@@ -122,8 +124,10 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         >
           <Component
             methods={Object.assign(block.methods, {
+              getState: block.getState,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
+              setState: block.setState,
               triggerEvent: block.triggerEvent,
             })}
             basePath={lowdefy.basePath}
