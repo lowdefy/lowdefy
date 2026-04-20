@@ -74,6 +74,7 @@
     "@lowdefy/actions-pdf-make": "5.0.0",
     "@lowdefy/blocks-aggrid": "5.0.0",
     "@lowdefy/blocks-antd": "5.0.0",
+    "@lowdefy/blocks-diff": "5.0.0",
     "@lowdefy/blocks-echarts": "5.0.0",
     "@lowdefy/blocks-google-maps": "5.0.0",
     "@lowdefy/blocks-markdown": "5.0.0",

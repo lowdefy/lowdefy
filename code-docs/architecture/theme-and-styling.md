@@ -115,14 +115,16 @@ Dark mode is managed by the `useDarkMode` hook with a three-tier resolution:
 3. **System preference** — `matchMedia('(prefers-color-scheme: dark)')` with a live `change` event listener that updates in real time when the OS theme changes.
 
 ```javascript
-const algorithm = useDarkMode({
-  baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+const { algorithm, token, components } = useDarkMode({
+  antd: lowdefyRef.current.theme?.antd,
   configDarkMode: lowdefyRef.current.theme?.darkMode,
 });
-// Returns resolved antd algorithm functions array, e.g. [defaultAlgorithm, darkAlgorithm]
+// algorithm: resolved antd algorithm functions array, e.g. [defaultAlgorithm, darkAlgorithm]
+// token: shared `antd.token` merged with `antd.lightToken` or `antd.darkToken` for the active mode
+// components: shared `antd.components` merged with `antd.lightComponents` or `antd.darkComponents`
 ```
 
-The hook strips `'dark'` from the base algorithm array (it manages dark mode separately) and merges `darkAlgorithm` back when the resolved state is dark.
+The hook strips `'dark'` from the base algorithm array (it manages dark mode separately) and merges `darkAlgorithm` back when the resolved state is dark. Per-mode `lightToken` / `darkToken` are merged over the shared `token` and per-mode `lightComponents` / `darkComponents` are merged over shared `components`, so users can soften base surfaces (e.g., `colorBgLayout`, `Layout.siderBg`) without maintaining two theme files.
 
 `window.__lowdefy_setDarkMode` is exposed for the `SetDarkMode` action. It accepts a string preference (`'system'`, `'light'`, `'dark'`), writes it to `localStorage`, and triggers a React state update.
 
@@ -136,9 +138,9 @@ Because `_app.js` uses `ssr: false` (`dynamic(() => Promise.resolve(App), { ssr:
 
 This is solved with two coordinating pieces:
 
-1. **Synchronous inline script in `_document.js`** — Runs before first paint. Reads the `configColorMode` value (embedded at build time from `theme.json`, allowlisted to `'system'`/`'light'`/`'dark'`) and mirrors the `useDarkMode` resolution logic: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. If dark, sets `document.documentElement.style.backgroundColor = '#000'` (Ant Design's default dark `colorBgLayout`). If light, does nothing (browser default white is correct).
+1. **Synchronous inline script in `_document.js`** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — all embedded at build time from `theme.json`. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
 
-2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets `#000` when dark, removes the property when light. This handles dark/light toggling and ensures the background stays correct across client-side navigations.
+2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets the resolved `colorBgLayout` from `antd.darkToken` / `antd.lightToken` (falling back to `'#000'` in dark and unset in light). This handles dark/light toggling and ensures the background stays correct across client-side navigations.
 
 The `configDarkMode` value is available in `_document.js` via `lib/build/theme.js`, which imports and deserializes the `theme.json` build artifact.
 

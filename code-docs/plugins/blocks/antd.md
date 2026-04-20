@@ -1,6 +1,6 @@
 # @lowdefy/blocks-antd
 
-Primary UI component library for Lowdefy, built on [Ant Design v5](https://ant.design/components/overview) with CSS-in-JS (CSS variables mode). Contains 71 blocks covering most UI needs.
+Primary UI component library for Lowdefy, built on [Ant Design v5](https://ant.design/components/overview) with CSS-in-JS (CSS variables mode). Contains 70 blocks covering most UI needs.
 
 ## Overview
 

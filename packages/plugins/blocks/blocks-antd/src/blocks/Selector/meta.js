@@ -33,6 +33,7 @@ export default {
   valueType: 'any',
   cssKeys: {
     element: 'The Selector element.',
+    selector: 'The inner value/tag container of the Selector (antd `content` semantic slot).',
     clearIcon: 'The clear icon in the Selector.',
     label: 'The Selector label.',
     extra: 'The Selector extra content.',

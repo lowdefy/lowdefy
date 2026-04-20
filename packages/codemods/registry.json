@@ -1,6 +1,18 @@
 {
   "versions": [
     {
+      "version": "5.1.0",
+      "from": ">=5.0.0 <5.1.0",
+      "description": "AgGrid built-in cell renderer types (tag, avatar, link, date, boolean, progress, number) + ellipsis + align",
+      "codemods": [
+        {
+          "id": "aggrid-cell-types-migration",
+          "description": "Report-only: detect cellRenderer HTML patterns that could migrate to cell.type. Each column requires human review and author sign-off.",
+          "path": "v5-1-0/01-aggrid-cell-types-migration.md"
+        }
+      ]
+    },
+    {
       "version": "5.0.0",
       "from": ">=4.0.0 <5.0.0",
       "description": "Antd v6 upgrade, layout grid changes, dayjs migration",

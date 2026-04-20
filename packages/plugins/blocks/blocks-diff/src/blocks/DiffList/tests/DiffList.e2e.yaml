@@ -1,0 +1,176 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: diff-list
+type: Box
+
+blocks:
+  - id: diff_list_empty
+    type: DiffList
+    properties:
+      title: No changes
+      emptyText: Nothing to show here.
+      before:
+        theme: dark
+      after:
+        theme: dark
+
+  - id: diff_list_basic
+    type: DiffList
+    properties:
+      title: Profile
+      before:
+        name: Sarah
+        role: member
+      after:
+        name: Sarah
+        role: admin
+
+  - id: diff_list_labels
+    type: DiffList
+    properties:
+      before:
+        email: a@example.com
+      after:
+        email: b@example.com
+      labels:
+        email: Email address
+
+  - id: diff_list_hide
+    type: DiffList
+    properties:
+      before:
+        email: a@example.com
+        internal:
+          traceId: x
+      after:
+        email: b@example.com
+        internal:
+          traceId: y
+      hide:
+        - 'internal.*'
+
+  - id: diff_list_boolean
+    type: DiffList
+    properties:
+      before:
+        active: false
+      after:
+        active: true
+      format:
+        active:
+          type: boolean
+          yes: Enabled
+          no: Disabled
+
+  - id: diff_list_enum
+    type: DiffList
+    properties:
+      before:
+        status: pending
+      after:
+        status: paid
+      format:
+        status:
+          type: enum
+          map:
+            pending: { label: Pending, color: warning }
+            paid: { label: Paid, color: success }
+
+  - id: diff_list_add_remove
+    type: DiffList
+    properties:
+      before:
+        name: Sarah
+        phone: '555-1234'
+      after:
+        name: Sarah
+        email: sarah@example.com
+
+  - id: diff_list_grouped
+    type: DiffList
+    properties:
+      before:
+        profile:
+          name: Sarah
+        address:
+          city: London
+      after:
+        profile:
+          name: Sarah Johnson
+        address:
+          city: Paris
+
+  - id: diff_list_unchanged
+    type: DiffList
+    properties:
+      showUnchanged: true
+      before:
+        name: Sarah
+        role: member
+      after:
+        name: Sarah
+        role: admin
+
+  - id: diff_list_orders_array
+    type: DiffList
+    properties:
+      before:
+        orders:
+          - id: ord_1
+            total: 10
+            name: Notebook
+          - id: ord_2
+            total: 5
+            name: Pen
+      after:
+        orders:
+          - id: ord_1
+            total: 20
+            name: Notebook
+          - id: ord_2
+            total: 5
+            name: Pen
+          - id: ord_3
+            total: 99
+            name: Stapler
+
+  - id: diff_list_deep_path
+    type: DiffList
+    properties:
+      before:
+        settings:
+          display:
+            theme:
+              mode: dark
+      after:
+        settings:
+          display:
+            theme:
+              mode: light
+
+  - id: diff_list_max_depth
+    type: DiffList
+    properties:
+      maxDepth: 3
+      before:
+        settings:
+          display:
+            theme:
+              mode: dark
+      after:
+        settings:
+          display:
+            theme:
+              mode: light

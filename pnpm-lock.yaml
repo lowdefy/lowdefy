@@ -145,6 +145,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 5.0.0
         version: link:../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-diff':
+        specifier: 5.0.0
+        version: link:../plugins/blocks/blocks-diff
       '@lowdefy/blocks-echarts':
         specifier: 5.0.0
         version: link:../plugins/blocks/blocks-echarts
@@ -651,12 +654,21 @@ importers:
       '@ag-grid-community/styles':
         specifier: 30.2.0
         version: 30.2.0
+      '@ant-design/icons':
+        specifier: '>=6'
+        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
         specifier: 5.0.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
         specifier: 5.0.0
         version: link:../../../utils/helpers
+      antd:
+        specifier: '>=6'
+        version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      dayjs:
+        specifier: '>=1.11'
+        version: 1.11.19
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -707,7 +719,7 @@ importers:
         specifier: 1.11.19
         version: 1.11.19
       minisearch:
-        specifier: ^7.0.0
+        specifier: 7.2.0
         version: 7.2.0
       react:
         specifier: '>=18'
@@ -755,6 +767,61 @@ importers:
       react-dom:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@lowdefy/block-dev-e2e':
+        specifier: 5.0.0
+        version: link:../../../utils/block-dev-e2e
+      '@lowdefy/e2e-utils':
+        specifier: 5.0.0
+        version: link:../../../utils/e2e-utils
+      '@playwright/test':
+        specifier: 1.50.1
+        version: 1.50.1
+      '@swc/cli':
+        specifier: 0.8.0
+        version: 0.8.0(@swc/core@1.15.18)
+      '@swc/core':
+        specifier: 1.15.18
+        version: 1.15.18
+      copyfiles:
+        specifier: 2.4.1
+        version: 2.4.1
+
+  packages/plugins/blocks/blocks-diff:
+    dependencies:
+      '@ant-design/icons':
+        specifier: 6.1.0
+        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@lowdefy/block-utils':
+        specifier: 5.0.0
+        version: link:../../../utils/block-utils
+      '@lowdefy/helpers':
+        specifier: 5.0.0
+        version: link:../../../utils/helpers
+      antd:
+        specifier: '>=6'
+        version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      dayjs:
+        specifier: 1.11.19
+        version: 1.11.19
+      diff:
+        specifier: 5.2.2
+        version: 5.2.2
+      microdiff:
+        specifier: 1.4.0
+        version: 1.4.0
+      pluralize:
+        specifier: 8.0.0
+        version: 8.0.0
+      react:
+        specifier: '>=18'
+        version: 18.2.0
+      react-dom:
+        specifier: '>=18'
+        version: 18.2.0(react@18.2.0)
+      yaml:
+        specifier: 2.3.4
+        version: 2.3.4
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 5.0.0
@@ -7047,8 +7114,8 @@ packages:
     resolution: {integrity: sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==}
     engines: {node: '>=0.3.1'}
 
-  diff@5.1.0:
-    resolution: {integrity: sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==}
+  diff@5.2.2:
+    resolution: {integrity: sha512-vtcDfH3TOjP8UekytvnHH1o1P4FcUdt4eQ1Y+Abap1tk/OB2MWQvcwS2ClCd1zuIhc3JKOx6p3kod8Vfys3E+A==}
     engines: {node: '>=0.3.1'}
 
   diffable-html@4.1.0:
@@ -9221,6 +9288,9 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
+  microdiff@1.4.0:
+    resolution: {integrity: sha512-OBKBOa1VBznvLPb/3ljeJaENVe0fO0lnWl77lR4vhPlQD71UpjEoRV5P0KdQkcjbFlBu1Oy2mEUBMU3wxcBAGg==}
+
   micromark-core-commonmark@1.1.0:
     resolution: {integrity: sha512-BgHO1aRbolh2hcrzL2d1La37V0Aoz73ymF8rAcKnohLy93titmv62E0gP8Hrx9PKcKrqCZ1BbLGbP3bEhoXYlw==}
 
@@ -10079,6 +10149,10 @@ packages:
     resolution: {integrity: sha512-G8rwsOQJ63XG6BbKj2w5rHeavFjy5zynBA9zsJMMtBoe/Uf757oG12NXz6e6OirF7RCrTVAKFXbLmn1RbL7Qaw==}
     engines: {node: '>=18'}
     hasBin: true
+
+  pluralize@8.0.0:
+    resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
+    engines: {node: '>=4'}
 
   png-js@1.0.0:
     resolution: {integrity: sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==}
@@ -17793,7 +17867,7 @@ snapshots:
 
   diff@5.0.0: {}
 
-  diff@5.1.0: {}
+  diff@5.2.2: {}
 
   diffable-html@4.1.0:
     dependencies:
@@ -20656,6 +20730,8 @@ snapshots:
 
   merge2@1.4.1: {}
 
+  microdiff@1.4.0: {}
+
   micromark-core-commonmark@1.1.0:
     dependencies:
       decode-named-character-reference: 1.0.2
@@ -21691,6 +21767,8 @@ snapshots:
       playwright-core: 1.50.1
     optionalDependencies:
       fsevents: 2.3.2
+
+  pluralize@8.0.0: {}
 
   png-js@1.0.0: {}
 
@@ -23404,7 +23482,7 @@ snapshots:
   uvu@0.5.6:
     dependencies:
       dequal: 2.0.3
-      diff: 5.1.0
+      diff: 5.2.2
       kleur: 4.1.5
       sade: 1.8.1
 

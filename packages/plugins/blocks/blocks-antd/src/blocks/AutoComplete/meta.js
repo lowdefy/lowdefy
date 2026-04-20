@@ -31,6 +31,7 @@ export default {
   valueType: 'string',
   cssKeys: {
     element: 'The AutoComplete element.',
+    selector: 'The inner value container of the AutoComplete (antd `content` semantic slot).',
     label: 'The AutoComplete label.',
     extra: 'The AutoComplete extra content.',
     feedback: 'The AutoComplete validation feedback.',

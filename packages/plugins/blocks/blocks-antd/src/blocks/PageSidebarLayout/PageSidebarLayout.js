@@ -65,6 +65,16 @@ const PageSidebarLayout = ({
   styles = {},
 }) => {
   const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
+  // Re-read localStorage on mount: during SSR localStorage is unavailable, so
+  // the lazy initializer falls back to properties.sider.initialCollapsed. Once
+  // hydrated we pick up the stored value so a reload restores the state the
+  // user actually left the sider in. Sider has its own internal state, so we
+  // also push the restored value through the registered sync method once it's
+  // available.
+  useEffect(() => {
+    setSiderOpen(getInitialSiderState({ properties }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     registerDarkModeMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {
@@ -143,7 +153,13 @@ const PageSidebarLayout = ({
                         }}
                         styles={{ element: styles.toggleButton }}
                         methods={methods}
-                        onClick={() => methods.toggleSiderOpen()}
+                        onClick={() => {
+                          methods.toggleSiderOpen();
+                          // Providing onClick bypasses Button's default
+                          // trigger-renamed-event path, so fire onToggleSider
+                          // explicitly for the page-level event handler.
+                          methods.triggerEvent({ name: 'onToggleSider' });
+                        }}
                         rename={{
                           events: {
                             onClick: 'onToggleSider',

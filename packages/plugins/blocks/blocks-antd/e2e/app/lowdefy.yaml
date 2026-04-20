@@ -33,6 +33,7 @@ pages:
   - _ref: ../../src/blocks/AutoComplete/tests/AutoComplete.e2e.yaml
   - _ref: ../../src/blocks/ButtonSelector/tests/ButtonSelector.e2e.yaml
   # Step 1.3: Date/Time Inputs
+  - _ref: ../../src/blocks/Calendar/tests/Calendar.e2e.yaml
   - _ref: ../../src/blocks/DateSelector/tests/DateSelector.e2e.yaml
   - _ref: ../../src/blocks/DateTimeSelector/tests/DateTimeSelector.e2e.yaml
   - _ref: ../../src/blocks/DateRangeSelector/tests/DateRangeSelector.e2e.yaml

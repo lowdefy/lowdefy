@@ -57,10 +57,18 @@ function App({ Component }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
-  const algorithm = useDarkMode({
-    baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+  const { algorithm, token, components } = useDarkMode({
+    antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
+
+  const {
+    lightToken: _lightToken,
+    darkToken: _darkToken,
+    lightComponents: _lightComponents,
+    darkComponents: _darkComponents,
+    ...antdConfig
+  } = lowdefyRef.current.theme?.antd ?? {};
 
   // Runtime error callback — pushes errors to state for ErrorBar display.
   // Accepts Error objects (with .name) or plain objects (with .type) from build warnings.
@@ -95,7 +103,9 @@ function App({ Component }) {
     <StyleProvider layer>
       <ConfigProvider
         theme={{
-          ...lowdefyRef.current.theme?.antd,
+          ...antdConfig,
+          token,
+          components,
           cssVar: { key: 'lowdefy' },
           hashed: false,
           algorithm,

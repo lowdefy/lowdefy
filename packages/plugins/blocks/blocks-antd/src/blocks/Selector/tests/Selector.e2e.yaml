@@ -324,3 +324,28 @@ blocks:
         - Blueberry
         - Cherry
         - Cranberry
+
+  # ============================================
+  # SELECTOR CSSKEY TESTS
+  # ============================================
+
+  - id: selector_selector_style
+    type: Selector
+    style:
+      .selector:
+        padding: 12px
+    properties:
+      options:
+        - A
+        - B
+        - C
+
+  - id: selector_selector_class
+    type: Selector
+    class:
+      .selector: selector-selector-tailwind
+    properties:
+      options:
+        - A
+        - B
+        - C

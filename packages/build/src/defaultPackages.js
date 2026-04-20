@@ -20,6 +20,7 @@ const defaultPackages = [
   '@lowdefy/blocks-aggrid',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
+  '@lowdefy/blocks-diff',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
