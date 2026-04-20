@@ -21,7 +21,6 @@ import cn from './cn.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
-import flashBlock from './flashBlock.js';
 import HtmlComponent from './HtmlComponent.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
@@ -34,7 +33,6 @@ export {
   ErrorBoundary,
   ErrorPage,
   extractBlockTypes,
-  flashBlock,
   HtmlComponent,
   renderHtml,
   withBlockDefaults,

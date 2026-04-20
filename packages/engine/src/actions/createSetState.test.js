@@ -14,15 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-
-jest.unstable_mockModule('@lowdefy/block-utils', () => ({
-  flashBlock: jest.fn(),
-}));
-
-const { default: testContext } = await import('../../test/testContext.js');
-const { default: createSetState } = await import('./createSetState.js');
-const { flashBlock } = await import('@lowdefy/block-utils');
+import testContext from '../../test/testContext.js';
 
 const lowdefy = {
   _internal: {
@@ -213,61 +205,4 @@ test('SetState value on array and create new Blocks for array items', async () =
   expect(textInput0.value).toEqual('0');
   expect(textInput1.value).toEqual('1');
   expect(textInput2.value).toEqual('2');
-});
-
-function makeContext() {
-  return {
-    _internal: {
-      State: { set: jest.fn() },
-      RootSlots: { reset: jest.fn() },
-      update: jest.fn(),
-    },
-  };
-}
-
-describe('createSetState flash option', () => {
-  beforeEach(() => {
-    flashBlock.mockClear();
-  });
-
-  test('setState writes each key to state and does not flash by default', () => {
-    const context = makeContext();
-    const setState = createSetState({ arrayIndices: [], context });
-
-    setState({ a: 1, b: 2 });
-
-    expect(context._internal.State.set).toHaveBeenCalledTimes(2);
-    expect(context._internal.State.set).toHaveBeenNthCalledWith(1, 'a', 1);
-    expect(context._internal.State.set).toHaveBeenNthCalledWith(2, 'b', 2);
-    expect(flashBlock).not.toHaveBeenCalled();
-  });
-
-  test('setState with options.flash true calls flashBlock for each key after writing', () => {
-    const context = makeContext();
-    const setState = createSetState({ arrayIndices: [], context });
-
-    setState({ a: 1, b: 2 }, { flash: true });
-
-    expect(flashBlock).toHaveBeenCalledTimes(2);
-    expect(flashBlock).toHaveBeenCalledWith('a');
-    expect(flashBlock).toHaveBeenCalledWith('b');
-  });
-
-  test('setState with options.flash applies arrayIndices to flashed block id', () => {
-    const context = makeContext();
-    const setState = createSetState({ arrayIndices: [0], context });
-
-    setState({ 'items.$.name': 'x' }, { flash: true });
-
-    expect(flashBlock).toHaveBeenCalledWith('items.0.name');
-  });
-
-  test('setState with options but no flash does not call flashBlock', () => {
-    const context = makeContext();
-    const setState = createSetState({ arrayIndices: [], context });
-
-    setState({ a: 1 }, {});
-
-    expect(flashBlock).not.toHaveBeenCalled();
-  });
 });

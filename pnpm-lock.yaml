@@ -417,9 +417,6 @@ importers:
 
   packages/engine:
     dependencies:
-      '@lowdefy/block-utils':
-        specifier: 5.0.0
-        version: link:../utils/block-utils
       '@lowdefy/errors':
         specifier: 5.0.0
         version: link:../utils/errors
