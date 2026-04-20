@@ -523,6 +523,7 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
       stepType: 'tool-result',
       usage: { totalTokens: 100 },
     },
+    kind: 'hook',
   });
 });
 
@@ -556,6 +557,7 @@ test('non-onFinish hook callbacks strip messages from event payload', async () =
 
   expect(callEndpoint).toHaveBeenCalledWith('log-step', {
     payload: { stepType: 'tool-result' },
+    kind: 'hook',
   });
 });
 
@@ -985,6 +987,7 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
       finishReason: 'stop',
       isAborted: false,
     }),
+    kind: 'hook',
   });
 });
 
@@ -1498,6 +1501,7 @@ test('onFinish hook receives original input messages in payload', async () => {
       finishReason: 'stop',
       isAborted: false,
     }),
+    kind: 'hook',
   });
 });
 
@@ -1538,6 +1542,7 @@ test('onFinish hook payload includes agentContext fields', async () => {
       urlQuery: { principle_id: 'P3' },
       userId: 'user_abc',
     }),
+    kind: 'hook',
   });
 });
 
@@ -1556,7 +1561,14 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         stepNumber: 0,
         text: 'Looking up products...',
         toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
-        toolResults: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' }, output: [{ name: 'MacBook' }] }],
+        toolResults: [
+          {
+            toolCallId: 'tc1',
+            toolName: 'search',
+            input: { q: 'laptop' },
+            output: [{ name: 'MacBook' }],
+          },
+        ],
         finishReason: 'tool-calls',
         usage: {
           inputTokens: 100,
@@ -1610,6 +1622,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         cacheWriteTokens: 10,
       },
     }),
+    kind: 'hook',
   });
 
   // Restore default mock
@@ -1658,6 +1671,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
         cacheWriteTokens: 0,
       },
     }),
+    kind: 'hook',
   });
 
   // Restore default mocks

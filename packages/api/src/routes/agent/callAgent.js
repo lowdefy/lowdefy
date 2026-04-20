@@ -127,12 +127,13 @@ async function callAgent(
         payload: agentContext,
         steps: {},
       }),
-    callEndpoint: async (endpointId, { payload, abortSignal }) => {
-      const toolLog = phaseLogger.child({ endpointId });
-      return toolLog.time(
-        'tool.endpoint.exec',
+    callEndpoint: async (endpointId, { payload, abortSignal, kind = 'tool' } = {}) => {
+      const prefix = kind === 'hook' ? 'hook.endpoint' : 'tool.endpoint';
+      const callLog = phaseLogger.child({ endpointId, kind });
+      return callLog.time(
+        `${prefix}.exec`,
         async () => {
-          const endpointConfig = await toolLog.time('tool.endpoint.config.load', () =>
+          const endpointConfig = await callLog.time(`${prefix}.config.load`, () =>
             getEndpointConfig(context, { endpointId })
           );
           authorizeApiEndpoint(context, { endpointConfig });

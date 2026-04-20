@@ -102,7 +102,7 @@ function createHookCallbacks({ hooks, callEndpoint, phaseLogger }) {
         stepNumber: event?.stepNumber,
       });
       for (const endpointId of endpointIds) {
-        callEndpoint(endpointId, { payload }).catch(() => {});
+        callEndpoint(endpointId, { payload, kind: 'hook' }).catch(() => {});
       }
     };
   }
@@ -368,6 +368,7 @@ async function handleAgentChat({ connection, properties, context }) {
             const hookResponse = await hookLog.time('hook.onFinish', () =>
               context.callEndpoint(endpointId, {
                 payload: finishPayload,
+                kind: 'hook',
               })
             );
             const responseData = serializer.deserialize(hookResponse?.response);
