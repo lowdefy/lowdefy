@@ -78,18 +78,12 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(
-              block.methods,
-              {
-                registerEvent: block.registerEvent,
-                registerMethod: block.registerMethod,
-                setValue: block.setValue,
-                triggerEvent: block.triggerEvent,
-              },
-              block.meta?.canWriteState
-                ? { getState: block.getState, setState: block.setState }
-                : {}
-            )}
+            methods={Object.assign(block.methods, {
+              registerEvent: block.registerEvent,
+              registerMethod: block.registerMethod,
+              setValue: block.setValue,
+              triggerEvent: block.triggerEvent,
+            })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
             classNames={classNames}
@@ -127,17 +121,11 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(
-              block.methods,
-              {
-                registerEvent: block.registerEvent,
-                registerMethod: block.registerMethod,
-                triggerEvent: block.triggerEvent,
-              },
-              block.meta?.canWriteState
-                ? { getState: block.getState, setState: block.setState }
-                : {}
-            )}
+            methods={Object.assign(block.methods, {
+              registerEvent: block.registerEvent,
+              registerMethod: block.registerMethod,
+              triggerEvent: block.triggerEvent,
+            })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
             classNames={classNames}

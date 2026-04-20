@@ -60,22 +60,16 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       layout={block.eval.layout}
     >
       <Component
-        methods={Object.assign(
-          block.methods,
-          {
-            moveItemDown: block.moveItemDown,
-            moveItemUp: block.moveItemUp,
-            pushItem: block.pushItem,
-            registerEvent: block.registerEvent,
-            registerMethod: block.registerMethod,
-            removeItem: block.removeItem,
-            triggerEvent: block.triggerEvent,
-            unshiftItem: block.unshiftItem,
-          },
-          block.meta?.canWriteState
-            ? { getState: block.getState, setState: block.setState }
-            : {}
-        )}
+        methods={Object.assign(block.methods, {
+          moveItemDown: block.moveItemDown,
+          moveItemUp: block.moveItemUp,
+          pushItem: block.pushItem,
+          registerEvent: block.registerEvent,
+          registerMethod: block.registerMethod,
+          removeItem: block.removeItem,
+          triggerEvent: block.triggerEvent,
+          unshiftItem: block.unshiftItem,
+        })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
         classNames={classNames}
