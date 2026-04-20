@@ -78,14 +78,18 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(block.methods, {
-              getState: block.getState,
-              registerEvent: block.registerEvent,
-              registerMethod: block.registerMethod,
-              setState: block.setState,
-              setValue: block.setValue,
-              triggerEvent: block.triggerEvent,
-            })}
+            methods={Object.assign(
+              block.methods,
+              {
+                registerEvent: block.registerEvent,
+                registerMethod: block.registerMethod,
+                setValue: block.setValue,
+                triggerEvent: block.triggerEvent,
+              },
+              block.meta?.canWriteState
+                ? { getState: block.getState, setState: block.setState }
+                : {}
+            )}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
             classNames={classNames}
@@ -123,13 +127,17 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(block.methods, {
-              getState: block.getState,
-              registerEvent: block.registerEvent,
-              registerMethod: block.registerMethod,
-              setState: block.setState,
-              triggerEvent: block.triggerEvent,
-            })}
+            methods={Object.assign(
+              block.methods,
+              {
+                registerEvent: block.registerEvent,
+                registerMethod: block.registerMethod,
+                triggerEvent: block.triggerEvent,
+              },
+              block.meta?.canWriteState
+                ? { getState: block.getState, setState: block.setState }
+                : {}
+            )}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
             classNames={classNames}

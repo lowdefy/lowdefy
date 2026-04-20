@@ -58,19 +58,23 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
       layout={block.eval.layout}
     >
       <Component
-        methods={Object.assign(block.methods, {
-          getState: block.getState,
-          moveItemDown: block.moveItemDown,
-          moveItemUp: block.moveItemUp,
-          pushItem: block.pushItem,
-          registerEvent: block.registerEvent,
-          registerMethod: block.registerMethod,
-          removeItem: block.removeItem,
-          setState: block.setState,
-          setValue: block.setValue,
-          triggerEvent: block.triggerEvent,
-          unshiftItem: block.unshiftItem,
-        })}
+        methods={Object.assign(
+          block.methods,
+          {
+            moveItemDown: block.moveItemDown,
+            moveItemUp: block.moveItemUp,
+            pushItem: block.pushItem,
+            registerEvent: block.registerEvent,
+            registerMethod: block.registerMethod,
+            removeItem: block.removeItem,
+            setValue: block.setValue,
+            triggerEvent: block.triggerEvent,
+            unshiftItem: block.unshiftItem,
+          },
+          block.meta?.canWriteState
+            ? { getState: block.getState, setState: block.setState }
+            : {}
+        )}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
         classNames={classNames}
