@@ -44,6 +44,15 @@ const authors = {
     github: 'https://github.com/Yianni99',
     linkedin: 'https://www.linkedin.com/in/ioannis-ktistakis-38a750183/',
   },
+  stephanie: {
+    id: 'stephanie',
+    name: 'Stephanie Smit',
+    title: 'Software Developer at Lowdefy',
+    bio: 'Stephanie is a software developer at Lowdefy, building enterprise web applications and contributing to the development of the Lowdefy framework.',
+    image: 'https://avatars.githubusercontent.com/u/47713197?v=4',
+    github: 'https://github.com/StephanieJKS',
+    linkedin: 'https://za.linkedin.com/in/stephaniejksmit',
+  },
   lowdefy: {
     id: 'lowdefy',
     name: 'Lowdefy',

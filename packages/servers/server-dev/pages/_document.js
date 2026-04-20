@@ -19,8 +19,13 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 import appJson from '../lib/build/app.js';
 import lowdefyConfig from '../lib/build/config.js';
+import themeConfig from '../lib/build/theme.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
+const VALID_COLOR_MODES = ['system', 'light', 'dark'];
+const configColorMode = VALID_COLOR_MODES.includes(themeConfig.darkMode)
+  ? themeConfig.darkMode
+  : 'system';
 
 class LowdefyDocument extends Document {
   render() {
@@ -36,6 +41,14 @@ class LowdefyDocument extends Document {
           <script
             dangerouslySetInnerHTML={{
               __html: `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`,
+            }}
+          />
+          {/* Synchronous dark-mode background script — prevents white flash during
+              page navigation when the user is in dark mode. Mirrors the logic in
+              useDarkMode.js: configDarkMode → localStorage → prefers-color-scheme. */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){var c="${configColorMode}";if(c==="light")return;var d=false;if(c==="dark"){d=true}else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}if(d)document.documentElement.style.backgroundColor="#000"})();`,
             }}
           />
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />

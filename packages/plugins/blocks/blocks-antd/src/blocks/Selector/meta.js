@@ -29,7 +29,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'AiOutlineCloseCircle', 'AiOutlineDown'],
   valueType: 'any',
   cssKeys: {
     element: 'The Selector element.',

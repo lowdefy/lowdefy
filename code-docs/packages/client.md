@@ -63,6 +63,7 @@ import Client from '@lowdefy/client';
 | `Head.js`                  | HTML head management (title, meta)                |
 | `DisplayMessage.js`        | Toast notifications and messages                  |
 | `ProgressBarController.js` | Loading progress indicator                        |
+| `useDarkMode.js`           | Dark mode hook (config → localStorage → OS pref)  |
 
 ### Block Rendering (`/block/`)
 

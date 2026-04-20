@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateId from '../../../utils/validateId.js';
+
 function validateStep(step, { endpointId }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
@@ -31,12 +33,7 @@ function validateStep(step, { endpointId }) {
       configKey,
     });
   }
-  if (step.id.includes('.')) {
-    throw new ConfigError(
-      `Step id "${step.id}" at endpoint "${endpointId}" should not include a period (".").`,
-      { configKey }
-    );
-  }
+  validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
     throw new ConfigError(
       `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,

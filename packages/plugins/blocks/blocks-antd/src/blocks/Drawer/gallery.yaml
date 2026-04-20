@@ -554,6 +554,78 @@
           properties:
             content: The extra slot renders content in the header area opposite the title. Commonly used for action buttons like Save or Cancel.
 
+- title: Footer Slot
+  blocks:
+    - id: drawer_footer_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Drawer with Footer
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: drawer_footer_open
+            type: CallMethod
+            params:
+              blockId: drawer_footer
+              method: setOpen
+              args:
+                - open: true
+    - id: drawer_footer
+      type: Drawer
+      properties:
+        title: Drawer with Footer
+        width: 400
+      slots:
+        footer:
+          blocks:
+            - id: drawer_footer_actions_row
+              type: Box
+              layout:
+                gap: 8
+                justify: end
+              blocks:
+                - id: drawer_footer_cancel_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Cancel
+                    color: default
+                    variant: outlined
+                  events:
+                    onClick:
+                      - id: drawer_footer_cancel
+                        type: CallMethod
+                        params:
+                          blockId: drawer_footer
+                          method: setOpen
+                          args:
+                            - open: false
+                - id: drawer_footer_save_btn
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    title: Save
+                    color: primary
+                    variant: solid
+                  events:
+                    onClick:
+                      - id: drawer_footer_save_msg
+                        type: DisplayMessage
+                        params:
+                          content: Saved successfully
+                          status: success
+                          duration: 2
+      blocks:
+        - id: drawer_footer_content
+          type: Paragraph
+          properties:
+            content: The footer slot renders content in the drawer's footer area, pinned at the bottom. It is commonly used for action buttons like Save and Cancel.
+
 - title: Toggle Method
   blocks:
     - id: drawer_toggle_btn

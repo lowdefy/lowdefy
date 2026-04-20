@@ -88,6 +88,11 @@ jest.unstable_mockModule('@ai-sdk/mcp', () => ({
   createMCPClient: mockCreateMCPClient,
 }));
 
+const mockBuildUpdatePageStateTool = jest.fn();
+jest.unstable_mockModule('./buildUpdatePageStateTool.js', () => ({
+  default: mockBuildUpdatePageStateTool,
+}));
+
 class MockStdioMCPTransport {
   constructor(config) {
     this.config = config;
@@ -1761,7 +1766,7 @@ test('pageContext omits empty urlQuery from context block', async () => {
   expect(lastAgentConfig.instructions).toContain('pageId: my-page');
 });
 
-test('pageContext includes pageState in context block', async () => {
+test('pageContext includes sharedState in context block', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
@@ -1786,18 +1791,18 @@ test('pageContext includes pageState in context block', async () => {
       agentContext: {
         pageId: 'onboarding',
         userId: 'user_abc',
-        pageState: { org_name: 'TestCorp', sector: 'private_security' },
+        sharedState: { org_name: 'TestCorp', sector: 'private_security' },
       },
     },
   });
 
   expect(lastAgentConfig.instructions).toContain(
-    'pageState: {"org_name":"TestCorp","sector":"private_security"}'
+    'sharedState: {"org_name":"TestCorp","sector":"private_security"}'
   );
   expect(lastAgentConfig.instructions).toContain('<context>');
 });
 
-test('pageContext omits empty pageState from context block', async () => {
+test('pageContext omits empty sharedState from context block', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
@@ -1819,11 +1824,67 @@ test('pageContext omits empty pageState from context block', async () => {
     context: {
       callEndpoint: jest.fn(),
       getEndpointConfig: jest.fn(),
-      agentContext: { pageId: 'my-page', userId: 'user_1', pageState: {} },
+      agentContext: { pageId: 'my-page', userId: 'user_1', sharedState: {} },
     },
   });
 
-  expect(lastAgentConfig.instructions).not.toContain('pageState');
+  expect(lastAgentConfig.instructions).not.toContain('sharedState');
+});
+
+test('merges update-page-state tool when sharedState is present on agentContext', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const sentinelTool = { __sentinel: 'update-page-state-tool' };
+  mockBuildUpdatePageStateTool.mockReset();
+  mockBuildUpdatePageStateTool.mockReturnValue(sentinelTool);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      agentContext: {
+        pageId: 'p1',
+        userId: 'u1',
+        sharedState: { org_name: 'Acme' },
+      },
+    },
+  });
+
+  expect(mockBuildUpdatePageStateTool).toHaveBeenCalledWith({
+    sharedState: { org_name: 'Acme' },
+  });
+  expect(lastAgentConfig.tools['update-page-state']).toBe(sentinelTool);
+});
+
+test('does not merge update-page-state tool when sharedState is absent', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockBuildUpdatePageStateTool.mockReset();
+  mockBuildUpdatePageStateTool.mockReturnValue(null);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      // no agentContext.sharedState
+    },
+  });
+
+  expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
 });
 
 test('onFinish hook payload includes steps with toolCalls and toolResults', async () => {

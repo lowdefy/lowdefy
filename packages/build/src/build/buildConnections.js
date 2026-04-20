@@ -22,6 +22,7 @@ import { ConfigError } from '@lowdefy/errors';
 import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+import validateId from '../utils/validateId.js';
 
 function validateConnection(connection, context) {
   const configKey = connection?.['~k'];
@@ -82,6 +83,7 @@ function buildConnections({ components, context }) {
     const configKey = connection['~k'];
 
     checkDuplicateConnectionId({ id: connection.id, configKey });
+    validateId({ id: connection.id, field: 'Connection id', configKey });
 
     // Track type usage for buildTypes validation
     context.typeCounters.connections.increment(connection.type, configKey);

@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateId from '../../utils/validateId.js';
+
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
@@ -28,11 +30,7 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
       configKey,
     });
   }
-  if (endpoint.id.includes('.')) {
-    throw new ConfigError(`Endpoint id "${endpoint.id}" should not include a period (".").`, {
-      configKey,
-    });
-  }
+  validateId({ id: endpoint.id, field: 'Endpoint id', configKey });
   if (type.isUndefined(endpoint.type)) {
     throw new ConfigError(`Endpoint type is not defined at "${endpoint.id}".`, { configKey });
   }

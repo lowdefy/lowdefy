@@ -18,8 +18,13 @@ import path from 'path';
 import { cachedPromises, serializer } from '@lowdefy/helpers';
 import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
+const validPathPattern = /^[A-Za-z0-9\-_/.:]+$/;
+
 function createReadConfigFile({ buildDirectory, fileCache }) {
   async function readConfigFile(filePath) {
+    if (!validPathPattern.test(filePath) || filePath.includes('..')) {
+      return null;
+    }
     const fileContent = await readFile(path.resolve(buildDirectory, filePath));
     if (getFileExtension(filePath) === 'json') {
       return serializer.deserializeFromString(fileContent);

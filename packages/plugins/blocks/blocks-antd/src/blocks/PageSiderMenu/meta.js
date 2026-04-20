@@ -23,6 +23,7 @@ export default {
   category: 'container',
   icons: [
     'AiOutlineBell',
+    'AiOutlineLaptop',
     'AiOutlineMenuFold',
     'AiOutlineMenuUnfold',
     'AiOutlineMoon',
@@ -402,7 +403,7 @@ export default {
           trigger: {
             type: 'string',
             enum: ['click', 'hover'],
-            default: 'click',
+            default: 'hover',
             description: 'How the profile dropdown opens.',
           },
           placement: {

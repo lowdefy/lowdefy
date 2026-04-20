@@ -15,6 +15,7 @@
 */
 
 import { callAgent } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
@@ -31,7 +32,7 @@ async function handler({ context, req, res }) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
   const { conversationId } = req.query;
-  const { messages, urlQuery, pageState } = req.body;
+  const { messages, urlQuery, sharedState } = req.body;
   if (!Array.isArray(messages)) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
@@ -40,8 +41,8 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'urlQuery must be an object' });
     return;
   }
-  if (pageState != null && (typeof pageState !== 'object' || Array.isArray(pageState))) {
-    res.status(400).json({ error: 'pageState must be an object' });
+  if (sharedState != null && !type.isObject(sharedState)) {
+    res.status(400).json({ error: 'sharedState must be an object' });
     return;
   }
   const { response: webResponse } = await callAgent(context, {
@@ -49,7 +50,7 @@ async function handler({ context, req, res }) {
     pageId,
     messages,
     conversationId: conversationId ?? undefined,
-    pageState: pageState ?? undefined,
+    sharedState: sharedState ?? undefined,
     urlQuery: urlQuery ?? undefined,
   });
 

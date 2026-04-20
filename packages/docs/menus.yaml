@@ -541,9 +541,6 @@
         - id: Message
           type: MenuLink
           pageId: Message
-        - id: MobileMenu
-          type: MenuLink
-          pageId: MobileMenu
         - id: Notification
           type: MenuLink
           pageId: Notification
@@ -665,12 +662,18 @@
         - id: Masonry
           type: MenuLink
           pageId: Masonry
+        - id: MobileMenu
+          type: MenuLink
+          pageId: MobileMenu
         - id: Modal
           type: MenuLink
           pageId: Modal
         - id: PageHeaderMenu
           type: MenuLink
           pageId: PageHeaderMenu
+        - id: PageSidebarLayout
+          type: MenuLink
+          pageId: PageSidebarLayout
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu

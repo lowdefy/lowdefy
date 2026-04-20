@@ -25,7 +25,10 @@ import getAgentResolver from './getAgentResolver.js';
 import getConnectionConfig from '../request/getConnectionConfig.js';
 import getConnection from '../request/getConnection.js';
 
-async function callAgent(context, { agentId, pageId, messages, conversationId, urlQuery, pageState }) {
+async function callAgent(
+  context,
+  { agentId, pageId, messages, conversationId, urlQuery, sharedState }
+) {
   const { logger } = context;
 
   context.pageId = pageId;
@@ -37,7 +40,7 @@ async function callAgent(context, { agentId, pageId, messages, conversationId, u
   const agentContext = {
     conversationId: conversationId ?? undefined,
     pageId,
-    pageState: pageState ?? {},
+    sharedState: sharedState ?? {},
     urlQuery: urlQuery ?? {},
     userId: context.user?.sub ?? context.user?.id ?? null,
   };

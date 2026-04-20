@@ -274,4 +274,47 @@ test.describe('MobileMenu Block', () => {
     const display = getBlock(page, 'mm_targeting_display');
     await expect(display).toHaveText('Clicked: mm_general_settings');
   });
+
+  // ============================================
+  // LOGO TESTS
+  // ============================================
+
+  test('renders logo in drawer header when logo property is set', async ({ page }) => {
+    const button = getMobileMenuButton(page, 'mm_with_logo');
+    await button.click();
+
+    const drawer = getDrawer(page);
+    await expect(drawer).toBeVisible();
+
+    // Logo should be in the drawer extra area
+    const logo = page.locator('.ant-drawer-extra img[alt="Test Logo"]');
+    await expect(logo).toBeVisible();
+  });
+
+  // ============================================
+  // DRAWER CONTENT AND FOOTER SLOT TESTS
+  // ============================================
+
+  test('renders drawerContent below menu in drawer', async ({ page }) => {
+    const button = getMobileMenuButton(page, 'mm_with_slots');
+    await button.click();
+
+    const drawer = getDrawer(page);
+    await expect(drawer).toBeVisible();
+
+    const drawerContent = getBlock(page, 'mm_drawer_content_text');
+    await expect(drawerContent).toContainText('Drawer Content Below Menu');
+  });
+
+  test('renders drawerFooter in drawer footer area', async ({ page }) => {
+    const button = getMobileMenuButton(page, 'mm_with_slots');
+    await button.click();
+
+    const drawer = getDrawer(page);
+    await expect(drawer).toBeVisible();
+
+    const footer = page.locator('.ant-drawer-footer');
+    await expect(footer).toBeVisible();
+    await expect(footer).toContainText('Drawer Footer Text');
+  });
 });

@@ -16,7 +16,10 @@
 
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
+import {
+  lastAssistantMessageIsCompleteWithApprovalResponses,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from 'ai';
 import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
@@ -35,7 +38,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const {
     agentId,
     urlQuery,
-    pageState,
+    sharedState,
     welcome,
     messageDisplay,
     sender,
@@ -49,8 +52,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
-  const pageStateRef = useRef(pageState);
-  pageStateRef.current = pageState;
+  // Mirror the operator-evaluated sharedState object into a ref so transport.body()
+  // sees the freshest value at send time without re-constructing the transport.
+  const sharedStateRef = useRef(null);
+  sharedStateRef.current =
+    type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -64,7 +70,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, pageStateRef }),
+    () =>
+      createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 
@@ -76,13 +83,54 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     status,
     stop,
     addToolApprovalResponse,
+    addToolOutput,
     setMessages,
     regenerate,
     clearError,
   } = useChat({
     transport,
     experimental_throttle: 50,
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    sendAutomaticallyWhen: (args) =>
+      lastAssistantMessageIsCompleteWithToolCalls(args) ||
+      lastAssistantMessageIsCompleteWithApprovalResponses(args),
+    async onToolCall({ toolCall }) {
+      if (toolCall.dynamic) return;
+      if (toolCall.toolName === 'update-page-state') {
+        try {
+          const updates = toolCall.input?.updates ?? {};
+          // Allowlist writes against the keys currently exposed via sharedState —
+          // the tool's description tells the agent "keys must match field names
+          // visible in shared state", but we enforce it here so a hallucinated
+          // key can't mutate arbitrary page state.
+          const allowedKeys = new Set(Object.keys(sharedStateRef.current ?? {}));
+          const writable = {};
+          const ignored = [];
+          for (const [key, value] of Object.entries(updates)) {
+            if (allowedKeys.has(key)) writable[key] = value;
+            else ignored.push(key);
+          }
+          if (Object.keys(writable).length > 0) {
+            await methods.triggerEvent({ name: '__updatePageState', event: writable });
+          }
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            output: {
+              ok: true,
+              written: Object.keys(writable),
+              ...(ignored.length > 0 ? { ignored } : {}),
+            },
+          });
+        } catch (err) {
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            state: 'output-error',
+            errorText: err.message,
+          });
+        }
+      }
+    },
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
@@ -163,6 +211,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     });
     methods.registerMethod('scrollToBottom', () => {
       bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+    methods.registerEvent({
+      name: '__updatePageState',
+      actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
     });
     if (attachmentsConfig?.s3PostPolicyRequestId) {
       methods.registerEvent({
