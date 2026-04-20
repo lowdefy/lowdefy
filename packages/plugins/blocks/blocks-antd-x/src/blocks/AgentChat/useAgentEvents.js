@@ -16,13 +16,21 @@
 
 import { useRef, useEffect } from 'react';
 
-function useAgentEvents({ messages, status, methods, finishMetaRef }) {
+function useAgentEvents({ messages, status, methods, finishMetaRef, phaseLoggerRef }) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
   const firedUserMessageIds = useRef(new Set());
   const firedTitleIds = useRef(new Set());
   const lastMessageCountRef = useRef(0);
+
+  function logFire(name, extra) {
+    phaseLoggerRef?.current?.phase(`client.events.fire`, {
+      name,
+      messageCount: messages.length,
+      ...(extra ?? {}),
+    });
+  }
 
   // Fire onMessageComplete when streaming finishes
   useEffect(() => {
@@ -34,6 +42,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
           .map((p) => p.text)
           .join('');
         const finishMeta = finishMetaRef?.current ?? {};
+        logFire('onMessageComplete', { finishReason: finishMeta.finishReason });
         methods.triggerEvent({
           name: 'onMessageComplete',
           event: {
@@ -70,6 +79,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
         ?.filter((p) => p.type === 'text')
         .map((p) => p.text)
         .join('');
+      logFire('onUserMessage', { messageId: lastMessage.id });
       methods.triggerEvent({
         name: 'onUserMessage',
         event: {
@@ -100,6 +110,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
 
           if (!firedToolCallIds.current.has(toolCallId)) {
             firedToolCallIds.current.add(toolCallId);
+            logFire('onToolCall', { toolName, toolCallId });
             methods.triggerEvent({
               name: 'onToolCall',
               event: {
@@ -115,6 +126,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
             !firedToolResultIds.current.has(toolCallId)
           ) {
             firedToolResultIds.current.add(toolCallId);
+            logFire('onToolResult', { toolName, toolCallId, error: part.state === 'output-error' });
             methods.triggerEvent({
               name: 'onToolResult',
               event: {
@@ -139,6 +151,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
           const titleKey = `${message.id}-${part.data.title}`;
           if (!firedTitleIds.current.has(titleKey)) {
             firedTitleIds.current.add(titleKey);
+            logFire('onTitleGenerated', { messageId: message.id });
             methods.triggerEvent({
               name: 'onTitleGenerated',
               event: { title: part.data.title },

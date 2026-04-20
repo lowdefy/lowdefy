@@ -15,3 +15,4 @@
 */
 
 export { default as handleAgentChat } from './handleAgentChat.js';
+export { default as createPhaseLogger } from './createPhaseLogger.js';

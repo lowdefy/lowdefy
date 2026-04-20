@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
+
 import { callAgent } from '@lowdefy/api';
+import { createPhaseLogger } from '@lowdefy/ai-utils';
 import { type } from '@lowdefy/helpers';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
@@ -32,7 +35,7 @@ async function handler({ context, req, res }) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ color: 'gray' }, `Agent: ${pageId} → ${agentId}`);
   const { conversationId } = req.query;
-  const { messages, urlQuery, sharedState } = req.body;
+  const { messages, urlQuery, sharedState, turnId: clientTurnId } = req.body;
   if (!Array.isArray(messages)) {
     res.status(400).json({ error: 'messages must be an array' });
     return;
@@ -45,6 +48,37 @@ async function handler({ context, req, res }) {
     res.status(400).json({ error: 'sharedState must be an object' });
     return;
   }
+
+  const turnId =
+    typeof clientTurnId === 'string' && clientTurnId ? clientTurnId : crypto.randomUUID();
+  const turnStart = Date.now();
+  const phaseLogger = createPhaseLogger({
+    logger: context.logger,
+    agentId,
+    pageId,
+    conversationId: conversationId ?? undefined,
+    turnId,
+    turnStart,
+  });
+
+  const bodySize = (() => {
+    try {
+      return Buffer.byteLength(JSON.stringify(req.body ?? ''));
+    } catch {
+      return -1;
+    }
+  })();
+  const hasFiles = Array.isArray(messages)
+    ? messages.some((m) => (m?.parts ?? []).some((p) => p?.type === 'file'))
+    : false;
+  phaseLogger.phase('ingress.received', {
+    bodySize,
+    messageCount: messages.length,
+    hasFiles,
+    sharedStateKeys: sharedState ? Object.keys(sharedState).length : 0,
+    urlQueryKeys: urlQuery ? Object.keys(urlQuery).length : 0,
+  });
+
   const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
@@ -52,6 +86,8 @@ async function handler({ context, req, res }) {
     conversationId: conversationId ?? undefined,
     sharedState: sharedState ?? undefined,
     urlQuery: urlQuery ?? undefined,
+    phaseLogger,
+    turnId,
   });
 
   // Stream the Web Response body to the Next.js response
@@ -61,17 +97,29 @@ async function handler({ context, req, res }) {
   res.setHeader('Content-Encoding', 'none');
   res.setHeader('Transfer-Encoding', 'chunked');
 
+  phaseLogger.phase('ingress.stream.forward.start');
+
   const reader = webResponse.body.getReader();
   const decoder = new TextDecoder();
   let done = false;
+  let firstByteLogged = false;
+  let chunkCount = 0;
+  let totalBytes = 0;
   while (!done) {
     const { value, done: readerDone } = await reader.read();
     done = readerDone;
     if (value) {
+      if (!firstByteLogged) {
+        firstByteLogged = true;
+        phaseLogger.phase('ingress.stream.first_byte', { bytes: value.byteLength });
+      }
+      chunkCount += 1;
+      totalBytes += value.byteLength;
       res.write(decoder.decode(value, { stream: true }));
     }
   }
   res.end();
+  phaseLogger.phase('ingress.stream.forward.done', { chunkCount, totalBytes });
 }
 
 export const config = {

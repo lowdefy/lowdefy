@@ -31,6 +31,7 @@ import { serializer } from '@lowdefy/helpers';
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
 import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+import createPhaseLogger from './createPhaseLogger.js';
 
 function createUsageAccumulator() {
   const usage = {
@@ -86,7 +87,7 @@ const hookMapping = {
   onStepFinish: 'onStepFinish',
 };
 
-function createHookCallbacks({ hooks, callEndpoint }) {
+function createHookCallbacks({ hooks, callEndpoint, phaseLogger }) {
   if (!hooks) return {};
 
   const callbacks = {};
@@ -96,6 +97,10 @@ function createHookCallbacks({ hooks, callEndpoint }) {
 
     callbacks[sdkKey] = (event) => {
       const payload = cleanHookEvent(event);
+      phaseLogger.phase(`hook.${yamlKey}.dispatch`, {
+        endpointCount: endpointIds.length,
+        stepNumber: event?.stepNumber,
+      });
       for (const endpointId of endpointIds) {
         callEndpoint(endpointId, { payload }).catch(() => {});
       }
@@ -124,21 +129,45 @@ function convertDataUrlsToBase64(messages) {
 
 async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages: rawMessages } = properties;
+
+  // Fall back to a noop logger so direct callers of handleAgentChat (tests,
+  // non-HTTP paths) don't need to construct one.
+  const phaseLogger =
+    context?.phaseLogger ??
+    createPhaseLogger({
+      agentId: agent?.agentId,
+    });
+
+  phaseLogger.phase('stream.handler.entry', {
+    model: agent?.properties?.model,
+    messageCount: rawMessages?.length ?? 0,
+  });
+
   const messages = convertDataUrlsToBase64(rawMessages);
 
-  const { tools, mcpClients } = await buildAgentTools({ agent, context });
+  const { tools, mcpClients } = await phaseLogger.time('tools.build', () =>
+    buildAgentTools({ agent, context })
+  );
 
   const sharedState = context.agentContext?.sharedState;
   const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
   if (updatePageStateTool) {
     tools['update-page-state'] = updatePageStateTool;
+    phaseLogger.phase('tools.update_page_state.injected', {
+      allowedKeys: Object.keys(sharedState ?? {}).length,
+    });
   }
+  phaseLogger.phase('tools.ready', {
+    toolCount: Object.keys(tools).length,
+    mcpClientCount: mcpClients.length,
+  });
 
   const model = connection.provider(agent.properties.model);
 
   const hookCallbacks = createHookCallbacks({
     hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
+    phaseLogger,
   });
 
   // Prepend page context to instructions when pageContext is enabled
@@ -199,6 +228,11 @@ async function handleAgentChat({ connection, properties, context }) {
       : {}),
   });
 
+  phaseLogger.phase('stream.agent.instance.created', {
+    maxSteps: agent.properties.maxSteps ?? 10,
+    toolChoice: agent.properties.toolChoice ?? 'auto',
+  });
+
   const onFinishEndpointIds = agent.hooks?.onFinish;
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
   const hasMcpClients = mcpClients.length > 0;
@@ -209,6 +243,7 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
+      phaseLogger.phase('stream.execute.start');
       const usageAccumulator = createUsageAccumulator();
       const steps = [];
       let agentStream;
@@ -222,22 +257,40 @@ async function handleAgentChat({ connection, properties, context }) {
           toolResults: stepResult.toolResults,
           finishReason: stepResult.finishReason,
         });
+        phaseLogger.phase('stream.step.finish', {
+          stepNumber: stepResult.stepNumber,
+          toolCalls: stepResult.toolCalls?.length ?? 0,
+          toolResults: stepResult.toolResults?.length ?? 0,
+          finishReason: stepResult.finishReason,
+          inputTokens: stepResult?.usage?.inputTokens,
+          outputTokens: stepResult?.usage?.outputTokens,
+          totalTokens: stepResult?.usage?.totalTokens,
+        });
       }
 
       if (pruneConfig) {
         // Decompose createAgentUIStream so we can insert pruneMessages
         // between the UIMessage→ModelMessage conversion and agent execution.
-        const validatedMessages = await validateUIMessages({
-          messages,
-          tools: agentInstance.tools,
-        });
-        const modelMessages = await convertToModelMessages(validatedMessages, {
-          tools: agentInstance.tools,
-        });
-        const prunedMessages = pruneMessages({
-          messages: modelMessages,
-          ...pruneConfig,
-        });
+        const validatedMessages = await phaseLogger.time('messages.validate', () =>
+          validateUIMessages({
+            messages,
+            tools: agentInstance.tools,
+          })
+        );
+        const modelMessages = await phaseLogger.time('messages.convert_model', () =>
+          convertToModelMessages(validatedMessages, {
+            tools: agentInstance.tools,
+          })
+        );
+        const prunedMessages = await phaseLogger.time('messages.prune', () =>
+          Promise.resolve(
+            pruneMessages({
+              messages: modelMessages,
+              ...pruneConfig,
+            })
+          )
+        );
+        phaseLogger.phase('stream.agent.invoke.start', { path: 'prune' });
         const result = await agentInstance.stream({
           prompt: prunedMessages,
           ...timeoutConfig,
@@ -250,6 +303,7 @@ async function handleAgentChat({ connection, properties, context }) {
         // createAgentUIStream validates UIMessages, converts to ModelMessages,
         // runs the agent, and returns a UIMessageStream — handling the full
         // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+        phaseLogger.phase('stream.agent.invoke.start', { path: 'default' });
         agentStream = await createAgentUIStream({
           agent: agentInstance,
           uiMessages: messages,
@@ -257,22 +311,47 @@ async function handleAgentChat({ connection, properties, context }) {
           onStepFinish: collectStep,
         });
       }
+      phaseLogger.phase('stream.agent.invoke.returned');
 
       // Read the agent stream to completion before running onFinish hooks.
       // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
       // manually read the stream to ensure hooks fire after the agent finishes.
       const reader = agentStream.getReader();
+      const seenChunkTypes = new Set();
+      let firstChunkLogged = false;
+      let chunkCount = 0;
       try {
         while (true) {
+          // eslint-disable-next-line no-await-in-loop
           const { done, value } = await reader.read();
           if (done) break;
+          chunkCount += 1;
+          if (!firstChunkLogged) {
+            firstChunkLogged = true;
+            phaseLogger.phase('stream.chunk.first', { type: value?.type });
+          }
+          const chunkType = value?.type;
+          if (chunkType && !seenChunkTypes.has(chunkType)) {
+            seenChunkTypes.add(chunkType);
+            phaseLogger.phase('stream.chunk.type.first', { type: chunkType });
+          }
           writer.write(value);
         }
       } catch (error) {
+        phaseLogger.phase('stream.reader.error', {
+          err: { message: error?.message, name: error?.name },
+        });
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
+      phaseLogger.phase('stream.reader.done', {
+        chunkCount,
+        chunkTypes: [...seenChunkTypes],
+      });
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
+        phaseLogger.phase('hook.onFinish.dispatch.start', {
+          endpointCount: onFinishEndpointIds.length,
+        });
         const finishPayload = {
           messages,
           steps,
@@ -283,29 +362,46 @@ async function handleAgentChat({ connection, properties, context }) {
           usage: usageAccumulator.usage,
         };
         for (const endpointId of onFinishEndpointIds) {
+          const hookLog = phaseLogger.child({ endpointId });
           try {
-            const hookResponse = await context.callEndpoint(endpointId, {
-              payload: finishPayload,
-            });
+            // eslint-disable-next-line no-await-in-loop
+            const hookResponse = await hookLog.time('hook.onFinish', () =>
+              context.callEndpoint(endpointId, {
+                payload: finishPayload,
+              })
+            );
             const responseData = serializer.deserialize(hookResponse?.response);
-            if (Array.isArray(responseData?.dataParts)) {
-              for (const part of responseData.dataParts) {
+            const dataParts = Array.isArray(responseData?.dataParts) ? responseData.dataParts : [];
+            if (dataParts.length > 0) {
+              for (const part of dataParts) {
                 writer.write(part);
               }
             }
+            hookLog.phase('hook.onFinish.applied', { dataParts: dataParts.length });
           } catch (error) {
+            hookLog.phase('hook.onFinish.failed', {
+              err: { message: error?.message, name: error?.name },
+            });
+            // eslint-disable-next-line no-console
             console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
           }
         }
+        phaseLogger.phase('hook.onFinish.dispatch.done');
       }
 
       if (hasMcpClients) {
-        await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+        await phaseLogger.time(
+          'mcp.close',
+          () => Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {}))),
+          { clientCount: mcpClients.length }
+        );
       }
+      phaseLogger.phase('stream.execute.done');
     },
   });
 
   const response = createUIMessageStreamResponse({ stream });
+  phaseLogger.phase('response.created');
   return { response };
 }
 

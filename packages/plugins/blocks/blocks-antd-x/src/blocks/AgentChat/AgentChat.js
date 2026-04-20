@@ -28,11 +28,19 @@ import { type } from '@lowdefy/helpers';
 
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
+import createClientPhaseLogger from './clientPhaseLogger.js';
 import DrawerWrapper from './DrawerWrapper.js';
 import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
+
+function generateTurnId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `turn-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
@@ -68,10 +76,27 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
+  // Client-side phase logger: off by default; enable via
+  //   window.__LOWDEFY_AGENT_TRACE__ = true  OR
+  //   localStorage.lowdefyAgentTrace = '1'
+  const phaseLoggerRef = useRef(null);
+  if (phaseLoggerRef.current === null) {
+    phaseLoggerRef.current = createClientPhaseLogger({ agentId, pageId, conversationId });
+  }
+  const turnIdRef = useRef(null);
+
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
     () =>
-      createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
+      createLowdefyChatTransport({
+        pageId,
+        agentId,
+        conversationId,
+        urlQuery,
+        sharedStateRef,
+        turnIdRef,
+        phaseLoggerRef,
+      }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 
@@ -94,6 +119,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       lastAssistantMessageIsCompleteWithToolCalls(args) ||
       lastAssistantMessageIsCompleteWithApprovalResponses(args),
     async onToolCall({ toolCall }) {
+      phaseLoggerRef.current?.phase('client.onToolCall', {
+        toolName: toolCall.toolName,
+        dynamic: toolCall.dynamic === true,
+        toolCallId: toolCall.toolCallId,
+      });
       if (toolCall.dynamic) return;
       if (toolCall.toolName === 'update-page-state') {
         try {
@@ -110,7 +140,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             else ignored.push(key);
           }
           if (Object.keys(writable).length > 0) {
-            await methods.triggerEvent({ name: '__updatePageState', event: writable });
+            await phaseLoggerRef.current.time(
+              'client.update_page_state.trigger_event',
+              () => methods.triggerEvent({ name: '__updatePageState', event: writable }),
+              { keyCount: Object.keys(writable).length }
+            );
           }
           addToolOutput({
             tool: 'update-page-state',
@@ -121,7 +155,14 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
               ...(ignored.length > 0 ? { ignored } : {}),
             },
           });
+          phaseLoggerRef.current?.phase('client.update_page_state.output', {
+            written: Object.keys(writable).length,
+            ignored: ignored.length,
+          });
         } catch (err) {
+          phaseLoggerRef.current?.phase('client.update_page_state.error', {
+            err: err?.message,
+          });
           addToolOutput({
             tool: 'update-page-state',
             toolCallId: toolCall.toolCallId,
@@ -132,12 +173,18 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       }
     },
     onError: (error) => {
+      phaseLoggerRef.current?.phase('client.onError', { message: error?.message });
       methods.triggerEvent({
         name: 'onError',
         event: { message: error.message },
       });
     },
     onFinish: (options) => {
+      phaseLoggerRef.current?.phase('client.onFinish', {
+        finishReason: options.finishReason,
+        isAbort: options.isAbort === true,
+        isDisconnect: options.isDisconnect === true,
+      });
       finishMetaRef.current = {
         finishReason: options.finishReason,
         isAbort: options.isAbort,
@@ -145,12 +192,28 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       };
     },
     onData: (dataPart) => {
+      phaseLoggerRef.current?.phase('client.onData', { type: dataPart.type, id: dataPart.id });
       methods.triggerEvent({
         name: 'onDataPart',
         event: { type: dataPart.type, data: dataPart.data, id: dataPart.id },
       });
     },
   });
+
+  // Start a new turn on every outbound sendMessage so client+server logs share turnId.
+  const trackedSendMessage = useMemo(
+    () => (args) => {
+      const turnId = generateTurnId();
+      turnIdRef.current = turnId;
+      phaseLoggerRef.current?.setTurn?.(turnId);
+      phaseLoggerRef.current?.phase('client.turn.start', {
+        hasText: typeof args?.text === 'string',
+        partCount: Array.isArray(args?.parts) ? args.parts.length : undefined,
+      });
+      return sendMessage(args);
+    },
+    [sendMessage]
+  );
 
   // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
@@ -188,7 +251,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     });
     methods.registerMethod('sendMessage', (args) => {
       if (args?.text) {
-        sendMessage({
+        trackedSendMessage({
           text: args.text,
           ...(args.files ? { experimental_attachments: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
@@ -230,7 +293,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     }
   }, []);
 
-  useAgentEvents({ messages, status, methods, finishMetaRef });
+  useAgentEvents({ messages, status, methods, finishMetaRef, phaseLoggerRef });
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
@@ -329,10 +392,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         }
       }
 
-      sendMessage({ parts });
+      trackedSendMessage({ parts });
       setAttachedFiles([]);
     } else {
-      sendMessage({ text });
+      trackedSendMessage({ text });
     }
     senderRef.current?.clear();
   }
@@ -346,7 +409,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   }
 
   function handlePromptClick(prompt) {
-    sendMessage({ text: prompt.label });
+    trackedSendMessage({ text: prompt.label });
   }
 
   function handleSuggestionClick(suggestion) {
@@ -354,7 +417,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       name: 'onSuggestionClick',
       event: { suggestion },
     });
-    sendMessage({ text: suggestion.label });
+    trackedSendMessage({ text: suggestion.label });
   }
 
   function handleSwitchChange(key, checked) {
@@ -405,7 +468,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     const messageIndex = messages.findIndex((m) => m.id === messageId);
     if (messageIndex >= 0) {
       setMessages((prev) => prev.slice(0, messageIndex));
-      sendMessage({ text: newContent });
+      trackedSendMessage({ text: newContent });
     }
   }
 

@@ -20,6 +20,7 @@ import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
+import createPhaseLogger from './createPhaseLogger.js';
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
 import searchFiles from './fileSystem/searchFiles.js';
@@ -54,6 +55,16 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
     throw new Error(`Sub-agent nesting exceeds maximum depth of ${MAX_DEPTH}.`);
   }
 
+  const parentLogger = context?.phaseLogger ?? createPhaseLogger();
+  const phaseLogger = parentLogger.child({ buildDepth: depth });
+
+  phaseLogger.phase('tools.build.start', {
+    endpointToolCount: agent.tools?.length ?? 0,
+    mcpSourceCount: agent.mcp?.length ?? 0,
+    subAgentCount: agent.agents?.length ?? 0,
+    hasFileSystem: Boolean(agent.properties?.fileSystem),
+  });
+
   const tools = {};
   const mcpClients = [];
 
@@ -61,7 +72,12 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
     assertNotReserved(endpointId, 'Endpoint tool');
-    const endpointConfig = await context.getEndpointConfig({ endpointId });
+    // eslint-disable-next-line no-await-in-loop
+    const endpointConfig = await phaseLogger.time(
+      'tools.endpoint.config.load',
+      () => context.getEndpointConfig({ endpointId }),
+      { endpointId }
+    );
 
     tools[endpointId] = tool({
       description: endpointConfig.description,
@@ -79,8 +95,16 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   }
 
   // Build MCP clients and merge their tools
-  for (const mcpSource of agent.mcp ?? []) {
+  for (let i = 0; i < (agent.mcp?.length ?? 0); i += 1) {
+    const mcpSource = agent.mcp[i];
     const evaluatedSource = context.evaluateOperators(mcpSource);
+    const label =
+      evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
+    const mcpLog = phaseLogger.child({
+      mcpIndex: i,
+      transport: evaluatedSource.transport ?? 'http',
+      label,
+    });
 
     try {
       let transport;
@@ -97,11 +121,16 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
           ...(evaluatedSource.headers ? { headers: evaluatedSource.headers } : {}),
         };
       }
-      const client = await createMCPClient({ transport });
+      // eslint-disable-next-line no-await-in-loop
+      const client = await mcpLog.time('tools.mcp.client.create', () =>
+        createMCPClient({ transport })
+      );
       mcpClients.push({ client, source: evaluatedSource });
     } catch (err) {
-      const label =
-        evaluatedSource.transport === 'stdio' ? evaluatedSource.command : evaluatedSource.url;
+      mcpLog.phase('tools.mcp.client.unreachable', {
+        err: { message: err?.message, name: err?.name },
+      });
+      // eslint-disable-next-line no-console
       console.warn(`MCP server "${label}" unreachable: ${err.message}`);
     }
   }
@@ -111,10 +140,17 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // reserved platform names or existing endpoint tools we warn + skip rather
   // than fail, since the names aren't under app control.
   for (const { client, source } of mcpClients) {
+    const label = source.transport === 'stdio' ? source.command : source.url;
+    const mcpLog = phaseLogger.child({ label });
     try {
-      const mcpTools = await client.tools();
+      // eslint-disable-next-line no-await-in-loop
+      const mcpTools = await mcpLog.time('tools.mcp.list', () => client.tools());
+      let added = 0;
+      let skipped = 0;
       for (const [name, mcpTool] of Object.entries(mcpTools)) {
         if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
+          skipped += 1;
+          // eslint-disable-next-line no-console
           console.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `uses a reserved platform tool name — skipped.`
@@ -122,6 +158,8 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
           continue;
         }
         if (tools[name]) {
+          skipped += 1;
+          // eslint-disable-next-line no-console
           console.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `conflicts with endpoint tool — skipped.`
@@ -133,9 +171,14 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
         } else {
           tools[name] = mcpTool;
         }
+        added += 1;
       }
+      mcpLog.phase('tools.mcp.merged', { added, skipped });
     } catch (err) {
-      const label = source.transport === 'stdio' ? source.command : source.url;
+      mcpLog.phase('tools.mcp.list.failed', {
+        err: { message: err?.message, name: err?.name },
+      });
+      // eslint-disable-next-line no-console
       console.warn(`MCP server "${label}" tool listing failed: ${err.message}`);
     }
   }
@@ -143,11 +186,22 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // Build sub-agent tools
   for (const subAgentRef of agent.agents ?? []) {
     assertNotReserved(subAgentRef.agentId, 'Sub-agent');
-    const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
-    const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
-    subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
+    const subLog = phaseLogger.child({ subAgentId: subAgentRef.agentId });
+    // eslint-disable-next-line no-await-in-loop
+    const subAgentConfig = await subLog.time('tools.subagent.config.load', () =>
+      context.getAgentConfig({ agentId: subAgentRef.agentId })
+    );
+    // eslint-disable-next-line no-await-in-loop
+    const subConnection = await subLog.time('tools.subagent.connection', () =>
+      context.getConnectionForAgent({ agentConfig: subAgentConfig })
+    );
+    // eslint-disable-next-line no-await-in-loop
+    subAgentConfig.mcp = await subLog.time('tools.subagent.mcp.resolve', () =>
+      context.resolveMcpSources({ agentConfig: subAgentConfig })
+    );
 
     // Recursively build sub-agent's tools
+    // eslint-disable-next-line no-await-in-loop
     const { tools: subTools, mcpClients: subMcpClients } = await buildAgentTools({
       agent: subAgentConfig,
       context,
@@ -263,7 +317,13 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
       }),
       execute: async ({ path }) => statFile(basePath, { path }),
     });
+    phaseLogger.phase('tools.filesystem.registered');
   }
+
+  phaseLogger.phase('tools.build.done', {
+    toolCount: Object.keys(tools).length,
+    mcpClientCount: mcpClients.length,
+  });
 
   return { tools, mcpClients };
 }
