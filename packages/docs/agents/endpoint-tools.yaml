@@ -186,6 +186,16 @@ _ref:
                     confirm: true
             ```
 
+            ## Reserved Tool Names
+
+            Lowdefy registers a small set of platform tools automatically (for example, `update-page-state`, which the [`AgentChat`](/AgentChat#shared-state) block wires up when `sharedState` is set). The following tool names are reserved and cannot be used as endpoint ids or sub-agent ids — the build will fail if one is encountered:
+
+            - `update-page-state`
+            - `read-file`
+            - `list-files`
+            - `search-files`
+            - `stat-file`
+
             ## Tool Confirmation
 
             Setting `confirm: true` pauses the agent loop and shows approve/reject buttons in the [`AgentChat`](/AgentChat) block. The agent waits until the user responds before continuing.

@@ -93,7 +93,7 @@ _ref:
             | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
             | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
-            | `pageState` | object | | Page state values sent with each request. Read at send time, so the latest form values are always forwarded. Included in the agent's context block when the agent has `pageContext: true`, and available server-side via `_payload`. |
+            | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
             | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
             | `maxWidth` | number | `800` | Maximum width in pixels. |
             | `display` | string | `'inline'` | `'inline'` renders directly on the page. `'drawer'` renders in a slide-out drawer. |
@@ -273,6 +273,42 @@ _ref:
                 width: 500
                 title: AI Assistant
             ```
+
+            ### Shared State
+
+            `sharedState` is a two-way bridge between the page's state and the agent. It is an operator expression that is evaluated at send time, so the latest values are always forwarded.
+
+            When the evaluated value is a non-empty object, the block:
+
+            1. Sends the object with each request. It is available server-side via `_payload` and is included in the agent's context block when the agent has [`pageContext: true`](/agent-properties).
+            2. Auto-registers the platform `update-page-state` tool for that turn. The tool's description lists the top-level keys currently in `sharedState`, so the model knows exactly what it can write.
+
+            When the agent calls `update-page-state`, the block routes the write through a synthetic `SetState` event. Only keys currently exposed in `sharedState` are applied — any other keys in the agent's call are dropped and returned to the agent as `ignored: [...]` in the tool result so it can self-correct next turn.
+
+            ###### Expose the entire page state:
+            ```yaml
+            - id: chat
+              type: AgentChat
+              properties:
+                agentId: assistant
+                sharedState:
+                  _state: true
+            ```
+
+            ###### Expose a curated shape:
+            ```yaml
+            - id: chat
+              type: AgentChat
+              properties:
+                agentId: form_filler
+                sharedState:
+                  legal_name:
+                    _state: legal_name
+                  registration_number:
+                    _state: registration_number
+            ```
+
+            With the curated form above, the agent can read `legal_name` and `registration_number`, and calling `update-page-state` with either key writes straight back into the page state — no custom endpoint or `onToolResult` handler required.
 
             ## Events
 

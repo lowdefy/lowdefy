@@ -80,7 +80,7 @@ _ref:
             | `toolResults` | array | Flattened tool results across all steps — convenience for hooks that only care about what tools returned. |
             | `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
             | `isAborted` | boolean | `true` if the client cancelled the request. |
-            | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `pageState` | | Context values mirrored from the request. |
+            | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `sharedState` | | Context values mirrored from the request. |
 
             Use `steps` or `toolResults` to drive agent → page sync — for example, returning a `data-...` part that a form block consumes via `onDataPart`.
 
