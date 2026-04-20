@@ -55,7 +55,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   // Keep ref in sync with current state when sharedState is enabled. Per-render
   // update is cheap and ensures transport.body() sees fresh state at send time.
   const sharedStateRef = useRef(null);
-  sharedStateRef.current = sharedState === true ? methods.getState() : null;
+  sharedStateRef.current =
+    sharedState && typeof sharedState === 'object' && Object.keys(sharedState).length > 0
+      ? sharedState
+      : null;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -97,7 +100,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       if (toolCall.toolName === 'update-page-state') {
         try {
           const updates = toolCall.input?.updates ?? {};
-          methods.setState(updates, { flash: true });
+          await methods.triggerEvent({ name: '__updatePageState', event: updates });
           addToolOutput({
             tool: 'update-page-state',
             toolCallId: toolCall.toolCallId,
@@ -193,6 +196,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     });
     methods.registerMethod('scrollToBottom', () => {
       bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+    methods.registerEvent({
+      name: '__updatePageState',
+      actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
     });
     if (attachmentsConfig?.s3PostPolicyRequestId) {
       methods.registerEvent({
