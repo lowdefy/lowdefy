@@ -52,8 +52,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
-  // Keep ref in sync with current state when sharedState is enabled. Per-render
-  // update is cheap and ensures transport.body() sees fresh state at send time.
+  // Mirror the operator-evaluated sharedState object into a ref so transport.body()
+  // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
   sharedStateRef.current =
     sharedState && typeof sharedState === 'object' && Object.keys(sharedState).length > 0
