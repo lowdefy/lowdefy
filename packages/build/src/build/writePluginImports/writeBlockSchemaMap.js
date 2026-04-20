@@ -64,12 +64,14 @@ async function writeBlockSchemaMap({ components, context }) {
         category: typesMapMeta.category,
         ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
+        ...(typesMapMeta.canWriteState && { canWriteState: true }),
       };
     } else if (meta) {
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(meta.valueType != null && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
+        ...(meta.canWriteState && { canWriteState: true }),
       };
     }
   }
