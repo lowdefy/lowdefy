@@ -1938,6 +1938,9 @@ importers:
       '@lowdefy/actions-core':
         specifier: 5.0.0
         version: link:../../plugins/actions/actions-core
+      '@lowdefy/ai-utils':
+        specifier: 5.0.0
+        version: link:../../utils/ai-utils
       '@lowdefy/api':
         specifier: 5.0.0
         version: link:../../api

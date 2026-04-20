@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@lowdefy/actions-core": "5.0.0",
+    "@lowdefy/ai-utils": "5.0.0",
     "@lowdefy/api": "5.0.0",
     "@lowdefy/block-utils": "5.0.0",
     "@lowdefy/blocks-aggrid": "5.0.0",
