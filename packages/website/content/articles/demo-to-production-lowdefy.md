@@ -1,9 +1,9 @@
 ---
-title: 'Seven things that turn a Lowdefy demo into a Lowdefy product'
-subtitle: "Notes from building Lowdefy apps for a living — the stuff my production apps consistently do that small ones don't."
+title: 'Six patterns for production Lowdefy apps'
+subtitle: 'Notes from building Lowdefy apps for a living'
 authorId: 'machiel'
 publishedAt: '2026-04-21'
-readTimeMinutes: 8
+readTimeMinutes: 5
 tags:
   - 'Production'
   - 'Architecture'
@@ -11,25 +11,76 @@ tags:
 draft: false
 ---
 
-Lowdefy docs will get you a working app. They won't get you a production app.
+Lowdefy docs cover primitives: pages, blocks, requests, connections, auth. They can't cover the shape of a codebase that's been through things like a compliance audit, an integration with a rate-limiting ERP, or a year of feature creep. You have to build one to know.
 
-That isn't a knock on the docs. Framework docs cover primitives: pages, blocks, requests, connections, auth. They can't cover the shape of a codebase that's been through a compliance audit, a bad migration at two in the morning, an integration with a rate-limiting ERP, and a year of feature creep. You have to build one to know.
-
-I maintain Lowdefy and I ship Lowdefy apps for clients. What follows is the stuff my production apps consistently do that small ones don't. None of it is secret. You just wouldn't stumble into most of it from the tutorials.
-
-Seven items.
+We maintain Lowdefy, but we also ship Lowdefy apps for clients. What follows are a few patterns our production apps consistently use that small ones don't. None of it is secret. You just wouldn't stumble into most of it from the tutorials.
 
 ---
 
-## 1. MongoDB isn't just a database you can use, it's a structural fit
+## 1. Parameterized fragments
 
-Every app I've shipped uses Mongo, and it isn't coincidence. The two tools match each other's grain.
+The most common pattern in a production Lowdefy codebase is "define once, reuse with different values." Lowdefy's [`_ref`](https://docs.lowdefy.com/references-and-templates) takes a path and optionally a `vars` object. The referenced file reads those vars with `_var`. A `.yaml.njk` extension turns on Nunjucks string interpolation in the file itself, for literal values like ids.
 
-Requests are declarative YAML. Aggregation pipelines are declarative JSON. An aggregation drops into a Lowdefy request with no impedance mismatch. No ORM, no DTO layer, no serializer. Lowdefy payloads are JSON-shaped. Mongo documents are JSON-shaped. You store the form state, you read it back, done. Lowdefy is strong on reading or writing one collection per request; Mongo is strong on reading or writing one collection per operation. You compose complexity with `$lookup` in-line instead of across query boundaries.
+One template handles every text input in the app:
 
-That's the structural argument. The production argument is what Mongo hands you for free once you lean into it.
+```yaml
+# components/edit/text_input.yaml.njk
+component:
+  id: { { key } }
+  type: TextInput
+  visible:
+    _var:
+      key: visible
+      default: true
+  required:
+    _var:
+      key: required
+      default: false
+  properties:
+    title:
+      _var: title
+    placeholder:
+      _var: placeholder
+```
 
-ChangeLog at the connection level. Seven lines of YAML, full audit trail:
+Callers pass values:
+
+```yaml
+- _ref:
+    path: components/edit/text_input.yaml.njk
+    vars:
+      key: customer_name
+      title: Customer name
+      placeholder: Acme Inc.
+      required: true
+```
+
+Two things resolve at build time. Nunjucks handles string-level interpolation (`{{ key }}` becomes `customer_name`). `_var` handles field-level variable lookup, with `default:` as a fallback.
+
+The pattern composes. A form refs twenty inputs. A whole page is often a single ref to a layout template, with page-specific content passed in:
+
+```yaml
+# pages/home.yaml
+_ref:
+  path: components/layout.yaml.njk
+  vars:
+    id: home
+    title: Home
+    blocks:
+      - _ref: components/home_content.yaml
+```
+
+Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
+
+---
+
+## 2. MongoDB is a structural fit
+
+Every app we've shipped uses Mongo.
+
+Requests are declarative YAML. Aggregation pipelines are declarative JSON. An aggregation drops into a Lowdefy request with no impedance mismatch. Lowdefy payloads are JSON-shaped. Mongo documents are JSON-shaped. You store the form state, and you read it back. You compose complexity with `$lookup` in-line instead of across query boundaries.
+
+[ChangeLog at the connection level](https://docs.lowdefy.com/MongoDB). Seven lines of YAML, full audit trail:
 
 ```yaml
 - id: items
@@ -89,28 +140,19 @@ version:
 
 One edit propagates. A new engineer writes their first update, refs the stamp, and can't forget to include it, because every update in the repo already does.
 
-The other Mongo wins worth calling out: Atlas Search indexes for full-text without standing up Elasticsearch, TTL indexes for auto-expiring verification tokens (zero cleanup code), and a two-stage ingestion pattern where raw data lands in a `-origin` collection and an aggregation `$merge`s into the normalized collection. That last one is how you reprocess a bad import without re-uploading the file, and I've used it more times than I'd like to admit.
+The other Mongo wins worth calling out: Atlas Search indexes for full-text without Elasticsearch, TTL indexes for auto-expiring verification tokens (zero cleanup code).
 
 ---
 
-## 2. Three tiers of backend, and you'll want all three
+## 3. Three tiers of backend
 
-Most "Lowdefy is low-code, not no-code" discussions stop at "write a request in YAML." That's the first tier. There are three.
+Tier 1: [Lowdefy requests](https://docs.lowdefy.com/connections-and-requests). The default choice for DB reads and writes. Stays in the app bundle and covers most CRUD use cases.
 
-Tier 1: Lowdefy requests. Default choice. DB reads and writes, aggregation, operator logic. Stays in the app bundle. Most of your app lives here.
+Tier 2: [Lowdefy API endpoints](https://docs.lowdefy.com/lowdefy-api). Declarative YAML that works well for expressing custom business logic, chaining requests, and calling third-party APIs. Still in the app bundle.
 
-Tier 2: Lowdefy API endpoints. When YAML operators run out you write a JS handler that runs in the Lowdefy Next.js backend. Same process, same env, same creds. You just get imperative code. Reach for it when you need a library Lowdefy doesn't expose as an operator, or a response shape the built-in request types don't produce, or control flow that's painful in YAML.
+Tier 3: Separate services, usually Lambdas. This is the tier tutorials skip, and it's where a lot of production reality lives. You reach for it when the work can't live inside a request/response cycle: scheduled jobs, queue consumers, long-running transforms, heavy native dependencies, and anything that needs its own retry and back-pressure semantics.
 
-Tier 3: separate services, usually Lambdas. This is the tier tutorials skip, and it's where a lot of production reality lives. You go here when the work can't live inside a request/response cycle at all:
-
-- Not HTTP-triggered. Cron, SQS, S3 events, webhook receivers that need their own auth. A nightly ERP sync has no user and no HTTP caller.
-- Longer than a request. Bulk transforms, reports, multi-minute aggregations. Your Next.js host has timeouts you don't want to fight.
-- Needs back-pressure and retries. SQS plus a DLQ plus `reservedConcurrency: 1` is the right shape for rate-limited third-party delivery. Not a thing you can express in a Lowdefy request.
-- Different blast radius. Your Lowdefy server has one IAM role. Give the S3-exporting Lambda only `s3:PutObject` on one bucket. Least privilege works when you can split the workload.
-- Heavy deps. Puppeteer, ffmpeg, pandoc. Don't pull them into your app server bundle.
-- Failure isolation. A broken nightly job shouldn't make the UI slower. Separate deploy, separate metrics, separate on-call signal.
-
-The part nobody shows you is how Lowdefy actually calls a Lambda. It's a normal connection.
+Calling these from the app is still a YAML-native experience. You define an [AxiosHttp](https://docs.lowdefy.com/AxiosHttp) connection for the service:
 
 ```yaml
 - id: notifications_service
@@ -137,7 +179,8 @@ routine:
     connectionId: events
     properties:
       doc:
-        _id: { _uuid: true }
+        _id:
+          _uuid: true
         type: insert-comment
         created:
           _ref: shared/change_stamp.yaml
@@ -163,17 +206,13 @@ routine:
             _ref: shared/change_stamp.yaml
 ```
 
-Three operations, three tiers, one routine. Mongo insert happens inline. Notification work is shipped off to a Lambda that owns template rendering, SQS enqueue, delivery retry. The parent-touch is Mongo again. The routine has no idea the middle step crosses a process boundary, and it shouldn't.
-
 ---
 
-## 3. Custom plugins aren't an escape hatch. They're part of the stack.
+## 4. Custom plugins
 
-The single biggest mindset shift: stop trying to make Lowdefy do everything, and start writing plugins.
+When using any low-code framework you will hit gaps. You might want a rich-text editor with @-mentions, or a Kanban board fed from a Mongo query.
 
-You will hit gaps. The built-in table won't handle 10k rows smoothly. You'll want a rich-text editor with @-mentions. You'll want a Kanban board fed from a Mongo query. You'll want a block that's half UI and half "call a custom endpoint with the selected rows."
-
-A Lowdefy plugin is a few hundred lines of React and a manifest. It lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin React component that Lowdefy mounts, passes props to, and collects events from. That's it.
+A [Lowdefy plugin](https://docs.lowdefy.com/plugins-introduction) is a few hundred lines of React and a manifest. It lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin React component that Lowdefy mounts, passes props to, and collects events from.
 
 Declared at the app level:
 
@@ -192,9 +231,9 @@ plugins:
     version: workspace:*
 ```
 
-Three community plugins, three at `workspace:*`. The `workspace:*` entries are the point. Those plugins live in the same monorepo as the app, evolve with it, and never need an npm publish cycle to ship a change. You change a React component in `plugins/plugin-rich-text`, the dev server picks it up, the app rebuilds. No release dance.
+Three community plugins, three at `workspace:*`. The `workspace:*` entries are the point. Those plugins live in the same monorepo as the app, evolve with it, and never need an npm publish cycle to ship a change. You change a React component in `plugins/plugin-rich-text`.
 
-Once registered, a custom block is indistinguishable from a built-in:
+Once registered, a custom [block](https://docs.lowdefy.com/blocks) is indistinguishable from a built-in one:
 
 ```yaml
 - id: body
@@ -204,119 +243,11 @@ Once registered, a custom block is indistinguishable from a built-in:
       _request: get_mentionable_users
 ```
 
-The app YAML doesn't know `RichTextEditor` is custom. It shouldn't.
-
-The plugins I've built, reliably, across multiple client projects: a high-performance data grid, a rich-text editor, a Kanban board, a QR scanner, a places autocomplete, a Socket.IO realtime subscription, and a "call custom backend logic with type-safe method signatures" connection we call LocalApi. Every one of them closed a gap that would otherwise have made me reach for a different framework. None took more than a week to build the first time.
-
 ---
 
-## 4. A Lowdefy app past thirty pages is a monorepo
+## 5. Auth
 
-Small apps put everything in one folder. Production apps usually have two Lowdefy apps sharing a user model, or one Lowdefy app plus three Lambdas plus two custom plugins, or a web admin and a customer portal sharing an identity layer. Sooner or later.
-
-You get there by treating the Lowdefy app as one package in a pnpm workspace:
-
-```
-repo/
-  apps/
-    admin/        # lowdefy app
-    portal/       # lowdefy app
-    shared/       # shared yaml fragments, modules
-  plugins/
-    plugin-local/
-    plugin-realtime/
-  lambda/
-    internal/
-  actions/
-    migrations/
-```
-
-In each app's `lowdefy.yaml`, point the watcher at the shared directories so edits in `../shared` trigger rebuilds:
-
-```yaml
-cli:
-  watch:
-    - ../shared
-    - ../modules
-```
-
-The sharing mechanism is `_ref`. For small fragments:
-
-```yaml
-updated:
-  _ref: shared/change_stamp.yaml
-```
-
-For larger units of reuse, like an entire page or a sub-app, use `_ref` with `vars` and a Nunjucks template. One user-admin module can serve both apps, parameterized:
-
-```yaml
-_ref:
-  path: ../modules/user-admin/pages.yaml.njk
-  vars:
-    app_name: app-one
-    form_profile_fields:
-      _ref: components/profile_form.yaml
-```
-
-Two apps that share 80% of their pages should not be two copies of those pages. They should be one module refd twice. This is the single pattern that lets a Lowdefy codebase scale past where small apps calcify, and it's mostly absent from the getting-started docs because getting-started doesn't need it.
-
----
-
-## 5. Schema changes are code, not Compass sessions
-
-The tutorial never mentions this and it's the single clearest demo-vs-product tell. How do you change the schema of a live app?
-
-In a demo you open MongoDB Compass and run an `updateMany`. In production that's a fireable offense. Migrations live in the repo, they get code review, they run in CI, and there's always a dry-run before the real run.
-
-The shape is a timestamped folder of migration YAMLs and a small runner script:
-
-```yaml
-# migration/20260211/rename_field.yaml
-collection: items
-backup: true
-pipeline:
-  - $match:
-      old_key:
-        $exists: true
-  - $addFields:
-      new_key: $old_key
-  - $unset: old_key
-
-write_stage:
-  $merge:
-    into: items
-    on: _id
-    whenMatched: merge
-    whenNotMatched: discard
-```
-
-```yaml
-# migration/20250225/drop_deprecated_field.yaml
-collection: users
-backup: true
-pipeline:
-  - $match:
-      legacy_tokens:
-        $ne: null
-  - $unset: legacy_tokens
-  - $merge:
-      into: users
-      on: _id
-      whenMatched: replace
-      whenNotMatched: discard
-```
-
-This isn't Lowdefy config. It's consumed by a small custom Node runner in `actions/migrations/`. The pattern is: a migration is a MongoDB aggregation pipeline with a `$merge` at the end. No imperative code, no cursor iteration, no "oh god I forgot the where clause."
-
-CI does three things. A PR with a new migration file triggers a dry-run job that runs the pipeline, logs the document count it would touch, and posts a comment on the PR. The merge to `main` triggers a deploy. A successful deploy triggers the migration job for real, with `backup: true` dumping the affected documents before the `$merge`.
-
-The `backup` flag is load-bearing. I've used it. It's worth the disk space.
-
----
-
-## 6. Invite-only, deny-by-default, roles mapped to page IDs
-
-Basic Lowdefy auth is NextAuth with a provider and an adapter. Production auth is three extra disciplines layered on top.
+[Lowdefy auth](https://docs.lowdefy.com/users-introduction) is [NextAuth](https://next-auth.js.org/) with a provider and an adapter.
 
 ```yaml
 auth:
@@ -359,25 +290,19 @@ auth:
         - settings
 ```
 
-The three things worth noticing:
+[`protected: true`](https://docs.lowdefy.com/protected-pages-apis) is deny-by-default. A new page that isn't listed under a role is inaccessible until it's granted explicitly.
 
-`protected: true`. Deny by default. A new page the engineer forgets to put in a role list is inaccessible until someone grants it explicitly. The opposite default, where everything is public and you lock down the sensitive pages, is how breaches happen.
+[Roles](https://docs.lowdefy.com/roles) map to page IDs, not to capability strings. `admin` is the set of page IDs a user with that role is allowed to visit. The config is the enforcement.
 
-Roles map to page IDs, not to capability strings. `admin` isn't a role with the admin capability, it's the set of page IDs a user with this role is allowed to visit. No middleware, no per-handler check, no RBAC library. The config is the enforcement.
+EmailProvider with a short `maxAge` gives magic-link auth with 30-minute tokens.
 
-EmailProvider with a short `maxAge`. Magic-link auth with 30-minute tokens. No password UX, no password reset flow, no rotation policy. The audit answer to "how are credentials stored" is "they aren't."
-
-One thing the stock adapter doesn't give you: invite-only sign-up, per-app user attributes, or caps on verification token reuse. Both of my reference production apps use a small custom adapter plugin that wraps the community one and adds those. Which points back to section 3. Plugins are how you extend anything, including the auth adapter.
+The stock adapter doesn't handle invite-only sign-up, per-app user attributes, or caps on verification token reuse. Most of our production apps use a small custom adapter plugin that wraps the community one and adds these.
 
 ---
 
-## 7. Observability is a deliberate layer you add
+## 6. Usage logging
 
-Lowdefy doesn't give you observability. None of the frameworks in this stack do. You add it.
-
-What I ship with: Sentry in every Lambda handler and in the Lowdefy server for error tracking, release tagging, source maps. Pino for structured logs, with `pino-mongodb` writing them to a Mongo collection for historical audit and `pino-sentry-transport` tee-ing errors to Sentry. Health checks on any stateful service (the Fly.io `/health` pattern). And structured usage events from the Lowdefy app itself into a dedicated Mongo collection. That last piece is the part that lives in Lowdefy config.
-
-The Lowdefy side is a connection and a shared request:
+Structured usage events from the Lowdefy app go into a dedicated Mongo collection, so you can answer questions like which pages get used, which filters are common, and whether last week's feature saw any traffic.
 
 ```yaml
 - id: log-usage
@@ -389,44 +314,46 @@ The Lowdefy side is a connection and a shared request:
     write: true
 ```
 
+The request is defined on the page, with `payload` capturing the page id and any query params at call time, and `properties` writing them into the log document on the server:
+
 ```yaml
-# shared/log-usage/log_usage.yaml
-id: log_usage
-type: MongoDBInsertOne
-connectionId: log-usage
-properties:
-  doc:
-    _id: { _uuid: true }
-    timestamp: { _date: now }
-    user_id: { _user: id }
-    page_id: { _payload: page_id }
-    params: { _payload: params }
+requests:
+  - id: log_usage
+    type: MongoDBInsertOne
+    connectionId: log-usage
+    payload:
+      page_id: items-list
+      params:
+        status:
+          _url_query: status
+    properties:
+      doc:
+        _id:
+          _uuid: true
+        timestamp:
+          _date: now
+        user_id:
+          _user: id
+        page_id:
+          _payload: page_id
+        params:
+          _payload: params
 ```
 
-Wired into a page's `onEnter`:
+Called via the [`Request`](https://docs.lowdefy.com/Request) action from the page's [`onMount`](https://docs.lowdefy.com/events-and-actions):
 
 ```yaml
 events:
-  onEnter:
+  onMount:
     - id: log
       type: Request
-      params:
-        request: log_usage
-        payload:
-          page_id: items-list
-          params:
-            status:
-              _url_query: status
+      params: log_usage
 ```
-
-Now you can answer questions you couldn't before. Which pages actually get used? Which filters do admins hit most? Did the feature we shipped last week get any traffic at all? Without this layer your "production" app is a black box in production, and you're guessing about what to build next.
 
 ---
 
 ## Closing thought
 
-None of this is exotic. It's what you'd do for any production codebase. Monorepo, migrations, audit, observability, CI, plugins for the things the framework doesn't cover.
+None of this is exotic. Reusable fragments, audit trails, service boundaries, custom extensions, access control, usage logging. It's what you'd do for any production codebase.
 
-The thing Lowdefy buys you is that the surface area of "treat it like a normal codebase" is a lot smaller. UI is YAML. Data layer is YAML. Auth is YAML. Business logic is YAML, or a small JS handler, or, for the hard 10%, a Lambda.
-
-That hard 10% is where most "low-code doesn't scale" stories come from. It scales fine. You just have to be willing to write the 10%.
+What Lowdefy buys you is that most of the codebase is YAML, not application code. A smaller surface area to maintain, review, and change.
