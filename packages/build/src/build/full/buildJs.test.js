@@ -139,13 +139,35 @@ test('buildJs connection functions', async () => {
   });
 });
 
-test('buildJs throw when _js value is not a string', async () => {
+test('buildJs throw when _js value is not a string or valid object', async () => {
   const context = testContext();
   const components = {
     pages: [{ id: 'a', style: { _js: 1 }, requests: [] }],
   };
 
   expect(() => buildJs({ components, context })).toThrow(
-    '_js operator expects the JavaScript definition as a string'
+    '_js operator expects a JavaScript string or { fn: string, args?: object }'
   );
+});
+
+test('buildJs hashes fn only and preserves args for object form', async () => {
+  const context = testContext();
+  const fnSource = 'return args.a + args.b;';
+  const components = {
+    pages: [
+      {
+        id: 'a',
+        style: { _js: { fn: fnSource, args: { a: 1, b: 2 } } },
+        requests: [],
+      },
+    ],
+  };
+
+  buildJs({ components, context });
+
+  const page = components.pages[0];
+  expect(page.style._js.args).toEqual({ a: 1, b: 2 });
+  expect(typeof page.style._js.fn).toBe('string');
+  expect(context.jsMap.client[page.style._js.fn]).toBe(fnSource);
+  expect(context.jsMap.server).toEqual({});
 });

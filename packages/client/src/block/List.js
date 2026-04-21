@@ -27,6 +27,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const contentList = [];
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
+      if (SBlock.slots[slotKey].blocks.length === 0) return;
       content[slotKey] = (contentStyle) => (
         <Area
           area={block.eval.slots[slotKey]}
