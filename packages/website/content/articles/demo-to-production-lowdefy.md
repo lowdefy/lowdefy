@@ -21,66 +21,91 @@ We maintain Lowdefy, but we also ship Lowdefy apps for clients. What follows are
 
 The most common pattern in a production Lowdefy codebase is "define once, reuse with different values." Lowdefy's [`_ref`](https://docs.lowdefy.com/references-and-templates) takes a path and optionally a `vars` object. The referenced file reads those vars with `_var`. A `.yaml.njk` extension turns on Nunjucks string interpolation in the file itself, for literal values like ids.
 
-One template handles every text input in the app:
+A contact form is a good example. Defined once as a component:
 
 ```yaml
-# components/edit/text_input.yaml.njk
-component:
-  id: { { key } }
-  type: TextInput
-  visible:
-    _var:
-      key: visible
-      default: true
-  required:
-    _var:
-      key: required
-      default: false
-  properties:
-    title:
-      _var: title
-    placeholder:
-      _var: placeholder
-```
-
-Callers pass values:
-
-```yaml
-- _ref:
-    path: components/edit/text_input.yaml.njk
-    vars:
-      key: customer_name
-      title: Customer name
-      placeholder: Acme Inc.
+# components/contact_form.yaml.njk
+- id: {{ id }}
+  type: Box
+  layout:
+    gap: 16
+  blocks:
+    - id: {{ id }}.name
+      type: TextInput
       required: true
+      properties:
+        title: Name
+    - id: {{ id }}.email
+      type: TextInput
+      required: true
+      properties:
+        title: Email
+    - id: {{ id }}.message
+      type: TextArea
+      required: true
+      properties:
+        title:
+          _var:
+            key: message_label
+            default: Message
+        rows: 5
+    - id: {{ id }}.submit
+      type: Button
+      properties:
+        title:
+          _var:
+            key: submit_label
+            default: Send
+      events:
+        onClick:
+          - id: validate
+            type: Validate
+          - id: send
+            type: Request
+            params:
+              _var: submit_request
 ```
 
-Two things resolve at build time. Nunjucks handles string-level interpolation (`{{ key }}` becomes `customer_name`). `_var` handles field-level variable lookup, with `default:` as a fallback.
+Two things resolve at build time. Nunjucks handles string-level interpolation (`{{ id }}.email` becomes the real block id at the call site). `_var` handles field-level variable lookup, with `default:` as a fallback.
 
-The pattern composes. A form refs twenty inputs. A whole page is often a single ref to a layout template, with page-specific content passed in:
+Reused on a public contact page:
 
 ```yaml
-# pages/home.yaml
-_ref:
-  path: components/layout.yaml.njk
-  vars:
-    id: home
-    title: Home
-    blocks:
-      - _ref: components/home_content.yaml
+# pages/contact.yaml
+- _ref:
+    path: components/contact_form.yaml.njk
+    vars:
+      id: contact_form
+      submit_request: submit_contact
 ```
 
-Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
+And again, inside a support modal on another page, with different labels and a different request:
+
+```yaml
+# pages/product.yaml
+- id: support_modal
+  type: Modal
+  blocks:
+    - _ref:
+        path: components/contact_form.yaml.njk
+        vars:
+          id: support_form
+          message_label: Describe the issue
+          submit_label: Open ticket
+          submit_request: open_support_ticket
+```
+
+One component, two pages, two submit targets, no duplicated markup. The pattern composes. A page is often a single `_ref` to a layout template with page-specific blocks passed in. Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
 
 ---
 
 ## 2. MongoDB is a structural fit
 
-Every app we've shipped uses Mongo.
+Every app we've shipped uses Mongo, via the [`@lowdefy/community-plugin-mongodb`](https://docs.lowdefy.com/MongoDB) plugin.
 
 Requests are declarative YAML. Aggregation pipelines are declarative JSON. An aggregation drops into a Lowdefy request with no impedance mismatch. Lowdefy payloads are JSON-shaped. Mongo documents are JSON-shaped. You store the form state, and you read it back. You compose complexity with `$lookup` in-line instead of across query boundaries.
 
-[ChangeLog at the connection level](https://docs.lowdefy.com/MongoDB). Seven lines of YAML, full audit trail:
+ChangeLog at the connection level is a feature of the community plugin. Seven lines of YAML, full audit trail:
 
 ```yaml
 - id: items
@@ -150,9 +175,9 @@ Tier 1: [Lowdefy requests](https://docs.lowdefy.com/connections-and-requests). T
 
 Tier 2: [Lowdefy API endpoints](https://docs.lowdefy.com/lowdefy-api). Declarative YAML that works well for expressing custom business logic, chaining requests, and calling third-party APIs. Still in the app bundle.
 
-Tier 3: Separate services, usually Lambdas. This is the tier tutorials skip, and it's where a lot of production reality lives. You reach for it when the work can't live inside a request/response cycle: scheduled jobs, queue consumers, long-running transforms, heavy native dependencies, and anything that needs its own retry and back-pressure semantics.
+Tier 3: Separate services, usually Lambdas. This is the tier tutorials skip, and it's rare — well under 1% of a typical app's requests. It's basically for work that looks like a third-party: scheduled jobs, queue consumers, long-running transforms, heavy native dependencies, and anything that needs its own retry and back-pressure semantics. Most production apps have a handful of these at most. If a task doesn't clearly belong in Tier 3, it doesn't.
 
-Calling these from the app is still a YAML-native experience. You define an [AxiosHttp](https://docs.lowdefy.com/AxiosHttp) connection for the service:
+When you do need one, calling it from the app is still a YAML-native experience. You define an [AxiosHttp](https://docs.lowdefy.com/AxiosHttp) connection for the service:
 
 ```yaml
 - id: notifications_service
@@ -168,7 +193,7 @@ Calling these from the app is still a YAML-native experience. You define an [Axi
         _secret: SERVICES_API_KEY
 ```
 
-You use it inside an `Api` routine like any other step:
+And call it like any other request — via the [`Request`](https://docs.lowdefy.com/Request) action, or as a step inside an `Api` routine:
 
 ```yaml
 id: insert-comment
@@ -210,9 +235,9 @@ routine:
 
 ## 4. Custom plugins
 
-When using any low-code framework you will hit gaps. You might want a rich-text editor with @-mentions, or a Kanban board fed from a Mongo query.
+When using any low-code framework you will hit gaps. You might want a rich-text editor with @-mentions, a Kanban board fed from a Mongo query, a connection to an internal API, or a custom auth adapter.
 
-A [Lowdefy plugin](https://docs.lowdefy.com/plugins-introduction) is a few hundred lines of React and a manifest. It lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin React component that Lowdefy mounts, passes props to, and collects events from.
+Plugins cover all of those. A [Lowdefy plugin](https://docs.lowdefy.com/plugins-introduction) can ship [blocks](https://docs.lowdefy.com/blocks), [actions](https://docs.lowdefy.com/plugins-actions), [connections and requests](https://docs.lowdefy.com/plugins-connections), [operators](https://docs.lowdefy.com/plugins-operators), and [auth adapters and providers](https://docs.lowdefy.com/auth-configuration) — effectively every extension point Lowdefy exposes. For blocks, that's a few hundred lines of React and a manifest. For a connection, it's a JS module. Either way the plugin lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin module that Lowdefy mounts, passes props or params to, and collects events or results from.
 
 Declared at the app level:
 
@@ -296,7 +321,7 @@ auth:
 
 EmailProvider with a short `maxAge` gives magic-link auth with 30-minute tokens.
 
-The stock adapter doesn't handle invite-only sign-up, per-app user attributes, or caps on verification token reuse. Most of our production apps use a small custom adapter plugin that wraps the community one and adds these.
+Out of the box, the stock adapter doesn't handle invite-only sign-up, per-app user attributes, or caps on verification token reuse. Most of our production apps need at least one of those, so they ship a small custom adapter plugin that wraps the community one and adds what's missing.
 
 ---
 
@@ -349,6 +374,8 @@ events:
       type: Request
       params: log_usage
 ```
+
+Wiring this into every page is manual today. A first-class logging hook at the page or app level is the kind of thing we'd rather have built in, and it's on the list.
 
 ---
 
