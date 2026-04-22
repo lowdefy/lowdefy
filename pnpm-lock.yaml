@@ -83,7 +83,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
@@ -166,6 +166,9 @@ importers:
       '@lowdefy/blocks-qr':
         specifier: 5.0.0
         version: link:../plugins/blocks/blocks-qr
+      '@lowdefy/connection-ai-gateway':
+        specifier: 5.0.0
+        version: link:../plugins/connections/connection-ai-gateway
       '@lowdefy/connection-anthropic':
         specifier: 5.0.0
         version: link:../plugins/connections/connection-anthropic
@@ -255,7 +258,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
       pino:
         specifier: 8.16.2
         version: 8.16.2
@@ -1020,6 +1023,34 @@ importers:
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+
+  packages/plugins/connections/connection-ai-gateway:
+    dependencies:
+      '@ai-sdk/gateway':
+        specifier: 3.0.66
+        version: 3.0.66(zod@4.3.6)
+      '@lowdefy/ai-utils':
+        specifier: 5.0.0
+        version: link:../../../utils/ai-utils
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@lowdefy/ajv':
+        specifier: 5.0.0
+        version: link:../../../utils/ajv
+      '@swc/cli':
+        specifier: 0.8.0
+        version: 0.8.0(@swc/core@1.15.18)
+      '@swc/core':
+        specifier: 1.15.18
+        version: 1.15.18
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.18)
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@20.6.2)
 
   packages/plugins/connections/connection-anthropic:
     dependencies:
