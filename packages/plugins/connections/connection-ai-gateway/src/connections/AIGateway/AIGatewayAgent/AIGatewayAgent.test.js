@@ -272,9 +272,9 @@ test('order is not an array of strings', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
   const schema = AIGatewayAgent.schema;
 
-  expect(() =>
-    validate({ schema, data: { model: 'openai/gpt-5', order: 'vertex' } })
-  ).toThrow('AIGatewayAgent agent property "order" should be an array of strings.');
+  expect(() => validate({ schema, data: { model: 'openai/gpt-5', order: 'vertex' } })).toThrow(
+    'AIGatewayAgent agent property "order" should be an array of strings.'
+  );
 });
 
 test('fallbackModels is not an array of strings', async () => {
@@ -290,9 +290,9 @@ test('tags is not an array of strings', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
   const schema = AIGatewayAgent.schema;
 
-  expect(() =>
-    validate({ schema, data: { model: 'openai/gpt-5', tags: 'demo' } })
-  ).toThrow('AIGatewayAgent agent property "tags" should be an array of strings.');
+  expect(() => validate({ schema, data: { model: 'openai/gpt-5', tags: 'demo' } })).toThrow(
+    'AIGatewayAgent agent property "tags" should be an array of strings.'
+  );
 });
 
 test('zeroDataRetention is not a boolean', async () => {
@@ -308,9 +308,9 @@ test('user is not a string', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
   const schema = AIGatewayAgent.schema;
 
-  expect(() =>
-    validate({ schema, data: { model: 'openai/gpt-5', user: 42 } })
-  ).toThrow('AIGatewayAgent agent property "user" should be a string.');
+  expect(() => validate({ schema, data: { model: 'openai/gpt-5', user: 42 } })).toThrow(
+    'AIGatewayAgent agent property "user" should be a string.'
+  );
 });
 
 test('providerTimeouts is not an object', async () => {
@@ -326,7 +326,84 @@ test('temperature out of range', async () => {
   const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
   const schema = AIGatewayAgent.schema;
 
+  expect(() => validate({ schema, data: { model: 'openai/gpt-5', temperature: 3 } })).toThrow(
+    'AIGatewayAgent agent property "temperature" should be at most 2.'
+  );
+});
+
+test('providerTimeouts.byok value below 1000 ms is rejected', async () => {
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+  const schema = AIGatewayAgent.schema;
+
   expect(() =>
-    validate({ schema, data: { model: 'openai/gpt-5', temperature: 3 } })
-  ).toThrow('AIGatewayAgent agent property "temperature" should be at most 2.');
+    validate({
+      schema,
+      data: {
+        model: 'openai/gpt-5',
+        providerTimeouts: { byok: { openai: 500 } },
+      },
+    })
+  ).toThrow(
+    'AIGatewayAgent agent property "providerTimeouts.byok" values should be at least 1000 ms.'
+  );
+});
+
+test('providerTimeouts.byok value at 1000 ms is accepted', async () => {
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+  const schema = AIGatewayAgent.schema;
+
+  expect(
+    validate({
+      schema,
+      data: {
+        model: 'openai/gpt-5',
+        providerTimeouts: { byok: { openai: 1000, anthropic: 2000 } },
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('byok value is not an array', async () => {
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+  const schema = AIGatewayAgent.schema;
+
+  expect(() =>
+    validate({
+      schema,
+      data: { model: 'openai/gpt-5', byok: { anthropic: 'sk-ant-xxx' } },
+    })
+  ).toThrow('AIGatewayAgent agent property "byok" values should be arrays of credential objects.');
+});
+
+test('byok credentials are not objects', async () => {
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+  const schema = AIGatewayAgent.schema;
+
+  expect(() =>
+    validate({
+      schema,
+      data: { model: 'openai/gpt-5', byok: { anthropic: ['sk-ant-xxx'] } },
+    })
+  ).toThrow('AIGatewayAgent agent property "byok" credentials should be objects.');
+});
+
+test('valid byok with arrays of credential objects', async () => {
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+  const schema = AIGatewayAgent.schema;
+
+  expect(
+    validate({
+      schema,
+      data: {
+        model: 'openai/gpt-5',
+        byok: {
+          anthropic: [{ apiKey: 'sk-ant-xxx' }],
+          vertex: [
+            { projectId: 'proj-1', privateKey: 'pk-1' },
+            { projectId: 'proj-2', privateKey: 'pk-2' },
+          ],
+        },
+      },
+    })
+  ).toEqual({ valid: true });
 });

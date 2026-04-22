@@ -79,8 +79,7 @@ export default {
     only: {
       type: 'array',
       items: { type: 'string' },
-      description:
-        'Restrict routing to only these provider slugs (e.g. ["anthropic", "vertex"]).',
+      description: 'Restrict routing to only these provider slugs (e.g. ["anthropic", "vertex"]).',
       errorMessage: {
         type: 'AIGatewayAgent agent property "only" should be an array of strings.',
       },
@@ -112,8 +111,7 @@ export default {
     },
     zeroDataRetention: {
       type: 'boolean',
-      description:
-        'When true, restrict routing to providers with zero data retention policies.',
+      description: 'When true, restrict routing to providers with zero data retention policies.',
       errorMessage: {
         type: 'AIGatewayAgent agent property "zeroDataRetention" should be a boolean.',
       },
@@ -123,9 +121,17 @@ export default {
       properties: {
         byok: {
           type: 'object',
-          additionalProperties: { type: 'integer', minimum: 0 },
+          additionalProperties: {
+            type: 'integer',
+            minimum: 1000,
+            errorMessage: {
+              type: 'AIGatewayAgent agent property "providerTimeouts.byok" values should be integers in milliseconds.',
+              minimum:
+                'AIGatewayAgent agent property "providerTimeouts.byok" values should be at least 1000 ms.',
+            },
+          },
           description:
-            'Per-provider BYOK timeouts in milliseconds, keyed by provider slug.',
+            'Per-provider BYOK timeouts in milliseconds (minimum 1000), keyed by provider slug.',
         },
       },
       additionalProperties: false,
@@ -137,6 +143,18 @@ export default {
     },
     byok: {
       type: 'object',
+      additionalProperties: {
+        type: 'array',
+        items: {
+          type: 'object',
+          errorMessage: {
+            type: 'AIGatewayAgent agent property "byok" credentials should be objects.',
+          },
+        },
+        errorMessage: {
+          type: 'AIGatewayAgent agent property "byok" values should be arrays of credential objects.',
+        },
+      },
       description:
         'Request-scoped Bring Your Own Key credentials. Keys are provider slugs, values are arrays of credential objects tried in order.',
       errorMessage: {
