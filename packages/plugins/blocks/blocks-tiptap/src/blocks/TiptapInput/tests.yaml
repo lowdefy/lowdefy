@@ -1,0 +1,65 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: TiptapInput
+- id: properties.placeholder
+  type: TiptapInput
+  properties:
+    placeholder: 'Start typing...'
+- id: properties.title
+  type: TiptapInput
+  properties:
+    title: 'Note'
+- id: properties.disabled
+  type: TiptapInput
+  properties:
+    disabled: true
+- id: properties.bordered = false
+  type: TiptapInput
+  properties:
+    bordered: false
+    placeholder: 'No border.'
+- id: properties.image and table disabled
+  type: TiptapInput
+  properties:
+    image:
+      disabled: true
+    table:
+      disabled: true
+- id: properties.starterKit overrides
+  type: TiptapInput
+  properties:
+    starterKit:
+      codeBlock: false
+      blockquote: false
+- id: properties.rows = 2
+  type: TiptapInput
+  properties:
+    rows: 2
+- id: properties.autoSize = {minRows 2, maxRows 5}
+  type: TiptapInput
+  properties:
+    autoSize:
+      minRows: 2
+      maxRows: 5
+- id: properties.autoSize = true
+  type: TiptapInput
+  properties:
+    autoSize: true
+- id: properties.link.openOnClick = false
+  type: TiptapInput
+  properties:
+    link:
+      openOnClick: false

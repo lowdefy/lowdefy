@@ -34,12 +34,14 @@ const SkeletonAvatar = ({ classNames, properties, styles }) => {
         size = 32;
     }
   }
+  const borderRadius =
+    properties.shape === 'square' ? 'var(--ant-border-radius-lg, 8px)' : size / 2;
   return (
     <Skeleton
       classNames={classNames}
       styles={{
         element: {
-          borderRadius: properties.shape === 'square' ? '0' : size / 2,
+          borderRadius,
           ...styles?.element,
         },
       }}

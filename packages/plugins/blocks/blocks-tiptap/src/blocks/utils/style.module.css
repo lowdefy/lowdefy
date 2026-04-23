@@ -1,0 +1,128 @@
+/* Wrapper: the EditorContent div with border/background/focus styling.
+   Antd v6 uses CSS-in-JS so the `.ant-input` class is not a global
+   stylesheet class — we replicate the input look using antd's theme
+   CSS variables (--ant-color-*, --ant-border-radius) so the block
+   tracks the active theme without depending on cssinjs. */
+:global(.tiptap-wrapper) {
+  border: 1px solid var(--ant-color-border, #d9d9d9);
+  border-radius: var(--ant-border-radius, 6px);
+  background: var(--ant-color-bg-container, #fff);
+  color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  padding: 0;
+}
+
+:global(.tiptap-wrapper):hover {
+  border-color: var(--ant-color-primary-hover, #4096ff);
+}
+
+:global(.tiptap-wrapper):focus-within {
+  border-color: var(--ant-color-primary, #1677ff);
+  box-shadow: 0 0 0 2px var(--ant-color-primary-bg, rgba(22, 119, 255, 0.1));
+  outline: none;
+}
+
+:global(.tiptap-wrapper-borderless) {
+  border-color: transparent;
+  background: transparent;
+}
+
+:global(.tiptap-wrapper-borderless):hover,
+:global(.tiptap-wrapper-borderless):focus-within {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:global(.tiptap-wrapper-error) {
+  border-color: var(--ant-color-error, #ff4d4f);
+}
+
+:global(.tiptap-wrapper-error):hover {
+  border-color: var(--ant-color-error-hover, var(--ant-color-error, #ff4d4f));
+}
+
+:global(.tiptap-wrapper-error):focus-within {
+  border-color: var(--ant-color-error, #ff4d4f);
+  box-shadow: 0 0 0 2px var(--ant-color-error-bg, rgba(255, 77, 79, 0.1));
+}
+
+:global(.tiptap-wrapper-warning) {
+  border-color: var(--ant-color-warning, #faad14);
+}
+
+:global(.tiptap-wrapper-warning):hover {
+  border-color: var(--ant-color-warning-hover, var(--ant-color-warning, #faad14));
+}
+
+:global(.tiptap-wrapper-warning):focus-within {
+  border-color: var(--ant-color-warning, #faad14);
+  box-shadow: 0 0 0 2px var(--ant-color-warning-bg, rgba(250, 173, 20, 0.1));
+}
+
+:global(.tiptap-wrapper-disabled) {
+  background: var(--ant-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
+  color: var(--ant-color-text-disabled, rgba(0, 0, 0, 0.25));
+  cursor: not-allowed;
+}
+
+:global(.tiptap-wrapper-disabled):hover {
+  border-color: var(--ant-color-border, #d9d9d9);
+}
+
+:global(.tiptap-wrapper-disabled) :global(.tiptap.ProseMirror) {
+  cursor: not-allowed;
+}
+
+/* ProseMirror editable — sits inside the wrapper. */
+:global(.tiptap.ProseMirror) {
+  padding: 8px;
+  outline: none;
+}
+
+:global(.tiptap) :global(p) {
+  margin: 0;
+}
+
+:global(.tiptap) :global(p.is-editor-empty):first-child::before {
+  color: var(--ant-color-text-placeholder, rgba(0, 0, 0, 0.25));
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+:global(.tiptap-popover) {
+  background: rgba(0, 0, 0, 0.85);
+  color: var(--ant-color-text-light-solid, #fff);
+  border-radius: var(--ant-border-radius, 8px);
+  padding: 4px;
+  margin: -4px;
+  display: flex;
+}
+
+:global(.tiptap-icon) {
+  border-radius: var(--ant-border-radius-sm, 4px);
+  display: flex;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  color: var(--ant-color-text-light-solid, #fff);
+}
+
+:global(.tiptap-icon.disabled) {
+  pointer-events: none;
+}
+
+:global(.tiptap-icon):hover {
+  background: var(--ant-color-icon-hover, rgba(0, 0, 0, 0.75));
+  color: var(--ant-color-text-light-solid, #fff);
+  cursor: pointer;
+}
+
+:global(.tiptap-icon) + :global(.tiptap-icon) {
+  margin-left: 4px;
+}

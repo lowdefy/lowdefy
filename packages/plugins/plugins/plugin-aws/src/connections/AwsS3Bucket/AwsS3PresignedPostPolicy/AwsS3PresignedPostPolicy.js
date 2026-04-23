@@ -41,7 +41,12 @@ async function AwsS3PresignedPostPolicy({ request, connection }) {
   }
   Object.keys(fields).forEach((field) => {
     if (fields[field]) {
-      params.Fields[field] = fields[field];
+      // S3 user metadata values must be ASCII. URL-encode x-amz-meta-* values so
+      // non-ASCII characters (names, URLs, etc.) survive the round trip. Other
+      // protocol fields (acl, Content-Type, ...) must be passed through literally.
+      params.Fields[field] = field.toLowerCase().startsWith('x-amz-meta-')
+        ? encodeURIComponent(fields[field])
+        : fields[field];
     }
   });
   const s3 = new S3Client({
