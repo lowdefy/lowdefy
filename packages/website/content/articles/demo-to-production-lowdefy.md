@@ -3,7 +3,7 @@ title: 'Six patterns for production Lowdefy apps'
 subtitle: 'Notes from building Lowdefy apps for a living'
 authorId: 'machiel'
 publishedAt: '2026-04-21'
-readTimeMinutes: 5
+readTimeMinutes: 7
 tags:
   - 'Production'
   - 'Architecture'
@@ -19,83 +19,52 @@ We maintain Lowdefy, but we also ship Lowdefy apps for clients. What follows are
 
 ## 1. Parameterized fragments
 
-The most common pattern in a production Lowdefy codebase is "define once, reuse with different values." Lowdefy's [`_ref`](https://docs.lowdefy.com/references-and-templates) takes a path and optionally a `vars` object. The referenced file reads those vars with `_var`. A `.yaml.njk` extension turns on Nunjucks string interpolation in the file itself, for literal values like ids.
+The most common pattern in a production Lowdefy codebase is "define once, reuse with different values." Lowdefy's [`_ref`](https://docs.lowdefy.com/references-and-templates) takes a path and optionally a `vars` object, and the referenced file reads those vars with `_var`. A `.yaml.njk` extension turns on Nunjucks interpolation inside the file itself, which handles the things `_var` can't.
 
-A contact form is a good example. Defined once as a component:
+A parameterized form field is a good example:
 
 ```yaml
-# components/contact_form.yaml.njk
-- id: {{ id }}
-  type: Box
-  layout:
-    gap: 16
-  blocks:
-    - id: {{ id }}.name
-      type: TextInput
-      required: true
-      properties:
-        title: Name
-    - id: {{ id }}.email
-      type: TextInput
-      required: true
-      properties:
-        title: Email
-    - id: {{ id }}.message
-      type: TextArea
-      required: true
-      properties:
-        title:
-          _var:
-            key: message_label
-            default: Message
-        rows: 5
-    - id: {{ id }}.submit
-      type: Button
-      properties:
-        title:
-          _var:
-            key: submit_label
-            default: Send
-      events:
-        onClick:
-          - id: validate
-            type: Validate
-          - id: send
-            type: Request
-            params:
-              _var: submit_request
+# components/form_field.yaml.njk
+- id: {{ key }}
+  type: TextInput
+  required:
+    _var:
+      key: required
+      default: false
+  properties:
+    title:
+      _var: title
+    {% if span %}
+    label:
+      span:
+        _var: span
+      align: right
+    {% endif %}
 ```
 
-Two things resolve at build time. Nunjucks handles string-level interpolation (`{{ id }}.email` becomes the real block id at the call site). `_var` handles field-level variable lookup, with `default:` as a fallback.
-
-Reused on a public contact page:
+Used twice on the same sign-up page, with different vars each time:
 
 ```yaml
-# pages/contact.yaml
+# pages/sign_up.yaml
 - _ref:
-    path: components/contact_form.yaml.njk
+    path: components/form_field.yaml.njk
     vars:
-      id: contact_form
-      submit_request: submit_contact
+      key: email
+      title: Email
+      required: true
+- _ref:
+    path: components/form_field.yaml.njk
+    vars:
+      key: company
+      title: Company (optional)
+      span: 8
 ```
 
-And again, inside a support modal on another page, with different labels and a different request:
+Two things here can't be done with `_var` alone. First, block ids must be literal strings at build time, so `id: {{ key }}` is rewritten to `id: email` before the build ever sees it. `_var` resolves values, not identifiers. Second, `{% if span %}` lets you omit the entire `label:` block when a caller doesn't pass `span`, rather than emitting the key with a null value that the block would have to interpret. Everything else uses `_var` in the usual way, with `default:` as the fallback when the caller omits a key.
 
-```yaml
-# pages/product.yaml
-- id: support_modal
-  type: Modal
-  blocks:
-    - _ref:
-        path: components/contact_form.yaml.njk
-        vars:
-          id: support_form
-          message_label: Describe the issue
-          submit_label: Open ticket
-          submit_request: open_support_ticket
-```
+Nunjucks can also parameterize the ref path itself. A page template that refs `../shared/requests/get_{{ entity }}.yaml` loads a different file per entity, letting one template drive several CRUD pages with no duplication. `_var` can't influence which file the build reads; Nunjucks can, because it runs first.
 
-One component, two pages, two submit targets, no duplicated markup. The pattern composes. A page is often a single `_ref` to a layout template with page-specific blocks passed in. Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
+The pattern composes upward. A form is a stack of field fragments. A page is often a single `_ref` to a layout template, with page-specific content passed in. Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
 
 ---
 
@@ -103,7 +72,7 @@ One component, two pages, two submit targets, no duplicated markup. The pattern 
 
 Every app we've shipped uses Mongo, via the [`@lowdefy/community-plugin-mongodb`](https://docs.lowdefy.com/MongoDB) plugin.
 
-Requests are declarative YAML. Aggregation pipelines are declarative JSON. An aggregation drops into a Lowdefy request with no impedance mismatch. Lowdefy payloads are JSON-shaped. Mongo documents are JSON-shaped. You store the form state, and you read it back. You compose complexity with `$lookup` in-line instead of across query boundaries.
+Lowdefy requests are declarative YAML; MongoDB aggregation pipelines are declarative JSON. Both are JSON-shaped the whole way through, so an aggregation drops straight into a request with no impedance mismatch: no ORM, no DTO layer, no serializer. You store form state and read it back, and you compose query complexity with `$lookup` in-line instead of across query boundaries.
 
 ChangeLog at the connection level is a feature of the community plugin. Seven lines of YAML, full audit trail:
 
@@ -171,11 +140,48 @@ The other Mongo wins worth calling out: Atlas Search indexes for full-text witho
 
 ## 3. Three tiers of backend
 
-Tier 1: [Lowdefy requests](https://docs.lowdefy.com/connections-and-requests). The default choice for DB reads and writes. Stays in the app bundle and covers most CRUD use cases.
+Tier 1 is [Lowdefy requests](https://docs.lowdefy.com/connections-and-requests). This is the default choice for DB reads and writes, and most of a production app lives here:
 
-Tier 2: [Lowdefy API endpoints](https://docs.lowdefy.com/lowdefy-api). Declarative YAML that works well for expressing custom business logic, chaining requests, and calling third-party APIs. Still in the app bundle.
+```yaml
+id: get_items
+type: MongoDBFind
+connectionId: items
+payload:
+  status:
+    _state: selected_status
+properties:
+  query:
+    status:
+      _payload: status
+```
 
-Tier 3: Separate services, usually Lambdas. This is the tier tutorials skip, and it's rare — well under 1% of a typical app's requests. It's basically for work that looks like a third-party: scheduled jobs, queue consumers, long-running transforms, heavy native dependencies, and anything that needs its own retry and back-pressure semantics. Most production apps have a handful of these at most. If a task doesn't clearly belong in Tier 3, it doesn't.
+Tier 2 is [Lowdefy API endpoints](https://docs.lowdefy.com/lowdefy-api). Declarative YAML that chains steps, calls third-party APIs, and expresses custom business logic server-side. Still in the app bundle. Reach for it when a single request isn't enough but imperative code isn't warranted either:
+
+```yaml
+id: archive_item
+type: Api
+routine:
+  - id: archive
+    type: MongoDBUpdateOne
+    connectionId: items
+    properties:
+      filter:
+        _id:
+          _payload: item_id
+      update:
+        $set:
+          archived: true
+  - id: log_event
+    type: MongoDBInsertOne
+    connectionId: events
+    properties:
+      doc:
+        type: archive-item
+        item_id:
+          _payload: item_id
+```
+
+Tier 3 is separate services, usually Lambdas. This is the tier tutorials skip, and it's rare. Well under 1% of a typical app's requests. It's for work that looks like a third-party: scheduled jobs, queue consumers, long-running transforms, heavy native dependencies, and anything that needs its own retry and back-pressure semantics. Most production apps have a handful of these at most. If a task doesn't clearly belong in Tier 3, it doesn't.
 
 When you do need one, calling it from the app is still a YAML-native experience. You define an [AxiosHttp](https://docs.lowdefy.com/AxiosHttp) connection for the service:
 
@@ -193,7 +199,7 @@ When you do need one, calling it from the app is still a YAML-native experience.
         _secret: SERVICES_API_KEY
 ```
 
-And call it like any other request — via the [`Request`](https://docs.lowdefy.com/Request) action, or as a step inside an `Api` routine:
+And call it like any other request, via the [`Request`](https://docs.lowdefy.com/Request) action, or as a step inside an `Api` routine. Here it composes all three tiers in one endpoint: a Tier 1 Mongo insert, a Tier 3 Lambda call, and a second Tier 1 Mongo update, orchestrated by a Tier 2 `Api`:
 
 ```yaml
 id: insert-comment
@@ -237,7 +243,9 @@ routine:
 
 When using any low-code framework you will hit gaps. You might want a rich-text editor with @-mentions, a Kanban board fed from a Mongo query, a connection to an internal API, or a custom auth adapter.
 
-Plugins cover all of those. A [Lowdefy plugin](https://docs.lowdefy.com/plugins-introduction) can ship [blocks](https://docs.lowdefy.com/blocks), [actions](https://docs.lowdefy.com/plugins-actions), [connections and requests](https://docs.lowdefy.com/plugins-connections), [operators](https://docs.lowdefy.com/plugins-operators), and [auth adapters and providers](https://docs.lowdefy.com/auth-configuration) — effectively every extension point Lowdefy exposes. For blocks, that's a few hundred lines of React and a manifest. For a connection, it's a JS module. Either way the plugin lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin module that Lowdefy mounts, passes props or params to, and collects events or results from.
+Plugins cover all of those. A [Lowdefy plugin](https://docs.lowdefy.com/plugins-introduction) can ship [blocks](https://docs.lowdefy.com/blocks), [actions](https://docs.lowdefy.com/plugins-actions), [connections and requests](https://docs.lowdefy.com/plugins-connections), [operators](https://docs.lowdefy.com/plugins-operators), and [auth adapters and providers](https://docs.lowdefy.com/auth-configuration). That covers effectively every extension point Lowdefy exposes.
+
+For blocks, that's a few hundred lines of React and a manifest. For a connection, it's a JS module. Either way the plugin lives in the same monorepo as the app and is versioned with it. You don't "extend" Lowdefy in some framework-y sense. You write a thin module that Lowdefy mounts, passes props or params to, and collects events or results from.
 
 Declared at the app level:
 
@@ -282,7 +290,7 @@ auth:
     error: /login
   adapter:
     id: mdb_adapter
-    type: MongoDBAdapter # from @lowdefy/community-plugin-auth-next-mongodb-adapter
+    type: MongoDBAdapter # from @lowdefy/community-plugin-mongodb
     properties:
       databaseUri:
         _secret: MONGODB_URI
@@ -321,7 +329,7 @@ auth:
 
 EmailProvider with a short `maxAge` gives magic-link auth with 30-minute tokens.
 
-Out of the box, the stock adapter doesn't handle invite-only sign-up, per-app user attributes, or caps on verification token reuse. Most of our production apps need at least one of those, so they ship a small custom adapter plugin that wraps the community one and adds what's missing.
+`MongoDBAdapter` is the thin adapter. The same [`@lowdefy/community-plugin-mongodb`](https://docs.lowdefy.com/MongoDB) also ships `MultiAppMongoDBAdapter`, which adds invite-only sign-up, per-app user attributes, and caps on verification token reuse. Most of our production apps use that one, dropped in by changing `type: MongoDBAdapter` to `type: MultiAppMongoDBAdapter` and configuring the extra properties.
 
 ---
 
