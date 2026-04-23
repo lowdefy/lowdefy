@@ -1,0 +1,35 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: DiffList
+    pageTitle: DiffList
+    section: Display Blocks
+    filePath: blocks/display/DiffList.yaml
+    block_type: DiffList
+    github_path: packages/plugins/blocks/blocks-diff/src/blocks/DiffList
+    schema: ../plugins/blocks/blocks-diff/src/blocks/DiffList/meta.js
+    gallery: ../plugins/blocks/blocks-diff/src/blocks/DiffList/gallery.yaml
+    fullWidthExamples: true
+    description: >
+      `DiffList` renders a polished, user-friendly diff between a `before` and
+      an `after` object as a grouped table of changes. Built on `microdiff` for
+      the diff engine and antd primitives for rendering, it groups changes by
+      top-level key, tags each row as Added / Removed / Changed, and supports
+      per-path value formatters (`date`, `datetime`, `boolean`, `currency`,
+      `enum`, `json`, `code`), humanised `labels`, and `hide` / `show` glob
+      filtering. All colours come from antd's semantic tokens so dark mode and
+      `theme` overrides work automatically.

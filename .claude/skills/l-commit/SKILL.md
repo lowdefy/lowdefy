@@ -11,7 +11,14 @@ Stage and commit with conventional commit format: `{type}({scope}): {message}`
 ## Arguments
 
 - `-p` — Push after committing
+- `$Xh` / `$Xm` — Time spent on this commit (e.g., `$1h`, `$30m`, `$2.5h`, `$2h $30m`). Placed as a footer on the first commit only.
 - Any other text is treated as commit guidance (e.g., `/l-commit fix the build issue`)
+
+## Time Tracking
+
+Extract `$Xh` / `$Xm` patterns from the arguments up front. Valid forms: `$1h`, `$30m`, `$2.5h`, `$2h $30m` (combined). The matched text becomes the time footer for the first commit; anything else in the arguments is commit guidance.
+
+If no time pattern is found in the arguments, include a "Time spent?" question in the same `AskUserQuestion` call that presents the commit proposal (step 4.3). Only add the footer to the **first** commit — subsequent split commits don't get it.
 
 ## Instructions
 
@@ -115,6 +122,27 @@ The user can always select "Other" to provide custom feedback — no need for an
 - Use short basenames unless disambiguation needed
 - Max 15 files per commit, then `(+N more)`
 
+**Time question (only if not already in arguments):**
+
+Include as a second question in the same `AskUserQuestion` call so the user answers commit split + time in one prompt:
+
+```
+Question: "Time spent?"
+Header: "Time"
+multiSelect: false
+Options:
+  - label: "No time"
+    description: "Skip time tracking"
+  - label: "$30m"
+    description: ""
+  - label: "$1h"
+    description: ""
+  - label: "$2h"
+    description: ""
+```
+
+Users can select "Other" to enter any `$Xh` / `$Xm` / combined value.
+
 If the user provides custom feedback: incorporate it and proceed (don't re-prompt).
 
 ### 5. Build Commit Descriptions
@@ -147,7 +175,9 @@ Tags: {3-8 comma-separated lowercase keywords for git log --grep}
 
 For each commit:
 
-**Single commit:**
+**Time footer:** If a time value was supplied (either in `$ARGUMENTS` or via the AskUserQuestion), append it as a blank-line-separated footer to the **first commit only**. Subsequent split commits omit the footer. If the user selected "No time", omit the footer entirely.
+
+**Single commit (with time):**
 
 ```bash
 git add -A
@@ -162,16 +192,26 @@ Changes:
 - auth.js: Updated payload key iteration
 
 Tags: payload, validation, dotted-keys, build
+
+$1h
 EOF
 )"
 ```
 
-**Split commits** — stage specific files only:
+**Split commits** — stage specific files only, time footer on the first only:
 
 ```bash
 git add src/validate.js src/auth.js
 git commit -m "$(cat <<'EOF'
-...
+...body...
+
+$1h
+EOF
+)"
+
+git add src/other.js
+git commit -m "$(cat <<'EOF'
+...body for second commit, no time footer...
 EOF
 )"
 ```

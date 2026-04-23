@@ -21,6 +21,7 @@ const defaultPackages = [
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-antd-x',
   '@lowdefy/blocks-basic',
+  '@lowdefy/blocks-diff',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',

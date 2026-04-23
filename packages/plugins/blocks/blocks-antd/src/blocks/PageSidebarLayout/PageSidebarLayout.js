@@ -65,6 +65,16 @@ const PageSidebarLayout = ({
   styles = {},
 }) => {
   const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
+  // Re-read localStorage on mount: during SSR localStorage is unavailable, so
+  // the lazy initializer falls back to properties.sider.initialCollapsed. Once
+  // hydrated we pick up the stored value so a reload restores the state the
+  // user actually left the sider in. Sider has its own internal state, so we
+  // also push the restored value through the registered sync method once it's
+  // available.
+  useEffect(() => {
+    setSiderOpen(getInitialSiderState({ properties }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     registerDarkModeMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {
@@ -107,7 +117,13 @@ const PageSidebarLayout = ({
               }}
               styles={{
                 element: mergeObjects([
-                  { borderInlineEnd: '1px solid var(--ant-color-border)' },
+                  {
+                    borderInlineEnd: '1px solid var(--ant-color-border)',
+                    position: 'sticky',
+                    top: 0,
+                    height: '100vh',
+                    alignSelf: 'flex-start',
+                  },
                   styles.sider,
                 ]),
               }}
@@ -143,7 +159,13 @@ const PageSidebarLayout = ({
                         }}
                         styles={{ element: styles.toggleButton }}
                         methods={methods}
-                        onClick={() => methods.toggleSiderOpen()}
+                        onClick={() => {
+                          methods.toggleSiderOpen();
+                          // Providing onClick bypasses Button's default
+                          // trigger-renamed-event path, so fire onToggleSider
+                          // explicitly for the page-level event handler.
+                          methods.triggerEvent({ name: 'onToggleSider' });
+                        }}
                         rename={{
                           events: {
                             onClick: 'onToggleSider',
@@ -188,8 +210,9 @@ const PageSidebarLayout = ({
                       style={{
                         position: 'sticky',
                         bottom: 0,
-                        background: 'var(--ant-color-bg-container)',
-                        padding: 8,
+                        background:
+                          'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--ant-color-bg-container) 85%, transparent) 32px, color-mix(in srgb, var(--ant-color-bg-container) 95%, transparent) 100%)',
+                        padding: '40px 8px 8px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',

@@ -707,3 +707,288 @@
             department: Engineering
             salary: 108000
             city: Seattle
+
+- title: Built-in cell types
+  fullWidth: true
+  blocks:
+    - id: cell_types_demo
+      type: AgGridAlpine
+      properties:
+        height: 360
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Status
+            field: status
+            width: 130
+            cell:
+              type: tag
+              colorMap:
+                Active: green
+                Blocked: red
+                Pending: blue
+                'On Leave': orange
+          - headerName: Assignee
+            field: name
+            minWidth: 220
+            cell:
+              type: avatar
+              nameField: name
+              srcField: picture
+              idField: id
+          - headerName: Created
+            field: created_at
+            width: 170
+            cell:
+              type: date
+          - headerName: Last seen
+            field: last_seen
+            width: 150
+            cell:
+              type: date
+              relative: true
+          - headerName: Verified
+            field: verified
+            width: 110
+            cell:
+              type: boolean
+          - headerName: Progress
+            field: completion
+            width: 130
+            cell:
+              type: progress
+        rowData:
+          - id: u1
+            name: Alice Johnson
+            picture: https://i.pravatar.cc/80?img=1
+            status: Active
+            created_at: '2025-11-14T09:30:00Z'
+            last_seen: '2026-04-17T11:45:00Z'
+            verified: true
+            completion: 92
+          - id: u2
+            name: Bob Smith
+            status: On Leave
+            created_at: '2025-09-02T14:10:00Z'
+            last_seen: '2026-04-10T08:15:00Z'
+            verified: true
+            completion: 68
+          - id: u3
+            name: Charlie Lee
+            picture: https://i.pravatar.cc/80?img=5
+            status: Blocked
+            created_at: '2026-01-20T18:00:00Z'
+            last_seen: '2026-04-17T07:22:00Z'
+            verified: false
+            completion: 22
+          - id: u4
+            name: Diana Patel
+            status: Pending
+            created_at: null
+            last_seen: null
+            verified: null
+            completion: null
+
+- title: Linked cells (onCellLink)
+  fullWidth: true
+  blocks:
+    - id: linked_cells_demo
+      type: AgGridAlpine
+      properties:
+        height: 240
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Task ID
+            field: _id
+            width: 140
+            cell:
+              type: link
+              pageId: tasks-view
+              urlQuery:
+                _id: _id
+          - headerName: Assignee
+            field: assignee
+            cell:
+              type: avatar
+              nameField: assignee
+              idField: _id
+              link:
+                pageId: user
+                urlQuery:
+                  userId: _id
+          - headerName: Priority
+            field: priority
+            width: 120
+            cell:
+              type: tag
+              colorMap:
+                High: red
+                Medium: orange
+                Low: default
+        rowData:
+          - _id: TSK-001
+            assignee: Alice Johnson
+            priority: High
+          - _id: TSK-002
+            assignee: Bob Smith
+            priority: Medium
+          - _id: TSK-003
+            assignee: Charlie Lee
+            priority: Low
+      events:
+        onCellLink:
+          - id: navigate
+            type: Link
+            params:
+              _event: link
+
+- title: Ellipsis column helper
+  fullWidth: true
+  blocks:
+    - id: ellipsis_demo
+      type: AgGridAlpine
+      properties:
+        height: 280
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Code
+            field: code
+            width: 100
+          - headerName: Title
+            field: title
+            minWidth: 220
+          - headerName: Description
+            field: description
+            flex: 1
+            ellipsis: 2
+        rowData:
+          - code: A-01
+            title: Main switchboard
+            description: Drafted the main switchboard layout and circuit schedule across three floors. Awaiting sign-off from the project engineer before ordering long-lead parts.
+          - code: A-02
+            title: East wing HVAC
+            description: Balancing HVAC loads across the east wing. Waiting on updated ductwork drawings from the architect and a revised thermal model from the mechanical team.
+          - code: A-03
+            title: Utility connections
+            description: Blocked on the utility connection survey — main was not where the drawings said it would be, which has cascaded to the trenching schedule.
+
+- title: Number formatting (currency, percent, compact, accounting)
+  fullWidth: true
+  blocks:
+    - id: number_demo
+      type: AgGridAlpine
+      properties:
+        height: 320
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Account
+            field: account
+            width: 180
+          - headerName: Revenue (USD)
+            field: revenue
+            width: 150
+            cell:
+              type: number
+              format: currency
+              currency: USD
+              decimals: 0
+          - headerName: EUR
+            field: revenue_eur
+            width: 150
+            cell:
+              type: number
+              format: currency
+              currency: EUR
+              locale: de-DE
+              decimals: 2
+          - headerName: Δ vs budget
+            field: delta
+            width: 160
+            cell:
+              type: number
+              format: currency
+              currency: USD
+              decimals: 2
+              negative: parentheses
+              signColor: true
+          - headerName: Margin
+            field: margin
+            width: 110
+            cell:
+              type: number
+              format: percent
+              decimals: 1
+          - headerName: Impressions
+            field: impressions
+            width: 130
+            cell:
+              type: number
+              format: compact
+          - headerName: Ratio
+            field: ratio
+            width: 110
+            cell:
+              type: number
+              decimals: 3
+        rowData:
+          - account: Acme Corp
+            revenue: 1245000
+            revenue_eur: 1125750.5
+            delta: 12500
+            margin: 0.184
+            impressions: 12340
+            ratio: 1.234
+          - account: Globex
+            revenue: 825500
+            revenue_eur: 745600.25
+            delta: -44250.5
+            margin: 0.072
+            impressions: 1050000
+            ratio: 0.876
+          - account: Stark Ind.
+            revenue: 4820000
+            revenue_eur: 4350750
+            delta: -125000
+            margin: -0.033
+            impressions: 85400000
+            ratio: 2.12
+          - account: Wayne Ent.
+            revenue: 3150000
+            revenue_eur: 2845300
+            delta: 87500
+            margin: 0.221
+            impressions: 524000
+            ratio: 0.948
+
+- title: Loading overlay (block loading flag)
+  fullWidth: true
+  blocks:
+    - id: loading_demo_switch
+      type: Switch
+      properties:
+        title: Toggle loading overlay
+    - id: loading_demo_grid
+      type: AgGridAlpine
+      loading:
+        _state: loading_demo_switch
+      properties:
+        height: 260
+        defaultColDef:
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+          - name: Bob Smith
+            role: Designer
+          - name: Charlie Lee
+            role: Manager

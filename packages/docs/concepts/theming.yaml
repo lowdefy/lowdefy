@@ -288,6 +288,67 @@ _ref:
 
             Useful palette variables: `var(--ant-blue-1)`, `var(--ant-green-1)`, `var(--ant-orange-1)`, `var(--ant-red-1)`, etc. For semantic colors, use `var(--ant-color-primary-bg)`, `var(--ant-color-success-bg)`, `var(--ant-color-warning-bg)`, `var(--ant-color-error-bg)`.
 
+            ### Customizing base colors per mode
+
+            Antd's default dark algorithm uses pure black (`#000`) for `colorBgLayout`, and the default light algorithm uses a stark off-white. If you want softer, more modern base surfaces, use `lightToken` and `darkToken` on `theme.antd`. These are merged on top of `theme.antd.token` only when the matching mode is active, so you get full per-mode control without juggling two separate theme files:
+
+            ```yaml
+            theme:
+              antd:
+                token:                     # Shared — applied in both modes
+                  colorPrimary: '#6366f1'
+                  borderRadius: 8
+                lightToken:                # Merged when light mode is active
+                  colorBgLayout: '#fafafa'
+                  colorBgContainer: '#ffffff'
+                darkToken:                 # Merged when dark mode is active
+                  colorBgLayout: '#0f1117'
+                  colorBgContainer: '#18181b'
+                  colorBgElevated: '#1f2937'
+              darkMode: system
+            ```
+
+            Tokens to customize for a softer base surface:
+
+            | Token | Where it shows up |
+            |---|---|
+            | `colorBgLayout` | Page background behind the layout — also applied to the `<html>` element to prevent navigation flash |
+            | `colorBgContainer` | Card, Table, Input, Modal body fill |
+            | `colorBgElevated` | Popover, Dropdown, Tooltip-host surfaces |
+            | `colorText` | Primary text color |
+            | `colorTextSecondary` | Secondary / muted text |
+
+            The pre-hydration script reads `darkToken.colorBgLayout` and `lightToken.colorBgLayout` directly, so the `<html>` background matches your configured color on first paint — there is no flash of `#000` or `#fff` before hydration. If you don't set a `lightToken.colorBgLayout`, light mode keeps the browser default white (today's behavior).
+
+            ### Per-mode component overrides
+
+            `colorBg*` seed tokens don't reach every component — Layout's header/sider and Menu have their own component tokens (`Layout.headerBg`, `Layout.siderBg`, `Menu.darkItemBg`, etc.). Use `darkComponents` and `lightComponents` alongside `darkToken`/`lightToken` to soften these surfaces in the active mode only:
+
+            ```yaml
+            theme:
+              antd:
+                darkToken:
+                  colorBgLayout: '#0f172a'
+                  colorBgContainer: '#111a2e'
+                darkComponents:
+                  Layout:
+                    bodyBg: '#0f172a'
+                    headerBg: '#0b1120'
+                    siderBg: '#0b1120'
+                    triggerBg: '#111a2e'
+                    triggerColor: '#e2e8f0'
+                  Menu:
+                    darkItemBg: '#0b1120'
+                    darkSubMenuItemBg: '#0b1120'
+                    darkPopupBg: '#111a2e'
+                    darkItemSelectedBg: '#1e293b'
+                    darkItemHoverBg: '#111a2e'
+            ```
+
+            `darkComponents` / `lightComponents` are merged per-component (deep at the component name level) on top of the shared `components`, so you only need to specify the per-mode deltas.
+
+            See antd's [design token reference](https://ant.design/docs/react/customize-theme#theme) for the full list of tokens you can override.
+
             ## Tailwind theme bridge (`theme.tailwind`)
 
             Lowdefy automatically bridges antd design tokens to Tailwind CSS theme variables. This means Tailwind utility classes like `text-primary` or `bg-bg-container` resolve to the current antd theme — including when you switch to dark mode.

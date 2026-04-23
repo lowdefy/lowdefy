@@ -88,3 +88,51 @@ test('js throw when invalid javascript function', async () => {
     })
   ).toThrow('c1 is not a proper JavaScript function');
 });
+
+test('js passes args through when params is object form', async () => {
+  const receivedArgs = [];
+  const argsMap = {
+    h1: ({ args }) => {
+      receivedArgs.push(args);
+      return args?.a + args?.b;
+    },
+  };
+  const result = js({
+    jsMap: argsMap,
+    operators: {},
+    location: rootLocation,
+    params: { fn: 'h1', args: { a: 2, b: 3 } },
+  });
+  expect(result).toEqual(5);
+  expect(receivedArgs[0]).toEqual({ a: 2, b: 3 });
+});
+
+test('js passes args as undefined when object form omits args', async () => {
+  const receivedArgs = [];
+  const argsMap = {
+    h1: ({ args }) => {
+      receivedArgs.push(args);
+      return 'ok';
+    },
+  };
+  js({
+    jsMap: argsMap,
+    operators: {},
+    location: rootLocation,
+    params: { fn: 'h1' },
+  });
+  expect(receivedArgs[0]).toBeUndefined();
+});
+
+test('js throws when object-form hash is not in map', async () => {
+  expect(() =>
+    js({
+      jsMap: {},
+      operators: {},
+      location: rootLocation,
+      params: { fn: 'missing', args: { a: 1 } },
+    })
+  ).toThrow(
+    '_js function not found. The function may not have been built yet. Received hash: missing'
+  );
+});

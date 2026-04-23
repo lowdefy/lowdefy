@@ -103,6 +103,35 @@ ${userStylesImport}/* Content sources for Tailwind JIT — block JS content coll
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source */
 @import "./tailwind-candidates.css";
 
+/* Themed scrollbars — opts out of the browser default that clashes on dark surfaces,
+   especially on Windows/Linux where scrollbars are always visible and native-chrome.
+   Colors use antd CSS custom properties so they auto-swap with dark/light mode. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ant-color-border-secondary, rgba(0, 0, 0, 0.15)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--ant-color-border-secondary, rgba(0, 0, 0, 0.15));
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 10px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  }
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
 /* Antd-to-Tailwind theme bridge — extends default Tailwind theme with antd design tokens */
 @theme inline {
 ${themeVars}

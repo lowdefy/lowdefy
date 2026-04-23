@@ -1,22 +1,107 @@
 .antdTheme.antdTheme {
   --ag-background-color: var(--ant-color-bg-container);
   --ag-foreground-color: var(--ant-color-text);
+  --ag-secondary-foreground-color: var(--ant-color-text-secondary);
   --ag-border-color: var(--ant-color-border);
   --ag-secondary-border-color: var(--ant-color-border-secondary);
   --ag-header-background-color: var(--ant-color-fill-quaternary);
   --ag-header-foreground-color: var(--ant-color-text);
+  --ag-header-cell-hover-background-color: var(--ant-color-fill-tertiary);
+  --ag-header-cell-moving-background-color: var(--ant-color-fill-secondary);
   --ag-tooltip-background-color: var(--ant-color-bg-spotlight);
   --ag-odd-row-background-color: var(--ant-color-fill-quaternary);
   --ag-control-panel-background-color: var(--ant-color-bg-elevated);
   --ag-subheader-background-color: var(--ant-color-bg-layout);
+  --ag-subheader-toolbar-background-color: var(--ant-color-bg-layout);
   --ag-selected-row-background-color: var(--ant-color-primary-bg);
   --ag-row-hover-color: var(--ant-color-primary-bg-hover);
   --ag-column-hover-color: var(--ant-color-primary-bg-hover);
+  --ag-range-selection-highlight-color: var(--ant-color-primary-bg-hover);
   --ag-modal-overlay-background-color: var(--ant-color-bg-mask);
   --ag-input-disabled-background-color: var(--ant-color-bg-container-disabled);
   --ag-input-disabled-border-color: var(--ant-color-border);
   --ag-disabled-foreground-color: var(--ant-color-text-disabled);
   --ag-chip-background-color: var(--ant-color-fill-secondary);
   --ag-input-focus-box-shadow: 0 0 0 2px var(--ant-color-primary-bg);
+  --ag-input-focus-border-color: var(--ant-color-primary);
+  --ag-range-selection-border-color: var(--ant-color-primary);
+  --ag-range-selection-background-color: var(--ant-color-primary-bg);
+  --ag-checkbox-checked-color: var(--ant-color-primary);
+  --ag-checkbox-unchecked-color: var(--ant-color-text-quaternary);
+  --ag-checkbox-background-color: var(--ant-color-bg-container);
   --ag-card-shadow: var(--ant-box-shadow-secondary);
+  --ag-popup-shadow: var(--ant-box-shadow);
+  --ag-font-family: var(--ant-font-family);
+  --ag-font-size: var(--ant-font-size);
+}
+
+.antdTheme :global(.ag-root-wrapper) {
+  border-radius: var(--ant-border-radius);
+  overflow: hidden;
+}
+
+/* Avatar sizing per ag-grid theme — reads row-height via the wrapper class. */
+.antdTheme:global(.ag-theme-balham),
+.antdTheme:global(.ag-theme-balham-dark) {
+  --lf-avatar-size: 20px;
+  --lf-avatar-font-size: 10px;
+}
+.antdTheme:global(.ag-theme-alpine),
+.antdTheme:global(.ag-theme-alpine-dark) {
+  --lf-avatar-size: var(--ant-control-height-sm, 24px);
+  --lf-avatar-font-size: var(--ant-font-size-sm, 12px);
+}
+.antdTheme:global(.ag-theme-material) {
+  --lf-avatar-size: 26px;
+  --lf-avatar-font-size: var(--ant-font-size-sm, 12px);
+}
+
+.antdTheme :global(.ag-overlay-loading-wrapper) {
+  background-color: color-mix(in srgb, var(--ant-color-bg-container) 70%, transparent);
+}
+
+.antdTheme :global(.ag-overlay-loading-center) {
+  border-radius: var(--ant-border-radius);
+  box-shadow: var(--ant-box-shadow-secondary);
+}
+
+.antdTheme :global(.ag-overlay-no-rows-wrapper) {
+  color: var(--ant-color-text-secondary);
+}
+
+.antdTheme :global(.ag-cell) {
+  display: flex;
+  align-items: center;
+  line-height: var(--ant-line-height, 1.5);
+}
+
+.antdTheme :global(.lf-ellipsis-1),
+.antdTheme :global(.lf-ellipsis-2),
+.antdTheme :global(.lf-ellipsis-3),
+.antdTheme :global(.lf-ellipsis-4),
+.antdTheme :global(.lf-ellipsis-5),
+.antdTheme :global(.lf-ellipsis-6) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+}
+.antdTheme :global(.lf-ellipsis-1) {
+  -webkit-line-clamp: 1;
+}
+.antdTheme :global(.lf-ellipsis-2) {
+  -webkit-line-clamp: 2;
+}
+.antdTheme :global(.lf-ellipsis-3) {
+  -webkit-line-clamp: 3;
+}
+.antdTheme :global(.lf-ellipsis-4) {
+  -webkit-line-clamp: 4;
+}
+.antdTheme :global(.lf-ellipsis-5) {
+  -webkit-line-clamp: 5;
+}
+.antdTheme :global(.lf-ellipsis-6) {
+  -webkit-line-clamp: 6;
 }

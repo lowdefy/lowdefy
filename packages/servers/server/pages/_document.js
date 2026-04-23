@@ -26,6 +26,27 @@ const VALID_COLOR_MODES = ['system', 'light', 'dark'];
 const configColorMode = VALID_COLOR_MODES.includes(themeConfig.darkMode)
   ? themeConfig.darkMode
   : 'system';
+const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
+const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
+
+// Escape characters that could break out of the enclosing <script> tag or
+// terminate a JS string literal. Used to defuse the js/bad-code-sanitization
+// class of injection for values embedded into the pre-hydration inline script.
+const SCRIPT_ESCAPES = {
+  '<': '\\u003C',
+  '>': '\\u003E',
+  '\b': '\\b',
+  '\f': '\\f',
+  '\n': '\\n',
+  '\r': '\\r',
+  '\t': '\\t',
+  '\0': '\\0',
+  '\u2028': '\\u2028',
+  '\u2029': '\\u2029',
+};
+function safeScriptJson(value) {
+  return JSON.stringify(value).replace(/[<>\b\f\n\r\t\0\u2028\u2029]/g, (c) => SCRIPT_ESCAPES[c]);
+}
 
 class LowdefyDocument extends Document {
   render() {
@@ -43,12 +64,19 @@ class LowdefyDocument extends Document {
               __html: `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`,
             }}
           />
-          {/* Synchronous dark-mode background script — prevents white flash during
-              page navigation when the user is in dark mode. Mirrors the logic in
-              useDarkMode.js: configDarkMode → localStorage → prefers-color-scheme. */}
+          {/* Synchronous pre-hydration background script — prevents mode-mismatch
+              flash on page navigation. Mirrors useDarkMode.js resolution order:
+              configDarkMode → localStorage → prefers-color-scheme. Uses the user's
+              configured colorBgLayout tokens when present (theme.antd.darkToken and
+              theme.antd.lightToken), falling back to #000 in dark and no inline style
+              in light so default behavior is unchanged. */}
           <script
             dangerouslySetInnerHTML={{
-              __html: `(function(){var c="${configColorMode}";if(c==="light")return;var d=false;if(c==="dark"){d=true}else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}if(d)document.documentElement.style.backgroundColor="#000"})();`,
+              __html: `(function(){var c=${safeScriptJson(configColorMode)};var db=${safeScriptJson(
+                darkBg
+              )};var lb=${safeScriptJson(
+                lightBg
+              )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;if(bg)document.documentElement.style.backgroundColor=bg})();`,
             }}
           />
           <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
