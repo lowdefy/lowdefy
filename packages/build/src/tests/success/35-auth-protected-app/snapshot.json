@@ -4437,29 +4437,6 @@
                   ],
                   "description": "The Selector element."
                 },
-                ".selector": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The inner value/tag container of the Selector (antd `content` semantic slot)."
-                },
                 ".clearIcon": {
                   "oneOf": [
                     {
@@ -4624,10 +4601,6 @@
                 ".element": {
                   "type": "object",
                   "description": "The Selector element."
-                },
-                ".selector": {
-                  "type": "object",
-                  "description": "The inner value/tag container of the Selector (antd `content` semantic slot)."
                 },
                 ".clearIcon": {
                   "type": "object",
@@ -8786,7 +8759,7 @@
         "oneOf": [
           {
             "type": "string",
-            "description": "Dot-notation path to value in user object, or a role name when used with a role method."
+            "description": "Dot-notation path to value in user object."
           },
           {
             "type": "integer",
@@ -8798,13 +8771,6 @@
               true
             ],
             "description": "Return all user data."
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of role names when used with a role method."
           },
           {
             "type": "object",
