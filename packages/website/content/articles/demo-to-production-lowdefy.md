@@ -1,9 +1,9 @@
 ---
-title: 'Six patterns for production Lowdefy apps'
+title: 'Five patterns for production Lowdefy apps'
 subtitle: 'Notes from building Lowdefy apps for a living'
 authorId: 'machiel'
 publishedAt: '2026-04-21'
-readTimeMinutes: 7
+readTimeMinutes: 6
 tags:
   - 'Production'
   - 'Architecture'
@@ -333,62 +333,8 @@ EmailProvider with a short `maxAge` gives magic-link auth with 30-minute tokens.
 
 ---
 
-## 6. Usage logging
-
-Structured usage events from the Lowdefy app go into a dedicated Mongo collection, so you can answer questions like which pages get used, which filters are common, and whether last week's feature saw any traffic.
-
-```yaml
-- id: log-usage
-  type: MongoDBCollection
-  properties:
-    collection: log-usage
-    databaseUri:
-      _secret: MONGODB_URI
-    write: true
-```
-
-The request is defined on the page, with `payload` capturing the page id and any query params at call time, and `properties` writing them into the log document on the server:
-
-```yaml
-requests:
-  - id: log_usage
-    type: MongoDBInsertOne
-    connectionId: log-usage
-    payload:
-      page_id: items-list
-      params:
-        status:
-          _url_query: status
-    properties:
-      doc:
-        _id:
-          _uuid: true
-        timestamp:
-          _date: now
-        user_id:
-          _user: id
-        page_id:
-          _payload: page_id
-        params:
-          _payload: params
-```
-
-Called via the [`Request`](https://docs.lowdefy.com/Request) action from the page's [`onMount`](https://docs.lowdefy.com/events-and-actions):
-
-```yaml
-events:
-  onMount:
-    - id: log
-      type: Request
-      params: log_usage
-```
-
-Wiring this into every page is manual today. A first-class logging hook at the page or app level is the kind of thing we'd rather have built in, and it's on the list.
-
----
-
 ## Closing thought
 
-None of this is exotic. Reusable fragments, audit trails, service boundaries, custom extensions, access control, usage logging. It's what you'd do for any production codebase.
+None of this is exotic. Reusable fragments, audit trails, service boundaries, custom extensions, access control. It's what you'd do for any production codebase.
 
 What Lowdefy buys you is that most of the codebase is YAML, not application code. A smaller surface area to maintain, review, and change.
