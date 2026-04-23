@@ -43,7 +43,7 @@ _ref:
             RUN corepack enable
 
             # Build lowdefy app
-            RUN pnpx lowdefy@4 build --log-level=debug
+            RUN pnpx lowdefy@5 build --log-level=debug
 
             FROM node:18-alpine AS runner
 
@@ -158,7 +158,7 @@ _ref:
             RUN corepack enable
 
             # TODO: Change config-directory (./app) as appropriate here
-            RUN pnpx lowdefy@4 build --config-directory ./app --log-level=debug
+            RUN pnpx lowdefy@5 build --config-directory ./app --log-level=debug
 
             RUN pnpm --filter=@lowdefy/server --prod deploy ./deploy
 
