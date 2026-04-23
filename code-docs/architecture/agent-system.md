@@ -1,6 +1,6 @@
 ---
 title: Agent System
-updated: 2026-04-14
+updated: 2026-04-23
 packages:
   [
     '@lowdefy/ai-utils',
@@ -10,6 +10,7 @@ packages:
     '@lowdefy/connection-anthropic',
     '@lowdefy/connection-openai',
     '@lowdefy/connection-google',
+    '@lowdefy/connection-ai-gateway',
     '@lowdefy/connection-mcp',
   ]
 ---
@@ -38,7 +39,7 @@ agents:
 
 The agent system separates concerns into four layers, each configured independently:
 
-1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
+1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google, AI Gateway) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
 
 2. **Agent** -- The orchestration unit. References a connection, specifies model/instructions/tools/hooks, and controls the tool loop (max steps, stop conditions, pruning). Configured under the top-level `agents:` key. At runtime, a `ToolLoopAgent` from the AI SDK manages the multi-step model interaction.
 
@@ -53,7 +54,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 ### Client Side
 
 1. User types a message in `AgentChat`. The `handleSend` function fires `onBeforeSend` for validation, then calls `sendMessage()` on the `useChat` hook.
-2. `useChat` uses a `DefaultChatTransport` that POSTs to `/api/agent/{pageId}/{agentId}?conversationId=...` with `{ messages, urlQuery }` in the body.
+2. `useChat` uses a `DefaultChatTransport` that POSTs to `/api/agent/{pageId}/{agentId}?conversationId=...` with `{ messages, urlQuery, sharedState }` in the body. `sharedState` is read from `sharedStateRef.current` at send time (see [Shared State](#shared-state)) so the payload always reflects the latest evaluated state.
 
 ### Server Side
 
@@ -182,6 +183,87 @@ Configured via `agent.properties.fileSystem` with a `basePath`. Automatically ad
 
 All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePath.js`) which normalizes the requested path against the base directory and throws if the resolved path escapes the base, preventing path traversal attacks.
 
+### Reserved Platform Tool Names
+
+`packages/utils/ai-utils/src/reservedToolNames.js` exports `RESERVED_PLATFORM_TOOL_NAMES`:
+
+```
+update-page-state, read-file, list-files, search-files, stat-file
+```
+
+`buildAgentTools` rejects any endpoint, MCP, or sub-agent whose name collides with this list with a `ConfigError`. MCP sources can collide in a non-fatal way -- the conflicting MCP tool is skipped and a warning is logged. These names are owned by the platform: `update-page-state` is injected by `handleAgentChat` when the chat has `sharedState`; the four `*-file*` tools are injected when an agent has a `fileSystem` basePath.
+
+## Shared State
+
+The `sharedState` system lets an agent read from -- and write back to -- the calling page's Lowdefy state. Two things get wired up when `AgentChat.sharedState` is a non-empty object:
+
+1. The object is sent to the server on every turn and injected into the agent's instructions as `<context>sharedState: ...</context>` (when `pageContext: true`).
+2. The server injects a platform tool named `update-page-state` into the agent's tool set. The model calls it with `{ updates: { key: value, ... } }` and the client applies the writes to Lowdefy page state.
+
+### Client: `AgentChat.sharedState`
+
+`AgentChat` takes a `sharedState` property (evaluated by operators per render, like any other block property):
+
+```yaml
+type: AgentChat
+properties:
+  agentId: support_agent
+  sharedState:
+    _state: true # expose whole page state
+    # or a curated shape:
+    # legal: { _state: legal_name }
+    # cart:  { _state: cart.items }
+```
+
+- The block mirrors the evaluated object into `sharedStateRef` and reads it inside the transport's `body()` at send time, so the agent sees the freshest value without re-creating the transport on every state change.
+- Empty objects are coerced to `null` -- the server only injects the tool when `sharedState` is a non-empty object.
+- The transport POSTs `{ messages, urlQuery, sharedState }` to `/api/agent/{pageId}/{agentId}`.
+
+### Server: Tool Injection
+
+`callAgent` extracts `sharedState` from the request body, defaults to `{}`, and puts it on `context.agentContext.sharedState`. `handleAgentChat` then:
+
+1. Calls `buildUpdatePageStateTool({ sharedState })`. If `sharedState` is not an object, it returns `null`. Otherwise, it returns an AI SDK `tool()` whose:
+   - **description** enumerates each top-level key with its JS `typeof` (or `null` / `array`), so the model knows exactly which fields it can write.
+   - **inputSchema** is `{ updates: { type: object, additionalProperties: true } }`.
+2. If a tool was returned, merges it into `tools` under the name `update-page-state`.
+3. When `pageContext: true`, appends `sharedState: {JSON}` to the `<context>` block prepended to the system instructions.
+
+### Client-Side Allowlist and Write Path
+
+`update-page-state` is a client-executed tool (no server `execute`). The browser handles the call in `AgentChat`'s `onToolCall`:
+
+1. Reads `toolCall.input.updates`.
+2. Filters writes against `Object.keys(sharedStateRef.current)` -- any key the model hallucinates outside the exposed shape is dropped into `ignored` and not written. This defends against prompt-injection writes to arbitrary page state.
+3. For the writable subset, fires a registered internal event via `methods.triggerEvent({ name: '__updatePageState', event: writable })`. The event is registered at block-mount time:
+
+   ```js
+   methods.registerEvent({
+     name: '__updatePageState',
+     actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
+   });
+   ```
+
+   Routing through `registerEvent` + `triggerEvent` with `_event: true` reuses the action-runner's existing state-write path rather than introducing new block-level `setState`/`getState` methods. (An earlier prototype that added `block.setState`/`block.getState` was reverted in favour of this pattern -- see the merge history for `agent-shared-state`.)
+
+4. Responds via `addToolOutput({ tool: 'update-page-state', output: { ok: true, written: [...], ignored: [...] } })` so the model can see what took effect.
+
+### Developer Pattern
+
+A typical setup: the page has a form, the agent can both ask questions about what's in the form and fill it in.
+
+```yaml
+- type: AgentChat
+  properties:
+    agentId: intake_agent
+    sharedState:
+      legal_name: { _state: legal_name }
+      company: { _state: company }
+      notes: { _state: notes }
+```
+
+The model now sees those three fields on every turn and can call `update-page-state` to write them back. Any attempt to write, say, `admin: true` is silently dropped because `admin` isn't in the exposed shape.
+
 ## Hook System
 
 Hooks are server-side lifecycle callbacks that call API endpoints. Configured under `agent.hooks`:
@@ -210,7 +292,14 @@ Hook payloads are cleaned of non-serializable fields (`abortSignal`, functions, 
 
 `onFinish` is handled at the stream level, not through the AI SDK callback. After the agent stream completes:
 
-- Sends a payload with `messages`, `finishReason`, `usage` (accumulated across all steps), and `agentContext` (pageId, userId, conversationId, urlQuery)
+- Sends a payload with:
+  - `messages` -- full UIMessage array
+  - `steps` -- per-step records collected via the SDK's `onStepFinish` (each with `text`, `finishReason`, `usage`, `toolCalls`, `toolResults`)
+  - `toolResults` -- flattened `steps.flatMap(s => s.toolResults)` convenience field
+  - `finishReason` -- overall finish reason from the usage accumulator
+  - `isAborted` -- currently always `false` here
+  - `usage` -- accumulated usage across all steps
+  - `agentContext` fields spread in: `pageId`, `userId`, `conversationId`, `urlQuery`, `sharedState`
 - **Awaits** each endpoint call sequentially
 - If an endpoint returns `{ dataParts: [...] }`, each data part is written to the response stream
 - This enables patterns like title generation: the hook endpoint calls an LLM, returns `[{ type: 'data-chat-title', data: { title } }]`, and the client receives the title as a stream event
@@ -256,6 +345,30 @@ properties:
   model: gemini-2.5-pro
   thinkingConfig: { thinkingBudget: 5000 }
 ```
+
+### AIGatewayAgent (`@lowdefy/connection-ai-gateway`)
+
+`packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGatewayAgent/AIGatewayAgent.js`
+
+Wraps the Vercel AI Gateway (`@ai-sdk/gateway`). Maps gateway routing props into `providerOptions.gateway` before delegating to `handleAgentChat`:
+
+```yaml
+properties:
+  model: anthropic/claude-sonnet-4.5 # creator/model id
+  order: [anthropic, vertex] # preferred provider order
+  only: [anthropic, vertex] # restrict to these providers
+  fallbackModels: # fallback models tried in order
+    - openai/gpt-5-mini
+  user: '{{ user.id }}' # spend attribution id
+  tags: [support, prod] # analytics tags
+  zeroDataRetention: true # ZDR-only routing
+  providerTimeouts: # per-provider BYOK timeouts (ms)
+    byok: { anthropic: 15000 }
+  byok: # request-scoped BYOK creds
+    anthropic: [{ apiKey: '...' }]
+```
+
+Provider-native options (e.g. Anthropic `thinking`, OpenAI `reasoningEffort`) are passed through the gateway by keying `providerOptions` on the underlying provider slug (`providerOptions.anthropic`, `providerOptions.openai`, ...).
 
 ### AISDKAgent (generic, `@lowdefy/ai-utils`)
 
@@ -386,32 +499,36 @@ Developers wire their own persistence. The block renders the list; the app confi
 
 ## Key Files
 
-| File                                                                                                     | Purpose                                                                    |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `packages/utils/ai-utils/src/handleAgentChat.js`                                                         | Core orchestration: builds tools, creates ToolLoopAgent, manages streaming |
-| `packages/utils/ai-utils/src/buildAgentTools.js`                                                         | Merges endpoint, MCP, sub-agent, and fileSystem tools                      |
-| `packages/utils/ai-utils/src/buildPrepareStep.js`                                                        | Builds step-matching function for dynamic per-step config                  |
-| `packages/utils/ai-utils/src/AISDKAgentSchema.js`                                                        | JSON Schema for agent properties validation                                |
-| `packages/utils/ai-utils/src/AISDKAgent.js`                                                              | Generic agent resolver (no provider-specific mapping)                      |
-| `packages/utils/ai-utils/src/fileSystem/resolvePath.js`                                                  | Path traversal prevention for fileSystem tools                             |
-| `packages/utils/ai-utils/src/fileSystem/readFile.js`                                                     | File reading with 512KB truncation                                         |
-| `packages/utils/ai-utils/src/fileSystem/searchFiles.js`                                                  | Case-insensitive search with 200 match limit                               |
-| `packages/api/src/routes/agent/callAgent.js`                                                             | API route handler: loads config, resolves connections, calls resolver      |
-| `packages/api/src/routes/agent/getAgentConfig.js`                                                        | Reads agent JSON from build artifacts                                      |
-| `packages/api/src/routes/agent/getAgentResolver.js`                                                      | Looks up agent type from plugin registry                                   |
-| `packages/build/src/build/buildAgents.js`                                                                | Build-time validation, normalization, cycle detection                      |
-| `packages/build/src/build/writeAgents.js`                                                                | Serializes agent configs to JSON artifacts                                 |
-| `packages/build/src/build/writePluginImports/writeAgentImports.js`                                       | Generates agent type import registry                                       |
-| `packages/build/src/build/copyAgentFileSystems.js`                                                       | Copies fileSystem directories to server output                             |
-| `packages/servers/server/pages/api/agent/[...path].js`                                                   | Next.js API route, SSE streaming                                           |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                | Chat block component                                                       |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                     | DefaultChatTransport factory                                               |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                           | AI SDK to Lowdefy event bridging                                           |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentConversations/AgentConversations.js`              | Conversation list block                                                    |
-| `packages/plugins/connections/connection-anthropic/src/connections/Anthropic/ClaudeAgent/ClaudeAgent.js` | Anthropic resolver                                                         |
-| `packages/plugins/connections/connection-openai/src/connections/OpenAI/OpenAIAgent/OpenAIAgent.js`       | OpenAI resolver                                                            |
-| `packages/plugins/connections/connection-google/src/connections/Google/GeminiAgent/GeminiAgent.js`       | Google resolver                                                            |
-| `packages/plugins/connections/connection-mcp/src/connections/Mcp/Mcp.js`                                 | MCP config-container connection                                            |
+| File                                                                                                            | Purpose                                                                     |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `packages/utils/ai-utils/src/handleAgentChat.js`                                                                | Core orchestration: builds tools, creates ToolLoopAgent, manages streaming  |
+| `packages/utils/ai-utils/src/buildAgentTools.js`                                                                | Merges endpoint, MCP, sub-agent, and fileSystem tools                       |
+| `packages/utils/ai-utils/src/buildUpdatePageStateTool.js`                                                       | Builds the `update-page-state` AI SDK tool from the current sharedState     |
+| `packages/utils/ai-utils/src/reservedToolNames.js`                                                              | `RESERVED_PLATFORM_TOOL_NAMES` -- blocks user tools from shadowing platform |
+| `packages/utils/ai-utils/src/buildPrepareStep.js`                                                               | Builds step-matching function for dynamic per-step config                   |
+| `packages/utils/ai-utils/src/AISDKAgentSchema.js`                                                               | JSON Schema for agent properties validation                                 |
+| `packages/utils/ai-utils/src/AISDKAgent.js`                                                                     | Generic agent resolver (no provider-specific mapping)                       |
+| `packages/utils/ai-utils/src/fileSystem/resolvePath.js`                                                         | Path traversal prevention for fileSystem tools                              |
+| `packages/utils/ai-utils/src/fileSystem/readFile.js`                                                            | File reading with 512KB truncation                                          |
+| `packages/utils/ai-utils/src/fileSystem/searchFiles.js`                                                         | Case-insensitive search with 200 match limit                                |
+| `packages/api/src/routes/agent/callAgent.js`                                                                    | API route handler: loads config, resolves connections, calls resolver       |
+| `packages/api/src/routes/agent/getAgentConfig.js`                                                               | Reads agent JSON from build artifacts                                       |
+| `packages/api/src/routes/agent/getAgentResolver.js`                                                             | Looks up agent type from plugin registry                                    |
+| `packages/build/src/build/buildAgents.js`                                                                       | Build-time validation, normalization, cycle detection                       |
+| `packages/build/src/build/writeAgents.js`                                                                       | Serializes agent configs to JSON artifacts                                  |
+| `packages/build/src/build/writePluginImports/writeAgentImports.js`                                              | Generates agent type import registry                                        |
+| `packages/build/src/build/copyAgentFileSystems.js`                                                              | Copies fileSystem directories to server output                              |
+| `packages/servers/server/pages/api/agent/[...path].js`                                                          | Next.js API route, SSE streaming                                            |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                       | Chat block component                                                        |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                            | DefaultChatTransport factory                                                |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                                  | AI SDK to Lowdefy event bridging                                            |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentConversations/AgentConversations.js`                     | Conversation list block                                                     |
+| `packages/plugins/connections/connection-anthropic/src/connections/Anthropic/ClaudeAgent/ClaudeAgent.js`        | Anthropic resolver                                                          |
+| `packages/plugins/connections/connection-openai/src/connections/OpenAI/OpenAIAgent/OpenAIAgent.js`              | OpenAI resolver                                                             |
+| `packages/plugins/connections/connection-google/src/connections/Google/GeminiAgent/GeminiAgent.js`              | Google resolver                                                             |
+| `packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGateway.js`                     | AI Gateway connection (createGateway)                                       |
+| `packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGatewayAgent/AIGatewayAgent.js` | AI Gateway resolver (routing opts -> providerOptions.gateway)               |
+| `packages/plugins/connections/connection-mcp/src/connections/Mcp/Mcp.js`                                        | MCP config-container connection                                             |
 
 ## Decision Trace
 
