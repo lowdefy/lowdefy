@@ -303,3 +303,28 @@ blocks:
         - Blueberry
         - Cherry
         - Cranberry
+
+  # ============================================
+  # SELECTOR CSSKEY TESTS
+  # ============================================
+
+  - id: ac_selector_style
+    type: AutoComplete
+    style:
+      .selector:
+        padding: 14px
+    properties:
+      options:
+        - A
+        - B
+        - C
+
+  - id: ac_selector_class
+    type: AutoComplete
+    class:
+      .selector: ac-selector-tailwind
+    properties:
+      options:
+        - A
+        - B
+        - C

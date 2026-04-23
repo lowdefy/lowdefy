@@ -21,6 +21,7 @@ import { CsvExportModule } from '@ag-grid-community/csv-export';
 
 import processColDefs from './processColDefs.js';
 import assignRowId from './assignRowId.js';
+import LoadingOverlay from './LoadingOverlay.js';
 
 const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const { quickFilterValue, columnDefs, defaultColDef, ...someProperties } = properties;
@@ -179,14 +180,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
       }
       gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
     });
-    if (gridRef.current.api) {
-      if (loading) {
-        gridRef.current.api.showLoadingOverlay();
-      }
-      if (!loading) {
-        gridRef.current.api.hideOverlay();
-      }
-    }
   }, []);
 
   useEffect(() => {
@@ -199,23 +192,27 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
     gridRef.current.api.setQuickFilter(quickFilterValue); // check if empty string matches all
   }
   return (
-    <AgGridReact
-      {...someProperties}
-      rowData={rowData}
-      onCellClicked={onCellClicked}
-      onCellValueChanged={onCellValueChanged}
-      onFilterChanged={onFilterChanged}
-      onRowClicked={onRowClick}
-      onRowSelected={onRowSelected}
-      onSelectionChanged={onSelectionChanged}
-      onSortChanged={onSortChanged}
-      onRowDragEnd={onRowDragEnd}
-      defaultColDef={memoDefaultColDef}
-      modules={[ClientSideRowModelModule, CsvExportModule]}
-      columnDefs={processColDefs(columnDefs, methods)}
-      ref={gridRef}
-      getRowId={getRowId}
-    />
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <AgGridReact
+        {...someProperties}
+        rowData={rowData}
+        onCellClicked={onCellClicked}
+        onCellValueChanged={onCellValueChanged}
+        onFilterChanged={onFilterChanged}
+        onRowClicked={onRowClick}
+        onRowSelected={onRowSelected}
+        onSelectionChanged={onSelectionChanged}
+        onSortChanged={onSortChanged}
+        onRowDragEnd={onRowDragEnd}
+        defaultColDef={memoDefaultColDef}
+        modules={[ClientSideRowModelModule, CsvExportModule]}
+        columnDefs={processColDefs(columnDefs, methods)}
+        ref={gridRef}
+        getRowId={getRowId}
+        suppressLoadingOverlay
+      />
+      {loading && <LoadingOverlay />}
+    </div>
   );
 };
 

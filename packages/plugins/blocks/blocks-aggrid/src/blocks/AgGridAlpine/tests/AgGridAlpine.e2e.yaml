@@ -267,3 +267,41 @@ blocks:
               - true
           then: Filter changed
           else: ''
+
+  # ============================================
+  # BUILT-IN CELL RENDERERS — cross-theme smoke
+  # ============================================
+
+  - id: aggridalpine_cell_types
+    type: AgGridAlpine
+    properties:
+      columnDefs:
+        - headerName: Status
+          field: status
+          cell:
+            type: tag
+            colorMap:
+              Active: green
+              Blocked: red
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+        - headerName: Revenue
+          field: revenue
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            decimals: 0
+      rowData:
+        - id: u1
+          status: Active
+          name: Alice Johnson
+          revenue: 12500
+        - id: u2
+          status: Blocked
+          name: Bob Smith
+          revenue: -4200

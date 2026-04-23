@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function js(operatorContext) {
   const { jsMap, operators, location, params } = operatorContext;
-  if (!jsMap[params]) {
+  const hash = type.isString(params) ? params : params?.fn;
+  const args = type.isObject(params) ? params.args : undefined;
+  if (!jsMap[hash]) {
     throw new Error(
-      `_js function not found. The function may not have been built yet. Received hash: ${params}`
+      `_js function not found. The function may not have been built yet. Received hash: ${hash}`
     );
   }
   try {
-    return jsMap[params]({
+    return jsMap[hash]({
+      args,
       payload: (p) => operators._payload({ ...operatorContext, params: p }),
       secret: (p) => operators._secret({ ...operatorContext, params: p }),
       user: (p) => operators._user({ ...operatorContext, params: p }),
@@ -31,7 +36,7 @@ function js(operatorContext) {
       state: (p) => operators._state({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(`_js function execution error. Function: ${jsMap[params].toString()}`, {
+    throw new Error(`_js function execution error. Function: ${jsMap[hash].toString()}`, {
       cause: error,
     });
   }

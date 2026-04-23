@@ -508,6 +508,18 @@
         - id: DangerousMarkdown
           type: MenuLink
           pageId: DangerousMarkdown
+        - id: DiffGit
+          type: MenuLink
+          pageId: DiffGit
+        - id: DiffList
+          type: MenuLink
+          pageId: DiffList
+        - id: DiffSideBySide
+          type: MenuLink
+          pageId: DiffSideBySide
+        - id: DiffTimeline
+          type: MenuLink
+          pageId: DiffTimeline
         - id: Divider
           type: MenuLink
           pageId: Divider

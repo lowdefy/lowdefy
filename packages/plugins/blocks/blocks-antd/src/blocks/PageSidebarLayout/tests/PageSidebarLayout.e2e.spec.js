@@ -19,11 +19,11 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 test.describe('PageSidebarLayout Block', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear localStorage to ensure clean state for each test
-    await page.addInitScript(() => {
-      localStorage.removeItem('lf-psl_e2e-open');
-    });
     await navigateToTestPage(page, 'pagesidebarlayout');
+    // Clear stored sider state once per test. Using page.evaluate (rather
+    // than addInitScript) means `page.reload()` doesn't re-wipe the key,
+    // so restore-from-localStorage tests actually exercise the behaviour.
+    await page.evaluate(() => localStorage.removeItem('lf-psl_e2e-open'));
     // Set desktop viewport for most tests
     await page.setViewportSize({ width: 1200, height: 800 });
   });
@@ -335,8 +335,10 @@ test.describe('PageSidebarLayout Block', () => {
   });
 
   test('onToggleSider event fires when sider toggle button is clicked', async ({ page }) => {
-    // Click the built-in toggle button in the sider
-    const siderToggle = page.locator('#pagesidebarlayout_toggle_sider .ant-btn');
+    // The inner Button is mounted with `id={blockId}` directly on the
+    // `.ant-btn` element (no `#bl-` wrapper since it's composed internally,
+    // not a top-level block).
+    const siderToggle = page.locator('#pagesidebarlayout_toggle_sider');
     await siderToggle.click();
 
     const display = getBlock(page, 'toggle_sider_display');
