@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/jest-yaml-transform",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "license": "Apache-2.0",
   "description": "A Jest Transform for YAML.",
   "main": "./dist/index.js",

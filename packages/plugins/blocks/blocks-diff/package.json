@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-diff",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "license": "Apache-2.0",
   "description": "Lowdefy diff blocks — list, side-by-side, timeline, and git-diff views for before/after object comparisons.",
   "homepage": "https://lowdefy.com",
@@ -48,8 +48,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "6.1.0",
-    "@lowdefy/block-utils": "5.0.0",
-    "@lowdefy/helpers": "5.0.0",
+    "@lowdefy/block-utils": "5.1.0",
+    "@lowdefy/helpers": "5.1.0",
     "dayjs": "1.11.19",
     "diff": "5.2.2",
     "microdiff": "1.4.0",
@@ -62,8 +62,8 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "5.0.0",
-    "@lowdefy/e2e-utils": "5.0.0",
+    "@lowdefy/block-dev-e2e": "5.1.0",
+    "@lowdefy/e2e-utils": "5.1.0",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
