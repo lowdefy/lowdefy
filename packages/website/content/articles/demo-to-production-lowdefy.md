@@ -67,6 +67,8 @@ global:
 
 The root file works as a table of contents for the app. The logic lives in the folders it points at.
 
+Lowdefy has no file-based routing. Pages are registered here explicitly, and a page's URL comes from its `id`, not its path on disk. The folder layout above is a convention, not a requirement.
+
 For a monorepo with multiple Lowdefy apps (say a customer-facing site and an internal admin console) the shared tree moves up a level. Each app declares it in `cli.watch` so hot-reload works across the boundary:
 
 ```
