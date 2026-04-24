@@ -17,54 +17,79 @@ We maintain Lowdefy, but we also ship Lowdefy apps for clients. What follows are
 
 ---
 
-## 1. Parameterized fragments
+## 1. Structure is how the app scales
 
-The most common pattern in a production Lowdefy codebase is "define once, reuse with different values." Lowdefy's [`_ref`](https://docs.lowdefy.com/references-and-templates) takes a path and optionally a `vars` object, and the referenced file reads those vars with `_var`. A `.yaml.njk` extension turns on Nunjucks interpolation inside the file itself, which handles the things `_var` can't.
+A production Lowdefy codebase can run into hundreds of YAML files. Two things keep it navigable: a consistent folder layout, and [`_ref`](https://docs.lowdefy.com/references-and-templates).
 
-A parameterized form field is a good example:
+Each page lives in its own directory, with the requests, components, and actions it owns as siblings:
 
-```yaml
-# components/form_field.yaml.njk
-- id: {{ key }}
-  type: TextInput
-  required:
-    _var:
-      key: required
-      default: false
-  properties:
-    title:
-      _var: title
-    {% if span %}
-    label:
-      span:
-        _var: span
-      align: right
-    {% endif %}
+```
+pages/
+  items/
+    items-all/
+      items-all.yaml
+      components/
+      requests/
+    items-edit/
+      items-edit.yaml
+      components/
+      requests/
+      actions/
 ```
 
-Used twice on the same sign-up page, with different vars each time:
+The page file itself is usually short. Most of its body is `_ref` pointers into the sibling folders.
 
-```yaml
-# pages/sign_up.yaml
-- _ref:
-    path: components/form_field.yaml.njk
-    vars:
-      key: email
-      title: Email
-      required: true
-- _ref:
-    path: components/form_field.yaml.njk
-    vars:
-      key: company
-      title: Company (optional)
-      span: 8
+Anything used in more than one page moves up into a `shared/` tree at the repo root:
+
+```
+shared/
+  change_stamp.yaml
+  enums/
+  layouts/
+  requests/
 ```
 
-Two things here can't be done with `_var` alone. First, block ids must be literal strings at build time, so `id: {{ key }}` is rewritten to `id: email` before the build ever sees it. `_var` resolves values, not identifiers. Second, `{% if span %}` lets you omit the entire `label:` block when a caller doesn't pass `span`, rather than emitting the key with a null value that the block would have to interpret. Everything else uses `_var` in the usual way, with `default:` as the fallback when the caller omits a key.
+The app's root `lowdefy.yaml` is mostly an index. `pages:`, `api:`, `connections:`, `menus:`, and `global:` are lists and maps of `_ref`:
 
-Nunjucks can also parameterize the ref path itself. A page template that refs `../shared/requests/get_{{ entity }}.yaml` loads a different file per entity, letting one template drive several CRUD pages with no duplication. `_var` can't influence which file the build reads; Nunjucks can, because it runs first.
+```yaml
+pages:
+  - _ref: pages/items/items-all/items-all.yaml
+  - _ref: pages/items/items-edit/items-edit.yaml
+  - _ref: shared/login.yaml
 
-The pattern composes upward. A form is a stack of field fragments. A page is often a single `_ref` to a layout template, with page-specific content passed in. Most of a production Lowdefy app is `_ref` with `vars`, not copy-pasted definitions.
+global:
+  enums:
+    statuses:
+      _ref: shared/enums/statuses.yaml
+    categories:
+      _ref: shared/enums/categories.yaml
+```
+
+The root file works as a table of contents for the app. The logic lives in the folders it points at.
+
+For a monorepo with multiple Lowdefy apps (say a customer-facing site and an internal admin console) the shared tree moves up a level. Each app declares it in `cli.watch` so hot-reload works across the boundary:
+
+```
+apps/
+  site/
+    lowdefy.yaml
+    pages/
+  admin/
+    lowdefy.yaml
+    pages/
+  shared/
+    change_stamp.yaml
+    enums/
+```
+
+```yaml
+# apps/site/lowdefy.yaml
+cli:
+  watch:
+    - ../shared
+```
+
+Change a shared enum and both apps pick it up on the next build.
 
 ---
 
