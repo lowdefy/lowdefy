@@ -28,7 +28,8 @@ export default {
     arrow: 'Dropdown arrow indicator.',
   },
   events: {
-    onClick: 'Trigger action when the button is clicked (split mode).',
+    onClick:
+      'Trigger action when the button is clicked (split mode). Renders a shortcut badge when a shortcut is configured on the event.',
     onOpenChange: 'Trigger action when dropdown opens or closes.',
   },
   properties: {
@@ -122,7 +123,8 @@ export default {
       },
       items: {
         type: 'array',
-        description: 'Menu items. Each with an eventName that triggers a named event.',
+        description:
+          'Menu items. Each with an eventName that triggers a named event. Keyboard shortcuts can be configured via the standard `events.<eventName>.shortcut` schema (preferred) or via the item-level `shortcut` property — both render a badge next to the item label. The event-level shortcut takes precedence when both are set.',
         items: {
           type: 'object',
           properties: {
@@ -156,7 +158,8 @@ export default {
             },
             shortcut: {
               type: 'string',
-              description: 'Keyboard shortcut. Binds the key and renders the badge.',
+              description:
+                'Keyboard shortcut. Binds the key and renders the badge. Prefer configuring this via `events.<eventName>.shortcut` to follow the standard Lowdefy event schema — the event-level shortcut takes precedence when both are set.',
             },
           },
         },
