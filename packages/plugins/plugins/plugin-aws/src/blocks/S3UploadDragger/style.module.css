@@ -14,18 +14,11 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
-
-import Block from './S3UploadButton.js';
-import examples from './tests.yaml';
-import schema from './schema.json';
-import validationsExamples from '../../validationExamples.js';
-
-const testConfig = {
-  validation: true,
-  required: true,
-  values: [],
-};
-
-runRenderTests({ Block, examples, schema, testConfig, validationsExamples });
-runBlockSchemaTests({ examples, schema });
+@layer components {
+  /* antd v6 applies `padding: token.padding` to `.ant-upload-drag .ant-upload`,
+     which overflows the drag area when the wrapper height is small. Scope the
+     override to this block and let users add padding via style.hint. */
+  :global(.lf-s3-upload-dragger .ant-upload-drag .ant-upload) {
+    padding: 0;
+  }
+}
