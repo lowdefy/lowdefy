@@ -144,6 +144,25 @@ test('jsMapParser _jst escapes literal backticks in the template', () => {
   expect(jsMap.client[result.x._jst]).toBe('return `a \\`b\\` c`;');
 });
 
+test('jsMapParser _jst escapes backslashes so interpolation is preserved', () => {
+  const jsMap = {};
+  // User wants a literal backslash followed by an interpolation.
+  // Without escaping the backslash, `\${...}` would cancel interpolation.
+  const input = { x: { _jst: 'prefix\\${state("x")}' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  // Body contains escaped backslash + live interpolation.
+  expect(jsMap.client[result.x._jst]).toBe('return `prefix\\\\${state("x")}`;');
+});
+
+test('jsMapParser _jst escapes trailing backslash without breaking the template literal', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 'path\\' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(jsMap.client[result.x._jst]).toBe('return `path\\\\`;');
+});
+
 test('jsMapParser _jst preserves multi-line templates', () => {
   const jsMap = {};
   const input = { x: { _jst: 'line1\nline2 ${state("x")}' } };

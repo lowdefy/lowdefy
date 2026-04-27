@@ -42,7 +42,7 @@ function JsMapParser({ input, jsMap, env }) {
           { configKey: value['~k'] }
         );
       }
-      const body = `return \`${inner.replace(/`/g, '\\`')}\`;`;
+      const body = `return \`${inner.replace(/[\\`]/g, '\\$&')}\`;`;
       return { _jst: hashFn({ jsMap, env, value: body }) };
     }
 
