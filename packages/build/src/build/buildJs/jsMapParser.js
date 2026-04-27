@@ -33,6 +33,19 @@ function JsMapParser({ input, jsMap, env }) {
     if (Object.keys(value).length !== 1) return value;
 
     const key = Object.keys(value)[0];
+
+    if (key === '_jst') {
+      const inner = value[key];
+      if (!type.isString(inner)) {
+        throw new ConfigError(
+          `_jst operator expects a string template literal. Received ${JSON.stringify(inner)}.`,
+          { configKey: value['~k'] }
+        );
+      }
+      const body = `return \`${inner.replace(/`/g, '\\`')}\`;`;
+      return { _jst: hashFn({ jsMap, env, value: body }) };
+    }
+
     if (key !== '_js') return value;
 
     const inner = value[key];
