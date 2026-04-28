@@ -139,10 +139,10 @@ Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`,
 - `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
   - For `_ref: { module, component/menu }` — calls `getModuleRefContent()` to look up exports in resolved manifests
 - `resolveVar(node, ctx)` — variable substitution with `~r` provenance
-- `resolveModuleVar(node, ctx)` — module variable substitution from `ctx.moduleVars`
+- `resolveModuleVar(node, ctx)` — lazy module variable resolution: reads consumer value from `ctx.moduleEntry.consumerVars`, otherwise walks the raw `default` expression via `resolveEffectiveVar` / `resolveVarDefault` and caches on `ctx.moduleEntry.resolvedVarCache`
 - `cloneVarValue(value, sourceRefId)` — deep clone for var values (needed because same var may appear at multiple `_var` sites)
 - `tagRefDeep(node, refId)` — in-place `~r` tagging (replaces old `createRefReviver` + `serializer.copy`)
-- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleVars` for module-level vars
+- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleEntry` (carrying `consumerVars`, `varDefs`, `resolvedVarCache`) for module-scoped state
 
 **Traversal order:** Top-down for `_ref`/`_var`/`_module.var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
 

@@ -15,7 +15,7 @@ fetch → local resolve → validate wiring → full resolve → scope IDs → m
 ```
 
 1. **Fetch** (Phase 0) — Download GitHub tarballs or resolve local `file:` paths
-2. **Local resolve** (Phase 1a) — Read `module.lowdefy.yaml`, resolve local `_ref` and `_module.var`, extract exports and dependencies
+2. **Local resolve** (Phase 1a) — Read `module.lowdefy.yaml`, resolve local `_ref` in schema positions, preserve var `default` fields and `_module.var` for lazy resolution, extract exports and dependencies
 3. **Validate wiring** (Phase 1b) — Auto-wire dependencies by name match, validate all mappings
 4. **Full resolve** (Phase 1c) — Resolve cross-module `_ref: { module }` and `_module.*Id` operators with dependencies set
 5. **Resolve refs** (Phase 2) — Handle `_ref: { module, component/menu }` during the app's `buildRefs` pass (walker resolves `_module.*Id` operators in the content)
@@ -63,23 +63,54 @@ modules:
 
 ## Var Resolution Flow
 
-`_module.var` resolves during the walker pass (Phase 1), alongside `_var`. The `WalkContext` carries `moduleVars` that propagates through both `child()` and `forRef()` — staying constant across all `_ref` nesting depths within the module.
+`_module.var` resolves lazily during the full-resolve walker pass — only when the walker reads a var, and only after the consumer's value or the manifest default has been resolved. There is no eager merge of defaults; defaults are expressions that the walker evaluates on demand.
+
+### Phase 1a — `resolveLocalManifest`
+
+The walker walks the manifest with `shouldStop` preserving var `default` fields, pages, API, connections, and menu links. `_ref` in schema positions (`vars.X.type`, `properties`, top-level `_ref` in the manifest) resolves. The entire `default` subtree is preserved verbatim — `_ref`, `_module.var`, `_build.*`, and any operator combinations stay raw until the full-resolve pass evaluates them on read.
+
+Phase 1a stores three things on `context.modules[entry.id]`:
+
+- `consumerVars` — the raw vars object the consumer passed in `lowdefy.yaml`
+- `varDefs` — the `vars` declarations from `module.lowdefy.yaml`, with `default` fields preserved as raw operator trees
+- `resolvedVarCache` — empty cache keyed by var path, populated lazily during the full-resolve pass
+
+Phase 1a then calls `validateRequiredVars` for any required var that has no default — a missing required var fails the build before the main walk runs.
+
+During Phase 1a, the walker has `moduleRoot` set on the `WalkContext` (no full `moduleEntry` yet). `_module.var` is preserved untouched in this phase — the full-resolve pass resolves it.
+
+### Phase 1c / Phase 2 — `resolveFullManifest`
+
+The walker walks the manifest with `moduleEntry` set on the `WalkContext`. `shouldStop` preserves var `default` fields (defaults still don't resolve until read). `_module.var` triggers lazy resolution via `resolveModuleVar` → `resolveEffectiveVar` → `resolveVarDefault`:
 
 ```javascript
 // In resolve(), after the _var branch:
 if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
-  const moduleVarResult = resolveModuleVar(node, ctx);
-  return resolve(moduleVarResult, ctx);
+  return resolveModuleVar(node, ctx);
 }
 ```
 
-`resolveModuleVar` takes a string argument and reads from `ctx.moduleVars`:
+`resolveModuleVar` looks up the consumer value in `ctx.moduleEntry.consumerVars` first. If the consumer provided a value at the requested path, return it. Otherwise call `resolveEffectiveVar(key, moduleEntry, ctx)`:
 
-- `{ "_module.var": "key" }` — dot-notation lookup in `moduleVars`, returns `null` if missing
+- For namespace vars (`type: object` with `properties`), `resolveNamespaceVar` builds a merged object — each property resolves on its own (consumer value, otherwise its declared default).
+- For leaf vars, `resolveVarDefault(rawDefault, moduleEntry, ctx)` walks the raw default subtree in a fresh `WalkContext` rooted at `module.lowdefy.yaml`:
+  - `sourceRefId: null` — the caller's `cloneVarValue(value, ctx.sourceRefId)` uses the outer walk's `sourceRefId`, not the nested default walk's.
+  - `refId: moduleEntry.refDef.id` — default-resolution errors point at the module entry, not the calling page.
+  - `vars: {}` — no `_var` carryover from the outer walk.
+  - `refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : [])` — fresh chain, seeded with the module root to catch self-ref loops.
+  - `currentFile: moduleYamlPath` — `_ref` paths inside defaults resolve relative to the module root.
 
-Defaults are applied before the walker runs. In `registerModules.js`, `applyVarDefaults(varDefs, consumerVars)` merges manifest defaults with consumer-provided vars at registration time. Vars with `properties` merge recursively at the property level. The effective vars (with defaults applied) are stored in `context.modules` and passed to the walker as `moduleVars`.
+`getVarDef(varDefs, key)` navigates the `properties` tree by dot-path to find the declaration for a nested key. Resolution results cache on `moduleEntry.resolvedVarCache`, keyed by var path. Subsequent reads of the same var (within the same module entry, across all walks including cross-module ref calls) hit the cache.
 
-Outside module context (`moduleVars` is `undefined`), `_module.var` passes through unchanged.
+After the full-resolve pass completes, `validateVarTypes` walks the populated `resolvedVarCache` and validates each resolved value against its declared `type`. Vars that no walk read are absent from the cache — their defaults never resolve and their declared `type` is never checked.
+
+### `_module.var` Branch on `WalkContext`
+
+The walker's `_module.var` branch examines two `WalkContext` fields:
+
+- `moduleEntry` set → lazy resolve via `resolveModuleVar` (full-resolve pass, cross-module refs)
+- `moduleEntry` null, `moduleRoot` set (Phase 1a local resolve) → preserve the node untouched; the full-resolve pass resolves it
+- Both null (app-level config) → throw `ConfigError` — `_module.var` does not work at the app level
 
 ## ID Operator Resolution (Walker-Based)
 
@@ -204,7 +235,7 @@ Modules reference dependencies through two mechanisms:
 
 ```yaml
 # String form: same-module reference
-_module.pageId: company-detail        # → "companies/company-detail"
+_module.pageId: view                  # → "companies/view"
 
 # Object form: cross-module reference
 _module.pageId:
@@ -262,7 +293,7 @@ The build reads `exports` during the local resolve step. Cross-module ID operato
 
 ### Embedded Component Context
 
-When module A embeds a component from module B, the component's `_module.var` and `_module.*Id` operators resolve against **B's context** — not A's. The walker switches `moduleVars`, `moduleDependencies`, and `packageRoot` to B's values when entering cross-module ref content.
+When module A embeds a component from module B, the component's `_module.var` and `_module.*Id` operators resolve against **B's context** — not A's. The walker switches `moduleEntry`, `moduleDependencies`, and `packageRoot` to B's values when entering cross-module ref content. `_module.var` then reads B's `consumerVars`, `varDefs`, and `resolvedVarCache`.
 
 This is essential: a contacts component's `_module.var: collection` means the contacts collection. Its `_module.pageId: contact-detail` resolves to the contacts entry's page. Per-ref `_var` still works for customizing the component at the point of inclusion.
 
@@ -270,7 +301,7 @@ This is essential: a contacts component's `_module.var: collection` means the co
 
 Modules can depend on each other (contacts ↔ companies). The build handles this with a local-resolve → validate → full-resolve sequence:
 
-**Step 1 — Local resolve:** For each module entry, run the walker with `shouldStop` preserving pages, API, connections, and menu link content. Local `_ref`s, `_module.var`, and `_build.*` operators resolve — producing concrete `components` and `menus` arrays with string IDs. Component bodies stay preserved. Extract `dependencies` and `exports` declarations.
+**Step 1 — Local resolve:** For each module entry, run the walker with `shouldStop` preserving pages, API, connections, menu link content, and var `default` fields. Local `_ref` in schema positions and `_build.*` operators resolve — producing concrete `components` and `menus` arrays with string IDs. Component bodies, var defaults, and `_module.var` references stay preserved. Extract `dependencies` and `exports` declarations.
 
 ```
 resolveLocalManifest("contacts") → concrete arrays, preserved content, exports extracted
@@ -279,7 +310,7 @@ resolveLocalManifest("companies") → concrete arrays, preserved content, export
 
 **Step 2 — Validate wiring:** `resolveModuleDependencies` auto-wires by name match, validates all mappings.
 
-**Step 3 — Full resolve:** Run the walker once per manifest with `moduleDependencies` set. The walker resolves all preserved content — pages, API, connections, menu links, and cross-module `_ref: { module }` refs. `_build.*` operators wrapping cross-module refs evaluate correctly because everything resolves in one pass.
+**Step 3 — Full resolve:** Run the walker once per manifest with `moduleEntry` and `moduleDependencies` set. The walker resolves all preserved content — pages, API, connections, menu links, and cross-module `_ref: { module }` refs. `_module.var` triggers lazy default resolution against `moduleEntry.consumerVars` and `varDefs`, caching results on `moduleEntry.resolvedVarCache`. `_build.*` operators wrapping cross-module refs evaluate correctly because everything resolves in one pass.
 
 This works because step 1 produces concrete arrays for every module without cross-module content. `components` and `menus` arrays are always locally constructable — cross-module `_ref: { module, component }` appears inside `component:` fields and page content, never at the array level. Step 3's walker looks up components and menus by ID in these concrete arrays. Processing order in step 3 doesn't matter.
 
@@ -326,9 +357,9 @@ After loading module ref content, the walker constructs a key `module:<entryId>/
 | `packages/build/src/build/fetchModules.js`                  | Fetch module sources (GitHub tarballs, local paths)                             |
 | `packages/build/src/build/buildModuleDefs.js`               | Three-phase module processing: local resolve → validate → full resolve          |
 | `packages/build/src/build/resolveModuleDependencies.js`     | Auto-wire and validate cross-module dependency mappings                         |
-| `packages/build/src/build/registerModules.js`               | `resolveLocalManifest` and `resolveFullManifest` — two-pass walker invocation   |
+| `packages/build/src/build/registerModules.js`               | `resolveLocalManifest` stores raw `consumerVars`/`varDefs`/empty `resolvedVarCache`; `resolveFullManifest` runs the full-resolve walker pass; calls `validateRequiredVars` early and `validateVarTypes` after the full-resolve pass |
 | `packages/build/src/build/buildModules.js`                  | Scope IDs (prefix with entryId), merge module content into app components       |
 | `packages/build/src/build/resolveModuleOperators.js`        | `scopeMenuItemIds` only — prefixes menu item IDs with entry ID                  |
 | `packages/build/src/build/resolveDepTarget.js`              | Shared utility for resolving abstract dependency names to concrete entry IDs    |
 | `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }`, deep copy content                  |
-| `packages/build/src/build/buildRefs/walker.js`              | `_module.var`, `_module.*Id` resolution, module context switching, cycle detection |
+| `packages/build/src/build/buildRefs/walker.js`              | `_module.var` triggers lazy resolution via `moduleEntry`; `_module.*Id` resolution; module context switching; cycle detection. Adds `resolveEffectiveVar`, `resolveNamespaceVar`, `resolveVarDefault`, `getVarDef` helpers |
