@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    description:
-      'String method params. Accepts array positional args or object with named args depending on method. The "format" method takes a template string with {0}/{1} positional placeholders (array form) or {name} placeholders (object form: { template, on }).',
-  },
-};
+@layer components {
+  /* antd v6 applies `padding: token.padding` to `.ant-upload-drag .ant-upload`,
+     which overflows the drag area when the wrapper height is small. Scope the
+     override to this block and let users add padding via style.hint. */
+  :global(.lf-s3-upload-dragger .ant-upload-drag .ant-upload) {
+    padding: 0;
+  }
+}

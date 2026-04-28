@@ -17,7 +17,8 @@
 export default {
   type: 'object',
   params: {
+    type: 'string',
     description:
-      'String method params. Accepts array positional args or object with named args depending on method. The "format" method takes a template string with {0}/{1} positional placeholders (array form) or {name} placeholders (object form: { template, on }).',
+      'Hash identifier of the pre-built JavaScript template-literal function to execute.',
   },
 };

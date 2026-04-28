@@ -276,37 +276,40 @@
           - title: Undo
             eventName: onUndo
             icon: AiOutlineUndo
-            shortcut: alt+z
           - title: Redo
             eventName: onRedo
             icon: AiOutlineRedo
-            shortcut: alt+shift+z
           - type: divider
           - title: Delete
             eventName: onDelete
             icon: AiOutlineDelete
             danger: true
-            shortcut: alt+Backspace
       events:
         onUndo:
-          - id: db_sc_undo_msg
-            type: DisplayMessage
-            params:
-              content: Undo
-              duration: 2
+          shortcut: alt+z
+          try:
+            - id: db_sc_undo_msg
+              type: DisplayMessage
+              params:
+                content: Undo
+                duration: 2
         onRedo:
-          - id: db_sc_redo_msg
-            type: DisplayMessage
-            params:
-              content: Redo
-              duration: 2
+          shortcut: alt+shift+z
+          try:
+            - id: db_sc_redo_msg
+              type: DisplayMessage
+              params:
+                content: Redo
+                duration: 2
         onDelete:
-          - id: db_sc_del_msg
-            type: DisplayMessage
-            params:
-              content: Deleted
-              status: error
-              duration: 2
+          shortcut: alt+Backspace
+          try:
+            - id: db_sc_del_msg
+              type: DisplayMessage
+              params:
+                content: Deleted
+                status: error
+                duration: 2
 
 - title: Hover Trigger
   blocks:

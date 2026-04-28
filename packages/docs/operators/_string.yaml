@@ -38,6 +38,43 @@ _ref:
           ```
         description: |
           The `_string.concat` method [concatenates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat) strings.
+
+          For label-style interpolation (`"Updates (5)"`), prefer [`_string.format`](#format) — it's more concise and renders `null`/`undefined` values as empty strings.
+      - name: format
+        types: |
+          ```
+          (template: string, ...values: any[]): string
+          (arguments: { template: string, on?: object }): string
+          ```
+        description: |
+          The `_string.format` method substitutes placeholders in a template string with values. Two input forms are supported:
+
+          **Positional (array form)** — `{0}`, `{1}`, ... refer to elements after the template:
+          ```yaml
+          _string.format:
+            - 'Updates ({0})'
+            - _request: get_counts.0.update
+          ```
+
+          **Named (object form)** — `{name}` placeholders are looked up in `on`:
+          ```yaml
+          _string.format:
+            template: 'Updates ({count}) since {date}'
+            on:
+              count:
+                _request: get_counts.0.update
+              date:
+                _date.format:
+                  - YYYY-MM-DD
+                  - _state: lastSync
+          ```
+
+          **Behavior**:
+          - `null` and `undefined` values render as an empty string. This often makes `_if_none` unnecessary — `_string.format: ['Updates ({0})', null]` produces `'Updates ()'` directly.
+          - Missing positional indexes or named keys render as an empty string.
+          - Non-string values are coerced via `String(v)`. For object/array values, use [`_json.stringify`](/_json) first.
+          - To include a literal `{` or `}`, use `{{` or `}}`.
+          - Use [`_nunjucks`](/_nunjucks) when you need conditionals, loops, or filters.
       - name: endsWith
         types: |
           ```
