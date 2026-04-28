@@ -1,5 +1,168 @@
 # @lowdefy/server-enterprise
 
+## 5.1.0
+
+### Patch Changes
+
+- 081d79634: feat(client): Per-mode theme tokens for dark/light customization.
+
+  `theme.antd` now accepts four new sibling keys so apps can soften base surfaces without juggling two theme files. Each is merged on top of the shared equivalent only when the matching mode is active:
+
+  - `lightToken` / `darkToken` — override antd design tokens (e.g. `colorBgLayout`, `colorBgContainer`, `colorBgElevated`) per mode.
+  - `lightComponents` / `darkComponents` — override component-level tokens per mode (e.g. `Layout.siderBg`, `Layout.headerBg`, `Menu.darkItemBg`) that aren't reachable via seed tokens.
+
+  The `<html>` pre-hydration inline script now reads `darkToken.colorBgLayout` / `lightToken.colorBgLayout` from the built theme, so the first paint matches your configured surface color with no flash of `#000` or `#fff`.
+
+  ```yaml
+  theme:
+    antd:
+      token:
+        colorPrimary: '#6366f1'
+      darkToken:
+        colorBgLayout: '#131419'
+        colorBgContainer: '#1a1b22'
+      darkComponents:
+        Layout:
+          headerBg: '#0e0f13'
+          siderBg: '#0e0f13'
+        Menu:
+          darkItemBg: '#0e0f13'
+          darkItemSelectedBg: '#252731'
+    darkMode: system
+  ```
+
+  Backwards compatible — apps that only use `theme.antd.token` keep antd's default base colors (dark `#000`, light browser-default).
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+- c6f45a1ac: fix(server): Escape theme values embedded in the pre-hydration inline script.
+
+  `_document.js` interpolates `configColorMode`, `darkToken.colorBgLayout`, and `lightToken.colorBgLayout` from `theme.json` into a synchronous `<script>` block to set the `<html>` background before hydration. Previously the values went through `JSON.stringify` only — enough to escape JS-string-context characters, but not enough to prevent a value containing `</script>` (or U+2028 / U+2029 line separators) from breaking out of the enclosing `<script>` tag.
+
+  Added a `safeScriptJson` helper that additionally escapes `<`, `>`, control chars, and U+2028 / U+2029 to `\uXXXX` sequences after `JSON.stringify`. For every valid color value (`#1e293b`, `rgb(...)`, `slategray`, `oklch(...)`, etc.) the output is byte-identical to the previous behavior; only payloads that would have tripped `<script>` breakout or JS-line-terminator injection are now neutralized.
+
+  Closes the six `js/bad-code-sanitization` CodeQL alerts (89 – 94) opened against the per-mode-theme PR.
+
+- Updated dependencies [95388a581]
+- Updated dependencies [573b90369]
+- Updated dependencies [be367bebd]
+- Updated dependencies [b1e0c9944]
+- Updated dependencies [447f8ce57]
+- Updated dependencies [36a2d1bca]
+- Updated dependencies [081d79634]
+- Updated dependencies [f56a47d87]
+- Updated dependencies [6c6aab961]
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/blocks-antd@5.1.0
+  - @lowdefy/client@5.1.0
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/api@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/actions-core@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/plugin-next-auth@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+  - @lowdefy/node-utils@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Upgrade Next.js to 16 with Turbopack.
+
+  ### Breaking Changes
+
+  - **Next.js 16**: Both production and development servers run on Next.js 16 with Turbopack as the default bundler.
+  - **Less removed**: `next-with-less` wrapper is removed. Styling uses CSS Modules and antd CSS-in-JS.
+  - **SWC 1.15.18**: Updated SWC compiler.
+  - **Dynamic transpilePackages**: Server resolves block packages for transpilation from a build artifact, supporting custom block plugins with CSS imports.
+  - **antd as direct server dependency**: Both server packages list `antd` and `@ant-design/cssinjs` as direct dependencies for pnpm strict mode compatibility.
+
+### Minor Changes
+
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- Updated dependencies [52ea769811]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [155c0b9724]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [0fe1bc38dd]
+- Updated dependencies [130a569d36]
+- Updated dependencies [e3e922538]
+- Updated dependencies [c3b5b45ec5]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [fd8225b7a1]
+- Updated dependencies [43528a8b9]
+- Updated dependencies [905d5d406]
+- Updated dependencies [c1b5ddb33a]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [c570982e0f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/blocks-basic@5.0.0
+  - @lowdefy/blocks-antd@5.0.0
+  - @lowdefy/client@5.0.0
+  - @lowdefy/layout@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/blocks-loaders@5.0.0
+  - @lowdefy/operators-js@5.0.0
+  - @lowdefy/actions-core@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/plugin-next-auth@5.0.0
+  - @lowdefy/node-utils@5.0.0
+  - @lowdefy/api@5.0.0
+  - @lowdefy/logger@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

@@ -1,5 +1,94 @@
 # @lowdefy/server-e2e
 
+## 5.1.0
+
+### Patch Changes
+
+- Updated dependencies [95388a581]
+- Updated dependencies [573b90369]
+- Updated dependencies [be367bebd]
+- Updated dependencies [b1e0c9944]
+- Updated dependencies [447f8ce57]
+- Updated dependencies [36a2d1bca]
+- Updated dependencies [081d79634]
+- Updated dependencies [f56a47d87]
+- Updated dependencies [6c6aab961]
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/blocks-antd@5.1.0
+  - @lowdefy/client@5.1.0
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/api@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/actions-core@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/blocks-markdown@5.1.0
+  - @lowdefy/connection-axios-http@5.1.0
+  - @lowdefy/connection-mongodb@5.1.0
+  - @lowdefy/operators-nunjucks@5.1.0
+  - @lowdefy/operators-uuid@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+  - @lowdefy/node-utils@5.1.0
+
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [52ea769811]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [155c0b9724]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [0fe1bc38dd]
+- Updated dependencies [130a569d36]
+- Updated dependencies [e3e922538]
+- Updated dependencies [c3b5b45ec5]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [fd8225b7a1]
+- Updated dependencies [43528a8b9]
+- Updated dependencies [905d5d406]
+- Updated dependencies [c1b5ddb33a]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [c570982e0f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/blocks-basic@5.0.0
+  - @lowdefy/blocks-antd@5.0.0
+  - @lowdefy/client@5.0.0
+  - @lowdefy/layout@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/blocks-loaders@5.0.0
+  - @lowdefy/blocks-markdown@5.0.0
+  - @lowdefy/operators-js@5.0.0
+  - @lowdefy/actions-core@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/connection-axios-http@5.0.0
+  - @lowdefy/operators-nunjucks@5.0.0
+  - @lowdefy/operators-uuid@5.0.0
+  - @lowdefy/node-utils@5.0.0
+  - @lowdefy/api@5.0.0
+  - @lowdefy/connection-mongodb@5.0.0
+  - @lowdefy/logger@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

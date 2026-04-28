@@ -22,6 +22,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import buildBlock from './buildBlock/buildBlock.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
@@ -41,6 +42,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     );
     return { failed: true };
   }
+  validateId({ id: page.id, field: 'Page id', configKey });
   if (checkDuplicatePageId) {
     checkDuplicatePageId({ id: page.id, configKey });
   }

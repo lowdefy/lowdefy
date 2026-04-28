@@ -28,11 +28,11 @@ _ref:
 
             To test the production server, it can be run locally. In order to do this, first create the production build output using:
 
-            `pnpx lowdefy@4 build`
+            `pnpx lowdefy@5 build`
 
             The production server can then be run using:
 
-            `pnpx lowdefy@4 start`
+            `pnpx lowdefy@5 start`
 
             ### Create Standalone Folder:
 
@@ -49,7 +49,7 @@ _ref:
 
             The production build output is then created by running:
 
-            `pnpx lowdefy@4 build`
+            `pnpx lowdefy@5 build`
 
             The above creates a Next.js standalone folder at `<config-directory>/.lowdefy/server/.next/standalone`. Read more about this [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output).
 

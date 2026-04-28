@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import uploadTheme from '../../schemas/uploadTheme.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -23,6 +25,11 @@ export default {
   },
   events: {
     onChange: 'Triggered when the upload state is changing.',
+    onRemove: {
+      description:
+        'Triggered when a file remove icon is clicked. The file is NOT removed automatically — the handler is responsible for updating `fileList` (e.g. via `SetState`).',
+      event: { file: 'The file whose remove icon was clicked.' },
+    },
   },
   properties: {
     type: 'object',
@@ -64,42 +71,13 @@ export default {
         description:
           'Id of a request of type AwsS3PresignedGetObject that defines which S3 bucket and file to download.',
       },
-      theme: {
-        type: 'object',
+      showRemoveIcon: {
+        type: 'boolean',
+        default: false,
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/upload#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-          link: 'https://ant.design/components/upload#design-token',
-        },
-        properties: {
-          actionsColor: {
-            type: 'string',
-            description: 'Color of action icons (download, preview).',
-          },
-          pictureCardSize: {
-            type: 'number',
-            description:
-              'Size of list items in card type (affects both picture-card and picture-circle).',
-          },
-          controlItemBgHover: {
-            type: 'string',
-            description: 'Background color of file item on hover.',
-          },
-          colorIcon: {
-            type: 'string',
-            description: 'Color of file icons.',
-          },
-          fontSize: {
-            type: 'number',
-            description: 'Font size of file name text.',
-          },
-          borderRadiusSM: {
-            type: 'number',
-            description: 'Border radius of file list items.',
-          },
-        },
+          'Show a remove (×) icon next to each file in the list. Clicking it fires the `onRemove` event; the file is not removed from `fileList` automatically — the action handler is responsible.',
       },
+      theme: uploadTheme,
     },
   },
 };

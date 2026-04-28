@@ -18,10 +18,10 @@ import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 import crypto from 'crypto';
 
-function makeHash({ jsMap, env, value }) {
+function hashFn({ jsMap, env, value }) {
   const hash = crypto.createHash('sha1').update(value).digest('base64');
   jsMap[env][hash] = value;
-  return { _js: hash };
+  return hash;
 }
 
 function JsMapParser({ input, jsMap, env }) {
@@ -33,15 +33,35 @@ function JsMapParser({ input, jsMap, env }) {
     if (Object.keys(value).length !== 1) return value;
 
     const key = Object.keys(value)[0];
+
+    if (key === '_jst') {
+      const inner = value[key];
+      if (!type.isString(inner)) {
+        throw new ConfigError(
+          `_jst operator expects a string template literal. Received ${JSON.stringify(inner)}.`,
+          { configKey: value['~k'] }
+        );
+      }
+      const body = `return \`${inner.replace(/[\\`]/g, '\\$&')}\`;`;
+      return { _jst: hashFn({ jsMap, env, value: body }) };
+    }
+
     if (key !== '_js') return value;
 
-    if (!type.isString(value[key])) {
-      throw new ConfigError(
-        `_js operator expects the JavaScript definition as a string. Received ${JSON.stringify(value[key])}.`,
-        { configKey: value['~k'] }
-      );
+    const inner = value[key];
+
+    if (type.isString(inner)) {
+      return { _js: hashFn({ jsMap, env, value: inner }) };
     }
-    return makeHash({ jsMap, env, value: value[key] });
+
+    if (type.isObject(inner) && type.isString(inner.fn)) {
+      return { _js: { fn: hashFn({ jsMap, env, value: inner.fn }), args: inner.args } };
+    }
+
+    throw new ConfigError(
+      `_js operator expects a JavaScript string or { fn: string, args?: object }. Received ${JSON.stringify(inner)}.`,
+      { configKey: value['~k'] }
+    );
   };
   return serializer.copy(input, { reviver });
 }

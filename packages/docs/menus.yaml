@@ -422,6 +422,12 @@
         - id: TextInput
           type: MenuLink
           pageId: TextInput
+        - id: TiptapInput
+          type: MenuLink
+          pageId: TiptapInput
+        - id: TiptapMentionInput
+          type: MenuLink
+          pageId: TiptapMentionInput
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
@@ -461,6 +467,18 @@
         - id: DangerousMarkdown
           type: MenuLink
           pageId: DangerousMarkdown
+        - id: DiffGit
+          type: MenuLink
+          pageId: DiffGit
+        - id: DiffList
+          type: MenuLink
+          pageId: DiffList
+        - id: DiffSideBySide
+          type: MenuLink
+          pageId: DiffSideBySide
+        - id: DiffTimeline
+          type: MenuLink
+          pageId: DiffTimeline
         - id: Divider
           type: MenuLink
           pageId: Divider
@@ -494,9 +512,6 @@
         - id: Message
           type: MenuLink
           pageId: Message
-        - id: MobileMenu
-          type: MenuLink
-          pageId: MobileMenu
         - id: Notification
           type: MenuLink
           pageId: Notification
@@ -618,12 +633,18 @@
         - id: Masonry
           type: MenuLink
           pageId: Masonry
+        - id: MobileMenu
+          type: MenuLink
+          pageId: MobileMenu
         - id: Modal
           type: MenuLink
           pageId: Modal
         - id: PageHeaderMenu
           type: MenuLink
           pageId: PageHeaderMenu
+        - id: PageSidebarLayout
+          type: MenuLink
+          pageId: PageSidebarLayout
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu
@@ -894,6 +915,9 @@
         - id: _js
           type: MenuLink
           pageId: _js
+        - id: _jst
+          type: MenuLink
+          pageId: _jst
         - id: _json
           type: MenuLink
           pageId: _json

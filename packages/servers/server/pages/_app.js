@@ -58,10 +58,18 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
 
-  const algorithm = useDarkMode({
-    baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+  const { algorithm, token, components } = useDarkMode({
+    antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
+
+  const {
+    lightToken: _lightToken,
+    darkToken: _darkToken,
+    lightComponents: _lightComponents,
+    darkComponents: _darkComponents,
+    ...antdConfig
+  } = lowdefyRef.current.theme?.antd ?? {};
 
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
@@ -75,7 +83,9 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     <StyleProvider layer>
       <ConfigProvider
         theme={{
-          ...lowdefyRef.current.theme?.antd,
+          ...antdConfig,
+          token,
+          components,
           cssVar: { key: 'lowdefy' },
           hashed: false,
           algorithm,

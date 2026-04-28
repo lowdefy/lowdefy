@@ -18,9 +18,18 @@ export default {
   type: 'object',
   params: {
     oneOf: [
-      { type: 'string', description: 'Dot-notation path to value in user object.' },
+      {
+        type: 'string',
+        description:
+          'Dot-notation path to value in user object, or a role name when used with a role method.',
+      },
       { type: 'integer', description: 'Index to access in user object.' },
       { type: 'boolean', enum: [true], description: 'Return all user data.' },
+      {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Array of role names when used with a role method.',
+      },
       {
         type: 'object',
         properties: {

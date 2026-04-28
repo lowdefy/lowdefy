@@ -776,6 +776,62 @@
           - label: Option 3
             value: 3
 
+- title: Scrollable Tag Container
+  blocks:
+    - id: scrollable_selector
+      type: MultipleSelector
+      style:
+        .selector:
+          maxHeight: 96px
+          overflowY: auto
+      properties:
+        title: Scrollable Selector
+        label:
+          extra: Cap the tag container at ~3 rows and scroll when more tags are selected.
+        placeholder: Pick several tags
+        renderTags: true
+        options:
+          - label: Alpha
+            value: alpha
+            tag:
+              color: blue
+          - label: Beta
+            value: beta
+            tag:
+              color: green
+          - label: Gamma
+            value: gamma
+            tag:
+              color: purple
+          - label: Delta
+            value: delta
+            tag:
+              color: orange
+          - label: Epsilon
+            value: epsilon
+            tag:
+              color: cyan
+          - label: Zeta
+            value: zeta
+            tag:
+              color: magenta
+          - label: Eta
+            value: eta
+            tag:
+              color: red
+          - label: Theta
+            value: theta
+            tag:
+              color: volcano
+          - label: Iota
+            value: iota
+            tag:
+              color: gold
+          - label: Kappa
+            value: kappa
+            tag:
+              color: geekblue
+
 - title: Style and Class Overrides
   blocks:
     - id: style_border

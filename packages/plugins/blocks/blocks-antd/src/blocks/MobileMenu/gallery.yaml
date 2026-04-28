@@ -807,6 +807,82 @@
               icon: AiOutlineSetting
               shortcut: mod+,
 
+- title: Logo in Drawer Header
+  blocks:
+    - id: mm_logo_example
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        logo:
+          src: logo-square-dark-theme.png
+          alt: Lowdefy
+          style:
+            width: 60
+        links:
+          - id: ml_home
+            type: MenuLink
+            properties:
+              title: Home
+              icon: AiOutlineHome
+          - id: ml_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+
+- title: Drawer Content Slot
+  blocks:
+    - id: mm_drawer_content_example
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        links:
+          - id: mdc_home
+            type: MenuLink
+            properties:
+              title: Home
+          - id: mdc_about
+            type: MenuLink
+            properties:
+              title: About
+      slots:
+        drawerContent:
+          blocks:
+            - id: mdc_extra
+              type: Paragraph
+              properties:
+                content: Additional content below the menu items.
+                style:
+                  padding: 16px
+                  color: '#999'
+
+- title: Drawer Footer Slot
+  blocks:
+    - id: mm_drawer_footer_example
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        links:
+          - id: mdf_home
+            type: MenuLink
+            properties:
+              title: Home
+      slots:
+        drawerFooter:
+          blocks:
+            - id: mdf_footer
+              type: Paragraph
+              properties:
+                content: App v2.1.0
+                style:
+                  textAlign: center
+                  margin: 0
+                  color: '#aaa'
+                  fontSize: 12
+
 - title: MobileMenu in Admin Dashboard
   blocks:
     - id: admin_header

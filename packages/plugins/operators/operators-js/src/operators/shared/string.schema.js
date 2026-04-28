@@ -18,6 +18,6 @@ export default {
   type: 'object',
   params: {
     description:
-      'String method params. Accepts array positional args or object with named args depending on method.',
+      'String method params. Accepts array positional args or object with named args depending on method. The "format" method takes a template string with {0}/{1} positional placeholders (array form) or {name} placeholders (object form: { template, on }).',
   },
 };

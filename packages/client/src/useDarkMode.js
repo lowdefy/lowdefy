@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { theme as antdTheme } from 'antd';
 
 const algorithmMap = {
@@ -55,7 +55,18 @@ function resolveIsDark({ configDarkMode, userPreference, systemIsDark }) {
   return systemIsDark;
 }
 
-function useDarkMode({ baseAlgorithm, configDarkMode }) {
+function mergeComponents(shared, mode) {
+  if (!shared && !mode) return undefined;
+  const keys = new Set([...Object.keys(shared ?? {}), ...Object.keys(mode ?? {})]);
+  const merged = {};
+  keys.forEach((name) => {
+    merged[name] = { ...((shared ?? {})[name] ?? {}), ...((mode ?? {})[name] ?? {}) };
+  });
+  return merged;
+}
+
+function useDarkMode({ antd, configDarkMode }) {
+  const baseAlgorithm = antd?.algorithm;
   const cleanAlgorithm = stripDarkFromAlgorithm(baseAlgorithm);
 
   const [userPreference, setUserPreference] = useState(() => {
@@ -84,7 +95,45 @@ function useDarkMode({ baseAlgorithm, configDarkMode }) {
 
   const isDark = resolveIsDark({ configDarkMode, userPreference, systemIsDark });
   window.__lowdefy_isDark = isDark;
-  return resolveAlgorithm(mergeAlgorithm(cleanAlgorithm, isDark));
+
+  const sharedToken = antd?.token;
+  const lightToken = antd?.lightToken;
+  const darkToken = antd?.darkToken;
+  const sharedComponents = antd?.components;
+  const lightComponents = antd?.lightComponents;
+  const darkComponents = antd?.darkComponents;
+
+  const token = useMemo(() => {
+    const modeToken = isDark ? darkToken : lightToken;
+    if (!sharedToken && !modeToken) return undefined;
+    return { ...(sharedToken ?? {}), ...(modeToken ?? {}) };
+  }, [isDark, sharedToken, lightToken, darkToken]);
+
+  const components = useMemo(
+    () => mergeComponents(sharedComponents, isDark ? darkComponents : lightComponents),
+    [isDark, sharedComponents, lightComponents, darkComponents]
+  );
+
+  // Keep the <html> background in sync with the resolved mode. The _document.js
+  // inline script sets an initial background before hydration; this effect takes
+  // over once React is active and updates on every dark/light toggle.
+  const darkBg = darkToken?.colorBgLayout;
+  const lightBg = lightToken?.colorBgLayout;
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.style.backgroundColor = darkBg ?? '#000';
+    } else if (lightBg) {
+      document.documentElement.style.backgroundColor = lightBg;
+    } else {
+      document.documentElement.style.removeProperty('background-color');
+    }
+  }, [isDark, darkBg, lightBg]);
+
+  return {
+    algorithm: resolveAlgorithm(mergeAlgorithm(cleanAlgorithm, isDark)),
+    token,
+    components,
+  };
 }
 
 export default useDarkMode;

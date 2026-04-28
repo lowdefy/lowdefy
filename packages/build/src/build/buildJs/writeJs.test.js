@@ -44,16 +44,16 @@ test('writeJs', async () => {
       'plugins/operators/clientJsMap.js',
       `
 export default {
-  'A': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 12; },
-  'B': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
+  'A': ({ actions, args, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 12; },
+  'B': ({ actions, args, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
   };`,
     ],
     [
       'plugins/operators/serverJsMap.js',
       `
 export default {
-  'C': ({ item, payload, secrets, state, step, user }) => { return 10; },
-  'D': ({ item, payload, secrets, state, step, user }) => { return 1; },
+  'C': ({ args, item, payload, secrets, state, step, user }) => { return 10; },
+  'D': ({ args, item, payload, secrets, state, step, user }) => { return 1; },
   };`,
     ],
   ]);
@@ -83,7 +83,7 @@ test('writeJs multiline', async () => {
       'plugins/operators/clientJsMap.js',
       `
 export default {
-  'A': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { const parts = input.split('-').filter(part => part);
+  'A': ({ actions, args, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { const parts = input.split('-').filter(part => part);
       return parts.reduce((acc, current, index) => {
         const prefix = index === 0 ? '-' : acc[index - 1] + '-';
         acc.push(prefix + current);
@@ -95,7 +95,7 @@ export default {
       'plugins/operators/serverJsMap.js',
       `
 export default {
-  'C': ({ item, payload, secrets, state, step, user }) => { let array = [1, 2, 3, 4, 5, 6];
+  'C': ({ args, item, payload, secrets, state, step, user }) => { let array = [1, 2, 3, 4, 5, 6];
       if (array.length > 3) {
         array.splice(3);
       }

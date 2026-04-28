@@ -35,6 +35,76 @@ function getDarkModeIcon() {
   return 'AiOutlineLaptop';
 }
 
+function getDarkModeLabel() {
+  const pref = getDarkModePreference();
+  if (pref === 'dark') return 'Dark mode';
+  if (pref === 'light') return 'Light mode';
+  return 'System';
+}
+
+// Wraps a header action row for the expanded sider. Icon cell has a fixed
+// basis so bell / avatar / sun share a vertical line regardless of their
+// own intrinsic size; label fills the remaining width. Row gets a subtle
+// hover background so it reads as interactive (matches menu items above).
+const EXPANDED_ROW_BASE = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  padding: '8px 12px',
+  width: '100%',
+  borderRadius: 6,
+  transition: 'background 0.15s',
+};
+
+const EXPANDED_ROW_BUTTON_RESET = {
+  background: 'transparent',
+  border: 'none',
+  textAlign: 'left',
+  font: 'inherit',
+  color: 'inherit',
+};
+
+function ExpandedRow({ children, label, className, style, onClick }) {
+  // `onClick` is only used when the row stands alone as the click target
+  // (e.g., dark-mode toggle). Notifications wraps this in a <Link> and
+  // profile wraps it in a <Dropdown> — in those cases interactivity comes
+  // from the parent, but the row should still hover-highlight.
+  const Tag = onClick ? 'button' : 'div';
+  const [hover, setHover] = React.useState(false);
+  const rowStyle = {
+    ...EXPANDED_ROW_BASE,
+    cursor: 'pointer',
+    ...(onClick ? EXPANDED_ROW_BUTTON_RESET : null),
+    ...(hover ? { background: 'color-mix(in srgb, var(--ant-color-text) 6%, transparent)' } : null),
+    ...style,
+  };
+  return (
+    <Tag
+      type={onClick ? 'button' : undefined}
+      className={className}
+      style={rowStyle}
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <span
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: '0 0 24px',
+          lineHeight: 1,
+        }}
+      >
+        {children}
+      </span>
+      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {label}
+      </span>
+    </Tag>
+  );
+}
+
 function renderNotifications({
   blockId,
   classNames,
@@ -44,6 +114,7 @@ function renderNotifications({
   Icon,
   Link,
   iconsColor,
+  expanded,
 }) {
   if (type.isNone(properties.notifications)) return null;
   const notif = properties.notifications;
@@ -67,6 +138,31 @@ function renderNotifications({
     </Badge>
   );
   const link = notif.link;
+  if (expanded) {
+    const row = (
+      <ExpandedRow
+        className={classNames.notifications}
+        style={styles.notifications}
+        label={notif.title ?? 'Notifications'}
+      >
+        {badge}
+      </ExpandedRow>
+    );
+    if (link) {
+      return (
+        <Link
+          id={`${blockId}_notifications_link`}
+          pageId={link.pageId}
+          url={link.url}
+          newTab={link.newTab}
+          style={{ display: 'block', color: 'inherit' }}
+        >
+          {row}
+        </Link>
+      );
+    }
+    return row;
+  }
   if (link) {
     return (
       <Link
@@ -98,6 +194,7 @@ function renderProfile({
   Icon,
   Link,
   ShortcutBadge,
+  expanded,
 }) {
   if (type.isNone(properties.profile)) return null;
   const prof = properties.profile;
@@ -130,13 +227,23 @@ function renderProfile({
     </Avatar>
   );
 
+  const trigger = expanded ? (
+    <ExpandedRow
+      className={classNames.profile}
+      style={styles.profile}
+      label={prof.title ?? 'Profile'}
+    >
+      {avatar}
+    </ExpandedRow>
+  ) : (
+    <div className={classNames.profile} style={styles.profile}>
+      {avatar}
+    </div>
+  );
+
   const links = prof.links ?? [];
   if (links.length === 0) {
-    return (
-      <div className={classNames.profile} style={styles.profile}>
-        {avatar}
-      </div>
-    );
+    return trigger;
   }
 
   const items = buildMenuItems({
@@ -150,8 +257,7 @@ function renderProfile({
 
   return (
     <Dropdown
-      className={classNames.profile}
-      style={{ cursor: 'pointer', ...styles.profile }}
+      style={{ cursor: 'pointer' }}
       menu={{
         items,
         onClick: ({ key, keyPath }) => {
@@ -162,8 +268,9 @@ function renderProfile({
           });
         },
       }}
-      trigger={[prof.trigger ?? 'click']}
-      placement={prof.placement ?? 'bottomRight'}
+      // Row-style trigger (expanded) expects click; small avatar (collapsed) uses hover.
+      trigger={[prof.trigger ?? (expanded ? 'click' : 'hover')]}
+      placement={prof.placement ?? (expanded ? 'topRight' : 'bottomRight')}
       arrow={prof.arrow}
       popupClassName={classNames.profileMenu}
       popupStyle={styles.profileMenu}
@@ -174,24 +281,51 @@ function renderProfile({
         })
       }
     >
-      <div>{avatar}</div>
+      {/* Antd Dropdown attaches its trigger handlers to the immediate child
+          DOM element; wrapping in a div (instead of passing the ExpandedRow
+          function component directly) ensures click/hover listeners land. */}
+      <div>{trigger}</div>
     </Dropdown>
   );
 }
 
-function renderDarkModeToggle({ blockId, classNames, styles, methods, events, Icon, iconsColor }) {
+function renderDarkModeToggle({
+  blockId,
+  classNames,
+  styles,
+  methods,
+  events,
+  Icon,
+  iconsColor,
+  expanded,
+}) {
+  const icon = (
+    <Icon
+      blockId={`${blockId}_dark_mode_toggle_icon`}
+      events={events}
+      properties={{ name: getDarkModeIcon() }}
+      styles={{ element: { fontSize: 16, color: iconsColor } }}
+    />
+  );
+  if (expanded) {
+    return (
+      <ExpandedRow
+        className={classNames.darkModeToggle}
+        style={styles.darkModeToggle}
+        label={getDarkModeLabel()}
+        onClick={() => methods.triggerEvent({ name: '__toggleDarkMode' })}
+      >
+        {icon}
+      </ExpandedRow>
+    );
+  }
   return (
     <div
       className={classNames.darkModeToggle}
       style={{ cursor: 'pointer', lineHeight: 1, ...styles.darkModeToggle }}
       onClick={() => methods.triggerEvent({ name: '__toggleDarkMode' })}
     >
-      <Icon
-        blockId={`${blockId}_dark_mode_toggle_icon`}
-        events={events}
-        properties={{ name: getDarkModeIcon() }}
-        styles={{ element: { fontSize: 16, color: iconsColor } }}
-      />
+      {icon}
     </div>
   );
 }
@@ -205,6 +339,7 @@ function renderHeaderActions({
   events,
   components: { Icon, Link, ShortcutBadge },
   iconsColor,
+  expanded = false,
 }) {
   const hasNotifications = !type.isNone(properties.notifications);
   const hasProfile = !type.isNone(properties.profile);
@@ -223,13 +358,15 @@ function renderHeaderActions({
     Link,
     ShortcutBadge,
     iconsColor,
+    expanded,
   };
 
+  const defaultClassName = expanded
+    ? 'flex flex-col items-stretch gap-1 w-full'
+    : 'flex items-center gap-4 ml-4';
+
   return (
-    <div
-      className={classNames.headerActions ?? 'flex items-center gap-4 ml-4'}
-      style={styles.headerActions}
-    >
+    <div className={classNames.headerActions ?? defaultClassName} style={styles.headerActions}>
       {hasNotifications && renderNotifications(ctx)}
       {hasProfile && renderProfile(ctx)}
       {hasDarkMode && renderDarkModeToggle(ctx)}

@@ -23,6 +23,7 @@ export default {
   category: 'container',
   icons: [
     'AiOutlineBell',
+    'AiOutlineLaptop',
     'AiOutlineMenuFold',
     'AiOutlineMenuUnfold',
     'AiOutlineMoon',
@@ -136,6 +137,12 @@ export default {
             description:
               'Width of the collapsed sidebar, by setting to 0 a special trigger will appear.',
           },
+          initialCollapsed: {
+            type: 'boolean',
+            default: false,
+            description:
+              'Set the initial collapsed state. Used as the fallback when no persisted preference exists in localStorage.',
+          },
           reverseArrow: {
             type: 'boolean',
             default: false,
@@ -154,6 +161,12 @@ export default {
             default: false,
           },
         },
+      },
+      siderStorageKey: {
+        type: 'string',
+        default: 'sider',
+        description:
+          "localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'.",
       },
       toggleSiderButton: {
         type: 'object',
@@ -402,7 +415,7 @@ export default {
           trigger: {
             type: 'string',
             enum: ['click', 'hover'],
-            default: 'click',
+            default: 'hover',
             description: 'How the profile dropdown opens.',
           },
           placement: {

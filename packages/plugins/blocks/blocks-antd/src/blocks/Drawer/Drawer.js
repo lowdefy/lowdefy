@@ -90,6 +90,7 @@ const DrawerBlock = ({
       id={blockId}
       closable={properties.closable}
       extra={content.extra && content.extra()}
+      footer={content.footer && content.footer()}
       getContainer={properties.getContainer}
       mask={properties.mask}
       maskClosable={properties.maskClosable}
@@ -123,6 +124,7 @@ const DrawerBlock = ({
       styles={{
         header: styles.header,
         body: styles.body,
+        footer: styles.footer,
         mask: styles.mask,
         wrapper: styles.wrapper,
         content: styles.content,
