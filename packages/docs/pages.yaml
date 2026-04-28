@@ -239,6 +239,7 @@
 - _ref: operators/_intl.yaml
 - _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
+- _ref: operators/_jst.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_jsonata.yaml
 - _ref: operators/_location.yaml

@@ -14,18 +14,6 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import _js from './js.js';
 
-import Block from './S3UploadButton.js';
-import examples from './tests.yaml';
-import schema from './schema.json';
-import validationsExamples from '../../validationExamples.js';
-
-const testConfig = {
-  validation: true,
-  required: true,
-  values: [],
-};
-
-runRenderTests({ Block, examples, schema, testConfig, validationsExamples });
-runBlockSchemaTests({ examples, schema });
+export default _js;

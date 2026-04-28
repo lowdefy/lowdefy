@@ -203,7 +203,6 @@ blocks:
       items:
         - title: Quick Save
           eventName: onQuickSave
-          shortcut: mod+j
         - title: Quick Export
           eventName: onQuickExport
           shortcut: mod+;
@@ -211,10 +210,12 @@ blocks:
           eventName: onNoShortcut
     events:
       onQuickSave:
-        - id: db_sc_save_set
-          type: SetState
-          params:
-            db_shortcut_result: quick_save
+        shortcut: mod+j
+        try:
+          - id: db_sc_save_set
+            type: SetState
+            params:
+              db_shortcut_result: quick_save
       onQuickExport:
         - id: db_sc_export_set
           type: SetState

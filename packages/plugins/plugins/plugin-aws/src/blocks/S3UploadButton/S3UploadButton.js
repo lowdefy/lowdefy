@@ -15,13 +15,14 @@
 */
 
 import React, { useEffect } from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import { Button } from '@lowdefy/blocks-antd/blocks';
 
 import { Upload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
+import withTheme from '../withTheme.js';
 
 const S3UploadButtonBlock = ({
   blockId,
@@ -58,38 +59,51 @@ const S3UploadButtonBlock = ({
     }
   }, [value]);
   return (
-    <Upload
-      accept={properties.accept ?? '*'}
-      beforeUpload={loadFileList}
-      className={classNames.element}
-      style={styles.element}
-      customRequest={s3UploadRequest}
-      disabled={properties.disabled}
-      fileList={state.fileList}
+    <div
       id={blockId}
-      maxCount={properties.maxCount}
-      multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
-      onRemove={removeFile}
-      showUploadList={properties.showUploadList}
-      onChange={() => {
-        methods.triggerEvent({ name: 'onChange' });
-      }}
+      className={cn('lf-s3-upload-button', classNames.element)}
+      style={styles.element}
     >
-      <Button
-        blockId={`${blockId}_button`}
-        components={components}
-        events={events}
-        properties={{
-          disabled: properties.disabled,
-          icon: 'AiOutlineUpload',
-          title: 'Upload',
-          type: 'default',
-          ...properties.button,
+      <Upload
+        accept={properties.accept ?? '*'}
+        beforeUpload={loadFileList}
+        classNames={{
+          trigger: classNames.trigger,
+          list: classNames.list,
+          item: classNames.item,
         }}
-        methods={methods}
-      />
-    </Upload>
+        styles={{
+          trigger: styles.trigger,
+          list: styles.list,
+          item: styles.item,
+        }}
+        customRequest={s3UploadRequest}
+        disabled={properties.disabled}
+        fileList={state.fileList}
+        maxCount={properties.maxCount}
+        multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
+        onRemove={removeFile}
+        showUploadList={properties.showUploadList}
+        onChange={() => {
+          methods.triggerEvent({ name: 'onChange' });
+        }}
+      >
+        <Button
+          blockId={`${blockId}_button`}
+          components={components}
+          events={events}
+          properties={{
+            disabled: properties.disabled,
+            icon: 'AiOutlineUpload',
+            title: 'Upload',
+            type: 'default',
+            ...properties.button,
+          }}
+          methods={methods}
+        />
+      </Upload>
+    </div>
   );
 };
 
-export default withBlockDefaults(S3UploadButtonBlock);
+export default withBlockDefaults(withTheme('Upload', S3UploadButtonBlock));

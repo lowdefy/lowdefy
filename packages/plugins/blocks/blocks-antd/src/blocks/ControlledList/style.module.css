@@ -14,10 +14,22 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    description:
-      'String method params. Accepts array positional args or object with named args depending on method. The "format" method takes a template string with {0}/{1} positional placeholders (array form) or {name} placeholders (object form: { template, on }).',
-  },
-};
+@layer components {
+  :global(.lf-controlled-list-remove) {
+    display: inline-flex;
+    align-items: center;
+    padding-left: var(--ant-padding-xs);
+    font-size: var(--ant-font-size-lg);
+    color: var(--ant-color-error);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  :global(.lf-controlled-list-remove:hover) {
+    color: var(--ant-color-error-hover);
+  }
+
+  :global(.lf-controlled-list-remove:active) {
+    color: var(--ant-color-error-active);
+  }
+}

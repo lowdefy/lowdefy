@@ -18,9 +18,11 @@ import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
 import withTheme from '../withTheme.js';
+
+import './style.module.css';
 
 const ControlledListBlock = ({
   blockId,
@@ -31,6 +33,7 @@ const ControlledListBlock = ({
   methods,
   properties,
   styles = {},
+  value = [],
 }) => {
   useEffect(() => {
     methods.registerMethod('moveItemDown', methods.moveItemDown);
@@ -44,6 +47,21 @@ const ControlledListBlock = ({
       methods.pushItem({});
     }
   }
+
+  const addItemToFront = () => {
+    methods.unshiftItem();
+    methods.triggerEvent({ name: 'onAdd', event: { index: 0, item: undefined } });
+  };
+  const addItemToBack = () => {
+    const index = value.length;
+    methods.pushItem();
+    methods.triggerEvent({ name: 'onAdd', event: { index, item: undefined } });
+  };
+  const removeItemAt = (index) => {
+    const item = value[index];
+    methods.removeItem(index);
+    methods.triggerEvent({ name: 'onRemove', event: { index, item } });
+  };
   return (
     <List
       id={blockId}
@@ -78,7 +96,7 @@ const ControlledListBlock = ({
                   type: 'default',
                   ...properties.addItemButton,
                 }}
-                onClick={() => methods.unshiftItem()}
+                onClick={addItemToFront}
               />
             )}
           </div>
@@ -108,7 +126,7 @@ const ControlledListBlock = ({
                 type: 'dashed',
                 ...properties.addItemButton,
               }}
-              onClick={() => methods.pushItem()}
+              onClick={addItemToBack}
             />
           </div>
         )
@@ -125,23 +143,17 @@ const ControlledListBlock = ({
             list.length > (properties.minItems ?? 0) && [
               // eslint-disable-next-line react/jsx-key
               <span
-                style={{
-                  paddingLeft:
-                    properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
-                  fontSize:
-                    properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
-                }}
+                className={cn('lf-controlled-list-remove', classNames.removeIcon)}
+                style={styles.removeIcon}
               >
                 <Icon
                   blockId={`${blockId}_${i}_remove_icon`}
-                  classNames={{ element: classNames.removeIcon }}
                   events={events}
                   properties={{
                     name: 'AiOutlineMinusCircle',
                     ...properties.removeItemIcon,
                   }}
-                  styles={{ element: styles.removeIcon }}
-                  onClick={() => methods.removeItem(i)}
+                  onClick={() => removeItemAt(i)}
                 />
               </span>,
             ]
