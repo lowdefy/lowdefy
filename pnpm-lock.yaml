@@ -83,7 +83,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@20.6.2)
+        version: 28.1.3(@types/node@16.18.101)
 
   packages/build:
     dependencies:
@@ -240,7 +240,7 @@ importers:
         version: 0.2.39(@swc/core@1.15.18)
       jest:
         specifier: 28.1.3
-        version: 28.1.3(@types/node@16.18.101)
+        version: 28.1.3(@types/node@20.6.2)
       pino:
         specifier: 8.16.2
         version: 8.16.2
@@ -1421,6 +1421,9 @@ importers:
 
   packages/plugins/operators/operators-dayjs:
     dependencies:
+      '@lowdefy/helpers':
+        specifier: 5.1.0
+        version: link:../../../utils/helpers
       '@lowdefy/operators':
         specifier: 5.1.0
         version: link:../../../operators
@@ -1708,6 +1711,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 5.1.0
         version: link:../../blocks/blocks-antd
+      '@lowdefy/errors':
+        specifier: 5.1.0
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.1.0
         version: link:../../../utils/helpers
