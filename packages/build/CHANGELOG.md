@@ -1,5 +1,37 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- 72fbd4bab: feat(build): Themed default scrollbars in generated `globals.css`.
+
+  Every Lowdefy app now ships with themed scrollbars out of the box. Native Windows/Linux scrollbars were rendering as light grey on dark surfaces (Modal, Drawer, overflowing containers), clashing with dark themes — macOS overlay scrollbars hid the problem. The generated `globals.css` now emits a `@layer base` block that:
+
+  - Sets `scrollbar-width: thin` and `scrollbar-color` for Firefox and modern browsers.
+  - Styles `::-webkit-scrollbar` (10px, transparent track, subtle thumb with inset border, hover darkens) for Chromium / WebKit.
+  - Drives all colors from antd CSS custom properties (`--ant-color-border-secondary`, `--ant-color-text-tertiary`) so they auto-swap on dark / light mode toggle.
+
+  User-provided CSS remains in `@layer components`, so any app-level `::-webkit-scrollbar` overrides in `public/styles.css` still win.
+
+### Patch Changes
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/operators@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/ajv@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/node-utils@5.1.0
+  - @lowdefy/nunjucks@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

@@ -261,6 +261,12 @@ export default {
           'Notification bell icon with badge. Shown in the sider on desktop and the mobile header on small screens. Renders when configured. Use the link property to navigate when clicked.',
         additionalProperties: false,
         properties: {
+          title: {
+            type: 'string',
+            default: 'Notifications',
+            description:
+              'Label shown next to the bell icon when the sider is expanded. Hidden on mobile header and collapsed sider.',
+          },
           link: {
             type: 'object',
             description: 'Link to navigate to when the notification bell is clicked.',
@@ -325,6 +331,12 @@ export default {
           'Profile avatar with optional dropdown menu. Shown in the sider on desktop and the mobile header on small screens. Renders when configured. Use with the _user operator to populate from the authenticated user.',
         additionalProperties: false,
         properties: {
+          title: {
+            type: 'string',
+            default: 'Profile',
+            description:
+              'Label shown next to the avatar when the sider is expanded. Hidden on mobile header and collapsed sider.',
+          },
           avatar: {
             type: 'object',
             description: 'Avatar display properties.',

@@ -87,6 +87,8 @@
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
+- _ref: blocks/input/TiptapInput.yaml
+- _ref: blocks/input/TiptapMentionInput.yaml
 - _ref: blocks/input/TitleInput.yaml
 - _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
@@ -239,6 +241,7 @@
 - _ref: operators/_intl.yaml
 - _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
+- _ref: operators/_jst.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_jsonata.yaml
 - _ref: operators/_location.yaml

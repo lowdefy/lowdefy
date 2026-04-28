@@ -1,5 +1,51 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- 081d79634: feat(client): Per-mode theme tokens for dark/light customization.
+
+  `theme.antd` now accepts four new sibling keys so apps can soften base surfaces without juggling two theme files. Each is merged on top of the shared equivalent only when the matching mode is active:
+
+  - `lightToken` / `darkToken` — override antd design tokens (e.g. `colorBgLayout`, `colorBgContainer`, `colorBgElevated`) per mode.
+  - `lightComponents` / `darkComponents` — override component-level tokens per mode (e.g. `Layout.siderBg`, `Layout.headerBg`, `Menu.darkItemBg`) that aren't reachable via seed tokens.
+
+  The `<html>` pre-hydration inline script now reads `darkToken.colorBgLayout` / `lightToken.colorBgLayout` from the built theme, so the first paint matches your configured surface color with no flash of `#000` or `#fff`.
+
+  ```yaml
+  theme:
+    antd:
+      token:
+        colorPrimary: '#6366f1'
+      darkToken:
+        colorBgLayout: '#131419'
+        colorBgContainer: '#1a1b22'
+      darkComponents:
+        Layout:
+          headerBg: '#0e0f13'
+          siderBg: '#0e0f13'
+        Menu:
+          darkItemBg: '#0e0f13'
+          darkItemSelectedBg: '#252731'
+    darkMode: system
+  ```
+
+  Backwards compatible — apps that only use `theme.antd.token` keep antd's default base colors (dark `#000`, light browser-default).
+
+### Patch Changes
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+  - @lowdefy/engine@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

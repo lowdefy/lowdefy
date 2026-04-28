@@ -31,12 +31,13 @@ const SkeletonButton = ({ classNames, properties, styles }) => {
     default:
       height = 32;
   }
+  const borderRadius = properties.shape === 'round' ? height / 2 : 'var(--ant-border-radius, 6px)';
   return (
     <Skeleton
       classNames={classNames}
       styles={{
         element: {
-          borderRadius: properties.shape === 'round' && height / 2,
+          borderRadius,
           ...styles?.element,
         },
       }}

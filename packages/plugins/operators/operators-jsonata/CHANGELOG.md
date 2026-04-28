@@ -1,5 +1,12 @@
 # @lowdefy/operators-jsonata
 
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.1.0
+- @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

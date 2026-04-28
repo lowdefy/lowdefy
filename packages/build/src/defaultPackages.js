@@ -26,6 +26,7 @@ const defaultPackages = [
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/blocks-qr',
+  '@lowdefy/blocks-tiptap',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-test',

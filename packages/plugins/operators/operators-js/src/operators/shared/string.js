@@ -93,7 +93,40 @@ const meta = {
   length: { validTypes: ['string', 'null'], property: true, prep },
 };
 
+function runFormat({ params, location }) {
+  let template;
+  let lookup;
+  if (type.isArray(params)) {
+    if (!type.isString(params[0])) {
+      throw new Error(
+        `Operator Error: _string.format - first array element must be the template string at ${location}.`
+      );
+    }
+    template = params[0];
+    const values = params.slice(1);
+    lookup = (key) => values[Number(key)];
+  } else if (type.isObject(params)) {
+    if (!type.isString(params.template)) {
+      throw new Error(
+        `Operator Error: _string.format - "template" must be a string at ${location}.`
+      );
+    }
+    template = params.template;
+    const on = params.on ?? {};
+    lookup = (key) => on[key];
+  } else {
+    throw new Error(`Operator Error: _string.format accepts an array or object at ${location}.`);
+  }
+  return template.replace(/\{\{|\}\}|\{(\w+)\}/g, (match, key) => {
+    if (match === '{{') return '{';
+    if (match === '}}') return '}';
+    const v = lookup(key);
+    return type.isNone(v) ? '' : String(v);
+  });
+}
+
 function _string({ params, location, methodName }) {
+  if (methodName === 'format') return runFormat({ params, location });
   return runInstance({
     location,
     meta,

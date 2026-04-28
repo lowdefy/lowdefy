@@ -1,5 +1,18 @@
 # Change Log
 
+## 5.1.0
+
+### Patch Changes
+
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/operators@5.1.0
+  - @lowdefy/ajv@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/node-utils@5.1.0
+  - @lowdefy/nunjucks@5.1.0
+
 ## 5.0.0
 
 ### Minor Changes
