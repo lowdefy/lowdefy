@@ -14,10 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    description:
-      'String method params. Accepts array positional args or object with named args depending on method. The "format" method takes a template string with {0}/{1} positional placeholders (array form) or {name} placeholders (object form: { template, on }).',
-  },
-};
+import _js from './js.js';
+import _jst from './jst.js';
+
+test('_jst delegates to _js (same function reference)', () => {
+  expect(_jst).toBe(_js);
+});
+
+test('_jst is dynamic', () => {
+  expect(_jst.dynamic).toBe(true);
+});

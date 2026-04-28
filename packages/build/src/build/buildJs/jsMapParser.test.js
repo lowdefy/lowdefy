@@ -123,3 +123,97 @@ test('jsMapParser initializes jsMap env bucket when missing', () => {
   expect(jsMap.client).toBeDefined();
   expect(Object.keys(jsMap.client)).toHaveLength(1);
 });
+
+test('jsMapParser wraps _jst as a template-literal function body and keeps _jst key', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 'Updates (${request("get_counts.0.update") ?? 0})' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(result.x._js).toBeUndefined();
+  expect(typeof result.x._jst).toBe('string');
+  expect(jsMap.client[result.x._jst]).toBe(
+    'return `Updates (${request("get_counts.0.update") ?? 0})`;'
+  );
+});
+
+test('jsMapParser _jst escapes literal backticks in the template', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 'a `b` c' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(jsMap.client[result.x._jst]).toBe('return `a \\`b\\` c`;');
+});
+
+test('jsMapParser _jst escapes backslashes so interpolation is preserved', () => {
+  const jsMap = {};
+  // User wants a literal backslash followed by an interpolation.
+  // Without escaping the backslash, `\${...}` would cancel interpolation.
+  const input = { x: { _jst: 'prefix\\${state("x")}' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  // Body contains escaped backslash + live interpolation.
+  expect(jsMap.client[result.x._jst]).toBe('return `prefix\\\\${state("x")}`;');
+});
+
+test('jsMapParser _jst escapes trailing backslash without breaking the template literal', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 'path\\' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(jsMap.client[result.x._jst]).toBe('return `path\\\\`;');
+});
+
+test('jsMapParser _jst preserves multi-line templates', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 'line1\nline2 ${state("x")}' } };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(jsMap.client[result.x._jst]).toBe('return `line1\nline2 ${state("x")}`;');
+});
+
+test('jsMapParser identical _jst sources share a hash', () => {
+  const jsMap = {};
+  const input = {
+    a: { _jst: 'hello ${state("x")}' },
+    b: { _jst: 'hello ${state("x")}' },
+  };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  expect(result.a._jst).toBe(result.b._jst);
+  expect(Object.keys(jsMap.client)).toHaveLength(1);
+});
+
+test('jsMapParser throws when _jst value is not a string', () => {
+  const jsMap = {};
+  const input = { x: { _jst: 42 } };
+
+  expect(() => jsMapParser({ input, jsMap, env: 'client' })).toThrow(
+    '_jst operator expects a string template literal'
+  );
+});
+
+test('jsMapParser _jst and _js coexist in the same env bucket', () => {
+  const jsMap = {};
+  const input = {
+    a: { _jst: 'x' },
+    b: { _js: 'return 1;' },
+  };
+  const result = jsMapParser({ input, jsMap, env: 'server' });
+
+  expect(typeof result.a._jst).toBe('string');
+  expect(typeof result.b._js).toBe('string');
+  expect(Object.keys(jsMap.server)).toHaveLength(2);
+});
+
+test('jsMapParser dedupes _jst-derived body and equivalent _js body by content hash', () => {
+  const jsMap = {};
+  const input = {
+    a: { _jst: 'x' },
+    b: { _js: 'return `x`;' },
+  };
+  const result = jsMapParser({ input, jsMap, env: 'client' });
+
+  // _jst wraps to `return \`x\`;` which matches the _js body verbatim
+  expect(result.a._jst).toBe(result.b._js);
+  expect(Object.keys(jsMap.client)).toHaveLength(1);
+});

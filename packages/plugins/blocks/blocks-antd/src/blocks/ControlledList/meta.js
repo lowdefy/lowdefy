@@ -21,12 +21,19 @@ export default {
   slots: {
     content: 'Blocks rendered for each list item.',
   },
+  events: {
+    onAdd:
+      'Triggered after a new item is added via the add button. The event payload is `{ index, item }`, where `item` is the newly added value (`undefined` for an empty row).',
+    onRemove:
+      'Triggered after an item is removed via the remove icon. The event payload is `{ index, item }`, where `item` is the removed value captured before removal.',
+  },
   cssKeys: {
     element: 'The ControlledList element.',
     header: 'The ControlledList header.',
     footer: 'The ControlledList footer.',
     item: 'The ControlledList item.',
-    removeIcon: 'The remove item icon in the ControlledList.',
+    removeIcon:
+      'The remove-item icon wrapper. Defaults to the antd error color at `fontSizeLG`; override `color`, `font-size`, or spacing here.',
   },
   properties: {
     type: 'object',
@@ -61,7 +68,8 @@ export default {
       },
       removeItemIcon: {
         type: ['string', 'object'],
-        description: 'Custom remove item icon properties.',
+        description:
+          'Custom remove item icon properties. Defaults to `AiOutlineMinusCircle` at a standard size with the antd error color inherited from the icon wrapper — override via `class.removeIcon` / `style.removeIcon` for visual tweaks, or via this property to change the icon name itself.',
         docs: {
           displayType: 'icon',
         },
