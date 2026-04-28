@@ -54,6 +54,7 @@
     "@lowdefy/blocks-antd": "5.1.0",
     "@lowdefy/blocks-basic": "5.1.0",
     "@lowdefy/blocks-loaders": "5.1.0",
+    "@lowdefy/blocks-tiptap": "5.1.0",
     "@lowdefy/client": "5.1.0",
     "@lowdefy/errors": "5.1.0",
     "@lowdefy/helpers": "5.1.0",

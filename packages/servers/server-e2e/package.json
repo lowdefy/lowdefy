@@ -56,6 +56,7 @@
     "@lowdefy/blocks-basic": "5.1.0",
     "@lowdefy/blocks-loaders": "5.1.0",
     "@lowdefy/blocks-markdown": "5.1.0",
+    "@lowdefy/blocks-tiptap": "5.1.0",
     "@lowdefy/client": "5.1.0",
     "@lowdefy/connection-axios-http": "5.1.0",
     "@lowdefy/connection-mongodb": "5.1.0",
