@@ -1,5 +1,93 @@
 # Change Log
 
+## 5.1.0
+
+### Patch Changes
+
+- 081d79634: feat(client): Per-mode theme tokens for dark/light customization.
+
+  `theme.antd` now accepts four new sibling keys so apps can soften base surfaces without juggling two theme files. Each is merged on top of the shared equivalent only when the matching mode is active:
+
+  - `lightToken` / `darkToken` — override antd design tokens (e.g. `colorBgLayout`, `colorBgContainer`, `colorBgElevated`) per mode.
+  - `lightComponents` / `darkComponents` — override component-level tokens per mode (e.g. `Layout.siderBg`, `Layout.headerBg`, `Menu.darkItemBg`) that aren't reachable via seed tokens.
+
+  The `<html>` pre-hydration inline script now reads `darkToken.colorBgLayout` / `lightToken.colorBgLayout` from the built theme, so the first paint matches your configured surface color with no flash of `#000` or `#fff`.
+
+  ```yaml
+  theme:
+    antd:
+      token:
+        colorPrimary: '#6366f1'
+      darkToken:
+        colorBgLayout: '#131419'
+        colorBgContainer: '#1a1b22'
+      darkComponents:
+        Layout:
+          headerBg: '#0e0f13'
+          siderBg: '#0e0f13'
+        Menu:
+          darkItemBg: '#0e0f13'
+          darkItemSelectedBg: '#252731'
+    darkMode: system
+  ```
+
+  Backwards compatible — apps that only use `theme.antd.token` keep antd's default base colors (dark `#000`, light browser-default).
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+- c6f45a1ac: fix(server): Escape theme values embedded in the pre-hydration inline script.
+
+  `_document.js` interpolates `configColorMode`, `darkToken.colorBgLayout`, and `lightToken.colorBgLayout` from `theme.json` into a synchronous `<script>` block to set the `<html>` background before hydration. Previously the values went through `JSON.stringify` only — enough to escape JS-string-context characters, but not enough to prevent a value containing `</script>` (or U+2028 / U+2029 line separators) from breaking out of the enclosing `<script>` tag.
+
+  Added a `safeScriptJson` helper that additionally escapes `<`, `>`, control chars, and U+2028 / U+2029 to `\uXXXX` sequences after `JSON.stringify`. For every valid color value (`#1e293b`, `rgb(...)`, `slategray`, `oklch(...)`, etc.) the output is byte-identical to the previous behavior; only payloads that would have tripped `<script>` breakout or JS-line-terminator injection are now neutralized.
+
+  Closes the six `js/bad-code-sanitization` CodeQL alerts (89 – 94) opened against the per-mode-theme PR.
+
+- Updated dependencies [b2a2a981d]
+- Updated dependencies [72625593e]
+- Updated dependencies [95388a581]
+- Updated dependencies [573b90369]
+- Updated dependencies [be367bebd]
+- Updated dependencies [b1e0c9944]
+- Updated dependencies [447f8ce57]
+- Updated dependencies [36a2d1bca]
+- Updated dependencies [081d79634]
+- Updated dependencies [72fbd4bab]
+- Updated dependencies [a7f2480b4]
+- Updated dependencies [797ab5b2d]
+- Updated dependencies [f56a47d87]
+- Updated dependencies [6c6aab961]
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/blocks-aggrid@5.1.0
+  - @lowdefy/blocks-antd@5.1.0
+  - @lowdefy/client@5.1.0
+  - @lowdefy/build@5.1.0
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/engine@5.1.0
+  - @lowdefy/api@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/actions-core@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-echarts@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/blocks-markdown@5.1.0
+  - @lowdefy/connection-axios-http@5.1.0
+  - @lowdefy/operators-change-case@5.1.0
+  - @lowdefy/operators-dayjs@5.1.0
+  - @lowdefy/operators-diff@5.1.0
+  - @lowdefy/operators-mql@5.1.0
+  - @lowdefy/operators-nunjucks@5.1.0
+  - @lowdefy/operators-uuid@5.1.0
+  - @lowdefy/operators-yaml@5.1.0
+  - @lowdefy/plugin-next-auth@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+  - @lowdefy/node-utils@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

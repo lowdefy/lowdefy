@@ -75,9 +75,7 @@ function ExpandedRow({ children, label, className, style, onClick }) {
     ...EXPANDED_ROW_BASE,
     cursor: 'pointer',
     ...(onClick ? EXPANDED_ROW_BUTTON_RESET : null),
-    ...(hover
-      ? { background: 'color-mix(in srgb, var(--ant-color-text) 6%, transparent)' }
-      : null),
+    ...(hover ? { background: 'color-mix(in srgb, var(--ant-color-text) 6%, transparent)' } : null),
     ...style,
   };
   return (
@@ -368,10 +366,7 @@ function renderHeaderActions({
     : 'flex items-center gap-4 ml-4';
 
   return (
-    <div
-      className={classNames.headerActions ?? defaultClassName}
-      style={styles.headerActions}
-    >
+    <div className={classNames.headerActions ?? defaultClassName} style={styles.headerActions}>
       {hasNotifications && renderNotifications(ctx)}
       {hasProfile && renderProfile(ctx)}
       {hasDarkMode && renderDarkModeToggle(ctx)}

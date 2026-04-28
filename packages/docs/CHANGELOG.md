@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.1.0
+
+### Patch Changes
+
+- af8ef77cb: feat(operators-js): Add `_user.hasRole`, `_user.hasSomeRoles`, and `_user.hasAllRoles` methods to check user roles against the `user.roles` array. `hasRole` takes a single role string; `hasSomeRoles` and `hasAllRoles` take an array of role strings. All return a boolean.
+  - @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

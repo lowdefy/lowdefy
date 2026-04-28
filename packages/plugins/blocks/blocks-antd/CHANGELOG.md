@@ -1,5 +1,115 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- 95388a581: feat(blocks-antd): DataDiff gains `sideBySide`, `timeline`, and `gitDiff` modes, plus depth-aware nested rendering.
+
+  - `mode: sideBySide` — two aligned antd `Descriptions` panels (Before / After) that respond to breakpoints.
+  - `mode: timeline` — antd `Timeline` with one item per change, colour-coded and breadcrumb-labelled for context.
+  - `mode: gitDiff` — unified-diff YAML patch rendering with +/− line markers; for technical users who want to see every line of change. Ignores the structured-rendering props (`labels`, `format`, `maxDepth`) but still honours `hide` / `show`.
+  - list mode now sub-groups array-of-objects changes into per-item sections with their own summary chips, and breadcrumbs deeply-nested row labels (`Order 1 › Customer › Name` instead of just `Name`).
+  - New `maxDepth` property (default `4`) collapses changes deeper than the cap into a single JSON-rendered row at the cap, keeping deep payloads legible.
+
+- 573b90369: feat(blocks-antd): Add `DataDiff` block for rendering user-friendly diffs.
+
+  `DataDiff` compares two objects (`before` / `after`) and renders the differences using antd primitives (`Descriptions`, `Collapse`, `Tag`, `Empty`). v1 ships a polished `list` mode: grouped by top-level key, with `+N` / `−N` / `~N` summary chips per group, icon- and color-coded change rows, and a collapsed-JSON fallback for entirely-new nested objects. All colors come from antd semantic tokens (`colorSuccess`, `colorError`, `colorWarning`) so the block respects dark mode and `theme` overrides automatically.
+
+  Per-path value formatters — `date`, `datetime`, `boolean` (Yes/No tag), `currency` (Intl.NumberFormat), `json` (pretty inside a subtle collapse), `code`, and `enum` (value → `{ label, color }` map) — turn raw field values into something end-users can read. `labels` maps dotted paths to display names; `hide` / `show` accept exact paths, `prefix.*`, or `*.leaf` patterns. Built on `microdiff` (~1 kB, zero deps).
+
+  ```yaml
+  - id: order_audit
+    type: DataDiff
+    properties:
+      before: _state.original
+      after: _state.current
+      labels:
+        status: Order status
+        total: Total
+      format:
+        total: { type: currency, currency: USD }
+        status:
+          type: enum
+          map:
+            pending: { label: Pending, color: warning }
+            paid: { label: Paid, color: success }
+      hide:
+        - 'internal.*'
+  ```
+
+- be367bebd: feat(blocks-antd): Expose `selector` cssKey on Select-based blocks.
+
+  `Selector`, `MultipleSelector`, and `AutoComplete` now expose a `selector` cssKey that targets the inner tag/value container (antd v6's `content` semantic slot, rendered as `.ant-select-content` in the DOM). Use it to cap the tag container height and enable internal scroll on multi-select blocks:
+
+  ```yaml
+  style:
+    .selector:
+      maxHeight: 96px
+      overflowY: auto
+  ```
+
+  Before this change, users had to reach for Tailwind arbitrary variants or global CSS (e.g. `[&_.ant-select-selector]:max-h-24`) to style the inner container, which leaked antd internals into app YAML and was brittle across antd upgrades.
+
+- b1e0c9944: feat(blocks-diff): New package. DataDiff extracted from blocks-antd and split
+  into `DiffList`, `DiffSideBySide`, `DiffTimeline`, and `DiffGit` blocks.
+
+  BREAKING: The `DataDiff` block has been removed from `@lowdefy/blocks-antd`.
+  Migrate to the per-mode blocks in `@lowdefy/blocks-diff`:
+
+  - `mode: list` → `Diff.DiffList`
+  - `mode: sideBySide` → `Diff.DiffSideBySide`
+  - `mode: timeline` → `Diff.DiffTimeline`
+  - `mode: gitDiff` → `Diff.DiffGit`
+
+  The `diff`, `yaml`, `pluralize`, and `microdiff` dependencies have been moved
+  from `@lowdefy/blocks-antd` to `@lowdefy/blocks-diff` along with the block.
+
+- 447f8ce57: feat: Add PageSidebarLayout block
+
+  New full-page layout block with a full-height sidebar, no top-level header, and mobile drawer navigation. The sider spans the entire viewport height with the logo pinned at the bottom.
+
+  **PageSidebarLayout**
+
+  - Full-height collapsible sider with inline menu
+  - Sider collapse state persists in localStorage (configurable key via `siderStorageKey`)
+  - Dark mode via app-level ConfigProvider — all components adapt automatically via CSS variables
+  - `darkModeToggle`, `notifications`, and `profile` properties shown in the sider on desktop and the mobile header on small screens, matching PageHeaderMenu and PageSiderMenu
+  - `theme` property accepts an Ant Design design token object for fine-grained color customization via ConfigProvider
+  - Responsive logo: full logo when sider is expanded, square logo when collapsed, auto-swaps between light and dark variants based on dark mode
+  - 8 content slots: content, footer, header, siderOpen, siderClosed, mobileExtra, mobileDrawerContent, mobileDrawerFooter
+
+  **Drawer**
+
+  - Added `footer` content slot and `styles.footer` passthrough
+
+  **MobileMenu**
+
+  - Added `logo` property for drawer header branding with dark mode-aware logo switching
+  - Added `drawerContent` and `drawerFooter` content slots
+  - Changed category from `display` to `container` to support slot resolution
+
+- 36a2d1bca: feat: Persist PageSiderMenu sider open state to localStorage
+
+  PageSiderMenu now persists its sider collapsed/expanded state across page navigations and reloads, matching PageSidebarLayout behavior.
+
+  - Sider open state reads from and writes to `lf-{siderStorageKey}-open` in localStorage
+  - New `siderStorageKey` property (default `'sider'`) — shares the same key as PageSidebarLayout by default, so the user's preference survives swapping between layouts
+  - New `sider.initialCollapsed` property used as the fallback when no persisted value exists
+  - Gracefully handles SSR and privacy-mode localStorage unavailability
+
+### Patch Changes
+
+- 6c6aab961: fix(blocks-antd): PageSiderMenu state sync, setSiderOpen bug, and menu auto-popup.
+
+  Three related fixes so the sider persists correctly and the inline menu doesn't pop open flyouts on page load.
+
+  - **Persistence on hard-refresh / new tab**: PageSiderMenu now feeds its computed `openSiderState` (read from `localStorage['lf-{siderStorageKey}-open']`) into the inner Sider block as `initialCollapsed`. Previously the Sider re-read the media-query-computed `initialCollapsed` independently and ignored the persisted value, so the sider always started collapsed on desktop regardless of the user's preference.
+  - **`setSiderOpen({ open })` bug**: the action called the Sider's `_toggleSiderOpen` (a no-arg toggle) with an `{ open }` argument that was silently ignored. Fixed to call `_setSiderOpen({ open })` so the sider lands in the requested state. `toggleSiderOpen` now also uses the explicit setter with the computed next value for symmetry.
+  - **Menu auto-popup when sider is collapsed**: the Menu block's `defaultOpenKeys` guard checked `properties.collapsed !== true`, but PageSiderMenu never passes `collapsed` as a prop — antd derives the collapsed state from `SiderContext`. As a result the current page's parent group was added to `defaultOpenKeys`, and antd's Menu auto-popped the flyout for that group on mount. Menu now reads `siderCollapsed` from `Layout._InternalSiderContext` (the same channel antd's own Menu uses) so the group auto-expansion only applies when the sider is expanded.
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

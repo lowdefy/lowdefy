@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.1.0
+- @lowdefy/helpers@5.1.0
+- @lowdefy/logger@5.1.0
+- @lowdefy/node-utils@5.1.0
+
 ## 5.0.0
 
 ### Minor Changes

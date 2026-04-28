@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-test",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "license": "Apache-2.0",
   "description": "Lowdefy test connection for debugging requests and errors.",
   "homepage": "https://lowdefy.com",
@@ -21,10 +21,10 @@
     "build": "echo 'No compilation needed — exports directly from src.'"
   },
   "dependencies": {
-    "@lowdefy/errors": "5.0.0"
+    "@lowdefy/errors": "5.1.0"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "5.0.0"
+    "@lowdefy/node-utils": "5.1.0"
   },
   "publishConfig": {
     "access": "public"
