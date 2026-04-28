@@ -67,7 +67,7 @@ modules:
 
 ### Phase 1a — `resolveLocalManifest`
 
-The walker walks the manifest with `shouldStop` preserving var `default` fields, pages, API, connections, and menu links. `_ref` in schema positions (`vars.X.type`, `properties`, top-level `_ref` in the manifest) resolves. The entire `default` subtree is preserved verbatim — `_ref`, `_module.var`, `_build.*`, and any operator combinations stay raw until the full-resolve pass evaluates them on read.
+The walker walks the manifest with `shouldStop` preserving var `default` subtrees, `components[].component` bodies, all of `pages`, `api`, and `connections`, and `menus[].links`. Everything outside those subtrees resolves normally — `_ref` in `dependencies`, `exports`, `plugins`, `secrets`, `name`, `description`, `menus[].id`, `components[].id`, and the rest of the manifest schema all evaluate in this pass. Inside the preserved subtrees, `_ref`, `_module.var`, `_build.*`, and any operator combinations stay raw until the full-resolve pass evaluates them on read.
 
 Phase 1a stores three things on `context.modules[entry.id]`:
 
@@ -90,17 +90,25 @@ if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
 }
 ```
 
-`resolveModuleVar` looks up the consumer value in `ctx.moduleEntry.consumerVars` first. If the consumer provided a value at the requested path, return it. Otherwise call `resolveEffectiveVar(key, moduleEntry, ctx)`:
+`resolveModuleVar` always delegates to `resolveEffectiveVar(key, moduleEntry, ctx)`. The consumer-vs-default decision lives entirely inside `resolveEffectiveVar`, which does:
 
-- For namespace vars (`type: object` with `properties`), `resolveNamespaceVar` builds a merged object — each property resolves on its own (consumer value, otherwise its declared default).
-- For leaf vars, `resolveVarDefault(rawDefault, moduleEntry, ctx)` walks the raw default subtree in a fresh `WalkContext` rooted at `module.lowdefy.yaml`:
-  - `sourceRefId: null` — the caller's `cloneVarValue(value, ctx.sourceRefId)` uses the outer walk's `sourceRefId`, not the nested default walk's.
-  - `refId: moduleEntry.refDef.id` — default-resolution errors point at the module entry, not the calling page.
-  - `vars: {}` — no `_var` carryover from the outer walk.
-  - `refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : [])` — fresh chain, seeded with the module root to catch self-ref loops.
-  - `currentFile: moduleYamlPath` — `_ref` paths inside defaults resolve relative to the module root.
+1. **Cache hit** — return `moduleEntry.resolvedVarCache[key]`.
+2. **Namespace var** (`varDef.properties` set) — call `resolveNamespaceVar`, which builds a fresh object containing only the **declared** properties; each property resolves through `resolveEffectiveVar` recursively (consumer value per-leaf, otherwise that property's declared default). The consumer's namespace value is never returned wholesale — keys the consumer passes that aren't declared in `properties` are silently dropped.
+3. **Leaf var with consumer value** — return the consumer value as-is.
+4. **Leaf var with declared default** — call `resolveVarDefault(varDef.default, moduleEntry, ctx)`.
+5. **Otherwise** — return `null`.
 
-`getVarDef(varDefs, key)` navigates the `properties` tree by dot-path to find the declaration for a nested key. Resolution results cache on `moduleEntry.resolvedVarCache`, keyed by var path. Subsequent reads of the same var (within the same module entry, across all walks including cross-module ref calls) hit the cache.
+The result is written to `moduleEntry.resolvedVarCache[key]` after step 2/3/4/5 completes (writes happen *after* resolution, not before — circular `_module.var` graphs between defaults stack-overflow, see Dynamic Defaults in the user docs).
+
+For step 4, `resolveVarDefault` walks the raw default subtree in a fresh `WalkContext` rooted at `module.lowdefy.yaml`:
+
+- `sourceRefId: null` — the caller's `cloneVarValue(value, ctx.sourceRefId)` uses the outer walk's `sourceRefId`, not the nested default walk's.
+- `refId: moduleEntry.refDef.id` — default-resolution errors point at the module entry, not the calling page.
+- `vars: {}` — no `_var` carryover from the outer walk.
+- `refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : [])` — fresh chain, seeded with the module root to catch self-ref loops.
+- `currentFile: moduleYamlPath` — `_ref` paths inside defaults resolve relative to the module root.
+
+`getVarDef(varDefs, key)` navigates the `properties` tree by dot-path to find the declaration for a nested key.
 
 After the full-resolve pass completes, `validateVarTypes` walks the populated `resolvedVarCache` and validates each resolved value against its declared `type`. Vars that no walk read are absent from the cache — their defaults never resolve and their declared `type` is never checked.
 
@@ -183,9 +191,18 @@ Failures produce errors with remediation instructions.
 
 ## Component and Menu Export System
 
-Components and menus are declared in `module.lowdefy.yaml` and resolved during Phase 1. During Phase 2, `_ref: { module, component }` calls `getModuleRefContent` which looks up the export in the already-resolved manifest.
+All named non-page exports live in the `components` section of `module.lowdefy.yaml` — UI blocks, config templates, enum maps, schema fragments. The unified structure is `{ id, component }` (no `type: Component`). Menus are declared separately in the `menus` section.
+
+- `key` extraction uses the existing walker mechanism (`_ref.key`)
+- Per-ref `vars` customize the component at the point of inclusion
+- Runtime operators in component content are preserved (not resolved at build time)
+- Content is deep-cloned before processing to prevent mutation of the manifest entry
 
 Menu refs (`_ref: { module, menu }`) return the menu's `links` array, suitable for splicing into app menus via `_build.array.concat`.
+
+### Deferred Resolution
+
+Components and menus are registered during Phase 1 local resolve, but their content stays preserved (the walker's `shouldStop` skips into `components[].component` and `menus[].links`). Content is walked at consumption time — either during Phase 1 full resolve (for cross-module refs inside module manifests) or during Phase 2 (for `_ref: { module, component/menu }` in app-level config). At consumption, `getModuleRefContent` looks up the export in the already-resolved manifest and walks it in the source module's context.
 
 ## Cross-Module Dependencies
 
@@ -330,25 +347,6 @@ The cycle key uses the **resolved concrete entry ID**, not the abstract dependen
 - **Diamond dependencies**: Multiple modules depend on the same module, all wired to the same entry
 - **Multi-instance**: Two instances of the same module wired to different dependencies
 - **Multiple layout variants**: Different layout modules expose the same component interface; the app chooses which
-
-## Component Export Model
-
-All named exports live in the `components` section — UI blocks, config templates, enum maps, schema fragments. The unified structure is `{ id, component }` (no `type: Component`).
-
-- `key` extraction uses the existing walker mechanism (`_ref.key`)
-- Per-ref `vars` customize the component at the point of inclusion
-- Runtime operators in component content are preserved (not resolved at build time)
-- Content is deep-cloned before processing to prevent mutation of the manifest entry
-
-### Deferred Resolution
-
-During Phase 1 local resolve, component content stays preserved (the walker's `shouldStop` skips into `component:` fields). Content is walked at consumption time — either during Phase 1 full resolve (for cross-module refs within module manifests) or during Phase 2 (for `_ref: { module, component }` in app-level config).
-
-### Cross-Module Cycle Detection
-
-The walker's file-based cycle detection checks `refDef.path` against the `refChain` Set. Module refs (`_ref: { module, component }`) have no `path`, so cross-module cycle detection uses synthetic keys.
-
-After loading module ref content, the walker constructs a key `module:<entryId>/<type>:<name>` (e.g., `module:contacts/component:contact-selector`) and checks it against `refChain`. The cycle key uses the **resolved concrete entry ID**, not the abstract dependency name — `internal-contacts/component:contact-selector` and `external-contacts/component:contact-selector` are distinct keys even when both come from the same source.
 
 ## Key Files
 

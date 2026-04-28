@@ -93,7 +93,7 @@ _ref:
 
             ## How Modules Stay Scoped and Composable
 
-            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menu items are public, so internal files stay internal and renaming one does not break consumers.
+            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
 
             ## Writing module.lowdefy.yaml
 
@@ -166,8 +166,6 @@ _ref:
 
             Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently.
 
-            Required-var checks run before the main walk — a missing required var without a default fails the build early. Type validation runs after the walk, against the resolved value.
-
             Unused vars are never read, so their defaults never resolve and their declared `type` is never checked.
 
             ```yaml
@@ -204,7 +202,7 @@ _ref:
                   _module.var: label_plural
             ```
 
-            `_ref` lets the module ship a structured default (a block tree, a column schema, a schedule) as its own file. `_module.var` inside a default turns one consumer-provided value into several — set `label_plural: "Users"` and `page_title` derives from it unless the consumer overrides it directly.
+            `_ref` lets the module ship a structured default (a block tree, a column schema, a default request body) as its own file. `_module.var` inside a default turns one consumer-provided value into several — set `label_plural: "Users"` and `page_title` derives from it unless the consumer overrides it directly.
 
             Defaults scale up to full operator trees and namespace-level merging:
 
@@ -228,6 +226,7 @@ _ref:
                 type: object
                 properties:
                   form_fields:
+                    type: array
                     default:
                       _ref: components/form_contact.yaml
                   show_header:

@@ -205,7 +205,7 @@ The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ 
 - `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy); for cross-module refs, switches `moduleEntry`, `moduleDependencies`, and `packageRoot` to the target module's values
 - `moduleEntry` — the module entry object, propagated through both `child()` and `forRef()` (constant across all nesting depths within a module). Carries `id`, `connections` (remapping), `exports` (validation), `consumerVars` (raw vars passed by the app), `varDefs` (raw manifest declarations including unresolved `default` expressions), and `resolvedVarCache` (lazy resolution cache)
 - `moduleDependencies` — maps abstract dependency names to concrete entry IDs
-- `moduleRoot` — set during Phase 1a local resolve when `moduleEntry` is not yet populated; tells the walker to preserve `_module.var` for the full-resolve pass instead of throwing
+- `moduleRoot` — module root directory; used by `resolveRef` to resolve relative `_ref` paths against the module root in every module-context walk. During Phase 1a (when `moduleEntry` is not yet populated) it also signals the walker to preserve `_module.var` for the full-resolve pass instead of throwing
 - Path tracks through ref boundaries, enabling `shouldStop` to match `pages.*.blocks` paths
 
 **`evaluateStaticOperators`** runs once at the end (not per-file) using `evaluateOperators` from `@lowdefy/operators`.

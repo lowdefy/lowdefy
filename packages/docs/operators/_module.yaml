@@ -35,21 +35,7 @@ _ref:
     description: |
       The `_module` operator family provides access to module-scoped values during the build. `_module.var` and the string forms of the ID operators only make sense inside module config files — the build throws a clear error if you use them at the app level.
 
-      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name. This is useful for linking from a top-level page to a module page without hardcoding the scoped ID:
-
-      ```yaml
-      # lowdefy.yaml (app level)
-      pages:
-        - id: home
-          blocks:
-            - id: go_to_team
-              type: Link
-              params:
-                pageId:
-                  _module.pageId:
-                    id: users-list
-                    module: team-users
-      ```
+      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
 
       All `_module` operators resolve during the walker pass — the same phase as `_var` and `_ref`. Inside module files, they work at any depth.
 
@@ -62,7 +48,7 @@ _ref:
           (key: string): any
           ```
         description: |
-          The `_module.var` operator reads a value from the module entry's `vars`. It returns the consumer value passed in `lowdefy.yaml` if one was provided, otherwise it resolves the manifest default on read.
+          The `_module.var` operator reads a value from the module entry's `vars`. It returns the consumer value passed in `lowdefy.yaml` if one was provided, otherwise it resolves the manifest default on read. If neither is provided (no consumer value, no declared default), the operator returns `null`.
 
           Unlike `_var`, which requires threading variables through each `_ref`, `_module.var` works at any depth within module files. It accesses the same vars regardless of `_ref` nesting.
 
