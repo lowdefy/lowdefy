@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Modules are reusable configuration packages that bundle pages, connections, API endpoints, components, and menus into a single distributable unit. Instead of copying config between projects, you install a module and configure it with variables.
+            Blocks are the smallest reusable unit in Lowdefy; apps are the largest. Modules sit between them — they package the shape of a feature teams want to share, like a user-admin panel or an events timeline. A module bundles pages, connections, API endpoints, components, and menus into a single distributable unit. Instead of copying config between projects, you install a module and configure it with variables.
 
             A module is hosted in a GitHub repository or local directory. Each usage of a module in your app is called a **module entry** — identified by a user-chosen `id` that controls namespacing.
 
@@ -56,9 +56,11 @@ _ref:
             Each module entry has:
             - `id: string` — **Required.** A unique identifier for this entry. Must not contain `/`. Controls the namespace for scoped IDs and page paths.
             - `source: string` — **Required.** Where to fetch the module. Supports GitHub repos and local paths.
-            - `vars: object` — Values passed to the module, accessible via [`_module.var`](/_module).
+            - `vars: object` — Values passed to the module, accessible via [`_module.var`](/_module). Consumer values override manifest defaults; any value you omit falls back to the module's declared default.
             - `connections: object` — Connection remapping. Maps module connection names to app connection IDs.
             - `dependencies: object` — Dependency wiring. Maps abstract dependency names to concrete module entry IDs. See [Cross-Module Dependencies](#cross-module-dependencies).
+
+            The entry `id` becomes the URL prefix for every page the module contributes. A `user-admin` entry serves its pages at `/user-admin/all`, `/user-admin/invite`, `/user-admin/edit`; a `companies` entry serves `/companies/view`, `/companies/edit`, `/companies/create`.
 
             ## Module Manifest
 
