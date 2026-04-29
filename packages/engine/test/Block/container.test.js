@@ -513,6 +513,265 @@ test('SetState on hidden list items preserves nested input values when revealed'
   });
 });
 
+test('Reset action returns a visible field to its frozen value after SetState modifies it', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { a: 'frozen' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'a',
+      },
+      {
+        type: 'Button',
+        id: 'change',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: 'changed' } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'reset',
+        events: {
+          onClick: [{ id: 'a', type: 'Reset' }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy: {
+      ...lowdefy,
+      _internal: {
+        actions: {
+          Reset: ({ methods: { reset } }) => reset(),
+        },
+      },
+    },
+    pageConfig,
+  });
+  const { change, reset } = context._internal.RootSlots.map;
+  expect(context.state).toEqual({ a: 'frozen' });
+
+  await change.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ a: 'changed' });
+
+  await reset.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ a: 'frozen' });
+});
+
+test('SetState({ a: null }) while hidden clears the value through the reveal', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { show: false, a: 'preset' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'a',
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'clear',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: null } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { clear, reveal } = context._internal.RootSlots.map;
+  const a = context._internal.RootSlots.map['a'];
+
+  // Initially hidden with the preset value held in memory.
+  expect(a.value).toEqual('preset');
+  expect(context.state).toEqual({ show: false });
+
+  // Explicit clear while still hidden.
+  await clear.triggerEvent({ name: 'onClick' });
+  expect(a.value).toEqual(null);
+  expect(context.state).toEqual({ show: false });
+
+  // Reveal — the cleared value is what surfaces, not the earlier 'preset'.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(a.value).toEqual(null);
+  expect(context.state).toEqual({ show: true, a: null });
+});
+
+test('Child input with own visible:false toggles independently of parent visibility', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { showInput: false, text: 'inner' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'text',
+            visible: { _state: 'showInput' },
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { showInput: true } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'hide',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { showInput: false } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { container, reveal, hide } = context._internal.RootSlots.map;
+  const text = context._internal.RootSlots.map['text'];
+
+  // Parent visible, child hidden via own `visible: { _state: 'showInput' }`.
+  expect(container.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(false);
+  expect(text.value).toEqual('inner');
+  expect(context.state).toEqual({ showInput: false });
+
+  // Reveal child only.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(text.visibleEval.output).toEqual(true);
+  expect(context.state).toEqual({ showInput: true, text: 'inner' });
+
+  // Hide child again — value preserved in memory, not in state.
+  await hide.triggerEvent({ name: 'onClick' });
+  expect(text.visibleEval.output).toEqual(false);
+  expect(text.value).toEqual('inner');
+  expect(context.state).toEqual({ showInput: false });
+});
+
+test('SetState replacing list items while hidden takes precedence over preservation', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            show: false,
+            items: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],
+          },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'List',
+            id: 'items',
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'items.$.name',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'replace',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'SetState',
+              params: { items: [{ name: 'x' }] },
+            },
+          ],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { replace, reveal } = context._internal.RootSlots.map;
+
+  // After init, list is hidden; three items held in memory but not in state.
+  expect(context.state).toEqual({ show: false });
+
+  // Replace items while still hidden — explicit array overrides preservation,
+  // sub-slots truncate from 3 to 1.
+  await replace.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: false });
+
+  // Reveal — only the single remaining item appears in state.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: true, items: [{ name: 'x' }] });
+});
+
 test('visibleParent. If container visible is null, child blocks should still be evaluated', async () => {
   const pageConfig = {
     id: 'root',
