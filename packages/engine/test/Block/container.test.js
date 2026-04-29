@@ -200,6 +200,230 @@ test('container blocks visibility toggle fields in state with nested containers 
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
+test('SetState on a hidden block preserves the value when the block becomes visible', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { show: false, myInput: 'new' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'myInput',
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'hide',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: false } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { container, myInput, reveal, hide } = context._internal.RootSlots.map;
+
+  // After init: container hidden, value held in memory but not in state.
+  expect(container.visibleEval.output).toEqual(false);
+  expect(myInput.visibleEval.output).toEqual(false);
+  expect(myInput.value).toEqual('new');
+  expect(context.state).toEqual({ show: false });
+
+  // Reveal: input becomes visible and value is republished to state.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(container.visibleEval.output).toEqual(true);
+  expect(myInput.visibleEval.output).toEqual(true);
+  expect(myInput.value).toEqual('new');
+  expect(context.state).toEqual({ show: true, myInput: 'new' });
+
+  // Hide again: state field deleted, but value stays in memory.
+  await hide.triggerEvent({ name: 'onClick' });
+  expect(myInput.visibleEval.output).toEqual(false);
+  expect(myInput.value).toEqual('new');
+  expect(context.state).toEqual({ show: false });
+
+  // Reveal a second time: value restored to state.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(myInput.visibleEval.output).toEqual(true);
+  expect(myInput.value).toEqual('new');
+  expect(context.state).toEqual({ show: true, myInput: 'new' });
+});
+
+test('revealing a hidden block triggers re-eval of other blocks referencing its state', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { show: false, myInput: 'new' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'myInput',
+          },
+        ],
+      },
+      {
+        type: 'Paragraph',
+        id: 'mirror',
+        properties: { content: { _state: 'myInput' } },
+        visible: { _eq: [{ _state: 'myInput' }, 'new'] },
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { myInput, mirror, reveal } = context._internal.RootSlots.map;
+
+  // Hidden block: in-memory value held, not in state.
+  expect(myInput.value).toEqual('new');
+  expect(context.state).toEqual({ show: false });
+
+  // While myInput is hidden, _state lookups return undefined for it. The mirror
+  // block's visibility (which depends on _state.myInput === 'new') should be
+  // false, and its title property should reflect the missing state.
+  expect(mirror.visibleEval.output).toEqual(false);
+
+  // Reveal: the hidden input becomes visible, its value is published to state,
+  // and the engine's repeat loop must rerun recEval so that mirror picks up the
+  // new state value through its _state operators.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: true, myInput: 'new' });
+  expect(mirror.visibleEval.output).toEqual(true);
+  expect(mirror.propertiesEval.output).toEqual({ content: 'new' });
+});
+
+test('SetState-driven visibility toggle preserves input state (parity with setValue)', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { text: 'a', swtch1: true, swtch2: true },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'swtch2' },
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'text',
+            visible: { _state: 'swtch1' },
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'set1false',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { swtch1: false } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'set1true',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { swtch1: true } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'set2false',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { swtch2: false } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'set2true',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { swtch2: true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { container, text, set1false, set1true, set2false, set2true } =
+    context._internal.RootSlots.map;
+  expect(container.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(true);
+  expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
+
+  await set1false.triggerEvent({ name: 'onClick' });
+  expect(container.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(false);
+  expect(context.state).toEqual({ swtch1: false, swtch2: true });
+
+  await set1true.triggerEvent({ name: 'onClick' });
+  expect(container.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(true);
+  expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
+
+  await set2false.triggerEvent({ name: 'onClick' });
+  expect(container.visibleEval.output).toEqual(false);
+  expect(text.visibleEval.output).toEqual(false);
+  expect(context.state).toEqual({ swtch1: true, swtch2: false });
+
+  await set2true.triggerEvent({ name: 'onClick' });
+  expect(container.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(true);
+  expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
+});
+
 test('visibleParent. If container visible is null, child blocks should still be evaluated', async () => {
   const pageConfig = {
     id: 'root',

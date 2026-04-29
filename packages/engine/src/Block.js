@@ -258,11 +258,23 @@ class Block {
     if (this.isInput() || this.isList()) {
       let blockValue = get(initWithState, this.blockId);
       if (type.isUndefined(blockValue)) {
-        blockValue = type.isUndefined(this.meta.initValue)
-          ? type.enforceType(this.meta.valueType, null)
-          : this.meta.initValue;
+        // If the block was hidden in the previous eval cycle and already has an
+        // in-memory value, preserve it. Slots.updateState deletes state fields
+        // for invisible blocks, so without this guard, every SetState would
+        // wipe the value back to the enforceType default. The next updateState
+        // re-publishes this.value to state if the block becomes visible, or
+        // leaves the field deleted if it stays hidden. This makes SetState-
+        // driven visibility toggles consistent with setValue-driven toggles.
+        const wasInvisible = this.visibleEval && this.visibleEval.output === false;
+        if (wasInvisible && !type.isUndefined(this.value)) {
+          blockValue = this.value;
+        } else {
+          blockValue = type.isUndefined(this.meta.initValue)
+            ? type.enforceType(this.meta.valueType, null)
+            : this.meta.initValue;
 
-        this.context._internal.State.set(this.blockId, blockValue);
+          this.context._internal.State.set(this.blockId, blockValue);
+        }
       }
       if (this.isList()) {
         if (!type.isArray(this.subSlots)) {
