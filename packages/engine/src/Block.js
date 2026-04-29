@@ -258,16 +258,25 @@ class Block {
     if (this.isInput() || this.isList()) {
       let blockValue = get(initWithState, this.blockId);
       if (type.isUndefined(blockValue)) {
-        // If the block was hidden in the previous eval cycle and already has an
-        // in-memory value, preserve it. Slots.updateState deletes state fields
-        // for invisible blocks, so without this guard, every SetState would
-        // wipe the value back to the enforceType default. The next updateState
-        // re-publishes this.value to state if the block becomes visible, or
-        // leaves the field deleted if it stays hidden. This makes SetState-
-        // driven visibility toggles consistent with setValue-driven toggles.
+        // If the block was hidden in the previous eval cycle, Slots.updateState
+        // deleted its state field. Without this guard, every SetState would
+        // wipe the in-memory value back to the enforceType default. The next
+        // updateState republishes this.value (inputs) or sub-block state
+        // (lists) when the block becomes visible, or leaves the field deleted
+        // if it stays hidden. This makes SetState-driven visibility toggles
+        // consistent with setValue-driven toggles.
         const wasInvisible = this.visibleEval && this.visibleEval.output === false;
-        if (wasInvisible && !type.isUndefined(this.value)) {
-          blockValue = this.value;
+        const inputHasValue = this.isInput() && !type.isUndefined(this.value);
+        const listHasSubSlots =
+          this.isList() && type.isArray(this.subSlots) && this.subSlots.length > 0;
+        if (wasInvisible && (inputHasValue || listHasSubSlots)) {
+          // For inputs, reuse this.value below.
+          // For lists, leave blockValue undefined so the rebuild loop skips
+          // (preserving subSlots). Sub-block this.value stays in memory and
+          // is republished by updateState once the list becomes visible.
+          if (inputHasValue) {
+            blockValue = this.value;
+          }
         } else {
           blockValue = type.isUndefined(this.meta.initValue)
             ? type.enforceType(this.meta.valueType, null)
