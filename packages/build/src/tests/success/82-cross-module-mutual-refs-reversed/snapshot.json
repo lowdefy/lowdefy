@@ -6623,12 +6623,12 @@
     "4": {
       "parent": "pages.0.blocks.1",
       "lineNumber": 16,
-      "path": "/Users/gerldf/github/lowdefy-alpha/packages/build/src/tests/success/71-cross-module-mutual-refs/modules/contacts/components/contact-selector.yaml"
+      "path": "<FIXTURES_DIR>/71-cross-module-mutual-refs/modules/contacts/components/contact-selector.yaml"
     },
     "5": {
       "parent": "3",
       "lineNumber": 20,
-      "path": "/Users/gerldf/github/lowdefy-alpha/packages/build/src/tests/success/71-cross-module-mutual-refs/modules/contacts/pages/contact-detail.yaml"
+      "path": "<FIXTURES_DIR>/71-cross-module-mutual-refs/modules/contacts/pages/contact-detail.yaml"
     },
     "6": {
       "parent": "5",
@@ -6643,7 +6643,7 @@
     "7": {
       "parent": "6",
       "lineNumber": 16,
-      "path": "/Users/gerldf/github/lowdefy-alpha/packages/build/src/tests/success/71-cross-module-mutual-refs/modules/companies/components/company-selector.yaml"
+      "path": "<FIXTURES_DIR>/71-cross-module-mutual-refs/modules/companies/components/company-selector.yaml"
     },
     "8": {
       "parent": null
@@ -6651,7 +6651,7 @@
     "pages.0": {
       "parent": "2",
       "lineNumber": 20,
-      "path": "/Users/gerldf/github/lowdefy-alpha/packages/build/src/tests/success/71-cross-module-mutual-refs/modules/companies/pages/company-detail.yaml"
+      "path": "<FIXTURES_DIR>/71-cross-module-mutual-refs/modules/companies/pages/company-detail.yaml"
     },
     "pages.0.blocks.1": {
       "parent": "pages.0",
