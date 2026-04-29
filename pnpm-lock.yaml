@@ -2308,6 +2308,9 @@ importers:
       '@babel/core':
         specifier: 7.23.3
         version: 7.23.3
+      '@lowdefy/ajv':
+        specifier: 5.1.0
+        version: link:../ajv
       '@swc/cli':
         specifier: 0.8.0
         version: 0.8.0(@swc/core@1.15.18)

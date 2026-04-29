@@ -14,15 +14,12 @@
   limitations under the License.
 */
 
-import Ajv from 'ajv';
+import { validate as ajvValidate } from '@lowdefy/ajv';
 import buildBlockSchema from './buildBlockSchema.js';
-
-const ajv = new Ajv({ strict: false });
 
 function validate(meta, data) {
   const schema = buildBlockSchema(meta);
-  const valid = ajv.validate(schema, data);
-  return { valid, errors: ajv.errors };
+  return ajvValidate({ schema, data, returnErrors: true });
 }
 
 test('basic display block with cssKeys and events', () => {
