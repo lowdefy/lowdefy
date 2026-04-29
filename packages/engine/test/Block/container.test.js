@@ -424,6 +424,95 @@ test('SetState-driven visibility toggle preserves input state (parity with setVa
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
+test('SetState on hidden list items preserves nested input values when revealed', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            show: false,
+            items: [{ name: 'first' }, { name: 'second' }],
+          },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'List',
+            id: 'items',
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'items.$.name',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'hide',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: false } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { reveal, hide } = context._internal.RootSlots.map;
+
+  // After init, container hidden: nested list state is absent from context.state,
+  // but the inner inputs hold their values in memory.
+  expect(context.state).toEqual({ show: false });
+  const item0 = context._internal.RootSlots.map['items.0.name'];
+  const item1 = context._internal.RootSlots.map['items.1.name'];
+  expect(item0.value).toEqual('first');
+  expect(item1.value).toEqual('second');
+  expect(item0.visibleEval.output).toEqual(false);
+  expect(item1.visibleEval.output).toEqual(false);
+
+  // Reveal: list and its sub-blocks become visible, values flow back into state.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({
+    show: true,
+    items: [{ name: 'first' }, { name: 'second' }],
+  });
+  expect(item0.visibleEval.output).toEqual(true);
+  expect(item1.visibleEval.output).toEqual(true);
+
+  // Hide again: items vanish from state but remain in memory.
+  await hide.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: false });
+  expect(item0.value).toEqual('first');
+  expect(item1.value).toEqual('second');
+
+  // Reveal a second time: nested values still restored.
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({
+    show: true,
+    items: [{ name: 'first' }, { name: 'second' }],
+  });
+});
+
 test('visibleParent. If container visible is null, child blocks should still be evaluated', async () => {
   const pageConfig = {
     id: 'root',
