@@ -2,6 +2,7 @@
 '@lowdefy/connection-knex': minor
 '@lowdefy/server': patch
 '@lowdefy/server-dev': patch
+'@lowdefy/server-e2e': patch
 ---
 
 chore(connection-knex): update knex and SQL drivers; add `better-sqlite3` client.
@@ -17,6 +18,9 @@ Bumped knex and its dialect drivers, and added `better-sqlite3` so users can opt
 - Added `better-sqlite3` `12.9.0`. Selectable as `client: better-sqlite3` in connection YAML — synchronous, faster, and actively maintained.
 - `mysql` left at `2.18.1` (already the latest published version).
 
-`@lowdefy/server` and `@lowdefy/server-dev` `pnpm.onlyBuiltDependencies`:
+`pnpm.onlyBuiltDependencies` allowlist for `better-sqlite3` and `sqlite3`:
 
-- Added `better-sqlite3` alongside `sqlite3`. Both packages run native-binding install scripts (`prebuild-install` with a `node-gyp rebuild` fallback). pnpm 10 silently suppresses postinstall scripts for unapproved packages, which under the CLI fetch flow (`.lowdefy/build/` and `.lowdefy/dev/`) would otherwise leave the binding unbuilt and crash `KnexRaw` / `KnexBuilder` at runtime with `Cannot find module`.
+Both packages run native-binding install scripts (`prebuild-install` with a `node-gyp rebuild` fallback). pnpm 10 silently suppresses postinstall scripts for unapproved packages, which leaves the binding unbuilt and crashes `KnexRaw` / `KnexBuilder` at runtime with `Cannot find module '...node_sqlite3.node'`.
+
+- Added the allowlist to `@lowdefy/server`, `@lowdefy/server-dev`, and `@lowdefy/server-e2e`. These are the install roots in the CLI fetch flow under `.lowdefy/{dev,build}/`, where pnpm honors the per-package `pnpm.onlyBuiltDependencies` field.
+- Also added the same allowlist to the monorepo root `package.json`. The per-package field is ignored at workspace-root install (pnpm 10 only honors it on the install root), so contributors running `pnpm install` at the repo root would otherwise have to `pnpm rebuild sqlite3 better-sqlite3` manually.
