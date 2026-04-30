@@ -46,6 +46,15 @@ function collectSkeletonSourceFiles({ components, context }) {
     walkRefIds(components[key], refIds);
   }
 
+  // Module consumerVars contribute to skeleton state via modules.json.
+  // Their ~r markers may only appear under pages (when consumed via
+  // _module.var inside page-referenced components), so the non-page
+  // walk above can miss them. Walk here so changes to per-app module
+  // vars files trigger a skeleton rebuild.
+  for (const moduleEntry of Object.values(context.modules ?? {})) {
+    walkRefIds(moduleEntry.consumerVars, refIds);
+  }
+
   const sourceFiles = new Set();
 
   // Walk parent chains for each collected ref ID
