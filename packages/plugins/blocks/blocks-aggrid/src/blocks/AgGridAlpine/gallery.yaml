@@ -1021,11 +1021,11 @@
             cell:
               type: buttons
               buttons:
-                - event: onEditClick
+                - eventName: onEditClick
                   title: Edit
                   icon: AiOutlineEdit
                   type: primary
-                - event: onDeleteClick
+                - eventName: onDeleteClick
                   title: Delete
                   icon: AiOutlineDelete
                   danger: true

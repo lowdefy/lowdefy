@@ -35,7 +35,7 @@ function ButtonsCell(params) {
   return (
     <Space size={4}>
       {buttons.map((btn, idx) => {
-        if (!type.isObject(btn) || !type.isString(btn.event)) return null;
+        if (!type.isObject(btn) || !type.isString(btn.eventName)) return null;
         if (resolveField('hidden', 'hiddenField', btn, data) === true) return null;
 
         const title = resolveField('title', 'titleField', btn, data);
@@ -45,11 +45,11 @@ function ButtonsCell(params) {
         function onClick(e) {
           e.stopPropagation();
           methods?.triggerEvent?.({
-            name: btn.event,
+            name: btn.eventName,
             event: {
               row: data,
               value,
-              button: { event: btn.event, title },
+              button: { eventName: btn.eventName, title },
               buttonIndex: idx,
             },
           });

@@ -63,11 +63,11 @@ export default {
     },
     onCellButton: {
       description:
-        'Documentation reference — the actual event name fired is the `event` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`).',
+        'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`).',
       event: {
         row: 'The row data.',
         value: 'The cell value.',
-        button: 'The clicked button: { event, title }.',
+        button: 'The clicked button: { eventName, title }.',
         buttonIndex: 'Zero-based index in the buttons array.',
       },
     },
@@ -372,9 +372,9 @@ export default {
                     'Buttons cell: list of buttons rendered per row. Each button triggers its own block-level event (declared in `events:`). Per-button properties mirror the `Button` block schema. `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths.',
                   items: {
                     type: 'object',
-                    required: ['event'],
+                    required: ['eventName'],
                     properties: {
-                      event: {
+                      eventName: {
                         type: 'string',
                         description: 'Block-level event name to trigger on click.',
                       },
