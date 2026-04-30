@@ -48,6 +48,8 @@ Any git repo with a manifest is a module. No registry, no approval, no naming cl
 
 The module system is a framework feature. `modules-mongodb` is the first library that builds on it: a set of modules covering features most apps need, patterned for MongoDB.
 
+![screenshot: side-menu layout with a module page open](/images/articles/modules.jpeg)
+
 ### Layout
 
 The layout module wraps every page from every other module: header with app title and logo, navigation menu, breadcrumb, page actions area, floating save/cancel footer. Three implementations ship: header-menu, side-menu, and page-sidebar. Pick one in your app config. If you later prefer a different shape, change the source string and every page in every installed module picks up the new shell.
@@ -55,8 +57,6 @@ The layout module wraps every page from every other module: header with app titl
 Blocks inside modules respect your app's theme variables. Set your colors and typography in the app config, and the module's pages pick up your branding without any restyling.
 
 The module exports four components that other modules use internally: `page`, `card`, `floating-actions`, and `auth-page`. Use them in your own custom pages too, so a page you wrote sits inside the same chrome as the module pages.
-
-![screenshot: side-menu layout with a module page open](./screenshots/layout-side-menu.png)
 
 ### Events
 
@@ -79,8 +79,6 @@ User admin is the other half: the app administrator managing other users. List p
 Install user admin once per user population. A team portal and a client portal each get their own `user-admin` entry, with different ids, different roles, and different URL namespaces.
 
 The module exports a user-selector dropdown for forms elsewhere in your app. Assigning a ticket or setting a "created by" reference is a drop-in.
-
-![screenshot: user admin list with role filters](./screenshots/user-admin-list.png)
 
 ### Companies
 
