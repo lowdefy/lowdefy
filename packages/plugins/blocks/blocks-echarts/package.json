@@ -54,7 +54,7 @@
   "dependencies": {
     "@lowdefy/block-utils": "5.1.0",
     "echarts": "6.0.0",
-    "echarts-for-react": "3.0.5"
+    "echarts-for-react": "3.0.6"
   },
   "peerDependencies": {
     "react": ">=18",
