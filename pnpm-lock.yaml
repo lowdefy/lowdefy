@@ -903,8 +903,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/block-utils
       '@react-google-maps/api':
-        specifier: 2.19.2
-        version: 2.19.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 2.20.8
+        version: 2.20.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -1111,8 +1111,8 @@ importers:
         specifier: 6.3.7
         version: 6.3.7
       turndown:
-        specifier: 7.2.0
-        version: 7.2.0
+        specifier: 7.2.4
+        version: 7.2.4
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 5.1.0
@@ -3480,11 +3480,11 @@ packages:
   '@gar/promisify@1.1.3':
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
 
-  '@googlemaps/js-api-loader@1.16.2':
-    resolution: {integrity: sha512-psGw5u0QM6humao48Hn4lrChOM2/rA43ZCm3tKK9qQsEj1/VzqkCqnvGfEOshDbBQflydfaRovbKwZMF4AyqbA==}
+  '@googlemaps/js-api-loader@1.16.8':
+    resolution: {integrity: sha512-CROqqwfKotdO6EBjZO/gQGVTbeDps5V7Mt9+8+5Q+jTg5CRMi3Ii/L9PmV3USROrt2uWxtGzJHORmByxyo9pSQ==}
 
-  '@googlemaps/markerclusterer@2.3.2':
-    resolution: {integrity: sha512-zb9OQP8XscZp2Npt1uQUYnGKu1miuq4DPP28JyDuFd6HV17HCEcjV9MtBi4muG/iVRXXvuHW9bRCnHbao9ITfw==}
+  '@googlemaps/markerclusterer@2.5.3':
+    resolution: {integrity: sha512-x7lX0R5yYOoiNectr10wLgCBasNcXFHiADIBdmn7jQllF2B5ENQw5XtZK+hIw4xnV0Df0xhN4LN98XqA5jaiOw==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -4717,17 +4717,17 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
-  '@react-google-maps/api@2.19.2':
-    resolution: {integrity: sha512-Vt57XWzCKfsUjKOmFUl2erVVfOePkPK5OigF/f+q7UuV/Nm9KDDy1PMFBx+wNahEqOd6a32BxfsykEhBnbU9wQ==}
+  '@react-google-maps/api@2.20.8':
+    resolution: {integrity: sha512-wtLYFtCGXK3qbIz1H5to3JxbosPnKsvjDKhqGylXUb859EskhzR7OpuNt0LqdLarXUtZCJTKzPn3BNaekNIahg==}
     peerDependencies:
-      react: ^16.8 || ^17 || ^18
-      react-dom: ^16.8 || ^17 || ^18
+      react: ^16.8 || ^17 || ^18 || ^19
+      react-dom: ^16.8 || ^17 || ^18 || ^19
 
-  '@react-google-maps/infobox@2.19.2':
-    resolution: {integrity: sha512-6wvBqeJsQ/eFSvoxg+9VoncQvNoVCdmxzxRpLvmjPD+nNC6mHM0vJH1xSqaKijkMrfLJT0nfkTGpovrF896jwg==}
+  '@react-google-maps/infobox@2.20.0':
+    resolution: {integrity: sha512-03PJHjohhaVLkX6+NHhlr8CIlvUxWaXhryqDjyaZ8iIqqix/nV8GFdz9O3m5OsjtxtNho09F/15j14yV0nuyLQ==}
 
-  '@react-google-maps/marker-clusterer@2.19.2':
-    resolution: {integrity: sha512-x9ibmsP0ZVqzyCo1Pitbw+4b6iEXRw/r1TCy3vOUR3eKrzWLnHYZMR325BkZW2r8fnuWE/V3Fp4QZOP9qYORCw==}
+  '@react-google-maps/marker-clusterer@2.20.0':
+    resolution: {integrity: sha512-tieX9Va5w1yP88vMgfH1pHTacDQ9TgDTjox3tLlisKDXRQWdjw+QeVVghhf5XqqIxXHgPdcGwBvKY6UP+SIvLw==}
 
   '@redis/bloom@1.2.0':
     resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==}
@@ -5806,8 +5806,8 @@ packages:
   '@types/glob@8.0.0':
     resolution: {integrity: sha512-l6NQsDDyQUVeoTynNpC9uRvCUint/gSUXQA2euwmTuWGvPY5LSDUu6tkCtJB2SvGQlJQzLaKqcGZP4//7EDveA==}
 
-  '@types/google.maps@3.53.5':
-    resolution: {integrity: sha512-HoRq4Te8J6krH7hj+TfdYepqegoKZCj3kkaK5gf+ySFSHLvyqYkDvkrtbcVJXQ6QBphQ0h1TF7p4J6sOh4r/zg==}
+  '@types/google.maps@3.58.1':
+    resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
 
   '@types/graceful-fs@4.1.6':
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
@@ -11417,8 +11417,9 @@ packages:
     resolution: {integrity: sha512-+v2QJey7ZUeUiuigkU+uFfklvNUyPI2VO2vBpMYJA+a1hKFLFiKtUYlRHdb3P9CrAvMzi0upbjI4WT+zKtqkBg==}
     hasBin: true
 
-  turndown@7.2.0:
-    resolution: {integrity: sha512-eCZGBN4nNNqM9Owkv9HAtWRYfLA4h909E/WGAWWBpmB275ehNhZyk87/Tpvjbp0jjNl9XwCsbe6bm6CqFsgD+A==}
+  turndown@7.2.4:
+    resolution: {integrity: sha512-I8yFsfRzmzK0WV1pNNOA4A7y4RDfFxPRxb3t+e3ui14qSGOxGtiSP6GjeX+Y6CHb7HYaFj7ECUD7VE5kQMZWGQ==}
+    engines: {node: '>=18', npm: '>=9'}
 
   type-check@0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}
@@ -13556,11 +13557,9 @@ snapshots:
   '@gar/promisify@1.1.3':
     optional: true
 
-  '@googlemaps/js-api-loader@1.16.2':
-    dependencies:
-      fast-deep-equal: 3.1.3
+  '@googlemaps/js-api-loader@1.16.8': {}
 
-  '@googlemaps/markerclusterer@2.3.2':
+  '@googlemaps/markerclusterer@2.5.3':
     dependencies:
       fast-deep-equal: 3.1.3
       supercluster: 8.0.1
@@ -14897,20 +14896,20 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@react-google-maps/api@2.19.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@react-google-maps/api@2.20.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@googlemaps/js-api-loader': 1.16.2
-      '@googlemaps/markerclusterer': 2.3.2
-      '@react-google-maps/infobox': 2.19.2
-      '@react-google-maps/marker-clusterer': 2.19.2
-      '@types/google.maps': 3.53.5
+      '@googlemaps/js-api-loader': 1.16.8
+      '@googlemaps/markerclusterer': 2.5.3
+      '@react-google-maps/infobox': 2.20.0
+      '@react-google-maps/marker-clusterer': 2.20.0
+      '@types/google.maps': 3.58.1
       invariant: 2.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@react-google-maps/infobox@2.19.2': {}
+  '@react-google-maps/infobox@2.20.0': {}
 
-  '@react-google-maps/marker-clusterer@2.19.2': {}
+  '@react-google-maps/marker-clusterer@2.20.0': {}
 
   '@redis/bloom@1.2.0(@redis/client@1.5.12)':
     dependencies:
@@ -16293,7 +16292,7 @@ snapshots:
       '@types/minimatch': 5.1.2
       '@types/node': 16.18.101
 
-  '@types/google.maps@3.53.5': {}
+  '@types/google.maps@3.58.1': {}
 
   '@types/graceful-fs@4.1.6':
     dependencies:
@@ -23283,7 +23282,7 @@ snapshots:
       '@turbo/windows-64': 2.9.6
       '@turbo/windows-arm64': 2.9.6
 
-  turndown@7.2.0:
+  turndown@7.2.4:
     dependencies:
       '@mixmark-io/domino': 2.2.0
 

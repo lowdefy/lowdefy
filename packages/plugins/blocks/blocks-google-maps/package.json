@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@lowdefy/block-utils": "5.1.0",
-    "@react-google-maps/api": "2.19.2"
+    "@react-google-maps/api": "2.20.8"
   },
   "peerDependencies": {
     "react": ">=18",
