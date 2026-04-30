@@ -29,6 +29,7 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
     columnDefs,
     defaultColDef,
     rowData: newRowData,
+    suppressCellFocus = true,
     ...someProperties
   } = properties;
   const [rowData, setRowData] = useState(newRowData ?? []);
@@ -148,6 +149,7 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <AgGridReact
         {...someProperties}
+        suppressCellFocus={suppressCellFocus}
         rowData={rowData}
         defaultColDef={memoDefaultColDef}
         onFilterChanged={onFilterChanged}
