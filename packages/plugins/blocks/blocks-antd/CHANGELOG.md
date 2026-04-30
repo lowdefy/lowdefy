@@ -1,5 +1,89 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 01e249b: feat(blocks-antd): `ControlledList` now fires `onAdd` / `onRemove` events and defaults the remove icon to the antd error color at a standard size.
+
+  **Events.** Both events fire **after** the list mutation completes. The event payload is `{ index, item }`:
+
+  - `onAdd` — `index` is where the new row was inserted (`0` for `addToFront: true`, else `list.length`). `item` is the newly added value (typically `undefined` for an empty row).
+  - `onRemove` — `index` is the removed row's position. `item` is the row value captured before removal, so handlers can reference the deleted data (e.g., `_event: item._id` to delete from a backend).
+
+  ```yaml
+  - id: tags
+    type: ControlledList
+    events:
+      onRemove:
+        - id: notify
+          type: DisplayMessage
+          params:
+            content:
+              _string.concat: ['Removed at index ', { _event: index }]
+    blocks:
+      - id: tags.$.label
+        type: TextInput
+  ```
+
+  **Remove icon styling.** The remove icon now defaults to `var(--ant-color-error)` at `var(--ant-font-size-lg)`, with `--ant-color-error-hover` / `--ant-color-error-active` on hover/press — no more hardcoded hex colors, and the size no longer swings with `properties.size`. Override via `class.removeIcon` / `style.removeIcon` (both slots target the icon wrapper). Existing configs that hardcoded `color: '#ff4d4f'` on `removeItemIcon` can drop it — the default is already danger.
+
+  **`@lowdefy/client`** also now passes the list's current state value to list-type block components via a `value` prop, so any list block can read its own array data.
+
+### Patch Changes
+
+- 6ec2cd9: fix(PageSidebarLayout): Pin the sider to the viewport so the bottom actions stay visible.
+
+  The sider is now `position: sticky` with `height: 100vh`, so the menu, notifications, profile avatar, dark-mode toggle, and logo remain on screen as the page content scrolls. The sticky footer container fades from transparent to the container background so content passing behind it doesn't cut off abruptly.
+
+- fd1604f: feat(blocks-antd): `DropdownButton` now supports the standard Lowdefy event-shortcut schema (`events.<eventName>.shortcut`) for item shortcuts, alongside the existing item-level `shortcut` property.
+
+  When a shortcut is configured via the event, the framework-level shortcut manager binds and fires it — consistent with `Button`. The shortcut badge renders next to the item label in both cases. If both are set on the same item, the event-level shortcut wins. The split-button's main action now also renders a badge when `events.onClick.shortcut` is configured.
+
+  **Event-level (preferred, matches `Button`):**
+
+  ```yaml
+  - id: actions
+    type: DropdownButton
+    properties:
+      items:
+        - title: Undo
+          eventName: onUndo
+    events:
+      onUndo:
+        shortcut: mod+z
+        try:
+          - id: undo
+            type: ...
+  ```
+
+  **Item-level (still supported):**
+
+  ```yaml
+  - id: actions
+    type: DropdownButton
+    properties:
+      items:
+        - title: Undo
+          eventName: onUndo
+          shortcut: mod+z
+    events:
+      onUndo:
+        - id: undo
+          type: ...
+  ```
+
+- cea34ac: fix(PageSidebarLayout): Render notifications, profile, and dark-mode toggle as labeled, left-aligned rows when the sider is expanded.
+
+  When the sider is open, the bottom actions now render as `[icon] [label]` rows that match the visual style of the menu items above (e.g. "Notifications", "Profile", "Light mode"). When the sider is collapsed, the actions remain as a centered icon stack. Two new optional schema fields — `notifications.title` (default `Notifications`) and `profile.title` (default `Profile`) — let consumers customise the expanded labels; consumers can also bind `_user: name` to `profile.title` to show the authenticated user's name.
+
+  The profile dropdown's default `trigger` now depends on whether the sider is expanded: `click` when expanded (the labeled row invites click), `hover` when collapsed (original small-avatar behavior). Consumers passing `profile.trigger` explicitly are unaffected.
+
+  No change to `PageSiderMenu` or `PageHeaderMenu` — their header-bar rendering still uses the icon-only layout and `hover` trigger.
+
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/helpers@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes
