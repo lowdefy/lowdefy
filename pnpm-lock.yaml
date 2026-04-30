@@ -734,8 +734,8 @@ importers:
         specifier: 2.3.2
         version: 2.3.2
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       minisearch:
         specifier: 7.2.0
         version: 7.2.0
@@ -820,8 +820,8 @@ importers:
         specifier: '>=6'
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       diff:
         specifier: 5.2.2
         version: 5.2.2
@@ -1192,8 +1192,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/helpers
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       google-spreadsheet:
         specifier: 3.3.0
         version: 3.3.0(encoding@0.1.13)
@@ -1443,8 +1443,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../operators
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 5.1.0
@@ -1897,8 +1897,8 @@ importers:
         specifier: 6.3.1
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       next:
         specifier: 16.1.6
         version: 16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2039,8 +2039,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -2163,8 +2163,8 @@ importers:
         specifier: 6.3.1
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
       next:
         specifier: 16.1.6
         version: 16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2514,8 +2514,8 @@ importers:
         specifier: 5.1.0
         version: link:../helpers
       dayjs:
-        specifier: 1.11.19
-        version: 1.11.19
+        specifier: 1.11.20
+        version: 1.11.20
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
@@ -7102,6 +7102,9 @@ packages:
 
   dayjs@1.11.19:
     resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
+
+  dayjs@1.11.20:
+    resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -17801,6 +17804,8 @@ snapshots:
     optional: true
 
   dayjs@1.11.19: {}
+
+  dayjs@1.11.20: {}
 
   debug@3.2.7:
     dependencies:

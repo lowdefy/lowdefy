@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.1.0",
-    "dayjs": "1.11.19"
+    "dayjs": "1.11.20"
   },
   "devDependencies": {
     "@swc/cli": "0.8.1",
