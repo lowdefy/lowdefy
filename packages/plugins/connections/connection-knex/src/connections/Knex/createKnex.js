@@ -23,6 +23,11 @@ function createKnex(connection) {
       'Knex connection "client: sqlite3" is no longer supported. Use "client: better-sqlite3" or "client: sqlite" instead.'
     );
   }
+  if (connection.client === 'mysql') {
+    throw new ConfigError(
+      'Knex connection "client: mysql" is no longer supported. Use "client: mysql2" instead.'
+    );
+  }
   if (connection.client === 'sqlite') {
     return knex({ ...connection, client: 'better-sqlite3' });
   }

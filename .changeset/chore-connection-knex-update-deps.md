@@ -5,9 +5,9 @@
 '@lowdefy/server-e2e': patch
 ---
 
-chore(connection-knex): update knex and SQL drivers; replace `sqlite3` with `better-sqlite3`; add `mysql2`.
+chore(connection-knex): update knex and SQL drivers; replace `sqlite3` with `better-sqlite3`; replace `mysql` with `mysql2`.
 
-Bumped knex and its dialect drivers, replaced the unmaintained `sqlite3` driver with `better-sqlite3`, and added `mysql2` alongside the unmaintained `mysql` driver. Subsumes the prior `sqlite3@5.1.7` darwin-arm64 fix.
+Bumped knex and its dialect drivers, and consolidated onto the actively-maintained drivers — replaced `sqlite3` with `better-sqlite3` and `mysql` with `mysql2`. Subsumes the prior `sqlite3@5.1.7` darwin-arm64 fix.
 
 `@lowdefy/connection-knex` dependency changes:
 
@@ -15,14 +15,15 @@ Bumped knex and its dialect drivers, replaced the unmaintained `sqlite3` driver 
 - `pg` `8.11.3` → `8.20.0`.
 - `mssql` `10.0.1` → `12.5.0`. v11 raises the Node floor to ≥18 (already satisfied); v12 stops cloning config objects, which is fine because Lowdefy hands the user's YAML to `knex(connection)` once and never mutates it.
 - **Removed** `sqlite3`. The driver is in maintenance-only mode upstream (the v6 release marked the repo unmaintained).
-- **Added** `better-sqlite3` `12.9.0` as the SQLite driver. Selectable as `client: better-sqlite3` (or `client: sqlite`, which is now an alias of `better-sqlite3` — see runtime remap below).
-- **Added** `mysql2` `3.22.3` as the recommended MySQL/MariaDB driver. The `mysql` package is left in (still selectable as `client: mysql`) for backwards compatibility but is no longer the recommended choice — the `mysql` package is unmaintained upstream since 2020.
+- **Added** `better-sqlite3` `12.9.0` as the SQLite driver. Selectable as `client: better-sqlite3` (or `client: sqlite`, which is now an alias of `better-sqlite3` — see runtime client handling below).
+- **Removed** `mysql`. Unmaintained upstream since 2020.
+- **Added** `mysql2` `3.22.3` as the MySQL / MariaDB driver. Selectable as `client: mysql2` in connection YAML.
 
-Runtime client remapping (in `createKnex`):
+Runtime client handling (in `createKnex`):
 
 - `client: sqlite` is silently remapped to `client: better-sqlite3`. `sqlite` was historically a knex-level alias of `sqlite3`; this preserves the YAML alias while the underlying driver changes.
 - `client: sqlite3` now throws a `ConfigError` with a migration message: `Knex connection "client: sqlite3" is no longer supported. Use "client: better-sqlite3" or "client: sqlite" instead.` Existing apps using `client: sqlite3` need to update their connection YAML.
-- `mysql` and `mysql2` are not remapped — they are separate knex dialects with subtly different SQL formatters. Users who want the maintained driver should explicitly switch to `client: mysql2`.
+- `client: mysql` now throws a `ConfigError` with a migration message: `Knex connection "client: mysql" is no longer supported. Use "client: mysql2" instead.` Existing apps using `client: mysql` need to update their connection YAML. `mysql` is **not** silently remapped because knex treats `mysql` and `mysql2` as separate dialects with subtly different SQL formatters, not aliases — the migration is a deliberate user choice.
 
 `pnpm.onlyBuiltDependencies` allowlist for `better-sqlite3`:
 

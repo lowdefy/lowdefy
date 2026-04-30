@@ -112,7 +112,6 @@ _ref:
               - `sqlite` (alias of `better-sqlite3`)
               - `mssql`
               - `mysql2`
-              - `mysql` (unmaintained — prefer `mysql2`)
               - `oracledb`
               - `postgres`
               - `pg` (alias of `postgres`)
@@ -131,7 +130,7 @@ _ref:
               - id: mysql
                 type: Knex
                 properties:
-                  client: mysql
+                  client: mysql2
                   connection:
                     host:
                       _secret: MYSQL_HOST

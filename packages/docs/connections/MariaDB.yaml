@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            The [Knex](/Knex) connection can be used to connect to a [MariaDB](https://www.mysql.com) database. To connect to a MariaDB database, use the `mysql2` client (recommended) or the legacy `mysql` client — knex does not have a separate `mariadb` client.
+            The [Knex](/Knex) connection can be used to connect to a [MariaDB](https://www.mysql.com) database. To connect to a MariaDB database, use the `mysql2` client — knex does not have a separate `mariadb` client.
 
       - id: markdown_connection
         type: MarkdownWithCode
@@ -38,16 +38,14 @@ _ref:
             ### Knex
 
             #### Properties
-            - `client: enum`: __Required__ - One of:
-              - `mysql2` (recommended) - uses the [`mysql2`](https://www.npmjs.com/package/mysql2) database client. Actively maintained.
-              - `mysql` - uses the [`mysql`](https://www.npmjs.com/package/mysql) database client. Unmaintained upstream; prefer `mysql2`.
-            - `connection: object | string `: __Required__ - Connection object or string to pass to the database client.
+            - `client: enum`: __Required__ - Use the `mysql2` client to connect to MariaDB.
+            - `connection: object | string `: __Required__ - Connection object or string to pass to the [`mysql2`](https://www.npmjs.com/package/mysql2) database client.
             - `version: string`:  Set database version.
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
 
             #### Examples
 
-            ###### Connection object (mysql2):
+            ###### Connection object:
             ```yaml
             connections:
               - id: mariadb

@@ -54,3 +54,17 @@ test('createKnex throws for client "sqlite3" with migration message', async () =
   );
   expect(mockKnex).not.toHaveBeenCalled();
 });
+
+test('createKnex throws for client "mysql" with migration message', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  expect(() => createKnex({ client: 'mysql', connection: 'mysql://u:p@h/db' })).toThrow(
+    'Knex connection "client: mysql" is no longer supported. Use "client: mysql2" instead.'
+  );
+  expect(mockKnex).not.toHaveBeenCalled();
+});
+
+test('createKnex passes "mysql2" through unchanged', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  createKnex({ client: 'mysql2', connection: 'mysql://u:p@h/db' });
+  expect(mockKnex.mock.calls).toEqual([[{ client: 'mysql2', connection: 'mysql://u:p@h/db' }]]);
+});
