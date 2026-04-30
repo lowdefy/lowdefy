@@ -46,8 +46,8 @@
     "fs-extra": "11.1.1"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "copyfiles": "2.4.1",
     "jest": "28.1.3"

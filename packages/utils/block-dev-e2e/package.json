@@ -38,8 +38,8 @@
     "@playwright/test": "1.50.1"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18"
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32"
   },
   "publishConfig": {
     "access": "public"

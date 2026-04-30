@@ -46,13 +46,13 @@
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.797.0",
+    "@aws-sdk/s3-presigned-post": "3.797.0",
+    "@aws-sdk/s3-request-presigner": "3.797.0",
     "@lowdefy/block-utils": "5.1.0",
     "@lowdefy/blocks-antd": "5.1.0",
     "@lowdefy/errors": "5.1.0",
-    "@lowdefy/helpers": "5.1.0",
-    "@aws-sdk/client-s3": "3.797.0",
-    "@aws-sdk/s3-presigned-post": "3.797.0",
-    "@aws-sdk/s3-request-presigner": "3.797.0"
+    "@lowdefy/helpers": "5.1.0"
   },
   "peerDependencies": {
     "antd": ">=6",
@@ -63,8 +63,8 @@
     "@lowdefy/ajv": "5.1.0",
     "@lowdefy/block-dev": "5.1.0",
     "@lowdefy/jest-yaml-transform": "5.1.0",
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "@testing-library/dom": "8.19.1",
     "@testing-library/react": "13.4.0",

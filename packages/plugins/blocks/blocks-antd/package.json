@@ -70,8 +70,8 @@
     "@lowdefy/e2e-utils": "5.1.0",
     "@lowdefy/node-utils": "5.1.0",
     "@playwright/test": "1.50.1",
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "copyfiles": "2.4.1"
   },
   "publishConfig": {
