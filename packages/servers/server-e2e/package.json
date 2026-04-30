@@ -34,7 +34,7 @@
     "public_default/*",
     "next.config.js",
     "package.original.json",
-    ".eslintrc.yaml",
+    "eslint.config.mjs",
     ".npmrc"
   ],
   "scripts": {
@@ -80,10 +80,10 @@
   },
   "devDependencies": {
     "@lowdefy/build": "5.1.0",
-    "@next/eslint-plugin-next": "16.1.6",
+    "@next/eslint-plugin-next": "16.2.4",
     "@tailwindcss/postcss": "4.2.4",
     "tailwindcss": "4.2.4",
-    "webpack": "5.94.0",
+    "webpack": "5.106.2",
     "yaml": "2.3.4",
     "yargs": "17.7.2"
   },
