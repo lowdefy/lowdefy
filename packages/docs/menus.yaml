@@ -915,9 +915,6 @@
         - id: _js
           type: MenuLink
           pageId: _js
-        - id: _jst
-          type: MenuLink
-          pageId: _jst
         - id: _json
           type: MenuLink
           pageId: _json
