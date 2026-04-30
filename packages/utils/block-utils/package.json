@@ -52,7 +52,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@babel/core": "7.23.3",
+    "@babel/core": "7.29.0",
     "@lowdefy/ajv": "5.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
