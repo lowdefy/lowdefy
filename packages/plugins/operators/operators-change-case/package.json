@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/helpers": "5.1.0",
     "@lowdefy/operators": "5.1.0",
-    "change-case": "5.4.0"
+    "change-case": "5.4.4"
   },
   "devDependencies": {
     "@lowdefy/node-utils": "5.1.0",

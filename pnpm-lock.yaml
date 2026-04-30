@@ -1412,8 +1412,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../operators
       change-case:
-        specifier: 5.4.0
-        version: 5.4.0
+        specifier: 5.4.4
+        version: 5.4.4
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 5.1.0
@@ -6824,8 +6824,8 @@ packages:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
-  change-case@5.4.0:
-    resolution: {integrity: sha512-11YRFf0f4pI+ROHUfq64WivyrcNSrZjdDt2qgVxvAObtj/Pwnu5uAKObHRbN9uAhaDFkvkqcKVEl8Dxnmx+N7w==}
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
   char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
@@ -12022,7 +12022,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.425.0
       '@aws-sdk/util-locate-window': 3.965.5
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -12041,7 +12041,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.425.0
       tslib: 1.14.1
     optional: true
 
@@ -12062,7 +12062,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.425.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     optional: true
@@ -17536,7 +17536,7 @@ snapshots:
 
   chalk@5.3.0: {}
 
-  change-case@5.4.0: {}
+  change-case@5.4.4: {}
 
   char-regex@1.0.2: {}
 
