@@ -76,11 +76,7 @@ test('Wildcard pattern matches multiple pages', () => {
         },
       },
     },
-    pages: [
-      { id: 'team-users/users-list' },
-      { id: 'team-users/user-edit' },
-      { id: 'home' },
-    ],
+    pages: [{ id: 'team-users/users-list' }, { id: 'team-users/user-edit' }, { id: 'home' }],
   };
   const res = getPageRoles({ components });
   expect(res).toEqual({
@@ -99,11 +95,7 @@ test('Mixed exact and wildcard patterns in roles', () => {
         },
       },
     },
-    pages: [
-      { id: 'team-users/users-list' },
-      { id: 'settings' },
-      { id: 'home' },
-    ],
+    pages: [{ id: 'team-users/users-list' }, { id: 'settings' }, { id: 'home' }],
   };
   const res = getPageRoles({ components });
   expect(res).toEqual({

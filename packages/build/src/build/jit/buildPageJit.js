@@ -87,7 +87,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   buildContext.warnings = buildWarnings;
 
   try {
-
     // Pages without a source file (e.g., default 404) can only be served from
     // their pre-built artifact — they have no YAML to re-resolve from.
     // All user pages (with refId) always JIT-resolve from source YAML so that
@@ -195,9 +194,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // When resolving from a collection file (with vars), the result is an array of pages.
     // Find the specific page by ID. For module pages, source IDs are unscoped.
     if (type.isArray(processed)) {
-      const unscopedId = moduleEntry
-        ? pageId.slice(`${moduleEntry.id}/`.length)
-        : pageId;
+      const unscopedId = moduleEntry ? pageId.slice(`${moduleEntry.id}/`.length) : pageId;
       processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
       if (!processed) {
         throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);

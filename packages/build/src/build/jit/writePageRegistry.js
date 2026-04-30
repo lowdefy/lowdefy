@@ -21,10 +21,7 @@ async function writePageRegistry({ pageRegistry, context }) {
   for (const [pageId, entry] of pageRegistry) {
     entries[pageId] = entry;
   }
-  await context.writeBuildArtifact(
-    'pageRegistry.json',
-    serializer.serializeToString(entries)
-  );
+  await context.writeBuildArtifact('pageRegistry.json', serializer.serializeToString(entries));
 }
 
 export default writePageRegistry;

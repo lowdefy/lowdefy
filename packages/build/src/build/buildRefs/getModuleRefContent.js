@@ -89,10 +89,9 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, c
   }
 
   if (!content) {
-    throw new ConfigError(
-      `Module "${entryId}" does not export ${exportType} "${exportName}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Module "${entryId}" does not export ${exportType} "${exportName}".`, {
+      configKey,
+    });
   }
 
   return { content, entryId };

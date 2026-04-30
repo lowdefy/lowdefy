@@ -222,7 +222,6 @@ test('normalizeClassAndStyles handles / prefixed keys in style', () => {
   });
 });
 
-
 test('normalizeClassAndStyles merges properties.style and /element (/element overrides)', () => {
   const components = {
     pages: [
@@ -529,9 +528,7 @@ test('style nested object not matching cssKey has no hint', () => {
   expect(() => buildPages({ components, context: contextWithMetas })).toThrow(
     'Style property "hover" has a nested object value'
   );
-  expect(() => buildPages({ components, context: contextWithMetas })).not.toThrow(
-    'Did you mean'
-  );
+  expect(() => buildPages({ components, context: contextWithMetas })).not.toThrow('Did you mean');
 });
 
 test('class non-dot key matching cssKey throws with "Did you mean" hint', () => {

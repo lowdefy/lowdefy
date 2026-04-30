@@ -25,11 +25,7 @@ const operatorSchema = {
 };
 
 const classValueSchema = {
-  oneOf: [
-    { type: 'string' },
-    { type: 'array', items: { type: 'string' } },
-    operatorSchema,
-  ],
+  oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }, operatorSchema],
 };
 
 const styleValueSchema = { type: 'object' };
@@ -45,17 +41,11 @@ function buildBlockSchema(meta) {
   });
 
   const classProperties = Object.fromEntries(
-    cssEntries.map(([key, desc]) => [
-      `.${key}`,
-      { ...classValueSchema, description: desc },
-    ])
+    cssEntries.map(([key, desc]) => [`.${key}`, { ...classValueSchema, description: desc }])
   );
 
   const styleProperties = Object.fromEntries(
-    cssEntries.map(([key, desc]) => [
-      `.${key}`,
-      { ...styleValueSchema, description: desc },
-    ])
+    cssEntries.map(([key, desc]) => [`.${key}`, { ...styleValueSchema, description: desc }])
   );
 
   const eventProperties = Object.fromEntries(

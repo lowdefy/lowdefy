@@ -34,10 +34,7 @@ function buildApi({ components, context }) {
       buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId });
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (
-        error instanceof ConfigError &&
-        shouldSuppressBuildCheck(error, context.keyMap)
-      ) {
+      if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)

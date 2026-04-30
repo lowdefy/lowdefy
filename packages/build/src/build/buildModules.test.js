@@ -63,9 +63,7 @@ test('buildModules adds module connections with scoped IDs', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
     manifest: {
-      connections: [
-        { id: 'users-db', type: 'MongoDBCollection', properties: {} },
-      ],
+      connections: [{ id: 'users-db', type: 'MongoDBCollection', properties: {} }],
     },
   });
   const context = makeContext([moduleEntry]);
@@ -118,9 +116,7 @@ test('buildModules skips remapped connections', () => {
   const result = buildModules({ components, context });
 
   // Only cache-db should be added; users-db is remapped
-  expect(result.connections).toEqual([
-    { id: 'team-users/cache-db', type: 'MongoDBCollection' },
-  ]);
+  expect(result.connections).toEqual([{ id: 'team-users/cache-db', type: 'MongoDBCollection' }]);
 });
 
 test('buildModules preserves pre-resolved _module.pageId strings in pages', () => {
@@ -158,9 +154,7 @@ test('buildModules preserves pre-resolved _module.pageId strings in pages', () =
 
   const result = buildModules({ components, context });
 
-  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe(
-    'team-users/user-detail'
-  );
+  expect(result.pages[0].blocks[0].events.onClick[0].params.pageId).toBe('team-users/user-detail');
 });
 
 test('buildModules preserves pre-resolved connectionId strings', () => {
@@ -416,11 +410,7 @@ test('buildModules processes modules in order they appear', () => {
 
   const result = buildModules({ components, context });
 
-  expect(result.pages.map((p) => p.id)).toEqual([
-    'home',
-    'alpha/page-a',
-    'beta/page-b',
-  ]);
+  expect(result.pages.map((p) => p.id)).toEqual(['home', 'alpha/page-a', 'beta/page-b']);
 });
 
 // Secret whitelist validation tests

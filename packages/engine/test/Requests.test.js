@@ -618,15 +618,16 @@ test('callRequest holdValue retains previous response on error', async () => {
   const pageConfig = getPageConfig();
   const context = await testContext({ lowdefy, pageConfig });
   let call = 0;
-  context._internal.lowdefy._internal.callRequest = jest.fn().mockImplementation(({ requestId }) =>
-    new Promise((resolve, reject) => {
-      call += 1;
-      if (call === 1) {
-        resolve(mockReqResponses.req_one);
-      } else {
-        reject(new Error('mock error'));
-      }
-    })
+  context._internal.lowdefy._internal.callRequest = jest.fn().mockImplementation(
+    ({ requestId }) =>
+      new Promise((resolve, reject) => {
+        call += 1;
+        if (call === 1) {
+          resolve(mockReqResponses.req_one);
+        } else {
+          reject(new Error('mock error'));
+        }
+      })
   );
 
   await context._internal.Requests.callRequest({ requestId: 'req_one', blockId });
@@ -690,4 +691,3 @@ test('callRequests with requestIds array form propagates holdValue', async () =>
   expect(snapshot.req_one[0].holdValue).toBe(true);
   expect(snapshot.req_two[0].holdValue).toBe(true);
 });
-

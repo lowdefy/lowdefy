@@ -62,9 +62,7 @@ test('writeBlockSchemaMap typesMap schemas take priority over package schemas', 
   };
   const components = {
     imports: {
-      blocks: [
-        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
-      ],
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' }],
     },
   };
   const context = {

@@ -56,7 +56,7 @@ const StatisticBlock = ({
             styles={{ element: styles.prefixIcon }}
           />
         ) : (
-          properties.prefix ?? ''
+          (properties.prefix ?? '')
         )
       }
       suffix={
@@ -69,7 +69,7 @@ const StatisticBlock = ({
             styles={{ element: styles.suffixIcon }}
           />
         ) : (
-          properties.suffix ?? ''
+          (properties.suffix ?? '')
         )
       }
       {...additionalProps}

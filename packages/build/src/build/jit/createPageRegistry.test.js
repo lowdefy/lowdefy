@@ -243,7 +243,10 @@ test('createPageRegistry handles resolver ref chain (child of root has no path)'
   // Resolver (no path) → template view.yaml (vars) → layout.yaml.njk (vars)
   // Child of root (ref-resolver) has no path. Go shallower — capture the
   // resolver's info so JIT can re-run it with freshly resolved vars.
-  const resolverOriginal = { resolver: 'resolvers/pages.js', vars: { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } } };
+  const resolverOriginal = {
+    resolver: 'resolvers/pages.js',
+    vars: { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } },
+  };
   const refMap = buildRefMap({
     'ref-root': { parent: null, path: 'lowdefy.yaml' },
     'ref-resolver': { parent: 'ref-root', path: null, original: resolverOriginal },
@@ -251,7 +254,10 @@ test('createPageRegistry handles resolver ref chain (child of root has no path)'
     'ref-layout': { parent: 'ref-template', path: 'layout.yaml.njk' },
   });
   const unresolvedRefVars = {
-    'ref-resolver': { app_name: { _ref: 'app-config.yaml' }, workflows: { _ref: 'workflows.yaml' } },
+    'ref-resolver': {
+      app_name: { _ref: 'app-config.yaml' },
+      workflows: { _ref: 'workflows.yaml' },
+    },
     'ref-template': { action_config: { action: 'initial-details' }, workflow_type: 'device' },
     'ref-layout': { id: 'device-initial-details-view', title: 'View' },
   };

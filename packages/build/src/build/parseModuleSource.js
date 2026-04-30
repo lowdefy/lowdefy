@@ -25,9 +25,7 @@ function parseModuleSource(source) {
     const rest = source.slice(7);
     const atIndex = rest.lastIndexOf('@');
     if (atIndex === -1) {
-      throw new ConfigError(
-        `Module source "${source}" is missing @ref (e.g., @v1.0.0).`
-      );
+      throw new ConfigError(`Module source "${source}" is missing @ref (e.g., @v1.0.0).`);
     }
     const ref = rest.slice(atIndex + 1);
     const fullPath = rest.slice(0, atIndex);
@@ -41,9 +39,7 @@ function parseModuleSource(source) {
     return { type: 'github', owner, repo, path, ref };
   }
 
-  throw new ConfigError(
-    `Unknown module source type: "${source}". Expected "github:" or "file:".`
-  );
+  throw new ConfigError(`Unknown module source type: "${source}". Expected "github:" or "file:".`);
 }
 
 export default parseModuleSource;

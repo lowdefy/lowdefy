@@ -20,10 +20,10 @@ import { ConfigError } from '@lowdefy/errors';
 function recMoveSkeletonBlocksToSlot(block, blockId, pageId) {
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
-      throw new ConfigError(
-        `Skeleton blocks at ${blockId} on page ${pageId} is not an array.`,
-        { received: block.blocks, configKey: block['~k'] }
-      );
+      throw new ConfigError(`Skeleton blocks at ${blockId} on page ${pageId} is not an array.`, {
+        received: block.blocks,
+        configKey: block['~k'],
+      });
     }
     set(block, 'slots.content.blocks', block.blocks);
     delete block.blocks;

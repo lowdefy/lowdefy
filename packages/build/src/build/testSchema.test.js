@@ -190,10 +190,7 @@ test('null item in blocks array emits warning', () => {
       {
         id: 'page_1',
         type: 'PageHeaderMenu',
-        blocks: [
-          { id: 'valid', type: 'Box' },
-          null,
-        ],
+        blocks: [{ id: 'valid', type: 'Box' }, null],
       },
     ],
   };

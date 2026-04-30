@@ -73,20 +73,19 @@ function validateMenuItem(menuItem, menuId, context) {
   if (type.isNone(menuItem.type)) {
     collectExceptions(
       context,
-      new ConfigError(
-        `Menu item type is not defined at "${menuItem.id}" on menu "${menuId}".`,
-        { configKey }
-      )
+      new ConfigError(`Menu item type is not defined at "${menuItem.id}" on menu "${menuId}".`, {
+        configKey,
+      })
     );
     return false;
   }
   if (!type.isString(menuItem.type)) {
     collectExceptions(
       context,
-      new ConfigError(
-        `Menu item type is not a string at "${menuItem.id}" on menu "${menuId}".`,
-        { received: menuItem.type, configKey }
-      )
+      new ConfigError(`Menu item type is not a string at "${menuItem.id}" on menu "${menuId}".`, {
+        received: menuItem.type,
+        configKey,
+      })
     );
     return false;
   }
@@ -161,10 +160,7 @@ function buildMenu({ components, context }) {
   components.menus.forEach((menu, menuIndex) => {
     const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      collectExceptions(
-        context,
-        new ConfigError('Menu id missing.', { configKey })
-      );
+      collectExceptions(context, new ConfigError('Menu id missing.', { configKey }));
       failedMenuIndices.add(menuIndex);
       return;
     }

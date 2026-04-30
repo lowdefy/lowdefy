@@ -22,9 +22,7 @@ import { ConfigWarning } from '@lowdefy/errors';
 import findSimilarString from '../../utils/findSimilarString.js';
 
 function validateIconImports({ iconImports, context }) {
-  const serverRequire = createRequire(
-    path.join(context.directories.server, 'package.json')
-  );
+  const serverRequire = createRequire(path.join(context.directories.server, 'package.json'));
   const moduleCache = {};
 
   return iconImports.map(({ icons, package: pkg }) => {

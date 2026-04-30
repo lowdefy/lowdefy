@@ -55,9 +55,7 @@ test('walks parent chain to collect all contributing paths', () => {
     },
   };
   const result = collectSkeletonSourceFiles({ components, context });
-  expect(result).toEqual(
-    new Set(['steps/validate.yaml', 'api/my-endpoint.yaml', 'lowdefy.yaml'])
-  );
+  expect(result).toEqual(new Set(['steps/validate.yaml', 'api/my-endpoint.yaml', 'lowdefy.yaml']));
 });
 
 test('excludes refs under pages key', () => {

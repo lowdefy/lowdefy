@@ -34,10 +34,7 @@ function validateConnection(connection, context) {
     return false;
   }
   if (type.isUndefined(connection.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Connection id missing.', { configKey })
-    );
+    collectExceptions(context, new ConfigError('Connection id missing.', { configKey }));
     return false;
   }
   if (!type.isString(connection.id)) {

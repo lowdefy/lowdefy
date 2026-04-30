@@ -232,7 +232,10 @@ test('_payload operator in request properties', async () => {
       response: { _payload: 'value' },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { value: 'from_payload' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { value: 'from_payload' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({ test_request: 'from_payload' });
 });
@@ -278,7 +281,10 @@ test('_step operator accesses previous step result', async () => {
   ];
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(routineContext.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
+  expect(routineContext.steps).toEqual({
+    first_request: 'first_value',
+    second_request: 'first_value',
+  });
 });
 
 test('_secret operator in request properties', async () => {
@@ -342,7 +348,10 @@ test('combined operators in request properties', async () => {
       },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { input: 'test_input' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { input: 'test_input' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({
     test_request: {

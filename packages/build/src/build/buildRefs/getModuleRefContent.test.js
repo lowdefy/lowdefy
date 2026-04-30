@@ -150,9 +150,7 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow(
-      'Module _ref requires "component" or "menu" property.'
-    );
+    ).rejects.toThrow('Module _ref requires "component" or "menu" property.');
   });
 
   test('throws ConfigError when export is not found in manifest', async () => {
@@ -363,9 +361,7 @@ describe('getModuleRefContent', () => {
       modules: {
         layout: createModuleEntry({
           id: 'layout',
-          components: [
-            { id: 'wrapper', component: { blocks: [{ _var: 'content' }] } },
-          ],
+          components: [{ id: 'wrapper', component: { blocks: [{ _var: 'content' }] } }],
         }),
       },
     });

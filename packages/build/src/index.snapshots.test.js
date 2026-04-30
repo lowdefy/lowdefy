@@ -75,8 +75,7 @@ function discoverFixtures() {
   return entries
     .filter(
       (entry) =>
-        entry.isDirectory() &&
-        fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
+        entry.isDirectory() && fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
     )
     .map((entry) => entry.name)
     .sort();

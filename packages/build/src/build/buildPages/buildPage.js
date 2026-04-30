@@ -29,10 +29,7 @@ import validateRequestReferences from './validateRequestReferences.js';
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    collectExceptions(
-      context,
-      new ConfigError(`Page id missing at page ${index}.`, { configKey })
-    );
+    collectExceptions(context, new ConfigError(`Page id missing at page ${index}.`, { configKey }));
     return { failed: true };
   }
   if (!type.isString(page.id)) {

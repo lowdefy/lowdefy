@@ -97,9 +97,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     );
   }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(
-      `Module entry "${entry.id}": 'source' is required and must be a string.`
-    );
+    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
   if (context.modules[entry.id]) {
@@ -160,9 +158,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   for (const section of exportSections) {
     const items = rawExports[section] ?? [];
     if (!type.isArray(items)) {
-      throw new ConfigError(
-        `Module "${entry.id}": exports.${section} must be an array.`
-      );
+      throw new ConfigError(`Module "${entry.id}": exports.${section} must be an array.`);
     }
     for (const item of items) {
       if (!type.isString(item.id)) {

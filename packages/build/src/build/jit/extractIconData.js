@@ -68,7 +68,9 @@ function extractIconData({ icons, directories, logger }) {
         }
       }
     } else if (logger) {
-      logger.warn(`Could not extract icon data for "${icon}" from "${pkg}". The icon will show as a fallback.`);
+      logger.warn(
+        `Could not extract icon data for "${icon}" from "${pkg}". The icon will show as a fallback.`
+      );
     }
   }
   return iconDataMap;

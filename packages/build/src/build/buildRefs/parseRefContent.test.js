@@ -133,9 +133,9 @@ type: Box`;
 type: Box
 properties:
   title: [unclosed bracket`;
-    await expect(
-      parseRefContent({ content, refDef: { path: 'test.yaml' } })
-    ).rejects.toThrow('YAML parse error in "test.yaml".');
+    await expect(parseRefContent({ content, refDef: { path: 'test.yaml' } })).rejects.toThrow(
+      'YAML parse error in "test.yaml".'
+    );
     try {
       await parseRefContent({ content, refDef: { path: 'test.yaml' } });
     } catch (error) {

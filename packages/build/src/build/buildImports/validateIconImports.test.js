@@ -61,9 +61,7 @@ test('validateIconImports filters out invalid icons and emits warning', async ()
 
   const context = createContext();
   const result = validateIconImports({
-    iconImports: [
-      { icons: ['AiFillAlert', 'AiOutlineToolOutlined'], package: 'react-icons/ai' },
-    ],
+    iconImports: [{ icons: ['AiFillAlert', 'AiOutlineToolOutlined'], package: 'react-icons/ai' }],
     context,
   });
 
@@ -83,9 +81,7 @@ test('validateIconImports emits warning without suggestion when no close match',
 
   const context = createContext();
   const result = validateIconImports({
-    iconImports: [
-      { icons: ['AiFillAlert', 'AiCompletelyWrong'], package: 'react-icons/ai' },
-    ],
+    iconImports: [{ icons: ['AiFillAlert', 'AiCompletelyWrong'], package: 'react-icons/ai' }],
     context,
   });
 
@@ -109,9 +105,7 @@ test('validateIconImports skips validation when package fails to load', async ()
     context,
   });
 
-  expect(result).toEqual([
-    { icons: ['AiFillAlert', 'AiBadIcon'], package: 'react-icons/ai' },
-  ]);
+  expect(result).toEqual([{ icons: ['AiFillAlert', 'AiBadIcon'], package: 'react-icons/ai' }]);
   expect(context.handleWarning).not.toHaveBeenCalled();
 });
 

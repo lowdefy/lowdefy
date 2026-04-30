@@ -29,8 +29,8 @@ function createSessionCallback({ authConfig, plugins }) {
 
   async function sessionCallback({ session, token, user }) {
     const identifier = user
-      ? user.id ?? user.sub ?? user.email
-      : token.id ?? token.sub ?? token.email;
+      ? (user.id ?? user.sub ?? user.email)
+      : (token.id ?? token.sub ?? token.email);
     if (token) {
       const {
         id,

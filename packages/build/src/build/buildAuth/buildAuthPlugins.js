@@ -23,10 +23,7 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
     pluginConfig.forEach((plugin) => {
       const configKey = plugin['~k'];
       if (type.isUndefined(plugin.id)) {
-        collectExceptions(
-          context,
-          new ConfigError(`Auth ${typeClass} id missing.`, { configKey })
-        );
+        collectExceptions(context, new ConfigError(`Auth ${typeClass} id missing.`, { configKey }));
         return;
       }
       if (!type.isString(plugin.id)) {
@@ -42,10 +39,13 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
       if (!type.isString(plugin.type)) {
         collectExceptions(
           context,
-          new ConfigError(`Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`, {
-            received: plugin.type,
-            configKey,
-          })
+          new ConfigError(
+            `Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`,
+            {
+              received: plugin.type,
+              configKey,
+            }
+          )
         );
         return;
       }
@@ -61,10 +61,7 @@ function buildAdapter({ components, context }) {
   }
   const configKey = adapter['~k'];
   if (type.isUndefined(adapter.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Auth adapter id missing.', { configKey })
-    );
+    collectExceptions(context, new ConfigError('Auth adapter id missing.', { configKey }));
     return;
   }
   if (!type.isString(adapter.id)) {

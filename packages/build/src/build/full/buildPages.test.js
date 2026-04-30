@@ -76,9 +76,7 @@ test('page id is not a string', () => {
       },
     ],
   };
-  expect(() => buildPages({ components, context })).toThrow(
-    'Page id is not a string at page 0.'
-  );
+  expect(() => buildPages({ components, context })).toThrow('Page id is not a string at page 0.');
 });
 
 test('Throw on duplicate page ids', () => {

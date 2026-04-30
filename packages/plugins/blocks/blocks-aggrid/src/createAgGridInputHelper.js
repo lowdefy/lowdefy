@@ -24,10 +24,7 @@ function createAgGridInputHelper(theme) {
     locator,
     do: {
       clickRow: (page, blockId, rowIndex) =>
-        locator(page, blockId)
-          .locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`)
-          .first()
-          .click(),
+        locator(page, blockId).locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`).first().click(),
       clickHeader: (page, blockId, colIndex) =>
         locator(page, blockId).locator('.ag-header-cell-text').nth(colIndex).click(),
       editCell: (page, blockId, rowIndex, colIndex) =>
@@ -56,14 +53,10 @@ function createAgGridInputHelper(theme) {
         expect(locator(page, blockId).locator('.ag-header-cell-text')).toHaveCount(count),
       cellText: (page, blockId, rowIndex, colIndex, text) =>
         expect(
-          locator(page, blockId)
-            .locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`)
-            .nth(colIndex)
+          locator(page, blockId).locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`).nth(colIndex)
         ).toHaveText(text),
       themeClass: (page, blockId) =>
-        expect(page.locator(`#${escapeId(blockId)}`)).toHaveClass(
-          new RegExp(`ag-theme-${theme}`)
-        ),
+        expect(page.locator(`#${escapeId(blockId)}`)).toHaveClass(new RegExp(`ag-theme-${theme}`)),
       emptyOverlay: (page, blockId) =>
         expect(locator(page, blockId).locator('.ag-overlay-no-rows-center')).toBeVisible(),
       dragHandle: (page, blockId, rowIndex) =>

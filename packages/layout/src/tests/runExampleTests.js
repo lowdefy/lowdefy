@@ -26,9 +26,7 @@ global.Math = mockMath;
 const runExampleTests = (examples) => {
   examples.forEach((ex) => {
     test(ex.id, () => {
-      const { container } = render(
-        <AutoBlockSim block={ex} state={{}} areaKey="content" />
-      );
+      const { container } = render(<AutoBlockSim block={ex} state={{}} areaKey="content" />);
       expect(container).toMatchSnapshot();
     });
   });

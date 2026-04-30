@@ -35,10 +35,9 @@ function validateStep(step, { endpointId }) {
   }
   validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
-    throw new ConfigError(
-      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.type)) {
     throw new ConfigError(

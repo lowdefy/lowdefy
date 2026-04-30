@@ -65,13 +65,17 @@ function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
     varDefs,
     resolvedVarCache: {},
     moduleDependencies: overrides.moduleDependencies ?? {},
-    refDef:
-      overrides.refDef ?? {
-        id: 'test:module.lowdefy.yaml:0',
-        path: '/modules/test/module.lowdefy.yaml',
-      },
-    exports:
-      overrides.exports ?? { pages: [], components: [], menus: [], connections: [], api: [] },
+    refDef: overrides.refDef ?? {
+      id: 'test:module.lowdefy.yaml:0',
+      path: '/modules/test/module.lowdefy.yaml',
+    },
+    exports: overrides.exports ?? {
+      pages: [],
+      components: [],
+      menus: [],
+      connections: [],
+      api: [],
+    },
     connections: overrides.connections ?? {},
   };
 }
@@ -311,10 +315,7 @@ describe('_module.pageId resolution', () => {
       moduleEntry: testModuleEntry,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.pageId': { id: 'event-log', module: 'events' } },
-      ctx
-    );
+    const result = await resolve({ '_module.pageId': { id: 'event-log', module: 'events' } }, ctx);
     expect(result).toBe('events-entry/event-log');
   });
 
@@ -568,10 +569,7 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.id': { module: 'events-entry' } },
-      ctx
-    );
+    const result = await resolve({ '_module.id': { module: 'events-entry' } }, ctx);
     expect(result).toBe('events-entry');
   });
 
@@ -592,9 +590,7 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
-    await expect(
-      resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
-    ).rejects.toThrow(
+    await expect(resolve({ '_module.id': { module: 'nonexistent' } }, ctx)).rejects.toThrow(
       '_module.id { module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
     );
   });
@@ -757,10 +753,7 @@ describe('_module.var with computed name (bottom-up)', () => {
   test('_build.string.concat computes module variable name', async () => {
     const entry = createModuleEntry({ theme: 'dark' });
     const ctx = createWalkContext({ moduleEntry: entry });
-    const result = await resolve(
-      { '_module.var': { '_build.string.concat': ['the', 'me'] } },
-      ctx
-    );
+    const result = await resolve({ '_module.var': { '_build.string.concat': ['the', 'me'] } }, ctx);
     expect(result).toBe('dark');
   });
 
@@ -862,10 +855,7 @@ describe('_module.var lazy resolution', () => {
 describe('regression — existing compositions still work', () => {
   test('_build.string.concat with _var argument', async () => {
     const ctx = createWalkContext({ vars: { prefix: 'admin' } });
-    const result = await resolve(
-      { '_build.string.concat': [{ _var: 'prefix' }, '-page'] },
-      ctx
-    );
+    const result = await resolve({ '_build.string.concat': [{ _var: 'prefix' }, '-page'] }, ctx);
     expect(result).toBe('admin-page');
   });
 

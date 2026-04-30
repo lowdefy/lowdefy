@@ -60,10 +60,10 @@ function checkMissingRequiredControls({ controlType, keys, control }, endpointCo
   const { endpointId } = endpointContext;
   const missingControls = controlTypes[controlType].required.filter((item) => !keys.includes(item));
   if (missingControls.length > 0) {
-    throw new ConfigError(
-      `Missing required control type(s) for endpoint ${endpointId}.`,
-      { received: missingControls, configKey: control?.['~k'] }
-    );
+    throw new ConfigError(`Missing required control type(s) for endpoint ${endpointId}.`, {
+      received: missingControls,
+      configKey: control?.['~k'],
+    });
   }
 }
 
@@ -75,10 +75,10 @@ function checkInvalidControls({ controlType, keys, control }, endpointContext) {
   );
 
   if (invalidControls.length > 0) {
-    throw new ConfigError(
-      `Invalid control type(s) for endpoint ${endpointId}.`,
-      { received: invalidControls, configKey: control?.['~k'] }
-    );
+    throw new ConfigError(`Invalid control type(s) for endpoint ${endpointId}.`, {
+      received: invalidControls,
+      configKey: control?.['~k'],
+    });
   }
 }
 
@@ -86,10 +86,10 @@ function handleSwitch(control, endpointContext) {
   const { endpointId } = endpointContext;
   const switchArray = control[':switch'];
   if (!type.isArray(control[':switch'])) {
-    throw new ConfigError(
-      `Type given for :switch control is invalid at endpoint ${endpointId}.`,
-      { received: control[':switch'], configKey: control['~k'] }
-    );
+    throw new ConfigError(`Type given for :switch control is invalid at endpoint ${endpointId}.`, {
+      received: control[':switch'],
+      configKey: control['~k'],
+    });
   }
 
   switchArray.forEach((caseObj) => {
@@ -116,16 +116,16 @@ function validateControl(control, endpointContext) {
   const keys = Object.keys(control);
   const intersection = keys.filter((item) => Object.keys(controlTypes).includes(item));
   if (intersection.length === 0) {
-    throw new ConfigError(
-      `Invalid control type(s) for endpoint ${endpointId}.`,
-      { received: keys, configKey: control['~k'] }
-    );
+    throw new ConfigError(`Invalid control type(s) for endpoint ${endpointId}.`, {
+      received: keys,
+      configKey: control['~k'],
+    });
   }
   if (intersection.length > 1) {
-    throw new ConfigError(
-      `More than one control type found for endpoint ${endpointId}.`,
-      { received: intersection, configKey: control['~k'] }
-    );
+    throw new ConfigError(`More than one control type found for endpoint ${endpointId}.`, {
+      received: intersection,
+      configKey: control['~k'],
+    });
   }
 
   const controlType = intersection[0];

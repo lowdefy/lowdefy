@@ -22,8 +22,7 @@ const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
 export default createBlockHelper({
   locator,
   do: {
-    click: (page, blockId) =>
-      locator(page, blockId).locator('canvas, svg').first().click(),
+    click: (page, blockId) => locator(page, blockId).locator('canvas, svg').first().click(),
   },
   expect: {
     hasCanvas: (page, blockId) => expect(locator(page, blockId).locator('canvas')).toBeVisible(),

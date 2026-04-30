@@ -94,9 +94,7 @@ test('menu id is not a string', () => {
       },
     ],
   };
-  expect(() => buildMenu({ components, context })).toThrow(
-    'Menu id is not a string.'
-  );
+  expect(() => buildMenu({ components, context })).toThrow('Menu id is not a string.');
 });
 
 test('throw on Duplicate menu ids', () => {

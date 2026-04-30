@@ -241,13 +241,13 @@ const PageSidebarLayout = ({
                         <img
                           src={
                             openSiderState
-                              ? properties.logo?.src ??
-                                `${basePath}/logo-${getDarkMode() ? 'dark' : 'light'}-theme.png`
-                              : properties.logo?.srcMobile ??
+                              ? (properties.logo?.src ??
+                                `${basePath}/logo-${getDarkMode() ? 'dark' : 'light'}-theme.png`)
+                              : (properties.logo?.srcMobile ??
                                 properties.logo?.src ??
                                 `${basePath}/logo-square-${
                                   getDarkMode() ? 'dark' : 'light'
-                                }-theme.png`
+                                }-theme.png`)
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={classNames.logo}

@@ -47,10 +47,7 @@ test('updateServerPackageJsonJit adds missing packages to package.json', async (
   });
 
   expect(mockReadFile).toHaveBeenCalledWith('/test/server/package.json');
-  expect(mockWriteFile).toHaveBeenCalledWith(
-    '/test/server/package.json',
-    expect.any(String)
-  );
+  expect(mockWriteFile).toHaveBeenCalledWith('/test/server/package.json', expect.any(String));
 
   const written = JSON.parse(mockWriteFile.mock.calls[0][1]);
   expect(written.dependencies['@lowdefy/plugin-aws']).toBe('1.0.0');

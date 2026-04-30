@@ -34,7 +34,11 @@ async function updateIconImportsJit({ newIcons, iconImports, context }) {
 
   // Extract SVG tree data from react-icons and write a self-contained JS module
   // that the client can fetch at runtime without a Next.js rebuild.
-  const newIconData = extractIconData({ icons: newIcons, directories: context.directories, logger: context.logger });
+  const newIconData = extractIconData({
+    icons: newIcons,
+    directories: context.directories,
+    logger: context.logger,
+  });
   await writeIconsDynamic({ newIconData, context });
 }
 

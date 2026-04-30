@@ -65,7 +65,7 @@ const TagBlock = ({
               html: properties.title,
               methods,
             })
-          : properties.title ?? blockId}
+          : (properties.title ?? blockId)}
         <ShortcutBadge shortcut={events.onClick?.shortcut} />
       </>
     </Tag>
