@@ -24,12 +24,13 @@ function _api({ params, apiResponses }) {
   const splitKey = params.split('.');
   const [endpoint, ...keyParts] = splitKey;
 
-  if (endpoint in apiResponses && !apiResponses[endpoint][0].loading) {
+  const entry = apiResponses[endpoint]?.[0];
+  if (entry && (!entry.loading || entry.holdValue)) {
     if (splitKey.length === 1) {
-      return apiResponses[endpoint][0];
+      return entry;
     }
     const key = keyParts.join('.');
-    return get(apiResponses[endpoint][0], key, {
+    return get(entry, key, {
       copy: true,
       default: null,
     });
