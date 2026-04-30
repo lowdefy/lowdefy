@@ -39,9 +39,9 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build"
   },
-  "dependencies": {
-    "next": "13.5.4",
-    "next-auth": "4.24.5"
+  "peerDependencies": {
+    "next": ">=16",
+    "next-auth": ">=4.24"
   },
   "devDependencies": {
     "@lowdefy/node-utils": "5.1.0",
