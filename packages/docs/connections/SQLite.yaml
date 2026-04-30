@@ -45,10 +45,7 @@ _ref:
             ### Knex
 
             #### Properties
-            - `client: enum`: __Required__ - One of:
-              - `better-sqlite3` (recommended) - uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver. Synchronous, faster, and actively maintained.
-              - `sqlite3` - uses the [`sqlite3`](https://github.com/TryGhost/node-sqlite3) driver. The driver is in maintenance-only mode upstream; prefer `better-sqlite3` for new apps.
-              - `sqlite` - alias of `sqlite3`.
+            - `client: enum`: __Required__ - Should be `better-sqlite3` or `sqlite` (alias of `better-sqlite3`) to connect to SQLite. SQLite uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver.
             - `connection: object`:
               - `filename: string`:  __Required__ - The path to the SQLite file (relative to the project root).
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
@@ -56,24 +53,13 @@ _ref:
 
             #### Examples
 
-            ##### Specify filename (better-sqlite3):
+            ##### Specify filename:
             ```yaml
             connections:
               - id: sqlite
                 type: Knex
                 properties:
                   client: better-sqlite3
-                  connection:
-                    filename: ./mydb.sqlite
-            ```
-
-            ##### Specify filename (sqlite3):
-            ```yaml
-            connections:
-              - id: sqlite
-                type: Knex
-                properties:
-                  client: sqlite
                   connection:
                     filename: ./mydb.sqlite
             ```
@@ -92,7 +78,7 @@ _ref:
             ```
             Environment variables in development:
             ```
-            LOWDEFY_SECRET_KNEX_CLIENT = sqlite
+            LOWDEFY_SECRET_KNEX_CLIENT = better-sqlite3
             LOWDEFY_SECRET_KNEX_CONNECTION = {"filename": "./mydb.sqlite"}
             ```
             Environment variables in production:

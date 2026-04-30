@@ -14,24 +14,19 @@
   limitations under the License.
 */
 
-import createKnex from '../createKnex.js';
-import schema from './schema.js';
+import knex from 'knex';
+import { ConfigError } from '@lowdefy/errors';
 
-async function KnexRaw({ request, connection }) {
-  const client = createKnex(connection);
-  const res = await client.raw(request.query, request.parameters);
-  Object.keys(res).forEach((key) => {
-    if (key.startsWith('_')) {
-      delete res[key];
-    }
-  });
-  return res;
+function createKnex(connection) {
+  if (connection.client === 'sqlite3') {
+    throw new ConfigError(
+      'Knex connection "client: sqlite3" is no longer supported. Use "client: better-sqlite3" or "client: sqlite" instead.'
+    );
+  }
+  if (connection.client === 'sqlite') {
+    return knex({ ...connection, client: 'better-sqlite3' });
+  }
+  return knex(connection);
 }
 
-KnexRaw.schema = schema;
-KnexRaw.meta = {
-  checkRead: false,
-  checkWrite: false,
-};
-
-export default KnexRaw;
+export default createKnex;

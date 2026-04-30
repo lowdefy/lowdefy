@@ -108,15 +108,16 @@ _ref:
 
             #### Properties
             - `client: enum`: __Required__ - The database client to use. One of:
+              - `better-sqlite3`
+              - `sqlite` (alias of `better-sqlite3`)
               - `mssql`
-              - `mysql`
+              - `mysql2`
+              - `mysql` (unmaintained — prefer `mysql2`)
               - `oracledb`
               - `postgres`
               - `pg` (alias of `postgres`)
               - `postgresql` (alias of `postgres`)
               - `redshift`
-              - `sqlite3`
-              - `sqlite` (alias of `sqlite3`)
             - `connection: object | string`: __Required__ - Connection string or object to pass to the database client. See the specific client documentation for more details.
             - `searchPath: string`:  Set PostgreSQL search path.
             - `version: string`:  Set database version.
