@@ -133,8 +133,8 @@ importers:
         specifier: 4.0.4
         version: 4.0.4
       semver:
-        specifier: 7.5.4
-        version: 7.5.4
+        specifier: 7.7.4
+        version: 7.7.4
       tar:
         specifier: 6.2.1
         version: 6.2.1
@@ -290,8 +290,8 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       semver:
-        specifier: 7.5.4
-        version: 7.5.4
+        specifier: 7.7.4
+        version: 7.7.4
       uuid:
         specifier: 9.0.1
         version: 9.0.1
@@ -2072,8 +2072,8 @@ importers:
         specifier: 5.6.0
         version: 5.6.0(react@18.2.0)
       swr:
-        specifier: 2.2.4
-        version: 2.2.4(react@18.2.0)
+        specifier: 2.4.1
+        version: 2.4.1(react@18.2.0)
       tailwindcss:
         specifier: 4.2.4
         version: 4.2.4
@@ -10806,11 +10806,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.5.4:
-    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
     engines: {node: '>=10'}
@@ -11225,10 +11220,10 @@ packages:
       '@swc/core': ^1.2.147
       webpack: '>=2'
 
-  swr@2.2.4:
-    resolution: {integrity: sha512-njiZ/4RiIhoOlAaLYDqwz5qH/KZXVilRLvomrx83HjzCWTfa+InyfAjv05PSFxnmLzZkNO9ZfvgoqzAaEI4sGQ==}
+  swr@2.4.1:
+    resolution: {integrity: sha512-2CC6CiKQtEwaEeNiqWTAw9PGykW8SR5zZX8MZk6TeAvEAnVS7Visz8WzphqgtQ8v2xz/4Q5K+j+SeMaKXeeQIA==}
     peerDependencies:
-      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -11619,6 +11614,11 @@ packages:
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  use-sync-external-store@1.6.0:
+    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -13250,7 +13250,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.7.4
 
   '@changesets/assemble-release-plan@6.0.10':
     dependencies:
@@ -13259,7 +13259,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.5.4
+      semver: 7.7.4
 
   '@changesets/changelog-git@0.2.1':
     dependencies:
@@ -13290,7 +13290,7 @@ snapshots:
       package-manager-detector: 0.2.11
       picocolors: 1.1.1
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.7.4
       spawndamnit: 3.0.1
       term-size: 2.2.1
     transitivePeerDependencies:
@@ -13316,7 +13316,7 @@ snapshots:
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
       picocolors: 1.1.1
-      semver: 7.5.4
+      semver: 7.7.4
 
   '@changesets/get-release-plan@4.0.16':
     dependencies:
@@ -13951,7 +13951,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.4
+      semver: 7.7.4
       tar: 6.2.1
     transitivePeerDependencies:
       - encoding
@@ -14123,7 +14123,7 @@ snapshots:
   '@npmcli/fs@1.1.1':
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.5.4
+      semver: 7.7.4
     optional: true
 
   '@npmcli/move-file@1.1.2':
@@ -14261,7 +14261,7 @@ snapshots:
       '@opentelemetry/instrumentation': 0.56.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.28.0
       forwarded-parse: 2.1.2
-      semver: 7.5.4
+      semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
 
@@ -14394,7 +14394,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
-      semver: 7.5.4
+      semver: 7.7.4
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -14406,7 +14406,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
-      semver: 7.5.4
+      semver: 7.7.4
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -20246,7 +20246,7 @@ snapshots:
       jest-util: 28.1.3
       natural-compare: 1.4.0
       pretty-format: 28.1.3
-      semver: 7.5.4
+      semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
 
@@ -20423,7 +20423,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.5.4
+      semver: 7.7.4
 
   jsx-ast-utils@3.3.5:
     dependencies:
@@ -21395,7 +21395,7 @@ snapshots:
 
   node-abi@3.65.0:
     dependencies:
-      semver: 7.5.4
+      semver: 7.7.4
 
   node-abort-controller@3.1.1: {}
 
@@ -21425,7 +21425,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.4
+      semver: 7.7.4
       tar: 6.2.1
       which: 2.0.2
     transitivePeerDependencies:
@@ -22561,10 +22561,6 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.5.4:
-    dependencies:
-      lru-cache: 6.0.0
-
   semver@7.7.4: {}
 
   serialize-javascript@6.0.0:
@@ -23054,11 +23050,11 @@ snapshots:
       '@swc/counter': 0.1.3
       webpack: 5.106.2(@swc/core@1.15.32)(webpack-cli@7.0.2)
 
-  swr@2.2.4(react@18.2.0):
+  swr@2.4.1(react@18.2.0):
     dependencies:
-      client-only: 0.0.1
+      dequal: 2.0.3
       react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
+      use-sync-external-store: 1.6.0(react@18.2.0)
 
   symbol-tree@3.2.4: {}
 
@@ -23552,6 +23548,10 @@ snapshots:
       requires-port: 1.0.0
 
   use-sync-external-store@1.2.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
+  use-sync-external-store@1.6.0(react@18.2.0):
     dependencies:
       react: 18.2.0
 
