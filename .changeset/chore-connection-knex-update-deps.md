@@ -13,7 +13,8 @@ Bumped knex and its dialect drivers, and consolidated onto the actively-maintain
 
 - `knex` `2.5.1` → `3.2.9`. Knex 3.x drops Node < 16; Lowdefy already requires Node 18+. The `knex(config)`, `.raw()`, and dynamic query-builder API surface used by `KnexRaw` / `KnexBuilder` is unchanged.
 - `pg` `8.11.3` → `8.20.0`.
-- `mssql` `10.0.1` → `12.5.0`. v11 raises the Node floor to ≥18 (already satisfied); v12 stops cloning config objects, which is fine because Lowdefy hands the user's YAML to `knex(connection)` once and never mutates it.
+- **Removed** `mssql`. Knex's `mssql` dialect actually requires `tedious` (not the `mssql` package), and Lowdefy never imported `mssql` directly — it was only ever a vehicle for pulling tedious into the install tree. `client: mssql` in user YAML is unchanged: the knex client name stays the same, only the underlying npm package shipped with `connection-knex` changes.
+- **Added** `tedious` `19.2.1` as the SQL Server driver — the package knex actually loads when `client: mssql` is used.
 - **Removed** `sqlite3`. The driver is in maintenance-only mode upstream (the v6 release marked the repo unmaintained).
 - **Added** `better-sqlite3` `12.9.0` as the SQLite driver. Selectable as `client: better-sqlite3` (or `client: sqlite`, which is now an alias of `better-sqlite3` — see runtime client handling below).
 - **Removed** `mysql`. Unmaintained upstream since 2020.

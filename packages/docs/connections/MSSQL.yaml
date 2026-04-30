@@ -39,7 +39,7 @@ _ref:
 
             #### Properties
             - `client: enum`: __Required__ - Should be `mssql` to connect to Microsoft SQL Server.
-            - `connection: object | string `: __Required__ - Connection object or string to pass to the [`mssql`](https://www.npmjs.com/package/mssql) database client.
+            - `connection: object | string `: __Required__ - Connection object or string to pass to the [`tedious`](https://www.npmjs.com/package/tedious) database client (knex's `mssql` dialect uses tedious internally).
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
 
             #### Examples

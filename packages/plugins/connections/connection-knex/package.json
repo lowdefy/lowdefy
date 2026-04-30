@@ -45,9 +45,9 @@
     "@lowdefy/helpers": "5.1.0",
     "better-sqlite3": "12.9.0",
     "knex": "3.2.9",
-    "mssql": "12.5.0",
     "mysql2": "3.22.3",
-    "pg": "8.20.0"
+    "pg": "8.20.0",
+    "tedious": "19.2.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
