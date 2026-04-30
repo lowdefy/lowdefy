@@ -50,7 +50,7 @@
     "release:experimental": "(npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- ."
   },
   "devDependencies": {
-    "@changesets/cli": "2.30.0",
+    "@changesets/cli": "2.31.0",
     "@eslint/js": "9.39.4",
     "eslint": "10.2.1",
     "eslint-config-prettier": "10.1.8",
@@ -63,7 +63,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.5.0",
     "prettier": "3.8.3",
-    "turbo": "2.8.19"
+    "turbo": "2.9.6"
   },
   "packageManager": "pnpm@10.29.2"
 }
