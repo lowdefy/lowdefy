@@ -1,5 +1,55 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- 01e249b: feat(blocks-antd): `ControlledList` now fires `onAdd` / `onRemove` events and defaults the remove icon to the antd error color at a standard size.
+
+  **Events.** Both events fire **after** the list mutation completes. The event payload is `{ index, item }`:
+
+  - `onAdd` — `index` is where the new row was inserted (`0` for `addToFront: true`, else `list.length`). `item` is the newly added value (typically `undefined` for an empty row).
+  - `onRemove` — `index` is the removed row's position. `item` is the row value captured before removal, so handlers can reference the deleted data (e.g., `_event: item._id` to delete from a backend).
+
+  ```yaml
+  - id: tags
+    type: ControlledList
+    events:
+      onRemove:
+        - id: notify
+          type: DisplayMessage
+          params:
+            content:
+              _string.concat: ['Removed at index ', { _event: index }]
+    blocks:
+      - id: tags.$.label
+        type: TextInput
+  ```
+
+  **Remove icon styling.** The remove icon now defaults to `var(--ant-color-error)` at `var(--ant-font-size-lg)`, with `--ant-color-error-hover` / `--ant-color-error-active` on hover/press — no more hardcoded hex colors, and the size no longer swings with `properties.size`. Override via `class.removeIcon` / `style.removeIcon` (both slots target the icon wrapper). Existing configs that hardcoded `color: '#ff4d4f'` on `removeItemIcon` can drop it — the default is already danger.
+
+  **`@lowdefy/client`** also now passes the list's current state value to list-type block components via a `value` prop, so any list block can read its own array data.
+
+- a4ecee5: fix(client): Skip rendering content slots that have no blocks.
+
+  `Container`, `InputContainer`, and `List` no longer create a `content[slotKey]` function when the slot's blocks array is empty. Blocks that use the `content.X && content.X()` pattern (for optional header, footer, extra, etc.) now correctly render nothing — including no wrapping `Area` element — when the user leaves the slot empty.
+
+- 6ec0dd4: fix(client): Forward `style` prop to all Link variants.
+
+  `createLinkComponent` previously destructured every prop except `style`, so any `<Link style={...}>` passed by a block was silently dropped. Inline style overrides only worked via `className` + CSS. All four link variants (`backLink`, `newOriginLink`, `sameOriginLink` — both newTab and same-origin branches — and `noLink`) now thread `style` through to the rendered `<a>` (or `<span>` for `noLink`).
+
+  Surfaces fixes in three places that were already passing `style` and silently broken: `headerActions.js` notifications/profile/dark-mode rows had `color: 'inherit'` that didn't reach the `<a>` (label rendered as antd link blue); `Anchor.js` disabled state set `color: '#BEBEBE'` that never applied; `buildMenuItems.js` per-link `style:` config was discarded.
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [d105b81]
+- Updated dependencies [e3fc007]
+  - @lowdefy/engine@5.2.0
+  - @lowdefy/logger@5.2.0
+  - @lowdefy/layout@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes

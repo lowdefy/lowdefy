@@ -1,5 +1,73 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 69a59c0: feat(\_js): Pass pre-computed values into `_js` via an `args` object.
+
+  The `_js` operator now accepts an object form `{ fn, args }` alongside the existing string form. Values in `args` are resolved by the parser — using any Lowdefy operator (`_state`, `_request`, `_user`, nested `_js`, etc.) — before the JavaScript function runs, and are injected as the `args` object inside the function body.
+
+  ```yaml
+  _js:
+    fn: |
+      const { products, target } = args;
+      return products
+        .filter((p) => p.category === target)
+        .reduce((a, p) => a + p.price, 0);
+    args:
+      products:
+        _request: get_products.data.products
+      target: smartphones
+  ```
+
+  This lets you precompute or normalize values in YAML and keep the JavaScript body focused on computation, rather than mixing operator lookups into the function. The string form continues to work unchanged, and identical `fn` bodies still share a single compiled function at build time — only `args` varies per call.
+
+- 0d44433: feat(\_string): Add `_string.format` for template-style string interpolation.
+
+  `_string.format` substitutes placeholders in a template string with values, accepting either a positional array form or a named object form. `null`/`undefined` values render as empty strings, which often makes `_if_none` unnecessary.
+
+  ```yaml
+  # Positional placeholders
+  _string.format:
+    - 'Updates ({0})'
+    - _request: get_counts.0.update
+
+  # Named placeholders
+  _string.format:
+    template: 'Updates ({count}) since {date}'
+    on:
+      count:
+        _request: get_counts.0.update
+      date:
+        _date.format:
+          - YYYY-MM-DD
+          - _state: lastSync
+  ```
+
+  Use `{{` / `}}` to include literal braces. Prefer `_string.format` over `_string.concat` for label-style interpolation, and use [`_nunjucks`](/_nunjucks) when you need conditionals, loops, or filters.
+
+### Patch Changes
+
+- 1d18a13: feat(actions): `holdValue` flag on `Request` and `CallAPI` actions.
+
+  `Request` and `CallAPI` actions now accept a `holdValue: true` flag that retains the previous response value while a new call is loading. UI bound to `_request: <id>` or `_api: <endpointId>` keeps showing the previous response instead of flashing to `null` during a refetch. The previous response is also retained if the new call errors — the error is still observable via `_request_details` / `_api`.
+
+  ```yaml
+  - id: refresh_table
+    type: Request
+    params:
+      requestId: my_table_request
+      holdValue: true
+  ```
+
+  The `Request` action's object-form params now also support `{ requestId, holdValue }` and `{ requestIds, holdValue }` shapes alongside the existing `{ all }` shape.
+
+- Updated dependencies [73fa2b9]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/helpers@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
