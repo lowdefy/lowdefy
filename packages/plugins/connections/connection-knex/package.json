@@ -42,11 +42,12 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.1.0",
-    "knex": "2.5.1",
-    "mssql": "10.0.1",
+    "better-sqlite3": "12.9.0",
+    "knex": "3.2.9",
+    "mssql": "12.5.0",
     "mysql": "2.18.1",
-    "pg": "8.11.3",
-    "sqlite3": "5.1.7"
+    "pg": "8.20.0",
+    "sqlite3": "6.0.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
