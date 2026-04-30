@@ -45,7 +45,10 @@ _ref:
             ### Knex
 
             #### Properties
-            - `client: enum`: __Required__ - Should be `sqlite3` or `sqlite` to connect to SQLite.
+            - `client: enum`: __Required__ - One of:
+              - `better-sqlite3` (recommended) - uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver. Synchronous, faster, and actively maintained.
+              - `sqlite3` - uses the [`sqlite3`](https://github.com/TryGhost/node-sqlite3) driver. The driver is in maintenance-only mode upstream; prefer `better-sqlite3` for new apps.
+              - `sqlite` - alias of `sqlite3`.
             - `connection: object`:
               - `filename: string`:  __Required__ - The path to the SQLite file (relative to the project root).
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
@@ -53,7 +56,18 @@ _ref:
 
             #### Examples
 
-            ##### Specify filename:
+            ##### Specify filename (better-sqlite3):
+            ```yaml
+            connections:
+              - id: sqlite
+                type: Knex
+                properties:
+                  client: better-sqlite3
+                  connection:
+                    filename: ./mydb.sqlite
+            ```
+
+            ##### Specify filename (sqlite3):
             ```yaml
             connections:
               - id: sqlite
