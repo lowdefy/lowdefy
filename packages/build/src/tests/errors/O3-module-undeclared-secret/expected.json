@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "expectThrow": true,
+      "errorContains": ["references secret \"UNDECLARED_SECRET\"", "does not declare it", "leaky"]
+    }
+  ]
+}

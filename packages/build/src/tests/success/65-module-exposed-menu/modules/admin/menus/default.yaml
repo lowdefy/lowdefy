@@ -1,0 +1,14 @@
+id: default
+links:
+  - id: settings
+    type: MenuLink
+    pageId:
+      _module.pageId: settings
+    properties:
+      title: Settings
+  - id: users
+    type: MenuLink
+    pageId:
+      _module.pageId: users
+    properties:
+      title: Users

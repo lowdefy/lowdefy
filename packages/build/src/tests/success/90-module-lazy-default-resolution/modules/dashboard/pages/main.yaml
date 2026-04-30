@@ -1,0 +1,11 @@
+id: main
+type: Box
+blocks:
+  - id: header_section
+    type: Box
+    blocks:
+      - _module.var: components.header
+  - id: form_section
+    type: Box
+    blocks:
+      _module.var: components.form_fields

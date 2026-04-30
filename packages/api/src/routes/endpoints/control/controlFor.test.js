@@ -23,7 +23,7 @@ test('for loop iterates over array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: { _item: 'item' },
@@ -48,7 +48,7 @@ test('for loop with empty array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'should not run',
@@ -73,7 +73,7 @@ test('for loop with object array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'processed',
@@ -91,7 +91,7 @@ test('for loop evaluates :in with operators', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',
@@ -109,7 +109,7 @@ test('missing :for variable name', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',
@@ -129,7 +129,7 @@ test(':in is not an array', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',
@@ -178,7 +178,7 @@ test('for loop logs iteration details', async () => {
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',
-      requestId: 'test_request',
+      stepId: 'test_request',
       connectionId: 'test',
       properties: {
         response: 'ok',

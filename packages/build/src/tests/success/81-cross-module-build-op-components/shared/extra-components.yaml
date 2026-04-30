@@ -1,0 +1,10 @@
+- id: extra-comp
+  type: Component
+  component:
+    id: extra-box
+    type: Box
+    blocks:
+      - id: extra-title
+        type: Title
+        properties:
+          content: Extra Component

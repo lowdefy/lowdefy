@@ -17,7 +17,7 @@
 async function writeSourcelessPages({ sourcelessPageArtifacts, context }) {
   for (const artifact of sourcelessPageArtifacts) {
     await context.writeBuildArtifact(
-      `pages/${artifact.pageId}/${artifact.pageId}.json`,
+      `pages/${artifact.pageId}.json`,
       artifact.pageJson
     );
     for (const request of artifact.requests) {

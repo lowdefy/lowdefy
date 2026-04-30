@@ -1,0 +1,12 @@
+# 87: Module declares a default plugin — build succeeds without app declaring it
+lowdefy: local
+name: Default Plugin Test
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

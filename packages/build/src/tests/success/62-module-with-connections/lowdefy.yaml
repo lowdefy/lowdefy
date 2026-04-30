@@ -1,0 +1,14 @@
+# 62: Module with its own connections
+# Tests that module connections get scoped IDs and _module.connectionId resolves correctly.
+lowdefy: local
+name: Module Connections Test
+
+modules:
+  - id: notify
+    source: 'file:modules/notifier'
+    vars:
+      sender_email: test@example.com
+
+pages:
+  - id: home
+    type: Box

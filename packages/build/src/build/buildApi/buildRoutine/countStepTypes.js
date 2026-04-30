@@ -15,6 +15,9 @@
 */
 
 function countStepTypes(step, { typeCounters }) {
+  if (step.type === 'CallApi') {
+    return;
+  }
   typeCounters.requests.increment(step.type, step['~k']);
 }
 

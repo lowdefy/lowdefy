@@ -1,0 +1,297 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _module
+    pageTitle: _module
+    filePath: operators/_module.yaml
+    env: Build Only
+    types: |
+      ```
+      _module.var: (key: string): any
+      _module.pageId: (pageId: string): string
+      _module.pageId: (arguments: { id: string, module: string }): string
+      _module.connectionId: (connectionId: string): string
+      _module.connectionId: (arguments: { id: string, module: string }): string
+      _module.endpointId: (endpointId: string): string
+      _module.endpointId: (arguments: { id: string, module: string }): string
+      _module.id: (true): string
+      _module.id: (arguments: { module: string }): string
+      ```
+    description: |
+      The `_module` operator family provides access to module-scoped values during the build. `_module.var` and the string forms of the ID operators only make sense inside module config files — the build throws a clear error if you use them at the app level.
+
+      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
+
+      All `_module` operators resolve during the walker pass — the same phase as `_var` and `_ref`. Inside module files, they work at any depth.
+
+      See [Modules](/modules) for an overview of the module system.
+
+    methods:
+      - name: var
+        types: |
+          ```
+          (key: string): any
+          ```
+        description: |
+          The `_module.var` operator reads a value from the module entry's `vars`. It returns the consumer value passed in `lowdefy.yaml` if one was provided, otherwise it resolves the manifest default on read. If neither is provided (no consumer value, no declared default), the operator returns `null`.
+
+          Unlike `_var`, which requires threading variables through each `_ref`, `_module.var` works at any depth within module files. It accesses the same vars regardless of `_ref` nesting.
+
+          Defaults are declared in `module.lowdefy.yaml` and resolve on read. Defaults are expressions — they can be literals, `_ref`s, `_module.var` references to other vars, or any `_build.*` tree. See [Writing Modules → Dynamic Defaults](/module-authoring#dynamic-defaults) for patterns.
+
+          Vars with `properties` merge at the property level — only consumer-provided keys override the declared defaults, and missing properties resolve their own defaults independently.
+
+        arguments: |
+          ###### string
+          The key in the module entry's `vars` object. Dot notation is supported for nested access (e.g., `theme.colors.primary`).
+
+        examples: |
+          ###### Simple string access:
+          ```yaml
+          title:
+            _module.var: title
+          ```
+          If the app provides `vars: { title: "Welcome" }`, returns `"Welcome"`.
+
+          ###### Nested path access:
+          ```yaml
+          primary_color:
+            _module.var: theme.colors.primary
+          ```
+          Accesses nested values using dot notation. If the module manifest declares defaults via `properties`, unset values resolve to their defaults.
+
+      - name: pageId
+        types: |
+          ```
+          (pageId: string): string
+          (arguments: { id: string, module: string }): string
+          ```
+        description: |
+          Resolves a page ID to its fully scoped ID. The string form references the current module's own pages and only works inside module content.
+
+          The object form references a target by entry ID. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml` — useful when an app-level page needs to link to a specific module instance.
+
+        arguments: |
+          ###### string
+          The module-local page ID (as declared in the module's page definition).
+
+          ###### object
+            - `id: string`: The page ID in the target module.
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Link to a sibling page:
+          ```yaml
+          - id: view_details
+            type: Link
+            params:
+              pageId:
+                _module.pageId: user-edit
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/user-edit`.
+
+          ###### Link to a page in another module:
+          ```yaml
+          - id: view_contact
+            type: Link
+            params:
+              pageId:
+                _module.pageId:
+                  id: contact-detail
+                  module: contacts
+          ```
+          If the `contacts` dependency is wired to an entry with `id: contacts`, resolves to `contacts/contact-detail`.
+
+          ###### Link from an app page to a module page:
+          ```yaml
+          # lowdefy.yaml (app level)
+          pages:
+            - id: home
+              blocks:
+                - id: view_team
+                  type: Link
+                  params:
+                    pageId:
+                      _module.pageId:
+                        id: users-list
+                        module: team-users
+          ```
+          At the app level, `module` is the module entry ID. The build resolves this to `team-users/users-list` regardless of where the entry lives in your config.
+
+      - name: connectionId
+        types: |
+          ```
+          (connectionId: string): string
+          (arguments: { id: string, module: string }): string
+          ```
+        description: |
+          Resolves a connection ID to its scoped or remapped ID. The string form references the current module's connections and only works inside module content.
+
+          The object form references a target by entry ID. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml` — useful when an app-level request needs to reach a specific module instance's connection.
+
+        arguments: |
+          ###### string
+          The module-local connection ID (as declared in the module's connection definition).
+
+          ###### object
+            - `id: string`: The connection ID in the target module.
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Reference a module connection:
+          ```yaml
+          connectionId:
+            _module.connectionId: users-db
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/users-db`.
+
+          If the app remaps the connection (`connections: { users-db: my-app-mongodb }`), resolves to `my-app-mongodb` instead.
+
+          ###### Reference a connection in another module:
+          ```yaml
+          connectionId:
+            _module.connectionId:
+              id: contacts-db
+              module: contacts
+          ```
+          Resolves to the target module's scoped or remapped connection ID.
+
+          ###### Reference a module connection from an app request:
+          ```yaml
+          # lowdefy.yaml (app level)
+          api:
+            - id: get_team_users
+              type: Request
+              connectionId:
+                _module.connectionId:
+                  id: users-db
+                  module: team-users
+          ```
+          At the app level, `module` is the module entry ID. The build resolves this to the target module's scoped or remapped connection ID.
+
+      - name: endpointId
+        types: |
+          ```
+          (endpointId: string): string
+          (arguments: { id: string, module: string }): string
+          ```
+        description: |
+          Resolves an API endpoint ID to its fully scoped ID. The string form references the current module's endpoints and only works inside module content.
+
+          The object form references a target by entry ID. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml` — useful when an app-level page needs to call a specific module instance's API.
+
+        arguments: |
+          ###### string
+          The module-local endpoint ID (as declared in the module's API definition).
+
+          ###### object
+            - `id: string`: The endpoint ID in the target module.
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Call a module API endpoint:
+          ```yaml
+          - id: call_invite
+            type: CallAPI
+            params:
+              endpointId:
+                _module.endpointId: invite-user
+          ```
+          In a module entry with `id: team-users`, resolves to `team-users/invite-user`.
+
+          ###### Call an API in another module:
+          ```yaml
+          - id: log_event
+            type: CallAPI
+            params:
+              endpointId:
+                _module.endpointId:
+                  id: log-event
+                  module: events
+          ```
+          Resolves to the target module's scoped endpoint ID.
+
+          ###### Call a module API endpoint from an app page:
+          ```yaml
+          # lowdefy.yaml (app level)
+          pages:
+            - id: dashboard
+              events:
+                onClick:
+                  - id: log_event
+                    type: CallAPI
+                    params:
+                      endpointId:
+                        _module.endpointId:
+                          id: log-event
+                          module: events
+          ```
+          At the app level, `module` is the module entry ID. The build resolves this to `events/log-event`.
+
+      - name: id
+        types: |
+          ```
+          (true): string
+          (arguments: { module: string }): string
+          ```
+        description: |
+          Returns the raw module entry ID. The `true` form returns the current module's entry ID and only works inside module content.
+
+          The object form returns the entry ID of a referenced module. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml` — useful for templates that need a module entry ID without hardcoding it.
+
+        arguments: |
+          ###### boolean
+          Pass `true` to return the current module entry ID.
+
+          ###### object
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Use in a label:
+          ```yaml
+          label:
+            _string.concat:
+              - _module.id: true
+              - " - User Admin"
+          ```
+          In a module entry with `id: team-users`, returns `"team-users - User Admin"`.
+
+          ###### Get a dependency's entry ID:
+          ```yaml
+          contactsEntry:
+            _module.id:
+              module: contacts
+          ```
+          Returns the concrete entry ID that the `contacts` dependency is wired to.
+
+          ###### Reference a module entry ID at the app level:
+          ```yaml
+          # lowdefy.yaml (app level)
+          pages:
+            - id: home
+              blocks:
+                - id: status_label
+                  type: Title
+                  properties:
+                    content:
+                      _string.concat:
+                        - 'Active module: '
+                        - _module.id:
+                            module: team-users
+          ```
+          At the app level, `module` is the module entry ID. Returns the entry ID verbatim — useful inside `_build.*` expressions or templates that need the entry name.

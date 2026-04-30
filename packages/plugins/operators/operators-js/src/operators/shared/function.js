@@ -16,7 +16,17 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-function _function({ actions, arrayIndices, event, location, operatorPrefix, params, parser }) {
+function _function({
+  actions,
+  arrayIndices,
+  event,
+  location,
+  operatorPrefix,
+  params,
+  parser,
+  payload,
+  steps,
+}) {
   return (...args) => {
     const { output, errors } = parser.parse({
       actions,
@@ -26,6 +36,8 @@ function _function({ actions, arrayIndices, event, location, operatorPrefix, par
       input: serializer.copy(params),
       location,
       operatorPrefix: `_${operatorPrefix}`,
+      payload,
+      steps,
     });
     if (errors.length > 0) {
       throw errors[0];

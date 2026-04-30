@@ -24,6 +24,8 @@ async function controlIf(context, routineContext, { control }) {
     input: control[':if'],
     items,
     location: control['~k'] ?? ':if',
+    steps: routineContext.steps,
+    payload: routineContext.payload,
   });
 
   logger.debug({

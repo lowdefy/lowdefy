@@ -1,0 +1,14 @@
+# OC: Undeclared key in namespace var with properties
+lowdefy: local
+
+modules:
+  - id: dashboard
+    source: 'file:modules/dashboard'
+    vars:
+      components:
+        table: true
+        charts: true
+
+pages:
+  - id: home
+    type: Box

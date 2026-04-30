@@ -1,0 +1,11 @@
+name: Greeter Module
+description: Simple greeting module
+
+vars:
+  greeting:
+    type: string
+    required: true
+    description: Greeting message to display
+
+pages:
+  - _ref: pages/welcome.yaml

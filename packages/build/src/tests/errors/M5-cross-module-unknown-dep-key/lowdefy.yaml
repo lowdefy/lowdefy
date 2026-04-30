@@ -1,0 +1,13 @@
+# M5: Unknown dependency key in lowdefy.yaml entry wiring
+lowdefy: local
+name: Unknown Dep Key Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      nonexistent: some-module
+
+pages:
+  - id: home
+    type: Box

@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -31,8 +32,9 @@ function buildPages({ components, context }) {
     message: 'Duplicate pageId "{{ id }}".',
   });
 
-  // Initialize linkActionRefs to collect Link action references across all pages
+  // Initialize action ref collections across all pages
   context.linkActionRefs = [];
+  context.callApiActionRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -69,6 +71,14 @@ function buildPages({ components, context }) {
   validateLinkReferences({
     linkActionRefs: context.linkActionRefs,
     pageIds,
+    context,
+  });
+
+  // Validate that CallAPI actions don't target InternalApi endpoints
+  const endpointConfigs = type.isArray(components.api) ? components.api : [];
+  validateCallApiRefs({
+    callApiActionRefs: context.callApiActionRefs,
+    endpointConfigs,
     context,
   });
 

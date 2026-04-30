@@ -1,5 +1,5 @@
 - id: getCustomerStats
-  type: Endpoint
+  type: Api
   routine:
     - id: logRequest
       type: Log
@@ -12,7 +12,7 @@
           total: 100
           active: 85
 - id: exportCustomers
-  type: Endpoint
+  type: Api
   routine:
     - id: logExport
       type: Log

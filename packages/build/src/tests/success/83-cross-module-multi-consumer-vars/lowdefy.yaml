@@ -1,0 +1,20 @@
+# 83: Multiple consumers of the same component with different vars
+# Tests each consumer resolves _var independently — no mutation bleed.
+lowdefy: local
+name: Multi Consumer Vars Test
+
+modules:
+  - id: shared
+    source: 'file:modules/shared'
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      shared: shared
+  - id: companies
+    source: 'file:modules/companies'
+    dependencies:
+      shared: shared
+
+pages:
+  - id: home
+    type: Box

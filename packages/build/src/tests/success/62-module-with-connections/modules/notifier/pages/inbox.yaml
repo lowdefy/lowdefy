@@ -1,0 +1,15 @@
+id: inbox
+type: Box
+blocks:
+  - id: send-btn
+    type: Button
+    properties:
+      title: Send Notification
+    requests:
+      - id: send-email
+        type: SendGridMailSend
+        connectionId:
+          _module.connectionId: email
+        properties:
+          to: user@example.com
+          subject: Test

@@ -1,0 +1,21 @@
+# 64: Module exposed component via _ref: { module, component }
+# Tests that app pages can include module components and _module.* operators resolve within them.
+lowdefy: local
+name: Exposed Component Test
+
+modules:
+  - id: widgets
+    source: 'file:modules/widgets'
+    vars:
+      badge_color: red
+
+pages:
+  - id: dashboard
+    type: Box
+    blocks:
+      - id: header
+        type: Box
+        blocks:
+          - _ref:
+              module: widgets
+              component: status-badge

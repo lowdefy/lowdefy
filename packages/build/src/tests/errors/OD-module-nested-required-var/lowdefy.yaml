@@ -1,0 +1,13 @@
+# OD: Required nested property missing
+lowdefy: local
+
+modules:
+  - id: app
+    source: 'file:modules/app'
+    vars:
+      api:
+        timeout: 5000
+
+pages:
+  - id: home
+    type: Box

@@ -16,24 +16,72 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
+
+import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+
+function validateConnection(connection, context) {
+  const configKey = connection?.['~k'];
+  if (!type.isObject(connection)) {
+    collectExceptions(
+      context,
+      new ConfigError('Connection should be an object.', { received: connection, configKey })
+    );
+    return false;
+  }
+  if (type.isUndefined(connection.id)) {
+    collectExceptions(
+      context,
+      new ConfigError('Connection id missing.', { configKey })
+    );
+    return false;
+  }
+  if (!type.isString(connection.id)) {
+    collectExceptions(
+      context,
+      new ConfigError('Connection id is not a string.', { received: connection.id, configKey })
+    );
+    return false;
+  }
+  if (type.isNone(connection.type)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Connection type is not defined at connection "${connection.id}".`, {
+        configKey,
+      })
+    );
+    return false;
+  }
+  if (!type.isString(connection.type)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Connection type is not a string at connection "${connection.id}".`, {
+        received: connection.type,
+        configKey,
+      })
+    );
+    return false;
+  }
+  return true;
+}
 
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
 
-  // Schema validates: id required, id is string, type is string
-  // Only check for duplicates here (schema can't do that)
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
   });
 
   (components.connections ?? []).forEach((connection) => {
+    if (!validateConnection(connection, context)) return;
+
     const configKey = connection['~k'];
 
-    // Check duplicates (schema can't validate this)
     checkDuplicateConnectionId({ id: connection.id, configKey });
     validateId({ id: connection.id, field: 'Connection id', configKey });
 

@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "expectThrow": true,
+      "errorContains": ["connection remapping references \"nonexistent-conn\"", "widget"]
+    }
+  ]
+}

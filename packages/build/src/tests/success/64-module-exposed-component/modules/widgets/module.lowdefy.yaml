@@ -1,0 +1,14 @@
+name: Widgets
+description: Reusable widget components
+
+vars:
+  badge_color:
+    type: string
+    default: blue
+    description: Default badge color
+
+components:
+  - id: status-badge
+    type: Component
+    component:
+      _ref: components/status-badge.yaml

@@ -16,8 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-import handleRequest from './handleRequest.js';
 import handleControl from './control/handleControl.js';
+import handleEndpointCall from './handleEndpointCall.js';
+import handleRequest from './handleRequest.js';
 
 async function runRoutine(context, routineContext, { routine }) {
   try {
@@ -25,6 +26,11 @@ async function runRoutine(context, routineContext, { routine }) {
       if (routine.id?.startsWith?.('request:')) {
         return await handleRequest(context, routineContext, {
           request: routine,
+        });
+      }
+      if (routine.id?.startsWith?.('endpoint:')) {
+        return await handleEndpointCall(context, routineContext, {
+          step: routine,
         });
       }
       return await handleControl(context, routineContext, { control: routine });

@@ -65,7 +65,10 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
       id={blockId}
       className={cn('lf-s3-upload-dragger', classNames.element)}
       onPaste={onPaste}
-      style={{ height, ...styles.element }}
+      style={{
+        '--lf-s3-dragger-height': type.isNumber(height) ? `${height}px` : height,
+        ...styles.element,
+      }}
     >
       <Dragger
         accept={properties.accept ?? '*'}
@@ -76,7 +79,7 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
           item: classNames.item,
         }}
         styles={{
-          root: { display: 'block', height: '100%' },
+          root: { display: 'block' },
           trigger: styles.trigger,
           list: styles.list,
           item: styles.item,

@@ -33,6 +33,8 @@ _ref:
 
       > The `_var` operator is a build time operator: it is evaluated when the app configuration is being built. This means it is not evaluated dynamically as the app is running, and can be used anywhere in the configuration as long as the resulting configuration files are valid YAML.
 
+      > For module-level variables (passed by the app developer in `lowdefy.yaml` `modules[].vars`), use [`_module.var`](/_module) instead. `_module.var` works at any depth within module files without threading vars through each `_ref`.
+
     arguments: |
       ###### string
       If the `_var` operator is called with a string argument, the value of the key in the `vars` object is returned. If the value is not found, `null` is returned. Dot notation is supported.

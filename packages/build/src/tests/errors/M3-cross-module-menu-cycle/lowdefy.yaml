@@ -1,0 +1,13 @@
+# M3: Circular menu embedding between two modules
+lowdefy: local
+name: Menu Cycle Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+  - id: companies
+    source: 'file:modules/companies'
+
+pages:
+  - id: home
+    type: Box

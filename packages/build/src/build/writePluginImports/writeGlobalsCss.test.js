@@ -213,6 +213,26 @@ test('writeGlobalsCss writes per-page content files to server directory', async 
   expect(aboutCall[1]).toContain('<p class="text-lg">About</p>');
 });
 
+test('writeGlobalsCss encodes slashed pageIds in content filenames', async () => {
+  const context = createContext();
+  context.tailwindContentMap = new Map([
+    ['user-account/profile', '<div class="bg-blue-100">Profile</div>'],
+    ['home', '<div class="p-4">Home</div>'],
+  ]);
+  await writeGlobalsCss({ components: {}, context });
+
+  const profileCall = mockWriteFile.mock.calls.find((call) =>
+    call[0].includes('user-account%2Fprofile.html')
+  );
+  expect(profileCall).toBeDefined();
+  expect(profileCall[0]).toBe('/app/lowdefy-build/tailwind/user-account%2Fprofile.html');
+  expect(profileCall[1]).toContain('<div class="bg-blue-100">Profile</div>');
+
+  const homeCall = mockWriteFile.mock.calls.find((call) => call[0].endsWith('/home.html'));
+  expect(homeCall).toBeDefined();
+  expect(homeCall[0]).toBe('/app/lowdefy-build/tailwind/home.html');
+});
+
 test('writeGlobalsCss writes no content files when tailwindContentMap is undefined', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });

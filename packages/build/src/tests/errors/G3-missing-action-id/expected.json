@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "Action should have required property \"id\""
+        "Action id missing on event"
       ],
       "errorContains": [
-        "Action should have required property \"id\".",
+        "Action id missing on event \"onClick\" on block \"button\" on page \"home\".",
         "lowdefy.yaml:22"
       ]
     }

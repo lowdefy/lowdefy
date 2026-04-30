@@ -1,0 +1,5 @@
+id: app-header
+type: Title
+properties:
+  content:
+    _var: title

@@ -23,6 +23,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
+import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -92,7 +93,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // All user pages (with refId) always JIT-resolve from source YAML so that
     // page-only edits are picked up without a skeleton rebuild.
     if (!pageEntry.refId) {
-      const pagePath = path.join(buildContext.directories.build, 'pages', pageId, `${pageId}.json`);
+      const pagePath = path.join(buildContext.directories.build, 'pages', `${pageId}.json`);
       try {
         const content = await fs.promises.readFile(pagePath, 'utf8');
         const page = serializer.deserialize(JSON.parse(content));
@@ -102,6 +103,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       } catch (err) {
         if (err.code !== 'ENOENT') throw err;
       }
+    }
+
+    // If this is a module page, set up module context
+    let moduleDependencies = null;
+    let moduleEntry = null;
+    if (pageEntry.moduleEntryId) {
+      moduleEntry = buildContext.modules[pageEntry.moduleEntryId];
+      moduleDependencies = moduleEntry?.moduleDependencies ?? null;
     }
 
     // Resolve the page file from scratch using the source file path determined
@@ -124,6 +133,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         refId: varRefDef.id,
         sourceRefId: null,
         vars: {},
+        moduleDependencies,
+        moduleEntry: moduleEntry ?? null,
+        moduleRoot: moduleEntry?.moduleRoot ?? null,
+        packageRoot: moduleEntry?.packageRoot ?? null,
         path: '',
         currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
         refChain: new Set(),
@@ -160,6 +173,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       refId: refDef.id,
       sourceRefId: null,
       vars: refDef.vars ?? {},
+      moduleDependencies,
+      moduleEntry: moduleEntry ?? null,
+      moduleRoot: moduleEntry?.moduleRoot ?? null,
+      packageRoot: moduleEntry?.packageRoot ?? null,
       path: '',
       currentFile: refDef.path ?? '',
       refChain: new Set(),
@@ -176,12 +193,20 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     });
 
     // When resolving from a collection file (with vars), the result is an array of pages.
-    // Find the specific page by ID.
+    // Find the specific page by ID. For module pages, source IDs are unscoped.
     if (type.isArray(processed)) {
-      processed = processed.find((p) => type.isObject(p) && p.id === pageId);
+      const unscopedId = moduleEntry
+        ? pageId.slice(`${moduleEntry.id}/`.length)
+        : pageId;
+      processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
       if (!processed) {
         throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
       }
+    }
+
+    // JIT builds resolve from source YAML — the page ID is unscoped for module pages
+    if (moduleEntry && type.isObject(processed) && processed.id) {
+      processed.id = `${moduleEntry.id}/${processed.id}`;
     }
 
     // Tag all objects with ~r for ref provenance (normally done inside _ref
@@ -198,9 +223,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
     await writeMaps({ context: buildContext });
 
-    // Initialize linkActionRefs for buildPage (normally done by buildPages)
+    // Initialize action ref collections for buildPage (normally done by buildPages)
     if (!buildContext.linkActionRefs) {
       buildContext.linkActionRefs = [];
+    }
+    if (!buildContext.callApiActionRefs) {
+      buildContext.callApiActionRefs = [];
     }
 
     // Build the page (validation, block processing)
@@ -237,6 +265,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateLinkReferences({
       linkActionRefs: buildContext.linkActionRefs,
       pageIds,
+      context: buildContext,
+    });
+    const endpointConfigs = type.isArray(buildContext.components?.api)
+      ? buildContext.components.api
+      : [];
+    validateCallApiRefs({
+      callApiActionRefs: buildContext.callApiActionRefs,
+      endpointConfigs,
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });

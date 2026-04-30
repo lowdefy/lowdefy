@@ -1,0 +1,8 @@
+id: contact-list
+type: Box
+blocks:
+  - _ref:
+      module: shared
+      component: card
+      vars:
+        title: Contacts

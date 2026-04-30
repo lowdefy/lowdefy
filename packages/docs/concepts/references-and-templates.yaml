@@ -235,5 +235,5 @@ _ref:
           vars:
             previous_page_title: APIs
             previous_page_id: lowdefy-api
-            next_page_title: Menus
-            next_page_id: menus
+            next_page_title: Modules
+            next_page_id: modules

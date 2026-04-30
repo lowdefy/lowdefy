@@ -1,0 +1,32 @@
+# 63: Module with connection remapping
+# Tests that remapped connections use the app's connection ID and skip module connection creation.
+lowdefy: local
+name: Connection Remapping Test
+
+connections:
+  - id: app-mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/app
+      collection: notifications
+  - id: app-sendgrid
+    type: SendGridMail
+    properties:
+      apiKey: test-key
+
+modules:
+  - id: notify
+    source: 'file:modules/notifier'
+    vars:
+      sender_email: test@example.com
+    connections:
+      email: app-sendgrid
+
+  - id: notify2
+    source: 'file:modules/notifier'
+    vars:
+      sender_email: other@example.com
+
+pages:
+  - id: home
+    type: Box

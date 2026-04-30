@@ -132,14 +132,14 @@ test('valid routine with :if', () => {
             ':then': {
               id: 'request:test_valid_if:then_step_1',
               endpointId: 'test_valid_if',
-              requestId: 'then_step_1',
+              stepId: 'then_step_1',
               type: 'MongoDBInsertOne',
               connectionId: 'connection',
             },
             ':else': {
               id: 'request:test_valid_if:else_step_2',
               endpointId: 'test_valid_if',
-              requestId: 'else_step_2',
+              stepId: 'else_step_2',
               type: 'MongoDBUpdateOne',
               connectionId: 'connection',
             },
@@ -147,7 +147,7 @@ test('valid routine with :if', () => {
           {
             id: 'request:test_valid_if:step_3',
             endpointId: 'test_valid_if',
-            requestId: 'step_3',
+            stepId: 'step_3',
             type: 'MongoDBAggregation',
             connectionId: 'connection',
           },
@@ -208,7 +208,7 @@ test('valid routine with :switch', () => {
                 ':then': {
                   id: 'request:test_valid_switch:case_1_step_1',
                   endpointId: 'test_valid_switch',
-                  requestId: 'case_1_step_1',
+                  stepId: 'case_1_step_1',
                   type: 'MongoDBInsertOne',
                   connectionId: 'connection',
                 },
@@ -218,7 +218,7 @@ test('valid routine with :switch', () => {
                 ':then': {
                   id: 'request:test_valid_switch:case_2_step_2',
                   endpointId: 'test_valid_switch',
-                  requestId: 'case_2_step_2',
+                  stepId: 'case_2_step_2',
                   type: 'MongoDBUpdateOne',
                   connectionId: 'connection',
                 },
@@ -227,7 +227,7 @@ test('valid routine with :switch', () => {
             ':default': {
               id: 'request:test_valid_switch:default_step_3',
               endpointId: 'test_valid_switch',
-              requestId: 'default_step_3',
+              stepId: 'default_step_3',
               type: 'MongoDBAggregation',
               connectionId: 'connection',
             },
@@ -266,14 +266,14 @@ test('valid routine with :try object', () => {
             {
               id: 'request:test_valid_try:try_step_1',
               endpointId: 'test_valid_try',
-              requestId: 'try_step_1',
+              stepId: 'try_step_1',
               type: 'MongoDBUpdateMany',
               connectionId: 'connection',
             },
             {
               id: 'request:test_valid_try:try_step_2',
               endpointId: 'test_valid_try',
-              requestId: 'try_step_2',
+              stepId: 'try_step_2',
               type: 'MongoDBInsertMany',
               connectionId: 'connection',
             },
@@ -281,7 +281,7 @@ test('valid routine with :try object', () => {
           ':catch': {
             id: 'request:test_valid_try:catch_step_1',
             endpointId: 'test_valid_try',
-            requestId: 'catch_step_1',
+            stepId: 'catch_step_1',
             type: 'MongoDBInsertOne',
             connectionId: 'connection',
           },

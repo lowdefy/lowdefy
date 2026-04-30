@@ -1,0 +1,27 @@
+name: Layout
+
+dependencies:
+  - id: events
+
+exports:
+  components:
+    - id: page-wrapper
+
+components:
+  - id: page-wrapper
+    type: Component
+    component:
+      id: layout-box
+      type: Box
+      blocks:
+        - _var: content
+        - _ref:
+            module: events
+            component: event-log-panel
+        - id: view-events
+          type: Anchor
+          properties:
+            href:
+              _module.pageId:
+                id: event-log
+                module: events

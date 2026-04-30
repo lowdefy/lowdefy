@@ -156,7 +156,7 @@ function evaluateOperators({
     const params = node[key];
 
     try {
-      return operators[op]({
+      const result = operators[op]({
         args,
         arrayIndices: [],
         env,
@@ -167,6 +167,28 @@ function evaluateOperators({
         parser,
         runtime: 'node',
       });
+      // Transfer source location markers to the result so addKeys can
+      // resolve file + line. Without this, operator results (e.g. from
+      // _build.array.concat) lose their source location.
+      if ((type.isObject(result) || type.isArray(result)) && result['~r'] === undefined) {
+        if (refId !== undefined) {
+          Object.defineProperty(result, '~r', {
+            value: refId,
+            enumerable: false,
+            writable: true,
+            configurable: true,
+          });
+        }
+        if (lineNumber !== undefined) {
+          Object.defineProperty(result, '~l', {
+            value: lineNumber,
+            enumerable: false,
+            writable: true,
+            configurable: true,
+          });
+        }
+      }
+      return result;
     } catch (e) {
       if (e instanceof ConfigError) {
         if (!e.configKey) {

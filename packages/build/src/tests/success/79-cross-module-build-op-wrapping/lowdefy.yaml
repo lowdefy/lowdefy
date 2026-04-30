@@ -1,0 +1,16 @@
+# 79: _build.array.concat wrapping cross-module ref
+# Tests that _build.* operators evaluate after cross-module ref resolution.
+lowdefy: local
+name: Build Op Wrapping Test
+
+modules:
+  - id: app-layout
+    source: 'file:modules/layout'
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+
+pages:
+  - id: home
+    type: Box

@@ -23,7 +23,7 @@ test('try catch with successful try', async () => {
     ':try': {
       id: 'request:test_endpoint:try_pass',
       type: 'TestRequest',
-      requestId: 'try_pass',
+      stepId: 'try_pass',
       connectionId: 'test',
       properties: {
         response: 'Success',
@@ -32,7 +32,7 @@ test('try catch with successful try', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',
@@ -53,7 +53,7 @@ test('try catch with successful try', async () => {
         request: {
           id: 'request:test_endpoint:try_pass',
           type: 'TestRequest',
-          requestId: 'try_pass',
+          stepId: 'try_pass',
           connectionId: 'test',
           properties: {
             response: 'Success',
@@ -77,7 +77,7 @@ test('try catch with unsuccessful try', async () => {
     ':try': {
       id: 'request:test_endpoint:try_fail',
       type: 'TestRequestError',
-      requestId: 'try_fail',
+      stepId: 'try_fail',
       connectionId: 'test',
       properties: {
         message: 'Try and fail',
@@ -86,7 +86,7 @@ test('try catch with unsuccessful try', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',
@@ -107,7 +107,7 @@ test('try catch with unsuccessful try', async () => {
         request: {
           id: 'request:test_endpoint:try_fail',
           type: 'TestRequestError',
-          requestId: 'try_fail',
+          stepId: 'try_fail',
           connectionId: 'test',
           properties: {
             message: 'Try and fail',
@@ -139,7 +139,7 @@ test('try catch with unsuccessful try', async () => {
         request: {
           id: 'request:test_endpoint:catch_error',
           type: 'TestRequest',
-          requestId: 'catch_error',
+          stepId: 'catch_error',
           connectionId: 'test',
           properties: {
             response: 'Fallback thing',
@@ -163,7 +163,7 @@ test('try only, success', async () => {
     ':try': {
       id: 'request:test_endpoint:try_pass',
       type: 'TestRequest',
-      requestId: 'try_pass',
+      stepId: 'try_pass',
       connectionId: 'test',
       properties: {
         response: 'Success',
@@ -184,7 +184,7 @@ test('try only, success', async () => {
         request: {
           id: 'request:test_endpoint:try_pass',
           type: 'TestRequest',
-          requestId: 'try_pass',
+          stepId: 'try_pass',
           connectionId: 'test',
           properties: {
             response: 'Success',
@@ -208,7 +208,7 @@ test('try only, fail', async () => {
     ':try': {
       id: 'request:test_endpoint:try_fail',
       type: 'TestRequestError',
-      requestId: 'try_fail',
+      stepId: 'try_fail',
       connectionId: 'test',
       properties: {
         message: 'Try and fail',
@@ -229,7 +229,7 @@ test('try only, fail', async () => {
         request: {
           id: 'request:test_endpoint:try_fail',
           type: 'TestRequestError',
-          requestId: 'try_fail',
+          stepId: 'try_fail',
           connectionId: 'test',
           properties: {
             message: 'Try and fail',
@@ -259,7 +259,7 @@ test('try with finally, try pass', async () => {
     ':try': {
       id: 'request:test_endpoint:try_pass',
       type: 'TestRequest',
-      requestId: 'try_pass',
+      stepId: 'try_pass',
       connectionId: 'test',
       properties: {
         response: 'Success',
@@ -268,7 +268,7 @@ test('try with finally, try pass', async () => {
     ':finally': {
       id: 'request:test_endpoint:try_finally',
       type: 'TestRequest',
-      requestId: 'try_finally',
+      stepId: 'try_finally',
       connectionId: 'test',
       properties: {
         response: 'Always do this',
@@ -289,7 +289,7 @@ test('try with finally, try pass', async () => {
         request: {
           id: 'request:test_endpoint:try_pass',
           type: 'TestRequest',
-          requestId: 'try_pass',
+          stepId: 'try_pass',
           connectionId: 'test',
           properties: {
             response: 'Success',
@@ -315,7 +315,7 @@ test('try with finally, try pass', async () => {
         request: {
           id: 'request:test_endpoint:try_finally',
           type: 'TestRequest',
-          requestId: 'try_finally',
+          stepId: 'try_finally',
           connectionId: 'test',
           properties: {
             response: 'Always do this',
@@ -338,7 +338,7 @@ test('try with finally, try fail', async () => {
     ':try': {
       id: 'request:test_endpoint:try_fail',
       type: 'TestRequestError',
-      requestId: 'try_fail',
+      stepId: 'try_fail',
       connectionId: 'test',
       properties: {
         message: 'Try and fail',
@@ -347,7 +347,7 @@ test('try with finally, try fail', async () => {
     ':finally': {
       id: 'request:test_endpoint:try_finally',
       type: 'TestRequest',
-      requestId: 'try_finally',
+      stepId: 'try_finally',
       connectionId: 'test',
       properties: {
         response: 'Always do this',
@@ -368,7 +368,7 @@ test('try with finally, try fail', async () => {
         request: {
           id: 'request:test_endpoint:try_fail',
           type: 'TestRequestError',
-          requestId: 'try_fail',
+          stepId: 'try_fail',
           connectionId: 'test',
           properties: {
             message: 'Try and fail',
@@ -400,7 +400,7 @@ test('try with finally, try fail', async () => {
         request: {
           id: 'request:test_endpoint:try_finally',
           type: 'TestRequest',
-          requestId: 'try_finally',
+          stepId: 'try_finally',
           connectionId: 'test',
           properties: {
             response: 'Always do this',
@@ -424,7 +424,7 @@ test('try catch finally, try pass', async () => {
     ':try': {
       id: 'request:test_endpoint:try_pass',
       type: 'TestRequest',
-      requestId: 'try_pass',
+      stepId: 'try_pass',
       connectionId: 'test',
       properties: {
         response: 'Success',
@@ -433,7 +433,7 @@ test('try catch finally, try pass', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',
@@ -442,7 +442,7 @@ test('try catch finally, try pass', async () => {
     ':finally': {
       id: 'request:test_endpoint:try_finally',
       type: 'TestRequest',
-      requestId: 'try_finally',
+      stepId: 'try_finally',
       connectionId: 'test',
       properties: {
         response: 'Always do this',
@@ -463,7 +463,7 @@ test('try catch finally, try pass', async () => {
         request: {
           id: 'request:test_endpoint:try_pass',
           type: 'TestRequest',
-          requestId: 'try_pass',
+          stepId: 'try_pass',
           connectionId: 'test',
           properties: {
             response: 'Success',
@@ -489,7 +489,7 @@ test('try catch finally, try pass', async () => {
         request: {
           id: 'request:test_endpoint:try_finally',
           type: 'TestRequest',
-          requestId: 'try_finally',
+          stepId: 'try_finally',
           connectionId: 'test',
           properties: {
             response: 'Always do this',
@@ -513,7 +513,7 @@ test('try catch finally, try fail', async () => {
     ':try': {
       id: 'request:test_endpoint:try_fail',
       type: 'TestRequestError',
-      requestId: 'try_fail',
+      stepId: 'try_fail',
       connectionId: 'test',
       properties: {
         message: 'Try and fail',
@@ -522,7 +522,7 @@ test('try catch finally, try fail', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',
@@ -531,7 +531,7 @@ test('try catch finally, try fail', async () => {
     ':finally': {
       id: 'request:test_endpoint:try_finally',
       type: 'TestRequest',
-      requestId: 'try_finally',
+      stepId: 'try_finally',
       connectionId: 'test',
       properties: {
         response: 'Always do this',
@@ -552,7 +552,7 @@ test('try catch finally, try fail', async () => {
         request: {
           id: 'request:test_endpoint:try_fail',
           type: 'TestRequestError',
-          requestId: 'try_fail',
+          stepId: 'try_fail',
           connectionId: 'test',
           properties: {
             message: 'Try and fail',
@@ -584,7 +584,7 @@ test('try catch finally, try fail', async () => {
         request: {
           id: 'request:test_endpoint:catch_error',
           type: 'TestRequest',
-          requestId: 'catch_error',
+          stepId: 'catch_error',
           connectionId: 'test',
           properties: {
             response: 'Fallback thing',
@@ -610,7 +610,7 @@ test('try catch finally, try fail', async () => {
         request: {
           id: 'request:test_endpoint:try_finally',
           type: 'TestRequest',
-          requestId: 'try_finally',
+          stepId: 'try_finally',
           connectionId: 'test',
           properties: {
             response: 'Always do this',
@@ -634,7 +634,7 @@ test('try catch finally, try and catch fail', async () => {
     ':try': {
       id: 'request:test_endpoint:try_fail',
       type: 'TestRequestError',
-      requestId: 'try_fail',
+      stepId: 'try_fail',
       connectionId: 'test',
       properties: {
         message: 'Try and fail',
@@ -643,7 +643,7 @@ test('try catch finally, try and catch fail', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequestError',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         message: 'Fallback thing fail',
@@ -652,7 +652,7 @@ test('try catch finally, try and catch fail', async () => {
     ':finally': {
       id: 'request:test_endpoint:try_finally',
       type: 'TestRequest',
-      requestId: 'try_finally',
+      stepId: 'try_finally',
       connectionId: 'test',
       properties: {
         response: 'Always do this',
@@ -673,7 +673,7 @@ test('try catch finally, try and catch fail', async () => {
         request: {
           id: 'request:test_endpoint:try_fail',
           type: 'TestRequestError',
-          requestId: 'try_fail',
+          stepId: 'try_fail',
           connectionId: 'test',
           properties: {
             message: 'Try and fail',
@@ -705,7 +705,7 @@ test('try catch finally, try and catch fail', async () => {
         request: {
           id: 'request:test_endpoint:catch_error',
           type: 'TestRequestError',
-          requestId: 'catch_error',
+          stepId: 'catch_error',
           connectionId: 'test',
           properties: {
             message: 'Fallback thing fail',
@@ -737,7 +737,7 @@ test('try catch finally, try and catch fail', async () => {
         request: {
           id: 'request:test_endpoint:try_finally',
           type: 'TestRequest',
-          requestId: 'try_finally',
+          stepId: 'try_finally',
           connectionId: 'test',
           properties: {
             response: 'Always do this',
@@ -764,7 +764,7 @@ test('try catch with throw in try', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',
@@ -790,7 +790,7 @@ test('try catch with throw in try', async () => {
         request: {
           id: 'request:test_endpoint:catch_error',
           type: 'TestRequest',
-          requestId: 'catch_error',
+          stepId: 'catch_error',
           connectionId: 'test',
           properties: {
             response: 'Fallback thing',
@@ -817,7 +817,7 @@ test('try catch with reject in try', async () => {
     ':catch': {
       id: 'request:test_endpoint:catch_error',
       type: 'TestRequest',
-      requestId: 'catch_error',
+      stepId: 'catch_error',
       connectionId: 'test',
       properties: {
         response: 'Fallback thing',

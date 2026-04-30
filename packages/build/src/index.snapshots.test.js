@@ -121,9 +121,20 @@ async function runBuildForFixture(fixtureDir) {
     throw err;
   }
 
-  // Parse JSON artifacts for readable snapshots
+  // Parse JSON artifacts for readable snapshots.
+  // Replace absolute fixture paths with stable placeholders so snapshots are
+  // portable across machines (module _ref paths are stored as absolute).
+  // configDir → <CONFIG_DIR> handles the active fixture's paths; fixturesDir →
+  // <FIXTURES_DIR> catches cross-fixture references (e.g. cross-module tests
+  // that resolve _ref into a sibling fixture directory).
+  const rawJson = JSON.stringify(artifacts);
+  const normalizedJson = rawJson
+    .replaceAll(configDir, '<CONFIG_DIR>')
+    .replaceAll(fixturesDir, '<FIXTURES_DIR>');
+  const normalizedArtifacts = JSON.parse(normalizedJson);
+
   const parsedArtifacts = {};
-  for (const [filePath, content] of Object.entries(artifacts)) {
+  for (const [filePath, content] of Object.entries(normalizedArtifacts)) {
     if (filePath.endsWith('.json')) {
       try {
         parsedArtifacts[filePath] = JSON.parse(content);
