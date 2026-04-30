@@ -45,7 +45,7 @@ _ref:
             ### Knex
 
             #### Properties
-            - `client: enum`: __Required__ - Should be `sqlite3` or `sqlite` to connect to SQLite.
+            - `client: enum`: __Required__ - Should be `better-sqlite3` or `sqlite` (alias of `better-sqlite3`) to connect to SQLite. SQLite uses the [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) driver.
             - `connection: object`:
               - `filename: string`:  __Required__ - The path to the SQLite file (relative to the project root).
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
@@ -59,7 +59,7 @@ _ref:
               - id: sqlite
                 type: Knex
                 properties:
-                  client: sqlite
+                  client: better-sqlite3
                   connection:
                     filename: ./mydb.sqlite
             ```
@@ -78,7 +78,7 @@ _ref:
             ```
             Environment variables in development:
             ```
-            LOWDEFY_SECRET_KNEX_CLIENT = sqlite
+            LOWDEFY_SECRET_KNEX_CLIENT = better-sqlite3
             LOWDEFY_SECRET_KNEX_CONNECTION = {"filename": "./mydb.sqlite"}
             ```
             Environment variables in production:
