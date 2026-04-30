@@ -61,6 +61,16 @@ export default {
         value: 'The cell value.',
       },
     },
+    onCellButton: {
+      description:
+        'Documentation reference — the actual event name fired is the `event` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`).',
+      event: {
+        row: 'The row data.',
+        value: 'The cell value.',
+        button: 'The clicked button: { event, title }.',
+        buttonIndex: 'Zero-based index in the buttons array.',
+      },
+    },
   },
   properties: {
     type: 'object',
@@ -85,6 +95,12 @@ export default {
         default: false,
         description:
           "Set to `true` to use the browser native `title` attribute tooltips instead of AG Grid's styled tooltip component.",
+      },
+      suppressCellFocus: {
+        type: 'boolean',
+        default: true,
+        description:
+          'When `true` (default), clicking a cell does not draw the AG Grid cell-focus border. Set to `false` to enable spreadsheet-style cell focus and keyboard navigation.',
       },
       tooltipShowDelay: {
         type: 'number',
@@ -181,7 +197,7 @@ export default {
               properties: {
                 type: {
                   type: 'string',
-                  enum: ['tag', 'avatar', 'link', 'date', 'boolean', 'progress', 'number'],
+                  enum: ['tag', 'avatar', 'link', 'date', 'boolean', 'progress', 'number', 'buttons'],
                   description: 'The built-in renderer to use.',
                 },
                 colorMap: {
@@ -349,6 +365,85 @@ export default {
                   enum: ['left', 'center', 'right'],
                   description:
                     'Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent` and `ag-*-aligned-header` on the header.',
+                },
+                buttons: {
+                  type: 'array',
+                  description:
+                    'Buttons cell: list of buttons rendered per row. Each button triggers its own block-level event (declared in `events:`). Per-button properties mirror the `Button` block schema. `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths.',
+                  items: {
+                    type: 'object',
+                    required: ['event'],
+                    properties: {
+                      event: {
+                        type: 'string',
+                        description: 'Block-level event name to trigger on click.',
+                      },
+                      title: {
+                        type: 'string',
+                        description: 'Title text on the button - supports html.',
+                      },
+                      titleField: {
+                        type: 'string',
+                        description: 'Row-data path for the title.',
+                      },
+                      icon: {
+                        type: ['string', 'object'],
+                        description: 'Name of a React-Icon or Icon block config.',
+                        docs: { displayType: 'icon' },
+                      },
+                      iconField: {
+                        type: 'string',
+                        description: 'Row-data path for the icon name or config.',
+                      },
+                      type: {
+                        type: 'string',
+                        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+                        description: 'antd Button type.',
+                      },
+                      variant: {
+                        type: 'string',
+                        enum: ['solid', 'outlined', 'dashed', 'filled', 'text', 'link'],
+                        description: 'antd Button variant. Takes precedence over `type` when set.',
+                      },
+                      color: {
+                        type: 'string',
+                        description: 'Button color (antd preset or hex).',
+                        docs: { displayType: 'color' },
+                      },
+                      size: {
+                        type: 'string',
+                        enum: ['small', 'default', 'large'],
+                        default: 'small',
+                        description: 'Button size. Defaults to `small` inside cells.',
+                      },
+                      shape: {
+                        type: 'string',
+                        enum: ['circle', 'round', 'square'],
+                        default: 'square',
+                      },
+                      danger: { type: 'boolean', default: false },
+                      ghost: { type: 'boolean', default: false },
+                      hideTitle: {
+                        type: 'boolean',
+                        default: false,
+                        description: "Hide the button's title (icon-only).",
+                      },
+                      disabled: { type: 'boolean', default: false },
+                      disabledField: {
+                        type: 'string',
+                        description: 'Row-data path → boolean.',
+                      },
+                      hidden: {
+                        type: 'boolean',
+                        default: false,
+                        description: 'Hide the button entirely.',
+                      },
+                      hiddenField: {
+                        type: 'string',
+                        description: 'Row-data path → boolean.',
+                      },
+                    },
+                  },
                 },
               },
             },

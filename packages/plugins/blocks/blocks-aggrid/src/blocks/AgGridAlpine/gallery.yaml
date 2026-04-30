@@ -992,3 +992,76 @@
             role: Designer
           - name: Charlie Lee
             role: Manager
+
+- title: Buttons cell (per-button action chains)
+  fullWidth: true
+  blocks:
+    - id: buttons_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Task
+            field: name
+          - headerName: Status
+            field: status
+            width: 120
+            cell:
+              type: tag
+              colorMap:
+                Open: blue
+                Locked: red
+                Archived: default
+          - headerName: Actions
+            field: _id
+            width: 220
+            cell:
+              type: buttons
+              buttons:
+                - event: onEditClick
+                  title: Edit
+                  icon: AiOutlineEdit
+                  type: primary
+                - event: onDeleteClick
+                  title: Delete
+                  icon: AiOutlineDelete
+                  danger: true
+                  disabledField: locked
+                  hiddenField: archived
+        rowData:
+          - _id: TSK-001
+            name: Wire main switchboard
+            status: Open
+            locked: false
+            archived: false
+          - _id: TSK-002
+            name: HVAC balancing
+            status: Locked
+            locked: true
+            archived: false
+          - _id: TSK-003
+            name: Utility connections
+            status: Archived
+            locked: false
+            archived: true
+      events:
+        onEditClick:
+          - id: edit_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Edit '
+                  - _event: row._id
+        onDeleteClick:
+          - id: delete_msg
+            type: DisplayMessage
+            params:
+              status: warning
+              content:
+                _string.concat:
+                  - 'Delete '
+                  - _event: row.name

@@ -23,7 +23,7 @@ import processColDefs from './processColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
 
-const AgGrid = ({ properties, methods, loading, events }) => {
+const AgGrid = ({ properties, methods, loading, events, components }) => {
   const {
     quickFilterValue,
     columnDefs,
@@ -157,7 +157,7 @@ const AgGrid = ({ properties, methods, loading, events }) => {
         onRowClicked={onRowClick}
         onCellClicked={onCellClicked}
         modules={[ClientSideRowModelModule, CsvExportModule]}
-        columnDefs={processColDefs(columnDefs, methods)}
+        columnDefs={processColDefs(columnDefs, methods, components)}
         ref={gridRef}
         getRowId={getRowId}
         suppressLoadingOverlay
