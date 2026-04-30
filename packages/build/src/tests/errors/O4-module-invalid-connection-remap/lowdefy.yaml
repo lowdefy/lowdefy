@@ -1,0 +1,14 @@
+# O4: Module connection remapping references a non-existent module connection
+# Tests that the build throws when remapping a connection ID that the module doesn't export.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+    connections:
+      nonexistent-conn: app-db
+
+pages:
+  - id: home
+    type: Box

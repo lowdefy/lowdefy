@@ -28,7 +28,7 @@ API endpoints are defined in the `api` array at the root of your Lowdefy configu
 The schema for a Lowdefy API is:
 
 - `id: string`: **Required** - A unique identifier for the API endpoint.
-- `type: Api`: **Required** - The API type.
+- `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 
 ###### API definition example:
@@ -205,6 +205,106 @@ Control structures allow you to implement complex logic flows within your API ro
 - [`:switch`](/switch) - Handle multiple conditions with different outcomes.
 - [`:throw`](/throw) - Throw a system error that can be caught.
 - [`:try`](/try) - Handle errors with catch and finally blocks.
+
+## Calling Other Endpoints
+
+API endpoints can call other endpoints server-side using `CallApi` steps. This enables you to compose complex workflows from smaller, reusable endpoints without HTTP overhead.
+
+A `CallApi` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: CallApi`: **Required** - Identifies this as an endpoint call step.
+- `properties.endpointId: string`: **Required** - The id of the target endpoint. **Operators are evaluated**.
+- `properties.payload: object`: Optional payload to pass to the target endpoint. **Operators are evaluated**.
+
+The called endpoint runs in an isolated context — it has its own `_step` results and `_payload`. Its internal step results do not appear in the calling endpoint's `_step` namespace. Only the value returned by the called endpoint's `:return` is stored as the step result.
+
+```yaml
+api:
+  - id: process_order
+    type: Api
+    routine:
+      - id: validate
+        type: MongoDBFindOne
+        connectionId: orders
+        properties:
+          query:
+            _id:
+              _payload: order_id
+
+      - id: send_notification
+        type: CallApi
+        properties:
+          endpointId: send_email
+          payload:
+            to:
+              _step: validate.customer_email
+            subject: 'Order received'
+
+      - :return:
+          order:
+            _step: validate
+          email_sent:
+            _step: send_notification # Contains the :return value from send_email
+
+  - id: send_email
+    type: Api
+    routine:
+      - id: send
+        type: SendGridMail
+        connectionId: email
+        properties:
+          to:
+            _payload: to
+          subject:
+            _payload: subject
+      - :return:
+          success: true
+```
+
+Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws an error — this prevents accidental infinite recursion.
+
+## Internal API Endpoints
+
+Endpoints with `type: InternalApi` are only callable from other endpoints via `CallApi` steps. They cannot be called from client pages using the `CallAPI` action, and HTTP requests to them return a "does not exist" error.
+
+Use `InternalApi` for endpoints that contain sensitive server-side logic that should never be triggered directly from the client — for example, sending emails, processing payments, or auditing events.
+
+```yaml
+api:
+  - id: charge_payment
+    type: InternalApi
+    routine:
+      - id: charge
+        type: AxiosHttp
+        connectionId: payment-gateway
+        properties:
+          data:
+            amount:
+              _payload: amount
+            token:
+              _payload: payment_token
+      - :return:
+          _step: charge
+
+  - id: checkout
+    type: Api  # Callable from the client
+    routine:
+      - id: process_payment
+        type: CallApi
+        properties:
+          endpointId: charge_payment  # Can call InternalApi endpoints
+          payload:
+            amount:
+              _payload: total
+            payment_token:
+              _payload: token
+      - :return:
+          payment:
+            _step: process_payment
+```
+
+If a client-side `CallAPI` action targets an `InternalApi` endpoint, the build produces a warning in dev mode and an error in production builds.
 
 ## Operators
 
@@ -497,6 +597,8 @@ api:
 - Routines define the execution flow using arrays, requests and control structures.
 - Control structures like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
 - Requests make requests to connections and can access results using [`_step`](/_step).
+- `CallApi` steps call other endpoints server-side with isolated `_step` and `_payload` namespaces.
+- `InternalApi` endpoints are server-only — callable from other endpoints but not from client pages.
 - The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
 - Server-side execution provides access to secrets, connections, and server operators.
 - Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).

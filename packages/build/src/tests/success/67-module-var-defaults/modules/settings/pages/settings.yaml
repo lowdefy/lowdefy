@@ -1,0 +1,18 @@
+id: preferences
+type: Box
+blocks:
+  - id: color-display
+    type: Paragraph
+    properties:
+      content:
+        _module.var: theme.primary_color
+  - id: page-size-display
+    type: Paragraph
+    properties:
+      content:
+        _module.var: page_size
+  - id: missing-var
+    type: Paragraph
+    properties:
+      content:
+        _module.var: nonexistent_path

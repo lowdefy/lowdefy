@@ -113,6 +113,16 @@
           pageId: references-and-templates
           properties:
             title: References and Templates
+        - id: modules
+          type: MenuLink
+          pageId: modules
+          properties:
+            title: Modules
+        - id: module-authoring
+          type: MenuLink
+          pageId: module-authoring
+          properties:
+            title: Writing Modules
         - id: menus
           type: MenuLink
           pageId: menus
@@ -412,6 +422,12 @@
         - id: TextInput
           type: MenuLink
           pageId: TextInput
+        - id: TiptapInput
+          type: MenuLink
+          pageId: TiptapInput
+        - id: TiptapMentionInput
+          type: MenuLink
+          pageId: TiptapMentionInput
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
@@ -926,6 +942,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
+        - id: _module
+          type: MenuLink
+          pageId: _module
         - id: _dayjs
           type: MenuLink
           pageId: _dayjs

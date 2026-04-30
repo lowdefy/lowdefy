@@ -1,0 +1,8 @@
+id: settings
+type: Box
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content:
+        _module.var: section_title

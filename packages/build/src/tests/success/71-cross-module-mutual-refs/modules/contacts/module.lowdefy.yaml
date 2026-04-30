@@ -1,0 +1,20 @@
+name: Contacts
+
+dependencies:
+  - id: companies
+    description: Company management
+
+exports:
+  pages:
+    - id: contact-detail
+  components:
+    - id: contact-selector
+
+components:
+  - id: contact-selector
+    type: Component
+    component:
+      _ref: components/contact-selector.yaml
+
+pages:
+  - _ref: pages/contact-detail.yaml

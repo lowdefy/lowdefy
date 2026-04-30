@@ -3,11 +3,11 @@
     {
       "mode": "prod",
       "errors": [
-        "Action \"type\" should be a string"
+        "Action type is not a string"
       ],
       "errorContains": [
-        "Action \"type\" should be a string.",
-        "lowdefy.yaml:24"
+        "Action type is not a string on action \"action1\" on event \"onClick\" on block \"button\" on page \"home\".",
+        "lowdefy.yaml:23"
       ]
     }
   ]

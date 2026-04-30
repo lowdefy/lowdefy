@@ -1,0 +1,9 @@
+name: Dashboard
+
+vars:
+  components:
+    type: object
+    properties:
+      table:
+        type: boolean
+        default: true

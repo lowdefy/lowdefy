@@ -1,0 +1,7 @@
+id: dashboard
+type: Box
+blocks:
+  - id: welcome
+    type: Title
+    properties:
+      content: App B Dashboard

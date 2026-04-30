@@ -1,0 +1,16 @@
+# 81: _build.array.concat constructing components array
+# Tests that build operators produce concrete component arrays in step 1.
+lowdefy: local
+name: Build Op Components Test
+
+modules:
+  - id: app-layout
+    source: 'file:modules/layout'
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+
+pages:
+  - id: home
+    type: Box

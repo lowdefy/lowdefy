@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "Block should have required property \"id\""
+        "Block id missing at page"
       ],
       "errorContains": [
-        "Block should have required property \"id\".",
+        "Block id missing at page \"home\".",
         "lowdefy.yaml:16"
       ]
     }

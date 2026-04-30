@@ -19,42 +19,7 @@ import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
-
-const defaultPackages = [
-  '@lowdefy/actions-core',
-  '@lowdefy/actions-pdf-make',
-  '@lowdefy/blocks-aggrid',
-  '@lowdefy/blocks-antd',
-  '@lowdefy/blocks-basic',
-  '@lowdefy/blocks-diff',
-  '@lowdefy/blocks-echarts',
-  '@lowdefy/blocks-google-maps',
-  '@lowdefy/blocks-loaders',
-  '@lowdefy/blocks-markdown',
-  '@lowdefy/blocks-qr',
-  '@lowdefy/connection-axios-http',
-  '@lowdefy/connection-elasticsearch',
-  '@lowdefy/connection-test',
-  '@lowdefy/connection-google-sheets',
-  '@lowdefy/connection-knex',
-  '@lowdefy/connection-mongodb',
-  '@lowdefy/connection-redis',
-  '@lowdefy/connection-sendgrid',
-  '@lowdefy/connection-stripe',
-  '@lowdefy/operators-change-case',
-  '@lowdefy/operators-diff',
-  '@lowdefy/operators-js',
-  '@lowdefy/operators-jsonata',
-  '@lowdefy/operators-dayjs',
-  '@lowdefy/operators-mql',
-  '@lowdefy/operators-nunjucks',
-  '@lowdefy/operators-uuid',
-  '@lowdefy/operators-yaml',
-  '@lowdefy/plugin-auth0',
-  '@lowdefy/plugin-aws',
-  '@lowdefy/plugin-csv',
-  '@lowdefy/plugin-next-auth',
-];
+import defaultPackages from '../defaultPackages.js';
 
 async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));

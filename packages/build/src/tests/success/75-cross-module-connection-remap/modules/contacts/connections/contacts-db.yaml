@@ -1,0 +1,5 @@
+id: contacts-db
+type: MongoDBCollection
+properties:
+  databaseUri: mongodb://localhost/contacts
+  collection: contacts

@@ -1,0 +1,13 @@
+# O2: Module var has wrong type
+# Tests that the build throws when a module var type doesn't match the declared type.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars:
+      count: not-a-number
+
+pages:
+  - id: home
+    type: Box

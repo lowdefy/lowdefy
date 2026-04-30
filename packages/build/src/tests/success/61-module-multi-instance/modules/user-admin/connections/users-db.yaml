@@ -1,0 +1,7 @@
+id: users-db
+type: MongoDBCollection
+properties:
+  databaseUri:
+    _secret: MONGODB
+  collection:
+    _module.var: collection

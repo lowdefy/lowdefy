@@ -28,8 +28,8 @@ import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
 import validateSlots from './validateSlots.js';
 
-function buildBlock(block, pageContext) {
-  validateBlock(block, pageContext);
+function buildBlock(block, pageContext, parentConfigKey) {
+  validateBlock(block, pageContext, parentConfigKey);
   setBlockId(block, pageContext);
   normalizeLayout(block, pageContext);
   moveAreasToSlots(block, pageContext);

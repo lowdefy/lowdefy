@@ -24,7 +24,7 @@
 const { toString } = Object.prototype;
 
 function ctorName(val) {
-  return val.constructor ? val.constructor.name : null;
+  return val.constructor && typeof val.constructor === 'function' ? val.constructor.name : null;
 }
 
 function isArray(val) {

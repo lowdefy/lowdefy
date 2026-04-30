@@ -72,6 +72,7 @@ const { output, errors } = evaluateOperators({
 - `_build.*` operators always evaluate regardless of `~dyn` (they work on YAML structure, not runtime values)
 - Unknown operators are marked as dynamic (deferred to runtime)
 - `parser.parse()` callback for recursive evaluation (used by `_function`/`_build.array.map`)
+- Source marker transfer: when an operator evaluates successfully, `~r` (ref ID) and `~l` (line number) from the expression object are transferred to the result (as non-enumerable properties). This ensures `addKeys` can resolve file + line for operator-produced values (e.g., arrays from `_build.array.concat`).
 
 **Build-time operators:**
 

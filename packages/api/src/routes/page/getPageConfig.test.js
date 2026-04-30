@@ -29,7 +29,7 @@ beforeEach(() => {
 
 test('getPageConfig, public', async () => {
   mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId/pageId.json') {
+    if (path === 'pages/pageId.json') {
       return {
         id: 'page:pageId',
         auth: {
@@ -47,7 +47,7 @@ test('getPageConfig, public', async () => {
 
 test('getPageConfig, protected, no user', async () => {
   mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId/pageId.json') {
+    if (path === 'pages/pageId.json') {
       return {
         id: 'page:pageId',
         auth: {
@@ -63,7 +63,7 @@ test('getPageConfig, protected, no user', async () => {
 
 test('getPageConfig, protected, with user', async () => {
   mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId/pageId.json') {
+    if (path === 'pages/pageId.json') {
       return {
         id: 'page:pageId',
         auth: {
@@ -85,7 +85,7 @@ test('getPageConfig, protected, with user', async () => {
 
 test('getPageConfig, page does not exist', async () => {
   mockReadConfigFile.mockImplementation((path) => {
-    if (path === 'pages/pageId/pageId.json') {
+    if (path === 'pages/pageId.json') {
       return {
         id: 'page:pageId',
         auth: {

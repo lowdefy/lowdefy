@@ -78,7 +78,7 @@ const logger = {
   error: jest.fn(),
 };
 
-function createTextContext({ payload }) {
+function createTextContext() {
   const context = testContext({
     connections,
     operators,
@@ -87,23 +87,23 @@ function createTextContext({ payload }) {
     secrets,
     session: { user: { id: 'id' } },
   });
-  context.payload = payload;
-  context.steps = {};
   context.blockId = 'blockId';
   context.pageId = 'pageId';
   context.endpointId = 'endpointId';
-  context.evaluateOperators = createEvaluateOperators(context, { payload });
+  context.evaluateOperators = createEvaluateOperators(context);
 
   return context;
 }
 async function runTest({ routine, payload = {} }) {
-  const context = createTextContext({ payload });
+  const context = createTextContext();
   const routineContext = {
+    steps: {},
+    payload,
     items: {},
     arrayIndices: [],
   };
   const res = await runRoutine(context, routineContext, { routine });
-  return { res, context };
+  return { res, context, routineContext };
 }
 
 export default runTest;

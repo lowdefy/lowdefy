@@ -1,0 +1,14 @@
+name: Widget Module
+
+vars:
+  count:
+    type: number
+    required: true
+    description: Number of items to display
+
+pages:
+  - id: main
+    type: Box
+    properties:
+      value:
+        _module.var: count

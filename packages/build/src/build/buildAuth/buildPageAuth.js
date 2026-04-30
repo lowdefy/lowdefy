@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
+import { isInPatternList } from './matchPattern.js';
 
 function buildPageAuth({ components, context }) {
   const protectedPages = getProtectedPages({ components });
@@ -38,7 +39,7 @@ function buildPageAuth({ components, context }) {
       return;
     }
     if (pageRoles[page.id]) {
-      if (configPublicPages.includes(page.id)) {
+      if (isInPatternList(page.id, configPublicPages)) {
         throw new ConfigError(`Page "${page.id}" is both protected by roles and public.`, {
           received: pageRoles[page.id],
           configKey: page['~k'],

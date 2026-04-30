@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "should be a string"
+        "Block id is not a string"
       ],
       "errorContains": [
-        "Block \"id\" should be a string.",
+        "Block id is not a string at page \"home\".",
         "lowdefy.yaml:16"
       ]
     }

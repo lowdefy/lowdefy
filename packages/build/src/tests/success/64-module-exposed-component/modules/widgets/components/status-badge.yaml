@@ -1,0 +1,6 @@
+id: status-badge
+type: Badge
+properties:
+  color:
+    _module.var: badge_color
+  text: Active

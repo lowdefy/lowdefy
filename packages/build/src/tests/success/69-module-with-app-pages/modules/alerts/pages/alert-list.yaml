@@ -1,0 +1,24 @@
+id: alert-list
+type: Box
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content:
+        _string.concat:
+          - _module.id: true
+          - ' - Alerts'
+  - id: alert-type
+    type: Paragraph
+    properties:
+      content:
+        _module.var: alert_type
+  - id: detail-link
+    type: Button
+    events:
+      onClick:
+        - id: go-detail
+          type: Link
+          params:
+            pageId:
+              _module.pageId: alert-detail

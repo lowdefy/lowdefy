@@ -1,0 +1,30 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+@layer components {
+  /* Height applies to the drop zone, not the outer wrapper, so the file list
+     (rendered as a sibling of `.ant-upload-drag` inside the Dragger root) can
+     flow inline below it instead of overflowing a fixed-height container. */
+  :global(.lf-s3-upload-dragger .ant-upload-drag) {
+    height: var(--lf-s3-dragger-height);
+  }
+  /* antd v6 applies `padding: token.padding` to `.ant-upload-drag .ant-upload`,
+     which overflows the drag area when the wrapper height is small. Scope the
+     override to this block and let users add padding via style.hint. */
+  :global(.lf-s3-upload-dragger .ant-upload-drag .ant-upload) {
+    padding: 0;
+  }
+}

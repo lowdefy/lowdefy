@@ -43,8 +43,8 @@ test('_and errors', () => {
 
 test('_and evaluated in ServerParser', () => {
   const input = { a: { _and: [true, true] } };
-  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const res = parser.parse({ input, location, payload: {} });
   expect(res.output).toEqual({ a: true });
 });
 

@@ -1,0 +1,13 @@
+id: contact-list
+type: Box
+blocks:
+  _build.array.concat:
+    - - _ref:
+          module: layout
+          component: header
+          vars:
+            title: Contacts
+    - - id: contact-table
+        type: Title
+        properties:
+          content: Contact Table

@@ -1,0 +1,16 @@
+id: alert-detail
+type: Box
+blocks:
+  - id: back
+    type: Button
+    events:
+      onClick:
+        - id: go-back
+          type: Link
+          params:
+            pageId:
+              _module.pageId: alert-list
+  - id: detail-title
+    type: Title
+    properties:
+      content: Alert Detail

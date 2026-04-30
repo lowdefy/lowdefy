@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+export { default as buildModuleDefs } from './build/buildModuleDefs.js';
+export { default as buildModules } from './build/buildModules.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';

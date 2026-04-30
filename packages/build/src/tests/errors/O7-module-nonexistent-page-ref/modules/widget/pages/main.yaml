@@ -1,0 +1,12 @@
+id: main
+type: Box
+blocks:
+  - id: link
+    type: Button
+    events:
+      onClick:
+        - id: go-nowhere
+          type: Link
+          params:
+            pageId:
+              _module.pageId: nonexistent-page

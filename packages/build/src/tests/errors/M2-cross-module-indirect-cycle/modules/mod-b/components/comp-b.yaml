@@ -1,0 +1,6 @@
+id: b-box
+type: Box
+blocks:
+  - _ref:
+      module: mod-c
+      component: comp-c

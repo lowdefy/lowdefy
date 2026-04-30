@@ -15,6 +15,7 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -27,17 +28,26 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   context.blockId = blockId;
   context.endpointId = endpointId;
   context.pageId = pageId;
-  context.payload = serializer.deserialize(payload);
   context.evaluateOperators = createEvaluateOperators(context);
 
   logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
+  // Block HTTP access to InternalApi endpoints — same error as missing endpoint
+  if (endpointConfig.type === 'InternalApi') {
+    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
+    logger.debug({ params: { endpointId }, err }, err.message);
+    throw err;
+  }
+
   authorizeApiEndpoint(context, { endpointConfig });
 
   const routineContext = {
+    steps: {},
+    payload: serializer.deserialize(payload),
     arrayIndices: [],
     items: {},
+    endpointDepth: 0,
   };
 
   const { error, response, status } = await runRoutine(context, routineContext, {

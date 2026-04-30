@@ -41,12 +41,13 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@lowdefy/errors": "5.1.0",
     "@lowdefy/helpers": "5.1.0",
-    "knex": "2.5.1",
-    "mssql": "10.0.1",
-    "mysql": "2.18.1",
-    "pg": "8.11.3",
-    "sqlite3": "5.1.6"
+    "better-sqlite3": "12.9.0",
+    "knex": "3.2.9",
+    "mysql2": "3.22.3",
+    "pg": "8.20.0",
+    "tedious": "19.2.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

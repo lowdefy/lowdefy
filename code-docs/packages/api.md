@@ -93,16 +93,22 @@ Client Action (Endpoint)
 └───────────────────┘
         │
         ▼
+  InternalApi? ──yes──▶ throw "does not exist"
+        │ no
+        ▼
 ┌───────────────────┐
 │authorizeEndpoint()│
 └───────────────────┘
         │
         ▼
 ┌───────────────────┐
-│   runRoutine()    │  ◀── Execute steps: Request, Control, etc.
+│   runRoutine()    │  ◀── Dispatch by prefix: request:, endpoint:, control
 └───────────────────┘
-        │
-        ▼
+     │          │
+     ▼          ▼
+ handleRequest  handleEndpointCall ──▶ runRoutine (child)
+     │
+     ▼
    Response/Error
 ```
 
@@ -112,10 +118,10 @@ Client Action (Endpoint)
 
 | Module                       | Purpose                                                            |
 | ---------------------------- | ------------------------------------------------------------------ |
-| `createApiContext.js`        | Initializes context with user session, state, and helper functions |
+| `createApiContext.js`        | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here) |
 | `createAuthorize.js`         | Creates authorization checker for role-based access                |
 | `createReadConfigFile.js`    | Utility to read build output files                                 |
-| `createEvaluateOperators.js` | Server-side operator evaluation                                    |
+| `createEvaluateOperators.js` | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation |
 | `errors.js`                  | Error types: ConfigurationError, RequestError, ServerError         |
 
 ### `/routes/request/`
@@ -135,11 +141,16 @@ Client Action (Endpoint)
 
 ### `/routes/endpoints/`
 
-| Module            | Purpose                                 |
-| ----------------- | --------------------------------------- |
-| `callEndpoint.js` | Main entry point for endpoint execution |
-| `runRoutine.js`   | Execute routine steps sequentially      |
-| `control/`        | Control flow operators (if, try, etc.)  |
+| Module                    | Purpose                                                        |
+| ------------------------- | -------------------------------------------------------------- |
+| `callEndpoint.js`         | HTTP entry point for endpoint execution; blocks `InternalApi`  |
+| `runRoutine.js`           | Dispatch steps by ID prefix: `request:`, `endpoint:`, control  |
+| `handleRequest.js`        | Execute a database/API request step                            |
+| `handleEndpointCall.js`   | Execute a `CallApi` step (server-side endpoint-to-endpoint)    |
+| `addStepResult.js`        | Store step results in `routineContext.steps`                   |
+| `getEndpointConfig.js`    | Load endpoint config from build artifacts                      |
+| `authorizeApiEndpoint.js` | Check user access to endpoint                                  |
+| `control/`                | Control flow handlers (if, for, try, switch, return, etc.)     |
 
 ### `/routes/auth/`
 

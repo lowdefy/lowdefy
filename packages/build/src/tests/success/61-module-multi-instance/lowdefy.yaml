@@ -1,0 +1,26 @@
+# 61: Multi-instance module — same module used twice with different vars/IDs
+# Tests that ID scoping produces distinct page/connection IDs per entry.
+lowdefy: local
+name: Multi-Instance Test
+
+modules:
+  - id: team-users
+    source: 'file:modules/user-admin'
+    vars:
+      collection: team_users
+      label: Team Users
+
+  - id: client-users
+    source: 'file:modules/user-admin'
+    vars:
+      collection: client_users
+      label: Client Users
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home Page

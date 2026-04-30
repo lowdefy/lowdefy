@@ -12,6 +12,8 @@
 - _ref: concepts/lowdefy-schema.yaml
 - _ref: concepts/menus.yaml
 - _ref: concepts/references-and-templates.yaml
+- _ref: concepts/modules.yaml
+- _ref: concepts/module-authoring.yaml
 - _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout-overview.yaml
@@ -85,6 +87,8 @@
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
+- _ref: blocks/input/TiptapInput.yaml
+- _ref: blocks/input/TiptapMentionInput.yaml
 - _ref: blocks/input/TitleInput.yaml
 - _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
@@ -246,6 +250,7 @@
 - _ref: operators/_math.yaml
 - _ref: operators/_media.yaml
 - _ref: operators/_menu.yaml
+- _ref: operators/_module.yaml
 - _ref: operators/_dayjs.yaml
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml

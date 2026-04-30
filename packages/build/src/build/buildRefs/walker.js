@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import path from 'path';
+
+import { get, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
+import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
+import { scopeMenuItemIds } from '../resolveModuleOperators.js';
+import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 
@@ -30,6 +35,10 @@ class WalkContext {
     refId,
     sourceRefId,
     vars,
+    moduleDependencies,
+    moduleEntry,
+    moduleRoot,
+    packageRoot,
     path,
     currentFile,
     refChain,
@@ -42,6 +51,10 @@ class WalkContext {
     this.refId = refId;
     this.sourceRefId = sourceRefId;
     this.vars = vars;
+    this.moduleDependencies = moduleDependencies;
+    this.moduleEntry = moduleEntry ?? null;
+    this.moduleRoot = moduleRoot;
+    this.packageRoot = packageRoot;
     this.path = path;
     this.currentFile = currentFile;
     this.refChain = refChain;
@@ -57,6 +70,10 @@ class WalkContext {
       refId: this.refId,
       sourceRefId: this.sourceRefId,
       vars: this.vars,
+      moduleDependencies: this.moduleDependencies,
+      moduleEntry: this.moduleEntry,
+      moduleRoot: this.moduleRoot,
+      packageRoot: this.packageRoot,
       path: this.path ? `${this.path}.${segment}` : segment,
       currentFile: this.currentFile,
       refChain: this.refChain,
@@ -67,16 +84,25 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath }) {
+  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
+    }
+    if (extraRefChainKeys) {
+      for (const key of extraRefChainKeys) {
+        newChain.add(key);
+      }
     }
     return new WalkContext({
       buildContext: this.buildContext,
       refId,
       sourceRefId: this.refId,
       vars: vars ?? {},
+      moduleDependencies: moduleDependencies ?? this.moduleDependencies,
+      moduleEntry: moduleEntry ?? this.moduleEntry,
+      moduleRoot: moduleRoot ?? this.moduleRoot,
+      packageRoot: packageRoot ?? this.packageRoot,
       path: this.path,
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
@@ -132,7 +158,7 @@ function tagRefDeep(node, refId) {
   }
 }
 
-// Deep clone preserving ~r, ~l, ~k non-enumerable markers.
+// Deep clone preserving non-enumerable build markers (~r, ~l, ~k, ~arr, ~deferredFrom).
 // Used before resolving ref def path/vars to prevent mutation of stored originals.
 function cloneForResolve(value) {
   if (!type.isObject(value) && !type.isArray(value)) return value;
@@ -142,6 +168,8 @@ function cloneForResolve(value) {
     if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
     if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
     if (value['~arr'] !== undefined) setNonEnumerableProperty(clone, '~arr', value['~arr']);
+    if (value['~deferredFrom'] !== undefined)
+      setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
     return clone;
   }
   const clone = {};
@@ -151,6 +179,8 @@ function cloneForResolve(value) {
   if (value['~r'] !== undefined) setNonEnumerableProperty(clone, '~r', value['~r']);
   if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
   if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
+  if (value['~deferredFrom'] !== undefined)
+    setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
   return clone;
 }
 
@@ -236,7 +266,298 @@ function resolveVar(node, ctx) {
   });
 }
 
-// Resolve a _ref node (12-step ref handling)
+// Resolve a _module.var node via lazy resolution against the module entry.
+async function resolveModuleVar(node, ctx) {
+  const key = node['_module.var'];
+
+  if (!type.isString(key)) {
+    throw new ConfigError('_module.var operator takes a string argument.', {
+      filePath: ctx.currentFile,
+    });
+  }
+
+  const value = await resolveEffectiveVar(key, ctx.moduleEntry, ctx);
+  return cloneVarValue(value, ctx.sourceRefId);
+}
+
+// Navigate the var definitions tree by dot-path key, following `properties` nesting.
+function getVarDef(varDefs, key) {
+  const parts = key.split('.');
+  let current = varDefs;
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (!current?.[part]) return undefined;
+    if (current[part].properties && i < parts.length - 1) {
+      current = current[part].properties;
+    } else {
+      return current[part];
+    }
+  }
+  return undefined;
+}
+
+// Resolve a raw var default through the walker using a fresh WalkContext rooted
+// at the module manifest. The fresh context prevents false circular-ref detection
+// from the consumer's refChain and ensures _ref paths resolve relative to the
+// module root.
+async function resolveVarDefault(rawDefault, moduleEntry, ctx) {
+  const moduleYamlPath = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
+
+  const defaultCtx = new WalkContext({
+    buildContext: ctx.buildContext,
+    refId: moduleEntry.refDef.id,
+    sourceRefId: null,
+    vars: {},
+    moduleDependencies: moduleEntry.moduleDependencies,
+    moduleEntry,
+    moduleRoot: moduleEntry.moduleRoot,
+    packageRoot: moduleEntry.packageRoot,
+    path: '',
+    currentFile: moduleYamlPath,
+    refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
+    operators: ctx.operators,
+    env: ctx.env,
+    dynamicIdentifiers: ctx.dynamicIdentifiers,
+  });
+
+  return await resolve(rawDefault, defaultCtx);
+}
+
+// Build a merged object for namespace vars (vars with `properties`). Each
+// declared property resolves through resolveEffectiveVar — consumer values
+// take precedence per-leaf; missing leaves fall back to defaults.
+async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
+  const result = {};
+
+  for (const propName of Object.keys(varDef.properties)) {
+    const fullKey = `${prefix}.${propName}`;
+    result[propName] = await resolveEffectiveVar(fullKey, moduleEntry, ctx);
+  }
+
+  return result;
+}
+
+// Core lazy var resolution with caching on the module entry.
+async function resolveEffectiveVar(key, moduleEntry, ctx) {
+  if (Object.hasOwn(moduleEntry.resolvedVarCache, key)) {
+    return moduleEntry.resolvedVarCache[key];
+  }
+
+  const consumerValue = get(moduleEntry.consumerVars, key, { default: undefined });
+  const varDef = getVarDef(moduleEntry.varDefs, key);
+
+  let result;
+
+  if (varDef?.properties) {
+    result = await resolveNamespaceVar(key, varDef, moduleEntry, ctx);
+  } else if (!type.isNone(consumerValue)) {
+    result = consumerValue;
+  } else if (varDef && !type.isUndefined(varDef.default)) {
+    result = await resolveVarDefault(varDef.default, moduleEntry, ctx);
+  } else {
+    result = null;
+  }
+
+  moduleEntry.resolvedVarCache[key] = result;
+  return result;
+}
+
+// Detect _module.*Id operators
+const MODULE_ID_OPERATOR_KEYS = [
+  '_module.pageId',
+  '_module.connectionId',
+  '_module.endpointId',
+  '_module.id',
+];
+
+function isModuleIdOperator(node) {
+  return MODULE_ID_OPERATOR_KEYS.some((key) => !type.isUndefined(node[key]));
+}
+
+// Resolve _module.pageId
+function resolveModulePageId(arg, moduleEntry, context, configKey) {
+  if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.pageId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
+    if (!(moduleEntry.exports?.pages ?? []).some((p) => p.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export page "${arg}".`, {
+        configKey,
+      });
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.pageId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
+    if (!(targetEntry.exports?.pages ?? []).some((p) => p.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
+      throw new ConfigError(
+        `${caller} references page "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export page "${arg.id}".`,
+        { configKey }
+      );
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.pageId requires a string or object { id, module }.', {
+    configKey,
+  });
+}
+
+// Resolve _module.connectionId
+function resolveModuleConnectionId(arg, moduleEntry, context, configKey) {
+  if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.connectionId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
+    if (!(moduleEntry.exports?.connections ?? []).some((c) => c.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export connection "${arg}".`, {
+        configKey,
+      });
+    }
+    const remapping = moduleEntry.connections ?? {};
+    if (remapping[arg]) {
+      return remapping[arg];
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.connectionId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
+    if (!(targetEntry.exports?.connections ?? []).some((c) => c.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
+      throw new ConfigError(
+        `${caller} references connection "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export connection "${arg.id}".`,
+        { configKey }
+      );
+    }
+    const targetRemapping = targetEntry.connections ?? {};
+    if (targetRemapping[arg.id]) {
+      return targetRemapping[arg.id];
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.connectionId requires a string or object { id, module }.', {
+    configKey,
+  });
+}
+
+// Resolve _module.endpointId
+function resolveModuleEndpointId(arg, moduleEntry, context, configKey) {
+  if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.endpointId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
+    if (!(moduleEntry.exports?.api ?? []).some((e) => e.id === arg)) {
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export endpoint "${arg}".`, {
+        configKey,
+      });
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.endpointId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
+    if (!(targetEntry.exports?.api ?? []).some((e) => e.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
+      throw new ConfigError(
+        `${caller} references endpoint "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export endpoint "${arg.id}".`,
+        { configKey }
+      );
+    }
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.endpointId requires a string or object { id, module }.', {
+    configKey,
+  });
+}
+
+// Resolve _module.id
+function resolveModuleId(arg, moduleEntry, context, configKey) {
+  if (!type.isObject(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.id is ambiguous at the app level — no module to scope against. Use { module } to specify the target module.',
+        { configKey }
+      );
+    }
+    return moduleEntry.id;
+  }
+
+  if (type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.id { module: "${arg.module}" }`,
+    });
+    return targetEntry.id;
+  }
+
+  throw new ConfigError('_module.id requires a truthy value or object { module }.', { configKey });
+}
+
+// Dispatch _module.*Id operators
+function resolveModuleIdOperator(node, ctx) {
+  const { moduleEntry } = ctx;
+  const context = ctx.buildContext;
+  const configKey = node['~k'];
+
+  if (!type.isUndefined(node['_module.pageId'])) {
+    return resolveModulePageId(node['_module.pageId'], moduleEntry, context, configKey);
+  }
+  if (!type.isUndefined(node['_module.connectionId'])) {
+    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, context, configKey);
+  }
+  if (!type.isUndefined(node['_module.endpointId'])) {
+    return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context, configKey);
+  }
+  if (!type.isUndefined(node['_module.id'])) {
+    return resolveModuleId(node['_module.id'], moduleEntry, context, configKey);
+  }
+
+  return node;
+}
+
+// Resolve a _ref node (16-step ref handling)
 async function resolveRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
@@ -265,13 +586,25 @@ async function resolveRef(node, ctx) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
   }
 
-  // 4. Update refMap with resolved path; store original for resolver refs
+  // 4. Module path resolution: resolve relative paths from the module root
+  if (ctx.moduleRoot && type.isString(refDef.path) && !path.isAbsolute(refDef.path)) {
+    refDef.path = path.resolve(ctx.moduleRoot, refDef.path);
+  }
+
+  // 5. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
   }
 
-  // 5. Circular detection
+  // 6. Path escape constraint: module refs cannot escape the package root
+  if (ctx.packageRoot && refDef.path) {
+    if (!refDef.path.startsWith(ctx.packageRoot + '/') && refDef.path !== ctx.packageRoot) {
+      throw new ConfigError(`Module ref path "${refDef.path}" escapes the package root.`);
+    }
+  }
+
+  // 7. Circular detection
   if (refDef.path && ctx.refChain.has(refDef.path)) {
     const chainDisplay = [...ctx.refChain, refDef.path].join('\n  -> ');
     throw new ConfigError(
@@ -280,41 +613,116 @@ async function resolveRef(node, ctx) {
     );
   }
 
-  // Steps 6-12: File operations that can fail independently per ref.
+
+  // Steps 8-16: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
   // allowing multiple errors to be reported at once.
   try {
-    // 6. Load content
-    let content = await getRefContent({
-      context: ctx.buildContext,
-      refDef,
-      referencedFrom: ctx.currentFile,
-    });
+    // 8. Load content
+    let content;
+    let resolvedEntryId = null;
 
-    // 7. Create child context for the ref file
-    const childCtx = ctx.forRef({
-      refId: refDef.id,
-      vars: refDef.vars,
-      filePath: refDef.path,
-    });
+    if (refDef.module) {
+      const result = await getModuleRefContent({
+        context: ctx.buildContext,
+        refDef,
+        referencedFrom: ctx.currentFile,
+        walkCtx: ctx,
+        configKey: node['~k'],
+      });
+      content = cloneForResolve(result.content);
+      resolvedEntryId = result.entryId;
+    } else {
+      content = await getRefContent({
+        context: ctx.buildContext,
+        refDef,
+        referencedFrom: ctx.currentFile,
+      });
+    }
 
-    // 8. Walk the content
+    // 9. Circular detection for cross-module component/menu refs.
+    // File-based cycle detection (step 7) misses these because each module
+    // has a different file path. Use a synthetic key with the resolved
+    // concrete entry ID: "module:<entryId>/<type>:<name>".
+    if (resolvedEntryId && (refDef.component || refDef.menu)) {
+      const exportType = refDef.component ? 'component' : 'menu';
+      const exportName = refDef.component ?? refDef.menu;
+      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
+      if (ctx.refChain.has(cycleKey)) {
+        const chainDisplay = [...ctx.refChain, cycleKey].join('\n  -> ');
+        throw new ConfigError(
+          `Circular module reference detected. Module "${resolvedEntryId}" ${exportType} "${exportName}" ` +
+            `references itself through:\n  -> ${chainDisplay}`,
+          { filePath: ctx.currentFile }
+        );
+      }
+    }
+
+    // 10. Create child context for the ref
+    let childCtx;
+    if (refDef.module && (refDef.component || refDef.menu)) {
+      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
+      const deferredFrom = content['~deferredFrom'];
+      const exportType = refDef.component ? 'component' : 'menu';
+      const exportName = refDef.component ?? refDef.menu;
+      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+        moduleRoot: moduleEntry.moduleRoot,
+        packageRoot: moduleEntry.packageRoot,
+        moduleDependencies: moduleEntry.moduleDependencies,
+        moduleEntry,
+        extraRefChainKeys: [cycleKey],
+      });
+
+      // Clone so each consumer gets an independent copy — getModuleRefContent
+      // returns a shared reference, and resolve() mutates in place.
+      // deferredFrom was read above before the clone (serializer.copy strips
+      // non-enumerable properties).
+      content = serializer.copy(content);
+
+      // When component/menu content is a file _ref, the inner ref would create
+      // a fresh var scope and lose the consumer's vars. Inject them into the clone.
+      if ((refDef.component || refDef.menu) && type.isObject(content) && content._ref) {
+        if (type.isObject(content._ref)) {
+          content._ref.vars = { ...(content._ref.vars ?? {}), ...refDef.vars };
+        } else if (type.isString(content._ref) && Object.keys(refDef.vars).length > 0) {
+          content._ref = { path: content._ref, vars: refDef.vars };
+        }
+      }
+    } else {
+      childCtx = ctx.forRef({
+        refId: refDef.id,
+        vars: refDef.vars,
+        filePath: refDef.path,
+      });
+    }
+
+    // 11. Walk the content
     content = await resolve(content, childCtx);
 
-    // 9. Run transformer
+    // 12. Scope menu item IDs (module menu refs only)
+    if (refDef.module && refDef.menu) {
+      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
+      scopeMenuItemIds(content, moduleEntry.id);
+    }
+
+    // 13. Run transformer
     content = await runTransformer({
       context: ctx.buildContext,
       input: content,
       refDef,
     });
 
-    // 10. Extract key
+    // 14. Extract key
     content = getKey({ input: content, refDef });
 
-    // 11. Tag all nodes with ~r for provenance
+    // 15. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
 
-    // 12. Propagate ~ignoreBuildChecks
+    // 16. Propagate ~ignoreBuildChecks
     if (refDef.ignoreBuildChecks !== undefined) {
       if (type.isObject(content)) {
         content['~ignoreBuildChecks'] = refDef.ignoreBuildChecks;
@@ -342,14 +750,45 @@ async function resolve(node, ctx) {
   // 1. Primitives pass through
   if (!type.isObject(node) && !type.isArray(node)) return node;
 
-  // 2. Object with _ref
+  // 2. _ref — top-down (only operator that needs it)
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
     return resolveRef(node, ctx);
   }
 
-  // 4. Object with _var — resolve, then re-walk the result so any
-  //    _ref or _build.* operators inside the default value get processed.
-  if (type.isObject(node) && !type.isUndefined(node._var)) {
+  // 3. Array — walk children in parallel
+  if (type.isArray(node)) {
+    await Promise.all(
+      node.map(async (item, i) => {
+        node[i] = await resolve(item, ctx.child(String(i)));
+      }),
+    );
+    return node;
+  }
+
+  // 4. Object — walk children in parallel (with shouldStop)
+  const keys = Object.keys(node);
+  await Promise.all(
+    keys.map(async (key) => {
+      if (ctx.shouldStop) {
+        const childPath = ctx.path ? `${ctx.path}.${key}` : key;
+        const stopMode = ctx.shouldStop(childPath, ctx.refId);
+        if (stopMode === 'delete' || stopMode === true) {
+          delete node[key];
+          return;
+        }
+        if (stopMode === 'preserve') {
+          if (type.isObject(node[key]) || type.isArray(node[key])) {
+            setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
+          }
+          return;
+        }
+      }
+      node[key] = await resolve(node[key], ctx.child(key));
+    }),
+  );
+
+  // 5. _var — substitution (children already resolved)
+  if (!type.isUndefined(node._var)) {
     try {
       const varResult = resolveVar(node, ctx);
       return await resolve(varResult, ctx);
@@ -362,32 +801,21 @@ async function resolve(node, ctx) {
     }
   }
 
-  // 5. Array — walk children in parallel
-  if (type.isArray(node)) {
-    await Promise.all(
-      node.map(async (item, i) => {
-        node[i] = await resolve(item, ctx.child(String(i)));
-      }),
-    );
-    return node;
+  // 6. _module.var — module variable substitution
+  if (!type.isUndefined(node['_module.var'])) {
+    if (!ctx.moduleEntry) {
+      if (ctx.moduleRoot) return node;
+      throw new ConfigError('_module.var cannot be used at the app level.');
+    }
+    return resolve(await resolveModuleVar(node, ctx), ctx);
   }
 
-  // 6. Object — walk children in parallel
-  const keys = Object.keys(node);
-  await Promise.all(
-    keys.map(async (key) => {
-      if (ctx.shouldStop) {
-        const childPath = ctx.path ? `${ctx.path}.${key}` : key;
-        if (ctx.shouldStop(childPath, ctx.refId)) {
-          delete node[key];
-          return;
-        }
-      }
-      node[key] = await resolve(node[key], ctx.child(key));
-    }),
-  );
+  // 7. _module.*Id — resolve to scoped ID string
+  if (isModuleIdOperator(node)) {
+    return resolveModuleIdOperator(node, ctx);
+  }
 
-  // Check if this is a _build.* operator
+  // 8. _build.* operator
   if (isBuildOperator(node)) {
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);

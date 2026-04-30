@@ -1,0 +1,13 @@
+# M7: Self-referencing dependency — module maps dependency to itself
+lowdefy: local
+name: Self Reference Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      companies: contacts
+
+pages:
+  - id: home
+    type: Box

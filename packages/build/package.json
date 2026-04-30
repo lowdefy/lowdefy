@@ -65,6 +65,9 @@
     "@lowdefy/operators-js": "5.1.0",
     "ajv": "8.12.0",
     "json5": "2.2.3",
+    "picomatch": "4.0.1",
+    "semver": "7.5.4",
+    "tar": "6.2.1",
     "yaml": "2.3.4",
     "yargs": "17.7.2"
   },
@@ -79,6 +82,7 @@
     "@lowdefy/blocks-google-maps": "5.1.0",
     "@lowdefy/blocks-markdown": "5.1.0",
     "@lowdefy/blocks-qr": "5.1.0",
+    "@lowdefy/blocks-tiptap": "5.1.0",
     "@lowdefy/connection-axios-http": "5.1.0",
     "@lowdefy/connection-elasticsearch": "5.1.0",
     "@lowdefy/connection-test": "5.1.0",

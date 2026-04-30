@@ -1,0 +1,63 @@
+# 86: Cross-module component refs, per-ref vars, override propagation, _module.pageId
+lowdefy: local
+name: Cross Module Component Ref Test
+
+modules:
+  - id: core
+    source: 'file:modules/core'
+    vars:
+      stamp:
+        timestamp:
+          _user: updated_at
+        user:
+          _user: id
+        app_version: '2.0'
+
+  - id: orders
+    source: 'file:modules/orders'
+
+pages:
+  - id: app-home
+    type: Box
+    blocks:
+      # Direct consumption of core's stamp
+      - id: direct-stamp
+        type: Box
+        properties:
+          stamp:
+            _ref:
+              module: core
+              component: stamp
+
+      # Cross-module: orders component that internally refs core's stamp
+      - id: order-detail
+        type: Box
+        properties:
+          summary:
+            _ref:
+              module: orders
+              component: order-summary
+              vars:
+                order_id: ORD-123
+                status: shipped
+
+      # Per-ref vars + key extraction combined
+      - id: order-audit
+        type: Box
+        properties:
+          just_audit:
+            _ref:
+              module: orders
+              component: order-summary
+              vars:
+                order_id: ORD-456
+              key: audit
+
+      # Component with _module.pageId
+      - id: link-section
+        type: Box
+        properties:
+          link:
+            _ref:
+              module: core
+              component: link_to_home

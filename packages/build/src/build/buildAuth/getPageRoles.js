@@ -14,15 +14,22 @@
   limitations under the License.
 */
 
+import { matchesPattern } from './matchPattern.js';
+
 function getPageRoles({ components }) {
   const roles = components.auth.pages.roles;
+  const pageIds = (components.pages ?? []).map((p) => p.id);
   const pageRoles = {};
   Object.keys(roles).forEach((roleName) => {
-    roles[roleName].forEach((pageId) => {
-      if (!pageRoles[pageId]) {
-        pageRoles[pageId] = new Set();
-      }
-      pageRoles[pageId].add(roleName);
+    roles[roleName].forEach((pattern) => {
+      pageIds.forEach((pageId) => {
+        if (matchesPattern(pageId, pattern)) {
+          if (!pageRoles[pageId]) {
+            pageRoles[pageId] = new Set();
+          }
+          pageRoles[pageId].add(roleName);
+        }
+      });
     });
   });
   Object.keys(pageRoles).forEach((pageId) => {

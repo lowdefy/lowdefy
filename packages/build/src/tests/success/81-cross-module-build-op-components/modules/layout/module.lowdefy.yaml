@@ -1,0 +1,20 @@
+name: Layout
+
+exports:
+  components:
+    - id: page-wrapper
+    - id: extra-comp
+
+components:
+  _build.array.concat:
+    - - id: page-wrapper
+        type: Component
+        component:
+          id: layout-box
+          type: Box
+          blocks:
+            - id: layout-title
+              type: Title
+              properties:
+                content: Layout Header
+    - _ref: ../../shared/extra-components.yaml

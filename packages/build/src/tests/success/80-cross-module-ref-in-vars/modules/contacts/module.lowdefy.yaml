@@ -1,0 +1,12 @@
+name: Contacts
+
+dependencies:
+  - id: layout
+  - id: widgets
+
+exports:
+  pages:
+    - id: contact-list
+
+pages:
+  - _ref: pages/contact-list.yaml

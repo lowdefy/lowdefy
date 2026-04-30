@@ -103,7 +103,7 @@ test('_type none', () => {
 
 test('_type date with on packed date pass and calls ServerParser', () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
-  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const res = parser.parse({ input, location, payload: {} });
   expect(res.output).toEqual(true);
 });

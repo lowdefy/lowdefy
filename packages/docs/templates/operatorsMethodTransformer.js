@@ -15,7 +15,7 @@
 */
 
 function transformer(obj) {
-  if (!obj.methods) {
+  if (!obj.methods || !obj.page.blocks) {
     return obj.page;
   }
   if (!obj.page.blocks) {

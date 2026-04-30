@@ -1,0 +1,4 @@
+id: company-picker
+type: Selector
+properties:
+  label: Select Company

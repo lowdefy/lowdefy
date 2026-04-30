@@ -14,15 +14,22 @@
   limitations under the License.
 */
 
+import { matchesPattern } from './matchPattern.js';
+
 function getApiRoles({ components }) {
   const roles = components.auth.api.roles;
+  const endpointIds = (components.api ?? []).map((e) => e.id);
   const apiRoles = {};
   Object.keys(roles).forEach((roleName) => {
-    roles[roleName].forEach((endpointId) => {
-      if (!apiRoles[endpointId]) {
-        apiRoles[endpointId] = new Set();
-      }
-      apiRoles[endpointId].add(roleName);
+    roles[roleName].forEach((pattern) => {
+      endpointIds.forEach((endpointId) => {
+        if (matchesPattern(endpointId, pattern)) {
+          if (!apiRoles[endpointId]) {
+            apiRoles[endpointId] = new Set();
+          }
+          apiRoles[endpointId].add(roleName);
+        }
+      });
     });
   });
   Object.keys(apiRoles).forEach((endpointId) => {

@@ -1,0 +1,24 @@
+# 73: Cross-module diamond dependencies
+# Tests multiple modules depending on the same layout module.
+lowdefy: local
+name: Diamond Deps Test
+
+modules:
+  - id: app-layout
+    source: 'file:modules/layout'
+    vars:
+      site_name: Diamond App
+
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+
+  - id: companies
+    source: 'file:modules/companies'
+    dependencies:
+      layout: app-layout
+
+pages:
+  - id: home
+    type: Box

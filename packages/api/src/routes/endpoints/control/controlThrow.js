@@ -19,8 +19,20 @@ async function controlThrow(context, routineContext, { control }) {
   const { items } = routineContext;
   const location = control['~k'] ?? ':throw';
 
-  const message = evaluateOperators({ input: control[':throw'], items, location });
-  const cause = evaluateOperators({ input: control[':cause'], items, location });
+  const message = evaluateOperators({
+    input: control[':throw'],
+    items,
+    location,
+    steps: routineContext.steps,
+    payload: routineContext.payload,
+  });
+  const cause = evaluateOperators({
+    input: control[':cause'],
+    items,
+    location,
+    steps: routineContext.steps,
+    payload: routineContext.payload,
+  });
   const error = new Error(message, { cause });
 
   context.logger.error({

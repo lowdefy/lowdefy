@@ -1,0 +1,27 @@
+# 65: Module exposed menu via _ref: { module, menu }
+# Tests that module menu items get scoped IDs and _module.pageId resolves in menu links.
+lowdefy: local
+name: Module Menu Test
+
+modules:
+  - id: admin
+    source: 'file:modules/admin'
+    vars:
+      section_title: Administration
+
+menus:
+  - id: main
+    links:
+      _build.array.concat:
+        - - id: home
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Home
+        - _ref:
+            module: admin
+            menu: default
+
+pages:
+  - id: home
+    type: Box

@@ -117,7 +117,13 @@ const PageSidebarLayout = ({
               }}
               styles={{
                 element: mergeObjects([
-                  { borderInlineEnd: '1px solid var(--ant-color-border)' },
+                  {
+                    borderInlineEnd: '1px solid var(--ant-color-border)',
+                    position: 'sticky',
+                    top: 0,
+                    height: '100vh',
+                    alignSelf: 'flex-start',
+                  },
                   styles.sider,
                 ]),
               }}
@@ -204,11 +210,13 @@ const PageSidebarLayout = ({
                       style={{
                         position: 'sticky',
                         bottom: 0,
-                        background: 'var(--ant-color-bg-container)',
-                        padding: 8,
+                        background:
+                          'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--ant-color-bg-container) 85%, transparent) 32px, color-mix(in srgb, var(--ant-color-bg-container) 95%, transparent) 100%)',
+                        padding: '40px 8px 8px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        gap: 8,
                       }}
                     >
                       {renderHeaderActions({
@@ -216,7 +224,10 @@ const PageSidebarLayout = ({
                         classNames: {
                           ...classNames,
                           headerActions:
-                            classNames.headerActions ?? 'flex flex-col items-center gap-4 py-4',
+                            classNames.headerActions ??
+                            (openSiderState
+                              ? 'flex flex-col items-stretch gap-1 w-full'
+                              : 'flex flex-col items-center gap-4 py-4'),
                         },
                         styles,
                         properties,
@@ -224,6 +235,7 @@ const PageSidebarLayout = ({
                         events,
                         components: { Icon, Link, ShortcutBadge },
                         iconsColor: properties.iconsColor,
+                        expanded: openSiderState,
                       })}
                       <Link home={true}>
                         <img

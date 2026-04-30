@@ -1,0 +1,12 @@
+# O3: Module references a secret not in its allowlist
+# Tests that the build throws when a module uses _secret for an undeclared secret name.
+lowdefy: local
+
+modules:
+  - id: leaky
+    source: 'file:modules/leaky'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

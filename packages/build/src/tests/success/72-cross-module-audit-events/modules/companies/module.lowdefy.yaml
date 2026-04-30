@@ -1,0 +1,12 @@
+name: Companies
+
+dependencies:
+  - id: events
+    description: Event logging
+
+exports:
+  pages:
+    - id: company-detail
+
+pages:
+  - _ref: pages/company-detail.yaml

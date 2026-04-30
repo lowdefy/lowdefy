@@ -1,0 +1,21 @@
+id: user-edit
+type: Box
+blocks:
+  - id: back-link
+    type: Button
+    events:
+      onClick:
+        - id: go-back
+          type: Link
+          params:
+            pageId:
+              _module.pageId: users-list
+  - id: name-input
+    type: TextInput
+    properties:
+      label: Name
+  - id: module-label
+    type: Title
+    properties:
+      content:
+        _module.id: true

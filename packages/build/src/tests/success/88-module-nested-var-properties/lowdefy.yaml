@@ -1,0 +1,15 @@
+# 88: Nested var properties — recursive merging, partial overrides, opaque objects
+lowdefy: local
+name: Nested Var Properties Test
+
+modules:
+  - id: dashboard
+    source: 'file:modules/dashboard'
+    vars:
+      components:
+        contacts_detail: false
+      theme:
+        colors:
+          primary: '#ff0000'
+      custom_styles:
+        border: none

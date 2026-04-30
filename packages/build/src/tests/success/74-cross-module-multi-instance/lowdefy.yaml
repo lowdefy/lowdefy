@@ -1,0 +1,37 @@
+# 74: Cross-module multi-instance with different wiring
+# Tests same module used twice, each wired to different dependencies.
+lowdefy: local
+name: Multi-Instance Test
+
+modules:
+  - id: internal-contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      companies: internal-companies
+    vars:
+      label: Internal Contacts
+
+  - id: external-contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      companies: external-companies
+    vars:
+      label: External Contacts
+
+  - id: internal-companies
+    source: 'file:modules/companies'
+    dependencies:
+      contacts: internal-contacts
+    vars:
+      label: Internal Companies
+
+  - id: external-companies
+    source: 'file:modules/companies'
+    dependencies:
+      contacts: external-contacts
+    vars:
+      label: External Companies
+
+pages:
+  - id: home
+    type: Box

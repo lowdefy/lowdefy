@@ -17,10 +17,10 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function validateBlock(block, { pageId }) {
-  const configKey = block?.['~k'];
+function validateBlock(block, { pageId }, parentConfigKey) {
+  const configKey = block?.['~k'] ?? parentConfigKey;
   if (!type.isObject(block)) {
-    throw new ConfigError(`Expected block to be an object on page "${pageId}".`, {
+    throw new ConfigError(`Block should be an object on page "${pageId}".`, {
       received: block,
       configKey,
     });
