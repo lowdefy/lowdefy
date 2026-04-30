@@ -38,13 +38,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.0",
+    "@ant-design/icons": "6.2.2",
     "@vercel/analytics": "1.6.1",
     "framer-motion": "^11.0.0",
     "gray-matter": "4.0.3",
     "lucide-react": "^0.400.0",
     "next": "^14.2.0",
-    "posthog-js": "^1.343.2",
+    "posthog-js": "^1.372.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "8.0.7",
@@ -52,8 +52,8 @@
     "remark-gfm": "3.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "1.50.1",
-    "autoprefixer": "^10.4.0",
+    "@playwright/test": "1.59.1",
+    "autoprefixer": "^10.5.0",
     "eslint": "10.2.1",
     "eslint-config-next": "16.2.4",
     "postcss": "^8.5.12",
