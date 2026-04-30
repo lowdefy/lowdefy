@@ -29,3 +29,15 @@ test('CallAPI action invocation', () => {
   });
   expect(mockCallAPI.mock.calls).toEqual([[{ endpointId: 'endpointId' }]]);
 });
+
+test('CallAPI action forwards holdValue', () => {
+  mockCallAPI.mockClear();
+  CallAPI({
+    methods,
+    params: {
+      endpointId: 'endpointId',
+      holdValue: true,
+    },
+  });
+  expect(mockCallAPI.mock.calls).toEqual([[{ endpointId: 'endpointId', holdValue: true }]]);
+});
