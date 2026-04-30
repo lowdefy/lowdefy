@@ -1,0 +1,36 @@
+# 84: Multiple consumers of the same menu export
+# Tests each consumer gets independently scoped menu IDs — no mutation bleed.
+lowdefy: local
+name: Multi Consumer Menus Test
+
+modules:
+  - id: nav
+    source: 'file:modules/nav'
+  - id: app-a
+    source: 'file:modules/app-a'
+    dependencies:
+      nav: nav
+  - id: app-b
+    source: 'file:modules/app-b'
+    dependencies:
+      nav: nav
+
+menus:
+  - id: main
+    links:
+      _build.array.concat:
+        - - id: home
+            type: MenuLink
+            pageId: home
+            properties:
+              title: Home
+        - _ref:
+            module: app-a
+            menu: default
+        - _ref:
+            module: app-b
+            menu: default
+
+pages:
+  - id: home
+    type: Box

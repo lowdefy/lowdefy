@@ -15,11 +15,26 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+import { ConfigWarning, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
 
+function getValueAtPath(obj, pathParts) {
+  let current = obj;
+  for (const part of pathParts) {
+    if (type.isNone(current)) return undefined;
+    current = type.isArray(current) ? current[parseInt(part, 10)] : current[part];
+  }
+  return current;
+}
+
+// Schema validation emits warnings rather than errors. Focused validations
+// in each build step (validateBlock, buildConnections, buildEvents, etc.)
+// provide better error messages with full context (pageId, blockId, etc.).
+// Schema warnings still surface useful hints like typos caught by
+// additionalProperties and property type mismatches.
 function testSchema({ components, context }) {
   const { valid, errors } = validate({
     schema: lowdefySchema,
@@ -62,18 +77,14 @@ function testSchema({ components, context }) {
       let message = error.message;
       if (error.params?.additionalProperty) {
         message = `${message} - "${error.params.additionalProperty}"`;
-      } else if (propertyName) {
+      } else if (propertyName && error.keyword !== 'errorMessage') {
         message = `"${propertyName}" ${message}`;
       }
 
-      const configError = new ConfigError(message, { configKey, checkSlug: 'schema' });
-      if (!shouldSuppressBuildCheck(configError, context.keyMap)) {
-        if (!context.errors) {
-          // If no error collection array, throw immediately (fallback for tests)
-          throw configError;
-        }
-        // Collect error object - logging happens at checkpoints in index.js
-        context.errors.push(configError);
+      const received = getValueAtPath(components, instancePath);
+      const warning = new ConfigWarning(message, { configKey, checkSlug: 'schema', received });
+      if (!shouldSuppressBuildCheck(warning, context.keyMap)) {
+        context.handleWarning(warning);
       }
     });
   }

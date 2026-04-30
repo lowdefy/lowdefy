@@ -1,0 +1,15 @@
+id: company-detail
+type: Box
+blocks:
+  - id: company-name
+    type: Title
+    properties:
+      content: Company Detail
+  - id: log-btn
+    type: Button
+    properties:
+      title: Log Event
+      endpointId:
+        _module.endpointId:
+          id: log-event
+          module: events

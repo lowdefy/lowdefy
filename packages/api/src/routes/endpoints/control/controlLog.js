@@ -23,8 +23,21 @@ async function controlLog(context, routineContext, { control }) {
   const location = control['~k'] ?? ':log';
 
   logger.debug({ event: 'debug_control_log' });
-  const log = evaluateOperators({ input: control[':log'], items, location });
-  const logLevel = evaluateOperators({ input: control[':level'], items, location }) ?? 'info';
+  const log = evaluateOperators({
+    input: control[':log'],
+    items,
+    location,
+    steps: routineContext.steps,
+    payload: routineContext.payload,
+  });
+  const logLevel =
+    evaluateOperators({
+      input: control[':level'],
+      items,
+      location,
+      steps: routineContext.steps,
+      payload: routineContext.payload,
+    }) ?? 'info';
 
   if (!type.isString(logLevel)) {
     throw new ConfigError(`Invalid :log in endpoint "${endpointId}" - :level must be a string.`, {

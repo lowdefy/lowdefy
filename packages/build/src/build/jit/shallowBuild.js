@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
 import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
@@ -32,6 +33,8 @@ import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
+import buildModuleDefs from '../buildModuleDefs.js';
+import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
@@ -58,7 +61,6 @@ import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
-import stripPageContent from './stripPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -68,8 +70,12 @@ async function shallowBuild(options) {
   try {
     context = createContext(options);
 
+    // Phase 1: Build module definitions
+    await buildModuleDefs({ context });
+
     let components;
     try {
+      // Phase 2: Ref resolution (with shallow options)
       components = await buildRefs({
         context,
         shallowOptions: true,
@@ -87,11 +93,19 @@ async function shallowBuild(options) {
     // surfaces the real error before downstream code crashes on nulls.
     logCollectedErrors(context);
 
+    // Phase 3: Process modules — scopes IDs, merges into components
+    buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    tryBuildStep(testSchema, 'testSchema', { components, context });
+
+    logCollectedErrors(context);
+
+    // Collect page content strings for Tailwind to scan.
+    // Runs after testSchema so null block entries are caught before walking.
     context.tailwindContentMap = new Map();
     for (const page of components.pages ?? []) {
       const content = collectPageContent([page]);
@@ -99,10 +113,6 @@ async function shallowBuild(options) {
         context.tailwindContentMap.set(page.id, content);
       }
     }
-    stripPageContent({ components, context });
-    tryBuildStep(testSchema, 'testSchema', { components, context });
-
-    logCollectedErrors(context);
 
     // Build skeleton steps (everything except page content)
     tryBuildStep(buildApp, 'buildApp', { components, context });
@@ -167,6 +177,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'installedPluginPackages.json',
       JSON.stringify([...(context.installedPackages ?? [])])
+    );
+    await context.writeBuildArtifact(
+      'modules.json',
+      serializer.serializeToString(context.modules ?? {})
     );
     await writePluginImports({ components, context });
     // Persist icon imports snapshot for JIT icon detection.

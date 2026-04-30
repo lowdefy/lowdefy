@@ -1,0 +1,13 @@
+- id: detail_block
+  type: Box
+  blocks:
+    - id: header_visible
+      type: Paragraph
+      properties:
+        content:
+          _module.var: components.show_header
+    - id: extra
+      type: Paragraph
+      properties:
+        content:
+          _module.var: components.extra_fields

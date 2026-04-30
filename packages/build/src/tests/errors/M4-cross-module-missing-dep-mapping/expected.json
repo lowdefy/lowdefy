@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "expectThrow": true,
+      "errorContains": [
+        "declares dependency \"companies\" but no mapping provided",
+        "no module entry \"companies\" exists"
+      ]
+    }
+  ]
+}

@@ -155,7 +155,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: References and Templates
-            previous_page_id: references-and-templates
+            previous_page_title: Writing Modules
+            previous_page_id: module-authoring
             next_page_title: Layout
             next_page_id: layout-overview

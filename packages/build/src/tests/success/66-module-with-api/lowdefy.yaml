@@ -1,0 +1,14 @@
+# 66: Module with API endpoints
+# Tests that module API endpoints get scoped IDs and _module.endpointId resolves correctly.
+lowdefy: local
+name: Module API Test
+
+modules:
+  - id: inviter
+    source: 'file:modules/inviter'
+    vars:
+      invite_message: You have been invited!
+
+pages:
+  - id: home
+    type: Box

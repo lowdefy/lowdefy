@@ -14,19 +14,27 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import testSchema from './testSchema.js';
 import testContext from '../test-utils/testContext.js';
 
-const context = testContext();
+const mockLogWarn = jest.fn();
+const context = testContext({ logger: { warn: mockLogWarn } });
 
-test('empty components', () => {
+beforeEach(() => {
+  mockLogWarn.mockReset();
+});
+
+test('empty components emits no warnings', () => {
   const components = {
     lowdefy: '1.0.0',
   };
-  expect(() => testSchema({ components, context })).not.toThrow();
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
-test('page auth config', () => {
+test('page auth config emits no warnings', () => {
   const components = {
     lowdefy: '1.0.0',
     auth: {
@@ -36,10 +44,11 @@ test('page auth config', () => {
       },
     },
   };
-  expect(() => testSchema({ components, context })).not.toThrow();
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
-test('app schema', () => {
+test('valid app schema emits no warnings', () => {
   const components = {
     lowdefy: '1.0.0',
     connections: [
@@ -71,20 +80,20 @@ test('app schema', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).not.toThrow();
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
-test('invalid schema', () => {
+test('invalid schema emits warning', () => {
   const components = {
     lowdefy: '1.0.0',
     global: 'global',
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'App "global" should be an object.'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('App "global" should be an object.');
 });
 
-test('multiple schema errors throws on first error', () => {
+test('multiple schema issues emit multiple warnings', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -101,13 +110,12 @@ test('multiple schema errors throws on first error', () => {
       },
     ],
   };
-  // Without context.errors array, throws on first error
-  expect(() => testSchema({ components, context })).toThrow(
-    'Block should have required property "id".'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toBe('Block should have required property "id".');
 });
 
-test('nested schema error', () => {
+test('nested schema warning', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -140,12 +148,11 @@ test('nested schema error', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'Action should have required property "type".'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Action should have required property "type".');
 });
 
-test('nested schema error 2', () => {
+test('nested schema warning for blocks null', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -172,12 +179,59 @@ test('nested schema error 2', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'Block "blocks" should be an array.'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Block "blocks" should be an array.');
 });
 
-test('connections schema error', () => {
+test('null item in blocks array emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          { id: 'valid', type: 'Box' },
+          null,
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Block should be an object.');
+});
+
+test('custom error messages are not prefixed with property name', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    global: 'global',
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('App "global" should be an object.');
+});
+
+test('default AJV messages are prefixed with property name', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          {
+            id: 'button_1',
+            type: 'Button',
+            events: { onClick: 42 },
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('"onClick" must be array');
+});
+
+test('connections schema warning', () => {
   const components = {
     lowdefy: '1.0.0',
     connections: [
@@ -199,12 +253,11 @@ test('connections schema error', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'Connection should have required property "type".'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Connection should have required property "type".');
 });
 
-test('requests schema error', () => {
+test('requests schema warning', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -253,12 +306,11 @@ test('requests schema error', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'Request should have required property "id".'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Request should have required property "id".');
 });
 
-test('menus schema error', () => {
+test('menus schema warning', () => {
   const components = {
     lowdefy: '1.0.0',
     menus: [
@@ -282,12 +334,11 @@ test('menus schema error', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
-    'must NOT have additional properties - "pageId"'
-  );
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "pageId"');
 });
 
-test('missing lowdefy version schema error', () => {
+test('missing lowdefy version schema warning', () => {
   const components = {
     pages: [
       {
@@ -313,7 +364,8 @@ test('missing lowdefy version schema error', () => {
       },
     ],
   };
-  expect(() => testSchema({ components, context })).toThrow(
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
     'Lowdefy configuration should have required property "lowdefy".'
   );
 });

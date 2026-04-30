@@ -40,6 +40,13 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
       configKey,
     });
   }
+  const validEndpointTypes = ['Api', 'InternalApi'];
+  if (!validEndpointTypes.includes(endpoint.type)) {
+    throw new ConfigError(
+      `Endpoint type "${endpoint.type}" is not valid at "${endpoint.id}". Must be one of: ${validEndpointTypes.join(', ')}.`,
+      { received: endpoint.type, configKey }
+    );
+  }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });
 }
 

@@ -1,0 +1,9 @@
+id: layout-box
+type: Box
+blocks:
+  - id: site-header
+    type: Title
+    properties:
+      content:
+        _module.var: site_name
+  - _var: content

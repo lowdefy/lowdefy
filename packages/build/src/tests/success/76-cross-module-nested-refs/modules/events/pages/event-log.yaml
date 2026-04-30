@@ -1,0 +1,7 @@
+id: event-log
+type: Box
+blocks:
+  - id: event-log-title
+    type: Title
+    properties:
+      content: Event Log

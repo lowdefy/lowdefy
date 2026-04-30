@@ -1,0 +1,9 @@
+id: title_block
+type: Paragraph
+properties:
+  content:
+    _build.if:
+      test:
+        _module.var: show_title
+      then: Dashboard Title
+      else: null

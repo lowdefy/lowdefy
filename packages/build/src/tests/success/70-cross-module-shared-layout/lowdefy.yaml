@@ -1,0 +1,19 @@
+# 70: Cross-module shared layout
+# Tests one-directional dependency and component embedding.
+lowdefy: local
+name: Shared Layout Test
+
+modules:
+  - id: app-layout
+    source: 'file:modules/layout'
+    vars:
+      site_name: My App
+
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+
+pages:
+  - id: home
+    type: Box

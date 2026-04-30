@@ -12,6 +12,8 @@
 - _ref: concepts/lowdefy-schema.yaml
 - _ref: concepts/menus.yaml
 - _ref: concepts/references-and-templates.yaml
+- _ref: concepts/modules.yaml
+- _ref: concepts/module-authoring.yaml
 - _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout-overview.yaml
@@ -239,7 +241,6 @@
 - _ref: operators/_intl.yaml
 - _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
-- _ref: operators/_jst.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_jsonata.yaml
 - _ref: operators/_location.yaml
@@ -249,6 +250,7 @@
 - _ref: operators/_math.yaml
 - _ref: operators/_media.yaml
 - _ref: operators/_menu.yaml
+- _ref: operators/_module.yaml
 - _ref: operators/_dayjs.yaml
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml

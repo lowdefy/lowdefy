@@ -43,8 +43,8 @@ test('_or errors', () => {
 
 test('_or evaluated in ServerParser', () => {
   const input = { a: { _or: [true, false] } };
-  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const res = parser.parse({ input, location, payload: {} });
   expect(res.output).toEqual({ a: true });
 });
 

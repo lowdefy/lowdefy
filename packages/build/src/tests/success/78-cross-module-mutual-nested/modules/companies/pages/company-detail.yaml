@@ -1,0 +1,7 @@
+id: company-detail
+type: Box
+blocks:
+  - id: company-heading
+    type: Title
+    properties:
+      content: Company Detail

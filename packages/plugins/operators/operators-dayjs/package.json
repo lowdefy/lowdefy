@@ -47,6 +47,7 @@
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@lowdefy/helpers": "5.1.0",
     "@lowdefy/operators": "5.1.0",
     "dayjs": "1.11.19"
   },

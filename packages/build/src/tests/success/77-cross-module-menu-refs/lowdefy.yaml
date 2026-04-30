@@ -1,0 +1,14 @@
+# 77: Cross-module menu refs
+# Tests menu items from one module included in another via _ref: { module, menu }.
+lowdefy: local
+name: Menu Refs Test
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+  - id: companies
+    source: 'file:modules/companies'
+
+pages:
+  - id: home
+    type: Box

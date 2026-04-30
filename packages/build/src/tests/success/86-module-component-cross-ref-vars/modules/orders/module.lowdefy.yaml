@@ -1,0 +1,37 @@
+name: Orders
+description: Order management
+
+exports:
+  pages:
+    - id: order-list
+  components:
+    - id: order-summary
+
+dependencies:
+  - id: core
+    description: Core shared components
+
+pages:
+  - id: order-list
+    type: Box
+    blocks:
+      - id: placeholder
+        type: Paragraph
+        properties:
+          content: Orders
+
+components:
+  - id: order-summary
+    component:
+      order_id:
+        _var:
+          key: order_id
+          default: unknown
+      status:
+        _var:
+          key: status
+          default: pending
+      audit:
+        _ref:
+          module: core
+          component: stamp

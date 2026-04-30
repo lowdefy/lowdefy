@@ -21,6 +21,10 @@ async function callAPIHandler(context, { blockId, params }) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
   }
 
+  const holdValue = params.holdValue === true;
+  const previousResponse =
+    context._internal.lowdefy.apiResponses[params.endpointId][0]?.response ?? null;
+
   const api = {
     ...params,
     blockId,
@@ -30,6 +34,10 @@ async function callAPIHandler(context, { blockId, params }) {
     startTimestamp: new Date(),
     endTimestamp: null,
   };
+  if (holdValue) {
+    api.holdValue = true;
+    api.response = previousResponse;
+  }
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
 
   let apiResponse;
@@ -44,7 +52,9 @@ async function callAPIHandler(context, { blockId, params }) {
   } catch (error) {
     api.error = error;
     api.loading = false;
-    api.response = null;
+    if (!holdValue) {
+      api.response = null;
+    }
     api.status = 'error';
     api.success = false;
     api.endTimestamp = new Date();

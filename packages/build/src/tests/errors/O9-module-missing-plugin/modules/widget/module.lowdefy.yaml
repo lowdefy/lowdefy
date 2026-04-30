@@ -1,0 +1,8 @@
+name: Widget Module
+
+plugins:
+  - name: '@example/custom-blocks'
+    version: '^4'
+
+pages:
+  - _ref: pages/main.yaml

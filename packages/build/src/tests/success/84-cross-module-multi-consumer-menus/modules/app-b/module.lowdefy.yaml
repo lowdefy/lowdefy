@@ -1,0 +1,30 @@
+name: App B
+
+dependencies:
+  - id: nav
+
+exports:
+  menus:
+    - id: default
+  pages:
+    - id: dashboard
+    - id: reports
+
+menus:
+  - id: default
+    links:
+      _build.array.concat:
+        - _ref:
+            module: nav
+            menu: shared-nav
+        - - id: reports
+            type: MenuLink
+            pageId:
+              _module.pageId: reports
+            properties:
+              title: B Reports
+
+pages:
+  - _ref: pages/dashboard.yaml
+  - id: reports
+    type: Box

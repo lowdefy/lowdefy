@@ -41,7 +41,9 @@ async function handleRequest(context, routineContext, { request }) {
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     items,
+    payload: routineContext.payload,
     requestConfig,
+    steps: routineContext.steps,
   });
   checkConnectionRead(context, {
     connectionConfig,
@@ -69,7 +71,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestResolver,
   });
 
-  addStepResult(context, routineContext, { result, stepId: request.requestId });
+  addStepResult(context, routineContext, { result, stepId: request.stepId });
 
   context.logger.debug({
     event: 'debug_end_request',

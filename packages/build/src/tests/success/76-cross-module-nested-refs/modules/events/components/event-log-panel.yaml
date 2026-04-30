@@ -1,0 +1,7 @@
+id: event-panel
+type: Box
+blocks:
+  - id: event-title
+    type: Title
+    properties:
+      content: Recent Events

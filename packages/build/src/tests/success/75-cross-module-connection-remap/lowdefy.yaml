@@ -1,0 +1,23 @@
+# 75: Cross-module connection remapping
+# Tests _module.connectionId object form with target module's remapping.
+lowdefy: local
+name: Connection Remap Test
+
+connections:
+  - id: shared-mongodb
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/shared
+      collection: data
+
+modules:
+  - id: contacts
+    source: 'file:modules/contacts'
+    connections:
+      contacts-db: shared-mongodb
+  - id: companies
+    source: 'file:modules/companies'
+
+pages:
+  - id: home
+    type: Box

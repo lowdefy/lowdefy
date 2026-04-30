@@ -1,0 +1,11 @@
+name: Companies
+
+dependencies:
+  - id: contacts
+
+exports:
+  pages:
+    - id: company-detail
+
+pages:
+  - _ref: pages/company-detail.yaml

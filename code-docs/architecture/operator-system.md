@@ -209,6 +209,50 @@ label:
     default: "Click"
 ```
 
+### \_module.var Operator
+
+**File:** `packages/build/src/build/buildRefs/walker.js` (`resolveModuleVar`, `resolveEffectiveVar`, `resolveVarDefault` functions)
+
+Module variable substitution, resolved lazily during the full-resolve walker pass:
+
+```yaml
+collection:
+  _module.var: collection
+
+# Defaults are expressions declared in module.lowdefy.yaml.
+# vars:
+#   page_title:
+#     default:
+#       _module.var: label_plural
+```
+
+The walker resolves `_module.var` with a three-way branch on the `WalkContext`:
+
+- `moduleEntry` set → lazy resolve via `resolveModuleVar`. Reads the consumer value from `moduleEntry.consumerVars` first; otherwise calls `resolveEffectiveVar` to walk the manifest's raw `default` expression.
+- `moduleEntry` null, `moduleRoot` set (Phase 1a local resolve) → preserve the node untouched; the full-resolve pass resolves it.
+- Both null (app-level config) → throw `ConfigError`.
+
+Defaults resolve in a fresh `WalkContext` anchored at `module.lowdefy.yaml` so cross-module refs, circular detection, and error messages work correctly. Resolution results cache on `moduleEntry.resolvedVarCache`, shared across all walks of the module and across cross-module ref calls.
+
+### \_module.\* ID Operators
+
+**File:** `packages/build/src/build/buildRefs/walker.js`
+
+The ID operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve during the walker pass, alongside `_module.var`. They are detected **after** child walking (bottom-up) — after `_var` and `_module.var` but before `_build.*`.
+
+Both string form (same-module) and object form (cross-module `{ id, module }`) are supported:
+
+- `_module.pageId: users-list` → `team-users/users-list`
+- `_module.pageId: { id: contact-detail, module: contacts }` → `contacts/contact-detail`
+- `_module.connectionId: users-db` → `team-users/users-db` (or remapped app connection ID)
+- `_module.endpointId: invite-user` → `team-users/invite-user`
+- `_module.id: true` → `team-users`
+- `_module.id: { module: contacts }` → resolved dependency entry ID
+
+The object form uses `resolveDepTarget()` (`packages/build/src/build/resolveDepTarget.js`) to resolve the abstract dependency name to a concrete module entry via the `moduleDependencies` map on `WalkContext`. Each operator validates that the referenced ID exists in the target module's `exports` declarations.
+
+The `moduleEntry` property on `WalkContext` propagates through `child()` unchanged, and is overridden in `forRef()` for component/menu refs — switching to the source module's context when entering cross-module content.
+
 ### \_build.\* Operators
 
 **Evaluated inline by walker** (`packages/build/src/build/buildRefs/walker.js`) via `evaluateOperators` with `operatorPrefix: '_build.'`.

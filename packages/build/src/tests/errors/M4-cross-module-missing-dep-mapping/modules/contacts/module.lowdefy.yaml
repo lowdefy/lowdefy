@@ -1,0 +1,9 @@
+name: Contacts
+
+dependencies:
+  - id: companies
+    description: Company management
+
+pages:
+  - id: contact-list
+    type: Box

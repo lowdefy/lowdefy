@@ -1,0 +1,7 @@
+id: nav-links
+type: Box
+blocks:
+  - id: nav-title
+    type: Title
+    properties:
+      content: Navigation

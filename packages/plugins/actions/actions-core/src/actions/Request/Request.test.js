@@ -24,3 +24,9 @@ test('Request action invocation', () => {
   Request({ methods, params: 'requestId' });
   expect(mockRequest.mock.calls).toEqual([['requestId']]);
 });
+
+test('Request action invocation forwards object form with holdValue', () => {
+  mockRequest.mockClear();
+  Request({ methods, params: { requestId: 'requestId', holdValue: true } });
+  expect(mockRequest.mock.calls).toEqual([[{ requestId: 'requestId', holdValue: true }]]);
+});

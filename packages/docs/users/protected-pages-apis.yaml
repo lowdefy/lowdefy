@@ -91,6 +91,34 @@ _ref:
                     protected: true
                 ```
 
+                ## Wildcard Patterns
+
+                Page and API access rules support glob patterns using `*` and `**` wildcards. This is useful for granting access to all pages from a [module](/modules):
+
+                - `team-users/*` — matches all pages in the `team-users` module
+                - `team-*/*` — matches all pages in modules with IDs starting with `team-`
+                - `*/settings` — matches the `settings` page in any module
+                - `**` — matches all pages
+
+                Exact page IDs still work: `home`, `team-users/users-list`.
+
+                ###### Wildcard pattern example:
+                ```yaml
+                lowdefy: {{ version }}
+                auth:
+                  pages:
+                    protected: true
+                    public:
+                      - home
+                      - login
+                    roles:
+                      admin:
+                        - team-users/*
+                        - admin/*
+                      user:
+                        - notifications/*
+                ```
+
                 ## Important Notes
 
                 - Pages and APIs are configured separately - protecting pages does not automatically protect APIs

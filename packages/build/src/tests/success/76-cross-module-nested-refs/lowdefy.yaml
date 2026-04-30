@@ -1,0 +1,20 @@
+# 76: Nested cross-module refs
+# Tests that embedded component resolves its own cross-module refs against its own wiring.
+lowdefy: local
+name: Nested Cross Refs Test
+
+modules:
+  - id: events
+    source: 'file:modules/events'
+  - id: app-layout
+    source: 'file:modules/layout'
+    dependencies:
+      events: events
+  - id: contacts
+    source: 'file:modules/contacts'
+    dependencies:
+      layout: app-layout
+
+pages:
+  - id: home
+    type: Box

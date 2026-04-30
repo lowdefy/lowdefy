@@ -1,0 +1,10 @@
+name: Dashboard Module
+description: Dashboard with nested file references
+
+vars:
+  title:
+    type: string
+    default: Dashboard
+
+pages:
+  - _ref: pages/overview.yaml

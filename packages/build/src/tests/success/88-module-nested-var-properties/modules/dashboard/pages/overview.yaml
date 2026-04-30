@@ -1,0 +1,43 @@
+id: overview
+type: Box
+blocks:
+  - id: show-table
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.contacts_table
+  - id: show-filter
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.contacts_filter
+  - id: show-detail
+    type: Paragraph
+    properties:
+      content:
+        _module.var: components.contacts_detail
+  - id: primary-color
+    type: Paragraph
+    properties:
+      content:
+        _module.var: theme.colors.primary
+  - id: bg-color
+    type: Paragraph
+    properties:
+      content:
+        _module.var: theme.colors.background
+  - id: font-size
+    type: Paragraph
+    properties:
+      content:
+        _module.var: theme.font_size
+  - id: page-size
+    type: Paragraph
+    properties:
+      content:
+        _module.var: page_size
+  - id: styles
+    type: Paragraph
+    properties:
+      content:
+        _module.var: custom_styles

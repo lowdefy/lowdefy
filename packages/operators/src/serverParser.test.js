@@ -56,7 +56,7 @@ const user = {
 };
 
 test('parse input undefined', () => {
-  const parser = new ServerParser({ operators, payload });
+  const parser = new ServerParser({ operators });
   const res = parser.parse({});
   expect(res.output).toEqual();
   expect(res.errors).toEqual([]);
@@ -65,14 +65,14 @@ test('parse input undefined', () => {
 test('parse args not array', () => {
   const input = {};
   const args = 'not an array';
-  const parser = new ServerParser({ operators, payload });
+  const parser = new ServerParser({ operators });
   expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
 });
 
 test('parse location not string', () => {
   const input = {};
   const location = [];
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   expect(() => parser.parse({ args, input, location })).toThrow(
     'Operator parser location must be a string.'
   );
@@ -80,100 +80,33 @@ test('parse location not string', () => {
 
 test('operator returns value with ~k present', () => {
   const input = { a: { _test: { params: true, '~k': 'c' }, '~k': 'b' }, '~k': 'a' };
-  const parser = new ServerParser({ operators, payload, secrets, state, steps, user });
-  const res = parser.parse({ args, input, location });
+  const parser = new ServerParser({ operators, secrets, state, user });
+  const res = parser.parse({ args, input, location, payload, steps });
   expect(res.output).toEqual({ a: 'test' });
-  expect(operators._test.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "args": Array [
-            Object {
-              "args": true,
-            },
-          ],
-          "arrayIndices": Array [],
-          "env": undefined,
-          "items": undefined,
-          "jsMap": undefined,
-          "location": "location",
-          "methodName": undefined,
-          "operatorPrefix": "_",
-          "operators": Object {
-            "_error": [MockFunction],
-            "_init": [MockFunction],
-            "_test": [MockFunction] {
-              "calls": [Circular],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "test",
-                },
-              ],
-            },
-          },
-          "params": Object {
-            "params": true,
-          },
-          "parser": ServerParser {
-            "env": undefined,
-            "jsMap": undefined,
-            "operators": Object {
-              "_error": [MockFunction],
-              "_init": [MockFunction],
-              "_test": [MockFunction] {
-                "calls": [Circular],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "test",
-                  },
-                ],
-              },
-            },
-            "parse": [Function],
-            "payload": Object {
-              "payload": true,
-            },
-            "secrets": Object {
-              "secrets": true,
-            },
-            "state": Object {
-              "state": true,
-            },
-            "steps": Object {
-              "steps": true,
-            },
-            "user": Object {
-              "user": true,
-            },
-          },
-          "payload": Object {
-            "payload": true,
-          },
-          "runtime": "node",
-          "secrets": Object {
-            "secrets": true,
-          },
-          "state": Object {
-            "state": true,
-          },
-          "steps": Object {
-            "steps": true,
-          },
-          "user": Object {
-            "user": true,
-          },
-        },
-      ],
-    ]
-  `);
+  expect(operators._test.mock.calls.length).toBe(1);
+  const operatorContext = operators._test.mock.calls[0][0];
+  expect(operatorContext.args).toEqual(args);
+  expect(operatorContext.arrayIndices).toEqual([]);
+  expect(operatorContext.env).toBeUndefined();
+  expect(operatorContext.items).toBeUndefined();
+  expect(operatorContext.jsMap).toBeUndefined();
+  expect(operatorContext.location).toBe('location');
+  expect(operatorContext.methodName).toBeUndefined();
+  expect(operatorContext.operatorPrefix).toBe('_');
+  expect(operatorContext.params).toEqual({ params: true });
+  expect(operatorContext.payload).toEqual({ payload: true });
+  expect(operatorContext.runtime).toBe('node');
+  expect(operatorContext.secrets).toEqual({ secrets: true });
+  expect(operatorContext.state).toEqual({ state: true });
+  expect(operatorContext.steps).toEqual({ steps: true });
+  expect(operatorContext.user).toEqual({ user: true });
+  expect(operatorContext.parser).toBeInstanceOf(ServerParser);
   expect(res.errors).toEqual([]);
 });
 
 test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -182,7 +115,7 @@ test('operator should be object with 1 key', () => {
 test('operatorPrefix invalid', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const operatorPrefix = 'invalid';
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -190,7 +123,7 @@ test('operatorPrefix invalid', () => {
 
 test('undefined operator', () => {
   const input = { a: { _id: { params: true } } };
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -198,7 +131,7 @@ test('undefined operator', () => {
 
 test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
@@ -217,7 +150,7 @@ test('operator errors include configKey from ~k', () => {
     writable: true,
     configurable: true,
   });
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
@@ -246,7 +179,6 @@ test('operator errors preserve existing configKey', () => {
   });
   const parser = new ServerParser({
     operators: operatorsWithPreConfiguredError,
-    payload,
     secrets,
     user,
   });
@@ -272,7 +204,6 @@ test('ConfigError from operator is preserved', () => {
   });
   const parser = new ServerParser({
     operators: operatorsWithConfigError,
-    payload,
     secrets,
     user,
   });

@@ -28,6 +28,8 @@ async function controlSwitch(context, routineContext, { control }) {
       input: caseObj[':case'],
       items,
       location: caseObj['~k'] ?? control['~k'] ?? ':switch',
+      steps: routineContext.steps,
+      payload: routineContext.payload,
     });
     logger.debug({
       event: 'debug_control_switch_case',

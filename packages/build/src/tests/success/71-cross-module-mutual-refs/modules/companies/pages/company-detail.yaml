@@ -1,0 +1,17 @@
+id: company-detail
+type: Box
+blocks:
+  - id: company-name
+    type: Title
+    properties:
+      content: Company Detail
+  - _ref:
+      module: contacts
+      component: contact-selector
+  - id: view-contact
+    type: Anchor
+    properties:
+      href:
+        _module.pageId:
+          id: contact-detail
+          module: contacts

@@ -119,6 +119,12 @@ function getBuildContext(buildDirectory, configDirectory) {
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
   cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
+  // Restore module entries from skeleton build for JIT module page builds
+  const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
+  if (modules) {
+    Object.assign(cachedBuildContext.modules, modules);
+  }
+
   // Use the frozen icon imports from the initial build for JIT detection.
   // This represents what's actually in the Next.js bundle — not what shallowBuild
   // discovers on subsequent rebuilds (those icons aren't bundled yet).

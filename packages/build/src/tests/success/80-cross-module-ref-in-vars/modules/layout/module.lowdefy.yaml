@@ -1,0 +1,18 @@
+name: Layout
+
+dependencies:
+  - id: widgets
+
+exports:
+  components:
+    - id: page-wrapper
+
+components:
+  - id: page-wrapper
+    type: Component
+    component:
+      id: layout-box
+      type: Box
+      blocks:
+        - _var: sidebar
+        - _var: content

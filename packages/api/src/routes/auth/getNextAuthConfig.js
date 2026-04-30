@@ -31,7 +31,6 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
 
   const operatorsParser = new ServerParser({
     operators: { _secret },
-    payload: {},
     secrets,
     user: {},
   });
@@ -39,6 +38,7 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
   const { output: authConfig, errors: operatorErrors } = operatorsParser.parse({
     input: authJson,
     location: 'auth',
+    payload: {},
   });
 
   if (operatorErrors.length > 0) {

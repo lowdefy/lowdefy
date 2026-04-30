@@ -193,7 +193,7 @@ test('valid routine step config nested array', () => {
             {
               id: 'request:test_valid_routine_steps_nested:step_1',
               endpointId: 'test_valid_routine_steps_nested',
-              requestId: 'step_1',
+              stepId: 'step_1',
               type: 'MongoDBInsertOne',
               connectionId: 'connection',
             },
@@ -202,7 +202,7 @@ test('valid routine step config nested array', () => {
             {
               id: 'request:test_valid_routine_steps_nested:step_2',
               endpointId: 'test_valid_routine_steps_nested',
-              requestId: 'step_2',
+              stepId: 'step_2',
               type: 'MongoDBUpdateOne',
               connectionId: 'connection',
             },
@@ -210,7 +210,7 @@ test('valid routine step config nested array', () => {
               {
                 id: 'request:test_valid_routine_steps_nested:step_3',
                 endpointId: 'test_valid_routine_steps_nested',
-                requestId: 'step_3',
+                stepId: 'step_3',
                 type: 'MongoDBAggregation',
                 connectionId: 'connection',
               },
@@ -222,7 +222,7 @@ test('valid routine step config nested array', () => {
                 {
                   id: 'request:test_valid_routine_steps_nested:step_4',
                   endpointId: 'test_valid_routine_steps_nested',
-                  requestId: 'step_4',
+                  stepId: 'step_4',
                   type: 'MongoDBInsertMany',
                   connectionId: 'connection',
                 },
@@ -233,6 +233,163 @@ test('valid routine step config nested array', () => {
       },
     ],
   });
+});
+
+test('CallApi step builds with endpoint prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callapi_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'call_other',
+            type: 'CallApi',
+            properties: {
+              endpointId: 'other_endpoint',
+              payload: { key: 'value' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_callapi_step',
+        endpointId: 'test_callapi_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'endpoint:test_callapi_step:call_other',
+            endpointId: 'test_callapi_step',
+            stepId: 'call_other',
+            type: 'CallApi',
+            properties: {
+              endpointId: 'other_endpoint',
+              payload: { key: 'value' },
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('CallApi step without properties.endpointId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callapi_no_endpoint',
+        type: 'Api',
+        routine: [
+          {
+            id: 'call_other',
+            type: 'CallApi',
+            properties: {},
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint step "call_other" at endpoint "test_callapi_no_endpoint" requires properties.endpointId.'
+  );
+});
+
+test('CallApi step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callapi_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'call_other',
+            type: 'CallApi',
+            connectionId: 'test_connection',
+            properties: {
+              endpointId: 'other_endpoint',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint step "call_other" at endpoint "test_callapi_with_connection" should not have a connectionId.'
+  );
+});
+
+test('CallApi step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callapi_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'call_other',
+            type: 'CallApi',
+            properties: {
+              endpointId: 'other_endpoint',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});
+
+test('mixed request and CallApi steps in routine', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_mixed_steps',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_query',
+            type: 'MongoDBFind',
+            connectionId: 'connection',
+          },
+          {
+            id: 'call_processor',
+            type: 'CallApi',
+            properties: {
+              endpointId: 'processor_endpoint',
+              payload: { data: { _step: 'db_query' } },
+            },
+          },
+          {
+            id: 'db_insert',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].id).toBe('request:test_mixed_steps:db_query');
+  expect(res.api[0].routine[1].id).toBe('endpoint:test_mixed_steps:call_processor');
+  expect(res.api[0].routine[2].id).toBe('request:test_mixed_steps:db_insert');
 });
 
 test('count steps', () => {

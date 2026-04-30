@@ -133,6 +133,44 @@ test('api type not a string', () => {
   );
 });
 
+test('invalid endpoint type throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'InvalidType',
+        routine: [],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint type "InvalidType" is not valid at "api1". Must be one of: Api, InternalApi.'
+  );
+});
+
+test('InternalApi endpoint type is valid', () => {
+  const components = {
+    api: [
+      {
+        id: 'internal_api1',
+        type: 'InternalApi',
+        routine: [],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        endpointId: 'internal_api1',
+        id: 'endpoint:internal_api1',
+        routine: [],
+        type: 'InternalApi',
+      },
+    ],
+  });
+});
+
 test('valid api endpoint', () => {
   const components = {
     api: [

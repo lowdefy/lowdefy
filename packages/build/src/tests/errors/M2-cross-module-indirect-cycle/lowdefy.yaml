@@ -1,0 +1,15 @@
+# M2: Indirect circular component embedding through 3 modules
+lowdefy: local
+name: Indirect Cycle Test
+
+modules:
+  - id: mod-a
+    source: 'file:modules/mod-a'
+  - id: mod-b
+    source: 'file:modules/mod-b'
+  - id: mod-c
+    source: 'file:modules/mod-c'
+
+pages:
+  - id: home
+    type: Box

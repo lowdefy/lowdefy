@@ -3,11 +3,11 @@
     {
       "mode": "prod",
       "errors": [
-        "Block \"type\" should be a string"
+        "Block type is not a string"
       ],
       "errorContains": [
-        "Block \"type\" should be a string.",
-        "lowdefy.yaml:17"
+        "Block type is not a string at \"badType\" on page \"home\".",
+        "lowdefy.yaml:16"
       ]
     }
   ]

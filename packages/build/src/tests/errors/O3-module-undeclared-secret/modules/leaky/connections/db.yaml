@@ -1,0 +1,6 @@
+id: db
+type: MongoDBCollection
+properties:
+  databaseUri:
+    _secret: UNDECLARED_SECRET
+  collection: items

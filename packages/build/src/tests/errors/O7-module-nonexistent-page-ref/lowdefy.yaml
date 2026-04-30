@@ -1,0 +1,12 @@
+# O7: Module page uses _module.pageId referencing a non-existent page
+# Tests that the build throws when _module.pageId references a page the module doesn't export.
+lowdefy: local
+
+modules:
+  - id: widget
+    source: 'file:modules/widget'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box

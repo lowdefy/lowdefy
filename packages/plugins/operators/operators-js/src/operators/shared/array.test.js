@@ -34,7 +34,7 @@ const location = 'location';
 
 const operatorPrefix = '_';
 
-const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
+const parser = new ServerParser({ operators, secrets: {}, user: {} });
 
 describe('_array.concat', () => {
   const methodName = 'concat';

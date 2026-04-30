@@ -1,0 +1,10 @@
+# 67: Module with var defaults — manifest defaults and properties merging
+lowdefy: local
+name: Var Defaults Test
+
+modules:
+  - id: settings
+    source: 'file:modules/settings'
+    vars:
+      theme:
+        primary_color: blue

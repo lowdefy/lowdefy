@@ -21,10 +21,12 @@ import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
+import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const context = {
+    defaultPackageNames: new Set(defaultPackages),
     connectionIds: new Set(),
     directories,
     errors: [],
@@ -32,6 +34,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     warnings: [],
     keyMap: {},
     logger,
+    modules: {},  // Map<entryId, ModuleEntry> — populated by buildModuleDefs (Phase 1)
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,

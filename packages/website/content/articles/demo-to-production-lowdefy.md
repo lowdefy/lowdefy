@@ -350,7 +350,7 @@ auth:
         - settings
 ```
 
-[`protected: true`](https://docs.lowdefy.com/protected-pages-apis) is deny-by-default. A new page that isn't listed under a role is inaccessible until it's granted explicitly.
+[`protected: true`](https://docs.lowdefy.com/protected-pages-apis) requires authentication on every page by default, with a small public list as the exception. Pages not assigned to a role are accessible to any authenticated user; pages listed under `roles` are restricted to users with that role.
 
 [Roles](https://docs.lowdefy.com/roles) map to page IDs, not to capability strings. `admin` is the set of page IDs a user with that role is allowed to visit. The config is the enforcement.
 

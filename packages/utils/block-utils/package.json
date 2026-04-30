@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.23.3",
+    "@lowdefy/ajv": "5.1.0",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
     "@swc/jest": "0.2.39",

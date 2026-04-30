@@ -1,0 +1,75 @@
+# 85: Module component data exports — non-UI content, _module.var, _build.object.assign, key extraction
+lowdefy: local
+name: Component Data Export Test
+
+modules:
+  - id: events
+    source: 'file:modules/events'
+    vars:
+      event_types:
+        custom_action:
+          icon: AiOutlineThunderbolt
+          color: purple
+          title: Custom Action
+
+pages:
+  - id: dashboard
+    type: Box
+    blocks:
+      # Full change_stamp (uses default — no app override)
+      - id: save-section
+        type: Box
+        properties:
+          stamp:
+            _ref:
+              module: events
+              component: change_stamp
+
+      # Key extraction — get just the user portion
+      - id: audit-section
+        type: Box
+        properties:
+          user_stamp:
+            _ref:
+              module: events
+              component: change_stamp
+              key: user
+
+      # Full event_types (merged: built-in + app addition)
+      - id: types-section
+        type: Box
+        properties:
+          all_types:
+            _ref:
+              module: events
+              component: event_types
+
+      # Key extraction — single type's icon
+      - id: icon-section
+        type: Box
+        properties:
+          login_icon:
+            _ref:
+              module: events
+              component: event_types
+              key: login.icon
+
+      # Key extraction — missing path returns null
+      - id: missing-section
+        type: Box
+        properties:
+          missing:
+            _ref:
+              module: events
+              component: event_types
+              key: nonexistent.path
+
+      # Key extraction — array index
+      - id: array-section
+        type: Box
+        properties:
+          first_region:
+            _ref:
+              module: events
+              component: regions
+              key: '0.name'

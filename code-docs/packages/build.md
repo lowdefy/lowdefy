@@ -31,29 +31,36 @@ The build function orchestrates 31 steps in sequence:
 async function build(options) {
   const context = createContext(options);
 
-  // 1. Parse and compose configuration
-  const components = await buildRefs({ context });      // Resolve _ref imports
+  // Phase 0-1: Module processing
+  await fetchModules({ context });                       // Fetch GitHub tarballs, resolve local paths
+  await buildModuleDefs({ components, context });        // Local resolve → validate deps → full resolve
 
-  // 2. Validate and transform
-  testSchema({ components, context });                   // Validate against schema
+  // Phase 2: Parse and compose configuration
+  const components = await buildRefs({ context });       // Resolve _ref imports (incl. module refs)
+
+  // Phase 3: Module integration
+  buildModules({ components, context });                 // Scope IDs, resolve _module operators, merge
+
+  // Phase 4: Schema warnings + validate
+  testSchema({ components, context });                   // Emit schema warnings (non-blocking)
+
+  // Phase 5: Build specific domains (each has its own focused validation)
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
-
-  // 3. Build specific domains
-  buildAuth({ components, context });                    // Auth providers/adapters
+  buildAuth({ components, context });                    // Auth providers/adapters (wildcard matching)
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions
   buildMenu({ components, context });                    // Navigation menus
   buildJs({ components, context });                      // Custom JS functions
 
-  // 4. Finalize
+  // Phase 6: Finalize
   addKeys({ components, context });                      // Add unique keys
   buildTypes({ components, context });                   // Resolve block/operator types
   buildImports({ components, context });                 // Track plugin imports
 
-  // 5. Write output files
+  // Phase 7: Write output files
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
@@ -79,9 +86,15 @@ async function build(options) {
 
 | Module | Purpose |
 |--------|---------|
+| `fetchModules.js` | Fetch module sources (GitHub tarballs, local paths) |
+| `buildModuleDefs.js` | Three-phase module processing: local resolve → validate wiring → full resolve |
+| `resolveModuleDependencies.js` | Auto-wire and validate cross-module dependency mappings |
+| `buildModules.js` | Scope module IDs, resolve `_module.*` operators (string + object form), merge |
+| `resolveModuleOperators.js` | Resolve `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id` |
 | `buildRefs/` | Resolve `_ref` operators to compose config from multiple files |
+| `buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }` from resolved manifests |
 | `buildPages/` | Process page definitions, blocks, and areas |
-| `buildAuth/` | Process authentication providers and adapters |
+| `buildAuth/` | Process authentication providers and adapters (wildcard matching) |
 | `buildConnections.js` | Validate and process connection definitions |
 | `buildApi/` | Process API endpoint definitions |
 | `buildMenu.js` | Generate navigation menus from page structure |
@@ -93,6 +106,7 @@ async function build(options) {
 | `buildPageJit.js` | Dev-only: resolve page content on demand |
 | `createPageRegistry.js` | Dev-only: extract page metadata for JIT |
 | `createFileDependencyMap.js` | Dev-only: map files → pages for invalidation |
+| `collectSkeletonSourceFiles.js` | Dev-only: derive skeleton source file set from refMap |
 
 ### Reference Resolution (`buildRefs/`)
 
@@ -118,27 +132,42 @@ blocks:
 
 #### Walker Architecture (`walker.js`)
 
-Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
+Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`, `_module.var`, and `_build.*` operators in one traversal, eliminating the JSON round-trips from the old `serializer.copy`-based pipeline.
 
 **Key components:**
 - `resolve(node, ctx)` — core recursive walk function
 - `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
+  - For `_ref: { module, component/menu }` — calls `getModuleRefContent()` to look up exports in resolved manifests
 - `resolveVar(node, ctx)` — variable substitution with `~r` provenance
+- `resolveModuleVar(node, ctx)` — lazy module variable resolution: reads consumer value from `ctx.moduleEntry.consumerVars`, otherwise walks the raw `default` expression via `resolveEffectiveVar` / `resolveVarDefault` and caches on `ctx.moduleEntry.resolvedVarCache`
 - `cloneVarValue(value, sourceRefId)` — deep clone for var values (needed because same var may appear at multiple `_var` sites)
 - `tagRefDeep(node, refId)` — in-place `~r` tagging (replaces old `createRefReviver` + `serializer.copy`)
-- `WalkContext` — immutable context with `child(segment)` for path tracking and `forRef()` for entering ref files
+- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleEntry` (carrying `consumerVars`, `varDefs`, `resolvedVarCache`) for module-scoped state
 
-**Traversal order:** Top-down for `_ref`/`_var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
+**Traversal order:** Top-down for `_ref`/`_var`/`_module.var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
 
 **`evaluateStaticOperators`** uses `evaluateOperators` from `@lowdefy/operators` (in-place walk, no `serializer.copy`).
 
 ### Schema Validation (`testSchema.js`)
 
-Validates config against the Lowdefy JSON schema:
-- Block types match their schemas
-- Required fields are present
-- Property types are correct
-- Enum values are valid
+Validates config against the Lowdefy JSON schema and emits **warnings** (not errors). Schema validation is non-blocking — it surfaces helpful hints like typos caught by `additionalProperties` and property type mismatches, but does not stop the build.
+
+Critical structural checks (required id/type, correct types) are handled by **focused validations** in each build step (`validateBlock`, `buildConnections`, `buildEvents`, etc.), which provide better error messages with full context (pageId, blockId, eventId).
+
+**Validation ownership:**
+
+| Check | Validated by | Error quality |
+|-------|-------------|---------------|
+| Block id/type required | `validateBlock.js` | Includes pageId |
+| Connection id/type required | `buildConnections.js` | Includes connectionId |
+| Request id/type required | `buildRequests.js` | Includes requestId, pageId |
+| Action id/type required | `buildEvents.js` | Includes eventId, blockId, pageId |
+| Endpoint id/type required | `validateEndpoint.js` | Includes endpointId |
+| Menu id required | `buildMenu.js` | Includes menuId |
+| Menu item id/type required | `buildMenu.js` | Includes menuItemId, menuId |
+| Auth plugin id/type required | `buildAuthPlugins.js` | Includes plugin type class |
+| Additional properties (typos) | `testSchema.js` (warning) | Generic AJV message |
+| Property type checks | `testSchema.js` (warning) | Generic AJV message |
 
 ### Page Building (`buildPages/`)
 
@@ -389,7 +418,7 @@ const typesMap = createPluginTypesMap(plugins);
 import { shallowBuild, buildPageJit, createContext } from '@lowdefy/build/dev';
 
 // Phase 1: Skeleton build (resolves everything except page content)
-const { components, pageRegistry, fileDependencyMap, context } = await shallowBuild({
+const { components, pageRegistry, context } = await shallowBuild({
   customTypesMap,
   directories,
   logger,
@@ -421,6 +450,7 @@ await buildPageJit({
 | `writePageRegistry` | `jit/writePageRegistry.js` | Serialize page registry to JSON |
 | `writePageJit` | `jit/writePageJit.js` | Write page/request JSONs + updated maps + JS files + per-page tailwind HTML |
 | `collectPageContent` | `collectPageContent.js` | Extract all string content from page blocks for Tailwind scanning |
+| `collectSkeletonSourceFiles` | `jit/collectSkeletonSourceFiles.js` | Walk `~r` markers on non-page components to derive skeleton source files |
 | `isPageContentPath` | `jit/isPageContentPath.js` | Semantic segment matching for shallow build stop paths |
 | `pageContentKeys` | `jit/pageContentKeys.js` | List of page content keys used by `isPageContentPath` |
 

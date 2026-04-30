@@ -1,0 +1,12 @@
+# O6: Module entry ID containing a slash
+# Tests that the build throws when a module entry ID contains '/'.
+lowdefy: local
+
+modules:
+  - id: team/users
+    source: 'file:modules/widget'
+    vars: {}
+
+pages:
+  - id: home
+    type: Box
