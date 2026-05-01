@@ -102,20 +102,23 @@ function displayKey(key) {
   return key;
 }
 
-function createShortcutBadge() {
+function createShortcutBadge(lowdefy) {
   function ShortcutBadge({ shortcut }) {
     if (!shortcut) return null;
     const primary = Array.isArray(shortcut) ? shortcut[0] : shortcut;
     if (!primary) return null;
 
     const segments = parseShortcut(primary);
+    const thenLabel = lowdefy?._internal?.t
+      ? lowdefy._internal.t('client.shortcutThen')
+      : 'then';
 
     return (
       <span className={styles['shortcut-badge']}>
         {segments.map((segment, i) =>
           segment === 'then' ? (
             <span key={i} className={styles['shortcut-then']}>
-              then
+              {thenLabel}
             </span>
           ) : (
             <kbd key={i} className={styles['shortcut-kbd']}>

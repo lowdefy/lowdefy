@@ -56,7 +56,7 @@ const ConfirmModal = ({
         style: styles.element,
         styles: { body: styles.body },
         closable: properties.closable,
-        okText: properties.okText ?? 'Ok',
+        okText: properties.okText,
         okButtonProps: properties.okButton?.icon
           ? {
               ...properties.okButton,
@@ -89,7 +89,7 @@ const ConfirmModal = ({
               ),
             }
           : properties.cancelButton,
-        cancelText: properties.cancelText ?? 'Cancel',
+        cancelText: properties.cancelText,
         centered: properties.centered ?? false,
         mask: properties.mask !== undefined ? properties.mask : true,
         maskClosable: properties.maskClosable ?? false,

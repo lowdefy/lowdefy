@@ -70,7 +70,7 @@ export default {
         description:
           'Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats.',
       },
-      placeholder: { ...placeholder, default: 'Select Month' },
+      placeholder: { ...placeholder },
       showToday: {
         type: 'boolean',
         default: true,

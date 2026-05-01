@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@lowdefy/errors": "5.2.0",
+    "intl-messageformat": "10.7.16",
     "lodash.merge": "4.6.2"
   },
   "devDependencies": {

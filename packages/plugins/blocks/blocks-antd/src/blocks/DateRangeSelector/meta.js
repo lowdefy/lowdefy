@@ -73,8 +73,7 @@ export default {
       label,
       placeholder: {
         type: 'array',
-        default: ['Start Date', 'End Date'],
-        description: 'Placeholder text inside the block before user types input.',
+        description: 'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
         docs: {
           displayType: 'manual',
           block: {

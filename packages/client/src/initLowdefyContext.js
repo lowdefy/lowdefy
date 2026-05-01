@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { translate } from '@lowdefy/helpers';
+
 import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
@@ -32,7 +34,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       blockMetas: types.blockMetas ?? {},
       components: {
         Icon: createIcon(types.icons),
-        ShortcutBadge: createShortcutBadge(),
+        ShortcutBadge: createShortcutBadge(lowdefy),
       },
       displayMessage: ({ content }) => {
         console.log(content);
@@ -67,6 +69,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
+    lowdefy._internal.t = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
     lowdefy._internal.logger = createBrowserLogger();

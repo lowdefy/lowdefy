@@ -14,38 +14,24 @@
   limitations under the License.
 */
 
-import { IntlMessageFormat } from 'intl-messageformat';
-import { type } from '@lowdefy/helpers';
+import { translate, type } from '@lowdefy/helpers';
 
 function _t({ params, i18n }) {
-  let key;
-  let values;
-  let localeOverride;
   if (type.isString(params)) {
-    key = params;
-  } else if (type.isObject(params)) {
-    key = params.key;
-    values = params.values;
-    localeOverride = params.locale;
-  } else {
-    throw new Error(
-      '_t takes a string key or an object { key, values, locale } — received ' +
-        JSON.stringify(params)
-    );
+    return translate({ key: params, i18n });
   }
-  if (!type.isString(key)) {
-    throw new Error('_t requires a string "key".');
+  if (type.isObject(params)) {
+    return translate({
+      key: params.key,
+      values: params.values,
+      locale: params.locale,
+      i18n,
+    });
   }
-  const active = localeOverride ?? i18n?.active ?? i18n?.defaultLocale;
-  const fallback = i18n?.fallbackLocale ?? i18n?.defaultLocale;
-  const messages = i18n?.messages ?? {};
-  const message =
-    messages[active]?.[key] ?? (fallback ? messages[fallback]?.[key] : undefined) ?? key;
-  if (type.isNone(values)) return message;
-  if (!type.isObject(values)) {
-    throw new Error('_t "values" must be an object.');
-  }
-  return new IntlMessageFormat(message, active).format(values);
+  throw new Error(
+    '_t takes a string key or an object { key, values, locale } — received ' +
+      JSON.stringify(params)
+  );
 }
 
 _t.dynamic = true;

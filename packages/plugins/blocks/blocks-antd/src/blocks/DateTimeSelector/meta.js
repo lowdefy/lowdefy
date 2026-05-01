@@ -84,7 +84,7 @@ export default {
         minimum: 1,
         description: 'Minute intervals to show in the time selector.',
       },
-      placeholder: { ...placeholder, default: 'Select Date & Time' },
+      placeholder: { ...placeholder },
       secondStep: {
         type: 'integer',
         default: 5,

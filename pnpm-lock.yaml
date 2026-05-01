@@ -2411,6 +2411,9 @@ importers:
       '@lowdefy/errors':
         specifier: 5.2.0
         version: link:../errors
+      intl-messageformat:
+        specifier: 10.7.16
+        version: 10.7.16
       lodash.merge:
         specifier: 4.6.2
         version: 4.6.2

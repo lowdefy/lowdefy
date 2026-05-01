@@ -64,7 +64,7 @@ class ErrorBoundary extends Component {
   }
 
   render() {
-    const { children, description, fallback, fullPage, message, name } = this.props;
+    const { children, description, fallback, fullPage, homeLinkText, message, name } = this.props;
     const { hasError, error } = this.state;
     if (hasError) {
       if (fallback) {
@@ -75,6 +75,7 @@ class ErrorBoundary extends Component {
           <ErrorPage
             code={error.number}
             description={description || error.description}
+            homeLinkText={homeLinkText}
             message={message || error.message}
             name={name || error.name}
           />

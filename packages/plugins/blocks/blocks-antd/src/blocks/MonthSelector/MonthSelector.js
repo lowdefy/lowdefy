@@ -67,7 +67,7 @@ const MonthSelector = ({
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Month'}
+              placeholder={properties.placeholder}
               size={properties.size}
               status={validation.status}
               value={type.isDate(value) ? dayjs.utc(value).startOf('month') : null}

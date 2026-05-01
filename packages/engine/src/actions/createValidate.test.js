@@ -28,6 +28,13 @@ const lowdefy = {
       },
     },
     displayMessage,
+    t: (key, values) => {
+      if (key === 'engine.validation.summary') {
+        return `Your input has ${values.count} validation error${values.count === 1 ? '' : 's'}.`;
+      }
+      if (key === 'engine.validation.fieldRequired') return 'This field is required';
+      return key;
+    },
   },
 };
 

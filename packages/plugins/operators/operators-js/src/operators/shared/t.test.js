@@ -80,11 +80,26 @@ test('_t throws when params is not a string or object', () => {
 });
 
 test('_t throws when key is missing on object params', () => {
-  expect(() => _t({ params: { values: {} }, i18n })).toThrow('_t requires a string "key".');
+  expect(() => _t({ params: { values: {} }, i18n })).toThrow('translate requires a string "key".');
 });
 
 test('_t throws when values is not an object', () => {
   expect(() => _t({ params: { key: 'greeting', values: 'Ada' }, i18n })).toThrow(
-    '_t "values" must be an object.'
+    'translate "values" must be an object.'
   );
+});
+
+test('_t falls back to a builtin message when neither active nor fallback have the key', () => {
+  expect(_t({ params: 'engine.action.loading', i18n })).toBe('Loading');
+});
+
+test('_t allows user messages to override a builtin', () => {
+  const overridden = {
+    ...i18n,
+    messages: {
+      ...i18n.messages,
+      'de-DE': { ...i18n.messages['de-DE'], 'engine.action.loading': 'Laden' },
+    },
+  };
+  expect(_t({ params: 'engine.action.loading', i18n: overridden })).toBe('Laden');
 });

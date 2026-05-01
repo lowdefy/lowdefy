@@ -16,10 +16,12 @@
 
 import React from 'react';
 
+import { translate } from '@lowdefy/helpers';
+
 const fontFamily =
   "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
-const ErrorPage = ({ code, description, message, name }) => (
+const ErrorPage = ({ code, description, homeLinkText, message, name }) => (
   <div
     style={{
       height: '100vh',
@@ -49,10 +51,10 @@ const ErrorPage = ({ code, description, message, name }) => (
         marginBottom: 8,
       }}
     >
-      {name ?? 'Error'}
+      {name ?? translate({ key: 'errorPage.name' })}
     </div>
     <div style={{ fontSize: '0.9em', color: '#595959', maxWidth: 400 }}>
-      {message ?? 'An error has occurred.'}
+      {message ?? translate({ key: 'errorPage.message' })}
     </div>
     {description && (
       <div style={{ fontSize: '0.9em', color: '#595959', maxWidth: 400, marginTop: 4 }}>
@@ -67,7 +69,7 @@ const ErrorPage = ({ code, description, message, name }) => (
           textDecoration: 'none',
         }}
       >
-        Return to home page
+        {homeLinkText ?? translate({ key: 'errorPage.homeLink' })}
       </a>
     </div>
   </div>

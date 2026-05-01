@@ -78,10 +78,7 @@ const DateRangeSelector = ({
               size={properties.size}
               status={validation.status}
               placeholder={
-                (type.isArray(properties.placeholder) && [
-                  properties.placeholder[0] ?? 'Start Date',
-                  properties.placeholder[1] ?? 'End Date',
-                ]) ?? ['Start Date', 'End Date']
+                type.isArray(properties.placeholder) ? properties.placeholder : undefined
               }
               suffixIcon={
                 <Icon

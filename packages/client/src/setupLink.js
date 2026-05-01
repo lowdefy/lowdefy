@@ -26,8 +26,7 @@ function setupLink(lowdefy) {
       const handle = window.open(`${url}${query ? `?${query}` : ''}`, '_blank');
       if (!handle) {
         lowdefy._internal.displayMessage({
-          content:
-            'A popup blocker may be preventing the application from opening the page. Approve the popup to continue.',
+          content: lowdefy._internal.t('client.popupBlocked'),
           status: 'info',
           duration: 10,
         });

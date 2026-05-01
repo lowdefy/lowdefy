@@ -65,7 +65,7 @@ const DateSelector = ({
               disabled={properties.disabled || loading}
               format={properties.format ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Date'}
+              placeholder={properties.placeholder}
               showToday={properties.showToday}
               size={properties.size}
               status={validation.status}

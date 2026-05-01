@@ -85,7 +85,7 @@ const DateTimeSelector = ({
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM-DD HH:mm'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Date & Time'}
+              placeholder={properties.placeholder}
               showNow={properties.showNow}
               showToday={properties.showToday}
               size={properties.size}

@@ -71,7 +71,7 @@ const WeekSelector = ({
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-wo'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Week'}
+              placeholder={properties.placeholder}
               size={properties.size}
               status={validation.status}
               suffixIcon={

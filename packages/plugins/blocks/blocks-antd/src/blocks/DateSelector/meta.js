@@ -72,7 +72,7 @@ export default {
         description:
           'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats.',
       },
-      placeholder: { ...placeholder, default: 'Select Date' },
+      placeholder: { ...placeholder },
       showToday: {
         type: 'boolean',
         default: true,
