@@ -1,0 +1,202 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: i18n
+    pageTitle: Internationalization
+    section: Concepts
+    filePath: concepts/i18n.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Lowdefy ships first-class internationalization (i18n) for end-user apps. One config block at `config.i18n` wires up:
+
+            - **Antd component strings** — date pickers, pagination, modal buttons, table empty states, form validation messages — via Ant Design's [`ConfigProvider locale`](https://ant.design/docs/react/i18n).
+            - **dayjs date formatting** — `dayjs.locale()` is set automatically for the active locale.
+            - **App-author translations** — your own strings via the [`_t`](/_t) operator with [ICU MessageFormat](https://formatjs.io/docs/core-concepts/icu-syntax/) (interpolation, plural rules, gender, select).
+            - **Built-in framework strings** — engine and client defaults (e.g. `Loading`, `Success`, `This field is required`) that authors can override per-locale.
+            - **Server-rendered translations** — the API resolves `Accept-Language` so server-side requests honor the user's locale.
+
+            ## Configure
+
+            Declare your supported locales and message catalogs under `config.i18n`:
+
+            ```yaml
+            # lowdefy.yaml
+            config:
+              i18n:
+                defaultLocale: en-US
+                fallbackLocale: en-US
+                locales:
+                  - { code: en-US, label: English, antd: en_US, dayjs: en }
+                  - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+                messages:
+                  en-US:
+                    _ref: i18n/en-US.json
+                  de-DE:
+                    _ref: i18n/de-DE.json
+            ```
+
+            **Per-locale fields:**
+            - `code` (required) — BCP 47 locale code (`en-US`, `de-DE`, `zh-CN`, ...).
+            - `label` — Human-readable name shown in language pickers.
+            - `antd` — Antd locale module name (e.g. `en_US`, `zh_CN`). Loaded dynamically from `antd/locale/{name}`.
+            - `dayjs` — Dayjs locale id (e.g. `en`, `zh-cn`).
+
+            **Top-level fields:**
+            - `defaultLocale` (required) — Locale used when no user preference and no browser match. Must appear in `locales`.
+            - `fallbackLocale` — Locale consulted when a key is missing in the active locale. Defaults to `defaultLocale`.
+            - `messages` — Translation catalogs keyed by locale code. Use inline maps or `_ref` to JSON files.
+
+            Only the locales you declare are bundled — antd and dayjs locale imports are codegen'd at build time, so you don't pay for locales you don't ship.
+
+            ## Translate strings with `_t`
+
+            Use the [`_t`](/_t) operator anywhere in your config that accepts a string:
+
+            ```yaml
+            - id: greeting
+              type: Title
+              properties:
+                content:
+                  _t: greeting
+            ```
+
+            With ICU MessageFormat values:
+
+            ```yaml
+            - id: cart
+              type: Paragraph
+              properties:
+                content:
+                  _t:
+                    key: cart.items
+                    values:
+                      count:
+                        _state: itemCount
+            ```
+
+            Where `messages.en-US.cart.items: '{count, plural, one {# item} other {# items}}'`.
+
+            **Resolution order** (per `_t` call): active-locale message → fallback-locale message → built-in framework message → key as last resort.
+
+            ## Switch language at runtime
+
+            Use the [`SetLocale`](/SetLocale) action and the [`_locale`](/_locale) operator to build a language picker:
+
+            ```yaml
+            - id: lang_picker
+              type: Selector
+              properties:
+                options:
+                  _locale: supported
+                optionLabel: label
+                optionValue: code
+                value:
+                  _locale: active
+              events:
+                onChange:
+                  - id: switch
+                    type: SetLocale
+                    params:
+                      locale:
+                        _state: lang_picker
+            ```
+
+            User preference persists to `localStorage`. Clear it (and fall back to browser/default) by passing `locale: auto`.
+
+            **Resolution at startup:**
+
+            1. User preference in `localStorage` (`lowdefy_locale`)
+            2. Browser `navigator.languages` best-fit against `config.i18n.locales`
+            3. `config.i18n.defaultLocale`
+
+            ## Built-in framework strings
+
+            The framework emits a few user-visible strings (action loading toasts, validation summaries, popup-blocker warnings, the global error page). They live in a built-in catalog and surface as English by default. Override any of them by adding the same key under `config.i18n.messages.{locale}`:
+
+            ```yaml
+            config:
+              i18n:
+                defaultLocale: de-DE
+                locales:
+                  - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+                messages:
+                  de-DE:
+                    engine.action.loading: 'Laden'
+                    engine.action.success: 'Erfolgreich'
+                    engine.validation.fieldRequired: 'Pflichtfeld'
+                    engine.validation.summary: '{count, plural, one {Eingabe hat # Validierungsfehler} other {Eingabe hat # Validierungsfehler}}'
+                    client.popupBlocked: 'Ein Popup-Blocker verhindert das Öffnen der Seite.'
+                    client.requestError: 'Anforderungsfehler'
+                    errorPage.name: 'Fehler'
+                    errorPage.message: 'Ein Fehler ist aufgetreten.'
+                    errorPage.homeLink: 'Zurück zur Startseite'
+            ```
+
+            **Built-in keys you can override:**
+
+            | Key | English default | Where it surfaces |
+            |---|---|---|
+            | `engine.action.loading` | `Loading` | Default loading toast on actions |
+            | `engine.action.success` | `Success` | Default success toast on actions |
+            | `engine.validation.fieldRequired` | `This field is required` | Required-field validation message |
+            | `engine.validation.summary` | `Your input has {count} validation error(s)` | `Validate` action error summary (ICU plural) |
+            | `client.popupBlocked` | `A popup blocker may be preventing...` | Toast when `Link` to a new tab is blocked |
+            | `client.requestError` | `Request error` | Fallback when an API response has no message |
+            | `client.backAriaLabel` | `back` | Aria label on browser-back links |
+            | `client.shortcutThen` | `then` | Sequence shortcut badge separator |
+            | `errorPage.name` | `Error` | Full-page error fallback heading |
+            | `errorPage.message` | `An error has occurred.` | Full-page error fallback body |
+            | `errorPage.homeLink` | `Return to home page` | Full-page error fallback link |
+
+            ## Localizing block defaults
+
+            Antd's `ConfigProvider locale` automatically translates date-picker placeholders, modal `Ok`/`Cancel` buttons, table empty states, pagination labels, and form validation messages — no per-block work required. When a block exposes a Lowdefy-specific string (e.g. `ControlledList.noDataTitle`, `Search.placeholder`), thread `_t` through the property:
+
+            ```yaml
+            - id: items
+              type: ControlledList
+              properties:
+                noDataTitle:
+                  _t: list.empty
+            ```
+
+            ## Server-side translations
+
+            Server-side actions and requests resolve the user's locale from the `Accept-Language` header. `_t` works the same in server contexts as on the client, with one difference: there's no `localStorage` on the server, so `Accept-Language` (and `defaultLocale`) determine the active locale per request.
+
+            ## Working with dates and numbers
+
+            Two complementary operators format values per locale:
+
+            - [`_intl`](/_intl) — wraps native `Intl.DateTimeFormat`/`Intl.NumberFormat`/etc. Pass an explicit `locale`, or omit it to use the user's default.
+            - [`_dayjs`](/_dayjs) and [`_date`](/_date) — dayjs-based date formatting. `dayjs.locale()` is set automatically by `useLocale`, so locale-aware tokens (`dddd`, `MMMM`, etc.) render in the active language.
+
+            ## Reference
+
+            - [`_t`](/_t) — translate operator
+            - [`_locale`](/_locale) — read active/default/fallback/supported locale state
+            - [`SetLocale`](/SetLocale) — set the user's preferred locale
+            - [`_intl`](/_intl) — Intl-based date/number/list formatting
+      - id: html_tag
+        type: Html
+        properties:
+          html: '<a href="/SetLocale">SetLocale</a> | <a href="/_t">_t</a> | <a href="/_locale">_locale</a> | <a href="/_intl">_intl</a>'
+        style:
+          display: none
