@@ -161,6 +161,7 @@ test('operator returns value with ~k present', () => {
             "configured": false,
             "pageId": "home.pageId",
           },
+          "i18n": undefined,
           "input": true,
           "jsMap": undefined,
           "location": "location.1",

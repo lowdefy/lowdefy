@@ -23,10 +23,12 @@ import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode } from '@lowdefy/client';
+import { useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
+import antdLocaleLoaders from '../build/i18n/antdLocales.js';
+import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
@@ -63,6 +65,16 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
 
+  const { active: activeLocale, antdLocale } = useLocale({
+    i18n: rootConfig?.i18n,
+    antdLocaleLoaders,
+    dayjsLocaleMap,
+  });
+
+  if (rootConfig?.i18n?.defaultLocale) {
+    lowdefyRef.current.i18n = { ...rootConfig.i18n, active: activeLocale };
+  }
+
   const {
     lightToken: _lightToken,
     darkToken: _darkToken,
@@ -82,6 +94,12 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   return (
     <StyleProvider layer>
       <ConfigProvider
+        locale={antdLocale ?? undefined}
+        form={
+          antdLocale?.Form?.defaultValidateMessages
+            ? { validateMessages: antdLocale.Form.defaultValidateMessages }
+            : undefined
+        }
         theme={{
           ...antdConfig,
           token,

@@ -16,10 +16,18 @@
 
 import createAuthorize from './createAuthorize.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import resolveLocale from './resolveLocale.js';
 
 function createApiContext(context) {
   context.state = {};
   context.user = context?.session?.user;
+
+  if (context.i18n?.defaultLocale) {
+    const active = resolveLocale({ i18n: context.i18n, headers: context.headers });
+    context.i18n = { ...context.i18n, active };
+  } else {
+    context.i18n = undefined;
+  }
 
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);

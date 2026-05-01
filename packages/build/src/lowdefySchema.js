@@ -1353,6 +1353,68 @@ export default {
             type: 'App "config.homePageId" should be a string.',
           },
         },
+        i18n: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['defaultLocale', 'locales'],
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            defaultLocale: {
+              type: 'string',
+              description: 'BCP 47 locale code used when no user preference or browser match is available.',
+            },
+            fallbackLocale: {
+              type: 'string',
+              description: 'BCP 47 locale code used when a translation key is missing from the active locale. Defaults to defaultLocale.',
+            },
+            locales: {
+              type: 'array',
+              minItems: 1,
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['code'],
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  code: {
+                    type: 'string',
+                    description: 'BCP 47 locale code (e.g. "en-US", "de-DE").',
+                  },
+                  label: {
+                    type: 'string',
+                    description: 'Human-readable label for language pickers.',
+                  },
+                  antd: {
+                    type: 'string',
+                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                  },
+                  dayjs: {
+                    type: 'string',
+                    description: 'Dayjs locale id (e.g. "en", "zh-cn").',
+                  },
+                },
+              },
+            },
+            messages: {
+              type: 'object',
+              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              additionalProperties: {
+                type: 'object',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "config.i18n" should be an object.',
+            required: {
+              defaultLocale: 'App "config.i18n" requires "defaultLocale".',
+              locales: 'App "config.i18n" requires a "locales" array.',
+            },
+          },
+        },
       },
     },
     theme: {

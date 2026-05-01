@@ -49,6 +49,7 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
       componentDisabled={properties.componentDisabled}
       componentSize={properties.componentSize}
       direction={properties.direction}
+      locale={properties.locale}
       variant={properties.variant}
       theme={Object.keys(themeConfig).length > 0 ? themeConfig : undefined}
     >

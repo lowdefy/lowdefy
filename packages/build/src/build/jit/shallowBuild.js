@@ -49,6 +49,8 @@ import writeApi from '../writeApi.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeLogger from '../writeLogger.js';
+import codegenI18nLocales from '../codegenI18nLocales.js';
+import writeI18n from '../writeI18n.js';
 import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
@@ -153,6 +155,8 @@ async function shallowBuild(options) {
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
+    await writeI18n({ components, context });
+    await codegenI18nLocales({ components, context });
     await writeLogger({ components, context });
     await writeMaps({ context });
     await context.writeBuildArtifact(

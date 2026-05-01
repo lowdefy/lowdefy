@@ -66,6 +66,7 @@ test('getRootConfig', async () => {
       configured: false,
       pageId: 'page',
     },
+    i18n: {},
     lowdefyGlobal: {
       global: true,
     },

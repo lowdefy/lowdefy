@@ -32,6 +32,7 @@ export default {
     'SetDarkMode',
     'SetFocus',
     'SetGlobal',
+    'SetLocale',
     'SetState',
     'Throw',
     'UpdateSession',

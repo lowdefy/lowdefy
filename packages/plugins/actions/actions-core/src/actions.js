@@ -30,6 +30,7 @@ export { default as ScrollTo } from './actions/ScrollTo/ScrollTo.js';
 export { default as SetDarkMode } from './actions/SetDarkMode/SetDarkMode.js';
 export { default as SetFocus } from './actions/SetFocus/SetFocus.js';
 export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
+export { default as SetLocale } from './actions/SetLocale/SetLocale.js';
 export { default as SetState } from './actions/SetState/SetState.js';
 export { default as Throw } from './actions/Throw/Throw.js';
 export { default as UpdateSession } from './actions/UpdateSession/UpdateSession.js';

@@ -57,6 +57,14 @@ export default {
         default: 'ltr',
         description: 'Direction of layout.',
       },
+      locale: {
+        type: 'object',
+        description:
+          'Antd locale object to localize built-in component strings (date pickers, pagination, modal, form validation). Pair with the _locale operator and config.i18n to keep the whole subtree in one language.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       token: {
         type: 'object',
         description:
