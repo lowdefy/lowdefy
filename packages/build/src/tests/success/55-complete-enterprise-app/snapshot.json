@@ -6349,6 +6349,11 @@
               "default": false,
               "description": "Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage."
             },
+            "localeSelector": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a locale picker dropdown in the header. Lists locales declared in `config.i18n.locales` and dispatches `SetLocale` on selection. Renders nothing when `config.i18n` is not configured."
+            },
             "theme": {
               "type": "object",
               "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
@@ -6681,6 +6686,52 @@
                   ],
                   "description": "The PageHeaderMenu dark mode toggle button."
                 },
+                ".localeSelector": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The PageHeaderMenu locale selector trigger."
+                },
+                ".localeSelectorMenu": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The PageHeaderMenu locale selector dropdown popup."
+                },
                 ".mobileMenu": {
                   "oneOf": [
                     {
@@ -6866,6 +6917,14 @@
                 ".darkModeToggle": {
                   "type": "object",
                   "description": "The PageHeaderMenu dark mode toggle button."
+                },
+                ".localeSelector": {
+                  "type": "object",
+                  "description": "The PageHeaderMenu locale selector trigger."
+                },
+                ".localeSelectorMenu": {
+                  "type": "object",
+                  "description": "The PageHeaderMenu locale selector dropdown popup."
                 },
                 ".mobileMenu": {
                   "type": "object",

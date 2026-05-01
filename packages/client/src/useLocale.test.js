@@ -124,6 +124,18 @@ test('writes window.__lowdefy_locale with the active code', () => {
   expect(window.__lowdefy_locale).toBe('en-US');
 });
 
+test('writes window.__lowdefy_supported_locales with the configured list', () => {
+  renderHook(() => useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }));
+  expect(window.__lowdefy_supported_locales).toEqual(i18n.locales);
+});
+
+test('writes empty supported_locales when no i18n config', () => {
+  renderHook(() =>
+    useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })
+  );
+  expect(window.__lowdefy_supported_locales).toEqual([]);
+});
+
 test('returns undefined active when i18n config is empty', () => {
   const { result } = renderHook(() =>
     useLocale({ i18n: undefined, antdLocaleLoaders: {}, dayjsLocaleMap: {} })

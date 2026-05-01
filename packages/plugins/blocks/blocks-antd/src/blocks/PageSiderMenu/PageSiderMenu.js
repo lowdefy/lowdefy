@@ -28,7 +28,12 @@ import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
 import Sider from '../Sider/Sider.js';
-import { getDarkMode, renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
+import {
+  getDarkMode,
+  renderHeaderActions,
+  registerDarkModeMethod,
+  registerLocaleMethod,
+} from '../headerActions.js';
 
 function getInitialSiderState({ properties }) {
   const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
@@ -67,6 +72,7 @@ const PageSiderMenu = ({
   const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
   useEffect(() => {
     registerDarkModeMethod(methods);
+    registerLocaleMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {
       const next = !openSiderState;
       methods._setSiderOpen({ open: next });

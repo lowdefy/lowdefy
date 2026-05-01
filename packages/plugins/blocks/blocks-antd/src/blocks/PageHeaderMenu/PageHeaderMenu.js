@@ -25,7 +25,12 @@ import Header from '../Header/Header.js';
 import Layout from '../Layout/Layout.js';
 import Menu from '../Menu/Menu.js';
 import MobileMenu from '../MobileMenu/MobileMenu.js';
-import { getDarkMode, renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
+import {
+  getDarkMode,
+  renderHeaderActions,
+  registerDarkModeMethod,
+  registerLocaleMethod,
+} from '../headerActions.js';
 
 const PageHeaderMenu = ({
   basePath,
@@ -42,6 +47,7 @@ const PageHeaderMenu = ({
 }) => {
   useEffect(() => {
     registerDarkModeMethod(methods);
+    registerLocaleMethod(methods);
   });
 
   return (

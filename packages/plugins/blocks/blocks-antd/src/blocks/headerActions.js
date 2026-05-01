@@ -42,6 +42,20 @@ function getDarkModeLabel() {
   return 'System';
 }
 
+function getSupportedLocales() {
+  return window.__lowdefy_supported_locales ?? [];
+}
+
+function getActiveLocaleCode() {
+  return window.__lowdefy_locale;
+}
+
+function getActiveLocaleLabel() {
+  const active = getActiveLocaleCode();
+  const match = getSupportedLocales().find((l) => l.code === active);
+  return match?.label ?? active ?? '';
+}
+
 // Wraps a header action row for the expanded sider. Icon cell has a fixed
 // basis so bell / avatar / sun share a vertical line regardless of their
 // own intrinsic size; label fills the remaining width. Row gets a subtle
@@ -330,6 +344,71 @@ function renderDarkModeToggle({
   );
 }
 
+function renderLocaleSelector({
+  blockId,
+  classNames,
+  styles,
+  methods,
+  events,
+  Icon,
+  iconsColor,
+  expanded,
+}) {
+  const supported = getSupportedLocales();
+  if (supported.length === 0) return null;
+  const active = getActiveLocaleCode();
+  const items = supported.map((locale) => ({
+    key: locale.code,
+    label: locale.label ?? locale.code,
+  }));
+
+  const icon = (
+    <Icon
+      blockId={`${blockId}_locale_selector_icon`}
+      events={events}
+      properties={{ name: 'AiOutlineGlobal' }}
+      styles={{ element: { fontSize: 16, color: iconsColor } }}
+    />
+  );
+
+  const trigger = expanded ? (
+    <ExpandedRow
+      className={classNames.localeSelector}
+      style={styles.localeSelector}
+      label={getActiveLocaleLabel()}
+    >
+      {icon}
+    </ExpandedRow>
+  ) : (
+    <div
+      className={classNames.localeSelector}
+      style={{ cursor: 'pointer', lineHeight: 1, ...styles.localeSelector }}
+    >
+      {icon}
+    </div>
+  );
+
+  return (
+    <Dropdown
+      menu={{
+        items,
+        selectedKeys: active ? [active] : [],
+        onClick: ({ key }) => {
+          methods.triggerEvent({ name: '__setLocale', event: { locale: key } });
+        },
+      }}
+      trigger={[expanded ? 'click' : 'hover']}
+      placement={expanded ? 'topRight' : 'bottomRight'}
+      popupClassName={classNames.localeSelectorMenu}
+      popupStyle={styles.localeSelectorMenu}
+    >
+      {/* Antd Dropdown attaches its trigger handlers to the immediate child
+          DOM element; wrapping in a div ensures click/hover listeners land. */}
+      <div>{trigger}</div>
+    </Dropdown>
+  );
+}
+
 function renderHeaderActions({
   blockId,
   classNames = {},
@@ -344,8 +423,10 @@ function renderHeaderActions({
   const hasNotifications = !type.isNone(properties.notifications);
   const hasProfile = !type.isNone(properties.profile);
   const hasDarkMode = properties.darkModeToggle;
+  const hasLocaleSelector =
+    properties.localeSelector && getSupportedLocales().length > 0;
 
-  if (!hasNotifications && !hasProfile && !hasDarkMode) return null;
+  if (!hasNotifications && !hasProfile && !hasDarkMode && !hasLocaleSelector) return null;
 
   const ctx = {
     blockId,
@@ -370,6 +451,7 @@ function renderHeaderActions({
       {hasNotifications && renderNotifications(ctx)}
       {hasProfile && renderProfile(ctx)}
       {hasDarkMode && renderDarkModeToggle(ctx)}
+      {hasLocaleSelector && renderLocaleSelector(ctx)}
     </div>
   );
 }
@@ -384,4 +466,22 @@ function registerDarkModeMethod(methods) {
   });
 }
 
-export { getDarkMode, renderHeaderActions, registerDarkModeMethod };
+function registerLocaleMethod(methods) {
+  methods.registerEvent({
+    name: '__setLocale',
+    actions: [
+      {
+        id: '__set_locale',
+        type: 'SetLocale',
+        params: { locale: { _event: 'locale' } },
+      },
+    ],
+  });
+}
+
+export {
+  getDarkMode,
+  renderHeaderActions,
+  registerDarkModeMethod,
+  registerLocaleMethod,
+};

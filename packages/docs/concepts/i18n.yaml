@@ -126,6 +126,22 @@ _ref:
             2. Browser `navigator.languages` best-fit against `config.i18n.locales`
             3. `config.i18n.defaultLocale`
 
+            ## Built-in language picker on page-shell blocks
+
+            The page-shell blocks ([`PageHeaderMenu`](/PageHeaderMenu), [`PageSidebarLayout`](/PageSidebarLayout), [`PageSiderMenu`](/PageSiderMenu)) expose a built-in `localeSelector` property — same shape as the existing `darkModeToggle`. Set it to `true` and a globe-icon dropdown appears in the page chrome alongside the dark-mode toggle. The dropdown lists the locales declared in `config.i18n.locales` and dispatches [`SetLocale`](/SetLocale) on selection. It renders nothing if `config.i18n` is not configured, so flipping the flag in apps that haven't set up i18n is a no-op.
+
+            ```yaml
+            - id: shell
+              type: PageHeaderMenu
+              properties:
+                darkModeToggle: true
+                localeSelector: true
+                menu:
+                  links:
+                    - label: Home
+                      pageId: home
+            ```
+
             ## Built-in framework strings
 
             The framework emits a few user-visible strings (action loading toasts, validation summaries, popup-blocker warnings, the global error page). They live in a built-in catalog and surface as English by default. Override any of them by adding the same key under `config.i18n.messages.{locale}`:

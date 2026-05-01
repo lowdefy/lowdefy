@@ -76,6 +76,7 @@ function useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }) {
   });
 
   window.__lowdefy_locale = active;
+  window.__lowdefy_supported_locales = i18n?.locales ?? [];
 
   const [antdLocale, setAntdLocale] = useState(null);
 
