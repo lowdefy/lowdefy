@@ -21,16 +21,16 @@ import createSignInEvent from './createSignInEvent.js';
 import createSignOutEvent from './createSignOutEvent.js';
 import createUpdateUserEvent from './createUpdateUserEvent.js';
 
-function createEvents({ authConfig, logger, plugins }) {
+function createEvents({ audit, authConfig, logger, plugins }) {
   const events = {
-    createUser: createCreateUserEvent({ authConfig, logger, plugins }),
-    linkAccount: createLinkAccountEvent({ authConfig, logger, plugins }),
-    signIn: createSignInEvent({ authConfig, logger, plugins }),
-    signOut: createSignOutEvent({ authConfig, logger, plugins }),
-    updateUser: createUpdateUserEvent({ authConfig, logger, plugins }),
+    createUser: createCreateUserEvent({ audit, authConfig, logger, plugins }),
+    linkAccount: createLinkAccountEvent({ audit, authConfig, logger, plugins }),
+    signIn: createSignInEvent({ audit, authConfig, logger, plugins }),
+    signOut: createSignOutEvent({ audit, authConfig, logger, plugins }),
+    updateUser: createUpdateUserEvent({ audit, authConfig, logger, plugins }),
   };
 
-  const session = createSessionEvent({ authConfig, plugins });
+  const session = createSessionEvent({ audit, authConfig, plugins });
   if (session) events.session = session;
 
   return events;

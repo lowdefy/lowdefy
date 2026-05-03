@@ -8,6 +8,7 @@
     "git_sha": "test-git-sha-for-snapshots",
     "~k": "2t"
   },
+  "audit.json": {},
   "auth.json": {
     "providers": {
       "~arr": [

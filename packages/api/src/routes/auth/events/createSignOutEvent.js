@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignOutEvent({ authConfig, logger, plugins }) {
+function createSignOutEvent({ audit, authConfig, logger, plugins }) {
   const signOutPlugins = createEventPlugins({
     authConfig,
     plugins,
@@ -33,6 +33,19 @@ function createSignOutEvent({ authConfig, logger, plugins }) {
         sub: user.sub,
         session_id: user.session_id,
       },
+    });
+    audit?.log({
+      category: 'auth',
+      eventType: 'auth.logout',
+      severity: 'medium',
+      initiator: {
+        userId: user.id ?? user.sub,
+        sub: user.sub,
+        roles: user.roles,
+      },
+      target: { type: 'auth' },
+      action: 'signOut',
+      outcome: 'success',
     });
     for (const plugin of signOutPlugins) {
       await plugin.fn({

@@ -16,6 +16,7 @@
 
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/AwsS3PresignedGetObject.js';
 import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/AwsS3PresignedPostPolicy.js';
+import AwsS3PutObject from './AwsS3PutObject/AwsS3PutObject.js';
 import schema from './schema.js';
 
 export default {
@@ -23,5 +24,6 @@ export default {
   requests: {
     AwsS3PresignedGetObject,
     AwsS3PresignedPostPolicy,
+    AwsS3PutObject,
   },
 };

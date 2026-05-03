@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import extractInitiator from '../../audit/extractInitiator.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 
@@ -50,11 +51,36 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     endpointDepth: 0,
   };
 
+  const startTime = Date.now();
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
   });
 
   const success = !['error', 'reject'].includes(status);
+
+  const captureEndpoint = context.audit?.enabled && context.auditConfig?.capture?.endpoint;
+  context.audit?.log({
+    category: 'endpoint',
+    eventType: success ? 'endpoint.execute' : 'endpoint.fail',
+    severity: success ? 'medium' : 'high',
+    initiator: extractInitiator(context),
+    target: {
+      type: 'endpoint',
+      id: endpointId,
+      pageId: context.pageId,
+    },
+    action: 'execute',
+    outcome: success ? 'success' : 'failure',
+    metadata: {
+      status,
+      blockId: context.blockId,
+      duration: Date.now() - startTime,
+      payload: captureEndpoint?.payload ? routineContext.payload : undefined,
+      response: captureEndpoint?.response ? response : undefined,
+      errorName: error?.name,
+      errorMessage: error?.message,
+    },
+  });
 
   return {
     error: serializer.serialize(error),

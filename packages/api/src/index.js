@@ -17,7 +17,10 @@
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createAuditLogger from './audit/createAuditLogger.js';
+import createReadConfigFile from './context/createReadConfigFile.js';
 import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
+import extractInitiator from './audit/extractInitiator.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
@@ -28,7 +31,10 @@ export {
   callEndpoint,
   callRequest,
   createApiContext,
+  createAuditLogger,
+  createReadConfigFile,
   createSessionCallback,
+  extractInitiator,
   getHomeAndMenus,
   getNextAuthConfig,
   getPageConfig,

@@ -28,6 +28,7 @@ import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import extractInitiator from '../../audit/extractInitiator.js';
 
 async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
@@ -72,12 +73,38 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestResolver,
     requestProperties,
   });
+  const startTime = Date.now();
   const response = await callRequestResolver(context, {
     connectionProperties,
     requestConfig,
     requestProperties,
     requestResolver,
   });
+
+  const captureRequest = context.audit?.enabled && context.auditConfig?.capture?.request;
+  context.audit?.log({
+    category: 'request',
+    eventType: 'request.execute',
+    severity: 'medium',
+    initiator: extractInitiator(context),
+    target: {
+      type: 'request',
+      id: requestConfig.requestId,
+      connectionId: connectionConfig.connectionId,
+      connectionType: connectionConfig.type,
+      pageId: context.pageId,
+    },
+    action: 'execute',
+    outcome: 'success',
+    metadata: {
+      requestType: requestConfig.type,
+      blockId: context.blockId,
+      duration: Date.now() - startTime,
+      payload: captureRequest?.payload ? requestPayload : undefined,
+      response: captureRequest?.response ? response : undefined,
+    },
+  });
+
   return {
     id: requestConfig.id,
     success: true,

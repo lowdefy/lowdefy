@@ -1597,6 +1597,154 @@ export default {
         },
       },
     },
+    audit: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['connectionId', 'events', 'requestType'],
+      errorMessage: {
+        type: 'App "audit" should be an object.',
+        required: {
+          connectionId: 'App "audit" should have required property "connectionId".',
+          events: 'App "audit" should have required property "events".',
+          requestType: 'App "audit" should have required property "requestType".',
+        },
+      },
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        connectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'App "audit.connectionId" should be a string.',
+          },
+        },
+        events: {
+          type: 'array',
+          minItems: 1,
+          items: {
+            type: 'string',
+            enum: ['auth', 'request', 'endpoint', 'authorization', 'error'],
+          },
+          errorMessage: {
+            type: 'App "audit.events" should be an array of event category strings.',
+            minItems: 'App "audit.events" should have at least one event category.',
+          },
+        },
+        severity: {
+          type: 'string',
+          enum: ['low', 'medium', 'high'],
+          errorMessage: {
+            type: 'App "audit.severity" should be one of "low", "medium", or "high".',
+          },
+        },
+        strict: {
+          type: 'boolean',
+          errorMessage: {
+            type: 'App "audit.strict" should be a boolean.',
+          },
+        },
+        requestType: {
+          type: 'string',
+          enum: ['MongoDBInsertMany', 'AwsS3PutObject'],
+          errorMessage: {
+            type: 'App "audit.requestType" should be one of "MongoDBInsertMany" or "AwsS3PutObject".',
+          },
+        },
+        mask: {
+          type: 'array',
+          items: { type: 'string' },
+          errorMessage: {
+            type: 'App "audit.mask" should be an array of strings.',
+          },
+        },
+        capture: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.capture" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            request: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                payload: { type: 'boolean' },
+                response: { type: 'boolean' },
+              },
+            },
+            endpoint: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                payload: { type: 'boolean' },
+                response: { type: 'boolean' },
+              },
+            },
+          },
+        },
+        fields: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "audit.fields" should be an object.',
+          },
+        },
+        exclude: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.exclude" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            pages: { type: 'array', items: { type: 'string' } },
+            requests: { type: 'array', items: { type: 'string' } },
+            endpoints: { type: 'array', items: { type: 'string' } },
+          },
+        },
+        include: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.include" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            pages: { type: 'array', items: { type: 'string' } },
+            requests: { type: 'array', items: { type: 'string' } },
+            endpoints: { type: 'array', items: { type: 'string' } },
+          },
+        },
+      },
+    },
   },
   errorMessage: {
     type: 'Lowdefy configuration should be an object.',

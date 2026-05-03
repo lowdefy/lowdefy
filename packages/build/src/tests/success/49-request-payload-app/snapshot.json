@@ -8,6 +8,7 @@
     "git_sha": "test-git-sha-for-snapshots",
     "~k": "3y"
   },
+  "audit.json": {},
   "auth.json": {
     "api": {
       "roles": {

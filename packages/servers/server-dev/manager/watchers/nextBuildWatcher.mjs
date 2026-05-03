@@ -24,6 +24,7 @@ const hashes = {};
 
 const trackedFiles = [
   'build/app.json',
+  'build/audit.json',
   'build/auth.json',
   'build/config.json',
   'build/plugins/actions.js',

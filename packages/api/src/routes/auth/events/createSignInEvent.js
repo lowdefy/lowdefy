@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignInEvent({ authConfig, logger, plugins }) {
+function createSignInEvent({ audit, authConfig, logger, plugins }) {
   const signInPlugins = createEventPlugins({
     authConfig,
     plugins,
@@ -34,6 +34,20 @@ function createSignInEvent({ authConfig, logger, plugins }) {
         sub: user.sub,
         session_id: user.session_id,
       },
+    });
+    audit?.log({
+      category: 'auth',
+      eventType: 'auth.login_success',
+      severity: 'medium',
+      initiator: {
+        userId: user.id ?? user.sub,
+        sub: user.sub,
+        roles: user.roles,
+      },
+      target: { type: 'auth', id: account?.provider },
+      action: 'signIn',
+      outcome: 'success',
+      metadata: { isNewUser, provider: account?.provider },
     });
     for (const plugin of signInPlugins) {
       await plugin.fn({

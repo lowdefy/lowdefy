@@ -36,6 +36,35 @@ function createHandleError({ context }) {
       }
 
       context.logger.error(error);
+
+      try {
+        const user = context.user ?? {};
+        context.audit?.log({
+          category: 'error',
+          eventType: `error.${error?.name ?? 'Error'}`,
+          severity: 'high',
+          initiator: {
+            userId: user.id ?? user.sub,
+            sub: user.sub,
+            roles: user.roles,
+          },
+          target: {
+            type: context.endpointId ? 'endpoint' : 'request',
+            id: context.req?.url,
+            pageId: context.pageId,
+          },
+          action: 'error',
+          outcome: 'failure',
+          metadata: {
+            errorName: error?.name,
+            errorMessage: error?.message,
+            source: error?.source,
+            configKey: error?.configKey,
+          },
+        });
+      } catch (auditErr) {
+        console.error('Audit error logging failed:', auditErr);
+      }
     } catch (e) {
       console.error(error);
       console.error('An error occurred while logging the error.');

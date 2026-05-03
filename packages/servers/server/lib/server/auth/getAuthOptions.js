@@ -14,21 +14,44 @@
   limitations under the License.
 */
 
-import { getNextAuthConfig } from '@lowdefy/api';
+import path from 'path';
+import { createAuditLogger, createReadConfigFile, getNextAuthConfig } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import adapters from '../../../build/plugins/auth/adapters.js';
+import auditConfig from '../../build/audit.js';
 import authJson from '../../build/auth.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
+import connections from '../../../build/plugins/connections.js';
 import events from '../../../build/plugins/auth/events.js';
+import fileCache from '../fileCache.js';
+import jsMap from '../../../build/plugins/operators/serverJsMap.js';
+import operators from '../../../build/plugins/operators/server.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
 function getAuthOptions({ logger }) {
+  const secrets = getSecretsFromEnv();
+  const buildDirectory = path.join(process.cwd(), 'build');
+  const readConfigFile = createReadConfigFile({ buildDirectory, fileCache });
+  const auditContext = {
+    auditConfig,
+    connections,
+    operators,
+    jsMap,
+    secrets,
+    logger,
+    readConfigFile,
+    headers: {},
+    user: {},
+  };
+  const audit = createAuditLogger({ auditConfig, context: auditContext });
+
   return getNextAuthConfig({
+    audit,
     authJson,
     logger,
     plugins: { adapters, callbacks, events, providers },
-    secrets: getSecretsFromEnv(),
+    secrets,
   });
 }
 

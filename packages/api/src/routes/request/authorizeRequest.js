@@ -15,13 +15,28 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import extractInitiator from '../../audit/extractInitiator.js';
 
-function authorizeRequest({ authorize, logger }, { requestConfig }) {
+function authorizeRequest(context, { requestConfig }) {
+  const { authorize, logger } = context;
   if (!authorize(requestConfig)) {
     logger.debug({
       event: 'debug_request_authorize',
       authorized: false,
       auth_config: requestConfig.auth,
+    });
+    context.audit?.log({
+      category: 'authorization',
+      eventType: 'authz.denied',
+      severity: 'high',
+      initiator: extractInitiator(context),
+      target: {
+        type: 'request',
+        id: requestConfig.requestId,
+        pageId: context.pageId,
+      },
+      action: 'authorize',
+      outcome: 'denied',
     });
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
     throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {
