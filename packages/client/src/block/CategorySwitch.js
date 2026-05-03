@@ -82,6 +82,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
+              translate: lowdefy._internal.t,
               triggerEvent: block.triggerEvent,
             })}
             basePath={lowdefy.basePath}
@@ -124,6 +125,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             methods={Object.assign(block.methods, {
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
+              translate: lowdefy._internal.t,
               triggerEvent: block.triggerEvent,
             })}
             basePath={lowdefy.basePath}

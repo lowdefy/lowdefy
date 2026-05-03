@@ -62,6 +62,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         methods={Object.assign(block.methods, {
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
+          translate: lowdefy._internal.t,
           triggerEvent: block.triggerEvent,
         })}
         basePath={lowdefy.basePath}
