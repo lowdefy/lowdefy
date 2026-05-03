@@ -22,6 +22,7 @@ import { hideBin } from 'yargs/helpers';
 import build from '@lowdefy/build';
 import { BuildError } from '@lowdefy/errors';
 import { createNodeLogger } from '@lowdefy/logger/node';
+import createCustomPluginMessagesMap from './createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -39,6 +40,7 @@ async function run() {
   };
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
+  const customMessagesMap = await createCustomPluginMessagesMap({ directories });
 
   let logger;
   logger = createNodeLogger({
@@ -48,6 +50,7 @@ async function run() {
   });
 
   await build({
+    customMessagesMap,
     customTypesMap,
     directories,
     logger,
