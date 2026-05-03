@@ -175,6 +175,10 @@ async function shallowBuild(options) {
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
     );
+    await context.writeBuildArtifact(
+      'customMessagesMap.json',
+      JSON.stringify(options.customMessagesMap ?? {})
+    );
     // Persist snapshot of installed packages for JIT missing-package detection.
     // Written as a build artifact so JIT builds compare against the skeleton
     // build state, not a potentially-updated package.json (race condition).

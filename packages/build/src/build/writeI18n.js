@@ -15,7 +15,20 @@
 */
 
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
-import { serializer, type } from '@lowdefy/helpers';
+import { mergeObjects, serializer, type } from '@lowdefy/helpers';
+
+function collectPluginMessages({ messagesMap, declaredCodes }) {
+  const collected = {};
+  Object.values(messagesMap ?? {}).forEach((pluginCatalog) => {
+    if (!type.isObject(pluginCatalog)) return;
+    Object.entries(pluginCatalog).forEach(([code, perLocale]) => {
+      if (!declaredCodes.has(code)) return;
+      if (!type.isObject(perLocale)) return;
+      collected[code] = mergeObjects([collected[code] ?? {}, perLocale]);
+    });
+  });
+  return collected;
+}
 
 async function writeI18n({ components, context }) {
   const i18n = components.config?.i18n;
@@ -81,15 +94,25 @@ async function writeI18n({ components, context }) {
       );
     }
   });
+  const pluginMessages = collectPluginMessages({
+    messagesMap: context.messagesMap,
+    declaredCodes: codes,
+  });
+  const mergedMessages = {};
   codes.forEach((code) => {
-    if (type.isNone(messages[code])) {
+    const userPerLocale = messages[code];
+    const pluginPerLocale = pluginMessages[code];
+    const combined = mergeObjects([pluginPerLocale ?? {}, userPerLocale ?? {}]);
+    if (Object.keys(combined).length === 0) {
       context.handleWarning(
         new ConfigWarning(
           `App "config.i18n" has no messages for locale "${code}". Falls back to "${fallbackLocale}".`,
           { configKey: i18n['~k'] }
         )
       );
+      return;
     }
+    mergedMessages[code] = combined;
   });
   const artifact = {
     defaultLocale: i18n.defaultLocale,
@@ -100,7 +123,7 @@ async function writeI18n({ components, context }) {
       antd: locale.antd,
       dayjs: locale.dayjs,
     })),
-    messages,
+    messages: mergedMessages,
   };
   await context.writeBuildArtifact('i18n.json', serializer.serializeToString(artifact));
 }

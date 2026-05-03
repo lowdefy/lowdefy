@@ -192,3 +192,147 @@ test('writeI18n warns when messages reference an undeclared locale', async () =>
     expect.stringContaining('"config.i18n.messages.fr-FR" references a locale not declared')
   );
 });
+
+test('writeI18n merges plugin messages into the artifact', async () => {
+  const ctx = testContext({
+    writeBuildArtifact: mockWriteBuildArtifact,
+    logger: { warn: mockWarn },
+  });
+  ctx.messagesMap = {
+    '@my-org/blocks-cool': {
+      'en-US': { 'blocks-cool.empty': 'No items' },
+      'de-DE': { 'blocks-cool.empty': 'Keine Einträge' },
+    },
+  };
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }, { code: 'de-DE' }],
+        messages: {
+          'en-US': { app: 'App' },
+          'de-DE': { app: 'App-DE' },
+        },
+      },
+    },
+  };
+  await writeI18n({ components, context: ctx });
+  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(parsed.messages).toEqual({
+    'en-US': { 'blocks-cool.empty': 'No items', app: 'App' },
+    'de-DE': { 'blocks-cool.empty': 'Keine Einträge', app: 'App-DE' },
+  });
+});
+
+test('writeI18n lets user messages win over plugin messages on the same key', async () => {
+  const ctx = testContext({
+    writeBuildArtifact: mockWriteBuildArtifact,
+    logger: { warn: mockWarn },
+  });
+  ctx.messagesMap = {
+    '@my-org/blocks-cool': {
+      'en-US': { 'blocks-cool.empty': 'No items' },
+    },
+  };
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }],
+        messages: {
+          'en-US': { 'blocks-cool.empty': 'Custom override' },
+        },
+      },
+    },
+  };
+  await writeI18n({ components, context: ctx });
+  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(parsed.messages).toEqual({
+    'en-US': { 'blocks-cool.empty': 'Custom override' },
+  });
+});
+
+test('writeI18n drops plugin locales not declared by the app', async () => {
+  const ctx = testContext({
+    writeBuildArtifact: mockWriteBuildArtifact,
+    logger: { warn: mockWarn },
+  });
+  ctx.messagesMap = {
+    '@my-org/blocks-cool': {
+      'en-US': { 'blocks-cool.empty': 'No items' },
+      'fr-FR': { 'blocks-cool.empty': 'Aucun élément' },
+    },
+  };
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }],
+        messages: { 'en-US': { app: 'App' } },
+      },
+    },
+  };
+  await writeI18n({ components, context: ctx });
+  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(parsed.messages).toEqual({
+    'en-US': { 'blocks-cool.empty': 'No items', app: 'App' },
+  });
+  expect(parsed.messages['fr-FR']).toBeUndefined();
+});
+
+test('writeI18n merges multiple plugins; later plugins override earlier on the same key', async () => {
+  const ctx = testContext({
+    writeBuildArtifact: mockWriteBuildArtifact,
+    logger: { warn: mockWarn },
+  });
+  ctx.messagesMap = {
+    '@my-org/blocks-cool': {
+      'en-US': { shared: 'cool', cool: 'cool-only' },
+    },
+    '@my-org/blocks-other': {
+      'en-US': { shared: 'other', other: 'other-only' },
+    },
+  };
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }],
+      },
+    },
+  };
+  await writeI18n({ components, context: ctx });
+  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(parsed.messages['en-US']).toEqual({
+    shared: 'other',
+    cool: 'cool-only',
+    other: 'other-only',
+  });
+});
+
+test('writeI18n surfaces plugin messages even when user provides none for that locale', async () => {
+  const ctx = testContext({
+    writeBuildArtifact: mockWriteBuildArtifact,
+    logger: { warn: mockWarn },
+  });
+  ctx.messagesMap = {
+    '@my-org/blocks-cool': {
+      'de-DE': { 'blocks-cool.empty': 'Keine Einträge' },
+    },
+  };
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }, { code: 'de-DE' }],
+        messages: { 'en-US': { app: 'App' } },
+      },
+    },
+  };
+  await writeI18n({ components, context: ctx });
+  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(parsed.messages['de-DE']).toEqual({ 'blocks-cool.empty': 'Keine Einträge' });
+  expect(mockWarn).not.toHaveBeenCalledWith(
+    expect.stringContaining('no messages for locale "de-DE"')
+  );
+});

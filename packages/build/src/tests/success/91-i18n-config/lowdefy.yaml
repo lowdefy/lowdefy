@@ -1,0 +1,28 @@
+# 91: i18n config emits a populated i18n.json
+# Exercises writeI18n with multi-locale messages and verifies the artifact is captured.
+lowdefy: local
+
+config:
+  i18n:
+    defaultLocale: en-US
+    fallbackLocale: en-US
+    locales:
+      - code: en-US
+        label: English
+        antd: en_US
+        dayjs: en
+      - code: de-DE
+        label: Deutsch
+        antd: de_DE
+        dayjs: de
+    messages:
+      en-US:
+        greeting: 'Hello, {name}!'
+        cart.items: '{count, plural, one {# item} other {# items}}'
+      de-DE:
+        greeting: 'Hallo, {name}!'
+        cart.items: '{count, plural, one {# Artikel} other {# Artikel}}'
+
+pages:
+  - id: home
+    type: Box
