@@ -20,8 +20,10 @@ import applyMask from './applyMask.js';
 import buildAuditEvent from './buildAuditEvent.js';
 import buildRequestProperties from './buildRequestProperties.js';
 import createAuditQueue from './createAuditQueue.js';
+import createRateLimiter from './createRateLimiter.js';
 import dispatchAuditEvent from './dispatchAuditEvent.js';
 import shouldAuditEvent from './shouldAuditEvent.js';
+import shouldSampleEvent from './shouldSampleEvent.js';
 
 const NOOP_LOGGER = { enabled: false, log: () => {}, flush: async () => {}, stop: async () => {} };
 
@@ -116,6 +118,20 @@ function instantiateLogger({ auditConfig, baseContext }) {
     });
   }
 
+  const rateLimiter = createRateLimiter({
+    perSecond: auditConfig.rateLimit?.perSecond,
+    onDrop: (count) => {
+      try {
+        baseContext?.logger?.warn(
+          { event: 'audit_rate_limit_exceeded', dropped: count },
+          `Audit rate limit exceeded: dropped ${count} events.`
+        );
+      } catch (_) {
+        // logger failure is non-fatal
+      }
+    },
+  });
+
   async function dispatchSingle(auditEvent) {
     const requestProperties = buildRequestProperties({
       requestType: auditConfig.requestType,
@@ -132,6 +148,8 @@ function instantiateLogger({ auditConfig, baseContext }) {
   async function log(event) {
     try {
       if (!shouldAuditEvent({ event, auditConfig })) return;
+      if (!shouldSampleEvent({ event, sampling: auditConfig.sampling })) return;
+      if (!rateLimiter.check()) return;
 
       const auditEvent = buildAuditEvent({
         event,

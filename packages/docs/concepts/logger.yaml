@@ -166,5 +166,5 @@ _ref:
           vars:
             previous_page_title: Secrets
             previous_page_id: secrets
-            next_page_title: Lists
-            next_page_id: lists
+            next_page_title: Audit Logging
+            next_page_id: audit-logging

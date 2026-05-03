@@ -1,0 +1,417 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: audit-logging
+    pageTitle: Audit Logging
+    section: Concepts
+    filePath: concepts/audit-logging.yaml
+    content:
+      - id: md_intro
+        type: Markdown
+        properties:
+          content: |
+            Audit logging captures *who did what, when, and to what* in your Lowdefy app — sign-ins, request executions, authorization denials, errors, and more. Audit events are written server-side to the storage backend of your choice, so they cannot be tampered with by the client.
+
+            Audit logging is config-driven. Once you add an `audit` block to your `lowdefy.yaml`, the framework automatically captures events at five interception points:
+
+            - Authentication (`signIn`, `signOut`)
+            - Request execution
+            - API endpoint execution
+            - Authorization denial
+            - Server-side errors
+
+            When `audit` is not configured, there is zero runtime overhead.
+
+            ## Quick Start
+
+            The simplest setup writes audit events to a MongoDB collection:
+
+            ```yaml
+            lowdefy: 4.5.2
+
+            audit:
+              connectionId: audit_db
+              events: [auth, request, authorization, error]
+              requestType: MongoDBInsertMany
+
+            connections:
+              - id: audit_db
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: AUDIT_MONGODB_URI
+                  collection: audit_events
+                  write: true
+            ```
+
+            That's it — every login, request execution, authorization denial, and server error is now recorded as a structured event in the `audit_events` collection.
+
+            ## Supported Transports
+
+            Phase 1 supports two storage backends out of the box. The `transport` field selects between them.
+
+            ### MongoDB
+
+            ```yaml
+            audit:
+              transport: connection      # default
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [auth, request, error]
+            ```
+
+            The connection must be a `MongoDBCollection` with `write: true`. Events are written via the connection's `MongoDBInsertMany` request.
+
+            ### Amazon S3
+
+            ```yaml
+            audit:
+              transport: connection
+              connectionId: audit_bucket
+              requestType: AwsS3PutObject
+              events: [auth, request, error]
+            ```
+
+            The connection must be an `AwsS3Bucket` with `write: true`. Each event is written as `audit/<YYYY-MM-DD>/<event.id>.json` (or as NDJSON when batching is enabled). S3 Object Lock and versioning are configured on the bucket itself.
+
+            ### Stdout (development only)
+
+            ```yaml
+            audit:
+              transport: stdout
+              events: [auth, request, error]
+            ```
+
+            Writes events as JSON via the operational logger. Useful for local development without configuring a database. `connectionId` and `requestType` are not required when `transport: stdout`.
+
+      - id: warning_supported_types
+        type: Alert
+        properties:
+          type: warning
+          icon: AiFillWarning
+          description: 'Only MongoDBCollection and AwsS3Bucket connections are supported as audit transports. The build will fail if audit.connectionId references any other connection type.'
+
+      - id: md_event_categories
+        type: Markdown
+        properties:
+          content: |
+            ## Event Categories
+
+            The `events` array selects which categories to capture. At least one is required.
+
+            | Category | When |
+            |----------|------|
+            | `auth` | NextAuth `signIn` and `signOut` events |
+            | `request` | Page request completes (data fetches, mutations) |
+            | `endpoint` | API endpoint completes (success or failure) |
+            | `authorization` | A user is denied access to a request or endpoint |
+            | `error` | A server-side error is captured (config, service, plugin, etc.) |
+
+            ## Audit Event Schema
+
+            Every event follows a standardized structure inspired by CADF (initiator/target/action/outcome) and the OWASP Logging Vocabulary:
+
+            ```json
+            {
+              "id": "evt_01HrJWpYyWqpQCxLB3SZhgoB",
+              "timestamp": "2026-05-03T10:30:00.000Z",
+              "eventType": "request.execute",
+              "category": "request",
+              "severity": "medium",
+              "initiator": {
+                "userId": "user_123",
+                "sub": "google-oauth2|abc",
+                "roles": ["editor"],
+                "ip": "192.168.1.10",
+                "userAgent": "Mozilla/5.0..."
+              },
+              "target": {
+                "type": "request",
+                "id": "update_user_profile",
+                "connectionId": "app_mongodb",
+                "connectionType": "MongoDBCollection",
+                "pageId": "user-settings"
+              },
+              "action": "execute",
+              "outcome": "success",
+              "metadata": {
+                "requestType": "MongoDBUpdateOne",
+                "duration": 42,
+                "blockId": "save_button"
+              },
+              "rid": "req_xyz789",
+              "appFields": {
+                "appName": "My App",
+                "environment": "production"
+              }
+            }
+            ```
+
+            ## Severity
+
+            Each event carries an inherent severity. The `severity` config field filters out events below the threshold.
+
+            | Level | Description |
+            |-------|-------------|
+            | `low` | Informational events |
+            | `medium` | Normal auditable operations (default threshold) |
+            | `high` | Security-relevant events (auth failures, errors, denials) |
+
+            Default threshold is `medium` — `low` severity events are dropped unless you set `severity: low`.
+
+            ## Field Masking
+
+            The `mask` array adds field names that should be replaced with `***MASKED***` in audit metadata. The framework also masks any field whose name matches the built-in heuristics: `password`, `token`, `secret`, `authorization`, `apikey` (case-insensitive).
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [request]
+              mask:
+                - ssn
+                - creditCard
+                - dateOfBirth
+            ```
+
+            Strings longer than 10,000 characters are truncated to prevent log bloat.
+
+            ## Capturing Payloads and Responses
+
+            By default, audit events include identity (who) and target (what), but not the request payload or response body. Enable `capture` per category to include payloads:
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [request, endpoint]
+              capture:
+                request:
+                  payload: true
+                  response: false
+                endpoint:
+                  payload: true
+                  response: true
+              mask:
+                - password
+                - apiKey
+            ```
+
+            Captured payloads pass through `mask` before being written. Always combine `capture` with `mask` to keep sensitive fields out of audit storage.
+
+      - id: warning_pii_capture
+        type: Alert
+        properties:
+          type: warning
+          icon: AiFillWarning
+          description: 'Capturing payloads and responses can write personally identifiable information into audit storage. Only enable capture when your retention and access policies allow it, and always set mask for sensitive fields.'
+
+      - id: md_filtering
+        type: Markdown
+        properties:
+          content: |
+            ## Filtering by Page, Request, or Endpoint
+
+            High-volume operations (autocomplete, dropdown options) often shouldn't generate audit events. Use `exclude` to skip them, or `include` to opt-in only a specific allowlist.
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [request]
+              exclude:
+                pages:
+                  - public-landing
+                requests:
+                  - fetch_dropdown_options
+                  - autocomplete_users
+                endpoints:
+                  - health-check
+            ```
+
+            `exclude` and `include` are mutually exclusive. If you set both, the build will fail.
+
+            ## App-Level Fields
+
+            The `fields` block lets you tag every audit event with static application context. Operators are evaluated once at server startup, so you can use `_secret` and other server-side operators.
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [request, error]
+              fields:
+                appName: HR Portal
+                environment:
+                  _secret: ENVIRONMENT
+                region: eu-west-1
+            ```
+
+            Each audit event will include an `appFields` object with these values.
+
+            ## Sampling
+
+            Sampling is useful when you want a statistical view of high-volume categories without writing every event. Each category accepts a rate between 0 and 1 (1.0 = log all, 0.0 = drop all, 0.1 = log 10%).
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [auth, request, error]
+              sampling:
+                request: 0.1     # log 10% of request events
+                auth: 1.0        # log all auth events
+                error: 1.0       # log all errors
+            ```
+
+            Categories not listed in `sampling` default to 1.0 (log all). Sampling is a probabilistic filter applied after `severity` and `exclude`/`include` checks.
+
+            ## Rate Limiting
+
+            For protection against pathological event bursts, set a hard ceiling on events per second. Events beyond the cap are dropped, and a warning is logged once per minute summarizing the count.
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [request, error]
+              rateLimit:
+                perSecond: 1000
+            ```
+
+            Rate limiting is applied across all categories. Use it as a backstop, not as a primary filter — `exclude`/`include` and `sampling` give you finer control.
+
+            ## Batching
+
+            For high-traffic apps, individual writes per audit event are wasteful. Enable batching to accumulate events in memory and flush them periodically.
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [auth, request, error]
+              batch:
+                enabled: true
+                size: 100        # flush after 100 events
+                interval: 5000   # or every 5 seconds, whichever comes first
+            ```
+
+            With batching enabled:
+
+            - **MongoDB**: events are combined into a single `MongoDBInsertMany` call (multiple docs per insert)
+            - **S3**: events are combined into a single NDJSON object with key `audit/<YYYY-MM-DD>/<first-id>-<last-id>.ndjson`
+
+            On process shutdown (`SIGTERM` / `SIGINT` / `beforeExit`), the queue flushes remaining events before exiting.
+
+      - id: alert_strict_batching
+        type: Alert
+        properties:
+          type: info
+          icon: AiOutlineInfoCircle
+          description: 'When audit.strict is enabled, audit writes are awaited and dispatched immediately, bypassing the batch queue. This ensures fail-closed semantics but loses the throughput benefit of batching.'
+
+      - id: md_strict_mode
+        type: Markdown
+        properties:
+          content: |
+            ## Failure Mode
+
+            By default, audit writes are fire-and-forget. If the audit storage is slow or unavailable, the user request still completes — the failure is logged as a warning through the operational logger.
+
+            For compliance scenarios where every event must be persisted before the user sees a response, enable strict mode:
+
+            ```yaml
+            audit:
+              connectionId: audit_db
+              requestType: MongoDBInsertMany
+              events: [auth, error]
+              strict: true
+            ```
+
+            With `strict: true`, audit write failures cause the user request to fail with a `ServiceError`. Use this carefully — it couples application availability to the availability of your audit storage.
+
+            ## Complete Example
+
+            An HR portal that audits all sensitive operations, masks PII, and uses batching:
+
+            ```yaml
+            lowdefy: 4.5.2
+            name: HR Portal
+
+            audit:
+              connectionId: audit_log
+              requestType: MongoDBInsertMany
+              events: [auth, request, authorization, error]
+              severity: medium
+              strict: false
+              mask:
+                - password
+                - ssn
+                - salary
+              capture:
+                request:
+                  payload: true
+                  response: false
+              fields:
+                appName: HR Portal
+                environment:
+                  _secret: ENVIRONMENT
+              exclude:
+                requests:
+                  - fetch_department_list
+                  - fetch_role_options
+              batch:
+                enabled: true
+                size: 100
+                interval: 5000
+
+            connections:
+              - id: app_db
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: MONGODB_URI
+                  collection: employees
+                  read: true
+                  write: true
+
+              - id: audit_log
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: AUDIT_MONGODB_URI
+                  collection: audit_events
+                  write: true
+            ```
+
+            In this setup:
+
+            - Every login and logout is logged.
+            - Every request execution generates an audit event with the masked payload.
+            - Authorization denials are captured (so you can see who tried to access protected data).
+            - All server-side errors are captured.
+            - High-volume dropdown requests are excluded.
+            - Events are batched in groups of 100 (or every 5 seconds) for efficiency.
+            - `salary` and `ssn` are masked everywhere they appear.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Logger
+            previous_page_id: logger
+            next_page_title: Lists
+            next_page_id: lists

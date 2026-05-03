@@ -57,6 +57,12 @@ function buildAudit({ components, context }) {
       components.audit.batch.interval = 5000;
     }
   }
+  if (type.isNone(components.audit.sampling)) {
+    components.audit.sampling = {};
+  }
+  if (type.isNone(components.audit.rateLimit)) {
+    components.audit.rateLimit = {};
+  }
 
   components.audit.configured =
     components.audit.transport === 'stdout' || !type.isNone(components.audit.connectionId);

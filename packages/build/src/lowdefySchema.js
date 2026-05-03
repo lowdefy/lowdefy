@@ -1707,6 +1707,66 @@ export default {
             },
           },
         },
+        sampling: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.sampling" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            auth: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: { type: 'App "audit.sampling.auth" should be a number between 0 and 1.' },
+            },
+            request: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: { type: 'App "audit.sampling.request" should be a number between 0 and 1.' },
+            },
+            endpoint: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: { type: 'App "audit.sampling.endpoint" should be a number between 0 and 1.' },
+            },
+            authorization: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: { type: 'App "audit.sampling.authorization" should be a number between 0 and 1.' },
+            },
+            error: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: { type: 'App "audit.sampling.error" should be a number between 0 and 1.' },
+            },
+          },
+        },
+        rateLimit: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.rateLimit" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            perSecond: {
+              type: 'integer',
+              minimum: 1,
+              errorMessage: {
+                type: 'App "audit.rateLimit.perSecond" should be a positive integer.',
+                minimum: 'App "audit.rateLimit.perSecond" should be at least 1.',
+              },
+            },
+          },
+        },
         mask: {
           type: 'array',
           items: { type: 'string' },

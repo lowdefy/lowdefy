@@ -211,6 +211,40 @@ test('logger.log batches events when batch.enabled is true', async () => {
   await logger.stop();
 });
 
+test('logger.log respects sampling rate of 0', async () => {
+  dispatchAuditEvent.mockResolvedValue(undefined);
+  const logger = createAuditLogger({
+    auditConfig: makeAuditConfig({ strict: true, sampling: { request: 0 } }),
+    context: { logger: noopLogger },
+  });
+  await logger.log({
+    category: 'request',
+    eventType: 'request.execute',
+    severity: 'medium',
+    target: { type: 'request' },
+  });
+  expect(dispatchAuditEvent).not.toHaveBeenCalled();
+});
+
+test('logger.log respects rate limit and warns when exceeded', async () => {
+  dispatchAuditEvent.mockResolvedValue(undefined);
+  const warn = jest.fn();
+  const logger = createAuditLogger({
+    auditConfig: makeAuditConfig({ strict: true, rateLimit: { perSecond: 2 } }),
+    context: { logger: { ...noopLogger, warn } },
+  });
+  const event = {
+    category: 'request',
+    eventType: 'request.execute',
+    severity: 'medium',
+    target: { type: 'request' },
+  };
+  await logger.log({ ...event });
+  await logger.log({ ...event });
+  await logger.log({ ...event });
+  expect(dispatchAuditEvent).toHaveBeenCalledTimes(2);
+});
+
 test('logger.flush sends pending batched events', async () => {
   dispatchAuditEvent.mockResolvedValue(undefined);
   const logger = createAuditLogger({
