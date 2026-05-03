@@ -52,6 +52,8 @@ _ref:
       ```
 
       `_t` is also used by the engine for built-in framework strings (e.g. `engine.action.loading`, `engine.validation.fieldRequired`). Override any built-in by adding the same key under `config.i18n.messages.{locale}`.
+
+      **Inside plugin code:** the runtime equivalent for custom block and action plugins is `methods.translate(key, values)`. Same lookup chain, same overrides — see the [i18n concept page](/i18n) for plugin authoring patterns and the `./messages` manifest format.
     arguments: |
       ###### string
       The translation key to look up.

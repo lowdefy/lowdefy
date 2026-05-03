@@ -46,14 +46,22 @@ _ref:
       ```
 
       ###### Wire a language picker:
+
+      `_locale: supported` returns an array of locale descriptors `{ code, label, antd, dayjs }`. Selector options must be `{ value, label }` pairs, so map each descriptor onto that shape:
       ```yaml
       - id: lang_picker
         type: Selector
         properties:
           options:
-            _locale: supported
-          optionLabel: label
-          optionValue: code
+            _array.map:
+              on:
+                _locale: supported
+              callback:
+                _function:
+                  value:
+                    __args: 0.code
+                  label:
+                    __args: 0.label
           value:
             _locale: active
         events:

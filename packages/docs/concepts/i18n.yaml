@@ -104,9 +104,15 @@ _ref:
               type: Selector
               properties:
                 options:
-                  _locale: supported
-                optionLabel: label
-                optionValue: code
+                  _array.map:
+                    on:
+                      _locale: supported
+                    callback:
+                      _function:
+                        value:
+                          __args: 0.code
+                        label:
+                          __args: 0.label
                 value:
                   _locale: active
               events:
@@ -117,6 +123,8 @@ _ref:
                       locale:
                         _state: lang_picker
             ```
+
+            `_locale: supported` returns `[{ code, label, antd, dayjs }, ...]`. Selector options must be an array of `{ value, label }` pairs, so the snippet above projects each locale onto that shape with `_array.map` + `_function`.
 
             User preference persists to `localStorage`. Clear it (and fall back to browser/default) by passing `locale: auto`.
 
@@ -196,6 +204,66 @@ _ref:
             ## Server-side translations
 
             Server-side actions and requests resolve the user's locale from the `Accept-Language` header. `_t` works the same in server contexts as on the client, with one difference: there's no `localStorage` on the server, so `Accept-Language` (and `defaultLocale`) determine the active locale per request.
+
+            ## From plugin code
+
+            `_t` is the YAML-config interface. The runtime equivalent for custom block and action plugins is `methods.translate(key, values)` — same lookup chain, same overrides. Plugin authors should never reach into `lowdefy._internal.t` directly; that's an engine-internal adapter. Use `methods.translate`:
+
+            ```js
+            // in @my-org/blocks-cool/src/blocks/CoolList/CoolList.js
+            function CoolList({ blockId, methods, properties }) {
+              const empty = methods.translate('blocks-cool.list.empty');
+              const greeting = methods.translate('blocks-cool.greeting', { name: properties.name });
+              // ...
+            }
+            ```
+
+            ```js
+            // in @my-org/actions-cool/src/actions/CoolAction.js
+            function CoolAction({ methods, params }) {
+              const ok = methods.translate('actions-cool.confirm.ok');
+              // ...
+            }
+            ```
+
+            ## Shipping default messages from a plugin package
+
+            Plugins can ship locale-keyed defaults so consumers see translated strings out-of-the-box. Add a `messages` JS module and register it under the package's `exports`:
+
+            ```js
+            // in @my-org/blocks-cool/src/messages.js
+            export default {
+              'en-US': {
+                'blocks-cool.list.empty': 'No items',
+                'blocks-cool.list.loading': 'Loading data...',
+              },
+              'de-DE': {
+                'blocks-cool.list.empty': 'Keine Einträge',
+                'blocks-cool.list.loading': 'Daten werden geladen...',
+              },
+            };
+            ```
+
+            ```json
+            // in @my-org/blocks-cool/package.json
+            {
+              "exports": {
+                "./types": "./dist/types.js",
+                "./messages": "./dist/messages.js"
+              }
+            }
+            ```
+
+            Namespace your keys with the package or org slug (`blocks-cool.*`) to avoid collisions with other plugins. Apps consume your defaults automatically — the build merges plugin manifests into the per-locale message catalog. App authors override individual keys via `config.i18n.messages.{locale}` like any other message.
+
+            **Merge precedence:**
+
+            | Tier | Source | Wins over |
+            |---|---|---|
+            | User app messages | `config.i18n.messages.{locale}` in `lowdefy.yaml` | everything below |
+            | Plugin messages | plugin's `./messages` export, locale-keyed | builtin |
+            | Framework builtins | the built-in catalog (English) | key |
+            | Key fallback | the lookup key itself | — |
 
             ## Working with dates and numbers
 
