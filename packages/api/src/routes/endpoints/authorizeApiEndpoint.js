@@ -37,6 +37,7 @@ function authorizeApiEndpoint(context, { endpointConfig }) {
       },
       action: 'authorize',
       outcome: 'denied',
+      rid: context.rid,
     });
     throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }

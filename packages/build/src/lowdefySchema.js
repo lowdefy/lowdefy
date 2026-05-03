@@ -1600,13 +1600,11 @@ export default {
     audit: {
       type: 'object',
       additionalProperties: false,
-      required: ['connectionId', 'events', 'requestType'],
+      required: ['events'],
       errorMessage: {
         type: 'App "audit" should be an object.',
         required: {
-          connectionId: 'App "audit" should have required property "connectionId".',
           events: 'App "audit" should have required property "events".',
-          requestType: 'App "audit" should have required property "requestType".',
         },
       },
       properties: {
@@ -1633,6 +1631,13 @@ export default {
         },
         '~r': {},
         '~l': {},
+        transport: {
+          type: 'string',
+          enum: ['connection', 'stdout'],
+          errorMessage: {
+            type: 'App "audit.transport" should be one of "connection" or "stdout".',
+          },
+        },
         connectionId: {
           type: 'string',
           errorMessage: {
@@ -1669,6 +1674,37 @@ export default {
           enum: ['MongoDBInsertMany', 'AwsS3PutObject'],
           errorMessage: {
             type: 'App "audit.requestType" should be one of "MongoDBInsertMany" or "AwsS3PutObject".',
+          },
+        },
+        batch: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "audit.batch" should be an object.',
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: { type: 'App "audit.batch.enabled" should be a boolean.' },
+            },
+            size: {
+              type: 'integer',
+              minimum: 1,
+              errorMessage: {
+                type: 'App "audit.batch.size" should be a positive integer.',
+                minimum: 'App "audit.batch.size" should be at least 1.',
+              },
+            },
+            interval: {
+              type: 'integer',
+              minimum: 100,
+              errorMessage: {
+                type: 'App "audit.batch.interval" should be an integer (milliseconds).',
+                minimum: 'App "audit.batch.interval" should be at least 100ms.',
+              },
+            },
           },
         },
         mask: {

@@ -37,6 +37,7 @@ function authorizeRequest(context, { requestConfig }) {
       },
       action: 'authorize',
       outcome: 'denied',
+      rid: context.rid,
     });
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
     throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {

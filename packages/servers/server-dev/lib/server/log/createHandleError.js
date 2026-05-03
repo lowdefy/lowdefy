@@ -61,6 +61,7 @@ function createHandleError({ context }) {
             source: error?.source,
             configKey: error?.configKey,
           },
+          rid: context.rid,
         });
       } catch (auditErr) {
         console.error('Audit error logging failed:', auditErr);

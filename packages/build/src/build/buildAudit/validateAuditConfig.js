@@ -105,38 +105,62 @@ function validateAuditConfig({ components, context }) {
     return;
   }
 
-  if (!context.connectionIds?.has(audit.connectionId)) {
-    collectExceptions(
-      context,
-      new ConfigError(
-        `Audit "connectionId" references unknown connection "${audit.connectionId}".`,
-        { configKey }
-      )
-    );
-    return;
-  }
+  const transport = audit.transport ?? 'connection';
 
-  const connection = findConnection(components, audit.connectionId);
-  const expectedRequestType = SUPPORTED_PAIRINGS[connection?.type];
-  if (!expectedRequestType) {
-    collectExceptions(
-      context,
-      new ConfigError(
-        `Audit connection "${audit.connectionId}" has unsupported type "${connection?.type}". Supported types: ${Object.keys(SUPPORTED_PAIRINGS).join(', ')}.`,
-        { configKey }
-      )
-    );
-    return;
-  }
-  if (audit.requestType !== expectedRequestType) {
-    collectExceptions(
-      context,
-      new ConfigError(
-        `Audit "requestType" "${audit.requestType}" is incompatible with connection type "${connection.type}". Expected "${expectedRequestType}".`,
-        { configKey }
-      )
-    );
-    return;
+  if (transport === 'connection') {
+    if (type.isNone(audit.connectionId)) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          'Audit "connectionId" is required when transport is "connection".',
+          { configKey }
+        )
+      );
+      return;
+    }
+    if (type.isNone(audit.requestType)) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          'Audit "requestType" is required when transport is "connection".',
+          { configKey }
+        )
+      );
+      return;
+    }
+    if (!context.connectionIds?.has(audit.connectionId)) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Audit "connectionId" references unknown connection "${audit.connectionId}".`,
+          { configKey }
+        )
+      );
+      return;
+    }
+
+    const connection = findConnection(components, audit.connectionId);
+    const expectedRequestType = SUPPORTED_PAIRINGS[connection?.type];
+    if (!expectedRequestType) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Audit connection "${audit.connectionId}" has unsupported type "${connection?.type}". Supported types: ${Object.keys(SUPPORTED_PAIRINGS).join(', ')}.`,
+          { configKey }
+        )
+      );
+      return;
+    }
+    if (audit.requestType !== expectedRequestType) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Audit "requestType" "${audit.requestType}" is incompatible with connection type "${connection.type}". Expected "${expectedRequestType}".`,
+          { configKey }
+        )
+      );
+      return;
+    }
   }
 
   if (!type.isNone(audit.exclude) && !type.isNone(audit.include)) {

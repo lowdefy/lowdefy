@@ -80,6 +80,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
       errorName: error?.name,
       errorMessage: error?.message,
     },
+    rid: context.rid,
   });
 
   return {

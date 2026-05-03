@@ -23,29 +23,63 @@ const sampleEvent = {
   eventType: 'request.execute',
 };
 
-test('buildRequestProperties wraps event in docs array for MongoDBInsertMany', () => {
+test('buildRequestProperties wraps single event in docs array for MongoDBInsertMany', () => {
   const result = buildRequestProperties({
     requestType: 'MongoDBInsertMany',
-    event: sampleEvent,
+    events: [sampleEvent],
   });
   expect(result).toEqual({ docs: [sampleEvent] });
 });
 
-test('buildRequestProperties produces date-partitioned key for AwsS3PutObject', () => {
+test('buildRequestProperties wraps multiple events for MongoDBInsertMany', () => {
+  const evt2 = { ...sampleEvent, id: 'evt_def' };
+  const result = buildRequestProperties({
+    requestType: 'MongoDBInsertMany',
+    events: [sampleEvent, evt2],
+  });
+  expect(result.docs).toHaveLength(2);
+  expect(result.docs[0]).toBe(sampleEvent);
+  expect(result.docs[1]).toBe(evt2);
+});
+
+test('buildRequestProperties produces date-partitioned key for single AwsS3PutObject event', () => {
   const result = buildRequestProperties({
     requestType: 'AwsS3PutObject',
-    event: sampleEvent,
+    events: [sampleEvent],
   });
   expect(result.key).toBe('audit/2026-05-03/evt_abc.json');
   expect(result.contentType).toBe('application/json');
   expect(JSON.parse(result.body)).toEqual(sampleEvent);
 });
 
+test('buildRequestProperties produces NDJSON for multiple AwsS3PutObject events', () => {
+  const evt2 = { ...sampleEvent, id: 'evt_def' };
+  const result = buildRequestProperties({
+    requestType: 'AwsS3PutObject',
+    events: [sampleEvent, evt2],
+  });
+  expect(result.key).toBe('audit/2026-05-03/evt_abc-evt_def.ndjson');
+  expect(result.contentType).toBe('application/x-ndjson');
+  const lines = result.body.split('\n');
+  expect(lines).toHaveLength(2);
+  expect(JSON.parse(lines[0])).toEqual(sampleEvent);
+  expect(JSON.parse(lines[1])).toEqual(evt2);
+});
+
 test('buildRequestProperties throws on unsupported requestType', () => {
   expect(() =>
     buildRequestProperties({
       requestType: 'UnsupportedThing',
-      event: sampleEvent,
+      events: [sampleEvent],
     })
   ).toThrow('Audit logger does not support requestType "UnsupportedThing".');
+});
+
+test('buildRequestProperties throws on empty events array', () => {
+  expect(() =>
+    buildRequestProperties({
+      requestType: 'MongoDBInsertMany',
+      events: [],
+    })
+  ).toThrow('buildRequestProperties requires at least one event.');
 });

@@ -16,7 +16,13 @@
 
 import { ServerParser } from '@lowdefy/operators';
 
-async function dispatchAuditEvent({ context, auditConfig, event, requestProperties }) {
+async function dispatchToStdout({ context, events }) {
+  events.forEach((event) => {
+    context.logger?.info({ event: 'audit_event', auditEvent: event }, 'audit');
+  });
+}
+
+async function dispatchToConnection({ context, auditConfig, events, requestProperties }) {
   const connectionConfig = await context.readConfigFile(
     `connections/${auditConfig.connectionId}.json`
   );
@@ -65,8 +71,18 @@ async function dispatchAuditEvent({ context, auditConfig, event, requestProperti
     pageId: undefined,
     payload: {},
     request: requestProperties,
-    requestId: `audit_${event.id}`,
+    requestId: `audit_${events[0]?.id ?? 'batch'}`,
   });
+}
+
+async function dispatchAuditEvent({ context, auditConfig, events, requestProperties }) {
+  const eventList = Array.isArray(events) ? events : [events];
+  if (eventList.length === 0) return undefined;
+
+  if (auditConfig.transport === 'stdout') {
+    return dispatchToStdout({ context, events: eventList });
+  }
+  return dispatchToConnection({ context, auditConfig, events: eventList, requestProperties });
 }
 
 export default dispatchAuditEvent;

@@ -103,6 +103,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
       payload: captureRequest?.payload ? requestPayload : undefined,
       response: captureRequest?.response ? response : undefined,
     },
+    rid: context.rid,
   });
 
   return {

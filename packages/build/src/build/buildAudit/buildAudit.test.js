@@ -47,7 +47,7 @@ test('buildAudit leaves components.audit undefined when not configured', () => {
   expect(context.errors).toHaveLength(0);
 });
 
-test('buildAudit fills default severity, strict, mask, fields, capture', () => {
+test('buildAudit fills default severity, strict, mask, fields, capture, transport, batch', () => {
   const components = {
     audit: validAudit(),
     connections: validConnections(),
@@ -59,8 +59,52 @@ test('buildAudit fills default severity, strict, mask, fields, capture', () => {
   expect(components.audit.mask).toEqual([]);
   expect(components.audit.fields).toEqual({});
   expect(components.audit.capture).toEqual({});
+  expect(components.audit.transport).toBe('connection');
+  expect(components.audit.batch).toEqual({ enabled: false });
   expect(components.audit.configured).toBe(true);
   expect(context.errors).toHaveLength(0);
+});
+
+test('buildAudit fills batch defaults when batch is partially configured', () => {
+  const audit = {
+    connectionId: 'audit_db',
+    events: ['request'],
+    requestType: 'MongoDBInsertMany',
+    batch: { enabled: true },
+  };
+  Object.defineProperty(audit, '~k', { value: 'audit', enumerable: false });
+  Object.defineProperty(audit.batch, '~k', { value: 'audit-batch', enumerable: false });
+  const components = { audit, connections: validConnections() };
+  const context = makeContext();
+  buildAudit({ components, context });
+  expect(components.audit.batch.enabled).toBe(true);
+  expect(components.audit.batch.size).toBe(100);
+  expect(components.audit.batch.interval).toBe(5000);
+});
+
+test('buildAudit accepts stdout transport without connectionId', () => {
+  const audit = { transport: 'stdout', events: ['request'] };
+  Object.defineProperty(audit, '~k', { value: 'audit', enumerable: false });
+  const components = { audit };
+  const context = makeContext();
+  buildAudit({ components, context });
+  expect(context.errors).toHaveLength(0);
+  expect(components.audit.transport).toBe('stdout');
+  expect(components.audit.configured).toBe(true);
+});
+
+test('buildAudit collects error when transport is connection but connectionId is missing', () => {
+  const audit = {
+    transport: 'connection',
+    events: ['request'],
+    requestType: 'MongoDBInsertMany',
+  };
+  Object.defineProperty(audit, '~k', { value: 'audit', enumerable: false });
+  const components = { audit, connections: validConnections() };
+  const context = makeContext();
+  buildAudit({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toMatch(/connectionId.*required.*connection/);
 });
 
 test('buildAudit collects error when connectionId references unknown connection', () => {

@@ -18,15 +18,30 @@ function datePartition(timestamp) {
   return timestamp.slice(0, 10);
 }
 
-function buildRequestProperties({ requestType, event }) {
+function buildRequestProperties({ requestType, events }) {
+  const eventList = Array.isArray(events) ? events : [events];
+  if (eventList.length === 0) {
+    throw new Error('buildRequestProperties requires at least one event.');
+  }
+
   if (requestType === 'MongoDBInsertMany') {
-    return { docs: [event] };
+    return { docs: eventList };
   }
   if (requestType === 'AwsS3PutObject') {
+    if (eventList.length === 1) {
+      const event = eventList[0];
+      return {
+        key: `audit/${datePartition(event.timestamp)}/${event.id}.json`,
+        body: JSON.stringify(event),
+        contentType: 'application/json',
+      };
+    }
+    const first = eventList[0];
+    const last = eventList[eventList.length - 1];
     return {
-      key: `audit/${datePartition(event.timestamp)}/${event.id}.json`,
-      body: JSON.stringify(event),
-      contentType: 'application/json',
+      key: `audit/${datePartition(first.timestamp)}/${first.id}-${last.id}.ndjson`,
+      body: eventList.map((evt) => JSON.stringify(evt)).join('\n'),
+      contentType: 'application/x-ndjson',
     };
   }
   throw new Error(`Audit logger does not support requestType "${requestType}".`);

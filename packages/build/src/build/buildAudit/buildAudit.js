@@ -26,6 +26,9 @@ function buildAudit({ components, context }) {
     return components;
   }
 
+  if (type.isNone(components.audit.transport)) {
+    components.audit.transport = 'connection';
+  }
   if (type.isNone(components.audit.severity)) {
     components.audit.severity = 'medium';
   }
@@ -41,8 +44,22 @@ function buildAudit({ components, context }) {
   if (type.isNone(components.audit.capture)) {
     components.audit.capture = {};
   }
+  if (type.isNone(components.audit.batch)) {
+    components.audit.batch = { enabled: false };
+  } else {
+    if (type.isNone(components.audit.batch.enabled)) {
+      components.audit.batch.enabled = false;
+    }
+    if (type.isNone(components.audit.batch.size)) {
+      components.audit.batch.size = 100;
+    }
+    if (type.isNone(components.audit.batch.interval)) {
+      components.audit.batch.interval = 5000;
+    }
+  }
 
-  components.audit.configured = !type.isNone(components.audit.connectionId);
+  components.audit.configured =
+    components.audit.transport === 'stdout' || !type.isNone(components.audit.connectionId);
 
   return components;
 }
