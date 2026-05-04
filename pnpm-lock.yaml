@@ -2489,8 +2489,8 @@ importers:
         specifier: 5.1.0
         version: link:../helpers
       fs-extra:
-        specifier: 11.1.1
-        version: 11.1.1
+        specifier: 11.3.4
+        version: 11.3.4
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
@@ -7943,8 +7943,8 @@ packages:
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
-  fs-extra@11.1.1:
-    resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
+  fs-extra@11.3.4:
+    resolution: {integrity: sha512-CTXd6rk/M3/ULNQj8FBqBWHYBVYybQ3VPBw0xGKFe3tuH7ytT6ACnvzpIQ3UZtB8yvUKC2cXn1a+x+5EVQLovA==}
     engines: {node: '>=14.14'}
 
   fs-extra@7.0.1:
@@ -12040,7 +12040,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       '@aws-sdk/util-locate-window': 3.965.5
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -12059,7 +12059,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       tslib: 1.14.1
     optional: true
 
@@ -12080,7 +12080,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     optional: true
@@ -18978,9 +18978,9 @@ snapshots:
 
   fs-constants@1.0.0: {}
 
-  fs-extra@11.1.1:
+  fs-extra@11.3.4:
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.0
 
