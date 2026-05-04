@@ -91,7 +91,7 @@
     "tailwindcss": "4.2.4",
     "uuid": "13.0.0",
     "yaml": "2.8.4",
-    "yargs": "17.7.2"
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "16.2.4",

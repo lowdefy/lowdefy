@@ -69,7 +69,7 @@
     "semver": "7.7.4",
     "tar": "6.2.1",
     "yaml": "2.8.4",
-    "yargs": "17.7.2"
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
