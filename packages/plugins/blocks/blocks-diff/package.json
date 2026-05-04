@@ -52,7 +52,7 @@
     "@lowdefy/helpers": "5.2.0",
     "dayjs": "1.11.20",
     "diff": "5.2.2",
-    "microdiff": "1.4.0",
+    "microdiff": "1.5.0",
     "pluralize": "8.0.0",
     "yaml": "2.8.4"
   },
