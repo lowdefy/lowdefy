@@ -1,5 +1,124 @@
 # @lowdefy/server-enterprise
 
+## 5.2.0
+
+### Minor Changes
+
+- 0f38c9f: feat: First-class module system for reusable config packages
+
+  Modules are reusable bundles of Lowdefy config — pages, connections, API endpoints, menus, and exposed components — hosted in GitHub repositories or local directories. Apps install modules in `lowdefy.yaml` and configure them through `vars`, replacing the copy-paste-between-projects pattern with a declarative dependency.
+
+  **Module entries (`@lowdefy/build`)**
+
+  - Apps declare entries in the `modules` array of `lowdefy.yaml` with `id`, `source`, and optional `vars`, `connections`, and `dependencies`.
+  - The entry `id` namespaces the module's content and forms the URL prefix for its pages (e.g. `/team-users/users-list`).
+  - Multi-instance: the same module source can be installed multiple times under different entry IDs, each with its own vars and namespace.
+  - GitHub sources (`github:owner/repo[/path]@ref`) are fetched as tarballs and locally cached. Private repos use `GITHUB_TOKEN`, the `gh` CLI, or git credential helpers.
+  - Local sources (`file:./relative/path`) resolve relative to the project root.
+
+  **Module manifest (`module.lowdefy.yaml`)**
+
+  - Declares the module's interface: `name`, `description`, `vars`, `connections`, `pages`, `api`, `components`, `menus`, `dependencies`, `exports`, `plugins`, and `secrets`.
+  - `vars` declarations validate consumer values with `type`, `required`, `default`, and `description`. Consumer values override manifest defaults; omitted values fall back to the declared default.
+  - `exports` declares the module's public interface — the IDs other modules and apps may reference. The build validates cross-module references against exports.
+  - `plugins` declarations are validated against the app's installed plugins with semver compatibility checks.
+  - `secrets` is an allowlist of secrets the module may access; undeclared `_secret` references fail the build. Remapped connections skip the module's secret references for that connection.
+
+  **Module operators**
+
+  - `_module.var` — read manifest-validated vars, including consumer overrides and declared defaults.
+  - `_module.pageId`, `_module.connectionId`, `_module.endpointId` — produce scoped IDs from a module-author's unscoped ID.
+  - `_module.id` — the entry ID of the current module.
+
+  **Auto-scoped IDs**
+
+  Page, connection, API endpoint, and menu item IDs are auto-prefixed with the entry ID. Block and request IDs inherit page scope and are not rewritten.
+
+  **Consuming module resources**
+
+  - Pages and APIs are auto-included and auto-scoped — they appear in the app under the entry-ID prefix.
+  - Components are reusable config fragments included with `_ref: { module, component, vars }`. They can export any config — UI blocks, enum maps, config templates, schema fragments — and accept vars at the call site.
+  - Menus are included with `_ref: { module, menu }`, typically wrapped in a `MenuGroup`.
+
+  **Connection remapping**
+
+  Apps can redirect a module connection to an existing app connection via the entry's `connections` map. The module's connection definition and its declared secrets are skipped — the app connection handles them.
+
+  **Cross-module dependencies**
+
+  Modules can reference each other's pages, components, menus, connections, and APIs via abstract dependencies declared in `module.lowdefy.yaml`.
+
+  - Auto-wiring: when a module entry's `id` matches a declared dependency name, the build wires it automatically.
+  - Explicit wiring: the entry's `dependencies` map overrides auto-wiring and supports multi-instance topologies where each instance points at a different partner.
+  - The build validates every wiring, detects dependency cycles, and reports unmapped or undeclared dependencies with remediation hints.
+
+  **Auth page rules**
+
+  Picomatch glob patterns in auth page rules (e.g. `team-users/*`) for wildcard module page matching.
+
+  **Slashed page IDs (`@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  Server routes support module page IDs containing `/` (e.g. `/team-users/users-list`).
+
+### Patch Changes
+
+- 596fddc: chore(connection-knex): update knex and SQL drivers; replace `sqlite3` with `better-sqlite3`; replace `mysql` with `mysql2`.
+
+  Bumped knex and its dialect drivers, and consolidated onto the actively-maintained drivers — replaced `sqlite3` with `better-sqlite3` and `mysql` with `mysql2`. Subsumes the prior `sqlite3@5.1.7` darwin-arm64 fix.
+
+  `@lowdefy/connection-knex` dependency changes:
+
+  - `knex` `2.5.1` → `3.2.9`. Knex 3.x drops Node < 16; Lowdefy already requires Node 18+. The `knex(config)`, `.raw()`, and dynamic query-builder API surface used by `KnexRaw` / `KnexBuilder` is unchanged.
+  - `pg` `8.11.3` → `8.20.0`.
+  - **Removed** `mssql`. Knex's `mssql` dialect actually requires `tedious` (not the `mssql` package), and Lowdefy never imported `mssql` directly — it was only ever a vehicle for pulling tedious into the install tree. `client: mssql` in user YAML is unchanged: the knex client name stays the same, only the underlying npm package shipped with `connection-knex` changes.
+  - **Added** `tedious` `19.2.1` as the SQL Server driver — the package knex actually loads when `client: mssql` is used.
+  - **Removed** `sqlite3`. The driver is in maintenance-only mode upstream (the v6 release marked the repo unmaintained).
+  - **Added** `better-sqlite3` `12.9.0` as the SQLite driver. Selectable as `client: better-sqlite3` (or `client: sqlite`, which is now an alias of `better-sqlite3` — see runtime client handling below).
+  - **Removed** `mysql`. Unmaintained upstream since 2020.
+  - **Added** `mysql2` `3.22.3` as the MySQL / MariaDB driver. Selectable as `client: mysql2` in connection YAML.
+
+  Runtime client handling (in `createKnex`):
+
+  - `client: sqlite` is silently remapped to `client: better-sqlite3`. `sqlite` was historically a knex-level alias of `sqlite3`; this preserves the YAML alias while the underlying driver changes.
+  - `client: sqlite3` now throws a `ConfigError` with a migration message: `Knex connection "client: sqlite3" is no longer supported. Use "client: better-sqlite3" or "client: sqlite" instead.` Existing apps using `client: sqlite3` need to update their connection YAML.
+  - `client: mysql` now throws a `ConfigError` with a migration message: `Knex connection "client: mysql" is no longer supported. Use "client: mysql2" instead.` Existing apps using `client: mysql` need to update their connection YAML. `mysql` is **not** silently remapped because knex treats `mysql` and `mysql2` as separate dialects with subtly different SQL formatters, not aliases — the migration is a deliberate user choice.
+
+  `pnpm.onlyBuiltDependencies` allowlist for `better-sqlite3`:
+
+  `better-sqlite3` runs a native-binding install script (`prebuild-install` with a `node-gyp rebuild` fallback). pnpm 10 silently suppresses postinstall scripts for unapproved packages, which leaves the binding unbuilt and crashes `KnexRaw` / `KnexBuilder` at runtime.
+
+  - Added `better-sqlite3` to the allowlist on `@lowdefy/server`, `@lowdefy/server-dev`, and `@lowdefy/server-e2e`. These are the install roots in the CLI fetch flow under `.lowdefy/{dev,build}/`, where pnpm honors the per-package `pnpm.onlyBuiltDependencies` field.
+  - Also added the same allowlist to the monorepo root `package.json`. The per-package field is ignored at workspace-root install (pnpm 10 only honors it on the install root), so contributors running `pnpm install` at the repo root would otherwise have to `pnpm rebuild better-sqlite3` manually.
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [01e249b]
+- Updated dependencies [762755c]
+- Updated dependencies [73fa2b9]
+- Updated dependencies [69a59c0]
+- Updated dependencies [6ec2cd9]
+- Updated dependencies [0d44433]
+- Updated dependencies [fd1604f]
+- Updated dependencies [a4ecee5]
+- Updated dependencies [6ec0dd4]
+- Updated dependencies [e3fc007]
+- Updated dependencies [cea34ac]
+- Updated dependencies [c91003d]
+  - @lowdefy/actions-core@5.2.0
+  - @lowdefy/operators-js@5.2.0
+  - @lowdefy/blocks-antd@5.2.0
+  - @lowdefy/client@5.2.0
+  - @lowdefy/blocks-tiptap@5.2.0
+  - @lowdefy/api@5.2.0
+  - @lowdefy/logger@5.2.0
+  - @lowdefy/blocks-loaders@5.2.0
+  - @lowdefy/layout@5.2.0
+  - @lowdefy/blocks-basic@5.2.0
+  - @lowdefy/plugin-next-auth@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/node-utils@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
