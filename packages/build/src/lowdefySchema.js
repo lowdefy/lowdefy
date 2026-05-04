@@ -1365,10 +1365,6 @@ export default {
               type: 'string',
               description: 'BCP 47 locale code used when no user preference or browser match is available.',
             },
-            fallbackLocale: {
-              type: 'string',
-              description: 'BCP 47 locale code used when a translation key is missing from the active locale. Defaults to defaultLocale.',
-            },
             locales: {
               type: 'array',
               minItems: 1,

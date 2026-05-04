@@ -37,7 +37,6 @@ test('translate method returns the localized message for a key', async () => {
     i18n: {
       active: 'de-DE',
       defaultLocale: 'en-US',
-      fallbackLocale: 'en-US',
       messages: {
         'en-US': { greeting: 'Hello' },
         'de-DE': { greeting: 'Hallo' },

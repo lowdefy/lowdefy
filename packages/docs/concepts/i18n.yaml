@@ -41,7 +41,6 @@ _ref:
             config:
               i18n:
                 defaultLocale: en-US
-                fallbackLocale: en-US
                 locales:
                   - { code: en-US, label: English, antd: en_US, dayjs: en }
                   - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
@@ -60,10 +59,11 @@ _ref:
 
             **Top-level fields:**
             - `defaultLocale` (required) — Locale used when no user preference and no browser match. Must appear in `locales`.
-            - `fallbackLocale` — Locale consulted when a key is missing in the active locale. Defaults to `defaultLocale`.
             - `messages` — Translation catalogs keyed by locale code. Use inline maps or `_ref` to JSON files.
 
             Only the locales you declare are bundled — antd and dayjs locale imports are codegen'd at build time, so you don't pay for locales you don't ship.
+
+            **Fallback is always `en-US`.** When a key isn't in the active locale, the lookup chain checks `en-US` next, then framework builtins, then the key string. Plugin and module authors should always ship `en-US` translations as a baseline so consumers in any locale see real English copy instead of raw keys when translations are incomplete.
 
             ## Translate strings with `_t`
 
@@ -93,7 +93,7 @@ _ref:
 
             Where `messages.en-US.cart.items: '{count, plural, one {# item} other {# items}}'`.
 
-            **Resolution order** (per `_t` call): active-locale message → fallback-locale message → built-in framework message → key as last resort.
+            **Resolution order** (per `_t` call): active-locale message → `en-US` message → built-in framework message → key as last resort.
 
             ## Switch language at runtime
 

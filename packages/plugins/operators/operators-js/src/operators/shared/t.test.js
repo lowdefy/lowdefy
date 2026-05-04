@@ -19,7 +19,6 @@ import _t from './t.js';
 const i18n = {
   active: 'de-DE',
   defaultLocale: 'en-US',
-  fallbackLocale: 'en-US',
   locales: [{ code: 'en-US' }, { code: 'de-DE' }],
   messages: {
     'en-US': {
@@ -39,13 +38,13 @@ test('_t with a string key returns the active locale message', () => {
   expect(_t({ params: 'hello', i18n })).toBe('Hallo');
 });
 
-test('_t falls back to fallbackLocale when key is missing in active locale', () => {
+test('_t falls back to en-US when key is missing in active locale', () => {
   expect(_t({ params: 'cart.items', i18n: { ...i18n, active: 'de-DE' } })).toBe(
     '{count, plural, =0 {No items} one {# item} other {# items}}'
   );
 });
 
-test('_t returns the key itself when missing in both active and fallback', () => {
+test('_t returns the key itself when missing in both active and en-US', () => {
   expect(_t({ params: 'unknown', i18n })).toBe('unknown');
 });
 
@@ -53,7 +52,7 @@ test('_t interpolates ICU MessageFormat values', () => {
   expect(_t({ params: { key: 'greeting', values: { name: 'Ada' } }, i18n })).toBe('Hallo, Ada!');
 });
 
-test('_t supports plural ICU rules via fallback locale', () => {
+test('_t supports plural ICU rules via en-US fallback', () => {
   const localized = _t({
     params: { key: 'cart.items', values: { count: 5 } },
     i18n: { ...i18n, active: 'en-US' },
@@ -89,7 +88,7 @@ test('_t throws when values is not an object', () => {
   );
 });
 
-test('_t falls back to a builtin message when neither active nor fallback have the key', () => {
+test('_t falls back to a builtin message when neither active nor en-US have the key', () => {
   expect(_t({ params: 'engine.action.loading', i18n })).toBe('Loading');
 });
 

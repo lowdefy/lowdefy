@@ -19,7 +19,6 @@ import _locale from './locale.js';
 const i18n = {
   active: 'de-DE',
   defaultLocale: 'en-US',
-  fallbackLocale: 'en-US',
   locales: [
     { code: 'en-US', label: 'English' },
     { code: 'de-DE', label: 'Deutsch' },
@@ -46,18 +45,12 @@ test('_locale default reads the configured default', () => {
   expect(_locale({ params: 'default', location: 'l', i18n })).toBe('en-US');
 });
 
-test('_locale fallback reads the configured fallback', () => {
+test('_locale fallback always returns en-US', () => {
   expect(_locale({ params: 'fallback', location: 'l', i18n })).toBe('en-US');
 });
 
-test('_locale fallback defaults to default when fallbackLocale is unset', () => {
-  expect(
-    _locale({
-      params: 'fallback',
-      location: 'l',
-      i18n: { ...i18n, fallbackLocale: undefined },
-    })
-  ).toBe('en-US');
+test('_locale fallback returns en-US even when i18n is unset', () => {
+  expect(_locale({ params: 'fallback', location: 'l' })).toBe('en-US');
 });
 
 test('_locale supported returns the list of locales', () => {

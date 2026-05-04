@@ -30,7 +30,7 @@ _ref:
 
       - `active: string` — the resolved active locale (e.g. `'de-DE'`).
       - `default: string` — the configured `config.i18n.defaultLocale`.
-      - `fallback: string` — the configured `config.i18n.fallbackLocale`, defaulting to `default`.
+      - `fallback: string` — always `'en-US'`. Lowdefy uses `en-US` as a fixed fallback when a key is missing in the active locale, so plugin and module authors should always ship `en-US` translations.
       - `supported: object[]` — the list of locales declared in `config.i18n.locales`. Each item has `{ code, label, antd, dayjs }`.
 
       Pair with the [`SetLocale`](/SetLocale) action to build a language picker.

@@ -20,7 +20,7 @@ function _locale({ arrayIndices, location, params, i18n }) {
   const view = {
     active: i18n?.active,
     default: i18n?.defaultLocale,
-    fallback: i18n?.fallbackLocale ?? i18n?.defaultLocale,
+    fallback: 'en-US',
     supported: i18n?.locales ?? [],
   };
   return getFromObject({

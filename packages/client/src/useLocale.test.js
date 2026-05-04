@@ -28,7 +28,6 @@ const { default: useLocale } = await import('./useLocale.js');
 
 const i18n = {
   defaultLocale: 'en-US',
-  fallbackLocale: 'en-US',
   locales: [
     { code: 'en-US', label: 'English', antd: 'en_US', dayjs: 'en' },
     { code: 'de-DE', label: 'Deutsch', antd: 'de_DE', dayjs: 'de' },

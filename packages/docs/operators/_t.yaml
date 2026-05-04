@@ -31,7 +31,7 @@ _ref:
     description: |
       The `_t` operator translates a string key against the app's `config.i18n` message catalogs, with [ICU MessageFormat](https://formatjs.io/docs/core-concepts/icu-syntax/) interpolation. It's the primary way app authors localize their own strings.
 
-      Resolution order: the active locale's messages → the fallback locale's messages → built-in framework messages → the key itself. The active locale is resolved from the user's preference (`SetLocale`/`localStorage`), then the browser's `navigator.languages` best-fit, then `config.i18n.defaultLocale`.
+      Resolution order: the active locale's messages → `en-US` messages → built-in framework messages → the key itself. The active locale is resolved from the user's preference (`SetLocale`/`localStorage`), then the browser's `navigator.languages` best-fit, then `config.i18n.defaultLocale`. Lowdefy always uses `en-US` as the missing-key fallback, so plugin and module authors should ship `en-US` translations as a baseline.
 
       Configure messages on `config.i18n.messages.{locale}`:
 
@@ -67,7 +67,7 @@ _ref:
       ```yaml
       _t: greeting
       ```
-      Returns: the active-locale message at `messages.{active}.greeting`, or the fallback / key.
+      Returns: the active-locale message at `messages.{active}.greeting`, or the `en-US` message, or the key.
 
       ###### Interpolate values:
       ```yaml

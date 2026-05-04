@@ -19,7 +19,6 @@ import translate from './translate.js';
 const i18n = {
   active: 'de-DE',
   defaultLocale: 'en-US',
-  fallbackLocale: 'en-US',
   locales: [{ code: 'en-US' }, { code: 'de-DE' }],
   messages: {
     'en-US': {
@@ -39,13 +38,13 @@ test('returns the active-locale message when present', () => {
   expect(translate({ key: 'hello', i18n })).toBe('Hallo');
 });
 
-test('falls back to the fallback locale when missing in active', () => {
+test('falls back to en-US when missing in active', () => {
   expect(translate({ key: 'cart.items', i18n })).toBe(
     '{count, plural, =0 {No items} one {# item} other {# items}}'
   );
 });
 
-test('falls back to a builtin message when neither active nor fallback have the key', () => {
+test('falls back to a builtin message when neither active nor en-US have the key', () => {
   expect(translate({ key: 'engine.action.loading', i18n })).toBe('Loading');
 });
 

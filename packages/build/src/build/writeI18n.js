@@ -71,13 +71,6 @@ async function writeI18n({ components, context }) {
       { configKey: i18n['~k'] }
     );
   }
-  const fallbackLocale = i18n.fallbackLocale ?? i18n.defaultLocale;
-  if (!codes.has(fallbackLocale)) {
-    throw new ConfigError(
-      `App "config.i18n.fallbackLocale" "${fallbackLocale}" must be present in "locales".`,
-      { configKey: i18n['~k'] }
-    );
-  }
   const messages = i18n.messages ?? {};
   if (!type.isObject(messages)) {
     throw new ConfigError('App "config.i18n.messages" should be an object.', {
@@ -106,7 +99,7 @@ async function writeI18n({ components, context }) {
     if (Object.keys(combined).length === 0) {
       context.handleWarning(
         new ConfigWarning(
-          `App "config.i18n" has no messages for locale "${code}". Falls back to "${fallbackLocale}".`,
+          `App "config.i18n" has no messages for locale "${code}". Falls back to "en-US".`,
           { configKey: i18n['~k'] }
         )
       );
@@ -116,7 +109,6 @@ async function writeI18n({ components, context }) {
   });
   const artifact = {
     defaultLocale: i18n.defaultLocale,
-    fallbackLocale,
     locales: i18n.locales.map((locale) => ({
       code: locale.code,
       label: locale.label,

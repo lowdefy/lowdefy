@@ -65,7 +65,7 @@ test('writeI18n writes the i18n config when valid', async () => {
   expect(filename).toBe('i18n.json');
   const parsed = JSON.parse(json);
   expect(parsed.defaultLocale).toBe('en-US');
-  expect(parsed.fallbackLocale).toBe('en-US');
+  expect(parsed.fallbackLocale).toBeUndefined();
   expect(parsed.locales).toEqual([
     { code: 'en-US', label: 'English', antd: 'en_US', dayjs: 'en' },
     { code: 'de-DE', label: 'Deutsch', antd: 'de_DE', dayjs: 'de' },
@@ -74,35 +74,6 @@ test('writeI18n writes the i18n config when valid', async () => {
     'en-US': { hello: 'Hello' },
     'de-DE': { hello: 'Hallo' },
   });
-});
-
-test('writeI18n defaults fallbackLocale to defaultLocale', async () => {
-  const components = {
-    config: {
-      i18n: {
-        defaultLocale: 'en-US',
-        locales: [{ code: 'en-US' }],
-      },
-    },
-  };
-  await writeI18n({ components, context });
-  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(parsed.fallbackLocale).toBe('en-US');
-});
-
-test('writeI18n honors explicit fallbackLocale', async () => {
-  const components = {
-    config: {
-      i18n: {
-        defaultLocale: 'de-DE',
-        fallbackLocale: 'en-US',
-        locales: [{ code: 'en-US' }, { code: 'de-DE' }],
-      },
-    },
-  };
-  await writeI18n({ components, context });
-  const parsed = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(parsed.fallbackLocale).toBe('en-US');
 });
 
 test('writeI18n throws when defaultLocale is missing', async () => {
@@ -129,21 +100,6 @@ test('writeI18n throws when defaultLocale is not in locales', async () => {
   };
   await expect(writeI18n({ components, context })).rejects.toThrow(
     'App "config.i18n.defaultLocale" "fr-FR" must be present in "locales".'
-  );
-});
-
-test('writeI18n throws when fallbackLocale is not in locales', async () => {
-  const components = {
-    config: {
-      i18n: {
-        defaultLocale: 'en-US',
-        fallbackLocale: 'fr-FR',
-        locales: [{ code: 'en-US' }],
-      },
-    },
-  };
-  await expect(writeI18n({ components, context })).rejects.toThrow(
-    'App "config.i18n.fallbackLocale" "fr-FR" must be present in "locales".'
   );
 });
 

@@ -19,9 +19,11 @@ import { IntlMessageFormat } from 'intl-messageformat';
 import builtinMessages from './builtinMessages.js';
 import type from './type.js';
 
-function resolveMessage({ key, active, fallback, messages }) {
+const FALLBACK_LOCALE = 'en-US';
+
+function resolveMessage({ key, active, messages }) {
   if (active && messages[active]?.[key] != null) return messages[active][key];
-  if (fallback && messages[fallback]?.[key] != null) return messages[fallback][key];
+  if (messages[FALLBACK_LOCALE]?.[key] != null) return messages[FALLBACK_LOCALE][key];
   if (builtinMessages[key] != null) return builtinMessages[key];
   return key;
 }
@@ -31,9 +33,8 @@ function translate({ key, values, locale, i18n }) {
     throw new Error('translate requires a string "key".');
   }
   const active = locale ?? i18n?.active ?? i18n?.defaultLocale;
-  const fallback = i18n?.fallbackLocale ?? i18n?.defaultLocale;
   const messages = i18n?.messages ?? {};
-  const message = resolveMessage({ key, active, fallback, messages });
+  const message = resolveMessage({ key, active, messages });
   if (type.isNone(values)) return message;
   if (!type.isObject(values)) {
     throw new Error('translate "values" must be an object.');

@@ -5,7 +5,6 @@ lowdefy: local
 config:
   i18n:
     defaultLocale: en-US
-    fallbackLocale: en-US
     locales:
       - code: en-US
         label: English
