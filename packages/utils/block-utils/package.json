@@ -44,7 +44,7 @@
     "@lowdefy/errors": "5.1.0",
     "@lowdefy/helpers": "5.1.0",
     "clsx": "2.1.1",
-    "dompurify": "3.2.4",
+    "dompurify": "3.4.2",
     "tailwind-merge": "2.6.0"
   },
   "peerDependencies": {
