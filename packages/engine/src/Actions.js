@@ -181,7 +181,7 @@ class Actions {
       return { type: action.type, skipped: true, index };
     }
     const messages = parsedAction.messages || {};
-    const t = this.context._internal.lowdefy._internal.t;
+    const t = this.context._internal.lowdefy._internal.translate;
     let response;
     const closeLoading = this.displayMessage({
       defaultMessage: t('engine.action.loading'),

@@ -10,7 +10,7 @@ const createLinkComponent = (lowdefy, Link) => {
       className={className}
       style={style}
       rel={rel}
-      aria-label={ariaLabel ?? lowdefy._internal.t('client.backAriaLabel')}
+      aria-label={ariaLabel ?? lowdefy._internal.translate('client.backAriaLabel')}
       onClick={(...params) => {
         lowdefy._internal.router.back();
         onClick(...params);

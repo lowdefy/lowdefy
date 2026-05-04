@@ -69,7 +69,8 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
-    lowdefy._internal.t = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
+    lowdefy._internal.translate = (key, values) =>
+      translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
     lowdefy._internal.logger = createBrowserLogger();

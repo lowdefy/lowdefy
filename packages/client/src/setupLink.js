@@ -26,7 +26,7 @@ function setupLink(lowdefy) {
       const handle = window.open(`${url}${query ? `?${query}` : ''}`, '_blank');
       if (!handle) {
         lowdefy._internal.displayMessage({
-          content: lowdefy._internal.t('client.popupBlocked'),
+          content: lowdefy._internal.translate('client.popupBlocked'),
           status: 'info',
           duration: 10,
         });

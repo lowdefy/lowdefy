@@ -62,7 +62,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
         methods={Object.assign(block.methods, {
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
-          translate: lowdefy._internal.t,
+          translate: lowdefy._internal.translate,
           triggerEvent: block.triggerEvent,
           setValue: block.setValue,
           moveItemDown: block.moveItemDown,

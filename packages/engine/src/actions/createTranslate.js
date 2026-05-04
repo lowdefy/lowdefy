@@ -16,7 +16,7 @@
 
 function createTranslate({ context }) {
   return function translate(key, values) {
-    return context._internal.lowdefy._internal.t(key, values);
+    return context._internal.lowdefy._internal.translate(key, values);
   };
 }
 

@@ -109,8 +109,8 @@ function createShortcutBadge(lowdefy) {
     if (!primary) return null;
 
     const segments = parseShortcut(primary);
-    const thenLabel = lowdefy?._internal?.t
-      ? lowdefy._internal.t('client.shortcutThen')
+    const thenLabel = lowdefy?._internal?.translate
+      ? lowdefy._internal.translate('client.shortcutThen')
       : 'then';
 
     return (

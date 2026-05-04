@@ -23,7 +23,7 @@ function createValidate({ context }) {
     const validationErrors = context._internal.RootSlots.validate(getBlockMatcher(params));
     if (validationErrors.length > 0) {
       throw new UserError(
-        context._internal.lowdefy._internal.t('engine.validation.summary', {
+        context._internal.lowdefy._internal.translate('engine.validation.summary', {
           count: validationErrors.length,
         })
       );

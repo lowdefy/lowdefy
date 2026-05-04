@@ -39,7 +39,7 @@ const lowdefy = {
       TextInput: { category: 'input', valueType: 'string' },
     },
     displayMessage,
-    t: (key, values) => {
+    translate: (key, values) => {
       if (key === 'engine.validation.summary') {
         return `Your input has ${values.count} validation error${values.count === 1 ? '' : 's'}.`;
       }

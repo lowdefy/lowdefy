@@ -69,7 +69,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           removeItem: block.removeItem,
-          translate: lowdefy._internal.t,
+          translate: lowdefy._internal.translate,
           triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         })}
