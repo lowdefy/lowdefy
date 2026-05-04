@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- Updated dependencies [e3fc007]
+  - @lowdefy/logger@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/node-utils@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
