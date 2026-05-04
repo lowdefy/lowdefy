@@ -74,7 +74,7 @@
     "react-dom": "18.2.0",
     "react-icons": "5.6.0",
     "tailwindcss": "4.2.4",
-    "uuid": "13.0.0"
+    "uuid": "14.0.0"
   },
   "devDependencies": {
     "@lowdefy/build": "5.2.0",
