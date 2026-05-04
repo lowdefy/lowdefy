@@ -23,33 +23,13 @@ function isSafeIdentifier(value) {
   return type.isString(value) && SAFE_IDENTIFIER_REGEX.test(value);
 }
 
-function toJsStringLiteral(value) {
-  return JSON.stringify(value).replace(/[<>/\u2028\u2029]/g, (char) => {
-    switch (char) {
-      case '<':
-        return '\\u003C';
-      case '>':
-        return '\\u003E';
-      case '/':
-        return '\\u002F';
-      case '\u2028':
-        return '\\u2028';
-      case '\u2029':
-        return '\\u2029';
-      default:
-        return char;
-    }
-  });
-}
-
 function buildAntdLoaders(locales) {
   const entries = locales
     .filter((locale) => isSafeIdentifier(locale.code) && isSafeIdentifier(locale.antd))
-    .map((locale) => {
-      const code = toJsStringLiteral(locale.code);
-      const antdImportPath = toJsStringLiteral(`antd/locale/${locale.antd}.js`);
-      return `  [${code}]: () => import(${antdImportPath}).then((m) => m.default ?? m),`;
-    });
+    .map(
+      (locale) =>
+        `  '${locale.code}': () => import('antd/locale/${locale.antd}.js').then((m) => m.default ?? m),`
+    );
   return `${HEADER}const loaders = {\n${entries.join('\n')}\n};\nexport default loaders;\n`;
 }
 
@@ -58,11 +38,9 @@ function buildDayjsImports(locales) {
     (locale) => isSafeIdentifier(locale.code) && isSafeIdentifier(locale.dayjs)
   );
   const ids = Array.from(new Set(validDayjsLocales.map((locale) => locale.dayjs)));
-  const imports = ids
-    .map((id) => `import ${toJsStringLiteral(`dayjs/locale/${id}.js`)};`)
-    .join('\n');
+  const imports = ids.map((id) => `import 'dayjs/locale/${id}.js';`).join('\n');
   const localeMap = validDayjsLocales
-    .map((locale) => `  [${toJsStringLiteral(locale.code)}]: ${toJsStringLiteral(locale.dayjs)},`)
+    .map((locale) => `  '${locale.code}': '${locale.dayjs}',`)
     .join('\n');
   return `${HEADER}${imports}\nconst localeMap = {\n${localeMap}\n};\nexport default localeMap;\n`;
 }
