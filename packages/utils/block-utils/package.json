@@ -45,7 +45,7 @@
     "@lowdefy/helpers": "5.2.0",
     "clsx": "2.1.1",
     "dompurify": "3.4.2",
-    "tailwind-merge": "2.6.0"
+    "tailwind-merge": "3.5.0"
   },
   "peerDependencies": {
     "react": ">=18",
