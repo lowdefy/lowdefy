@@ -40,7 +40,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.0",
+    "@ant-design/icons": "6.2.2",
     "@lowdefy/block-utils": "5.1.0",
     "@lowdefy/engine": "5.1.0",
     "@lowdefy/errors": "5.1.0",
