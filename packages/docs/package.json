@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "5.1.0",
     "minisearch": "^7.0.0",
-    "yaml": "2.3.4"
+    "yaml": "2.8.4"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

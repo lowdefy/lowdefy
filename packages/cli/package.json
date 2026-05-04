@@ -50,7 +50,7 @@
     "dotenv": "16.3.1",
     "semver": "7.7.4",
     "uuid": "9.0.1",
-    "yaml": "2.3.4"
+    "yaml": "2.8.4"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

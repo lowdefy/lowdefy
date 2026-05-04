@@ -68,7 +68,7 @@
     "picomatch": "4.0.4",
     "semver": "7.7.4",
     "tar": "6.2.1",
-    "yaml": "2.3.4",
+    "yaml": "2.8.4",
     "yargs": "17.7.2"
   },
   "devDependencies": {

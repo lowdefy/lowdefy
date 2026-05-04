@@ -90,7 +90,7 @@
     "swr": "2.4.1",
     "tailwindcss": "4.2.4",
     "uuid": "13.0.0",
-    "yaml": "2.3.4",
+    "yaml": "2.8.4",
     "yargs": "17.7.2"
   },
   "devDependencies": {
