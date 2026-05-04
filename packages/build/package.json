@@ -63,7 +63,7 @@
     "@lowdefy/nunjucks": "5.1.0",
     "@lowdefy/operators": "5.1.0",
     "@lowdefy/operators-js": "5.1.0",
-    "ajv": "8.12.0",
+    "ajv": "8.20.0",
     "json5": "2.2.3",
     "picomatch": "4.0.4",
     "semver": "7.7.4",
