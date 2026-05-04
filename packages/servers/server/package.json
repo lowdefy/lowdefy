@@ -67,7 +67,7 @@
     "@tailwindcss/postcss": "4.2.4",
     "antd": "6.3.1",
     "dayjs": "1.11.20",
-    "next": "16.1.6",
+    "next": "16.2.4",
     "next-auth": "4.24.14",
     "pino": "8.16.2",
     "react": "18.2.0",
