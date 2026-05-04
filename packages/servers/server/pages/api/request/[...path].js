@@ -23,7 +23,7 @@ async function handler({ context, req, res }) {
     throw new Error('Only POST requests are supported.');
   }
   const segments = req.query.path;
-  if (!segments || segments.length < 2) {
+  if (!Array.isArray(segments) || segments.length < 2) {
     res.status(400).json({ error: 'Invalid request path' });
     return;
   }

@@ -34,7 +34,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     warnings: [],
     keyMap: {},
     logger,
-    modules: {}, // Map<entryId, ModuleEntry> — populated by buildModuleDefs (Phase 1)
+    // Null prototype prevents pollution via attacker-controlled entry.id.
+    modules: Object.create(null),
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,

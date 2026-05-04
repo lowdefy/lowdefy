@@ -96,11 +96,14 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
         `Use a flat identifier like "team-users".`
     );
   }
+  if (entry.id === '__proto__' || entry.id === 'constructor' || entry.id === 'prototype') {
+    throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`);
+  }
   if (!entry.source || !type.isString(entry.source)) {
     throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
-  if (context.modules[entry.id]) {
+  if (Object.hasOwn(context.modules, entry.id)) {
     throw new ConfigError(`Duplicate module entry id "${entry.id}".`);
   }
 

@@ -4,10 +4,11 @@ import { type } from '@lowdefy/helpers';
 
 const createLinkComponent = (lowdefy, Link) => {
   const { window } = lowdefy._internal.globals;
-  const backLink = ({ ariaLabel, children, className, id, onClick = () => {}, rel }) => (
+  const backLink = ({ ariaLabel, children, className, id, onClick = () => {}, rel, style }) => (
     <a
       id={id}
       className={className}
+      style={style}
       rel={rel}
       aria-label={ariaLabel ?? 'back'}
       onClick={(...params) => {
@@ -29,6 +30,7 @@ const createLinkComponent = (lowdefy, Link) => {
     pageId,
     query,
     rel,
+    style,
     url,
   }) => {
     return (
@@ -36,6 +38,7 @@ const createLinkComponent = (lowdefy, Link) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
+        style={style}
         href={href ?? `${url}${query ? `?${query}` : ''}`}
         rel={rel ?? (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
@@ -62,6 +65,7 @@ const createLinkComponent = (lowdefy, Link) => {
     replace,
     scroll,
     setInput,
+    style,
     url,
   }) => {
     if (newTab) {
@@ -71,6 +75,7 @@ const createLinkComponent = (lowdefy, Link) => {
           id={id}
           aria-label={ariaLabel}
           className={className}
+          style={style}
           href={`${window.location.origin}${lowdefy.basePath}${pathname}${
             query ? `?${query}` : ''
           }`}
@@ -94,6 +99,7 @@ const createLinkComponent = (lowdefy, Link) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
+        style={style}
         rel={rel}
         onClick={(...params) => {
           setInput();
@@ -104,8 +110,8 @@ const createLinkComponent = (lowdefy, Link) => {
       </Link>
     );
   };
-  const noLink = ({ className, children, id, onClick = () => {} }) => (
-    <span id={id} className={className} onClick={onClick}>
+  const noLink = ({ className, children, id, onClick = () => {}, style }) => (
+    <span id={id} className={className} style={style} onClick={onClick}>
       {type.isFunction(children) ? children(id) : children}
     </span>
   );

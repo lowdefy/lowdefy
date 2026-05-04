@@ -65,5 +65,10 @@
     "prettier": "3.8.3",
     "turbo": "2.9.6"
   },
-  "packageManager": "pnpm@10.29.2"
+  "packageManager": "pnpm@10.29.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  }
 }

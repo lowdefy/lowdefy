@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import knex from 'knex';
+import createKnex from '../createKnex.js';
 import schema from './schema.js';
 
 async function KnexRaw({ request, connection }) {
-  const client = knex(connection);
+  const client = createKnex(connection);
   const res = await client.raw(request.query, request.parameters);
   Object.keys(res).forEach((key) => {
     if (key.startsWith('_')) {
