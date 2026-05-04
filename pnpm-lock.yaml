@@ -373,8 +373,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@testing-library/user-event':
-        specifier: 14.4.3
-        version: 14.4.3(@testing-library/dom@8.19.1)
+        specifier: 14.6.1
+        version: 14.6.1(@testing-library/dom@8.19.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -553,8 +553,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@testing-library/user-event':
-        specifier: 14.4.3
-        version: 14.4.3(@testing-library/dom@8.19.1)
+        specifier: 14.6.1
+        version: 14.6.1(@testing-library/dom@8.19.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -701,8 +701,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -756,8 +756,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/node-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -793,8 +793,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -848,8 +848,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -885,8 +885,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -919,8 +919,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -953,8 +953,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -999,8 +999,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -1033,8 +1033,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -1121,8 +1121,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -1767,8 +1767,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@testing-library/user-event':
-        specifier: 14.4.3
-        version: 14.4.3(@testing-library/dom@8.19.1)
+        specifier: 14.6.1
+        version: 14.6.1(@testing-library/dom@8.19.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -2249,8 +2249,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@testing-library/user-event':
-        specifier: 14.4.3
-        version: 14.4.3(@testing-library/dom@8.19.1)
+        specifier: 14.6.1
+        version: 14.6.1(@testing-library/dom@8.19.1)
       ajv:
         specifier: 8.20.0
         version: 8.20.0
@@ -2286,8 +2286,8 @@ importers:
         specifier: 5.1.0
         version: link:../e2e-utils
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
@@ -2342,8 +2342,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@testing-library/user-event':
-        specifier: 14.4.3
-        version: 14.4.3(@testing-library/dom@8.19.1)
+        specifier: 14.6.1
+        version: 14.6.1(@testing-library/dom@8.19.1)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -2363,8 +2363,8 @@ importers:
         specifier: 5.1.0
         version: link:../helpers
       '@playwright/test':
-        specifier: 1.50.1
-        version: 1.50.1
+        specifier: 1.59.1
+        version: 1.59.1
       js-yaml:
         specifier: 4.1.1
         version: 4.1.1
@@ -4376,11 +4376,6 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/test@1.50.1':
-    resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   '@playwright/test@1.59.1':
     resolution: {integrity: sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg==}
     engines: {node: '>=18'}
@@ -5520,8 +5515,8 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
 
-  '@testing-library/user-event@14.4.3':
-    resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
+  '@testing-library/user-event@14.6.1':
+    resolution: {integrity: sha512-vq7fv0rnt+QTXgPxr5Hjc210p6YKq2kmdziLgnsZGgLJ9e6VAShx1pACLuRjd/AS/sr7phAR58OIIpf0LlmQNw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
@@ -10232,18 +10227,8 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  playwright-core@1.50.1:
-    resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   playwright-core@1.59.1:
     resolution: {integrity: sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
-  playwright@1.50.1:
-    resolution: {integrity: sha512-G8rwsOQJ63XG6BbKj2w5rHeavFjy5zynBA9zsJMMtBoe/Uf757oG12NXz6e6OirF7RCrTVAKFXbLmn1RbL7Qaw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -14507,10 +14492,6 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@playwright/test@1.50.1':
-    dependencies:
-      playwright: 1.50.1
-
   '@playwright/test@1.59.1':
     dependencies:
       playwright: 1.59.1
@@ -16004,7 +15985,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@testing-library/user-event@14.4.3(@testing-library/dom@8.19.1)':
+  '@testing-library/user-event@14.6.1(@testing-library/dom@8.19.1)':
     dependencies:
       '@testing-library/dom': 8.19.1
 
@@ -21851,15 +21832,7 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  playwright-core@1.50.1: {}
-
   playwright-core@1.59.1: {}
-
-  playwright@1.50.1:
-    dependencies:
-      playwright-core: 1.50.1
-    optionalDependencies:
-      fsevents: 2.3.2
 
   playwright@1.59.1:
     dependencies:

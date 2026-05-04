@@ -40,7 +40,7 @@
     "@lowdefy/helpers": "5.1.0",
     "@testing-library/dom": "8.19.1",
     "@testing-library/react": "13.4.0",
-    "@testing-library/user-event": "14.4.3",
+    "@testing-library/user-event": "14.6.1",
     "ajv": "8.20.0",
     "ajv-errors": "3.0.0",
     "jest": "28.1.3",
