@@ -731,8 +731,8 @@ importers:
         specifier: '>=6'
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       classnames:
-        specifier: 2.3.2
-        version: 2.3.2
+        specifier: 2.5.1
+        version: 2.5.1
       dayjs:
         specifier: 1.11.20
         version: 1.11.20
@@ -777,8 +777,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/helpers
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: 3.4.2
+        version: 3.4.2
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -971,8 +971,8 @@ importers:
         specifier: 5.1.0
         version: link:../../../utils/block-utils
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: 3.4.2
+        version: 3.4.2
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -2308,8 +2308,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: 3.4.2
+        version: 3.4.2
       react:
         specifier: '>=18'
         version: 18.2.0
@@ -6874,8 +6874,8 @@ packages:
   cjs-module-lexer@1.2.3:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
 
-  classnames@2.3.2:
-    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
@@ -7293,11 +7293,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.2.4:
-    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
-
-  dompurify@3.4.1:
-    resolution: {integrity: sha512-JahakDAIg1gyOm7dlgWSDjV4n7Ip2PKR55NIT6jrMfIgLFgWo81vdr1/QGqWtFNRqXP9UV71oVePtjqS2ebnPw==}
+  dompurify@3.4.2:
+    resolution: {integrity: sha512-lHeS9SA/IKeIFFyYciHBr2n0v1VMPlSj843HdLOwjb2OxNwdq9Xykxqhk+FE42MzAdHvInbAolSE4mhahPpjXA==}
 
   domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -17613,7 +17610,7 @@ snapshots:
 
   cjs-module-lexer@1.2.3: {}
 
-  classnames@2.3.2: {}
+  classnames@2.5.1: {}
 
   clean-stack@2.2.0:
     optional: true
@@ -18022,11 +18019,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.2.4:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
-  dompurify@3.4.1:
+  dompurify@3.4.2:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -21880,7 +21873,7 @@ snapshots:
       '@posthog/core': 1.27.9
       '@posthog/types': 1.372.5
       core-js: 3.48.0
-      dompurify: 3.4.1
+      dompurify: 3.4.2
       fflate: 0.4.8
       preact: 10.28.3
       query-selector-shadow-dom: 1.0.1
