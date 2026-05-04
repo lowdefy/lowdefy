@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import * as path from 'path';
-import * as Mocha from 'mocha';
+import path from 'path';
+import Mocha from 'mocha';
 import { glob } from 'glob';
 
 export function run(): Promise<void> {
