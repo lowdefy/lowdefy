@@ -22,15 +22,6 @@ import { ConfigError } from '@lowdefy/errors';
 import lowdefySchema from '../../lowdefySchema.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 
-const SUPPORTED_PAIRINGS = {
-  MongoDBCollection: 'MongoDBInsertMany',
-  AwsS3Bucket: 'AwsS3PutObject',
-};
-
-function findConnection(components, connectionId) {
-  return (components.connections ?? []).find((c) => c.connectionId === connectionId);
-}
-
 function collectExcludeIncludeIds(components) {
   const requestIds = new Set();
   const endpointIds = new Set();
@@ -75,25 +66,25 @@ function validateReferences({ audit, components, context }) {
 }
 
 function validateAuditConfig({ components, context }) {
-  if (type.isNone(components.audit)) {
+  if (type.isNone(components.logger?.audit)) {
     return;
   }
-  if (!type.isObject(components.audit)) {
+  if (!type.isObject(components.logger.audit)) {
     collectExceptions(
       context,
-      new ConfigError('App "audit" should be an object.', {
-        received: components.audit,
-        configKey: components['~k'],
+      new ConfigError('App "logger.audit" should be an object.', {
+        received: components.logger.audit,
+        configKey: components.logger['~k'],
       })
     );
     return;
   }
 
-  const audit = components.audit;
+  const audit = components.logger.audit;
   const configKey = audit['~k'];
 
   const { valid, errors } = validate({
-    schema: lowdefySchema.properties.audit,
+    schema: lowdefySchema.properties.logger.properties.audit,
     data: audit,
     returnErrors: true,
   });
@@ -103,64 +94,6 @@ function validateAuditConfig({ components, context }) {
       collectExceptions(context, new ConfigError(`Audit ${error.message}.`, { configKey }));
     });
     return;
-  }
-
-  const transport = audit.transport ?? 'connection';
-
-  if (transport === 'connection') {
-    if (type.isNone(audit.connectionId)) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          'Audit "connectionId" is required when transport is "connection".',
-          { configKey }
-        )
-      );
-      return;
-    }
-    if (type.isNone(audit.requestType)) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          'Audit "requestType" is required when transport is "connection".',
-          { configKey }
-        )
-      );
-      return;
-    }
-    if (!context.connectionIds?.has(audit.connectionId)) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          `Audit "connectionId" references unknown connection "${audit.connectionId}".`,
-          { configKey }
-        )
-      );
-      return;
-    }
-
-    const connection = findConnection(components, audit.connectionId);
-    const expectedRequestType = SUPPORTED_PAIRINGS[connection?.type];
-    if (!expectedRequestType) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          `Audit connection "${audit.connectionId}" has unsupported type "${connection?.type}". Supported types: ${Object.keys(SUPPORTED_PAIRINGS).join(', ')}.`,
-          { configKey }
-        )
-      );
-      return;
-    }
-    if (audit.requestType !== expectedRequestType) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          `Audit "requestType" "${audit.requestType}" is incompatible with connection type "${connection.type}". Expected "${expectedRequestType}".`,
-          { configKey }
-        )
-      );
-      return;
-    }
   }
 
   if (!type.isNone(audit.exclude) && !type.isNone(audit.include)) {

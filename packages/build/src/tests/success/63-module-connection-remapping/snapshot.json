@@ -8,7 +8,6 @@
     "git_sha": "test-git-sha-for-snapshots",
     "~k": "1c"
   },
-  "audit.json": {},
   "auth.json": {
     "api": {
       "roles": {

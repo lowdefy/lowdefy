@@ -47,7 +47,6 @@ import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
-import writeAudit from './build/writeAudit.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
@@ -138,7 +137,6 @@ async function build(options) {
     await writeAuth({ components, context });
     await writeConnections({ components, context });
     await writeApi({ components, context });
-    await writeAudit({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });

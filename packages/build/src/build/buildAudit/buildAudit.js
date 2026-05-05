@@ -22,50 +22,33 @@ import validateAuditConfig from './validateAuditConfig.js';
 function buildAudit({ components, context }) {
   validateAuditConfig({ components, context });
 
-  if (type.isNone(components.audit)) {
+  if (type.isNone(components.logger?.audit)) {
     return components;
   }
 
-  if (type.isNone(components.audit.transport)) {
-    components.audit.transport = 'connection';
-  }
-  if (type.isNone(components.audit.severity)) {
-    components.audit.severity = 'medium';
-  }
-  if (type.isNone(components.audit.strict)) {
-    components.audit.strict = false;
-  }
-  if (type.isNone(components.audit.mask)) {
-    components.audit.mask = [];
-  }
-  if (type.isNone(components.audit.fields)) {
-    components.audit.fields = {};
-  }
-  if (type.isNone(components.audit.capture)) {
-    components.audit.capture = {};
-  }
-  if (type.isNone(components.audit.batch)) {
-    components.audit.batch = { enabled: false };
-  } else {
-    if (type.isNone(components.audit.batch.enabled)) {
-      components.audit.batch.enabled = false;
-    }
-    if (type.isNone(components.audit.batch.size)) {
-      components.audit.batch.size = 100;
-    }
-    if (type.isNone(components.audit.batch.interval)) {
-      components.audit.batch.interval = 5000;
-    }
-  }
-  if (type.isNone(components.audit.sampling)) {
-    components.audit.sampling = {};
-  }
-  if (type.isNone(components.audit.rateLimit)) {
-    components.audit.rateLimit = {};
-  }
+  const audit = components.logger.audit;
 
-  components.audit.configured =
-    components.audit.transport === 'stdout' || !type.isNone(components.audit.connectionId);
+  if (type.isNone(audit.enabled)) {
+    audit.enabled = true;
+  }
+  if (type.isNone(audit.severity)) {
+    audit.severity = 'medium';
+  }
+  if (type.isNone(audit.mask)) {
+    audit.mask = [];
+  }
+  if (type.isNone(audit.fields)) {
+    audit.fields = {};
+  }
+  if (type.isNone(audit.capture)) {
+    audit.capture = {};
+  }
+  if (type.isNone(audit.sampling)) {
+    audit.sampling = {};
+  }
+  if (type.isNone(audit.rateLimit)) {
+    audit.rateLimit = {};
+  }
 
   return components;
 }

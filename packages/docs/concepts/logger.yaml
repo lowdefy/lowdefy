@@ -161,6 +161,18 @@ _ref:
             - **Config Location:** The source file and line number in your YAML config
             - **User Context:** Configured user fields for authenticated sessions
 
+            ## Audit Logging
+
+            Lowdefy can emit a structured audit trail of *who did what, when, and to what* — sign-ins, request executions, authorization denials, and errors — through the same pino logger that handles operational logs. Audit events are tagged with `audit: true` so log drains and aggregation tools can route them separately.
+
+            ```yaml
+            logger:
+              audit:
+                events: [auth, request, authorization, error]
+            ```
+
+            See the [Audit Logging](/audit-logging) page for the full configuration reference, event schema, masking, sampling, and how to route the audit stream to platforms like Vercel log drains, CloudWatch, Datadog, or S3.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

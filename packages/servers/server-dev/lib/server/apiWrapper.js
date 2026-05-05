@@ -20,7 +20,6 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
-import auditConfig from '../build/audit.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
@@ -28,6 +27,7 @@ import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
 import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
+import loggerConfig from '../build/logger.js';
 import operators from '../../build/plugins/operators/server.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
@@ -90,8 +90,8 @@ function apiWrapper(handler) {
         context.session = await getServerSession(context);
       }
       createApiContext(context);
-      context.auditConfig = auditConfig;
-      context.audit = createAuditLogger({ auditConfig, context });
+      context.auditConfig = loggerConfig.audit;
+      context.audit = createAuditLogger({ auditConfig: loggerConfig.audit, context });
       logRequest({ context });
       // Await here so that if handler throws it is caught.
       const response = await handler({ context, req, res });

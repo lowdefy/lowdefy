@@ -36,7 +36,6 @@
     "git_sha": "test-git-sha-for-snapshots",
     "~k": "12"
   },
-  "audit.json": {},
   "auth.json": {
     "api": {
       "roles": {

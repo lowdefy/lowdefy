@@ -16,40 +16,37 @@
 
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('./dispatchAuditEvent.js', () => ({
-  default: jest.fn(),
-}));
-
-const { default: createAuditLogger } = await import('./createAuditLogger.js');
-const { default: dispatchAuditEvent } = await import('./dispatchAuditEvent.js');
+import createAuditLogger from './createAuditLogger.js';
 
 function makeAuditConfig(overrides = {}) {
   return {
-    connectionId: 'audit_db',
-    configured: true,
+    enabled: true,
     events: ['request', 'authorization', 'auth', 'error'],
     severity: 'medium',
-    requestType: 'MongoDBInsertMany',
-    transport: 'connection',
-    strict: false,
     capture: {},
     fields: {},
     mask: [],
-    batch: { enabled: false },
+    sampling: {},
+    rateLimit: {},
     ...overrides,
   };
 }
 
-const noopLogger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-};
-
-beforeEach(() => {
-  dispatchAuditEvent.mockReset();
-});
+function makeContext({ child, info = jest.fn(), warn = jest.fn() } = {}) {
+  const auditChildLogger = { info };
+  const parentLogger = {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn,
+    error: jest.fn(),
+    child: child ?? jest.fn(() => auditChildLogger),
+  };
+  return {
+    rid: 'req_1',
+    logger: parentLogger,
+    auditChildLogger,
+  };
+}
 
 test('createAuditLogger returns no-op when auditConfig is undefined', () => {
   const logger = createAuditLogger({ auditConfig: undefined, context: {} });
@@ -57,181 +54,110 @@ test('createAuditLogger returns no-op when auditConfig is undefined', () => {
   expect(logger.log({ category: 'request' })).toBeUndefined();
 });
 
-test('createAuditLogger returns no-op when connectionId is missing for connection transport', () => {
+test('createAuditLogger returns no-op when auditConfig.enabled is false', () => {
   const logger = createAuditLogger({
-    auditConfig: { transport: 'connection', configured: true },
-    context: {},
+    auditConfig: makeAuditConfig({ enabled: false }),
+    context: makeContext(),
   });
   expect(logger.enabled).toBe(false);
 });
 
-test('createAuditLogger returns enabled logger when transport is stdout without connectionId', () => {
+test('createAuditLogger returns no-op when events list is empty', () => {
   const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ transport: 'stdout', connectionId: undefined }),
-    context: { logger: noopLogger },
+    auditConfig: makeAuditConfig({ events: [] }),
+    context: makeContext(),
   });
-  expect(logger.enabled).toBe(true);
-  expect(logger.transport).toBe('stdout');
+  expect(logger.enabled).toBe(false);
 });
 
-test('createAuditLogger returns no-op when context flagged as audit (recursion guard)', () => {
+test('createAuditLogger returns no-op when context.logger has no child method', () => {
   const logger = createAuditLogger({
     auditConfig: makeAuditConfig(),
-    context: { __audit: true, logger: noopLogger },
+    context: { logger: { info: jest.fn() } },
   });
   expect(logger.enabled).toBe(false);
 });
 
 test('createAuditLogger returns enabled logger when fully configured', () => {
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig(),
-    context: { logger: noopLogger },
-  });
+  const ctx = makeContext();
+  const logger = createAuditLogger({ auditConfig: makeAuditConfig(), context: ctx });
   expect(logger.enabled).toBe(true);
+  expect(ctx.logger.child).toHaveBeenCalledWith({ audit: true });
 });
 
-test('createAuditLogger caches logger by auditConfig identity', () => {
-  const auditConfig = makeAuditConfig();
-  const a = createAuditLogger({ auditConfig, context: { logger: noopLogger } });
-  const b = createAuditLogger({ auditConfig, context: { logger: noopLogger } });
-  expect(a).toBe(b);
-});
-
-test('logger.log dispatches audit event in fire-and-forget mode', async () => {
-  dispatchAuditEvent.mockResolvedValueOnce(undefined);
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig(),
-    context: { logger: noopLogger, rid: 'req_1' },
-  });
-  await logger.log({
+test('logger.log emits structured pino info call with audit_event marker', () => {
+  const ctx = makeContext();
+  const logger = createAuditLogger({ auditConfig: makeAuditConfig(), context: ctx });
+  logger.log({
     category: 'request',
     eventType: 'request.execute',
     severity: 'medium',
     target: { type: 'request', id: 'r1' },
     action: 'execute',
     outcome: 'success',
-    rid: 'req_1',
   });
-  await new Promise((resolve) => setImmediate(resolve));
-  expect(dispatchAuditEvent).toHaveBeenCalledTimes(1);
-  const call = dispatchAuditEvent.mock.calls[0][0];
-  expect(call.events).toHaveLength(1);
-  expect(call.events[0].rid).toBe('req_1');
+  expect(ctx.auditChildLogger.info).toHaveBeenCalledTimes(1);
+  const [payload, message] = ctx.auditChildLogger.info.mock.calls[0];
+  expect(payload.event).toBe('audit_event');
+  expect(payload.auditEvent.eventType).toBe('request.execute');
+  expect(payload.auditEvent.target).toEqual({ type: 'request', id: 'r1' });
+  expect(payload.auditEvent.rid).toBe('req_1');
+  expect(message).toBe('audit request.execute');
 });
 
-test('logger.log skips dispatch when category is not in events list', async () => {
+test('logger.log skips emission when category is not in events list', () => {
+  const ctx = makeContext();
   const logger = createAuditLogger({
     auditConfig: makeAuditConfig({ events: ['authorization'] }),
-    context: { logger: noopLogger },
+    context: ctx,
   });
-  await logger.log({
+  logger.log({
     category: 'request',
     eventType: 'request.execute',
     severity: 'medium',
     target: { type: 'request' },
   });
-  await new Promise((resolve) => setImmediate(resolve));
-  expect(dispatchAuditEvent).not.toHaveBeenCalled();
+  expect(ctx.auditChildLogger.info).not.toHaveBeenCalled();
 });
 
-test('logger.log awaits dispatch and propagates error in strict mode', async () => {
-  dispatchAuditEvent.mockRejectedValueOnce(new Error('dispatch failed'));
+test('logger.log applies mask to metadata before emit', () => {
+  const ctx = makeContext();
   const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ strict: true }),
-    context: { logger: noopLogger },
+    auditConfig: makeAuditConfig({ mask: ['ssn'] }),
+    context: ctx,
   });
-  await expect(
-    logger.log({
-      category: 'request',
-      eventType: 'request.execute',
-      severity: 'medium',
-      target: { type: 'request' },
-    })
-  ).rejects.toThrow('dispatch failed');
-});
-
-test('logger.log warns and swallows error in non-strict mode', async () => {
-  dispatchAuditEvent.mockRejectedValueOnce(new Error('dispatch failed'));
-  const warnSpy = jest.fn();
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig(),
-    context: { logger: { ...noopLogger, warn: warnSpy } },
-  });
-  await logger.log({
-    category: 'request',
-    eventType: 'request.execute',
-    severity: 'medium',
-    target: { type: 'request' },
-  });
-  await new Promise((resolve) => setImmediate(resolve));
-  expect(warnSpy).toHaveBeenCalledWith(
-    expect.objectContaining({ event: 'audit_write_failed' }),
-    expect.stringContaining('dispatch failed')
-  );
-});
-
-test('logger.log applies mask to metadata before dispatch', async () => {
-  dispatchAuditEvent.mockResolvedValueOnce(undefined);
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ strict: true, mask: ['ssn'] }),
-    context: { logger: noopLogger },
-  });
-  await logger.log({
+  logger.log({
     category: 'request',
     eventType: 'request.execute',
     severity: 'medium',
     target: { type: 'request' },
     metadata: { payload: { ssn: '111-22-3333', other: 'visible' } },
   });
-  const dispatchedEvent = dispatchAuditEvent.mock.calls[0][0].events[0];
-  expect(dispatchedEvent.metadata.payload.ssn).toBe('***MASKED***');
-  expect(dispatchedEvent.metadata.payload.other).toBe('visible');
+  const emittedEvent = ctx.auditChildLogger.info.mock.calls[0][0].auditEvent;
+  expect(emittedEvent.metadata.payload.ssn).toBe('***MASKED***');
+  expect(emittedEvent.metadata.payload.other).toBe('visible');
 });
 
-test('logger.log batches events when batch.enabled is true', async () => {
-  dispatchAuditEvent.mockResolvedValue(undefined);
+test('logger.log respects sampling rate of 0', () => {
+  const ctx = makeContext();
   const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ batch: { enabled: true, size: 3, interval: 60000 } }),
-    context: { logger: noopLogger },
+    auditConfig: makeAuditConfig({ sampling: { request: 0 } }),
+    context: ctx,
   });
-
-  const baseEvent = {
-    category: 'request',
-    eventType: 'request.execute',
-    severity: 'medium',
-    target: { type: 'request' },
-  };
-  await logger.log({ ...baseEvent });
-  await logger.log({ ...baseEvent });
-  expect(dispatchAuditEvent).not.toHaveBeenCalled();
-  await logger.log({ ...baseEvent });
-  await new Promise((resolve) => setImmediate(resolve));
-  expect(dispatchAuditEvent).toHaveBeenCalledTimes(1);
-  expect(dispatchAuditEvent.mock.calls[0][0].events).toHaveLength(3);
-  await logger.stop();
-});
-
-test('logger.log respects sampling rate of 0', async () => {
-  dispatchAuditEvent.mockResolvedValue(undefined);
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ strict: true, sampling: { request: 0 } }),
-    context: { logger: noopLogger },
-  });
-  await logger.log({
+  logger.log({
     category: 'request',
     eventType: 'request.execute',
     severity: 'medium',
     target: { type: 'request' },
   });
-  expect(dispatchAuditEvent).not.toHaveBeenCalled();
+  expect(ctx.auditChildLogger.info).not.toHaveBeenCalled();
 });
 
-test('logger.log respects rate limit and warns when exceeded', async () => {
-  dispatchAuditEvent.mockResolvedValue(undefined);
-  const warn = jest.fn();
+test('logger.log respects rate limit and warns when exceeded', () => {
+  const ctx = makeContext();
   const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ strict: true, rateLimit: { perSecond: 2 } }),
-    context: { logger: { ...noopLogger, warn } },
+    auditConfig: makeAuditConfig({ rateLimit: { perSecond: 2 } }),
+    context: ctx,
   });
   const event = {
     category: 'request',
@@ -239,26 +165,22 @@ test('logger.log respects rate limit and warns when exceeded', async () => {
     severity: 'medium',
     target: { type: 'request' },
   };
-  await logger.log({ ...event });
-  await logger.log({ ...event });
-  await logger.log({ ...event });
-  expect(dispatchAuditEvent).toHaveBeenCalledTimes(2);
+  logger.log({ ...event });
+  logger.log({ ...event });
+  logger.log({ ...event });
+  expect(ctx.auditChildLogger.info).toHaveBeenCalledTimes(2);
 });
 
-test('logger.flush sends pending batched events', async () => {
-  dispatchAuditEvent.mockResolvedValue(undefined);
-  const logger = createAuditLogger({
-    auditConfig: makeAuditConfig({ batch: { enabled: true, size: 100, interval: 60000 } }),
-    context: { logger: noopLogger },
-  });
-  await logger.log({
+test('logger.log emits the rid bound on the parent child logger automatically', () => {
+  const ctx = makeContext();
+  const logger = createAuditLogger({ auditConfig: makeAuditConfig(), context: ctx });
+  logger.log({
     category: 'request',
     eventType: 'request.execute',
     severity: 'medium',
     target: { type: 'request' },
+    rid: 'override_rid',
   });
-  expect(dispatchAuditEvent).not.toHaveBeenCalled();
-  await logger.flush();
-  expect(dispatchAuditEvent).toHaveBeenCalledTimes(1);
-  await logger.stop();
+  // event.rid takes precedence over context.rid when explicitly supplied
+  expect(ctx.auditChildLogger.info.mock.calls[0][0].auditEvent.rid).toBe('override_rid');
 });
