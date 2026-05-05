@@ -18,6 +18,5 @@ module.exports = process.env.SENTRY_DSN
   ? withSentryConfig(nextConfig, {
       // Sentry options
       silent: true,
-      hideSourceMaps: true,
     })
   : nextConfig;
