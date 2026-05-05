@@ -46,7 +46,7 @@
     "@lowdefy/errors": "5.2.0",
     "@lowdefy/helpers": "5.2.0",
     "ora": "9.4.0",
-    "pino": "8.16.2"
+    "pino": "10.3.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
