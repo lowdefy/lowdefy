@@ -1195,8 +1195,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0(encoding@0.1.13)
       mingo:
-        specifier: 6.4.9
-        version: 6.4.9
+        specifier: 7.2.1
+        version: 7.2.1
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -1570,8 +1570,8 @@ importers:
         specifier: 5.2.0
         version: link:../../../operators
       mingo:
-        specifier: 6.4.9
-        version: 6.4.9
+        specifier: 7.2.1
+        version: 7.2.1
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 5.2.0
@@ -1810,10 +1810,10 @@ importers:
     dependencies:
       next:
         specifier: '>=16'
-        version: 16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
         specifier: '>=4.24'
-        version: 4.24.10(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.24.10(next@16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 5.2.0
@@ -9711,8 +9711,8 @@ packages:
     resolution: {integrity: sha512-e5ISH9xMYU0DzrT+jl8q2ze9D6eWBto+I8CNpe+VI+K2J/F/k3PdkdTdz4wvGVH4NTpo+NRYTVIuMQEMMcsLqg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  mingo@6.4.9:
-    resolution: {integrity: sha512-jsOiIEJ19UtTaWjNFN4CnuKWqELm2sINZcHqI/nmjezMvXthBIQOftJrlT85NuIDoSFc0vrbjD+GnrzEgYnPbA==}
+  mingo@7.2.1:
+    resolution: {integrity: sha512-MEIQPOSJS2sVCueyQeE2rzgEeW3HpIIhizPbeuwD4v7+miVj7NI3ZVPqqw8t3YPIWCivpIaXA4KsoRI7koyNOA==}
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
@@ -12153,7 +12153,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       '@aws-sdk/util-locate-window': 3.965.5
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -12172,7 +12172,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       tslib: 1.14.1
     optional: true
 
@@ -12193,7 +12193,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.425.0
+      '@aws-sdk/types': 3.775.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     optional: true
@@ -21197,7 +21197,7 @@ snapshots:
 
   mimic-response@4.0.0: {}
 
-  mingo@6.4.9: {}
+  mingo@7.2.1: {}
 
   minimatch@10.2.5:
     dependencies:
@@ -21368,13 +21368,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  next-auth@4.24.10(next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-auth@4.24.10(next@16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(nodemailer@6.9.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.29.2
       '@panva/hkdf': 1.1.1
       cookie: 0.7.2
       jose: 4.15.9
-      next: 16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       oauth: 0.9.15
       openid-client: 5.6.0
       preact: 10.28.3
@@ -21402,7 +21402,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@16.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 16.1.6
       '@swc/helpers': 0.5.15
@@ -21421,7 +21421,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 16.1.6
       '@next/swc-win32-arm64-msvc': 16.1.6
       '@next/swc-win32-x64-msvc': 16.1.6
-      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api': 1.9.1
       '@playwright/test': 1.59.1
       sharp: 0.34.5
     transitivePeerDependencies:

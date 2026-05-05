@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/helpers": "5.2.0",
     "@lowdefy/operators": "5.2.0",
-    "mingo": "6.4.9"
+    "mingo": "7.2.1"
   },
   "devDependencies": {
     "@lowdefy/node-utils": "5.2.0",

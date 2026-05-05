@@ -221,7 +221,7 @@ test('_mql.aggregate invalid', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"invalid pipeline operator $badOp"`);
+  ).toThrowErrorMatchingInlineSnapshot(`"unregistered pipeline operator $badOp."`);
 });
 
 test('_mql.aggregate on is object', () => {
@@ -287,7 +287,7 @@ test('_mql.expr $add on: null', () => {
       location: 'locationId',
       methodName: 'expr',
     })
-  ).toEqual(NaN);
+  ).toEqual(null);
 });
 
 test('_mql.expr $sum on: null', () => {
@@ -352,7 +352,9 @@ test('_mql.expr invalid', () => {
       location: 'locationId',
       methodName: 'expr',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"$cond: invalid arguments"`);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"$cond expects array(3) or object with 'if-then-else' expressions"`
+  );
 });
 
 test('_mql.expr invalid on', () => {
@@ -576,7 +578,7 @@ test('_mql.test invalid test', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`"unknown operator $badOp"`);
+  ).toThrowErrorMatchingInlineSnapshot(`"unknown query operator $badOp"`);
 });
 
 test('_mql.test invalid on', () => {

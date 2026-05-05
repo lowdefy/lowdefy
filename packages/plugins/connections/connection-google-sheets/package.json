@@ -44,7 +44,7 @@
     "@lowdefy/helpers": "5.2.0",
     "dayjs": "1.11.20",
     "google-spreadsheet": "3.3.0",
-    "mingo": "6.4.9"
+    "mingo": "7.2.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

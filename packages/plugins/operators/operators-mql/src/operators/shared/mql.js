@@ -18,8 +18,6 @@ import mingo from 'mingo';
 import { get, type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
-import 'mingo/init/system';
-
 function aggregate(data, pipeline) {
   if (data === null) {
     data = [];
