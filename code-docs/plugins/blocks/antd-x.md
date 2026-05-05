@@ -1,6 +1,6 @@
 ---
 title: '@lowdefy/blocks-antd-x'
-updated: 2026-04-14
+updated: 2026-05-05
 package: '@lowdefy/blocks-antd-x'
 ---
 
@@ -26,6 +26,7 @@ Composite chat block that integrates the AI SDK's `useChat` hook with Ant Design
 - `conversationId` — Conversation identifier for multi-turn persistence
 - `messages` — Load existing messages (external state)
 - `urlQuery` — Query params passed to agent API
+- `sharedState` — Object slice of page state the agent may read and write back via the built-in `update-page-state` tool. See [Shared state two-way binding](#shared-state-two-way-binding).
 - `welcome` — Welcome screen: `title`, `description`, `prompts[]`
 - `messageDisplay` — Rendering: `showThoughtChain`, `reasoningDisplay`, `toolResultDisplay`
 - `sender` — Input area: `placeholder`, `submitType`, `allowSpeech`, `attachments`, `header`, `switches[]`, `suggestions[]`
@@ -78,6 +79,17 @@ The `useChat` hook from `@ai-sdk/react` manages messages, status, and streaming.
 ### Event Bridging
 
 `useAgentEvents` converts AI SDK message updates to Lowdefy block events by tracking seen message/tool IDs. This prevents duplicate event firing during re-renders.
+
+### Shared state two-way binding
+
+The `sharedState` property is the block's contribution to a round-trip between page state and the agent:
+
+- `sharedState` is operator-evaluated on every render (e.g. `_state` to pick fields).
+- It's mirrored into a ref (`sharedStateRef`) so the chat transport can attach the latest snapshot to each request body without retriggering effects.
+- The server-side runtime sees the snapshot via `agentContext.sharedState` and (if non-empty) builds a built-in `update-page-state` tool the agent can call.
+- When `update-page-state` results stream back, the block writes the patch to page state -- but only for keys that were originally present in `sharedState` at request time. This allowlist is enforced client-side via `Object.keys(sharedStateRef.current)`.
+
+The reserved-name guard in `@lowdefy/ai-utils` prevents user-defined tools from masquerading as `update-page-state`. See [Agent System architecture](../../architecture/agent-system.md#page-state-integration-sharedstate) for the full flow.
 
 ## Dependencies
 

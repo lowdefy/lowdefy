@@ -1,6 +1,6 @@
 ---
 title: Agent System
-updated: 2026-04-14
+updated: 2026-05-05
 packages:
   [
     '@lowdefy/ai-utils',
@@ -10,7 +10,10 @@ packages:
     '@lowdefy/connection-anthropic',
     '@lowdefy/connection-openai',
     '@lowdefy/connection-google',
+    '@lowdefy/connection-ai-gateway',
     '@lowdefy/connection-mcp',
+    '@lowdefy/server',
+    '@lowdefy/server-dev',
   ]
 ---
 
@@ -38,7 +41,7 @@ agents:
 
 The agent system separates concerns into four layers, each configured independently:
 
-1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
+1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google, Vercel AI Gateway) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
 
 2. **Agent** -- The orchestration unit. References a connection, specifies model/instructions/tools/hooks, and controls the tool loop (max steps, stop conditions, pruning). Configured under the top-level `agents:` key. At runtime, a `ToolLoopAgent` from the AI SDK manages the multi-step model interaction.
 
@@ -53,7 +56,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 ### Client Side
 
 1. User types a message in `AgentChat`. The `handleSend` function fires `onBeforeSend` for validation, then calls `sendMessage()` on the `useChat` hook.
-2. `useChat` uses a `DefaultChatTransport` that POSTs to `/api/agent/{pageId}/{agentId}?conversationId=...` with `{ messages, urlQuery }` in the body.
+2. `useChat` uses a `DefaultChatTransport` that POSTs to `/api/agent/{pageId}/{agentId}?conversationId=...` with `{ messages, urlQuery, sharedState }` in the body. `sharedState` carries the operator-evaluated slice of page state declared by the AgentChat block (see [Page state integration](#page-state-integration-sharedstate)).
 
 ### Server Side
 
@@ -62,6 +65,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 4. `callAgent` (`packages/api/src/routes/agent/callAgent.js`) orchestrates the server-side flow:
 
    - Loads agent config from `agents/{agentId}.json` via `getAgentConfig`
+   - Builds `agentContext` (`{ conversationId, pageId, sharedState, urlQuery, userId }`)
    - Evaluates operators in agent properties (`_user`, `_secret`, `_payload`) with `agentContext` as payload
    - Loads connection config, creates the provider instance (e.g., Anthropic SDK client)
    - Resolves MCP connection references to inline transport config
@@ -72,7 +76,8 @@ This separation means the same endpoint can serve a page button, another endpoin
 5. The agent resolver (e.g., `ClaudeAgent`) maps provider-specific properties into `providerOptions` and delegates to `handleAgentChat()`.
 
 6. `handleAgentChat` (`packages/utils/ai-utils/src/handleAgentChat.js`) is the shared runtime:
-   - Calls `buildAgentTools` to merge endpoint, MCP, sub-agent, and file system tools
+   - Calls `buildAgentTools` to merge endpoint, MCP, sub-agent, and file system tools (after rejecting any user tool whose name collides with a platform reserved name like `update-page-state`)
+   - If the request carries a non-empty `sharedState`, builds the `update-page-state` tool via `buildUpdatePageStateTool` and includes the snapshot in the agent's context block
    - Creates a `ToolLoopAgent` with model, instructions, tools, stop conditions, and hook callbacks
    - Opens a `createUIMessageStream`, runs the agent inside the stream's execute function
    - If `prune` config is set, decomposes the stream creation to insert `pruneMessages` between UI-to-model conversion and agent execution
@@ -257,6 +262,23 @@ properties:
   thinkingConfig: { thinkingBudget: 5000 }
 ```
 
+### AIGatewayAgent (`@lowdefy/connection-ai-gateway`)
+
+`packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGatewayAgent/AIGatewayAgent.js`
+
+Routes requests through Vercel AI Gateway. Folds gateway-specific sugar into `providerOptions.gateway` before delegating to `handleAgentChat`. The `model` is in `creator/model` form (e.g. `anthropic/claude-sonnet-4.5`).
+
+```yaml
+properties:
+  model: anthropic/claude-sonnet-4.5
+  order: [vertex, anthropic]
+  fallbackModels: [openai/gpt-5-mini]
+  user: user_123
+  tags: [production, customer-support]
+```
+
+Use this when the app needs cross-provider failover, BYOK, or consolidated billing/analytics. Single-provider apps should use the dedicated provider connection (`Anthropic`, `OpenAI`, `Google`) for lower indirection.
+
 ### AISDKAgent (generic, `@lowdefy/ai-utils`)
 
 `packages/utils/ai-utils/src/AISDKAgent.js`
@@ -317,6 +339,24 @@ prune:
       tools: [search_files]
     - type: before-last-message
 ```
+
+## Page state integration (`sharedState`)
+
+Agents can read and write a slice of page state declared by the AgentChat block. This bridges the gap between the conversational UI and form fields, filters, or other interactive elements on the same page.
+
+### Flow
+
+1. The AgentChat block declares a `sharedState` property in its config -- an operator-evaluated object whose keys are the page-state slots the agent may observe and write.
+2. With each chat request, the block sends the current `sharedState` snapshot in the request body.
+3. `callAgent` puts it on `agentContext.sharedState`.
+4. `handleAgentChat` includes the snapshot in the context block prepended to instructions (so the agent sees current values), and -- if `sharedState` is non-empty -- builds the platform-reserved `update-page-state` tool via `buildUpdatePageStateTool` so the agent can write back.
+5. When the agent calls `update-page-state` with a patch, the tool result streams back to the block. The block's `update-page-state` event handler applies the patch -- but only for keys that were originally exposed via `sharedState` (allowlist).
+
+### Sharp edges
+
+- **Allowlist is request-scoped**: `Object.keys(sharedState)` at request time. Patches to keys not in that set are dropped on the client.
+- **Reserved name**: `update-page-state` is in `RESERVED_PLATFORM_TOOL_NAMES`. User tools with that name throw at build/runtime -- they cannot shadow the built-in.
+- **Snapshot, not live**: The agent sees the snapshot at request time, not subsequent updates from other UI interactions during the agent run.
 
 ## AgentChat Block
 
@@ -386,32 +426,35 @@ Developers wire their own persistence. The block renders the list; the app confi
 
 ## Key Files
 
-| File                                                                                                     | Purpose                                                                    |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `packages/utils/ai-utils/src/handleAgentChat.js`                                                         | Core orchestration: builds tools, creates ToolLoopAgent, manages streaming |
-| `packages/utils/ai-utils/src/buildAgentTools.js`                                                         | Merges endpoint, MCP, sub-agent, and fileSystem tools                      |
-| `packages/utils/ai-utils/src/buildPrepareStep.js`                                                        | Builds step-matching function for dynamic per-step config                  |
-| `packages/utils/ai-utils/src/AISDKAgentSchema.js`                                                        | JSON Schema for agent properties validation                                |
-| `packages/utils/ai-utils/src/AISDKAgent.js`                                                              | Generic agent resolver (no provider-specific mapping)                      |
-| `packages/utils/ai-utils/src/fileSystem/resolvePath.js`                                                  | Path traversal prevention for fileSystem tools                             |
-| `packages/utils/ai-utils/src/fileSystem/readFile.js`                                                     | File reading with 512KB truncation                                         |
-| `packages/utils/ai-utils/src/fileSystem/searchFiles.js`                                                  | Case-insensitive search with 200 match limit                               |
-| `packages/api/src/routes/agent/callAgent.js`                                                             | API route handler: loads config, resolves connections, calls resolver      |
-| `packages/api/src/routes/agent/getAgentConfig.js`                                                        | Reads agent JSON from build artifacts                                      |
-| `packages/api/src/routes/agent/getAgentResolver.js`                                                      | Looks up agent type from plugin registry                                   |
-| `packages/build/src/build/buildAgents.js`                                                                | Build-time validation, normalization, cycle detection                      |
-| `packages/build/src/build/writeAgents.js`                                                                | Serializes agent configs to JSON artifacts                                 |
-| `packages/build/src/build/writePluginImports/writeAgentImports.js`                                       | Generates agent type import registry                                       |
-| `packages/build/src/build/copyAgentFileSystems.js`                                                       | Copies fileSystem directories to server output                             |
-| `packages/servers/server/pages/api/agent/[...path].js`                                                   | Next.js API route, SSE streaming                                           |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                | Chat block component                                                       |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                     | DefaultChatTransport factory                                               |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                           | AI SDK to Lowdefy event bridging                                           |
-| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentConversations/AgentConversations.js`              | Conversation list block                                                    |
-| `packages/plugins/connections/connection-anthropic/src/connections/Anthropic/ClaudeAgent/ClaudeAgent.js` | Anthropic resolver                                                         |
-| `packages/plugins/connections/connection-openai/src/connections/OpenAI/OpenAIAgent/OpenAIAgent.js`       | OpenAI resolver                                                            |
-| `packages/plugins/connections/connection-google/src/connections/Google/GeminiAgent/GeminiAgent.js`       | Google resolver                                                            |
-| `packages/plugins/connections/connection-mcp/src/connections/Mcp/Mcp.js`                                 | MCP config-container connection                                            |
+| File                                                                                                            | Purpose                                                                    |
+| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `packages/utils/ai-utils/src/handleAgentChat.js`                                                                | Core orchestration: builds tools, creates ToolLoopAgent, manages streaming |
+| `packages/utils/ai-utils/src/buildAgentTools.js`                                                                | Merges endpoint, MCP, sub-agent, and fileSystem tools                      |
+| `packages/utils/ai-utils/src/buildPrepareStep.js`                                                               | Builds step-matching function for dynamic per-step config                  |
+| `packages/utils/ai-utils/src/AISDKAgentSchema.js`                                                               | JSON Schema for agent properties validation                                |
+| `packages/utils/ai-utils/src/AISDKAgent.js`                                                                     | Generic agent resolver (no provider-specific mapping)                      |
+| `packages/utils/ai-utils/src/fileSystem/resolvePath.js`                                                         | Path traversal prevention for fileSystem tools                             |
+| `packages/utils/ai-utils/src/fileSystem/readFile.js`                                                            | File reading with 512KB truncation                                         |
+| `packages/utils/ai-utils/src/fileSystem/searchFiles.js`                                                         | Case-insensitive search with 200 match limit                               |
+| `packages/api/src/routes/agent/callAgent.js`                                                                    | API route handler: loads config, resolves connections, calls resolver      |
+| `packages/api/src/routes/agent/getAgentConfig.js`                                                               | Reads agent JSON from build artifacts                                      |
+| `packages/api/src/routes/agent/getAgentResolver.js`                                                             | Looks up agent type from plugin registry                                   |
+| `packages/build/src/build/buildAgents.js`                                                                       | Build-time validation, normalization, cycle detection                      |
+| `packages/build/src/build/writeAgents.js`                                                                       | Serializes agent configs to JSON artifacts                                 |
+| `packages/build/src/build/writePluginImports/writeAgentImports.js`                                              | Generates agent type import registry                                       |
+| `packages/build/src/build/copyAgentFileSystems.js`                                                              | Copies fileSystem directories to server output                             |
+| `packages/servers/server/pages/api/agent/[...path].js`                                                          | Next.js API route, SSE streaming                                           |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                       | Chat block component                                                       |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                            | DefaultChatTransport factory                                               |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                                  | AI SDK to Lowdefy event bridging                                           |
+| `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentConversations/AgentConversations.js`                     | Conversation list block                                                    |
+| `packages/plugins/connections/connection-anthropic/src/connections/Anthropic/ClaudeAgent/ClaudeAgent.js`        | Anthropic resolver                                                         |
+| `packages/plugins/connections/connection-openai/src/connections/OpenAI/OpenAIAgent/OpenAIAgent.js`              | OpenAI resolver                                                            |
+| `packages/plugins/connections/connection-google/src/connections/Google/GeminiAgent/GeminiAgent.js`              | Google resolver                                                            |
+| `packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGatewayAgent/AIGatewayAgent.js` | Vercel AI Gateway resolver                                                 |
+| `packages/plugins/connections/connection-mcp/src/connections/Mcp/Mcp.js`                                        | MCP config-container connection                                            |
+| `packages/utils/ai-utils/src/buildUpdatePageStateTool.js`                                                       | Built-in `update-page-state` tool factory for sharedState writes           |
+| `packages/utils/ai-utils/src/reservedToolNames.js`                                                              | Platform-reserved tool name guard                                          |
 
 ## Decision Trace
 
