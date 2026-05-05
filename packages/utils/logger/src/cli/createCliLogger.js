@@ -72,15 +72,8 @@ function createOraPrint({ logLevel }) {
     color: 'blue',
   });
 
-  // Write a log line. If spinner is active, output above it without stopping it.
   function writeLine(symbol, text) {
-    if (spinner.isSpinning) {
-      spinner.clear();
-      process.stderr.write(`${colors.gray(getTime())} ${symbol} ${text}\n`);
-      spinner.render();
-    } else {
-      spinner.stopAndPersist({ symbol, text });
-    }
+    process.stderr.write(`${colors.gray(getTime())} ${symbol} ${text}\n`);
   }
 
   return filterLevels(

@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/errors": "5.2.0",
     "@lowdefy/helpers": "5.2.0",
-    "ora": "7.0.1",
+    "ora": "9.4.0",
     "pino": "8.16.2"
   },
   "devDependencies": {
