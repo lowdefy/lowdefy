@@ -27,12 +27,15 @@ _ref:
     description: |
       The `_api` operator returns the response object from an API endpoint that has been called using the [`CallAPI`](/CallAPI) action. This operator is only available on the client side (in pages) and provides access to the full API response object including the response data, loading state, success status, and any errors. If the API endpoint has not yet been called or is still executing, the returned value is `null`. Dot notation is supported for accessing nested properties.
 
+      If the call was made with `holdValue: true` on the [`CallAPI`](/CallAPI) action, the previous response is retained on the entry while the new call is loading. `_api: <endpointId>.response` keeps returning the previous data instead of going to `null`, while `_api: <endpointId>.loading` still reflects the in-flight state. The previous response is also retained if the new call errors.
+
       The response includes the following fields:
 
       - `blockId: string`: The block id of the block from which the API call was initiated.
       - `endTimestamp: date`: The timestamp when the API call ended.
       - `endpointId: string`: The endpoint id of the API endpoint that was called.
       - `error: object`: Any error if the API endpoint failed or used :reject.
+      - `holdValue: boolean`: Present (and `true`) when the call was made with `holdValue: true`.
       - `loading: boolean`: When `true`, the API endpoint is awaiting a response.
       - `pageId: string`: The page id of the page from which the API call was initiated.
       - `payload: object`: The payload sent with the API call.

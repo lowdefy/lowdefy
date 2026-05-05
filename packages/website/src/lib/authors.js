@@ -53,6 +53,15 @@ const authors = {
     github: 'https://github.com/StephanieJKS',
     linkedin: 'https://za.linkedin.com/in/stephaniejksmit',
   },
+  machiel: {
+    id: 'machiel',
+    name: 'Machiel van der Walt',
+    title: 'Software Developer at Resonancy & Lowdefy',
+    bio: "Machiel is a software developer at Resonancy and Lowdefy. He focuses on building software that takes friction out of people's day-to-day work, whether through better tooling, smarter automation, or simpler workflows.",
+    image: 'https://avatars.githubusercontent.com/u/94852967?v=4',
+    github: 'https://github.com/machielvdw',
+    linkedin: 'https://www.linkedin.com/in/machiel-van-der-walt-550343242',
+  },
   lowdefy: {
     id: 'lowdefy',
     name: 'Lowdefy',

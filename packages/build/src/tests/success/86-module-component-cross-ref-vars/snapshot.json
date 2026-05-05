@@ -5777,7 +5777,7 @@
         "oneOf": [
           {
             "type": "string",
-            "description": "Dot-notation path to value in user object."
+            "description": "Dot-notation path to value in user object, or a role name when used with a role method."
           },
           {
             "type": "integer",
@@ -5789,6 +5789,13 @@
               true
             ],
             "description": "Return all user data."
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of role names when used with a role method."
           },
           {
             "type": "object",

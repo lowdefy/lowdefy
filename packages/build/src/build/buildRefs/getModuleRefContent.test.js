@@ -133,7 +133,9 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'nonexistent', component: 'badge' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow('Module entry "nonexistent" not found.');
+    ).rejects.toThrow(
+      '_ref { module: "nonexistent", component: "badge" } references module "nonexistent" but no module with that entry id was registered.'
+    );
   });
 
   test('throws ConfigError when no export type property is provided', async () => {
@@ -280,7 +282,7 @@ describe('getModuleRefContent', () => {
         walkCtx,
       })
     ).rejects.toThrow(
-      'Module entry "contacts" not found. ("contacts" was mapped to "missing-entry" via dependency wiring.)'
+      '_ref { module: "contacts", component: "selector" } references module "contacts" but no module with that entry id was registered ("contacts" was mapped to "missing-entry" via dependency wiring).'
     );
   });
 

@@ -216,6 +216,7 @@ const PageSidebarLayout = ({
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        gap: 8,
                       }}
                     >
                       {renderHeaderActions({
@@ -223,7 +224,10 @@ const PageSidebarLayout = ({
                         classNames: {
                           ...classNames,
                           headerActions:
-                            classNames.headerActions ?? 'flex flex-col items-center gap-4 py-4',
+                            classNames.headerActions ??
+                            (openSiderState
+                              ? 'flex flex-col items-stretch gap-1 w-full'
+                              : 'flex flex-col items-center gap-4 py-4'),
                         },
                         styles,
                         properties,
@@ -231,6 +235,7 @@ const PageSidebarLayout = ({
                         events,
                         components: { Icon, Link, ShortcutBadge },
                         iconsColor: properties.iconsColor,
+                        expanded: openSiderState,
                       })}
                       <Link home={true}>
                         <img

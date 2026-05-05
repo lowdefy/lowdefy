@@ -29,7 +29,7 @@ _ref:
             We recommend running the CLI using `pnpx`, to always use the latest version:
 
             ```
-            pnpx lowdefy@4 <command>
+            pnpx lowdefy@5 <command>
             ```
 
             or, to use a specific version:
@@ -112,8 +112,8 @@ _ref:
             It fetches the latest `@lowdefy/codemods` package, resolves the version chain from your current version to the target, and presents migration prompts phase by phase.
 
             ```
-            pnpx lowdefy@4 upgrade
-            pnpx lowdefy@4 upgrade --to 6.0.0
+            pnpx lowdefy@5 upgrade
+            pnpx lowdefy@5 upgrade --to 6.0.0
             ```
 
             - `--to <version>`: Target version to upgrade to. Defaults to the latest stable release.
@@ -149,12 +149,12 @@ _ref:
 
             Run the dev server, watching a relative directory for file changes:
             ```txt
-            pnpx lowdefy@4 dev --watch ../other-project
+            pnpx lowdefy@5 dev --watch ../other-project
             ```
 
             Run the dev server, ignoring the public directory:
             ```txt
-            pnpx lowdefy@4 dev --watch-ignore public/**
+            pnpx lowdefy@5 dev --watch-ignore public/**
             ```
 
 

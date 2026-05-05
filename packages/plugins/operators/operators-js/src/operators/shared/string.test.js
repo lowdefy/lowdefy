@@ -1315,6 +1315,146 @@ describe('_string.length', () => {
   });
 });
 
+describe('_string.format', () => {
+  const methodName = 'format';
+  test('positional placeholders', () => {
+    expect(
+      string({
+        params: ['Updates ({0})', 5],
+        methodName,
+        location,
+      })
+    ).toEqual('Updates (5)');
+    expect(
+      string({
+        params: ['{0} + {1} = {2}', 1, 2, 3],
+        methodName,
+        location,
+      })
+    ).toEqual('1 + 2 = 3');
+  });
+  test('positional null and undefined render as empty', () => {
+    expect(
+      string({
+        params: ['Updates ({0})', null],
+        methodName,
+        location,
+      })
+    ).toEqual('Updates ()');
+    expect(
+      string({
+        params: ['Updates ({0})', undefined],
+        methodName,
+        location,
+      })
+    ).toEqual('Updates ()');
+  });
+  test('positional missing index renders as empty', () => {
+    expect(
+      string({
+        params: ['{0} {1}', 'a'],
+        methodName,
+        location,
+      })
+    ).toEqual('a ');
+  });
+  test('positional coerces non-string values', () => {
+    expect(
+      string({
+        params: ['{0}-{1}-{2}', true, 0, false],
+        methodName,
+        location,
+      })
+    ).toEqual('true-0-false');
+  });
+  test('named placeholders', () => {
+    expect(
+      string({
+        params: { template: 'Updates ({count})', on: { count: 5 } },
+        methodName,
+        location,
+      })
+    ).toEqual('Updates (5)');
+    expect(
+      string({
+        params: {
+          template: '{a} and {b}',
+          on: { a: 'apples', b: 'bananas' },
+        },
+        methodName,
+        location,
+      })
+    ).toEqual('apples and bananas');
+  });
+  test('named missing key renders as empty', () => {
+    expect(
+      string({
+        params: { template: '{a}-{b}', on: { a: 1 } },
+        methodName,
+        location,
+      })
+    ).toEqual('1-');
+  });
+  test('named without on renders all keys empty', () => {
+    expect(
+      string({
+        params: { template: 'plain {x}' },
+        methodName,
+        location,
+      })
+    ).toEqual('plain ');
+  });
+  test('escape doubled braces', () => {
+    expect(
+      string({
+        params: ['{{0}} = {0}', 5],
+        methodName,
+        location,
+      })
+    ).toEqual('{0} = 5');
+    expect(
+      string({
+        params: { template: '{{a}} {a}', on: { a: 'x' } },
+        methodName,
+        location,
+      })
+    ).toEqual('{a} x');
+  });
+  test('throws when array template is not a string', () => {
+    expect(() =>
+      string({
+        params: [42, 'a'],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _string.format - first array element must be the template string at location."`
+    );
+  });
+  test('throws when object template is missing', () => {
+    expect(() =>
+      string({
+        params: { on: { a: 1 } },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _string.format - \\"template\\" must be a string at location."`
+    );
+  });
+  test('throws when params is not array or object', () => {
+    expect(() =>
+      string({
+        params: 'just a string',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _string.format accepts an array or object at location."`
+    );
+  });
+});
+
 test('_string called with no method or params', () => {
   expect(() => string({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
     `"_string requires a method. Use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`

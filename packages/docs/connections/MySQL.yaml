@@ -38,8 +38,8 @@ _ref:
             ### Knex
 
             #### Properties
-            - `client: enum`: __Required__ - Should be `mysql` to connect to MySQL.
-            - `connection: object | string `: __Required__ - Connection object or string to pass to the [`mysql`](https://www.npmjs.com/package/mysql) database client.
+            - `client: enum`: __Required__ - Should be `mysql2` to connect to MySQL. MySQL uses the [`mysql2`](https://www.npmjs.com/package/mysql2) driver.
+            - `connection: object | string `: __Required__ - Connection object or string to pass to the database client.
             - `version: string`:  Set database version.
             - `useNullAsDefault: boolean`: If true, undefined keys are replaced with NULL instead of DEFAULT.
 
@@ -51,7 +51,7 @@ _ref:
               - id: mysql
                 type: Knex
                 properties:
-                  client: mysql
+                  client: mysql2
                   connection:
                     host:
                       _secret: MYSQL_HOST
@@ -76,7 +76,7 @@ _ref:
               - id: mysql
                 type: Knex
                 properties:
-                  client: mysql
+                  client: mysql2
                   connection:
                     _secret: MYSQL_CONNECTION_STRING
             ```

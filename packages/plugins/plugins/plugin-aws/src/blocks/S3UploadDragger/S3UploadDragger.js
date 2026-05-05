@@ -15,12 +15,16 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload } from 'antd';
-import { withBlockDefaults, renderHtml } from '@lowdefy/block-utils';
+import { Upload, theme as antdTheme } from 'antd';
+import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 import getOnPaste from '../utils/getOnPaste.js';
+import withTheme from '../withTheme.js';
+
+import './style.module.css';
 
 const { Dragger } = Upload;
 
@@ -54,14 +58,32 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
       await onPaste();
     });
   }, [onPaste]);
+  const { token } = antdTheme.useToken();
+  const height = type.isNone(properties.height) ? token.controlHeight : properties.height;
   return (
-    <div id={blockId} onPaste={onPaste}>
+    <div
+      id={blockId}
+      className={cn('lf-s3-upload-dragger', classNames.element)}
+      onPaste={onPaste}
+      style={{
+        '--lf-s3-dragger-height': type.isNumber(height) ? `${height}px` : height,
+        ...styles.element,
+      }}
+    >
       <Dragger
         accept={properties.accept ?? '*'}
         beforeUpload={loadFileList}
-        className={classNames.element}
-        style={styles.element}
-        height={properties.height}
+        classNames={{
+          trigger: classNames.trigger,
+          list: classNames.list,
+          item: classNames.item,
+        }}
+        styles={{
+          root: { display: 'block' },
+          trigger: styles.trigger,
+          list: styles.list,
+          item: styles.item,
+        }}
         customRequest={s3UploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}
@@ -73,7 +95,7 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
           methods.triggerEvent({ name: 'onChange' });
         }}
       >
-        <div className={classNames.hint} style={styles.hint}>
+        <div className={cn(classNames.hint)} style={styles.hint}>
           {renderHtml({
             html: properties.title ?? 'Click or drag to add a file.',
             methods,
@@ -84,4 +106,4 @@ const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles
   );
 };
 
-export default withBlockDefaults(S3UploadDragger);
+export default withBlockDefaults(withTheme('Upload', S3UploadDragger));

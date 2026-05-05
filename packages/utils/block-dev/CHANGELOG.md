@@ -1,5 +1,19 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- @lowdefy/block-utils@5.2.0
+- @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/block-utils@5.1.0
+- @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

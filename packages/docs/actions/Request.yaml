@@ -20,9 +20,11 @@ _ref:
     filePath: actions/Request.yaml
     types: |
       ```
-      (options: {all: boolean}): void
-      (requestId: string): void
-      (requestIds: string[]): void
+      (params: { all: boolean, holdValue?: boolean }): void
+      (params: { requestId: string, holdValue?: boolean }): void
+      (params: { requestIds: string[], holdValue?: boolean }): void
+      (params: { requestId: string }): void
+      (params: { requestIds: string[] }): void
       ```
     description: |
       The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads.
@@ -36,6 +38,9 @@ _ref:
     params: |
       ###### object
       - `all: boolean`: All requests in the page are called if `all` is set to true.
+      - `requestId: string`: A single requestId to call. Use this object form when you also want to set `holdValue`.
+      - `requestIds: string[]`: An array of requestIds to call. Use this object form when you also want to set `holdValue`.
+      - `holdValue: boolean`: Optional. When `true`, the previous response value is retained on `requests[id][0].response` while the new request is loading. UI bound to `_request: <id>` continues to display the previous response instead of going to `null`. The previous response is also retained if the new request errors out — inspect `_request_details: <id>.error` to detect failures. Defaults to `false`.
 
       ###### string
       A requestId of the request to call.
@@ -67,4 +72,13 @@ _ref:
         type: Request
         params:
           all: true
+      ```
+
+      ###### Refresh a table without flashing the previous data:
+      ```yaml
+      - id: refresh_table
+        type: Request
+        params:
+          requestId: my_table_request
+          holdValue: true
       ```
