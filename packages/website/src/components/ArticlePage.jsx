@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -30,9 +28,9 @@ const markdownComponents = {
       </a>
     );
   },
-  code: ({ children, className, ...props }) => {
+  code: ({ inline, children, className, ...props }) => {
     const match = /language-(\w+)/.exec(className || '');
-    if (match) {
+    if (!inline && match) {
       return (
         <SyntaxHighlighter
           style={oneDark}

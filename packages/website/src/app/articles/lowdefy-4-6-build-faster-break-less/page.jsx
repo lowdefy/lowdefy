@@ -1,5 +1,3 @@
-'use client';
-
 import { Header, Footer } from '@/components';
 import ArticlePage from '@/components/ArticlePage';
 import articles from '@/content/articles';

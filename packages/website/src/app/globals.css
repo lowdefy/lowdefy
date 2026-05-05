@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config '../../tailwind.config.js';
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   html {

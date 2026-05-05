@@ -34,29 +34,26 @@
   "scripts": {
     "dev": "next dev -p 3006",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@ant-design/icons": "6.2.2",
-    "@vercel/analytics": "1.6.1",
-    "framer-motion": "^11.0.0",
+    "@vercel/analytics": "2.0.1",
     "gray-matter": "4.0.3",
-    "lucide-react": "^0.400.0",
-    "next": "^14.2.0",
-    "posthog-js": "^1.372.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "16.2.4",
+    "posthog-js": "1.372.8",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-markdown": "8.0.7",
     "react-syntax-highlighter": "15.5.0",
     "remark-gfm": "3.0.0"
   },
   "devDependencies": {
     "@playwright/test": "1.59.1",
-    "autoprefixer": "^10.5.0",
-    "eslint": "10.2.1",
+    "@tailwindcss/postcss": "4.2.4",
+    "eslint": "10.3.0",
     "eslint-config-next": "16.2.4",
-    "postcss": "^8.5.12",
-    "tailwindcss": "^4.2.4"
+    "postcss": "8.5.14",
+    "tailwindcss": "4.2.4"
   }
 }

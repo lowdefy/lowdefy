@@ -1,15 +1,20 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import matter from 'gray-matter';
 
-import buildFasterRaw from '../../../content/articles/lowdefy-4-6-build-faster-break-less.md';
-import jsonParseRaw from '../../../content/articles/lowdefy-4-7-faster-builds-json-parse.md';
-import yamlAiEraRaw from '../../../content/articles/yaml-best-language-ai-era.md';
-import fiftyLinesRaw from '../../../content/articles/what-can-you-build-in-50-lines-of-yaml.md';
-import configDrivenRaw from '../../../content/articles/case-for-config-driven-development.md';
-import v5WhatsNewRaw from '../../../content/articles/lowdefy-5-whats-new.md';
-import demoToProductionRaw from '../../../content/articles/demo-to-production-lowdefy.md';
-import dropInModulesRaw from '../../../content/articles/lowdefy-5-2-drop-in-modules.md';
+const slugs = [
+  'lowdefy-4-6-build-faster-break-less',
+  'lowdefy-4-7-faster-builds-json-parse',
+  'yaml-best-language-ai-era',
+  'what-can-you-build-in-50-lines-of-yaml',
+  'case-for-config-driven-development',
+  'lowdefy-5-whats-new',
+  'demo-to-production-lowdefy',
+  'lowdefy-5-2-drop-in-modules',
+];
 
-function parseArticle(slug, raw) {
+function loadArticle(slug) {
+  const raw = readFileSync(join(process.cwd(), 'content/articles', `${slug}.md`), 'utf8');
   const { data, content } = matter(raw);
   return {
     id: slug,
@@ -24,16 +29,8 @@ function parseArticle(slug, raw) {
   };
 }
 
-const articles = [
-  parseArticle('lowdefy-4-6-build-faster-break-less', buildFasterRaw),
-  parseArticle('lowdefy-4-7-faster-builds-json-parse', jsonParseRaw),
-  parseArticle('yaml-best-language-ai-era', yamlAiEraRaw),
-  parseArticle('what-can-you-build-in-50-lines-of-yaml', fiftyLinesRaw),
-  parseArticle('case-for-config-driven-development', configDrivenRaw),
-  parseArticle('lowdefy-5-whats-new', v5WhatsNewRaw),
-  parseArticle('demo-to-production-lowdefy', demoToProductionRaw),
-  parseArticle('lowdefy-5-2-drop-in-modules', dropInModulesRaw),
-]
+const articles = slugs
+  .map(loadArticle)
   .filter((a) => !a.draft)
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
