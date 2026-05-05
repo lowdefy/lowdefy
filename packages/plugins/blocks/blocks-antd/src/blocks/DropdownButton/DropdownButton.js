@@ -70,12 +70,14 @@ function DropdownButtonBlock({
     if (item.type === 'divider') {
       return { type: 'divider', key: `divider-${i}` };
     }
+    const eventShortcut = item.eventName ? events[item.eventName]?.shortcut : undefined;
+    const itemShortcut = eventShortcut ?? item.shortcut;
     return {
       key: item.eventName ?? `item-${i}`,
       label: (
         <span>
           {item.title}
-          {item.shortcut && <ShortcutBadge shortcut={item.shortcut} />}
+          {itemShortcut && <ShortcutBadge shortcut={itemShortcut} />}
         </span>
       ),
       icon: item.icon ? (
@@ -92,8 +94,14 @@ function DropdownButtonBlock({
     };
   });
 
-  const shortcutItems = (properties.items ?? [])
-    .filter((item) => item.shortcut && item.eventName && !item.disabled)
+  // Item-level shortcut fallback for items that declare `shortcut` on properties
+  // rather than via `events.<eventName>.shortcut`. Skip items whose event already
+  // owns the shortcut — the framework-level shortcut manager handles those.
+  const propertyShortcutItems = (properties.items ?? [])
+    .filter(
+      (item) =>
+        item.shortcut && item.eventName && !item.disabled && !events[item.eventName]?.shortcut
+    )
     .map((item) => ({ key: item.eventName, shortcut: item.shortcut }));
 
   const onShortcutMatch = useCallback(
@@ -102,9 +110,10 @@ function DropdownButtonBlock({
     },
     [methods]
   );
-  useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
+  useItemShortcuts({ items: propertyShortcutItems, onMatch: onShortcutMatch });
 
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
+  const onClickShortcut = events[onClickActionName]?.shortcut;
 
   const dropdownProps = {
     menu: {
@@ -161,6 +170,7 @@ function DropdownButtonBlock({
             onClick={() => methods.triggerEvent({ name: onClickActionName })}
           >
             {properties.title}
+            {onClickShortcut && <ShortcutBadge shortcut={onClickShortcut} />}
           </Button>
           <Dropdown {...dropdownProps}>
             <Button

@@ -18,34 +18,36 @@
   .skeleton {
     position: relative;
     overflow: hidden;
-    background: var(--ant-color-fill-tertiary);
+    background-color: var(--ant-color-fill-secondary);
+    border-radius: var(--ant-border-radius-sm, 4px);
+    isolation: isolate;
   }
 
-  .skeleton::before {
+  .skeleton::after {
     content: '';
-    display: block;
     position: absolute;
-    left: -100%;
-    max-width: 600px;
-    top: 0;
-    height: 200%;
-    width: 100%;
-    background: linear-gradient(
-      to right,
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
       transparent 0%,
-      var(--ant-color-fill-secondary) 50%,
+      var(--ant-color-fill-quaternary) 20%,
+      var(--ant-color-fill) 60%,
       transparent 100%
     );
-    animation: load 1.8s infinite;
-    /* transform: rotate(45deg); */
+    animation: skeleton-shimmer 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: transform;
   }
 
-  @keyframes load {
-    from {
-      left: -100%;
+  @keyframes skeleton-shimmer {
+    100% {
+      transform: translateX(100%);
     }
-    to {
-      left: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton::after {
+      animation: none;
     }
   }
 }

@@ -23,12 +23,13 @@ import processColDefs from './processColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
 
-const AgGrid = ({ properties, methods, loading, events }) => {
+const AgGrid = ({ properties, methods, loading, events, components }) => {
   const {
     quickFilterValue,
     columnDefs,
     defaultColDef,
     rowData: newRowData,
+    suppressCellFocus = true,
     ...someProperties
   } = properties;
   const [rowData, setRowData] = useState(newRowData ?? []);
@@ -94,12 +95,18 @@ const AgGrid = ({ properties, methods, loading, events }) => {
     }
   }, []);
 
+  const getDisplayedRows = (api) => {
+    const rows = [];
+    api.forEachNodeAfterFilterAndSort((node) => rows.push(node.data));
+    return rows;
+  };
+
   const onFilterChanged = useCallback((event) => {
     if (events.onFilterChanged) {
       methods.triggerEvent({
         name: 'onFilterChanged',
         event: {
-          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
+          rows: getDisplayedRows(event.api),
           filter: gridRef.current.api.getFilterModel(),
         },
       });
@@ -111,8 +118,8 @@ const AgGrid = ({ properties, methods, loading, events }) => {
       methods.triggerEvent({
         name: 'onSortChanged',
         event: {
-          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
-          sort: event.columnApi.getColumnState().filter((col) => Boolean(col.sort)),
+          rows: getDisplayedRows(event.api),
+          sort: event.api.getColumnState().filter((col) => Boolean(col.sort)),
         },
       });
     }
@@ -122,16 +129,18 @@ const AgGrid = ({ properties, methods, loading, events }) => {
     methods.registerMethod('exportDataAsCsv', (args) => gridRef.current.api.exportDataAsCsv(args));
     methods.registerMethod('sizeColumnsToFit', () => gridRef.current.api.sizeColumnsToFit());
     methods.registerMethod('setFilterModel', (model) => gridRef.current.api.setFilterModel(model));
-    methods.registerMethod('setQuickFilter', (value) => gridRef.current.api.setQuickFilter(value));
+    methods.registerMethod('setQuickFilter', (value) =>
+      gridRef.current.api.setGridOption('quickFilterText', value)
+    );
     methods.registerMethod('autoSize', (args = {}) => {
       const { skipHeader, colIds } = args;
       const allColumnIds = colIds || [];
       if (!colIds) {
-        gridRef.current.columnApi.getAllColumns().forEach((column) => {
+        gridRef.current.api.getColumns().forEach((column) => {
           allColumnIds.push(column.getId());
         });
       }
-      gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+      gridRef.current.api.autoSizeColumns(allColumnIds, skipHeader);
     });
   }, []);
 
@@ -142,12 +151,14 @@ const AgGrid = ({ properties, methods, loading, events }) => {
   }, [newRowData]);
 
   if (quickFilterValue && quickFilterValue === '') {
-    gridRef.current.api.setQuickFilter(quickFilterValue); // check if empty string matches all
+    gridRef.current.api.setGridOption('quickFilterText', quickFilterValue); // check if empty string matches all
   }
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <AgGridReact
+        columnMenu="legacy"
         {...someProperties}
+        suppressCellFocus={suppressCellFocus}
         rowData={rowData}
         defaultColDef={memoDefaultColDef}
         onFilterChanged={onFilterChanged}
@@ -157,7 +168,7 @@ const AgGrid = ({ properties, methods, loading, events }) => {
         onRowClicked={onRowClick}
         onCellClicked={onCellClicked}
         modules={[ClientSideRowModelModule, CsvExportModule]}
-        columnDefs={processColDefs(columnDefs, methods)}
+        columnDefs={processColDefs(columnDefs, methods, components)}
         ref={gridRef}
         getRowId={getRowId}
         suppressLoadingOverlay

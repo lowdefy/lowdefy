@@ -211,24 +211,28 @@ label:
 
 ### \_module.var Operator
 
-**File:** `packages/build/src/build/buildRefs/walker.js` (`resolveModuleVar` function)
+**File:** `packages/build/src/build/buildRefs/walker.js` (`resolveModuleVar`, `resolveEffectiveVar`, `resolveVarDefault` functions)
 
-Module variable substitution, resolved during the walker pass alongside `_var`:
+Module variable substitution, resolved lazily during the full-resolve walker pass:
 
 ```yaml
-# Simple key access
 collection:
   _module.var: collection
 
-# With default value
-columnDefs:
-  _module.var:
-    key: components.table_columns
-    default:
-      - field: name
+# Defaults are expressions declared in module.lowdefy.yaml.
+# vars:
+#   page_title:
+#     default:
+#       _module.var: label_plural
 ```
 
-`_module.var` reads from `ctx.moduleVars` on the `WalkContext`. Module vars propagate through both `child()` and `forRef()`, staying constant across all `_ref` nesting depths within a module. Outside module context (`moduleVars` is `undefined`), the operator passes through unchanged.
+The walker resolves `_module.var` with a three-way branch on the `WalkContext`:
+
+- `moduleEntry` set → lazy resolve via `resolveModuleVar`. Reads the consumer value from `moduleEntry.consumerVars` first; otherwise calls `resolveEffectiveVar` to walk the manifest's raw `default` expression.
+- `moduleEntry` null, `moduleRoot` set (Phase 1a local resolve) → preserve the node untouched; the full-resolve pass resolves it.
+- Both null (app-level config) → throw `ConfigError`.
+
+Defaults resolve in a fresh `WalkContext` anchored at `module.lowdefy.yaml` so cross-module refs, circular detection, and error messages work correctly. Resolution results cache on `moduleEntry.resolvedVarCache`, shared across all walks of the module and across cross-module ref calls.
 
 ### \_module.\* ID Operators
 

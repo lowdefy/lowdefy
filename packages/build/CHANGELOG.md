@@ -1,5 +1,180 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 73fa2b9: feat: Internal API endpoint calls
+
+  **Endpoint-to-Endpoint Calls (`@lowdefy/api`)**
+
+  - API endpoint routines can call other endpoints server-side via `CallApi` steps, without HTTP
+  - Each called endpoint runs in an isolated context with its own `steps` and `payload` namespaces
+  - Recursive endpoint call depth is capped at 10 to prevent infinite loops
+  - `InternalApi` endpoints are blocked from HTTP access — they return the same response as a missing endpoint
+
+  **Build Support (`@lowdefy/build`)**
+
+  - `CallApi` routine steps validated at build time: require `properties.endpointId`, reject `connectionId`
+  - `InternalApi` endpoint type accepted alongside `Api`
+  - Client-side `CallAPI` actions targeting `InternalApi` endpoints produce a build warning (error in production)
+
+  **Operator Parser (`@lowdefy/operators`)**
+
+  - `ServerParser.parse()` accepts `steps` and `payload` per call for routine context isolation
+
+- 69a59c0: feat(\_js): Pass pre-computed values into `_js` via an `args` object.
+
+  The `_js` operator now accepts an object form `{ fn, args }` alongside the existing string form. Values in `args` are resolved by the parser — using any Lowdefy operator (`_state`, `_request`, `_user`, nested `_js`, etc.) — before the JavaScript function runs, and are injected as the `args` object inside the function body.
+
+  ```yaml
+  _js:
+    fn: |
+      const { products, target } = args;
+      return products
+        .filter((p) => p.category === target)
+        .reduce((a, p) => a + p.price, 0);
+    args:
+      products:
+        _request: get_products.data.products
+      target: smartphones
+  ```
+
+  This lets you precompute or normalize values in YAML and keep the JavaScript body focused on computation, rather than mixing operator lookups into the function. The string form continues to work unchanged, and identical `fn` bodies still share a single compiled function at build time — only `args` varies per call.
+
+- 0f38c9f: feat: First-class module system for reusable config packages
+
+  Modules are reusable bundles of Lowdefy config — pages, connections, API endpoints, menus, and exposed components — hosted in GitHub repositories or local directories. Apps install modules in `lowdefy.yaml` and configure them through `vars`, replacing the copy-paste-between-projects pattern with a declarative dependency.
+
+  **Module entries (`@lowdefy/build`)**
+
+  - Apps declare entries in the `modules` array of `lowdefy.yaml` with `id`, `source`, and optional `vars`, `connections`, and `dependencies`.
+  - The entry `id` namespaces the module's content and forms the URL prefix for its pages (e.g. `/team-users/users-list`).
+  - Multi-instance: the same module source can be installed multiple times under different entry IDs, each with its own vars and namespace.
+  - GitHub sources (`github:owner/repo[/path]@ref`) are fetched as tarballs and locally cached. Private repos use `GITHUB_TOKEN`, the `gh` CLI, or git credential helpers.
+  - Local sources (`file:./relative/path`) resolve relative to the project root.
+
+  **Module manifest (`module.lowdefy.yaml`)**
+
+  - Declares the module's interface: `name`, `description`, `vars`, `connections`, `pages`, `api`, `components`, `menus`, `dependencies`, `exports`, `plugins`, and `secrets`.
+  - `vars` declarations validate consumer values with `type`, `required`, `default`, and `description`. Consumer values override manifest defaults; omitted values fall back to the declared default.
+  - `exports` declares the module's public interface — the IDs other modules and apps may reference. The build validates cross-module references against exports.
+  - `plugins` declarations are validated against the app's installed plugins with semver compatibility checks.
+  - `secrets` is an allowlist of secrets the module may access; undeclared `_secret` references fail the build. Remapped connections skip the module's secret references for that connection.
+
+  **Module operators**
+
+  - `_module.var` — read manifest-validated vars, including consumer overrides and declared defaults.
+  - `_module.pageId`, `_module.connectionId`, `_module.endpointId` — produce scoped IDs from a module-author's unscoped ID.
+  - `_module.id` — the entry ID of the current module.
+
+  **Auto-scoped IDs**
+
+  Page, connection, API endpoint, and menu item IDs are auto-prefixed with the entry ID. Block and request IDs inherit page scope and are not rewritten.
+
+  **Consuming module resources**
+
+  - Pages and APIs are auto-included and auto-scoped — they appear in the app under the entry-ID prefix.
+  - Components are reusable config fragments included with `_ref: { module, component, vars }`. They can export any config — UI blocks, enum maps, config templates, schema fragments — and accept vars at the call site.
+  - Menus are included with `_ref: { module, menu }`, typically wrapped in a `MenuGroup`.
+
+  **Connection remapping**
+
+  Apps can redirect a module connection to an existing app connection via the entry's `connections` map. The module's connection definition and its declared secrets are skipped — the app connection handles them.
+
+  **Cross-module dependencies**
+
+  Modules can reference each other's pages, components, menus, connections, and APIs via abstract dependencies declared in `module.lowdefy.yaml`.
+
+  - Auto-wiring: when a module entry's `id` matches a declared dependency name, the build wires it automatically.
+  - Explicit wiring: the entry's `dependencies` map overrides auto-wiring and supports multi-instance topologies where each instance points at a different partner.
+  - The build validates every wiring, detects dependency cycles, and reports unmapped or undeclared dependencies with remediation hints.
+
+  **Auth page rules**
+
+  Picomatch glob patterns in auth page rules (e.g. `team-users/*`) for wildcard module page matching.
+
+  **Slashed page IDs (`@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  Server routes support module page IDs containing `/` (e.g. `/team-users/users-list`).
+
+### Patch Changes
+
+- 762755c: feat(blocks-tiptap): Add new default block package with `TiptapInput` and `TiptapMentionInput` rich-text editors.
+
+  `@lowdefy/blocks-tiptap` ships two rich-text editor blocks built on [TipTap](https://tiptap.dev):
+
+  - **`TiptapInput`** — standard rich-text editor with bold/italic/strike-through, multi-color highlight, headings, lists, tables, links, and a bubble menu.
+  - **`TiptapMentionInput`** — everything `TiptapInput` does, plus an @-mention dropdown populated from a static options list or a Lowdefy request. Resolved mentions are returned on the block value as `mentions: [...]`.
+
+  Both blocks emit an object value shaped `{ html, text, markdown, fileList, mentions? }` and register `clear`, `setContent`, and `focus` methods.
+
+  **Configurable extensions** — defaults preserve the bundled editor; override any of these to trim the editor down or tune it:
+
+  - `properties.starterKit` — object forwarded to TipTap [StarterKit](https://tiptap.dev/docs/editor/extensions/functionality/starterkit), e.g. `{ heading: false, codeBlock: false }`.
+  - `properties.image` — `{ enabled, maxWidth, zoom }`
+  - `properties.table` — `{ enabled, resizable }`
+  - `properties.link` — `{ enabled, autolink, linkOnPaste, openOnClick, defaultProtocol }`
+  - `properties.highlight` — `{ enabled, multicolor }`
+  - `properties.mentions.char` / `properties.mentions.allowSpaces` — change the trigger char (e.g. `#` for hashtags) or disable spaces inside a mention query (`TiptapMentionInput` only).
+
+  Image drag/drop and paste are supported by pointing `properties.s3PostPolicyRequestId` at a request that returns an S3 presigned POST policy (e.g. `AwsS3PresignedPostPolicy`). The file handler is optional — omit the request id to disable uploads entirely.
+
+  The blocks are registered in the default types map and are available out of the box on `@lowdefy/server-dev`. No private-registry tokens are required: the blocks use the open-source [`@tiptap/extension-file-handler`](https://www.npmjs.com/package/@tiptap/extension-file-handler) instead of `@tiptap-pro/extension-file-handler`, so projects that migrated from a custom TipTap plugin can drop their `TIPTAP_PRO_TOKEN` environment variable and `.npmrc` scoped-registry config.
+
+- 72b6159: fix(build): Replace schema validation errors with warnings and add focused validations.
+
+  AJV schema validation now emits warnings instead of blocking the build. Focused validations in each build step (validateBlock, buildConnections, buildEvents, etc.) provide better error messages with full context — page, block, and event names — instead of generic schema messages. Added focused validation for connections and menu items that previously relied on schema checks alone.
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [73fa2b9]
+- Updated dependencies [69a59c0]
+- Updated dependencies [0d44433]
+- Updated dependencies [1e964c4]
+- Updated dependencies [c91003d]
+  - @lowdefy/operators-js@5.2.0
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/blocks-loaders@5.2.0
+  - @lowdefy/blocks-basic@5.2.0
+  - @lowdefy/ajv@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/node-utils@5.2.0
+  - @lowdefy/nunjucks@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- 72fbd4bab: feat(build): Themed default scrollbars in generated `globals.css`.
+
+  Every Lowdefy app now ships with themed scrollbars out of the box. Native Windows/Linux scrollbars were rendering as light grey on dark surfaces (Modal, Drawer, overflowing containers), clashing with dark themes — macOS overlay scrollbars hid the problem. The generated `globals.css` now emits a `@layer base` block that:
+
+  - Sets `scrollbar-width: thin` and `scrollbar-color` for Firefox and modern browsers.
+  - Styles `::-webkit-scrollbar` (10px, transparent track, subtle thumb with inset border, hover darkens) for Chromium / WebKit.
+  - Drives all colors from antd CSS custom properties (`--ant-color-border-secondary`, `--ant-color-text-tertiary`) so they auto-swap on dark / light mode toggle.
+
+  User-provided CSS remains in `@layer components`, so any app-level `::-webkit-scrollbar` overrides in `public/styles.css` still win.
+
+### Patch Changes
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/operators@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/ajv@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/node-utils@5.1.0
+  - @lowdefy/nunjucks@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

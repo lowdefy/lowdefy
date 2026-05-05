@@ -4701,6 +4701,29 @@
                   ],
                   "description": "The Selector element."
                 },
+                ".selector": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The inner value/tag container of the Selector (antd `content` semantic slot)."
+                },
                 ".clearIcon": {
                   "oneOf": [
                     {
@@ -4865,6 +4888,10 @@
                 ".element": {
                   "type": "object",
                   "description": "The Selector element."
+                },
+                ".selector": {
+                  "type": "object",
+                  "description": "The inner value/tag container of the Selector (antd `content` semantic slot)."
                 },
                 ".clearIcon": {
                   "type": "object",

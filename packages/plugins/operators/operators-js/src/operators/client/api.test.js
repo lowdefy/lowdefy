@@ -64,6 +64,23 @@ const context = {
             error: { message: 'error message' },
           },
         ],
+        holding: [
+          {
+            response: { items: [1, 2] },
+            loading: true,
+            holdValue: true,
+            status: null,
+            success: null,
+          },
+        ],
+        loadingNoHold: [
+          {
+            response: { items: [9] },
+            loading: true,
+            status: null,
+            success: null,
+          },
+        ],
       },
       basePath: 'basePath',
       inputs: { id: true },
@@ -163,5 +180,21 @@ test('_api dot notation returns null if ', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual(null);
+  expect(res.errors).toEqual([]);
+});
+
+test('_api returns previous response when loading and holdValue is true', () => {
+  const input = { _api: 'holding.response' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId' });
+  expect(res.output).toEqual({ items: [1, 2] });
+  expect(res.errors).toEqual([]);
+});
+
+test('_api returns null when loading and holdValue is not set', () => {
+  const input = { _api: 'loadingNoHold.response' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId' });
+  expect(res.output).toBe(null);
   expect(res.errors).toEqual([]);
 });

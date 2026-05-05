@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Lowdefy, Inc
+  Copyright 2020-2026 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -88,12 +88,18 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
     }
   }, []);
 
+  const getDisplayedRows = (api) => {
+    const rows = [];
+    api.forEachNodeAfterFilterAndSort((node) => rows.push(node.data));
+    return rows;
+  };
+
   const onFilterChanged = useCallback((event) => {
     if (events.onFilterChanged) {
       methods.triggerEvent({
         name: 'onFilterChanged',
         event: {
-          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
+          rows: getDisplayedRows(event.api),
           filter: gridRef.current.api.getFilterModel(),
         },
       });
@@ -105,8 +111,8 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
       methods.triggerEvent({
         name: 'onSortChanged',
         event: {
-          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
-          sort: event.columnApi.getColumnState().filter((col) => Boolean(col.sort)),
+          rows: getDisplayedRows(event.api),
+          sort: event.api.getColumnState().filter((col) => Boolean(col.sort)),
         },
       });
     }
@@ -145,7 +151,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         newRowData.splice(toIndex, 0, element);
         methods.setValue(newRowData);
         setRowData(rowData);
-        gridRef.current.api.setRowData(value);
+        gridRef.current.api.setGridOption('rowData', value);
         gridRef.current.api.clearFocusedCell();
         methods.triggerEvent({
           name: 'onRowDragEnd',
@@ -164,21 +170,20 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
 
   useEffect(() => {
     methods.registerMethod('exportDataAsCsv', (args) => gridRef.current.api.exportDataAsCsv(args));
-    methods.registerMethod('exportDataAsCsv', (args) => gridRef.current.api.exportDataAsCsv(args));
     methods.registerMethod('sizeColumnsToFit', () => gridRef.current.api.sizeColumnsToFit());
     methods.registerMethod('setFilterModel', (model) => gridRef.current.api.setFilterModel(model));
     methods.registerMethod('setQuickFilter', (filter) =>
-      gridRef.current.api.setQuickFilter(filter)
+      gridRef.current.api.setGridOption('quickFilterText', filter)
     );
     methods.registerMethod('autoSize', (args = {}) => {
       const { skipHeader, colIds } = args;
       const allColumnIds = colIds || [];
       if (!colIds) {
-        gridRef.current.columnApi.getAllColumns().forEach((column) => {
+        gridRef.current.api.getColumns().forEach((column) => {
           allColumnIds.push(column.getId());
         });
       }
-      gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+      gridRef.current.api.autoSizeColumns(allColumnIds, skipHeader);
     });
   }, []);
 
@@ -189,11 +194,12 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
   }, [value]);
 
   if (quickFilterValue && quickFilterValue === '') {
-    gridRef.current.api.setQuickFilter(quickFilterValue); // check if empty string matches all
+    gridRef.current.api.setGridOption('quickFilterText', quickFilterValue); // check if empty string matches all
   }
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <AgGridReact
+        columnMenu="legacy"
         {...someProperties}
         rowData={rowData}
         onCellClicked={onCellClicked}

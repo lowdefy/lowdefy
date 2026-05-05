@@ -1,5 +1,49 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 1d18a13: feat(actions): `holdValue` flag on `Request` and `CallAPI` actions.
+
+  `Request` and `CallAPI` actions now accept a `holdValue: true` flag that retains the previous response value while a new call is loading. UI bound to `_request: <id>` or `_api: <endpointId>` keeps showing the previous response instead of flashing to `null` during a refetch. The previous response is also retained if the new call errors — the error is still observable via `_request_details` / `_api`.
+
+  ```yaml
+  - id: refresh_table
+    type: Request
+    params:
+      requestId: my_table_request
+      holdValue: true
+  ```
+
+  The `Request` action's object-form params now also support `{ requestId, holdValue }` and `{ requestIds, holdValue }` shapes alongside the existing `{ all }` shape.
+
+### Patch Changes
+
+- d105b81: fix(engine): Preserve input values across `visible` toggles when set via `SetState`.
+
+  When an input was inside a hidden container and a `SetState` action set its value (e.g. on `onInit` before the container becomes visible), the value was silently reset to the input's `enforceType` default (typically `null`/`""`) on the next `SetState`. The next `SetState` triggered `RootSlots.reset()`, which found the field missing from `context.state` (because `Slots.updateState` correctly deletes invisible blocks' state fields) and overwrote `this.value` with the type default.
+
+  `Block.reset()` now skips the type-default fallback when the block was hidden in the previous eval cycle and has in-memory state to preserve — `this.value` for inputs, or existing `subSlots` for lists (which would otherwise be truncated by the rebuild loop reading an empty `enforceType('array', null)`). The next `updateState` republishes the value to `context.state` if the block becomes visible, or leaves the field absent if it stays hidden.
+
+  This brings `SetState`-driven visibility toggles into parity with `setValue`-driven toggles, which already preserved the value via `Block.evaluate`. Lists with nested inputs also retain per-item values across hide/reveal cycles.
+
+  **Behaviour change:** apps that relied on a hidden input being silently reset to its default by an unrelated `SetState` will now see the previously-set value preserved. To explicitly clear a value, use `SetState({ myInput: null })`. Invisible blocks continue to have no representation in `context.state`, the user-facing `Reset` action still produces `enforceType` defaults, and `List` sub-slot rebuilding on `SetState({ list: [...] })` is unchanged.
+
+- Updated dependencies [73fa2b9]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.1.0
+- @lowdefy/errors@5.1.0
+- @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

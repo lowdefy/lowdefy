@@ -1,5 +1,21 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- Updated dependencies [73fa2b9]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.1.0
+- @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

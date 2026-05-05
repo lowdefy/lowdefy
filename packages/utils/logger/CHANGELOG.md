@@ -1,5 +1,23 @@
 # @lowdefy/logger
 
+## 5.2.0
+
+### Patch Changes
+
+- e3fc007: fix(logger): Handle non-object JSON values in stdout line handler.
+
+  `JSON.parse` can return `null` for literal `"null"` input, crashing the CLI log handler. Non-object parsed values are now treated as plain text lines.
+
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.1.0
+- @lowdefy/helpers@5.1.0
+
 ## 5.0.0
 
 ### Patch Changes

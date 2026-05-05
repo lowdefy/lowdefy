@@ -24,15 +24,20 @@ const SkeletonParagraph = ({ classNames, properties, styles }) => {
   return (
     <div
       className={classNames?.element}
-      style={{ width: properties.width ?? '100%', ...styles?.element }}
+      style={{
+        width: properties.width ?? '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem',
+        ...styles?.element,
+      }}
     >
       {lines.map((key) => (
         <Skeleton
           key={key}
-          styles={{ element: { marginBottom: '1rem' } }}
           properties={{
-            height: '1.25rem',
-            width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
+            height: '0.875rem',
+            width: key === lines.length - 1 && key !== 0 ? '60%' : '100%',
           }}
         />
       ))}

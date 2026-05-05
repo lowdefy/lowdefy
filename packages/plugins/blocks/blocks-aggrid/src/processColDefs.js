@@ -65,23 +65,23 @@ function applyAlignment(colDef, cell) {
   return { ...colDef, cellStyle, headerClass };
 }
 
-function buildCellRenderer({ cell, methods }) {
+function buildCellRenderer({ cell, methods, components }) {
   const Renderer = getCellRenderer(cell?.type);
   if (!Renderer) return undefined;
   // ag-grid calls the renderer as a React function component when returned directly.
   return function CellRendererAdapter(params) {
-    return Renderer({ ...params, cellConfig: cell, methods });
+    return Renderer({ ...params, cellConfig: cell, methods, components });
   };
 }
 
-function recProcessColDefs(columnDefs, methods) {
+function recProcessColDefs(columnDefs, methods, components) {
   return columnDefs.map((col) => {
     const newColDef = {};
     if (type.isArray(col.children)) {
-      newColDef.children = recProcessColDefs(col.children, methods);
+      newColDef.children = recProcessColDefs(col.children, methods, components);
     }
     if (type.isObject(col.cell) && type.isString(col.cell.type)) {
-      const renderer = buildCellRenderer({ cell: col.cell, methods });
+      const renderer = buildCellRenderer({ cell: col.cell, methods, components });
       if (renderer) {
         newColDef.cellRenderer = renderer;
       }
@@ -105,8 +105,8 @@ function recProcessColDefs(columnDefs, methods) {
   });
 }
 
-function processColDefs(columnDefs = [], methods) {
-  return recProcessColDefs(columnDefs, methods);
+function processColDefs(columnDefs = [], methods, components) {
+  return recProcessColDefs(columnDefs, methods, components);
 }
 
 export default processColDefs;

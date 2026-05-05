@@ -64,7 +64,36 @@ _ref:
                 └── validate-email.yaml
             ```
 
-            Modules in a monorepo can reference shared files using relative paths (`_ref: ../shared/page-layout.yaml`).
+            Modules in a monorepo can reference shared files outside their own directory with `../`. See [Ref Path Resolution](#ref-path-resolution).
+
+            ### Ref Path Resolution
+
+            `_ref` paths inside a module are relative to the module root (the directory containing `module.lowdefy.yaml`), not to the file doing the `_ref`. The same path works from any file in the module, regardless of nesting depth:
+
+            ```yaml
+            # module root: my-module/
+            # This ref works the same from:
+            #   my-module/module.lowdefy.yaml
+            #   my-module/pages/users-list.yaml
+            #   my-module/pages/admin/users-edit.yaml
+            header:
+              _ref: components/page-header.yaml   # always resolves to my-module/components/page-header.yaml
+            ```
+
+            Use `../` only to reference files outside the module — typically shared files in a monorepo:
+
+            ```yaml
+            # module root: my-modules/user-admin/
+            # _ref resolves to my-modules/shared/page-layout.yaml
+            layout:
+              _ref: ../shared/page-layout.yaml
+            ```
+
+            The build prevents `../` from escaping the package root — the git repo root for local (`file:`) modules (falling back to the module directory itself if not in a git repo), or the fetched repo root for `github:` modules. Breaking out throws a config error.
+
+            ## How Modules Stay Scoped and Composable
+
+            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
 
             ## Writing module.lowdefy.yaml
 
@@ -135,7 +164,9 @@ _ref:
             - `description` — Documentation for the variable's purpose.
             - `properties` — For `object` vars, declares nested keys with their own type, default, required, and description. Consumer values are merged at the property level — only overridden keys change.
 
-            The build applies manifest defaults at registration time, then validates the effective values. A var with `properties` merges recursively — the consumer overrides only the keys they provide, and the rest keep their defaults.
+            Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently.
+
+            Unused vars are never read, so their defaults never resolve and their declared `type` is never checked.
 
             ```yaml
             vars:
@@ -155,9 +186,62 @@ _ref:
 
             If the consumer provides `components: { filter: false }`, the effective value is `{ table: true, filter: false }`.
 
+            ### Dynamic Defaults
+
+            Defaults are expressions. A `default:` value can be a literal, a `_ref` to a file, a `_module.var` reference to another var, or any `_build.*` tree. The build resolves a default on read — only when `_module.var` accesses the var and the consumer did not provide a value.
+
+            The two most common patterns are loading a default from a file and deriving one var from another:
+
+            ```yaml
+            vars:
+              table_columns:
+                default:
+                  _ref: defaults/table-columns.yaml
+              page_title:
+                default:
+                  _module.var: label_plural
+            ```
+
+            `_ref` lets the module ship a structured default (a block tree, a column schema, a default request body) as its own file. `_module.var` inside a default turns one consumer-provided value into several — set `label_plural: "Users"` and `page_title` derives from it unless the consumer overrides it directly.
+
+            Defaults scale up to full operator trees and namespace-level merging:
+
+            ```yaml
+            vars:
+              show_title:
+                type: boolean
+                default: true
+
+              # Default built from another var
+              page_title:
+                type: string
+                default:
+                  _build.if:
+                    - _module.var: show_title
+                    - 'Contact Form'
+                    - null
+
+              # Namespace var — each property's default resolves on its own
+              components:
+                type: object
+                properties:
+                  form_fields:
+                    type: array
+                    default:
+                      _ref: components/form_contact.yaml
+                  show_header:
+                    type: boolean
+                    default:
+                      _module.var: show_title
+            ```
+
+            When a consumer passes `components: { show_header: false }`, `show_header` keeps the consumer value and the build still resolves the `form_fields` default — property-level merging plus lazy resolution combine without any extra work from the author.
+
+            A default that reads another var via `_module.var` triggers that var's resolution first. The build walks the dependency graph on demand, caching results per module entry. Circular `_module.var` graphs between defaults have no natural terminator — the build stack-overflows. Keep default graphs acyclic.
+
             ## Using _module.var
 
-            The [`_module.var`](/_module) operator accesses module entry variables — the values passed by the app developer, merged with manifest defaults. It takes a string argument and works at any depth within module files, without threading vars through nested `_ref`s:
+            The [`_module.var`](/_module) operator reads module entry variables — it returns the consumer value when provided, or resolves the manifest default on read. It takes a string argument and works at any depth within module files, without threading vars through nested `_ref`s:
 
             ```yaml
             # Any file in the module, at any nesting depth
