@@ -8,6 +8,7 @@ import configDrivenRaw from '../../../content/articles/case-for-config-driven-de
 import v5WhatsNewRaw from '../../../content/articles/lowdefy-5-whats-new.md';
 import demoToProductionRaw from '../../../content/articles/demo-to-production-lowdefy.md';
 import dropInModulesRaw from '../../../content/articles/lowdefy-5-2-drop-in-modules.md';
+import lowdefyAgentsRaw from '../../../content/articles/lowdefy-agents.md';
 
 function parseArticle(slug, raw) {
   const { data, content } = matter(raw);
@@ -33,6 +34,7 @@ const articles = [
   parseArticle('lowdefy-5-whats-new', v5WhatsNewRaw),
   parseArticle('demo-to-production-lowdefy', demoToProductionRaw),
   parseArticle('lowdefy-5-2-drop-in-modules', dropInModulesRaw),
+  parseArticle('lowdefy-agents', lowdefyAgentsRaw),
 ]
   .filter((a) => !a.draft)
   .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
