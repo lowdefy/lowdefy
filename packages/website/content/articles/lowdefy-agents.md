@@ -1,6 +1,6 @@
 ---
 title: 'Lowdefy Agents'
-subtitle: 'A page in a Lowdefy app can now hold a streaming AI conversation'
+subtitle: 'A Lowdefy app can now run AI agents that call your existing endpoints as tools'
 authorId: 'machiel'
 publishedAt: '2026-05-05'
 readTimeMinutes: 8
@@ -11,7 +11,7 @@ tags:
 draft: true
 ---
 
-A page in a Lowdefy app can now hold a streaming AI conversation. Add a provider connection and an agent to your app config, drop an `AgentChat` block on a page, and your existing API endpoints become the agent's tools. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
+A Lowdefy app can now run AI agents that call your existing endpoints as tools. Add a provider connection and an agent to your app config, drop an `AgentChat` block on a page, and you have streaming chat wired to the API you already have. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
 
 The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block is built on [Ant Design X](https://x.ant.design/) and ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and bidirectional page-state sync sit in the same shape as the simplest chat.
 
