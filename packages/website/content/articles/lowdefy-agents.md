@@ -8,10 +8,10 @@ tags:
   - 'Release'
   - 'Agents'
   - 'AI'
-draft: true
+draft: false
 ---
 
-A Lowdefy app can now run AI agents that call your existing endpoints as tools. Add a provider connection and an agent to your app config, drop an `AgentChat` block on a page, and you have streaming chat wired to the API you already have. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
+A Lowdefy app can now run AI agents that call your existing endpoints as tools. Add a provider connection and an agent to your app config, drop an [`AgentChat`](https://docs.lowdefy.com/AgentChat) block on a page, and you have streaming chat wired to the API you already have. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
 
 The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block is built on [Ant Design X](https://x.ant.design/) and ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and bidirectional page-state sync sit in the same shape as the simplest chat.
 
@@ -63,16 +63,14 @@ pages:
     type: PageHeaderMenu
     properties:
       title: Chat
-    slots:
-      content:
-        blocks:
-          - id: chat
-            type: AgentChat
-            properties:
-              agentId: chat_bot
-              welcome:
-                title: Chat
-                description: Ask me anything
+    blocks:
+      - id: chat
+        type: AgentChat
+        properties:
+          agentId: chat_bot
+          welcome:
+            title: Chat
+            description: Ask me anything
 ```
 
 Drop your Anthropic API key into a secret called `ANTHROPIC_API_KEY` and the page serves a streaming chat with markdown rendering, a welcome screen, copy-message actions, and a typing indicator while the model is generating. The `AgentChat` block ships the things you'd otherwise wire up by hand: streaming, scroll behavior, error and abort handling, role-based avatars, an empty state, file attachments. None are required config.
@@ -118,11 +116,11 @@ agents:
       - search-products
 ```
 
-This endpoint is a regular Lowdefy API. A button on a page can hit it through a `CallApi` action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, `_payload` carries the model's tool input, the same as if a page had sent it.
+This endpoint is a regular Lowdefy API. A button on a page can hit it through a [`CallApi`](https://docs.lowdefy.com/CallApi) action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, [`_payload`](https://docs.lowdefy.com/_payload) carries the model's tool input, the same as if a page had sent it.
 
-An agent has the same surface area as the rest of your app. Every operator, every connection, every secret, every authenticated user reference (`_user`) is available inside a tool's routine. An insert endpoint that writes to MongoDB is already a tool. An endpoint that calls a third-party API with a stored key is already a tool. The agent isn't a new server, it's a different caller of the server you already have.
+An agent has the same surface area as the rest of your app. Every operator, every connection, every secret, every authenticated user reference ([`_user`](https://docs.lowdefy.com/_user)) is available inside a tool's routine. An insert endpoint that writes to MongoDB is already a tool. An endpoint that calls a third-party API with a stored key is already a tool. The agent isn't a new server, it's a different caller of the server you already have.
 
-For tools that shouldn't be exposed to the browser at all, change the type to `InternalApi`. The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints:
+For tools that shouldn't be exposed to the browser at all, change the type to [`InternalApi`](https://docs.lowdefy.com/InternalApi). The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints:
 
 ```yaml
 api:
