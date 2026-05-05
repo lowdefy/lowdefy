@@ -140,6 +140,36 @@ function createHandleError({ context }) {
         context,
         configLocation: location,
       });
+
+      try {
+        context.audit?.log({
+          category: 'error',
+          eventType: `error.${eventType}`,
+          severity: 'high',
+          initiator: {
+            userId: user.id ?? user.sub,
+            sub: user.sub,
+            roles: user.roles,
+          },
+          target: {
+            type: context.endpointId ? 'endpoint' : 'request',
+            id: context.req?.url,
+            pageId: context.pageId,
+          },
+          action: 'error',
+          outcome: 'failure',
+          metadata: {
+            errorName,
+            errorMessage: error.message,
+            source: error.source,
+            configKey: error.configKey,
+          },
+          rid: context.rid,
+        });
+      } catch (auditErr) {
+        // Audit failures must never break error handling
+        console.error('Audit error logging failed:', auditErr);
+      }
     } catch (e) {
       console.error(error);
       console.error('An error occurred while logging the error.');

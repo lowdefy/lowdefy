@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, createAuditLogger } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
@@ -68,6 +68,8 @@ function apiWrapper(handler) {
         });
       }
       createApiContext(context);
+      context.auditConfig = loggerConfig.audit;
+      context.audit = createAuditLogger({ auditConfig: loggerConfig.audit, context });
       logRequest({ context });
       // Await here so that if handler throws it is caught.
       const response = await handler({ context, req, res });

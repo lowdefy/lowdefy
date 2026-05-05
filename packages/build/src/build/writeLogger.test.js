@@ -82,6 +82,25 @@ test('writeLogger with sentry config', async () => {
   ]);
 });
 
+test('writeLogger serializes audit config alongside sentry', async () => {
+  const components = {
+    logger: {
+      sentry: { client: true, server: true },
+      audit: {
+        enabled: true,
+        events: ['request', 'authorization'],
+        severity: 'medium',
+      },
+    },
+  };
+  await writeLogger({ components, context });
+  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(written.audit.enabled).toBe(true);
+  expect(written.audit.events).toEqual(['request', 'authorization']);
+  expect(written.audit.severity).toBe('medium');
+  expect(written.sentry.client).toBe(true);
+});
+
 test('writeLogger preserves all sentry options', async () => {
   const components = {
     logger: {

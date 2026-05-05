@@ -1,0 +1,359 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: audit-logging
+    pageTitle: Audit Logging
+    section: Concepts
+    filePath: concepts/audit-logging.yaml
+    content:
+      - id: md_intro
+        type: Markdown
+        properties:
+          content: |
+            Audit logging captures *who did what, when, and to what* in your Lowdefy app — sign-ins, request executions, authorization denials, errors, and more. Audit events are emitted server-side as structured JSON log lines so they cannot be tampered with by the client.
+
+            Audit logging is config-driven. Once you add an `audit` block under `logger:` in your `lowdefy.yaml`, the framework automatically captures events at five interception points:
+
+            - Authentication (`signIn`, `signOut`)
+            - Request execution
+            - API endpoint execution
+            - Authorization denial
+            - Server-side errors
+
+            When `logger.audit` is not configured (or `enabled: false`), there is zero runtime overhead.
+
+            ## How It Works
+
+            Audit events are emitted through the same pino-based structured logger that Lowdefy already uses for operational logs. Each audit event is a JSON line on `stdout` with `audit: true` and a stable, queryable shape. From there, you forward them to your log destination of choice — Vercel log drains, AWS CloudWatch Logs, Datadog, Splunk, or S3 via Kinesis Firehose. Retention, access control, and tamper-evidence are handled by the destination.
+
+            ## Quick Start
+
+            ```yaml
+            lowdefy: 4.5.2
+
+            logger:
+              audit:
+                events: [auth, request, authorization, error]
+            ```
+
+            That's it — every login, request execution, authorization denial, and server error is now emitted as a structured JSON line.
+
+            A typical line looks like:
+
+            ```json
+            {
+              "level": 30,
+              "time": 1714752600000,
+              "rid": "req_xyz789",
+              "audit": true,
+              "event": "audit_event",
+              "auditEvent": {
+                "id": "evt_01HrJWpYyWqpQCxLB3SZhgoB",
+                "timestamp": "2026-05-03T10:30:00.000Z",
+                "eventType": "request.execute",
+                "category": "request",
+                "severity": "medium",
+                "initiator": { "userId": "user_123", "sub": "google-oauth2|abc", "roles": ["editor"] },
+                "target": { "type": "request", "id": "update_user", "pageId": "settings" },
+                "action": "execute",
+                "outcome": "success",
+                "metadata": { "duration": 42, "blockId": "save_button" },
+                "rid": "req_xyz789"
+              },
+              "msg": "audit request.execute"
+            }
+            ```
+
+            Filter your log stream on `audit: true` to extract just the audit events.
+
+      - id: md_event_categories
+        type: Markdown
+        properties:
+          content: |
+            ## Event Categories
+
+            The `events` array selects which categories to capture. At least one is required.
+
+            | Category | When |
+            |----------|------|
+            | `auth` | NextAuth `signIn` and `signOut` events |
+            | `request` | Page request completes (data fetches, mutations) |
+            | `endpoint` | API endpoint completes (success or failure) |
+            | `authorization` | A user is denied access to a request or endpoint |
+            | `error` | A server-side error is captured (config, service, plugin, etc.) |
+
+            ## Audit Event Schema
+
+            Every event follows a standardized structure inspired by CADF (initiator/target/action/outcome) and the OWASP Logging Vocabulary:
+
+            ```json
+            {
+              "id": "evt_01HrJWpYyWqpQCxLB3SZhgoB",
+              "timestamp": "2026-05-03T10:30:00.000Z",
+              "eventType": "request.execute",
+              "category": "request",
+              "severity": "medium",
+              "initiator": {
+                "userId": "user_123",
+                "sub": "google-oauth2|abc",
+                "roles": ["editor"],
+                "ip": "192.168.1.10",
+                "userAgent": "Mozilla/5.0..."
+              },
+              "target": {
+                "type": "request",
+                "id": "update_user_profile",
+                "connectionId": "app_mongodb",
+                "connectionType": "MongoDBCollection",
+                "pageId": "user-settings"
+              },
+              "action": "execute",
+              "outcome": "success",
+              "metadata": {
+                "requestType": "MongoDBUpdateOne",
+                "duration": 42,
+                "blockId": "save_button"
+              },
+              "rid": "req_xyz789",
+              "appFields": {
+                "appName": "My App",
+                "environment": "production"
+              }
+            }
+            ```
+
+            ## Severity
+
+            Each event carries an inherent severity. The `severity` config field filters out events below the threshold.
+
+            | Level | Description |
+            |-------|-------------|
+            | `low` | Informational events |
+            | `medium` | Normal auditable operations (default threshold) |
+            | `high` | Security-relevant events (auth failures, errors, denials) |
+
+            Default threshold is `medium` — `low` severity events are dropped unless you set `severity: low`.
+
+            ## Field Masking
+
+            The `mask` array adds field names that should be replaced with `***MASKED***` in audit metadata. The framework also masks any field whose name matches the built-in heuristics: `password`, `token`, `secret`, `authorization`, `apikey` (case-insensitive).
+
+            ```yaml
+            logger:
+              audit:
+                events: [request]
+                mask:
+                  - ssn
+                  - creditCard
+                  - dateOfBirth
+            ```
+
+            Strings longer than 10,000 characters are truncated to prevent log bloat.
+
+            ## Capturing Payloads and Responses
+
+            By default, audit events include identity (who) and target (what), but not the request payload or response body. Enable `capture` per category to include payloads:
+
+            ```yaml
+            logger:
+              audit:
+                events: [request, endpoint]
+                capture:
+                  request:
+                    payload: true
+                    response: false
+                  endpoint:
+                    payload: true
+                    response: true
+                mask:
+                  - password
+                  - apiKey
+            ```
+
+            Captured payloads pass through `mask` before being emitted. Always combine `capture` with `mask` to keep sensitive fields out of audit storage.
+
+      - id: warning_pii_capture
+        type: Alert
+        properties:
+          type: warning
+          icon: AiFillWarning
+          description: 'Capturing payloads and responses can write personally identifiable information into your log stream. Only enable capture when your retention and access policies allow it, and always set mask for sensitive fields.'
+
+      - id: md_filtering
+        type: Markdown
+        properties:
+          content: |
+            ## Filtering by Page, Request, or Endpoint
+
+            High-volume operations (autocomplete, dropdown options) often shouldn't generate audit events. Use `exclude` to skip them, or `include` to opt-in only a specific allowlist.
+
+            ```yaml
+            logger:
+              audit:
+                events: [request]
+                exclude:
+                  pages:
+                    - public-landing
+                  requests:
+                    - fetch_dropdown_options
+                    - autocomplete_users
+                  endpoints:
+                    - health-check
+            ```
+
+            `exclude` and `include` are mutually exclusive. If you set both, the build will fail.
+
+            ## App-Level Fields
+
+            The `fields` block lets you tag every audit event with static application context. Operators are evaluated once at server startup, so you can use `_secret` and other server-side operators.
+
+            ```yaml
+            logger:
+              audit:
+                events: [request, error]
+                fields:
+                  appName: HR Portal
+                  environment:
+                    _secret: ENVIRONMENT
+                  region: eu-west-1
+            ```
+
+            Each audit event will include an `appFields` object with these values.
+
+            ## Sampling
+
+            Sampling is useful when you want a statistical view of high-volume categories without writing every event. Each category accepts a rate between 0 and 1 (1.0 = log all, 0.0 = drop all, 0.1 = log 10%).
+
+            ```yaml
+            logger:
+              audit:
+                events: [auth, request, error]
+                sampling:
+                  request: 0.1     # log 10% of request events
+                  auth: 1.0        # log all auth events
+                  error: 1.0       # log all errors
+            ```
+
+            Categories not listed in `sampling` default to 1.0 (log all). Sampling is a probabilistic filter applied after `severity` and `exclude`/`include` checks.
+
+            ## Rate Limiting
+
+            For protection against pathological event bursts, set a hard ceiling on events per second. Events beyond the cap are dropped, and a warning is logged once per minute summarizing the count.
+
+            ```yaml
+            logger:
+              audit:
+                events: [request, error]
+                rateLimit:
+                  perSecond: 1000
+            ```
+
+            Rate limiting is applied across all categories. Use it as a backstop, not as a primary filter — `exclude`/`include` and `sampling` give you finer control.
+
+      - id: md_drains
+        type: Markdown
+        properties:
+          content: |
+            ## Routing Audit Events to Persistent Storage
+
+            Audit events emit to stdout as JSON. Forward them to whichever destination matches your retention and compliance needs:
+
+            ### Vercel
+
+            Configure a [log drain](https://vercel.com/docs/observability/log-drains) under your project's settings. Vercel forwards every stdout line — including audit events — to your endpoint.
+
+            Filter by `audit: true` in the destination platform.
+
+            ### AWS CloudWatch Logs
+
+            Pipe stdout into the CloudWatch Logs agent or run on Lambda/ECS where stdout is automatically captured. Use a CloudWatch Logs metric filter or subscription to extract `{ $.audit IS TRUE }` and forward to S3, OpenSearch, or another consumer.
+
+            ### Datadog / Splunk
+
+            The Datadog agent and Splunk forwarder both ingest stdout JSON natively. Add a pipeline filter on `@audit:true` (Datadog) or `audit=true` (Splunk) to route audit events to a separate index with longer retention.
+
+            ### S3 (immutable, append-only)
+
+            Use AWS Kinesis Firehose with a CloudWatch Logs subscription as the source and an S3 bucket with Object Lock as the sink. Configure Firehose to filter for `audit: true` and partition by date.
+
+            ### Self-managed log shipping
+
+            Tools like Vector, Fluent Bit, and Logstash all parse pino's JSON output natively. Configure a filter for `audit: true` and route to whichever sink you operate.
+
+      - id: md_complete_example
+        type: Markdown
+        properties:
+          content: |
+            ## Complete Example
+
+            An HR portal that audits all sensitive operations, masks PII, and routes audit events to a long-retention store via the platform's log drain:
+
+            ```yaml
+            lowdefy: 4.5.2
+            name: HR Portal
+
+            logger:
+              audit:
+                events: [auth, request, authorization, error]
+                severity: medium
+                mask:
+                  - password
+                  - ssn
+                  - salary
+                capture:
+                  request:
+                    payload: true
+                    response: false
+                fields:
+                  appName: HR Portal
+                  environment:
+                    _secret: ENVIRONMENT
+                exclude:
+                  requests:
+                    - fetch_department_list
+                    - fetch_role_options
+                rateLimit:
+                  perSecond: 1000
+
+            connections:
+              - id: app_db
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: MONGODB_URI
+                  collection: employees
+                  read: true
+                  write: true
+            ```
+
+            In this setup:
+
+            - Every login and logout is logged.
+            - Every request execution emits an audit event with the masked payload.
+            - Authorization denials are captured (so you can see who tried to access protected data).
+            - All server-side errors are captured.
+            - High-volume dropdown requests are excluded.
+            - `salary` and `ssn` are masked everywhere they appear.
+            - The platform's log drain forwards events with `audit: true` to long-retention storage.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Logger
+            previous_page_id: logger
+            next_page_title: Lists
+            next_page_id: lists

@@ -14,27 +14,13 @@
   limitations under the License.
 */
 
-import createEventPlugins from './createEventPlugins.js';
-
-function createSessionEvent({ audit: _audit, authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
-  });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
-  }
-  return sessionEvent;
+function shouldSampleEvent({ event, sampling, random = Math.random }) {
+  if (!sampling) return true;
+  const rate = sampling[event.category];
+  if (rate === undefined || rate === null) return true;
+  if (rate >= 1) return true;
+  if (rate <= 0) return false;
+  return random() < rate;
 }
 
-export default createSessionEvent;
+export default shouldSampleEvent;

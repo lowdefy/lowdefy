@@ -14,27 +14,16 @@
   limitations under the License.
 */
 
-import createEventPlugins from './createEventPlugins.js';
+const SEVERITY_LEVELS = {
+  low: 10,
+  medium: 20,
+  high: 30,
+};
 
-function createSessionEvent({ audit: _audit, authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
-  });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
-  }
-  return sessionEvent;
+function meetsThreshold(eventSeverity, configSeverity) {
+  const eventValue = SEVERITY_LEVELS[eventSeverity] ?? SEVERITY_LEVELS.medium;
+  const thresholdValue = SEVERITY_LEVELS[configSeverity] ?? SEVERITY_LEVELS.medium;
+  return eventValue >= thresholdValue;
 }
 
-export default createSessionEvent;
+export { SEVERITY_LEVELS, meetsThreshold };

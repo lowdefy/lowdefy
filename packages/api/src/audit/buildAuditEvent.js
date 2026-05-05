@@ -14,27 +14,23 @@
   limitations under the License.
 */
 
-import createEventPlugins from './createEventPlugins.js';
+import { randomUUID } from 'crypto';
 
-function createSessionEvent({ audit: _audit, authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
-  });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
-  }
-  return sessionEvent;
+function buildAuditEvent({ event, context, appFields }) {
+  return {
+    id: `evt_${randomUUID()}`,
+    timestamp: new Date().toISOString(),
+    eventType: event.eventType,
+    category: event.category,
+    severity: event.severity ?? 'medium',
+    initiator: event.initiator ?? {},
+    target: event.target ?? {},
+    action: event.action,
+    outcome: event.outcome,
+    metadata: event.metadata ?? {},
+    rid: context?.rid,
+    appFields: appFields ?? {},
+  };
 }
 
-export default createSessionEvent;
+export default buildAuditEvent;

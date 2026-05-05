@@ -26,7 +26,7 @@ import createProviders from './createProviders.js';
 const nextAuthConfig = {};
 let initialized = false;
 
-function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
+function getNextAuthConfig({ audit, authJson, logger, plugins, secrets }) {
   if (initialized) return nextAuthConfig;
 
   const operatorsParser = new ServerParser({
@@ -47,7 +47,7 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
 
   nextAuthConfig.adapter = createAdapter({ authConfig, logger, plugins });
   nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
-  nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
+  nextAuthConfig.events = createEvents({ audit, authConfig, logger, plugins });
   nextAuthConfig.logger = createLogger({ logger });
   nextAuthConfig.providers = createProviders({ authConfig, logger, plugins });
   nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;

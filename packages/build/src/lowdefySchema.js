@@ -1595,6 +1595,209 @@ export default {
             },
           },
         },
+        audit: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['events'],
+          errorMessage: {
+            type: 'App "logger.audit" should be an object.',
+            required: {
+              events: 'App "logger.audit" should have required property "events".',
+            },
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.audit.enabled" should be a boolean.',
+              },
+            },
+            events: {
+              type: 'array',
+              minItems: 1,
+              items: {
+                type: 'string',
+                enum: ['auth', 'request', 'endpoint', 'authorization', 'error'],
+              },
+              errorMessage: {
+                type: 'App "logger.audit.events" should be an array of event category strings.',
+                minItems: 'App "logger.audit.events" should have at least one event category.',
+              },
+            },
+            severity: {
+              type: 'string',
+              enum: ['low', 'medium', 'high'],
+              errorMessage: {
+                type: 'App "logger.audit.severity" should be one of "low", "medium", or "high".',
+              },
+            },
+            sampling: {
+              type: 'object',
+              additionalProperties: false,
+              errorMessage: {
+                type: 'App "logger.audit.sampling" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                auth: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.sampling.auth" should be a number between 0 and 1.',
+                  },
+                },
+                request: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.sampling.request" should be a number between 0 and 1.',
+                  },
+                },
+                endpoint: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.sampling.endpoint" should be a number between 0 and 1.',
+                  },
+                },
+                authorization: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.sampling.authorization" should be a number between 0 and 1.',
+                  },
+                },
+                error: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.sampling.error" should be a number between 0 and 1.',
+                  },
+                },
+              },
+            },
+            rateLimit: {
+              type: 'object',
+              additionalProperties: false,
+              errorMessage: {
+                type: 'App "logger.audit.rateLimit" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                perSecond: {
+                  type: 'integer',
+                  minimum: 1,
+                  errorMessage: {
+                    type: 'App "logger.audit.rateLimit.perSecond" should be a positive integer.',
+                    minimum: 'App "logger.audit.rateLimit.perSecond" should be at least 1.',
+                  },
+                },
+              },
+            },
+            mask: {
+              type: 'array',
+              items: { type: 'string' },
+              errorMessage: {
+                type: 'App "logger.audit.mask" should be an array of strings.',
+              },
+            },
+            capture: {
+              type: 'object',
+              additionalProperties: false,
+              errorMessage: {
+                type: 'App "logger.audit.capture" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                request: {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    '~r': {},
+                    '~l': {},
+                    payload: { type: 'boolean' },
+                    response: { type: 'boolean' },
+                  },
+                },
+                endpoint: {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    '~r': {},
+                    '~l': {},
+                    payload: { type: 'boolean' },
+                    response: { type: 'boolean' },
+                  },
+                },
+              },
+            },
+            fields: {
+              type: 'object',
+              errorMessage: {
+                type: 'App "logger.audit.fields" should be an object.',
+              },
+            },
+            exclude: {
+              type: 'object',
+              additionalProperties: false,
+              errorMessage: {
+                type: 'App "logger.audit.exclude" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                pages: { type: 'array', items: { type: 'string' } },
+                requests: { type: 'array', items: { type: 'string' } },
+                endpoints: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            include: {
+              type: 'object',
+              additionalProperties: false,
+              errorMessage: {
+                type: 'App "logger.audit.include" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                pages: { type: 'array', items: { type: 'string' } },
+                requests: { type: 'array', items: { type: 'string' } },
+                endpoints: { type: 'array', items: { type: 'string' } },
+              },
+            },
+          },
+        },
       },
     },
   },

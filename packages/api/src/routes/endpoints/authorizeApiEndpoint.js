@@ -15,13 +15,29 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import extractInitiator from '../../audit/extractInitiator.js';
 
-function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
+function authorizeApiEndpoint(context, { endpointConfig }) {
+  const { authorize, logger } = context;
   if (!authorize(endpointConfig)) {
     logger.debug({
       event: 'debug_api_authorize',
       authorized: false,
       auth_config: endpointConfig.auth,
+    });
+    context.audit?.log({
+      category: 'authorization',
+      eventType: 'authz.denied',
+      severity: 'high',
+      initiator: extractInitiator(context),
+      target: {
+        type: 'endpoint',
+        id: endpointConfig.endpointId,
+        pageId: context.pageId,
+      },
+      action: 'authorize',
+      outcome: 'denied',
+      rid: context.rid,
     });
     throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }

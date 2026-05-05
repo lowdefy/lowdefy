@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, createAuditLogger } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
@@ -27,6 +27,7 @@ import getE2eSecrets from './getE2eSecrets.js';
 import getServerSession from './auth/getServerSession.js';
 import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
+import loggerConfig from '../build/logger.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 
@@ -58,6 +59,8 @@ function apiWrapper(handler) {
       context.handleError = createHandleError({ context });
       context.session = getServerSession(context);
       createApiContext(context);
+      context.auditConfig = loggerConfig.audit;
+      context.audit = createAuditLogger({ auditConfig: loggerConfig.audit, context });
       logRequest({ context });
       // Await here so that if handler throws it is caught.
       const response = await handler({ context, req, res });

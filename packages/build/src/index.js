@@ -27,6 +27,7 @@ import tryBuildStep from './utils/tryBuildStep.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildApp from './build/buildApp.js';
+import buildAudit from './build/buildAudit/buildAudit.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
@@ -110,6 +111,7 @@ async function build(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(buildAudit, 'buildAudit', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
