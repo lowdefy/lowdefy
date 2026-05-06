@@ -21,6 +21,7 @@ import DateCell from './DateCell.js';
 import BooleanCell from './BooleanCell.js';
 import ProgressCell from './ProgressCell.js';
 import NumberCell from './NumberCell.js';
+import ButtonsCell from './ButtonsCell.js';
 
 const CELL_RENDERERS = {
   tag: TagCell,
@@ -30,6 +31,7 @@ const CELL_RENDERERS = {
   boolean: BooleanCell,
   progress: ProgressCell,
   number: NumberCell,
+  buttons: ButtonsCell,
 };
 
 function getCellRenderer(type) {
