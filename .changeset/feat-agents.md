@@ -73,6 +73,7 @@ feat: Add AI agent support with multi-provider chat and tool use
 - MCP `connectionId` normalization (inline config vs reference)
 - Lazy module variable resolution for agent properties referenced from modules
 - Agent schema validation integrated into the build pipeline
+- `copyAgentFileSystems` emits an `agentFileSystems.json` manifest so the production server can include each agent's `fileSystem.basePath` directory in Next.js file tracing — agents that read files now work on Vercel and standalone (`output: 'standalone'`) deployments without manual `next.config.js` configuration
 
 **API (`@lowdefy/api`)**
 
