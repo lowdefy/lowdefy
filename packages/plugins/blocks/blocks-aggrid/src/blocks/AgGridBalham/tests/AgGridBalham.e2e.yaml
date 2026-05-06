@@ -327,6 +327,19 @@ blocks:
         - roles: []
         - roles: null
 
+  - id: aggridbalham_cell_tag_seeded
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Tag
+          field: tag
+          cell:
+            type: tag
+      rowData:
+        - tag: frontend
+        - tag: frontend
+        - tag: backend
+
   - id: aggridbalham_cell_avatar
     type: AgGridBalham
     properties:

@@ -833,6 +833,51 @@
           - name: Chan Maarten
             roles: null
 
+- title: Auto-coloured tags
+  fullWidth: true
+  blocks:
+    - id: tag_seeded_demo
+      type: AgGridAlpine
+      properties:
+        height: 300
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Project
+            field: project
+            minWidth: 160
+          - headerName: Tags
+            field: tags
+            minWidth: 320
+            cell:
+              type: tag
+        rowData:
+          - project: Storefront
+            tags:
+              - frontend
+              - react
+              - typescript
+          - project: API gateway
+            tags:
+              - backend
+              - node
+              - typescript
+          - project: ML pipeline
+            tags:
+              - python
+              - airflow
+              - backend
+          - project: Mobile app
+            tags:
+              - frontend
+              - react
+              - mobile
+          - project: Design system
+            tags:
+              - frontend
+              - design
+
 - title: Linked cells (onCellLink)
   fullWidth: true
   blocks:

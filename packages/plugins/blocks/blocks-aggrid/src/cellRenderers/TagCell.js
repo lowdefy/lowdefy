@@ -35,6 +35,33 @@ const ANTD_TAG_COLOR_TOKENS = {
   default: 'var(--ant-color-text-secondary)',
 };
 
+const SEED_PALETTE = [
+  'red',
+  'volcano',
+  'orange',
+  'gold',
+  'yellow',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+  'magenta',
+];
+
+function colorSeed(s) {
+  if (type.isNone(s)) return 0;
+  const str = String(s);
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  return hash;
+}
+
+function seededColor(item) {
+  return SEED_PALETTE[colorSeed(item) % SEED_PALETTE.length];
+}
+
 function resolveColor(value) {
   if (type.isNone(value)) return ANTD_TAG_COLOR_TOKENS.default;
   return ANTD_TAG_COLOR_TOKENS[value] ?? value;
@@ -63,12 +90,18 @@ function TagCell(params) {
 
   const { colorMap, colorFrom, default: defaultColor } = cellConfig ?? {};
   const useColorFrom = type.isString(colorFrom);
+  const useColorMap = type.isObject(colorMap);
   const fromColor = useColorFrom ? resolvePath(colorFrom, data) : undefined;
+  const seedingActive = !useColorFrom && !useColorMap && type.isNone(defaultColor);
 
   function colorFor(item) {
     if (useColorFrom) return fromColor;
-    if (type.isObject(colorMap)) return colorMap[item];
+    if (useColorMap) return colorMap[item];
     return undefined;
+  }
+
+  function pickColor(item) {
+    return colorFor(item) ?? defaultColor ?? (seedingActive ? seededColor(item) : undefined);
   }
 
   if (type.isArray(value)) {
@@ -80,7 +113,7 @@ function TagCell(params) {
     return (
       <span style={containerStyle}>
         {items.map((item, index) => {
-          const resolved = resolveColor(colorFor(item) ?? defaultColor);
+          const resolved = resolveColor(pickColor(item));
           return (
             <span key={`${index}-${item}`} style={tagStyle(resolved)}>
               {String(item)}
@@ -91,7 +124,7 @@ function TagCell(params) {
     );
   }
 
-  const resolved = resolveColor(colorFor(value) ?? defaultColor);
+  const resolved = resolveColor(pickColor(value));
   return <span style={tagStyle(resolved)}>{String(value)}</span>;
 }
 
