@@ -40,8 +40,6 @@ Each layer has its own job. Connections hold credentials, separate from any indi
 plugins:
   - name: '@lowdefy/connection-anthropic'
     version: 5.3.0
-  - name: '@lowdefy/blocks-antd-x'
-    version: 5.3.0
 
 connections:
   - id: claude
