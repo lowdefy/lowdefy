@@ -187,6 +187,28 @@ Configured via `agent.properties.fileSystem` with a `basePath`. Automatically ad
 
 All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePath.js`) which normalizes the requested path against the base directory and throws if the resolved path escapes the base, preventing path traversal attacks.
 
+#### Deployment Considerations
+
+The fileSystem tools call Node's `fs/promises` and `glob` directly, so they require a Node.js runtime. Edge runtimes (Vercel Edge, Cloudflare Workers, Deno Deploy edge) and browsers cannot execute them — `fs/promises` is unavailable. Lowdefy's pages router (`pages/api/agent/[...path].js` in both `@lowdefy/server` and `@lowdefy/server-dev`) does not declare `runtime: 'edge'`, so the default Node runtime applies.
+
+The tools are read-only — there is no `write-file` or `delete-file`. Serverless platforms with a read-only deployment filesystem (Vercel, AWS Lambda) work without needing `/tmp` workarounds.
+
+**Standard `next start`** (running the built server directory directly): `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server. This works as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.).
+
+**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers behave differently. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable — the files copied by `copyAgentFileSystems` are present on the build host but **not included in the deployed bundle**. The agent will deploy successfully, then `list-files` returns empty and `read-file` throws `ENOENT` in production.
+
+The fix is to declare the directories explicitly in `next.config.js`:
+
+```js
+module.exports = {
+  outputFileTracingIncludes: {
+    '/api/agent/**': ['./content/**/*', './data/**/*'],
+  },
+};
+```
+
+The current `next.config.js` files do not configure this — projects deploying to Vercel or building with `output: 'standalone'` need to add it themselves, or arrange for the basePath to be sourced from somewhere other than the local filesystem.
+
 ## Hook System
 
 Hooks are server-side lifecycle callbacks that call API endpoints. Configured under `agent.hooks`:
