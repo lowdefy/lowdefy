@@ -40,22 +40,8 @@ function resolveColor(value) {
   return ANTD_TAG_COLOR_TOKENS[value] ?? value;
 }
 
-function TagCell(params) {
-  const { value, data, cellConfig } = params;
-  if (type.isNone(value) || value === '') {
-    return <NullCell />;
-  }
-
-  const { colorMap, colorFrom, default: defaultColor } = cellConfig ?? {};
-  let color;
-  if (type.isString(colorFrom)) {
-    color = resolvePath(colorFrom, data);
-  } else if (type.isObject(colorMap)) {
-    color = colorMap[value];
-  }
-  const resolved = resolveColor(color ?? defaultColor);
-
-  const style = {
+function tagStyle(resolved) {
+  return {
     display: 'inline-flex',
     alignItems: 'center',
     padding: 'var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px)',
@@ -67,8 +53,46 @@ function TagCell(params) {
     background: `color-mix(in srgb, ${resolved} 12%, transparent)`,
     border: `1px solid color-mix(in srgb, ${resolved} 30%, transparent)`,
   };
+}
 
-  return <span style={style}>{String(value)}</span>;
+function TagCell(params) {
+  const { value, data, cellConfig } = params;
+  if (type.isNone(value) || value === '') {
+    return <NullCell />;
+  }
+
+  const { colorMap, colorFrom, default: defaultColor } = cellConfig ?? {};
+  const useColorFrom = type.isString(colorFrom);
+  const fromColor = useColorFrom ? resolvePath(colorFrom, data) : undefined;
+
+  function colorFor(item) {
+    if (useColorFrom) return fromColor;
+    if (type.isObject(colorMap)) return colorMap[item];
+    return undefined;
+  }
+
+  if (type.isArray(value)) {
+    const items = value.filter((item) => !type.isNone(item) && item !== '');
+    if (items.length === 0) {
+      return <NullCell />;
+    }
+    const containerStyle = { display: 'inline-flex', flexWrap: 'wrap', gap: 4 };
+    return (
+      <span style={containerStyle}>
+        {items.map((item, index) => {
+          const resolved = resolveColor(colorFor(item) ?? defaultColor);
+          return (
+            <span key={`${index}-${item}`} style={tagStyle(resolved)}>
+              {String(item)}
+            </span>
+          );
+        })}
+      </span>
+    );
+  }
+
+  const resolved = resolveColor(colorFor(value) ?? defaultColor);
+  return <span style={tagStyle(resolved)}>{String(value)}</span>;
 }
 
 export default TagCell;

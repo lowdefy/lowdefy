@@ -203,7 +203,7 @@ export default {
                 colorMap: {
                   type: 'object',
                   description:
-                    'Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`.',
+                    'Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`. The cell value may be a single string or an array of strings; arrays render one tag per item.',
                 },
                 colorFrom: {
                   type: 'string',

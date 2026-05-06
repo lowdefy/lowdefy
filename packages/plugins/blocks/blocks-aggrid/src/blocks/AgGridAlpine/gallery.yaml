@@ -790,6 +790,49 @@
             verified: null
             completion: null
 
+- title: Tag cells with array values
+  fullWidth: true
+  blocks:
+    - id: tag_array_demo
+      type: AgGridAlpine
+      properties:
+        height: 240
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: User
+            field: name
+            minWidth: 180
+          - headerName: Roles
+            field: roles
+            minWidth: 260
+            cell:
+              type: tag
+              colorMap:
+                admin: red
+                editor: blue
+                viewer: green
+                billing: orange
+              default: default
+        rowData:
+          - name: Alice Johnson
+            roles:
+              - admin
+              - editor
+          - name: Bob Smith
+            roles:
+              - viewer
+          - name: Charlie Lee
+            roles:
+              - editor
+              - billing
+              - viewer
+          - name: Diana Patel
+            roles: []
+          - name: Chan Maarten
+            roles: null
+
 - title: Linked cells (onCellLink)
   fullWidth: true
   blocks:
@@ -868,13 +911,19 @@
         rowData:
           - code: A-01
             title: Main switchboard
-            description: Drafted the main switchboard layout and circuit schedule across three floors. Awaiting sign-off from the project engineer before ordering long-lead parts.
+            description: Drafted the main switchboard layout and circuit schedule across
+              three floors. Awaiting sign-off from the project engineer before
+              ordering long-lead parts.
           - code: A-02
             title: East wing HVAC
-            description: Balancing HVAC loads across the east wing. Waiting on updated ductwork drawings from the architect and a revised thermal model from the mechanical team.
+            description: Balancing HVAC loads across the east wing. Waiting on updated
+              ductwork drawings from the architect and a revised thermal model
+              from the mechanical team.
           - code: A-03
             title: Utility connections
-            description: Blocked on the utility connection survey — main was not where the drawings said it would be, which has cascaded to the trenching schedule.
+            description: Blocked on the utility connection survey — main was not where the
+              drawings said it would be, which has cascaded to the trenching
+              schedule.
 
 - title: Number formatting (currency, percent, compact, accounting)
   fullWidth: true
