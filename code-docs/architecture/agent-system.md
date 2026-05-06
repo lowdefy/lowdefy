@@ -195,19 +195,11 @@ The tools are read-only — there is no `write-file` or `delete-file`. Serverles
 
 **Standard `next start`** (running the built server directory directly): `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server. This works as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.).
 
-**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers behave differently. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable — the files copied by `copyAgentFileSystems` are present on the build host but **not included in the deployed bundle**. The agent will deploy successfully, then `list-files` returns empty and `read-file` throws `ENOENT` in production.
+**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers need extra wiring. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable — without help, the files copied by `copyAgentFileSystems` would sit on the build host but never make it into the deployed bundle.
 
-The fix is to declare the directories explicitly in `next.config.js`:
+The build handles this automatically. `copyAgentFileSystems` writes a `agentFileSystems.json` manifest to the server build directory listing every unique `basePath`. `packages/servers/server/next.config.js` reads the manifest and feeds the paths into `outputFileTracingIncludes` under the `/api/agent/*` route, so the tracer pulls each `basePath` directory into the standalone output and the Vercel function bundle. App developers don't need to configure anything.
 
-```js
-module.exports = {
-  outputFileTracingIncludes: {
-    '/api/agent/**': ['./content/**/*', './data/**/*'],
-  },
-};
-```
-
-The current `next.config.js` files do not configure this — projects deploying to Vercel or building with `output: 'standalone'` need to add it themselves, or arrange for the basePath to be sourced from somewhere other than the local filesystem.
+The trade-off is bundle size: pointing an agent at a large directory will bloat the deployment. That's the explicit intent of granting fileSystem access, but worth flagging when sizing deployments.
 
 ## Hook System
 

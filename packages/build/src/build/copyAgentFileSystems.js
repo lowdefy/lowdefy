@@ -19,14 +19,23 @@ import fs from 'fs';
 import { copyFileOrDirectory } from '@lowdefy/node-utils';
 
 async function copyAgentFileSystems({ components, context }) {
-  if (context.directories.config === context.directories.server) return;
-
-  const copied = new Set();
+  const basePaths = [];
+  const seen = new Set();
   for (const agent of components.agents ?? []) {
     const basePath = agent.properties?.fileSystem?.basePath;
     if (!basePath || typeof basePath !== 'string') continue;
-    if (copied.has(basePath)) continue;
+    if (seen.has(basePath)) continue;
+    seen.add(basePath);
+    basePaths.push(basePath);
+  }
 
+  // Manifest is consumed by next.config.js to populate outputFileTracingIncludes,
+  // so the Next.js tracer bundles these directories on Vercel and standalone builds.
+  await context.writeBuildArtifact('agentFileSystems.json', JSON.stringify(basePaths));
+
+  if (context.directories.config === context.directories.server) return;
+
+  for (const basePath of basePaths) {
     const source = path.resolve(context.directories.config, basePath);
     if (!fs.existsSync(source)) continue;
 
@@ -38,7 +47,6 @@ async function copyAgentFileSystems({ components, context }) {
         `Failed to copy fileSystem basePath "${basePath}" to server directory: ${err.message}`
       );
     }
-    copied.add(basePath);
   }
 }
 

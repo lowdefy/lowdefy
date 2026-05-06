@@ -1,4 +1,5 @@
 {
+  "agentFileSystems.json": [],
   "api/inviter/send-invite.json": {
     "id": "endpoint:inviter/send-invite",
     "type": "Api",
