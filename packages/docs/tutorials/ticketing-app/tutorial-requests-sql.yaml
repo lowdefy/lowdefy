@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-requests-sql
     pageTitle: 6. Saving data to SQL
-    section: Tutorial
-    filePath: tutorial/tutorial-requests-sql.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-requests-sql.yaml
     content:
       - id: body_sqlite
         type: MarkdownWithCode

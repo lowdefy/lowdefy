@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-add-blocks
     pageTitle: 3. Adding blocks
-    section: Tutorial
-    filePath: tutorial/tutorial-add-blocks.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-add-blocks.yaml
     content:
       - id: body_add_blocks
         type: MarkdownWithCode

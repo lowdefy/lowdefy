@@ -17,10 +17,11 @@ _ref:
   vars:
     pageId: tutorial-next-steps
     pageTitle: Next steps
-    section: Tutorial
+    section: Tutorials
+    subSection: Ticketing App
     prefetchPages:
       - overview
-    filePath: tutorial/tutorial-next-steps.yaml
+    filePath: tutorials/ticketing-app/tutorial-next-steps.yaml
     content:
       - id: body_next_steps
         type: MarkdownWithCode

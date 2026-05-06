@@ -22,6 +22,10 @@ layout:
 blocks:
   - id: previous_button
     type: Button
+    visible:
+      _and:
+        - _var: previous_page_id
+        - _var: previous_page_title
     layout:
       span: 12
     properties:
@@ -44,6 +48,10 @@ blocks:
             top: 0
   - id: next_button
     type: Button
+    visible:
+      _and:
+        - _var: next_page_id
+        - _var: next_page_title
     layout:
       span: 12
     properties:

@@ -53,6 +53,11 @@ blocks:
           - _ref: version.yaml
       {% if section %}
           - {{ section }}
+      {% endif %}
+      {% if subSection %}
+          - {{ subSection }}
+      {% endif %}
+      {% if section or subSection %}
           - {{ pageTitle }}
       {% endif %}
 
