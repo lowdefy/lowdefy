@@ -3,7 +3,7 @@ title: 'Lowdefy Agents'
 subtitle: 'A Lowdefy app can now run AI agents that call your existing endpoints as tools'
 authorId: 'machiel'
 publishedAt: '2026-05-05'
-readTimeMinutes: 8
+readTimeMinutes: 10
 tags:
   - 'Release'
   - 'Agents'
@@ -38,9 +38,9 @@ Each layer has its own job. Connections hold credentials, separate from any indi
 
 ```yaml
 plugins:
-  - name: "@lowdefy/connection-anthropic"
+  - name: '@lowdefy/connection-anthropic'
     version: 5.3.0
-  - name: "@lowdefy/blocks-antd-x"
+  - name: '@lowdefy/blocks-antd-x'
     version: 5.3.0
 
 connections:
@@ -75,6 +75,8 @@ pages:
 
 Drop your Anthropic API key into a secret called `ANTHROPIC_API_KEY` and the page serves a streaming chat with markdown rendering, a welcome screen, copy-message actions, and a typing indicator while the model is generating. The `AgentChat` block ships the things you'd otherwise wire up by hand: streaming, scroll behavior, error and abort handling, role-based avatars, an empty state, file attachments. None are required config.
 
+![Streaming chat with markdown rendering from the 30-line example](/images/articles/agent-chat.gif)
+
 ### Endpoints as tools
 
 An agent's `tools` list is endpoint IDs. Add a `description` and a `payloadSchema` to the endpoint and it becomes eligible to be called by the model:
@@ -101,7 +103,7 @@ api:
             _string.concat:
               - /products/search?q=
               - _payload: query
-              - "&limit=5"
+              - '&limit=5'
       - :return:
           _step: search.data.products
 
@@ -165,7 +167,7 @@ connections:
       transport: stdio
       command: npx
       args:
-        - "-y"
+        - '-y'
         - mcp-remote
         - https://mcp.docs.astro.build/mcp
 
@@ -247,6 +249,71 @@ agents:
 ```
 
 The orchestrator runs on Sonnet. The specialists run on Haiku. Each sub-agent has its own tools, its own loop limit, and its own prompt. The orchestrator sees them as plain tools, with the `description` field deciding when it delegates.
+
+## Built-in tools
+
+Two tool sources are injected by the framework rather than written by the developer. They appear in the same pool as endpoint, MCP, and sub-agent tools, but they aren't listed under `tools:` — the agent picks them up by virtue of other config.
+
+### File system
+
+Set `fileSystem.basePath` on the agent and four tools land in the pool: `read-file`, `list-files`, `search-files`, `stat-file`. Every path is resolved against the base directory and any path that escapes is rejected, so the agent can browse the directory and nothing else.
+
+```yaml
+agents:
+  - id: docs_bot
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5-20251001
+      instructions: You answer questions using the knowledge base.
+      fileSystem:
+        basePath: ./knowledge-base
+```
+
+This is the simple way to point an agent at a corpus: a directory of markdown files, a snapshot of internal docs, a vendored SDK source tree. Reads are capped at 512 KB per file, search caps at 200 matches and skips files over 1 MB. In production builds the directory is copied into the server bundle automatically.
+
+### Page state
+
+The `AgentChat` block can expose a slice of page state to the agent. Declare `sharedState` on the block — an operator expression that evaluates to an object — and two things happen on the next message: the agent receives an `update-page-state` tool that lets it write back, and (when the agent has `pageContext: true`) the current values arrive in its prompt as a context block.
+
+```yaml
+agents:
+  - id: form_bot
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5-20251001
+      pageContext: true
+      instructions: |
+        Help the user fill in the form. Read sharedState to see what's
+        already entered. When the user provides new values, call
+        update-page-state with an `updates` object.
+
+pages:
+  - id: form
+    type: PageHeaderMenu
+    properties:
+      title: Form
+    slots:
+      content:
+        blocks:
+          - id: company_name
+            type: TextInput
+          - id: employee_count
+            type: NumberInput
+          - id: chat
+            type: AgentChat
+            properties:
+              agentId: form_bot
+              sharedState:
+                _state: true
+```
+
+`sharedState: { _state: true }` exposes the whole page state; a curated shape like `{ company: { _state: company_name } }` exposes a subset. The block enforces an allowlist on the way back: only keys present in the original `sharedState` snapshot can be written, anything else is dropped on the client. The write applies through a synthetic `SetState`, so the form re-renders with the agent's values without any `onDataPart` handler or hook endpoint.
+
+![Agent reading and writing page state on a form](/images/articles/page-state.gif)
+
+`update-page-state` is a reserved name: an endpoint or sub-agent that tries to claim it is rejected when the agent runs, and an MCP server that publishes a tool with that name is skipped with a warning. The tool's description is generated at request time from the keys in the snapshot, so the agent always sees the current set of writable fields.
 
 ## Under the hood
 
