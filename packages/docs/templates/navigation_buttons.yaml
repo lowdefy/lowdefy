@@ -27,7 +27,14 @@ blocks:
         - _var: previous_page_id
         - _var: previous_page_title
     layout:
-      span: 12
+      span:
+        _if:
+          test:
+            _and:
+              - _var: next_page_id
+              - _var: next_page_title
+          then: 12
+          else: 24
     properties:
       block: true
       hideActionLoading: true
@@ -53,7 +60,14 @@ blocks:
         - _var: next_page_id
         - _var: next_page_title
     layout:
-      span: 12
+      span:
+        _if:
+          test:
+            _and:
+              - _var: previous_page_id
+              - _var: previous_page_title
+          then: 12
+          else: 24
     properties:
       block: true
       hideActionLoading: true
