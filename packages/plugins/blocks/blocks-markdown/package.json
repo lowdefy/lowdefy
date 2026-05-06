@@ -56,6 +56,7 @@
     "remark-gfm": "3.0.0"
   },
   "peerDependencies": {
+    "antd": ">=6",
     "react": ">=18",
     "react-dom": ">=18"
   },
