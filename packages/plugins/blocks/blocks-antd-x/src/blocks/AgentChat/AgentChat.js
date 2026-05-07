@@ -16,7 +16,10 @@
 
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { lastAssistantMessageIsCompleteWithApprovalResponses } from 'ai';
+import {
+  lastAssistantMessageIsCompleteWithApprovalResponses,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from 'ai';
 import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
@@ -26,7 +29,7 @@ import { type } from '@lowdefy/helpers';
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
 import DrawerWrapper from './DrawerWrapper.js';
-import LowdefyChatTransport from './LowdefyChatTransport.js';
+import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
@@ -34,6 +37,8 @@ import WelcomeScreen from './WelcomeScreen.js';
 function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
   const {
     agentId,
+    urlQuery,
+    sharedState,
     welcome,
     messageDisplay,
     sender,
@@ -47,6 +52,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  // Mirror the operator-evaluated sharedState object into a ref so transport.body()
+  // sees the freshest value at send time without re-constructing the transport.
+  const sharedStateRef = useRef(null);
+  sharedStateRef.current =
+    type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const attachmentsConfig = sender?.attachments;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
@@ -58,9 +68,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
+  const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () => new LowdefyChatTransport({ pageId, agentId, conversationId }),
-    [pageId, agentId, conversationId]
+    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
+    [pageId, agentId, conversationId, urlQueryKey]
   );
 
   const bubbleListRef = useRef(null);
@@ -71,13 +82,54 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     status,
     stop,
     addToolApprovalResponse,
+    addToolOutput,
     setMessages,
     regenerate,
     clearError,
   } = useChat({
     transport,
     experimental_throttle: 50,
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+    sendAutomaticallyWhen: (args) =>
+      lastAssistantMessageIsCompleteWithToolCalls(args) ||
+      lastAssistantMessageIsCompleteWithApprovalResponses(args),
+    async onToolCall({ toolCall }) {
+      if (toolCall.dynamic) return;
+      if (toolCall.toolName === 'update-page-state') {
+        try {
+          const updates = toolCall.input?.updates ?? {};
+          // Allowlist writes against the keys currently exposed via sharedState —
+          // the tool's description tells the agent "keys must match field names
+          // visible in shared state", but we enforce it here so a hallucinated
+          // key can't mutate arbitrary page state.
+          const allowedKeys = new Set(Object.keys(sharedStateRef.current ?? {}));
+          const writable = {};
+          const ignored = [];
+          for (const [key, value] of Object.entries(updates)) {
+            if (allowedKeys.has(key)) writable[key] = value;
+            else ignored.push(key);
+          }
+          if (Object.keys(writable).length > 0) {
+            await methods.triggerEvent({ name: '__updatePageState', event: writable });
+          }
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            output: {
+              ok: true,
+              written: Object.keys(writable),
+              ...(ignored.length > 0 ? { ignored } : {}),
+            },
+          });
+        } catch (err) {
+          addToolOutput({
+            tool: 'update-page-state',
+            toolCallId: toolCall.toolCallId,
+            state: 'output-error',
+            errorText: err.message,
+          });
+        }
+      }
+    },
     onError: (error) => {
       methods.triggerEvent({
         name: 'onError',
@@ -90,6 +142,12 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         isAbort: options.isAbort,
         isDisconnect: options.isDisconnect,
       };
+    },
+    onData: (dataPart) => {
+      methods.triggerEvent({
+        name: 'onDataPart',
+        event: { type: dataPart.type, data: dataPart.data, id: dataPart.id },
+      });
     },
   });
 
@@ -152,6 +210,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     });
     methods.registerMethod('scrollToBottom', () => {
       bubbleListRef.current?.scrollTo({ top: 'bottom' });
+    });
+    methods.registerEvent({
+      name: '__updatePageState',
+      actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
     });
     if (attachmentsConfig?.s3PostPolicyRequestId) {
       methods.registerEvent({

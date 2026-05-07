@@ -69,7 +69,6 @@
           variant: dashed
         removeItemIcon:
           name: AiOutlineDelete
-          color: '#ff4d4f'
       blocks:
         - id: bookmarks.$.url
           type: TextInput
@@ -429,3 +428,54 @@
                 params:
                   content: Projects saved!
                   status: success
+
+# ──────────────────────────────────────────────
+# onAdd / onRemove events
+# ──────────────────────────────────────────────
+
+- title: onAdd / onRemove events
+  blocks:
+    - id: tags
+      type: ControlledList
+      properties:
+        title: Tags
+        size: small
+        addItemButton:
+          title: Add Tag
+          icon: AiOutlinePlus
+          size: small
+          variant: dashed
+      events:
+        onAdd:
+          - id: tags_added_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Added row at index '
+                  - _event: index
+              duration: 1
+        onRemove:
+          - id: tags_removed_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Removed "'
+                  - _if_none:
+                      - _event: item.label
+                      - '(empty)'
+                  - '" at index '
+                  - _event: index
+              status: warning
+              duration: 2
+      blocks:
+        - id: tags.$.label
+          type: TextInput
+          layout:
+            flex: 1 1 0
+          properties:
+            label:
+              disabled: true
+            placeholder: Tag name
+            size: small

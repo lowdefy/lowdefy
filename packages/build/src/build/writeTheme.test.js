@@ -61,3 +61,22 @@ test('writeTheme throws when theme is not an object', async () => {
   };
   await expect(writeTheme({ components, context })).rejects.toThrow('Theme is not an object.');
 });
+
+test('writeTheme preserves per-mode lightToken and darkToken', async () => {
+  const components = {
+    theme: {
+      antd: {
+        token: { colorPrimary: '#6366f1' },
+        lightToken: { colorBgLayout: '#fafafa' },
+        darkToken: { colorBgLayout: '#0f1117', colorBgContainer: '#18181b' },
+      },
+    },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'theme.json',
+      '{"antd":{"token":{"colorPrimary":"#6366f1"},"lightToken":{"colorBgLayout":"#fafafa"},"darkToken":{"colorBgLayout":"#0f1117","colorBgContainer":"#18181b"}},"darkMode":"system"}',
+    ],
+  ]);
+});

@@ -16,15 +16,22 @@
 
 import { DefaultChatTransport } from 'ai';
 
-class LowdefyChatTransport extends DefaultChatTransport {
-  constructor({ pageId, agentId, conversationId }) {
-    const base = `/api/agent/${pageId}/${agentId}`;
-    const api = conversationId ? `${base}?conversationId=${encodeURIComponent(conversationId)}` : base;
-    super({
-      api,
-      credentials: 'include',
-    });
-  }
+function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }) {
+  const base = `/api/agent/${pageId}/${agentId}`;
+  const api = conversationId
+    ? `${base}?conversationId=${encodeURIComponent(conversationId)}`
+    : base;
+  return new DefaultChatTransport({
+    api,
+    credentials: 'include',
+    body: () => {
+      const sharedState = sharedStateRef?.current;
+      return {
+        ...(urlQuery ? { urlQuery } : {}),
+        ...(sharedState ? { sharedState } : {}),
+      };
+    },
+  });
 }
 
-export default LowdefyChatTransport;
+export default createLowdefyChatTransport;

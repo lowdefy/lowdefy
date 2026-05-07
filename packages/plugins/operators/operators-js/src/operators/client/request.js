@@ -22,12 +22,13 @@ function _request({ arrayIndices, params, requests }) {
   }
   const splitKey = params.split('.');
   const [requestId, ...keyParts] = splitKey;
-  if (requestId in requests && !requests[requestId][0].loading) {
+  const entry = requests[requestId]?.[0];
+  if (entry && (!entry.loading || entry.holdValue)) {
     if (splitKey.length === 1) {
-      return serializer.copy(requests[requestId][0].response);
+      return serializer.copy(entry.response);
     }
     const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
-    return get(requests[requestId][0].response, applyArrayIndices(arrayIndices, key), {
+    return get(entry.response, applyArrayIndices(arrayIndices, key), {
       copy: true,
       default: null,
     });

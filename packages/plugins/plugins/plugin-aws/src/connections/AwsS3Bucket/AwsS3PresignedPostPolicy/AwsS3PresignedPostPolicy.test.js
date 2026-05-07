@@ -120,6 +120,36 @@ test('AwsS3PresignedPostPolicy options', async () => {
   expect(res).toEqual('res');
 });
 
+test('AwsS3PresignedPostPolicy URL-encodes x-amz-meta-* fields but passes other fields through', async () => {
+  const request = {
+    key: 'key',
+    acl: 'private',
+  };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'region',
+    write: true,
+    bucket: 'bucket',
+  };
+  // Fields are normally injected via request.properties.fields in the engine;
+  // simulate that shape here by attaching fields directly to the request.
+  request.fields = {
+    'x-amz-meta-uploaded-by-name': 'Zoë Güven',
+    'x-amz-meta-uploaded-by-url': 'https://example.com/page?q=hello world',
+    'X-Amz-Meta-Mixed-Case': 'a b',
+    'Content-Type': 'application/pdf',
+  };
+  await AwsS3PresignedPostPolicy({ request, connection });
+  expect(mockCreatePresignedPost.mock.calls[0][1].Fields).toEqual({
+    acl: 'private',
+    'x-amz-meta-uploaded-by-name': 'Zo%C3%AB%20G%C3%BCven',
+    'x-amz-meta-uploaded-by-url': 'https%3A%2F%2Fexample.com%2Fpage%3Fq%3Dhello%20world',
+    'X-Amz-Meta-Mixed-Case': 'a%20b',
+    'Content-Type': 'application/pdf',
+  });
+});
+
 test('Error from s3 client', async () => {
   mockCreatePresignedPost.mockImplementation(() => {
     throw new Error('Test S3 client error.');

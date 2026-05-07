@@ -1,0 +1,13 @@
+lowdefy: local
+name: Lazy Default Resolution Test
+
+modules:
+  - id: dashboard-defaults
+    source: 'file:modules/dashboard'
+    vars:
+      show_title: true
+      roles:
+        - admin
+        - editor
+  - id: dashboard-minimal
+    source: 'file:modules/dashboard'

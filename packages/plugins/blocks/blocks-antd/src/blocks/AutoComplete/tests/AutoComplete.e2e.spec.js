@@ -144,8 +144,11 @@ test.describe('AutoComplete Block', () => {
   test('onBlur event fires when input loses focus', async ({ page }) => {
     const input = getInput(page, 'ac_onblur');
 
+    // AutoComplete is built on antd's Select internally; the focusable input
+    // is the combobox inside `.ant-select`. Clicking body doesn't blur it, so
+    // explicitly blur the active element.
     await input.click();
-    await page.click('body');
+    await page.evaluate(() => document.activeElement?.blur());
 
     const display = getBlock(page, 'ac_onblur_display');
     await expect(display).toHaveText('Blur fired');
@@ -273,5 +276,21 @@ test.describe('AutoComplete Block', () => {
 
     // With backfill, the input should show the highlighted option
     await expect(input).toHaveValue('Apple');
+  });
+
+  // ============================================
+  // SELECTOR CSSKEY TESTS
+  // ============================================
+
+  test('style.selector is forwarded to .ant-select-content', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_selector_style');
+    const content = wrapper.locator('.ant-select-content');
+    await expect(content).toHaveCSS('padding', '14px');
+  });
+
+  test('class.selector is forwarded to .ant-select-content', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_selector_class');
+    const content = wrapper.locator('.ant-select-content');
+    await expect(content).toHaveClass(/ac-selector-tailwind/);
   });
 });

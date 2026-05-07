@@ -1473,3 +1473,57 @@ test('buildAgents does not warn when sub-agent has no confirm tools', () => {
   buildAgents({ components, context });
   expect(warnings.some((w) => w.includes('confirm'))).toBe(false);
 });
+
+test('buildAgents throws when fileSystem.basePath is not a string', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: {
+          model: 'test-model',
+          fileSystem: { basePath: 123 },
+        },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" fileSystem.basePath is not a string.'
+  );
+});
+
+test('buildAgents throws when fileSystem.basePath does not exist', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: {
+          model: 'test-model',
+          fileSystem: { basePath: '__nonexistent_ldf_test_dir__' },
+        },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" fileSystem.basePath "__nonexistent_ldf_test_dir__" does not exist.'
+  );
+});

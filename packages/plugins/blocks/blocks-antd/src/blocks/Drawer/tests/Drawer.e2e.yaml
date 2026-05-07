@@ -524,3 +524,39 @@ blocks:
               - true
           then: AfterClose fired
           else: ''
+
+  # ============================================
+  # FOOTER SLOT TESTS
+  # ============================================
+
+  - id: drawer_with_footer
+    type: Drawer
+    properties:
+      title: Drawer with Footer
+    slots:
+      content:
+        blocks:
+          - id: drawer_with_footer_content
+            type: Paragraph
+            properties:
+              content: Drawer body content.
+      footer:
+        blocks:
+          - id: drawer_footer_text
+            type: Span
+            properties:
+              content: Footer Content Here
+
+  - id: open_with_footer
+    type: Button
+    properties:
+      title: Open Footer Drawer
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_with_footer
+            method: setOpen
+            args:
+              - open: true

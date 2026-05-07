@@ -1,0 +1,88 @@
+{
+  "name": "@lowdefy/blocks-tiptap",
+  "version": "5.2.0",
+  "license": "Apache-2.0",
+  "description": "Lowdefy TipTap rich-text editor blocks.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks",
+    "tiptap",
+    "rich-text",
+    "wysiwyg",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
+    "./metas": "./dist/metas.js",
+    "./e2e": "./dist/e2e.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
+    "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
+    "e2e": "playwright test --config e2e/playwright.config.js",
+    "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@lowdefy/block-utils": "5.2.0",
+    "@lowdefy/blocks-antd": "5.2.0",
+    "@lowdefy/helpers": "5.2.0",
+    "@tiptap/core": "2.27.2",
+    "@tiptap/extension-file-handler": "2.27.2",
+    "@tiptap/extension-highlight": "2.27.2",
+    "@tiptap/extension-image": "2.27.2",
+    "@tiptap/extension-link": "2.27.2",
+    "@tiptap/extension-mention": "2.27.2",
+    "@tiptap/extension-placeholder": "2.27.2",
+    "@tiptap/extension-table": "2.27.2",
+    "@tiptap/extension-table-cell": "2.27.2",
+    "@tiptap/extension-table-header": "2.27.2",
+    "@tiptap/extension-table-row": "2.27.2",
+    "@tiptap/pm": "2.27.2",
+    "@tiptap/react": "2.27.2",
+    "@tiptap/starter-kit": "2.27.2",
+    "react-icons": "5.6.0",
+    "tippy.js": "6.3.7",
+    "turndown": "7.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@lowdefy/block-dev-e2e": "5.2.0",
+    "@lowdefy/e2e-utils": "5.2.0",
+    "@playwright/test": "1.50.1",
+    "@swc/cli": "0.8.0",
+    "@swc/core": "1.15.18",
+    "copyfiles": "2.4.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

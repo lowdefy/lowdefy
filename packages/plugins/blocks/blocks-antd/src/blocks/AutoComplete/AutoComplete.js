@@ -55,7 +55,9 @@ const AutoCompleteInput = ({
             backfill={properties.backfill}
             variant={properties.bordered === false ? 'borderless' : properties.variant}
             className={classNames.element}
+            classNames={{ content: classNames.selector }}
             style={{ width: '100%', ...styles.element }}
+            styles={{ content: styles.selector }}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
             placeholder={properties.placeholder ?? 'Type or select item'}

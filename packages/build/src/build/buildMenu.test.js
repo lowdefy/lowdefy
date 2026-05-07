@@ -639,6 +639,127 @@ test('buildMenu pages not array, no menu', () => {
   });
 });
 
+test('menu item id is not defined', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+    ],
+  };
+  expect(() => buildMenu({ components, context })).toThrow(
+    'Menu item id missing on menu "my_menu".'
+  );
+});
+
+test('menu item id is not a string', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 42,
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+    ],
+  };
+  expect(() => buildMenu({ components, context })).toThrow(
+    'Menu item id is not a string on menu "my_menu".'
+  );
+});
+
+test('menu item type is not defined', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+    ],
+  };
+  expect(() => buildMenu({ components, context })).toThrow(
+    'Menu item type is not defined at "menu_page_1" on menu "my_menu".'
+  );
+});
+
+test('menu item type is not a string', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            type: 123,
+            pageId: 'page_1',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+    ],
+  };
+  expect(() => buildMenu({ components, context })).toThrow(
+    'Menu item type is not a string at "menu_page_1" on menu "my_menu".'
+  );
+});
+
+test('menu item is not an object', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [null],
+      },
+    ],
+    pages: [],
+  };
+  expect(() => buildMenu({ components, context })).toThrow(
+    'Menu item should be an object on menu "my_menu".'
+  );
+});
+
 test('buildMenu default menu filter 404 page', () => {
   const components = {
     pages: [

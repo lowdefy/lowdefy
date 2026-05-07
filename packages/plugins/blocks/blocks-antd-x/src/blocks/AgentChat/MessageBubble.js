@@ -29,6 +29,7 @@ import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
+import { getToolInfo, partCategory } from './messageParts.js';
 import ToolApproval from './ToolApproval.js';
 
 // Module-level singleton for the LaTeX marked extension.
@@ -85,19 +86,6 @@ function RichCodeBlock({ renderMermaid, codeHighlighter }) {
         <code className={lang ? `language-${lang}` : undefined}>{children}</code>
       </pre>
     );
-  };
-}
-
-// Detects tool-call parts from AI SDK v6's dynamic part types.
-// Tool parts have type `tool-${toolName}` or `dynamic-tool`, not a generic `tool-invocation`.
-function getToolInfo(part) {
-  if (!part.type?.startsWith?.('tool-') && part.type !== 'dynamic-tool') return null;
-  return {
-    toolCallId: part.toolCallId,
-    toolName: part.toolName ?? part.type?.replace('tool-', ''),
-    state: part.state,
-    input: part.input,
-    output: part.output,
   };
 }
 
@@ -268,33 +256,20 @@ function MessageBubble({
     const status = { category: 'status', parts: [] };
     const text = { category: 'text', parts: [] };
     for (const part of parts) {
-      if (part.type === 'reasoning') reasoning.parts.push(part);
-      else if (part.type === 'text') text.parts.push(part);
-      else if (getToolInfo(part)) tools.parts.push(part);
-      else if (part.type === 'file') files.parts.push(part);
-      else if (part.type === 'data-status') status.parts.push(part);
+      const cat = partCategory(part);
+      if (cat === 'reasoning') reasoning.parts.push(part);
+      else if (cat === 'text') text.parts.push(part);
+      else if (cat === 'tool') tools.parts.push(part);
+      else if (cat === 'file') files.parts.push(part);
+      else if (cat === 'status') status.parts.push(part);
     }
     segments = [reasoning, tools, files, status, text].filter((s) => s.parts.length > 0);
   } else {
     segments = [];
     let current = null;
     for (const part of parts) {
-      if (part.type === 'step-start') continue;
-
-      let category;
-      if (part.type === 'text') {
-        category = 'text';
-      } else if (part.type === 'reasoning') {
-        category = 'reasoning';
-      } else if (getToolInfo(part)) {
-        category = 'tool';
-      } else if (part.type === 'file') {
-        category = 'file';
-      } else if (part.type === 'data-status') {
-        category = 'status';
-      } else {
-        continue;
-      }
+      const category = partCategory(part);
+      if (!category) continue;
 
       if (!current || current.category !== category) {
         current = { category, parts: [] };

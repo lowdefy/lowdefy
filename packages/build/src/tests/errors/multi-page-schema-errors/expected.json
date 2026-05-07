@@ -2,9 +2,9 @@
   "tests": [
     {
       "mode": "prod",
-      "description": "Multiple schema errors across pages should ALL be collected",
+      "description": "Multiple block id missing errors across pages should ALL be collected",
       "errorContains": [
-        "Block should have required property \"id\"",
+        "Block id missing at page",
         "lowdefy.yaml:17",
         "lowdefy.yaml:25",
         "lowdefy.yaml:33"

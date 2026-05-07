@@ -41,6 +41,7 @@ const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {}
       ],
     });
   }, []);
+  const showRemoveIcon = properties.showRemoveIcon ?? false;
   return (
     <Upload
       id={blockId}
@@ -48,8 +49,14 @@ const S3Download = ({ blockId, classNames = {}, methods, properties, styles = {}
       style={styles.element}
       fileList={properties.fileList ?? []}
       onPreview={async (file) => await downloadFile({ file, methods })}
-      showUploadList={{ showRemoveIcon: false, showDownloadIcon: true }}
       onDownload={async (file) => await downloadFile({ file, methods })}
+      onRemove={(file) => {
+        methods.triggerEvent({ name: 'onRemove', event: { file } });
+        // Controlled fileList: the YAML handler decides whether to update state.
+        // Return false so antd doesn't fire onChange with a removed-file list.
+        return false;
+      }}
+      showUploadList={{ showDownloadIcon: true, showRemoveIcon }}
     />
   );
 };

@@ -77,6 +77,21 @@ const context = {
         error: [],
       },
     ],
+    holding: [
+      {
+        response: 'previous value',
+        loading: true,
+        holdValue: true,
+        error: [],
+      },
+    ],
+    loadingNoHold: [
+      {
+        response: 'stale value',
+        loading: true,
+        error: [],
+      },
+    ],
   },
   state: { state: true },
 };
@@ -158,5 +173,21 @@ test('_request dot notation returns null if ', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
+  expect(res.errors).toEqual([]);
+});
+
+test('_request returns previous response when loading and holdValue is true', () => {
+  const input = { _request: 'holding' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual('previous value');
+  expect(res.errors).toEqual([]);
+});
+
+test('_request returns null when loading and holdValue is not set', () => {
+  const input = { _request: 'loadingNoHold' };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(null);
   expect(res.errors).toEqual([]);
 });

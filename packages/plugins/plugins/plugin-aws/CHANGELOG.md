@@ -1,5 +1,178 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 235e219: feat(plugin-aws): Add onBeforeUpload event to S3 upload blocks.
+
+  S3UploadButton, S3UploadDragger, and S3UploadPhoto now fire an `onBeforeUpload` event before the upload starts. If any action throws, the upload is cancelled. This allows validation, confirmation prompts, or other logic to run before files are sent to S3.
+
+### Patch Changes
+
+- a52db1c: feat(plugin-aws): Auto URL-encode `x-amz-meta-*` fields on `AwsS3PresignedPostPolicy`.
+
+  `AwsS3PresignedPostPolicy` now URL-encodes any field whose name starts with `x-amz-meta-` (case-insensitive) before signing the policy. S3 user metadata must be ASCII, so values containing names, URLs, or other non-ASCII characters previously had to be wrapped with `_uri.encode` in every request config.
+
+  With this change, upload policies can pass values through directly:
+
+  ```yaml
+  fields:
+    x-amz-meta-uploaded-by-name:
+      _user: profile.name
+    x-amz-meta-uploaded-by-url:
+      _payload: url
+  ```
+
+  Other protocol fields (`acl`, `Content-Type`, `success_action_redirect`, etc.) continue to pass through literally. Readers of the metadata (e.g., Lambda triggers that ingest S3 events) should URL-decode `x-amz-meta-*` values via `decodeURIComponent` before use.
+
+- 825f86c: fix(plugin-aws): S3 upload blocks — working `height` on `S3UploadDragger` in antd v6, antd semantic-slot passthrough across all three upload blocks, cleaner `classNames`/`styles` wiring.
+
+  After the antd v6 upgrade the Upload wrapper changed from a `<div>` to an inline `<span>`, which caused the antd `Dragger` `height` prop to resize only the inner drag box — the wrapping element and the clickable `ant-upload-btn` (which uses `height: 100%`) collapsed, so the drag area looked unchanged.
+
+  This release:
+
+  - Makes `properties.height` actually resize the full drag surface. Height is applied to the block's outer wrapper, and the antd `Upload` wrapper is forced to `display: block; height: 100%` so nested `height: 100%` rules resolve correctly.
+  - Defaults `height` to the antd `controlHeight` theme token (matches the default button height and follows the compact algorithm).
+  - Accepts `height` as a number or a string so CSS lengths like `"50vh"` / `"300px"` are supported.
+  - Exposes the antd v6 Upload semantic slots (`trigger`, `list`, `item`) through Lowdefy's `classNames` / `styles` API, so file-list rows and the drop trigger can be styled from YAML (`style: { .trigger: { … }, .list: { … }, .item: { … } }`).
+  - Moves `classNames.element` / `styles.element` onto the block's outer wrapper (matching the convention used in `blocks-antd/Search`), merges marker classes via `cn()`, and adds a `lf-s3-upload-dragger-hint` marker to the hint node for future scoped CSS.
+  - Fixes precedence: `style.element.height` now overrides `properties.height` again, matching the original schema docs.
+
+  `S3UploadButton` and `S3UploadPhoto` receive the same treatment: `classNames.element` / `styles.element` move to an outer block wrapper carrying a marker class (`lf-s3-upload-button`, `lf-s3-upload-photo`), and the antd v6 semantic slots `trigger` / `list` / `item` are piped through as Lowdefy slots. `S3UploadPhoto` also keeps `.icon` and `.title` slots for styling the content of the upload trigger card. The `avatar-uploader` hardcoded class on `S3UploadPhoto` (which had no CSS attached) was removed in favour of the marker-class pattern.
+
+  `S3UploadDragger`, `S3UploadButton`, and `S3UploadPhoto` are now wrapped in `withTheme('Upload', …)` (previously only `S3Download` was). Each block's `meta.js` exposes a `theme` property whose object is forwarded into a scoped `<ConfigProvider theme={{ components: { Upload: theme } }}>`, giving per-instance overrides of antd Upload design tokens (`actionsColor`, `pictureCardSize`, `controlItemBgHover`, `colorIcon`, `fontSize`, `borderRadiusSM`) — the tokens that semantic `classNames` / `styles` slots cannot reach. The shared schema lives at `packages/plugins/plugins/plugin-aws/src/schemas/uploadTheme.js` and is imported by all four upload/download block metas.
+
+  `S3Download` gains a `showRemoveIcon` property (default `false`) and an `onRemove` event. When the remove icon is clicked, the block fires `onRemove` with the clicked `file` and returns `false` to antd — the controlled `fileList` stays authoritative, and the action handler decides whether to update state (e.g. via `SetState`).
+
+  **Migration note:** Apps that relied on `style: { .element: { … } }` styling the inner `.ant-upload-drag` / `.ant-upload-select` div (e.g. custom hover interactions coupled to that selector) should move those declarations to `style: { .trigger: { … } }`. All visual styling cases in the gallery (background, border, shadow, padding) render identically on the outer wrapper, so typical apps need no changes.
+
+- Updated dependencies [01e249b]
+- Updated dependencies [6ec2cd9]
+- Updated dependencies [fd1604f]
+- Updated dependencies [cea34ac]
+  - @lowdefy/blocks-antd@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- Updated dependencies [95388a581]
+- Updated dependencies [573b90369]
+- Updated dependencies [be367bebd]
+- Updated dependencies [b1e0c9944]
+- Updated dependencies [447f8ce57]
+- Updated dependencies [36a2d1bca]
+- Updated dependencies [6c6aab961]
+  - @lowdefy/blocks-antd@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/helpers@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- 29eb199c7f: Restructure block metadata from component static properties to dedicated `meta.js` files.
+
+  ### Breaking Changes
+
+  - **`schema.js` renamed to `meta.js`**: Block definitions moved from `schema.js` to `meta.js`. The `meta.js` files export `category`, `icons`, `valueType`, `cssKeys`, `events`, and `properties` (JSON Schema).
+  - **`schemas.js` barrel renamed to `metas.js`**: Block packages export `./metas` instead of `./schemas`.
+  - **`.meta` removed from components**: Block components no longer have a `.meta` static property. Metadata is loaded from the `blockMetas.json` build artifact at runtime.
+  - **`blockMetas.json` build artifact**: The build pipeline writes `plugins/blockMetas.json` containing category, valueType, and initValue for each block type.
+  - **`buildBlockSchema(meta)`**: New function in `@lowdefy/block-utils` generates complete JSON Schema from meta objects with operator support and CSS slot key validation.
+
+- f430f02dde: Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
+
+  ### Breaking Changes
+
+  - **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+  - **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
+
+- f430f02dde: Migrate all blocks from `defaultProps` to `withBlockDefaults` wrapper for React 19 compatibility.
+
+  ### Breaking Changes
+
+  - **`defaultProps` removed**: React 19 silently ignores `defaultProps` on function components. All ~101 block components now use a `withBlockDefaults` wrapper from `@lowdefy/block-utils`.
+  - **`withBlockDefaults` API**: New export from `@lowdefy/block-utils` that wraps block components with default property injection. Antd blocks use `withTheme` which absorbs defaults; non-antd blocks use the generic wrapper.
+
+- f430f02dde: Replace the Less/Emotion styling system with unified `style` and `class` properties using `.` prefixed CSS slot keys.
+
+  ### Breaking Changes
+
+  - **Less removed**: `.less` files are no longer supported. All styling uses CSS, CSS Modules, or Tailwind utilities.
+  - **`makeCssClass` removed**: Blocks no longer call `methods.makeCssClass()`. They receive `classNames` and `styles` objects as props, keyed by CSS slot names (`element`, `icon`, `header`, `body`, etc.).
+  - **`mediaToCssObject` removed** from `@lowdefy/block-utils`.
+  - **`style` replaces `styles`**: The `style` (singular) property handles all styling. Using `styles` (plural) throws a `ConfigError`.
+  - **`class` property added**: New `class` property for CSS classes (Tailwind utilities, custom classes). Supports string, array, or object with `.` slot keys.
+  - **`properties.style` moved**: Block-specific `properties.style` maps to `style: { .element }` at build time.
+  - **Inline style props removed**: `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle`, `contentStyle`, `labelStyle`, `valueStyle`, `tabBarStyle`, `overlayStyle` are replaced by CSS slot keys (e.g., `style: { .header }`, `style: { .body }`).
+
+  ### CSS Slot Keys
+
+  `.` prefixed keys target specific parts of a block:
+
+  | Key                                | Target                                                  |
+  | ---------------------------------- | ------------------------------------------------------- |
+  | `.block`                           | Layout wrapper (grid column)                            |
+  | `.element`                         | Component root element                                  |
+  | `.header`, `.body`, `.cover`, etc. | Antd semantic sub-elements (declared in `meta.cssKeys`) |
+
+  Flat shorthand (no `.` keys) maps to `.block`:
+
+  ```yaml
+  # These are equivalent:
+  style: { marginTop: 20 }
+  style:
+    .block: { marginTop: 20 }
+  ```
+
+### Minor Changes
+
+- cdf0ba3b5: feat(plugin-aws): Add `onBeforeUpload` event and improve S3 upload error handling.
+
+  S3UploadButton and S3UploadDragger now fire an `onBeforeUpload` event before each file upload begins. If any action in the event handler throws, the upload is cancelled — useful for file validation, size checks, or confirmation prompts.
+
+  Upload error handling has been rewritten: XHR uploads are now Promise-based with proper error propagation, CORS/network failures throw a `ServiceError` with a diagnostic message, and file metadata is serialized into a plain object so `_event` resolution no longer destroys File/Blob references.
+
+### Patch Changes
+
+- 4ee4bf33a: refactor(plugin-aws): Migrate S3 presigned URL operations from deprecated `aws-sdk` v2 to modular `@aws-sdk` v3.
+
+  Replaced the monolithic `aws-sdk` package with the modular v3 packages (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`, `@aws-sdk/s3-presigned-post`). No changes to the request/connection API — existing configs work without modification.
+
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [155c0b9724]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [0fe1bc38dd]
+- Updated dependencies [130a569d36]
+- Updated dependencies [c3b5b45ec5]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [43528a8b9]
+- Updated dependencies [905d5d406]
+- Updated dependencies [c1b5ddb33a]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [c570982e0f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/blocks-antd@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/helpers@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

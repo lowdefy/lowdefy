@@ -15,6 +15,7 @@
 */
 
 import iconPackages from './iconPackages.js';
+import validateIconImports from './validateIconImports.js';
 
 function getConfigIcons({ components, icons, regex }) {
   [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
@@ -38,7 +39,7 @@ function buildIconImports({ blocks, components, context, defaults = {} }) {
     getBlockDefaultIcons({ blocks, context, icons, regex });
     iconImports.push({ icons: [...icons], package: iconPackage });
   });
-  return iconImports;
+  return validateIconImports({ iconImports, context });
 }
 
 export default buildIconImports;

@@ -1,5 +1,235 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- 01e249b: feat(blocks-antd): `ControlledList` now fires `onAdd` / `onRemove` events and defaults the remove icon to the antd error color at a standard size.
+
+  **Events.** Both events fire **after** the list mutation completes. The event payload is `{ index, item }`:
+
+  - `onAdd` — `index` is where the new row was inserted (`0` for `addToFront: true`, else `list.length`). `item` is the newly added value (typically `undefined` for an empty row).
+  - `onRemove` — `index` is the removed row's position. `item` is the row value captured before removal, so handlers can reference the deleted data (e.g., `_event: item._id` to delete from a backend).
+
+  ```yaml
+  - id: tags
+    type: ControlledList
+    events:
+      onRemove:
+        - id: notify
+          type: DisplayMessage
+          params:
+            content:
+              _string.concat: ['Removed at index ', { _event: index }]
+    blocks:
+      - id: tags.$.label
+        type: TextInput
+  ```
+
+  **Remove icon styling.** The remove icon now defaults to `var(--ant-color-error)` at `var(--ant-font-size-lg)`, with `--ant-color-error-hover` / `--ant-color-error-active` on hover/press — no more hardcoded hex colors, and the size no longer swings with `properties.size`. Override via `class.removeIcon` / `style.removeIcon` (both slots target the icon wrapper). Existing configs that hardcoded `color: '#ff4d4f'` on `removeItemIcon` can drop it — the default is already danger.
+
+  **`@lowdefy/client`** also now passes the list's current state value to list-type block components via a `value` prop, so any list block can read its own array data.
+
+- a4ecee5: fix(client): Skip rendering content slots that have no blocks.
+
+  `Container`, `InputContainer`, and `List` no longer create a `content[slotKey]` function when the slot's blocks array is empty. Blocks that use the `content.X && content.X()` pattern (for optional header, footer, extra, etc.) now correctly render nothing — including no wrapping `Area` element — when the user leaves the slot empty.
+
+- 6ec0dd4: fix(client): Forward `style` prop to all Link variants.
+
+  `createLinkComponent` previously destructured every prop except `style`, so any `<Link style={...}>` passed by a block was silently dropped. Inline style overrides only worked via `className` + CSS. All four link variants (`backLink`, `newOriginLink`, `sameOriginLink` — both newTab and same-origin branches — and `noLink`) now thread `style` through to the rendered `<a>` (or `<span>` for `noLink`).
+
+  Surfaces fixes in three places that were already passing `style` and silently broken: `headerActions.js` notifications/profile/dark-mode rows had `color: 'inherit'` that didn't reach the `<a>` (label rendered as antd link blue); `Anchor.js` disabled state set `color: '#BEBEBE'` that never applied; `buildMenuItems.js` per-link `style:` config was discarded.
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [d105b81]
+- Updated dependencies [e3fc007]
+  - @lowdefy/engine@5.2.0
+  - @lowdefy/logger@5.2.0
+  - @lowdefy/layout@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- 081d79634: feat(client): Per-mode theme tokens for dark/light customization.
+
+  `theme.antd` now accepts four new sibling keys so apps can soften base surfaces without juggling two theme files. Each is merged on top of the shared equivalent only when the matching mode is active:
+
+  - `lightToken` / `darkToken` — override antd design tokens (e.g. `colorBgLayout`, `colorBgContainer`, `colorBgElevated`) per mode.
+  - `lightComponents` / `darkComponents` — override component-level tokens per mode (e.g. `Layout.siderBg`, `Layout.headerBg`, `Menu.darkItemBg`) that aren't reachable via seed tokens.
+
+  The `<html>` pre-hydration inline script now reads `darkToken.colorBgLayout` / `lightToken.colorBgLayout` from the built theme, so the first paint matches your configured surface color with no flash of `#000` or `#fff`.
+
+  ```yaml
+  theme:
+    antd:
+      token:
+        colorPrimary: '#6366f1'
+      darkToken:
+        colorBgLayout: '#131419'
+        colorBgContainer: '#1a1b22'
+      darkComponents:
+        Layout:
+          headerBg: '#0e0f13'
+          siderBg: '#0e0f13'
+        Menu:
+          darkItemBg: '#0e0f13'
+          darkItemSelectedBg: '#252731'
+    darkMode: system
+  ```
+
+  Backwards compatible — apps that only use `theme.antd.token` keep antd's default base colors (dark `#000`, light browser-default).
+
+### Patch Changes
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+  - @lowdefy/engine@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Rename `areas` to `slots` throughout the framework.
+
+  ### Breaking Changes
+
+  - **`areas` renamed to `slots`**: All block area definitions use `slots` instead of `areas`. The build pipeline auto-migrates `areas` to `slots` with a deprecation warning in dev mode (error in production).
+  - **Engine internals**: `Areas.js` renamed to `Slots.js`. Block instances expose `.slots` instead of `.areas`.
+  - **Layout internals**: `layoutParamsToArea` renamed to `layoutParamsToSlot`.
+  - **Custom blocks**: Blocks that render child areas must use `content.slotName()` — the API is unchanged but the terminology in config and docs is now `slots`.
+
+- 29eb199c7f: Restructure block metadata from component static properties to dedicated `meta.js` files.
+
+  ### Breaking Changes
+
+  - **`schema.js` renamed to `meta.js`**: Block definitions moved from `schema.js` to `meta.js`. The `meta.js` files export `category`, `icons`, `valueType`, `cssKeys`, `events`, and `properties` (JSON Schema).
+  - **`schemas.js` barrel renamed to `metas.js`**: Block packages export `./metas` instead of `./schemas`.
+  - **`.meta` removed from components**: Block components no longer have a `.meta` static property. Metadata is loaded from the `blockMetas.json` build artifact at runtime.
+  - **`blockMetas.json` build artifact**: The build pipeline writes `plugins/blockMetas.json` containing category, valueType, and initValue for each block type.
+  - **`buildBlockSchema(meta)`**: New function in `@lowdefy/block-utils` generates complete JSON Schema from meta objects with operator support and CSS slot key validation.
+
+- f430f02dde: Replace antd Row/Col grid with a pure CSS grid layout system.
+
+  ### Breaking Changes
+
+  - **antd Grid dependency removed**: `@lowdefy/layout` no longer imports antd's `Row`, `Col`, or `Grid` components.
+  - **CSS Grid implementation**: Layout uses a 24-column CSS grid with CSS custom properties and media queries. Responsive breakpoints align with Tailwind CSS v4.
+  - **`span: 0` hides block**: Setting `layout.span: 0` now applies `display: none` instead of making the block full-width.
+  - **Responsive `style` breakpoints removed**: `style.sm`, `style.md` etc. no longer work. Use Tailwind classes via `class: "p-16 sm:p-8"` instead.
+  - **`_media` operator**: Returns `"2xl"` instead of `"xxl"` for the largest breakpoint (1536px instead of 1600px).
+
+  ### Renamed Layout Properties
+
+  The `content*` prefix is dropped. Build normalizes old names with a deprecation warning.
+
+  | Old                       | New                | Purpose                        |
+  | ------------------------- | ------------------ | ------------------------------ |
+  | `layout.contentGutter`    | `layout.gap`       | Spacing between child blocks   |
+  | `layout.contentAlign`     | `layout.align`     | Vertical alignment of children |
+  | `layout.contentJustify`   | `layout.justify`   | Horizontal distribution        |
+  | `layout.contentDirection` | `layout.direction` | Flex direction                 |
+  | `layout.contentWrap`      | `layout.wrap`      | Flex wrap                      |
+  | `layout.contentOverflow`  | `layout.overflow`  | Overflow behavior              |
+  | `slots.*.gutter`          | `slots.*.gap`      | Gap within a slot              |
+  | `xxl` breakpoint          | `2xl`              | Aligns with Tailwind v4        |
+
+- f430f02dde: Replace the Less/Emotion styling system with unified `style` and `class` properties using `.` prefixed CSS slot keys.
+
+  ### Breaking Changes
+
+  - **Less removed**: `.less` files are no longer supported. All styling uses CSS, CSS Modules, or Tailwind utilities.
+  - **`makeCssClass` removed**: Blocks no longer call `methods.makeCssClass()`. They receive `classNames` and `styles` objects as props, keyed by CSS slot names (`element`, `icon`, `header`, `body`, etc.).
+  - **`mediaToCssObject` removed** from `@lowdefy/block-utils`.
+  - **`style` replaces `styles`**: The `style` (singular) property handles all styling. Using `styles` (plural) throws a `ConfigError`.
+  - **`class` property added**: New `class` property for CSS classes (Tailwind utilities, custom classes). Supports string, array, or object with `.` slot keys.
+  - **`properties.style` moved**: Block-specific `properties.style` maps to `style: { .element }` at build time.
+  - **Inline style props removed**: `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle`, `contentStyle`, `labelStyle`, `valueStyle`, `tabBarStyle`, `overlayStyle` are replaced by CSS slot keys (e.g., `style: { .header }`, `style: { .body }`).
+
+  ### CSS Slot Keys
+
+  `.` prefixed keys target specific parts of a block:
+
+  | Key                                | Target                                                  |
+  | ---------------------------------- | ------------------------------------------------------- |
+  | `.block`                           | Layout wrapper (grid column)                            |
+  | `.element`                         | Component root element                                  |
+  | `.header`, `.body`, `.cover`, etc. | Antd semantic sub-elements (declared in `meta.cssKeys`) |
+
+  Flat shorthand (no `.` keys) maps to `.block`:
+
+  ```yaml
+  # These are equivalent:
+  style: { marginTop: 20 }
+  style:
+    .block: { marginTop: 20 }
+  ```
+
+### Minor Changes
+
+- f430f02dde: Add ErrorBar component to the development server that displays build errors and warnings in a fixed bottom bar. Build warnings now propagate from the build pipeline to the browser for immediate developer feedback.
+- 130a569d36: Add keyboard shortcut support for block events.
+
+  Blocks can now define keyboard shortcuts on events using the `shortcut` property in the event long-form object. Shortcuts are platform-aware (`mod+K` maps to Cmd+K on Mac, Ctrl+K on Windows), support sequences (`g i`), and can be arrays for multiple bindings.
+
+  - **Build validation** warns on duplicate shortcuts within a page and conflicts with browser defaults (e.g. `mod+N`)
+  - **ShortcutManager** registers a single global keydown listener via tinykeys with visibility gating and input field suppression
+  - **ShortcutBadge** component renders platform-appropriate key symbols (e.g. `⌘ K`) and is available to all blocks via `components.ShortcutBadge`
+  - **ShortcutBadge in blocks**: Button, Anchor, Tag, and Search blocks display a platform-aware keyboard shortcut badge (e.g. `⌘S` / `Ctrl+S`) next to the title when the event has a `shortcut` defined
+
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [130a569d36]
+- Updated dependencies [905d5d406]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/engine@5.0.0
+  - @lowdefy/layout@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/logger@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

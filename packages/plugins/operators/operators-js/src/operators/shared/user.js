@@ -14,9 +14,61 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { getFromObject } from '@lowdefy/operators';
 
-function _user({ arrayIndices, location, params, user }) {
+const roleMethods = ['hasRole', 'hasSomeRoles', 'hasAllRoles'];
+
+function getUserRoles({ user, methodName }) {
+  const roles = user?.roles;
+  if (type.isNone(roles)) return [];
+  if (!type.isArray(roles)) {
+    throw new Error(
+      `_user.${methodName} expects "user.roles" to be an array of strings. Received ${JSON.stringify(
+        roles
+      )}.`
+    );
+  }
+  return roles;
+}
+
+function validateRoleString({ params, methodName }) {
+  if (!type.isString(params)) {
+    throw new Error(`_user.${methodName} accepts a string. Received ${JSON.stringify(params)}.`);
+  }
+  return params;
+}
+
+function validateRoleArray({ params, methodName }) {
+  if (!type.isArray(params) || !params.every((role) => type.isString(role))) {
+    throw new Error(
+      `_user.${methodName} accepts an array of strings. Received ${JSON.stringify(params)}.`
+    );
+  }
+  return params;
+}
+
+function _user({ arrayIndices, location, methodName, params, user }) {
+  if (methodName === 'hasRole') {
+    const role = validateRoleString({ params, methodName });
+    const userRoles = getUserRoles({ user, methodName });
+    return userRoles.includes(role);
+  }
+  if (methodName === 'hasSomeRoles') {
+    const required = validateRoleArray({ params, methodName });
+    const userRoles = getUserRoles({ user, methodName });
+    return required.some((role) => userRoles.includes(role));
+  }
+  if (methodName === 'hasAllRoles') {
+    const required = validateRoleArray({ params, methodName });
+    const userRoles = getUserRoles({ user, methodName });
+    return required.every((role) => userRoles.includes(role));
+  }
+  if (!type.isUndefined(methodName)) {
+    throw new Error(
+      `_user.${methodName} is not supported, use one of the following: ${roleMethods.join(', ')}.`
+    );
+  }
   return getFromObject({
     arrayIndices,
     location,

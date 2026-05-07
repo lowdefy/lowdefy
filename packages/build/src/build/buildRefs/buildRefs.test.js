@@ -2367,7 +2367,67 @@ size: large`,
     });
   });
 
-  test('consumer _module.pageId in vars resolves against template module', async () => {
+  test('consumer _module.pageId object form in vars resolves at app level', async () => {
+    context.modules = {
+      layout: {
+        id: 'layout',
+        manifest: {
+          components: [
+            {
+              id: 'page',
+              component: { type: 'PageHeaderMenu', blocks: { _var: 'blocks' } },
+            },
+          ],
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
+          connections: [],
+        },
+        exports: {
+          pages: [{ id: 'dashboard' }, { id: 'users-list' }],
+          connections: [],
+          api: [],
+        },
+        moduleRoot: '/mod',
+        packageRoot: '/mod',
+        vars: {},
+        moduleDependencies: {},
+      },
+    };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+_ref:
+  module: layout
+  component: page
+  vars:
+    blocks:
+      - id: user-link
+        type: Anchor
+        properties:
+          pageId:
+            _module.pageId:
+              module: layout
+              id: users-list`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res).toEqual({
+      type: 'PageHeaderMenu',
+      blocks: [
+        {
+          id: 'user-link',
+          type: 'Anchor',
+          properties: {
+            pageId: 'layout/users-list',
+          },
+        },
+      ],
+    });
+  });
+
+  test('consumer _module.pageId string form in vars errors at app level', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2409,23 +2469,10 @@ _ref:
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    const res = await buildRefs({ context });
-    expect(context.errors).toHaveLength(0);
-    expect(res).toEqual({
-      type: 'PageHeaderMenu',
-      blocks: [
-        {
-          id: 'user-link',
-          type: 'Anchor',
-          properties: {
-            pageId: 'layout/users-list',
-          },
-        },
-      ],
-    });
+    await expect(buildRefs({ context })).rejects.toThrow(/ambiguous at the app level/);
   });
 
-  test('consumer _module.connectionId in vars resolves against template module', async () => {
+  test('consumer _module.connectionId object form in vars resolves at app level', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2460,7 +2507,9 @@ _ref:
   vars:
     content:
       connectionId:
-        _module.connectionId: user-contacts`,
+        _module.connectionId:
+          module: layout
+          id: user-contacts`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
@@ -2474,7 +2523,7 @@ _ref:
     });
   });
 
-  test('consumer _module.endpointId in vars resolves against template module', async () => {
+  test('consumer _module.endpointId object form in vars resolves at app level', async () => {
     context.modules = {
       layout: {
         id: 'layout',
@@ -2510,7 +2559,9 @@ _ref:
   vars:
     endpoint:
       endpointId:
-        _module.endpointId: update-user`,
+        _module.endpointId:
+          module: layout
+          id: update-user`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
@@ -2628,7 +2679,7 @@ _ref:
     ]);
   });
 
-  test('component ref with deferred _ref, vars, and _module.* operators resolves', async () => {
+  test('component ref with deferred _ref, vars, and _module.* object form resolves', async () => {
     const componentContent = { _ref: '/mod/components/page.yaml' };
     Object.defineProperty(componentContent, '~deferredFrom', {
       value: '/mod/module.lowdefy.yaml',
@@ -2669,9 +2720,13 @@ _ref:
         type: Anchor
         properties:
           pageId:
-            _module.pageId: users-list
+            _module.pageId:
+              module: layout
+              id: users-list
           connectionId:
-            _module.connectionId: user-contacts`,
+            _module.connectionId:
+              module: layout
+              id: user-contacts`,
       },
       {
         path: '/mod/components/page.yaml',

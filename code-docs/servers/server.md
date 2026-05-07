@@ -92,6 +92,7 @@ server/
 │   ├── 404.js
 │   ├── [pageId].js
 │   └── api/
+│       ├── agent/[...path].js        # Agent chat streaming route
 │       ├── auth/[...nextauth].js
 │       ├── endpoints/[endpointId].js
 │       ├── request/[pageId]/[requestId].js

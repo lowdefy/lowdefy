@@ -35,15 +35,16 @@ function createBuildContext() {
   return context;
 }
 
-function createWalkContext({ moduleVars, moduleEntry, vars, buildContext } = {}) {
+function createWalkContext({ moduleEntry, vars, buildContext } = {}) {
   const ctx = buildContext ?? createBuildContext();
   return new WalkContext({
     buildContext: ctx,
     refId: 'test:lowdefy.yaml:0',
     sourceRefId: null,
     vars: vars ?? {},
-    moduleVars,
-    moduleEntry,
+    moduleEntry: moduleEntry ?? null,
+    moduleRoot: moduleEntry?.moduleRoot ?? null,
+    packageRoot: moduleEntry?.packageRoot ?? null,
     path: '',
     currentFile: 'lowdefy.yaml',
     refChain: new Set(['lowdefy.yaml']),
@@ -54,77 +55,103 @@ function createWalkContext({ moduleVars, moduleEntry, vars, buildContext } = {})
   });
 }
 
+function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
+  return {
+    id: overrides.id ?? 'test-module',
+    source: overrides.source ?? 'file:modules/test',
+    moduleRoot: overrides.moduleRoot ?? '/modules/test',
+    packageRoot: overrides.packageRoot ?? '/modules/test',
+    consumerVars,
+    varDefs,
+    resolvedVarCache: {},
+    moduleDependencies: overrides.moduleDependencies ?? {},
+    refDef:
+      overrides.refDef ?? {
+        id: 'test:module.lowdefy.yaml:0',
+        path: '/modules/test/module.lowdefy.yaml',
+      },
+    exports:
+      overrides.exports ?? { pages: [], components: [], menus: [], connections: [], api: [] },
+    connections: overrides.connections ?? {},
+  };
+}
+
 beforeEach(() => {
   mockReadConfigFile.mockClear();
 });
 
 describe('_module.var resolution', () => {
-  test('resolves simple string key from moduleVars', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { roles: ['admin', 'editor'] },
-    });
+  test('resolves simple string key from consumerVars', async () => {
+    const entry = createModuleEntry({ roles: ['admin', 'editor'] });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 'roles' };
     const result = await resolve(node, ctx);
     expect(result).toEqual(['admin', 'editor']);
   });
 
-  test('resolves nested key path from moduleVars', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { components: { table_columns: ['name', 'email'] } },
-    });
+  test('resolves nested key path from consumerVars', async () => {
+    const entry = createModuleEntry({ components: { table_columns: ['name', 'email'] } });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 'components.table_columns' };
     const result = await resolve(node, ctx);
     expect(result).toEqual(['name', 'email']);
   });
 
-  test('returns null for missing key with string form', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { roles: ['admin'] },
-    });
+  test('returns null for missing key', async () => {
+    const entry = createModuleEntry({ roles: ['admin'] });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 'missing_key' };
     const result = await resolve(node, ctx);
     expect(result).toBeNull();
   });
 
-  test('resolves pre-merged default from moduleVars', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { page_size: 25 },
-    });
+  test('resolves default from varDefs when consumer omits var', async () => {
+    const entry = createModuleEntry({}, { page_size: { default: 25 } });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 'page_size' };
     const result = await resolve(node, ctx);
     expect(result).toBe(25);
   });
 
-  test('passes through unchanged when moduleVars is null', async () => {
-    const ctx = createWalkContext({
-      moduleVars: null,
-    });
-    const node = { '_module.var': 'roles' };
+  test('consumer value takes precedence over default', async () => {
+    const entry = createModuleEntry(
+      { page_size: 50 },
+      { page_size: { type: 'number', default: 25 } }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const node = { '_module.var': 'page_size' };
     const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'roles' });
+    expect(result).toBe(50);
   });
 
-  test('passes through unchanged when moduleVars is undefined', async () => {
+  test('throws when moduleEntry is null and no moduleRoot', async () => {
+    const ctx = createWalkContext({ moduleEntry: null });
+    const node = { '_module.var': 'roles' };
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
+  });
+
+  test('throws when moduleEntry is undefined and no moduleRoot', async () => {
     const ctx = createWalkContext();
     const node = { '_module.var': 'roles' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'roles' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
   });
 
-  test('throws on invalid argument type', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { roles: ['admin'] },
-    });
+  test('throws for non-string key', async () => {
+    const entry = createModuleEntry({ roles: ['admin'] });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 123 };
     await expect(resolve(node, ctx)).rejects.toThrow(
       '_module.var operator takes a string argument.'
     );
   });
 
-  test('throws on object form (no longer supported)', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { theme: 'dark' },
-    });
+  test('throws for object form', async () => {
+    const entry = createModuleEntry({ theme: 'dark' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': { key: 'theme' } };
     await expect(resolve(node, ctx)).rejects.toThrow(
       '_module.var operator takes a string argument.'
@@ -133,9 +160,8 @@ describe('_module.var resolution', () => {
 
   test('deep clones resolved values to prevent mutation', async () => {
     const originalArray = ['admin', 'editor'];
-    const ctx = createWalkContext({
-      moduleVars: { roles: originalArray },
-    });
+    const entry = createModuleEntry({ roles: originalArray });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = { '_module.var': 'roles' };
     const result = await resolve(node, ctx);
     expect(result).toEqual(['admin', 'editor']);
@@ -145,37 +171,36 @@ describe('_module.var resolution', () => {
 });
 
 describe('_module.var propagation through WalkContext', () => {
-  test('moduleVars propagates through child()', () => {
-    const moduleVars = { theme: 'dark' };
-    const ctx = createWalkContext({ moduleVars });
+  test('moduleEntry propagates through child()', () => {
+    const entry = createModuleEntry({ theme: 'dark' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const child = ctx.child('pages');
-    expect(child.moduleVars).toBe(moduleVars);
+    expect(child.moduleEntry).toBe(entry);
   });
 
-  test('moduleVars propagates through forRef() when not overridden', () => {
-    const moduleVars = { theme: 'dark' };
-    const ctx = createWalkContext({ moduleVars });
+  test('moduleEntry propagates through forRef() when not overridden', () => {
+    const entry = createModuleEntry({ theme: 'dark' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const refCtx = ctx.forRef({ refId: 'ref:test:1', vars: {}, filePath: 'other.yaml' });
-    expect(refCtx.moduleVars).toBe(moduleVars);
+    expect(refCtx.moduleEntry).toBe(entry);
   });
 
-  test('moduleVars can be overridden in forRef()', () => {
-    const moduleVars = { theme: 'dark' };
-    const newModuleVars = { theme: 'light' };
-    const ctx = createWalkContext({ moduleVars });
+  test('moduleEntry can be overridden in forRef()', () => {
+    const entry = createModuleEntry({ theme: 'dark' });
+    const newEntry = createModuleEntry({ theme: 'light' }, {}, { id: 'other-module' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const refCtx = ctx.forRef({
       refId: 'ref:test:1',
       vars: {},
       filePath: 'other.yaml',
-      moduleVars: newModuleVars,
+      moduleEntry: newEntry,
     });
-    expect(refCtx.moduleVars).toBe(newModuleVars);
+    expect(refCtx.moduleEntry).toBe(newEntry);
   });
 
   test('_module.var resolves inside nested objects', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { title: 'Hello', color: 'blue' },
-    });
+    const entry = createModuleEntry({ title: 'Hello', color: 'blue' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = {
       page: {
         title: { '_module.var': 'title' },
@@ -196,17 +221,17 @@ describe('_module.var propagation through WalkContext', () => {
   });
 
   test('_module.var resolves inside arrays', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { item1: 'first', item2: 'second' },
-    });
+    const entry = createModuleEntry({ item1: 'first', item2: 'second' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const node = [{ '_module.var': 'item1' }, { '_module.var': 'item2' }];
     const result = await resolve(node, ctx);
     expect(result).toEqual(['first', 'second']);
   });
 
   test('_module.var works alongside _var', async () => {
+    const entry = createModuleEntry({ moduleTitle: 'Module Title' });
     const ctx = createWalkContext({
-      moduleVars: { moduleTitle: 'Module Title' },
+      moduleEntry: entry,
       vars: { refTitle: 'Ref Title' },
     });
     const node = {
@@ -301,7 +326,7 @@ describe('_module.pageId resolution', () => {
     await expect(
       resolve({ '_module.pageId': { id: 'missing', module: 'events' } }, ctx)
     ).rejects.toThrow(
-      'Module "entry-id" references page "missing" from dependency "events" (entry "events-entry"), but that module does not export page "missing".'
+      'Module "entry-id" references page "missing" from "events" (entry "events-entry"), but that module does not export page "missing".'
     );
   });
 
@@ -313,7 +338,7 @@ describe('_module.pageId resolution', () => {
     await expect(
       resolve({ '_module.pageId': { id: 'x', module: 'unknown' } }, ctx)
     ).rejects.toThrow(
-      'Module "entry-id" references dependency "unknown" but no mapping exists.'
+      '_module.pageId { id: "x", module: "unknown" } in module "entry-id" references dependency "unknown" but no mapping exists.'
     );
   });
 
@@ -447,19 +472,154 @@ describe('_module.id resolution', () => {
   });
 });
 
-describe('_module.*Id pass-through when moduleEntry is null', () => {
-  test('_module.pageId passes through', async () => {
-    const ctx = createWalkContext({ moduleEntry: null });
-    const node = { '_module.pageId': 'settings' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.pageId': 'settings' });
+describe('_module.*Id at app level (null moduleEntry)', () => {
+  test('_module.pageId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.pageId': 'settings' }, ctx)).rejects.toThrow(
+      '_module.pageId string form is ambiguous at the app level'
+    );
   });
 
-  test('_module.id passes through', async () => {
-    const ctx = createWalkContext({ moduleEntry: null });
-    const node = { '_module.id': true };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.id': true });
+  test('_module.connectionId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.connectionId': 'users-db' }, ctx)).rejects.toThrow(
+      '_module.connectionId string form is ambiguous at the app level'
+    );
+  });
+
+  test('_module.endpointId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.endpointId': 'invite-user' }, ctx)).rejects.toThrow(
+      '_module.endpointId string form is ambiguous at the app level'
+    );
+  });
+
+  test('_module.id non-object form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.id': true }, ctx)).rejects.toThrow(
+      '_module.id is ambiguous at the app level'
+    );
+  });
+
+  test('_module.pageId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.pageId': { id: 'event-log', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-log');
+  });
+
+  test('_module.connectionId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.connectionId': { id: 'events-db', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/events-db');
+  });
+
+  test('_module.connectionId object form resolves with remapping at app level', async () => {
+    const buildCtx = createBuildContext();
+    buildCtx.modules = {
+      'entry-id': testModuleEntry,
+      'events-entry': remappedEventsEntry,
+    };
+    const ctx = createWalkContext({ moduleEntry: null, buildContext: buildCtx });
+    const result = await resolve(
+      { '_module.connectionId': { id: 'events-db', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('shared-events-mongodb');
+  });
+
+  test('_module.endpointId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.endpointId': { id: 'send-event', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/send-event');
+  });
+
+  test('_module.id object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.id': { module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry');
+  });
+
+  test('object form throws for missing module entry at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve({ '_module.pageId': { id: 'page', module: 'nonexistent' } }, ctx)
+    ).rejects.toThrow(
+      '_module.pageId { id: "page", module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
+    );
+  });
+
+  test('_module.id object form throws for missing module entry at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
+    ).rejects.toThrow(
+      '_module.id { module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
+    );
+  });
+
+  test('_module.var throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.var': 'some-var' }, ctx)).rejects.toThrow(
+      '_module.var cannot be used at the app level.'
+    );
+  });
+
+  test('_module.connectionId object form throws for nonexistent export at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(
+      resolve(
+        { '_module.connectionId': { id: 'nonexistent-connection', module: 'events-entry' } },
+        ctx
+      )
+    ).rejects.toThrow('does not export connection "nonexistent-connection"');
   });
 });
 
@@ -595,9 +755,8 @@ describe('_var object form with operator in default (bottom-up)', () => {
 
 describe('_module.var with computed name (bottom-up)', () => {
   test('_build.string.concat computes module variable name', async () => {
-    const ctx = createWalkContext({
-      moduleVars: { theme: 'dark' },
-    });
+    const entry = createModuleEntry({ theme: 'dark' });
+    const ctx = createWalkContext({ moduleEntry: entry });
     const result = await resolve(
       { '_module.var': { '_build.string.concat': ['the', 'me'] } },
       ctx
@@ -606,12 +765,97 @@ describe('_module.var with computed name (bottom-up)', () => {
   });
 
   test('_var computes module variable name', async () => {
+    const entry = createModuleEntry({ theme: 'dark' });
     const ctx = createWalkContext({
       vars: { whichVar: 'theme' },
-      moduleVars: { theme: 'dark' },
+      moduleEntry: entry,
     });
     const result = await resolve({ '_module.var': { _var: 'whichVar' } }, ctx);
     expect(result).toBe('dark');
+  });
+});
+
+describe('_module.var lazy resolution', () => {
+  test('caches resolved values across multiple lookups', async () => {
+    const entry = createModuleEntry({ color: 'blue' }, { color: { type: 'string' } });
+    const ctx = createWalkContext({ moduleEntry: entry });
+    await resolve({ '_module.var': 'color' }, ctx);
+    await resolve({ '_module.var': 'color' }, ctx);
+    expect(entry.resolvedVarCache['color']).toBe('blue');
+  });
+
+  test('resolves namespace var by merging consumer + defaults', async () => {
+    const entry = createModuleEntry(
+      { ui: { show_header: false } },
+      {
+        ui: {
+          type: 'object',
+          properties: {
+            show_header: { type: 'boolean', default: true },
+            page_size: { type: 'number', default: 10 },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'ui' }, ctx);
+    expect(result).toEqual({ show_header: false, page_size: 10 });
+  });
+
+  test('namespace var uses all defaults when consumer omits it', async () => {
+    const entry = createModuleEntry(
+      {},
+      {
+        ui: {
+          type: 'object',
+          properties: {
+            show_header: { type: 'boolean', default: true },
+            page_size: { type: 'number', default: 10 },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'ui' }, ctx);
+    expect(result).toEqual({ show_header: true, page_size: 10 });
+  });
+
+  test('namespace var uses all defaults when consumer provides null', async () => {
+    const entry = createModuleEntry(
+      { ui: null },
+      {
+        ui: {
+          type: 'object',
+          properties: {
+            show_header: { type: 'boolean', default: true },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'ui' }, ctx);
+    expect(result).toEqual({ show_header: true });
+  });
+
+  test('preserves _module.var when moduleRoot set but no moduleEntry (Phase 1a)', async () => {
+    const ctx = new WalkContext({
+      buildContext: createBuildContext(),
+      refId: 'test:module.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleRoot: '/modules/test',
+      packageRoot: '/modules/test',
+      path: '',
+      currentFile: '/modules/test/module.lowdefy.yaml',
+      refChain: new Set(),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+    const node = { '_module.var': 'theme' };
+    const result = await resolve(node, ctx);
+    expect(result).toEqual({ '_module.var': 'theme' });
   });
 });
 

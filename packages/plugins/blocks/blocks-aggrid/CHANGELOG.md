@@ -1,5 +1,126 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- 186a57d: fix(blocks-aggrid): Suppress cell focus by default and clip overflowing cell content.
+
+  The ag-grid cell focus outline visually competed with built-in cell renderers (buttons, links, tags), so `suppressCellFocus` now defaults to `true` and can still be overridden per grid. The antd cell wrapper also clips overflowing flex children so long text and inline cell components no longer blow out the cell width.
+
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- b2a2a981d: feat(blocks-aggrid): Add built-in cell renderer types.
+
+  Every AgGrid column now accepts a `cell` object on `columnDefs` entries that selects a first-class renderer — `tag`, `avatar`, `link`, `date`, `boolean`, `progress`, `number` — plus an `ellipsis: N` column-level helper that auto-enables `wrapText` + `autoHeight` with an N-line clamp.
+
+  The `number` renderer wraps `Intl.NumberFormat` with Excel-style config: `format` (`number` / `currency` / `percent` / `compact`), `locale`, `currency`, `decimals`, accounting-style `negative: parentheses`, `signColor` (green/red by sign), and optional `prefix` / `suffix`. Number columns auto-right-align (`cellStyle.justifyContent: flex-end` + `ag-right-aligned-header`) and every `cell.type` supports an `align: left | center | right` override. Renderer output is React, vertically centred, and styled entirely through antd CSS tokens (`--ant-control-height`, `--ant-margin-xs`, `--ant-color-*`, `--ant-border-radius`, `--ant-font-size`, etc.) so the grid adapts to Material vs Balham row heights and to dark / compact antd `theme.algorithm` without per-theme overrides.
+
+  Field-valued keys (`nameField`, `srcField`, `idField`, `colorFrom`, and every value inside `link.urlQuery`) are plain row-data path strings — no `_function` wrapping required. Null values render a muted em-dash across every built-in type.
+
+  Link navigation: `cell.type: link` and `avatar.link` render anchors and emit a new `onCellLink` block event with the resolved link config; wire it to a `Link` action (`params: { _event: link }`) to navigate — matches the existing Lowdefy event → action pattern.
+
+  `antd`, `@ant-design/icons`, and `dayjs` are now declared as peer dependencies on `@lowdefy/blocks-aggrid` (de-facto required by the existing `ag-grid-antd.module.css` token mapping).
+
+  Also fixes the long-standing cell vertical-centering drift: `.ag-cell` is now a flex container via the antd theme CSS module, which also benefits users' existing `renderHtml` cells.
+
+- 72625593e: feat(blocks-aggrid): Declare tooltip properties in block schemas.
+
+  All six AgGrid variants (Alpine/Balham/Material for display and input) now declare `enableBrowserTooltips`, `tooltipShowDelay`, and `tooltipHideDelay` at the grid level and `tooltipField`, `tooltipValueGetter`, and `tooltipComponent` at the column level. These AG Grid props already worked — they were passed through via property spreading — but were not documented in the block schemas. Users can now discover and configure tooltips directly from the schema.
+
+### Patch Changes
+
+- a7f2480b4: fix(blocks-aggrid): React to `loading` prop changes on AgGrid.
+
+  The `loading` block flag now toggles AG Grid's native `showLoadingOverlay` / `hideOverlay` at runtime. Previously the overlay calls were inside a `useEffect` with an empty dependency array, so they only ran once on mount and never reacted to subsequent `loading` changes. The effect has been split in two — method registration still runs once, overlay toggling now runs whenever `loading` changes — and an `onGridReady` callback applies the initial overlay state safely after the grid api is attached.
+
+- 797ab5b2d: fix(blocks-aggrid): Safari loading overlay stuck.
+
+  `AgGrid` and `AgGridInput` no longer use ag-grid's internal `showLoadingOverlay` / `hideOverlay` API to reflect the block's `loading` prop. On Safari / WebKit, a microtask race between our `hideOverlay()` call and ag-grid's own late `showOverlay` tick left the "Loading…" box stuck on screen even after data had rendered (ag-grid issues #4421, #1665, #8358). Chromium happened to win the race the other way, which hid the symptom.
+
+  Both blocks now wrap `AgGridReact` in a `position: relative` div, set `suppressLoadingOverlay` on the grid, and render a small themed overlay component (`LoadingOverlay.js`) when the Lowdefy `loading` prop is `true`. The overlay is styled via antd CSS custom properties, so it follows the active theme.
+
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/helpers@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- 29eb199c7f: Restructure block metadata from component static properties to dedicated `meta.js` files.
+
+  ### Breaking Changes
+
+  - **`schema.js` renamed to `meta.js`**: Block definitions moved from `schema.js` to `meta.js`. The `meta.js` files export `category`, `icons`, `valueType`, `cssKeys`, `events`, and `properties` (JSON Schema).
+  - **`schemas.js` barrel renamed to `metas.js`**: Block packages export `./metas` instead of `./schemas`.
+  - **`.meta` removed from components**: Block components no longer have a `.meta` static property. Metadata is loaded from the `blockMetas.json` build artifact at runtime.
+  - **`blockMetas.json` build artifact**: The build pipeline writes `plugins/blockMetas.json` containing category, valueType, and initValue for each block type.
+  - **`buildBlockSchema(meta)`**: New function in `@lowdefy/block-utils` generates complete JSON Schema from meta objects with operator support and CSS slot key validation.
+
+- f430f02dde: Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
+
+  ### Breaking Changes
+
+  - **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+  - **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
+
+- f430f02dde: Migrate all blocks from `defaultProps` to `withBlockDefaults` wrapper for React 19 compatibility.
+
+  ### Breaking Changes
+
+  - **`defaultProps` removed**: React 19 silently ignores `defaultProps` on function components. All ~101 block components now use a `withBlockDefaults` wrapper from `@lowdefy/block-utils`.
+  - **`withBlockDefaults` API**: New export from `@lowdefy/block-utils` that wraps block components with default property injection. Antd blocks use `withTheme` which absorbs defaults; non-antd blocks use the generic wrapper.
+
+- f430f02dde: Replace the Less/Emotion styling system with unified `style` and `class` properties using `.` prefixed CSS slot keys.
+
+  ### Breaking Changes
+
+  - **Less removed**: `.less` files are no longer supported. All styling uses CSS, CSS Modules, or Tailwind utilities.
+  - **`makeCssClass` removed**: Blocks no longer call `methods.makeCssClass()`. They receive `classNames` and `styles` objects as props, keyed by CSS slot names (`element`, `icon`, `header`, `body`, etc.).
+  - **`mediaToCssObject` removed** from `@lowdefy/block-utils`.
+  - **`style` replaces `styles`**: The `style` (singular) property handles all styling. Using `styles` (plural) throws a `ConfigError`.
+  - **`class` property added**: New `class` property for CSS classes (Tailwind utilities, custom classes). Supports string, array, or object with `.` slot keys.
+  - **`properties.style` moved**: Block-specific `properties.style` maps to `style: { .element }` at build time.
+  - **Inline style props removed**: `headerStyle`, `bodyStyle`, `maskStyle`, `contentWrapperStyle`, `contentStyle`, `labelStyle`, `valueStyle`, `tabBarStyle`, `overlayStyle` are replaced by CSS slot keys (e.g., `style: { .header }`, `style: { .body }`).
+
+  ### CSS Slot Keys
+
+  `.` prefixed keys target specific parts of a block:
+
+  | Key                                | Target                                                  |
+  | ---------------------------------- | ------------------------------------------------------- |
+  | `.block`                           | Layout wrapper (grid column)                            |
+  | `.element`                         | Component root element                                  |
+  | `.header`, `.body`, `.cover`, etc. | Antd semantic sub-elements (declared in `meta.cssKeys`) |
+
+  Flat shorthand (no `.` keys) maps to `.block`:
+
+  ```yaml
+  # These are equivalent:
+  style: { marginTop: 20 }
+  style:
+    .block: { marginTop: 20 }
+  ```
+
+### Minor Changes
+
+- 45964f1506: AG Grid blocks now follow the Ant Design theme automatically. All six grid blocks (AgGridAlpine, AgGridBalham, AgGridMaterial, and their Input variants) map ag-grid CSS variables to antd design tokens, so they respond to light/dark mode and custom theme colors without any configuration. Override individual `--ag-*` variables via the block's `style` property for per-instance customization. The explicit dark variant blocks (AgGridAlpineDark, AgGridBalhamDark, AgGridInputAlpineDark, AgGridInputBalhamDark) have been removed.
+
+### Patch Changes
+
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [130a569d36]
+- Updated dependencies [905d5d406]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/helpers@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

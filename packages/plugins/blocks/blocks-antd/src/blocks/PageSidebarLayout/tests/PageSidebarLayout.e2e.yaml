@@ -1,0 +1,216 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pagesidebarlayout
+type: PageSidebarLayout
+properties:
+  siderStorageKey: psl_e2e
+  sider:
+    initialCollapsed: false
+    collapsible: true
+  logo:
+    src: logo-light-theme.png
+    srcMobile: logo-square-light-theme.png
+    alt: Test Logo
+  menu:
+    links:
+      - id: psl_link1
+        type: MenuLink
+        properties:
+          title: Dashboard
+          icon: AiOutlineDashboard
+      - id: psl_link2
+        type: MenuLink
+        properties:
+          title: Users
+          icon: AiOutlineUser
+      - id: psl_group
+        type: MenuGroup
+        properties:
+          title: Settings
+          icon: AiOutlineSetting
+        links:
+          - id: psl_sub1
+            type: MenuLink
+            properties:
+              title: General
+          - id: psl_sub2
+            type: MenuLink
+            properties:
+              title: Security
+  breadcrumb:
+    list:
+      - Home
+      - Dashboard
+
+slots:
+  header:
+    blocks:
+      - id: header_content
+        type: Span
+        properties:
+          content: Header Content Area
+  siderOpen:
+    blocks:
+      - id: sider_open_content
+        type: Span
+        properties:
+          content: Sider Open Content
+  siderClosed:
+    blocks:
+      - id: sider_closed_content
+        type: Span
+        properties:
+          content: Sider Closed Content
+  mobileExtra:
+    blocks:
+      - id: mobile_extra_content
+        type: Span
+        properties:
+          content: Mobile Extra
+  mobileDrawerContent:
+    blocks:
+      - id: mobile_drawer_content
+        type: Span
+        properties:
+          content: Mobile Drawer Content
+  mobileDrawerFooter:
+    blocks:
+      - id: mobile_drawer_footer
+        type: Span
+        properties:
+          content: Mobile Drawer Footer
+  content:
+    blocks:
+      - id: main_content
+        type: Title
+        properties:
+          content: Main Content Area
+          level: 3
+
+      # ============================================
+      # METHOD TESTS
+      # ============================================
+
+      - id: toggle_sider_btn
+        type: Button
+        properties:
+          title: Toggle Sider
+        events:
+          onClick:
+            - id: toggle_sider
+              type: CallMethod
+              params:
+                blockId: pagesidebarlayout
+                method: toggleSiderOpen
+
+      - id: open_sider_btn
+        type: Button
+        properties:
+          title: Open Sider
+        events:
+          onClick:
+            - id: open_sider
+              type: CallMethod
+              params:
+                blockId: pagesidebarlayout
+                method: setSiderOpen
+                args:
+                  - open: true
+
+      - id: close_sider_btn
+        type: Button
+        properties:
+          title: Close Sider
+        events:
+          onClick:
+            - id: close_sider
+              type: CallMethod
+              params:
+                blockId: pagesidebarlayout
+                method: setSiderOpen
+                args:
+                  - open: false
+
+      # ============================================
+      # EVENT DISPLAYS
+      # ============================================
+
+      - id: breadcrumb_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: psl_breadcrumb_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Breadcrumb: '
+                  - _state: psl_breadcrumb_clicked
+              else: ''
+
+      - id: menuitem_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _ne:
+                  - _state: psl_menuitem_clicked
+                  - null
+              then:
+                _string.concat:
+                  - 'Menu clicked: '
+                  - _state: psl_menuitem_clicked
+              else: ''
+
+      - id: toggle_sider_display
+        type: Span
+        properties:
+          content:
+            _if:
+              test:
+                _eq:
+                  - _state: psl_toggle_sider_fired
+                  - true
+              then: Toggle sider fired
+              else: ''
+
+  footer:
+    blocks:
+      - id: footer_content
+        type: Span
+        properties:
+          content: Footer Content Area
+
+events:
+  onBreadcrumbClick:
+    - id: set_breadcrumb_clicked
+      type: SetState
+      params:
+        psl_breadcrumb_clicked:
+          _event: link
+  onMenuItemClick:
+    - id: set_menu_clicked
+      type: SetState
+      params:
+        psl_menuitem_clicked:
+          _event: key
+  onToggleSider:
+    - id: set_toggle_sider_fired
+      type: SetState
+      params:
+        psl_toggle_sider_fired: true

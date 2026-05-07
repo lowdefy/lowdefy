@@ -28,10 +28,12 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineCloseCircle', 'AiOutlineDown'],
   valueType: 'array',
   cssKeys: {
     element: 'The MultipleSelector element.',
+    selector:
+      'The inner tag/value container of the MultipleSelector (antd `content` semantic slot). Use for capping the tag area height and enabling internal scroll.',
     clearIcon: 'The clear icon in the MultipleSelector.',
     label: 'The MultipleSelector label.',
     extra: 'The MultipleSelector extra content.',

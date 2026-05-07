@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateId from '../../../utils/validateId.js';
+
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
   const configKey = request['~k'];
@@ -30,12 +32,7 @@ function buildRequest(request, pageContext) {
     });
   }
   checkDuplicateRequestId({ id: request.id, configKey, pageId });
-  if (request.id.includes('.')) {
-    throw new ConfigError(
-      `Request id "${request.id}" at page "${pageId}" should not include a period (".").`,
-      { configKey }
-    );
-  }
+  validateId({ id: request.id, field: 'Request id', location: `page "${pageId}"`, configKey });
 
   if (!type.isString(request.type)) {
     throw new ConfigError(

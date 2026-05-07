@@ -267,3 +267,289 @@ blocks:
               - true
           then: Filter changed
           else: ''
+
+  # ============================================
+  # BUILT-IN CELL RENDERERS — cell.type
+  # ============================================
+
+  - id: aggridbalham_cell_tag
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Status
+          field: status
+          cell:
+            type: tag
+            colorMap:
+              Active: green
+              Blocked: red
+              Pending: blue
+      rowData:
+        - status: Active
+        - status: Blocked
+        - status: Pending
+        - status: Unknown
+        - status: null
+
+  - id: aggridbalham_cell_tag_from
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Status
+          field: label
+          cell:
+            type: tag
+            colorFrom: color
+      rowData:
+        - label: A
+          color: green
+        - label: B
+          color: '#ff4d4f'
+
+  - id: aggridbalham_cell_avatar
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            srcField: picture
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+          picture: https://example.com/a.png
+        - id: u2
+          name: Bob Smith
+          picture: null
+        - id: u3
+          name: null
+          picture: null
+
+  - id: aggridbalham_cell_avatar_link
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+            link:
+              pageId: user
+              urlQuery:
+                userId: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+    events:
+      onCellLink:
+        - id: capture_avatar_link
+          type: SetState
+          params:
+            aggridbalham_avatar_link_event:
+              _event: link.pageId
+
+  - id: aggridbalham_avatar_link_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridbalham_avatar_link_event
+              - null
+          then:
+            _string.concat:
+              - 'Link: '
+              - _state: aggridbalham_avatar_link_event
+          else: ''
+
+  - id: aggridbalham_cell_link
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: ID
+          field: _id
+          cell:
+            type: link
+            pageId: detail
+            urlQuery:
+              _id: _id
+      rowData:
+        - _id: TSK-001
+        - _id: TSK-002
+    events:
+      onCellLink:
+        - id: capture_link
+          type: SetState
+          params:
+            aggridbalham_link_event:
+              _event: link.urlQuery._id
+
+  - id: aggridbalham_link_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridbalham_link_event
+              - null
+          then:
+            _string.concat:
+              - 'Linked to: '
+              - _state: aggridbalham_link_event
+          else: ''
+
+  - id: aggridbalham_cell_date
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Created
+          field: created_at
+          cell:
+            type: date
+        - headerName: Custom
+          field: created_at
+          cell:
+            type: date
+            format: YYYY/MM/DD
+      rowData:
+        - created_at: '2025-01-15T09:30:00Z'
+        - created_at: null
+        - created_at: invalid-date
+
+  - id: aggridbalham_cell_boolean
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Verified
+          field: verified
+          cell:
+            type: boolean
+        - headerName: Active
+          field: active
+          cell:
+            type: boolean
+            trueLabel: Yes!
+            falseLabel: Nope
+      rowData:
+        - verified: true
+          active: true
+        - verified: false
+          active: false
+        - verified: null
+          active: null
+
+  - id: aggridbalham_cell_progress
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Progress
+          field: progress
+          cell:
+            type: progress
+      rowData:
+        - progress: 10
+        - progress: 55
+        - progress: 100
+        - progress: null
+
+  - id: aggridbalham_cell_number
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Revenue
+          field: revenue
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            decimals: 0
+        - headerName: Delta
+          field: delta
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            decimals: 2
+            negative: parentheses
+            signColor: true
+        - headerName: Margin
+          field: margin
+          cell:
+            type: number
+            format: percent
+            decimals: 1
+        - headerName: Views
+          field: views
+          cell:
+            type: number
+            format: compact
+      rowData:
+        - revenue: 1245000
+          delta: 12500
+          margin: 0.184
+          views: 12340
+        - revenue: 825500
+          delta: -44250.5
+          margin: 0.072
+          views: 1050000
+        - revenue: null
+          delta: null
+          margin: null
+          views: null
+
+  - id: aggridbalham_cell_align_override
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Revenue
+          field: revenue
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            align: left
+      rowData:
+        - revenue: 1000
+
+  - id: aggridbalham_ellipsis
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Notes
+          field: notes
+          ellipsis: 2
+      rowData:
+        - notes: >-
+            Quite a long piece of text that should wrap across multiple lines
+            and then be clamped to two lines via the built-in line-clamp class
+            so that the rest is hidden.
+        - notes: Short.
+        - notes: null
+
+  # ============================================
+  # LOADING FLAG — runtime toggle
+  # ============================================
+
+  - id: aggridbalham_loading_toggle
+    type: Switch
+    properties:
+      title: Loading
+
+  - id: aggridbalham_loading_grid
+    type: AgGridBalham
+    loading:
+      _state: aggridbalham_loading_toggle
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob

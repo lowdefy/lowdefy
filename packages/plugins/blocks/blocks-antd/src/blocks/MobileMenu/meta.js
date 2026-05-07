@@ -15,9 +15,13 @@
 */
 
 export default {
-  category: 'display',
+  category: 'container',
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
   valueType: null,
+  slots: {
+    drawerContent: 'Additional content below the menu in the drawer.',
+    drawerFooter: 'Footer content in the drawer.',
+  },
   cssKeys: {
     element: 'The MobileMenu element.',
   },
@@ -45,6 +49,33 @@ export default {
         description: 'Menu drawer properties.',
         docs: {
           displayType: 'yaml',
+        },
+      },
+      logo: {
+        type: 'object',
+        description: 'Logo settings for the mobile menu drawer header.',
+        additionalProperties: false,
+        properties: {
+          src: {
+            type: 'string',
+            description: 'Logo source url.',
+          },
+          srcMobile: {
+            type: 'string',
+            description: 'Mobile logo source url.',
+          },
+          alt: {
+            type: 'string',
+            default: 'Lowdefy',
+            description: 'Logo alternative text.',
+          },
+          style: {
+            type: 'object',
+            description: 'Css style object to apply to logo.',
+            docs: {
+              displayType: 'yaml',
+            },
+          },
         },
       },
       menuId: {
