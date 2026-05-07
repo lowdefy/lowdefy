@@ -159,28 +159,24 @@ Many capabilities you'd want an agent to have already exist as MCP servers: docu
 
 ```yaml
 connections:
-  - id: mcp_astro
+  - id: mcp_deepwiki
     type: Mcp
     properties:
-      transport: stdio
-      command: npx
-      args:
-        - '-y'
-        - mcp-remote
-        - https://mcp.docs.astro.build/mcp
+      transport: http
+      url: https://mcp.deepwiki.com/mcp
 
 agents:
-  - id: astro_bot
+  - id: repo_bot
     type: ClaudeAgent
     connectionId: claude
     properties:
       model: claude-haiku-4-5-20251001
-      instructions: You answer Astro framework questions using the docs MCP server.
+      instructions: You answer questions about public GitHub repos using the DeepWiki MCP server.
     mcp:
-      - mcp_astro
+      - mcp_deepwiki
 ```
 
-The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. Both `http` and `stdio` transports work.
+The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. Streamable `http`, `sse`, and `stdio` transports are all supported — prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
 
 ### Tool confirmation
 
