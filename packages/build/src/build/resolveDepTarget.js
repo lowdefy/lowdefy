@@ -16,22 +16,38 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-function resolveDepTarget({ moduleEntry, depName, context }) {
+function resolveDepTarget({ moduleEntry, depName, context, configKey, usage }) {
+  const prefix = usage ? `${usage} ` : '';
+
+  // App-level: module name IS the entry ID (no dependency mapping)
+  if (!moduleEntry) {
+    const targetEntry = context.modules[depName];
+    if (!targetEntry) {
+      throw new ConfigError(
+        `${prefix}references module "${depName}" but no module with that entry id was registered.`,
+        { configKey }
+      );
+    }
+    return targetEntry;
+  }
+
   const wiring = moduleEntry.moduleDependencies ?? {};
   const targetEntryId = wiring[depName];
 
   if (!targetEntryId) {
     throw new ConfigError(
-      `Module "${moduleEntry.id}" references dependency "${depName}" ` +
-        `but no mapping exists. Add dependencies.${depName} to the entry.`
+      `${prefix}in module "${moduleEntry.id}" references dependency "${depName}" but no mapping exists. ` +
+        `Add dependencies.${depName} to module "${moduleEntry.id}".`,
+      { configKey }
     );
   }
 
   const targetEntry = context.modules[targetEntryId];
   if (!targetEntry) {
     throw new ConfigError(
-      `Module "${moduleEntry.id}" dependency "${depName}" maps to ` +
-        `"${targetEntryId}" but no module entry "${targetEntryId}" exists.`
+      `${prefix}in module "${moduleEntry.id}" references dependency "${depName}" which maps to "${targetEntryId}", ` +
+        `but no module with entry id "${targetEntryId}" was registered.`,
+      { configKey }
     );
   }
 

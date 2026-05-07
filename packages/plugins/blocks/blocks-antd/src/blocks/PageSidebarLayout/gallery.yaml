@@ -1,0 +1,302 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic PageSidebarLayout
+  fullWidth: true
+  blocks:
+    - id: psl_basic
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_basic
+        sider:
+          initialCollapsed: false
+          width: 220
+        menu:
+          links:
+            - id: psl_basic_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psl_basic_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+            - id: psl_basic_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      blocks:
+        - id: psl_basic_content
+          type: Paragraph
+          properties:
+            content: PageSidebarLayout provides a full-page layout with a full-height sidebar. The sider spans the entire viewport height with the logo at the bottom. On mobile screens, a hamburger menu with a full-width drawer replaces the sider.
+
+- title: Initially Collapsed
+  fullWidth: true
+  blocks:
+    - id: psl_collapsed
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_collapsed
+        sider:
+          initialCollapsed: true
+        menu:
+          links:
+            - id: psl_collapsed_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psl_collapsed_users
+              type: MenuLink
+              properties:
+                title: Users
+                icon: AiOutlineUser
+      blocks:
+        - id: psl_collapsed_content
+          type: Paragraph
+          properties:
+            content: Sider starts collapsed. Click the toggle button to expand. The collapsed state is persisted in localStorage.
+
+- title: With Desktop Header
+  fullWidth: true
+  blocks:
+    - id: psl_header
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_header
+        sider:
+          width: 220
+        header:
+          contentStyle:
+            justifyContent: flex-end
+        menu:
+          links:
+            - id: psl_header_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psl_header_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      slots:
+        header:
+          blocks:
+            - id: psl_header_search_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Search
+                icon: AiOutlineSearch
+                color: default
+                variant: outlined
+                size: small
+      blocks:
+        - id: psl_header_content
+          type: Paragraph
+          properties:
+            content: Optional desktop header with custom content. The header sits inside the content area, not above the sider.
+
+- title: Logo Configuration
+  fullWidth: true
+  blocks:
+    - id: psl_logo
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_logo
+        logo:
+          src: /logo_example.png
+          srcMobile: /logo_example.png
+          alt: Custom Logo
+          style:
+            width: 80
+        menu:
+          links:
+            - id: psl_logo_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+      blocks:
+        - id: psl_logo_content
+          type: Paragraph
+          properties:
+            content: Custom logo with style overrides. The full logo (src) shows when the sider is expanded, and the square logo (srcMobile) shows when collapsed.
+
+- title: Admin Dashboard
+  fullWidth: true
+  blocks:
+    - id: psl_admin
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_admin
+        darkModeToggle: true
+        notifications:
+          count: 3
+        profile:
+          avatar:
+            content: AU
+            color: '#1677ff'
+          links:
+            - id: psl_admin_prof_profile
+              type: MenuLink
+              properties:
+                title: My Profile
+                icon: AiOutlineUser
+            - id: psl_admin_prof_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+            - id: psl_admin_prof_divider
+              type: MenuDivider
+            - id: psl_admin_prof_logout
+              type: MenuLink
+              properties:
+                title: Sign Out
+                icon: AiOutlineLogout
+                danger: true
+        sider:
+          width: 240
+        breadcrumb:
+          list:
+            - Admin
+            - Dashboard
+        menu:
+          defaultOpenKeys:
+            - psl_admin_users_group
+          links:
+            - id: psl_admin_dash
+              type: MenuLink
+              properties:
+                title: Dashboard
+                icon: AiOutlineDashboard
+            - id: psl_admin_users_group
+              type: MenuGroup
+              properties:
+                title: User Management
+                icon: AiOutlineTeam
+              links:
+                - id: psl_admin_all_users
+                  type: MenuLink
+                  properties:
+                    title: All Users
+                - id: psl_admin_user_roles
+                  type: MenuLink
+                  properties:
+                    title: Roles & Permissions
+            - id: psl_admin_analytics
+              type: MenuLink
+              properties:
+                title: Analytics
+                icon: AiOutlineBarChart
+            - id: psl_admin_settings
+              type: MenuLink
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+      slots:
+        siderOpen:
+          blocks:
+            - id: psl_admin_sider_open
+              type: Box
+              style:
+                padding: 8px 12px
+              blocks:
+                - id: psl_admin_env_tag
+                  type: Tag
+                  properties:
+                    title: Production
+                    color: green
+                    icon: AiOutlineCloudServer
+        siderClosed:
+          blocks:
+            - id: psl_admin_sider_closed
+              type: Box
+              style:
+                padding: 8px
+                textAlign: center
+              blocks:
+                - id: psl_admin_env_tag_sm
+                  type: Tag
+                  properties:
+                    title: Prod
+                    color: green
+        footer:
+          blocks:
+            - id: psl_admin_footer_text
+              type: Paragraph
+              properties:
+                content: Admin Panel v2.4.1
+                style:
+                  textAlign: center
+                  margin: 0
+                  color: '#999'
+                  fontSize: 12
+      blocks:
+        - id: psl_admin_title
+          type: Title
+          properties:
+            content: Dashboard Overview
+            level: 3
+        - id: psl_admin_stats_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: psl_admin_stat_users
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psl_admin_stat_users_val
+                  type: Statistic
+                  properties:
+                    title: Total Users
+                    value: 2847
+                    prefixIcon: AiOutlineUser
+            - id: psl_admin_stat_revenue
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psl_admin_stat_revenue_val
+                  type: Statistic
+                  properties:
+                    title: Revenue
+                    value: 58420
+                    prefix: $
+            - id: psl_admin_stat_orders
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                size: small
+              blocks:
+                - id: psl_admin_stat_orders_val
+                  type: Statistic
+                  properties:
+                    title: Orders
+                    value: 384

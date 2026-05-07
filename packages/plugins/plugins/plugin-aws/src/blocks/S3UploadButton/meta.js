@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
+import uploadTheme from '../../schemas/uploadTheme.js';
+
 export default {
   category: 'input',
   icons: ['AiOutlineUpload'],
   valueType: 'object',
   cssKeys: {
-    element: 'The upload wrapper element.',
+    element: 'The outer block wrapper around the upload button and list.',
+    trigger: 'The antd upload trigger (.ant-upload-select) that wraps the button.',
+    list: 'The uploaded file list container.',
+    item: 'Each uploaded file row in the list.',
   },
   events: {
     onBeforeUpload: {
@@ -117,6 +122,33 @@ export default {
         type: 'string',
         description:
           'Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.',
+        docs: {
+          displayType: 'manual',
+          block: {
+            id: 'block_properties_s3PostPolicyRequestId',
+            layout: { _global: 'settings_input_layout' },
+            type: 'Label',
+            required: true,
+            properties: {
+              title: 's3PostPolicyRequestId',
+              span: 8,
+              align: 'right',
+            },
+            blocks: [
+              {
+                id: 'block_properties_s3PostPolicyRequestId_text',
+                type: 'Markdown',
+                style: {
+                  color: '#8c8c8c',
+                },
+                properties: {
+                  content:
+                    'Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.',
+                },
+              },
+            ],
+          },
+        },
       },
       showUploadList: {
         type: 'boolean',
@@ -129,6 +161,7 @@ export default {
         description:
           'Only allow a single file to be uploaded. Only one file can be selected in the prompt.',
       },
+      theme: uploadTheme,
     },
   },
 };

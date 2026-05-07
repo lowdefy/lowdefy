@@ -115,18 +115,36 @@ Dark mode is managed by the `useDarkMode` hook with a three-tier resolution:
 3. **System preference** — `matchMedia('(prefers-color-scheme: dark)')` with a live `change` event listener that updates in real time when the OS theme changes.
 
 ```javascript
-const algorithm = useDarkMode({
-  baseAlgorithm: lowdefyRef.current.theme?.antd?.algorithm,
+const { algorithm, token, components } = useDarkMode({
+  antd: lowdefyRef.current.theme?.antd,
   configDarkMode: lowdefyRef.current.theme?.darkMode,
 });
-// Returns resolved antd algorithm functions array, e.g. [defaultAlgorithm, darkAlgorithm]
+// algorithm: resolved antd algorithm functions array, e.g. [defaultAlgorithm, darkAlgorithm]
+// token: shared `antd.token` merged with `antd.lightToken` or `antd.darkToken` for the active mode
+// components: shared `antd.components` merged with `antd.lightComponents` or `antd.darkComponents`
 ```
 
-The hook strips `'dark'` from the base algorithm array (it manages dark mode separately) and merges `darkAlgorithm` back when the resolved state is dark.
+The hook strips `'dark'` from the base algorithm array (it manages dark mode separately) and merges `darkAlgorithm` back when the resolved state is dark. Per-mode `lightToken` / `darkToken` are merged over the shared `token` and per-mode `lightComponents` / `darkComponents` are merged over shared `components`, so users can soften base surfaces (e.g., `colorBgLayout`, `Layout.siderBg`) without maintaining two theme files.
 
 `window.__lowdefy_setDarkMode` is exposed for the `SetDarkMode` action. It accepts a string preference (`'system'`, `'light'`, `'dark'`), writes it to `localStorage`, and triggers a React state update.
 
 When dark mode toggles, `ConfigProvider` re-renders with the new algorithm. Antd's CSS-in-JS regenerates all `--ant-*` CSS variables on `.lowdefy` with dark values. The Tailwind bridge variables (e.g., `--color-bg-layout: var(--ant-color-bg-layout)`) automatically resolve to the new values — no CSS recompilation needed.
+
+#### Dark Mode Flash Prevention
+
+**Files:** `packages/servers/server/pages/_document.js`, `packages/servers/server-dev/pages/_document.js`
+
+Because `_app.js` uses `ssr: false` (`dynamic(() => Promise.resolve(App), { ssr: false })`), Ant Design's `ConfigProvider` and its CSS variables aren't available until client-side hydration. During page navigation, the browser defaults to a white background, causing a visible flash for dark mode users.
+
+This is solved with two coordinating pieces:
+
+1. **Synchronous inline script in `_document.js`** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — all embedded at build time from `theme.json`. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
+
+2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets the resolved `colorBgLayout` from `antd.darkToken` / `antd.lightToken` (falling back to `'#000'` in dark and unset in light). This handles dark/light toggling and ensures the background stays correct across client-side navigations.
+
+The `configDarkMode` value is available in `_document.js` via `lib/build/theme.js`, which imports and deserializes the `theme.json` build artifact.
+
+**IMPORTANT:** The inline script's dark mode logic must stay in sync with `useDarkMode.js`. If the resolution priority changes (e.g., new preference tiers), update both.
 
 #### CRITICAL: Single antd Instance Requirement
 
@@ -580,19 +598,13 @@ The `lowdefy-build/tailwind/` directory contains:
 
 ### Production Layer Order Workaround
 
-**File:** `packages/servers/server/pages/_document.js`
+**Files:** `packages/servers/server/pages/_document.js`, `packages/servers/server-dev/pages/_document.js`
 
-Next.js strips the `@layer` order declaration from CSS during bundling, so the production server re-declares it in a `<style>` tag in `_document.js` to guarantee it loads before any other CSS:
+Next.js strips the `@layer` order declaration from CSS during bundling, so both servers re-declare it in a synchronous `<script>` tag in `_document.js` that creates and prepends a `<style>` element. A `MutationObserver` keeps it as the first `<head>` child even if antd's CSS-in-JS tries to prepend its own `<style>` tags.
 
-```jsx
-<style
-  dangerouslySetInnerHTML={{
-    __html: '@layer theme, base, antd, components, utilities;',
-  }}
-/>
-```
+The same `_document.js` files also contain the dark mode flash prevention script (see "Dark Mode Flash Prevention" above).
 
-In dev mode, the layer order in `globals.css` is preserved because PostCSS compiles it directly to `tailwind-jit.css` without Next.js CSS bundling.
+In dev mode, the layer order in `globals.css` is also preserved because PostCSS compiles it directly to `tailwind-jit.css` without Next.js CSS bundling.
 
 ## Dev Mode: CSS Hot Reload
 
@@ -727,7 +739,10 @@ pages:
 | `packages/build/src/build/jit/writePageJit.js`                              | JIT: writes page artifacts + per-page tailwind HTML file                                           |
 | `packages/build/src/build/buildPages/buildBlock/normalizeClassAndStyles.js` | Normalizes `class`/`style` at build time (dot-prefix stripping, slot partitioning)                 |
 | `packages/plugins/operators/operators-js/src/operators/client/theme.js`     | `_theme` operator implementation                                                                   |
-| `packages/servers/server/pages/_document.js`                                | Production CSS layer order workaround (inline `<style>` tag)                                       |
+| `packages/servers/server/pages/_document.js`                                | Production CSS layer order + dark mode flash prevention (inline scripts)                           |
+| `packages/servers/server-dev/pages/_document.js`                            | Dev CSS layer order + dark mode flash prevention (inline scripts)                                  |
+| `packages/servers/server/lib/build/theme.js`                                | Imports `theme.json` build artifact (used by `_document.js` for `configDarkMode`)                  |
+| `packages/servers/server-dev/lib/build/theme.js`                            | Same for dev server                                                                                |
 | `packages/servers/server-dev/pages/_app.js`                                 | ConfigProvider + StyleProvider setup                                                               |
 | `packages/servers/server-dev/lib/server/compileCss.js`                      | JIT CSS compilation (PostCSS + Tailwind)                                                           |
 | `packages/servers/server-dev/manager/processes/compileCss.mjs`              | Manager CSS compilation (PostCSS + Tailwind, with logging)                                         |
@@ -823,6 +838,7 @@ The hook also listens for OS theme changes via `matchMedia('(prefers-color-schem
 - In browser console: does `window.__lowdefy_setDarkMode` exist? (Should accept a string, not boolean)
 - What is the config-level `theme.darkMode`? If `'light'` or `'dark'`, user toggle is overridden.
 - After toggling: do `--ant-*` CSS variables on `.lowdefy` change? (Inspect `<html class="lowdefy">` computed styles)
+- Does `<html>` have an inline `background-color: #000` in light mode? If so, the `useDarkMode` effect didn't run — the app may not be hydrating correctly.
 
 ### 6. AgGrid-Specific Dark Mode
 

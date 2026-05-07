@@ -224,3 +224,63 @@ test('descendant scan excludes scalar refs whose parent chain only reaches page 
   // No non-page keys, so refIds is empty. Descendant scan finds no ancestor in refIds.
   expect(result.size).toBe(0);
 });
+
+test('collects paths from module consumerVars when only consumed in pages', () => {
+  // The bug case: a module entry's vars are inlined into pages via _module.var,
+  // so ~r markers never appear under non-page components. consumerVars must
+  // still drive a skeleton rebuild when edited.
+  const page = setRefMarker({ id: 'page1', type: 'PageHeaderMenu' }, 'ref-page');
+  const consumerVars = setRefMarker(
+    { page_type: 'sidebar', footer: ['a', 'b'] },
+    'ref-layout-vars'
+  );
+  const components = {
+    pages: [page],
+  };
+  const context = {
+    refMap: {
+      'ref-page': { parent: 'ref-root', path: 'pages/my-page.yaml' },
+      'ref-layout-vars': { parent: 'ref-modules', path: 'modules/layout/vars.yaml' },
+      'ref-modules': { parent: 'ref-root', path: 'modules.yaml' },
+      'ref-root': { parent: null, path: 'lowdefy.yaml' },
+    },
+    modules: {
+      layout: { consumerVars },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result.has('modules/layout/vars.yaml')).toBe(true);
+  expect(result.has('modules.yaml')).toBe(true);
+  expect(result.has('lowdefy.yaml')).toBe(true);
+  // The page-only ref must remain excluded.
+  expect(result.has('pages/my-page.yaml')).toBe(false);
+});
+
+test('descendant scan picks up scalar _ref leaves under module consumerVars', () => {
+  // page_type was authored as `_ref: page-type.yaml` resolving to a string.
+  // No ~r marker survives on the resolved scalar, but the refMap has an entry
+  // whose parent chain reaches ref-layout-vars (now in refIds via the new walk).
+  const consumerVars = setRefMarker({ page_type: 'sidebar' }, 'ref-layout-vars');
+  const components = {};
+  const context = {
+    refMap: {
+      'ref-layout-vars': { parent: null, path: 'modules/layout/vars.yaml' },
+      'ref-page-type': { parent: 'ref-layout-vars', path: 'modules/layout/page-type.yaml' },
+    },
+    modules: {
+      layout: { consumerVars },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result.has('modules/layout/vars.yaml')).toBe(true);
+  expect(result.has('modules/layout/page-type.yaml')).toBe(true);
+});
+
+test('returns empty set when context has no modules key', () => {
+  // Existing call sites and tests don't supply context.modules; the ?? {}
+  // fallback must keep the function a no-op for the new branch.
+  const components = {};
+  const context = { refMap: {} };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result.size).toBe(0);
+});

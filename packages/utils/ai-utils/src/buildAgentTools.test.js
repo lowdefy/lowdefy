@@ -405,3 +405,39 @@ test('buildAgentTools does not write data-display part when tool execution fails
 
   expect(writeDataPart).not.toHaveBeenCalled();
 });
+
+test('buildAgentTools throws ConfigError when endpoint tool name collides with reserved platform tool', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'update-page-state' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'custom',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
+    /reserved platform tool name/i
+  );
+});
+
+test('buildAgentTools throws ConfigError when sub-agent id collides with reserved name', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    agents: [{ agentId: 'read-file' }],
+  };
+  const context = {
+    getAgentConfig: jest.fn(),
+    getConnectionForAgent: jest.fn(),
+    resolveMcpSources: jest.fn(),
+  };
+
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
+    /reserved platform tool name/i
+  );
+});

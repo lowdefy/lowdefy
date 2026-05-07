@@ -17,7 +17,7 @@
 import disabledDates from '../../schemas/disabledDates.js';
 
 export default {
-  category: 'display',
+  category: 'input',
   icons: [],
   valueType: 'date',
   cssKeys: {

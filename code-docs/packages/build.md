@@ -41,10 +41,10 @@ async function build(options) {
   // Phase 3: Module integration
   buildModules({ components, context });                 // Scope IDs, resolve _module operators, merge
 
-  // Phase 4: Validate
-  testSchema({ components, context });                   // Validate against schema
+  // Phase 4: Schema warnings + validate
+  testSchema({ components, context });                   // Emit schema warnings (non-blocking)
 
-  // Phase 5: Build specific domains
+  // Phase 5: Build specific domains (each has its own focused validation)
   buildApp({ components, context });                     // Process app config
   validateConfig({ components, context });               // Business rule validation
   addDefaultPages({ components, context });              // Add 404, etc.
@@ -52,6 +52,7 @@ async function build(options) {
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions
+  buildAgents({ components, context });                  // Agent config validation + normalization
   buildMenu({ components, context });                    // Navigation menus
   buildJs({ components, context });                      // Custom JS functions
 
@@ -73,8 +74,10 @@ async function build(options) {
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writePluginImports({ components, context });  // includes writeGlobalsCss
+  await writeAgents({ components, context });             // Agent config artifacts
+  await writePluginImports({ components, context });  // includes writeGlobalsCss, writeAgentImports
   await writeJs({ components, context });
+  await copyAgentFileSystems({ components, context });   // Copy fileSystem basePaths to server
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }
@@ -139,10 +142,10 @@ Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`,
 - `resolveRef(refNode, parentCtx)` — full 12-step ref handling (load, walk content, transform, tag `~r`)
   - For `_ref: { module, component/menu }` — calls `getModuleRefContent()` to look up exports in resolved manifests
 - `resolveVar(node, ctx)` — variable substitution with `~r` provenance
-- `resolveModuleVar(node, ctx)` — module variable substitution from `ctx.moduleVars`
+- `resolveModuleVar(node, ctx)` — lazy module variable resolution: reads consumer value from `ctx.moduleEntry.consumerVars`, otherwise walks the raw `default` expression via `resolveEffectiveVar` / `resolveVarDefault` and caches on `ctx.moduleEntry.resolvedVarCache`
 - `cloneVarValue(value, sourceRefId)` — deep clone for var values (needed because same var may appear at multiple `_var` sites)
 - `tagRefDeep(node, refId)` — in-place `~r` tagging (replaces old `createRefReviver` + `serializer.copy`)
-- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleVars` for module-level vars
+- `WalkContext` — immutable context with `child(segment)` for path tracking, `forRef()` for entering ref files, and `moduleEntry` (carrying `consumerVars`, `varDefs`, `resolvedVarCache`) for module-scoped state
 
 **Traversal order:** Top-down for `_ref`/`_var`/`_module.var` detection, bottom-up for `_build.*` evaluation. Children always resolve before their parent.
 
@@ -150,11 +153,24 @@ Ref resolution uses a single-pass async tree walker that handles `_ref`, `_var`,
 
 ### Schema Validation (`testSchema.js`)
 
-Validates config against the Lowdefy JSON schema:
-- Block types match their schemas
-- Required fields are present
-- Property types are correct
-- Enum values are valid
+Validates config against the Lowdefy JSON schema and emits **warnings** (not errors). Schema validation is non-blocking — it surfaces helpful hints like typos caught by `additionalProperties` and property type mismatches, but does not stop the build.
+
+Critical structural checks (required id/type, correct types) are handled by **focused validations** in each build step (`validateBlock`, `buildConnections`, `buildEvents`, etc.), which provide better error messages with full context (pageId, blockId, eventId).
+
+**Validation ownership:**
+
+| Check | Validated by | Error quality |
+|-------|-------------|---------------|
+| Block id/type required | `validateBlock.js` | Includes pageId |
+| Connection id/type required | `buildConnections.js` | Includes connectionId |
+| Request id/type required | `buildRequests.js` | Includes requestId, pageId |
+| Action id/type required | `buildEvents.js` | Includes eventId, blockId, pageId |
+| Endpoint id/type required | `validateEndpoint.js` | Includes endpointId |
+| Menu id required | `buildMenu.js` | Includes menuId |
+| Menu item id/type required | `buildMenu.js` | Includes menuItemId, menuId |
+| Auth plugin id/type required | `buildAuthPlugins.js` | Includes plugin type class |
+| Additional properties (typos) | `testSchema.js` (warning) | Generic AJV message |
+| Property type checks | `testSchema.js` (warning) | Generic AJV message |
 
 ### Page Building (`buildPages/`)
 

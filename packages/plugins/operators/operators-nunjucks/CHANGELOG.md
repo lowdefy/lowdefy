@@ -1,5 +1,42 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- Updated dependencies [73fa2b9]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/nunjucks@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.1.0
+- @lowdefy/helpers@5.1.0
+- @lowdefy/nunjucks@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
+
+  ### Breaking Changes
+
+  - **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+  - **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
+
+### Patch Changes
+
+- Updated dependencies [155c0b9724]
+- Updated dependencies [905d5d406]
+  - @lowdefy/nunjucks@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/operators@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

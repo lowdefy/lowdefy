@@ -97,9 +97,11 @@ async function build(options) {
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // testSchema emits warnings (not errors) — focused validations in each
+    // build step provide better error messages with full context
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
-    // Schema errors mean structurally invalid data - stop before processing further
+    // Stop if addKeys collected any errors (e.g. invalid ~ignoreBuildChecks)
     logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });

@@ -1,0 +1,60 @@
+@import '../utils/style.module.css';
+
+:global(.tableWrapper),
+:global(.tiptap-table) {
+  display: block;
+  overflow-x: auto;
+  max-width: 80%;
+}
+
+:global(.tableWrapper) :global(table),
+:global(.tiptap-table) :global(table) {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 75px;
+}
+
+:global(.tableWrapper) :global(colgroup) :global(col),
+:global(.tiptap-table) :global(colgroup) :global(col) {
+  width: auto;
+}
+
+:global(.tableWrapper) :global(table),
+:global(.tableWrapper) :global(th),
+:global(.tableWrapper) :global(td),
+:global(.tiptap-table) :global(table),
+:global(.tiptap-table) :global(th),
+:global(.tiptap-table) :global(td) {
+  border: 1px solid var(--ant-color-border);
+}
+
+:global(.tableWrapper) :global(th),
+:global(.tableWrapper) :global(td),
+:global(.tiptap-table) :global(th),
+:global(.tiptap-table) :global(td) {
+  padding: 2px;
+  text-align: left;
+}
+
+:global(.tableWrapper) :global(th),
+:global(.tiptap-table) :global(th) {
+  background-color: var(--ant-color-fill-tertiary);
+  font-weight: bold;
+}
+
+:global(.tableWrapper) :global(tr):nth-child(even),
+:global(.tiptap-table) :global(tr):nth-child(even) {
+  background-color: var(--ant-color-fill-quaternary);
+}
+
+:global(.tableWrapper) :global(tr):hover,
+:global(.tiptap-table) :global(tr):hover {
+  background-color: var(--ant-color-primary-bg);
+}
+
+:global(.tableWrapper) :global(td) :global(p),
+:global(.tableWrapper) :global(th) :global(p),
+:global(.tiptap-table) :global(td) :global(p),
+:global(.tiptap-table) :global(th) :global(p) {
+  margin: 0;
+}

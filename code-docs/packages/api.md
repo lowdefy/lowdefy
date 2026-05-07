@@ -112,17 +112,66 @@ Client Action (Endpoint)
    Response/Error
 ```
 
+### Agent Flow
+
+Agents handle AI chat with streaming responses:
+
+```
+Client (AgentChat block)
+        │
+        ▼
+POST /api/agent/{pageId}/{agentId}?conversationId=...
+Body: { messages: UIMessage[], urlQuery }
+        │
+        ▼
+┌───────────────────┐
+│   callAgent()     │
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐     ┌──────────────────────────────┐
+│ getAgentConfig()  │────▶│ Read from agents/{id}.json   │
+└───────────────────┘     └──────────────────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│evaluateOperators()│  ◀── Resolve _secret, _user in agent properties
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│  getConnection()  │  ◀── Load AI provider (Anthropic, OpenAI, Google)
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│getAgentResolver() │  ◀── Get agent type (ClaudeAgent, OpenAIAgent, etc.)
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│ resolver(context) │  ◀── Calls handleAgentChat in @lowdefy/ai-utils
+└───────────────────┘
+        │
+        ▼
+   Streaming Response (text/event-stream)
+```
+
+The resolver context includes `callEndpoint` (for tool execution), `getAgentConfig` (for sub-agents), `getConnectionForAgent` (for sub-agent connections), and `resolveMcpSources` (for MCP connectionId references).
+
+See [Agent System Architecture](../architecture/agent-system.md) for the complete flow.
+
 ## Key Modules
 
 ### `/context/`
 
-| Module                       | Purpose                                                            |
-| ---------------------------- | ------------------------------------------------------------------ |
+| Module                       | Purpose                                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `createApiContext.js`        | Initializes context with user session, state, and helper functions (steps/payload live on routineContext, not here) |
-| `createAuthorize.js`         | Creates authorization checker for role-based access                |
-| `createReadConfigFile.js`    | Utility to read build output files                                 |
-| `createEvaluateOperators.js` | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation |
-| `errors.js`                  | Error types: ConfigurationError, RequestError, ServerError         |
+| `createAuthorize.js`         | Creates authorization checker for role-based access                                                                 |
+| `createReadConfigFile.js`    | Utility to read build output files                                                                                  |
+| `createEvaluateOperators.js` | Server-side operator evaluation; accepts `steps`/`payload` per call for routine isolation                           |
+| `errors.js`                  | Error types: ConfigurationError, RequestError, ServerError                                                          |
 
 ### `/routes/request/`
 
@@ -141,29 +190,37 @@ Client Action (Endpoint)
 
 ### `/routes/endpoints/`
 
-| Module                    | Purpose                                                        |
-| ------------------------- | -------------------------------------------------------------- |
-| `callEndpoint.js`         | HTTP entry point for endpoint execution; blocks `InternalApi`  |
-| `runRoutine.js`           | Dispatch steps by ID prefix: `request:`, `endpoint:`, control  |
-| `handleRequest.js`        | Execute a database/API request step                            |
-| `handleEndpointCall.js`   | Execute a `CallApi` step (server-side endpoint-to-endpoint)    |
-| `addStepResult.js`        | Store step results in `routineContext.steps`                   |
-| `getEndpointConfig.js`    | Load endpoint config from build artifacts                      |
-| `authorizeApiEndpoint.js` | Check user access to endpoint                                  |
-| `control/`                | Control flow handlers (if, for, try, switch, return, etc.)     |
+| Module                    | Purpose                                                       |
+| ------------------------- | ------------------------------------------------------------- |
+| `callEndpoint.js`         | HTTP entry point for endpoint execution; blocks `InternalApi` |
+| `runRoutine.js`           | Dispatch steps by ID prefix: `request:`, `endpoint:`, control |
+| `handleRequest.js`        | Execute a database/API request step                           |
+| `handleEndpointCall.js`   | Execute a `CallApi` step (server-side endpoint-to-endpoint)   |
+| `addStepResult.js`        | Store step results in `routineContext.steps`                  |
+| `getEndpointConfig.js`    | Load endpoint config from build artifacts                     |
+| `authorizeApiEndpoint.js` | Check user access to endpoint                                 |
+| `control/`                | Control flow handlers (if, for, try, switch, return, etc.)    |
+
+### `/routes/agent/`
+
+| Module                | Purpose                                                         |
+| --------------------- | --------------------------------------------------------------- |
+| `callAgent.js`        | Main entry point for agent chat execution with streaming        |
+| `getAgentConfig.js`   | Load agent definition from build artifacts (`agents/{id}.json`) |
+| `getAgentResolver.js` | Load agent type resolver from plugin registry                   |
 
 ### `/routes/auth/`
 
 Handles Auth.js (NextAuth) configuration retrieval.
 
-| Module                                        | Purpose                                                        |
-| --------------------------------------------- | -------------------------------------------------------------- |
-| `callbacks/createSessionCallback.js`          | Assembles session from OIDC claims, userFields, and plugins    |
-| `callbacks/validateSessionRoles.js`           | Validates `session.user.roles` is an array of strings          |
-| `callbacks/createJWTCallback.js`              | JWT token assembly                                             |
-| `callbacks/addUserFieldsToSession.js`         | Maps provider fields to session via `auth.userFields`          |
-| `callbacks/addUserFieldsToToken.js`           | Maps provider fields to JWT token via `auth.userFields`        |
-| `callbacks/createCallbackPlugins.js`          | Filters callback plugins by type                               |
+| Module                                | Purpose                                                     |
+| ------------------------------------- | ----------------------------------------------------------- |
+| `callbacks/createSessionCallback.js`  | Assembles session from OIDC claims, userFields, and plugins |
+| `callbacks/validateSessionRoles.js`   | Validates `session.user.roles` is an array of strings       |
+| `callbacks/createJWTCallback.js`      | JWT token assembly                                          |
+| `callbacks/addUserFieldsToSession.js` | Maps provider fields to session via `auth.userFields`       |
+| `callbacks/addUserFieldsToToken.js`   | Maps provider fields to JWT token via `auth.userFields`     |
+| `callbacks/createCallbackPlugins.js`  | Filters callback plugins by type                            |
 
 ### `/routes/page/`
 

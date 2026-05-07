@@ -1,5 +1,80 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 73fa2b9: feat: Internal API endpoint calls
+
+  **Endpoint-to-Endpoint Calls (`@lowdefy/api`)**
+
+  - API endpoint routines can call other endpoints server-side via `CallApi` steps, without HTTP
+  - Each called endpoint runs in an isolated context with its own `steps` and `payload` namespaces
+  - Recursive endpoint call depth is capped at 10 to prevent infinite loops
+  - `InternalApi` endpoints are blocked from HTTP access — they return the same response as a missing endpoint
+
+  **Build Support (`@lowdefy/build`)**
+
+  - `CallApi` routine steps validated at build time: require `properties.endpointId`, reject `connectionId`
+  - `InternalApi` endpoint type accepted alongside `Api`
+  - Client-side `CallAPI` actions targeting `InternalApi` endpoints produce a build warning (error in production)
+
+  **Operator Parser (`@lowdefy/operators`)**
+
+  - `ServerParser.parse()` accepts `steps` and `payload` per call for routine context isolation
+
+### Patch Changes
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [73fa2b9]
+- Updated dependencies [69a59c0]
+- Updated dependencies [0d44433]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators-js@5.2.0
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/ajv@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/node-utils@5.2.0
+  - @lowdefy/nunjucks@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/operators@5.1.0
+  - @lowdefy/ajv@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/node-utils@5.1.0
+  - @lowdefy/nunjucks@5.1.0
+
+## 5.0.0
+
+### Minor Changes
+
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- Updated dependencies [155c0b9724]
+- Updated dependencies [e3e922538]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [fd8225b7a1]
+- Updated dependencies [905d5d406]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/nunjucks@5.0.0
+  - @lowdefy/operators-js@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/node-utils@5.0.0
+  - @lowdefy/ajv@5.0.0
+  - @lowdefy/operators@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

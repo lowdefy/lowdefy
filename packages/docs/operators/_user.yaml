@@ -43,6 +43,60 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `user` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `user` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `user`. By default, `null` is returned if a value is not found.
+    methods:
+      - name: hasRole
+        types: |
+          ```
+          (role: string): boolean
+          ```
+        description: |
+          The `_user.hasRole` method returns `true` if the `user.roles` array contains the given role. It returns `false` when the user is not logged in, when `user.roles` is missing, or when the role is not present.
+
+          The `user.roles` value is read directly from the `user` object and must be an array of strings. An error is thrown if `user.roles` is defined but is not an array, or if the argument is not a string.
+        examples: |
+          ###### Check for a single role:
+          ```yaml
+          _user.hasRole: admin
+          ```
+          Returns: `true` if `user.roles` includes `"admin"`.
+      - name: hasSomeRoles
+        types: |
+          ```
+          (roles: string[]): boolean
+          ```
+        description: |
+          The `_user.hasSomeRoles` method returns `true` if the `user.roles` array contains at least one of the given roles. It returns `false` when the user is not logged in, when `user.roles` is missing, or when none of the roles match.
+
+          The `user.roles` value is read directly from the `user` object and must be an array of strings. An error is thrown if `user.roles` is defined but is not an array, or if the argument is not an array of strings.
+
+          For checking a single role, use [`_user.hasRole`](#hasRole).
+        examples: |
+          ###### Check for any of several roles:
+          ```yaml
+          _user.hasSomeRoles:
+            - admin
+            - support
+          ```
+          Returns: `true` if `user.roles` includes `"admin"` or `"support"`.
+      - name: hasAllRoles
+        types: |
+          ```
+          (roles: string[]): boolean
+          ```
+        description: |
+          The `_user.hasAllRoles` method returns `true` if the `user.roles` array contains every one of the given roles. It returns `false` when the user is not logged in, when `user.roles` is missing, or when any required role is not present.
+
+          The `user.roles` value is read directly from the `user` object and must be an array of strings. An error is thrown if `user.roles` is defined but is not an array, or if the argument is not an array of strings.
+
+          For checking a single role, use [`_user.hasRole`](#hasRole).
+        examples: |
+          ###### Require all of several roles:
+          ```yaml
+          _user.hasAllRoles:
+            - admin
+            - support
+          ```
+          Returns: `true` only if `user.roles` includes both `"admin"` and `"support"`.
     examples: |
       ###### Get the value of `name` from `user`:
       ```yaml

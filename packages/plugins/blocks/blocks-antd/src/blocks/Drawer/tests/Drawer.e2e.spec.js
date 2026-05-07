@@ -248,4 +248,20 @@ test.describe('Drawer Block', () => {
     const display = getBlock(page, 'afterclose_display');
     await expect(display).toHaveText('AfterClose fired');
   });
+
+  // ============================================
+  // FOOTER SLOT TESTS
+  // ============================================
+
+  test('renders drawer with footer content slot', async ({ page }) => {
+    const openBtn = getBlock(page, 'open_with_footer').locator('.ant-btn');
+    await openBtn.click();
+
+    const drawer = getDrawer(page);
+    await expect(drawer).toBeVisible();
+
+    const footer = drawer.locator('.ant-drawer-footer');
+    await expect(footer).toBeVisible();
+    await expect(footer).toContainText('Footer Content Here');
+  });
 });

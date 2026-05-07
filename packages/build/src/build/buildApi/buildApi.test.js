@@ -92,7 +92,7 @@ test('duplicate api endpoint ids', () => {
   );
 });
 
-test('api endpoint id contains "."', () => {
+test('api endpoint id contains invalid characters', () => {
   const components = {
     api: [
       {
@@ -102,7 +102,7 @@ test('api endpoint id contains "."', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    `Endpoint id "api1.test" should not include a period (".").`
+    'Endpoint id "api1.test" contains invalid characters.'
   );
 });
 

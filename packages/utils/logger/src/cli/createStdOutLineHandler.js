@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 // Map pino numeric levels to level names
 const pinoLevelToName = {
@@ -34,6 +34,9 @@ function createStdOutLineHandler({ context }) {
     try {
       parsed = JSON.parse(line);
     } catch {
+      // Not valid JSON — fall through
+    }
+    if (!type.isObject(parsed)) {
       logger.info(line);
       return;
     }

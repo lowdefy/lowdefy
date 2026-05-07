@@ -17,6 +17,8 @@
 import { createRequire } from 'module';
 import path from 'path';
 
+import findSimilarString from '../../utils/findSimilarString.js';
+
 // Matches the JSON data argument inside GenIcon({...})(props) in react-icons source.
 // react-icons icons are generated functions of the form:
 //   function IconName(props) { return GenIcon({...})(props); }
@@ -40,7 +42,21 @@ function extractIconData({ icons, directories, logger }) {
       }
     }
     const iconFn = moduleCache[pkg][icon];
-    if (!iconFn) continue;
+    if (!iconFn) {
+      if (logger) {
+        let message = `Icon "${icon}" not found in "${pkg}".`;
+        const suggestion = findSimilarString({
+          input: icon,
+          candidates: Object.keys(moduleCache[pkg]),
+          maxDistance: Math.max(3, Math.ceil(icon.length * 0.4)),
+        });
+        if (suggestion) {
+          message += ` Did you mean "${suggestion}"?`;
+        }
+        logger.warn(message);
+      }
+      continue;
+    }
 
     const match = iconFn.toString().match(genIconDataRegex);
     if (match) {

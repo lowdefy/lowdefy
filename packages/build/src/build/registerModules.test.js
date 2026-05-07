@@ -73,6 +73,10 @@ pages:
   expect(context.modules['team-users'].id).toBe('team-users');
   expect(context.modules['team-users'].source).toBe('file:../modules/team-users');
   expect(context.modules['team-users'].isLocal).toBe(true);
+  expect(context.modules['team-users'].consumerVars).toEqual({});
+  expect(context.modules['team-users'].varDefs).toEqual({});
+  expect(context.modules['team-users'].resolvedVarCache).toEqual({});
+  expect(context.modules['team-users'].vars).toBeUndefined();
   // Pages are preserved in local resolve
   expect(context.modules['team-users'].manifest.pages).toBeDefined();
 });
@@ -176,7 +180,7 @@ pages: []
   ).rejects.toThrow('requires var "apiKey"');
 });
 
-test('resolveLocalManifest throws when var type does not match', async () => {
+test('validateVarTypes catches type mismatch after Phase 2', async () => {
   const context = createTestContext();
   const files = [
     {
@@ -185,6 +189,44 @@ test('resolveLocalManifest throws when var type does not match', async () => {
 vars:
   count:
     type: number
+pages:
+  - id: test
+    type: Box
+    properties:
+      value:
+        _module.var: count
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  // Phase 1a succeeds — no type validation yet
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: { count: 'not-a-number' } },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod']).toBeDefined();
+
+  // Type validation happens after resolveFullManifest
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'must be type "number" but got "string"'
+  );
+});
+
+test('resolveLocalManifest throws when plugin version is missing', async () => {
+  const context = createTestContext({ plugins: [] });
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+plugins:
+  - name: "@example/custom-blocks"
 pages: []
 `,
     },
@@ -193,7 +235,7 @@ pages: []
 
   await expect(
     resolveLocalManifest({
-      entry: { id: 'my-mod', source: 'file:../mod', vars: { count: 'not-a-number' } },
+      entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/my-mod',
         moduleRoot: '/modules/my-mod',
@@ -201,7 +243,7 @@ pages: []
       },
       context,
     })
-  ).rejects.toThrow('must be type "number" but got "string"');
+  ).rejects.toThrow('must declare a "version"');
 });
 
 test('resolveLocalManifest throws when required plugin is missing from app', async () => {
@@ -683,6 +725,109 @@ components:
   expect(manifest.api).toBeDefined();
   expect(manifest.menus).toBeDefined();
   expect(manifest.components).toBeDefined();
+});
+
+test('resolveLocalManifest preserves var default fields but walks schema structure', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  components:
+    type: object
+    properties:
+      detail:
+        default:
+          _ref: defaults/detail.yaml
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  const varDefs = context.modules['my-mod'].varDefs;
+  // Schema structure is walked (type, properties resolved)
+  expect(varDefs.components.type).toBe('object');
+  expect(varDefs.components.properties.detail).toBeDefined();
+  // Default values are preserved — _ref NOT resolved during Phase 1a
+  expect(varDefs.components.properties.detail.default).toEqual({
+    _ref: 'defaults/detail.yaml',
+  });
+});
+
+test('resolveLocalManifest does not throw for required var with default', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  theme:
+    required: true
+    default: light
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  expect(context.modules['my-mod']).toBeDefined();
+});
+
+test('resolveLocalManifest throws for undeclared namespace property', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  ui:
+    type: object
+    properties:
+      theme:
+        type: string
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    resolveLocalManifest({
+      entry: {
+        id: 'my-mod',
+        source: 'file:../mod',
+        vars: { ui: { theme: 'dark', color: 'blue' } },
+      },
+      resolvedPaths: {
+        packageRoot: '/modules/my-mod',
+        moduleRoot: '/modules/my-mod',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('undeclared property "color"');
 });
 
 test('resolveFullManifest resolves preserved content in second pass', async () => {

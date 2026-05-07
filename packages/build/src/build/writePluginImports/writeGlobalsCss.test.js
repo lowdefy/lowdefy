@@ -83,7 +83,7 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   const css = context.writeBuildArtifact.mock.calls[0][1];
   expect(css).toContain('@layer theme, base, antd, components, utilities;');
   expect(css).toContain('@import "tailwindcss";');
-  expect(css).toContain('@source "../lowdefy-build/tailwind/**/*.html";');
+  expect(css).toContain('@source "../lowdefy-build/tailwind/*.html";');
   expect(css).toContain('@import "./tailwind-candidates.css";');
 });
 
@@ -181,12 +181,12 @@ test('writeGlobalsCss omits styles.css import when file does not exist', async (
   expect(css).not.toContain('styles.css');
 });
 
-test('writeGlobalsCss includes @source for lowdefy-build/tailwind/**/*.html', async () => {
+test('writeGlobalsCss includes @source for lowdefy-build/tailwind/*.html', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });
 
   const css = context.writeBuildArtifact.mock.calls[0][1];
-  expect(css).toContain('@source "../lowdefy-build/tailwind/**/*.html";');
+  expect(css).toContain('@source "../lowdefy-build/tailwind/*.html";');
 });
 
 test('writeGlobalsCss writes per-page content files to server directory', async () => {
@@ -211,6 +211,26 @@ test('writeGlobalsCss writes per-page content files to server directory', async 
   expect(aboutCall).toBeDefined();
   expect(aboutCall[0]).toBe('/app/lowdefy-build/tailwind/about.html');
   expect(aboutCall[1]).toContain('<p class="text-lg">About</p>');
+});
+
+test('writeGlobalsCss encodes slashed pageIds in content filenames', async () => {
+  const context = createContext();
+  context.tailwindContentMap = new Map([
+    ['user-account/profile', '<div class="bg-blue-100">Profile</div>'],
+    ['home', '<div class="p-4">Home</div>'],
+  ]);
+  await writeGlobalsCss({ components: {}, context });
+
+  const profileCall = mockWriteFile.mock.calls.find((call) =>
+    call[0].includes('user-account%2Fprofile.html')
+  );
+  expect(profileCall).toBeDefined();
+  expect(profileCall[0]).toBe('/app/lowdefy-build/tailwind/user-account%2Fprofile.html');
+  expect(profileCall[1]).toContain('<div class="bg-blue-100">Profile</div>');
+
+  const homeCall = mockWriteFile.mock.calls.find((call) => call[0].endsWith('/home.html'));
+  expect(homeCall).toBeDefined();
+  expect(homeCall[0]).toBe('/app/lowdefy-build/tailwind/home.html');
 });
 
 test('writeGlobalsCss writes no content files when tailwindContentMap is undefined', async () => {

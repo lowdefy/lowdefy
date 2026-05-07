@@ -21,6 +21,7 @@ export default {
   slots: {
     content: 'Main Drawer body.',
     extra: 'Extra content in the header.',
+    footer: 'The Drawer footer.',
   },
   cssKeys: {
     element: 'The Drawer element.',

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ai-utils",
-  "version": "4.7.1",
+  "version": "5.2.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@ai-sdk/mcp": "1.0.30",
-    "@lowdefy/helpers": "workspace:*",
+    "@lowdefy/errors": "5.2.0",
+    "@lowdefy/helpers": "5.2.0",
     "ai": "6.0.116",
     "glob": "11.0.2"
   },

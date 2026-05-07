@@ -32,11 +32,21 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
       inputHeight = 32;
   }
   return (
-    <div className={classNames?.element} style={styles?.element}>
+    <div
+      className={classNames?.element}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        ...styles?.element,
+      }}
+    >
       {properties.label !== false && (
         <Skeleton
           styles={{
-            element: { marginBottom: 10 },
+            element: {
+              borderRadius: 'var(--ant-border-radius-sm, 4px)',
+            },
           }}
           properties={{
             width: properties.labelWidth ?? properties.width ?? '30%',
@@ -46,7 +56,10 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
       )}
       <Skeleton
         styles={{
-          element: styles?.input ?? {},
+          element: {
+            borderRadius: 'var(--ant-border-radius, 6px)',
+            ...styles?.input,
+          },
         }}
         properties={{
           width: properties.width ?? '100%',

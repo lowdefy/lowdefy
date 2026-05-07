@@ -98,7 +98,6 @@ async function shallowBuild(options) {
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
-
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 

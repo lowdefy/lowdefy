@@ -15,6 +15,7 @@
 */
 
 import { callAgent } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
@@ -30,15 +31,27 @@ async function handler({ context, req, res }) {
   const agentId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ color: 'gray' }, `Agent: ${pageId} → ${agentId}`);
-  const { messages } = req.body;
+  const { conversationId } = req.query;
+  const { messages, urlQuery, sharedState } = req.body;
   if (!Array.isArray(messages)) {
     res.status(400).json({ error: 'messages must be an array' });
+    return;
+  }
+  if (urlQuery != null && (typeof urlQuery !== 'object' || Array.isArray(urlQuery))) {
+    res.status(400).json({ error: 'urlQuery must be an object' });
+    return;
+  }
+  if (sharedState != null && !type.isObject(sharedState)) {
+    res.status(400).json({ error: 'sharedState must be an object' });
     return;
   }
   const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
     messages,
+    conversationId: conversationId ?? undefined,
+    sharedState: sharedState ?? undefined,
+    urlQuery: urlQuery ?? undefined,
   });
 
   // Stream the Web Response body to the Next.js response

@@ -320,3 +320,40 @@
           url: http://page.com
           properties:
             icon: AiFillVideoCamera
+- id: 'properties.logo'
+  type: MobileMenu
+  properties:
+    logo:
+      src: /logo.png
+      alt: My App
+    links:
+      - id: menu_item_1
+        type: MenuLink
+        properties:
+          title: Home
+- id: 'areas.drawerContent:'
+  type: MobileMenu
+  properties:
+    links:
+      - id: menu_item_1
+        type: MenuLink
+        properties:
+          title: Home
+  areas:
+    drawerContent:
+      blocks:
+        - id: one
+          type: Test
+- id: 'areas.drawerFooter:'
+  type: MobileMenu
+  properties:
+    links:
+      - id: menu_item_1
+        type: MenuLink
+        properties:
+          title: Home
+  areas:
+    drawerFooter:
+      blocks:
+        - id: one
+          type: Test

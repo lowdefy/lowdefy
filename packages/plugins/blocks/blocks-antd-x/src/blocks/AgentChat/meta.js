@@ -33,9 +33,12 @@ export default {
     onSuggestionClick: 'Trigger when the user clicks a follow-up suggestion.',
     onTitleGenerated: 'Trigger when the agent generates a conversation title.',
     onSwitchChange: 'Trigger when the user toggles a sender switch.',
+    onDataPart:
+      'Trigger when the agent sends a custom data part. Event contains type, data, and id.',
   },
   methods: {
-    regenerate: 'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
+    regenerate:
+      'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
     setMessages: 'Replace the message list. Accepts args.messages array.',
     sendMessage: 'Send a message programmatically. Accepts args.text string.',
     clearMessages: 'Clear all messages from the chat.',

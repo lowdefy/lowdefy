@@ -32,25 +32,37 @@ class Requests {
 
   callRequests({ actionId, actions, arrayIndices, blockId, event, params } = {}) {
     if (type.isObject(params) && params.all === true) {
+      const { holdValue } = params;
       return Promise.all(
         Object.keys(this.requestConfig).map((requestId) =>
-          this.callRequest({ actionId, arrayIndices, blockId, event, requestId })
+          this.callRequest({ actionId, arrayIndices, blockId, event, holdValue, requestId })
         )
       );
     }
 
     let requestIds = [];
-    if (type.isString(params)) requestIds = [params];
-    if (type.isArray(params)) requestIds = params;
+    let holdValue;
+    if (type.isString(params)) {
+      requestIds = [params];
+    } else if (type.isArray(params)) {
+      requestIds = params;
+    } else if (type.isObject(params)) {
+      holdValue = params.holdValue;
+      if (type.isString(params.requestId)) {
+        requestIds = [params.requestId];
+      } else if (type.isArray(params.requestIds)) {
+        requestIds = params.requestIds;
+      }
+    }
 
     const requests = requestIds.map((requestId) =>
-      this.callRequest({ actionId, actions, requestId, blockId, event, arrayIndices })
+      this.callRequest({ actionId, actions, requestId, blockId, event, arrayIndices, holdValue })
     );
     this.context._internal.update(); // update to render request reset
     return Promise.all(requests);
   }
 
-  async callRequest({ actionId, actions, arrayIndices, blockId, event, requestId }) {
+  async callRequest({ actionId, actions, arrayIndices, blockId, event, holdValue, requestId }) {
     const requestConfig = this.requestConfig[requestId];
     if (!this.context.requests[requestId]) {
       this.context.requests[requestId] = [];
@@ -77,14 +89,18 @@ class Requests {
     if (parserErrors.length > 0) {
       throw parserErrors[0];
     }
+    const previousResponse = this.context.requests[requestId][0]?.response ?? null;
     const request = {
       actionId,
       blockId,
       loading: true,
       payload,
       requestId,
-      response: null,
+      response: holdValue ? previousResponse : null,
     };
+    if (holdValue) {
+      request.holdValue = true;
+    }
     this.context.requests[requestId].unshift(request);
     return this.fetch(request);
   }

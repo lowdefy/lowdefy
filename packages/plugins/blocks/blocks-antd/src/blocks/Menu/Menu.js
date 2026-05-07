@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import React, { useCallback } from 'react';
-import { Menu } from 'antd';
+import React, { useCallback, useContext } from 'react';
+import { Layout, Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
+
+const SiderContext = Layout._InternalSiderContext;
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
@@ -155,6 +157,8 @@ function MenuComp({
   }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);
   const theme = properties.theme;
+  const { siderCollapsed } = useContext(SiderContext) ?? {};
+  const isCollapsed = properties.collapsed === true || siderCollapsed === true;
 
   const items = buildMenuItems({
     links: menu,
@@ -200,7 +204,7 @@ function MenuComp({
       defaultOpenKeys={
         properties.defaultOpenKeys ??
         (properties.mode === 'inline' &&
-          properties.collapsed !== true && [
+          !isCollapsed && [
             (
               menu.find((link) =>
                 (link.links || [])

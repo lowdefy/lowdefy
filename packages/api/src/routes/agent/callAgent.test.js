@@ -581,6 +581,133 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
   ).rejects.toThrow();
 });
 
+test('callAgent passes agentContext with conversationId, pageId, urlQuery, userId to resolver context', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { sub: 'user_abc', id: 'user_id_fallback' } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'principle-view',
+    messages: [],
+    conversationId: 'conv_123',
+    urlQuery: { principle_id: 'P3' },
+  });
+
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+  expect(resolverContext.agentContext).toEqual({
+    conversationId: 'conv_123',
+    pageId: 'principle-view',
+    sharedState: {},
+    urlQuery: { principle_id: 'P3' },
+    userId: 'user_abc',
+  });
+});
+
+test('callAgent passes userId from context.user.id when sub is not present', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_456' } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'page1',
+    messages: [],
+  });
+
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+  expect(resolverContext.agentContext.userId).toBe('user_456');
+});
+
+test('callAgent passes null userId when no user session', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'page1',
+    messages: [],
+  });
+
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+  expect(resolverContext.agentContext.userId).toBeNull();
+});
+
 test('callAgent passes getAgentConfig in resolver context', async () => {
   const mockResolver = jest.fn().mockResolvedValue({ response: {} });
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
@@ -680,6 +807,107 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
   expect(connInstance).toBeDefined();
   // mockCreate is called once for the parent agent, then again for getConnectionForAgent
   expect(mockCreate.mock.calls.length).toBeGreaterThanOrEqual(2);
+});
+
+test('callAgent evaluates operators in agent properties before passing to resolver', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet', instructions: { _test: true } },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'page1',
+    messages: [],
+  });
+
+  // The _test operator resolves to 'test', so instructions should be 'test' not { _test: true }
+  const resolvedAgent = mockResolver.mock.calls[0][0].properties.agent;
+  expect(resolvedAgent.properties.instructions).toBe('test');
+});
+
+test('callAgent provides agentContext as payload for operator evaluation', async () => {
+  let capturedPayload;
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet', instructions: { _payload: 'pageId' } },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+
+  // Use a custom _payload operator that captures and resolves the payload
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    operators: {
+      _payload: ({ params, payload }) => {
+        capturedPayload = payload;
+        if (typeof params === 'string') return payload?.[params];
+        return payload;
+      },
+    },
+    session: { user: { sub: 'user_xyz' } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'principle-view',
+    messages: [],
+    conversationId: 'conv_abc',
+    urlQuery: { principle_id: 'P3' },
+  });
+
+  expect(capturedPayload).toEqual({
+    conversationId: 'conv_abc',
+    pageId: 'principle-view',
+    sharedState: {},
+    urlQuery: { principle_id: 'P3' },
+    userId: 'user_xyz',
+  });
+
+  const resolvedAgent = mockResolver.mock.calls[0][0].properties.agent;
+  expect(resolvedAgent.properties.instructions).toBe('principle-view');
 });
 
 test('callAgent passes resolveMcpSources in resolver context', async () => {

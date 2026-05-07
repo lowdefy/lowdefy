@@ -17,12 +17,14 @@
 import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
+import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
 import searchFiles from './fileSystem/searchFiles.js';
 import statFile from './fileSystem/statFile.js';
+import RESERVED_PLATFORM_TOOL_NAMES from './reservedToolNames.js';
 
 // Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
 // properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
@@ -34,6 +36,16 @@ function cleanBuildArtifact(obj) {
       return value;
     })
   );
+}
+
+function assertNotReserved(name, kind) {
+  if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
+    throw new ConfigError(
+      `${kind} "${name}" uses a reserved platform tool name. ` +
+        `Rename it (e.g., to "${name}-app" or "custom-${name}"). ` +
+        `Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`
+    );
+  }
 }
 
 async function buildAgentTools({ agent, context, depth = 0 }) {
@@ -48,6 +60,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // Build endpoint tools
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
+    assertNotReserved(endpointId, 'Endpoint tool');
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
     tools[endpointId] = tool({
@@ -109,16 +122,25 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
     }
   }
 
-  // Merge MCP tools with endpoint tools
+  // Merge MCP tools with endpoint tools.
+  // MCP tool names come from external servers at runtime — on collisions with
+  // reserved platform names or existing endpoint tools we warn + skip rather
+  // than fail, since the names aren't under app control.
   for (const { client, source } of mcpClients) {
     try {
       const mcpTools = await client.tools();
       for (const [name, mcpTool] of Object.entries(mcpTools)) {
+        if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
+          console.warn(
+            `MCP tool "${name}" from ${source.url ?? source.command} ` +
+              `uses a reserved platform tool name — skipped.`
+          );
+          continue;
+        }
         if (tools[name]) {
           console.warn(
-            `MCP tool "${name}" from ${
-              source.url ?? source.command
-            } conflicts with endpoint tool — skipped.`
+            `MCP tool "${name}" from ${source.url ?? source.command} ` +
+              `conflicts with endpoint tool — skipped.`
           );
           continue;
         }
@@ -136,6 +158,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
 
   // Build sub-agent tools
   for (const subAgentRef of agent.agents ?? []) {
+    assertNotReserved(subAgentRef.agentId, 'Sub-agent');
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });

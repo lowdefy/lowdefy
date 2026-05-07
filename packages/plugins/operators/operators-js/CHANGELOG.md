@@ -1,5 +1,133 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 69a59c0: feat(\_js): Pass pre-computed values into `_js` via an `args` object.
+
+  The `_js` operator now accepts an object form `{ fn, args }` alongside the existing string form. Values in `args` are resolved by the parser — using any Lowdefy operator (`_state`, `_request`, `_user`, nested `_js`, etc.) — before the JavaScript function runs, and are injected as the `args` object inside the function body.
+
+  ```yaml
+  _js:
+    fn: |
+      const { products, target } = args;
+      return products
+        .filter((p) => p.category === target)
+        .reduce((a, p) => a + p.price, 0);
+    args:
+      products:
+        _request: get_products.data.products
+      target: smartphones
+  ```
+
+  This lets you precompute or normalize values in YAML and keep the JavaScript body focused on computation, rather than mixing operator lookups into the function. The string form continues to work unchanged, and identical `fn` bodies still share a single compiled function at build time — only `args` varies per call.
+
+- 0d44433: feat(\_string): Add `_string.format` for template-style string interpolation.
+
+  `_string.format` substitutes placeholders in a template string with values, accepting either a positional array form or a named object form. `null`/`undefined` values render as empty strings, which often makes `_if_none` unnecessary.
+
+  ```yaml
+  # Positional placeholders
+  _string.format:
+    - 'Updates ({0})'
+    - _request: get_counts.0.update
+
+  # Named placeholders
+  _string.format:
+    template: 'Updates ({count}) since {date}'
+    on:
+      count:
+        _request: get_counts.0.update
+      date:
+        _date.format:
+          - YYYY-MM-DD
+          - _state: lastSync
+  ```
+
+  Use `{{` / `}}` to include literal braces. Prefer `_string.format` over `_string.concat` for label-style interpolation, and use [`_nunjucks`](/_nunjucks) when you need conditionals, loops, or filters.
+
+### Patch Changes
+
+- 1d18a13: feat(actions): `holdValue` flag on `Request` and `CallAPI` actions.
+
+  `Request` and `CallAPI` actions now accept a `holdValue: true` flag that retains the previous response value while a new call is loading. UI bound to `_request: <id>` or `_api: <endpointId>` keeps showing the previous response instead of flashing to `null` during a refetch. The previous response is also retained if the new call errors — the error is still observable via `_request_details` / `_api`.
+
+  ```yaml
+  - id: refresh_table
+    type: Request
+    params:
+      requestId: my_table_request
+      holdValue: true
+  ```
+
+  The `Request` action's object-form params now also support `{ requestId, holdValue }` and `{ requestIds, holdValue }` shapes alongside the existing `{ all }` shape.
+
+- Updated dependencies [73fa2b9]
+- Updated dependencies [1e964c4]
+  - @lowdefy/operators@5.2.0
+  - @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- af8ef77cb: feat(operators-js): Add `_user.hasRole`, `_user.hasSomeRoles`, and `_user.hasAllRoles` methods to check user roles against the `user.roles` array. `hasRole` takes a single role string; `hasSomeRoles` and `hasAllRoles` take an array of role strings. All return a boolean.
+  - @lowdefy/operators@5.1.0
+  - @lowdefy/helpers@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
+
+  ### Breaking Changes
+
+  - **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+  - **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
+
+### Minor Changes
+
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+- 8b9f926d1: `_menu` operator now returns the `links` array directly instead of the full menu object. Supports dot-path access: `_menu: profile_menu.0.pageId`. `_menu: true` and `{ all: true }` still return the full menus array.
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- e3e922538: feat(operators-js): Add `_math.mod` modulo operator.
+
+  Added `_math.mod` operator for modulo (remainder) calculations. Supports both array and named argument forms: `_math.mod: [10, 3]` or `_math.mod: { dividend: 10, divisor: 3 }`.
+
+- fd8225b7a1: fix(operators-js): The `_date` operator now accepts Date objects as input, in addition to numbers and strings.
+- Updated dependencies [905d5d406]
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/operators@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

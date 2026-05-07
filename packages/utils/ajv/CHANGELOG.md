@@ -1,5 +1,24 @@
 # Change Log
 
+## 5.2.0
+
+### Patch Changes
+
+- @lowdefy/nunjucks@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/nunjucks@5.1.0
+
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [155c0b9724]
+  - @lowdefy/nunjucks@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

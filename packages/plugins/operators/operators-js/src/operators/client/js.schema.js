@@ -17,7 +17,25 @@
 export default {
   type: 'object',
   params: {
-    type: 'string',
-    description: 'Hash identifier of the pre-built JavaScript function to execute.',
+    oneOf: [
+      {
+        type: 'string',
+        description: 'Hash identifier of the pre-built JavaScript function to execute.',
+      },
+      {
+        type: 'object',
+        required: ['fn'],
+        additionalProperties: false,
+        properties: {
+          fn: {
+            type: 'string',
+            description: 'Hash identifier of the pre-built JavaScript function to execute.',
+          },
+          args: {
+            description: 'Pre-resolved values injected into the JavaScript function as `args`.',
+          },
+        },
+      },
+    ],
   },
 };
