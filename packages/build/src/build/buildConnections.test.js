@@ -25,9 +25,6 @@ test('buildConnections no connections', () => {
   expect(res.connections).toBe(undefined);
 });
 
-// Note: "connections not an array" is validated by schema (testSchema.js)
-// buildConnections assumes valid input after schema validation
-
 test('buildConnections', () => {
   const components = {
     connections: [
@@ -56,8 +53,66 @@ test('buildConnections', () => {
   ]);
 });
 
-// Note: Missing id, invalid id type, and missing/invalid type are validated by schema
-// See index.errors.test.js for A2 (missing id), A1 (invalid type)
+test('buildConnections throws when connection is not an object', () => {
+  const components = {
+    connections: [null],
+  };
+  expect(() => buildConnections({ components, context })).toThrow(
+    'Connection should be an object.'
+  );
+});
+
+test('buildConnections throws when connection id is missing', () => {
+  const components = {
+    connections: [
+      {
+        type: 'ConnectionType',
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context })).toThrow('Connection id missing.');
+});
+
+test('buildConnections throws when connection id is not a string', () => {
+  const components = {
+    connections: [
+      {
+        id: true,
+        type: 'ConnectionType',
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context })).toThrow(
+    'Connection id is not a string.'
+  );
+});
+
+test('buildConnections throws when connection type is not defined', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context })).toThrow(
+    'Connection type is not defined at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when connection type is not a string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 123,
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context })).toThrow(
+    'Connection type is not a string at connection "connection1".'
+  );
+});
 
 test('throw on Duplicate ids', () => {
   const components = {

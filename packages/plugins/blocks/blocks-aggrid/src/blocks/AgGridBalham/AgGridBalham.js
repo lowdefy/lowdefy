@@ -23,14 +23,20 @@ import antdStyles from '../../ag-grid-antd.module.css';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridBalham = ({ blockId, events, loading, methods, properties, styles }) => {
+const AgGridBalham = ({ blockId, components, events, loading, methods, properties, styles }) => {
   return (
     <div
       id={blockId}
       className={`ag-theme-balham ${antdStyles.antdTheme}`}
       style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
     >
-      <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
+      <AgGrid
+        components={components}
+        events={events}
+        loading={loading}
+        methods={methods}
+        properties={properties}
+      />
     </div>
   );
 };

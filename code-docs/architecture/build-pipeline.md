@@ -181,7 +181,7 @@ The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ 
    - For `_ref: { module, component/menu }` → `getModuleRefContent()` looks up the export in the resolved manifest
 3. Arrays/objects → walk children in-place, then:
    a. `_var` → `resolveVar()`, re-walk result
-   b. `_module.var` → `resolveModuleVar()`, re-walk result (reads from `ctx.moduleVars`)
+   b. `_module.var` → `resolveModuleVar()` (reads consumer value from `ctx.moduleEntry.consumerVars`, otherwise lazy-resolves the manifest default and caches on `ctx.moduleEntry.resolvedVarCache`)
    c. `_module.*Id` → `resolveModuleIdOperator()` (reads from `ctx.moduleEntry`, validates against exports)
    d. `_build.*` → `evaluateOperators()` with `_build.` prefix
 
@@ -202,10 +202,10 @@ The walker replaces the old multi-pass `recursiveBuild` pipeline (which used 5+ 
 
 **`WalkContext`** carries immutable context through the walk:
 - `child(segment)` — appends to JSON path for stop-path matching
-- `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy); for cross-module refs, switches `moduleVars`, `moduleDependencies`, `moduleEntry`, and `packageRoot` to the target module's values
-- `moduleVars` — module entry vars, propagated through both `child()` and `forRef()` (constant across all nesting depths within a module)
-- `moduleEntry` — the module entry object (carries `id`, `connections` for remapping, `exports` for validation)
+- `forRef()` — creates child context for entering a new file (new vars, fresh refChain Set copy); for cross-module refs, switches `moduleEntry`, `moduleDependencies`, and `packageRoot` to the target module's values
+- `moduleEntry` — the module entry object, propagated through both `child()` and `forRef()` (constant across all nesting depths within a module). Carries `id`, `connections` (remapping), `exports` (validation), `consumerVars` (raw vars passed by the app), `varDefs` (raw manifest declarations including unresolved `default` expressions), and `resolvedVarCache` (lazy resolution cache)
 - `moduleDependencies` — maps abstract dependency names to concrete entry IDs
+- `moduleRoot` — module root directory; used by `resolveRef` to resolve relative `_ref` paths against the module root in every module-context walk. During Phase 1a (when `moduleEntry` is not yet populated) it also signals the walker to preserve `_module.var` for the full-resolve pass instead of throwing
 - Path tracks through ref boundaries, enabling `shouldStop` to match `pages.*.blocks` paths
 
 **`evaluateStaticOperators`** runs once at the end (not per-file) using `evaluateOperators` from `@lowdefy/operators`.

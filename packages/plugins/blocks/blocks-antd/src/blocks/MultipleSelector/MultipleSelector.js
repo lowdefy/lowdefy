@@ -47,7 +47,7 @@ const tagRender = (props, option, methods, components) => {
 const MultipleSelector = ({
   blockId,
   classNames = {},
-  components: { Icon },
+  components: { Icon, ShortcutBadge },
   events,
   loading,
   methods,
@@ -80,13 +80,19 @@ const MultipleSelector = ({
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
+              classNames={{ content: classNames.selector }}
               style={{ width: '100%', ...styles.element }}
+              styles={{ content: styles.selector }}
               disabled={properties.disabled || loading}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               mode="multiple"
               tagRender={
                 properties.renderTags &&
-                ((props) => tagRender(props, uniqueValueOptions[props.value], methods, { Icon }))
+                ((props) =>
+                  tagRender(props, uniqueValueOptions[props.value], methods, {
+                    Icon,
+                    ShortcutBadge,
+                  }))
               }
               maxTagCount={properties.maxTagCount}
               notFoundContent={

@@ -44,6 +44,7 @@ import buildRefs from './build/buildRefs/buildRefs.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
+import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
@@ -100,9 +101,11 @@ async function build(options) {
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    // testSchema emits warnings (not errors) — focused validations in each
+    // build step provide better error messages with full context
     tryBuildStep(testSchema, 'testSchema', { components, context });
 
-    // Schema errors mean structurally invalid data - stop before processing further
+    // Stop if addKeys collected any errors (e.g. invalid ~ignoreBuildChecks)
     logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
@@ -158,6 +161,7 @@ async function build(options) {
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
+    await copyAgentFileSystems({ components, context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

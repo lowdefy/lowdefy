@@ -560,3 +560,134 @@ test('trigger request from event end to end and parse payload', async () => {
     ],
   });
 });
+
+test('callRequests holdValue keeps previous response while loading', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({ lowdefy, pageConfig });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  await context._internal.Requests.callRequest({ requestId: 'req_one', blockId });
+  expect(context.requests.req_one[0].response).toBe(1);
+
+  const promise = context._internal.Requests.callRequests({
+    actionId: 'click',
+    actions,
+    arrayIndices,
+    blockId,
+    event,
+    params: { requestId: 'req_one', holdValue: true },
+  });
+  const snapshot = JSON.parse(JSON.stringify(context.requests));
+  await promise;
+
+  expect(snapshot.req_one[0]).toEqual({
+    actionId: 'click',
+    blockId: 'block_id',
+    holdValue: true,
+    loading: true,
+    payload: {
+      action: null,
+      arrayIndices: null,
+      event: {},
+      sum: 2,
+    },
+    requestId: 'req_one',
+    response: 1,
+  });
+});
+
+test('callRequests holdValue first call has null response', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({ lowdefy, pageConfig });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  const promise = context._internal.Requests.callRequests({
+    actionId: 'click',
+    actions,
+    arrayIndices,
+    blockId,
+    event,
+    params: { requestId: 'req_one', holdValue: true },
+  });
+  const snapshot = JSON.parse(JSON.stringify(context.requests));
+  await promise;
+  expect(snapshot.req_one[0].response).toBe(null);
+  expect(snapshot.req_one[0].holdValue).toBe(true);
+  expect(snapshot.req_one[0].loading).toBe(true);
+});
+
+test('callRequest holdValue retains previous response on error', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({ lowdefy, pageConfig });
+  let call = 0;
+  context._internal.lowdefy._internal.callRequest = jest.fn().mockImplementation(
+    ({ requestId }) =>
+      new Promise((resolve, reject) => {
+        call += 1;
+        if (call === 1) {
+          resolve(mockReqResponses.req_one);
+        } else {
+          reject(new Error('mock error'));
+        }
+      })
+  );
+
+  await context._internal.Requests.callRequest({ requestId: 'req_one', blockId });
+  expect(context.requests.req_one[0].response).toBe(1);
+
+  await expect(
+    context._internal.Requests.callRequests({
+      actionId: 'click',
+      actions,
+      arrayIndices,
+      blockId,
+      event,
+      params: { requestId: 'req_one', holdValue: true },
+    })
+  ).rejects.toThrow('mock error');
+
+  expect(context.requests.req_one[0].response).toBe(1);
+  expect(context.requests.req_one[0].error).toEqual(new Error('mock error'));
+  expect(context.requests.req_one[0].holdValue).toBe(true);
+  expect(context.requests.req_one[0].loading).toBe(false);
+});
+
+test('callRequests holdValue propagates with all: true', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({ lowdefy, pageConfig });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  let snapshot;
+  try {
+    const promise = context._internal.Requests.callRequests({
+      actionId: 'click',
+      actions,
+      arrayIndices,
+      blockId,
+      event,
+      params: { all: true, holdValue: true },
+    });
+    snapshot = JSON.parse(JSON.stringify(context.requests));
+    await promise;
+  } catch (e) {
+    // ignore reject from req_error
+  }
+  expect(snapshot.req_one[0].holdValue).toBe(true);
+  expect(snapshot.req_two[0].holdValue).toBe(true);
+  expect(snapshot.req_error[0].holdValue).toBe(true);
+});
+
+test('callRequests with requestIds array form propagates holdValue', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({ lowdefy, pageConfig });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  const promise = context._internal.Requests.callRequests({
+    actionId: 'click',
+    actions,
+    arrayIndices,
+    blockId,
+    event,
+    params: { requestIds: ['req_one', 'req_two'], holdValue: true },
+  });
+  const snapshot = JSON.parse(JSON.stringify(context.requests));
+  await promise;
+  expect(snapshot.req_one[0].holdValue).toBe(true);
+  expect(snapshot.req_two[0].holdValue).toBe(true);
+});

@@ -14,19 +14,23 @@
   limitations under the License.
 */
 
+import uploadTheme from '../../schemas/uploadTheme.js';
+
 export default {
   category: 'input',
   icons: ['AiOutlineLoading', 'AiOutlineCamera'],
   valueType: 'object',
   cssKeys: {
-    element: 'The upload content area.',
-    icon: 'The icon in the S3UploadPhoto.',
-    title: 'The upload title text.',
+    element: 'The outer block wrapper around the upload card and list.',
+    trigger: 'The antd upload trigger card (.ant-upload-select) — the dashed upload tile.',
+    list: 'The uploaded photos list container.',
+    item: 'Each uploaded photo tile in the list.',
+    icon: 'The icon shown inside the upload trigger card (camera / loading).',
+    title: 'The title text shown below the icon inside the upload trigger card.',
   },
   events: {
     onBeforeUpload: {
-      description:
-        'Triggered before upload starts. If any action throws, the upload is cancelled.',
+      description: 'Triggered before upload starts. If any action throws, the upload is cancelled.',
       event: { file: 'The raw File object selected by the user.' },
     },
     onChange: 'Triggered when the upload state is changing.',
@@ -68,6 +72,33 @@ export default {
         type: 'string',
         description:
           'Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.',
+        docs: {
+          displayType: 'manual',
+          block: {
+            id: 'block_properties_s3PostPolicyRequestId',
+            layout: { _global: 'settings_input_layout' },
+            type: 'Label',
+            required: true,
+            properties: {
+              title: 's3PostPolicyRequestId',
+              span: 8,
+              align: 'right',
+            },
+            blocks: [
+              {
+                id: 'block_properties_s3PostPolicyRequestId_text',
+                type: 'Markdown',
+                style: {
+                  color: '#8c8c8c',
+                },
+                properties: {
+                  content:
+                    'Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.',
+                },
+              },
+            ],
+          },
+        },
       },
       showUploadList: {
         type: 'boolean',
@@ -80,6 +111,7 @@ export default {
         description:
           'Only allow a single file to be uploaded. Only one file can be selected in the prompt.',
       },
+      theme: uploadTheme,
     },
   },
 };

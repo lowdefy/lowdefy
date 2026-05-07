@@ -132,7 +132,7 @@ test('Throw on duplicate request ids', () => {
   );
 });
 
-test('request id contains a "."', () => {
+test('request id contains invalid characters', () => {
   const components = {
     pages: [
       {
@@ -144,7 +144,7 @@ test('request id contains a "."', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request id "my.request" at page "page_1" should not include a period (".").'
+    'Request id "my.request" at page "page_1" contains invalid characters.'
   );
 });
 

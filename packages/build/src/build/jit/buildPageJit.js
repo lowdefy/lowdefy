@@ -106,12 +106,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
 
     // If this is a module page, set up module context
-    let moduleVars = null;
     let moduleDependencies = null;
     let moduleEntry = null;
     if (pageEntry.moduleEntryId) {
       moduleEntry = buildContext.modules[pageEntry.moduleEntryId];
-      moduleVars = moduleEntry?.vars ?? null;
       moduleDependencies = moduleEntry?.moduleDependencies ?? null;
     }
 
@@ -135,7 +133,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         refId: varRefDef.id,
         sourceRefId: null,
         vars: {},
-        moduleVars,
         moduleDependencies,
         moduleEntry: moduleEntry ?? null,
         moduleRoot: moduleEntry?.moduleRoot ?? null,
@@ -176,7 +173,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       refId: refDef.id,
       sourceRefId: null,
       vars: refDef.vars ?? {},
-      moduleVars,
       moduleDependencies,
       moduleEntry: moduleEntry ?? null,
       moduleRoot: moduleEntry?.moduleRoot ?? null,

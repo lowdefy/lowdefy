@@ -20,6 +20,25 @@ theme:
   antd:
     token:
       borderRadius: 6
+    darkToken:
+      colorBgLayout: '#131419'
+      colorBgContainer: '#1a1b22'
+      colorBgElevated: '#252731'
+      colorBorder: '#353743'
+      colorBorderSecondary: '#252731'
+    darkComponents:
+      Layout:
+        bodyBg: '#131419'
+        headerBg: '#0e0f13'
+        siderBg: '#0e0f13'
+        triggerBg: '#1a1b22'
+        triggerColor: '#e4e4e7'
+      Menu:
+        darkItemBg: '#0e0f13'
+        darkSubMenuItemBg: '#0e0f13'
+        darkPopupBg: '#1a1b22'
+        darkItemSelectedBg: '#252731'
+        darkItemHoverBg: '#1a1b22'
 cli:
   disableTelemetry: true
   watchIgnore:

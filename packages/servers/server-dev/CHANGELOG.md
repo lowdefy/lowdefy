@@ -1,5 +1,377 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 0f38c9f: feat: First-class module system for reusable config packages
+
+  Modules are reusable bundles of Lowdefy config — pages, connections, API endpoints, menus, and exposed components — hosted in GitHub repositories or local directories. Apps install modules in `lowdefy.yaml` and configure them through `vars`, replacing the copy-paste-between-projects pattern with a declarative dependency.
+
+  **Module entries (`@lowdefy/build`)**
+
+  - Apps declare entries in the `modules` array of `lowdefy.yaml` with `id`, `source`, and optional `vars`, `connections`, and `dependencies`.
+  - The entry `id` namespaces the module's content and forms the URL prefix for its pages (e.g. `/team-users/users-list`).
+  - Multi-instance: the same module source can be installed multiple times under different entry IDs, each with its own vars and namespace.
+  - GitHub sources (`github:owner/repo[/path]@ref`) are fetched as tarballs and locally cached. Private repos use `GITHUB_TOKEN`, the `gh` CLI, or git credential helpers.
+  - Local sources (`file:./relative/path`) resolve relative to the project root.
+
+  **Module manifest (`module.lowdefy.yaml`)**
+
+  - Declares the module's interface: `name`, `description`, `vars`, `connections`, `pages`, `api`, `components`, `menus`, `dependencies`, `exports`, `plugins`, and `secrets`.
+  - `vars` declarations validate consumer values with `type`, `required`, `default`, and `description`. Consumer values override manifest defaults; omitted values fall back to the declared default.
+  - `exports` declares the module's public interface — the IDs other modules and apps may reference. The build validates cross-module references against exports.
+  - `plugins` declarations are validated against the app's installed plugins with semver compatibility checks.
+  - `secrets` is an allowlist of secrets the module may access; undeclared `_secret` references fail the build. Remapped connections skip the module's secret references for that connection.
+
+  **Module operators**
+
+  - `_module.var` — read manifest-validated vars, including consumer overrides and declared defaults.
+  - `_module.pageId`, `_module.connectionId`, `_module.endpointId` — produce scoped IDs from a module-author's unscoped ID.
+  - `_module.id` — the entry ID of the current module.
+
+  **Auto-scoped IDs**
+
+  Page, connection, API endpoint, and menu item IDs are auto-prefixed with the entry ID. Block and request IDs inherit page scope and are not rewritten.
+
+  **Consuming module resources**
+
+  - Pages and APIs are auto-included and auto-scoped — they appear in the app under the entry-ID prefix.
+  - Components are reusable config fragments included with `_ref: { module, component, vars }`. They can export any config — UI blocks, enum maps, config templates, schema fragments — and accept vars at the call site.
+  - Menus are included with `_ref: { module, menu }`, typically wrapped in a `MenuGroup`.
+
+  **Connection remapping**
+
+  Apps can redirect a module connection to an existing app connection via the entry's `connections` map. The module's connection definition and its declared secrets are skipped — the app connection handles them.
+
+  **Cross-module dependencies**
+
+  Modules can reference each other's pages, components, menus, connections, and APIs via abstract dependencies declared in `module.lowdefy.yaml`.
+
+  - Auto-wiring: when a module entry's `id` matches a declared dependency name, the build wires it automatically.
+  - Explicit wiring: the entry's `dependencies` map overrides auto-wiring and supports multi-instance topologies where each instance points at a different partner.
+  - The build validates every wiring, detects dependency cycles, and reports unmapped or undeclared dependencies with remediation hints.
+
+  **Auth page rules**
+
+  Picomatch glob patterns in auth page rules (e.g. `team-users/*`) for wildcard module page matching.
+
+  **Slashed page IDs (`@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  Server routes support module page IDs containing `/` (e.g. `/team-users/users-list`).
+
+### Patch Changes
+
+- 596fddc: chore(connection-knex): update knex and SQL drivers; replace `sqlite3` with `better-sqlite3`; replace `mysql` with `mysql2`.
+
+  Bumped knex and its dialect drivers, and consolidated onto the actively-maintained drivers — replaced `sqlite3` with `better-sqlite3` and `mysql` with `mysql2`. Subsumes the prior `sqlite3@5.1.7` darwin-arm64 fix.
+
+  `@lowdefy/connection-knex` dependency changes:
+
+  - `knex` `2.5.1` → `3.2.9`. Knex 3.x drops Node < 16; Lowdefy already requires Node 18+. The `knex(config)`, `.raw()`, and dynamic query-builder API surface used by `KnexRaw` / `KnexBuilder` is unchanged.
+  - `pg` `8.11.3` → `8.20.0`.
+  - **Removed** `mssql`. Knex's `mssql` dialect actually requires `tedious` (not the `mssql` package), and Lowdefy never imported `mssql` directly — it was only ever a vehicle for pulling tedious into the install tree. `client: mssql` in user YAML is unchanged: the knex client name stays the same, only the underlying npm package shipped with `connection-knex` changes.
+  - **Added** `tedious` `19.2.1` as the SQL Server driver — the package knex actually loads when `client: mssql` is used.
+  - **Removed** `sqlite3`. The driver is in maintenance-only mode upstream (the v6 release marked the repo unmaintained).
+  - **Added** `better-sqlite3` `12.9.0` as the SQLite driver. Selectable as `client: better-sqlite3` (or `client: sqlite`, which is now an alias of `better-sqlite3` — see runtime client handling below).
+  - **Removed** `mysql`. Unmaintained upstream since 2020.
+  - **Added** `mysql2` `3.22.3` as the MySQL / MariaDB driver. Selectable as `client: mysql2` in connection YAML.
+
+  Runtime client handling (in `createKnex`):
+
+  - `client: sqlite` is silently remapped to `client: better-sqlite3`. `sqlite` was historically a knex-level alias of `sqlite3`; this preserves the YAML alias while the underlying driver changes.
+  - `client: sqlite3` now throws a `ConfigError` with a migration message: `Knex connection "client: sqlite3" is no longer supported. Use "client: better-sqlite3" or "client: sqlite" instead.` Existing apps using `client: sqlite3` need to update their connection YAML.
+  - `client: mysql` now throws a `ConfigError` with a migration message: `Knex connection "client: mysql" is no longer supported. Use "client: mysql2" instead.` Existing apps using `client: mysql` need to update their connection YAML. `mysql` is **not** silently remapped because knex treats `mysql` and `mysql2` as separate dialects with subtly different SQL formatters, not aliases — the migration is a deliberate user choice.
+
+  `pnpm.onlyBuiltDependencies` allowlist for `better-sqlite3`:
+
+  `better-sqlite3` runs a native-binding install script (`prebuild-install` with a `node-gyp rebuild` fallback). pnpm 10 silently suppresses postinstall scripts for unapproved packages, which leaves the binding unbuilt and crashes `KnexRaw` / `KnexBuilder` at runtime.
+
+  - Added `better-sqlite3` to the allowlist on `@lowdefy/server`, `@lowdefy/server-dev`, and `@lowdefy/server-e2e`. These are the install roots in the CLI fetch flow under `.lowdefy/{dev,build}/`, where pnpm honors the per-package `pnpm.onlyBuiltDependencies` field.
+  - Also added the same allowlist to the monorepo root `package.json`. The per-package field is ignored at workspace-root install (pnpm 10 only honors it on the install root), so contributors running `pnpm install` at the repo root would otherwise have to `pnpm rebuild better-sqlite3` manually.
+
+- 762755c: feat(blocks-tiptap): Add new default block package with `TiptapInput` and `TiptapMentionInput` rich-text editors.
+
+  `@lowdefy/blocks-tiptap` ships two rich-text editor blocks built on [TipTap](https://tiptap.dev):
+
+  - **`TiptapInput`** — standard rich-text editor with bold/italic/strike-through, multi-color highlight, headings, lists, tables, links, and a bubble menu.
+  - **`TiptapMentionInput`** — everything `TiptapInput` does, plus an @-mention dropdown populated from a static options list or a Lowdefy request. Resolved mentions are returned on the block value as `mentions: [...]`.
+
+  Both blocks emit an object value shaped `{ html, text, markdown, fileList, mentions? }` and register `clear`, `setContent`, and `focus` methods.
+
+  **Configurable extensions** — defaults preserve the bundled editor; override any of these to trim the editor down or tune it:
+
+  - `properties.starterKit` — object forwarded to TipTap [StarterKit](https://tiptap.dev/docs/editor/extensions/functionality/starterkit), e.g. `{ heading: false, codeBlock: false }`.
+  - `properties.image` — `{ enabled, maxWidth, zoom }`
+  - `properties.table` — `{ enabled, resizable }`
+  - `properties.link` — `{ enabled, autolink, linkOnPaste, openOnClick, defaultProtocol }`
+  - `properties.highlight` — `{ enabled, multicolor }`
+  - `properties.mentions.char` / `properties.mentions.allowSpaces` — change the trigger char (e.g. `#` for hashtags) or disable spaces inside a mention query (`TiptapMentionInput` only).
+
+  Image drag/drop and paste are supported by pointing `properties.s3PostPolicyRequestId` at a request that returns an S3 presigned POST policy (e.g. `AwsS3PresignedPostPolicy`). The file handler is optional — omit the request id to disable uploads entirely.
+
+  The blocks are registered in the default types map and are available out of the box on `@lowdefy/server-dev`. No private-registry tokens are required: the blocks use the open-source [`@tiptap/extension-file-handler`](https://www.npmjs.com/package/@tiptap/extension-file-handler) instead of `@tiptap-pro/extension-file-handler`, so projects that migrated from a custom TipTap plugin can drop their `TIPTAP_PRO_TOKEN` environment variable and `.npmrc` scoped-registry config.
+
+- Updated dependencies [1d18a13]
+- Updated dependencies [01e249b]
+- Updated dependencies [762755c]
+- Updated dependencies [73fa2b9]
+- Updated dependencies [69a59c0]
+- Updated dependencies [6ec2cd9]
+- Updated dependencies [0d44433]
+- Updated dependencies [fd1604f]
+- Updated dependencies [186a57d]
+- Updated dependencies [a4ecee5]
+- Updated dependencies [d105b81]
+- Updated dependencies [6ec0dd4]
+- Updated dependencies [e3fc007]
+- Updated dependencies [cea34ac]
+- Updated dependencies [0f38c9f]
+- Updated dependencies [c91003d]
+- Updated dependencies [72b6159]
+  - @lowdefy/actions-core@5.2.0
+  - @lowdefy/engine@5.2.0
+  - @lowdefy/operators-js@5.2.0
+  - @lowdefy/blocks-antd@5.2.0
+  - @lowdefy/client@5.2.0
+  - @lowdefy/blocks-tiptap@5.2.0
+  - @lowdefy/build@5.2.0
+  - @lowdefy/api@5.2.0
+  - @lowdefy/blocks-aggrid@5.2.0
+  - @lowdefy/logger@5.2.0
+  - @lowdefy/blocks-loaders@5.2.0
+  - @lowdefy/operators-change-case@5.2.0
+  - @lowdefy/operators-dayjs@5.2.0
+  - @lowdefy/operators-diff@5.2.0
+  - @lowdefy/operators-mql@5.2.0
+  - @lowdefy/operators-nunjucks@5.2.0
+  - @lowdefy/operators-uuid@5.2.0
+  - @lowdefy/operators-yaml@5.2.0
+  - @lowdefy/layout@5.2.0
+  - @lowdefy/blocks-basic@5.2.0
+  - @lowdefy/blocks-echarts@5.2.0
+  - @lowdefy/blocks-markdown@5.2.0
+  - @lowdefy/connection-axios-http@5.2.0
+  - @lowdefy/plugin-next-auth@5.2.0
+  - @lowdefy/block-utils@5.2.0
+  - @lowdefy/errors@5.2.0
+  - @lowdefy/helpers@5.2.0
+  - @lowdefy/node-utils@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- 081d79634: feat(client): Per-mode theme tokens for dark/light customization.
+
+  `theme.antd` now accepts four new sibling keys so apps can soften base surfaces without juggling two theme files. Each is merged on top of the shared equivalent only when the matching mode is active:
+
+  - `lightToken` / `darkToken` — override antd design tokens (e.g. `colorBgLayout`, `colorBgContainer`, `colorBgElevated`) per mode.
+  - `lightComponents` / `darkComponents` — override component-level tokens per mode (e.g. `Layout.siderBg`, `Layout.headerBg`, `Menu.darkItemBg`) that aren't reachable via seed tokens.
+
+  The `<html>` pre-hydration inline script now reads `darkToken.colorBgLayout` / `lightToken.colorBgLayout` from the built theme, so the first paint matches your configured surface color with no flash of `#000` or `#fff`.
+
+  ```yaml
+  theme:
+    antd:
+      token:
+        colorPrimary: '#6366f1'
+      darkToken:
+        colorBgLayout: '#131419'
+        colorBgContainer: '#1a1b22'
+      darkComponents:
+        Layout:
+          headerBg: '#0e0f13'
+          siderBg: '#0e0f13'
+        Menu:
+          darkItemBg: '#0e0f13'
+          darkItemSelectedBg: '#252731'
+    darkMode: system
+  ```
+
+  Backwards compatible — apps that only use `theme.antd.token` keep antd's default base colors (dark `#000`, light browser-default).
+
+- f56a47d87: fix(server): Prevent white flash on page navigation in dark mode.
+
+  Pages no longer flash white when navigating between pages in dark mode. A synchronous inline script now sets the correct background color before the page paints, matching the user's dark mode preference from config, localStorage, or system settings.
+
+- c6f45a1ac: fix(server): Escape theme values embedded in the pre-hydration inline script.
+
+  `_document.js` interpolates `configColorMode`, `darkToken.colorBgLayout`, and `lightToken.colorBgLayout` from `theme.json` into a synchronous `<script>` block to set the `<html>` background before hydration. Previously the values went through `JSON.stringify` only — enough to escape JS-string-context characters, but not enough to prevent a value containing `</script>` (or U+2028 / U+2029 line separators) from breaking out of the enclosing `<script>` tag.
+
+  Added a `safeScriptJson` helper that additionally escapes `<`, `>`, control chars, and U+2028 / U+2029 to `\uXXXX` sequences after `JSON.stringify`. For every valid color value (`#1e293b`, `rgb(...)`, `slategray`, `oklch(...)`, etc.) the output is byte-identical to the previous behavior; only payloads that would have tripped `<script>` breakout or JS-line-terminator injection are now neutralized.
+
+  Closes the six `js/bad-code-sanitization` CodeQL alerts (89 – 94) opened against the per-mode-theme PR.
+
+- Updated dependencies [b2a2a981d]
+- Updated dependencies [72625593e]
+- Updated dependencies [95388a581]
+- Updated dependencies [573b90369]
+- Updated dependencies [be367bebd]
+- Updated dependencies [b1e0c9944]
+- Updated dependencies [447f8ce57]
+- Updated dependencies [36a2d1bca]
+- Updated dependencies [081d79634]
+- Updated dependencies [72fbd4bab]
+- Updated dependencies [a7f2480b4]
+- Updated dependencies [797ab5b2d]
+- Updated dependencies [f56a47d87]
+- Updated dependencies [6c6aab961]
+- Updated dependencies [af8ef77cb]
+  - @lowdefy/blocks-aggrid@5.1.0
+  - @lowdefy/blocks-antd@5.1.0
+  - @lowdefy/client@5.1.0
+  - @lowdefy/build@5.1.0
+  - @lowdefy/operators-js@5.1.0
+  - @lowdefy/engine@5.1.0
+  - @lowdefy/api@5.1.0
+  - @lowdefy/layout@5.1.0
+  - @lowdefy/actions-core@5.1.0
+  - @lowdefy/blocks-basic@5.1.0
+  - @lowdefy/blocks-echarts@5.1.0
+  - @lowdefy/blocks-loaders@5.1.0
+  - @lowdefy/blocks-markdown@5.1.0
+  - @lowdefy/connection-axios-http@5.1.0
+  - @lowdefy/operators-change-case@5.1.0
+  - @lowdefy/operators-dayjs@5.1.0
+  - @lowdefy/operators-diff@5.1.0
+  - @lowdefy/operators-mql@5.1.0
+  - @lowdefy/operators-nunjucks@5.1.0
+  - @lowdefy/operators-uuid@5.1.0
+  - @lowdefy/operators-yaml@5.1.0
+  - @lowdefy/plugin-next-auth@5.1.0
+  - @lowdefy/block-utils@5.1.0
+  - @lowdefy/errors@5.1.0
+  - @lowdefy/helpers@5.1.0
+  - @lowdefy/logger@5.1.0
+  - @lowdefy/node-utils@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- 29eb199c7f: Restructure block metadata from component static properties to dedicated `meta.js` files.
+
+  ### Breaking Changes
+
+  - **`schema.js` renamed to `meta.js`**: Block definitions moved from `schema.js` to `meta.js`. The `meta.js` files export `category`, `icons`, `valueType`, `cssKeys`, `events`, and `properties` (JSON Schema).
+  - **`schemas.js` barrel renamed to `metas.js`**: Block packages export `./metas` instead of `./schemas`.
+  - **`.meta` removed from components**: Block components no longer have a `.meta` static property. Metadata is loaded from the `blockMetas.json` build artifact at runtime.
+  - **`blockMetas.json` build artifact**: The build pipeline writes `plugins/blockMetas.json` containing category, valueType, and initValue for each block type.
+  - **`buildBlockSchema(meta)`**: New function in `@lowdefy/block-utils` generates complete JSON Schema from meta objects with operator support and CSS slot key validation.
+
+- f430f02dde: Upgrade Next.js to 16 with Turbopack.
+
+  ### Breaking Changes
+
+  - **Next.js 16**: Both production and development servers run on Next.js 16 with Turbopack as the default bundler.
+  - **Less removed**: `next-with-less` wrapper is removed. Styling uses CSS Modules and antd CSS-in-JS.
+  - **SWC 1.15.18**: Updated SWC compiler.
+  - **Dynamic transpilePackages**: Server resolves block packages for transpilation from a build artifact, supporting custom block plugins with CSS imports.
+  - **antd as direct server dependency**: Both server packages list `antd` and `@ant-design/cssinjs` as direct dependencies for pnpm strict mode compatibility.
+
+### Minor Changes
+
+- f430f02dde: Add ErrorBar component to the development server that displays build errors and warnings in a fixed bottom bar. Build warnings now propagate from the build pipeline to the browser for immediate developer feedback.
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+- f430f02dde: Extract Tailwind utility classes from block properties for CSS generation. All string values in block properties (HTML content, markdown, class names) are scanned at build time and written to per-page content files so Tailwind v4's Oxide engine generates CSS for all used utilities. Content files are regenerated on each JIT rebuild for hot reload.
+
+  Block plugin source files are resolved using `require.resolve` to follow pnpm symlinks correctly. The server package includes `postcss.config.js` so Tailwind compiles in production builds.
+
+- f430f02dde: Add theme token system. Use `_theme` operator to access Ant Design v6 design tokens (colors, spacing, typography) at runtime. Theme is configured via `theme.antd.token` and `theme.antd.algorithm` in `lowdefy.yaml`. The `_theme` operator resolves the full computed token set including antd defaults.
+
+### Patch Changes
+
+- Updated dependencies [45964f1506]
+- Updated dependencies [52ea769811]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [29eb199c7f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [155c0b9724]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [0fe1bc38dd]
+- Updated dependencies [130a569d36]
+- Updated dependencies [e3e922538]
+- Updated dependencies [c3b5b45ec5]
+- Updated dependencies [c8f4a41063]
+- Updated dependencies [fd8225b7a1]
+- Updated dependencies [43528a8b9]
+- Updated dependencies [905d5d406]
+- Updated dependencies [c1b5ddb33a]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [8b9f926d1]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [c570982e0f]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+- Updated dependencies [f430f02dde]
+  - @lowdefy/blocks-aggrid@5.0.0
+  - @lowdefy/blocks-basic@5.0.0
+  - @lowdefy/blocks-antd@5.0.0
+  - @lowdefy/build@5.0.0
+  - @lowdefy/engine@5.0.0
+  - @lowdefy/client@5.0.0
+  - @lowdefy/layout@5.0.0
+  - @lowdefy/block-utils@5.0.0
+  - @lowdefy/blocks-loaders@5.0.0
+  - @lowdefy/blocks-echarts@5.0.0
+  - @lowdefy/blocks-markdown@5.0.0
+  - @lowdefy/operators-dayjs@5.0.0
+  - @lowdefy/operators-js@5.0.0
+  - @lowdefy/actions-core@5.0.0
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/connection-axios-http@5.0.0
+  - @lowdefy/operators-mql@5.0.0
+  - @lowdefy/operators-nunjucks@5.0.0
+  - @lowdefy/operators-uuid@5.0.0
+  - @lowdefy/operators-yaml@5.0.0
+  - @lowdefy/operators-change-case@5.0.0
+  - @lowdefy/operators-diff@5.0.0
+  - @lowdefy/plugin-next-auth@5.0.0
+  - @lowdefy/node-utils@5.0.0
+  - @lowdefy/api@5.0.0
+  - @lowdefy/logger@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['AiOutlineCloseCircle'],
   valueType: null,
   cssKeys: {
     element: 'The Icon element.',

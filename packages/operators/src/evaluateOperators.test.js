@@ -285,6 +285,59 @@ test('dynamic method is not evaluated and marked', () => {
   expect(res.output.a['~dyn']).toBe(true);
 });
 
+test('operator result object inherits ~r and ~l from expression', () => {
+  const input = { a: { _echo: { value: 1 } } };
+  input.a['~r'] = 'ref-abc';
+  input.a['~l'] = 10;
+  const res = evaluateOperators({ input, operators: mockOperators });
+  expect(res.output.a).toEqual({ value: 1 });
+  expect(res.output.a['~r']).toBe('ref-abc');
+  expect(res.output.a['~l']).toBe(10);
+});
+
+test('operator result array inherits ~r and ~l from expression', () => {
+  const _concat = jest.fn(({ params }) => params.flat());
+  const ops = { ...mockOperators, _concat };
+  const input = { blocks: { _concat: [[1], [2, 3]] } };
+  input.blocks['~r'] = 'ref-xyz';
+  input.blocks['~l'] = 25;
+  const res = evaluateOperators({ input, operators: ops });
+  expect(res.output.blocks).toEqual([1, 2, 3]);
+  expect(res.output.blocks['~r']).toBe('ref-xyz');
+  expect(res.output.blocks['~l']).toBe(25);
+});
+
+test('operator result does not overwrite existing ~r on result', () => {
+  const _echo = jest.fn(({ params }) => {
+    const result = { ...params };
+    result['~r'] = 'result-ref';
+    return result;
+  });
+  const ops = { _echo };
+  const input = { a: { _echo: { value: 1 } } };
+  input.a['~r'] = 'expression-ref';
+  input.a['~l'] = 5;
+  const res = evaluateOperators({ input, operators: ops });
+  expect(res.output.a['~r']).toBe('result-ref');
+});
+
+test('operator returning primitive does not receive markers', () => {
+  const input = { result: { _sum: [1, 2] } };
+  input.result['~r'] = 'ref-prim';
+  input.result['~l'] = 7;
+  const res = evaluateOperators({ input, operators: mockOperators });
+  expect(res.output.result).toBe(3);
+});
+
+test('operator returning null does not receive markers', () => {
+  const _null = jest.fn(() => null);
+  const ops = { ...mockOperators, _null };
+  const input = { a: { _null: true } };
+  input.a['~r'] = 'ref-null';
+  const res = evaluateOperators({ input, operators: ops });
+  expect(res.output.a).toBeNull();
+});
+
 test('nested type boundaries each reset independently', () => {
   const _state = jest.fn(() => 'state');
   const ops = { _state };

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-aggrid",
-  "version": "4.7.3",
+  "version": "5.2.0",
   "license": "Apache-2.0",
   "description": "AgGrid Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -52,19 +52,24 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "30.2.0",
-    "@ag-grid-community/core": "30.2.0",
-    "@ag-grid-community/csv-export": "30.2.0",
-    "@ag-grid-community/react": "30.2.0",
-    "@ag-grid-community/styles": "30.2.0",
-    "@lowdefy/block-utils": "4.7.3",
-    "@lowdefy/helpers": "4.7.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "@ag-grid-community/client-side-row-model": "32.3.9",
+    "@ag-grid-community/core": "32.3.9",
+    "@ag-grid-community/csv-export": "32.3.9",
+    "@ag-grid-community/react": "32.3.9",
+    "@ag-grid-community/styles": "32.3.9",
+    "@lowdefy/block-utils": "5.2.0",
+    "@lowdefy/helpers": "5.2.0"
+  },
+  "peerDependencies": {
+    "@ant-design/icons": ">=6",
+    "antd": ">=6",
+    "dayjs": ">=1.11",
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "4.7.3",
-    "@lowdefy/e2e-utils": "4.7.3",
+    "@lowdefy/block-dev-e2e": "5.2.0",
+    "@lowdefy/e2e-utils": "5.2.0",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",

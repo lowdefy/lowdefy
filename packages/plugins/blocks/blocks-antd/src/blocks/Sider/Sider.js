@@ -19,6 +19,8 @@ import { get } from '@lowdefy/helpers';
 import { Layout } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
+import { getDarkMode } from '../headerActions.js';
+
 const Sider = Layout.Sider;
 
 const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
@@ -41,6 +43,12 @@ const SiderBlock = ({
   styles = {},
 }) => {
   const [openState, setOpen] = useState(!properties.initialCollapsed);
+  // Sync internal state when the parent (e.g. PageSidebarLayout) changes
+  // `initialCollapsed` after mount — typically because a hydration-time read
+  // from localStorage restored a value different from the SSR default.
+  useEffect(() => {
+    setOpen(!properties.initialCollapsed);
+  }, [properties.initialCollapsed]);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
       triggerSetOpen({ state: !openState, setOpen, methods, rename })
@@ -58,6 +66,7 @@ const SiderBlock = ({
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
+      theme={properties.theme ?? (getDarkMode() ? 'dark' : 'light')}
       style={{
         overflow: 'auto',
         background: 'var(--ant-color-bg-container)',

@@ -60,7 +60,9 @@ const Selector = ({
               id={`${blockId}_input`}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
+              classNames={{ content: classNames.selector }}
               style={{ width: '100%', ...styles.element }}
+              styles={{ content: styles.selector }}
               mode="single"
               autoFocus={properties.autoFocus}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}

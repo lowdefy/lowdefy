@@ -26,7 +26,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
 
   // Fire onMessageComplete when streaming finishes
   useEffect(() => {
-    if (prevStatusRef.current === 'streaming' && status === 'idle') {
+    if (prevStatusRef.current === 'streaming' && (status === 'ready' || status === 'idle')) {
       const lastAssistantMessage = [...messages].reverse().find((m) => m.role === 'assistant');
       if (lastAssistantMessage) {
         const textContent = lastAssistantMessage.parts

@@ -30,6 +30,27 @@ import MobileMenu from '../MobileMenu/MobileMenu.js';
 import Sider from '../Sider/Sider.js';
 import { getDarkMode, renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
 
+function getInitialSiderState({ properties }) {
+  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+  try {
+    const stored = localStorage.getItem(storageKey);
+    if (stored === 'true') return true;
+    if (stored === 'false') return false;
+  } catch {
+    // localStorage unavailable (SSR, privacy mode)
+  }
+  return !properties.sider?.initialCollapsed;
+}
+
+function writeSiderState({ properties, open }) {
+  const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
+  try {
+    localStorage.setItem(storageKey, String(open));
+  } catch {
+    // localStorage unavailable
+  }
+}
+
 const PageSiderMenu = ({
   basePath,
   blockId,
@@ -43,16 +64,19 @@ const PageSiderMenu = ({
   properties,
   styles = {},
 }) => {
-  const [openSiderState, setSiderOpen] = useState(true);
+  const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
   useEffect(() => {
     registerDarkModeMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {
-      methods._toggleSiderOpen({ open: !openSiderState });
-      setSiderOpen(!openSiderState);
+      const next = !openSiderState;
+      methods._setSiderOpen({ open: next });
+      setSiderOpen(next);
+      writeSiderState({ properties, open: next });
     });
     methods.registerMethod('setSiderOpen', ({ open }) => {
-      methods._toggleSiderOpen({ open });
+      methods._setSiderOpen({ open });
       setSiderOpen(open);
+      writeSiderState({ properties, open });
     });
   });
 
@@ -78,6 +102,7 @@ const PageSiderMenu = ({
                   {
                     background: 'var(--ant-color-bg-container)',
                     flexDirection: 'row-reverse',
+                    borderBottom: '1px solid var(--ant-color-border)',
                   },
                   styles.header,
                 ]),
@@ -173,9 +198,17 @@ const PageSiderMenu = ({
                       components={{ Icon, Link, ShortcutBadge }}
                       events={events}
                       methods={methods}
-                      properties={properties.sider ?? {}}
+                      properties={{
+                        ...(properties.sider ?? {}),
+                        initialCollapsed: !openSiderState,
+                      }}
                       classNames={{ element: classNames.sider ?? 'hidden lg:block' }}
-                      styles={{ element: styles.sider }}
+                      styles={{
+                        element: mergeObjects([
+                          { borderInlineEnd: '1px solid var(--ant-color-border)' },
+                          styles.sider,
+                        ]),
+                      }}
                       rename={{
                         methods: {
                           toggleOpen: '_toggleSiderOpen',

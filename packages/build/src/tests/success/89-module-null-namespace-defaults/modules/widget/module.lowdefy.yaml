@@ -1,0 +1,20 @@
+name: Widget
+
+vars:
+  components:
+    type: object
+    properties:
+      extra_fields:
+        default: []
+      show_header:
+        type: boolean
+        default: true
+      custom_field:
+        type: string
+        default: default_value
+      detail:
+        default:
+          _ref: defaults/detail.yaml
+
+pages:
+  - _ref: pages/main.yaml

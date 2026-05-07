@@ -159,4 +159,30 @@ test.describe('AgGridAlpine Block', () => {
     const rows = getRows(page, 'aggridalpine_filterable');
     await expect(rows).toHaveCount(1);
   });
+
+  // ============================================
+  // BUILT-IN CELL RENDERERS — cross-theme smoke
+  // ============================================
+
+  test('cell.type: tag renders on Alpine with color-mix styling', async ({ page }) => {
+    const block = getBlock(page, 'aggridalpine_cell_types');
+    const tag = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
+    await expect(tag).toHaveText('Active');
+    const style = await tag.getAttribute('style');
+    expect(style).toContain('color-mix');
+  });
+
+  test('cell.type: avatar renders initials on Alpine', async ({ page }) => {
+    const block = getBlock(page, 'aggridalpine_cell_types');
+    const avatarRow = block.locator('.ag-row[row-index="0"]');
+    await expect(avatarRow).toContainText('AJ');
+    await expect(avatarRow).toContainText('Alice Johnson');
+  });
+
+  test('cell.type: number right-aligns on Alpine', async ({ page }) => {
+    const block = getBlock(page, 'aggridalpine_cell_types');
+    const revenueCell = block.locator('.ag-row[row-index="0"] .ag-cell').nth(2);
+    const style = await revenueCell.getAttribute('style');
+    expect(style).toContain('justify-content: flex-end');
+  });
 });

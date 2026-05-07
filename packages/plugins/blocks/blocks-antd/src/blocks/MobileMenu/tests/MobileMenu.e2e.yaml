@@ -264,3 +264,51 @@ blocks:
               - 'Clicked: '
               - _state: mm_targeting_clicked_key
           else: ''
+
+  # ============================================
+  # LOGO TESTS
+  # ============================================
+
+  - id: mm_with_logo
+    type: MobileMenu
+    properties:
+      theme: light
+      logo:
+        src: /test-logo.png
+        alt: Test Logo
+      links:
+        - id: mm_logo_link1
+          type: MenuLink
+          properties:
+            title: Home
+        - id: mm_logo_link2
+          type: MenuLink
+          properties:
+            title: About
+
+  # ============================================
+  # DRAWER CONTENT AND FOOTER SLOT TESTS
+  # ============================================
+
+  - id: mm_with_slots
+    type: MobileMenu
+    properties:
+      theme: light
+      links:
+        - id: mm_slot_link1
+          type: MenuLink
+          properties:
+            title: Item 1
+    slots:
+      drawerContent:
+        blocks:
+          - id: mm_drawer_content_text
+            type: Span
+            properties:
+              content: Drawer Content Below Menu
+      drawerFooter:
+        blocks:
+          - id: mm_drawer_footer_text
+            type: Span
+            properties:
+              content: Drawer Footer Text

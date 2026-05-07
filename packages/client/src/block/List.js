@@ -17,6 +17,7 @@
 import React from 'react';
 import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn } from '@lowdefy/block-utils';
+import { get } from '@lowdefy/helpers';
 
 import Block from './Block.js';
 import resolveClassNames from './resolveClassNames.js';
@@ -27,6 +28,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const contentList = [];
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
+      if (SBlock.slots[slotKey].blocks.length === 0) return;
       content[slotKey] = (contentStyle) => (
         <Area
           area={block.eval.slots[slotKey]}
@@ -77,6 +79,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         events={block.eval.events ?? {}}
         key={block.blockId}
         list={contentList}
+        value={get(context.state, block.blockId) ?? []}
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}

@@ -408,16 +408,16 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
 
 **Available Check Slugs:**
 
-| Slug              | Description                                 |
-| ----------------- | ------------------------------------------- |
-| `state-refs`      | Undefined `_state` reference warnings       |
-| `payload-refs`    | Undefined `_payload` reference warnings     |
-| `step-refs`       | Undefined `_step` reference warnings        |
-| `link-refs`       | Invalid Link action page reference warnings |
-| `request-refs`    | Invalid Request action reference warnings   |
-| `connection-refs` | Nonexistent connection ID references        |
-| `types`           | All type validation                         |
-| `schema`          | JSON schema validation errors               |
+| Slug              | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| `state-refs`      | Undefined `_state` reference warnings          |
+| `payload-refs`    | Undefined `_payload` reference warnings        |
+| `step-refs`       | Undefined `_step` reference warnings           |
+| `link-refs`       | Invalid Link action page reference warnings    |
+| `request-refs`    | Invalid Request action reference warnings      |
+| `connection-refs` | Nonexistent connection ID references           |
+| `types`           | All type validation                            |
+| `schema`          | JSON schema validation warnings (non-blocking) |
 
 **Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings.
 

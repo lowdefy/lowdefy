@@ -35,7 +35,6 @@ class WalkContext {
     refId,
     sourceRefId,
     vars,
-    moduleVars,
     moduleDependencies,
     moduleEntry,
     moduleRoot,
@@ -52,7 +51,6 @@ class WalkContext {
     this.refId = refId;
     this.sourceRefId = sourceRefId;
     this.vars = vars;
-    this.moduleVars = moduleVars;
     this.moduleDependencies = moduleDependencies;
     this.moduleEntry = moduleEntry ?? null;
     this.moduleRoot = moduleRoot;
@@ -72,7 +70,6 @@ class WalkContext {
       refId: this.refId,
       sourceRefId: this.sourceRefId,
       vars: this.vars,
-      moduleVars: this.moduleVars,
       moduleDependencies: this.moduleDependencies,
       moduleEntry: this.moduleEntry,
       moduleRoot: this.moduleRoot,
@@ -87,7 +84,7 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleVars, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -102,7 +99,6 @@ class WalkContext {
       refId,
       sourceRefId: this.refId,
       vars: vars ?? {},
-      moduleVars: moduleVars ?? this.moduleVars,
       moduleDependencies: moduleDependencies ?? this.moduleDependencies,
       moduleEntry: moduleEntry ?? this.moduleEntry,
       moduleRoot: moduleRoot ?? this.moduleRoot,
@@ -270,24 +266,101 @@ function resolveVar(node, ctx) {
   });
 }
 
-// Resolve a _module.var node
-function resolveModuleVar(node, ctx) {
-  if (!ctx.moduleVars) {
-    // Not in a module context — pass through unchanged
-    return node;
-  }
-
+// Resolve a _module.var node via lazy resolution against the module entry.
+async function resolveModuleVar(node, ctx) {
   const key = node['_module.var'];
 
-  if (type.isString(key)) {
-    const value = get(ctx.moduleVars, key, { default: null });
-    return cloneVarValue(value, ctx.sourceRefId);
+  if (!type.isString(key)) {
+    throw new ConfigError('_module.var operator takes a string argument.', {
+      filePath: ctx.currentFile,
+    });
   }
 
-  throw new ConfigError(
-    '_module.var operator takes a string argument.',
-    { filePath: ctx.currentFile },
-  );
+  const value = await resolveEffectiveVar(key, ctx.moduleEntry, ctx);
+  return cloneVarValue(value, ctx.sourceRefId);
+}
+
+// Navigate the var definitions tree by dot-path key, following `properties` nesting.
+function getVarDef(varDefs, key) {
+  const parts = key.split('.');
+  let current = varDefs;
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (!current?.[part]) return undefined;
+    if (current[part].properties && i < parts.length - 1) {
+      current = current[part].properties;
+    } else {
+      return current[part];
+    }
+  }
+  return undefined;
+}
+
+// Resolve a raw var default through the walker using a fresh WalkContext rooted
+// at the module manifest. The fresh context prevents false circular-ref detection
+// from the consumer's refChain and ensures _ref paths resolve relative to the
+// module root.
+async function resolveVarDefault(rawDefault, moduleEntry, ctx) {
+  const moduleYamlPath = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
+
+  const defaultCtx = new WalkContext({
+    buildContext: ctx.buildContext,
+    refId: moduleEntry.refDef.id,
+    sourceRefId: null,
+    vars: {},
+    moduleDependencies: moduleEntry.moduleDependencies,
+    moduleEntry,
+    moduleRoot: moduleEntry.moduleRoot,
+    packageRoot: moduleEntry.packageRoot,
+    path: '',
+    currentFile: moduleYamlPath,
+    refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
+    operators: ctx.operators,
+    env: ctx.env,
+    dynamicIdentifiers: ctx.dynamicIdentifiers,
+  });
+
+  return await resolve(rawDefault, defaultCtx);
+}
+
+// Build a merged object for namespace vars (vars with `properties`). Each
+// declared property resolves through resolveEffectiveVar — consumer values
+// take precedence per-leaf; missing leaves fall back to defaults.
+async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
+  const result = {};
+
+  for (const propName of Object.keys(varDef.properties)) {
+    const fullKey = `${prefix}.${propName}`;
+    result[propName] = await resolveEffectiveVar(fullKey, moduleEntry, ctx);
+  }
+
+  return result;
+}
+
+// Core lazy var resolution with caching on the module entry.
+async function resolveEffectiveVar(key, moduleEntry, ctx) {
+  if (Object.hasOwn(moduleEntry.resolvedVarCache, key)) {
+    return moduleEntry.resolvedVarCache[key];
+  }
+
+  const consumerValue = get(moduleEntry.consumerVars, key, { default: undefined });
+  const varDef = getVarDef(moduleEntry.varDefs, key);
+
+  let result;
+
+  if (varDef?.properties) {
+    result = await resolveNamespaceVar(key, varDef, moduleEntry, ctx);
+  } else if (!type.isNone(consumerValue)) {
+    result = consumerValue;
+  } else if (varDef && !type.isUndefined(varDef.default)) {
+    result = await resolveVarDefault(varDef.default, moduleEntry, ctx);
+  } else {
+    result = null;
+  }
+
+  moduleEntry.resolvedVarCache[key] = result;
+  return result;
 }
 
 // Detect _module.*Id operators
@@ -303,34 +376,60 @@ function isModuleIdOperator(node) {
 }
 
 // Resolve _module.pageId
-function resolveModulePageId(arg, moduleEntry, context) {
+function resolveModulePageId(arg, moduleEntry, context, configKey) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.pageId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
     if (!(moduleEntry.exports?.pages ?? []).some((p) => p.id === arg)) {
-      throw new ConfigError(`Module "${moduleEntry.id}" does not export page "${arg}".`);
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export page "${arg}".`, {
+        configKey,
+      });
     }
     return `${moduleEntry.id}/${arg}`;
   }
 
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
-    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.pageId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
     if (!(targetEntry.exports?.pages ?? []).some((p) => p.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references page "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
-          `but that module does not export page "${arg.id}".`
+        `${caller} references page "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export page "${arg.id}".`,
+        { configKey }
       );
     }
     return `${targetEntry.id}/${arg.id}`;
   }
 
-  throw new ConfigError('_module.pageId requires a string or object { id, module }.');
+  throw new ConfigError('_module.pageId requires a string or object { id, module }.', {
+    configKey,
+  });
 }
 
 // Resolve _module.connectionId
-function resolveModuleConnectionId(arg, moduleEntry, context) {
+function resolveModuleConnectionId(arg, moduleEntry, context, configKey) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.connectionId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
     if (!(moduleEntry.exports?.connections ?? []).some((c) => c.id === arg)) {
-      throw new ConfigError(`Module "${moduleEntry.id}" does not export connection "${arg}".`);
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export connection "${arg}".`, {
+        configKey,
+      });
     }
     const remapping = moduleEntry.connections ?? {};
     if (remapping[arg]) {
@@ -340,12 +439,20 @@ function resolveModuleConnectionId(arg, moduleEntry, context) {
   }
 
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
-    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.connectionId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
     if (!(targetEntry.exports?.connections ?? []).some((c) => c.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references connection "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
-          `but that module does not export connection "${arg.id}".`
+        `${caller} references connection "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export connection "${arg.id}".`,
+        { configKey }
       );
     }
     const targetRemapping = targetEntry.connections ?? {};
@@ -355,67 +462,96 @@ function resolveModuleConnectionId(arg, moduleEntry, context) {
     return `${targetEntry.id}/${arg.id}`;
   }
 
-  throw new ConfigError('_module.connectionId requires a string or object { id, module }.');
+  throw new ConfigError('_module.connectionId requires a string or object { id, module }.', {
+    configKey,
+  });
 }
 
 // Resolve _module.endpointId
-function resolveModuleEndpointId(arg, moduleEntry, context) {
+function resolveModuleEndpointId(arg, moduleEntry, context, configKey) {
   if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.endpointId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
     if (!(moduleEntry.exports?.api ?? []).some((e) => e.id === arg)) {
-      throw new ConfigError(`Module "${moduleEntry.id}" does not export endpoint "${arg}".`);
+      throw new ConfigError(`Module "${moduleEntry.id}" does not export endpoint "${arg}".`, {
+        configKey,
+      });
     }
     return `${moduleEntry.id}/${arg}`;
   }
 
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
-    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.endpointId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
     if (!(targetEntry.exports?.api ?? []).some((e) => e.id === arg.id)) {
+      const caller = moduleEntry ? `Module "${moduleEntry.id}"` : 'App config';
       throw new ConfigError(
-        `Module "${moduleEntry.id}" references endpoint "${arg.id}" ` +
-          `from dependency "${arg.module}" (entry "${targetEntry.id}"), ` +
-          `but that module does not export endpoint "${arg.id}".`
+        `${caller} references endpoint "${arg.id}" ` +
+          `from "${arg.module}" (entry "${targetEntry.id}"), ` +
+          `but that module does not export endpoint "${arg.id}".`,
+        { configKey }
       );
     }
     return `${targetEntry.id}/${arg.id}`;
   }
 
-  throw new ConfigError('_module.endpointId requires a string or object { id, module }.');
+  throw new ConfigError('_module.endpointId requires a string or object { id, module }.', {
+    configKey,
+  });
 }
 
 // Resolve _module.id
-function resolveModuleId(arg, moduleEntry, context) {
+function resolveModuleId(arg, moduleEntry, context, configKey) {
   if (!type.isObject(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.id is ambiguous at the app level — no module to scope against. Use { module } to specify the target module.',
+        { configKey }
+      );
+    }
     return moduleEntry.id;
   }
 
   if (type.isString(arg.module)) {
-    const targetEntry = resolveDepTarget({ moduleEntry, depName: arg.module, context });
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.id { module: "${arg.module}" }`,
+    });
     return targetEntry.id;
   }
 
-  throw new ConfigError('_module.id requires a truthy value or object { module }.');
+  throw new ConfigError('_module.id requires a truthy value or object { module }.', { configKey });
 }
 
 // Dispatch _module.*Id operators
 function resolveModuleIdOperator(node, ctx) {
-  if (!ctx.moduleEntry) {
-    return node;
-  }
-
   const { moduleEntry } = ctx;
   const context = ctx.buildContext;
+  const configKey = node['~k'];
 
   if (!type.isUndefined(node['_module.pageId'])) {
-    return resolveModulePageId(node['_module.pageId'], moduleEntry, context);
+    return resolveModulePageId(node['_module.pageId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.connectionId'])) {
-    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, context);
+    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.endpointId'])) {
-    return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context);
+    return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.id'])) {
-    return resolveModuleId(node['_module.id'], moduleEntry, context);
+    return resolveModuleId(node['_module.id'], moduleEntry, context, configKey);
   }
 
   return node;
@@ -492,6 +628,7 @@ async function resolveRef(node, ctx) {
         refDef,
         referencedFrom: ctx.currentFile,
         walkCtx: ctx,
+        configKey: node['~k'],
       });
       content = cloneForResolve(result.content);
       resolvedEntryId = result.entryId;
@@ -533,7 +670,6 @@ async function resolveRef(node, ctx) {
         refId: refDef.id,
         vars: refDef.vars,
         filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
-        moduleVars: moduleEntry.vars,
         moduleRoot: moduleEntry.moduleRoot,
         packageRoot: moduleEntry.packageRoot,
         moduleDependencies: moduleEntry.moduleDependencies,
@@ -667,8 +803,11 @@ async function resolve(node, ctx) {
 
   // 6. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
-    if (!ctx.moduleVars) return node;
-    return resolve(resolveModuleVar(node, ctx), ctx);
+    if (!ctx.moduleEntry) {
+      if (ctx.moduleRoot) return node;
+      throw new ConfigError('_module.var cannot be used at the app level.');
+    }
+    return resolve(await resolveModuleVar(node, ctx), ctx);
   }
 
   // 7. _module.*Id — resolve to scoped ID string

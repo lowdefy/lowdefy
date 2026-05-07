@@ -330,3 +330,36 @@ blocks:
         - Blueberry
         - Cherry
         - Cranberry
+
+  # ============================================
+  # SELECTOR CSSKEY TESTS
+  # ============================================
+
+  - id: ms_selector_style
+    type: MultipleSelector
+    style:
+      .selector:
+        maxHeight: 96px
+        overflowY: auto
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+        - Dragonfruit
+        - Elderberry
+        - Fig
+        - Grape
+        - Honeydew
+        - Kiwi
+        - Lemon
+
+  - id: ms_selector_class
+    type: MultipleSelector
+    class:
+      .selector: ms-selector-tailwind
+    properties:
+      options:
+        - A
+        - B
+        - C

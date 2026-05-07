@@ -1,0 +1,14 @@
+- id: name_field
+  type: TextInput
+  properties:
+    label: Name
+- id: role_display
+  type: Paragraph
+  properties:
+    content:
+      _build.string.concat:
+        - 'Roles: '
+        - _build.array.join:
+            on:
+              _module.var: roles
+            separator: ', '

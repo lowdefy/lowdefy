@@ -1,5 +1,79 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 1d18a13: feat(actions): `holdValue` flag on `Request` and `CallAPI` actions.
+
+  `Request` and `CallAPI` actions now accept a `holdValue: true` flag that retains the previous response value while a new call is loading. UI bound to `_request: <id>` or `_api: <endpointId>` keeps showing the previous response instead of flashing to `null` during a refetch. The previous response is also retained if the new call errors — the error is still observable via `_request_details` / `_api`.
+
+  ```yaml
+  - id: refresh_table
+    type: Request
+    params:
+      requestId: my_table_request
+      holdValue: true
+  ```
+
+  The `Request` action's object-form params now also support `{ requestId, holdValue }` and `{ requestIds, holdValue }` shapes alongside the existing `{ all }` shape.
+
+### Patch Changes
+
+- @lowdefy/errors@5.2.0
+- @lowdefy/helpers@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.1.0
+- @lowdefy/helpers@5.1.0
+
+## 5.0.0
+
+### Major Changes
+
+- f430f02dde: Replace auto-generated `types.json` with source `types.js` files in all plugin packages.
+
+  ### Breaking Changes
+
+  - **Plugin type resolution**: Plugin types are now read from source `types.js` files instead of auto-generated `types.json`. Block packages derive types from their `metas.js` barrel using the `extractBlockTypes` helper.
+  - **`extract-plugin-types` script removed**: The build-time extraction script in `@lowdefy/node-utils` has been deleted. Each plugin package maintains its own `types.js`.
+
+### Minor Changes
+
+- c8f4a41063: Add `theme.darkMode` config with system preference support.
+
+  **System Dark Mode (`theme.darkMode`)**
+
+  - New `theme.darkMode` config key accepts `'system'` (default), `'light'`, or `'dark'`
+  - When set to `'system'`, the app follows the OS dark mode preference and updates live when it changes
+  - When set to `'light'` or `'dark'`, the developer locks the mode — user preferences are stored but not applied
+
+  **SetDarkMode Action**
+
+  - Now accepts string params: `darkMode: 'system' | 'light' | 'dark'`
+  - Without params, cycles through light, dark, and system preferences
+
+  **`_media` Operator**
+
+  - New `_media: darkModePreference` returns the user's preference (`'system'`, `'light'`, or `'dark'`)
+  - `_media: darkMode` continues to return the effective boolean state
+
+  **Dark Mode Rendering**
+
+  - Notification, Message, and ConfirmModal render with correct dark mode colors via `App.useApp()` hooks
+  - Loader blocks (Skeleton, Spinner) use antd design tokens instead of hardcoded colors
+  - 404 page and loading states use theme-aware backgrounds
+  - Mobile menu drawer background matches the active theme
+
+### Patch Changes
+
+- Updated dependencies [905d5d406]
+  - @lowdefy/helpers@5.0.0
+  - @lowdefy/errors@5.0.0
+
 ## 4.7.3
 
 ### Patch Changes

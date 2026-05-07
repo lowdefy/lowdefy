@@ -16,7 +16,18 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx }) {
+function describeRef(refDef) {
+  const parts = [];
+  if (refDef.module) parts.push(`module: "${refDef.module}"`);
+  if (refDef.component) parts.push(`component: "${refDef.component}"`);
+  if (refDef.menu) parts.push(`menu: "${refDef.menu}"`);
+  if (refDef.page) parts.push(`page: "${refDef.page}"`);
+  if (refDef.connection) parts.push(`connection: "${refDef.connection}"`);
+  if (refDef.api) parts.push(`api: "${refDef.api}"`);
+  return `_ref { ${parts.join(', ')} }`;
+}
+
+async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, configKey }) {
   const rawName = refDef.module;
   let entryId;
 
@@ -30,10 +41,11 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx })
 
   if (!moduleEntry) {
     throw new ConfigError(
-      `Module entry "${rawName}" not found.` +
+      `${describeRef(refDef)} references module "${rawName}" but no module with that entry id was registered` +
         (entryId !== rawName
-          ? ` ("${rawName}" was mapped to "${entryId}" via dependency wiring.)`
-          : '')
+          ? ` ("${rawName}" was mapped to "${entryId}" via dependency wiring).`
+          : '.'),
+      { configKey }
     );
   }
 
@@ -50,7 +62,8 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx })
         : '_module.endpointId';
     throw new ConfigError(
       `Cross-module _ref does not support "${refType}". ` +
-        `Use ${operator}: { id: "${refDef[refType]}", module: "${rawName}" } instead.`
+        `Use ${operator}: { id: "${refDef[refType]}", module: "${rawName}" } instead.`,
+      { configKey }
     );
   }
 
@@ -58,9 +71,7 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx })
   const exportType = exportTypes.find((t) => refDef[t]) ?? null;
 
   if (!exportType) {
-    throw new ConfigError(
-      'Module _ref requires "component" or "menu" property.'
-    );
+    throw new ConfigError('Module _ref requires "component" or "menu" property.', { configKey });
   }
 
   const exportName = refDef[exportType];
@@ -79,7 +90,8 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx })
 
   if (!content) {
     throw new ConfigError(
-      `Module "${entryId}" does not export ${exportType} "${exportName}".`
+      `Module "${entryId}" does not export ${exportType} "${exportName}".`,
+      { configKey }
     );
   }
 

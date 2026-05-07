@@ -41,6 +41,7 @@ import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
+import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
@@ -101,7 +102,6 @@ async function shallowBuild(options) {
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
-
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 
@@ -205,6 +205,7 @@ async function shallowBuild(options) {
     );
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
+    await copyAgentFileSystems({ components, context });
 
     return { components, pageRegistry, context };
   } catch (err) {

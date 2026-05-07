@@ -16,16 +16,50 @@
 
 import {
   ToolLoopAgent,
+  convertToModelMessages,
   createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  pruneMessages,
   stepCountIs,
-  convertToModelMessages,
   hasToolCall,
+  validateUIMessages,
 } from 'ai';
+
+import { serializer } from '@lowdefy/helpers';
 
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
+import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
+
+function createUsageAccumulator() {
+  const usage = {
+    inputTokens: 0,
+    outputTokens: 0,
+    totalTokens: 0,
+    reasoningTokens: 0,
+    cacheReadTokens: 0,
+    cacheWriteTokens: 0,
+  };
+
+  let finishReason = 'stop';
+
+  function add(stepResult) {
+    const stepUsage = stepResult?.usage ?? stepResult;
+    if (stepResult?.finishReason) {
+      finishReason = stepResult.finishReason;
+    }
+    if (!stepUsage) return;
+    usage.inputTokens += stepUsage.inputTokens ?? 0;
+    usage.outputTokens += stepUsage.outputTokens ?? 0;
+    usage.totalTokens += stepUsage.totalTokens ?? 0;
+    usage.reasoningTokens += stepUsage.outputTokenDetails?.reasoningTokens ?? 0;
+    usage.cacheReadTokens += stepUsage.inputTokenDetails?.cacheReadTokens ?? 0;
+    usage.cacheWriteTokens += stepUsage.inputTokenDetails?.cacheWriteTokens ?? 0;
+  }
+
+  return { usage, add, getFinishReason: () => finishReason };
+}
 
 // Strip non-serializable fields from agent-level hook events before sending as payload.
 // messages excluded here — the stream-level onFinish sends UIMessage[] directly.
@@ -94,12 +128,36 @@ async function handleAgentChat({ connection, properties, context, format }) {
 
   const { tools, mcpClients } = await buildAgentTools({ agent, context });
 
+  const sharedState = context.agentContext?.sharedState;
+  const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
+  if (updatePageStateTool) {
+    tools['update-page-state'] = updatePageStateTool;
+  }
+
   const model = connection.provider(agent.properties.model);
 
   const hookCallbacks = createHookCallbacks({
     hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
   });
+
+  // Prepend page context to instructions when pageContext is enabled
+  let instructions = agent.properties.instructions;
+  if (agent.properties.pageContext && context.agentContext) {
+    const ctx = context.agentContext;
+    const contextLines = ['<context>'];
+    if (ctx.pageId) contextLines.push(`  pageId: ${ctx.pageId}`);
+    if (ctx.userId) contextLines.push(`  userId: ${ctx.userId}`);
+    if (ctx.conversationId) contextLines.push(`  conversationId: ${ctx.conversationId}`);
+    if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
+      contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
+    }
+    if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
+      contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
+    }
+    contextLines.push('</context>');
+    instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
+  }
 
   // Build stop conditions
   const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
@@ -113,7 +171,7 @@ async function handleAgentChat({ connection, properties, context, format }) {
 
   const agentInstance = new ToolLoopAgent({
     model,
-    instructions: agent.properties.instructions,
+    instructions,
     tools,
     stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
     maxOutputTokens: agent.properties.maxOutputTokens,
@@ -163,29 +221,93 @@ async function handleAgentChat({ connection, properties, context, format }) {
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;
   const hasMcpClients = mcpClients.length > 0;
 
+  const pruneConfig = agent.properties.prune;
+  const timeoutConfig =
+    agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
+
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
-      // createAgentUIStream validates UIMessages, converts to ModelMessages,
-      // runs the agent, and returns a UIMessageStream — handling the full
-      // UI→model→UI conversion that ToolLoopAgent.stream() does not.
-      const agentStream = await createAgentUIStream({
-        agent: agentInstance,
-        uiMessages: messages,
-        ...(agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {}),
-      });
+      const usageAccumulator = createUsageAccumulator();
+      const steps = [];
+      let agentStream;
 
-      writer.merge(agentStream);
+      function collectStep(stepResult) {
+        usageAccumulator.add(stepResult);
+        steps.push({
+          stepNumber: stepResult.stepNumber,
+          text: stepResult.text,
+          toolCalls: stepResult.toolCalls,
+          toolResults: stepResult.toolResults,
+          finishReason: stepResult.finishReason,
+        });
+      }
 
-      // After merge resolves the agent stream is complete.
+      if (pruneConfig) {
+        // Decompose createAgentUIStream so we can insert pruneMessages
+        // between the UIMessage→ModelMessage conversion and agent execution.
+        const validatedMessages = await validateUIMessages({
+          messages,
+          tools: agentInstance.tools,
+        });
+        const modelMessages = await convertToModelMessages(validatedMessages, {
+          tools: agentInstance.tools,
+        });
+        const prunedMessages = pruneMessages({
+          messages: modelMessages,
+          ...pruneConfig,
+        });
+        const result = await agentInstance.stream({
+          prompt: prunedMessages,
+          ...timeoutConfig,
+          onStepFinish: collectStep,
+        });
+        agentStream = result.toUIMessageStream({
+          originalMessages: validatedMessages,
+        });
+      } else {
+        // createAgentUIStream validates UIMessages, converts to ModelMessages,
+        // runs the agent, and returns a UIMessageStream — handling the full
+        // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+        agentStream = await createAgentUIStream({
+          agent: agentInstance,
+          uiMessages: messages,
+          ...timeoutConfig,
+          onStepFinish: collectStep,
+        });
+      }
+
+      // Read the agent stream to completion before running onFinish hooks.
+      // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
+      // manually read the stream to ensure hooks fire after the agent finishes.
+      const reader = agentStream.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          writer.write(value);
+        }
+      } catch (error) {
+        writer.write({ type: 'error', errorText: writer.onError(error) });
+      }
       // Call onFinish hooks — awaited so dataParts can be written to stream.
       if (hasOnFinishHooks) {
+        const finishPayload = {
+          messages,
+          steps,
+          toolResults: steps.flatMap((s) => s.toolResults ?? []),
+          finishReason: usageAccumulator.getFinishReason(),
+          isAborted: false,
+          ...(context.agentContext ?? {}),
+          usage: usageAccumulator.usage,
+        };
         for (const endpointId of onFinishEndpointIds) {
           try {
             const hookResponse = await context.callEndpoint(endpointId, {
-              payload: { messages, finishReason: 'stop', isAborted: false },
+              payload: finishPayload,
             });
-            if (hookResponse?.dataParts) {
-              for (const part of hookResponse.dataParts) {
+            const responseData = serializer.deserialize(hookResponse?.response);
+            if (Array.isArray(responseData?.dataParts)) {
+              for (const part of responseData.dataParts) {
                 writer.write(part);
               }
             }

@@ -52,6 +52,25 @@ export default {
       description: 'Trigger event when the sort changes.',
       event: { rows: 'The displayed rows after sorting.', sort: 'The sort column state.' },
     },
+    onCellLink: {
+      description:
+        'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
+      event: {
+        link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+        row: 'The row data.',
+        value: 'The cell value.',
+      },
+    },
+    onCellButton: {
+      description:
+        'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`).',
+      event: {
+        row: 'The row data.',
+        value: 'The cell value.',
+        button: 'The clicked button: { eventName, title }.',
+        buttonIndex: 'Zero-based index in the buttons array.',
+      },
+    },
   },
   properties: {
     type: 'object',
@@ -70,6 +89,30 @@ export default {
         type: 'string',
         description:
           'The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/).',
+      },
+      enableBrowserTooltips: {
+        type: 'boolean',
+        default: false,
+        description:
+          "Set to `true` to use the browser native `title` attribute tooltips instead of AG Grid's styled tooltip component.",
+      },
+      suppressCellFocus: {
+        type: 'boolean',
+        default: true,
+        description:
+          'When `true` (default), clicking a cell does not draw the AG Grid cell-focus border. Set to `false` to enable spreadsheet-style cell focus and keyboard navigation.',
+      },
+      tooltipShowDelay: {
+        type: 'number',
+        default: 2000,
+        description:
+          'The delay in milliseconds before a tooltip is shown. Not applied when `enableBrowserTooltips` is `true`.',
+      },
+      tooltipHideDelay: {
+        type: 'number',
+        default: 10000,
+        description:
+          'The delay in milliseconds before a tooltip is hidden. Not applied when `enableBrowserTooltips` is `true`.',
       },
       defaultColDef: {
         type: 'object',
@@ -126,6 +169,292 @@ export default {
               type: ['object', 'string'],
               description:
                 'A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.',
+            },
+            tooltipField: {
+              type: 'string',
+              description:
+                "The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component.",
+            },
+            tooltipValueGetter: {
+              type: 'object',
+              description:
+                'Provide a function (using the `_function` operator) that returns the tooltip value for a cell. Overrides `tooltipField`.',
+            },
+            tooltipComponent: {
+              type: 'object',
+              description:
+                'Provide a custom tooltip component. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/).',
+            },
+            ellipsis: {
+              type: 'number',
+              description:
+                'Line-clamp count for long text. Automatically enables `wrapText` and `autoHeight` and applies the `.lf-ellipsis-N` class (1–6).',
+            },
+            cell: {
+              type: 'object',
+              description:
+                'Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths.',
+              properties: {
+                type: {
+                  type: 'string',
+                  enum: [
+                    'tag',
+                    'avatar',
+                    'link',
+                    'date',
+                    'boolean',
+                    'progress',
+                    'number',
+                    'buttons',
+                  ],
+                  description: 'The built-in renderer to use.',
+                },
+                colorMap: {
+                  type: 'object',
+                  description:
+                    'Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`.',
+                },
+                colorFrom: {
+                  type: 'string',
+                  description:
+                    'Tag: row-data path to a color value. Takes precedence over `colorMap`.',
+                },
+                default: {
+                  type: 'string',
+                  description: 'Tag: fallback color for values not in `colorMap`.',
+                },
+                nameField: {
+                  type: 'string',
+                  description: 'Avatar: row-data path for the name label.',
+                },
+                srcField: {
+                  type: 'string',
+                  description: 'Avatar: row-data path for the image src (optional).',
+                },
+                idField: {
+                  type: 'string',
+                  description: 'Avatar: row-data path for an id used to seed initials colour.',
+                },
+                shape: {
+                  type: 'string',
+                  enum: ['circle', 'square'],
+                  description: 'Avatar shape. Defaults to `circle`.',
+                },
+                link: {
+                  type: 'object',
+                  description:
+                    'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths.',
+                },
+                pageId: { type: 'string', description: 'Link: target page id (literal).' },
+                href: { type: 'string', description: 'Link: literal href (overrides `pageId`).' },
+                back: { type: 'boolean', description: 'Link: navigate back.' },
+                home: { type: 'boolean', description: 'Link: navigate home.' },
+                newTab: { type: 'boolean', description: 'Link: open in a new tab.' },
+                urlQuery: {
+                  type: 'object',
+                  description: 'Link: query params. Each value is a row-data path.',
+                },
+                labelField: {
+                  type: 'string',
+                  description:
+                    'Link: row-data path for the visible label (falls back to cell value).',
+                },
+                format: {
+                  type: 'string',
+                  description: 'Date: dayjs format string. Default `YYYY-MM-DD HH:mm`.',
+                },
+                relative: {
+                  type: 'boolean',
+                  description: 'Date: render as relative time (e.g. "3 hours ago").',
+                },
+                trueLabel: { type: 'string', description: 'Boolean: label when truthy.' },
+                falseLabel: { type: 'string', description: 'Boolean: label when falsy.' },
+                trueColor: { type: 'string', description: 'Boolean: CSS colour when truthy.' },
+                falseColor: { type: 'string', description: 'Boolean: CSS colour when falsy.' },
+                thresholds: {
+                  type: 'array',
+                  description:
+                    'Progress: threshold values (ascending). Each threshold defines where the next colour starts.',
+                  items: { type: 'number' },
+                },
+                colors: {
+                  type: 'array',
+                  description: 'Progress: colour per bucket (length = thresholds.length + 1).',
+                  items: { type: 'string' },
+                },
+                suffix: {
+                  type: 'string',
+                  description:
+                    'Number/Progress: literal suffix appended after the formatted value. Default `%` for progress.',
+                },
+                nullLabel: {
+                  type: 'string',
+                  description: 'Progress: label when value is null. Default `None`.',
+                },
+                format: {
+                  type: 'string',
+                  description:
+                    'Number: `number` (default), `currency`, `percent`, or `compact` (K/M/B). Date: dayjs format string (default `YYYY-MM-DD HH:mm`).',
+                },
+                locale: {
+                  type: 'string',
+                  description:
+                    'Number: BCP 47 locale for `Intl.NumberFormat` (e.g. `en-US`, `de-DE`). Defaults to browser.',
+                },
+                currency: {
+                  type: 'string',
+                  description:
+                    'Number: ISO 4217 currency code when `format: currency`. Default `USD`.',
+                },
+                currencyDisplay: {
+                  type: 'string',
+                  enum: ['symbol', 'narrowSymbol', 'code', 'name'],
+                  description: 'Number: currency display style when `format: currency`.',
+                },
+                decimals: {
+                  type: 'number',
+                  description:
+                    'Number: fixed number of fraction digits (sets both `minimumFractionDigits` and `maximumFractionDigits`).',
+                },
+                minDecimals: {
+                  type: 'number',
+                  description: 'Number: `Intl.NumberFormat` `minimumFractionDigits`.',
+                },
+                maxDecimals: {
+                  type: 'number',
+                  description: 'Number: `Intl.NumberFormat` `maximumFractionDigits`.',
+                },
+                notation: {
+                  type: 'string',
+                  enum: ['standard', 'scientific', 'engineering', 'compact'],
+                  description:
+                    'Number: `Intl.NumberFormat` notation. `compact` format sets this automatically.',
+                },
+                useGrouping: {
+                  type: 'boolean',
+                  default: true,
+                  description: 'Number: include thousands separators.',
+                },
+                negative: {
+                  type: 'string',
+                  enum: ['minus', 'parentheses'],
+                  default: 'minus',
+                  description:
+                    'Number: how to render negative numbers — `minus` (default) or `parentheses` for accounting.',
+                },
+                signColor: {
+                  type: 'boolean',
+                  default: false,
+                  description:
+                    'Number: when true, positives use `positiveColor` (default success token), negatives use `negativeColor` (default error token).',
+                },
+                positiveColor: {
+                  type: 'string',
+                  description: 'Number: CSS colour when value > 0 (requires `signColor: true`).',
+                },
+                negativeColor: {
+                  type: 'string',
+                  description: 'Number: CSS colour when value < 0 (requires `signColor: true`).',
+                },
+                zeroColor: {
+                  type: 'string',
+                  description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                },
+                color: {
+                  type: 'string',
+                  description:
+                    'Number: CSS colour applied to all values (overridden by `signColor`).',
+                },
+                prefix: {
+                  type: 'string',
+                  description: 'Number: literal prefix (e.g. `Δ `, `~`).',
+                },
+                align: {
+                  type: 'string',
+                  enum: ['left', 'center', 'right'],
+                  description:
+                    'Cell horizontal alignment. Defaults to `right` for `cell.type: number`. Sets `cellStyle.justifyContent` and `ag-*-aligned-header` on the header.',
+                },
+                buttons: {
+                  type: 'array',
+                  description:
+                    'Buttons cell: list of buttons rendered per row. Each button triggers its own block-level event (declared in `events:`). Per-button properties mirror the `Button` block schema. `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths.',
+                  items: {
+                    type: 'object',
+                    required: ['eventName'],
+                    properties: {
+                      eventName: {
+                        type: 'string',
+                        description: 'Block-level event name to trigger on click.',
+                      },
+                      title: {
+                        type: 'string',
+                        description: 'Title text on the button - supports html.',
+                      },
+                      titleField: {
+                        type: 'string',
+                        description: 'Row-data path for the title.',
+                      },
+                      icon: {
+                        type: ['string', 'object'],
+                        description: 'Name of a React-Icon or Icon block config.',
+                        docs: { displayType: 'icon' },
+                      },
+                      iconField: {
+                        type: 'string',
+                        description: 'Row-data path for the icon name or config.',
+                      },
+                      type: {
+                        type: 'string',
+                        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+                        description: 'antd Button type.',
+                      },
+                      variant: {
+                        type: 'string',
+                        enum: ['solid', 'outlined', 'dashed', 'filled', 'text', 'link'],
+                        description: 'antd Button variant. Takes precedence over `type` when set.',
+                      },
+                      color: {
+                        type: 'string',
+                        description: 'Button color (antd preset or hex).',
+                        docs: { displayType: 'color' },
+                      },
+                      size: {
+                        type: 'string',
+                        enum: ['small', 'default', 'large'],
+                        default: 'small',
+                        description: 'Button size. Defaults to `small` inside cells.',
+                      },
+                      shape: {
+                        type: 'string',
+                        enum: ['circle', 'round', 'square'],
+                        default: 'square',
+                      },
+                      danger: { type: 'boolean', default: false },
+                      ghost: { type: 'boolean', default: false },
+                      hideTitle: {
+                        type: 'boolean',
+                        default: false,
+                        description: "Hide the button's title (icon-only).",
+                      },
+                      disabled: { type: 'boolean', default: false },
+                      disabledField: {
+                        type: 'string',
+                        description: 'Row-data path → boolean.',
+                      },
+                      hidden: {
+                        type: 'boolean',
+                        default: false,
+                        description: 'Hide the button entirely.',
+                      },
+                      hiddenField: {
+                        type: 'string',
+                        description: 'Row-data path → boolean.',
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
