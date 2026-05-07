@@ -1,5 +1,5 @@
 ---
-title: 'Lowdefy Agents'
+title: 'Lowdefy v5.3: Agents'
 subtitle: 'A Lowdefy app can now run AI agents that call your existing endpoints as tools'
 authorId: 'machiel'
 publishedAt: '2026-05-05'
@@ -178,28 +178,6 @@ agents:
 
 The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. Streamable `http`, `sse`, and `stdio` transports are all supported — prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
 
-### Tool confirmation
-
-Some tools want a human to approve them before they run. Set `confirm: true` on the tool reference and the chat block renders an approve/reject card inline:
-
-```yaml
-agents:
-  - id: leave_bot
-    type: ClaudeAgent
-    connectionId: claude
-    properties:
-      model: claude-haiku-4-5-20251001
-      instructions: |
-        You help with leave requests. Use search to look up policies.
-        Submit only when the user agrees.
-    tools:
-      - search-policies
-      - endpointId: submit-leave
-        confirm: true
-```
-
-`search-policies` is read-only and runs immediately. `submit-leave` writes to the database, so the model's tool call surfaces in the chat as a card showing the proposed input alongside approve and reject buttons. The endpoint runs only after approval. The two forms in the `tools` list (the bare ID and the object with `endpointId`) both work. The object form unlocks per-tool flags.
-
 ### Sub-agents
 
 An agent can have other agents as tools. Define each specialist as its own agent, then list them on the orchestrator under `agents`:
@@ -303,24 +281,100 @@ pages:
                 _state: true
 ```
 
-`sharedState: { _state: true }` exposes the whole page state; a curated shape like `{ company: { _state: company_name } }` exposes a subset. The block enforces an allowlist on the way back: only keys present in the original `sharedState` snapshot can be written, anything else is dropped on the client. The write applies through a synthetic `SetState`, so the form re-renders with the agent's values without any `onDataPart` handler or hook endpoint.
+`sharedState: { _state: true }` exposes the whole page state; a curated shape like `{ company: { _state: company_name } }` exposes a subset. Writes are scoped to the keys you exposed and applied through `SetState`, so the page re-renders without extra wiring.
 
 ![Agent reading and writing page state on a form](/images/articles/page-state.gif)
 
-`update-page-state` is a reserved name: an endpoint or sub-agent that tries to claim it is rejected when the agent runs, and an MCP server that publishes a tool with that name is skipped with a warning. The tool's description is generated at request time from the keys in the snapshot, so the agent always sees the current set of writable fields.
+## More you can do
 
-## Under the hood
+### Swap providers without rewriting the agent
 
-Lowdefy's agent system runs on top of the [Vercel AI SDK](https://ai-sdk.dev/). The SDK provides the model abstraction, the tool-loop runtime, the chat streaming protocol, and the React hook the chat block uses. Lowdefy contributes the config layer and the in-process tool execution.
+The same `chat_bot` works on Claude today, GPT or Gemini tomorrow, and a self-hosted open model after that — all through the [Vercel AI Gateway](https://vercel.com/ai-gateway). Use the gateway connection and a `provider/model` string, optionally hand it a fallback list, and the gateway handles failover, attribution, and BYOK credentials per request:
 
-A provider connection wraps the SDK's provider factory for its vendor: Anthropic, OpenAI, Google, the Vercel AI Gateway, plus community providers as they appear. Provider-specific knobs like Anthropic's extended thinking or OpenAI's reasoning effort live on the agent type the connection plugin ships, and pass through to the underlying provider call.
+```yaml
+connections:
+  - id: ai_gateway
+    type: AIGateway
+    properties:
+      apiKey:
+        _secret: AI_GATEWAY_API_KEY
 
-The agent runtime takes a model, a tool list, a stop condition, and a system prompt, then runs the call-tool-call loop until the model finishes or a stop condition fires. Lowdefy hands all of this in from the agent's YAML config. Lifecycle hooks declared in YAML (`onStart`, `onStepStart`, `onToolCallStart`, `onStepFinish`, `onFinish`) become callbacks on the runtime, each one fired by calling a Lowdefy API endpoint with the event payload.
+agents:
+  - id: chat_bot
+    type: AIGatewayAgent
+    connectionId: ai_gateway
+    properties:
+      model: anthropic/claude-sonnet-4.6
+      fallbackModels:
+        - openai/gpt-5-mini
+        - google/gemini-2.5-pro
+      tags: [production, chat]
+      instructions: You are a helpful assistant.
+```
 
-Tools come from three places: API endpoints, MCP connections, and other agents. For an endpoint tool, the runtime reads the description and `payloadSchema` directly off the endpoint config and runs the endpoint's routine in-process when the model calls the tool. The model's tool input arrives as `_payload`, with the same connection access, operators, and auth context any other endpoint call would have. MCP tools are loaded from the configured MCP servers and merged into the same tool pool. Sub-agents wrap a child agent's run inside a tool, so the parent loop calls them like any other tool.
+Set `zeroDataRetention: true` to restrict routing to providers that don't retain prompts. Pass `byok` credentials per request to charge usage to the user's own account. The agent config doesn't change — only the routing does.
 
-The browser chat is driven by the SDK's chat hook, with a custom transport pointed at a Lowdefy agent route. Browser cookies authenticate the request. The route loads the agent config, runs the agent, and streams the response back unmodified. Text deltas, tool input streams, tool output, reasoning, sources, and step boundaries all arrive as structured parts. The block converts each part into an Ant Design X component and fires Lowdefy events so a page can react to message completion, tool calls, or errors without managing the stream itself.
+### React to what the agent is doing
 
-The mapping is shallow because the primitives line up. A Lowdefy connection already does what a provider does. A Lowdefy endpoint already does what a tool's execute function does. A Lowdefy block already does what a React component does. Where Lowdefy adds something on top (bidirectional page-state sync via `sharedState`, the inline approve/reject UI for `confirm: true` tools, sub-agents as tools, the per-provider typed agent schemas), those are places where the runtime didn't have an opinion and the framework did.
+Every step in an agent's life — `onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`, `onFinish` — can fire a Lowdefy endpoint with the event payload. So persisting a conversation, recording usage, sending a Slack notification when a tool runs, or streaming a custom data part back to the page is the same as any other endpoint:
 
-Putting an agent into a Lowdefy app means writing four config keys. The runtime, the streaming protocol, and the chat hook come from one library. The tools are the endpoints you'd already have written. The chat UI is a block. When the building blocks line up, you don't write a wrapper. You write a registration.
+```yaml
+agents:
+  - id: chat_bot
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5-20251001
+      instructions: You are a helpful assistant.
+    hooks:
+      onFinish:
+        - save-conversation
+        - record-usage
+```
+
+Hooks run with the same connection, operator, and auth context as any other endpoint. There's no new API to learn — you're calling endpoints you'd already write.
+
+### Citations
+
+When a tool returns source citations — most public MCP servers do — the chat can render them inline beneath the answer. Set `messageDisplay.showSources: true` on the chat block:
+
+```yaml
+- id: chat
+  type: AgentChat
+  properties:
+    agentId: docs_bot
+    messageDisplay:
+      showSources: true
+```
+
+Sources arrive as `source-url` and `source-document` parts in the agent's response stream and surface as expandable cards next to the message. No extra wiring on the agent side — if a tool publishes sources, the block displays them.
+
+### Tool approvals
+
+Some tools want a human to approve them before they run. Set `confirm: true` on the tool reference and the chat block renders an approve/reject card inline:
+
+```yaml
+agents:
+  - id: leave_bot
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5-20251001
+      instructions: |
+        You help with leave requests. Use search to look up policies.
+        Submit only when the user agrees.
+    tools:
+      - search-policies
+      - endpointId: submit-leave
+        confirm: true
+```
+
+`search-policies` is read-only and runs immediately. `submit-leave` writes to the database, so the model's tool call surfaces in the chat as a card showing the proposed input alongside approve and reject buttons. The endpoint runs only after approval. The two forms in the `tools` list (the bare ID and the object with `endpointId`) both work — the object form unlocks per-tool flags. `confirm: true` also works on MCP tools.
+
+![Tool approval card with approve and reject buttons](/images/articles/tool-approval.gif)
+
+---
+
+There's a lot more to discover — drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, page context injection, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
+
+The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood — Lowdefy contributes the config layer that maps a YAML agent to its model, a YAML endpoint to a tool, and a YAML block to the chat UI. A Lowdefy connection is already what a provider is. A Lowdefy endpoint is already what a tool is. A Lowdefy block is already what a React component is. When the primitives line up, you don't write a wrapper — you write a registration.
