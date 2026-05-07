@@ -176,7 +176,7 @@ agents:
       - mcp_deepwiki
 ```
 
-The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. Streamable `http`, `sse`, and `stdio` transports are all supported — prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
+The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. All three MCP transports are supported: Streamable `http`, `sse`, and `stdio`. Prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
 
 ### Sub-agents
 
@@ -224,7 +224,7 @@ The orchestrator runs on Sonnet. The specialists run on Haiku. Each sub-agent ha
 
 ## Built-in tools
 
-Two tool sources are injected by the framework rather than written by the developer. They appear in the same pool as endpoint, MCP, and sub-agent tools, but they aren't listed under `tools:` — the agent picks them up by virtue of other config.
+Two tool sets appear automatically when you set certain agent properties, no `tools:` list entry required. They land in the same pool as endpoint, MCP, and sub-agent tools by the time the model sees them.
 
 ### File system
 
@@ -246,7 +246,7 @@ This is the simple way to point an agent at a corpus: a directory of markdown fi
 
 ### Page state
 
-The `AgentChat` block can expose a slice of page state to the agent. Declare `sharedState` on the block — an operator expression that evaluates to an object — and two things happen on the next message: the agent receives an `update-page-state` tool that lets it write back, and (when the agent has `pageContext: true`) the current values arrive in its prompt as a context block.
+The `AgentChat` block can expose a slice of page state to the agent. Set `sharedState` on the block to an operator expression that evaluates to an object. The agent then receives an `update-page-state` tool that lets it write back. If the agent also sets `pageContext: true`, the current values are sent in its prompt as a context block on every message.
 
 ```yaml
 agents:
@@ -289,7 +289,7 @@ pages:
 
 ### Swap providers without rewriting the agent
 
-The same `chat_bot` works on Claude today, GPT or Gemini tomorrow, and a self-hosted open model after that — all through the [Vercel AI Gateway](https://vercel.com/ai-gateway). Use the gateway connection and a `provider/model` string, optionally hand it a fallback list, and the gateway handles failover, attribution, and BYOK credentials per request:
+An agent can route through the [Vercel AI Gateway](https://vercel.com/ai-gateway) and reach Claude, GPT, Gemini, and self-hosted open models with one config. Use the gateway connection and a `provider/model` string, optionally hand it a fallback list, and the gateway handles failover, attribution, and bring-your-own-key credentials per request:
 
 ```yaml
 connections:
@@ -312,11 +312,11 @@ agents:
       instructions: You are a helpful assistant.
 ```
 
-Set `zeroDataRetention: true` to restrict routing to providers that don't retain prompts. Pass `byok` credentials per request to charge usage to the user's own account. The agent config doesn't change — only the routing does.
+Set `zeroDataRetention: true` to restrict routing to providers that don't retain prompts. Pass `byok` credentials per request to charge usage to the user's own account. The agent config doesn't change. Only the routing does.
 
 ### React to what the agent is doing
 
-Every step in an agent's life — `onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`, `onFinish` — can fire a Lowdefy endpoint with the event payload. So persisting a conversation, recording usage, sending a Slack notification when a tool runs, or streaming a custom data part back to the page is the same as any other endpoint:
+Every step in an agent's life (`onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`, `onFinish`) can fire a Lowdefy endpoint with the event payload. So persisting a conversation, recording usage, sending a Slack notification when a tool runs, or streaming a custom data part back to the page is the same as any other endpoint:
 
 ```yaml
 agents:
@@ -332,11 +332,11 @@ agents:
         - record-usage
 ```
 
-Hooks run with the same connection, operator, and auth context as any other endpoint. There's no new API to learn — you're calling endpoints you'd already write.
+Hooks run with the same connection, operator, and auth context as any other endpoint. You're calling endpoints you'd already write.
 
 ### Citations
 
-When a tool returns source citations — most public MCP servers do — the chat can render them inline beneath the answer. Set `messageDisplay.showSources: true` on the chat block:
+When a tool returns source citations (most public MCP servers do), the chat can render them inline beneath the answer. Set `messageDisplay.showSources: true` on the chat block:
 
 ```yaml
 - id: chat
@@ -347,7 +347,7 @@ When a tool returns source citations — most public MCP servers do — the chat
       showSources: true
 ```
 
-Sources arrive as `source-url` and `source-document` parts in the agent's response stream and surface as expandable cards next to the message. No extra wiring on the agent side — if a tool publishes sources, the block displays them.
+Sources arrive as `source-url` and `source-document` parts in the agent's response stream and surface as expandable cards next to the message. No extra wiring on the agent side. If a tool publishes sources, the block displays them.
 
 ### Tool approvals
 
@@ -369,12 +369,12 @@ agents:
         confirm: true
 ```
 
-`search-policies` is read-only and runs immediately. `submit-leave` writes to the database, so the model's tool call surfaces in the chat as a card showing the proposed input alongside approve and reject buttons. The endpoint runs only after approval. The two forms in the `tools` list (the bare ID and the object with `endpointId`) both work — the object form unlocks per-tool flags. `confirm: true` also works on MCP tools.
+`search-policies` is read-only and runs immediately. `submit-leave` writes to the database, so the model's tool call surfaces in the chat as a card showing the proposed input alongside approve and reject buttons. The endpoint runs only after approval. The two forms in the `tools` list (the bare ID and the object with `endpointId`) both work; the object form unlocks per-tool flags. `confirm: true` also works on MCP tools.
 
 ![Tool approval card with approve and reject buttons](/images/articles/tool-approval.gif)
 
 ---
 
-There's a lot more to discover — drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, page context injection, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
+There's a lot more to discover: drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, page context injection, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
 
-The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood — Lowdefy contributes the config layer that maps a YAML agent to its model, a YAML endpoint to a tool, and a YAML block to the chat UI. A Lowdefy connection is already what a provider is. A Lowdefy endpoint is already what a tool is. A Lowdefy block is already what a React component is. When the primitives line up, you don't write a wrapper — you write a registration.
+The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood. Lowdefy contributes the config layer that maps a YAML agent to its model, a YAML endpoint to a tool, and a YAML block to the chat UI. A Lowdefy connection is already what a provider is. A Lowdefy endpoint is already what a tool is. A Lowdefy block is already what a React component is. When the primitives line up, you don't write a wrapper. You write a registration.
