@@ -48,6 +48,8 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
+    "@chat-adapter/state-memory": "4.24.0",
+    "@chat-adapter/telegram": "4.24.0",
     "@lowdefy/actions-core": "5.2.0",
     "@lowdefy/api": "5.2.0",
     "@lowdefy/block-utils": "5.2.0",
@@ -67,6 +69,7 @@
     "@sentry/nextjs": "8.53.0",
     "@tailwindcss/postcss": "4.2.1",
     "antd": "6.3.1",
+    "chat": "4.24.0",
     "dayjs": "1.11.19",
     "next": "16.1.6",
     "next-auth": "4.24.10",

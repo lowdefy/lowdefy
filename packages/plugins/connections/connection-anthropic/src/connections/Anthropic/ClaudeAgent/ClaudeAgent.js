@@ -17,7 +17,7 @@
 import { handleAgentChat } from '@lowdefy/ai-utils';
 import schema from './schema.js';
 
-async function resolver({ connection, properties, context }) {
+async function resolver({ connection, properties, context, format }) {
   const props = properties.agent.properties;
   const anthropic = {};
   if (props.thinking) anthropic.thinking = props.thinking;
@@ -29,7 +29,7 @@ async function resolver({ connection, properties, context }) {
       anthropic: { ...props.providerOptions?.anthropic, ...anthropic },
     };
   }
-  return handleAgentChat({ connection, properties, context });
+  return handleAgentChat({ connection, properties, context, format });
 }
 
 const ClaudeAgent = { schema, resolver };
