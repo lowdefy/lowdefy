@@ -13,7 +13,7 @@ draft: false
 
 A Lowdefy app can now run AI agents that call your existing endpoints as tools. Add a provider connection and an agent to your app config, drop an [`AgentChat`](https://docs.lowdefy.com/AgentChat) block on a page, and you have streaming chat wired to the API you already have. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
 
-The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block is built on [Ant Design X](https://x.ant.design/) and ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and page state the agent can read and write all sit in the same shape as the simplest chat.
+The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and page state the agent can read and write all sit in the same shape as the simplest chat.
 
 ## What an agent is
 
@@ -348,4 +348,6 @@ agents:
 
 There's a lot more to discover: drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
 
-The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood. Lowdefy contributes the config layer that maps a YAML agent to its model, a YAML endpoint to a tool, and a YAML block to the chat UI. A Lowdefy connection is already what a provider is. A Lowdefy endpoint is already what a tool is. A Lowdefy block is already what a React component is. When the primitives line up, you don't write a wrapper. You write a registration.
+The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood, and the `AgentChat` block sits on [Ant Design X](https://x.ant.design/).
+
+Your Lowdefy app can now have an agent that knows what your app knows.
