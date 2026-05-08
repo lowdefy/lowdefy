@@ -326,3 +326,77 @@ test('buildAgentTools throws ConfigError when sub-agent id collides with reserve
     /reserved platform tool name/i
   );
 });
+
+test('endpoint tool returns top-level marker-wrapped array as a plain array', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  // Build artifacts wrap location-marked arrays as { '~arr': [...], '~k': '...' }.
+  // The serializer's skipMarkers mode must un-wrap this back into a plain array
+  // before the array reaches the AI SDK as a tool result.
+  const wrappedResponse = {
+    '~arr': [
+      { title: 'Annual leave', body: '25 days' },
+      { title: 'Carry-over', body: 'Max 5 days' },
+    ],
+    '~k': 'api.search-policies.routine.0.:return',
+  };
+
+  const agent = {
+    tools: [{ endpointId: 'search-policies' }],
+    mcp: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Search HR policies.',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+  const result = await tools['search-policies'].execute(
+    { query: 'leave' },
+    { abortSignal: null }
+  );
+
+  expect(Array.isArray(result)).toBe(true);
+  expect(result).toEqual([
+    { title: 'Annual leave', body: '25 days' },
+    { title: 'Carry-over', body: 'Max 5 days' },
+  ]);
+});
+
+test('endpoint tool unwraps a marker-wrapped array nested under an object key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  // Same wrapper convention applies to nested arrays — e.g. payloadSchema's
+  // `enum: [...]` or `required: [...]` would survive build with markers
+  // attached. The same path cleans both tool results and payloadSchemas.
+  const wrappedResponse = {
+    items: {
+      '~arr': ['phone', 'tablet', 'laptop'],
+      '~k': 'api.search.routine.0.:return.items',
+    },
+    total: 3,
+  };
+
+  const agent = {
+    tools: [{ endpointId: 'search' }],
+    mcp: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Search products.',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: wrappedResponse }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+  const result = await tools.search.execute({ q: 'phones' }, { abortSignal: null });
+
+  expect(result).toEqual({ items: ['phone', 'tablet', 'laptop'], total: 3 });
+  expect(Array.isArray(result.items)).toBe(true);
+});

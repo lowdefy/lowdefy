@@ -187,6 +187,20 @@ Configured via `agent.properties.fileSystem` with a `basePath`. Automatically ad
 
 All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePath.js`) which normalizes the requested path against the base directory and throws if the resolved path escapes the base, preventing path traversal attacks.
 
+#### Deployment Considerations
+
+The fileSystem tools call Node's `fs/promises` and `glob` directly, so they require a Node.js runtime. Edge runtimes (Vercel Edge, Cloudflare Workers, Deno Deploy edge) and browsers cannot execute them — `fs/promises` is unavailable. Lowdefy's pages router (`pages/api/agent/[...path].js` in both `@lowdefy/server` and `@lowdefy/server-dev`) does not declare `runtime: 'edge'`, so the default Node runtime applies.
+
+The tools are read-only — there is no `write-file` or `delete-file`. Serverless platforms with a read-only deployment filesystem (Vercel, AWS Lambda) work without needing `/tmp` workarounds.
+
+**Standard `next start`** (running the built server directory directly): `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server. This works as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.).
+
+**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers need extra wiring. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable — without help, the files copied by `copyAgentFileSystems` would sit on the build host but never make it into the deployed bundle.
+
+The build handles this automatically. `copyAgentFileSystems` writes a `agentFileSystems.json` manifest to the server build directory listing every unique `basePath`. `packages/servers/server/next.config.js` reads the manifest and feeds the paths into `outputFileTracingIncludes` under the `/api/agent/*` route, so the tracer pulls each `basePath` directory into the standalone output and the Vercel function bundle. App developers don't need to configure anything.
+
+The trade-off is bundle size: pointing an agent at a large directory will bloat the deployment. That's the explicit intent of granting fileSystem access, but worth flagging when sizing deployments.
+
 ## Hook System
 
 Hooks are server-side lifecycle callbacks that call API endpoints. Configured under `agent.hooks`:
