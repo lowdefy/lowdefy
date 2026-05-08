@@ -1,5 +1,5 @@
 ---
-title: 'Lowdefy v5.3: Agents'
+title: 'Lowdefy v5.3: AI Agents in 30 Lines of YAML'
 subtitle: 'A Lowdefy app can now run AI agents that call your existing endpoints as tools'
 authorId: 'machiel'
 publishedAt: '2026-05-05'
