@@ -3,7 +3,7 @@ title: 'Lowdefy v5.3: Agents'
 subtitle: 'A Lowdefy app can now run AI agents that call your existing endpoints as tools'
 authorId: 'machiel'
 publishedAt: '2026-05-05'
-readTimeMinutes: 10
+readTimeMinutes: 7
 tags:
   - 'Release'
   - 'Agents'
@@ -13,7 +13,7 @@ draft: false
 
 A Lowdefy app can now run AI agents that call your existing endpoints as tools. Add a provider connection and an agent to your app config, drop an [`AgentChat`](https://docs.lowdefy.com/AgentChat) block on a page, and you have streaming chat wired to the API you already have. The same endpoint a button calls when a user clicks it can be called by the model mid-conversation: same routine, same connections, same auth context, same operators.
 
-The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block is built on [Ant Design X](https://x.ant.design/) and ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and bidirectional page-state sync sit in the same shape as the simplest chat.
+The agent's model, system instructions, tool list, and loop limits all live in YAML alongside your existing connections, endpoints, and pages. The `AgentChat` block is built on [Ant Design X](https://x.ant.design/) and ships streaming, message rendering, tool-call display, attachments, and tool approval out of the box. Multi-provider support, MCP servers, sub-agents, and page state the agent can read and write all sit in the same shape as the simplest chat.
 
 ## What an agent is
 
@@ -71,13 +71,13 @@ pages:
             description: Ask me anything
 ```
 
-Drop your Anthropic API key into a secret called `ANTHROPIC_API_KEY` and the page serves a streaming chat with markdown rendering, a welcome screen, copy-message actions, and a typing indicator while the model is generating. The `AgentChat` block ships the things you'd otherwise wire up by hand: streaming, scroll behavior, error and abort handling, role-based avatars, an empty state, file attachments. None are required config.
+Drop your Anthropic API key into a secret called `ANTHROPIC_API_KEY` and the page serves a streaming chat with markdown rendering, a welcome screen, copy-message actions, and a typing indicator while the model is generating. The `AgentChat` block ships the things you'd otherwise wire up by hand: streaming, scroll behavior, error and abort handling, role-based avatars, an empty state, file attachments. None of those need extra config.
 
 ![Streaming chat with markdown rendering from the 30-line example](/images/articles/agent-chat.gif)
 
 ### Endpoints as tools
 
-An agent's `tools` list is endpoint IDs. Add a `description` and a `payloadSchema` to the endpoint and it becomes eligible to be called by the model:
+An agent's `tools` list contains endpoint IDs. Add a `description` and a `payloadSchema` to the endpoint and it becomes eligible to be called by the model:
 
 ```yaml
 api:
@@ -116,46 +116,15 @@ agents:
       - search-products
 ```
 
-This endpoint is a regular Lowdefy API. A button on a page can hit it through a [`CallApi`](https://docs.lowdefy.com/CallApi) action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, [`_payload`](https://docs.lowdefy.com/_payload) carries the model's tool input, the same as if a page had sent it.
+This endpoint is a regular Lowdefy API. A page can hit it through a [`CallApi`](https://docs.lowdefy.com/CallApi) action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, [`_payload`](https://docs.lowdefy.com/_payload) carries the model's tool input, the same as if a page had sent it.
 
 An agent has the same surface area as the rest of your app. Every operator, every connection, every secret, every authenticated user reference ([`_user`](https://docs.lowdefy.com/_user)) is available inside a tool's routine. An insert endpoint that writes to MongoDB is already a tool. An endpoint that calls a third-party API with a stored key is already a tool. The agent isn't a new server, it's a different caller of the server you already have.
 
-For tools that shouldn't be exposed to the browser at all, change the type to [`InternalApi`](https://docs.lowdefy.com/InternalApi). The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints:
-
-```yaml
-api:
-  - id: lookup-user
-    type: InternalApi
-    description: Look up a user by their ID. Returns name, email, and role.
-    payloadSchema:
-      type: object
-      properties:
-        userId:
-          type: number
-          description: The user ID to look up
-      required:
-        - userId
-    routine:
-      - id: user
-        type: AxiosHttp
-        connectionId: hr_api
-        properties:
-          url:
-            _string.concat:
-              - /users/
-              - _payload: userId
-      - :return:
-          name:
-            _step: user.data.fullName
-          email:
-            _step: user.data.email
-          role:
-            _step: user.data.role
-```
+For tools that shouldn't be exposed to the browser at all, change the type from `Api` to [`InternalApi`](https://docs.lowdefy.com/InternalApi). The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints.
 
 ### MCP servers by ID
 
-Many capabilities you'd want an agent to have already exist as MCP servers: documentation lookups, web search, Slack, GitHub, Linear. Lowdefy treats an MCP server as a connection, then lets the agent reference it the same way it references the provider:
+Many capabilities you'd want an agent to have already exist as MCP servers: documentation lookups, web search, Slack, GitHub, Linear. Lowdefy treats an MCP server as a connection, then lets the agent pull in its tools by ID:
 
 ```yaml
 connections:
@@ -176,7 +145,7 @@ agents:
       - mcp_deepwiki
 ```
 
-The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. All three MCP transports are supported: Streamable `http`, `sse`, and `stdio`. Prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
+The agent picks up every tool the MCP server exposes: list, search, fetch, whatever the server publishes. Endpoint tools and MCP tools end up in the same pool by the time the model sees them. All three MCP transports are supported: Streamable HTTP (`http`), `sse`, and `stdio`. Prefer `http` for anything you're going to deploy, since `stdio` spawns a child process and won't survive serverless environments.
 
 ### Sub-agents
 
@@ -222,7 +191,7 @@ agents:
 
 The orchestrator sees each sub-agent as a single tool whose `description` decides when it delegates.
 
-What sub-agents buy you over a single fatter agent: each one runs in its own context. The specialist's intermediate tool calls, raw API responses, and reasoning never enter the orchestrator's prompt. The orchestrator only sees the summary text. The specialist's tool list stays narrow, which makes tool selection more reliable. And each agent picks its own model, so coordination can run on Sonnet while the legwork runs on Haiku.
+What sub-agents buy you over packing everything into one agent: each one runs in its own context. The specialist's intermediate tool calls, raw API responses, and reasoning never enter the orchestrator's prompt. The orchestrator only sees the summary text. The specialist's tool list stays narrow, which makes tool selection more reliable. And each agent picks its own model, so coordination can run on Sonnet while the legwork runs on Haiku.
 
 ## Built-in tools
 
@@ -314,11 +283,11 @@ agents:
       instructions: You are a helpful assistant.
 ```
 
-Set `zeroDataRetention: true` to restrict routing to providers that don't retain prompts. Pass `byok` credentials per request to charge usage to the user's own account. The agent config doesn't change. Only the routing does.
+Set `zeroDataRetention: true` to restrict routing to providers that don't retain prompts. The agent config doesn't change. Only the routing does.
 
 ### React to what the agent is doing
 
-Every step in an agent's life (`onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`, `onFinish`) can fire a Lowdefy endpoint with the event payload. So persisting a conversation, recording usage, sending a Slack notification when a tool runs, or streaming a custom data part back to the page is the same as any other endpoint:
+An agent fires lifecycle events at six points: `onStart`, `onStepStart`, `onToolCallStart`, `onToolCallFinish`, `onStepFinish`, `onFinish`. Each one can fire a Lowdefy endpoint with the event payload. Persisting a conversation, recording usage, sending a Slack notification when a tool runs, or streaming a custom data part back to the page are all just endpoint calls:
 
 ```yaml
 agents:
@@ -338,7 +307,7 @@ Hooks run with the same connection, operator, and auth context as any other endp
 
 ### Citations
 
-When a tool returns source citations (most public MCP servers do), the chat can render them inline beneath the answer. Set `messageDisplay.showSources: true` on the chat block:
+When a tool returns source citations (many public MCP servers do), the chat can render them inline beneath the answer. Set `messageDisplay.showSources: true` on the chat block:
 
 ```yaml
 - id: chat
@@ -377,6 +346,6 @@ agents:
 
 ---
 
-There's a lot more to discover: drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, page context injection, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
+There's a lot more to discover: drawer mode for floating chat, message regeneration, custom roles and avatars, file attachments, dynamic per-step tool phasing, message history pruning, custom data parts. See the [docs](https://docs.lowdefy.com) for the full set.
 
 The agent runtime is the [Vercel AI SDK](https://ai-sdk.dev/) under the hood. Lowdefy contributes the config layer that maps a YAML agent to its model, a YAML endpoint to a tool, and a YAML block to the chat UI. A Lowdefy connection is already what a provider is. A Lowdefy endpoint is already what a tool is. A Lowdefy block is already what a React component is. When the primitives line up, you don't write a wrapper. You write a registration.
