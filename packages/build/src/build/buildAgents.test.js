@@ -38,6 +38,13 @@ test('buildAgents null agents', () => {
   expect(res.agents).toBe(null);
 });
 
+test('buildAgents returns components untouched when agents is not an array', () => {
+  const context = testContext();
+  const components = { agents: { not: 'an-array' } };
+  const res = buildAgents({ components, context });
+  expect(res.agents).toEqual({ not: 'an-array' });
+});
+
 test('buildAgents valid agent renames id and adds to agentIds', () => {
   const context = testContext();
   const components = {

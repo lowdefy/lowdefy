@@ -58,7 +58,7 @@ function detectCycles(agents) {
 }
 
 function buildAgents({ components, context }) {
-  if (type.isNone(components.agents)) {
+  if (!type.isArray(components.agents)) {
     return components;
   }
 
@@ -68,7 +68,7 @@ function buildAgents({ components, context }) {
     message: 'Duplicate agentId "{{ id }}".',
   });
 
-  (components.agents ?? []).forEach((agent) => {
+  components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
     // Check duplicates
@@ -236,7 +236,7 @@ function buildAgents({ components, context }) {
   });
 
   // Second pass: validate sub-agent references (needs all agentIds collected)
-  (components.agents ?? []).forEach((agent) => {
+  components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
     agent.agents.forEach((subAgentRef) => {
