@@ -189,6 +189,65 @@ test.describe('AgGridBalham Block', () => {
     expect(firstStyle).toContain('color-mix');
   });
 
+  test('cell.type: tag renders one styled span per array item', async ({ page }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_array');
+    const firstRowCell = block.locator('.ag-row[row-index="0"] .ag-cell').first();
+    const tagSpans = firstRowCell.locator('span > span');
+    await expect(tagSpans).toHaveCount(2);
+    await expect(tagSpans.nth(0)).toHaveText('admin');
+    await expect(tagSpans.nth(1)).toHaveText('editor');
+    const firstStyle = await tagSpans.nth(0).getAttribute('style');
+    expect(firstStyle).toContain('color-mix');
+    expect(firstStyle).toContain('12%');
+    expect(firstStyle).toContain('30%');
+  });
+
+  test('cell.type: tag renders single tag for a one-element array', async ({ page }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_array');
+    const secondRowCell = block.locator('.ag-row[row-index="1"] .ag-cell').first();
+    const tagSpans = secondRowCell.locator('span > span');
+    await expect(tagSpans).toHaveCount(1);
+    await expect(tagSpans.nth(0)).toHaveText('viewer');
+  });
+
+  test('cell.type: tag renders em-dash for empty array', async ({ page }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_array');
+    const thirdRowCell = block.locator('.ag-row[row-index="2"] .ag-cell').first();
+    await expect(thirdRowCell).toContainText('—');
+  });
+
+  test('cell.type: tag renders em-dash for null array', async ({ page }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_array');
+    const fourthRowCell = block.locator('.ag-row[row-index="3"] .ag-cell').first();
+    await expect(fourthRowCell).toContainText('—');
+  });
+
+  test('cell.type: tag auto-colours unmapped values with the seeded styled-tag pattern', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_seeded');
+    const firstRowSpan = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
+    await expect(firstRowSpan).toHaveText('frontend');
+    const style = await firstRowSpan.getAttribute('style');
+    expect(style).toContain('color-mix');
+    expect(style).toContain('12%');
+    expect(style).toContain('30%');
+  });
+
+  test('cell.type: tag seeded colour is consistent across rows for the same value', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridbalham_cell_tag_seeded');
+    const row0 = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
+    const row1 = block.locator('.ag-row[row-index="1"] .ag-cell span').first();
+    const row2 = block.locator('.ag-row[row-index="2"] .ag-cell span').first();
+    const style0 = await row0.getAttribute('style');
+    const style1 = await row1.getAttribute('style');
+    const style2 = await row2.getAttribute('style');
+    expect(style0).toBe(style1);
+    expect(style0).not.toBe(style2);
+  });
+
   test('cell.type: avatar renders picture when srcField is present', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_cell_avatar');
     const firstRow = block.locator('.ag-row[row-index="0"]');

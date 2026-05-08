@@ -306,6 +306,40 @@ blocks:
         - label: B
           color: '#ff4d4f'
 
+  - id: aggridbalham_cell_tag_array
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Roles
+          field: roles
+          cell:
+            type: tag
+            colorMap:
+              admin: red
+              editor: blue
+              viewer: green
+      rowData:
+        - roles:
+            - admin
+            - editor
+        - roles:
+            - viewer
+        - roles: []
+        - roles: null
+
+  - id: aggridbalham_cell_tag_seeded
+    type: AgGridBalham
+    properties:
+      columnDefs:
+        - headerName: Tag
+          field: tag
+          cell:
+            type: tag
+      rowData:
+        - tag: frontend
+        - tag: frontend
+        - tag: backend
+
   - id: aggridbalham_cell_avatar
     type: AgGridBalham
     properties:

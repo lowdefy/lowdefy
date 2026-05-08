@@ -65,6 +65,7 @@ const PageHeaderMenu = ({
                 element: mergeObjects([
                   {
                     background: 'var(--ant-color-bg-container)',
+                    borderBottom: '1px solid var(--ant-color-border)',
                   },
                   styles.header,
                 ]),
