@@ -22,8 +22,8 @@ import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import runRoutine from '../endpoints/runRoutine.js';
 import getAgentConfig from './getAgentConfig.js';
 import getAgentResolver from './getAgentResolver.js';
-import getConnectionConfig from '../request/getConnectionConfig.js';
-import getConnection from '../request/getConnection.js';
+import getConnectionConfig from '../connections/getConnectionConfig.js';
+import getConnection from '../connections/getConnection.js';
 
 async function callAgent(
   context,
@@ -55,11 +55,8 @@ async function callAgent(
 
   // Load connection config from build artifacts using agent's connectionId
   const connectionConfig = await getConnectionConfig(context, {
-    requestConfig: {
-      connectionId: agentConfig.connectionId,
-      requestId: agentConfig.agentId,
-      '~k': agentConfig['~k'],
-    },
+    connectionId: agentConfig.connectionId,
+    configKey: agentConfig['~k'],
   });
 
   // Get connection plugin from registry
@@ -118,11 +115,8 @@ async function callAgent(
     },
     getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
       const subConnectionConfig = await getConnectionConfig(context, {
-        requestConfig: {
-          connectionId: subAgentConfig.connectionId,
-          requestId: subAgentConfig.agentId,
-          '~k': subAgentConfig['~k'],
-        },
+        connectionId: subAgentConfig.connectionId,
+        configKey: subAgentConfig['~k'],
       });
       const subConnection = getConnection(context, { connectionConfig: subConnectionConfig });
       const subConnectionProperties = context.evaluateOperators({
@@ -138,11 +132,8 @@ async function callAgent(
       for (const mcpSource of subAgentConfig.mcp ?? []) {
         if (!type.isNone(mcpSource.connectionId)) {
           const mcpConnConfig = await getConnectionConfig(context, {
-            requestConfig: {
-              connectionId: mcpSource.connectionId,
-              requestId: subAgentConfig.agentId,
-              '~k': subAgentConfig['~k'],
-            },
+            connectionId: mcpSource.connectionId,
+            configKey: subAgentConfig['~k'],
           });
           const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
           const mcpConnProps = context.evaluateOperators({
@@ -169,11 +160,8 @@ async function callAgent(
   for (const mcpSource of agentConfig.mcp ?? []) {
     if (!type.isNone(mcpSource.connectionId)) {
       const mcpConnConfig = await getConnectionConfig(context, {
-        requestConfig: {
-          connectionId: mcpSource.connectionId,
-          requestId: agentConfig.agentId,
-          '~k': agentConfig['~k'],
-        },
+        connectionId: mcpSource.connectionId,
+        configKey: agentConfig['~k'],
       });
       const mcpConnection = getConnection(context, { connectionConfig: mcpConnConfig });
       const mcpConnProps = context.evaluateOperators({

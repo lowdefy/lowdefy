@@ -19,8 +19,8 @@ import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import checkConnectionWrite from '../request/checkConnectionWrite.js';
 import evaluateOperators from '../request/evaluateOperators.js';
-import getConnection from '../request/getConnection.js';
-import getConnectionConfig from '../request/getConnectionConfig.js';
+import getConnection from '../connections/getConnection.js';
+import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import validateSchemas from '../request/validateSchemas.js';
 
@@ -33,7 +33,10 @@ async function handleRequest(context, routineContext, { request }) {
     request,
   });
   const requestConfig = request;
-  const connectionConfig = await getConnectionConfig(context, { requestConfig });
+  const connectionConfig = await getConnectionConfig(context, {
+    connectionId: requestConfig.connectionId,
+    configKey: requestConfig['~k'],
+  });
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
