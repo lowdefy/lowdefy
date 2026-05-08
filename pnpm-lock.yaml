@@ -87,6 +87,9 @@ importers:
 
   packages/build:
     dependencies:
+      '@lowdefy/ai-utils':
+        specifier: 5.2.0
+        version: link:../utils/ai-utils
       '@lowdefy/ajv':
         specifier: 5.2.0
         version: link:../utils/ajv
@@ -148,9 +151,6 @@ importers:
       '@lowdefy/actions-pdf-make':
         specifier: 5.2.0
         version: link:../plugins/actions/actions-pdf-make
-      '@lowdefy/ai-utils':
-        specifier: 5.2.0
-        version: link:../utils/ai-utils
       '@lowdefy/blocks-aggrid':
         specifier: 5.2.0
         version: link:../plugins/blocks/blocks-aggrid

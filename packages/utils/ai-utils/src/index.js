@@ -15,3 +15,4 @@
 */
 
 export { default as handleAgentChat } from './handleAgentChat.js';
+export { default as RESERVED_PLATFORM_TOOL_NAMES } from './reservedToolNames.js';
