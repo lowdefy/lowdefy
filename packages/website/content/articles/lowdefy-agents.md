@@ -30,7 +30,7 @@ Lowdefy spreads that definition across four places, each with a different respon
 | Tool       | What the model can call to act on the world | `api`          |
 | Block      | The chat UI                                 | `pages.blocks` |
 
-Each layer has its own job. Connections hold credentials, separate from any individual agent. Agents are reusable behavior: define one, drop it into any page. Endpoints already exist in Lowdefy as the way you call backend logic from a button or another routine; adding two fields makes them callable by a model as well. Blocks stay pure UI, with no AI-specific config of their own. A block references an agent by ID and renders whatever messages come back.
+Each layer has its own job. Connections hold credentials, separate from any individual agent. Agents are reusable behavior: define one, drop it into any page. Endpoints already exist in Lowdefy as the way you expose backend logic to the rest of your app; adding two fields makes them callable by a model as well. Blocks stay pure UI, with no AI-specific config of their own. A block references an agent by ID and renders whatever messages come back.
 
 ## Adding an agent
 
@@ -180,7 +180,7 @@ The agent picks up every tool the MCP server exposes: list, search, fetch, whate
 
 ### Sub-agents
 
-An agent can have other agents as tools. Define each specialist as its own agent, then list them on the orchestrator under `agents`:
+An agent can call other agents as tools. The orchestrator hands the sub-agent a prompt; the sub-agent runs its own tool loop with its own model, instructions, tools, and step limit, and returns the text it produced. Define each specialist as its own agent, then list them on the orchestrator under `agents`:
 
 ```yaml
 agents:
@@ -220,7 +220,9 @@ agents:
         description: Look up user information by ID
 ```
 
-The orchestrator runs on Sonnet. The specialists run on Haiku. Each sub-agent has its own tools, its own loop limit, and its own prompt. The orchestrator sees them as plain tools, with the `description` field deciding when it delegates.
+The orchestrator sees each sub-agent as a single tool whose `description` decides when it delegates. By default the sub-agent takes a `task` string; override that with `inputSchema` for structured input.
+
+What sub-agents buy you over a single fatter agent: each one runs in its own context. The specialist's intermediate tool calls, raw API responses, and reasoning never enter the orchestrator's prompt. The orchestrator only sees the summary text. The specialist's tool list stays narrow, which makes tool selection more reliable. And each agent picks its own model, so coordination can run on Sonnet while the legwork runs on Haiku.
 
 ## Built-in tools
 
@@ -285,9 +287,9 @@ pages:
 
 ![Agent reading and writing page state on a form](/images/articles/page-state.gif)
 
-## More you can do
+## Going further
 
-### Swap providers without rewriting the agent
+### Routing across providers
 
 An agent can route through the [Vercel AI Gateway](https://vercel.com/ai-gateway) and reach Claude, GPT, Gemini, and self-hosted open models with one config. Use the gateway connection and a `provider/model` string, optionally hand it a fallback list, and the gateway handles failover, attribution, and bring-your-own-key credentials per request:
 
