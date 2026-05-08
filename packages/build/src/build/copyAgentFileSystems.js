@@ -44,7 +44,8 @@ async function copyAgentFileSystems({ components, context }) {
       await copyFileOrDirectory(source, dest);
     } catch (err) {
       throw new Error(
-        `Failed to copy fileSystem basePath "${basePath}" to server directory: ${err.message}`
+        `Failed to copy fileSystem basePath "${basePath}" to server directory: ${err.message}`,
+        { cause: err }
       );
     }
   }

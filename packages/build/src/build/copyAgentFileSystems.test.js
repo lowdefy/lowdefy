@@ -150,16 +150,22 @@ test('copyAgentFileSystems skips copying when source basePath does not exist', a
 });
 
 test('copyAgentFileSystems wraps copy errors with the failing basePath', async () => {
-  mockCopyFileOrDirectory.mockRejectedValueOnce(new Error('disk full'));
+  const originalError = new Error('disk full');
+  mockCopyFileOrDirectory.mockRejectedValueOnce(originalError);
   const context = createContext();
-  await expect(
-    copyAgentFileSystems({
+  let thrown;
+  try {
+    await copyAgentFileSystems({
       components: {
         agents: [{ id: 'a1', properties: { fileSystem: { basePath: './content' } } }],
       },
       context,
-    })
-  ).rejects.toThrow(
+    });
+  } catch (err) {
+    thrown = err;
+  }
+  expect(thrown.message).toBe(
     'Failed to copy fileSystem basePath "./content" to server directory: disk full'
   );
+  expect(thrown.cause).toBe(originalError);
 });
