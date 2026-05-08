@@ -220,7 +220,7 @@ agents:
         description: Look up user information by ID
 ```
 
-The orchestrator sees each sub-agent as a single tool whose `description` decides when it delegates. By default the sub-agent takes a `task` string; override that with `inputSchema` for structured input.
+The orchestrator sees each sub-agent as a single tool whose `description` decides when it delegates.
 
 What sub-agents buy you over a single fatter agent: each one runs in its own context. The specialist's intermediate tool calls, raw API responses, and reasoning never enter the orchestrator's prompt. The orchestrator only sees the summary text. The specialist's tool list stays narrow, which makes tool selection more reliable. And each agent picks its own model, so coordination can run on Sonnet while the legwork runs on Haiku.
 
