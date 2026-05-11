@@ -23,13 +23,33 @@ function isSafeIdentifier(value) {
   return type.isString(value) && SAFE_IDENTIFIER_REGEX.test(value);
 }
 
+// Reconstructs the value from the regex match. The returned string is exactly
+// the matched portion of the input — never the input itself — so even if
+// `value` were tainted with non-whitelist characters, none of them can reach
+// the generated source. This pattern is recognized by static-analysis taint
+// tracking (CodeQL) as a sanitization boundary, even though the upstream
+// filter already guarantees `value` is safe.
+function sanitizeIdentifier(value) {
+  if (typeof value !== 'string') {
+    throw new Error('codegenI18nLocales: identifier must be a string.');
+  }
+  const match = value.match(SAFE_IDENTIFIER_REGEX);
+  if (!match) {
+    throw new Error(
+      `codegenI18nLocales: identifier "${value}" does not match ${SAFE_IDENTIFIER_REGEX}.`
+    );
+  }
+  return match[0];
+}
+
 function buildAntdLoaders(locales) {
   const entries = locales
     .filter((locale) => isSafeIdentifier(locale.code) && isSafeIdentifier(locale.antd))
-    .map(
-      (locale) =>
-        `  '${locale.code}': () => import('antd/locale/${locale.antd}.js').then((m) => m.default ?? m),`
-    );
+    .map((locale) => {
+      const code = sanitizeIdentifier(locale.code);
+      const antd = sanitizeIdentifier(locale.antd);
+      return `  '${code}': () => import('antd/locale/${antd}.js').then((m) => m.default ?? m),`;
+    });
   return `${HEADER}const loaders = {\n${entries.join('\n')}\n};\nexport default loaders;\n`;
 }
 
@@ -38,9 +58,14 @@ function buildDayjsImports(locales) {
     (locale) => isSafeIdentifier(locale.code) && isSafeIdentifier(locale.dayjs)
   );
   const ids = Array.from(new Set(validDayjsLocales.map((locale) => locale.dayjs)));
-  const imports = ids.map((id) => `import 'dayjs/locale/${id}.js';`).join('\n');
+  const imports = ids
+    .map((id) => `import 'dayjs/locale/${sanitizeIdentifier(id)}.js';`)
+    .join('\n');
   const localeMap = validDayjsLocales
-    .map((locale) => `  '${locale.code}': '${locale.dayjs}',`)
+    .map(
+      (locale) =>
+        `  '${sanitizeIdentifier(locale.code)}': '${sanitizeIdentifier(locale.dayjs)}',`
+    )
     .join('\n');
   return `${HEADER}${imports}\nconst localeMap = {\n${localeMap}\n};\nexport default localeMap;\n`;
 }
