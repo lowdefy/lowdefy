@@ -42,7 +42,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ai-sdk/openai": "3.0.41",
+    "@ai-sdk/openai": "3.0.63",
     "@lowdefy/ai-utils": "5.2.0"
   },
   "devDependencies": {

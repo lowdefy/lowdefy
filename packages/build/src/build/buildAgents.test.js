@@ -38,6 +38,13 @@ test('buildAgents null agents', () => {
   expect(res.agents).toBe(null);
 });
 
+test('buildAgents returns components untouched when agents is not an array', () => {
+  const context = testContext();
+  const components = { agents: { not: 'an-array' } };
+  const res = buildAgents({ components, context });
+  expect(res.agents).toEqual({ not: 'an-array' });
+});
+
 test('buildAgents valid agent renames id and adds to agentIds', () => {
   const context = testContext();
   const components = {
@@ -1525,5 +1532,71 @@ test('buildAgents throws when fileSystem.basePath does not exist', () => {
   };
   expect(() => buildAgents({ components, context })).toThrow(
     'Agent "agent1" fileSystem.basePath "__nonexistent_ldf_test_dir__" does not exist.'
+  );
+});
+
+test('buildAgents throws when tool endpointId uses a reserved platform tool name', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    api: [
+      {
+        id: 'endpoint:update-page-state',
+        endpointId: 'update-page-state',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['update-page-state'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /tool "update-page-state" uses a reserved platform tool name/
+  );
+});
+
+test('buildAgents throws when sub-agent agentId uses a reserved platform tool name', () => {
+  const context = testContext();
+  const components = {
+    connections: [
+      {
+        id: 'connection:conn1',
+        connectionId: 'conn1',
+        type: 'Anthropic',
+      },
+    ],
+    agents: [
+      {
+        id: 'read-file',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'parent',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        agents: ['read-file'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /sub-agent "read-file" uses a reserved platform tool name/
   );
 });

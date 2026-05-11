@@ -1,12 +1,12 @@
 ---
 title: '@lowdefy/connection-ai-gateway'
-updated: 2026-04-23
+updated: 2026-05-05
 package: '@lowdefy/connection-ai-gateway'
 ---
 
 # @lowdefy/connection-ai-gateway
 
-Vercel AI Gateway connection and `AIGatewayAgent` resolver. Use this when you want a single provider that can route to many models (Anthropic, OpenAI, Google, xAI, etc.) behind the Vercel AI Gateway -- including provider fallback, routing restrictions, BYOK, and spend attribution.
+Vercel AI Gateway connection and `AIGatewayAgent` resolver. Use this when you want a single provider that can route to many models (Anthropic, OpenAI, Google, xAI, etc.) behind the Vercel AI Gateway, including provider fallback, routing restrictions, BYOK, and spend attribution.
 
 ## Connection: AIGateway
 
@@ -64,7 +64,7 @@ These are all optional. When any are set, the resolver merges them into `provide
 
 ### Shared agent properties
 
-`AIGatewayAgent` also accepts the common agent properties shared with other resolvers: `instructions`, `maxSteps`, `maxOutputTokens`, `temperature`, `toolChoice`, `pageContext`, `providerOptions`, `repairToolCall`, and `prepareStep`. Tool wiring, hooks, MCP sources, sub-agents, and the `update-page-state` flow come from the shared runtime -- see `code-docs/architecture/agent-system.md`.
+`AIGatewayAgent` also accepts the common agent properties shared with other resolvers: `instructions`, `maxSteps`, `maxOutputTokens`, `temperature`, `toolChoice`, `pageContext`, `providerOptions`, `repairToolCall`, and `prepareStep`. Tool wiring, hooks, MCP sources, sub-agents, and the `update-page-state` flow come from the shared runtime, see `code-docs/architecture/agent-system.md`.
 
 ## Pass-through provider options
 
@@ -78,7 +78,18 @@ properties:
       thinking: { type: enabled, budgetTokens: 10000 }
 ```
 
-The gateway forwards this to the routed provider. Use `providerOptions.gateway` only when you want to set gateway options directly -- the resolver merges the routing props listed above into it automatically.
+The gateway forwards this to the routed provider. Use `providerOptions.gateway` only when you want to set gateway options directly, the resolver merges the routing props listed above into it automatically.
+
+## Why use it
+
+A single AIGateway connection replaces multiple provider connections when:
+
+- The app needs cross-provider failover (e.g. Anthropic to OpenAI on quota errors)
+- You want consolidated billing/analytics across providers
+- Customers bring their own provider keys (BYOK) routed through the gateway
+- You need per-request routing decisions (order/only) without changing connection config
+
+Single-provider apps can keep using the dedicated connections (`Anthropic`, `OpenAI`, `Google`), they have lower indirection.
 
 ## Exports
 

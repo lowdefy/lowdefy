@@ -53,6 +53,7 @@
     "test:u": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=snapshots -- -u"
   },
   "dependencies": {
+    "@lowdefy/ai-utils": "5.2.0",
     "@lowdefy/ajv": "5.2.0",
     "@lowdefy/block-utils": "5.2.0",
     "@lowdefy/blocks-basic": "5.2.0",
@@ -75,7 +76,6 @@
     "@jest/globals": "28.1.3",
     "@lowdefy/actions-core": "5.2.0",
     "@lowdefy/actions-pdf-make": "5.2.0",
-    "@lowdefy/ai-utils": "5.2.0",
     "@lowdefy/blocks-aggrid": "5.2.0",
     "@lowdefy/blocks-antd": "5.2.0",
     "@lowdefy/blocks-antd-x": "5.2.0",

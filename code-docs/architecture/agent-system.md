@@ -1,6 +1,6 @@
 ---
 title: Agent System
-updated: 2026-04-23
+updated: 2026-05-05
 packages:
   [
     '@lowdefy/ai-utils',
@@ -12,6 +12,8 @@ packages:
     '@lowdefy/connection-google',
     '@lowdefy/connection-ai-gateway',
     '@lowdefy/connection-mcp',
+    '@lowdefy/server',
+    '@lowdefy/server-dev',
   ]
 ---
 
@@ -39,7 +41,7 @@ agents:
 
 The agent system separates concerns into four layers, each configured independently:
 
-1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google, AI Gateway) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
+1. **Connection** -- AI SDK provider (Anthropic, OpenAI, Google, Vercel AI Gateway) or config container (Mcp). Holds credentials and creates the provider instance. Configured under `connections:` just like database connections.
 
 2. **Agent** -- The orchestration unit. References a connection, specifies model/instructions/tools/hooks, and controls the tool loop (max steps, stop conditions, pruning). Configured under the top-level `agents:` key. At runtime, a `ToolLoopAgent` from the AI SDK manages the multi-step model interaction.
 
@@ -63,6 +65,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 4. `callAgent` (`packages/api/src/routes/agent/callAgent.js`) orchestrates the server-side flow:
 
    - Loads agent config from `agents/{agentId}.json` via `getAgentConfig`
+   - Builds `agentContext` (`{ conversationId, pageId, sharedState, urlQuery, userId }`)
    - Evaluates operators in agent properties (`_user`, `_secret`, `_payload`) with `agentContext` as payload
    - Loads connection config, creates the provider instance (e.g., Anthropic SDK client)
    - Resolves MCP connection references to inline transport config
@@ -73,7 +76,8 @@ This separation means the same endpoint can serve a page button, another endpoin
 5. The agent resolver (e.g., `ClaudeAgent`) maps provider-specific properties into `providerOptions` and delegates to `handleAgentChat()`.
 
 6. `handleAgentChat` (`packages/utils/ai-utils/src/handleAgentChat.js`) is the shared runtime:
-   - Calls `buildAgentTools` to merge endpoint, MCP, sub-agent, and file system tools
+   - Calls `buildAgentTools` to merge endpoint, MCP, sub-agent, and file system tools (after rejecting any user tool whose name collides with a platform reserved name like `update-page-state`)
+   - If the request carries a non-empty `sharedState`, builds the `update-page-state` tool via `buildUpdatePageStateTool` and includes the snapshot in the agent's context block
    - Creates a `ToolLoopAgent` with model, instructions, tools, stop conditions, and hook callbacks
    - Opens a `createUIMessageStream`, runs the agent inside the stream's execute function
    - If `prune` config is set, decomposes the stream creation to insert `pruneMessages` between UI-to-model conversion and agent execution
@@ -183,6 +187,20 @@ Configured via `agent.properties.fileSystem` with a `basePath`. Automatically ad
 
 All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePath.js`) which normalizes the requested path against the base directory and throws if the resolved path escapes the base, preventing path traversal attacks.
 
+#### Deployment Considerations
+
+The fileSystem tools call Node's `fs/promises` and `glob` directly, so they require a Node.js runtime. Edge runtimes (Vercel Edge, Cloudflare Workers, Deno Deploy edge) and browsers cannot execute them, `fs/promises` is unavailable. Lowdefy's pages router (`pages/api/agent/[...path].js` in both `@lowdefy/server` and `@lowdefy/server-dev`) does not declare `runtime: 'edge'`, so the default Node runtime applies.
+
+The tools are read-only. There is no `write-file` or `delete-file`. Serverless platforms with a read-only deployment filesystem (Vercel, AWS Lambda) work without needing `/tmp` workarounds.
+
+**Standard `next start`** (running the built server directory directly): `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server. This works as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.).
+
+**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers need extra wiring. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable. Without help, the files copied by `copyAgentFileSystems` would sit on the build host but never make it into the deployed bundle.
+
+The build handles this automatically. `copyAgentFileSystems` writes a `agentFileSystems.json` manifest to the server build directory listing every unique `basePath`. `packages/servers/server/next.config.js` reads the manifest and feeds the paths into `outputFileTracingIncludes` under the `/api/agent/*` route, so the tracer pulls each `basePath` directory into the standalone output and the Vercel function bundle. App developers don't need to configure anything.
+
+The trade-off is bundle size: pointing an agent at a large directory will bloat the deployment. That's the explicit intent of granting fileSystem access, but worth flagging when sizing deployments.
+
 ### Reserved Platform Tool Names
 
 `packages/utils/ai-utils/src/reservedToolNames.js` exports `RESERVED_PLATFORM_TOOL_NAMES`:
@@ -191,11 +209,11 @@ All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePa
 update-page-state, read-file, list-files, search-files, stat-file
 ```
 
-`buildAgentTools` rejects any endpoint, MCP, or sub-agent whose name collides with this list with a `ConfigError`. MCP sources can collide in a non-fatal way -- the conflicting MCP tool is skipped and a warning is logged. These names are owned by the platform: `update-page-state` is injected by `handleAgentChat` when the chat has `sharedState`; the four `*-file*` tools are injected when an agent has a `fileSystem` basePath.
+`buildAgentTools` rejects any endpoint, MCP, or sub-agent whose name collides with this list with a `ConfigError`. MCP sources can collide in a non-fatal way: the conflicting MCP tool is skipped and a warning is logged. These names are owned by the platform: `update-page-state` is injected by `handleAgentChat` when the chat has `sharedState`; the four `*-file*` tools are injected when an agent has a `fileSystem` basePath.
 
 ## Shared State
 
-The `sharedState` system lets an agent read from -- and write back to -- the calling page's Lowdefy state. Two things get wired up when `AgentChat.sharedState` is a non-empty object:
+The `sharedState` system lets an agent read from, and write back to, the calling page's Lowdefy state. Two things get wired up when `AgentChat.sharedState` is a non-empty object:
 
 1. The object is sent to the server on every turn and injected into the agent's instructions as `<context>sharedState: ...</context>` (when `pageContext: true`).
 2. The server injects a platform tool named `update-page-state` into the agent's tool set. The model calls it with `{ updates: { key: value, ... } }` and the client applies the writes to Lowdefy page state.
@@ -216,7 +234,7 @@ properties:
 ```
 
 - The block mirrors the evaluated object into `sharedStateRef` and reads it inside the transport's `body()` at send time, so the agent sees the freshest value without re-creating the transport on every state change.
-- Empty objects are coerced to `null` -- the server only injects the tool when `sharedState` is a non-empty object.
+- Empty objects are coerced to `null`. The server only injects the tool when `sharedState` is a non-empty object.
 - The transport POSTs `{ messages, urlQuery, sharedState }` to `/api/agent/{pageId}/{agentId}`.
 
 ### Server: Tool Injection
@@ -234,7 +252,7 @@ properties:
 `update-page-state` is a client-executed tool (no server `execute`). The browser handles the call in `AgentChat`'s `onToolCall`:
 
 1. Reads `toolCall.input.updates`.
-2. Filters writes against `Object.keys(sharedStateRef.current)` -- any key the model hallucinates outside the exposed shape is dropped into `ignored` and not written. This defends against prompt-injection writes to arbitrary page state.
+2. Filters writes against `Object.keys(sharedStateRef.current)`. Any key the model hallucinates outside the exposed shape is dropped into `ignored` and not written. This defends against prompt-injection writes to arbitrary page state.
 3. For the writable subset, fires a registered internal event via `methods.triggerEvent({ name: '__updatePageState', event: writable })`. The event is registered at block-mount time:
 
    ```js
@@ -244,9 +262,15 @@ properties:
    });
    ```
 
-   Routing through `registerEvent` + `triggerEvent` with `_event: true` reuses the action-runner's existing state-write path rather than introducing new block-level `setState`/`getState` methods. (An earlier prototype that added `block.setState`/`block.getState` was reverted in favour of this pattern -- see the merge history for `agent-shared-state`.)
+   Routing through `registerEvent` + `triggerEvent` with `_event: true` reuses the action-runner's existing state-write path rather than introducing new block-level `setState`/`getState` methods. (An earlier prototype that added `block.setState`/`block.getState` was reverted in favour of this pattern, see the merge history for `agent-shared-state`.)
 
 4. Responds via `addToolOutput({ tool: 'update-page-state', output: { ok: true, written: [...], ignored: [...] } })` so the model can see what took effect.
+
+### Sharp Edges
+
+- **Allowlist is request-scoped**: `Object.keys(sharedState)` at request time. Patches to keys not in that set are dropped on the client.
+- **Reserved name**: `update-page-state` is in `RESERVED_PLATFORM_TOOL_NAMES`. User tools with that name throw at build/runtime, they cannot shadow the built-in.
+- **Snapshot, not live**: The agent sees the snapshot at request time, not subsequent updates from other UI interactions during the agent run.
 
 ### Developer Pattern
 
@@ -350,7 +374,7 @@ properties:
 
 `packages/plugins/connections/connection-ai-gateway/src/connections/AIGateway/AIGatewayAgent/AIGatewayAgent.js`
 
-Wraps the Vercel AI Gateway (`@ai-sdk/gateway`). Maps gateway routing props into `providerOptions.gateway` before delegating to `handleAgentChat`:
+Wraps the Vercel AI Gateway (`@ai-sdk/gateway`). Maps gateway routing props into `providerOptions.gateway` before delegating to `handleAgentChat`. The `model` is in `creator/model` form (e.g. `anthropic/claude-sonnet-4.5`):
 
 ```yaml
 properties:
@@ -369,6 +393,8 @@ properties:
 ```
 
 Provider-native options (e.g. Anthropic `thinking`, OpenAI `reasoningEffort`) are passed through the gateway by keying `providerOptions` on the underlying provider slug (`providerOptions.anthropic`, `providerOptions.openai`, ...).
+
+Use this when the app needs cross-provider failover, BYOK, or consolidated billing/analytics. Single-provider apps should use the dedicated provider connection (`Anthropic`, `OpenAI`, `Google`) for lower indirection.
 
 ### AISDKAgent (generic, `@lowdefy/ai-utils`)
 

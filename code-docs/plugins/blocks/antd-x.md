@@ -1,6 +1,6 @@
 ---
 title: '@lowdefy/blocks-antd-x'
-updated: 2026-04-23
+updated: 2026-05-05
 package: '@lowdefy/blocks-antd-x'
 ---
 
@@ -26,7 +26,7 @@ Composite chat block that integrates the AI SDK's `useChat` hook with Ant Design
 - `conversationId` — Conversation identifier for multi-turn persistence
 - `messages` — Load existing messages (external state)
 - `urlQuery` — Query params passed to agent API
-- `sharedState` — Object exposing page state to the agent. See [Shared State](#shared-state) below.
+- `sharedState` — Object slice of page state the agent may read and write back via the built-in `update-page-state` tool. See [Shared State](#shared-state) below.
 - `welcome` — Welcome screen: `title`, `description`, `prompts[]`
 - `messageDisplay` — Rendering: `showThoughtChain`, `reasoningDisplay`, `toolResultDisplay`, `thinkingMessages`, `thinkingMessageDelay`, `thinkingMessageRotationInterval`
 - `sender` — Input area: `placeholder`, `submitType`, `allowSpeech`, `attachments`, `header`, `switches[]`, `suggestions[]`

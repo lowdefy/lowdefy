@@ -20,6 +20,7 @@ import path from 'path';
 import fs from 'fs';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
@@ -58,7 +59,7 @@ function detectCycles(agents) {
 }
 
 function buildAgents({ components, context }) {
-  if (type.isNone(components.agents)) {
+  if (!type.isArray(components.agents)) {
     return components;
   }
 
@@ -68,7 +69,7 @@ function buildAgents({ components, context }) {
     message: 'Duplicate agentId "{{ id }}".',
   });
 
-  (components.agents ?? []).forEach((agent) => {
+  components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
     // Check duplicates
@@ -114,6 +115,12 @@ function buildAgents({ components, context }) {
 
     // Validate tools reference existing API endpoints with required tool metadata
     agent.tools.forEach((toolConfig) => {
+      if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.endpointId)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" tool "${toolConfig.endpointId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          { configKey }
+        );
+      }
       const endpoint = (components.api ?? []).find(
         (e) => e.id === toolConfig.endpointId || e.endpointId === toolConfig.endpointId
       );
@@ -236,7 +243,7 @@ function buildAgents({ components, context }) {
   });
 
   // Second pass: validate sub-agent references (needs all agentIds collected)
-  (components.agents ?? []).forEach((agent) => {
+  components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
     agent.agents.forEach((subAgentRef) => {
@@ -244,6 +251,14 @@ function buildAgents({ components, context }) {
       if (!context.agentIds.has(subAgentRef.agentId)) {
         throw new ConfigError(
           `Agent "${agent.agentId}" references sub-agent "${subAgentRef.agentId}" which does not exist.`,
+          { configKey }
+        );
+      }
+
+      // Reserved platform tool name guard for sub-agents
+      if (RESERVED_PLATFORM_TOOL_NAMES.includes(subAgentRef.agentId)) {
+        throw new ConfigError(
+          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
           { configKey }
         );
       }

@@ -26,16 +26,13 @@ import searchFiles from './fileSystem/searchFiles.js';
 import statFile from './fileSystem/statFile.js';
 import RESERVED_PLATFORM_TOOL_NAMES from './reservedToolNames.js';
 
-// Build artifacts contain serializer markers (~k, ~r, ~l) as non-enumerable
-// properties and ~arr wrappers for arrays. JSON.parse(JSON.stringify(obj))
-// strips non-enumerable props and produces a clean JSON Schema for the AI SDK.
+// Build artifacts carry serializer markers (~k, ~r, ~l) and wrap location-marked
+// arrays as { '~arr': [...], '~k': '...' }. serializer.deserialize un-wraps
+// ~arr back to a plain array and demotes markers to non-enumerable properties;
+// the subsequent JSON round-trip drops those non-enumerable markers, leaving a
+// clean structure for the AI SDK.
 function cleanBuildArtifact(obj) {
-  return JSON.parse(
-    JSON.stringify(obj, (key, value) => {
-      if (key.startsWith('~')) return undefined;
-      return value;
-    })
-  );
+  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
 function assertNotReserved(name, kind) {
