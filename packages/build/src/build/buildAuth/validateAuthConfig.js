@@ -29,6 +29,12 @@ function validateAuthConfig({ components, context }) {
   if (!type.isObject(components.auth)) {
     throw new ConfigError('lowdefy.auth is not an object.', { configKey: components['~k'] });
   }
+  if (type.isNone(components.auth.agents)) {
+    components.auth.agents = {};
+  }
+  if (type.isNone(components.auth.agents.roles)) {
+    components.auth.agents.roles = {};
+  }
   if (type.isNone(components.auth.api)) {
     components.auth.api = {};
   }
@@ -49,6 +55,9 @@ function validateAuthConfig({ components, context }) {
   }
   if (type.isNone(components.auth.events)) {
     components.auth.events = [];
+  }
+  if (type.isNone(components.auth.jwt)) {
+    components.auth.jwt = {};
   }
   if (type.isNone(components.auth.providers)) {
     components.auth.providers = [];
@@ -89,6 +98,7 @@ function validateAuthConfig({ components, context }) {
     });
   }
 
+  validateMutualExclusivity({ components, context, entity: 'agents' });
   validateMutualExclusivity({ components, context, entity: 'api' });
   validateMutualExclusivity({ components, context, entity: 'pages' });
 

@@ -83,89 +83,89 @@ const CalendarBlock = ({
 
   return (
     <div id={blockId}>
-    <Calendar
-      className={classNames.element}
-      style={styles.element}
-      fullscreen={properties.fullscreen !== false}
-      mode={properties.mode}
-      disabledDate={disabledDate(properties.disabledDates ?? {})}
-      validRange={
-        type.isArray(properties.validRange) && properties.validRange.length === 2
-          ? [dayjs(properties.validRange[0]), dayjs(properties.validRange[1])]
-          : undefined
-      }
-      value={type.isDate(value) ? dayjs(value) : undefined}
-      defaultValue={!type.isDate(value) ? defaultPanel : undefined}
-      onSelect={(date, selectInfo) => {
-        // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
-        const d = dayjs(date);
-        const val = d.toDate();
-        const source = selectInfo?.source ?? 'date';
-        // Only fire for date cell clicks — year/month panel navigation emits
-        // onSelect too but shouldn't push a value through the event chain.
-        if (source !== 'date' && source !== 'customize') return;
-        methods.setValue(val);
-        methods.triggerEvent({
-          name: 'onSelect',
-          event: {
-            value: val,
-            date: d.format('YYYY-MM-DD'),
-            source,
-          },
-        });
-      }}
-      onChange={(date) => {
-        const d = dayjs(date);
-        const val = d.toDate();
-        methods.setValue(val);
-        methods.triggerEvent({
-          name: 'onChange',
-          event: {
-            value: val,
-            date: d.format('YYYY-MM-DD'),
-          },
-        });
-      }}
-      onPanelChange={(date, mode) => {
-        const d = dayjs(date);
-        methods.triggerEvent({
-          name: 'onPanelChange',
-          event: {
-            value: d.toDate(),
-            date: d.format('YYYY-MM-DD'),
-            mode,
-          },
-        });
-      }}
-      cellRender={
-        hasDateData
-          ? (current, info) => {
-              if (info.type !== 'date') return info.originNode;
-              const key = dayjs(current).format('YYYY-MM-DD');
-              const items = dateMap[key];
-              // cellRender output is appended to the default date cell — return
-              // null for days with no events to avoid double-rendering the date.
-              if (!items) return null;
-              return (
-                <ul
-                  className="ant-picker-calendar-events"
-                  style={{ listStyle: 'none', padding: 0, margin: 0 }}
-                >
-                  {items.map((item, i) => (
-                    <li key={i}>
-                      <Badge
-                        status={item.status ?? 'default'}
-                        color={item.color}
-                        text={item.content}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              );
-            }
-          : undefined
-      }
-    />
+      <Calendar
+        className={classNames.element}
+        style={styles.element}
+        fullscreen={properties.fullscreen !== false}
+        mode={properties.mode}
+        disabledDate={disabledDate(properties.disabledDates ?? {})}
+        validRange={
+          type.isArray(properties.validRange) && properties.validRange.length === 2
+            ? [dayjs(properties.validRange[0]), dayjs(properties.validRange[1])]
+            : undefined
+        }
+        value={type.isDate(value) ? dayjs(value) : undefined}
+        defaultValue={!type.isDate(value) ? defaultPanel : undefined}
+        onSelect={(date, selectInfo) => {
+          // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
+          const d = dayjs(date);
+          const val = d.toDate();
+          const source = selectInfo?.source ?? 'date';
+          // Only fire for date cell clicks — year/month panel navigation emits
+          // onSelect too but shouldn't push a value through the event chain.
+          if (source !== 'date' && source !== 'customize') return;
+          methods.setValue(val);
+          methods.triggerEvent({
+            name: 'onSelect',
+            event: {
+              value: val,
+              date: d.format('YYYY-MM-DD'),
+              source,
+            },
+          });
+        }}
+        onChange={(date) => {
+          const d = dayjs(date);
+          const val = d.toDate();
+          methods.setValue(val);
+          methods.triggerEvent({
+            name: 'onChange',
+            event: {
+              value: val,
+              date: d.format('YYYY-MM-DD'),
+            },
+          });
+        }}
+        onPanelChange={(date, mode) => {
+          const d = dayjs(date);
+          methods.triggerEvent({
+            name: 'onPanelChange',
+            event: {
+              value: d.toDate(),
+              date: d.format('YYYY-MM-DD'),
+              mode,
+            },
+          });
+        }}
+        cellRender={
+          hasDateData
+            ? (current, info) => {
+                if (info.type !== 'date') return info.originNode;
+                const key = dayjs(current).format('YYYY-MM-DD');
+                const items = dateMap[key];
+                // cellRender output is appended to the default date cell — return
+                // null for days with no events to avoid double-rendering the date.
+                if (!items) return null;
+                return (
+                  <ul
+                    className="ant-picker-calendar-events"
+                    style={{ listStyle: 'none', padding: 0, margin: 0 }}
+                  >
+                    {items.map((item, i) => (
+                      <li key={i}>
+                        <Badge
+                          status={item.status ?? 'default'}
+                          color={item.color}
+                          text={item.content}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                );
+              }
+            : undefined
+        }
+      />
     </div>
   );
 };

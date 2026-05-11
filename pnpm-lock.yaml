@@ -68,6 +68,9 @@ importers:
       '@lowdefy/operators-js':
         specifier: 5.2.0
         version: link:../plugins/operators/operators-js
+      jose:
+        specifier: 4.15.9
+        version: 4.15.9
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3

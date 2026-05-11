@@ -27,7 +27,7 @@ import getConnection from '../connections/getConnection.js';
 
 async function callAgent(
   context,
-  { agentId, pageId, messages, conversationId, urlQuery, sharedState }
+  { agentId, pageId, messages, conversationId, urlQuery, sharedState, format }
 ) {
   const { logger } = context;
 
@@ -185,6 +185,7 @@ async function callAgent(
     connection: connectionInstance,
     properties: { agent: agentConfig, messages },
     context: resolverContext,
+    format,
   });
 
   return { response };

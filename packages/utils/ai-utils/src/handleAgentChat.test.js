@@ -1556,7 +1556,14 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         stepNumber: 0,
         text: 'Looking up products...',
         toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
-        toolResults: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' }, output: [{ name: 'MacBook' }] }],
+        toolResults: [
+          {
+            toolCallId: 'tc1',
+            toolName: 'search',
+            input: { q: 'laptop' },
+            output: [{ name: 'MacBook' }],
+          },
+        ],
         finishReason: 'tool-calls',
         usage: {
           inputTokens: 100,

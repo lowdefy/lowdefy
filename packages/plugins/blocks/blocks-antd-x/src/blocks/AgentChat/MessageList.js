@@ -96,8 +96,7 @@ const MessageList = React.forwardRef(function MessageList(
     // Show loading dots while the agent is working on the last assistant bubble and
     // nothing visible has rendered yet. `hasVisibleContent` mirrors what MessageBubble
     // paints, so tool-only messages with showThoughtChain: false also keep dots.
-    const showLoading =
-      isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
+    const showLoading = isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
 
     items.push({
       key: msg.id,

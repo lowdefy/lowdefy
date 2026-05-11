@@ -197,7 +197,16 @@ export default {
               properties: {
                 type: {
                   type: 'string',
-                  enum: ['tag', 'avatar', 'link', 'date', 'boolean', 'progress', 'number', 'buttons'],
+                  enum: [
+                    'tag',
+                    'avatar',
+                    'link',
+                    'date',
+                    'boolean',
+                    'progress',
+                    'number',
+                    'buttons',
+                  ],
                   description: 'The built-in renderer to use.',
                 },
                 colorMap: {

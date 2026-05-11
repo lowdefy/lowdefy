@@ -122,7 +122,7 @@ function convertDataUrlsToBase64(messages) {
   });
 }
 
-async function handleAgentChat({ connection, properties, context }) {
+async function handleAgentChat({ connection, properties, context, format }) {
   const { agent, messages: rawMessages } = properties;
   const messages = convertDataUrlsToBase64(rawMessages);
 
@@ -198,6 +198,21 @@ async function handleAgentChat({ connection, properties, context }) {
         }
       : {}),
   });
+
+  if (format === 'text') {
+    const hasMcpClients = mcpClients.length > 0;
+    const result = await agentInstance.stream({
+      messages: await convertToModelMessages(messages, { tools }),
+      ...(hasMcpClients
+        ? {
+            onFinish: async () => {
+              await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
+            },
+          }
+        : {}),
+    });
+    return { response: result.toTextStreamResponse() };
+  }
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
   const hasOnFinishHooks = onFinishEndpointIds && onFinishEndpointIds.length > 0;

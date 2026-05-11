@@ -31,20 +31,14 @@ function ThinkingIndicator({ label }) {
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('bubble');
   return (
-    <span
-      style={{ display: 'inline-flex', alignItems: 'center', gap: 8, verticalAlign: 'middle' }}
-    >
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, verticalAlign: 'middle' }}>
       <span className={`${prefixCls}-dot`} aria-hidden="true">
         <i className={`${prefixCls}-dot-item`} key="item-1" />
         <i className={`${prefixCls}-dot-item`} key="item-2" />
         <i className={`${prefixCls}-dot-item`} key="item-3" />
       </span>
       {label != null && label !== '' && (
-        <span
-          aria-live="polite"
-          aria-atomic="true"
-          style={{ color: '#8c8c8c', fontSize: '0.9em' }}
-        >
+        <span aria-live="polite" aria-atomic="true" style={{ color: '#8c8c8c', fontSize: '0.9em' }}>
           {label}
         </span>
       )}

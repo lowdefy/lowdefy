@@ -70,8 +70,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
-    () =>
-      createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
+    () => createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
     [pageId, agentId, conversationId, urlQueryKey]
   );
 

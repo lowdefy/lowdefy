@@ -55,15 +55,15 @@ All other ag-grid props pass through unchanged via `{...someProperties}`. Users 
 
 Define `cell` on a column to opt into a Lowdefy-managed renderer. The build registry lives in `src/cellRenderers/index.js`:
 
-| `cell.type` | Renders                          | Triggers       |
-| ----------- | -------------------------------- | -------------- |
-| `tag`       | antd `Tag` with color mapping    | —              |
-| `avatar`    | antd `Avatar` (initials/image)   | `onCellLink` * |
-| `link`      | `<a>` with row-data-substituted href | `onCellLink` |
-| `date`      | dayjs-formatted date             | —              |
-| `boolean`   | true/false labels with colors    | —              |
-| `progress`  | progress bar with thresholds     | —              |
-| `number`    | `Intl.NumberFormat` (currency, percent, etc.) | — |
+| `cell.type` | Renders                                       | Triggers                |
+| ----------- | --------------------------------------------- | ----------------------- |
+| `tag`       | antd `Tag` with color mapping                 | —                       |
+| `avatar`    | antd `Avatar` (initials/image)                | `onCellLink` \*         |
+| `link`      | `<a>` with row-data-substituted href          | `onCellLink`            |
+| `date`      | dayjs-formatted date                          | —                       |
+| `boolean`   | true/false labels with colors                 | —                       |
+| `progress`  | progress bar with thresholds                  | —                       |
+| `number`    | `Intl.NumberFormat` (currency, percent, etc.) | —                       |
 | `buttons`   | list of antd `Button`s, one event per button  | per-button `eventName:` |
 
 \* Avatar emits `onCellLink` only when given a `link` config.
@@ -169,16 +169,16 @@ Without this plumbing, `components.Icon` is `undefined` inside cell renderers an
 
 ## Events Catalogue
 
-| Event                 | Triggered by                                         | Payload                                                                |
-| --------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
-| `onRowClick`          | Click anywhere on a row (non-bubble-suppressed)      | `{ row, selected, rowIndex }`                                          |
-| `onCellClick`         | Click anywhere in a cell                             | `{ cell: { column, value }, colId, row, rowIndex, selected }`          |
-| `onRowSelected`       | Row checkbox / selection changes (selection only)    | `{ row, rowIndex, selected }`                                          |
-| `onSelectionChanged`  | Multi-row selection set changed                      | `{ selected }`                                                         |
-| `onFilterChanged`     | User changed any filter                              | `{ rows, filter }` (rows = currently displayed)                        |
-| `onSortChanged`       | User changed sort                                    | `{ rows, sort }`                                                       |
-| `onCellLink`          | Click on a `cell.type: link` (or avatar with `link`) | `{ link, row, value }` — wire to `Link` action with `params: { _event: link }` |
-| user-defined          | Click on a `cell.type: buttons` button               | `{ row, value, button: { eventName, title }, buttonIndex }` — name is the button's `eventName:` string |
+| Event                | Triggered by                                         | Payload                                                                                                |
+| -------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `onRowClick`         | Click anywhere on a row (non-bubble-suppressed)      | `{ row, selected, rowIndex }`                                                                          |
+| `onCellClick`        | Click anywhere in a cell                             | `{ cell: { column, value }, colId, row, rowIndex, selected }`                                          |
+| `onRowSelected`      | Row checkbox / selection changes (selection only)    | `{ row, rowIndex, selected }`                                                                          |
+| `onSelectionChanged` | Multi-row selection set changed                      | `{ selected }`                                                                                         |
+| `onFilterChanged`    | User changed any filter                              | `{ rows, filter }` (rows = currently displayed)                                                        |
+| `onSortChanged`      | User changed sort                                    | `{ rows, sort }`                                                                                       |
+| `onCellLink`         | Click on a `cell.type: link` (or avatar with `link`) | `{ link, row, value }` — wire to `Link` action with `params: { _event: link }`                         |
+| user-defined         | Click on a `cell.type: buttons` button               | `{ row, value, button: { eventName, title }, buttonIndex }` — name is the button's `eventName:` string |
 
 The buttons-cell entry intentionally lists "user-defined" because each button declares its own block-level event name. The meta files include a documentation-only `onCellButton` entry describing the payload shape.
 
@@ -211,6 +211,7 @@ ag-grid's `cellRenderer` accepts a string (registered name) or React component. 
 ### Why Per-Button Event Names (Buttons Cell)?
 
 Three options were considered:
+
 1. **One shared event with id-dispatch.** User writes `_if` ladders inside the action chain.
 2. **Per-button `onClick:` action chains inline.** Buttons would carry their own action arrays.
 3. **Per-button `eventName:` → block-level event lookup.** Chosen.

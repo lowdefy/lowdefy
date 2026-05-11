@@ -218,7 +218,6 @@ Module variable substitution, resolved lazily during the full-resolve walker pas
 ```yaml
 collection:
   _module.var: collection
-
 # Defaults are expressions declared in module.lowdefy.yaml.
 # vars:
 #   page_title:
@@ -735,6 +734,7 @@ _type.isUndefined: value
 Operators declare whether they can be safely evaluated at build time or must be deferred to runtime. This is controlled by the `dynamic` flag and enforced by `collectDynamicIdentifiers` and `evaluateOperators`.
 
 **Files:**
+
 - `packages/build/src/build/collectDynamicIdentifiers.js` — Builds the `Set` of dynamic identifiers
 - `packages/build/src/build/validateOperatorsDynamic.js` — Validates all operators have the flag
 - `packages/build/src/build/buildRefs/evaluateStaticOperators.js` — Runs static evaluation pass
@@ -763,18 +763,20 @@ _number.meta = meta; // must expose meta for collectDynamicIdentifiers
 2. If `operatorFn.dynamic === false` and `operatorFn.meta` exists → checks each method for `dynamic: true`, adds qualified names (e.g. `_number.toLocaleString`)
 
 At evaluation time, the check is:
+
 ```javascript
-dynamicIdentifiers.has(fullIdentifier) || dynamicIdentifiers.has(op)
+dynamicIdentifiers.has(fullIdentifier) || dynamicIdentifiers.has(op);
 ```
+
 So operator-level `true` catches all usages (with or without method), while method-level only catches specific methods.
 
 ### When to Use Each
 
-| Scenario | Flag Level | Example |
-|---|---|---|
-| All methods need runtime context | Operator-level `dynamic = true` | `_date` (time-dependent), `_intl` (locale-dependent) |
-| Most methods are pure, a few need runtime | Method-level `dynamic: true` | `_math.random`, `_number.toLocaleString` |
-| All methods are pure transformations | Operator-level `dynamic = false`, no method flags | `_string`, `_array`, `_json` |
+| Scenario                                  | Flag Level                                        | Example                                              |
+| ----------------------------------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| All methods need runtime context          | Operator-level `dynamic = true`                   | `_date` (time-dependent), `_intl` (locale-dependent) |
+| Most methods are pure, a few need runtime | Method-level `dynamic: true`                      | `_math.random`, `_number.toLocaleString`             |
+| All methods are pure transformations      | Operator-level `dynamic = false`, no method flags | `_string`, `_array`, `_json`                         |
 
 ### Which Operators Are in the Build Set
 

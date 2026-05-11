@@ -98,7 +98,7 @@ if (type.isObject(node) && !type.isUndefined(node['_module.var'])) {
 4. **Leaf var with declared default** — call `resolveVarDefault(varDef.default, moduleEntry, ctx)`.
 5. **Otherwise** — return `null`.
 
-The result is written to `moduleEntry.resolvedVarCache[key]` after step 2/3/4/5 completes (writes happen *after* resolution, not before — circular `_module.var` graphs between defaults stack-overflow, see Dynamic Defaults in the user docs).
+The result is written to `moduleEntry.resolvedVarCache[key]` after step 2/3/4/5 completes (writes happen _after_ resolution, not before — circular `_module.var` graphs between defaults stack-overflow, see Dynamic Defaults in the user docs).
 
 For step 4, `resolveVarDefault` walks the raw default subtree in a fresh `WalkContext` rooted at `module.lowdefy.yaml`:
 
@@ -350,14 +350,14 @@ The cycle key uses the **resolved concrete entry ID**, not the abstract dependen
 
 ## Key Files
 
-| File                                                        | Purpose                                                                         |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `packages/build/src/build/fetchModules.js`                  | Fetch module sources (GitHub tarballs, local paths)                             |
-| `packages/build/src/build/buildModuleDefs.js`               | Three-phase module processing: local resolve → validate → full resolve          |
-| `packages/build/src/build/resolveModuleDependencies.js`     | Auto-wire and validate cross-module dependency mappings                         |
+| File                                                        | Purpose                                                                                                                                                                                                                             |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/build/src/build/fetchModules.js`                  | Fetch module sources (GitHub tarballs, local paths)                                                                                                                                                                                 |
+| `packages/build/src/build/buildModuleDefs.js`               | Three-phase module processing: local resolve → validate → full resolve                                                                                                                                                              |
+| `packages/build/src/build/resolveModuleDependencies.js`     | Auto-wire and validate cross-module dependency mappings                                                                                                                                                                             |
 | `packages/build/src/build/registerModules.js`               | `resolveLocalManifest` stores raw `consumerVars`/`varDefs`/empty `resolvedVarCache`; `resolveFullManifest` runs the full-resolve walker pass; calls `validateRequiredVars` early and `validateVarTypes` after the full-resolve pass |
-| `packages/build/src/build/buildModules.js`                  | Scope IDs (prefix with entryId), merge module content into app components       |
-| `packages/build/src/build/resolveModuleOperators.js`        | `scopeMenuItemIds` only — prefixes menu item IDs with entry ID                  |
-| `packages/build/src/build/resolveDepTarget.js`              | Shared utility for resolving abstract dependency names to concrete entry IDs    |
-| `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }`, deep copy content                  |
-| `packages/build/src/build/buildRefs/walker.js`              | `_module.var` triggers lazy resolution via `moduleEntry`; `_module.*Id` resolution; module context switching; cycle detection. Adds `resolveEffectiveVar`, `resolveNamespaceVar`, `resolveVarDefault`, `getVarDef` helpers |
+| `packages/build/src/build/buildModules.js`                  | Scope IDs (prefix with entryId), merge module content into app components                                                                                                                                                           |
+| `packages/build/src/build/resolveModuleOperators.js`        | `scopeMenuItemIds` only — prefixes menu item IDs with entry ID                                                                                                                                                                      |
+| `packages/build/src/build/resolveDepTarget.js`              | Shared utility for resolving abstract dependency names to concrete entry IDs                                                                                                                                                        |
+| `packages/build/src/build/buildRefs/getModuleRefContent.js` | Resolve `_ref: { module, component/menu }`, deep copy content                                                                                                                                                                       |
+| `packages/build/src/build/buildRefs/walker.js`              | `_module.var` triggers lazy resolution via `moduleEntry`; `_module.*Id` resolution; module context switching; cycle detection. Adds `resolveEffectiveVar`, `resolveNamespaceVar`, `resolveVarDefault`, `getVarDef` helpers          |

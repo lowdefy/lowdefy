@@ -98,8 +98,49 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
       callEndpoint: expect.any(Function),
       getEndpointConfig: expect.any(Function),
     }),
+    format: undefined,
   });
   expect(result).toEqual({ response: mockStream });
+});
+
+test('callAgent passes format to resolver', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet', instructions: 'Be helpful.' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-test' },
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    session: { user: { id: 'user_1' } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'my-page',
+    messages: [{ role: 'user', content: 'Hello' }],
+    format: 'text',
+  });
+
+  expect(mockResolver).toHaveBeenCalledWith(expect.objectContaining({ format: 'text' }));
 });
 
 test('callAgent throws ConfigError when agent does not exist', async () => {

@@ -11,7 +11,7 @@ tags:
 draft: false
 ---
 
-A new Lowdefy app no longer starts empty. Install five *modules* in your `lowdefy.yaml` and your app has login, user admin, audit trails, file uploads, and entity management. The pages, save routines, and access models are all in place, configured through vars you set when you install them.
+A new Lowdefy app no longer starts empty. Install five _modules_ in your `lowdefy.yaml` and your app has login, user admin, audit trails, file uploads, and entity management. The pages, save routines, and access models are all in place, configured through vars you set when you install them.
 
 Two things ship in this release: the [module system](https://docs.lowdefy.com/modules) itself, built into the Lowdefy framework, and [modules-mongodb](https://github.com/lowdefy/modules-mongodb), a library of modules for MongoDB-backed apps.
 
@@ -24,7 +24,7 @@ You install a module by adding an entry to your app's `lowdefy.yaml`:
 ```yaml
 modules:
   - id: user-admin
-    source: "github:lowdefy/modules-mongodb/user-admin@v1"
+    source: 'github:lowdefy/modules-mongodb/user-admin@v1'
     vars:
       app_name: my-app
       roles:
@@ -117,26 +117,26 @@ Here's an app config that pulls in a few modules:
 ```yaml
 modules:
   - id: layout
-    source: "github:lowdefy/modules-mongodb/layout-sider-menu@v1"
+    source: 'github:lowdefy/modules-mongodb/layout-sider-menu@v1'
     vars:
       app_title: My App
 
   - id: events
-    source: "github:lowdefy/modules-mongodb/events@v1"
+    source: 'github:lowdefy/modules-mongodb/events@v1'
     vars:
       app_name: my-app
 
   - id: user-admin
-    source: "github:lowdefy/modules-mongodb/user-admin@v1"
+    source: 'github:lowdefy/modules-mongodb/user-admin@v1'
     vars:
       app_name: my-app
       roles: [admin, user]
 
   - id: companies
-    source: "github:lowdefy/modules-mongodb/companies@v1"
+    source: 'github:lowdefy/modules-mongodb/companies@v1'
 
   - id: contacts
-    source: "github:lowdefy/modules-mongodb/contacts@v1"
+    source: 'github:lowdefy/modules-mongodb/contacts@v1'
 ```
 
 Modules can use components from other modules, and so can your custom pages. Use a `_ref` to drop one in:

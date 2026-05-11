@@ -46,7 +46,8 @@
     "@lowdefy/node-utils": "5.2.0",
     "@lowdefy/nunjucks": "5.2.0",
     "@lowdefy/operators": "5.2.0",
-    "@lowdefy/operators-js": "5.2.0"
+    "@lowdefy/operators-js": "5.2.0",
+    "jose": "4.15.9"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
