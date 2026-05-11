@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import articles from '@/content/articles';

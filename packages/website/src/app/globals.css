@@ -263,3 +263,24 @@
   scrollbar-width: thin;
   scrollbar-color: #475569 transparent;
 }
+
+/* Clear the 64px fixed nav after anchor jumps */
+.article-content :is(h2, h3) {
+  scroll-margin-top: 5rem;
+}
+
+/* Permalink: hidden until heading is hovered or anchor is focused */
+.article-content .heading-anchor {
+  opacity: 0;
+  margin-left: 0.4rem;
+  text-decoration: none;
+  color: rgb(148 163 184); /* slate-400 */
+  transition: opacity 150ms;
+}
+.article-content :is(h2, h3):hover .heading-anchor,
+.article-content .heading-anchor:focus {
+  opacity: 1;
+}
+.dark .article-content .heading-anchor {
+  color: rgb(100 116 139); /* slate-500 */
+}
