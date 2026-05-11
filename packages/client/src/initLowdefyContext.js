@@ -33,6 +33,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       components: {
         Icon: createIcon(types.icons),
         ShortcutBadge: createShortcutBadge(),
+        blockComponents: types.blocks,
       },
       displayMessage: ({ content }) => {
         console.log(content);

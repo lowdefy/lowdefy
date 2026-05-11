@@ -291,6 +291,121 @@ test('buildAgentTools with no agents property returns only endpoint tools', asyn
   expect(Object.keys(tools)).toEqual([]);
 });
 
+test('buildAgentTools writes data-display part when tool has display config and succeeds', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [
+      {
+        endpointId: 'get-stats',
+        display: {
+          type: 'Statistic',
+          properties: { title: 'Count', value: { _get: 'output.count' } },
+        },
+      },
+    ],
+    mcp: [],
+  };
+
+  const writeDataPart = jest.fn();
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Get stats',
+      payloadSchema: { type: 'object', properties: { id: { type: 'string' } } },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({
+      success: true,
+      response: { count: 42 },
+    }),
+    evaluateOperators: jest.fn((x) => x),
+    writeDataPart,
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  const result = await tools['get-stats'].execute(
+    { id: 'abc' },
+    { toolCallId: 'call_123', abortSignal: null }
+  );
+
+  expect(result).toEqual({ count: 42 });
+  expect(writeDataPart).toHaveBeenCalledTimes(1);
+
+  const part = writeDataPart.mock.calls[0][0];
+  expect(part.type).toBe('data-display');
+  expect(part.data.toolCallId).toBe('call_123');
+  expect(part.data.toolName).toBe('get-stats');
+  expect(part.data.display).toEqual({
+    type: 'Statistic',
+    properties: { title: 'Count', value: { _get: 'output.count' } },
+  });
+  expect(part.data.output).toEqual({ count: 42 });
+  expect(part.data.input).toEqual({ id: 'abc' });
+});
+
+test('buildAgentTools does not write data-display part when tool has no display config', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'save-data' }],
+    mcp: [],
+  };
+
+  const writeDataPart = jest.fn();
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Save data',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({
+      success: true,
+      response: { saved: true },
+    }),
+    evaluateOperators: jest.fn((x) => x),
+    writeDataPart,
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+  await tools['save-data'].execute({}, { toolCallId: 'call_456', abortSignal: null });
+
+  expect(writeDataPart).not.toHaveBeenCalled();
+});
+
+test('buildAgentTools does not write data-display part when tool execution fails', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [
+      {
+        endpointId: 'get-stats',
+        display: { type: 'Statistic', properties: {} },
+      },
+    ],
+    mcp: [],
+  };
+
+  const writeDataPart = jest.fn();
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Get stats',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({
+      success: false,
+      error: { '~e': { message: 'Not found', name: 'Error' } },
+    }),
+    evaluateOperators: jest.fn((x) => x),
+    writeDataPart,
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+  await expect(
+    tools['get-stats'].execute({}, { toolCallId: 'call_789', abortSignal: null })
+  ).rejects.toThrow('Not found');
+
+  expect(writeDataPart).not.toHaveBeenCalled();
+});
+
 test('buildAgentTools throws ConfigError when endpoint tool name collides with reserved platform tool', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

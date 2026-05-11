@@ -207,8 +207,16 @@ async function handleAgentChat({ connection, properties, context }) {
   const timeoutConfig =
     agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
 
+  let streamWriter = null;
+  context.writeDataPart = (part) => {
+    if (streamWriter) {
+      streamWriter.write(part);
+    }
+  };
+
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
+      streamWriter = writer;
       const usageAccumulator = createUsageAccumulator();
       const steps = [];
       let agentStream;

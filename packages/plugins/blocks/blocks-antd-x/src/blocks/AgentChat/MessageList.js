@@ -62,6 +62,9 @@ const MessageList = React.forwardRef(function MessageList(
     onRegenerate,
     onDelete,
     onEditMessage,
+    blockComponents,
+    sendMessage,
+    methods,
   },
   ref
 ) {
@@ -214,6 +217,9 @@ const MessageList = React.forwardRef(function MessageList(
                 onFeedback={onFeedback}
                 onRegenerate={onRegenerate}
                 onDelete={onDelete}
+                blockComponents={blockComponents}
+                sendMessage={sendMessage}
+                methods={methods}
               />
             );
           },

@@ -14,6 +14,29 @@
   limitations under the License.
 */
 
-export { default as ALLOWED_DISPLAY_BLOCKS } from './allowedDisplayBlocks.js';
-export { default as handleAgentChat } from './handleAgentChat.js';
-export { default as RESERVED_PLATFORM_TOOL_NAMES } from './reservedToolNames.js';
+const ALLOWED_DISPLAY_BLOCKS = Object.freeze([
+  // Read-only (Phase A)
+  'Alert',
+  'Badge',
+  'Card',
+  'Descriptions',
+  'Divider',
+  'List',
+  'Progress',
+  'Result',
+  'Statistic',
+  'S3Table',
+  'Tag',
+  'Timeline',
+  // Interactive (Phase B)
+  'Button',
+  'ButtonGroup',
+  'CheckboxSelector',
+  'NumberInput',
+  'RadioSelector',
+  'Rate',
+  'Switch',
+  'TextInput',
+]);
+
+export default ALLOWED_DISPLAY_BLOCKS;

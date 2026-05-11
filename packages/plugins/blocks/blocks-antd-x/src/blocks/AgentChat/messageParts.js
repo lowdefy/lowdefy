@@ -36,13 +36,14 @@ export function isCommentaryPart(part) {
 }
 
 // Classify a message part for inline rendering in MessageBubble's segment loop.
-// Returns 'reasoning' | 'text' | 'tool' | 'file' | 'status' | null.
+// Returns 'reasoning' | 'text' | 'tool' | 'file' | 'status' | 'display' | null.
 // Parts that return null are either never-rendered (e.g. step-start) or rendered
 // via separate paths (source-url/source-document via SourcesDisplay, custom data-*
 // parts not handled inline). MessageBubble's interleaved loop skips null categories
 // so they don't fragment consecutive same-type segments.
 export function partCategory(part) {
   if (part.type === 'step-start') return null;
+  if (part.type === 'data-display') return 'display';
   if (part.type === 'reasoning' || (part.type === 'text' && isCommentaryPart(part))) {
     return 'reasoning';
   }

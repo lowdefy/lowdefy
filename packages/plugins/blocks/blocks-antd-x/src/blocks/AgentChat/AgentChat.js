@@ -34,7 +34,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon, blockComponents }, methods, pageId, properties }) {
   const {
     agentId,
     urlQuery,
@@ -449,6 +449,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
+            blockComponents={blockComponents}
+            sendMessage={sendMessage}
+            methods={methods}
           />
         )}
       </div>

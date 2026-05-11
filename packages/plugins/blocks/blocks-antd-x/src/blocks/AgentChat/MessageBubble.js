@@ -27,6 +27,7 @@ import {
 } from '@ant-design/x';
 import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
+import DynamicBlock from './DynamicBlock.js';
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
 import { getToolInfo, partCategory } from './messageParts.js';
@@ -194,6 +195,9 @@ function MessageBubble({
   onFeedback,
   onRegenerate,
   onDelete,
+  blockComponents,
+  sendMessage,
+  methods,
 }) {
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
@@ -242,6 +246,7 @@ function MessageBubble({
     );
   }
 
+
   // Build segments of consecutive same-type parts.
   // 'interleaved': preserves the natural ordering from the AI SDK
   //   (reasoning → tool calls → reasoning → text).
@@ -252,6 +257,7 @@ function MessageBubble({
   if (reasoningDisplay === 'grouped') {
     const reasoning = { category: 'reasoning', parts: [] };
     const tools = { category: 'tool', parts: [] };
+    const display = { category: 'display', parts: [] };
     const files = { category: 'file', parts: [] };
     const status = { category: 'status', parts: [] };
     const text = { category: 'text', parts: [] };
@@ -260,10 +266,13 @@ function MessageBubble({
       if (cat === 'reasoning') reasoning.parts.push(part);
       else if (cat === 'text') text.parts.push(part);
       else if (cat === 'tool') tools.parts.push(part);
+      else if (cat === 'display') display.parts.push(part);
       else if (cat === 'file') files.parts.push(part);
       else if (cat === 'status') status.parts.push(part);
     }
-    segments = [reasoning, tools, files, status, text].filter((s) => s.parts.length > 0);
+    segments = [reasoning, tools, display, files, status, text].filter(
+      (s) => s.parts.length > 0
+    );
   } else {
     segments = [];
     let current = null;
@@ -461,6 +470,24 @@ function MessageBubble({
               </span>
               {lastStatus.data?.message ?? 'Processing...'}
             </div>
+          );
+        }
+        if (segment.category === 'display') {
+          return (
+            <React.Fragment key={`display-${idx}`}>
+              {segment.parts.map((part) => (
+                <DynamicBlock
+                  key={part.id ?? `display-${idx}-${part.data?.toolCallId}`}
+                  config={part.data.display}
+                  output={part.data.output}
+                  input={part.data.input}
+                  toolCallId={part.data.toolCallId}
+                  blockComponents={blockComponents}
+                  sendMessage={sendMessage}
+                  methods={methods}
+                />
+              ))}
+            </React.Fragment>
           );
         }
         if (segment.category === 'text') {

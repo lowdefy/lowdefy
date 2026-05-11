@@ -2148,3 +2148,36 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
     onStepFinish: expect.any(Function),
   });
 });
+
+test('handleAgentChat sets writeDataPart on context that delegates to stream writer', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const connection = { provider: jest.fn().mockReturnValue('test-model') };
+  const properties = {
+    agent: {
+      tools: [],
+      mcp: [],
+      properties: { model: 'test', maxSteps: 5 },
+    },
+    messages: [{ id: '1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+  };
+  const context = {
+    callEndpoint: jest.fn(),
+    getEndpointConfig: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  await handleAgentChat({ connection, properties, context });
+
+  // writeDataPart should be set on context before stream execute runs
+  expect(context.writeDataPart).toBeDefined();
+  expect(typeof context.writeDataPart).toBe('function');
+
+  // Execute the stream callback to set the writer reference
+  await mockCreateUIMessageStream._lastExecute({ writer: mockWriter });
+
+  // Now writeDataPart should delegate to the writer
+  const testPart = { type: 'data-display', id: 'test-1', data: { foo: 'bar' } };
+  context.writeDataPart(testPart);
+  expect(mockWriter.write).toHaveBeenCalledWith(testPart);
+});
