@@ -18,7 +18,7 @@ import { get } from '@lowdefy/helpers';
 
 function filterMenuList(context, { menuList }) {
   const { authorize } = context;
-  return menuList
+  const filtered = menuList
     .map((item) => {
       if (item.type === 'MenuLink') {
         if (authorize(item)) {
@@ -36,10 +36,21 @@ function filterMenuList(context, { menuList }) {
             links: filteredSubItems,
           };
         }
+        return null;
+      }
+      if (item.type === 'MenuDivider') {
+        return item;
       }
       return null;
     })
     .filter((item) => item !== null);
+  return filtered.filter((item, i, arr) => {
+    if (item.type !== 'MenuDivider') return true;
+    if (i === 0) return false;
+    if (i === arr.length - 1) return false;
+    if (arr[i - 1].type === 'MenuDivider') return false;
+    return true;
+  });
 }
 
 export default filterMenuList;

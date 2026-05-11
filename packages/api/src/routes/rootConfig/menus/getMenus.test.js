@@ -377,3 +377,380 @@ test('Filter invalid menu item types', async () => {
     },
   ]);
 });
+
+test('MenuDivider between two public links is preserved', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'home',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:sep',
+              menuItemId: 'sep',
+              type: 'MenuDivider',
+              auth: { public: true },
+              properties: { dashed: true },
+            },
+            {
+              id: 'menuitem:default:about',
+              menuItemId: 'about',
+              type: 'MenuLink',
+              pageId: 'about',
+              auth: { public: true },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'home',
+          auth: { public: true },
+        },
+        {
+          id: 'menuitem:default:sep',
+          menuItemId: 'sep',
+          type: 'MenuDivider',
+          auth: { public: true },
+          properties: { dashed: true },
+        },
+        {
+          id: 'menuitem:default:about',
+          menuItemId: 'about',
+          type: 'MenuLink',
+          pageId: 'about',
+          auth: { public: true },
+        },
+      ],
+    },
+  ]);
+});
+
+test('Leading MenuDivider is dropped', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:sep',
+              menuItemId: 'sep',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'home',
+              auth: { public: true },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'home',
+          auth: { public: true },
+        },
+      ],
+    },
+  ]);
+});
+
+test('Trailing MenuDivider is dropped', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'home',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:sep',
+              menuItemId: 'sep',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'home',
+          auth: { public: true },
+        },
+      ],
+    },
+  ]);
+});
+
+test('Adjacent MenuDividers collapse to a single divider', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'home',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:sep1',
+              menuItemId: 'sep1',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:sep2',
+              menuItemId: 'sep2',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:about',
+              menuItemId: 'about',
+              type: 'MenuLink',
+              pageId: 'about',
+              auth: { public: true },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'home',
+          auth: { public: true },
+        },
+        {
+          id: 'menuitem:default:sep1',
+          menuItemId: 'sep1',
+          type: 'MenuDivider',
+          auth: { public: true },
+        },
+        {
+          id: 'menuitem:default:about',
+          menuItemId: 'about',
+          type: 'MenuLink',
+          pageId: 'about',
+          auth: { public: true },
+        },
+      ],
+    },
+  ]);
+});
+
+test('MenuDivider orphaned by auth filtering is dropped', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:private1',
+              menuItemId: 'private1',
+              type: 'MenuLink',
+              pageId: 'private1',
+              auth: { public: false },
+            },
+            {
+              id: 'menuitem:default:sep',
+              menuItemId: 'sep',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:private2',
+              menuItemId: 'private2',
+              type: 'MenuLink',
+              pageId: 'private2',
+              auth: { public: false },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [],
+    },
+  ]);
+});
+
+test('MenuDivider inside a MenuGroup is preserved between links', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:grp',
+              menuItemId: 'grp',
+              type: 'MenuGroup',
+              auth: { public: true },
+              links: [
+                {
+                  id: 'menuitem:default:home',
+                  menuItemId: 'home',
+                  type: 'MenuLink',
+                  pageId: 'home',
+                  auth: { public: true },
+                },
+                {
+                  id: 'menuitem:default:sep',
+                  menuItemId: 'sep',
+                  type: 'MenuDivider',
+                  auth: { public: true },
+                },
+                {
+                  id: 'menuitem:default:about',
+                  menuItemId: 'about',
+                  type: 'MenuLink',
+                  pageId: 'about',
+                  auth: { public: true },
+                },
+              ],
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:grp',
+          menuItemId: 'grp',
+          type: 'MenuGroup',
+          auth: { public: true },
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'home',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:sep',
+              menuItemId: 'sep',
+              type: 'MenuDivider',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:about',
+              menuItemId: 'about',
+              type: 'MenuLink',
+              pageId: 'about',
+              auth: { public: true },
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+});
+
+test('MenuGroup with only a MenuDivider child is dropped', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:grp',
+              menuItemId: 'grp',
+              type: 'MenuGroup',
+              auth: { public: true },
+              links: [
+                {
+                  id: 'menuitem:default:sep',
+                  menuItemId: 'sep',
+                  type: 'MenuDivider',
+                  auth: { public: true },
+                },
+              ],
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context);
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [],
+    },
+  ]);
+});

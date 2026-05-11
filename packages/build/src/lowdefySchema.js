@@ -1193,8 +1193,66 @@ export default {
         },
       },
     },
+    menuDivider: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'MenuDivider "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'MenuDivider "type" should be a string.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'MenuDivider "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'MenuDivider should be an object.',
+        required: {
+          id: 'MenuDivider should have required property "id".',
+          type: 'MenuDivider should have required property "type".',
+        },
+      },
+    },
     menuItem: {
       anyOf: [
+        {
+          $ref: '#/definitions/menuDivider',
+        },
         {
           $ref: '#/definitions/menuGroup',
         },

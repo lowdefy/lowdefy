@@ -130,6 +130,9 @@ function loopItems({
       if (menuItem.type === 'MenuGroup') {
         menuItem.auth = { public: true };
       }
+      if (menuItem.type === 'MenuDivider') {
+        menuItem.auth = { public: true };
+      }
       checkDuplicateMenuItemId({ id: menuItem.id, menuId, configKey });
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;
