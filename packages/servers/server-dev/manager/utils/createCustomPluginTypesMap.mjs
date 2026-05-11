@@ -39,6 +39,7 @@ async function getPluginDefinitions({ directories }) {
 async function createCustomPluginTypesMap({ directories, logger }) {
   const customTypesMap = {
     actions: {},
+    agents: {},
     auth: {
       adapters: {},
       callbacks: {},

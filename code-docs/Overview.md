@@ -67,22 +67,29 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 
 ### Plugin Types
 
-| Type               | What It Does        | Examples                        |
-| ------------------ | ------------------- | ------------------------------- |
-| **Blocks**         | UI components       | Button, TextInput, Table, Chart |
-| **Connections**    | Data source configs | MongoDB, PostgreSQL, REST API   |
-| **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`  |
-| **Actions**        | Event handlers      | SetState, Request, Navigate     |
-| **Auth Providers** | Authentication      | Google, Auth0, Credentials      |
+| Type               | What It Does        | Examples                              |
+| ------------------ | ------------------- | ------------------------------------- |
+| **Blocks**         | UI components       | Button, TextInput, Table, Chart       |
+| **Connections**    | Data source configs | MongoDB, PostgreSQL, REST API         |
+| **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`        |
+| **Actions**        | Event handlers      | SetState, Request, Navigate           |
+| **Agents**         | AI chat providers   | Anthropic, OpenAI, Google, AI Gateway |
+| **Auth Providers** | Authentication      | Google, Auth0, Credentials            |
 
 ### Default Plugins
 
 These ship with Lowdefy and don't need explicit installation:
 
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
+- `@lowdefy/blocks-antd-x` - AI chat components (AgentChat, AgentConversations)
 - `@lowdefy/blocks-basic` - HTML primitives
 - `@lowdefy/operators-js` - Core JavaScript operators
 - `@lowdefy/actions-core` - Standard actions
+- `@lowdefy/connection-anthropic` - Anthropic Claude models
+- `@lowdefy/connection-openai` - OpenAI GPT models
+- `@lowdefy/connection-google` - Google Gemini models
+- `@lowdefy/connection-ai-gateway` - Vercel AI Gateway (multi-provider routing)
+- `@lowdefy/connection-mcp` - MCP server connections
 
 See [Plugin System Architecture](./architecture/plugin-system.md) for internals.
 
@@ -132,6 +139,12 @@ Each page has isolated state managed by `@lowdefy/engine`:
 - **\_request** - Cached request responses
 - **\_global** - Shared across pages (sparingly used)
 
+### Agents
+
+Agents add AI chat capabilities to Lowdefy apps. Defined as a top-level `agents:` config key, they follow the same `type` + `connectionId` + `properties` pattern as requests. Agents reference connections for AI provider credentials, use API endpoints as tools, and stream responses to the AgentChat block.
+
+See [Agent System Architecture](./architecture/agent-system.md) for the complete data flow.
+
 ### Requests
 
 Requests are server-side data operations:
@@ -176,6 +189,7 @@ lowdefy/
 
 ### Architecture Deep Dives
 
+- [Agent System](./architecture/agent-system.md) - AI agent orchestration, tools, and streaming
 - [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a Next.js app
 - [Request Lifecycle](./architecture/request-lifecycle.md) - Data flow from action to database
 - [State Management](./architecture/state-management.md) - Page state and reactivity

@@ -50,6 +50,11 @@ Connections are:
 | [@lowdefy/connection-redis](./redis.md)                 | Redis                       | Get, Set, List ops     |
 | [@lowdefy/connection-sendgrid](./sendgrid.md)           | SendGrid                    | Send emails            |
 | [@lowdefy/connection-stripe](./stripe.md)               | Stripe                      | Payments, Customers    |
+| [@lowdefy/connection-anthropic](./anthropic.md)         | Anthropic Claude            | ClaudeAgent            |
+| [@lowdefy/connection-openai](./openai.md)               | OpenAI GPT                  | OpenAIAgent            |
+| [@lowdefy/connection-google](./google.md)               | Google Gemini               | GeminiAgent            |
+| [@lowdefy/connection-ai-gateway](./ai-gateway.md)       | Vercel AI Gateway           | AIGatewayAgent         |
+| [@lowdefy/connection-mcp](./mcp.md)                     | MCP Servers                 | (tool source)          |
 
 ## Connection Configuration
 

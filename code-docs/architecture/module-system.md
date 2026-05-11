@@ -225,12 +225,12 @@ The app wires slots to concrete entries. Auto-wiring matches dependency names to
 # lowdefy.yaml
 modules:
   - id: contacts
-    source: "github:org/crm/contacts@v1"
+    source: 'github:org/crm/contacts@v1'
   - id: companies
-    source: "github:org/crm/companies@v1"
+    source: 'github:org/crm/companies@v1'
     # "contacts" auto-wires (name matches entry ID)
     dependencies:
-      layout: app-layout  # Explicit — no entry called "layout"
+      layout: app-layout # Explicit — no entry called "layout"
 ```
 
 ### Dependency Resolution (`resolveModuleDependencies`)
@@ -261,12 +261,12 @@ _module.pageId:
   # → "contacts/contact-detail" (resolved concrete entry's scoped page ID)
 ```
 
-| Operator | String Form (same module) | Object Form (cross module) |
-|----------|--------------------------|---------------------------|
-| `_module.pageId` | `"pageId"` → `"{entryId}/pageId"` | `{ id, module }` → `"{targetEntryId}/pageId"` |
-| `_module.connectionId` | `"connId"` → scoped or remapped | `{ id, module }` → scoped via target entry |
-| `_module.endpointId` | `"apiId"` → `"{entryId}/apiId"` | `{ id, module }` → `"{targetEntryId}/apiId"` |
-| `_module.id` | `true` → `"{entryId}"` | `{ module }` → `"{targetEntryId}"` |
+| Operator               | String Form (same module)         | Object Form (cross module)                    |
+| ---------------------- | --------------------------------- | --------------------------------------------- |
+| `_module.pageId`       | `"pageId"` → `"{entryId}/pageId"` | `{ id, module }` → `"{targetEntryId}/pageId"` |
+| `_module.connectionId` | `"connId"` → scoped or remapped   | `{ id, module }` → scoped via target entry    |
+| `_module.endpointId`   | `"apiId"` → `"{entryId}/apiId"`   | `{ id, module }` → `"{targetEntryId}/apiId"`  |
+| `_module.id`           | `true` → `"{entryId}"`            | `{ module }` → `"{targetEntryId}"`            |
 
 **`_ref: { module }` refs** — for embedding components and menus:
 

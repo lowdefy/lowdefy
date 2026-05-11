@@ -1,0 +1,106 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: OpenAI-connection
+    pageTitle: OpenAI
+    section: Connections
+    filePath: connections/OpenAI.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The OpenAI connection connects to the [OpenAI API](https://platform.openai.com/docs/) and provides the `OpenAIAgent` agent type for use with [Lowdefy agents](/agents-introduction).
+
+            > The OpenAI connection is provided by the `@lowdefy/connection-openai` package, which is included by default.
+
+            ## Connections
+
+            ### OpenAI
+
+            #### Properties
+            - `apiKey: string`: __Required__ - OpenAI API key. Use [`_secret`](/_secret) to reference this securely.
+            - `baseURL: string`: Optional base URL. Use this to connect to Azure OpenAI or any OpenAI-compatible endpoint.
+
+            ###### Connection example:
+            ```yaml
+            connections:
+              - id: openai
+                type: OpenAI
+                properties:
+                  apiKey:
+                    _secret: OPENAI_API_KEY
+            ```
+
+            ###### Azure OpenAI:
+            ```yaml
+            connections:
+              - id: azure_openai
+                type: OpenAI
+                properties:
+                  apiKey:
+                    _secret: AZURE_OPENAI_API_KEY
+                  baseURL: https://my-resource.openai.azure.com/openai/deployments/my-deployment
+            ```
+
+            ## Agent Types
+
+            ### OpenAIAgent
+
+            The `OpenAIAgent` supports all [common agent properties](/agents-introduction) plus the following:
+
+            | Property | Type | Description |
+            | --- | --- | --- |
+            | `reasoningEffort` | string | Reasoning effort for reasoning models (o3, o4-mini): `'none'`, `'minimal'`, `'low'`, `'medium'`, `'high'`, or `'xhigh'`. |
+            | `reasoningSummary` | string | Reasoning summary mode: `'auto'` or `'detailed'`. |
+
+            > `reasoningEffort` and `reasoningSummary` only apply to OpenAI reasoning models (o3, o4-mini). They are ignored for standard models like gpt-4o.
+
+            ###### Standard model:
+            ```yaml
+            agents:
+              - id: assistant
+                type: OpenAIAgent
+                connectionId: openai
+                properties:
+                  model: gpt-4o
+                  instructions: |
+                    You are a helpful assistant for our internal tools.
+                    Search the documentation when users ask questions.
+                  maxSteps: 5
+                tools:
+                  - search-docs
+                  - get-user-permissions
+            ```
+
+            ###### Reasoning model for complex analysis:
+            ```yaml
+            agents:
+              - id: code_reviewer
+                type: OpenAIAgent
+                connectionId: openai
+                properties:
+                  model: o4-mini
+                  reasoningEffort: high
+                  reasoningSummary: detailed
+                  instructions: |
+                    You review code changes for bugs, security issues, and
+                    performance problems. Be thorough and specific.
+                tools:
+                  - get-pull-request
+                  - get-file-contents
+            ```

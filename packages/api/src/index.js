@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
@@ -25,6 +26,7 @@ import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 
 export {
+  callAgent,
   callEndpoint,
   callRequest,
   createApiContext,

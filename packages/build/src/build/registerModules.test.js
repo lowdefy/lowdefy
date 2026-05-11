@@ -219,6 +219,33 @@ pages:
   );
 });
 
+test('resolveLocalManifest throws when plugin version is missing', async () => {
+  const context = createTestContext({ plugins: [] });
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+plugins:
+  - name: "@example/custom-blocks"
+pages: []
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    resolveLocalManifest({
+      entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/my-mod',
+        moduleRoot: '/modules/my-mod',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('must declare a "version"');
+});
+
 test('resolveLocalManifest throws when required plugin is missing from app', async () => {
   const context = createTestContext({ plugins: [] });
   const files = [

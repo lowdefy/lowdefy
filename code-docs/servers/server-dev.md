@@ -118,6 +118,7 @@ server-dev/
 │       └── nextBuildWatcher.mjs
 ├── pages/
 │   └── api/
+│       ├── agent/[...path].js # Agent chat streaming route
 │       ├── reload.js         # SSE endpoint
 │       ├── ping.js           # Health check
 │       ├── page/[pageId].js  # Page API (triggers JIT build)
@@ -324,11 +325,11 @@ Sources of dependencies:
 
 When a file changes, the watcher classifies it using the `skeletonSourceFiles.json` artifact (produced by the build's `collectSkeletonSourceFiles`):
 
-| Condition                        | Action                                                                  |
-| -------------------------------- | ----------------------------------------------------------------------- |
-| `lowdefy.yaml` changed          | Full skeleton rebuild                                                   |
-| File in `skeletonSourceFiles`    | Full skeleton rebuild                                                   |
-| File not in `skeletonSourceFiles`| Page-only change: write `invalidatePages` signal, reload clients        |
+| Condition                         | Action                                                           |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `lowdefy.yaml` changed            | Full skeleton rebuild                                            |
+| File in `skeletonSourceFiles`     | Full skeleton rebuild                                            |
+| File not in `skeletonSourceFiles` | Page-only change: write `invalidatePages` signal, reload clients |
 
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
@@ -425,10 +426,10 @@ async function installPlugins(context) {
 function startWatchers(context) {
   return async () => {
     await Promise.all([
-      envWatcher(context),          // .env changes → hard restart
+      envWatcher(context), // .env changes → hard restart
       lowdefyBuildWatcher(context), // Config changes → soft reload
-      moduleBuildWatcher(context),  // Local module changes → soft reload
-      nextBuildWatcher(context),    // Plugin changes → rebuild + restart
+      moduleBuildWatcher(context), // Local module changes → soft reload
+      nextBuildWatcher(context), // Plugin changes → rebuild + restart
     ]);
   };
 }
@@ -452,8 +453,7 @@ const callback = async (filePaths) => {
   const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
 
   const isSkeletonChange =
-    lowdefyYamlModified ||
-    changedFiles.some((f) => skeletonSourceFiles.has(f));
+    lowdefyYamlModified || changedFiles.some((f) => skeletonSourceFiles.has(f));
 
   if (isSkeletonChange) {
     await context.lowdefyBuild(); // Full skeleton rebuild
@@ -758,37 +758,37 @@ const nextConfig = {
 
 ## Key Files
 
-| File                                       | Purpose                                    |
-| ------------------------------------------ | ------------------------------------------ |
-| `manager/run.mjs`                          | Entry point                                |
-| `manager/getContext.mjs`                   | Context factory with JIT build state       |
-| `manager/processes/lowdefyBuild.mjs`       | Calls `shallowBuild`, captures result      |
-| `manager/utils/loadSkeletonSourceFiles.mjs`| Load skeleton source file set from build artifact |
-| `manager/watchers/lowdefyBuildWatcher.mjs` | Skeleton vs page change classification     |
-| `manager/watchers/moduleBuildWatcher.mjs`  | Local module file change classification    |
-| `lib/server/jitPageBuilder.js`             | JIT page build on API request              |
-| `lib/server/pageCache.mjs`                 | PageCache class (compiled tracking, locks) |
-| `pages/api/page/[pageId].js`               | Page API (triggers JIT build)              |
-| `pages/api/js/[env].js`                    | Serves JS map as module                    |
-| `pages/api/reload.js`                      | SSE endpoint                               |
-| `lib/client/Reload.js`                     | Hot reload component                       |
-| `lib/client/App.js`                        | Dev app wrapper                            |
-| `lib/client/Page.js`                       | Page renderer (merges jsMap)               |
-| `lib/client/Utils/usePageConfig.js`        | SWR hook with versioned cache keys         |
-| `lib/client/Utils/useMutateCache.js`       | `reloadVersion` counter for cache busting  |
+| File                                        | Purpose                                           |
+| ------------------------------------------- | ------------------------------------------------- |
+| `manager/run.mjs`                           | Entry point                                       |
+| `manager/getContext.mjs`                    | Context factory with JIT build state              |
+| `manager/processes/lowdefyBuild.mjs`        | Calls `shallowBuild`, captures result             |
+| `manager/utils/loadSkeletonSourceFiles.mjs` | Load skeleton source file set from build artifact |
+| `manager/watchers/lowdefyBuildWatcher.mjs`  | Skeleton vs page change classification            |
+| `manager/watchers/moduleBuildWatcher.mjs`   | Local module file change classification           |
+| `lib/server/jitPageBuilder.js`              | JIT page build on API request                     |
+| `lib/server/pageCache.mjs`                  | PageCache class (compiled tracking, locks)        |
+| `pages/api/page/[pageId].js`                | Page API (triggers JIT build)                     |
+| `pages/api/js/[env].js`                     | Serves JS map as module                           |
+| `pages/api/reload.js`                       | SSE endpoint                                      |
+| `lib/client/Reload.js`                      | Hot reload component                              |
+| `lib/client/App.js`                         | Dev app wrapper                                   |
+| `lib/client/Page.js`                        | Page renderer (merges jsMap)                      |
+| `lib/client/Utils/usePageConfig.js`         | SWR hook with versioned cache keys                |
+| `lib/client/Utils/useMutateCache.js`        | `reloadVersion` counter for cache busting         |
 
 ## Reload Types
 
-| Trigger                         | Watcher             | Action                      | Result                              |
-| ------------------------------- | ------------------- | --------------------------- | ----------------------------------- |
-| Page-level config change        | lowdefyBuildWatcher | Signal file + SSE           | Soft reload (all pages invalidated, rebuilt JIT) |
-| Skeleton-level config change    | lowdefyBuildWatcher | Full skeleton rebuild + SSE | Soft reload (all pages invalidated)              |
-| Module skeleton file change     | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                     |
-| Module page content change      | moduleBuildWatcher  | Signal file + SSE           | Soft reload (all pages invalidated, rebuilt JIT) |
-| `module.lowdefy.yaml` change   | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                     |
-| .env change                     | envWatcher          | Read env                    | Hard restart                        |
-| Plugin change                   | nextBuildWatcher    | Next build                  | Hard restart                        |
-| package.json                    | nextBuildWatcher    | Install + build             | Hard restart                        |
+| Trigger                      | Watcher             | Action                            | Result                                           |
+| ---------------------------- | ------------------- | --------------------------------- | ------------------------------------------------ |
+| Page-level config change     | lowdefyBuildWatcher | Signal file + SSE                 | Soft reload (all pages invalidated, rebuilt JIT) |
+| Skeleton-level config change | lowdefyBuildWatcher | Full skeleton rebuild + SSE       | Soft reload (all pages invalidated)              |
+| Module skeleton file change  | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                                      |
+| Module page content change   | moduleBuildWatcher  | Signal file + SSE                 | Soft reload (all pages invalidated, rebuilt JIT) |
+| `module.lowdefy.yaml` change | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                                      |
+| .env change                  | envWatcher          | Read env                          | Hard restart                                     |
+| Plugin change                | nextBuildWatcher    | Next build                        | Hard restart                                     |
+| package.json                 | nextBuildWatcher    | Install + build                   | Hard restart                                     |
 
 ## Mock User for Testing
 

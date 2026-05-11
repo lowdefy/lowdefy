@@ -26,6 +26,7 @@ function getPluginPackages({ components }) {
     });
   }
   getPackages(components.types.actions);
+  getPackages(components.types.agents);
   getPackages(components.types.auth.adapters);
   getPackages(components.types.auth.callbacks);
   getPackages(components.types.auth.events);
@@ -53,6 +54,7 @@ function buildImportsDev({ components, context }) {
   const blocks = buildImportClassDev({ pluginPackages, map: context.typesMap.blocks });
   return {
     actions: buildImportClassDev({ pluginPackages, map: context.typesMap.actions }),
+    agents: buildImportClassDev({ pluginPackages, map: context.typesMap.agents }),
     auth: {
       adapters: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.adapters }),
       callbacks: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.callbacks }),

@@ -790,6 +790,94 @@
             verified: null
             completion: null
 
+- title: Tag cells with array values
+  fullWidth: true
+  blocks:
+    - id: tag_array_demo
+      type: AgGridAlpine
+      properties:
+        height: 240
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: User
+            field: name
+            minWidth: 180
+          - headerName: Roles
+            field: roles
+            minWidth: 260
+            cell:
+              type: tag
+              colorMap:
+                admin: red
+                editor: blue
+                viewer: green
+                billing: orange
+              default: default
+        rowData:
+          - name: Alice Johnson
+            roles:
+              - admin
+              - editor
+          - name: Bob Smith
+            roles:
+              - viewer
+          - name: Charlie Lee
+            roles:
+              - editor
+              - billing
+              - viewer
+          - name: Diana Patel
+            roles: []
+          - name: Chan Maarten
+            roles: null
+
+- title: Auto-coloured tags
+  fullWidth: true
+  blocks:
+    - id: tag_seeded_demo
+      type: AgGridAlpine
+      properties:
+        height: 300
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Project
+            field: project
+            minWidth: 160
+          - headerName: Tags
+            field: tags
+            minWidth: 320
+            cell:
+              type: tag
+        rowData:
+          - project: Storefront
+            tags:
+              - frontend
+              - react
+              - typescript
+          - project: API gateway
+            tags:
+              - backend
+              - node
+              - typescript
+          - project: ML pipeline
+            tags:
+              - python
+              - airflow
+              - backend
+          - project: Mobile app
+            tags:
+              - frontend
+              - react
+              - mobile
+          - project: Design system
+            tags:
+              - frontend
+              - design
+
 - title: Linked cells (onCellLink)
   fullWidth: true
   blocks:
@@ -868,13 +956,19 @@
         rowData:
           - code: A-01
             title: Main switchboard
-            description: Drafted the main switchboard layout and circuit schedule across three floors. Awaiting sign-off from the project engineer before ordering long-lead parts.
+            description: Drafted the main switchboard layout and circuit schedule across
+              three floors. Awaiting sign-off from the project engineer before
+              ordering long-lead parts.
           - code: A-02
             title: East wing HVAC
-            description: Balancing HVAC loads across the east wing. Waiting on updated ductwork drawings from the architect and a revised thermal model from the mechanical team.
+            description: Balancing HVAC loads across the east wing. Waiting on updated
+              ductwork drawings from the architect and a revised thermal model
+              from the mechanical team.
           - code: A-03
             title: Utility connections
-            description: Blocked on the utility connection survey — main was not where the drawings said it would be, which has cascaded to the trenching schedule.
+            description: Blocked on the utility connection survey — main was not where the
+              drawings said it would be, which has cascaded to the trenching
+              schedule.
 
 - title: Number formatting (currency, percent, compact, accounting)
   fullWidth: true
@@ -992,3 +1086,76 @@
             role: Designer
           - name: Charlie Lee
             role: Manager
+
+- title: Buttons cell (per-button action chains)
+  fullWidth: true
+  blocks:
+    - id: buttons_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Task
+            field: name
+          - headerName: Status
+            field: status
+            width: 120
+            cell:
+              type: tag
+              colorMap:
+                Open: blue
+                Locked: red
+                Archived: default
+          - headerName: Actions
+            field: _id
+            width: 220
+            cell:
+              type: buttons
+              buttons:
+                - eventName: onEditClick
+                  title: Edit
+                  icon: AiOutlineEdit
+                  type: primary
+                - eventName: onDeleteClick
+                  title: Delete
+                  icon: AiOutlineDelete
+                  danger: true
+                  disabledField: locked
+                  hiddenField: archived
+        rowData:
+          - _id: TSK-001
+            name: Wire main switchboard
+            status: Open
+            locked: false
+            archived: false
+          - _id: TSK-002
+            name: HVAC balancing
+            status: Locked
+            locked: true
+            archived: false
+          - _id: TSK-003
+            name: Utility connections
+            status: Archived
+            locked: false
+            archived: true
+      events:
+        onEditClick:
+          - id: edit_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Edit '
+                  - _event: row._id
+        onDeleteClick:
+          - id: delete_msg
+            type: DisplayMessage
+            params:
+              status: warning
+              content:
+                _string.concat:
+                  - 'Delete '
+                  - _event: row.name
