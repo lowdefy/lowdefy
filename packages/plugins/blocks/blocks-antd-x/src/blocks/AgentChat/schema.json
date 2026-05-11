@@ -1,0 +1,251 @@
+{
+  "type": "object",
+  "properties": {
+    "agentId": { "type": "string" },
+    "welcome": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": {},
+        "prompts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "description": { "type": "string" },
+              "icon": {}
+            }
+          }
+        },
+        "variant": {
+          "type": "string",
+          "enum": ["filled", "borderless"]
+        }
+      }
+    },
+    "messageDisplay": {
+      "type": "object",
+      "properties": {
+        "markdownRendering": { "type": "boolean", "default": true },
+        "renderMermaid": { "type": "boolean", "default": true },
+        "codeHighlighter": { "type": "boolean", "default": true },
+        "renderLatex": { "type": "boolean", "default": false },
+        "showThoughtChain": { "type": "boolean", "default": true },
+        "showReasoning": { "type": "boolean", "default": true },
+        "reasoningDisplay": {
+          "type": "string",
+          "enum": ["interleaved", "grouped"],
+          "default": "interleaved"
+        },
+        "toolResultDisplay": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["summary", "full", "none", "readable"],
+              "default": "summary"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "enum": ["summary", "full", "none", "readable"]
+                }
+              },
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["summary", "full", "none", "readable"]
+              }
+            }
+          ]
+        },
+        "showSources": {
+          "type": "boolean",
+          "description": "Show source citations from tool results. Defaults to false — set to true to display source-url and source-document parts."
+        },
+        "showStatusUpdates": { "type": "boolean", "default": true },
+        "showStepSeparators": { "type": "boolean", "default": false },
+        "showToolInputStreaming": { "type": "boolean", "default": true },
+        "thinkingMessages": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+          ],
+          "description": "Optional label shown next to the typing dots on a loading assistant bubble, after a short delay. Pass a string for a single label, or an array to rotate through several. Leave unset (default) to show dots only."
+        },
+        "thinkingMessageDelay": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 500,
+          "description": "Milliseconds of continuous loading state before the first thinkingMessages entry appears. Clamped to a 500 ms minimum at runtime to prevent flash-of-label on near-instant responses. Ignored when thinkingMessages is unset."
+        },
+        "thinkingMessageRotationInterval": {
+          "type": "number",
+          "default": 8000,
+          "minimum": 500,
+          "description": "Milliseconds between label rotations when thinkingMessages is an array with 2 or more entries. Ignored for a single string."
+        },
+        "editableMessages": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow inline editing of sent user messages by clicking on them."
+        },
+        "sourcesDisplay": {
+          "type": "object",
+          "properties": {
+            "inline": { "type": "boolean", "default": false },
+            "expandIconPosition": { "type": "string", "enum": ["start", "end"], "default": "end" }
+          }
+        },
+        "actions": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["copy", "feedback", "regenerate", "delete", "audio"]
+              },
+              "description": "Array shorthand — list the actions to enable."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "copy": { "type": "boolean", "default": true },
+                "feedback": { "type": "boolean", "default": true },
+                "regenerate": { "type": "boolean", "default": false },
+                "delete": { "type": "boolean", "default": false },
+                "audio": { "type": "boolean", "default": false }
+              },
+              "description": "Object form — set each action to true or false."
+            }
+          ]
+        },
+        "roles": {
+          "type": "object",
+          "properties": {
+            "assistant": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
+              }
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "avatar": { "type": "string" },
+                "variant": {
+                  "type": "string",
+                  "enum": ["filled", "outlined", "shadow", "borderless"]
+                },
+                "shape": {
+                  "type": "string",
+                  "enum": ["default", "round", "corner"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages": {
+      "type": "array"
+    },
+    "conversationId": {
+      "type": "string",
+      "description": "Active conversation ID. When this value changes, messages are automatically cleared."
+    },
+    "urlQuery": {
+      "type": "object",
+      "description": "URL query parameters to send with each agent request. Available server-side in onFinish hook payload and via _payload operator in agent properties."
+    },
+    "sharedState": {
+      "description": "When set to a non-empty object, the object is sent to the agent each turn as read context and the agent can write to any top-level key via the update-page-state tool. Typically set to `{ _state: true }` to expose the whole page state, or a curated shape like `{ legal: _state.legal_name }`.",
+      "type": "object"
+    },
+    "sender": {
+      "type": "object",
+      "properties": {
+        "placeholder": { "type": "string", "default": "Type a message..." },
+        "submitType": {
+          "type": "string",
+          "enum": ["enter", "shiftEnter"],
+          "default": "enter"
+        },
+        "allowSpeech": { "type": "boolean", "default": false },
+        "attachments": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "accept": { "type": "string" },
+            "maxSize": { "type": "number" },
+            "s3PostPolicyRequestId": {
+              "type": "string",
+              "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
+            }
+          }
+        },
+        "switches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "icon": {},
+              "default": { "type": "boolean", "default": false }
+            },
+            "required": ["key", "label"]
+          }
+        }
+      }
+    },
+    "display": {
+      "type": "string",
+      "enum": ["inline", "drawer"],
+      "default": "inline"
+    },
+    "drawer": {
+      "type": "object",
+      "properties": {
+        "placement": { "type": "string", "enum": ["left", "right", "top", "bottom"] },
+        "width": { "type": "number" },
+        "title": { "type": "string" }
+      }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": {}
+        }
+      }
+    },
+    "height": {
+      "type": "string",
+      "default": "calc(100dvh - 170px)",
+      "description": "CSS height of the chat container. Only applies when display is 'inline'."
+    },
+    "maxWidth": {
+      "type": "number",
+      "default": 800,
+      "description": "Maximum width of the chat container in pixels."
+    }
+  },
+  "required": ["agentId"]
+}

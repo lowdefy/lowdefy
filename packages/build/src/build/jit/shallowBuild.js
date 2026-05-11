@@ -29,6 +29,7 @@ import addKeys from '../addKeys.js';
 import buildApp from '../buildApp.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
+import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
@@ -38,6 +39,7 @@ import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
+import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
@@ -45,6 +47,7 @@ import writeApp from '../writeApp.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
+import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
@@ -125,6 +128,7 @@ async function shallowBuild(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(buildAgents, 'buildAgents', { components, context });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
@@ -152,6 +156,7 @@ async function shallowBuild(options) {
     await writeAuth({ components, context });
     await writeConnections({ components, context });
     await writeApi({ components, context });
+    await writeAgents({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
@@ -200,6 +205,7 @@ async function shallowBuild(options) {
     );
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
+    await copyAgentFileSystems({ components, context });
 
     return { components, pageRegistry, context };
   } catch (err) {

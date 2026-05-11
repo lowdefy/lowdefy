@@ -10,6 +10,12 @@
 **/.env
 
 .claude/settings.local.json
+.claude/skills/
+.agents/
+.superpowers/
+.worktrees/
+skills-lock.json
+docs/superpowers/
 
 .turbo
 

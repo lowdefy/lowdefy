@@ -35,6 +35,7 @@ function createContext({
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
+    agentIds: new Set(),
     connectionIds: new Set(),
     directories,
     errors: [],
@@ -52,6 +53,7 @@ function createContext({
     stage,
     typeCounters: {
       actions: createCounter(),
+      agents: createCounter(),
       auth: {
         adapters: createCounter(),
         callbacks: createCounter(),

@@ -12,18 +12,18 @@ Moment.js locale shortcuts (`l`, `ll`, `lll`, `llll` and uppercase `L`, `LL`, `L
 
 **Replace these with explicit dayjs format tokens:**
 
-| Moment shortcut | Moment output example | Replacement |
-| --- | --- | --- |
-| `l` | 3/26/2026 | `D/M/YYYY` |
-| `ll` | Mar 26, 2026 | `D MMM YYYY` |
-| `lll` | Mar 26, 2026 3:27 PM | `D MMM YYYY h:mm A` |
-| `llll` | Wed, Mar 26, 2026 3:27 PM | `ddd, D MMM YYYY h:mm A` |
-| `L` | 03/26/2026 | `DD/MM/YYYY` |
-| `LL` | March 26, 2026 | `D MMMM YYYY` |
-| `LLL` | March 26, 2026 3:27 PM | `D MMMM YYYY h:mm A` |
-| `LLLL` | Wednesday, March 26, 2026 3:27 PM | `dddd, D MMMM YYYY h:mm A` |
-| `LT` | 3:27 PM | `h:mm A` |
-| `LTS` | 3:27:45 PM | `h:mm:ss A` |
+| Moment shortcut | Moment output example             | Replacement                |
+| --------------- | --------------------------------- | -------------------------- |
+| `l`             | 3/26/2026                         | `D/M/YYYY`                 |
+| `ll`            | Mar 26, 2026                      | `D MMM YYYY`               |
+| `lll`           | Mar 26, 2026 3:27 PM              | `D MMM YYYY h:mm A`        |
+| `llll`          | Wed, Mar 26, 2026 3:27 PM         | `ddd, D MMM YYYY h:mm A`   |
+| `L`             | 03/26/2026                        | `DD/MM/YYYY`               |
+| `LL`            | March 26, 2026                    | `D MMMM YYYY`              |
+| `LLL`           | March 26, 2026 3:27 PM            | `D MMMM YYYY h:mm A`       |
+| `LLLL`          | Wednesday, March 26, 2026 3:27 PM | `dddd, D MMMM YYYY h:mm A` |
+| `LT`            | 3:27 PM                           | `h:mm A`                   |
+| `LTS`           | 3:27:45 PM                        | `h:mm:ss A`                |
 
 **Files to search:**
 
@@ -33,21 +33,25 @@ Grep: `date\(['"]([lL]{1,4}|LTS?)['"]\)`
 **Example:**
 
 Before:
+
 ```yaml
 template: "{{ meeting_date | date('llll') }}"
 ```
 
 After:
+
 ```yaml
 template: "{{ meeting_date | date('ddd, D MMM YYYY h:mm A') }}"
 ```
 
 Before:
+
 ```yaml
 Last modified by {{ doc.updated.user.name | safe }} on {{ doc.updated.timestamp | date('lll')}}
 ```
 
 After:
+
 ```yaml
 Last modified by {{ doc.updated.user.name | safe }} on {{ doc.updated.timestamp | date('D MMM YYYY h:mm A')}}
 ```

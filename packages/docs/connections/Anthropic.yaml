@@ -1,0 +1,110 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: Anthropic
+    pageTitle: Anthropic
+    section: Connections
+    filePath: connections/Anthropic.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The Anthropic connection connects to the [Anthropic API](https://docs.anthropic.com/) and provides the `ClaudeAgent` agent type for use with [Lowdefy agents](/agents-introduction).
+
+            > The Anthropic connection is provided by the `@lowdefy/connection-anthropic` package, which is included by default.
+
+            ## Connections
+
+            ### Anthropic
+
+            #### Properties
+            - `apiKey: string`: __Required__ - Anthropic API key. Use [`_secret`](/_secret) to reference this securely.
+            - `baseURL: string`: Optional base URL for the Anthropic API. Use this to connect to a proxy or compatible endpoint.
+
+            ###### Connection example:
+            ```yaml
+            connections:
+              - id: anthropic
+                type: Anthropic
+                properties:
+                  apiKey:
+                    _secret: ANTHROPIC_API_KEY
+            ```
+
+            ## Agent Types
+
+            ### ClaudeAgent
+
+            The `ClaudeAgent` supports all [common agent properties](/agents-introduction) plus the following:
+
+            | Property | Type | Description |
+            | --- | --- | --- |
+            | `thinking` | object | Extended thinking configuration. The model shows its reasoning before responding. |
+            | `thinking.type` | string | Set to `'enabled'` to turn on extended thinking. |
+            | `thinking.budgetTokens` | integer | Maximum tokens the model can use for thinking. |
+            | `effort` | string | Thinking effort level: `'low'`, `'medium'`, or `'high'`. Simpler alternative to `thinking`. |
+
+            > Use `effort` for a simple control or `thinking` for fine-grained token budget control — not both at the same time.
+
+            ###### Agent with extended thinking:
+            ```yaml
+            connections:
+              - id: anthropic
+                type: Anthropic
+                properties:
+                  apiKey:
+                    _secret: ANTHROPIC_API_KEY
+
+            agents:
+              - id: analyst
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  thinking:
+                    type: enabled
+                    budgetTokens: 10000
+                  instructions: |
+                    You are a data analyst. Think carefully through each
+                    question before answering. Show your reasoning.
+                  maxSteps: 8
+                tools:
+                  - query-analytics
+                  - get-dashboard-data
+            ```
+
+            ###### Agent with effort level:
+            ```yaml
+            agents:
+              - id: support_agent
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  effort: high
+                  instructions: |
+                    You are a customer support agent. Search the knowledge
+                    base before answering questions. Be concise and friendly.
+                  maxSteps: 5
+                  temperature: 0.3
+                tools:
+                  - search-knowledge-base
+                  - get-account-info
+                  - endpointId: create-ticket
+                    confirm: true
+            ```

@@ -20,6 +20,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
+import agents from '../../build/plugins/agents.js';
 import config from '../build/config.js';
 import i18nConfig from '../build/i18n.js';
 import connections from '../../build/plugins/connections.js';
@@ -41,6 +42,7 @@ function apiWrapper(handler) {
     const context = {
       // Important to give absolute path so Next can trace build files
       rid: uuid(),
+      agents,
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       connections,

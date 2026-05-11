@@ -259,7 +259,7 @@ test('request does not have a connectionId', async () => {
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Request "requestId" does not specify a connection.'
+    'Connection id is missing.'
   );
 });
 

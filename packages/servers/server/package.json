@@ -52,6 +52,7 @@
     "@lowdefy/api": "5.2.0",
     "@lowdefy/block-utils": "5.2.0",
     "@lowdefy/blocks-antd": "5.2.0",
+    "@lowdefy/blocks-antd-x": "5.2.0",
     "@lowdefy/blocks-basic": "5.2.0",
     "@lowdefy/blocks-loaders": "5.2.0",
     "@lowdefy/blocks-tiptap": "5.2.0",

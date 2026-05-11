@@ -26,6 +26,7 @@ import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
+import buildAgents from './build/buildAgents.js';
 import buildApp from './build/buildApp.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
@@ -41,10 +42,12 @@ import buildRefs from './build/buildRefs/buildRefs.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
+import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateConfig from './build/validateConfig.js';
+import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
@@ -112,6 +115,7 @@ async function build(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
@@ -136,6 +140,7 @@ async function build(options) {
     await writeApp({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });
+    await writeAgents({ components, context });
     await writeApi({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
@@ -152,6 +157,7 @@ async function build(options) {
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
+    await copyAgentFileSystems({ components, context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

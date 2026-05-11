@@ -52,6 +52,7 @@ async function build(options) {
   buildConnections({ components, context });             // Connection configs
   buildApi({ components, context });                     // API endpoints
   buildPages({ components, context });                   // Page definitions
+  buildAgents({ components, context });                  // Agent config validation + normalization
   buildMenu({ components, context });                    // Navigation menus
   buildJs({ components, context });                      // Custom JS functions
 
@@ -73,8 +74,10 @@ async function build(options) {
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writePluginImports({ components, context });  // includes writeGlobalsCss
+  await writeAgents({ components, context });             // Agent config artifacts
+  await writePluginImports({ components, context });  // includes writeGlobalsCss, writeAgentImports
   await writeJs({ components, context });
+  await copyAgentFileSystems({ components, context });   // Copy fileSystem basePaths to server
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }

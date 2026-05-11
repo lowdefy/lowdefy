@@ -16,25 +16,20 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getConnectionConfig({ logger, readConfigFile }, { requestConfig }) {
-  const { connectionId, requestId } = requestConfig;
+async function getConnectionConfig({ logger, readConfigFile }, { connectionId, configKey }) {
   let err;
 
   if (!connectionId) {
-    err = new ConfigError(`Request "${requestId}" does not specify a connection.`, {
-      configKey: requestConfig['~k'],
-    });
-    logger.debug({ params: { requestId }, err }, err.message);
+    err = new ConfigError('Connection id is missing.', { configKey });
+    logger.debug({ params: { connectionId }, err }, err.message);
     throw err;
   }
 
   const connection = await readConfigFile(`connections/${connectionId}.json`);
 
   if (!connection) {
-    err = new ConfigError(`Connection "${connectionId}" does not exist.`, {
-      configKey: requestConfig['~k'],
-    });
-    logger.debug({ params: { requestId }, err }, err.message);
+    err = new ConfigError(`Connection "${connectionId}" does not exist.`, { configKey });
+    logger.debug({ params: { connectionId }, err }, err.message);
     throw err;
   }
   return connection;
