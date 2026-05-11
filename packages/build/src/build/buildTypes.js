@@ -67,6 +67,7 @@ function buildTypes({ components, context }) {
 
   components.types = {
     actions: {},
+    agents: {},
     auth: {
       adapters: {},
       callbacks: {},
@@ -88,6 +89,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.actions,
     store: components.types.actions,
     typeClass: 'Action',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.agents,
+    definitions: context.typesMap.agents,
+    store: components.types.agents,
+    typeClass: 'Agent',
   });
 
   buildTypeClass(context, {

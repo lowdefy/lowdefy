@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "icon": {},
+          "disabled": { "type": "boolean" },
+          "timestamp": { "type": "number" },
+          "group": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "activeKey": { "type": "string" },
+    "menu": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "label": { "type": "string" },
+          "icon": {},
+          "danger": { "type": "boolean" }
+        }
+      }
+    },
+    "creation": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "icon": {},
+        "align": { "type": "string", "enum": ["start", "center", "end"] }
+      }
+    },
+    "groupable": {
+      "type": "object",
+      "properties": {
+        "collapsible": { "type": "boolean", "default": true },
+        "label": { "type": "string" },
+        "defaultExpandedKeys": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "width": {
+      "type": "number",
+      "default": 250,
+      "description": "Sidebar width in pixels."
+    }
+  }
+}

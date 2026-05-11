@@ -25,6 +25,7 @@ async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
   const defaultTypesMap = {
     actions: {},
+    agents: {},
     auth: {
       adapters: {},
       callbacks: {},
