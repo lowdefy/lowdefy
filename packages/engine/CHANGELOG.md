@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.3.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.3.0
+- @lowdefy/errors@5.3.0
+- @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Minor Changes
