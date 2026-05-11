@@ -1,5 +1,12 @@
 # @lowdefy/logger
 
+## 5.3.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.3.0
+- @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Patch Changes

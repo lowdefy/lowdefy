@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.3.0
+
+### Patch Changes
+
+- 54d30f7: fix(blocks-antd): Add default header border to PageHeaderMenu.
+
+  PageHeaderMenu now has a default `borderBottom` matching the existing default borders on PageSiderMenu and PageSidebarLayout, for visual consistency across the page menu blocks. The default can still be overridden via `styles.header`.
+
+  - @lowdefy/block-utils@5.3.0
+  - @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Minor Changes

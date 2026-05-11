@@ -1,5 +1,11 @@
 # @lowdefy/e2e-utils
 
+## 5.3.0
+
+### Patch Changes
+
+- @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Patch Changes
