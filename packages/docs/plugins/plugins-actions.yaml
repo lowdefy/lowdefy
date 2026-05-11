@@ -40,6 +40,7 @@ _ref:
               - `getEvent: function`: Get event data from the event that triggered the action.
               - `getGlobal: function`: Get data from the Lowdefy global object.
               - `getInput: function`: Get data from the Lowdefy input object.
+              - `getLocale: function`: Return the active i18n locale code (or undefined when `config.i18n` is not configured).
               - `getPageId: function`: Get the pageId of the block that the action is defined on.
               - `getRequestDetails: function`: Get data from Lowdefy requests.
               - `getState: function`: Get data from the Lowdefy state object.

@@ -67,9 +67,8 @@ export default {
       disabledDates,
       format: {
         type: 'string',
-        default: 'YYYY-MM-DD HH:mm',
         description:
-          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats.',
+          'Format in which to parse the date value, eg. "DD MMMM YYYY HH:mm" will parse a date value of 1999-12-31T15:30 as "31 December 1999 15:30". The format has to conform to dayjs formats. Defaults to the active locale\'s date-time format, or "YYYY-MM-DD HH:mm" when no locale is configured.',
       },
       hourStep: {
         type: 'integer',

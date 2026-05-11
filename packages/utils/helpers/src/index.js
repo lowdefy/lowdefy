@@ -19,6 +19,9 @@ import builtinMessages from './builtinMessages.js';
 import cachedPromises from './cachedPromises.js';
 import extractErrorProps from './extractErrorProps.js';
 import get from './get.js';
+import getLocaleDateFormat from './getLocaleDateFormat.js';
+import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
+import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
@@ -38,6 +41,9 @@ export {
   cachedPromises,
   extractErrorProps,
   get,
+  getLocaleDateFormat,
+  getLocaleDecimalSeparator,
+  getLocaleGroupSeparator,
   LRUCache,
   mergeObjects,
   omit,

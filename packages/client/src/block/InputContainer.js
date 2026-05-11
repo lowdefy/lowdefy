@@ -60,6 +60,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
     >
       <Component
         methods={Object.assign(block.methods, {
+          getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           translate: lowdefy._internal.translate,

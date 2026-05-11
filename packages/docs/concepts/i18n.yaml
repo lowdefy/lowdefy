@@ -267,10 +267,19 @@ _ref:
 
             ## Working with dates and numbers
 
-            Two complementary operators format values per locale:
+            **Date and number input blocks auto-localize their defaults when `config.i18n` is configured:**
+
+            - `DateSelector`, `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` — the input/display `format` defaults to the active locale's date format (e.g. `DD.MM.YYYY` for `de-DE`, `MM/DD/YYYY` for `en-US`). Formats are derived at runtime via `Intl.DateTimeFormat` — no per-locale table to maintain.
+            - `NumberInput` — `decimalSeparator` defaults to the active locale's separator (e.g. `,` for `de-DE`, `.` for `en-US`), derived via `Intl.NumberFormat`.
+
+            Override per-block by setting `properties.format` or `properties.decimalSeparator` explicitly. When `config.i18n` isn't configured the legacy defaults (`YYYY-MM-DD`, `.`) apply so apps without i18n are unchanged.
+
+            Two complementary operators also format values per locale in YAML expressions:
 
             - [`_intl`](/_intl) — wraps native `Intl.DateTimeFormat`/`Intl.NumberFormat`/etc. Pass an explicit `locale`, or omit it to use the user's default.
             - [`_dayjs`](/_dayjs) and [`_date`](/_date) — dayjs-based date formatting. `dayjs.locale()` is set automatically by `useLocale`, so locale-aware tokens (`dddd`, `MMMM`, etc.) render in the active language.
+
+            **In custom block / action code**, read the active locale with `methods.getLocale()` and pair it with the `@lowdefy/helpers` utilities `getLocaleDateFormat`, `getLocaleDecimalSeparator`, `getLocaleGroupSeparator` to derive locale-aware defaults.
 
             ## Reference
 

@@ -21,6 +21,7 @@ import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
 import createGetGlobal from './createGetGlobal.js';
 import createGetInput from './createGetInput.js';
+import createGetLocale from './createGetLocale.js';
 import createGetPageId from './createGetPageId.js';
 import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
@@ -49,6 +50,7 @@ function getActionMethods(props) {
     getEvent: createGetEvent(props),
     getGlobal: createGetGlobal(props),
     getInput: createGetInput(props),
+    getLocale: createGetLocale(props),
     getPageId: createGetPageId(props),
     getRequestDetails: createGetRequestDetails(props),
     getState: createGetState(props),

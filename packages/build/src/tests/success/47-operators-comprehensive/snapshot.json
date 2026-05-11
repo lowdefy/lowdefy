@@ -7436,8 +7436,7 @@
             },
             "decimalSeparator": {
               "type": "string",
-              "default": ".",
-              "description": "Separator between number and decimal places."
+              "description": "Separator between number and decimal places. Defaults to the active locale's decimal separator (e.g. \",\" for de-DE, \".\" for en-US), or \".\" when no locale is configured."
             },
             "precision": {
               "type": "integer",

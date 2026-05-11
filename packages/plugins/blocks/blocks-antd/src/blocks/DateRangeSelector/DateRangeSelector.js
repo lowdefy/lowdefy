@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
-import { type } from '@lowdefy/helpers';
+import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
@@ -72,7 +72,7 @@ const DateRangeSelector = ({
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format ?? 'YYYY-MM-DD'}
+              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               separator={properties.separator ?? '~'}
               size={properties.size}
