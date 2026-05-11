@@ -315,7 +315,7 @@ function parseChangesetEntries(content) {
     if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
 
     // New changeset entry: `- {hash}: {description}`
-    const entryMatch = line.match(/^- ([a-f0-9]{8,}): (.+)/);
+    const entryMatch = line.match(/^- ([a-f0-9]{7,}): (.+)/);
     if (entryMatch) {
       if (currentEntry) entries.push(currentEntry);
       currentEntry = {
