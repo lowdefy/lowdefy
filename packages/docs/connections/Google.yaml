@@ -1,0 +1,106 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: Google
+    pageTitle: Google
+    section: Connections
+    filePath: connections/Google.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The Google connection connects to the [Google Gemini API](https://ai.google.dev/docs) and provides the `GeminiAgent` agent type for use with [Lowdefy agents](/agents-introduction).
+
+            > The Google connection is provided by the `@lowdefy/connection-google` package, which is included by default.
+
+            ## Connections
+
+            ### Google
+
+            #### Properties
+            - `apiKey: string`: __Required__ - Google API key. Use [`_secret`](/_secret) to reference this securely.
+            - `baseURL: string`: Optional base URL for the Google API.
+
+            ###### Connection example:
+            ```yaml
+            connections:
+              - id: google
+                type: Google
+                properties:
+                  apiKey:
+                    _secret: GOOGLE_API_KEY
+            ```
+
+            ## Agent Types
+
+            ### GeminiAgent
+
+            The `GeminiAgent` supports all [common agent properties](/agents-introduction) plus the following:
+
+            | Property | Type | Description |
+            | --- | --- | --- |
+            | `thinkingConfig` | object | Configuration for the model's thinking process. |
+            | `thinkingConfig.thinkingBudget` | integer | Maximum thinking tokens (Gemini 2.5 models). Set to `0` to disable. |
+            | `thinkingConfig.thinkingLevel` | string | Thinking depth (Gemini 3 models): `'minimal'`, `'low'`, `'medium'`, or `'high'`. |
+            | `thinkingConfig.includeThoughts` | boolean | Return thought summaries in the response. |
+            | `safetySettings` | object[] | Safety filter settings. |
+            | `safetySettings[].category` | string | Safety category (e.g. `'HARM_CATEGORY_DANGEROUS_CONTENT'`). |
+            | `safetySettings[].threshold` | string | Block threshold (e.g. `'BLOCK_ONLY_HIGH'`, `'BLOCK_NONE'`). |
+
+            ###### Agent with thinking enabled:
+            ```yaml
+            connections:
+              - id: google
+                type: Google
+                properties:
+                  apiKey:
+                    _secret: GOOGLE_API_KEY
+
+            agents:
+              - id: research_agent
+                type: GeminiAgent
+                connectionId: google
+                properties:
+                  model: gemini-2.5-pro
+                  thinkingConfig:
+                    thinkingBudget: 8000
+                    includeThoughts: true
+                  instructions: |
+                    You are a research assistant. Search for information
+                    and provide well-sourced answers. Think through
+                    complex questions step by step.
+                  maxSteps: 8
+                tools:
+                  - search-knowledge-base
+                  - get-document
+            ```
+
+            ###### Agent with safety settings:
+            ```yaml
+            agents:
+              - id: creative_writer
+                type: GeminiAgent
+                connectionId: google
+                properties:
+                  model: gemini-2.5-pro
+                  temperature: 0.9
+                  safetySettings:
+                    - category: HARM_CATEGORY_DANGEROUS_CONTENT
+                      threshold: BLOCK_ONLY_HIGH
+                  instructions: You are a creative writing assistant.
+            ```

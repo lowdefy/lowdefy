@@ -174,6 +174,53 @@
           properties:
             title: The CLI
 
+    - id: agents_group
+      type: MenuGroup
+      properties:
+        title: Agents
+        icon: AiOutlineRobot
+      links:
+        - id: agents-introduction
+          type: MenuLink
+          pageId: agents-introduction
+          properties:
+            title: Introduction
+        - id: agent-properties
+          type: MenuLink
+          pageId: agent-properties
+          properties:
+            title: Agent Properties
+        - id: agent-endpoint-tools
+          type: MenuLink
+          pageId: agent-endpoint-tools
+          properties:
+            title: Endpoint Tools
+        - id: agent-mcp-tools
+          type: MenuLink
+          pageId: agent-mcp-tools
+          properties:
+            title: MCP Tools
+        - id: agent-multi-agent
+          type: MenuLink
+          pageId: agent-multi-agent
+          properties:
+            title: Multi-Agent
+        - id: agent-server-hooks
+          type: MenuLink
+          pageId: agent-server-hooks
+          properties:
+            title: Server Hooks
+        - id: AgentChat
+          type: MenuLink
+          pageId: AgentChat
+          properties:
+            title: AgentChat
+        - id: AgentConversations
+          type: MenuLink
+          pageId: AgentConversations
+          properties:
+            title: AgentConversations
+
     - id: deployment
       type: MenuGroup
       properties:
@@ -700,6 +747,9 @@
         title: Connections
         icon: AiOutlineApi
       links:
+        - id: Anthropic
+          type: MenuLink
+          pageId: Anthropic
         - id: AmazonRedshift
           type: MenuLink
           pageId: AmazonRedshift
@@ -720,6 +770,11 @@
           pageId: Elasticsearch
           properties:
             title: Elasticsearch
+        - id: Google
+          type: MenuLink
+          pageId: Google
+          properties:
+            title: Google Gemini
         - id: GoogleSheet
           type: MenuLink
           pageId: GoogleSheet
@@ -731,6 +786,11 @@
         - id: MariaDB
           type: MenuLink
           pageId: MariaDB
+        - id: Mcp
+          type: MenuLink
+          pageId: Mcp
+          properties:
+            title: MCP
         - id: MongoDB
           type: MenuLink
           pageId: MongoDB
@@ -742,6 +802,11 @@
         - id: MySQL
           type: MenuLink
           pageId: MySQL
+        - id: OpenAI-connection
+          type: MenuLink
+          pageId: OpenAI-connection
+          properties:
+            title: OpenAI
         - id: PostgreSQL
           type: MenuLink
           pageId: PostgreSQL

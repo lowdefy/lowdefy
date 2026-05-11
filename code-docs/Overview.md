@@ -67,14 +67,14 @@ Lowdefy is extensible via npm packages. Everything the user sees or interacts wi
 
 ### Plugin Types
 
-| Type               | What It Does        | Examples                        |
-| ------------------ | ------------------- | ------------------------------- |
-| **Blocks**         | UI components       | Button, TextInput, Table, Chart |
-| **Connections**    | Data source configs | MongoDB, PostgreSQL, REST API   |
-| **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`  |
-| **Actions**        | Event handlers      | SetState, Request, Navigate     |
-| **Agents**         | AI chat providers   | Anthropic, OpenAI, Google       |
-| **Auth Providers** | Authentication      | Google, Auth0, Credentials      |
+| Type               | What It Does        | Examples                              |
+| ------------------ | ------------------- | ------------------------------------- |
+| **Blocks**         | UI components       | Button, TextInput, Table, Chart       |
+| **Connections**    | Data source configs | MongoDB, PostgreSQL, REST API         |
+| **Operators**      | Logic functions     | `_if`, `_get`, `_sum`, `_date`        |
+| **Actions**        | Event handlers      | SetState, Request, Navigate           |
+| **Agents**         | AI chat providers   | Anthropic, OpenAI, Google, AI Gateway |
+| **Auth Providers** | Authentication      | Google, Auth0, Credentials            |
 
 ### Default Plugins
 
@@ -88,6 +88,7 @@ These ship with Lowdefy and don't need explicit installation:
 - `@lowdefy/connection-anthropic` - Anthropic Claude models
 - `@lowdefy/connection-openai` - OpenAI GPT models
 - `@lowdefy/connection-google` - Google Gemini models
+- `@lowdefy/connection-ai-gateway` - Vercel AI Gateway (multi-provider routing)
 - `@lowdefy/connection-mcp` - MCP server connections
 
 See [Plugin System Architecture](./architecture/plugin-system.md) for internals.

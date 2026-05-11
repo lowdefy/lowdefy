@@ -1,0 +1,168 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: agent-multi-agent
+    pageTitle: Multi-Agent
+    section: Agents
+    filePath: agents/multi-agent.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            An agent can delegate tasks to other agents defined in your app. Sub-agents are presented to the parent agent as tools — the parent sends a task description, the sub-agent processes it using its own instructions and tools, and returns a text response.
+
+            This lets you build systems where a general-purpose agent routes requests to specialized agents, each with their own instructions, tools, and model settings.
+
+            ## Defining Sub-Agents
+
+            Define the sub-agent as a regular agent, then reference it in the parent agent's `agents` array:
+
+            ```yaml
+            agents:
+              - id: researcher
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: You research and summarize information about products.
+                tools:
+                  - search-products
+                  - get-product-details
+
+              - id: assistant
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: |
+                    You are a helpful assistant. When users ask about products,
+                    delegate the research to the researcher agent.
+                agents:
+                  - agentId: researcher
+                    description: Research and summarize product information.
+            ```
+
+            The `description` tells the parent model when to delegate. Write it clearly — it's the only thing the parent sees about the sub-agent's capabilities.
+
+            ## Sub-Agent Options
+
+            - `agents: array`: Each item is either:
+              - `string` — The sub-agent `id`. Uses the sub-agent's instructions as the tool description.
+              - `object`:
+                - `agentId: string`: __Required__ - The sub-agent `id`.
+                - `description: string`: Description sent to the parent model.
+                - `inputSchema: object`: JSON Schema for structured input. When provided, the parent generates structured input matching this schema instead of freeform text.
+
+            ###### String shorthand:
+            ```yaml
+            agents:
+              - researcher
+            ```
+
+            ###### With structured input:
+            ```yaml
+            agents:
+              - agentId: report_generator
+                description: Generate formatted reports from data.
+                inputSchema:
+                  type: object
+                  properties:
+                    reportType:
+                      type: string
+                      enum:
+                        - summary
+                        - detailed
+                        - executive
+                      description: The type of report to generate.
+                    dateRange:
+                      type: string
+                      description: Date range for the report (e.g. "last 30 days").
+                    metrics:
+                      type: array
+                      items:
+                        type: string
+                      description: Metrics to include in the report.
+                  required:
+                    - reportType
+            ```
+
+            ## Routing Pattern
+
+            A common pattern is a router agent that delegates to specialized agents based on the user's intent:
+
+            ```yaml
+            agents:
+              - id: billing_agent
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: |
+                    You handle billing questions. Look up invoices, explain
+                    charges, and process refund requests.
+                tools:
+                  - get-invoices
+                  - get-payment-history
+                  - endpointId: process-refund
+                    confirm: true
+
+              - id: technical_agent
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: |
+                    You handle technical support. Diagnose issues, search
+                    the knowledge base, and escalate if needed.
+                tools:
+                  - search-articles
+                  - check-service-status
+
+              - id: router
+                type: ClaudeAgent
+                connectionId: anthropic
+                properties:
+                  model: claude-sonnet-4-20250514
+                  instructions: |
+                    You are the main support agent. Route billing questions
+                    to the billing agent and technical issues to the
+                    technical agent. Handle general questions yourself.
+                agents:
+                  - agentId: billing_agent
+                    description: Handles billing, invoices, payments, and refund requests.
+                  - agentId: technical_agent
+                    description: Handles technical issues, troubleshooting, and bug reports.
+            ```
+
+            The user chats with the `router` agent via [`AgentChat`](/AgentChat). When the router delegates, the sub-agent runs server-side and returns its response to the router, which can then relay or build on it.
+
+            ## Nesting and Limits
+
+            Sub-agents can themselves have sub-agents, up to **5 levels deep**. Circular references (agent A delegates to agent B, which delegates back to agent A) are detected at build time and cause a build error.
+
+            Sub-agents can use any combination of [endpoint tools](/agent-endpoint-tools), [MCP tools](/agent-mcp-tools), and [file system access](/agent-properties) — they are full agents with their own configuration.
+
+            > Tools with `confirm: true` are not supported on sub-agents, since sub-agents run server-side without direct user interaction. A build warning is shown if this is configured.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: MCP Tools
+            previous_page_id: agent-mcp-tools
+            next_page_title: Server Hooks
+            next_page_id: agent-server-hooks
