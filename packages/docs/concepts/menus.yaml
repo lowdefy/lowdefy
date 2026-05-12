@@ -49,17 +49,36 @@ _ref:
             - `type: string`: __Required__ - The type should be `MenuLink`.
             - `pageId: string`: The id of the page to link to. Used as the menu item title if no title is provided.
             - `url: string`: An external url to link to.
+            - `class: string | array | object`: CSS classes (including Tailwind utilities) for the item. Flat applies to the item wrapper; use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
+            - `style: object`: CSS styles for the item. Flat applies to the wrapper; use dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
             -  `properties: object`: The properties of the menu link. These are:
                 - `title: string`: The title to display for the link.
                 - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the link.
+                - `danger: boolean`: Apply danger style (switches the item onto antd's `dangerItem*` token set).
+                - `disabled: boolean`: Disable the item — blocks clicks and applies a greyed style.
+                - `tooltip: string`: Tooltip text shown when the menu is collapsed.
+                - `extra: string`: Free-form right-aligned label on the item (e.g. `beta`, `soon`). For real keyboard shortcuts use `shortcut`, which both renders a kbd badge AND wires the key handler. When both are set, `shortcut` sits to the far right of `extra`.
+                - `shortcut: string`: Keyboard shortcut for this menu item. Renders a kbd badge floated to the far right of the item AND wires the key handler (fires `onSelect` when pressed). Use `mod` for Cmd/Ctrl. Supports sequences like `g s` and multi-key combos like `mod+shift+q`.
 
             The schema for a `MenuGroup` is:
             - `id: string`: __Required__ - A identifier for the group unique to the menu.
             - `type: string`: __Required__ - The type should be `MenuGroup`.
+            - `class: string | array | object`: CSS classes for the group's title row. Use the `.popup` slot key (object form) to style the floating SubMenu popup.
+            - `style: object`: CSS styles for the group's title row. Use dot-prefixed slot keys to target specific parts.
             -  `properties: object`: The properties of the menu group. These are:
                 - `title: string`: The title to display for the group.
                 - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the group.
+                - `disabled: boolean`: Disable the group — blocks expansion and applies a greyed style.
+                - `tooltip: string`: Tooltip text shown when the menu is collapsed.
             - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that should be grouped together in the group.
+
+            The schema for a `MenuDivider` is:
+            - `id: string`: __Required__ - A identifier for the divider unique to the menu.
+            - `type: string`: __Required__ - The type should be `MenuDivider`.
+            - `class: string | array | object`: CSS classes for the divider line.
+            - `style: object`: CSS styles for the divider line.
+            -  `properties: object`: The properties of the divider. These are:
+                - `dashed: boolean`: Render the divider as a dashed line.
 
             ###### Menus example:
             ```yaml

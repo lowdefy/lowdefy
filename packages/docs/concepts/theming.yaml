@@ -131,6 +131,35 @@ _ref:
 
             Under the hood, `properties.theme` wraps the block in a scoped [ConfigProvider](/ConfigProvider) with the specified component tokens.
 
+            ### Per-item variants in `Menu`
+
+            antd's `Menu` owns the token scope for all its items, so you can't override tokens per item. Instead, set `properties.danger: true` on a `MenuLink` to switch that single item onto the `dangerItem*` token set, and theme the whole danger state at the block level:
+
+            ```yaml
+            - id: actions_menu
+              type: Menu
+              properties:
+                mode: vertical
+                theme:
+                  dangerItemColor: '#cf1322'
+                  dangerItemHoverColor: '#ff4d4f'
+                  dangerItemSelectedBg: '#fff1f0'
+                links:
+                  - id: edit
+                    type: MenuLink
+                    properties:
+                      title: Edit
+                      icon: AiOutlineEdit
+                  - id: delete
+                    type: MenuLink
+                    properties:
+                      title: Delete
+                      icon: AiOutlineDelete
+                      danger: true
+            ```
+
+            For per-item visual tweaks beyond `danger`, use `class` (Tailwind / arbitrary CSS) or `style` on the menu item — both support dot-prefixed slot keys (`.element`, `.icon`, `.label`, `.popup`). See [Custom styling](/custom-styling).
+
             ## ConfigProvider block
 
             For scoped theming of a group of blocks, use the [ConfigProvider](/ConfigProvider) container block:

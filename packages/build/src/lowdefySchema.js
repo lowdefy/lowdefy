@@ -1169,6 +1169,16 @@ export default {
             type: 'MenuGroup "type" should be a string.',
           },
         },
+        style: {
+          errorMessage: {
+            type: 'MenuGroup "style" should be an object, string, or array.',
+          },
+        },
+        class: {
+          errorMessage: {
+            type: 'MenuGroup "class" should be a string, array, or object.',
+          },
+        },
         properties: {
           type: 'object',
           errorMessage: {
@@ -1231,6 +1241,16 @@ export default {
           type: 'string',
           errorMessage: {
             type: 'MenuDivider "type" should be a string.',
+          },
+        },
+        style: {
+          errorMessage: {
+            type: 'MenuDivider "style" should be an object, string, or array.',
+          },
+        },
+        class: {
+          errorMessage: {
+            type: 'MenuDivider "class" should be a string, array, or object.',
           },
         },
         properties: {
@@ -1323,6 +1343,16 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'MenuLink "input" should be an object.',
+          },
+        },
+        style: {
+          errorMessage: {
+            type: 'MenuLink "style" should be an object, string, or array.',
+          },
+        },
+        class: {
+          errorMessage: {
+            type: 'MenuLink "class" should be a string, array, or object.',
           },
         },
         properties: {
