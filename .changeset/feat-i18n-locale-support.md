@@ -35,10 +35,11 @@ config:
       de-DE: { greeting: 'Hallo, {name}!' }
 ```
 
-**New schema** — `config.i18n` with `defaultLocale`, `fallbackLocale`,
-`locales[]`, and `messages`. Validated at build time; only declared
-locales are bundled (antd and dayjs locale imports are codegen'd, no
-~150KB unused).
+**New schema** — `config.i18n` with `defaultLocale`, `locales[]`, and
+`messages`. Validated at build time; only declared locales are bundled
+(antd and dayjs locale imports are codegen'd, no ~150KB unused). The
+missing-key fallback is always `en-US`, so plugin and module authors
+should ship `en-US` translations as a baseline.
 
 **New operators**
 
@@ -52,9 +53,9 @@ locales are bundled (antd and dayjs locale imports are codegen'd, no
     values: { count: { _state: itemCount } }
   ```
 
-- [`_locale`](/_locale) — read `active` / `default` / `fallback` /
-  `supported` locale state. Use with `Selector` to build a language
-  picker.
+- [`_locale`](/_locale) — read `active` / `default` / `fallback`
+  (always `'en-US'`) / `supported` locale state. Use with `Selector`
+  to build a language picker.
 
 **New action** — [`SetLocale`](/SetLocale) sets the user's preferred
 locale (persisted to `localStorage`). Pass `'auto'` to clear the
@@ -91,5 +92,19 @@ requests as on the client.
 
 **Translation engine.** A new `translate()` helper in `@lowdefy/helpers`
 backs both the `_t` operator and the engine/client adapter (installed
-on `lowdefy._internal.t`). One source of truth for the lookup chain;
-no duplication. Adds `intl-messageformat` as a foundational dep.
+on `lowdefy._internal.translate`). One source of truth for the lookup
+chain; no duplication. Adds `intl-messageformat` as a foundational dep.
+
+**Plugin-author surface.** Action and block plugins receive
+`methods.translate(key, values)` and `methods.getLocale()` for runtime
+translation in their JS code. Plugin packages can ship default
+messages via a `./messages` export — the build merges them into the
+app's i18n catalog (user app messages > plugin messages > framework
+builtins > key).
+
+**DatePicker and NumberInput auto-localization.** Date selector blocks
+(`DateSelector`, `DateRangeSelector`, `DateTimeSelector`,
+`MonthSelector`) and `NumberInput` derive their default `format` /
+`decimalSeparator` from the active locale via `Intl.DateTimeFormat` /
+`Intl.NumberFormat`. A German user sees `DD.MM.YYYY` and `1234,56`
+automatically; an en-US user sees `MM/DD/YYYY` and `1234.56`.
