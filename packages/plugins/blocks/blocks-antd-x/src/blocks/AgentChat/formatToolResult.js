@@ -35,7 +35,6 @@ function humanizeKey(key) {
 }
 
 function CollapsibleText({ text, limit, translate }) {
-  const t = translate ?? ((_, fallback) => fallback);
   const [expanded, setExpanded] = useState(false);
   if (text.length <= limit) return <span>{text}</span>;
   return (
@@ -45,7 +44,9 @@ function CollapsibleText({ text, limit, translate }) {
         onClick={() => setExpanded(!expanded)}
         style={{ marginLeft: 4, fontSize: '0.85em', cursor: 'pointer' }}
       >
-        {expanded ? t('agent.toolResult.showLess') : t('agent.toolResult.showMore')}
+        {expanded
+          ? translate('agent.toolResult.showLess')
+          : translate('agent.toolResult.showMore')}
       </a>
     </span>
   );
@@ -87,9 +88,8 @@ function formatValue(value, depth, translate) {
 }
 
 function formatArray(arr, depth, translate) {
-  const t = translate ?? ((_, fallback) => fallback);
   if (arr.length === 0) {
-    return <span style={{ color: '#999' }}>{t('agent.toolResult.emptyList')}</span>;
+    return <span style={{ color: '#999' }}>{translate('agent.toolResult.emptyList')}</span>;
   }
   const allPrimitive = arr.every(
     (item) => item === null || item === undefined || typeof item !== 'object'
@@ -123,10 +123,9 @@ function formatArray(arr, depth, translate) {
 }
 
 function formatObject(obj, depth, translate) {
-  const t = translate ?? ((_, fallback) => fallback);
   const keys = Object.keys(obj);
   if (keys.length === 0) {
-    return <span style={{ color: '#999' }}>{t('agent.toolResult.empty')}</span>;
+    return <span style={{ color: '#999' }}>{translate('agent.toolResult.empty')}</span>;
   }
   return (
     <div
@@ -160,9 +159,10 @@ function formatObject(obj, depth, translate) {
 }
 
 function formatToolResult(output, translate) {
-  const t = translate ?? ((_, fallback) => fallback);
   if (output === null || output === undefined) {
-    return <span style={{ color: '#999' }}>{t('agent.toolResult.completedNoData')}</span>;
+    return (
+      <span style={{ color: '#999' }}>{translate('agent.toolResult.completedNoData')}</span>
+    );
   }
   return (
     <div style={{ fontSize: '0.9em', lineHeight: 1.5, maxHeight: 400, overflowY: 'auto' }}>

@@ -38,6 +38,9 @@ const builtinMessages = {
   'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',
   'agent.runtime.agentTypeNotFound': 'Agent type "{type}" can not be found.',
   'agent.runtime.toolExecutionFailed': 'Endpoint execution failed',
+  'agent.runtime.subAgentDepthExceeded': 'Sub-agent nesting exceeds maximum depth of {max}.',
+  'agent.runtime.reservedToolName':
+    '{kind} "{name}" uses a reserved platform tool name. Rename it (e.g., to "{name}-app" or "custom-{name}"). Reserved: {reserved}.',
 
   // AgentChat block UI
   'agent.sender.placeholder': 'Type a message...',
@@ -47,12 +50,24 @@ const builtinMessages = {
   'agent.message.feedback': 'Feedback',
   'agent.message.regenerate': 'Regenerate',
   'agent.message.delete': 'Delete',
+  'agent.message.userHeader': 'You',
+  'agent.message.assistantHeader': 'Assistant',
   'agent.toolResult.completed': 'Completed',
   'agent.toolResult.completedNoData': 'Completed (no data)',
   'agent.toolResult.empty': 'Empty',
   'agent.toolResult.emptyList': 'Empty list',
   'agent.toolResult.showMore': 'Show more',
   'agent.toolResult.showLess': 'Show less',
+  'agent.toolResult.sourcesTitle': 'Sources',
+  'agent.toolResult.reasoningTitle': 'Reasoning',
+  'agent.toolResult.running': 'Running...',
+  'agent.toolResult.processing': 'Processing...',
+  'agent.toolResult.failed': 'Tool execution failed',
+  'agent.toolResult.rejected': 'Tool execution was rejected',
+  'agent.toolResult.returnedCount':
+    '{count, plural, one {Returned # result} other {Returned # results}}',
+  'agent.toolResult.returnedKeys': 'Returned: {keys}',
+  'agent.toolResult.returnedFields': 'Returned object with {count} fields',
 
   // antd X built-ins — apps can override per-locale via config.i18n.messages.
   // For en_US and zh_CN, XProvider's pack already covers these natively.

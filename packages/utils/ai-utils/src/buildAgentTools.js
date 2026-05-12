@@ -35,12 +35,14 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
-function assertNotReserved(name, kind) {
+function assertNotReserved(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
     throw new ConfigError(
-      `${kind} "${name}" uses a reserved platform tool name. ` +
-        `Rename it (e.g., to "${name}-app" or "custom-${name}"). ` +
-        `Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`
+      translate({
+        key: 'agent.runtime.reservedToolName',
+        values: { kind, name, reserved: RESERVED_PLATFORM_TOOL_NAMES.join(', ') },
+        i18n,
+      })
     );
   }
 }
@@ -48,7 +50,13 @@ function assertNotReserved(name, kind) {
 async function buildAgentTools({ agent, context, depth = 0 }) {
   const MAX_DEPTH = 5;
   if (depth > MAX_DEPTH) {
-    throw new Error(`Sub-agent nesting exceeds maximum depth of ${MAX_DEPTH}.`);
+    throw new Error(
+      translate({
+        key: 'agent.runtime.subAgentDepthExceeded',
+        values: { max: MAX_DEPTH },
+        i18n: context.i18n,
+      })
+    );
   }
 
   const tools = {};
@@ -57,7 +65,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // Build endpoint tools
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
-    assertNotReserved(endpointId, 'Endpoint tool');
+    assertNotReserved(endpointId, 'Endpoint tool', context.i18n);
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
     tools[endpointId] = tool({
@@ -142,7 +150,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
 
   // Build sub-agent tools
   for (const subAgentRef of agent.agents ?? []) {
-    assertNotReserved(subAgentRef.agentId, 'Sub-agent');
+    assertNotReserved(subAgentRef.agentId, 'Sub-agent', context.i18n);
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });

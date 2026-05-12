@@ -73,3 +73,19 @@ test('getAgentResolver logs debug on error before throwing', () => {
     'Agent type "MissingType" can not be found.'
   );
 });
+
+test('getAgentResolver translates the type-not-found error using i18n.messages for the active locale', () => {
+  const agents = {};
+  const agentConfig = { type: 'UnknownType', agentId: 'my-agent' };
+  const i18n = {
+    active: 'de-DE',
+    defaultLocale: 'en-US',
+    messages: {
+      'de-DE': { 'agent.runtime.agentTypeNotFound': 'Agententyp "{type}" nicht gefunden.' },
+    },
+  };
+
+  expect(() => getAgentResolver({ agents, i18n, logger }, { agentConfig })).toThrow(
+    'Agententyp "UnknownType" nicht gefunden.'
+  );
+});

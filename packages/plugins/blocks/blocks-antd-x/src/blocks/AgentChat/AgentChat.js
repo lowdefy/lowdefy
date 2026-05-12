@@ -511,11 +511,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         )}
         <Sender
           ref={senderRef}
-          placeholder={
-            sender?.placeholder ??
-            methods.translate?.('agent.sender.placeholder') ??
-            'Type a message...'
-          }
+          placeholder={sender?.placeholder ?? methods.translate('agent.sender.placeholder')}
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
           onSubmit={handleSend}

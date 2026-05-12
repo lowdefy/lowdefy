@@ -32,8 +32,8 @@ function roleAvatar(roleConfig, fallbackIcon) {
   return <Avatar icon={fallbackIcon} />;
 }
 
-function roleHeader(roleConfig, fallback) {
-  const name = roleConfig?.name ?? fallback;
+function roleHeader(roleConfig, fallbackKey, translate) {
+  const name = roleConfig?.name ?? translate(fallbackKey);
   return <h5 style={{ margin: 0 }}>{name}</h5>;
 }
 
@@ -143,7 +143,7 @@ const MessageList = React.forwardRef(function MessageList(
           variant: config?.roles?.user?.variant ?? 'filled',
           shape: config?.roles?.user?.shape ?? 'round',
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
-          header: roleHeader(config?.roles?.user, 'You'),
+          header: roleHeader(config?.roles?.user, 'agent.message.userHeader', translate),
           editable:
             config?.editableMessages !== false
               ? {
@@ -197,7 +197,7 @@ const MessageList = React.forwardRef(function MessageList(
           shape: config?.roles?.assistant?.shape ?? 'default',
           style: { maxWidth: '100%' },
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
-          header: roleHeader(config?.roles?.assistant, 'Assistant'),
+          header: roleHeader(config?.roles?.assistant, 'agent.message.assistantHeader', translate),
           typing: config?.roles?.assistant?.typing
             ? config.roles.assistant.typing
             : { effect: 'fade-in' },

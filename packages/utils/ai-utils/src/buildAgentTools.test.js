@@ -367,6 +367,87 @@ test('endpoint tool returns top-level marker-wrapped array as a plain array', as
   ]);
 });
 
+test('endpoint tool fallback error message translates per i18n.active locale', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'broken' }],
+    mcp: [],
+  };
+  const context = {
+    i18n: {
+      active: 'de-DE',
+      defaultLocale: 'en-US',
+      messages: {
+        'de-DE': { 'agent.runtime.toolExecutionFailed': 'Endpunktausführung fehlgeschlagen' },
+      },
+    },
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'broken endpoint',
+      payloadSchema: { type: 'object' },
+    }),
+    // success: false with no error message forces the translated fallback path
+    callEndpoint: jest.fn().mockResolvedValue({ success: false, error: undefined }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  await expect(tools.broken.execute({}, { abortSignal: null })).rejects.toThrow(
+    'Endpunktausführung fehlgeschlagen'
+  );
+});
+
+test('buildAgentTools translates sub-agent depth error per i18n.active locale', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const context = {
+    i18n: {
+      active: 'de-DE',
+      defaultLocale: 'en-US',
+      messages: {
+        'de-DE': {
+          'agent.runtime.subAgentDepthExceeded':
+            'Sub-Agent-Verschachtelung überschreitet maximale Tiefe von {max}.',
+        },
+      },
+    },
+  };
+
+  await expect(buildAgentTools({ agent: {}, context, depth: 6 })).rejects.toThrow(
+    'Sub-Agent-Verschachtelung überschreitet maximale Tiefe von 5.'
+  );
+});
+
+test('buildAgentTools translates reserved-tool-name error per i18n.active locale', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'update-page-state' }],
+  };
+  const context = {
+    i18n: {
+      active: 'de-DE',
+      defaultLocale: 'en-US',
+      messages: {
+        'de-DE': {
+          'agent.runtime.reservedToolName':
+            '{kind} "{name}" verwendet einen reservierten Plattform-Tool-Namen.',
+        },
+      },
+    },
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'custom',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
+    'Endpoint tool "update-page-state" verwendet einen reservierten Plattform-Tool-Namen.'
+  );
+});
+
 test('endpoint tool unwraps a marker-wrapped array nested under an object key', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
