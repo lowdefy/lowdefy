@@ -56,6 +56,49 @@ test('codegenI18nLocales emits dynamic antd imports for declared locales', async
   );
 });
 
+test('codegenI18nLocales emits antd-X locale loaders for supported locales', async () => {
+  const components = {
+    config: {
+      i18n: {
+        locales: [
+          { code: 'en-US', antd: 'en_US', dayjs: 'en' },
+          { code: 'zh-CN', antd: 'zh_CN', dayjs: 'zh-cn' },
+        ],
+      },
+    },
+  };
+  await codegenI18nLocales({ components, context });
+  const calls = Object.fromEntries(mockWriteBuildArtifact.mock.calls);
+  expect(calls['i18n/antdXLocales.js']).toContain(
+    "'en-US': () => import('@ant-design/x/locale/en_US.js')"
+  );
+  expect(calls['i18n/antdXLocales.js']).toContain(
+    "'zh-CN': () => import('@ant-design/x/locale/zh_CN.js')"
+  );
+});
+
+test('codegenI18nLocales falls back to en_US antd-X pack for unsupported locales', async () => {
+  const components = {
+    config: {
+      i18n: {
+        locales: [
+          { code: 'de-DE', antd: 'de_DE', dayjs: 'de' },
+          { code: 'fr-FR', antd: 'fr_FR', dayjs: 'fr' },
+        ],
+      },
+    },
+  };
+  await codegenI18nLocales({ components, context });
+  const calls = Object.fromEntries(mockWriteBuildArtifact.mock.calls);
+  // antd X ships only en_US + zh_CN; de_DE and fr_FR fall back to en_US.
+  expect(calls['i18n/antdXLocales.js']).toContain(
+    "'de-DE': () => import('@ant-design/x/locale/en_US.js')"
+  );
+  expect(calls['i18n/antdXLocales.js']).toContain(
+    "'fr-FR': () => import('@ant-design/x/locale/en_US.js')"
+  );
+});
+
 test('codegenI18nLocales emits dayjs imports and code-to-id map', async () => {
   const components = {
     config: {

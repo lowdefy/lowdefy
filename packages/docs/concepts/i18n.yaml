@@ -205,6 +205,61 @@ _ref:
 
             Server-side actions and requests resolve the user's locale from the `Accept-Language` header. `_t` works the same in server contexts as on the client, with one difference: there's no `localStorage` on the server, so `Accept-Language` (and `defaultLocale`) determine the active locale per request.
 
+            ## Agents and AI chat UI
+
+            **The AgentChat block** (`@lowdefy/blocks-antd-x`) auto-localizes its framework-rendered strings via `methods.translate(key)` against the active locale. Builtin keys:
+
+            | Key | Default | Where |
+            |---|---|---|
+            | `agent.sender.placeholder` | `Type a message...` | Sender input placeholder |
+            | `agent.toolApproval.approve` / `.reject` | `Approve` / `Reject` | Tool-approval buttons |
+            | `agent.message.copy` / `.feedback` / `.regenerate` / `.delete` | English defaults | Message action menu |
+            | `agent.toolResult.completed` / `.completedNoData` | `Completed` / `Completed (no data)` | Tool result captions |
+            | `agent.toolResult.empty` / `.emptyList` | `Empty` / `Empty list` | Empty tool-result placeholders |
+            | `agent.toolResult.showMore` / `.showLess` | `Show more` / `Show less` | Collapsible long text |
+
+            Override per-locale via `config.i18n.messages.{locale}` — same mechanism as any other message.
+
+            **antd X built-in strings.** XProvider is wired at the app root with a merged antd + antd-X locale pack. antd X (`@ant-design/x@2.7.x`) ships only two upstream packs: `en_US` and `zh_CN`. Locales outside that set fall back to `en_US` for X-native strings (`New chat`, `Stop loading`, `Like`/`Dislike`, `OK`/`Cancel` on bubble edit). To override these in unsupported locales, set the framework's reference keys under `config.i18n.messages.{locale}`:
+
+            ```yaml
+            config:
+              i18n:
+                defaultLocale: de-DE
+                locales:
+                  - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+                messages:
+                  de-DE:
+                    agent.antdx.conversations.create: 'Neuer Chat'
+                    agent.antdx.sender.stopLoading: 'Anhalten'
+                    agent.antdx.bubble.editableOk: 'OK'
+                    agent.antdx.bubble.editableCancel: 'Abbrechen'
+                    agent.antdx.actions.feedbackLike: 'Gefällt mir'
+                    agent.antdx.actions.feedbackDislike: 'Gefällt mir nicht'
+            ```
+
+            **Agent runtime errors.** HTTP 400/500 errors from the agent endpoint (`Only POST requests are supported.`, `Invalid agent path`, `Agent "X" does not exist.`, etc.) translate via `agent.runtime.*` keys against the request's `Accept-Language`. Server-side validation errors and stack traces stay in English (developer diagnostics).
+
+            **Agent config translation.** `agent.properties.instructions` passes through the operator parser at request time, so `_t:` works:
+
+            ```yaml
+            agents:
+              - id: assistant
+                type: AISDKAgent
+                connectionId: anthropic
+                properties:
+                  agent:
+                    model: claude-sonnet-4
+                    instructions:
+                      _t: agent.systemPrompt
+            ```
+
+            For `tools[].description` — describes when the model should call a tool — keep it static English in most cases. Translating tool descriptions can degrade tool-call accuracy on English-trained models.
+
+            **Hook payloads.** Agent hook endpoints (`onStart`, `onStepFinish`, `onFinish`, etc.) receive a payload that now includes `locale: <activeCode>`, so hook routines can return locale-aware follow-up messages.
+
+            **Built-in tool descriptions, console warnings, build errors, and the model's natural-language output stay English.** They're either model-facing (translation degrades model behavior), developer-facing (English is standard), or owned by the model.
+
             ## From plugin code
 
             `_t` is the YAML-config interface. The runtime equivalent for custom block and action plugins is `methods.translate(key, values)` — same lookup chain, same overrides. Plugin authors should never reach into `lowdefy._internal.t` directly; that's an engine-internal adapter. Use `methods.translate`:

@@ -15,17 +15,18 @@
 */
 
 import { callAgent } from '@lowdefy/api';
-import { type } from '@lowdefy/helpers';
+import { translate, type } from '@lowdefy/helpers';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
+  const t = (key, values) => translate({ key, values, i18n: context.i18n });
   if (req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+    throw new Error(t('agent.runtime.methodNotAllowed'));
   }
   const segments = req.query.path;
   if (!Array.isArray(segments) || segments.length < 2) {
-    res.status(400).json({ error: 'Invalid agent path' });
+    res.status(400).json({ error: t('agent.runtime.invalidPath') });
     return;
   }
   const agentId = segments[segments.length - 1];
@@ -34,15 +35,15 @@ async function handler({ context, req, res }) {
   const { conversationId } = req.query;
   const { messages, urlQuery, sharedState } = req.body;
   if (!Array.isArray(messages)) {
-    res.status(400).json({ error: 'messages must be an array' });
+    res.status(400).json({ error: t('agent.runtime.messagesMustBeArray') });
     return;
   }
   if (urlQuery != null && (typeof urlQuery !== 'object' || Array.isArray(urlQuery))) {
-    res.status(400).json({ error: 'urlQuery must be an object' });
+    res.status(400).json({ error: t('agent.runtime.urlQueryMustBeObject') });
     return;
   }
   if (sharedState != null && !type.isObject(sharedState)) {
-    res.status(400).json({ error: 'sharedState must be an object' });
+    res.status(400).json({ error: t('agent.runtime.sharedStateMustBeObject') });
     return;
   }
   const { response: webResponse } = await callAgent(context, {

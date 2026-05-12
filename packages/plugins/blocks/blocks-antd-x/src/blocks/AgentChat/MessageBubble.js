@@ -89,8 +89,9 @@ function RichCodeBlock({ renderMermaid, codeHighlighter }) {
   };
 }
 
-function summarizeToolOutput(output) {
-  if (output === null || output === undefined) return 'Completed (no data)';
+function summarizeToolOutput(output, translate) {
+  const t = translate ?? ((_, fallback) => fallback);
+  if (output === null || output === undefined) return t('agent.toolResult.completedNoData');
   if (Array.isArray(output))
     return `Returned ${output.length} result${output.length === 1 ? '' : 's'}`;
   if (typeof output === 'object') {
@@ -123,21 +124,30 @@ function normalizeActions(actions) {
   return actions ?? {};
 }
 
-function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenerate, onDelete }) {
+function BubbleActions({
+  actions,
+  textContent,
+  messageId,
+  onFeedback,
+  onRegenerate,
+  onDelete,
+  translate,
+}) {
+  const t = translate ?? ((_, fallback) => fallback);
   const normalized = normalizeActions(actions);
   const items = [];
 
   if (normalized.copy) {
     items.push({
       key: 'copy',
-      label: 'Copy',
+      label: t('agent.message.copy'),
       actionRender: () => <Actions.Copy text={textContent} />,
     });
   }
   if (normalized.feedback) {
     items.push({
       key: 'feedback',
-      label: 'Feedback',
+      label: t('agent.message.feedback'),
       actionRender: () => (
         <Actions.Feedback onChange={(rating) => onFeedback?.({ messageId, rating })} />
       ),
@@ -147,7 +157,7 @@ function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenera
     items.push({
       key: 'regenerate',
       icon: <ReloadOutlined />,
-      label: 'Regenerate',
+      label: t('agent.message.regenerate'),
       onItemClick: () => onRegenerate?.({ messageId }),
     });
   }
@@ -155,7 +165,7 @@ function BubbleActions({ actions, textContent, messageId, onFeedback, onRegenera
     items.push({
       key: 'delete',
       icon: <DeleteOutlined />,
-      label: 'Delete',
+      label: t('agent.message.delete'),
       danger: true,
       onItemClick: () => onDelete?.({ messageId }),
     });
@@ -194,7 +204,9 @@ function MessageBubble({
   onFeedback,
   onRegenerate,
   onDelete,
+  translate,
 }) {
+  const t = translate ?? ((_, fallback) => fallback);
   const showThoughtChain = config?.showThoughtChain !== false;
   const showReasoning = config?.showReasoning !== false;
   const reasoningDisplay = config?.reasoningDisplay ?? 'interleaved';
@@ -236,6 +248,7 @@ function MessageBubble({
             onFeedback={onFeedback}
             onRegenerate={onRegenerate}
             onDelete={onDelete}
+            translate={translate}
           />
         )}
       </div>
@@ -330,6 +343,7 @@ function MessageBubble({
                     approvalId={part.approval.id}
                     onApprove={(id) => addToolApprovalResponse?.({ id, approved: true })}
                     onReject={(id) => addToolApprovalResponse?.({ id, approved: false })}
+                    translate={translate}
                   />
                 ),
                 status: 'loading',
@@ -360,7 +374,7 @@ function MessageBubble({
             } else if (status === 'error') {
               description = 'Tool execution failed';
             } else if (toolOutput?.display && typeof toolOutput.display === 'string') {
-              description = summarizeToolOutput(toolOutput.display);
+              description = summarizeToolOutput(toolOutput.display, translate);
               content = (
                 <Markdown components={markdownComponents} config={markdownConfig}>
                   {toolOutput.display}
@@ -369,7 +383,7 @@ function MessageBubble({
               collapsible = true;
             } else if (isSubAgent) {
               // Sub-agent results: short status in description, full response in styled content
-              description = 'Completed';
+              description = t('agent.toolResult.completed');
               const subAgentText =
                 typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2);
               content = (
@@ -390,19 +404,19 @@ function MessageBubble({
             } else {
               const mode = resolveToolResultMode(toolResultDisplay, tool.toolName);
               if (mode === 'readable') {
-                description = summarizeToolOutput(toolOutput);
-                content = formatToolResult(toolOutput);
+                description = summarizeToolOutput(toolOutput, translate);
+                content = formatToolResult(toolOutput, translate);
                 collapsible = true;
               } else if (mode === 'full') {
-                description = summarizeToolOutput(toolOutput);
+                description = summarizeToolOutput(toolOutput, translate);
                 content = JSON.stringify(toolOutput, null, 2);
                 collapsible = true;
               } else if (mode === 'none') {
-                description = 'Completed';
+                description = t('agent.toolResult.completed');
               } else {
                 // summary mode: show summary, add readable content behind collapse
-                description = summarizeToolOutput(toolOutput);
-                const readable = formatToolResult(toolOutput);
+                description = summarizeToolOutput(toolOutput, translate);
+                const readable = formatToolResult(toolOutput, translate);
                 if (readable != null) {
                   content = readable;
                   collapsible = true;
@@ -489,6 +503,7 @@ function MessageBubble({
           onFeedback={onFeedback}
           onRegenerate={onRegenerate}
           onDelete={onDelete}
+          translate={translate}
         />
       )}
     </div>

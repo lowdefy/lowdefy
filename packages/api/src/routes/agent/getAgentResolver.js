@@ -15,14 +15,20 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { translate } from '@lowdefy/helpers';
 
-function getAgentResolver({ agents, logger }, { agentConfig }) {
+function getAgentResolver({ agents, i18n, logger }, { agentConfig }) {
   const agentType = agents[agentConfig.type];
 
   if (!agentType) {
-    const err = new ConfigError(`Agent type "${agentConfig.type}" can not be found.`, {
-      configKey: agentConfig['~k'],
-    });
+    const err = new ConfigError(
+      translate({
+        key: 'agent.runtime.agentTypeNotFound',
+        values: { type: agentConfig.type },
+        i18n,
+      }),
+      { configKey: agentConfig['~k'] }
+    );
     logger.debug(
       { params: { id: agentConfig.agentId, type: agentConfig.type }, err },
       err.message

@@ -74,6 +74,7 @@
     "@lowdefy/operators-yaml": "5.2.0",
     "@lowdefy/plugin-next-auth": "5.2.0",
     "@ant-design/cssinjs": "2.1.2",
+    "@ant-design/x": "2.7.0",
     "antd": "6.3.1",
     "dayjs": "1.11.19",
     "chokidar": "3.5.3",

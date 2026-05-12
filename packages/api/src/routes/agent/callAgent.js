@@ -79,6 +79,7 @@ async function callAgent(
   // Build resolver context with callEndpoint that allows InternalApi endpoints
   const resolverContext = {
     agentContext,
+    i18n: context.i18n,
     evaluateOperators: (input) =>
       context.evaluateOperators({
         input,

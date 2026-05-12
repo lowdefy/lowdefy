@@ -41,7 +41,13 @@ async function loadAntdLocale({ active, antdLocaleLoaders }) {
   return mod?.default ?? mod;
 }
 
-function useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }) {
+async function loadAntdXLocale({ active, antdXLocaleLoaders }) {
+  if (!active || !antdXLocaleLoaders?.[active]) return null;
+  const mod = await antdXLocaleLoaders[active]();
+  return mod?.default ?? mod;
+}
+
+function useLocale({ i18n, antdLocaleLoaders, antdXLocaleLoaders, dayjsLocaleMap }) {
   const supportedCodes = useMemo(
     () => (i18n?.locales ?? []).map((l) => l.code),
     [i18n?.locales]
@@ -79,6 +85,7 @@ function useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }) {
   window.__lowdefy_supported_locales = i18n?.locales ?? [];
 
   const [antdLocale, setAntdLocale] = useState(null);
+  const [antdXLocale, setAntdXLocale] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +96,16 @@ function useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }) {
       cancelled = true;
     };
   }, [active, antdLocaleLoaders]);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadAntdXLocale({ active, antdXLocaleLoaders }).then((locale) => {
+      if (!cancelled) setAntdXLocale(locale);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, antdXLocaleLoaders]);
 
   useEffect(() => {
     const dayjsId = dayjsLocaleMap?.[active];
@@ -102,6 +119,7 @@ function useLocale({ i18n, antdLocaleLoaders, dayjsLocaleMap }) {
     userPreference,
     setPreference,
     antdLocale,
+    antdXLocale,
   };
 }
 

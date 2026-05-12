@@ -28,6 +28,40 @@ const builtinMessages = {
   'errorPage.name': 'Error',
   'errorPage.message': 'An error has occurred.',
   'errorPage.homeLink': 'Return to home page',
+
+  // Agent runtime — surfaces in browser as HTTP error responses / streamed errors
+  'agent.runtime.methodNotAllowed': 'Only POST requests are supported.',
+  'agent.runtime.invalidPath': 'Invalid agent path',
+  'agent.runtime.messagesMustBeArray': 'messages must be an array',
+  'agent.runtime.urlQueryMustBeObject': 'urlQuery must be an object',
+  'agent.runtime.sharedStateMustBeObject': 'sharedState must be an object',
+  'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',
+  'agent.runtime.agentTypeNotFound': 'Agent type "{type}" can not be found.',
+  'agent.runtime.toolExecutionFailed': 'Endpoint execution failed',
+
+  // AgentChat block UI
+  'agent.sender.placeholder': 'Type a message...',
+  'agent.toolApproval.approve': 'Approve',
+  'agent.toolApproval.reject': 'Reject',
+  'agent.message.copy': 'Copy',
+  'agent.message.feedback': 'Feedback',
+  'agent.message.regenerate': 'Regenerate',
+  'agent.message.delete': 'Delete',
+  'agent.toolResult.completed': 'Completed',
+  'agent.toolResult.completedNoData': 'Completed (no data)',
+  'agent.toolResult.empty': 'Empty',
+  'agent.toolResult.emptyList': 'Empty list',
+  'agent.toolResult.showMore': 'Show more',
+  'agent.toolResult.showLess': 'Show less',
+
+  // antd X built-ins — apps can override per-locale via config.i18n.messages.
+  // For en_US and zh_CN, XProvider's pack already covers these natively.
+  'agent.antdx.conversations.create': 'New chat',
+  'agent.antdx.sender.stopLoading': 'Stop loading',
+  'agent.antdx.bubble.editableOk': 'OK',
+  'agent.antdx.bubble.editableCancel': 'Cancel',
+  'agent.antdx.actions.feedbackLike': 'Like',
+  'agent.antdx.actions.feedbackDislike': 'Dislike',
 };
 
 export default builtinMessages;

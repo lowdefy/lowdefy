@@ -45,9 +45,26 @@ function buildDayjsImports(locales) {
   return `${HEADER}${imports}\nconst localeMap = {\n${localeMap}\n};\nexport default localeMap;\n`;
 }
 
+// antd X (@ant-design/x@2.7.x) only ships two locale packs: en_US and zh_CN.
+// Other locales fall back to en_US for X-native strings (New chat, OK/Cancel,
+// Stop loading, Like/Dislike, etc.). App authors override per-locale via
+// config.i18n.messages.{locale}.agent.antdx.* keys handled outside this codegen.
+const ANTD_X_SUPPORTED = new Set(['en_US', 'zh_CN']);
+
+function buildAntdXLoaders(locales) {
+  const entries = locales
+    .filter((locale) => isSafeIdentifier(locale.code) && isSafeIdentifier(locale.antd))
+    .map((locale) => {
+      const pack = ANTD_X_SUPPORTED.has(locale.antd) ? locale.antd : 'en_US';
+      return `  '${locale.code}': () => import('@ant-design/x/locale/${pack}.js').then((m) => m.default ?? m),`;
+    });
+  return `${HEADER}const loaders = {\n${entries.join('\n')}\n};\nexport default loaders;\n`;
+}
+
 async function codegenI18nLocales({ components, context }) {
   const locales = components.config?.i18n?.locales ?? [];
   await context.writeBuildArtifact('i18n/antdLocales.js', buildAntdLoaders(locales));
+  await context.writeBuildArtifact('i18n/antdXLocales.js', buildAntdXLoaders(locales));
   await context.writeBuildArtifact('i18n/dayjsLocales.js', buildDayjsImports(locales));
 }
 

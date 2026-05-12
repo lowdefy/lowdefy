@@ -18,7 +18,7 @@ import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, translate } from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
@@ -68,7 +68,10 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
         const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
         if (!result.success) {
           const err = serializer.deserialize(result.error);
-          throw new Error(err?.message ?? 'Endpoint execution failed');
+          throw new Error(
+            err?.message ??
+              translate({ key: 'agent.runtime.toolExecutionFailed', i18n: context.i18n })
+          );
         }
         return cleanBuildArtifact(result.response);
       },
