@@ -340,7 +340,7 @@ export default {
                     shortcut: {
                       type: 'string',
                       description:
-                        'Keyboard shortcut. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                        'Keyboard shortcut. Renders a kbd badge floated to the far right and wires the key handler. Use "mod" for Cmd/Ctrl.',
                     },
                   },
                 },

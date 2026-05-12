@@ -23,6 +23,7 @@ const SiderContext = Layout._InternalSiderContext;
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
+import { buildMenuItems } from '../buildMenuItems.js';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
@@ -30,8 +31,6 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
   const menu = menus.find((item) => item.menuId === menuId) ?? menus[0] ?? {};
   return menu.links ?? [];
 };
-
-const getTitle = ({ id, properties, pageId, url }) => properties?.title ?? pageId ?? url ?? id;
 
 function collectLinkShortcuts(links) {
   const result = [];
@@ -48,89 +47,20 @@ function collectLinkShortcuts(links) {
   return result;
 }
 
-function buildMenuItems({
-  links,
-  events,
-  components: { Icon, Link, ShortcutBadge },
-  classNames,
-  styles,
-  isTopLevel = true,
-}) {
-  return (links ?? []).map((link, i) => {
-    if (link.type === 'MenuDivider') {
-      return {
-        type: 'divider',
-        key: link.id ?? i,
-        dashed: link.properties?.dashed,
-        style: link.style,
-      };
-    }
-
-    if (link.type === 'MenuGroup') {
-      const groupItem = {
-        key: link.pageId ?? link.id,
-        label: (
-          <Link id={link.pageId ?? link.id ?? i} style={link.style} {...link}>
-            {getTitle(link)}
-          </Link>
-        ),
-        children: buildMenuItems({
-          links: link.links,
-          events,
-          components: { Icon, Link, ShortcutBadge },
-          classNames,
-          styles,
-          isTopLevel: false,
-        }),
-      };
-
-      if (isTopLevel) {
-        // Top-level MenuGroup → collapsible submenu (with icon)
-        groupItem.icon = link.properties?.icon ? (
-          <Icon
-            blockId={`${link.id}_icon`}
-            classNames={{ element: classNames.icon }}
-            events={events}
-            properties={link.properties.icon}
-            styles={{ element: styles.icon }}
-          />
-        ) : undefined;
-      } else {
-        // Nested MenuGroup → non-collapsible group header
-        groupItem.type = 'group';
-      }
-
-      return groupItem;
-    }
-
-    // MenuLink (default)
-    return {
-      key: link.pageId ?? link.id,
-      danger: link.properties?.danger,
-      className: classNames.item,
-      icon: link.properties?.icon ? (
-        <Icon
-          blockId={`${link.id}_icon`}
-          classNames={{ element: classNames.icon }}
-          events={events}
-          properties={link.properties.icon}
-          styles={{ element: styles.icon }}
-        />
-      ) : undefined,
-      label: (
-        <Link
-          id={link.pageId ?? link.id ?? i}
-          style={link.style}
-          url={link.url ?? link.properties?.url}
-          newTab={link.newTab ?? link.properties?.newTab}
-          {...link}
-        >
-          {getTitle(link)}
-          <ShortcutBadge shortcut={link.properties?.shortcut} />
-        </Link>
-      ),
-    };
-  });
+function makeWrapGroupLabel(Link) {
+  return function wrapGroupLabel({ link, labelText, classNames: labelClass, styles: labelStyle }) {
+    const { class: _omitClass, style: _omitStyle, ...linkRest } = link;
+    return (
+      <Link
+        {...linkRest}
+        id={link.pageId ?? link.id}
+        className={labelClass || undefined}
+        style={labelStyle}
+      >
+        {labelText}
+      </Link>
+    );
+  };
 }
 
 function MenuComp({
@@ -160,12 +90,19 @@ function MenuComp({
   const { siderCollapsed } = useContext(SiderContext) ?? {};
   const isCollapsed = properties.collapsed === true || siderCollapsed === true;
 
+  // Back-compat: the prior cssKey for the menu item icon was `icon`; the shared helper
+  // standardises on `itemIcon`. Map either through so existing YAML keeps working.
+  const itemsClassNames = { ...classNames, itemIcon: classNames.itemIcon ?? classNames.icon };
+  const itemsStyles = { ...styles, itemIcon: styles.itemIcon ?? styles.icon };
   const items = buildMenuItems({
     links: menu,
     events,
     components: { Icon, Link, ShortcutBadge },
-    classNames,
-    styles,
+    classNames: itemsClassNames,
+    styles: itemsStyles,
+    wrapGroupLabel: makeWrapGroupLabel(Link),
+    nestedGroupAsGroup: true,
+    getKey: (link) => link.pageId ?? link.id,
   });
 
   const shortcutItems = collectLinkShortcuts(menu);

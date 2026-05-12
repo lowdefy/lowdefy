@@ -87,11 +87,17 @@ export default {
               description: 'Open link in new tab.',
             },
             style: {
-              type: 'object',
-              description: 'Css style applied to the link.',
+              type: ['object', 'string', 'array'],
+              description:
+                'CSS styles for the menu item. Use a flat object for the item wrapper, or dot-prefixed slot keys (`.element`, `.icon`, `.label`).',
               docs: {
                 displayType: 'yaml',
               },
+            },
+            class: {
+              type: ['string', 'array', 'object'],
+              description:
+                'CSS classes for the menu item. Flat applies to the item wrapper; use dot-prefixed slot keys to target parts.',
             },
             properties: {
               type: 'object',
@@ -119,6 +125,15 @@ export default {
                   default: false,
                   description: 'Disable the menu item.',
                 },
+                tooltip: {
+                  type: 'string',
+                  description: 'Tooltip text shown when the menu is collapsed.',
+                },
+                extra: {
+                  type: 'string',
+                  description:
+                    'Free-form right-aligned label on a MenuLink. For real keybindings use `shortcut`; when both are set, `shortcut` sits to the right of `extra`.',
+                },
                 dashed: {
                   type: 'boolean',
                   default: false,
@@ -127,7 +142,7 @@ export default {
                 shortcut: {
                   type: 'string',
                   description:
-                    'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                    'Keyboard shortcut for this menu item. Renders a kbd badge floated to the far right of the item AND wires the key handler. Use "mod" for Cmd/Ctrl.',
                 },
               },
             },
@@ -149,9 +164,14 @@ export default {
                   url: { type: 'string', description: 'External URL to link to.' },
                   newTab: { type: 'boolean', description: 'Open link in new tab.' },
                   style: {
-                    type: 'object',
-                    description: 'Css style applied to the link.',
+                    type: ['object', 'string', 'array'],
+                    description:
+                      'CSS styles for the menu item. Flat or dot-prefixed slot keys (`.element`, `.icon`, `.label`).',
                     docs: { displayType: 'yaml' },
+                  },
+                  class: {
+                    type: ['string', 'array', 'object'],
+                    description: 'CSS classes for the menu item.',
                   },
                   properties: {
                     type: 'object',
@@ -169,6 +189,15 @@ export default {
                         default: false,
                         description: 'Disable the item.',
                       },
+                      tooltip: {
+                        type: 'string',
+                        description: 'Tooltip text shown when the menu is collapsed.',
+                      },
+                      extra: {
+                        type: 'string',
+                        description:
+                          'Free-form right-aligned label on a MenuLink. For real keybindings use `shortcut`.',
+                      },
                       dashed: {
                         type: 'boolean',
                         default: false,
@@ -177,7 +206,7 @@ export default {
                       shortcut: {
                         type: 'string',
                         description:
-                          'Keyboard shortcut. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                          'Keyboard shortcut. Renders a kbd badge floated to the far right and wires the key handler. Use "mod" for Cmd/Ctrl.',
                       },
                     },
                   },

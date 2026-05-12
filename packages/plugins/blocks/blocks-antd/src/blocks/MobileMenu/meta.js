@@ -205,51 +205,51 @@ export default {
                         description: 'Whether the divider line is dashed.',
                       },
                     },
-                    links: {
-                      type: 'array',
-                      items: {
-                        type: 'object',
-                        required: ['id', 'type'],
+                  },
+                  links: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      required: ['id', 'type'],
+                      properties: {
+                        id: {
+                          type: 'string',
+                          description: 'Menu item id.',
+                        },
+                        type: {
+                          type: 'string',
+                          enum: ['MenuDivider', 'MenuLink'],
+                          default: 'MenuLink',
+                          description: 'Menu item type.',
+                        },
+                        style: {
+                          type: 'object',
+                          description: 'Css style to applied to sub-link.',
+                          docs: {
+                            displayType: 'yaml',
+                          },
+                        },
+                        pageId: {
+                          type: 'string',
+                          description: 'Page to link to.',
+                        },
                         properties: {
-                          id: {
-                            type: 'string',
-                            description: 'Menu item id.',
-                          },
-                          type: {
-                            type: 'string',
-                            enum: ['MenuDivider', 'MenuLink'],
-                            default: 'MenuLink',
-                            description: 'Menu item type.',
-                          },
-                          style: {
-                            type: 'object',
-                            description: 'Css style to applied to sub-link.',
-                            docs: {
-                              displayType: 'yaml',
-                            },
-                          },
-                          pageId: {
-                            type: 'string',
-                            description: 'Page to link to.',
-                          },
+                          type: 'object',
+                          description: 'properties from menu item.',
                           properties: {
-                            type: 'object',
-                            description: 'properties from menu item.',
-                            properties: {
-                              title: {
-                                type: 'string',
-                                description: 'Menu item title.',
-                              },
-                              danger: {
-                                type: 'boolean',
-                                default: false,
-                                description: 'Apply danger style to menu item.',
-                              },
-                              dashed: {
-                                type: 'boolean',
-                                default: false,
-                                description: 'Whether the divider line is dashed.',
-                              },
+                            title: {
+                              type: 'string',
+                              description: 'Menu item title.',
+                            },
+                            danger: {
+                              type: 'boolean',
+                              default: false,
+                              description: 'Apply danger style to menu item.',
+                            },
+                            dashed: {
+                              type: 'boolean',
+                              default: false,
+                              description: 'Whether the divider line is dashed.',
                             },
                           },
                         },

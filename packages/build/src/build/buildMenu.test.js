@@ -760,6 +760,93 @@ test('menu item is not an object', () => {
   );
 });
 
+test('buildMenu preserves MenuDivider items and assigns public auth', () => {
+  const components = {
+    menus: [
+      {
+        id: 'my_menu',
+        links: [
+          {
+            id: 'menu_page_1',
+            type: 'MenuLink',
+            pageId: 'page_1',
+          },
+          {
+            id: 'sep',
+            type: 'MenuDivider',
+            properties: {
+              dashed: true,
+            },
+          },
+          {
+            id: 'menu_page_2',
+            type: 'MenuLink',
+            pageId: 'page_2',
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: true },
+      },
+    ],
+  };
+  const res = buildMenu({ components, context });
+  expect(res).toEqual({
+    menus: [
+      {
+        id: 'menu:my_menu',
+        menuId: 'my_menu',
+        links: [
+          {
+            id: 'menuitem:my_menu:menu_page_1',
+            menuItemId: 'menu_page_1',
+            type: 'MenuLink',
+            pageId: 'page_1',
+            auth: { public: true },
+          },
+          {
+            id: 'menuitem:my_menu:sep',
+            menuItemId: 'sep',
+            type: 'MenuDivider',
+            auth: { public: true },
+            properties: {
+              dashed: true,
+            },
+          },
+          {
+            id: 'menuitem:my_menu:menu_page_2',
+            menuItemId: 'menu_page_2',
+            type: 'MenuLink',
+            pageId: 'page_2',
+            auth: { public: true },
+          },
+        ],
+      },
+    ],
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        auth: { public: true },
+      },
+      {
+        id: 'page:page_2',
+        pageId: 'page_2',
+        auth: { public: true },
+      },
+    ],
+  });
+});
+
 test('buildMenu default menu filter 404 page', () => {
   const components = {
     pages: [

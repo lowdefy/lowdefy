@@ -21,8 +21,9 @@ export default {
   cssKeys: {
     element: 'The Menu element.',
     expandIcon: 'The expand icon in the Menu.',
-    icon: 'The icon in the Menu.',
-    item: 'The Menu item.',
+    icon: 'Deprecated alias for `itemIcon`.',
+    itemIcon: 'The icon shown in each menu item.',
+    item: 'The Menu item wrapper (li).',
   },
   events: {
     onSelect: {
@@ -358,11 +359,17 @@ export default {
               description: 'Page to link to.',
             },
             style: {
-              type: 'object',
-              description: 'Css style to applied to link.',
+              type: ['object', 'string', 'array'],
+              description:
+                'CSS styles for the menu item. Use a flat object for the item wrapper, or use dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.',
               docs: {
                 displayType: 'yaml',
               },
+            },
+            class: {
+              type: ['string', 'array', 'object'],
+              description:
+                'CSS classes for the menu item (including Tailwind utilities). Flat string/array applies to the item wrapper. Use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`, `.popup` — popup only on MenuGroup) to target specific parts.',
             },
             properties: {
               type: 'object',
@@ -383,17 +390,33 @@ export default {
                 danger: {
                   type: 'boolean',
                   default: false,
-                  description: 'Apply danger style to menu item.',
+                  description:
+                    'Apply danger style (MenuLink only). Switches the item onto the `dangerItem*` token set — theme via `properties.theme.dangerItemColor` etc.',
+                },
+                disabled: {
+                  type: 'boolean',
+                  default: false,
+                  description: 'Disable the menu item (blocks clicks and applies a greyed style).',
+                },
+                tooltip: {
+                  type: 'string',
+                  description:
+                    'Tooltip text shown on hover when the menu is collapsed. Maps to antd item `title`.',
+                },
+                extra: {
+                  type: 'string',
+                  description:
+                    'Free-form right-aligned label on a MenuLink (e.g. a status hint like "beta" or "soon"). For real keyboard shortcuts use `shortcut` instead — it renders a kbd badge AND wires the key handler. When both are set, `shortcut` sits to the far right of `extra`.',
                 },
                 dashed: {
                   type: 'boolean',
                   default: false,
-                  description: 'Whether the divider line is dashed.',
+                  description: 'Whether the divider line is dashed (MenuDivider only).',
                 },
                 shortcut: {
                   type: 'string',
                   description:
-                    'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                    'Keyboard shortcut for this menu item. Renders a kbd badge floated to the far right of the item AND wires the key handler (fires onSelect when pressed). Use "mod" for Cmd/Ctrl.',
                 },
               },
             },
@@ -414,11 +437,17 @@ export default {
                     description: 'Menu item type.',
                   },
                   style: {
-                    type: 'object',
-                    description: 'Css style to applied to sub-link.',
+                    type: ['object', 'string', 'array'],
+                    description:
+                      'CSS styles for the menu item. Use a flat object for the item wrapper, or dot-prefixed slot keys (`.element`, `.icon`, `.label`).',
                     docs: {
                       displayType: 'yaml',
                     },
+                  },
+                  class: {
+                    type: ['string', 'array', 'object'],
+                    description:
+                      'CSS classes for the menu item. Flat applies to the item wrapper; use dot-prefixed slot keys to target parts.',
                   },
                   pageId: {
                     type: 'string',
@@ -432,10 +461,29 @@ export default {
                         type: 'string',
                         description: 'Menu item title.',
                       },
+                      icon: {
+                        type: ['string', 'object'],
+                        description: 'Icon name or Icon block properties.',
+                        docs: { displayType: 'icon' },
+                      },
                       danger: {
                         type: 'boolean',
                         default: false,
-                        description: 'Apply danger style to menu item.',
+                        description: 'Apply danger style (MenuLink only).',
+                      },
+                      disabled: {
+                        type: 'boolean',
+                        default: false,
+                        description: 'Disable the menu item.',
+                      },
+                      tooltip: {
+                        type: 'string',
+                        description: 'Tooltip text shown when the menu is collapsed.',
+                      },
+                      extra: {
+                        type: 'string',
+                        description:
+                          'Free-form right-aligned label on a MenuLink. For real keybindings use `shortcut`; when both are set, `shortcut` sits to the right of `extra`.',
                       },
                       dashed: {
                         type: 'boolean',
@@ -445,59 +493,81 @@ export default {
                       shortcut: {
                         type: 'string',
                         description:
-                          'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
+                          'Keyboard shortcut for this menu item. Renders a kbd badge floated to the far right of the item AND wires the key handler (fires onSelect when pressed). Use "mod" for Cmd/Ctrl.',
                       },
                     },
-                    links: {
-                      type: 'array',
-                      items: {
-                        type: 'object',
-                        required: ['id', 'type'],
+                  },
+                  links: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      required: ['id', 'type'],
+                      properties: {
+                        id: {
+                          type: 'string',
+                          description: 'Menu item id.',
+                        },
+                        type: {
+                          type: 'string',
+                          enum: ['MenuDivider', 'MenuLink'],
+                          default: 'MenuLink',
+                          description: 'Menu item type.',
+                        },
+                        style: {
+                          type: ['object', 'string', 'array'],
+                          description:
+                            'CSS styles for the menu item. Use a flat object or dot-prefixed slot keys.',
+                          docs: { displayType: 'yaml' },
+                        },
+                        class: {
+                          type: ['string', 'array', 'object'],
+                          description: 'CSS classes for the menu item.',
+                        },
+                        pageId: {
+                          type: 'string',
+                          description: 'Page to link to.',
+                        },
                         properties: {
-                          id: {
-                            type: 'string',
-                            description: 'Menu item id.',
-                          },
-                          type: {
-                            type: 'string',
-                            enum: ['MenuDivider', 'MenuLink'],
-                            default: 'MenuLink',
-                            description: 'Menu item type.',
-                          },
-                          style: {
-                            type: 'object',
-                            description: 'Css style to applied to sub-link.',
-                            docs: {
-                              displayType: 'yaml',
-                            },
-                          },
-                          pageId: {
-                            type: 'string',
-                            description: 'Page to link to.',
-                          },
+                          type: 'object',
+                          description: 'properties from menu item.',
                           properties: {
-                            type: 'object',
-                            description: 'properties from menu item.',
-                            properties: {
-                              title: {
-                                type: 'string',
-                                description: 'Menu item title.',
-                              },
-                              danger: {
-                                type: 'boolean',
-                                default: false,
-                                description: 'Apply danger style to menu item.',
-                              },
-                              dashed: {
-                                type: 'boolean',
-                                default: false,
-                                description: 'Whether the divider line is dashed.',
-                              },
-                              shortcut: {
-                                type: 'string',
-                                description:
-                                  'Keyboard shortcut to select this menu item. Renders a shortcut badge next to the label. Use "mod" for Cmd/Ctrl.',
-                              },
+                            title: {
+                              type: 'string',
+                              description: 'Menu item title.',
+                            },
+                            icon: {
+                              type: ['string', 'object'],
+                              description: 'Icon name or Icon block properties.',
+                              docs: { displayType: 'icon' },
+                            },
+                            danger: {
+                              type: 'boolean',
+                              default: false,
+                              description: 'Apply danger style (MenuLink only).',
+                            },
+                            disabled: {
+                              type: 'boolean',
+                              default: false,
+                              description: 'Disable the menu item.',
+                            },
+                            tooltip: {
+                              type: 'string',
+                              description: 'Tooltip text shown when the menu is collapsed.',
+                            },
+                            extra: {
+                              type: 'string',
+                              description:
+                                'Free-form right-aligned label on a MenuLink. For real keybindings use `shortcut`.',
+                            },
+                            dashed: {
+                              type: 'boolean',
+                              default: false,
+                              description: 'Whether the divider line is dashed.',
+                            },
+                            shortcut: {
+                              type: 'string',
+                              description:
+                                'Keyboard shortcut. Renders a kbd badge floated to the far right and wires the key handler. Use "mod" for Cmd/Ctrl.',
                             },
                           },
                         },

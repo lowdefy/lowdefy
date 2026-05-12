@@ -847,6 +847,94 @@
               - Block properties
               - Event handling
 
+- title: Item Styling and Props
+  blocks:
+    - id: ip_per_item_class_menu
+      type: Menu
+      style:
+        width: 280
+      properties:
+        mode: vertical
+        links:
+          - id: ip_dashboard
+            type: MenuLink
+            class: rounded-lg
+            properties:
+              title: Dashboard
+              icon: AiOutlineDashboard
+          - id: ip_reports
+            type: MenuLink
+            class:
+              .element: rounded-lg
+              .icon: text-blue-500
+              .label: font-semibold
+            properties:
+              title: Reports
+              icon: AiOutlineBarChart
+          - id: ip_settings
+            type: MenuLink
+            style:
+              .element:
+                borderLeft: 3px solid '#1677ff'
+              .label:
+                letterSpacing: 0.05em
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+    - id: ip_disabled_tooltip_extra_menu
+      type: Menu
+      style:
+        width: 280
+      properties:
+        mode: vertical
+        links:
+          - id: ip_search
+            type: MenuLink
+            properties:
+              title: Search
+              icon: AiOutlineSearch
+              extra: ⌘K
+              tooltip: Open command palette
+          - id: ip_history
+            type: MenuLink
+            properties:
+              title: History
+              icon: AiOutlineHistory
+              disabled: true
+              tooltip: Coming soon
+          - id: ip_divider
+            type: MenuDivider
+          - id: ip_delete
+            type: MenuLink
+            properties:
+              title: Delete account
+              icon: AiOutlineDelete
+              danger: true
+              extra: irreversible
+    - id: ip_popup_class_menu
+      type: Menu
+      style:
+        width: 280
+      properties:
+        mode: vertical
+        links:
+          - id: ip_group
+            type: MenuGroup
+            class:
+              .popup: shadow-2xl rounded-lg
+            properties:
+              title: Settings
+              icon: AiOutlineSetting
+            links:
+              - id: ip_general
+                type: MenuLink
+                properties:
+                  title: General
+              - id: ip_security
+                type: MenuLink
+                properties:
+                  title: Security
+
 - title: Keyboard Shortcuts
   blocks:
     - id: ks_menu
