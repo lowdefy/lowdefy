@@ -1,5 +1,14 @@
 # @lowdefy/blocks-tiptap
 
+## 5.3.0
+
+### Patch Changes
+
+- Updated dependencies [54d30f7]
+  - @lowdefy/blocks-antd@5.3.0
+  - @lowdefy/block-utils@5.3.0
+  - @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Minor Changes

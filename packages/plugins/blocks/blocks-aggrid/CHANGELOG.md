@@ -1,5 +1,32 @@
 # Change Log
 
+## 5.3.0
+
+### Minor Changes
+
+- 99fe9b8: feat(blocks-aggrid): Buttons cell renderer and ag-grid v32 update.
+
+  **New `cell.type: buttons` renderer** — render a list of action buttons in a column with each button firing its own block-level event with the row data on the payload. Per-button properties mirror the antd Button block (`title`, `icon`, `type`, `variant`, `color`, `size`, `shape`, `danger`, `ghost`, `hideTitle`, `disabled`) plus row-data-path variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) for per-row state. Use this for inline Edit/Delete/Approve actions without `_if` dispatching.
+
+  **ag-grid updated to v32.3.9** — pulls in two majors of upstream fixes. The column header UX (hamburger column menu with filter popup) is preserved by default; opt into the new ag-grid v32 column menu via `columnMenu: 'new'` on the block.
+
+  **Cell focus suppressed by default** — `suppressCellFocus` now defaults to `true` so the keyboard focus outline doesn't visually compete with built-in cell renderers (tags, buttons, links). Override with `suppressCellFocus: false` if needed. Cell overflow is also clipped so flex-rendered content stays inside its column.
+
+- 7f40746: feat(blocks-aggrid): Tag cell renders one tag per item for array-valued fields.
+
+  The `cell.type: tag` renderer now accepts an array of strings in addition to a single string. Each item is rendered as its own styled tag and resolves its colour through the existing `colorMap` / `colorFrom` / `default` configuration. Empty arrays and arrays containing only null/empty entries render the em-dash placeholder, matching the existing null-value behaviour. Single-string values are unchanged.
+
+- e3a08cc: feat(blocks-aggrid): Auto-colour tag cells by default for consistent per-value colouring.
+
+  When a `cell.type: tag` column is used with no `colorMap`, no `colorFrom`, and no `default`, tag values are now coloured from a stable hash so the same value always gets the same colour across rows, columns, and tables. The palette uses 12 antd named hues (red, volcano, orange, gold, yellow, lime, green, cyan, blue, geekblue, purple, magenta) and respects the active theme.
+
+  The grey fallback is still available — set `cell: { type: tag, default: default }` on any column to opt out. When `colorMap`, `colorFrom`, or `default` is set, behaviour is unchanged.
+
+### Patch Changes
+
+- @lowdefy/block-utils@5.3.0
+- @lowdefy/helpers@5.3.0
+
 ## 5.2.0
 
 ### Patch Changes

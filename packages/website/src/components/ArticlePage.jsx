@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { GithubOutlined, LinkedinOutlined } from '@ant-design/icons';
 import authors from '@/lib/authors';
-import articles from '@/content/articles';
+import ArticleToc from './ArticleToc';
 
 function formatDate(date) {
   return date.toLocaleDateString('en-US', {
@@ -18,8 +20,8 @@ function formatDate(date) {
 }
 
 const markdownComponents = {
-  a: ({ children, href, ...props }) => {
-    const isInternal = href?.startsWith('/');
+  a: ({ children, href, node, ...props }) => {
+    const isInternal = href?.startsWith('/') || href?.startsWith('#');
     return (
       <a
         href={href}
@@ -56,10 +58,13 @@ const markdownComponents = {
   },
 };
 
-export default function ArticlePage({ article }) {
+export default function ArticlePage({ article, relatedArticles = [] }) {
   const author = authors[article.authorId];
-
-  const relatedArticles = articles.filter((a) => a.id !== article.id).slice(0, 3);
+  const tocEntryCount = (article.toc ?? []).reduce(
+    (n, h2) => n + 1 + h2.children.length,
+    0,
+  );
+  const showToc = article.tocEnabled !== false && tocEntryCount >= 2;
 
   return (
     <article className="min-h-screen bg-white dark:bg-slate-950 pt-24 pb-0">
@@ -130,12 +135,42 @@ export default function ArticlePage({ article }) {
       </div>
 
       {/* Article Body */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-3xl mx-auto article-content">
-          <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {article.markdown}
-          </Markdown>
+      <div className="relative max-w-[1408px] mx-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-3xl mx-auto article-content">
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[
+                rehypeSlug,
+                [
+                  rehypeAutolinkHeadings,
+                  {
+                    behavior: 'append',
+                    properties: {
+                      className: 'heading-anchor',
+                      'aria-label': 'Link to section',
+                      tabIndex: -1,
+                    },
+                    content: {
+                      type: 'element',
+                      tagName: 'span',
+                      properties: { className: 'heading-anchor-symbol', 'aria-hidden': 'true' },
+                      children: [{ type: 'text', value: '#' }],
+                    },
+                  },
+                ],
+              ]}
+              components={markdownComponents}
+            >
+              {article.markdown}
+            </Markdown>
+          </div>
         </div>
+        {showToc && (
+          <aside className="hidden xl:block absolute top-12 bottom-12 right-4 sm:right-6 lg:right-8 w-56">
+            <ArticleToc toc={article.toc} />
+          </aside>
+        )}
       </div>
 
       {/* Author Bio */}

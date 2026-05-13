@@ -116,11 +116,11 @@ agents:
       - search-products
 ```
 
-This endpoint is a regular Lowdefy API. A page can hit it through a [`CallApi`](https://docs.lowdefy.com/CallApi) action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, [`_payload`](https://docs.lowdefy.com/_payload) carries the model's tool input, the same as if a page had sent it.
+This endpoint is a regular Lowdefy API. A page can hit it through a [`CallAPI`](https://docs.lowdefy.com/CallAPI) action; another endpoint can compose it as a routine step. Adding `description` and `payloadSchema` doesn't change any of that. It only makes the endpoint discoverable to the model. When the agent calls it, `_payload` carries the model's tool input, the same as if a page had sent it.
 
 An agent has the same surface area as the rest of your app. Every operator, every connection, every secret, every authenticated user reference ([`_user`](https://docs.lowdefy.com/_user)) is available inside a tool's routine. An insert endpoint that writes to MongoDB is already a tool. An endpoint that calls a third-party API with a stored key is already a tool. The agent isn't a new server, it's a different caller of the server you already have.
 
-For tools that shouldn't be exposed to the browser at all, change the type from `Api` to [`InternalApi`](https://docs.lowdefy.com/InternalApi). The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints.
+For tools that shouldn't be exposed to the browser at all, change the type from `Api` to [`InternalApi`](https://docs.lowdefy.com/lowdefy-api). The endpoint stops serving HTTP requests and stays callable from agents and from other endpoints.
 
 ### MCP servers by ID
 

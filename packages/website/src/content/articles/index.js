@@ -1,4 +1,11 @@
+import 'server-only';
+
 import matter from 'gray-matter';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import { visit } from 'unist-util-visit';
+import GithubSlugger from 'github-slugger';
+import { toString as mdastToString } from 'mdast-util-to-string';
 
 import buildFasterRaw from '../../../content/articles/lowdefy-4-6-build-faster-break-less.md';
 import jsonParseRaw from '../../../content/articles/lowdefy-4-7-faster-builds-json-parse.md';
@@ -9,6 +16,27 @@ import v5WhatsNewRaw from '../../../content/articles/lowdefy-5-whats-new.md';
 import demoToProductionRaw from '../../../content/articles/demo-to-production-lowdefy.md';
 import dropInModulesRaw from '../../../content/articles/lowdefy-5-2-drop-in-modules.md';
 import lowdefyAgentsRaw from '../../../content/articles/lowdefy-agents.md';
+
+function extractToc(markdown) {
+  const tree = unified().use(remarkParse).parse(markdown);
+  const slugger = new GithubSlugger();
+  const items = [];
+  let currentH2 = null;
+
+  visit(tree, 'heading', (node) => {
+    if (node.depth !== 2 && node.depth !== 3) return;
+    const text = mdastToString(node);
+    const id = slugger.slug(text);
+    if (node.depth === 2) {
+      currentH2 = { id, text, children: [] };
+      items.push(currentH2);
+    } else if (currentH2) {
+      currentH2.children.push({ id, text });
+    }
+    // h3s before the first h2 are intentionally dropped.
+  });
+  return items;
+}
 
 function parseArticle(slug, raw) {
   const { data, content } = matter(raw);
@@ -21,6 +49,8 @@ function parseArticle(slug, raw) {
     readTimeMinutes: data.readTimeMinutes,
     tags: data.tags,
     draft: data.draft,
+    toc: extractToc(content),
+    tocEnabled: data.toc !== false,
     markdown: content,
   };
 }

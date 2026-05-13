@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-tiptap",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "license": "Apache-2.0",
   "description": "Lowdefy TipTap rich-text editor blocks.",
   "homepage": "https://lowdefy.com",
@@ -49,9 +49,9 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "5.2.0",
-    "@lowdefy/blocks-antd": "5.2.0",
-    "@lowdefy/helpers": "5.2.0",
+    "@lowdefy/block-utils": "5.3.0",
+    "@lowdefy/blocks-antd": "5.3.0",
+    "@lowdefy/helpers": "5.3.0",
     "@tiptap/core": "2.27.2",
     "@tiptap/extension-file-handler": "2.27.2",
     "@tiptap/extension-highlight": "2.27.2",
@@ -75,8 +75,8 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "5.2.0",
-    "@lowdefy/e2e-utils": "5.2.0",
+    "@lowdefy/block-dev-e2e": "5.3.0",
+    "@lowdefy/e2e-utils": "5.3.0",
     "@playwright/test": "1.50.1",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
