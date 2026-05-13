@@ -166,6 +166,10 @@ _ref:
 
             Lowdefy uses object [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
 
+            ### Localizing plugin strings
+
+            Plugins can ship locale-keyed default messages so consumers see translated strings out-of-the-box, and translate strings at runtime via `methods.translate(key, values)` in block / action code. See [i18n](/i18n) for the full plugin-author contract — `./messages` export shape, `package.json` `exports` registration, namespacing convention, and merge precedence.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

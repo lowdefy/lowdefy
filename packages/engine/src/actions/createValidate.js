@@ -23,9 +23,9 @@ function createValidate({ context }) {
     const validationErrors = context._internal.RootSlots.validate(getBlockMatcher(params));
     if (validationErrors.length > 0) {
       throw new UserError(
-        `Your input has ${validationErrors.length} validation error${
-          validationErrors.length !== 1 ? 's' : ''
-        }.`
+        context._internal.lowdefy._internal.translate('engine.validation.summary', {
+          count: validationErrors.length,
+        })
       );
     }
   };

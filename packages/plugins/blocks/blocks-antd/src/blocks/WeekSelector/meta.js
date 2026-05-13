@@ -71,7 +71,7 @@ export default {
         description:
           'Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats.',
       },
-      placeholder: { ...placeholder, default: 'Select Week' },
+      placeholder: { ...placeholder },
       label,
       showToday: {
         type: 'boolean',

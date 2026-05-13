@@ -21,6 +21,7 @@ import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
 import createGetGlobal from './createGetGlobal.js';
 import createGetInput from './createGetInput.js';
+import createGetLocale from './createGetLocale.js';
 import createGetPageId from './createGetPageId.js';
 import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
@@ -35,6 +36,7 @@ import createReset from './createReset.js';
 import createResetValidation from './createResetValidation.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createTranslate from './createTranslate.js';
 import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
 
@@ -48,6 +50,7 @@ function getActionMethods(props) {
     getEvent: createGetEvent(props),
     getGlobal: createGetGlobal(props),
     getInput: createGetInput(props),
+    getLocale: createGetLocale(props),
     getPageId: createGetPageId(props),
     getRequestDetails: createGetRequestDetails(props),
     getState: createGetState(props),
@@ -61,6 +64,7 @@ function getActionMethods(props) {
     resetValidation: createResetValidation(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    translate: createTranslate(props),
     updateSession: createUpdateSession(props),
     validate: createValidate(props),
   };

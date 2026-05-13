@@ -1,0 +1,112 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _t
+    pageTitle: _t
+    filePath: operators/_t.yaml
+    types: |
+      ```
+      (key: string): string
+      (arguments: {
+        key: string,
+        values?: object,
+        locale?: string,
+      }): string
+      ```
+    description: |
+      The `_t` operator translates a string key against the app's `config.i18n` message catalogs, with [ICU MessageFormat](https://formatjs.io/docs/core-concepts/icu-syntax/) interpolation. It's the primary way app authors localize their own strings.
+
+      Resolution order: the active locale's messages → `en-US` messages → built-in framework messages → the key itself. The active locale is resolved from the user's preference (`SetLocale`/`localStorage`), then the browser's `navigator.languages` best-fit, then `config.i18n.defaultLocale`. Lowdefy always uses `en-US` as the missing-key fallback, so plugin and module authors should ship `en-US` translations as a baseline.
+
+      Configure messages on `config.i18n.messages.{locale}`:
+
+      ```yaml
+      config:
+        i18n:
+          defaultLocale: en-US
+          locales:
+            - { code: en-US, label: English, antd: en_US, dayjs: en }
+            - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+          messages:
+            en-US:
+              greeting: 'Hello, {name}!'
+              cart.items: '{count, plural, one {# item} other {# items}}'
+            de-DE:
+              greeting: 'Hallo, {name}!'
+              cart.items: '{count, plural, one {# Artikel} other {# Artikel}}'
+      ```
+
+      `_t` is also used by the engine for built-in framework strings (e.g. `engine.action.loading`, `engine.validation.fieldRequired`). Override any built-in by adding the same key under `config.i18n.messages.{locale}`.
+
+      **Inside plugin code:** the runtime equivalent for custom block and action plugins is `methods.translate(key, values)`. Same lookup chain, same overrides — see the [i18n concept page](/i18n) for plugin authoring patterns and the `./messages` manifest format.
+    arguments: |
+      ###### string
+      The translation key to look up.
+
+      ###### object
+        - `key: string`: The translation key.
+        - `values: object`: Values to interpolate into the message via ICU MessageFormat.
+        - `locale: string`: BCP 47 locale code to force this lookup into a specific locale, regardless of the user's active locale.
+    examples: |
+      ###### Translate a simple key:
+      ```yaml
+      _t: greeting
+      ```
+      Returns: the active-locale message at `messages.{active}.greeting`, or the `en-US` message, or the key.
+
+      ###### Interpolate values:
+      ```yaml
+      _t:
+        key: greeting
+        values:
+          name:
+            _user: name
+      ```
+      Returns: e.g. `"Hallo, Ada!"` when active is `de-DE`.
+
+      ###### Pluralize via ICU MessageFormat:
+      ```yaml
+      _t:
+        key: cart.items
+        values:
+          count:
+            _state: itemCount
+      ```
+      Returns: `"3 items"` / `"3 Artikel"` etc., respecting the locale's plural rules.
+
+      ###### Force a specific locale:
+      ```yaml
+      _t:
+        key: greeting
+        locale: en-US
+      ```
+      Returns: the en-US message regardless of the active locale.
+
+      ###### Override a built-in framework string:
+      ```yaml
+      config:
+        i18n:
+          defaultLocale: de-DE
+          locales:
+            - { code: de-DE, label: Deutsch, antd: de_DE, dayjs: de }
+          messages:
+            de-DE:
+              engine.validation.fieldRequired: 'Pflichtfeld'
+              engine.action.loading: 'Laden'
+      ```
+      The engine's built-in messages (used by `Validate`, `Request`, etc.) now render in German.

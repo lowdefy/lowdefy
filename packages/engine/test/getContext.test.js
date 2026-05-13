@@ -28,6 +28,7 @@ const getLowdefy = () => {
     _internal: {
       displayMessage: () => () => {},
       updateBlock,
+      translate: (key) => key,
       operators: {},
       actions: {},
       blockComponents: {

@@ -69,3 +69,18 @@ test('getAgentConfig logs debug on error before throwing', async () => {
     'Agent "bad-agent" does not exist.'
   );
 });
+
+test('getAgentConfig translates the not-found error using i18n.messages for the active locale', async () => {
+  const readConfigFile = jest.fn().mockResolvedValue(null);
+  const i18n = {
+    active: 'de-DE',
+    defaultLocale: 'en-US',
+    messages: {
+      'de-DE': { 'agent.runtime.agentNotFound': 'Agent "{agentId}" existiert nicht.' },
+    },
+  };
+
+  await expect(
+    getAgentConfig({ i18n, logger, readConfigFile }, { agentId: 'bad-agent' })
+  ).rejects.toThrow('Agent "bad-agent" existiert nicht.');
+});

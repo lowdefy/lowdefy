@@ -93,8 +93,11 @@ function getBuildContext(buildDirectory, configDirectory) {
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
+  const customMessagesMap =
+    readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
 
   cachedBuildContext = createContext({
+    customMessagesMap,
     customTypesMap,
     directories: {
       build: buildDirectory,

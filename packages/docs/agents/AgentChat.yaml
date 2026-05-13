@@ -211,7 +211,7 @@ _ref:
             ### Sender
 
             - `sender: object`:
-              - `placeholder: string`: Default: `'Type a message...'` - Input placeholder.
+              - `placeholder: string`: Default: `'Type a message...'` — Input placeholder. When `config.i18n` is configured, falls back to the localized `agent.sender.placeholder` builtin key. See the [i18n concept page](/i18n) for the full list of localizable agent UI keys (tool approval buttons, message actions, tool-result captions, etc.).
               - `submitType: string`: Default: `'enter'` - Submit key. `'enter'` or `'shiftEnter'`.
               - `allowSpeech: boolean`: Default: `false` - Enable speech input.
 

@@ -68,11 +68,10 @@ export default {
       label,
       format: {
         type: 'string',
-        default: 'YYYY-MM-DD',
         description:
-          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats.',
+          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale\'s date format, or "YYYY-MM-DD" when no locale is configured.',
       },
-      placeholder: { ...placeholder, default: 'Select Date' },
+      placeholder: { ...placeholder },
       showToday: {
         type: 'boolean',
         default: true,

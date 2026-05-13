@@ -379,7 +379,7 @@ class Block {
       status: 'error',
       message: type.isString(this.requiredEval.output)
         ? this.requiredEval.output
-        : 'This field is required',
+        : this.context._internal.lowdefy._internal.translate('engine.validation.fieldRequired'),
     };
     const validation =
       this.requiredEval.output === false ? this.validate : [...this.validate, requiredValidation];

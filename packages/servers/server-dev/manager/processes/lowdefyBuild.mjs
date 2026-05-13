@@ -15,6 +15,7 @@
 */
 
 import { shallowBuild } from '@lowdefy/build/dev';
+import createCustomPluginMessagesMap from '../utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
 function formatDuration(ms) {
@@ -27,8 +28,10 @@ function lowdefyBuild({ directories, logger, options }) {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
+    const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
 
     const result = await shallowBuild({
+      customMessagesMap,
       customTypesMap,
       directories,
       logger,

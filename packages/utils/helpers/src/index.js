@@ -15,9 +15,13 @@
 */
 
 import applyArrayIndices from './applyArrayIndices.js';
+import builtinMessages from './builtinMessages.js';
 import cachedPromises from './cachedPromises.js';
 import extractErrorProps from './extractErrorProps.js';
 import get from './get.js';
+import getLocaleDateFormat from './getLocaleDateFormat.js';
+import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
+import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
@@ -25,6 +29,7 @@ import serializer from './serializer.js';
 import set from './set.js';
 import stableStringify from './stableStringify.js';
 import swap from './swap.js';
+import translate from './translate.js';
 import type from './type.js';
 import unset from './unset.js';
 import urlQuery from './urlQuery.js';
@@ -32,9 +37,13 @@ import wait from './wait.js';
 
 export {
   applyArrayIndices,
+  builtinMessages,
   cachedPromises,
   extractErrorProps,
   get,
+  getLocaleDateFormat,
+  getLocaleDecimalSeparator,
+  getLocaleGroupSeparator,
   LRUCache,
   mergeObjects,
   omit,
@@ -42,6 +51,7 @@ export {
   set,
   stableStringify,
   swap,
+  translate,
   type,
   unset,
   urlQuery,

@@ -29,7 +29,7 @@ _ref:
             ## Model and Instructions
 
             - `model: string`: __Required__ - The model identifier (e.g. `claude-sonnet-4-20250514`, `gpt-4o`, `gemini-2.5-pro`).
-            - `instructions: string`: System instructions that guide the agent's behavior. This is the system prompt sent to the model with every request.
+            - `instructions: string`: System instructions that guide the agent's behavior. This is the system prompt sent to the model with every request. The string passes through the operator parser at request time, so `_t:` works for locale-aware prompts (see [i18n](/i18n)). Note: tool descriptions stay English — translating them can degrade tool-call accuracy on English-trained models.
             - `pageContext: boolean`: Default: `false` - When `true`, prepend context about the current page, user, conversation, URL query, and shared state to the instructions. URL query and shared state are only included when the [`AgentChat`](/AgentChat) block sends them as `urlQuery` and `sharedState`. Useful when the agent needs to know who it's talking to or what the user has typed into form fields.
 
             ###### Instructions with user context:

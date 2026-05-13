@@ -34,7 +34,7 @@ function humanizeKey(key) {
     .replace(/^\w/, (c) => c.toUpperCase());
 }
 
-function CollapsibleText({ text, limit }) {
+function CollapsibleText({ text, limit, translate }) {
   const [expanded, setExpanded] = useState(false);
   if (text.length <= limit) return <span>{text}</span>;
   return (
@@ -44,13 +44,15 @@ function CollapsibleText({ text, limit }) {
         onClick={() => setExpanded(!expanded)}
         style={{ marginLeft: 4, fontSize: '0.85em', cursor: 'pointer' }}
       >
-        {expanded ? 'Show less' : 'Show more'}
+        {expanded
+          ? translate('agent.toolResult.showLess')
+          : translate('agent.toolResult.showMore')}
       </a>
     </span>
   );
 }
 
-function formatValue(value, depth) {
+function formatValue(value, depth, translate) {
   if (value === null || value === undefined) {
     return <span style={{ color: '#999' }}>{'\u2014'}</span>;
   }
@@ -72,22 +74,22 @@ function formatValue(value, depth) {
   }
   if (typeof value === 'string') {
     if (value.length > 200) {
-      return <CollapsibleText text={value} limit={200} />;
+      return <CollapsibleText text={value} limit={200} translate={translate} />;
     }
     return <span>{value}</span>;
   }
   if (Array.isArray(value)) {
-    return formatArray(value, depth);
+    return formatArray(value, depth, translate);
   }
   if (typeof value === 'object') {
-    return formatObject(value, depth);
+    return formatObject(value, depth, translate);
   }
   return <span>{String(value)}</span>;
 }
 
-function formatArray(arr, depth) {
+function formatArray(arr, depth, translate) {
   if (arr.length === 0) {
-    return <span style={{ color: '#999' }}>Empty list</span>;
+    return <span style={{ color: '#999' }}>{translate('agent.toolResult.emptyList')}</span>;
   }
   const allPrimitive = arr.every(
     (item) => item === null || item === undefined || typeof item !== 'object'
@@ -96,7 +98,7 @@ function formatArray(arr, depth) {
     return (
       <ul style={{ margin: '4px 0', paddingLeft: 20 }}>
         {arr.map((item, i) => (
-          <li key={i}>{formatValue(item, depth + 1)}</li>
+          <li key={i}>{formatValue(item, depth + 1, translate)}</li>
         ))}
       </ul>
     );
@@ -113,17 +115,17 @@ function formatArray(arr, depth) {
             border: '1px solid rgba(0, 0, 0, 0.06)',
           }}
         >
-          {formatValue(item, depth + 1)}
+          {formatValue(item, depth + 1, translate)}
         </div>
       ))}
     </div>
   );
 }
 
-function formatObject(obj, depth) {
+function formatObject(obj, depth, translate) {
   const keys = Object.keys(obj);
   if (keys.length === 0) {
-    return <span style={{ color: '#999' }}>Empty</span>;
+    return <span style={{ color: '#999' }}>{translate('agent.toolResult.empty')}</span>;
   }
   return (
     <div
@@ -139,7 +141,7 @@ function formatObject(obj, depth) {
               <div style={{ fontWeight: 600, fontSize: '0.9em', marginBottom: 2 }}>
                 {humanizeKey(key)}
               </div>
-              {formatValue(val, depth + 1)}
+              {formatValue(val, depth + 1, translate)}
             </div>
           );
         }
@@ -148,7 +150,7 @@ function formatObject(obj, depth) {
             <span style={{ fontWeight: 600, fontSize: '0.9em', color: 'rgba(0, 0, 0, 0.55)' }}>
               {humanizeKey(key)}:{' '}
             </span>
-            {formatValue(val, depth + 1)}
+            {formatValue(val, depth + 1, translate)}
           </div>
         );
       })}
@@ -156,13 +158,15 @@ function formatObject(obj, depth) {
   );
 }
 
-function formatToolResult(output) {
+function formatToolResult(output, translate) {
   if (output === null || output === undefined) {
-    return <span style={{ color: '#999' }}>Completed (no data)</span>;
+    return (
+      <span style={{ color: '#999' }}>{translate('agent.toolResult.completedNoData')}</span>
+    );
   }
   return (
     <div style={{ fontSize: '0.9em', lineHeight: 1.5, maxHeight: 400, overflowY: 'auto' }}>
-      {formatValue(output, 0)}
+      {formatValue(output, 0, translate)}
     </div>
   );
 }

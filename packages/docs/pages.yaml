@@ -20,6 +20,7 @@
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/keyboard-shortcuts.yaml
+- _ref: concepts/i18n.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/logger.yaml
@@ -223,6 +224,7 @@
 - _ref: actions/SetDarkMode.yaml
 - _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
+- _ref: actions/SetLocale.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml
 - _ref: actions/UpdateSession.yaml
@@ -257,6 +259,7 @@
 - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_jsonata.yaml
+- _ref: operators/_locale.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
 - _ref: operators/_lt.yaml
@@ -287,6 +290,7 @@
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml
 - _ref: operators/_switch.yaml
+- _ref: operators/_t.yaml
 - _ref: operators/_theme.yaml
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml

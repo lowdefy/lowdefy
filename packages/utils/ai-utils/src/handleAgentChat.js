@@ -86,7 +86,7 @@ const hookMapping = {
   onStepFinish: 'onStepFinish',
 };
 
-function createHookCallbacks({ hooks, callEndpoint }) {
+function createHookCallbacks({ hooks, callEndpoint, locale }) {
   if (!hooks) return {};
 
   const callbacks = {};
@@ -95,7 +95,7 @@ function createHookCallbacks({ hooks, callEndpoint }) {
     if (!endpointIds || endpointIds.length === 0) continue;
 
     callbacks[sdkKey] = (event) => {
-      const payload = cleanHookEvent(event);
+      const payload = { ...cleanHookEvent(event), locale };
       for (const endpointId of endpointIds) {
         callEndpoint(endpointId, { payload }).catch(() => {});
       }
@@ -136,9 +136,11 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const model = connection.provider(agent.properties.model);
 
+  const locale = context.i18n?.active;
   const hookCallbacks = createHookCallbacks({
     hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
+    locale,
   });
 
   // Prepend page context to instructions when pageContext is enabled
@@ -281,6 +283,7 @@ async function handleAgentChat({ connection, properties, context }) {
           isAborted: false,
           ...(context.agentContext ?? {}),
           usage: usageAccumulator.usage,
+          locale,
         };
         for (const endpointId of onFinishEndpointIds) {
           try {

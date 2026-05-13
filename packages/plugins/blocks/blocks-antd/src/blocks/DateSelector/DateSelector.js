@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
-import { type } from '@lowdefy/helpers';
+import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 import { DatePicker } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
@@ -63,9 +63,9 @@ const DateSelector = ({
               className={classNames.element}
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
-              format={properties.format ?? 'YYYY-MM-DD'}
+              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Date'}
+              placeholder={properties.placeholder}
               showToday={properties.showToday}
               size={properties.size}
               status={validation.status}

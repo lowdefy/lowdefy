@@ -15,6 +15,7 @@
 */
 
 import buildTestPage from '@lowdefy/build/buildTestPage';
+import { translate } from '@lowdefy/helpers';
 
 import getContext from '../src/getContext.js';
 import testOperators from './testOperators.js';
@@ -36,6 +37,7 @@ const testContext = async ({ lowdefy, pageConfig }) => {
       updateBlock: () => {},
       logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
       handleError: () => {},
+      translate: (key, values) => translate({ key, values, i18n: lowdefy?.i18n }),
       ...lowdefy?._internal,
       operators: testOperators,
       actions: { ...testActions, ...lowdefy?._internal?.actions },

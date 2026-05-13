@@ -66,15 +66,13 @@ export default {
       disabledDates,
       format: {
         type: 'string',
-        default: 'YYYY-MM-DD',
         description:
-          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats.',
+          'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale\'s date format, or "YYYY-MM-DD" when no locale is configured.',
       },
       label,
       placeholder: {
         type: 'array',
-        default: ['Start Date', 'End Date'],
-        description: 'Placeholder text inside the block before user types input.',
+        description: 'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
         docs: {
           displayType: 'manual',
           block: {

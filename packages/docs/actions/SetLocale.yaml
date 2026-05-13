@@ -1,0 +1,84 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: SetLocale
+    pageTitle: SetLocale
+    filePath: actions/SetLocale.yaml
+    types: |
+      ```
+      (params?: {
+        locale?: string
+      }): void
+      ```
+    description: |
+      The `SetLocale` action sets the user's active locale preference for the app. The preference is persisted to `localStorage` (`lowdefy_locale`) and triggers re-rendering of the root Ant Design `ConfigProvider`. All blocks, `_t` translations, `_locale` operators, antd-built-in strings (date pickers, modals, validation), and dayjs date formatting update automatically.
+
+      - `locale`: A BCP 47 code declared in `config.i18n.locales` (e.g. `'en-US'`, `'de-DE'`).
+      - `'auto'` (or no params): Clears the user preference. The app falls back to the browser language best-fit, then to `config.i18n.defaultLocale`.
+
+      `SetLocale` is a no-op when `config.i18n` is not configured.
+    params: |
+      ###### object (optional)
+        - `locale: string`: A BCP 47 locale code declared in `config.i18n.locales`, or `'auto'` to clear the preference.
+    examples: |
+      ###### Switch to German:
+      ```yaml
+      events:
+        onClick:
+          - id: switch_de
+            type: SetLocale
+            params:
+              locale: de-DE
+      ```
+
+      ###### Wire a language picker:
+
+      `_locale: supported` returns an array of locale descriptors `{ code, label, antd, dayjs }`. Selector options must be `{ value, label }` pairs, so map each descriptor onto that shape:
+      ```yaml
+      - id: lang_picker
+        type: Selector
+        properties:
+          options:
+            _array.map:
+              on:
+                _locale: supported
+              callback:
+                _function:
+                  value:
+                    __args: 0.code
+                  label:
+                    __args: 0.label
+          value:
+            _locale: active
+        events:
+          onChange:
+            - id: set_locale
+              type: SetLocale
+              params:
+                locale:
+                  _state: lang_picker
+      ```
+
+      ###### Reset to browser/default:
+      ```yaml
+      events:
+        onClick:
+          - id: reset_locale
+            type: SetLocale
+            params:
+              locale: auto
+      ```

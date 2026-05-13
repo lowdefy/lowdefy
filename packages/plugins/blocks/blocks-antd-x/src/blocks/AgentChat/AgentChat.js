@@ -449,6 +449,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
+            translate={methods.translate}
           />
         )}
       </div>
@@ -510,7 +511,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         )}
         <Sender
           ref={senderRef}
-          placeholder={sender?.placeholder ?? 'Type a message...'}
+          placeholder={sender?.placeholder ?? methods.translate('agent.sender.placeholder')}
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
           onSubmit={handleSend}

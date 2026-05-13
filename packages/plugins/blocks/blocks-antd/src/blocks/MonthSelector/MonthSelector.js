@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
-import { type } from '@lowdefy/helpers';
+import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
@@ -65,9 +65,13 @@ const MonthSelector = ({
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format ?? 'YYYY-MM'}
+              format={
+                properties.format ??
+                getLocaleDateFormat(methods.getLocale?.(), 'month') ??
+                'YYYY-MM'
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              placeholder={properties.placeholder ?? 'Select Month'}
+              placeholder={properties.placeholder}
               size={properties.size}
               status={validation.status}
               value={type.isDate(value) ? dayjs.utc(value).startOf('month') : null}

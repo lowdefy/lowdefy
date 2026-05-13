@@ -25,10 +25,14 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode } from '@lowdefy/client';
+import { useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
-import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
+import { App as AntdApp, theme as antdTheme } from 'antd';
+import { XProvider } from '@ant-design/x';
 
+import antdLocaleLoaders from '../build/i18n/antdLocales.js';
+import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
+import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
 import Auth from '../lib/client/auth/Auth.js';
 import ErrorBar from '../lib/client/ErrorBar.js';
 import request from '../lib/client/utils/request.js';
@@ -61,6 +65,17 @@ function App({ Component }) {
     antd: lowdefyRef.current.theme?.antd,
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
+
+  const { active: activeLocale, antdLocale, antdXLocale } = useLocale({
+    i18n: rootConfig?.i18n,
+    antdLocaleLoaders,
+    antdXLocaleLoaders,
+    dayjsLocaleMap,
+  });
+
+  if (rootConfig?.i18n?.defaultLocale) {
+    lowdefyRef.current.i18n = { ...rootConfig.i18n, active: activeLocale };
+  }
 
   const {
     lightToken: _lightToken,
@@ -99,9 +114,21 @@ function App({ Component }) {
     }
   }, []);
 
+  // XProvider extends antd's ConfigProvider; merging antd + antd-X locale packs
+  // gives X components their built-in strings alongside antd's.
+  const mergedLocale = antdLocale || antdXLocale
+    ? { ...(antdLocale ?? {}), ...(antdXLocale ?? {}) }
+    : undefined;
+
   return (
     <StyleProvider layer>
-      <ConfigProvider
+      <XProvider
+        locale={mergedLocale}
+        form={
+          antdLocale?.Form?.defaultValidateMessages
+            ? { validateMessages: antdLocale.Form.defaultValidateMessages }
+            : undefined
+        }
         theme={{
           ...antdConfig,
           token,
@@ -134,7 +161,7 @@ function App({ Component }) {
             <ErrorBar errors={runtimeErrors} />
           </ThemeTokenResolver>
         </AntdApp>
-      </ConfigProvider>
+      </XProvider>
     </StyleProvider>
   );
 }

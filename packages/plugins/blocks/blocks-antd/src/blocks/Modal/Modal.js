@@ -62,14 +62,14 @@ const ModalBlock = ({
         id={`${blockId}_modal`}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
         cancelButtonProps={properties.cancelButtonProps}
-        cancelText={properties.cancelText ?? 'Cancel'}
+        cancelText={properties.cancelText}
         centered={!!properties.centered}
         closable={properties.closable !== undefined ? properties.closable : true}
         confirmLoading={get(events, 'onOk.loading')}
         mask={properties.mask !== undefined ? properties.mask : true}
         maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
         okButtonProps={properties.okButtonProps}
-        okText={properties.okText ?? 'Ok'}
+        okText={properties.okText}
         okType={properties.okButtonType ?? 'primary'}
         title={renderHtml({ html: properties.title, methods })}
         open={openState}

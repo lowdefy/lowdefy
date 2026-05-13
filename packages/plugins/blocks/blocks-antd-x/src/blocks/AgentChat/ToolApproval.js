@@ -17,7 +17,7 @@
 import React from 'react';
 import { Button, Space } from 'antd';
 
-function ToolApproval({ toolName, input, approvalId, onApprove, onReject }) {
+function ToolApproval({ toolName, input, approvalId, onApprove, onReject, translate }) {
   return (
     <div style={{ padding: '8px 0' }}>
       <div style={{ fontWeight: 500 }}>{toolName}</div>
@@ -28,10 +28,10 @@ function ToolApproval({ toolName, input, approvalId, onApprove, onReject }) {
       )}
       <Space style={{ marginTop: 8 }}>
         <Button type="primary" size="small" onClick={() => onApprove(approvalId)}>
-          Approve
+          {translate('agent.toolApproval.approve')}
         </Button>
         <Button size="small" onClick={() => onReject(approvalId)}>
-          Reject
+          {translate('agent.toolApproval.reject')}
         </Button>
       </Space>
     </div>

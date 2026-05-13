@@ -181,9 +181,10 @@ class Actions {
       return { type: action.type, skipped: true, index };
     }
     const messages = parsedAction.messages || {};
+    const t = this.context._internal.lowdefy._internal.translate;
     let response;
     const closeLoading = this.displayMessage({
-      defaultMessage: 'Loading',
+      defaultMessage: t('engine.action.loading'),
       duration: 0,
       message: messages.loading,
       status: 'loading',
@@ -239,7 +240,7 @@ class Actions {
     }
     closeLoading();
     this.displayMessage({
-      defaultMessage: 'Success',
+      defaultMessage: t('engine.action.success'),
       message: messages.success,
       status: 'success',
     });

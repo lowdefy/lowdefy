@@ -21,10 +21,18 @@ import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
+import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
-function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+function createContext({
+  customMessagesMap,
+  customTypesMap,
+  directories,
+  logger,
+  refResolver,
+  stage = 'prod',
+}) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
@@ -62,6 +70,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       },
     },
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 

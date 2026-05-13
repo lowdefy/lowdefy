@@ -63,12 +63,14 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     >
       <Component
         methods={Object.assign(block.methods, {
+          getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           removeItem: block.removeItem,
+          translate: lowdefy._internal.translate,
           triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         })}

@@ -15,11 +15,14 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { translate } from '@lowdefy/helpers';
 
-async function getAgentConfig({ logger, readConfigFile }, { agentId }) {
+async function getAgentConfig({ i18n, logger, readConfigFile }, { agentId }) {
   const agent = await readConfigFile(`agents/${agentId}.json`);
   if (!agent) {
-    const err = new ConfigError(`Agent "${agentId}" does not exist.`);
+    const err = new ConfigError(
+      translate({ key: 'agent.runtime.agentNotFound', values: { agentId }, i18n })
+    );
     logger.debug({ params: { agentId }, err }, err.message);
     throw err;
   }

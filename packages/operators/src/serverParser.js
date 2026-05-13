@@ -18,8 +18,9 @@ import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, jsMap, operators, secrets, state, user }) {
+  constructor({ env, i18n, jsMap, operators, secrets, state, user }) {
     this.env = env;
+    this.i18n = i18n;
     this.jsMap = jsMap;
     this.operators = operators;
     this.parse = this.parse.bind(this);
@@ -55,6 +56,7 @@ class ServerParser {
           args,
           arrayIndices: [],
           env: this.env,
+          i18n: this.i18n,
           items,
           jsMap: this.jsMap,
           location,

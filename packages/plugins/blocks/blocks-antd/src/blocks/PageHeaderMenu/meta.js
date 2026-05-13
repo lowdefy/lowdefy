@@ -48,6 +48,8 @@ export default {
     profileAvatar: 'The profile avatar element.',
     profileMenu: 'The profile dropdown menu popup.',
     darkModeToggle: 'The PageHeaderMenu dark mode toggle button.',
+    localeSelector: 'The PageHeaderMenu locale selector trigger.',
+    localeSelectorMenu: 'The PageHeaderMenu locale selector dropdown popup.',
     mobileMenu: 'The PageHeaderMenu mobile menu.',
     menu: 'The PageHeaderMenu menu.',
     content: 'The PageHeaderMenu content.',
@@ -384,6 +386,12 @@ export default {
         default: false,
         description:
           'Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage.',
+      },
+      localeSelector: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show a locale picker dropdown in the header. Lists locales declared in `config.i18n.locales` and dispatches `SetLocale` on selection. Renders nothing when `config.i18n` is not configured.',
       },
       theme: {
         type: 'object',

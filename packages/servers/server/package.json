@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
+    "@ant-design/x": "2.7.0",
     "@lowdefy/actions-core": "5.2.0",
     "@lowdefy/api": "5.2.0",
     "@lowdefy/block-utils": "5.2.0",

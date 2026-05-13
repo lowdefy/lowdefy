@@ -78,13 +78,11 @@ export default {
       },
       okText: {
         type: 'string',
-        default: 'Ok',
-        description: 'Text of the Ok button.',
+        description: 'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       cancelText: {
         type: 'string',
-        default: 'Cancel',
-        description: 'Text of the Cancel button.',
+        description: 'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       okButton: {
         type: 'object',
