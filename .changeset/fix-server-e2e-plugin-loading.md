@@ -1,9 +1,10 @@
 ---
+'@lowdefy/e2e-utils': patch
 '@lowdefy/server-e2e': patch
 'lowdefy': patch
 ---
 
-fix: Resync `@lowdefy/server-e2e` with `@lowdefy/server`.
+fix: Unblock Playwright e2e for Lowdefy apps with custom plugins.
 
 **`@lowdefy/server-e2e`**
 
@@ -16,6 +17,10 @@ fix: Resync `@lowdefy/server-e2e` with `@lowdefy/server`.
 - `pages/api/client-error.js` now enforces the same-origin host check and strips `~e.received` from incoming payloads, matching `@lowdefy/server`.
 - `lowdefy/build.mjs` now uses `instanceof BuildError` for the formatted-error shortcut (matches `@lowdefy/server`) and drops the obsolete `mixin` logger config.
 - Runtime dependency set now includes `@lowdefy/blocks-antd-x`, and `tailwindcss` / `@tailwindcss/postcss` are declared in `dependencies` (not just `devDependencies`). The unused `process` browser polyfill has been removed.
+
+**`@lowdefy/e2e-utils`**
+
+- `extractBlockMap` now traverses `slots.<name>.blocks` alongside `areas.<name>.blocks` and `blocks`. Compiled page artifacts under `.lowdefy/server/build/pages/<pageId>.json` use the `slots` container shape, which `extractBlockMap` was not walking — so `generateManifest` produced a `blockMap` containing only the page root and `ldf.block('<any-nested-id>')` threw `Block "<id>" not found on page. Available blocks: <pageId>` for every non-root block, reducing the e2e framework to root-block assertions and raw `ldf.page.locator(...)` fallbacks.
 
 **`lowdefy` CLI**
 
