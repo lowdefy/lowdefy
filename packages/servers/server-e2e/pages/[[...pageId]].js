@@ -20,8 +20,42 @@ import serverSidePropsWrapper from '../lib/server/serverSidePropsWrapper.js';
 import Page from '../lib/client/Page.js';
 
 async function getServerSidePropsHandler({ context, nextContext }) {
-  const { pageId } = nextContext.params;
+  const segments = nextContext.params.pageId ?? [];
+  const pageId = segments.join('/');
   const { logger, session } = context;
+
+  if (!pageId) {
+    const rootConfig = await getRootConfig(context);
+    const { home } = rootConfig;
+    if (home.configured === false) {
+      logger.info({ event: 'redirect_to_homepage', pageId: home.pageId });
+      return {
+        redirect: {
+          destination: `/${home.pageId}`,
+          permanent: false,
+        },
+      };
+    }
+    const pageConfig = await getPageConfig(context, { pageId: home.pageId });
+    if (!pageConfig) {
+      logger.info({ event: 'redirect_page_not_found', pageId: home.pageId });
+      return {
+        redirect: {
+          destination: '/404',
+          permanent: false,
+        },
+      };
+    }
+    logger.info({ event: 'page_view', pageId: home.pageId });
+    return {
+      props: {
+        pageConfig,
+        rootConfig,
+        session,
+      },
+    };
+  }
+
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
     getPageConfig(context, { pageId }),

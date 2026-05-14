@@ -22,7 +22,7 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const { endpointId } = req.query;
+  const endpointId = req.query.endpointId.join('/');
   const { blockId, payload, pageId } = req.body;
   context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
