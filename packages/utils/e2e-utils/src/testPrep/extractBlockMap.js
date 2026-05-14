@@ -38,6 +38,14 @@ function extractBlockMap({ pageConfig, typesBlocks }) {
       }
     }
 
+    // Traverse slots - slot.blocks is { "~arr": [...blocks...] }
+    if (obj.slots) {
+      Object.values(obj.slots).forEach((slot) => {
+        const blocks = getBlocksArray(slot.blocks);
+        blocks.forEach((block) => traverse(block));
+      });
+    }
+
     // Traverse areas - area.blocks is { "~arr": [...blocks...] }
     if (obj.areas) {
       Object.values(obj.areas).forEach((area) => {
