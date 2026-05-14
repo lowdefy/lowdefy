@@ -4,7 +4,7 @@
 'lowdefy': patch
 ---
 
-fix: Unblock Playwright e2e for Lowdefy apps with custom plugins.
+fix: Unblock Playwright e2e for v5+ Lowdefy apps.
 
 **`@lowdefy/server-e2e`**
 
