@@ -19,4 +19,4 @@ fix: Resync `@lowdefy/server-e2e` with `@lowdefy/server`.
 
 **`lowdefy` CLI**
 
-- `lowdefy build --server <name>` now re-fetches the server package when the version matches but the name differs. Previously, an earlier `lowdefy dev` run could leave the default server cached in `.lowdefy/server/`, causing subsequent runs with a different `--server` value to silently use the wrong server.
+- `lowdefy build --server <name>` now re-fetches the server package when the version matches but the name differs. Both `lowdefy build` and `lowdefy build --server e2e` write to the same `.lowdefy/server/` directory, so the previous version-only cache check meant flipping between them (in either order) would silently reuse whichever server package was fetched first.
