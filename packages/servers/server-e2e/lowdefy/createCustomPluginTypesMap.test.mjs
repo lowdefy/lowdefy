@@ -100,3 +100,16 @@ test('populates icons from plugin types', async () => {
     FakeBlock: 'icon-name',
   });
 });
+
+test('returns empty typesMap when neither lowdefy.yaml nor lowdefy.yml exists', async () => {
+  const { readFile } = await import('@lowdefy/node-utils');
+  readFile.mockResolvedValue(undefined);
+  const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
+  const result = await createCustomPluginTypesMap({ directories: { config: '/config' } });
+  expect(result.actions).toEqual({});
+  expect(result.blocks).toEqual({});
+  expect(result.blockMetas).toEqual({});
+  expect(result.icons).toEqual({});
+  expect(result.requests).toEqual({});
+  expect(result.operators).toEqual({ client: {}, server: {} });
+});
