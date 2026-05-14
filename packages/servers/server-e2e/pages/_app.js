@@ -23,6 +23,7 @@ import React, { useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
+import { useDarkMode } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 
@@ -32,22 +33,35 @@ import createLogUsage from '../lib/client/createLogUsage.js';
 // Must be in _app due to next specifications.
 import '../build/globals.css';
 
-const algorithmMap = {
-  default: antdTheme.defaultAlgorithm,
-  dark: antdTheme.darkAlgorithm,
-  compact: antdTheme.compactAlgorithm,
-};
-
-function resolveAlgorithm(algorithm) {
-  if (Array.isArray(algorithm)) {
-    return algorithm.map((a) => algorithmMap[a] || antdTheme.defaultAlgorithm);
+function ThemeTokenResolver({ lowdefyRef, children }) {
+  const { token } = antdTheme.useToken();
+  if (!lowdefyRef.current.theme) {
+    lowdefyRef.current.theme = {};
   }
-  return algorithmMap[algorithm] || antdTheme.defaultAlgorithm;
+  lowdefyRef.current.theme._resolvedAntdToken = token;
+  return children;
 }
 
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+  if (rootConfig?.theme) {
+    lowdefyRef.current.theme = rootConfig.theme;
+  }
+
+  const { algorithm, token, components } = useDarkMode({
+    antd: lowdefyRef.current.theme?.antd,
+    configDarkMode: lowdefyRef.current.theme?.darkMode,
+  });
+
+  const {
+    lightToken: _lightToken,
+    darkToken: _darkToken,
+    lightComponents: _lightComponents,
+    darkComponents: _darkComponents,
+    ...antdConfig
+  } = lowdefyRef.current.theme?.antd ?? {};
+
   const handleError = useCallback((error) => {
     if (lowdefyRef.current?._internal?.handleError) {
       lowdefyRef.current._internal.handleError(error);
@@ -60,28 +74,32 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
     <StyleProvider layer>
       <ConfigProvider
         theme={{
-          ...lowdefyRef.current.theme?.antd,
+          ...antdConfig,
+          token,
+          components,
           cssVar: { key: 'lowdefy' },
           hashed: false,
-          algorithm: resolveAlgorithm(lowdefyRef.current.theme?.antd?.algorithm),
+          algorithm,
         }}
       >
         <AntdApp>
-          <ErrorBoundary fullPage onError={handleError}>
-            <Auth session={session}>
-              {(auth) => {
-                usageDataRef.current.user = auth.session?.hashed_id;
-                return (
-                  <Component
-                    auth={auth}
-                    lowdefy={lowdefyRef.current}
-                    rootConfig={rootConfig}
-                    pageConfig={pageConfig}
-                  />
-                );
-              }}
-            </Auth>
-          </ErrorBoundary>
+          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+            <ErrorBoundary fullPage onError={handleError}>
+              <Auth session={session}>
+                {(auth) => {
+                  usageDataRef.current.user = auth.session?.hashed_id;
+                  return (
+                    <Component
+                      auth={auth}
+                      lowdefy={lowdefyRef.current}
+                      rootConfig={rootConfig}
+                      pageConfig={pageConfig}
+                    />
+                  );
+                }}
+              </Auth>
+            </ErrorBoundary>
+          </ThemeTokenResolver>
         </AntdApp>
       </ConfigProvider>
     </StyleProvider>
