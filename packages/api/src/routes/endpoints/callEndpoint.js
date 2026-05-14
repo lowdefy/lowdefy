@@ -55,9 +55,17 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   });
 
   const success = !['error', 'reject'].includes(status);
+  const clientError =
+    success || error == null
+      ? error
+      : { code: 'ENDPOINT_ERROR', message: 'Endpoint request failed.' };
+
+  if (!success && error) {
+    logger.error({ event: 'endpoint_error', blockId, endpointId, pageId, error });
+  }
 
   return {
-    error: serializer.serialize(error),
+    error: serializer.serialize(clientError),
     response: serializer.serialize(response),
     status: success ? 'success' : status,
     success,
