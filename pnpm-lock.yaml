@@ -2454,6 +2454,12 @@ importers:
       ajv-errors:
         specifier: 3.0.0
         version: 3.0.0(ajv@8.12.0)
+      ajv-formats:
+        specifier: 2.1.1
+        version: 2.1.1(ajv@8.12.0)
+      ajv-keywords:
+        specifier: 5.1.0
+        version: 5.1.0(ajv@8.12.0)
     devDependencies:
       '@swc/cli':
         specifier: 0.8.0

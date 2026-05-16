@@ -15,5 +15,6 @@
 */
 
 import validate from './validate.js';
+import compile from './compile.js';
 
-export { validate };
+export { validate, compile };

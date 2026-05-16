@@ -14,16 +14,8 @@
   limitations under the License.
 */
 
-import Ajv from 'ajv';
-import ajvErrors from 'ajv-errors';
+import ajv from './ajvInstance.js';
 import createErrorMessage from './createErrorMessage.js';
-
-const ajv = new Ajv({
-  allErrors: true,
-  strict: false,
-});
-
-ajvErrors(ajv);
 
 function validate({ schema, data, returnErrors = false }) {
   const valid = ajv.validate(schema, data);

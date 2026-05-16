@@ -264,6 +264,129 @@ api:
 
 Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws an error — this prevents accidental infinite recursion.
 
+## Validating Data As A Routine Step
+
+API routines can validate any value against a JSON Schema using `ValidateSchema` steps. This is useful for guarding endpoint inputs that need stricter checks than the endpoint's request schema enforces, or for asserting the shape of data returned by a prior step before it flows downstream.
+
+`ValidateSchema` is a built-in step. It requires no `connectionId` and no plugin install. It runs against the shared Ajv instance used by the rest of Lowdefy, so all standard JSON Schema features are available:
+
+- All formats from [ajv-formats](https://ajv.js.org/packages/ajv-formats.html) (`email`, `uri`, `uuid`, `date`, `date-time`, `ipv4`, `ipv6`, …).
+- The `instanceof`, `transform`, and `regexp` keywords from [ajv-keywords](https://ajv.js.org/packages/ajv-keywords.html).
+- The `errorMessage` keyword from [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) for custom error messages.
+
+See [ajv.js.org](https://ajv.js.org/json-schema.html) for the full keyword reference.
+
+A `ValidateSchema` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: ValidateSchema`: **Required** - Identifies this as a validation step.
+- `properties.schema: object`: **Required** - The JSON Schema to validate against. **Operators are evaluated**, so `_ref` and `_var` work for sourcing schemas from files or app state.
+- `properties.data: any`: **Required** - The value to validate. **Operators are evaluated**.
+- `properties.throwOnInvalid: boolean`: Optional, default `true`. When `true`, invalid data short-circuits the routine with an error response and the AJV errors attached as `error.cause`. When `false`, the routine continues and the validation result is exposed as the step result for downstream branching.
+
+The step always records `{ valid, errors }` as its result, available downstream as `_step.<stepId>.valid` and `_step.<stepId>.errors`.
+
+###### Guard endpoint input (default throw)
+
+```yaml
+api:
+  - id: create_user
+    type: Api
+    routine:
+      - id: validate_input
+        type: ValidateSchema
+        properties:
+          schema:
+            type: object
+            required: [email, name]
+            additionalProperties: false
+            properties:
+              email: { type: string, format: email }
+              name:  { type: string, minLength: 1, maxLength: 80 }
+              age:   { type: integer, minimum: 0 }
+          data:
+            _payload: true
+
+      - id: insert_user
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          collection: users
+          doc:
+            _payload: true
+
+      - :return:
+          userId:
+            _step: insert_user.insertedId
+```
+
+If the request payload is missing `email`, the routine errors out with the AJV failure details and `insert_user` never runs.
+
+###### Inspect-and-branch (`throwOnInvalid: false`)
+
+Set `throwOnInvalid: false` to keep going on failure — then use `:if` to react to `_step.<stepId>.valid`:
+
+```yaml
+routine:
+  - id: check_input
+    type: ValidateSchema
+    properties:
+      schema:
+        type: object
+        required: [email]
+        properties:
+          email: { type: string, format: email }
+      data:
+        _payload: true
+      throwOnInvalid: false
+
+  - :if:
+      _eq:
+        - _step: check_input.valid
+        - false
+    :then:
+      - :reject:
+          message: 'Invalid input'
+          errors:
+            _step: check_input.errors
+
+  - id: send_welcome
+    type: SendgridMailSend
+    connectionId: mailer
+    properties:
+      to:
+        _payload: email
+      template: welcome
+```
+
+###### Validate a prior step's output
+
+`schema` and `data` are both operator-evaluated, so any value reachable in the routine context can be checked — payload, prior step results, items in a loop, etc.
+
+```yaml
+routine:
+  - id: load_profile
+    type: MongoDBFindOne
+    connectionId: app_db
+    properties:
+      collection: profiles
+      query:
+        _id:
+          _payload: userId
+
+  - id: assert_profile_shape
+    type: ValidateSchema
+    properties:
+      schema:
+        type: object
+        required: [_id, tier]
+        properties:
+          _id:  { type: string }
+          tier: { type: string, enum: [free, pro, enterprise] }
+      data:
+        _step: load_profile
+```
+
 ## Internal API Endpoints
 
 Endpoints with `type: InternalApi` are only callable from other endpoints via `CallApi` steps. They cannot be called from client pages using the `CallAPI` action, and HTTP requests to them return a "does not exist" error.

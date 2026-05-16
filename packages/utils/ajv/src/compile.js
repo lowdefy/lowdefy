@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
-function countStepTypes(step, { typeCounters }) {
-  if (step.type === 'CallApi' || step.type === 'ValidateSchema') {
-    return;
-  }
-  typeCounters.requests.increment(step.type, step['~k']);
+import ajv from './ajvInstance.js';
+
+function compile({ schema }) {
+  const validator = ajv.compile(schema);
+  return (data) => {
+    const valid = validator(data);
+    return { valid, errors: valid ? [] : validator.errors || [] };
+  };
 }
 
-export default countStepTypes;
+export default compile;

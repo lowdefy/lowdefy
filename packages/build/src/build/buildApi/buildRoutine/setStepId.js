@@ -14,10 +14,15 @@
   limitations under the License.
 */
 
+const prefixByType = {
+  CallApi: 'endpoint',
+  ValidateSchema: 'validate',
+};
+
 function setStepId(step, { endpointId }) {
   step.stepId = step.id;
   step.endpointId = endpointId;
-  const prefix = step.type === 'CallApi' ? 'endpoint' : 'request';
+  const prefix = prefixByType[step.type] ?? 'request';
   step.id = `${prefix}:${endpointId}:${step.stepId}`;
 }
 

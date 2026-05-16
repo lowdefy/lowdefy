@@ -69,6 +69,28 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (step.type === 'ValidateSchema') {
+    if (type.isNone(step.properties?.schema)) {
+      throw new ConfigError(
+        `ValidateSchema step "${step.id}" at endpoint "${endpointId}" requires properties.schema.`,
+        { configKey }
+      );
+    }
+    if (type.isNone(step.properties?.data)) {
+      throw new ConfigError(
+        `ValidateSchema step "${step.id}" at endpoint "${endpointId}" requires properties.data.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `ValidateSchema step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
   if (type.isUndefined(step.connectionId)) {
     throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
       configKey,
