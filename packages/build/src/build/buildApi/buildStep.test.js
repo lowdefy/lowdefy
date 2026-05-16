@@ -356,6 +356,140 @@ test('CallApi step is not counted in typeCounters.requests', () => {
   });
 });
 
+test('ValidateSchema step builds with validate prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_validate_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'check_input',
+            type: 'ValidateSchema',
+            properties: {
+              schema: { type: 'object', required: ['name'] },
+              data: { _payload: true },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0]).toEqual({
+    id: 'validate:test_validate_step:check_input',
+    endpointId: 'test_validate_step',
+    stepId: 'check_input',
+    type: 'ValidateSchema',
+    properties: {
+      schema: { type: 'object', required: ['name'] },
+      data: { _payload: true },
+    },
+  });
+});
+
+test('ValidateSchema step without properties.schema throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_validate_no_schema',
+        type: 'Api',
+        routine: [
+          {
+            id: 'check_input',
+            type: 'ValidateSchema',
+            properties: { data: { _payload: true } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'ValidateSchema step "check_input" at endpoint "test_validate_no_schema" requires properties.schema.'
+  );
+});
+
+test('ValidateSchema step without properties.data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_validate_no_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'check_input',
+            type: 'ValidateSchema',
+            properties: { schema: { type: 'object' } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'ValidateSchema step "check_input" at endpoint "test_validate_no_data" requires properties.data.'
+  );
+});
+
+test('ValidateSchema step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_validate_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'check_input',
+            type: 'ValidateSchema',
+            connectionId: 'unused',
+            properties: {
+              schema: { type: 'object' },
+              data: {},
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'ValidateSchema step "check_input" at endpoint "test_validate_with_connection" should not have a connectionId.'
+  );
+});
+
+test('ValidateSchema step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_validate_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'check_input',
+            type: 'ValidateSchema',
+            properties: {
+              schema: { type: 'object' },
+              data: {},
+            },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});
+
 test('mixed request and CallApi steps in routine', () => {
   const context = testContext({ logger });
   const components = {
