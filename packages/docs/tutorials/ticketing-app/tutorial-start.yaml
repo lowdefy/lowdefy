@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-start
     pageTitle: 1. Getting started
-    section: Tutorial
-    filePath: tutorial/tutorial-start.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-start.yaml
     content:
       # TODO: Create new tutorial videos
       # - id: tutorial_video

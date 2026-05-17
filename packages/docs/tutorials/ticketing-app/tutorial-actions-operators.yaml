@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-actions-operators
     pageTitle: 4. Interactive pages with actions and operators
-    section: Tutorial
-    filePath: tutorial/tutorial-actions-operators.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-actions-operators.yaml
     content:
       - id: body_reset
         type: MarkdownWithCode
@@ -379,7 +380,6 @@ _ref:
                 properties:
                   title: Reset
                   block: true # Make the button fill all the space available to it
-                  type: default # Make the button a plain button
                   icon: AiOutlineClear
                 events:
                   onClick:
@@ -392,7 +392,8 @@ _ref:
                 properties:
                   title: Submit
                   block: true
-                  type: primary # Make the button a primary button with color
+                  color: primary
+                  variant: solid
                   icon: AiOutlineSave
                 events:
                   onClick:

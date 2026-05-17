@@ -6,57 +6,62 @@
       properties:
         title: Introduction
         icon: AiOutlineCoffee
-    - id: tutorial
+    - id: tutorials
       type: MenuGroup
       properties:
-        title: Tutorial
+        title: Tutorials
         icon: AiOutlineRocket
       links:
-        - id: tutorial-start
-          type: MenuLink
-          pageId: tutorial-start
+        - id: tutorial-ticketing-app
+          type: MenuGroup
           properties:
-            title: Getting started
-        - id: tutorial-create-page
-          type: MenuLink
-          pageId: tutorial-create-page
-          properties:
-            title: Creating a page
-        - id: tutorial-add-blocks
-          type: MenuLink
-          pageId: tutorial-add-blocks
-          properties:
-            title: Adding blocks
-        - id: tutorial-actions-operators
-          type: MenuLink
-          pageId: tutorial-actions-operators
-          properties:
-            title: Interactive pages
-        - id: tutorial-requests-api
-          type: MenuLink
-          pageId: tutorial-requests-api
-          properties:
-            title: API / HTTP requests
-        - id: tutorial-requests-sql
-          type: MenuLink
-          pageId: tutorial-requests-sql
-          properties:
-            title: Saving data
-        - id: tutorial-display-data-page
-          type: MenuLink
-          pageId: tutorial-display-data-page
-          properties:
-            title: Display data
-        # - id: tutorial-deploy
-        #   type: MenuLink
-        #   pageId: tutorial-deploy
-        #   properties:
-        #     title: Deploy to Netlify
-        - id: tutorial-next-steps
-          type: MenuLink
-          pageId: tutorial-next-steps
-          properties:
-            title: Next steps
+            title: Ticketing App
+          links:
+            - id: tutorial-start
+              type: MenuLink
+              pageId: tutorial-start
+              properties:
+                title: Getting started
+            - id: tutorial-create-page
+              type: MenuLink
+              pageId: tutorial-create-page
+              properties:
+                title: Creating a page
+            - id: tutorial-add-blocks
+              type: MenuLink
+              pageId: tutorial-add-blocks
+              properties:
+                title: Adding blocks
+            - id: tutorial-actions-operators
+              type: MenuLink
+              pageId: tutorial-actions-operators
+              properties:
+                title: Interactive pages
+            - id: tutorial-requests-api
+              type: MenuLink
+              pageId: tutorial-requests-api
+              properties:
+                title: API / HTTP requests
+            - id: tutorial-requests-sql
+              type: MenuLink
+              pageId: tutorial-requests-sql
+              properties:
+                title: Saving data
+            - id: tutorial-display-data-page
+              type: MenuLink
+              pageId: tutorial-display-data-page
+              properties:
+                title: Display data
+            # - id: tutorial-deploy
+            #   type: MenuLink
+            #   pageId: tutorial-deploy
+            #   properties:
+            #     title: Deploy to Netlify
+            - id: tutorial-next-steps
+              type: MenuLink
+              pageId: tutorial-next-steps
+              properties:
+                title: Next steps
     - id: concepts
       type: MenuGroup
       properties:
