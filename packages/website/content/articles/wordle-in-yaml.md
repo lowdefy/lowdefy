@@ -1,6 +1,6 @@
 ---
-title: 'Wordle in YAML (and 23 Lines of JavaScript)'
-subtitle: 'YAML did everything except the colouring. JavaScript did that, in 23 lines.'
+title: 'Wordle in YAML (and 22 Lines of JavaScript)'
+subtitle: 'YAML did everything except the colouring. JavaScript did that, in 22 lines.'
 authorId: 'ioannis'
 publishedAt: '2026-05-18'
 readTimeMinutes: 12
@@ -15,9 +15,10 @@ Most config-first apps are data-driven: forms, dashboards, and CRUD apps. Wordle
 
 I rebuilt it in [Lowdefy](https://lowdefy.com) v5 to find out where YAML stops being the clearer choice. The answer turned out to be one algorithm.
 
-**23 lines of JavaScript. No React component written.**
+**22 lines of JavaScript. No React component written.**
 
 ![Demo of Wordle running in Lowdefy](/images/articles/wordle-yaml.gif)
+_Full source on [GitHub](https://github.com/Yianni99/lowdefy-wordle)._
 
 Lowdefy is a config-first web framework. Pages, blocks, actions, and operators are all defined in YAML. v5 added keyboard shortcuts as a one-line property on any event. Keyboard input in this build depends on it. More on v5 in the [launch post](https://lowdefy.com/articles/lowdefy-5-whats-new).
 
@@ -70,16 +71,7 @@ The render is two nested `List` blocks with the tile body inline:
           layout:
             flex: 0 0 auto
           style:
-            width: 60
-            height: 60
-            border: '2px solid #d3d6da'
-            borderRadius: 4
-            display: flex
-            alignItems: center
-            justifyContent: center
-            fontSize: 32
-            fontWeight: 700
-            textTransform: uppercase
+            # ... static styles (60×60, border, centered text)
             backgroundColor:
               _state: colors.$.$.bg
             color:
@@ -118,11 +110,11 @@ The render is two nested `List` blocks with the tile body inline:
 
 Three things are going on here.
 
-**Block IDs encode the iteration shape.** `board.$.cells.$.tile` reads as: render the tile for each cell in each row of `state.board`. The data path each tile is bound to is `state.board[row].cells[col]`. The `$` placeholders are substituted with array indices at render time. A `List` block looks up state at its own block ID, treats it as an array, and renders one set of children per item.
+**Block IDs encode the iteration shape.** `board.$.cells.$.tile` reads as: render the tile for each cell in each row of `state.board`. Each tile binds to the data path `state.board[row].cells[col]`. Lowdefy substitutes the `$` placeholders with array indices at render time. A `List` block looks up state at its own block ID, treats it as an array, and renders one set of children per item.
 
 **`_index` gives the coordinates.** Inside the deepest tile, `_index: 0` returns the outer (row) index, `_index: 1` returns the inner (col) index. These drive the conditional rendering: which letter to show depends on whether this row has been submitted yet.
 
-**State paths use `$.$` to walk into nested arrays.** `_state: colors.$.$.bg` resolves to `state.colors[row][col].bg`. Before a row is submitted, that path is undefined and `backgroundColor` is unset, leaving the tile transparent. After submission, it pulls the right hex code from the parallel colour array we'll build later in the article.
+**State paths use `$.$` to walk into nested arrays.** `_state: colors.$.$.bg` resolves to `state.colors[row][col].bg`. Until the user submits a row, that path is undefined and `backgroundColor` stays unset, leaving the tile transparent. After submission, it pulls the right hex code from the parallel colour array we get to later.
 
 One quirk: Lowdefy's `_state` doesn't index into strings. `state.guesses` is an array of 5-letter strings, and `state.guesses[row][col]` would be a single character in plain JavaScript, but `_state: guesses.$.$` returns null. Use `_string.charAt` to extract the character.
 
@@ -138,7 +130,7 @@ It's correct for dashboards and forms (the grid is doing real work there) but ge
 
 Wordle is keyboard-first. You type letters, you press Enter, you press Backspace. In React, that's a `useEffect` + `keydown` listener, with focus handling once you also have text inputs.
 
-In Lowdefy v5, you put `shortcut: q` on a button's click event. That's the whole story.
+In Lowdefy v5, you put `shortcut: q` on a button's click event to bind the letter Q. That's the whole story. The letter button uses a build-time `_var` to substitute each letter:
 
 ```yaml
 # pages/wordle/components/letter.yaml
@@ -159,22 +151,18 @@ events:
     try:
       - id: append_letter
         type: SetState
+        skip:
+          _or:
+            - _gte:
+                - _string.length:
+                    _state: currentGuess
+                - 5
+            - _state: gameOver
         params:
-          _if:
-            test:
-              _and:
-                - _lt:
-                    - _string.length:
-                        _state: currentGuess
-                    - 5
-                - _not:
-                    _state: gameOver
-            then:
-              currentGuess:
-                _string.concat:
-                  - _state: currentGuess
-                  - _var: letter
-            else: {}
+          currentGuess:
+            _string.concat:
+              - _state: currentGuess
+              - _var: letter
 ```
 
 The same component renders a clickable button and binds the keyboard shortcut. One config path, two input methods. 26 refs in the page (one per letter), and the on-screen keyboard _is_ the physical keyboard. They aren't wired together. They're the same thing.
@@ -189,7 +177,7 @@ The board worked as a nested `List` because the tiles are pure render: coordinat
 
 It doesn't work. Here's why.
 
-`shortcut:` is validated at build time, and the validator wants a string literal. The framework needs to wire keyboard shortcuts during app startup; it can't bind a key to a value that isn't computed yet.
+Lowdefy validates `shortcut:` at build time, and the validator wants a string literal. The framework needs to wire keyboard shortcuts during app startup; it can't bind a key to a value that isn't computed yet.
 
 `_var` substitutes at build time. The build resolves a ref like:
 
@@ -200,7 +188,7 @@ _ref:
     letter: q
 ```
 
-The `letter` placeholder is replaced with the literal `q` before the schema validator runs. The validator sees a string. Build passes.
+The build replaces the `letter` placeholder with the literal `q` before the schema validator runs. The validator sees a string. Build passes.
 
 `_state` resolves at runtime. `shortcut: { _state: 'kb_keys.$.letter' }` is still an unresolved operator at build time. The validator sees an object, not a string. Build fails.
 
@@ -259,9 +247,9 @@ _get:
 
 In most config systems, `_ref` (or its equivalent) is for components and pages: stamp out a block, give it some props, move on. Lowdefy's `_ref` works on any YAML node. The whole file is one operator expression (a `_get` from a list, with the key chosen by `_random`), and the value at the call site is whatever that expression evaluates to. No block, no UI, only a value.
 
-The same `_ref` is used inside the reset action, so a new game gets a new word without duplicating the list.
+The same `_ref` runs inside the reset action, so a new game gets a new word without duplicating the list.
 
-When the user presses Enter with a 5-letter guess, five of those fields update at once: append the guess, append the colours, clear `currentGuess`, set `won`, set `gameOver`. The cleanest way to express that turned out to be a single `_if` returning either an object of changes or an empty object:
+When the user presses Enter with a 5-letter guess, five of those fields update at once: append the guess, append the colours, clear `currentGuess`, set `won`, set `gameOver`. The cleanest way to express that is a `skip:` on the action itself. When its test evaluates true, the action doesn't run at all; otherwise the writes happen unconditionally:
 
 ```yaml
 events:
@@ -270,51 +258,70 @@ events:
     try:
       - id: submit_guess
         type: SetState
+        skip:
+          _ne:
+            - _string.length:
+                _state: currentGuess
+            - 5
         params:
-          _if:
-            test:
-              _eq:
-                - _string.length:
-                    _state: currentGuess
-                - 5
-            then:
-              guesses:
-                _array.concat:
-                  - _state: guesses
-                  - - _state: currentGuess
-              colors:
-                _array.concat:
-                  - _state: colors
-                  - - _js:
-                        fn: |
-                          # ... see next section
-                        args:
-                          guess:
-                            _state: currentGuess
-                          target:
-                            _state: target
-              currentGuess: ''
-              won:
-                _eq:
-                  - _state: currentGuess
-                  - _state: target
-              gameOver:
-                _or:
-                  - _eq:
-                      - _state: currentGuess
-                      - _state: target
-                  - _gte:
-                      - _sum:
-                          - _array.length:
-                              _state: guesses
-                          - 1
-                      - 6
-            else: {}
+          guesses: # ... append current guess
+          colors:
+            _array.concat:
+              - _state: colors
+              - - _js:
+                    fn: |
+                      # ... see next section
+                    args:
+                      guess:
+                        _state: currentGuess
+                      target:
+                        _state: target
+          currentGuess: ''
+          won: # ... _eq currentGuess and target
+          gameOver: # ... won OR 6 guesses played
 ```
 
-When the guess isn't five letters, `SetState` gets an empty object, a no-op. Five state writes wrapped in one condition, no scattered `if` checks across the action.
+When the guess isn't five letters, the action skips entirely: no writes, and crucially the `_js` inside `colors:` never evaluates. That matters because Lowdefy operators evaluate eagerly: wrapping params in `_if + else: {}` would still call the `_js` on every keystroke. `skip:` short-circuits the action before params evaluate. Five state writes guarded by one `skip:`, no conditional logic threading through the writes themselves.
 
-The same pattern appears in the Backspace action (skip if game over) and the letter-append action (skip if game over or row is full). Three actions, one shape.
+The same pattern appears in the `append_letter` action (skip if game over or row is full, shown earlier in `letter.yaml`) and the Backspace action (skip if game over):
+
+```yaml
+- id: backspace
+  type: SetState
+  skip:
+    _state: gameOver
+  params:
+    currentGuess: # ... slice last character
+```
+
+Three actions, one shape.
+
+### Eager evaluation
+
+Lowdefy evaluates both branches of an `_if`; only the result gets selected. `_if` works in the board section above because picking which letter renders in a tile is a pure data lookup. Both branches evaluate freely, the cost is zero. Inside an action's params with a `_js` call, that same eagerness would run the function on every keystroke. `skip:` short-circuits at a layer that operator-level conditionals can't reach.
+
+Written with `_if`, the `_js` runs on every keystroke:
+
+```yaml
+- id: submit_guess
+  type: SetState
+  params:
+    colors:
+      _if:
+        test:
+          _eq:
+            - _string.length:
+                _state: currentGuess
+            - 5
+        then:
+          _array.concat:
+            - _state: colors
+            - - _js: # ... colour function
+        else:
+          _state: colors
+```
+
+If you've worked with React's "everything is JS" mental model, this is the shift: result selection is lazy, evaluation isn't.
 
 ---
 
@@ -332,7 +339,7 @@ pass 2: for each not-yet-green position, if guess[i] is in remaining target,
 
 Two short passes. One mutable array.
 
-I tried writing it in Lowdefy operators. It's possible. It's also miserable. The mutable "remaining" array becomes an `_array.reduce` threading an accumulator through each position, with `_function` callbacks rebuilding `labels` and `remaining` at every step because operators don't mutate. Two reduces stacked for the two passes. 50 lines of operators where 23 lines of JavaScript would do.
+I tried writing it in Lowdefy operators. It's possible. It's also miserable. The mutable "remaining" array becomes an `_array.reduce` threading an accumulator through each position, with `_function` callbacks rebuilding `labels` and `remaining` at every step because operators don't mutate. Two reduces stacked for the two passes. 50 lines of operators where 22 lines of JavaScript would do.
 
 So I dropped into JavaScript. Lowdefy's `_js` operator takes a function source string and a set of args, runs the function client-side, and returns whatever the function returns. The build hashes the function source and registers it; the runtime looks it up and executes it.
 
@@ -340,7 +347,6 @@ So I dropped into JavaScript. Lowdefy's `_js` operator takes a function source s
 _js:
   fn: |
     const { guess, target } = args;
-    if (!guess || guess.length !== 5) return [];
     const g = guess.toLowerCase();
     const t = target.toLowerCase();
     const labels = Array(5).fill('absent');
@@ -369,25 +375,17 @@ _js:
       _state: target
 ```
 
-23 lines, palette included. The function returns an array of colour objects. The surrounding `_array.concat` appends that array to `state.colors`. Each tile reads its colour from `state.colors[row][col]` via the `_state: colors.$.$.bg` path we saw in the board section. Nothing else in the YAML changes.
+22 lines, palette included. The function returns an array of colour objects. The surrounding `_array.concat` appends that array to `state.colors`. Each tile reads its colour from `state.colors[row][col]` via the `_state: colors.$.$.bg` path we saw in the board section. Nothing else in the YAML changes.
 
 This is what `_js` is for. The colouring algorithm _is_ expressible in operators (`_array.reduce`, `_function`, an accumulator threaded through two passes), but the operator version reads worse than the JavaScript at every line of it. `_js` makes the choice about clarity, not necessity. The JavaScript doesn't know anything about Lowdefy. It's a pure function. Takes args, returns a value. Testable in isolation with vitest. There are no exports, no hooks, no wrapper component.
 
-The seam between config and code is what people want to know about a config-first framework. How readable each side is on its own. How clean the boundary between them. In Lowdefy v5, the boundary is a function, registered through one operator. The 23 lines that handle Wordle's hardest piece are exactly the 23 lines you'd write in plain JavaScript.
-
----
-
-## Eager evaluation
-
-**`_if` doesn't short-circuit.** Lowdefy operators evaluate eagerly. Both branches of an `_if` evaluate; only the result is selected from the evaluated values. For pure data lookups this never matters. For an `_if` whose `then` branch contains a `_js` call, the `_js` runs even when the `then` isn't selected. The fix is one defensive line at the top of the JavaScript: `if (!guess || guess.length !== 5) return [];`. Without it, premature Enter presses crash the function with "cannot read property of undefined."
-
-If you've worked with React's "everything is JS" mental model, this is a shift. Result selection is lazy. Evaluation isn't.
+The seam between config and code is what people want to know about a config-first framework. How readable each side is on its own. How clean the boundary between them. In Lowdefy v5, the boundary is a function, registered through one operator. The 22 lines that handle Wordle's hardest piece are exactly the 22 lines you'd write in plain JavaScript.
 
 ---
 
 ## Closing
 
-**23 lines of JavaScript. The rest, YAML.** A working Wordle clone, with on-screen and physical keyboard input, colour-coded feedback respecting the double-letter rule, win/lose detection, a reset button bound to Escape, and a status display. No React component written. No manual `keydown` listener.
+**22 lines of JavaScript. The rest, YAML.** A working Wordle clone, with on-screen and physical keyboard input, colour-coded feedback respecting the double-letter rule, win/lose detection, a reset button bound to Escape, and a status display. No React component written. No manual `keydown` listener.
 
 The point of this build isn't that you should ship games in YAML. It's that the boundary between "config can do this" and "you need to write code" is narrow and honest. Most of the build is paste-and-go YAML. The JavaScript handles what doesn't read well in operators.
 
