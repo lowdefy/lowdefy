@@ -26,6 +26,15 @@ function generateManifest({ buildDir = '.lowdefy' }) {
   }
 
   const types = JSON.parse(fs.readFileSync(typesPath, 'utf-8'));
+
+  // blockMetas tells us which block types iterate their slot children (category === 'list').
+  // Missing file is non-fatal: older builds keep working, list children just don't get the
+  // .$. prefix applied.
+  const blockMetasPath = path.join(buildDir, 'plugins/blockMetas.json');
+  const blockMetas = fs.existsSync(blockMetasPath)
+    ? JSON.parse(fs.readFileSync(blockMetasPath, 'utf-8'))
+    : {};
+
   const pagesDir = path.join(buildDir, 'pages');
 
   const manifest = { pages: {} };
@@ -51,6 +60,7 @@ function generateManifest({ buildDir = '.lowdefy' }) {
           manifest.pages[pageId] = extractBlockMap({
             pageConfig,
             typesBlocks: types.blocks ?? {},
+            blockMetas,
           });
         }
       }

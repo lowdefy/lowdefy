@@ -26,6 +26,7 @@ import { setUserCookie, clearUserCookie } from '../core/userCookie.js';
 import { get, type } from '@lowdefy/helpers';
 
 import createBlockMethodProxy from './createBlockMethodProxy.js';
+import resolveTemplateId from './resolveTemplateId.js';
 
 function createPageManager({ page, manifest, helperRegistry, mockManager }) {
   let currentBlockMap = null;
@@ -35,6 +36,87 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
     if (!currentBlockMap) {
       throw new Error('Call goto() before accessing blocks');
     }
+  }
+
+  // Block locator - ldf.block('id').do.*/expect.*/locator()/state()/validation()
+  // List children: pass the concrete runtime blockId (e.g. `legal_rows.0.toggle`) and we
+  // fall back to the templated entry (`legal_rows.$.toggle`) for the type/helper. The
+  // concrete blockId still flows into each helper's locator(page, blockId) so the DOM
+  // selector targets the right row.
+  function block(blockId) {
+    ensurePageLoaded();
+    let blockInfo = currentBlockMap[blockId];
+    if (!blockInfo) {
+      const templateId = resolveTemplateId(blockId);
+      if (templateId !== blockId) {
+        blockInfo = currentBlockMap[templateId];
+      }
+    }
+    if (!blockInfo) {
+      const available = Object.keys(currentBlockMap).join(', ');
+      throw new Error(
+        `Block "${blockId}" not found on page. Available blocks: ${available || '(none)'}`
+      );
+    }
+
+    return {
+      do: createBlockMethodProxy({ page, blockId, blockInfo, helperRegistry, mode: 'do' }),
+      expect: createBlockMethodProxy({
+        page,
+        blockId,
+        blockInfo,
+        helperRegistry,
+        mode: 'expect',
+      }),
+      locator: () => getBlock(page, blockId),
+      state: () => getBlockState(page, { blockId }),
+      validation: () => getValidation(page, blockId),
+    };
+  }
+
+  // List locator - ldf.list('id') for ergonomic addressing of list children.
+  //   .count()                  → number of items currently in state
+  //   .row(i).block('childId')  → synchronous, positional access
+  //   .rowBy('_id', 'bbbee')    → async; resolves to a row whose block(...) is sync
+  //   .rowWhere(item => ...)    → async; same shape as rowBy
+  // All paths delegate to block(`${listId}.${index}.${childId}`), so the templated
+  // manifest lookup above takes over from there.
+  function list(listId) {
+    ensurePageLoaded();
+
+    const readItems = async () => {
+      const state = await getState(page);
+      const items = get(state, listId);
+      if (!Array.isArray(items)) {
+        throw new Error(
+          `ldf.list("${listId}"): state value is not an array (got ${
+            items === undefined ? 'undefined' : typeof items
+          }). Make sure a Request has populated the list state before reading rows.`
+        );
+      }
+      return items;
+    };
+
+    const rowAt = (index) => ({
+      block: (childId) => block(`${listId}.${index}.${childId}`),
+    });
+
+    const findRow = async (predicate, describe) => {
+      const items = await readItems();
+      const index = items.findIndex(predicate);
+      if (index < 0) {
+        throw new Error(`ldf.list("${listId}"): no row matched ${describe}.`);
+      }
+      return rowAt(index);
+    };
+
+    return {
+      count: async () => (await readItems()).length,
+      row: (index) => rowAt(index),
+      rowBy: (key, value) =>
+        findRow((item) => item != null && item[key] === value, `${key}=${JSON.stringify(value)}`),
+      rowWhere: (predicate) => findRow(predicate, 'predicate'),
+    };
   }
 
   return {
@@ -74,31 +156,9 @@ function createPageManager({ page, manifest, helperRegistry, mockManager }) {
       return currentPageId;
     },
 
-    // Block locator - ldf.block('id').do.*/expect.*/locator()/state()/validation()
-    block(blockId) {
-      ensurePageLoaded();
-      const blockInfo = currentBlockMap[blockId];
-      if (!blockInfo) {
-        const available = Object.keys(currentBlockMap).join(', ');
-        throw new Error(
-          `Block "${blockId}" not found on page. Available blocks: ${available || '(none)'}`
-        );
-      }
+    block,
 
-      return {
-        do: createBlockMethodProxy({ page, blockId, blockInfo, helperRegistry, mode: 'do' }),
-        expect: createBlockMethodProxy({
-          page,
-          blockId,
-          blockInfo,
-          helperRegistry,
-          mode: 'expect',
-        }),
-        locator: () => getBlock(page, blockId),
-        state: () => getBlockState(page, { blockId }),
-        validation: () => getValidation(page, blockId),
-      };
-    },
+    list,
 
     // Request locator - ldf.request('id').expect.*/response()/state()
     request(requestId) {
