@@ -79,12 +79,12 @@ const PageSidebarLayout = ({
     registerDarkModeMethod(methods);
     methods.registerMethod('toggleSiderOpen', () => {
       const next = !openSiderState;
-      methods._toggleSiderOpen({ open: next });
+      methods._setSiderOpen({ open: next });
       setSiderOpen(next);
       writeSiderState({ properties, open: next });
     });
     methods.registerMethod('setSiderOpen', ({ open }) => {
-      methods._toggleSiderOpen({ open });
+      methods._setSiderOpen({ open });
       setSiderOpen(open);
       writeSiderState({ properties, open });
     });
