@@ -29,6 +29,9 @@ async function getPluginDefinitions({ directories }) {
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yml'));
   }
+  if (!lowdefyYaml) {
+    return [];
+  }
   const lowdefy = YAML.parse(lowdefyYaml);
   return get(lowdefy, 'plugins', { default: [] });
 }
@@ -43,6 +46,7 @@ async function createCustomPluginTypesMap({ directories }) {
       events: {},
       providers: {},
     },
+    blockMetas: {},
     blocks: {},
     connections: {},
     icons: {},
@@ -58,7 +62,7 @@ async function createCustomPluginTypesMap({ directories }) {
   for (const plugin of pluginDefinitions) {
     const types = require(`${plugin.name}/types`);
     createPluginTypesMap({
-      packageTypes: types,
+      packageTypes: types.default ?? types,
       typesMap: customTypesMap,
       packageName: plugin.name,
       version: plugin.version,

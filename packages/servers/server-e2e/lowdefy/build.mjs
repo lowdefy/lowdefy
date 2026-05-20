@@ -20,6 +20,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import build from '@lowdefy/build';
+import { BuildError } from '@lowdefy/errors';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
@@ -39,15 +40,10 @@ async function run() {
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
 
-  let logger;
-  logger = createNodeLogger({
+  const logger = createNodeLogger({
     name: 'lowdefy_build',
     level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
     base: { pid: undefined, hostname: undefined },
-    mixin: (context, level) => ({
-      ...context,
-      print: context.print ?? logger.levels.labels[level],
-    }),
   });
 
   await build({
@@ -59,8 +55,7 @@ async function run() {
 }
 
 run().catch((error) => {
-  // If error is already formatted (from error collection), just show the message
-  if (error.isFormatted || error.hideStack) {
+  if (error instanceof BuildError) {
     console.error(error.message);
     process.exit(1);
   }

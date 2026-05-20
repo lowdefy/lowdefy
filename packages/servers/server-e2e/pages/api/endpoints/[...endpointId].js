@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { callEndpoint } from '@lowdefy/api';
 
-import apiWrapper from '../../../../lib/server/apiWrapper.js';
+import apiWrapper from '../../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const { pageId, requestId } = req.query;
-  const { actionId, blockId, payload } = req.body;
-  context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
-  const response = await callRequest(context, { blockId, pageId, payload, requestId });
+  const endpointId = req.query.endpointId.join('/');
+  const { blockId, payload, pageId } = req.body;
+  context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
+  const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
   res.status(200).json(response);
 }
 

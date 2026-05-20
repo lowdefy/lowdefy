@@ -14,38 +14,25 @@
   limitations under the License.
 */
 
-import { logClientError } from '@lowdefy/api';
+import { callRequest } from '@lowdefy/api';
 
-import apiWrapper from '../../lib/server/apiWrapper.js';
+import apiWrapper from '../../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-
-  const origin = req.headers.origin;
-  if (!origin) {
-    res.status(403).json({ error: 'Forbidden' });
+  const segments = req.query.path;
+  if (!Array.isArray(segments) || segments.length < 2) {
+    res.status(400).json({ error: 'Invalid request path' });
     return;
   }
-  try {
-    if (new URL(origin).host !== req.headers.host) {
-      res.status(403).json({ error: 'Forbidden' });
-      return;
-    }
-  } catch {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
-  }
-
-  // Strip received from payload — prod doesn't need it for schema validation
-  if (req.body?.['~e']) {
-    delete req.body['~e'].received;
-  }
-  // eslint-disable-next-line no-unused-vars
-  const { error, ...response } = await logClientError(context, req.body);
-
-  res.status(200).json({ success: true });
+  const requestId = segments[segments.length - 1];
+  const pageId = segments.slice(0, -1).join('/');
+  const { actionId, blockId, payload } = req.body;
+  context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
+  const response = await callRequest(context, { blockId, pageId, payload, requestId });
+  res.status(200).json(response);
 }
 
 export default apiWrapper(handler);

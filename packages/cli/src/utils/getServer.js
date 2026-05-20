@@ -32,9 +32,14 @@ async function getServer({ context, packageName, directory }) {
 
   if (serverExists) {
     const serverPackageConfig = JSON.parse(await readFile(path.join(directory, 'package.json')));
-    if (serverPackageConfig.version !== context.lowdefyVersion) {
+    if (
+      serverPackageConfig.version !== context.lowdefyVersion ||
+      serverPackageConfig.name !== packageName
+    ) {
       fetchServer = true;
-      context.logger.warn(`Removing ${packageName} with version ${serverPackageConfig.version}`);
+      context.logger.warn(
+        `Removing ${serverPackageConfig.name}@${serverPackageConfig.version}; installing ${packageName}@${context.lowdefyVersion}`
+      );
       await cleanDirectory(directory);
     }
   }

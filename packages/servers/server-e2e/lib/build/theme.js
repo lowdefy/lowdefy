@@ -13,20 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
+import raw from '../../build/theme.json';
 
-import { callEndpoint } from '@lowdefy/api';
-
-import apiWrapper from '../../../lib/server/apiWrapper.js';
-
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
-  }
-  const { endpointId } = req.query;
-  const { blockId, payload, pageId } = req.body;
-  context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
-  const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
-  res.status(200).json(response);
-}
-
-export default apiWrapper(handler);
+export default serializer.deserialize(raw);

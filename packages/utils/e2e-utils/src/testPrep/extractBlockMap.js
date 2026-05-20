@@ -21,39 +21,53 @@ function getBlocksArray(container) {
   return [];
 }
 
-function extractBlockMap({ pageConfig, typesBlocks }) {
+function extractBlockMap({ pageConfig, typesBlocks, blockMetas = {} }) {
   const blockMap = {};
 
-  function traverse(obj) {
+  function traverse(obj, prefix) {
     if (!obj || typeof obj !== 'object') return;
 
-    // If this object has blockId and type, record it
+    let nextPrefix = prefix;
+
+    // If this object has blockId and type, record it under prefix + blockId.
+    // List-category blocks (category: 'list' on their meta) iterate their slot children
+    // at runtime under {blockId}.{index}.{childId}, so we record children under the
+    // template id `{blockId}.$.{childId}` and downstream resolves numeric runtime
+    // segments back to `$` for lookup.
     if (obj.blockId && obj.type) {
       const packageName = typesBlocks[obj.type]?.package;
       if (packageName) {
-        blockMap[obj.blockId] = {
+        blockMap[`${prefix}${obj.blockId}`] = {
           type: obj.type,
           helper: `${packageName}/e2e`,
         };
       }
+      if (blockMetas[obj.type]?.category === 'list') {
+        nextPrefix = `${prefix}${obj.blockId}.$.`;
+      }
+    }
+
+    // Traverse slots - slot.blocks is { "~arr": [...blocks...] }
+    if (obj.slots) {
+      Object.values(obj.slots).forEach((slot) => {
+        getBlocksArray(slot.blocks).forEach((block) => traverse(block, nextPrefix));
+      });
     }
 
     // Traverse areas - area.blocks is { "~arr": [...blocks...] }
     if (obj.areas) {
       Object.values(obj.areas).forEach((area) => {
-        const blocks = getBlocksArray(area.blocks);
-        blocks.forEach((block) => traverse(block));
+        getBlocksArray(area.blocks).forEach((block) => traverse(block, nextPrefix));
       });
     }
 
     // Traverse direct blocks array (may also be { "~arr": [...] })
     if (obj.blocks) {
-      const blocks = getBlocksArray(obj.blocks);
-      blocks.forEach((block) => traverse(block));
+      getBlocksArray(obj.blocks).forEach((block) => traverse(block, nextPrefix));
     }
   }
 
-  traverse(pageConfig);
+  traverse(pageConfig, '');
   return blockMap;
 }
 

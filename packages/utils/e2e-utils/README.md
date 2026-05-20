@@ -89,6 +89,44 @@ test('validates required fields', async ({ ldf }) => {
 });
 ```
 
+### Testing List Children (`ldf.list()` / `ldf.block()` with indexed ids)
+
+List blocks render their slot children with runtime-prefixed ids
+(`legal_rows.0.toggle`, `legal_rows.1.toggle`, ...). You can pass these indexed ids
+straight into `ldf.block()` — the manifest stores `legal_rows.$.toggle` and the runtime
+resolves the numeric segment automatically:
+
+```javascript
+await ldf.block('legal_rows.0.toggle').do.toggle();
+await ldf.block('legal_rows.0.toggle').expect.checked();
+```
+
+For ergonomic row addressing, use `ldf.list(listId)`:
+
+```javascript
+// Number of rows in state
+const count = await ldf.list('legal_rows').count();
+
+// Positional access (synchronous)
+await ldf.list('legal_rows').row(0).block('toggle').do.toggle();
+
+// By key (async — reads list state to find the index)
+const row = await ldf.list('legal_rows').rowBy('_id', 'bbbee');
+await row.block('toggle').do.toggle();
+await row.block('toggle').expect.checked();
+
+// By predicate (async)
+const archived = await ldf.list('legal_rows').rowWhere((it) => it.archived === true);
+await archived.block('restore_btn').do.click();
+```
+
+Nested lists work the same way — every level of nesting adds another numeric
+segment, all resolved through one templated lookup:
+
+```javascript
+await ldf.block('outer.0.inner.2.button').do.click();
+```
+
 ### State (`ldf.state()`)
 
 ```javascript
