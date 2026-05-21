@@ -131,7 +131,7 @@ function buildCssKeysTable(cssKeys) {
 
 function buildSlotsTable(slots) {
   if (slots === false)
-    return 'Slots are **dynamic** — defined by properties (e.g. `tabs`, `panels`). See the Properties table.';
+    return 'Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.';
   if (!slots) return 'No slots defined.';
   const entries = Array.isArray(slots) ? slots.map((key) => [key, '']) : Object.entries(slots);
   if (entries.length === 0) return 'No slots defined.';

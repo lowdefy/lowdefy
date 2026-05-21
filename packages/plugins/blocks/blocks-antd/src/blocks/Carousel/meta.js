@@ -149,6 +149,21 @@ export default {
         default: false,
         description: 'Reverses the slide order.',
       },
+      slides: {
+        type: 'array',
+        description:
+          'Optional list of slides for explicit ordering and metadata. Each entry must have a `key` matching a slot name. When omitted, every defined slot becomes a slide, ordered alphabetically by key. Each entry is passed to `afterChange` and `beforeChange` events as `event.current` and `event.next` — any extra fields on the entry (e.g. a title or analytics id) are available there.',
+        items: {
+          type: 'object',
+          required: ['key'],
+          properties: {
+            key: {
+              type: 'string',
+              description: 'Slot key for this slide.',
+            },
+          },
+        },
+      },
       slidesPerRow: {
         type: 'integer',
         default: 1,
