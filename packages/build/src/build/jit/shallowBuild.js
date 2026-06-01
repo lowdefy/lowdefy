@@ -27,6 +27,7 @@ import tryBuildStep from '../../utils/tryBuildStep.js';
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
 import buildApp from '../buildApp.js';
+import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
@@ -76,6 +77,11 @@ async function shallowBuild(options) {
   try {
     context = createContext(options);
 
+    // Phase 0: Resolve root app metadata before any operator evaluation.
+    await buildAppMeta({ context });
+    // Surface bad root metadata before module operators evaluate against it.
+    logCollectedErrors(context);
+
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
 
@@ -122,6 +128,9 @@ async function shallowBuild(options) {
 
     // Build skeleton steps (everything except page content)
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    // appMeta is computed in Phase 0; attach it here (where buildApp used to
+    // create it) so the following addKeys pass keys it identically.
+    components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });

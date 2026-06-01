@@ -16,18 +16,7 @@
   limitations under the License.
 */
 
-import { execSync } from 'child_process';
 import { type } from '@lowdefy/helpers';
-
-function computeGitSha() {
-  const fromEnv = process.env.LOWDEFY_GIT_SHA?.trim();
-  if (fromEnv) return fromEnv;
-  try {
-    return execSync('git rev-parse HEAD').toString().trim();
-  } catch (_) {
-    return null;
-  }
-}
 
 function buildApp({ components }) {
   if (type.isNone(components.app)) {
@@ -45,15 +34,6 @@ function buildApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
-  components.appMeta = {
-    slug: components.slug ?? null,
-    name: components.name ?? null,
-    version: components.version ?? null,
-    description: components.description ?? null,
-    license: components.license ?? null,
-    lowdefyVersion: components.lowdefy ?? null,
-    gitSha: computeGitSha(),
-  };
   return components;
 }
 

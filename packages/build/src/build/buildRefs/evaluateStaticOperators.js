@@ -32,6 +32,7 @@ function evaluateStaticOperators({ context, input, refDef }) {
     operators,
     operatorPrefix: '_',
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     typeNames,
   });

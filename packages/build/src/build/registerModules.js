@@ -131,6 +131,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
       if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
@@ -239,6 +240,7 @@ async function resolveFullManifest({ entryId, context }) {
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
       if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';

@@ -55,6 +55,7 @@ async function parseLowdefyYaml({ context }) {
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (path) => {
       // Defer entry vars and connections: they may contain cross-module
@@ -88,6 +89,7 @@ async function resolveEntryConfig({ entry, context }) {
       refChain: new Set(lowdefyYamlRefDef.path ? [lowdefyYamlRefDef.path] : []),
       operators,
       env: process.env,
+      lowdefyApp: context.appMeta,
       dynamicIdentifiers,
     });
   }

@@ -1701,6 +1701,9 @@ importers:
 
   packages/plugins/operators/operators-js:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 5.3.0
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.3.0
         version: link:../../../utils/helpers

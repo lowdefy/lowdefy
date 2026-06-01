@@ -128,6 +128,10 @@ function getBuildContext(buildDirectory, configDirectory) {
     Object.assign(cachedBuildContext.modules, modules);
   }
 
+  // Restore app metadata so JIT page builds resolve _app / _build.app against
+  // the same metadata the skeleton build computed.
+  cachedBuildContext.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+
   // Use the frozen icon imports from the initial build for JIT detection.
   // This represents what's actually in the Next.js bundle — not what shallowBuild
   // discovers on subsequent rebuilds (those icons aren't bundled yet).

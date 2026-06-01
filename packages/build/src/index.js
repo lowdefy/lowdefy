@@ -28,6 +28,7 @@ import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildAgents from './build/buildAgents.js';
 import buildApp from './build/buildApp.js';
+import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
@@ -75,6 +76,14 @@ async function build(options) {
   try {
     context = createContext(options);
 
+    // Phase 0: Resolve root app metadata into context.appMeta before any
+    // operator evaluation. _app / _build.app read this, and buildModuleDefs
+    // (next) evaluates operators on root config, consumer vars, and connections.
+    await buildAppMeta({ context });
+    // Surface bad root metadata (unsupported operators, failed _build.*) now,
+    // before module operators evaluate against it — avoids cascade errors.
+    logCollectedErrors(context);
+
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
     await buildModuleDefs({ context });
@@ -108,6 +117,9 @@ async function build(options) {
     logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    // appMeta is computed in Phase 0; attach it here (where buildApp used to
+    // create it) so the following addKeys pass keys it identically.
+    components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
