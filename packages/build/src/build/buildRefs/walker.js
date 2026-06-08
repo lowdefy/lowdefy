@@ -42,6 +42,8 @@ class WalkContext {
     path,
     currentFile,
     refChain,
+    deferModuleRefs,
+    entryResolveChain,
     operators,
     env,
     lowdefyApp,
@@ -59,6 +61,8 @@ class WalkContext {
     this.path = path;
     this.currentFile = currentFile;
     this.refChain = refChain;
+    this.deferModuleRefs = deferModuleRefs ?? false;
+    this.entryResolveChain = entryResolveChain ?? new Set();
     this.operators = operators;
     this.env = env;
     this.lowdefyApp = lowdefyApp;
@@ -79,6 +83,8 @@ class WalkContext {
       path: this.path ? `${this.path}.${segment}` : segment,
       currentFile: this.currentFile,
       refChain: this.refChain,
+      deferModuleRefs: this.deferModuleRefs,
+      entryResolveChain: this.entryResolveChain,
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
@@ -97,6 +103,7 @@ class WalkContext {
         newChain.add(key);
       }
     }
+    const newEntryResolveChain = new Set(this.entryResolveChain);
     return new WalkContext({
       buildContext: this.buildContext,
       refId,
@@ -109,6 +116,8 @@ class WalkContext {
       path: this.path,
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
+      deferModuleRefs: this.deferModuleRefs,
+      entryResolveChain: newEntryResolveChain,
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
