@@ -615,9 +615,8 @@ async function prepareRef(node, ctx) {
 async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
   const fromFile = referencedFrom ?? ctx.currentFile;
 
-  // Steps 8-16: File operations that can fail independently per ref.
-  // Errors are collected so the walker can continue processing sibling refs,
-  // allowing multiple errors to be reported at once.
+  // Errors here are collected (not thrown) so the walker can continue
+  // processing sibling refs and report multiple errors at once.
   try {
     // 8. Load content
     let content;
