@@ -66,6 +66,7 @@ function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
     consumerVars,
     varDefs,
     resolvedVarCache: {},
+    entryConfigState: overrides.entryConfigState ?? 'resolved',
     moduleDependencies: overrides.moduleDependencies ?? {},
     refDef:
       overrides.refDef ?? {

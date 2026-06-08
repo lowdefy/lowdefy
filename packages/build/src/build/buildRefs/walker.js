@@ -332,6 +332,7 @@ async function resolveVarDefault(rawDefault, moduleEntry, ctx) {
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
+    entryResolveChain: ctx.entryResolveChain,
     operators: ctx.operators,
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
@@ -355,12 +356,85 @@ async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
   return result;
 }
 
+function isDeferredSentinel(node) {
+  return type.isObject(node) && !type.isUndefined(node['~deferredModuleRef']);
+}
+
+// Returns the first ~deferredModuleRef sentinel found in node's subtree (node itself
+// or any descendant), else null. Detection is by direct property access since the
+// marker is non-enumerable.
+function findSentinelInSubtree(node) {
+  if (isDeferredSentinel(node)) return node;
+  if (type.isArray(node)) {
+    for (const item of node) {
+      const found = findSentinelInSubtree(item);
+      if (found) return found;
+    }
+  } else if (type.isObject(node)) {
+    for (const k of Object.keys(node)) {
+      const found = findSentinelInSubtree(node[k]);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+// Case 3 guard: walking `key`'s path through E's structural consumerVars, a true
+// value cycle exists iff an ANCESTOR on the path is a sentinel (the key's
+// visibility depends on unpulled content) or the value AT key has a sentinel
+// anywhere in its subtree. Either way → named-chain ConfigError. A miss with no
+// sentinel ancestor is a genuine miss (sentinel resolution replaces nodes in place
+// and can't add keys elsewhere) → caller falls back to the manifest default.
+function assertNoBlockingSentinel(key, moduleEntry, ctx) {
+  const parts = key.split('.');
+  let node = moduleEntry.consumerVars;
+  for (let i = 0; i < parts.length; i++) {
+    if (isDeferredSentinel(node)) {
+      throw entryConfigCycleError(node, key, moduleEntry, ctx);
+    }
+    if (!type.isObject(node)) return; // path runs into a non-object before key → genuine miss
+    node = node[parts[i]];
+  }
+  const sentinel = findSentinelInSubtree(node);
+  if (sentinel) {
+    throw entryConfigCycleError(sentinel, key, moduleEntry, ctx);
+  }
+}
+
+function entryConfigCycleError(sentinelNode, key, moduleEntry, ctx) {
+  const chain = [...ctx.entryResolveChain, moduleEntry.id].join(' → ');
+  const sourceFile = sentinelNode['~deferredFrom'];
+  return new ConfigError(
+    `Circular module entry vars: ${chain}.\n` +
+      `Var "${key}" of entry "${moduleEntry.id}" cannot be read while its ` +
+      `cross-module ref (${sourceFile}) is still resolving.`
+  );
+}
+
 // Core lazy var resolution with caching on the module entry.
 async function resolveEffectiveVar(key, moduleEntry, ctx) {
   if (Object.hasOwn(moduleEntry.resolvedVarCache, key)) {
     return moduleEntry.resolvedVarCache[key];
   }
 
+  // Demand-driven read path. If the owner entry's config is not yet resolved,
+  // either we're transitively inside its own finalize (case 3: answer from the
+  // structural snapshot, or error on a true cycle) or it just hasn't been
+  // resolved yet on this branch (case 2: resolve it now, whatever the modules: order).
+  if (moduleEntry.entryConfigState !== 'resolved') {
+    if (ctx.entryResolveChain.has(moduleEntry.id)) {
+      // CASE 3 — true re-entry. Read E's structural blob.
+      assertNoBlockingSentinel(key, moduleEntry, ctx); // throws the named-chain ConfigError if blocked
+      // sentinel-free → fall through to the resolved-path body below.
+    } else {
+      // CASE 2 — lazily resolve E (pass our chain so cycle detection crosses the
+      // ensure→finalize boundary), then fall through to the resolved-path body.
+      await ctx.buildContext.ensureEntryConfigResolved(moduleEntry, ctx.entryResolveChain);
+    }
+  }
+
+  // CASE 1 (resolved entry) AND the sentinel-free fall-through of cases 2 & 3:
+  // the existing consumer-value / namespace / default / null logic, then cache.
   const consumerValue = get(moduleEntry.consumerVars, key, { default: undefined });
   const varDef = getVarDef(moduleEntry.varDefs, key);
 
