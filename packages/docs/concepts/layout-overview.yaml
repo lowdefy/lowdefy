@@ -1456,7 +1456,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Menus
-            previous_page_id: menus
+            previous_page_title: Overlay
+            previous_page_id: overlay
             next_page_title: Secrets
             next_page_id: secrets

@@ -11,6 +11,7 @@
 - _ref: concepts/overview.yaml
 - _ref: concepts/lowdefy-schema.yaml
 - _ref: concepts/menus.yaml
+- _ref: concepts/overlay.yaml
 - _ref: concepts/references-and-templates.yaml
 - _ref: concepts/modules.yaml
 - _ref: concepts/module-authoring.yaml

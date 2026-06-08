@@ -176,5 +176,5 @@ _ref:
           vars:
             previous_page_title: Writing Modules
             previous_page_id: module-authoring
-            next_page_title: Layout
-            next_page_id: layout-overview
+            next_page_title: Overlay
+            next_page_id: overlay

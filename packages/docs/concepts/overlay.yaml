@@ -1,0 +1,81 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: overlay
+    pageTitle: Overlay
+    section: Concepts
+    filePath: concepts/overlay.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The `overlay` config prepends a list of blocks to **every page** in the app, so they render on all pages without being added to each page individually. This is useful for app-wide UI such as a floating support button, a notice banner, an analytics mount, or a developer-tools panel.
+
+            Overlay blocks are prepended to each page's blocks and are built exactly like normal page blocks — block ids are scoped per page, and their plugins, icons and operators are resolved as usual. The overlay is applied in both production builds (`lowdefy build`) and the development server (`lowdefy dev`).
+
+            The schema for the `overlay` object is:
+
+            - `blocks: object[]`: __Required__ - An array of [block](/blocks) objects to prepend to every page.
+            - `exclude: string[]`: An array of `pageId`s that should __not__ receive the overlay (for example a `login` or `404` page).
+            - `devOnly: boolean`: When `true`, the overlay is injected only by `lowdefy dev` and is left out of production builds (`lowdefy build`). Defaults to `false`. Use this for development-only UI you don't want shipped.
+
+            A single page can also opt out by setting `properties.overlay: false` on the page.
+
+            ###### Overlay example:
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            overlay:
+              exclude:
+                - login
+                - '404'
+              blocks:
+                - id: support_button
+                  type: FloatButton
+                  properties:
+                    icon: AiOutlineQuestion
+                    tooltip: Get help
+                  events:
+                    onClick:
+                      - id: open_help
+                        type: Link
+                        params:
+                          url: https://example.com/support
+                          newTab: true
+            ```
+
+            In the example above a help button is shown on every page except `login` and `404`. Because overlay blocks are built like any other block, give them ids that won't clash with a page's own blocks.
+
+            ###### Development-only overlay:
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            overlay:
+              devOnly: true
+              blocks:
+                - id: dev_tools_panel
+                  type: Box
+                  # ...development tooling, kept out of production builds...
+            ```
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Menus
+            previous_page_id: menus
+            next_page_title: Layout
+            next_page_id: layout-overview
