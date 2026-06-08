@@ -403,6 +403,16 @@ function assertNoBlockingSentinel(key, moduleEntry, ctx) {
   }
 }
 
+function moduleConnectionCycleError(targetEntry, connectionId, moduleEntry, ctx, configKey) {
+  const chain = [...ctx.entryResolveChain, targetEntry.id].join(' → ');
+  return new ConfigError(
+    `Circular module entry connections: ${chain}.\n` +
+      `Connection "${connectionId}" cannot be remapped from entry ` +
+      `"${moduleEntry?.id ?? '(app)'}" because entry "${targetEntry.id}" is still resolving.`,
+    { configKey }
+  );
+}
+
 function entryConfigCycleError(sentinelNode, key, moduleEntry, ctx) {
   const chain = [...ctx.entryResolveChain, moduleEntry.id].join(' → ');
   const sourceFile = sentinelNode['~deferredFrom'] ?? '<unknown file>';
@@ -497,7 +507,9 @@ function resolveModulePageId(arg, moduleEntry, context, configKey) {
 }
 
 // Resolve _module.connectionId
-function resolveModuleConnectionId(arg, moduleEntry, context, configKey) {
+async function resolveModuleConnectionId(arg, moduleEntry, ctx, configKey) {
+  const context = ctx.buildContext;
+
   if (type.isString(arg)) {
     if (!moduleEntry) {
       throw new ConfigError(
@@ -520,6 +532,12 @@ function resolveModuleConnectionId(arg, moduleEntry, context, configKey) {
       configKey,
       usage: `_module.connectionId { id: "${arg.id}", module: "${arg.module}" }`,
     });
+    // Cycle guard must be synchronous (before any await) to catch a true remap cycle
+    // before the target's in-flight finalizePromise could deadlock.
+    if (ctx.entryResolveChain.has(targetEntry.id)) {
+      throw moduleConnectionCycleError(targetEntry, arg.id, moduleEntry, ctx, configKey);
+    }
+    await context.ensureEntryConfigResolved(targetEntry, ctx.entryResolveChain);
     const targetRemapping = targetEntry.connections ?? {};
     if (targetRemapping[arg.id]) {
       return targetRemapping[arg.id];
@@ -587,7 +605,7 @@ function resolveModuleId(arg, moduleEntry, context, configKey) {
 }
 
 // Dispatch _module.*Id operators
-function resolveModuleIdOperator(node, ctx) {
+async function resolveModuleIdOperator(node, ctx) {
   const { moduleEntry } = ctx;
   const context = ctx.buildContext;
   const configKey = node['~k'];
@@ -596,7 +614,7 @@ function resolveModuleIdOperator(node, ctx) {
     return resolveModulePageId(node['_module.pageId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.connectionId'])) {
-    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, context, configKey);
+    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, ctx, configKey);
   }
   if (!type.isUndefined(node['_module.endpointId'])) {
     return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context, configKey);
