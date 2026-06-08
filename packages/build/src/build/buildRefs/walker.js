@@ -614,7 +614,18 @@ async function resolveModuleIdOperator(node, ctx) {
     return resolveModulePageId(node['_module.pageId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.connectionId'])) {
-    return resolveModuleConnectionId(node['_module.connectionId'], moduleEntry, ctx, configKey);
+    const connectionArg = node['_module.connectionId'];
+    // Stage 1 (deferModuleRefs) must not resolve the object form: it reads the
+    // TARGET entry's stage-2 connection remap table, which crosses a module
+    // boundary. Defer it unresolved into the structural blob so it resolves in
+    // stage 2 (finalize), where entryResolveChain is seeded and the cycle guard
+    // is armed — resolving here, with an empty chain, deadlocks a true remap
+    // cycle instead of erroring. The string form reads the current module's own
+    // remap and is left to resolve.
+    if (ctx.deferModuleRefs && type.isObject(connectionArg)) {
+      return node;
+    }
+    return resolveModuleConnectionId(connectionArg, moduleEntry, ctx, configKey);
   }
   if (!type.isUndefined(node['_module.endpointId'])) {
     return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context, configKey);
