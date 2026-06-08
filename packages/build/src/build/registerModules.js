@@ -64,10 +64,11 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
   }
 }
 
-function isRuntimeOperatorObject(value) {
-  if (!type.isObject(value)) return false;
+function getRuntimeOperatorKey(value) {
+  if (!type.isObject(value)) return null;
   const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
-  return nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_');
+  if (nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_')) return nonTildeKeys[0];
+  return null;
 }
 
 function suggestBuildOperator(operatorKey) {
@@ -84,8 +85,8 @@ function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '
       // A typed var must hold a concrete value — runtime operators are not allowed
       // regardless of whether they are static-foldable or dynamic. Suggest the
       // build-time equivalent so the user knows how to fix it.
-      if (isRuntimeOperatorObject(value)) {
-        const operatorKey = Object.keys(value).filter((k) => !k.startsWith('~'))[0];
+      const operatorKey = getRuntimeOperatorKey(value);
+      if (operatorKey) {
         throw new ConfigError(
           `Module "${entryId}" (${source}) var "${fullName}" is typed "${varDef.type}" ` +
             `but received a runtime operator "${operatorKey}". ` +
