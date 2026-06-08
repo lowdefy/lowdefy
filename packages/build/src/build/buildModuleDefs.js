@@ -19,7 +19,6 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './buildRefs/walker.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
@@ -67,10 +66,7 @@ async function parseLowdefyYaml({ context }) {
     },
   });
 
-  let config = await resolve(content, ctx);
-
-  config = evaluateStaticOperators({ context, input: config, refDef });
-
+  const config = await resolve(content, ctx);
   return config ?? {};
 }
 
@@ -94,18 +90,10 @@ async function resolveEntryConfig({ entry, context }) {
     });
   }
 
-  const refDef = lowdefyYamlRefDef;
-
-  let resolvedVars = await resolve(moduleEntry.consumerVars, makeAppLevelCtx());
-  resolvedVars = evaluateStaticOperators({ context, input: resolvedVars, refDef });
+  const resolvedVars = await resolve(moduleEntry.consumerVars, makeAppLevelCtx());
   moduleEntry.consumerVars = resolvedVars ?? {};
 
-  let resolvedConnections = await resolve(moduleEntry.connections, makeAppLevelCtx());
-  resolvedConnections = evaluateStaticOperators({
-    context,
-    input: resolvedConnections,
-    refDef,
-  });
+  const resolvedConnections = await resolve(moduleEntry.connections, makeAppLevelCtx());
   moduleEntry.connections = resolvedConnections ?? {};
 
   validateRequiredVars(moduleEntry.varDefs, moduleEntry.consumerVars, entry.id, entry.source);

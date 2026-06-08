@@ -388,7 +388,7 @@ pages:
   expect(context.modules['app'].consumerVars.contact_link).toBe('contacts/view');
 });
 
-test('buildModuleDefs resolves _env operator in entry vars (Phase 2.5 regression)', async () => {
+test('buildModuleDefs preserves runtime operators in entry vars (folded by Phase 3.5)', async () => {
   const previous = process.env.TEST_VAR_PHASE25;
   process.env.TEST_VAR_PHASE25 = 'env-value';
   try {
@@ -419,7 +419,10 @@ pages: []
 
     await buildModuleDefs({ context });
 
-    expect(context.modules['my-mod'].consumerVars.my_var).toBe('env-value');
+    // Runtime operators in entry vars are no longer folded during Phase 2.5.
+    // They flow through _module.var into manifests and are folded in Phase 3.5
+    // (precomputeRuntimeOperators on components after buildModules merges manifests).
+    expect(context.modules['my-mod'].consumerVars.my_var).toEqual({ _env: 'TEST_VAR_PHASE25' });
   } finally {
     if (previous === undefined) {
       delete process.env.TEST_VAR_PHASE25;

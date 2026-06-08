@@ -19,12 +19,12 @@ import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 
-import evaluateStaticOperators from './evaluateStaticOperators.js';
+import precomputeRuntimeOperators from './precomputeRuntimeOperators.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-// _app resolves at the `_` static prefix, exactly as evaluateStaticOperators
+// _app resolves at the `_` static prefix, exactly as precomputeRuntimeOperators
 // runs it during the build (sourcing lowdefyApp from context.appMeta).
 function makeContext(appMeta) {
   return {
@@ -52,7 +52,7 @@ function evaluateBuild(input, lowdefyApp, env = process.env) {
 
 describe('_app and _build.app resolve at build', () => {
   test('both names resolve slug to appMeta.slug when set', () => {
-    const fromStatic = evaluateStaticOperators({
+    const fromStatic = precomputeRuntimeOperators({
       context: makeContext({ slug: 'my-app' }),
       input: { result: { _app: 'slug' } },
       refDef: { path: 'lowdefy.yaml' },
@@ -69,7 +69,7 @@ describe('_app and _build.app resolve at build', () => {
 
   test('both names throw a collected ConfigError when slug is unset', () => {
     const staticContext = makeContext({ slug: null });
-    const fromStatic = evaluateStaticOperators({
+    const fromStatic = precomputeRuntimeOperators({
       context: staticContext,
       input: { result: { _app: 'slug' } },
       refDef: { path: 'lowdefy.yaml' },
@@ -86,7 +86,7 @@ describe('_app and _build.app resolve at build', () => {
 
   test('non-slug fields return null when unset, at both names', () => {
     const staticContext = makeContext({ name: null });
-    const fromStatic = evaluateStaticOperators({
+    const fromStatic = precomputeRuntimeOperators({
       context: staticContext,
       input: { result: { _app: 'name' } },
       refDef: { path: 'lowdefy.yaml' },
@@ -116,7 +116,7 @@ describe('_build.app nested in another _build.* operator', () => {
 describe('per-location error collection', () => {
   test('N missing-slug references collect N errors with distinct locations', () => {
     const context = makeContext({ slug: null });
-    evaluateStaticOperators({
+    precomputeRuntimeOperators({
       context,
       input: {
         a: { _app: 'slug', '~l': 11 },
@@ -133,7 +133,7 @@ describe('per-location error collection', () => {
 
 describe('nesting behind dynamic context', () => {
   test('_app: slug inside _if/_eq with _state still resolves at build', () => {
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: makeContext({ slug: 'my-app' }),
       input: {
         result: {
@@ -153,7 +153,7 @@ describe('nesting behind dynamic context', () => {
 
   test('_app: slug behind dynamic context still throws when slug is unset', () => {
     const context = makeContext({ slug: null });
-    evaluateStaticOperators({
+    precomputeRuntimeOperators({
       context,
       input: {
         result: {
@@ -174,7 +174,7 @@ describe('nesting behind dynamic context', () => {
 describe('clean cases', () => {
   test('config that never references slug builds with an unset slug', () => {
     const context = makeContext({ slug: null });
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context,
       input: { result: { _sum: [1, 2, 3] } },
       refDef: { path: 'lowdefy.yaml' },

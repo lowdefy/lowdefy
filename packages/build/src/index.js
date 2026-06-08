@@ -38,6 +38,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
+import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import collectPageContent from './build/collectPageContent.js';
@@ -105,6 +106,19 @@ async function build(options) {
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
+
+    // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
+    // whose arguments are fully static. This single fold covers components after
+    // module manifests are merged (replacing the old per-region folds in buildRefs,
+    // buildModuleDefs, and registerModules). Must run before addKeys so that ~k
+    // markers are added to the already-folded tree.
+    // context.rootRefDef is the lowdefy.yaml refDef stashed by buildRefs (Phase 2)
+    // so we can resolve error source file paths without allocating a new makeId entry.
+    components = precomputeRuntimeOperators({
+      context,
+      input: components,
+      refDef: context.rootRefDef,
+    });
 
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info

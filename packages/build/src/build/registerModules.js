@@ -23,7 +23,6 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './buildRefs/walker.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 
@@ -65,12 +64,35 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
   }
 }
 
+function isRuntimeOperatorObject(value) {
+  if (!type.isObject(value)) return false;
+  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
+  return nonTildeKeys.length === 1 && nonTildeKeys[0].startsWith('_');
+}
+
+function suggestBuildOperator(operatorKey) {
+  // '_string.concat' -> '_build.string.concat', '_sum' -> '_build.sum'
+  return `_build.${operatorKey.slice(1)}`;
+}
+
 function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
     const value = resolvedVarCache[fullName];
 
     if (varDef.type && !type.isNone(value)) {
+      // A typed var must hold a concrete value — runtime operators are not allowed
+      // regardless of whether they are static-foldable or dynamic. Suggest the
+      // build-time equivalent so the user knows how to fix it.
+      if (isRuntimeOperatorObject(value)) {
+        const operatorKey = Object.keys(value).filter((k) => !k.startsWith('~'))[0];
+        throw new ConfigError(
+          `Module "${entryId}" (${source}) var "${fullName}" is typed "${varDef.type}" ` +
+            `but received a runtime operator "${operatorKey}". ` +
+            `Use the build-time equivalent "${suggestBuildOperator(operatorKey)}" instead.` +
+            (varDef.description ? `\n  - ${varDef.description}` : '')
+        );
+      }
       if (type.typeOf(value) !== varDef.type) {
         throw new ConfigError(
           `Module "${entryId}" (${source}) var "${fullName}" must be type ` +
@@ -249,9 +271,7 @@ async function resolveFullManifest({ entryId, context }) {
     },
   });
 
-  let resolved = await resolve(manifest, ctx);
-
-  resolved = evaluateStaticOperators({ context, input: resolved, refDef });
+  const resolved = await resolve(manifest, ctx);
 
   // Filter null entries produced by _ref resolution failures
   for (const key of ['pages', 'connections', 'api']) {

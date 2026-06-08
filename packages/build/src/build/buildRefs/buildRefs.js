@@ -19,7 +19,6 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './walker.js';
 import getRefContent from './getRefContent.js';
 import makeRefDefinition from './makeRefDefinition.js';
-import evaluateStaticOperators from './evaluateStaticOperators.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import isPageContentPath from '../jit/isPageContentPath.js';
@@ -31,6 +30,9 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 async function buildRefs({ context, shallowOptions }) {
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
+  // Stash for Phase 3.5 (precomputeRuntimeOperators) so it can resolve error
+  // source file paths without creating a new makeId entry.
+  context.rootRefDef = refDef;
 
   const ctx = new WalkContext({
     buildContext: context,
@@ -59,14 +61,7 @@ async function buildRefs({ context, shallowOptions }) {
     referencedFrom: null,
   });
 
-  let components = await resolve(content, ctx);
-
-  // Evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
-  components = evaluateStaticOperators({
-    context,
-    input: components,
-    refDef,
-  });
+  const components = await resolve(content, ctx);
   return components ?? {};
 }
 

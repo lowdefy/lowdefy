@@ -31,7 +31,7 @@ import validateStateReferences from '../buildPages/validateStateReferences.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
@@ -188,7 +188,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
-    processed = evaluateStaticOperators({
+    processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
       refDef,

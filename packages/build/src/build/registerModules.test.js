@@ -207,6 +207,90 @@ pages:
   );
 });
 
+test('validateVarTypes throws when a typed var is given a static-foldable runtime operator', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  total:
+    type: number
+pages:
+  - id: test
+    type: Box
+    properties:
+      value:
+        _module.var: total
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  // Pass a static-foldable runtime operator ({ _sum: [1, 2] }) as the typed var value.
+  // Even though _sum with static args could be folded, typed vars must hold concrete values.
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: { total: { _sum: [1, 2] } } },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'var "total" is typed "number" but received a runtime operator "_sum"'
+  );
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    '"_build.sum"'
+  );
+});
+
+test('validateVarTypes throws when a typed var is given a dynamic runtime operator', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  label:
+    type: string
+pages:
+  - id: test
+    type: Box
+    properties:
+      value:
+        _module.var: label
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  // Pass a dynamic runtime operator ({ '_string.concat': [..., { _state: x }] }) as the typed var value.
+  // Dynamic operators cannot be statically folded, but the check applies regardless.
+  await resolveLocalManifest({
+    entry: {
+      id: 'my-mod',
+      source: 'file:../mod',
+      vars: { label: { '_string.concat': ['hello', { _state: 'name' }] } },
+    },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'var "label" is typed "string" but received a runtime operator "_string.concat"'
+  );
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    '"_build.string.concat"'
+  );
+});
+
 test('resolveLocalManifest throws when plugin version is missing', async () => {
   const context = createTestContext({ plugins: [] });
   const files = [
