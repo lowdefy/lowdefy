@@ -31,6 +31,7 @@ import validateStateReferences from '../buildPages/validateStateReferences.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
+import injectOverlayBlocks from '../../utils/injectOverlayBlocks.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
@@ -69,6 +70,24 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       logger: logger ?? console,
       stage: 'dev',
     });
+
+  // The JIT context is built fresh per dev session and never runs buildOverlay,
+  // so load the overlay the skeleton build persisted (see writeOverlay). Loaded
+  // once onto the (cached) context; injectOverlayBlocks reads it per page.
+  if (buildContext.overlayBlocks === undefined) {
+    try {
+      const overlay = serializer.deserialize(
+        JSON.parse(
+          fs.readFileSync(path.join(buildContext.directories.build, 'overlay.json'), 'utf8')
+        )
+      );
+      buildContext.overlayBlocks = overlay.blocks ?? [];
+      buildContext.overlayExclude = new Set(overlay.exclude ?? []);
+    } catch {
+      buildContext.overlayBlocks = [];
+      buildContext.overlayExclude = new Set();
+    }
+  }
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -218,6 +237,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
+
+    // Prepend app overlay blocks (persisted by the skeleton build) so they render
+    // on every page in dev too. The clones carry their skeleton ~k/~r, which are
+    // present in the loaded keyMap/refMap.
+    injectOverlayBlocks({ page: processed, context: buildContext });
 
     // Write keyMap/refMap so the error handler reads JIT entries from disk.
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
