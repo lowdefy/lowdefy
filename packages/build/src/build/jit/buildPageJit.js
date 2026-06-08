@@ -235,13 +235,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
 
+    // Prepend app overlay blocks (persisted by the skeleton build) so they render
+    // on every page in dev too. Injected before addKeys so the clones are keyed by
+    // the same pass as the rest of the page, matching the full build.
+    injectOverlayBlocks({ page: processed, context: buildContext });
+
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
-
-    // Prepend app overlay blocks (persisted by the skeleton build) so they render
-    // on every page in dev too. The clones carry their skeleton ~k/~r, which are
-    // present in the loaded keyMap/refMap.
-    injectOverlayBlocks({ page: processed, context: buildContext });
 
     // Write keyMap/refMap so the error handler reads JIT entries from disk.
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
