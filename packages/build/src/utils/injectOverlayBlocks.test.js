@@ -35,6 +35,30 @@ test('handles a page with no blocks', () => {
   expect(page.blocks).toEqual([{ id: 'dev_tools', type: 'Box' }]);
 });
 
+test('injects into the content slot for a slots-only page (does not clobber it)', () => {
+  const context = { overlayBlocks: [overlayBlock], overlayExclude: new Set() };
+  const page = {
+    id: 'home',
+    slots: { content: { blocks: [{ id: 'a', type: 'Box' }] } },
+  };
+  injectOverlayBlocks({ page, context });
+  // The page's own slot content is preserved, overlay prepended.
+  expect(page.slots.content.blocks).toEqual([
+    { id: 'dev_tools', type: 'Box' },
+    { id: 'a', type: 'Box' },
+  ]);
+  // No competing top-level `blocks` is created (which would override the slot).
+  expect(page.blocks).toBeUndefined();
+});
+
+test('creates the content slot when a slots page has no content slot', () => {
+  const context = { overlayBlocks: [overlayBlock], overlayExclude: new Set() };
+  const page = { id: 'home', slots: { header: { blocks: [] } } };
+  injectOverlayBlocks({ page, context });
+  expect(page.slots.content.blocks).toEqual([{ id: 'dev_tools', type: 'Box' }]);
+  expect(page.blocks).toBeUndefined();
+});
+
 test('no-op when there are no overlay blocks', () => {
   const context = { overlayBlocks: [], overlayExclude: new Set() };
   const page = { id: 'home', blocks: [{ id: 'a', type: 'Box' }] };

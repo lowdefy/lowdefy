@@ -29,3 +29,14 @@ pages:
         type: Title
         properties:
           content: No overlay here
+  # Page authored via explicit slots — overlay must inject into the content slot
+  # without clobbering the page's own slot content.
+  - id: slots_page
+    type: Box
+    slots:
+      content:
+        blocks:
+          - id: slots_heading
+            type: Title
+            properties:
+              content: Slots page

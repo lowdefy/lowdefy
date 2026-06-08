@@ -38,7 +38,21 @@ function injectOverlayBlocks({ page, context }) {
   // Deep-clone per page so each page owns its block instances — buildBlock
   // assigns ids/keys independently when it processes each page.
   const clones = overlayBlocks.map((block) => serializer.copy(block));
-  page.blocks = [...clones, ...(type.isArray(page.blocks) ? page.blocks : [])];
+
+  // Prepend the overlay to the page's content. A page expresses content either
+  // as the top-level `blocks` shorthand or via explicit `slots`. Injecting into
+  // `page.blocks` when the page uses slots would clobber the slot content (the
+  // `blocks` shorthand wins over `slots.content` in buildBlock), so inject into
+  // the default content slot in that case.
+  if (type.isArray(page.blocks)) {
+    page.blocks = [...clones, ...page.blocks];
+  } else if (type.isObject(page.slots)) {
+    const content = type.isObject(page.slots.content) ? page.slots.content : {};
+    content.blocks = [...clones, ...(type.isArray(content.blocks) ? content.blocks : [])];
+    page.slots.content = content;
+  } else {
+    page.blocks = clones;
+  }
 }
 
 export default injectOverlayBlocks;
