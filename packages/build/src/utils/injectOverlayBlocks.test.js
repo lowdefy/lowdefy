@@ -76,17 +76,6 @@ test('skips a page listed in overlay.exclude (by pageId)', () => {
   expect(page.blocks).toEqual([{ id: 'a', type: 'Box' }]);
 });
 
-test('skips a page that opts out with properties.overlay false', () => {
-  const context = { overlayBlocks: [overlayBlock], overlayExclude: new Set() };
-  const page = {
-    id: 'home',
-    properties: { overlay: false },
-    blocks: [{ id: 'a', type: 'Box' }],
-  };
-  injectOverlayBlocks({ page, context });
-  expect(page.blocks).toEqual([{ id: 'a', type: 'Box' }]);
-});
-
 test('injected blocks are deep clones — mutating a page does not affect the source', () => {
   const context = { overlayBlocks: [overlayBlock], overlayExclude: new Set() };
   const page = { id: 'home', blocks: [] };

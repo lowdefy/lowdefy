@@ -23,7 +23,7 @@ import { serializer, type } from '@lowdefy/helpers';
 // runs, so the injected blocks go through the normal block build (id scoping,
 // plugin/icon/operator detection) like any other page block.
 //
-// A page opts out via `overlay.exclude` (by pageId) or `properties.overlay: false`.
+// A page opts out by listing its pageId in `overlay.exclude`.
 function injectOverlayBlocks({ page, context }) {
   const overlayBlocks = context.overlayBlocks ?? [];
   if (overlayBlocks.length === 0) return;
@@ -33,7 +33,6 @@ function injectOverlayBlocks({ page, context }) {
   // (pageId is set later); fall back to pageId for callers that set it first.
   const pageId = page.pageId ?? page.id;
   if (context.overlayExclude?.has(pageId)) return;
-  if (type.isObject(page.properties) && page.properties.overlay === false) return;
 
   // Deep-clone per page so each page owns its block instances — buildBlock
   // assigns ids/keys independently when it processes each page.
