@@ -1753,6 +1753,41 @@ export default {
         type: 'App "pages" should be an array.',
       },
     },
+    overlay: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        '~r': {},
+        '~l': {},
+        devOnly: {
+          type: 'boolean',
+          errorMessage: {
+            type: 'App "overlay.devOnly" should be a boolean.',
+          },
+        },
+        exclude: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          errorMessage: {
+            type: 'App "overlay.exclude" should be an array of pageIds.',
+          },
+        },
+        blocks: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/block',
+          },
+          errorMessage: {
+            type: 'App "overlay.blocks" should be an array.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "overlay" should be an object.',
+      },
+    },
     modules: {
       type: 'array',
       items: {
