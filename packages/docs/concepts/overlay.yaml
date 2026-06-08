@@ -26,7 +26,7 @@ _ref:
           content: |
             The `overlay` config prepends a list of blocks to **every page** in the app, so they render on all pages without being added to each page individually. This is useful for app-wide UI such as a floating support button, a notice banner, an analytics mount, or a developer-tools panel.
 
-            Overlay blocks are prepended to each page's blocks and are built exactly like normal page blocks — block ids are scoped per page, and their plugins, icons and operators are resolved as usual. The overlay is applied in both production builds (`lowdefy build`) and the development server (`lowdefy dev`).
+            Overlay blocks are prepended to each page's content (whether the page is authored with the top-level `blocks` shorthand or with explicit `slots`) and are built exactly like normal page blocks, so block ids are scoped per page and their plugins, icons and operators are resolved as usual. The overlay is applied in both production builds (`lowdefy build`) and the development server (`lowdefy dev`).
 
             The schema for the `overlay` object is:
 
