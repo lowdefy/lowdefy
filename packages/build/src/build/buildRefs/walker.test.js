@@ -1521,3 +1521,93 @@ describe('module ref JS path resolution (resolver / transformer / .js content)',
     );
   });
 });
+
+describe('deferModuleRefs sentinel', () => {
+  test('resolving a cross-module _ref with deferModuleRefs true returns a sentinel with no enumerable keys', async () => {
+    const buildContext = createBuildContext();
+    // Give the refMap an entry for the ref id that will be created
+    buildContext.refMap = {};
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      deferModuleRefs: true,
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: { module: 'my-module', component: 'MyComponent' } };
+
+    const sentinel = await resolve(node, ctx);
+
+    // No enumerable keys — it must look like {}
+    expect(Object.keys(sentinel)).toEqual([]);
+    // The prepared refDef is stored under the non-enumerable marker
+    expect(sentinel['~deferredModuleRef']).toBeDefined();
+    expect(sentinel['~deferredModuleRef'].module).toBe('my-module');
+    expect(sentinel['~deferredModuleRef'].component).toBe('MyComponent');
+    // Provenance is recorded
+    expect(sentinel['~deferredFrom']).toBe('lowdefy.yaml');
+  });
+
+  test('resolving a file _ref with deferModuleRefs true does not produce a sentinel', async () => {
+    // A file _ref (no module key) must not be deferred — the refDef.module guard
+    // in resolveRef ensures only module refs become sentinels.
+    // We verify this by checking the result is NOT a deferred sentinel object.
+    // (The actual file resolution may fail due to missing test fixtures; we only
+    //  care about the deferred-sentinel branch not activating.)
+    const buildContext = createBuildContext();
+    buildContext.refMap = {};
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: '/app/lowdefy.yaml',
+      refChain: new Set(['/app/lowdefy.yaml']),
+      deferModuleRefs: true,
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: '/app/some-file.yaml' };
+    const result = await resolve(node, ctx);
+    // Result must NOT be a deferred sentinel — either resolved content or null
+    // (null when getRefContent fails due to missing file in tests).
+    expect(result === null || result['~deferredModuleRef'] === undefined).toBe(true);
+  });
+
+  test('cloneForResolve preserves ~deferredModuleRef on a sentinel object', async () => {
+    const { cloneForResolve } = await import('./walker.js');
+
+    const refDef = { module: 'mod', component: 'Comp' };
+    const sentinel = {};
+    Object.defineProperty(sentinel, '~deferredModuleRef', { value: refDef, enumerable: false });
+    Object.defineProperty(sentinel, '~deferredFrom', {
+      value: 'origin.yaml',
+      enumerable: false,
+    });
+
+    const cloned = cloneForResolve(sentinel);
+
+    expect(Object.keys(cloned)).toEqual([]);
+    expect(cloned['~deferredModuleRef']).toBe(refDef);
+    expect(cloned['~deferredFrom']).toBe('origin.yaml');
+  });
+});

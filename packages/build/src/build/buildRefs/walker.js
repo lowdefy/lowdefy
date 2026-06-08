@@ -171,7 +171,7 @@ function tagRefDeep(node, refId) {
   }
 }
 
-// Deep clone preserving non-enumerable build markers (~r, ~l, ~k, ~arr, ~deferredFrom).
+// Deep clone preserving non-enumerable build markers (~r, ~l, ~k, ~arr, ~deferredFrom, ~deferredModuleRef).
 // Used before resolving ref def path/vars to prevent mutation of stored originals.
 function cloneForResolve(value) {
   if (!type.isObject(value) && !type.isArray(value)) return value;
@@ -194,6 +194,8 @@ function cloneForResolve(value) {
   if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
   if (value['~deferredFrom'] !== undefined)
     setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
+  if (value['~deferredModuleRef'] !== undefined)
+    setNonEnumerableProperty(clone, '~deferredModuleRef', value['~deferredModuleRef']);
   return clone;
 }
 
@@ -530,8 +532,11 @@ function resolveModuleIdOperator(node, ctx) {
   return node;
 }
 
-// Resolve a _ref node (16-step ref handling)
-async function resolveRef(node, ctx) {
+// Steps 1–7: scope-dependent prepare — resolves path/vars/key, normalises module
+// paths, updates refMap, and checks for package-root escapes and circular refs.
+// Returns the fully-resolved refDef; all side-effects (unresolvedRefVars, refMap)
+// happen here. No file I/O is performed.
+async function prepareRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
   const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, ctx.path);
@@ -601,6 +606,14 @@ async function resolveRef(node, ctx) {
     );
   }
 
+  return refDef;
+}
+
+// Steps 8–16: load content, build child context, walk, transform, tag.
+// `referencedFrom` overrides ctx.currentFile for provenance (used when replaying
+// a deferred sentinel whose origin file differs from the stage-2 ctx.currentFile).
+async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
+  const fromFile = referencedFrom ?? ctx.currentFile;
 
   // Steps 8-16: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
@@ -614,9 +627,9 @@ async function resolveRef(node, ctx) {
       const result = await getModuleRefContent({
         context: ctx.buildContext,
         refDef,
-        referencedFrom: ctx.currentFile,
+        referencedFrom: fromFile,
         walkCtx: ctx,
-        configKey: node['~k'],
+        configKey,
       });
       content = cloneForResolve(result.content);
       resolvedEntryId = result.entryId;
@@ -624,7 +637,7 @@ async function resolveRef(node, ctx) {
       content = await getRefContent({
         context: ctx.buildContext,
         refDef,
-        referencedFrom: ctx.currentFile,
+        referencedFrom: fromFile,
       });
     }
 
@@ -641,7 +654,7 @@ async function resolveRef(node, ctx) {
         throw new ConfigError(
           `Circular module reference detected. Module "${resolvedEntryId}" ${exportType} "${exportName}" ` +
             `references itself through:\n  -> ${chainDisplay}`,
-          { filePath: ctx.currentFile }
+          { filePath: fromFile }
         );
       }
     }
@@ -702,7 +715,7 @@ async function resolveRef(node, ctx) {
       context: ctx.buildContext,
       input: content,
       refDef,
-      referencedFrom: ctx.currentFile,
+      referencedFrom: fromFile,
     });
 
     // 14. Extract key
@@ -734,17 +747,38 @@ async function resolveRef(node, ctx) {
   }
 }
 
+// Resolve a _ref node: prepare (steps 1–7), then optionally defer module refs
+// as sentinels (when ctx.deferModuleRefs is true), otherwise load-and-walk (steps 8–16).
+async function resolveRef(node, ctx) {
+  const refDef = await prepareRef(node, ctx);
+  if (ctx.deferModuleRefs && refDef.module) {
+    const sentinel = {};
+    setNonEnumerableProperty(sentinel, '~deferredModuleRef', refDef);
+    setNonEnumerableProperty(sentinel, '~deferredFrom', ctx.currentFile);
+    return sentinel;
+  }
+  return loadAndWalkRef(refDef, ctx, { configKey: node['~k'] });
+}
+
 // Core walk function — single-pass async tree walker
 async function resolve(node, ctx) {
   // 1. Primitives pass through
   if (!type.isObject(node) && !type.isArray(node)) return node;
 
-  // 2. _ref — top-down (only operator that needs it)
+  // 2. Deferred module-ref sentinel — replay in stage 2 (flag off) with original provenance
+  if (type.isObject(node) && node['~deferredModuleRef'] !== undefined) {
+    return loadAndWalkRef(node['~deferredModuleRef'], ctx, {
+      configKey: node['~k'],
+      referencedFrom: node['~deferredFrom'],
+    });
+  }
+
+  // 3. _ref — top-down (only operator that needs it)
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
     return resolveRef(node, ctx);
   }
 
-  // 3. Array — walk children in parallel
+  // 4. Array — walk children in parallel
   if (type.isArray(node)) {
     await Promise.all(
       node.map(async (item, i) => {
@@ -754,7 +788,7 @@ async function resolve(node, ctx) {
     return node;
   }
 
-  // 4. Object — walk children in parallel (with shouldStop)
+  // 5. Object — walk children in parallel (with shouldStop)
   const keys = Object.keys(node);
   await Promise.all(
     keys.map(async (key) => {
@@ -776,7 +810,7 @@ async function resolve(node, ctx) {
     }),
   );
 
-  // 5. _var — substitution (children already resolved)
+  // 6. _var — substitution (children already resolved)
   if (!type.isUndefined(node._var)) {
     try {
       const varResult = resolveVar(node, ctx);
@@ -790,7 +824,7 @@ async function resolve(node, ctx) {
     }
   }
 
-  // 6. _module.var — module variable substitution
+  // 7. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
     if (!ctx.moduleEntry) {
       if (ctx.moduleRoot) return node;
@@ -799,12 +833,12 @@ async function resolve(node, ctx) {
     return resolve(await resolveModuleVar(node, ctx), ctx);
   }
 
-  // 7. _module.*Id — resolve to scoped ID string
+  // 8. _module.*Id — resolve to scoped ID string
   if (isModuleIdOperator(node)) {
     return resolveModuleIdOperator(node, ctx);
   }
 
-  // 8. _build.* operator
+  // 9. _build.* operator
   if (isBuildOperator(node)) {
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
