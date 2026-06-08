@@ -395,6 +395,8 @@ function assertNoBlockingSentinel(key, moduleEntry, ctx) {
     if (!type.isObject(node)) return; // path runs into a non-object before key → genuine miss
     node = node[parts[i]];
   }
+  // node is now the value at key (or undefined); the subtree scan catches a sentinel
+  // sitting at the leaf as well as anywhere beneath it.
   const sentinel = findSentinelInSubtree(node);
   if (sentinel) {
     throw entryConfigCycleError(sentinel, key, moduleEntry, ctx);
@@ -403,7 +405,7 @@ function assertNoBlockingSentinel(key, moduleEntry, ctx) {
 
 function entryConfigCycleError(sentinelNode, key, moduleEntry, ctx) {
   const chain = [...ctx.entryResolveChain, moduleEntry.id].join(' → ');
-  const sourceFile = sentinelNode['~deferredFrom'];
+  const sourceFile = sentinelNode['~deferredFrom'] ?? '<unknown file>';
   return new ConfigError(
     `Circular module entry vars: ${chain}.\n` +
       `Var "${key}" of entry "${moduleEntry.id}" cannot be read while its ` +
