@@ -34,8 +34,6 @@ _ref:
             - `exclude: string[]`: An array of `pageId`s that should __not__ receive the overlay (for example a `login` or `404` page).
             - `devOnly: boolean`: When `true`, the overlay is injected only by `lowdefy dev` and is left out of production builds (`lowdefy build`). Defaults to `false`. Use this for development-only UI you don't want shipped.
 
-            A single page can also opt out by setting `properties.overlay: false` on the page.
-
             ###### Overlay example:
             ```yaml
             lowdefy: LOWDEFY_VERSION
