@@ -240,6 +240,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     dependencies,
     moduleDependencies: entry.dependencies ?? {},
     refDef,
+    entryConfigState: 'registered',
   };
 }
 
