@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-// Build artifacts are read from disk because the Hono server runs as
-// unbundled Node.js ESM — JSON imports would need import attributes, and
-// client code imports the build JSON directly through Vite instead.
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+// Splits the rest of a catch-all route into decoded segments, independent of
+// any configured basePath. Mirrors the Next.js [...param] query arrays —
+// nested ids (slashes in pageId or endpointId) are real.
+function getPathSegments(c, prefix) {
+  const rest = c.req.path.split(prefix)[1] ?? '';
+  return rest.split('/').filter(Boolean).map(decodeURIComponent);
+}
 
-const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/config.json'), 'utf8'));
-
-export default serializer.deserialize(raw);
+export default getPathSegments;

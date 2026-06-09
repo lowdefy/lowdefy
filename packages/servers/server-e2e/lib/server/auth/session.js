@@ -14,27 +14,22 @@
   limitations under the License.
 */
 
-import authConfig from '../../build/auth.js';
+// E2E test-user injection: the session is read from the lowdefy_e2e_user
+// cookie (base64-encoded JSON user object) instead of a real auth engine.
+function getSession(c) {
+  const cookieHeader = c.req.header('cookie') ?? '';
+  const match = cookieHeader.match(/lowdefy_e2e_user=([^;]+)/);
+  if (!match) {
+    return undefined;
+  }
 
-function e2eNotSupported() {
-  throw new Error('Sign-in and sign-out are not supported in e2e testing.');
+  try {
+    const decoded = Buffer.from(decodeURIComponent(match[1]), 'base64').toString();
+    const user = JSON.parse(decoded);
+    return { user };
+  } catch {
+    return undefined;
+  }
 }
 
-function Auth({ children, session }) {
-  const auth = {
-    authConfig,
-    session,
-    getSession: async () => {
-      const res = await fetch('/api/auth/session');
-      if (res.ok) {
-        return res.json();
-      }
-      return null;
-    },
-    signIn: e2eNotSupported,
-    signOut: e2eNotSupported,
-  };
-  return children(auth);
-}
-
-export default Auth;
+export default getSession;

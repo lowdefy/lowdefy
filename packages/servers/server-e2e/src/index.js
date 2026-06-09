@@ -14,13 +14,22 @@
   limitations under the License.
 */
 
-// Build artifacts are read from disk because the Hono server runs as
-// unbundled Node.js ESM — JSON imports would need import attributes, and
-// client code imports the build JSON directly through Vite instead.
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+import { serve } from '@hono/node-server';
 
-const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/config.json'), 'utf8'));
+import createApp from './app.js';
 
-export default serializer.deserialize(raw);
+const app = createApp();
+const port = Number(process.env.PORT ?? 3000);
+
+const server = serve({ fetch: app.fetch, port }, (info) => {
+  console.log(`Lowdefy e2e server listening on http://localhost:${info.port}`);
+});
+
+function shutdown() {
+  server.close(() => {
+    process.exit(0);
+  });
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

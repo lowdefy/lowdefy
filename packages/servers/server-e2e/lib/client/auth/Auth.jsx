@@ -14,13 +14,27 @@
   limitations under the License.
 */
 
-// Build artifacts are read from disk because the Hono server runs as
-// unbundled Node.js ESM — JSON imports would need import attributes, and
-// client code imports the build JSON directly through Vite instead.
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+import authConfig from '../../../build/auth.json';
 
-const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/config.json'), 'utf8'));
+function e2eNotSupported() {
+  throw new Error('Sign-in and sign-out are not supported in e2e testing.');
+}
 
-export default serializer.deserialize(raw);
+function Auth({ children, session }) {
+  const auth = {
+    authConfig,
+    session,
+    getSession: async () => {
+      const res = await fetch('/api/auth/session');
+      if (res.ok) {
+        return res.json();
+      }
+      return null;
+    },
+    signIn: e2eNotSupported,
+    signOut: e2eNotSupported,
+  };
+  return children(auth);
+}
+
+export default Auth;

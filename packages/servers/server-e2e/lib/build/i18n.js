@@ -21,6 +21,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { serializer } from '@lowdefy/helpers';
 
-const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/config.json'), 'utf8'));
+const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/i18n.json'), 'utf8'));
 
 export default serializer.deserialize(raw);
