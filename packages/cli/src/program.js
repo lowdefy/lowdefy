@@ -83,7 +83,8 @@ program
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
-  .option('--no-next-build', 'Do not build the Next.js server.')
+  .option('--no-client-build', 'Do not run the Vite client build.')
+  .addOption(new Option('--no-next-build', 'Deprecated alias of --no-client-build.').hideHelp())
   .addOption(options.refResolver)
   .addOption(
     new Option(

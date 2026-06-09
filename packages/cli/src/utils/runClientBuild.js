@@ -18,38 +18,35 @@ import { spawnProcess } from '@lowdefy/node-utils';
 
 function createStdOutLineHandler({ context }) {
   function stdOutLineHandler(line) {
-    // Matches next build output of form: ┌ λ /           261 B        403 kB
-    const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/u);
+    // Matches vite build output of form: dist/client/assets/main-XXXX.js  5,205.62 kB │ gzip: 1,544.04 kB
+    const match = line.match(/assets\/main-[\w-]+\.js\s+[\d,.]+ kB │ gzip:\s+([\d,.]+ kB)/u);
     if (match) {
-      context.logger.info(`Home page first load JS size: ${match[1]}.`);
+      context.logger.info(`Client bundle size (gzip): ${match[1]}.`);
     }
     context.logger.debug(line);
   }
   return stdOutLineHandler;
 }
 
-async function runNextBuild({ context, directory }) {
-  context.logger.info({ spin: 'start' }, 'Running Next build.');
+async function runClientBuild({ context, directory }) {
+  context.logger.info({ spin: 'start' }, 'Running client build.');
   try {
     await spawnProcess({
       command: context.pnpmCmd,
-      args: ['run', 'build:next'],
+      args: ['run', 'build:client'],
       stdOutLineHandler: createStdOutLineHandler({ context }),
       processOptions: {
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
         shell: process.platform === 'win32',
         cwd: directory,
-        env: {
-          ...process.env,
-          NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
-        },
+        env: process.env,
       },
     });
   } catch (error) {
-    context.logger.info({ spin: 'fail' }, 'Running Next build.');
-    throw new Error('Next build failed.');
+    context.logger.info({ spin: 'fail' }, 'Running client build.');
+    throw new Error('Client build failed.');
   }
-  context.logger.info('Next build successful.');
+  context.logger.info('Client build successful.');
 }
 
-export default runNextBuild;
+export default runClientBuild;
