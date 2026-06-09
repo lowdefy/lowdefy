@@ -14,51 +14,9 @@
   limitations under the License.
 */
 
-import { ServerParser } from '@lowdefy/operators';
-import { _app, _secret } from '@lowdefy/operators-js/operators/server';
+// Deprecated: NextAuth v4 naming, kept as a compatibility shim while server
+// packages migrate to the Auth.js v5 engine. Use getAuthConfig instead.
+// Removed in the vite-hono release cleanup (Phase 6).
+import getAuthConfig from './getAuthConfig.js';
 
-import createAdapter from './createAdapter.js';
-import createCallbacks from './callbacks/createCallbacks.js';
-import createEvents from './events/createEvents.js';
-import createLogger from './createLogger.js';
-import createProviders from './createProviders.js';
-
-const nextAuthConfig = {};
-let initialized = false;
-
-function getNextAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
-  if (initialized) return nextAuthConfig;
-
-  const operatorsParser = new ServerParser({
-    lowdefyApp: appMeta,
-    operators: { _app, _secret },
-    secrets,
-    user: {},
-  });
-
-  const { output: authConfig, errors: operatorErrors } = operatorsParser.parse({
-    input: authJson,
-    location: 'auth',
-    payload: {},
-  });
-
-  if (operatorErrors.length > 0) {
-    throw operatorErrors[0];
-  }
-
-  nextAuthConfig.adapter = createAdapter({ authConfig, logger, plugins });
-  nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
-  nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
-  nextAuthConfig.logger = createLogger({ logger });
-  nextAuthConfig.providers = createProviders({ authConfig, logger, plugins });
-  nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
-  nextAuthConfig.pages = authConfig.authPages;
-  nextAuthConfig.session = authConfig.session;
-  nextAuthConfig.theme = authConfig.theme;
-  nextAuthConfig.cookies = authConfig?.advanced?.cookies;
-  nextAuthConfig.originalRedirectCallback = nextAuthConfig.callbacks.redirect;
-  initialized = true;
-  return nextAuthConfig;
-}
-
-export default getNextAuthConfig;
+export default getAuthConfig;
