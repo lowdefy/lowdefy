@@ -44,7 +44,7 @@ _ref:
             2. Starts a local server
             3. Opens a browser and runs your test code against the live app
 
-            The build runs with a special flag (`NEXT_PUBLIC_LOWDEFY_E2E=true`) that exposes internal state, so your tests can assert on page state, request responses, and validation status.
+            The e2e server build exposes internal state on `window.lowdefy`, so your tests can assert on page state, request responses, and validation status.
 
             ## Prerequisites
 
