@@ -40,10 +40,10 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "next": ">=16",
-    "next-auth": ">=4.24"
+    "@auth/core": ">=0.41.2"
   },
   "devDependencies": {
+    "@auth/core": "0.41.2",
     "@lowdefy/node-utils": "5.3.0",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
