@@ -16,23 +16,23 @@
 
 import { callRequest } from '@lowdefy/api';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
+import getPathSegments from '../lib/getPathSegments.js';
 
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
+async function requestHandler(c) {
+  if (c.req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const segments = req.query.path;
-  if (!Array.isArray(segments) || segments.length < 2) {
-    res.status(400).json({ error: 'Invalid request path' });
-    return;
+  const context = c.get('lowdefyContext');
+  const segments = getPathSegments(c, '/api/request/');
+  if (segments.length < 2) {
+    return c.json({ error: 'Invalid request path' }, 400);
   }
   const requestId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
-  const { actionId, blockId, payload } = req.body;
+  const { actionId, blockId, payload } = await c.req.json();
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
-  res.status(200).json(response);
+  return c.json(response);
 }
 
-export default apiWrapper(handler);
+export default requestHandler;

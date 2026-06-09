@@ -14,23 +14,12 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
-import React from 'react';
-import AuthConfigured from './AuthConfigured.js';
-import AuthNotConfigured from './AuthNotConfigured.js';
-
-import authConfig from '../../build/auth.js';
-
-function Auth({ children, session }) {
-  if (authConfig.configured === true) {
-    return (
-      <AuthConfigured serverSession={session} authConfig={authConfig}>
-        {(auth) => children(auth)}
-      </AuthConfigured>
-    );
-  }
-  return <AuthNotConfigured authConfig={authConfig}>{(auth) => children(auth)}</AuthNotConfigured>;
+// Splits the rest of a catch-all route into decoded segments, independent of
+// any configured basePath. Mirrors the Next.js [...param] query arrays —
+// nested ids (slashes in pageId or endpointId) are real.
+function getPathSegments(c, prefix) {
+  const rest = c.req.path.split(prefix)[1] ?? '';
+  return rest.split('/').filter(Boolean).map(decodeURIComponent);
 }
 
-export default Auth;
+export default getPathSegments;

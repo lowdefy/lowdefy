@@ -17,9 +17,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useRef } from 'react';
-import { getSession, SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
+import {
+  authConfigManager,
+  getSession,
+  SessionProvider,
+  signIn,
+  signOut,
+  useSession,
+} from '@hono/auth-js/react';
 
-import lowdefyConfig from '../../build/config.js';
+import lowdefyConfig from '../../../build/config.json';
+
+// @hono/auth-js/react configures its fetch paths through a module-level
+// manager instead of SessionProvider props.
+if (lowdefyConfig.basePath) {
+  authConfigManager.setConfig({ basePath: `${lowdefyConfig.basePath}/api/auth` });
+}
 
 function Session({ children }) {
   const wasAuthenticated = useRef(false);
@@ -32,9 +45,8 @@ function Session({ children }) {
     }
   }, [status]);
 
-  // If session is passed to SessionProvider from getServerSideProps
-  // we won't have a loading state here.
-  // But 404 uses getStaticProps so we have this for 404.
+  // If session is passed to SessionProvider from the server-rendered config
+  // we won't have a loading state here, but unauthenticated first loads do.
   if (status === 'loading') {
     return '';
   }
@@ -43,12 +55,8 @@ function Session({ children }) {
 
 function AuthConfigured({ authConfig, children, serverSession }) {
   const auth = { authConfig, getSession, signIn, signOut };
-  let basePath = lowdefyConfig.basePath;
-  if (basePath) {
-    basePath = `${basePath}/api/auth`;
-  }
   return (
-    <SessionProvider session={serverSession} basePath={basePath}>
+    <SessionProvider session={serverSession}>
       <Session>
         {(session) => {
           auth.session = session;

@@ -16,34 +16,32 @@
 
 import { logClientError } from '@lowdefy/api';
 
-import apiWrapper from '../../lib/server/apiWrapper.js';
 import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
+async function clientErrorHandler(c) {
+  if (c.req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
+  const context = c.get('lowdefyContext');
 
-  const origin = req.headers.origin;
+  const origin = c.req.header('origin');
   if (!origin) {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
+    return c.json({ error: 'Forbidden' }, 403);
   }
   try {
-    if (new URL(origin).host !== req.headers.host) {
-      res.status(403).json({ error: 'Forbidden' });
-      return;
+    if (new URL(origin).host !== c.req.header('host')) {
+      return c.json({ error: 'Forbidden' }, 403);
     }
   } catch {
-    res.status(403).json({ error: 'Forbidden' });
-    return;
+    return c.json({ error: 'Forbidden' }, 403);
   }
 
+  const body = await c.req.json();
   // Strip received from payload — prod doesn't need it for schema validation
-  if (req.body?.['~e']) {
-    delete req.body['~e'].received;
+  if (body?.['~e']) {
+    delete body['~e'].received;
   }
-  const { error, ...response } = await logClientError(context, req.body);
+  const { error, ...response } = await logClientError(context, body);
 
   // Capture client error to Sentry (no-op if Sentry not configured)
   captureSentryError({
@@ -52,7 +50,7 @@ async function handler({ context, req, res }) {
     configLocation: response.source ? { source: response.source, config: response.config } : null,
   });
 
-  res.status(200).json({ success: true });
+  return c.json({ success: true });
 }
 
-export default apiWrapper(handler);
+export default clientErrorHandler;

@@ -14,6 +14,18 @@
   limitations under the License.
 */
 
-// This file is required by @sentry/nextjs but initialization
-// happens conditionally in _app.js based on SENTRY_DSN.
-// Empty initialization is valid - SDK handles missing DSN gracefully.
+import { getAuthUser } from '@hono/auth-js';
+
+import authJson from '../../build/auth.js';
+
+// Replaces getServerSession.js — reads the session from the Hono context
+// populated by the initAuthConfig middleware.
+async function getSession(c) {
+  if (authJson.configured !== true) {
+    return undefined;
+  }
+  const authUser = await getAuthUser(c);
+  return authUser?.session ?? undefined;
+}
+
+export default getSession;

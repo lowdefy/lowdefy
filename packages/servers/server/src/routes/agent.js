@@ -17,34 +17,31 @@
 import { callAgent } from '@lowdefy/api';
 import { translate, type } from '@lowdefy/helpers';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
+import getPathSegments from '../lib/getPathSegments.js';
 
-async function handler({ context, req, res }) {
+async function agentHandler(c) {
+  const context = c.get('lowdefyContext');
   const t = (key, values) => translate({ key, values, i18n: context.i18n });
-  if (req.method !== 'POST') {
+  if (c.req.method !== 'POST') {
     throw new Error(t('agent.runtime.methodNotAllowed'));
   }
-  const segments = req.query.path;
-  if (!Array.isArray(segments) || segments.length < 2) {
-    res.status(400).json({ error: t('agent.runtime.invalidPath') });
-    return;
+  const segments = getPathSegments(c, '/api/agent/');
+  if (segments.length < 2) {
+    return c.json({ error: t('agent.runtime.invalidPath') }, 400);
   }
   const agentId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
-  const { conversationId } = req.query;
-  const { messages, urlQuery, sharedState } = req.body;
+  const { conversationId } = c.req.query();
+  const { messages, urlQuery, sharedState } = await c.req.json();
   if (!Array.isArray(messages)) {
-    res.status(400).json({ error: t('agent.runtime.messagesMustBeArray') });
-    return;
+    return c.json({ error: t('agent.runtime.messagesMustBeArray') }, 400);
   }
   if (urlQuery != null && (typeof urlQuery !== 'object' || Array.isArray(urlQuery))) {
-    res.status(400).json({ error: t('agent.runtime.urlQueryMustBeObject') });
-    return;
+    return c.json({ error: t('agent.runtime.urlQueryMustBeObject') }, 400);
   }
   if (sharedState != null && !type.isObject(sharedState)) {
-    res.status(400).json({ error: t('agent.runtime.sharedStateMustBeObject') });
-    return;
+    return c.json({ error: t('agent.runtime.sharedStateMustBeObject') }, 400);
   }
   const { response: webResponse } = await callAgent(context, {
     agentId,
@@ -55,32 +52,13 @@ async function handler({ context, req, res }) {
     urlQuery: urlQuery ?? undefined,
   });
 
-  // Stream the Web Response body to the Next.js response
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Content-Encoding', 'none');
-  res.setHeader('Transfer-Encoding', 'chunked');
-
-  const reader = webResponse.body.getReader();
-  const decoder = new TextDecoder();
-  let done = false;
-  while (!done) {
-    const { value, done: readerDone } = await reader.read();
-    done = readerDone;
-    if (value) {
-      res.write(decoder.decode(value, { stream: true }));
-    }
-  }
-  res.end();
+  // callAgent returns a Web Response — stream its body straight through.
+  return c.body(webResponse.body, 200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+    'Content-Encoding': 'none',
+  });
 }
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-};
-
-export default apiWrapper(handler);
+export default agentHandler;

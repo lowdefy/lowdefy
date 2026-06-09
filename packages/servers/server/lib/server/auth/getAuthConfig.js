@@ -14,17 +14,18 @@
   limitations under the License.
 */
 
-import { getNextAuthConfig } from '@lowdefy/api';
+import { getAuthConfig as getApiAuthConfig } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import adapters from '../../../build/plugins/auth/adapters.js';
+import appMeta from '../../build/appMeta.js';
 import authJson from '../../build/auth.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
-function getAuthOptions({ appMeta, logger }) {
-  return getNextAuthConfig({
+function getAuthConfig({ logger }) {
+  return getApiAuthConfig({
     appMeta,
     authJson,
     logger,
@@ -33,4 +34,4 @@ function getAuthOptions({ appMeta, logger }) {
   });
 }
 
-export default getAuthOptions;
+export default getAuthConfig;

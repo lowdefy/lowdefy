@@ -14,12 +14,21 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/node';
 
-// Only initialize if DSN is present
-if (process.env.SENTRY_DSN) {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    tracesSampleRate: 0.1,
-  });
+// Replaces @sentry/nextjs route auto-instrumentation: every request becomes
+// an http.server transaction. Handler errors never propagate through
+// middleware in Hono — captureException happens in the app error handler.
+function sentryMiddleware() {
+  return async function sentry(c, next) {
+    if (!process.env.SENTRY_DSN) {
+      return next();
+    }
+    return Sentry.startSpan(
+      { name: `${c.req.method} ${c.req.path}`, op: 'http.server' },
+      () => next()
+    );
+  };
 }
+
+export default sentryMiddleware;

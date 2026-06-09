@@ -16,17 +16,18 @@
 
 import { callEndpoint } from '@lowdefy/api';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
+import getPathSegments from '../lib/getPathSegments.js';
 
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
+async function endpointsHandler(c) {
+  if (c.req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const endpointId = req.query.endpointId.join('/');
-  const { blockId, payload, pageId } = req.body;
+  const context = c.get('lowdefyContext');
+  const endpointId = getPathSegments(c, '/api/endpoints/').join('/');
+  const { blockId, payload, pageId } = await c.req.json();
   context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
-  res.status(200).json(response);
+  return c.json(response);
 }
 
-export default apiWrapper(handler);
+export default endpointsHandler;

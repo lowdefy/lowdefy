@@ -14,13 +14,7 @@
   limitations under the License.
 */
 
-// CSS layer order — MUST be the first CSS import. Next.js treats this as critical
-// CSS that loads before hydration, locking the cascade priority (antd > base/preflight)
-// before antd's StyleProvider injects @layer antd {} at runtime.
-import '../build/layer-order.css';
-
 import React, { useCallback, useRef } from 'react';
-import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 import { useDarkMode, useLocale } from '@lowdefy/client';
@@ -31,20 +25,12 @@ import { XProvider } from '@ant-design/x';
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
 import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
-import Auth from '../lib/client/auth/Auth.js';
+import loggerConfig from '../build/logger.json';
+import Auth from '../lib/client/auth/Auth.jsx';
 import createLogUsage from '../lib/client/createLogUsage.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
-import loggerConfig from '../lib/build/logger.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
-
-// Must be in _app due to next specifications.
-import '../build/globals.css';
-
-// Initialize Sentry client once on module load
-initSentryClient({
-  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  sentryConfig: loggerConfig.sentry,
-});
+import Page from './Page.jsx';
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -55,7 +41,16 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
   return children;
 }
 
-function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
+function App({ config }) {
+  const { rootConfig, session } = config;
+
+  // Sentry DSN arrives at runtime via the embedded config (the server reads
+  // SENTRY_DSN per process) — no build-time env inlining.
+  initSentryClient({
+    sentryDsn: config.sentryDsn,
+    sentryConfig: loggerConfig.sentry,
+  });
+
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
   if (rootConfig?.theme) {
@@ -98,9 +93,8 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   // gives X components (Bubble, Sender, Conversations, ...) their built-in strings
   // alongside antd's. antd X ships only en_US + zh_CN; other locales fall back
   // to en_US for X-native strings.
-  const mergedLocale = antdLocale || antdXLocale
-    ? { ...(antdLocale ?? {}), ...(antdXLocale ?? {}) }
-    : undefined;
+  const mergedLocale =
+    antdLocale || antdXLocale ? { ...(antdLocale ?? {}), ...(antdXLocale ?? {}) } : undefined;
 
   return (
     <StyleProvider layer>
@@ -131,14 +125,7 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
                     user: auth.session,
                     sentryConfig: loggerConfig.sentry,
                   });
-                  return (
-                    <Component
-                      auth={auth}
-                      lowdefy={lowdefyRef.current}
-                      rootConfig={rootConfig}
-                      pageConfig={pageConfig}
-                    />
-                  );
+                  return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
                 }}
               </Auth>
             </ErrorBoundary>
@@ -149,8 +136,4 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   );
 }
 
-const DynamicApp = dynamic(() => Promise.resolve(App), {
-  ssr: false,
-});
-
-export default DynamicApp;
+export default App;
