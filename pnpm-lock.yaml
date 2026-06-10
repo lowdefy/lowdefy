@@ -2071,9 +2071,15 @@ importers:
       '@lowdefy/blocks-basic':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-echarts':
+        specifier: 5.3.0
+        version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-loaders
+      '@lowdefy/blocks-markdown':
+        specifier: 5.3.0
+        version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-tiptap':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-tiptap
