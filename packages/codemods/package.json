@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/codemods",
-  "version": "5.3.0",
+  "version": "0.0.0-experimental-20260610101734",
   "description": "Codemod scripts and migration prompts for Lowdefy version upgrades",
   "license": "Apache-2.0",
   "repository": {
