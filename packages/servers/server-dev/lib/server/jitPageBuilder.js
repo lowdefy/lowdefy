@@ -35,10 +35,10 @@ let cachedRegistry = null;
 let cachedBuildContext = null;
 let lastInvalidationMtime = null;
 
-// Frozen snapshot of icon imports from the initial build (what's actually in the Next.js bundle).
+// Frozen snapshot of icon imports from the initial build (what's actually in the client bundle).
 // Module-level so it persists across context resets (skeleton rebuilds update iconImports.json
-// with newly discovered icons, but those aren't in the bundle until the next nextBuild).
-// Only resets when the server process restarts (which happens after every nextBuild).
+// with newly discovered icons, but those aren't in the bundle until a server restart).
+// Only resets when the server process restarts.
 let bundledIconImports = null;
 
 function readJsonFile(filePath) {
@@ -134,9 +134,9 @@ function getBuildContext(buildDirectory, configDirectory) {
   cachedBuildContext.components = { api: readBuildApiArtifacts(buildDirectory) };
 
   // Use the frozen icon imports from the initial build for JIT detection.
-  // This represents what's actually in the Next.js bundle — not what shallowBuild
+  // This represents what's actually in the client bundle — not what shallowBuild
   // discovers on subsequent rebuilds (those icons aren't bundled yet).
-  // bundledIconImports is module-level and only resets on server restart (after nextBuild).
+  // bundledIconImports is module-level and only resets on server restart.
   if (!bundledIconImports) {
     bundledIconImports = readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? [];
   }

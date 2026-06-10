@@ -8,7 +8,7 @@ COPY . .
 RUN corepack enable
 
 # Build lowdefy app (Lowdefy config build + Vite client build)
-RUN pnpx lowdefy@5 build --log-level=debug
+RUN pnpx lowdefy@6 build --log-level=debug
 
 FROM node:22-bookworm-slim AS runner
 
