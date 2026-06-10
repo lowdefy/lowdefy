@@ -127,7 +127,9 @@ Form input components:
 | `RadioSelector`     | Single       | Radio button group              |
 | `CheckboxSelector`  | Array        | Checkbox group                  |
 | `ButtonSelector`    | Single/Array | Button-style selection          |
-| `TreeSelector`      | Single/Array | Hierarchical selection          |
+| `TreeInput`         | Array        | Inline hierarchical tree        |
+| `TreeSelector`      | Single       | Tree dropdown (single)          |
+| `TreeMultipleSelector` | Array     | Tree dropdown (multiple)        |
 | `DateSelector`      | Date         | Date picker                     |
 | `DateTimeSelector`  | Date         | Date and time picker            |
 | `DateRangeSelector` | Array        | Date range picker               |

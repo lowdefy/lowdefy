@@ -696,3 +696,15 @@
           - label: High
             value: high
             color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_checkbox_selector
+      type: CheckboxSelector
+      properties:
+        title: Permissions
+        data:
+          - { id: 1, name: Read }
+          - { id: 2, name: Write }
+          - { id: 3, name: Admin }
+        html: '{{ item.name }}'
+        valueKey: id

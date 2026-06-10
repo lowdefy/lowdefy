@@ -191,3 +191,33 @@
         html: |
           <strong>{{ item.name }}</strong>
           <div style="color:#666;">{{ item.role }}</div>
+
+- title: Select by key (valueKey)
+  blocks:
+    - id: keyed_list
+      type: ListSelector
+      properties:
+        valueKey: id
+        primaryKey: id
+        data:
+          - { id: 1, name: Starter, price: $0 }
+          - { id: 2, name: Pro, price: $20 }
+          - { id: 3, name: Enterprise, price: $99 }
+        html: |
+          <strong>{{ item.name }}</strong>
+          <div style="color:#888;">{{ item.price }} / month</div>
+      events:
+        onChange:
+          - id: capture_keyed
+            type: SetState
+            params:
+              keyed_plan_id:
+                _event: value
+    - id: keyed_plan_display
+      type: Paragraph
+      properties:
+        content:
+          _nunjucks:
+            template: 'Selected plan id: {{ keyed_plan_id if keyed_plan_id != null else "—" }}'
+            on:
+              _state: true

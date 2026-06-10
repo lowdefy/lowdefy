@@ -78,5 +78,7 @@ export { default as TimelineList } from './blocks/TimelineList/e2e.js';
 export { default as Title } from './blocks/Title/e2e.js';
 export { default as TitleInput } from './blocks/TitleInput/e2e.js';
 export { default as Tooltip } from './blocks/Tooltip/e2e.js';
+export { default as TreeInput } from './blocks/TreeInput/e2e.js';
+export { default as TreeMultipleSelector } from './blocks/TreeMultipleSelector/e2e.js';
 export { default as TreeSelector } from './blocks/TreeSelector/e2e.js';
 export { default as WeekSelector } from './blocks/WeekSelector/e2e.js';

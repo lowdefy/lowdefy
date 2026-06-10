@@ -1040,3 +1040,16 @@
           - label: High
             value: high
             color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_selector
+      type: Selector
+      properties:
+        title: Plan
+        placeholder: Choose a plan...
+        data:
+          - { id: 1, name: Starter }
+          - { id: 2, name: Pro }
+          - { id: 3, name: Enterprise }
+        html: '{{ item.name }}'
+        valueKey: id

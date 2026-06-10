@@ -2,6 +2,6 @@
 '@lowdefy/blocks-antd': patch
 ---
 
-fix: PageHeaderMenu active menu item underline now sits on the header's bottom border.
+fix: PageHeaderMenu active menu item underline now sits exactly on the header's bottom border.
 
-The horizontal menu was vertically centered in the 64px header, so the active item's underline floated above the header's bottom border (two disconnected lines). The menu now fills the header height (`lineHeight: var(--ant-layout-header-height, 64px)`) so the active underline aligns with the header divider, matching the single-border look of Sider / PageSiderMenu.
+The horizontal menu was vertically centered in the header, so the active item's underline floated half a pixel above the header's bottom divider — two disconnected lines under the selected tab. The menu now reserves the header's 1px bottom border when sizing its line box, so the active underline lands precisely on the divider, forming a single continuous line across the full page width (including the logo) and matching the single-border look of Sider / PageSiderMenu.

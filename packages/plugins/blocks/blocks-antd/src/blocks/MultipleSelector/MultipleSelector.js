@@ -19,8 +19,8 @@ import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
-import getUniqueValues from '../../getUniqueValues.js';
-import getValueIndex from '../../getValueIndex.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
 import getContrastTextColor from '../../getContrastTextColor.js';
 import getOptionColorStyle from '../../getOptionColorStyle.js';
 import Label from '../Label/Label.js';
@@ -68,7 +68,7 @@ const MultipleSelector = ({
 }) => {
   const [fetchState, setFetch] = useState(false);
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
-  const uniqueValueOptions = getUniqueValues(properties.options ?? []);
+  const uniqueValueOptions = useSelectorOptions({ properties, methods });
   // Auto-enable custom tag rendering when any option carries a color/tag, so
   // per-option pill colors work without requiring renderTags.
   const hasTagStyling = uniqueValueOptions.some(
@@ -129,7 +129,7 @@ const MultipleSelector = ({
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
               status={validation.status}
-              value={loading ? [] : getValueIndex(value, uniqueValueOptions, true)}
+              value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon

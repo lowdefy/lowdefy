@@ -35,9 +35,9 @@ const getTreeNodeTitle = (page, blockId, label) =>
 const getTreeNodeSwitcher = (page, blockId, label) =>
   getTreeNodeByText(page, blockId, label).locator('.ant-tree-switcher');
 
-test.describe('TreeSelector Block', () => {
+test.describe('TreeInput Block', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'treeselector');
+    await navigateToTestPage(page, 'treeinput');
   });
 
   // ============================================

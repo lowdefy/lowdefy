@@ -20,8 +20,8 @@ import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
-import getValueIndex from '../../getValueIndex.js';
-import getUniqueValues from '../../getUniqueValues.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
 import withTheme from '../withTheme.js';
 
 const RadioGroup = Radio.Group;
@@ -39,8 +39,8 @@ const RadioSelector = ({
   value,
   methods,
 }) => {
-  const uniqueValueOptions = getUniqueValues(properties.options || []);
-  const selectedIndex = getValueIndex(value, uniqueValueOptions);
+  const uniqueValueOptions = useSelectorOptions({ properties, methods });
+  const selectedIndex = getSelectedIndex(value, uniqueValueOptions, { properties });
   const radioGroup = (
     <RadioGroup
       id={`${blockId}_input`}
@@ -54,7 +54,7 @@ const RadioSelector = ({
         methods.setValue(val);
         methods.triggerEvent({ name: 'onChange', event: { value: val } });
       }}
-      value={`${getValueIndex(value, uniqueValueOptions)}`}
+      value={`${getSelectedIndex(value, uniqueValueOptions, { properties })}`}
     >
       <Space
         direction={properties.direction}

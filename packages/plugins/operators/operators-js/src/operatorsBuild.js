@@ -17,6 +17,7 @@
 import _and from './operators/shared/and.js';
 import _args from './operators/shared/args.js';
 import _array from './operators/shared/array.js';
+import _boolean from './operators/shared/boolean.js';
 import _date from './operators/shared/date.js';
 import _divide from './operators/shared/divide.js';
 import _eq from './operators/shared/eq.js';
@@ -58,6 +59,7 @@ export default {
   _args,
   _array,
   _base64,
+  _boolean,
   _date,
   _divide,
   _env,

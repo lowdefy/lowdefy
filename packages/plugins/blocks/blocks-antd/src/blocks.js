@@ -88,6 +88,8 @@ export { default as TextArea } from './blocks/TextArea/TextArea.js';
 export { default as TextInput } from './blocks/TextInput/TextInput.js';
 export { default as Title } from './blocks/Title/Title.js';
 export { default as TitleInput } from './blocks/TitleInput/TitleInput.js';
+export { default as TreeInput } from './blocks/TreeInput/TreeInput.js';
+export { default as TreeMultipleSelector } from './blocks/TreeMultipleSelector/TreeMultipleSelector.js';
 export { default as TreeSelector } from './blocks/TreeSelector/TreeSelector.js';
 export { default as Tooltip } from './blocks/Tooltip/Tooltip.js';
 export { default as Tour } from './blocks/Tour/Tour.js';

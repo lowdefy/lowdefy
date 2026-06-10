@@ -1229,3 +1229,17 @@
           - label: High
             value: high
             color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_multiple_selector
+      type: MultipleSelector
+      properties:
+        title: Team
+        placeholder: Add people...
+        data:
+          - { id: 1, name: Ada }
+          - { id: 2, name: Linus }
+          - { id: 3, name: Grace }
+          - { id: 4, name: Alan }
+        html: '{{ item.name }}'
+        valueKey: id

@@ -1,0 +1,78 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic (flat data)
+  blocks:
+    - id: tree_basic
+      type: TreeInput
+      properties:
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        defaultExpandAll: true
+        data:
+          - { id: 1, label: Engineering }
+          - { id: 2, label: Frontend, parentId: 1 }
+          - { id: 3, label: Backend, parentId: 1 }
+          - { id: 4, label: Operations }
+          - { id: 5, label: SRE, parentId: 4 }
+      events:
+        onChange:
+          - id: capture
+            type: SetState
+            params:
+              dept:
+                _event: value
+    - id: tree_basic_display
+      type: Paragraph
+      properties:
+        content:
+          _nunjucks:
+            template: 'Selected: {{ dept if dept != null else "—" }}'
+            on:
+              _state: true
+
+- title: Show line + checkboxes
+  blocks:
+    - id: tree_line
+      type: TreeInput
+      properties:
+        showLine: true
+        checkable: true
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        defaultExpandAll: true
+        data:
+          - { id: 1, label: Fruits }
+          - { id: 2, label: Apple, parentId: 1 }
+          - { id: 3, label: Banana, parentId: 1 }
+          - { id: 4, label: Vegetables }
+          - { id: 5, label: Carrot, parentId: 4 }
+
+- title: Options (label/value)
+  blocks:
+    - id: tree_options
+      type: TreeInput
+      properties:
+        primaryKey: value
+        parentKey: parent
+        defaultExpandAll: true
+        options:
+          - { value: eng, label: Engineering }
+          - { value: fe, label: Frontend, parent: eng }
+          - { value: be, label: Backend, parent: eng }
+          - { value: ops, label: Operations }

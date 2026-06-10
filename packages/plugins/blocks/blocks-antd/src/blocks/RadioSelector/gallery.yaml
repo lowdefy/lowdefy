@@ -745,3 +745,15 @@
           - label: High
             value: high
             color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_radio_selector
+      type: RadioSelector
+      properties:
+        title: Notify by
+        data:
+          - { id: 1, name: Email }
+          - { id: 2, name: SMS }
+          - { id: 3, name: Push }
+        html: '{{ item.name }}'
+        valueKey: id

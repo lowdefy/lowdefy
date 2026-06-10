@@ -1,0 +1,67 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic (flat data, tags)
+  blocks:
+    - id: basic_tree_multiple
+      type: TreeMultipleSelector
+      properties:
+        title: Categories
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        treeDefaultExpandAll: true
+        data:
+          - { id: 1, label: Electronics }
+          - { id: 2, label: Phones, parentId: 1 }
+          - { id: 3, label: Laptops, parentId: 1 }
+          - { id: 4, label: Clothing }
+          - { id: 5, label: Shirts, parentId: 4 }
+          - { id: 6, label: Shoes, parentId: 4 }
+
+- title: Checkable
+  blocks:
+    - id: checkable_tree_multiple
+      type: TreeMultipleSelector
+      properties:
+        title: Permissions
+        checkable: true
+        showCheckedStrategy: SHOW_CHILD
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        treeDefaultExpandAll: true
+        data:
+          - { id: 1, label: Read }
+          - { id: 2, label: Write }
+          - { id: 3, label: Create, parentId: 2 }
+          - { id: 4, label: Update, parentId: 2 }
+          - { id: 5, label: Admin }
+      events:
+        onChange:
+          - id: capture
+            type: SetState
+            params:
+              perms:
+                _event: value
+    - id: checkable_tree_display
+      type: Paragraph
+      properties:
+        content:
+          _nunjucks:
+            template: 'Selected: {{ perms }}'
+            on:
+              _state: true

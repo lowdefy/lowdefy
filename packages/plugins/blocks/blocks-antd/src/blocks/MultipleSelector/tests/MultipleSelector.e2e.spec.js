@@ -353,4 +353,41 @@ test.describe('MultipleSelector Block', () => {
     const content = selector.locator('.ant-select-content');
     await expect(content).toHaveClass(/ms-selector-tailwind/);
   });
+
+  // ============================================
+  // OBJECT-VALUED OPTIONS
+  // ============================================
+
+  test('renders a pre-populated object value as a tag', async ({ page }) => {
+    // Regression: an object-valued selection must re-display its tag.
+    const selector = getSelector(page, 'ms_object_value');
+    await expect(selector).toBeVisible();
+    const selectedItems = selector.locator('.ant-select-selection-item-content');
+    await expect(selectedItems).toHaveCount(1);
+    await expect(selectedItems.first()).toHaveText('Bob');
+  });
+
+  test('selecting an object-valued option renders a tag and stores the object', async ({ page }) => {
+    const selector = getSelector(page, 'ms_object_select');
+    await selector.click();
+
+    await getOption(page, 'ms_object_select', 1).click(); // Bob
+    await page.keyboard.press('Escape');
+
+    await expect(selector.locator('.ant-select-selection-item-content')).toHaveText('Bob');
+
+    // The full object value (not just the label) is what reaches state.
+    const display = getBlock(page, 'ms_object_select_display');
+    await expect(display).toContainText('"b2"');
+    await expect(display).toContainText('"Bob"');
+  });
+
+  test('matches a pre-populated object value by primaryKey', async ({ page }) => {
+    // Stored value differs from the option value except on `_id`, so a correct
+    // match must project `_id` from both sides; the label "Bob" then renders.
+    const selector = getSelector(page, 'ms_object_primarykey');
+    const selectedItems = selector.locator('.ant-select-selection-item-content');
+    await expect(selectedItems).toHaveCount(1);
+    await expect(selectedItems.first()).toHaveText('Bob');
+  });
 });

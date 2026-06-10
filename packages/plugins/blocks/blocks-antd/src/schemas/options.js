@@ -47,7 +47,6 @@ export default {
         'Options can either be an array of primitive values, on an array of label, value pairs.',
       items: {
         type: 'object',
-        required: ['value'],
         properties: {
           label: {
             type: 'string',

@@ -123,14 +123,16 @@ const PageHeaderMenu = ({
                             properties.menuLg,
                           ])}
                           styles={{
-                            // Fill the header height so the active item's underline lands on the
-                            // header's bottom border (instead of floating above it), matching the
-                            // single-border look of Sider / PageSiderMenu. borderBottom is left to
-                            // the Header so the divider spans the full width, including the logo.
+                            // Size the menu's line box to the header height minus its 1px bottom
+                            // border, so the active item's underline lands exactly on that border
+                            // (antd offsets horizontal items down by 1px expecting the menu's own
+                            // border below them; reserving the border's 1px here makes the underline
+                            // and the header divider coincide as a single line). borderBottom is left
+                            // to the Header so the divider spans the full width, including the logo.
                             element: mergeObjects([
                               {
                                 borderBottom: 'none',
-                                lineHeight: 'var(--ant-layout-header-height, 64px)',
+                                lineHeight: 'calc(var(--ant-layout-header-height, 64px) - 1px)',
                               },
                               styles.menu,
                             ]),

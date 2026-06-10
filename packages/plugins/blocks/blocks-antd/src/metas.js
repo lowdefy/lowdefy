@@ -90,6 +90,8 @@ export { default as Title } from './blocks/Title/meta.js';
 export { default as TitleInput } from './blocks/TitleInput/meta.js';
 export { default as Tooltip } from './blocks/Tooltip/meta.js';
 export { default as Tour } from './blocks/Tour/meta.js';
+export { default as TreeInput } from './blocks/TreeInput/meta.js';
+export { default as TreeMultipleSelector } from './blocks/TreeMultipleSelector/meta.js';
 export { default as TreeSelector } from './blocks/TreeSelector/meta.js';
 export { default as Watermark } from './blocks/Watermark/meta.js';
 export { default as WeekSelector } from './blocks/WeekSelector/meta.js';

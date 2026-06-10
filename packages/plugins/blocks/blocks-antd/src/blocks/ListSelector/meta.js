@@ -31,7 +31,8 @@ export default {
     onChange: {
       description: 'Triggered when the selection changes (only fires when `selectable` is true).',
       event: {
-        value: 'The newly selected data item, or null when the selection is cleared.',
+        value:
+          'The newly selected value — the `valueKey` field when set, otherwise the whole data item; null when the selection is cleared.',
         index: 'Zero-based index of the clicked card.',
         item: 'The data item bound to the clicked card.',
       },
@@ -79,6 +80,16 @@ export default {
         default: true,
         description:
           'Allow clicking the selected card again to clear the selection (sets the value to null). Ignored when `selectable` is false.',
+      },
+      valueKey: {
+        type: 'string',
+        description:
+          'Field of each data item stored as the block value when a card is selected (e.g. "id"). Omit to store the whole item. Lets the selection be driven with SetState using a simple key. Supports dotted paths.',
+      },
+      primaryKey: {
+        type: 'string',
+        description:
+          'Field used to match the current value (e.g. set with SetState) back to a card for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole item but a single field (e.g. "id") uniquely identifies it. Supports dotted paths.',
       },
       bordered: {
         type: 'boolean',

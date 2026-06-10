@@ -711,3 +711,15 @@
                 params:
                   content: Settings saved successfully.
                   duration: 2
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_segmented_selector
+      type: SegmentedSelector
+      properties:
+        title: Range
+        data:
+          - { id: 1, name: Day }
+          - { id: 2, name: Week }
+          - { id: 3, name: Month }
+        html: '{{ item.name }}'
+        valueKey: id

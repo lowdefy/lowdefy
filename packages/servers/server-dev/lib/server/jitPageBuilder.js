@@ -21,6 +21,7 @@ import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
+import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
 
 const jitLogger = createLogger({ name: 'jit-build' });
 
@@ -126,6 +127,11 @@ function getBuildContext(buildDirectory, configDirectory) {
   if (modules) {
     Object.assign(cachedBuildContext.modules, modules);
   }
+
+  // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
+  // buildPageJit) can resolve endpointIds. Without this the dev context has no
+  // components.api and every CallAPI action is flagged as a non-existent endpoint.
+  cachedBuildContext.components = { api: readBuildApiArtifacts(buildDirectory) };
 
   // Use the frozen icon imports from the initial build for JIT detection.
   // This represents what's actually in the Next.js bundle — not what shallowBuild

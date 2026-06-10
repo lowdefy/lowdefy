@@ -103,6 +103,11 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
+        - id: selectors
+          type: MenuLink
+          pageId: selectors
+          properties:
+            title: Driving Selectors
         - id: lowdefy-api
           type: MenuLink
           pageId: lowdefy-api
@@ -483,6 +488,12 @@
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
+        - id: TreeInput
+          type: MenuLink
+          pageId: TreeInput
+        - id: TreeMultipleSelector
+          type: MenuLink
+          pageId: TreeMultipleSelector
         - id: TreeSelector
           type: MenuLink
           pageId: TreeSelector
@@ -931,6 +942,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _boolean
+          type: MenuLink
+          pageId: _boolean
         - id: _build
           type: MenuLink
           pageId: _build

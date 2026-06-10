@@ -877,3 +877,15 @@
           - label: Done
             value: done
             color: '#16a34a'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_button_selector
+      type: ButtonSelector
+      properties:
+        title: Priority
+        data:
+          - { id: 1, name: Low }
+          - { id: 2, name: Medium }
+          - { id: 3, name: High }
+        html: '{{ item.name }}'
+        valueKey: id

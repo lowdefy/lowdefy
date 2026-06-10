@@ -21,8 +21,8 @@ import { ConfigProvider, Select } from 'antd';
 
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
-import getValueIndex from '../../getValueIndex.js';
-import getUniqueValues from '../../getUniqueValues.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
 import getContrastTextColor from '../../getContrastTextColor.js';
 
 const Option = Select.Option;
@@ -42,10 +42,10 @@ const Selector = ({
 }) => {
   const [fetchState, setFetch] = useState(false);
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
-  const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const uniqueValueOptions = useSelectorOptions({ properties, methods });
   // Color the whole selector with the selected option's color: `solid` fills the
   // input, otherwise the border/text is colored.
-  const selectedIndex = getValueIndex(value, uniqueValueOptions);
+  const selectedIndex = getSelectedIndex(value, uniqueValueOptions, { properties });
   const selectedOption = type.isNone(selectedIndex) ? undefined : uniqueValueOptions[selectedIndex];
   const selectedColor = type.isObject(selectedOption) ? selectedOption.color : undefined;
   const isSolid = properties.variant === 'solid';
@@ -153,7 +153,7 @@ const Selector = ({
                     setFetch(false);
                   }
                 }}
-                value={getValueIndex(value, uniqueValueOptions)}
+                value={getSelectedIndex(value, uniqueValueOptions, { properties })}
               >
                 {uniqueValueOptions.map((opt, i) =>
                   type.isPrimitive(opt) ? (

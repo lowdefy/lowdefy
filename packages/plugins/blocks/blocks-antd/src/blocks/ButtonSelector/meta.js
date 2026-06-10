@@ -17,6 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import options from '../../schemas/options.js';
+import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
@@ -60,6 +61,10 @@ export default {
       },
       disabled,
       options,
+      data,
+      html,
+      valueKey,
+      primaryKey,
       size: sizeSmallDefaultLarge,
       label,
       title: inputTitle,

@@ -20,8 +20,8 @@ import { type } from '@lowdefy/helpers';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Label from '../Label/Label.js';
-import getValueIndex from '../../getValueIndex.js';
-import getUniqueValues from '../../getUniqueValues.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
 import withTheme from '../withTheme.js';
 
 const CheckboxSelector = ({
@@ -37,9 +37,9 @@ const CheckboxSelector = ({
   value,
   methods,
 }) => {
-  const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const uniqueValueOptions = useSelectorOptions({ properties, methods });
   const selectedIndexes = new Set(
-    type.isNone(value) ? [] : getValueIndex(value, uniqueValueOptions, true)
+    type.isNone(value) ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
   );
   const checkboxGroup = (
     <Checkbox.Group
@@ -59,7 +59,7 @@ const CheckboxSelector = ({
         methods.setValue(val);
         methods.triggerEvent({ name: 'onChange', event: { value: val } });
       }}
-      value={getValueIndex(value, uniqueValueOptions, true)}
+      value={getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
     >
       <Space
         direction={properties.direction}

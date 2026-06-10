@@ -17,6 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import options from '../../schemas/options.js';
+import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import { disabled, inputTitle } from '../../schemas/inputProperties.js';
 
 export default {
@@ -65,6 +66,10 @@ export default {
         description: "Specifies wrapping of options. Applies when 'direction' is 'horizontal'.",
       },
       options,
+      data,
+      html,
+      valueKey,
+      primaryKey,
       label,
       title: inputTitle,
       theme: {

@@ -26,4 +26,5 @@ _ref:
     schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/meta.js
     gallery: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/gallery.yaml
     description: >
-      Tree selector with nested options and checkboxes.
+      Searchable single-select tree dropdown. Driven by flat `data`/`options` with
+      `primaryKey`/`parentKey` for hierarchy.

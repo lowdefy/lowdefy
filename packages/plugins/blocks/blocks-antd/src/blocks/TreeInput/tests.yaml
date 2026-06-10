@@ -13,7 +13,7 @@
 # limitations under the License.
 
 - id: default
-  type: TreeSelector
+  type: TreeInput
   properties:
     options:
       - label: Node 1
@@ -26,14 +26,14 @@
       - label: Node 2
         value: '2'
 - id: 'properties.title: My Tree'
-  type: TreeSelector
+  type: TreeInput
   properties:
     title: My Tree
     options:
       - label: Node 1
         value: '1'
 - id: 'properties.showLine: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     showLine: true
     options:
@@ -45,7 +45,7 @@
       - label: Node 2
         value: '2'
 - id: 'properties.defaultExpandAll: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     defaultExpandAll: true
     options:
@@ -57,7 +57,7 @@
           - label: Child 2
             value: child2
 - id: 'properties.checkable: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     checkable: true
     options:
@@ -69,21 +69,21 @@
       - label: Node 2
         value: '2'
 - id: 'properties.disabled: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     disabled: true
     options:
       - label: Node 1
         value: '1'
 - id: 'properties.selectable: false'
-  type: TreeSelector
+  type: TreeInput
   properties:
     selectable: false
     options:
       - label: Node 1
         value: '1'
 - id: 'properties.label title: My Tree Title'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       title: My Tree Title
@@ -91,7 +91,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label span: 12'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       span: 12
@@ -99,7 +99,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label align: right'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       align: right
@@ -107,7 +107,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label inline: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       inline: true
@@ -115,7 +115,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label disabled: true'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       disabled: true
@@ -123,7 +123,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label colon: false'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       colon: false
@@ -131,7 +131,7 @@
       - label: Node 1
         value: '1'
 - id: 'properties.label extra: showing extra'
-  type: TreeSelector
+  type: TreeInput
   properties:
     label:
       extra: showing extra

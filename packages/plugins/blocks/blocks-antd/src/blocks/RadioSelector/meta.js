@@ -17,6 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import options from '../../schemas/options.js';
+import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import { disabled, inputTitle } from '../../schemas/inputProperties.js';
 
 export default {
@@ -66,6 +67,10 @@ export default {
       },
       label,
       options,
+      data,
+      html,
+      valueKey,
+      primaryKey,
       title: inputTitle,
       theme: {
         type: 'object',

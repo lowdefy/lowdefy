@@ -799,3 +799,87 @@ blocks:
   );
   expect(iconDynamicCall).toBeUndefined();
 });
+
+// CallAPI endpoint reference validation (validateCallApiRefs) in the JIT path.
+// The dev server hydrates context.components.api from build/api/*.json before building
+// a page (see getBuildContext + readBuildApiArtifacts). These tests assert that, given
+// that hydrated context, a valid CallAPI endpointId does NOT produce a false warning,
+// while a genuinely missing endpointId still does.
+function createTestContextWithApi(api) {
+  const context = createTestContext();
+  context.components = { api };
+  context.typesMap = {
+    ...snapshotTypesMap,
+    actions: {
+      ...snapshotTypesMap.actions,
+      CallAPI: { package: '@lowdefy/actions-core' },
+    },
+  };
+  return context;
+}
+
+const callApiPageYaml = `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: btn
+    type: Button
+    events:
+      onClick:
+        - id: call_endpoint
+          type: CallAPI
+          params:
+            endpointId: my_endpoint
+`;
+
+function callApiPageRegistry() {
+  return new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+}
+
+test('buildPageJit does not warn for a CallAPI action when the endpoint exists in components.api', async () => {
+  const context = createTestContextWithApi([{ endpointId: 'my_endpoint', type: 'Api' }]);
+  const warnings = [];
+  context.handleWarning = (warning) => warnings.push(warning);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  expect(result.id).toBe('page:home');
+  expect(warnings.find((w) => w.message.includes('non-existent endpoint'))).toBeUndefined();
+});
+
+test('buildPageJit warns for a CallAPI action when the endpoint is missing from components.api', async () => {
+  const context = createTestContextWithApi([]);
+  const warnings = [];
+  context.handleWarning = (warning) => warnings.push(warning);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  const warning = warnings.find((w) => w.checkSlug === 'callapi-refs');
+  expect(warning).toBeDefined();
+  expect(warning.message).toBe(
+    'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
+  );
+});

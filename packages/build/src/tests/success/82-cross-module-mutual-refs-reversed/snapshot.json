@@ -3640,6 +3640,22 @@
               "default": false,
               "description": "Disable the block if true."
             },
+            "data": {
+              "type": "array",
+              "description": "Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request."
+            },
+            "html": {
+              "type": "string",
+              "description": "Nunjucks template that renders each option label when using `data`. The context exposes `item` (the current row) and `index` (the zero-based row index). Ignored when `options` is used."
+            },
+            "valueKey": {
+              "type": "string",
+              "description": "Field used as the selected value. With `options` it names the value field (defaults to \"value\"). With `data` it names the field stored when an option is selected; omit it to store the whole row. Supports dotted paths (e.g. \"user.id\")."
+            },
+            "primaryKey": {
+              "type": "string",
+              "description": "Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. \"id\") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths."
+            },
             "options": {
               "default": [],
               "oneOf": [
@@ -3669,9 +3685,6 @@
                   "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
                   "items": {
                     "type": "object",
-                    "required": [
-                      "value"
-                    ],
                     "properties": {
                       "label": {
                         "type": "string",

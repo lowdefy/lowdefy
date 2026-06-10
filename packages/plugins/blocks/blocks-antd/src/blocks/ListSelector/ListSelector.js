@@ -22,9 +22,21 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { get, serializer, type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
+import useSetData from '../../useSetData.js';
 
 const FIELD_SEPARATOR = '';
 const SKELETON_COUNT = 4;
+
+// The value stored on select: `valueKey` names the field, otherwise the whole item.
+function valueOf(item, valueKey) {
+  return type.isString(valueKey) && type.isObject(item) ? get(item, valueKey) : item;
+}
+
+// The identity used to match the current value back to a row: `primaryKey` (falling back to
+// `valueKey`) names the field; with neither, the whole value is the identity.
+function identityOf(x, effKey) {
+  return type.isString(effKey) && type.isObject(x) ? get(x, effKey) : x;
+}
 
 const ListSelectorRow = React.memo(function ListSelectorRow({
   blockId,
@@ -42,6 +54,7 @@ const ListSelectorRow = React.memo(function ListSelectorRow({
   clickable,
   selectable,
   selectedKey,
+  effKey,
   selectedClassName,
   selectedStyle,
   onRowClick,
@@ -53,8 +66,9 @@ const ListSelectorRow = React.memo(function ListSelectorRow({
   );
   const selected = useMemo(
     () =>
-      selectedKey != null && serializer.serializeToString(item, { stable: true }) === selectedKey,
-    [item, selectedKey]
+      selectedKey != null &&
+      serializer.serializeToString(identityOf(item, effKey), { stable: true }) === selectedKey,
+    [item, selectedKey, effKey]
   );
   const handleClick = useCallback(() => onRowClick(index, item), [onRowClick, index, item]);
   const className =
@@ -114,7 +128,7 @@ const ListSelector = ({
   styles = {},
   value,
 }) => {
-  const data = properties.data ?? [];
+  const data = useSetData({ properties, methods }) ?? [];
   const template = useMemo(
     () => (type.isString(properties.html) ? nunjucksFunction(properties.html) : null),
     [properties.html]
@@ -122,6 +136,10 @@ const ListSelector = ({
 
   const selectable = properties.selectable !== false;
   const allowDeselect = properties.allowDeselect !== false;
+  // `valueKey` names the field stored on select (otherwise the whole item). `primaryKey` (falling
+  // back to `valueKey`) is the identity matched when the value is controlled via state.
+  const valueKey = properties.valueKey;
+  const effKey = type.isString(properties.primaryKey) ? properties.primaryKey : valueKey;
 
   // Selection lives in the block value (app state), so a single serialized key identifies the
   // selected row. When selection is off the block stores no value and renders like a plain list.
@@ -129,8 +147,8 @@ const ListSelector = ({
     () =>
       !selectable || type.isNone(value)
         ? null
-        : serializer.serializeToString(value, { stable: true }),
-    [selectable, value]
+        : serializer.serializeToString(identityOf(value, effKey), { stable: true }),
+    [selectable, value, effKey]
   );
 
   const methodsRef = useRef(methods);
@@ -141,13 +159,19 @@ const ListSelector = ({
   allowDeselectRef.current = allowDeselect;
   const selectedKeyRef = useRef(selectedKey);
   selectedKeyRef.current = selectedKey;
+  const valueKeyRef = useRef(valueKey);
+  valueKeyRef.current = valueKey;
+  const effKeyRef = useRef(effKey);
+  effKeyRef.current = effKey;
 
   const clickable = selectable || Boolean(events.onClick);
   const onRowClick = useCallback((index, item) => {
     if (selectableRef.current) {
-      const itemKey = serializer.serializeToString(item, { stable: true });
+      const itemKey = serializer.serializeToString(identityOf(item, effKeyRef.current), {
+        stable: true,
+      });
       const deselect = allowDeselectRef.current && itemKey === selectedKeyRef.current;
-      const newValue = deselect ? null : item;
+      const newValue = deselect ? null : valueOf(item, valueKeyRef.current);
       methodsRef.current.setValue(newValue);
       methodsRef.current.triggerEvent({
         name: 'onChange',
@@ -262,6 +286,7 @@ const ListSelector = ({
           clickable={clickable}
           selectable={selectable}
           selectedKey={selectedKey}
+          effKey={effKey}
           selectedClassName={classNames.selected}
           selectedStyle={selectedStyle}
           onRowClick={onRowClick}
@@ -285,6 +310,7 @@ const ListSelector = ({
       clickable,
       selectable,
       selectedKey,
+      effKey,
       selectedStyle,
       onRowClick,
     ]

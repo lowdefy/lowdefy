@@ -17,6 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
+import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import {
   disabled,
   inputTitle,
@@ -77,6 +78,10 @@ export default {
       },
       label,
       disabled,
+      data,
+      html,
+      valueKey,
+      primaryKey,
       options: {
         default: [],
         oneOf: [
@@ -110,7 +115,6 @@ export default {
               'Options can either be an array of primitive values, on an array of label, value pairs.',
             items: {
               type: 'object',
-              required: ['value'],
               properties: {
                 label: {
                   type: 'string',
