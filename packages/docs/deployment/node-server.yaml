@@ -34,32 +34,17 @@ _ref:
 
             `pnpx lowdefy@5 start`
 
-            ### Create Standalone Folder:
+            ### Deploying the built server:
 
-            The following steps are used to create a standalone folder that copies only the necessary files for a production deployment.
+            `pnpx lowdefy@5 build` writes a complete server into `<config-directory>/.lowdefy/server` — the Hono server (`src/`), the built client assets (`dist/client/`), the app build artifacts (`build/`), and `public/`.
 
-            Update the .env file to contain the following:
+            Copy that folder (with its `node_modules`, or run `pnpm install --prod` inside it on the target machine) to your server and run:
 
-            ###### .env
+            ```node src/index.js```
 
-            ```
-            # ...
-            LOWDEFY_BUILD_OUTPUT_STANDALONE = 1
-            ```
+            from inside the folder, or `pnpm start`. The server listens on `PORT` (default 3000).
 
-            The production build output is then created by running:
-
-            `pnpx lowdefy@5 build`
-
-            The above creates a Next.js standalone folder at `<config-directory>/.lowdefy/server/.next/standalone`. Read more about this [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output).
-
-            This folder can be copied or moved around as needed and can be run using:
-
-            ```node .lowdefy/server/.next/standalone/server.js```
-
-            or with the applicable path if the standalone folder has been moved.
-
-            Files in the `public` and `.next/static` folders do not get copied over into this standalone folder and should therefore be copied over manually or be served from a CDN. Read more [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output#automatically-copying-traced-files).
+            Always run the build before restarting the server — the server reads the client asset manifest once at startup.
 
             ### Alternative
 

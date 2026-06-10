@@ -70,7 +70,7 @@ const testTypesMap = {
     callbacks: {},
     events: {},
     providers: {
-      GoogleProvider: { package: 'next-auth' },
+      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
     },
   },
   operators: {

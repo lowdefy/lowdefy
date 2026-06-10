@@ -27,17 +27,8 @@ const authWarnings = {
 
 function createLogger({ logger }) {
   return {
-    // Auth.js v5 calls error(error); NextAuth v4 called error(code, metadata).
-    // Handle both while the getNextAuthConfig compatibility shim exists.
-    error: (codeOrError, metadata) => {
-      if (codeOrError instanceof Error) {
-        logger.error(codeOrError);
-        return;
-      }
-      const error = metadata instanceof Error ? metadata : metadata?.error;
-      if (error) {
-        error.code = codeOrError;
-      }
+    // Auth.js v5 logger contract: error(error), warn(code), debug(message, metadata).
+    error: (error) => {
       logger.error(error);
     },
     warn: (code) => {

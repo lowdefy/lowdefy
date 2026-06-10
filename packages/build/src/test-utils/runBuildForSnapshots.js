@@ -166,10 +166,10 @@ const snapshotTypesMap = {
     },
     providers: {
       Auth0Provider: { package: '@lowdefy/plugin-auth0' },
-      GoogleProvider: { package: 'next-auth' },
-      GitHubProvider: { package: 'next-auth' },
-      CredentialsProvider: { package: 'next-auth' },
-      EmailProvider: { package: 'next-auth' },
+      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
+      GitHubProvider: { package: '@lowdefy/plugin-next-auth' },
+      CredentialsProvider: { package: '@lowdefy/plugin-next-auth' },
+      EmailProvider: { package: '@lowdefy/plugin-next-auth' },
     },
   },
   operators: {

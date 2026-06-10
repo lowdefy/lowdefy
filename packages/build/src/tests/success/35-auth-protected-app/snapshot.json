@@ -2062,7 +2062,7 @@
   "plugins/auth/adapters.js": "export default {\n  };",
   "plugins/auth/callbacks.js": "export default {\n  };",
   "plugins/auth/events.js": "export default {\n  };",
-  "plugins/auth/providers.js": "import { GoogleProvider as GoogleProvider } from 'next-auth/auth/providers';\nexport default {\n  GoogleProvider,\n  };",
+  "plugins/auth/providers.js": "import { GoogleProvider as GoogleProvider } from '@lowdefy/plugin-next-auth/auth/providers';\nexport default {\n  GoogleProvider,\n  };",
   "plugins/blockMetas.json": {
     "Result": {
       "category": "container"
@@ -9010,7 +9010,7 @@
       "providers": {
         "GoogleProvider": {
           "originalTypeName": "GoogleProvider",
-          "package": "next-auth",
+          "package": "@lowdefy/plugin-next-auth",
           "count": 1,
           "~k": "4m"
         },
