@@ -1,6 +1,6 @@
 # Build Pipeline Architecture
 
-How Lowdefy transforms YAML configuration into a running Next.js application.
+How Lowdefy transforms YAML configuration into a running application — a Hono server serving a Vite-built React client.
 
 ## Overview
 
@@ -12,7 +12,7 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 5. Validates configuration against schemas
 6. Processes pages, blocks, connections, and auth
 7. Extracts and hashes JavaScript code, generates type manifests
-8. Outputs JSON artifacts for the Next.js server
+8. Outputs JSON artifacts for the Hono server and the Vite client build
 
 ## Entry Points
 
@@ -27,8 +27,10 @@ The build pipeline is an 8-phase process (Phases 0–7) that:
 4. installServer() - Run npm install
 5. runLowdefyBuild() - Execute core build (pnpm run build:lowdefy)
 6. installServer() - Second install for updated deps
-7. runNextBuild() - Build Next.js app
+7. runClientBuild() - Vite client build (pnpm run build:client → vite build)
 ```
+
+The client build is skipped with `--no-client-build` (`--no-next-build` is kept as a deprecated, hidden alias). `runClientBuild` (`packages/cli/src/utils/runClientBuild.js`) spawns `pnpm run build:client` in the server directory and parses the gzip bundle size from the Vite output.
 
 ### Dev Command
 
@@ -67,6 +69,8 @@ Uses `@lowdefy/server-dev` instead of `@lowdefy/server`, outputs to `directories
 │               └── serverJsMap.js
 └── dev/                          # Development output
 ```
+
+The Vite client build (`vite build`, run after the core build) writes `dist/client/` inside the server directory — content-hashed assets plus `.vite/manifest.json`, which the production server reads once at startup (`src/html/getAssets.js`) to resolve the CSS `<link>` and `<script type="module">` URLs in the HTML shell.
 
 ## Core Build Pipeline
 
@@ -156,6 +160,8 @@ writeMaps(), writeTypes(), writePluginImports()
 // writePluginImports includes:
 //   - Import files (blocks.js, actions.js, operators/*.js, etc.)
 //   - Schema maps (blockSchemas.json, actionSchemas.json, operatorSchemas.json)
+//   - CSS artifacts via writeGlobalsCss (globals.css, layer-order.css,
+//     tailwind-candidates.css, per-page tailwind HTML files)
 ```
 
 ## The buildRefs System
@@ -394,9 +400,10 @@ cleanBuildDirectory() → Write all artifacts
      ↓
 .lowdefy/server/build/ populated
      ↓
-installServer() → runNextBuild()
+installServer() → runClientBuild()
      ↓
-Complete Next.js app in .lowdefy/server/
+Hono server + Vite client bundle in .lowdefy/server/
+(client assets in dist/client/ with .vite/manifest.json)
 ```
 
 ## Data Transformation Stages
@@ -556,11 +563,13 @@ When a page is requested, uses the walker to resolve page content:
 **File:** `packages/build/src/indexDev.js`
 
 ```javascript
-export { default as shallowBuild } from './build/shallowBuild.js';
-export { default as buildPageJit } from './build/buildPageJit.js';
-export { default as createPageRegistry } from './build/createPageRegistry.js';
-export { default as createFileDependencyMap } from './build/createFileDependencyMap.js';
+export { default as buildModuleDefs } from './build/buildModuleDefs.js';
+export { default as buildModules } from './build/buildModules.js';
+export { default as shallowBuild } from './build/jit/shallowBuild.js';
+export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as createContext } from './createContext.js';
+export { default as makeId } from './utils/makeId.js';
 ```
 
 Imported by the dev server as `@lowdefy/build/dev`.
@@ -577,18 +586,19 @@ In dev mode, the build directory contains additional JIT artifacts:
 │   ├── skeletonSourceFiles.json # Source files that affect skeleton (for watcher)
 │   ├── invalidatePages        # Timestamp file — triggers JIT cache invalidation
 │   ├── globals.css            # Generated CSS with @source, @theme, layer order
-│   ├── tailwind-candidates.css # Trigger file for CSS recompilation
+│   ├── layer-order.css        # Standalone @layer order statement (first CSS import)
+│   ├── tailwind-candidates.css # Trigger file — rewritten to invalidate Vite's CSS module
 │   ├── pages/{pageId}/        # Written by JIT build on first request
 │   │   ├── {pageId}.json
 │   │   └── requests/{requestId}.json
 │   └── ... (standard skeleton artifacts)
-├── lowdefy-build/
-│   └── tailwind/              # Per-page content files for Tailwind scanning
-│       ├── {pageId1}.html     # Written by skeleton build + updated by JIT/watcher
-│       └── {pageId2}.html
-└── public/
-    └── tailwind-jit.css       # Compiled CSS output (PostCSS + Tailwind)
+└── lowdefy-build/
+    └── tailwind/              # Per-page content files for Tailwind scanning
+        ├── {pageId1}.html     # Written by skeleton build + updated by JIT/watcher
+        └── {pageId2}.html
 ```
+
+There is no compiled CSS artifact in dev. `globals.css` is in Vite's dev module graph (imported by `client/main.jsx`), so Vite's CSS pipeline (PostCSS + Tailwind) recompiles and hot-replaces CSS whenever `globals.css` or anything it imports changes. JIT page builds and the file watcher touch `tailwind-candidates.css` (imported by `globals.css`) to trigger Tailwind recompilation for newly discovered classes. See [theme-and-styling.md](theme-and-styling.md) "Dev Mode: CSS Hot Reload".
 
 ## Customization Points
 

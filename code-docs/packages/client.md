@@ -24,7 +24,7 @@ import Client from '@lowdefy/client';
   config={pageConfig}
   jsMap={customJsFunctions}
   lowdefy={lowdefyContext}
-  router={nextRouter}
+  router={router}
   stage={buildStage}
   types={typeDefinitions}
   window={windowObject}
@@ -117,7 +117,7 @@ lowdefy = {
   user: { id, email, roles, ... },
 
   // Navigation
-  router: nextRouter,
+  router: router,
   Link: LinkComponent,
 
   // Configuration
@@ -239,7 +239,7 @@ Blocks receive it as a prop, not via React context, for performance.
 - **@lowdefy/layout**: Provides layout components. Container.js, InputContainer.js, etc. pass `classNames.block`/`styles.block` to BlockLayout, and layout components accept `className`/`style` props instead of the deprecated `makeCssClass`/`blockStyle`/`areaStyle` pattern.
 - **@lowdefy/block-utils**: Block helper utilities
 - **Block plugins**: Actual UI components
-- **Next.js**: Router and head management
+- **`@lowdefy/client/adapters`**: History-API router, Link and Head components the server packages pass in as `router` and `Components`
 
 ## Event Flow Example
 

@@ -79,22 +79,24 @@ theme:
 
 ### ConfigProvider Setup
 
-**File:** `packages/servers/server-dev/pages/_app.js`
+**Files:** `packages/servers/server/client/App.jsx`, `packages/servers/server-dev/client/App.jsx`
 
-The app wraps all content in antd's `StyleProvider` and `ConfigProvider`:
+The client entry wraps all content in antd's `StyleProvider` and `XProvider` (which extends `ConfigProvider`, adding `@ant-design/x` support):
 
 ```javascript
 <StyleProvider layer>
-  <ConfigProvider
+  <XProvider
     theme={{
-      ...lowdefy.theme?.antd,
+      ...antdConfig, // theme.antd minus the per-mode token/components keys
+      token, // resolved by useDarkMode (shared token + light/dark token)
+      components, // resolved by useDarkMode
       cssVar: { key: 'lowdefy' },
       hashed: false,
-      algorithm: resolveAlgorithm(lowdefy.theme?.antd?.algorithm),
+      algorithm, // resolved by useDarkMode
     }}
   >
     {/* app content */}
-  </ConfigProvider>
+  </XProvider>
 </StyleProvider>
 ```
 
@@ -132,17 +134,17 @@ When dark mode toggles, `ConfigProvider` re-renders with the new algorithm. Antd
 
 #### Dark Mode Flash Prevention
 
-**Files:** `packages/servers/server/pages/_document.js`, `packages/servers/server-dev/pages/_document.js`
+**Files:** `packages/servers/server/src/html/template.js`, `packages/servers/server-dev/src/html/renderDevPage.js`
 
-Because `_app.js` uses `ssr: false` (`dynamic(() => Promise.resolve(App), { ssr: false })`), Ant Design's `ConfigProvider` and its CSS variables aren't available until client-side hydration. During page navigation, the browser defaults to a white background, causing a visible flash for dark mode users.
+The server returns an HTML shell with no SSR — React renders entirely client-side, so Ant Design's `ConfigProvider` and its CSS variables aren't available until hydration. On first paint, the browser defaults to a white background, causing a visible flash for dark mode users.
 
 This is solved with two coordinating pieces:
 
-1. **Synchronous inline script in `_document.js`** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — all embedded at build time from `theme.json`. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
+1. **Synchronous inline script in the HTML shell** — Runs before first paint. Reads `configColorMode`, `darkBg` (from `themeConfig.antd.darkToken.colorBgLayout`, default `'#000'`) and `lightBg` (from `themeConfig.antd.lightToken.colorBgLayout`, default `''`) — interpolated server-side via `safeScriptJson` from the `theme.json` build artifact. Mirrors the `useDarkMode` resolution: config → `localStorage('lowdefy_darkMode')` → `prefers-color-scheme: dark`. Applies the resolved bg color to `document.documentElement.style.backgroundColor`. An empty string means no inline style (browser default white).
 
 2. **`useEffect` in `useDarkMode`** — Once React hydrates, actively manages the `<html>` inline background on every `isDark` change: sets the resolved `colorBgLayout` from `antd.darkToken` / `antd.lightToken` (falling back to `'#000'` in dark and unset in light). This handles dark/light toggling and ensures the background stays correct across client-side navigations.
 
-The `configDarkMode` value is available in `_document.js` via `lib/build/theme.js`, which imports and deserializes the `theme.json` build artifact.
+The production server reads `theme.json` once at startup via `lib/build/theme.js` (an `fs.readFileSync` + `serializer.deserialize` loader). The dev server's `renderDevPage.js` reads `build/theme.json` per request, so a config rebuild updates the pre-hydration values without a server restart.
 
 **IMPORTANT:** The inline script's dark mode logic must stay in sync with `useDarkMode.js`. If the resolution priority changes (e.g., new preference tiers), update both.
 
@@ -549,10 +551,10 @@ class: 'p-2 md:p-4'
 
 ## Custom CSS (`public/styles.css`)
 
-Users can add a `public/styles.css` file for custom CSS. The build detects it and imports it into the `components` layer:
+Users can add a `public/styles.css` file for custom CSS. The build detects it and imports it into the `components` layer (the path is computed relative to the build directory):
 
 ```css
-@import '../../public/styles.css' layer(components);
+@import '../../../public/styles.css' layer(components);
 ```
 
 This gives custom CSS higher priority than antd styles but lower than Tailwind utilities. If the user needs to override utilities, they can use `!important` or write rules with higher specificity.
@@ -574,14 +576,20 @@ The complete generated file:
 @import 'tailwindcss';
 @import '@lowdefy/layout/grid.css';
 
-/* User custom styles (only if public/styles.css exists) */
-@import '../../public/styles.css' layer(components);
-
-/* Content sources for Tailwind JIT — per-page content + block JS collected at build time */
-@source "../lowdefy-build/tailwind/*.html";
-
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source */
 @import './tailwind-candidates.css';
+
+/* User custom styles (only if public/styles.css exists) */
+@import '../../../public/styles.css' layer(components);
+
+/* Content sources for Tailwind JIT — block JS content collected at build time */
+@source "../lowdefy-build/tailwind/*.html";
+
+/* Themed scrollbars — colors use antd CSS custom properties so they
+   auto-swap with dark/light mode */
+@layer base {
+  /* ... scrollbar-width/scrollbar-color + ::-webkit-scrollbar rules ... */
+}
 
 /* Antd-to-Tailwind theme bridge — extends default Tailwind theme with antd design tokens */
 @theme inline {
@@ -591,51 +599,55 @@ The complete generated file:
 }
 ```
 
+All `@import` statements come before `@source` and every other statement — the CSS spec only allows `@charset` and an empty `@layer` statement before `@import`, and Vite's CSS pipeline enforces this (it warns and may drop late imports). This is why the layer order declaration is an empty statement at the top and why the user styles import sits above `@source`.
+
+`writeGlobalsCss` also writes two sibling artifacts:
+
+- `layer-order.css` — just the `@layer theme, base, antd, components, utilities;` statement (see "Layer Order: Two-File Pattern" below)
+- `tailwind-candidates.css` — an (initially empty) file imported by `globals.css`; the dev server rewrites it to trigger Tailwind recompilation (see "Dev Mode: CSS Hot Reload" below)
+
 The `lowdefy-build/tailwind/` directory contains:
 
 - `{pageId}.html` — per-page content strings (from YAML config)
 - `_blocks.html` — block plugin JS content (from `collectBlockSourceContent`)
 
-### Production Layer Order Workaround
+### Layer Order: Two-File Pattern + Runtime Defense
 
-**Files:** `packages/servers/server/pages/_document.js`, `packages/servers/server-dev/pages/_document.js`
+**Files:** `packages/servers/server/client/main.jsx`, `packages/servers/server/src/html/template.js` (dev: `packages/servers/server-dev/client/main.jsx`, `packages/servers/server-dev/src/html/renderDevPage.js`)
 
-Next.js strips the `@layer` order declaration from CSS during bundling, so both servers re-declare it in a synchronous `<script>` tag in `_document.js` that creates and prepends a `<style>` element. A `MutationObserver` keeps it as the first `<head>` child even if antd's CSS-in-JS tries to prepend its own `<style>` tags.
+With cascade layers, whichever `@layer` statement the browser sees **first** defines the layer priority. Antd's CSS-in-JS uses `prependQueue` to inject `<style>` tags at the **top** of `<head>` at runtime — if one of those wins the race, `@layer antd` becomes the first-declared (lowest priority) layer and the cascade breaks.
 
-The same `_document.js` files also contain the dark mode flash prevention script (see "Dark Mode Flash Prevention" above).
+Two coordinating pieces lock the order:
 
-In dev mode, the layer order in `globals.css` is also preserved because PostCSS compiles it directly to `tailwind-jit.css` without Next.js CSS bundling.
+1. **`build/layer-order.css` imported first** — `client/main.jsx` imports it before `App.jsx` and before `globals.css`, so the order declaration is at the front of the Vite CSS output and the cascade priority is locked before antd's `StyleProvider` injects `@layer antd {}`.
+2. **Runtime defense in the HTML shell** — `template.js` (prod) and `renderDevPage.js` (dev) embed a synchronous inline `<script>` that prepends a `<style id="__lf-layer-order">` element with the order declaration, and a `MutationObserver` keeps it as the first `<head>` child even when antd's CSS-in-JS prepends its own `<style>` tags. The observer fires before paint, so the browser never sees the wrong cascade order.
+
+The same HTML shell also contains the dark mode flash prevention script (see "Dark Mode Flash Prevention" above).
+
+In production, Vite bundles all imported CSS (layer-order, globals, block package CSS) into a single content-hashed CSS asset linked from the HTML template. In dev, CSS is served and hot-replaced through Vite's module graph.
 
 ## Dev Mode: CSS Hot Reload
 
-CSS compilation in dev mode uses a two-path approach:
+There is no standalone CSS compile step in dev. `globals.css` is in Vite's dev module graph (imported by `client/main.jsx`), so Vite's CSS pipeline runs PostCSS + Tailwind (`@tailwindcss/postcss`, read automatically from `postcss.config.cjs`) whenever `globals.css` or anything it imports changes, and hot-replaces the result in the browser.
+
+Because Tailwind's `@source` HTML files are *not* in Vite's module graph, writing them alone doesn't trigger recompilation. The trigger is `build/tailwind-candidates.css` — an otherwise-empty file that `globals.css` imports. Rewriting it (with a timestamp comment) invalidates the CSS module, which re-runs Tailwind, which re-scans the `@source` files.
 
 ### Skeleton Build Path (initial build + full config changes)
 
 1. **Skeleton build** (`shallowBuild`) collects strings from all pages via `collectPageContent()` before stripping page content, stores them in `context.tailwindContentMap`
-2. **`writeGlobalsCss`** writes per-page HTML files to `lowdefy-build/tailwind/{pageId}.html`
-3. **Manager's `compileCss`** (`manager/processes/compileCss.mjs`) runs PostCSS + Tailwind to compile `globals.css` → `public/tailwind-jit.css`
+2. **`writeGlobalsCss`** writes per-page HTML files to `lowdefy-build/tailwind/{pageId}.html`, plus `globals.css`, `layer-order.css`, and `tailwind-candidates.css` — Vite picks the changes up through the module graph
 
 ### JIT Build Path (on-demand page load)
 
-1. **Page request** triggers `buildPageIfNeeded` in `jitPageBuilder.js`
+1. **Page request** triggers `buildPageIfNeeded` in `lib/server/jitPageBuilder.js`
 2. **`writePageJit`** writes the page JSON artifacts AND collects strings via `collectPageContent([page])`, writing them to `lowdefy-build/tailwind/{pageId}.html`
-3. **JIT `compileCss`** (`lib/server/compileCss.js`) recompiles CSS after the page build
-4. **Client CSS cache bust** — `usePageConfig` updates the `<link id="tailwind-jit-css">` href with `?v=${Date.now()}` so the browser picks up newly compiled classes
+3. **`jitPageBuilder` touches `build/tailwind-candidates.css`** so Vite re-runs Tailwind for classes the JIT build discovered; the updated CSS hot-replaces via HMR
 
 ### File Change Path (editing page YAML in dev)
 
 1. **`lowdefyBuildWatcher`** detects the change
-2. For page-only changes: `updatePageTailwindCss` parses the changed YAML, extracts all strings, and writes them to the page's tailwind HTML file, then calls `compileCss`
-3. For skeleton changes (lowdefy.yaml, non-page files): runs full skeleton rebuild + `compileCss`
-
-### CSS Compilation
-
-**Manager-side** (`manager/processes/compileCss.mjs`): Used during initial build and watcher-triggered rebuilds. Logs timing info.
-
-**Server-side** (`lib/server/compileCss.js`): Used by `jitPageBuilder` after JIT page builds. Lightweight — no logging, same PostCSS + Tailwind pipeline.
-
-Both read `{buildDirectory}/globals.css` (which contains `@source "../lowdefy-build/tailwind/*.html"`) and output `public/tailwind-jit.css`.
+2. For page-only changes: `updatePageTailwindCss` (`manager/utils/updatePageTailwindCss.mjs`) parses the changed YAML, extracts all strings, writes them to the page's tailwind HTML file, then touches `tailwind-candidates.css`
+3. For skeleton changes (lowdefy.yaml, files in `skeletonSourceFiles.json`): runs a full `lowdefyBuild`, which rewrites `globals.css` and the per-page HTML files via `writeGlobalsCss`
 
 ## Complete Example
 
@@ -739,15 +751,14 @@ pages:
 | `packages/build/src/build/jit/writePageJit.js`                              | JIT: writes page artifacts + per-page tailwind HTML file                                           |
 | `packages/build/src/build/buildPages/buildBlock/normalizeClassAndStyles.js` | Normalizes `class`/`style` at build time (dot-prefix stripping, slot partitioning)                 |
 | `packages/plugins/operators/operators-js/src/operators/client/theme.js`     | `_theme` operator implementation                                                                   |
-| `packages/servers/server/pages/_document.js`                                | Production CSS layer order + dark mode flash prevention (inline scripts)                           |
-| `packages/servers/server-dev/pages/_document.js`                            | Dev CSS layer order + dark mode flash prevention (inline scripts)                                  |
-| `packages/servers/server/lib/build/theme.js`                                | Imports `theme.json` build artifact (used by `_document.js` for `configDarkMode`)                  |
-| `packages/servers/server-dev/lib/build/theme.js`                            | Same for dev server                                                                                |
-| `packages/servers/server-dev/pages/_app.js`                                 | ConfigProvider + StyleProvider setup                                                               |
-| `packages/servers/server-dev/lib/server/compileCss.js`                      | JIT CSS compilation (PostCSS + Tailwind)                                                           |
-| `packages/servers/server-dev/manager/processes/compileCss.mjs`              | Manager CSS compilation (PostCSS + Tailwind, with logging)                                         |
-| `packages/servers/server-dev/manager/utils/updatePageTailwindCss.mjs`       | Hot-reload: parses changed YAML, updates tailwind HTML files                                       |
-| `packages/servers/server-dev/lib/client/utils/usePageConfig.js`             | Client-side CSS cache busting after JIT page load                                                  |
+| `packages/servers/server/src/html/template.js`                              | Production HTML shell — layer order + dark mode flash prevention (inline scripts)                  |
+| `packages/servers/server-dev/src/html/renderDevPage.js`                     | Dev HTML shell — same inline scripts, reads `theme.json` per request                               |
+| `packages/servers/server/lib/build/theme.js`                                | Reads + deserializes `theme.json` at startup (used by `renderPage` for the pre-hydration scripts)  |
+| `packages/servers/server/client/main.jsx`                                   | Client entry — imports `layer-order.css` first, then `globals.css` (dev: `server-dev/client/main.jsx`) |
+| `packages/servers/server/client/App.jsx`                                    | StyleProvider + XProvider setup (dev: `server-dev/client/App.jsx`)                                 |
+| `packages/servers/server/postcss.config.cjs`                                | `@tailwindcss/postcss` — read automatically by Vite's CSS pipeline                                 |
+| `packages/servers/server-dev/lib/server/jitPageBuilder.js`                  | JIT page build — touches `tailwind-candidates.css` to trigger CSS recompilation                    |
+| `packages/servers/server-dev/manager/utils/updatePageTailwindCss.mjs`       | Hot-reload: parses changed YAML, updates tailwind HTML files, touches `tailwind-candidates.css`    |
 | `packages/client/src/useDarkMode.js`                                        | Dark mode hook (localStorage + system preference + SetDarkMode action)                             |
 | `packages/layout/src/grid.css`                                              | Lowdefy grid CSS (in `components` layer)                                                           |
 | `packages/build/src/lowdefySchema.js`                                       | Schema definitions for `theme`, `class`, `style`                                                   |
@@ -812,19 +823,19 @@ ls -la node_modules/.pnpm/@lowdefy+blocks-antd*/node_modules/antd
 
 **Workspace edge case:** If the external repo's `pnpm-workspace.yaml` includes `.lowdefy/*` as a workspace member (e.g., `app/.lowdefy/*`), pnpm resolves the server's dependencies from the workspace root's `.pnpm` store instead of a local one. This is usually fine but can cause version conflicts with other workspace packages.
 
-### 3. CSS Layer Order (Production)
+### 3. CSS Layer Order
 
-**File:** `packages/servers/server/pages/_document.js`
+**File:** `packages/servers/server/src/html/template.js`
 
-Next.js strips `@layer` declarations from CSS during bundling. The production server redeclares the layer order in a `<style>` tag in `_document.js`. Without it, antd CSS-in-JS and Tailwind utilities have unpredictable priority.
+antd's CSS-in-JS prepends `<style>` tags to `<head>` at runtime — if one of them declares `@layer antd` before the browser has seen the order declaration, antd becomes the lowest-priority layer and Tailwind utilities/antd styles get unpredictable priority. The HTML shell's inline script prepends a `<style id="__lf-layer-order">` element with the order declaration and a `MutationObserver` keeps it as the first `<head>` child.
 
-**Check:** View page source, confirm the `@layer theme, base, antd, components, utilities;` style tag appears before any CSS `<link>` tags.
+**Check:** View page source, confirm the layer-order inline `<script>` appears before the CSS `<link>` tags. In DevTools, confirm `<style id="__lf-layer-order">` is the first child of `<head>`.
 
-### 4. `transpilePackages` (Block CSS Modules)
+### 4. Missing or Stale CSS Asset (Production)
 
-Block packages that import CSS (`.css`, `.module.css`) must be listed in `transpilePackages` in `next.config.js`. Otherwise, Next.js skips CSS processing for node_modules packages and CSS imports fail silently.
+Vite bundles all imported CSS — including block packages' plain CSS and CSS modules, which resolve natively under Vite (no `transpilePackages`-style allowlist) — into a single content-hashed asset listed in `dist/client/.vite/manifest.json`. The server reads the manifest **once at startup** (`src/html/getAssets.js`), so an in-place deploy that rebuilds without restarting the server serves stale (or 404ing) asset URLs.
 
-**Check:** `.lowdefy/server/build/blockPackages.json` should list all block packages used by the app. `next.config.js` reads this file and adds them to `transpilePackages`.
+**Check:** Does `dist/client/.vite/manifest.json` have a `client/main.jsx` entry with a `css` array? Does the `<link rel="stylesheet">` in the page source point to a file that exists in `dist/client/assets/`? If not, rebuild the client and restart the server.
 
 ### 5. Dark Mode Toggle Chain
 
@@ -846,4 +857,4 @@ The hook also listens for OS theme changes via `matchMedia('(prefers-color-schem
 
 AgGrid dark mode maps `--ag-*` variables to `--ant-*` variables via a CSS module (`.antdTheme` class). It does NOT depend on antd JS — only on CSS variables being present at runtime.
 
-**Check:** In the built `.next/static/chunks/`, search for `antdTheme` in CSS files. The CSS module should contain the `--ag-*` to `--ant-*` mappings. If present, the issue is at runtime (variables not generated), not build-time.
+**Check:** In the built `dist/client/assets/`, search for `antdTheme` in the CSS asset. The CSS module should contain the `--ag-*` to `--ant-*` mappings. If present, the issue is at runtime (variables not generated), not build-time.
