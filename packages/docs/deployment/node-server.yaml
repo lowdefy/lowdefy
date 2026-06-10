@@ -28,15 +28,15 @@ _ref:
 
             To test the production server, it can be run locally. In order to do this, first create the production build output using:
 
-            `pnpx lowdefy@5 build`
+            `pnpx lowdefy@6 build`
 
             The production server can then be run using:
 
-            `pnpx lowdefy@5 start`
+            `pnpx lowdefy@6 start`
 
             ### Deploying the built server:
 
-            `pnpx lowdefy@5 build` writes a complete server into `<config-directory>/.lowdefy/server` — the Hono server (`src/`), the built client assets (`dist/client/`), the app build artifacts (`build/`), and `public/`.
+            `pnpx lowdefy@6 build` writes a complete server into `<config-directory>/.lowdefy/server` — the Hono server (`src/`), the built client assets (`dist/client/`), the app build artifacts (`build/`), and `public/`.
 
             Copy that folder (with its `node_modules`, or run `pnpm install --prod` inside it on the target machine) to your server and run:
 

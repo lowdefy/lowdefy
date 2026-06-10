@@ -26,7 +26,7 @@ _ref:
           content: |
             ### Building a Lowdefy app image
 
-            A Lowdefy app can be self-hosted or deployed to many hosting providers using Docker containers. The app needs to build into a Docker image, containing all the app configuration and a [Next.js Docker server](https://nextjs.org/docs/deployment#docker-image).
+            A Lowdefy app can be self-hosted or deployed to many hosting providers using Docker containers. The app needs to build into a Docker image, containing all the app configuration and the [Hono](https://hono.dev) server with its built client assets.
 
             The `init-docker` CLI command can be used to create a Dockerfile, or the following Dockerfile can be used:
 
@@ -41,7 +41,7 @@ _ref:
             RUN corepack enable
 
             # Build lowdefy app (Lowdefy config build + Vite client build)
-            RUN pnpx lowdefy@5 build --log-level=debug
+            RUN pnpx lowdefy@6 build --log-level=debug
 
             FROM node:22-bookworm-slim AS runner
 
@@ -151,7 +151,7 @@ _ref:
             RUN corepack enable
 
             # TODO: Change config-directory (./app) as appropriate here
-            RUN pnpx lowdefy@5 build --config-directory ./app --log-level=debug
+            RUN pnpx lowdefy@6 build --config-directory ./app --log-level=debug
 
             FROM node:22-bookworm-slim AS runner
 

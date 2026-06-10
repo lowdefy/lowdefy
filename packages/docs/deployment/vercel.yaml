@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            To deploy a Lowdefy app on Vercel a custom install script needs to run to download the server and build the Lowdefy configuration. This script creates a Next.js application that can then be built by Vercel. The install script needs to be placed in an empty directory and it installs the server in its working directory - by default this directory is called `deploy`.
+            To deploy a Lowdefy app on Vercel a custom install script needs to run to download the server and build the Lowdefy configuration. This script prepares the Lowdefy server, which Vercel then builds with the Vite client build. The install script needs to be placed in an empty directory and it installs the server in its working directory - by default this directory is called `deploy`.
 
             The script can be created using the `init-vercel` CLI command, or the following file can be created at `<config-directory>/deploy/vercel.install.sh`:
 
@@ -41,7 +41,7 @@ _ref:
 
             - Create a new project
             - Connect the GitHub, Gitlab or BitBucket repository with your Lowdefy app to the Vercel project
-            - The framework preset should be Next.js
+            - The framework preset should be `Other`
             - The root directory should be `<config-directory>/deploy`
                 -  `<config-directory>` is the path to the directory in which the `lowdefy.yaml` file is placed
                 - Eg: If the `lowdefy.yaml` is in the top level of the repository the configured root directory should be `deploy`
