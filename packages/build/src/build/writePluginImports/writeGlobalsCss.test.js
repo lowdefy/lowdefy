@@ -87,6 +87,19 @@ test('writeGlobalsCss includes layer order and tailwind import', async () => {
   expect(css).toContain('@import "./tailwind-candidates.css";');
 });
 
+test('writeGlobalsCss places all @import statements before @source', async () => {
+  const context = createContext();
+  await writeGlobalsCss({ components: {}, context });
+
+  // The CSS spec only allows @charset and empty @layer before @import —
+  // a late @import is dropped by spec-enforcing pipelines like Vite's.
+  const css = context.writeBuildArtifact.mock.calls[0][1];
+  const sourceIndex = css.indexOf('\n@source ');
+  const lastImportIndex = css.lastIndexOf('\n@import ');
+  expect(sourceIndex).toBeGreaterThan(-1);
+  expect(lastImportIndex).toBeLessThan(sourceIndex);
+});
+
 test('writeGlobalsCss deep merges theme.tailwind overrides with defaults', async () => {
   const context = createContext();
   const components = {
