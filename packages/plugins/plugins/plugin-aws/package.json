@@ -36,11 +36,12 @@
   },
   "type": "module",
   "exports": {
-    "./*": "./dist/*",
-    "./connections/*": "./dist/connections/*",
+    "./connections": "./dist/connections.js",
     "./blocks": "./dist/blocks.js",
     "./metas": "./dist/metas.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./connections/*": "./dist/connections/*",
+    "./*": "./dist/*"
   },
   "files": [
     "dist/*"
