@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
+import fs from 'node:fs';
+import path from 'node:path';
+
+function serveBuildJs(relativePath) {
+  const filePath = path.join(process.cwd(), 'build', ...relativePath);
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch {
+    // Empty default export if the file doesn't exist yet
+    return 'export default {};';
   }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
-    }
-    return { redirect: false, pageId: rootConfig.home.pageId };
-  }
-  return { redirect: false, pageId: location.pageId };
 }
 
-export default setPageId;
+export default serveBuildJs;

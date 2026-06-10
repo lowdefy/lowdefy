@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
+import path from 'path';
+import { createRequire } from 'module';
+
+function getViteBin() {
+  const require = createRequire(import.meta.url);
+  const vitePackageJsonPath = require.resolve('vite/package.json');
+  const vitePackageJson = require('vite/package.json');
+
+  let viteBinFragment = vitePackageJson.bin.vite;
+  if (process.platform === 'win32') {
+    viteBinFragment = viteBinFragment.replaceAll('/', '\\');
   }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
-    }
-    return { redirect: false, pageId: rootConfig.home.pageId };
-  }
-  return { redirect: false, pageId: location.pageId };
+
+  return path.join(path.dirname(vitePackageJsonPath), viteBinFragment);
 }
 
-export default setPageId;
+export default getViteBin;

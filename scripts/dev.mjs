@@ -26,7 +26,7 @@
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
     2. Imports CLI logger from built dist (for spinners and formatted output)
-    3. Copies server-dev to _server/dev/, patches next.config.js
+    3. Copies server-dev to _server/dev/
     4. Scans monorepo packages, rewrites @lowdefy/* deps to link: paths
     5. Handles workspace:* plugins from external pnpm monorepos
     6. Runs pnpm install in the isolated copy
@@ -38,7 +38,6 @@ import path from 'node:path';
 
 import parse, { REPO_ROOT } from './lib/parseArgs.mjs';
 import copyServer from './lib/copyServer.mjs';
-import patchNextConfig from './lib/patchNextConfig.mjs';
 import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins, { readLowdefyYaml } from './lib/addPlugins.mjs';
@@ -95,7 +94,6 @@ const stdOutLineHandler = createStdOutLineHandler({ context });
 
 logger.info({ spin: 'start' }, 'Copying server-dev to dev directory...');
 copyServer({ sourceDir: SERVER_DEV_DIR, targetDir: devDir });
-patchNextConfig({ targetDir: devDir });
 logger.info({ spin: 'succeed' }, 'Copied server-dev to dev directory.');
 
 // -- Step 4: Build @lowdefy/* package map --

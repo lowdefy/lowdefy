@@ -17,42 +17,39 @@
 import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
+import devServer from '@hono/vite-dev-server';
 
-// basePath from the Lowdefy build — assets are served under it.
+// basePath from the Lowdefy build — assets and routes are served under it.
 let basePath = '';
 try {
   const config = JSON.parse(fs.readFileSync('./build/config.json', 'utf8'));
   basePath = config.basePath ?? '';
 } catch (e) {
-  // No build yet (e.g. editor tooling) — default base.
+  // No build yet — default base.
 }
-
-const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
     react(),
-    uploadSourceMaps &&
-      sentryVitePlugin({
-        org: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT,
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-      }),
-  ].filter(Boolean),
+    devServer({
+      entry: './src/app.js',
+      // Vite serves these itself; everything else routes to the Hono app.
+      exclude: [
+        /^\/client\/.+/,
+        /^\/lib\/.+/,
+        /^\/build\/.+/,
+        /^\/@.+$/,
+        /^\/node_modules\/.*/,
+        /\?t=\d+$/,
+        /^\/favicon\.ico$/,
+      ],
+    }),
+  ],
   define: {
     // Vite does not replace process.env.NODE_ENV inside dependencies —
     // plugin and client code branch on it.
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
-  },
-  build: {
-    outDir: 'dist/client',
-    manifest: true,
-    sourcemap: uploadSourceMaps,
-    rollupOptions: {
-      input: 'client/main.jsx',
-    },
   },
   resolve: {
     // linked plugin packages (pnpm link: / workspace) must share one React.

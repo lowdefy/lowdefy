@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
+import serveBuildJs from '../lib/serveBuildJs.js';
+
+function jsEnvHandler(c) {
+  const env = c.req.param('env');
+  if (env !== 'client' && env !== 'server') {
+    return c.text('Invalid env parameter. Use "client" or "server".', 400);
   }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
-    }
-    return { redirect: false, pageId: rootConfig.home.pageId };
-  }
-  return { redirect: false, pageId: location.pageId };
+  const fileName = env === 'client' ? 'clientJsMap.js' : 'serverJsMap.js';
+  return c.body(serveBuildJs(['plugins', 'operators', fileName]), 200, {
+    'Content-Type': 'application/javascript',
+  });
 }
 
-export default setPageId;
+export default jsEnvHandler;

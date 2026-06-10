@@ -14,19 +14,12 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
-  }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
-    }
-    return { redirect: false, pageId: rootConfig.home.pageId };
-  }
-  return { redirect: false, pageId: location.pageId };
+// Splits the rest of a catch-all route into decoded segments, independent of
+// any configured basePath. Mirrors the Next.js [...param] query arrays —
+// nested ids (slashes in pageId or endpointId) are real.
+function getPathSegments(c, prefix) {
+  const rest = c.req.path.split(prefix)[1] ?? '';
+  return rest.split('/').filter(Boolean).map(decodeURIComponent);
 }
 
-export default setPageId;
+export default getPathSegments;

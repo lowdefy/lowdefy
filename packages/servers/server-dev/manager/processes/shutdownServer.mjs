@@ -16,18 +16,18 @@
 
 function shutdownServer(context) {
   return () => {
-    if (context.nextServer) {
+    if (context.devServer) {
       context.logger.debug(
-        `Existing next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+        `Existing next server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
       );
-      if (!context.nextServer.killed) {
+      if (!context.devServer.killed) {
         context.logger.info({ spin: 'start' }, 'Shutting down server...');
-        context.nextServer.kill();
+        context.devServer.kill();
         context.logger.debug(
-          `Killed next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+          `Killed next server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
         );
       }
-      context.nextServer = null;
+      context.devServer = null;
     }
   };
 }

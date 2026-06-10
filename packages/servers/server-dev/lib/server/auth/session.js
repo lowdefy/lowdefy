@@ -14,19 +14,23 @@
   limitations under the License.
 */
 
-// location comes from the custom router (@lowdefy/client/adapters):
-// { pageId, pathname, search }. pageId is null at the root path.
-function setPageId(location, rootConfig) {
-  if (location.pageId === '404') {
-    return { redirect: false, pageId: '404' };
+import { getAuthUser } from '@hono/auth-js';
+
+import authJson from '../../build/auth.js';
+import getMockSession from './getMockSession.js';
+
+// Replaces getServerSession.js — mock user first (dev only), then the
+// session from the Hono context populated by initAuthConfig.
+async function getSession(c) {
+  const mockSession = await getMockSession();
+  if (mockSession) {
+    return mockSession;
   }
-  if (!location.pageId) {
-    if (rootConfig.home.configured === false) {
-      return { redirect: true, pageId: rootConfig.home.pageId };
-    }
-    return { redirect: false, pageId: rootConfig.home.pageId };
+  if (authJson.configured !== true) {
+    return undefined;
   }
-  return { redirect: false, pageId: location.pageId };
+  const authUser = await getAuthUser(c);
+  return authUser?.session ?? undefined;
 }
 
-export default setPageId;
+export default getSession;
