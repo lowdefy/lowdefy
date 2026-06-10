@@ -22,15 +22,20 @@ import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
 
+import { serializer } from '@lowdefy/helpers';
+
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
 import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
-import loggerConfig from '../build/logger.json';
+import rawLoggerConfig from '../build/logger.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import createLogUsage from '../lib/client/createLogUsage.js';
 import initSentryClient from '../lib/client/sentry/initSentryClient.js';
 import setSentryUser from '../lib/client/sentry/setSentryUser.js';
 import Page from './Page.jsx';
+
+// Deserialize to restore arrays (e.g. sentry.userFields) from ~arr markers.
+const loggerConfig = serializer.deserialize(rawLoggerConfig);
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();

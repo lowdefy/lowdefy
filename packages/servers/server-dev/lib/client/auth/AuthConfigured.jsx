@@ -26,7 +26,11 @@ import {
   useSession,
 } from '@hono/auth-js/react';
 
-import lowdefyConfig from '../../../build/config.json';
+import { serializer } from '@lowdefy/helpers';
+
+import rawLowdefyConfig from '../../../build/config.json';
+
+const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
 // @hono/auth-js/react configures its fetch paths through a module-level
 // manager instead of SessionProvider props.

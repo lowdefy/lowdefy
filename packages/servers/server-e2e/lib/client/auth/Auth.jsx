@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import authConfig from '../../../build/auth.json';
+import { serializer } from '@lowdefy/helpers';
+
+import rawAuthConfig from '../../../build/auth.json';
+
+const authConfig = serializer.deserialize(rawAuthConfig);
 
 function e2eNotSupported() {
   throw new Error('Sign-in and sign-out are not supported in e2e testing.');

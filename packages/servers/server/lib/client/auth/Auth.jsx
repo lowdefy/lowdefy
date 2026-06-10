@@ -20,9 +20,15 @@ import React from 'react';
 import AuthConfigured from './AuthConfigured.jsx';
 import AuthNotConfigured from './AuthNotConfigured.js';
 
+import { serializer } from '@lowdefy/helpers';
+
 // Client code imports the build JSON directly — Vite handles JSON imports;
 // the lib/build/*.js wrappers are server-only (they read from disk).
-import authConfig from '../../../build/auth.json';
+// Deserialize to restore arrays from their ~arr build markers (providers
+// must be a real array for single-provider inference in createAuthMethods).
+import rawAuthConfig from '../../../build/auth.json';
+
+const authConfig = serializer.deserialize(rawAuthConfig);
 
 function Auth({ children, session }) {
   if (authConfig.configured === true) {
