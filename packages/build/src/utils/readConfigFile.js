@@ -18,12 +18,12 @@ import path from 'path';
 import { cachedPromises } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
-function createReadConfigFile({ directories }) {
+function createReadConfigFile({ directories, cache = new Map() }) {
   async function readConfigFile(filePath) {
     return readFile(path.resolve(directories.config, filePath));
   }
   return cachedPromises({
-    cache: new Map(),
+    cache,
     getter: readConfigFile,
   });
 }

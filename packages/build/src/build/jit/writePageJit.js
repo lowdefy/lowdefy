@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { serializer, type } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
 import collectPageContent from '../collectPageContent.js';
@@ -42,15 +42,9 @@ async function writePageJit({ page, context }) {
     delete request.auth;
   }
 
-  // Write updated keyMap and refMap (JIT build adds new entries)
-  if (!type.isObject(context.keyMap)) {
-    throw new Error('keyMap is not an object.');
-  }
-  if (!type.isObject(context.refMap)) {
-    throw new Error('refMap is not an object.');
-  }
-  await context.writeBuildArtifact('keyMap.json', serializer.serializeToString(context.keyMap));
-  await context.writeBuildArtifact('refMap.json', serializer.serializeToString(context.refMap));
+  // keyMap/refMap are not written per JIT build — error location resolution
+  // reads them from the shared in-memory build context (dev server runs in
+  // the same process as the build).
 
   // Write updated JS map files (JIT build extracts page-level _js functions)
   await writeJs({ context });

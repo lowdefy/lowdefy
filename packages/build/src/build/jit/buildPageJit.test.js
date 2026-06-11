@@ -574,7 +574,7 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
   }
 });
 
-test('buildPageJit writes keyMap/refMap so error handler resolves correct location', async () => {
+test('buildPageJit populates the in-memory keyMap so error handlers resolve correct locations', async () => {
   const context = createTestContext();
   mockFiles([
     {
@@ -611,16 +611,16 @@ blocks:
     message: expect.stringContaining('Action type "UndefinedAction" was used but is not defined'),
   });
 
-  // Verify keyMap.json and refMap.json were written to disk before the error
+  // keyMap/refMap are no longer written per JIT build — the dev server reads
+  // them from the shared in-memory build context. The context keyMap must
+  // contain the action's ~k entry with the correct source line so error
+  // handlers can resolve the location.
   const writeArgs = mockWriteBuildArtifact.mock.calls.map((c) => c[0]);
-  expect(writeArgs).toContain('keyMap.json');
-  expect(writeArgs).toContain('refMap.json');
+  expect(writeArgs).not.toContain('keyMap.json');
+  expect(writeArgs).not.toContain('refMap.json');
 
-  // The written keyMap should contain the action's ~k with correct ~l
-  const keyMapCall = mockWriteBuildArtifact.mock.calls.find((c) => c[0] === 'keyMap.json');
-  const keyMap = JSON.parse(keyMapCall[1]);
   // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
-  const actionEntry = Object.values(keyMap).find(
+  const actionEntry = Object.values(context.keyMap).find(
     (entry) => entry.key && entry.key.includes('UndefinedAction')
   );
   expect(actionEntry).toBeDefined();

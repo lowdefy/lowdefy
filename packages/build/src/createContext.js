@@ -33,9 +33,13 @@ function createContext({
   refResolver,
   stage = 'prod',
 }) {
+  const configFileCache = new Map();
   const context = {
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
+    // Cleared by the dev server on page invalidation so long-lived JIT
+    // contexts re-read edited config files from disk.
+    configFileCache,
     connectionIds: new Set(),
     directories,
     errors: [],
@@ -45,7 +49,7 @@ function createContext({
     logger,
     // Null prototype prevents pollution via attacker-controlled entry.id.
     modules: Object.create(null),
-    readConfigFile: createReadConfigFile({ directories }),
+    readConfigFile: createReadConfigFile({ cache: configFileCache, directories }),
     refMap: {},
     refResolver,
     unresolvedRefVars: {},

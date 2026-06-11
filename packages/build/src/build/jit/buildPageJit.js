@@ -37,7 +37,6 @@ import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
-import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
@@ -216,10 +215,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
 
-    // Write keyMap/refMap so the error handler reads JIT entries from disk.
-    // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
-    await writeMaps({ context: buildContext });
-
     // Initialize action ref collections for buildPage (normally done by buildPages)
     if (!buildContext.linkActionRefs) {
       buildContext.linkActionRefs = [];
@@ -258,7 +253,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     await updateDynamicIcons({ page: processed, context: buildContext });
 
     // Validate link, state, payload, and server-state references
-    const pageIds = Object.keys(pageRegistry);
+    const pageIds = type.isFunction(pageRegistry.keys)
+      ? [...pageRegistry.keys()]
+      : Object.keys(pageRegistry);
     validateLinkReferences({
       linkActionRefs: buildContext.linkActionRefs,
       pageIds,
