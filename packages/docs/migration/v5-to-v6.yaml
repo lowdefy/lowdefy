@@ -59,6 +59,7 @@ _ref:
 
             - **Users sign in again once.** The session cookie prefix changes from `next-auth.*` to `authjs.*`, so existing sessions are invalidated on upgrade.
             - **`NEXTAUTH_SECRET` and `NEXTAUTH_URL` still work**, but `AUTH_SECRET` and `AUTH_URL` are the preferred names going forward.
+            - **Email sign-in flows expect `nodemailer@^7`.** Auth.js declares a `nodemailer@^7` peer dependency. Custom email providers (or plugins) that pin `nodemailer@6` keep working but log a peer-dependency warning during install — upgrade the `nodemailer` dependency in your app or plugin to `^7` to clear it.
 
       - _ref:
           path: templates/navigation_buttons.yaml
