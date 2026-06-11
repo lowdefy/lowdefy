@@ -28,6 +28,7 @@
   "files": [
     "lib/*",
     "manager/*",
+    "plugin/*",
     "public_default/*",
     "package.original.json",
     ".eslintrc.yaml",
@@ -40,7 +41,7 @@
   "scripts": {
     "build": "cp package.json package.original.json || copy package.json package.original.json",
     "prepublishOnly": "pnpm build",
-    "start": "node manager/run.mjs",
+    "start": "node manager/supervisor.mjs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {

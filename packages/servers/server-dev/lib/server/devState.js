@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-// Served from the in-memory build state published by the lowdefy() Vite
-// plugin — same process, no artifact re-read. Module-scope export: the SSR
-// module graph is invalidated on rebuild, and restart-bucket changes (auth,
-// app, config) exit to the supervisor for a fresh process.
-import getDevState from '../server/devState.js';
+// The Hono app and the lowdefy() Vite plugin run in the same process — the
+// plugin publishes in-memory build state (plugin/devState.mjs) before the
+// SSR app first loads.
+function getDevState() {
+  const state = globalThis.__LOWDEFY_DEV__;
+  if (!state) {
+    throw new Error(
+      'Lowdefy dev state is not initialized. The dev server must be started through Vite with the lowdefy() plugin (lowdefy dev).'
+    );
+  }
+  return state;
+}
 
-export default getDevState().artifacts.auth;
+export default getDevState;

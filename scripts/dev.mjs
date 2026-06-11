@@ -30,7 +30,7 @@
     4. Scans monorepo packages, rewrites @lowdefy/* deps to link: paths
     5. Handles workspace:* plugins from external pnpm monorepos
     6. Runs pnpm install in the isolated copy
-    7. Starts the dev server manager (node manager/run.mjs)
+    7. Starts the dev server supervisor (node manager/supervisor.mjs)
 */
 
 import { execSync, spawn } from 'node:child_process';
@@ -166,7 +166,7 @@ if (watchIgnorePaths.length > 0) {
   env.LOWDEFY_SERVER_DEV_WATCH_IGNORE = JSON.stringify(watchIgnorePaths);
 }
 
-const child = spawn('node', ['manager/run.mjs'], {
+const child = spawn('node', ['manager/supervisor.mjs'], {
   cwd: devDir,
   stdio: ['ignore', 'pipe', 'pipe'],
   env,

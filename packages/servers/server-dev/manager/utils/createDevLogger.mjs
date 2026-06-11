@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
-// Served from the in-memory build state published by the lowdefy() Vite
-// plugin — same process, no artifact re-read. Module-scope export: the SSR
-// module graph is invalidated on rebuild, and restart-bucket changes (auth,
-// app, config) exit to the supervisor for a fresh process.
-import getDevState from '../server/devState.js';
+import pino from 'pino';
+import { createNodeLogger } from '@lowdefy/logger/node';
 
-export default getDevState().artifacts.auth;
+// Shared by the supervisor and the lowdefy() Vite plugin — both run in their
+// own process and need the same CLI-friendly output format.
+function createDevLogger({ name = 'lowdefy build' } = {}) {
+  return createNodeLogger({
+    name,
+    level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
+    base: { pid: undefined, hostname: undefined },
+    destination: pino.destination({ dest: 1, sync: true }),
+  });
+}
+
+export default createDevLogger;

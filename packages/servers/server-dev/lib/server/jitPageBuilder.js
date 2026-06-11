@@ -16,12 +16,11 @@
 
 import fs from 'fs';
 import path from 'path';
-import { serializer } from '@lowdefy/helpers';
-import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
+import { buildPageJit } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
+import getDevState from './devState.js';
 import PageCache from './pageCache.mjs';
-import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
 
 const jitLogger = createLogger({ name: 'jit-build' });
 
@@ -29,135 +28,23 @@ function formatDuration(ms) {
   if (ms < 1000) return `${ms}ms`;
   return `${(ms / 1000).toFixed(2)}s`;
 }
+
+// Pages built since the last invalidation. The lowdefy() Vite plugin runs in
+// the same process and invalidates through the shared dev state — the
+// previous mtime checks on invalidatePages/pageRegistry.json are gone.
 const pageCache = new PageCache();
-let cachedRegistryMtime = null;
-let cachedRegistry = null;
-let cachedBuildContext = null;
-let lastInvalidationMtime = null;
 
-// Frozen snapshot of icon imports from the initial build (what's actually in the client bundle).
-// Module-level so it persists across context resets (skeleton rebuilds update iconImports.json
-// with newly discovered icons, but those aren't in the bundle until a server restart).
-// Only resets when the server process restarts.
-let bundledIconImports = null;
-
-function readJsonFile(filePath) {
-  try {
-    const content = fs.readFileSync(filePath, 'utf8');
-    return serializer.deserialize(JSON.parse(content));
-  } catch {
-    return null;
-  }
-}
-
-function checkPageInvalidations(buildDirectory) {
-  const invalidatePath = path.join(buildDirectory, 'invalidatePages');
-  try {
-    const stat = fs.statSync(invalidatePath);
-    if (lastInvalidationMtime && stat.mtimeMs === lastInvalidationMtime) {
-      return;
-    }
-    lastInvalidationMtime = stat.mtimeMs;
-    pageCache.invalidateAll();
-    cachedBuildContext = null;
-  } catch {
-    // File doesn't exist yet — nothing to invalidate
-  }
-}
-
-function loadPageRegistry(buildDirectory) {
-  const registryPath = path.join(buildDirectory, 'pageRegistry.json');
-  try {
-    const stat = fs.statSync(registryPath);
-    // Only reload if file has changed
-    if (cachedRegistryMtime && stat.mtimeMs === cachedRegistryMtime) {
-      return cachedRegistry;
-    }
-    cachedRegistryMtime = stat.mtimeMs;
-    cachedRegistry = readJsonFile(registryPath);
-    // Invalidate all pages when registry changes (skeleton rebuild happened)
-    pageCache.invalidateAll();
-    cachedBuildContext = null;
-    return cachedRegistry;
-  } catch {
-    return null;
-  }
-}
-
-function getBuildContext(buildDirectory, configDirectory) {
-  if (cachedBuildContext) return cachedBuildContext;
-
-  const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
-  const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
-  const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
-  const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
-
-  const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
-  const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
-
-  cachedBuildContext = createContext({
-    customMessagesMap,
-    customTypesMap,
-    directories: {
-      build: buildDirectory,
-      config: configDirectory,
-      server: path.resolve(buildDirectory, '..'),
-    },
-    logger: jitLogger,
-    stage: 'dev',
-  });
-
-  // Restore refMap, keyMap, jsMap, and connectionIds from skeleton build
-  Object.assign(cachedBuildContext.refMap, refMap);
-  Object.assign(cachedBuildContext.keyMap, keyMap);
-  cachedBuildContext.jsMap.client = jsMap.client ?? {};
-  cachedBuildContext.jsMap.server = jsMap.server ?? {};
-  for (const id of connectionIds) {
-    cachedBuildContext.connectionIds.add(id);
+async function buildPageIfNeeded({ pageId }) {
+  const state = getDevState();
+  if (state.pageCache !== pageCache) {
+    state.pageCache = pageCache;
   }
 
-  // Load installed packages snapshot from skeleton build for missing-package detection
-  const installedPluginPackages =
-    readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
-  cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
-
-  // Restore module entries from skeleton build for JIT module page builds
-  const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
-  if (modules) {
-    Object.assign(cachedBuildContext.modules, modules);
-  }
-
-  // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
-  // buildPageJit) can resolve endpointIds. Without this the dev context has no
-  // components.api and every CallAPI action is flagged as a non-existent endpoint.
-  cachedBuildContext.components = { api: readBuildApiArtifacts(buildDirectory) };
-
-  // Use the frozen icon imports from the initial build for JIT detection.
-  // This represents what's actually in the client bundle — not what shallowBuild
-  // discovers on subsequent rebuilds (those icons aren't bundled yet).
-  // bundledIconImports is module-level and only resets on server restart.
-  if (!bundledIconImports) {
-    bundledIconImports = readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? [];
-  }
-  cachedBuildContext.iconImports = bundledIconImports;
-
-  // Accumulator for dynamically extracted icon SVG data written to plugins/iconsDynamic.js.
-  // Reset on skeleton rebuild (cachedBuildContext = null) — JIT re-discovers as needed.
-  cachedBuildContext.dynamicIconData = {};
-
-  // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
-  const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
-  if (idCounter != null) {
-    makeId.setCounter(idCounter);
-  }
-
-  return cachedBuildContext;
-}
-
-async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
-  checkPageInvalidations(buildDirectory);
-  const registry = loadPageRegistry(buildDirectory);
-  if (!registry || !registry[pageId]) {
+  // The live registry from shallowBuild is a Map (the previous file restore
+  // produced a plain object).
+  const registry = state.pageRegistry;
+  const pageEntry = typeof registry?.get === 'function' ? registry.get(pageId) : registry?.[pageId];
+  if (!pageEntry) {
     return false;
   }
 
@@ -174,16 +61,18 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   jitLogger.info({ spin: 'start' }, `Building page "${pageId}"...`);
   const startTime = Date.now();
   try {
-    const context = getBuildContext(buildDirectory, configDirectory);
+    // The live shallow-build context — refMap, keyMap, jsMap, typesMap,
+    // modules, and the makeId counter continue in memory. No artifact
+    // restore: producer and consumer share the process.
     const result = await buildPageJit({
       pageId,
       pageRegistry: registry,
-      context,
+      context: state.buildContext,
     });
     if (result && result.installing) {
       jitLogger.info(
         `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
-          'The page will be available after the server restarts.'
+          'The page will be available once they are installed.'
       );
       return result;
     }
@@ -196,7 +85,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     // tailwind content, so unchanged rebuilds cause no CSS recompile.
     if (result?._tailwindChanged) {
       fs.writeFileSync(
-        path.join(buildDirectory, 'tailwind-candidates.css'),
+        path.join(state.buildContext.directories.build, 'tailwind-candidates.css'),
         `/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n/* ${Date.now()} */\n`
       );
     }

@@ -14,24 +14,21 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
 
-// basePath from the Lowdefy build — assets and routes are served under it.
-let basePath = '';
-try {
-  const config = JSON.parse(fs.readFileSync('./build/config.json', 'utf8'));
-  basePath = config.basePath ?? '';
-} catch (e) {
-  // No build yet — default base.
-}
+import lowdefy from './plugin/index.mjs';
 
 export default defineConfig(({ mode }) => ({
-  base: `${basePath}/`,
+  // base is provided by the lowdefy() plugin config hook — it runs the
+  // initial build and resolves basePath from the built config.
   plugins: [
     react(),
+    // Runs the Lowdefy build in-process: initial build in the config hook,
+    // config/module/.env/package.json watchers, restart via exit(87) to the
+    // supervisor (manager/supervisor.mjs).
+    lowdefy(),
     devServer({
       entry: './src/app.js',
       // Vite serves these itself; everything else routes to the Hono app.

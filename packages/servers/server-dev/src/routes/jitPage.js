@@ -31,11 +31,7 @@ async function jitPageHandler(c) {
 
   let buildResult;
   try {
-    buildResult = await buildPageIfNeeded({
-      pageId,
-      buildDirectory: context.buildDirectory,
-      configDirectory: context.configDirectory,
-    });
+    buildResult = await buildPageIfNeeded({ pageId });
   } catch (error) {
     const rawErrors = error.buildErrors ?? [error];
     const errors = [];

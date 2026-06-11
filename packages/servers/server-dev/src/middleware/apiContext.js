@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
 import path from 'node:path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
@@ -27,38 +26,14 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
+import getDevState from '../../lib/server/devState.js';
+import getServerJsMap from '../../lib/server/getServerJsMap.js';
 import getSession from '../../lib/server/auth/session.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
-import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 
 const secrets = getSecretsFromEnv();
-
-// Dynamic JS map loading for JIT-built pages — the build rewrites
-// serverJsMap.js when a JIT page discovers new _js operators.
-let cachedJsMapMtime = null;
-let cachedJsMap = staticJsMap;
-
-function loadDynamicJsMap(buildDirectory) {
-  const jsMapPath = path.join(buildDirectory, 'plugins', 'operators', 'serverJsMap.js');
-  try {
-    const stat = fs.statSync(jsMapPath);
-    if (cachedJsMapMtime && stat.mtimeMs === cachedJsMapMtime) {
-      return cachedJsMap;
-    }
-    cachedJsMapMtime = stat.mtimeMs;
-    // For server-side, we can read and eval the JS file
-    const content = fs.readFileSync(jsMapPath, 'utf8');
-    const fn = new Function('exports', content.replace('export default', 'exports.default ='));
-    const exports = {};
-    fn(exports);
-    cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
-    return cachedJsMap;
-  } catch {
-    return cachedJsMap;
-  }
-}
 
 // Replaces lib/server/apiWrapper.js. Errors thrown by handlers are routed by
 // Hono to the app-level error handler (src/middleware/errorHandler.js).
@@ -68,7 +43,10 @@ function apiContext() {
       return next();
     }
     const buildDirectory = path.join(process.cwd(), 'build');
-    const jsMap = loadDynamicJsMap(buildDirectory);
+    // Live server jsMap from the shared build context — JIT page builds add
+    // content-hashed _js entries in memory (replaces the previous mtime-gated
+    // re-eval of serverJsMap.js from disk).
+    const jsMap = getServerJsMap();
 
     const context = {
       rid: uuid(),
@@ -100,6 +78,16 @@ function apiContext() {
       context.session = await getSession(c);
     }
     createApiContext(context);
+    // keyMap/refMap live in the shared build context — error location
+    // resolution reads them from memory (the per-JIT-build writeMaps disk
+    // write is gone). Everything else still reads the written artifacts.
+    const readConfigFile = context.readConfigFile;
+    const buildContext = getDevState().buildContext;
+    context.readConfigFile = async (filePath) => {
+      if (filePath === 'keyMap.json') return buildContext.keyMap;
+      if (filePath === 'refMap.json') return buildContext.refMap;
+      return readConfigFile(filePath);
+    };
     logRequest({ context });
     c.set('lowdefyContext', context);
     return next();

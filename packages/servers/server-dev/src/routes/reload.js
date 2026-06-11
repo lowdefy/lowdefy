@@ -14,33 +14,28 @@
   limitations under the License.
 */
 
-import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
-// SSE endpoint — notifies the client when build/reload is written so it can
-// mutate the SWR cache and refetch config.
-async function reloadHandler(c) {
-  return streamSSE(c, async (stream) => {
-    const watcher = chokidar.watch(['./build/reload'], {
-      persistent: true,
-      ignoreInitial: true,
-    });
+import getDevState from '../../lib/server/devState.js';
 
+// SSE endpoint — the lowdefy() Vite plugin emits a reload event after every
+// rebuild or page invalidation (in-process, replacing the watched
+// build/reload signal file) so the client can mutate the SWR cache and
+// refetch config.
+async function reloadHandler(c) {
+  const state = getDevState();
+  return streamSSE(c, async (stream) => {
     let open = true;
-    stream.onAbort(() => {
-      open = false;
-      watcher.close();
-    });
 
     const reload = () => {
       stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
     };
-    watcher.on('add', () => reload());
-    watcher.on('change', () => reload());
-    // Do not reload on unlink — cleanBuildDirectory deletes build/reload during
-    // skeleton rebuilds, which would send a premature SSE event before the new
-    // build artifacts are written. The real reload comes via add/change when
-    // reloadClients() creates the file after the build completes.
+    state.emitter.on('reload', reload);
+
+    stream.onAbort(() => {
+      open = false;
+      state.emitter.off('reload', reload);
+    });
 
     while (open) {
       await stream.sleep(15000);

@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-// Served from the in-memory build state published by the lowdefy() Vite
-// plugin — same process, no artifact re-read. Module-scope export: the SSR
-// module graph is invalidated on rebuild, and restart-bucket changes (auth,
-// app, config) exit to the supervisor for a fresh process.
-import getDevState from '../server/devState.js';
+// Restart protocol between the lowdefy() Vite plugin and the supervisor:
+// the plugin exits with this code when a fresh Node process is required
+// (stale native ESM cache for plugin packages, .env or auth changes); the
+// supervisor respawns immediately. Exit 0 stops; other codes are crashes
+// and respawn with backoff.
+const RESTART_EXIT_CODE = 87;
 
-export default getDevState().artifacts.auth;
+export default RESTART_EXIT_CODE;

@@ -14,13 +14,10 @@
   limitations under the License.
 */
 
-// Build artifacts are read from disk because the Hono server runs as
-// unbundled Node.js ESM — JSON imports would need import attributes, and
-// client code imports the build JSON directly through Vite instead.
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+// Served from the in-memory build state published by the lowdefy() Vite
+// plugin — same process, no artifact re-read. Module-scope export: the SSR
+// module graph is invalidated on rebuild, and restart-bucket changes (auth,
+// app, config) exit to the supervisor for a fresh process.
+import getDevState from '../server/devState.js';
 
-const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/i18n.json'), 'utf8'));
-
-export default serializer.deserialize(raw);
+export default getDevState().artifacts.i18n;
