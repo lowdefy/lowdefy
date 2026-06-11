@@ -18,9 +18,11 @@ import { jest } from '@jest/globals';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
 const mockWriteFile = jest.fn();
+const mockWriteFileIfChanged = jest.fn();
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   ...realNodeUtils,
   writeFile: mockWriteFile,
+  writeFileIfChanged: mockWriteFileIfChanged,
 }));
 
 const { default: testContext } = await import('../../test-utils/testContext.js');
@@ -56,6 +58,8 @@ beforeEach(() => {
   mockWriteBuildArtifact.mockResolvedValue(undefined);
   mockWriteFile.mockReset();
   mockWriteFile.mockResolvedValue(undefined);
+  mockWriteFileIfChanged.mockReset();
+  mockWriteFileIfChanged.mockResolvedValue(true);
 });
 
 test('buildPageJit returns null for unknown pageId', async () => {

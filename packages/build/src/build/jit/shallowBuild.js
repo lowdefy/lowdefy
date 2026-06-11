@@ -141,7 +141,7 @@ async function shallowBuild(options) {
     // Update server package.json before addInstalledTypes so that addInstalledTypes
     // sees the full set of dependencies on every run (not just after the first build).
     // This prevents plugin import files from differing between the initial and
-    // subsequent builds, which would trigger unnecessary Next.js rebuilds.
+    // subsequent builds, which would trigger unnecessary server restarts.
     await updateServerPackageJson({ components, context });
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });

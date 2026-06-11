@@ -100,7 +100,11 @@ async function writeGlobalsCss({ components, context }) {
 @import "tailwindcss";
 @import "@lowdefy/layout/grid.css";
 
-/* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source */
+/* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source.
+   This import is the ONLY recompile trigger in dev: the @source .html files below are
+   deliberately excluded from Vite's watcher (server.watch.ignored in the dev server's
+   vite.config.js) because watched .html changes force full browser reloads. The JIT
+   page builder touches this file whenever tailwind content changes. */
 @import "./tailwind-candidates.css";
 
 ${userStylesImport}/* Content sources for Tailwind JIT — block JS content collected at build time */
