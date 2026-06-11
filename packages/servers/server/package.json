@@ -90,7 +90,7 @@
     "@tailwindcss/postcss": "4.2.1",
     "tailwindcss": "4.2.1",
     "webpack": "5.94.0",
-    "yaml": "2.3.4",
+    "yaml": "2.9.0",
     "yargs": "17.7.2"
   },
   "engines": {
