@@ -34,6 +34,7 @@ import createContext from '../../createContext.js';
 import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
+import makeId from '../../utils/makeId.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
@@ -84,6 +85,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
+
+  // Namespaced keys (`p:<pageId>:<n>`, counter reset per build) make JIT
+  // builds deterministic — rebuilding a page produces identical keys, so
+  // byte-identical config yields byte-identical artifacts and the shared
+  // keyMap stays bounded. Callers (the dev server) serialize page builds, so
+  // the singleton namespace cannot interleave.
+  makeId.enterNamespace(`p:${pageId}`);
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -323,6 +331,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
+  } finally {
+    makeId.exitNamespace();
   }
 }
 

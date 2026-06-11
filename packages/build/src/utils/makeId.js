@@ -17,15 +17,38 @@
 class MakeId {
   constructor() {
     this.counter = 0;
+    this.namespace = null;
+    this.namespaceCounter = 0;
   }
 
   next() {
-    this.counter++;
+    if (this.namespace !== null) {
+      this.namespaceCounter += 1;
+      return `${this.namespace}:${this.namespaceCounter.toString(36)}`;
+    }
+    this.counter += 1;
     return this.counter.toString(36);
+  }
+
+  // Per-unit namespaces make keys deterministic and collision-free: JIT page
+  // builds use `p:<pageId>` with a counter that resets per build, so
+  // rebuilding one page always produces the same keys and never shifts
+  // another unit's keys. Skeleton builds keep the global counter (reset per
+  // build, deterministic for identical input).
+  enterNamespace(namespace) {
+    this.namespace = namespace;
+    this.namespaceCounter = 0;
+  }
+
+  exitNamespace() {
+    this.namespace = null;
+    this.namespaceCounter = 0;
   }
 
   reset() {
     this.counter = 0;
+    this.namespace = null;
+    this.namespaceCounter = 0;
   }
 
   setCounter(value) {
