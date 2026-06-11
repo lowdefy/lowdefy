@@ -51,8 +51,30 @@ export default defineConfig(({ mode }) => ({
     // plugin and client code branch on it.
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
   },
+  optimizeDeps: {
+    // There is no index.html in the root (the Hono app renders HTML), so the
+    // dependency scanner has nothing to crawl and would discover client deps
+    // lazily at first request — ending in a mid-session "optimized
+    // dependencies changed" full reload. The client entry reaches every
+    // plugin import statically (main.jsx → App → Routing → build/plugins/*),
+    // so a startup crawl discovers the full set. Linked workspace plugins are
+    // intentionally not pre-bundled (Vite default) so local plugin edits stay
+    // live.
+    entries: ['client/main.jsx'],
+  },
   resolve: {
     // linked plugin packages (pnpm link: / workspace) must share one React.
     dedupe: ['react', 'react-dom'],
+  },
+  server: {
+    watch: {
+      // Tailwind scan inputs are rewritten by JIT page builds, and Vite
+      // full-reloads the browser on any watched .html change — killing
+      // in-flight requests on every first page visit. CSS recompilation does
+      // not need these events: globals.css imports build/tailwind-candidates.css,
+      // which the JIT builder touches whenever tailwind content changes (the
+      // sole recompile trigger — see writeGlobalsCss in @lowdefy/build).
+      ignored: ['**/lowdefy-build/tailwind/**'],
+    },
   },
 }));

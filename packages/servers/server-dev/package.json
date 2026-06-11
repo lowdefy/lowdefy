@@ -97,7 +97,7 @@
     "tailwindcss": "4.2.1",
     "uuid": "13.0.0",
     "vite": "8.0.16",
-    "yaml": "2.3.4",
+    "yaml": "2.9.0",
     "yargs": "17.7.2"
   },
   "devDependencies": {
