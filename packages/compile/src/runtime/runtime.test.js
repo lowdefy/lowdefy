@@ -328,7 +328,9 @@ describe('module helpers — D7 binding semantics', () => {
     const binding = bindModuleEntry({ id: 'files' });
     const scope = createScope({ module: binding });
     expect(moduleId({ scope, kind: 'pageId', arg: 'view', loc })).toBe('files/view');
-    expect(moduleId({ scope, kind: 'id', arg: 'thing', loc })).toBe('files/thing');
+    // _module.id takes any non-object value and returns the entry id (walker).
+    expect(moduleId({ scope, kind: 'id', arg: true, loc })).toBe('files');
+    expect(moduleId({ scope, kind: 'id', arg: 'thing', loc })).toBe('files');
   });
 
   test('moduleId connectionId honors remappings', () => {
@@ -346,9 +348,10 @@ describe('module helpers — D7 binding semantics', () => {
   });
 
   test('moduleId object form resolves dependency targets', () => {
-    const dep = bindModuleEntry({ id: 'other', connections: { c1: 'mapped' } });
-    const binding = bindModuleEntry({ id: 'files', deps: { otherDep: dep } });
-    const scope = createScope({ module: binding });
+    // deps map names to entry ids; targets come from the build registry.
+    const registry = { other: { id: 'other', connections: { c1: 'mapped' } } };
+    const binding = bindModuleEntry({ id: 'files', deps: { otherDep: 'other' } });
+    const scope = createScope({ module: binding, getModuleEntry: (id) => registry[id] });
     expect(moduleId({ scope, kind: 'pageId', arg: { id: 'p', module: 'otherDep' }, loc })).toBe(
       'other/p'
     );
@@ -357,7 +360,7 @@ describe('module helpers — D7 binding semantics', () => {
     ).toBe('mapped');
     expect(() =>
       moduleId({ scope, kind: 'pageId', arg: { id: 'p', module: 'nope' }, loc })
-    ).toThrow('Module dependency "nope" not found');
+    ).toThrow('references dependency "nope" but no mapping exists');
   });
 
   test('moduleId invalid arg throws the walker message', () => {

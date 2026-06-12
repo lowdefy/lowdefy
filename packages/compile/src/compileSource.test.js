@@ -132,26 +132,27 @@ describe('markers mode delegates walker-only ref forms (S1b)', () => {
     expect(code).not.toContain('_r.ref(');
   });
 
-  test('operator-built paths delegate with the path expression evaluated in place', () => {
+  test('operator-built paths delegate with the raw def — the walker resolves the path', () => {
     const code = compileMarkers(
       'pages:\n  - _ref:\n      path:\n        _build.string.concat:\n          - pages/\n          - home.yaml\n'
     );
     expect(code).toContain('_r.delegatedRef(');
-    expect(code).toContain('"path": _r.markDeep(_r.buildOperator(');
+    // Raw def: the operator node passes through as data, no buildOperator call.
+    expect(code).toContain('"_build.string.concat"');
+    expect(code).not.toContain('"path": _r.markDeep(_r.buildOperator(');
   });
 
-  test('the _ref _var path shorthand delegates through getVar', () => {
+  test('the _ref _var path shorthand delegates as a raw def', () => {
     const code = compileMarkers('blocks:\n  - _ref:\n      _var: contentFile\n');
     expect(code).toContain('_r.delegatedRef(');
-    expect(code).toContain('"path": _r.getVar({ scope');
+    // Raw def: the walker resolves the _var path against the site vars.
+    expect(code).toContain('"_var": "contentFile"');
   });
 
-  test('resolver refs delegate; non-string resolver values stay a compile error', () => {
+  test('resolver refs delegate as raw defs', () => {
     const code = compileMarkers('pages:\n  - _ref:\n      resolver: resolvers/r.js\n');
     expect(code).toContain('"resolver": "resolvers/r.js"');
-    expect(() => compileMarkers('pages:\n  - _ref:\n      resolver:\n        _var: r\n')).toThrow(
-      'not yet compiled (config-compiler S1 scope)'
-    );
+    expect(code).toContain('_r.delegatedRef(');
   });
 
   test('yaml refs still compile to static imports, not delegation', () => {

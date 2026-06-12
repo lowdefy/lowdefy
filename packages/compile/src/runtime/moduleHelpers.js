@@ -111,56 +111,98 @@ async function moduleVar({ scope, key, loc }) {
   );
 }
 
-function resolveDep({ binding, depName, usage, loc }) {
-  const target = binding?.deps?.[depName];
-  if (!target) {
-    throw new ConfigError(`Module dependency "${depName}" not found for ${usage}.`, {
-      filePath: loc?.file,
-      lineNumber: loc?.line,
-    });
+// Walker resolveDepTarget parity: at app level the module name IS the entry
+// id; inside a module, names map through the registration's dependency
+// wiring. Targets come from the build registry (scope.getModuleEntry).
+// Errors carry no location (the walker passes an undefined configKey here).
+function resolveDepTarget({ scope, depName, usage }) {
+  const binding = scope.module;
+  const getEntry = scope.getModuleEntry ?? (() => undefined);
+  if (!binding) {
+    const targetEntry = getEntry(depName);
+    if (!targetEntry) {
+      throw new ConfigError(
+        `${usage} references module "${depName}" but no module with that entry id was registered.`
+      );
+    }
+    return targetEntry;
   }
-  return target;
+  const targetEntryId = (binding.deps ?? {})[depName];
+  if (!targetEntryId) {
+    throw new ConfigError(
+      `${usage} in module "${binding.id}" references dependency "${depName}" but no mapping exists. ` +
+        `Add dependencies.${depName} to module "${binding.id}".`
+    );
+  }
+  const targetEntry = getEntry(targetEntryId);
+  if (!targetEntry) {
+    throw new ConfigError(
+      `${usage} in module "${binding.id}" references dependency "${depName}" which maps to "${targetEntryId}", ` +
+        `but no module with entry id "${targetEntryId}" was registered.`
+    );
+  }
+  return targetEntry;
 }
 
-// Walker resolveModule*Id parity — string form scopes against the bound
-// module (ambiguous at app level), object form { id, module } resolves a
-// dependency target; connectionId honors remappings.
-function moduleId({ scope, kind, arg, loc }) {
+// Walker resolveModule*Id parity. _module.id accepts any non-object value
+// when a module is bound; the others take a string (scoped against the
+// binding, connectionId honoring remappings) or { id, module } resolving a
+// dependency target.
+function moduleId({ scope, kind, arg }) {
   const binding = scope.module;
   const opName = `_module.${kind}`;
+
+  if (kind === 'id') {
+    if (!type.isObject(arg)) {
+      if (!binding) {
+        throw new ConfigError(
+          '_module.id is ambiguous at the app level — no module to scope against. Use { module } to specify the target module.'
+        );
+      }
+      return binding.id;
+    }
+    if (type.isString(arg.module)) {
+      const target = resolveDepTarget({
+        scope,
+        depName: arg.module,
+        usage: `_module.id { module: "${arg.module}" }`,
+      });
+      return target.id;
+    }
+    throw new ConfigError('_module.id requires a truthy value or object { module }.');
+  }
 
   if (type.isString(arg)) {
     if (!binding) {
       throw new ConfigError(
-        `${opName} string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.`,
-        { filePath: loc?.file, lineNumber: loc?.line }
+        `${opName} string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.`
       );
     }
     if (kind === 'connectionId') {
       const remapping = binding.connections ?? {};
-      if (remapping[arg]) return remapping[arg];
+      if (remapping[arg]) {
+        return remapping[arg];
+      }
     }
     return `${binding.id}/${arg}`;
   }
 
   if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
-    const target = resolveDep({
-      binding,
+    const target = resolveDepTarget({
+      scope,
       depName: arg.module,
       usage: `${opName} { id: "${arg.id}", module: "${arg.module}" }`,
-      loc,
     });
     if (kind === 'connectionId') {
       const remapping = target.connections ?? {};
-      if (remapping[arg.id]) return remapping[arg.id];
+      if (remapping[arg.id]) {
+        return remapping[arg.id];
+      }
     }
     return `${target.id}/${arg.id}`;
   }
 
-  throw new ConfigError(`${opName} requires a string or object { id, module }.`, {
-    filePath: loc?.file,
-    lineNumber: loc?.line,
-  });
+  throw new ConfigError(`${opName} requires a string or object { id, module }.`);
 }
 
 export { bindModuleEntry, moduleVar, moduleId };

@@ -80,6 +80,8 @@ async function build(options) {
   let context;
   try {
     context = createContext(options);
+    // Registration (buildModuleDefs) branches on this for compiled manifests.
+    context.compiler = useCompiler;
 
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules

@@ -65,6 +65,9 @@ function emitModule({
   // to a file target — ({module, component}) => {cfgPath, moduleRoot,
   // entryId, exportName, innerRefLine, manifestFile} | null.
   resolveModuleExport = null,
+  // D7b: walker-path zones emitted as raw ~l-marked data instead of compiled
+  // expressions — manifest preserve zones (vars defaults, components content).
+  preserveZones = null,
   runtimeSpecifier = '@lowdefy/compile/runtime',
 }) {
   const refImports = new Map(); // cfgPath -> ident
@@ -185,62 +188,12 @@ function emitModule({
     return `{ ${varProps.join(', ')} }`;
   }
 
-  // Emits a ref the compiler does not resolve itself — module/component/menu
-  // and resolver refs, non-YAML content files, dynamic paths, the
-  // `_ref: { _var }` path shorthand. The def is rebuilt with path/vars/key
-  // expressions evaluated in place (walker step-3 semantics: container walk
-  // path) and handed to the build's walker at run time. Map-form defs carry
-  // the parser's ~l marks — for path-less refs the walker stores the def as
-  // refMap `original`, where the serializer writes those markers.
-  function emitMarkedRefDef(refEntry, structPath, wp) {
-    const refNode = refEntry.value;
-    if (refNode.t === 'lit') {
-      return json(refNode.value);
-    }
-    const keys = refNode.entries.map((e) => e.key);
-    const props = [];
-    for (const entry of refNode.entries) {
-      const { key, value: valueNode } = entry;
-      if (key === 'vars' && valueNode.t === 'map') {
-        // The vars map carries its key's line (addLineNumbers parity).
-        props.push(
-          `"vars": _r.mark(${emitRefDefVars(valueNode, structPath, wp)}, ${entry.keyPos.line})`
-        );
-        continue;
-      }
-      if (key === '_var' && !keys.includes('path')) {
-        // getRefPath treats `_ref: { _var: x }` as a dynamic path.
-        props.push(`"path": ${emitVar(entry, structPath, wp)}`);
-        continue;
-      }
-      if (['transformer', 'resolver', 'module', 'component', 'menu'].includes(key)) {
-        if (valueNode.t !== 'lit' || typeof valueNode.value !== 'string') {
-          throw new ConfigError(
-            `_ref ${key} must be a string path in "${file}" (line ${valueNode.pos.line}) — dynamic ${key} values are not yet compiled (config-compiler S1 scope).`,
-            { filePath: file, lineNumber: valueNode.pos.line }
-          );
-        }
-        props.push(`${json(key)}: ${json(valueNode.value)}`);
-        continue;
-      }
-      // path (incl. dynamic), key, ~ignoreBuildChecks, and unknown keys —
-      // emitted with the container's walk path (resolveRef step-3 ctx).
-      props.push(
-        `${json(key)}: ${emitNode(
-          valueNode,
-          childPath(structPath, `_ref.${key}`),
-          wp,
-          entry.keyPos.line
-        )}`
-      );
-    }
-    // The def map carries the _ref key's line, like any map value.
-    return `_r.mark({ ${props.join(', ')} }, ${refEntry.keyPos.line})`;
-  }
-
   function emitDelegatedRef(refEntry, structPath, wp, refLine) {
+    // The def is handed to the walker RAW — it resolves path/vars/key itself
+    // with the site vars, so refMap `original` and unresolvedRefVars match
+    // the walker byte-for-byte (including refs inside vars).
     return (
-      `await _r.delegatedRef({ scope, def: ${emitMarkedRefDef(refEntry, structPath, wp)}, ` +
+      `await _r.delegatedRef({ scope, def: ${emitRaw(refEntry.value, refEntry.keyPos.line)}, ` +
       `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refEntry.value)} })`
     );
   }
@@ -252,6 +205,9 @@ function emitModule({
   function emitModuleComponentRef(refEntry, target, structPath, wp, refLine) {
     const refNode = refEntry.value;
     const parts = entryMap(refNode);
+    const defEntries = refNode.entries;
+    const entryOf = (name) => defEntries.find((e) => e.key === name) ?? null;
+
     let transformerIdent = 'null';
     let transformerPath = 'null';
     const transformerNode = parts.get('transformer');
@@ -265,11 +221,29 @@ function emitModule({
       transformerIdent = importTransformer(path.resolve(configDir, transformerNode.value));
       transformerPath = json(transformerNode.value);
     }
+
+    const varsNode = parts.get('vars');
+    const varsExpr = varsNode ? emitRefDefVars(varsNode, structPath, wp) : '{}';
+    const keyEntry = entryOf('key');
+    const keyExpr = keyEntry
+      ? emitNode(keyEntry.value, childPath(structPath, '_ref.key'), wp, keyEntry.keyPos.line)
+      : 'null';
+    const ignoreEntry = entryOf('~ignoreBuildChecks');
+    const ignoreExpr = ignoreEntry
+      ? emitNode(
+          ignoreEntry.value,
+          childPath(structPath, '_ref.~ignoreBuildChecks'),
+          wp,
+          ignoreEntry.keyPos.line
+        )
+      : 'undefined';
+
     const ident = importModuleTarget(target.cfgPath, target.moduleRoot);
     return (
       `await _r.moduleComponentRef({ scope, factory: ${ident}, file: ${json(target.cfgPath)}, ` +
       `entryId: ${json(target.entryId)}, component: ${json(target.exportName)}, ` +
-      `def: ${emitMarkedRefDef(refEntry, structPath, wp)}, ` +
+      `def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
+      `vars: ${varsExpr}, key: ${keyExpr}, ignoreBuildChecks: ${ignoreExpr}, ` +
       `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
       `manifestFile: ${json(target.manifestFile)}, innerRefLine: ${
         target.innerRefLine ?? 'undefined'
@@ -510,7 +484,29 @@ function emitModule({
     return `{ ${props.join(', ')} }`;
   }
 
+  // Raw data emission for preserve zones: no classification, no operator or
+  // ref compilation — nodes carry ~l only (walker-preserved subtrees are
+  // parse-marked and resolved later or consumed as raw defs).
+  function emitRaw(node, markLine) {
+    if (node.t === 'lit') {
+      return json(node.value === undefined ? null : node.value);
+    }
+    if (node.t === 'seq') {
+      const items = node.items.map((item) => emitRaw(item, item.pos.line));
+      const body = `[ ${items.join(', ')} ]`;
+      return mode === 'markers' ? `_r.mark(${body}, ${markLine})` : body;
+    }
+    const props = node.entries.map(
+      (entry) => `${json(entry.key)}: ${emitRaw(entry.value, entry.keyPos.line)}`
+    );
+    const body = `{ ${props.join(', ')} }`;
+    return mode === 'markers' ? `_r.mark(${body}, ${markLine})` : body;
+  }
+
   function emitNode(node, structPath, wp, markLine = node?.pos?.line) {
+    if (preserveZones && wp && preserveZones(wp)) {
+      return emitRaw(node, markLine);
+    }
     if (node.t === 'lit') {
       return json(node.value === undefined ? null : node.value);
     }

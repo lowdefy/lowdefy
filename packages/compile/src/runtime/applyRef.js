@@ -232,6 +232,9 @@ async function moduleComponentRef({
   entryId,
   component,
   def,
+  vars: consumerVars,
+  key,
+  ignoreBuildChecks,
   transformer,
   transformerPath,
   manifestFile,
@@ -266,7 +269,7 @@ async function moduleComponentRef({
         { filePath: loc?.file, lineNumber: loc?.line }
       );
     }
-    const vars = (type.isObject(def) ? def.vars : undefined) ?? {};
+    const vars = consumerVars ?? {};
     const outerScope = {
       ...scope,
       refId: outerId,
@@ -274,7 +277,10 @@ async function moduleComponentRef({
       sourceRefId: scope.refId ?? null,
       vars,
       file: manifestFile,
-      refChain: [...scope.refChain, manifestFile, cycleKey],
+      // Walker refChain is a Set — re-adding an existing member is a no-op.
+      refChain: scope.refChain.includes(manifestFile)
+        ? [...scope.refChain, cycleKey]
+        : [...scope.refChain, manifestFile, cycleKey],
       module: bindModuleEntry({
         id: entry.id ?? entryId,
         consumerVars: entry.consumerVars ?? {},
@@ -311,7 +317,6 @@ async function moduleComponentRef({
       }
     }
 
-    const key = type.isObject(def) ? def.key : undefined;
     if (key !== null && key !== undefined) {
       content = get(content, key, { default: null });
     }
@@ -320,7 +325,6 @@ async function moduleComponentRef({
       markDeep(content, outerId);
     }
 
-    const ignoreBuildChecks = type.isObject(def) ? def['~ignoreBuildChecks'] : undefined;
     if (ignoreBuildChecks !== undefined) {
       if (type.isObject(content)) {
         content['~ignoreBuildChecks'] = ignoreBuildChecks;

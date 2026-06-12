@@ -16,28 +16,20 @@
 
 import fs from 'fs';
 import path from 'path';
-import { createRequire } from 'module';
 import { compileDir } from '@lowdefy/compile';
 import { createScope } from '@lowdefy/compile/runtime';
-import operators from '@lowdefy/operators-js/operators/build';
 
 import buildRefs from './buildRefs/buildRefs.js';
 import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
-import { resolve, WalkContext } from './buildRefs/walker.js';
-import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
-import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import {
+  makeRefTracker,
+  makeWalkerResolve,
+  makeResolveModuleVarDefault,
+  makeResolveModuleExport,
+  runtimePath,
+} from './compileScopeTools.js';
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
-
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
-
-// Compiled modules live in a tmp directory with no node_modules — the
-// runtime import is emitted as a relative path to the resolved package.
-const require = createRequire(import.meta.url);
-const runtimePath = fs.realpathSync(
-  path.join(path.dirname(require.resolve('@lowdefy/compile')), 'runtime/index.js')
-);
 
 // Config-compiler S1: replaces the walker for ref resolution. Mirrors the
 // buildRefs contract — returns the resolved components tree, collects
@@ -71,37 +63,6 @@ async function compileRefs({ context }) {
   // build keeps Node's ESM cache from serving stale modules across rebuilds.
   fs.mkdirSync(context.directories.build, { recursive: true });
   const outDir = fs.realpathSync(fs.mkdtempSync(path.join(context.directories.build, '.compile-')));
-  // D7a: `_ref: {module, component}` whose manifest export is a plain file
-  // ref compiles — the hook resolves the registration (populated by
-  // buildModuleDefs before this phase) to an absolute target. Anything else
-  // returns null and stays on walker delegation.
-  const resolveModuleExport = ({ module: moduleName, component }) => {
-    const entry2 = context.modules?.[moduleName];
-    if (!entry2?.moduleRoot) return null;
-    const item = (entry2.manifest?.components ?? []).find((c2) => c2.id === component);
-    const defNode = item?.component;
-    if (!defNode || Object.keys(defNode).length !== 1) return null;
-    let refPath = null;
-    if (typeof defNode._ref === 'string') {
-      refPath = defNode._ref;
-    } else if (
-      defNode._ref &&
-      typeof defNode._ref === 'object' &&
-      typeof defNode._ref.path === 'string' &&
-      Object.keys(defNode._ref).every((k) => k === 'path')
-    ) {
-      refPath = defNode._ref.path;
-    }
-    if (refPath === null || path.isAbsolute(refPath)) return null;
-    return {
-      cfgPath: path.resolve(entry2.moduleRoot, refPath),
-      moduleRoot: entry2.moduleRoot,
-      entryId: moduleName,
-      exportName: component,
-      innerRefLine: defNode['~l'],
-      manifestFile: defNode['~deferredFrom'] ?? path.join(entry2.moduleRoot, 'module.lowdefy.yaml'),
-    };
-  };
 
   const result = await compileDir({
     configDir,
@@ -109,7 +70,8 @@ async function compileRefs({ context }) {
     entry,
     mode: 'markers',
     runtimePath,
-    resolveModuleExport,
+    // App-level: module names are registration ids directly.
+    resolveModuleExport: makeResolveModuleExport(context),
   });
 
   // Walker parity: the root ref consumes the id counter first (so addKeys ids
@@ -131,68 +93,10 @@ async function compileRefs({ context }) {
     env: process.env,
     refId: rootRefId,
     walkPath: '',
-    refTracker: {
-      alloc: (globalPath, refMapEntry) => {
-        const id =
-          globalPath != null && context.refMap[globalPath] === undefined
-            ? globalPath
-            : makeId.next();
-        context.refMap[id] = refMapEntry;
-        return id;
-      },
-      setPath: (id, refPath) => {
-        context.refMap[id].path = refPath;
-      },
-      // Module refs have a null path — the walker stores the raw def.
-      setOriginal: (id, original) => {
-        context.refMap[id].original = original;
-      },
-    },
+    refTracker: makeRefTracker(context),
     getModuleEntry: (id) => context.modules?.[id],
-    // Walker resolveVarDefault parity: structured module-var defaults walk
-    // with a fresh context rooted at the manifest, cached on the entry.
-    resolveModuleVarDefault: async (rawDefault, entryId) => {
-      const moduleEntry = context.modules[entryId];
-      return resolve(
-        rawDefault,
-        new WalkContext({
-          buildContext: context,
-          refId: moduleEntry.refDef.id,
-          sourceRefId: null,
-          vars: {},
-          moduleDependencies: moduleEntry.moduleDependencies,
-          moduleEntry,
-          moduleRoot: moduleEntry.moduleRoot,
-          packageRoot: moduleEntry.packageRoot,
-          path: '',
-          currentFile: path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
-          refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
-          operators,
-          env: process.env,
-          dynamicIdentifiers,
-        })
-      );
-    },
-    // Ref forms the compiler does not resolve itself (module/component/menu,
-    // resolver refs, non-YAML content, dynamic paths) delegate to the real
-    // walker with a context built from the call site — same refMap, same id
-    // counter, identical output by construction.
-    walkerResolve: (node, site) =>
-      resolve(
-        node,
-        new WalkContext({
-          buildContext: context,
-          refId: site.refId,
-          sourceRefId: site.sourceRefId,
-          vars: site.vars ?? {},
-          path: site.walkPath,
-          currentFile: site.file,
-          refChain: new Set(site.refChain),
-          operators,
-          env: process.env,
-          dynamicIdentifiers,
-        })
-      ),
+    resolveModuleVarDefault: makeResolveModuleVarDefault(context),
+    walkerResolve: makeWalkerResolve(context),
   });
   let components = await mod.default(scope);
 

@@ -14,13 +14,26 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
+import { compileDir } from '@lowdefy/compile';
+import { createScope, bindModuleEntry } from '@lowdefy/compile/runtime';
+
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import {
+  makeRefTracker,
+  makeWalkerResolve,
+  makeResolveModuleVarDefault,
+  makeResolveModuleExport,
+  runtimePath,
+} from './compileScopeTools.js';
+import collectExceptions from '../utils/collectExceptions.js';
+import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
@@ -29,6 +42,50 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+
+// D7b zone rules. Content zones compile (refs/operators live); preserve
+// zones stay raw data (consumed lazily — var defaults, component defs).
+// Anything else is registration meta, which the compiled path extracts from
+// the raw parse — a manifest carrying operators/refs there falls back to
+// walker registration for that module.
+const OP_ALLOWED_ZONES = [
+  /^pages(\..*)?$/,
+  /^api(\..*)?$/,
+  /^connections(\..*)?$/,
+  /^menus\.\d+\.links(\..*)?$/,
+  /^components\.\d+\.component(\..*)?$/,
+  /^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/,
+];
+const MANIFEST_PRESERVE_ZONES = [
+  /^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/,
+  /^components\.\d+\.component$/,
+];
+const CONTENT_TOP_KEYS = new Set(['pages', 'api', 'connections', 'menus']);
+
+function manifestMetaHasOperators(node, nodePath = '') {
+  if (OP_ALLOWED_ZONES.some((re) => re.test(nodePath))) return false;
+  if (type.isArray(node)) {
+    return node.some((item, i) =>
+      manifestMetaHasOperators(item, nodePath ? `${nodePath}.${i}` : String(i))
+    );
+  }
+  if (type.isObject(node)) {
+    if (Object.keys(node).some((k) => k.startsWith('_'))) return true;
+    return Object.entries(node).some(([k, v]) =>
+      manifestMetaHasOperators(v, nodePath ? `${nodePath}.${k}` : k)
+    );
+  }
+  return false;
+}
+
+// Entry preserve zones for the compiled manifest: walker step-4 preserves
+// plus every non-content top-level subtree (registration meta is raw — its
+// values come from the raw parse, so the factory must not re-resolve them).
+function manifestPreserveZones(wp) {
+  if (MANIFEST_PRESERVE_ZONES.some((re) => re.test(wp))) return true;
+  const top = wp.split('.')[0];
+  return !CONTENT_TOP_KEYS.has(top);
+}
 
 function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
@@ -46,7 +103,9 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
         if (!varDef.properties[key]) {
           throw new ConfigError(
             `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
-              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(
+                ', '
+              )}.`
           );
         }
       }
@@ -100,9 +159,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`);
   }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(
-      `Module entry "${entry.id}": 'source' is required and must be a string.`
-    );
+    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
   if (Object.hasOwn(context.modules, entry.id)) {
@@ -143,7 +200,11 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     },
   });
 
-  const manifest = await resolve(content, ctx);
+  // D7b: with the compiler on and no operators/refs in registration meta,
+  // skip the local walk — meta extracts from the raw parse, content resolves
+  // through the compiled manifest at full-resolve time.
+  const compiledManifest = context.compiler === true && !manifestMetaHasOperators(content);
+  const manifest = compiledManifest ? content : await resolve(content, ctx);
 
   // Parse dependencies array from manifest
   const dependencies = manifest.dependencies ?? [];
@@ -216,7 +277,30 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     dependencies,
     moduleDependencies: entry.dependencies ?? {},
     refDef,
+    compiledManifest,
   };
+}
+
+// Walker parity for the compiled manifest: preserved zones carry
+// ~deferredFrom — getModuleRefContent and the component-export hook read it.
+function setDeferredFromMarks(manifest, moduleYamlPath) {
+  for (const item of manifest?.components ?? []) {
+    if (type.isObject(item?.component) || type.isArray(item?.component)) {
+      setNonEnumerableProperty(item.component, '~deferredFrom', moduleYamlPath);
+    }
+  }
+  const markDefaults = (defs) => {
+    for (const def of Object.values(defs ?? {})) {
+      if (!type.isObject(def)) continue;
+      if (type.isObject(def.default) || type.isArray(def.default)) {
+        setNonEnumerableProperty(def.default, '~deferredFrom', moduleYamlPath);
+      }
+      if (def.properties) {
+        markDefaults(def.properties);
+      }
+    }
+  };
+  markDefaults(manifest?.vars);
 }
 
 async function resolveFullManifest({ entryId, context }) {
@@ -225,29 +309,83 @@ async function resolveFullManifest({ entryId, context }) {
 
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
-  const ctx = new WalkContext({
-    buildContext: context,
-    refId: refDef.id,
-    sourceRefId: null,
-    vars: {},
-    moduleDependencies,
-    moduleEntry,
-    moduleRoot,
-    packageRoot,
-    path: '',
-    currentFile: moduleYamlPath,
-    refChain: new Set(refDef.path ? [refDef.path] : []),
-    operators,
-    env: process.env,
-    dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
-      return false;
-    },
-  });
+  let resolved;
+  if (moduleEntry.compiledManifest) {
+    // D7b: the manifest compiles once — content zones (pages, api,
+    // connections, menus) as compiled expressions, everything else raw —
+    // and the content factory runs with the registration bound.
+    fs.mkdirSync(context.directories.build, { recursive: true });
+    const outDir = fs.realpathSync(
+      fs.mkdtempSync(path.join(context.directories.build, '.compile-mod-'))
+    );
+    const result = await compileDir({
+      configDir: context.directories.config,
+      outDir,
+      entry: moduleYamlPath,
+      mode: 'markers',
+      runtimePath,
+      resolveModuleExport: makeResolveModuleExport(context, moduleDependencies),
+      entryPreserveZones: manifestPreserveZones,
+      entryModuleRoot: moduleRoot,
+    });
+    const mod = await import(result.entryUrl);
+    const scope = createScope({
+      vars: {},
+      importer: result.importer,
+      file: moduleYamlPath,
+      refChain: [moduleYamlPath],
+      onError: (error) => {
+        collectExceptions(context, error);
+      },
+      env: process.env,
+      refId: refDef.id,
+      walkPath: '',
+      refTracker: makeRefTracker(context),
+      getModuleEntry: (id) => context.modules?.[id],
+      resolveModuleVarDefault: makeResolveModuleVarDefault(context),
+      walkerResolve: makeWalkerResolve(context, {
+        moduleEntry,
+        moduleRoot,
+        packageRoot,
+        moduleDependencies,
+      }),
+      module: bindModuleEntry({
+        id: entryId,
+        consumerVars: moduleEntry.consumerVars ?? {},
+        varDefs: moduleEntry.varDefs ?? {},
+        connections: moduleEntry.connections ?? {},
+        deps: moduleDependencies ?? {},
+        resolvedVarCache: moduleEntry.resolvedVarCache,
+      }),
+    });
+    resolved = await mod.default(scope);
+    setDeferredFromMarks(resolved, moduleYamlPath);
+  } else {
+    const ctx = new WalkContext({
+      buildContext: context,
+      refId: refDef.id,
+      sourceRefId: null,
+      vars: {},
+      moduleDependencies,
+      moduleEntry,
+      moduleRoot,
+      packageRoot,
+      path: '',
+      currentFile: moduleYamlPath,
+      refChain: new Set(refDef.path ? [refDef.path] : []),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: (childPath) => {
+        if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath))
+          return 'preserve';
+        if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
+        return false;
+      },
+    });
 
-  let resolved = await resolve(manifest, ctx);
+    resolved = await resolve(manifest, ctx);
+  }
 
   resolved = evaluateStaticOperators({ context, input: resolved, refDef });
 
