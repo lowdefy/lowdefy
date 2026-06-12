@@ -61,6 +61,9 @@ async function compileAndRun({
     module,
     importer: result.importer,
     file: entry,
+    // The entry is on the chain from the start (walker buildRefs parity) —
+    // a ref back to the entry is a cycle at the first inclusion.
+    refChain: [entry],
     onError: collectErrors ? (e) => errors.push(e) : null,
     env,
   });

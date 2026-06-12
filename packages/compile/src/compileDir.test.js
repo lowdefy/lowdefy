@@ -72,16 +72,27 @@ test('compileDir supports the string _ref form', async () => {
   expect(output).toEqual({ child: { value: 42 } });
 });
 
-test('compileDir detects static circular references with the inclusion chain', async () => {
-  await expect(
-    compileOnly({
-      files: {
-        'a.yaml': `x:\n  _ref: b.yaml\n`,
-        'b.yaml': `y:\n  _ref: a.yaml\n`,
-      },
-      entry: 'a.yaml',
-    })
-  ).rejects.toThrow('Circular reference detected: a.yaml -> b.yaml -> a.yaml.');
+test('static circular references collect the walker error and null the parent ref', async () => {
+  // Import cycles are legal at the module level; the runtime refChain guard
+  // reproduces the walker exactly — the cycle error propagates past the
+  // offending ref and nulls the PARENT ref (walker step-7 throw vs the
+  // parent's step-11 catch).
+  const { output, errors } = await compileAndRun({
+    files: {
+      'a.yaml': `x:\n  _ref: b.yaml\n`,
+      'b.yaml': `y:\n  _ref: a.yaml\n`,
+    },
+    entry: 'a.yaml',
+    collectErrors: true,
+  });
+  expect(output).toEqual({ x: null });
+  expect(errors).toHaveLength(1);
+  expect(errors[0].message).toBe(
+    'Circular reference detected. File "a.yaml" references itself through:\n  -> a.yaml\n  -> b.yaml\n  -> a.yaml'
+  );
+  // The error carries the file containing the offending ref and its line.
+  expect(errors[0].filePath).toBe('b.yaml');
+  expect(errors[0].lineNumber).toBe(1);
 });
 
 test('missing static refs collect an error and resolve to null — the rest still builds', async () => {
@@ -122,23 +133,26 @@ child:
 });
 
 test('dynamic _ref cycles are caught by the scope refChain guard', async () => {
-  // The first dynamic inclusion of a.yaml is legal (the entry is not on the
-  // chain — walker parity); the second one is the cycle.
-  const { output, errors } = await compileAndRun({
-    files: {
-      'a.yaml': `
+  // The entry is on the chain from the start (walker buildRefs parity), so
+  // the first dynamic self-inclusion is already the cycle. At the top level
+  // there is no parent ref to null — the error propagates out of the
+  // factory, matching the walker where buildRefs throws to its caller.
+  await expect(
+    compileAndRun({
+      files: {
+        'a.yaml': `
 x:
   _ref:
     path:
       _build.string.concat: ['a', '.yaml']
 `,
-    },
-    entry: 'a.yaml',
-    collectErrors: true,
-  });
-  expect(output).toEqual({ x: { x: null } });
-  expect(errors).toHaveLength(1);
-  expect(errors[0].message).toContain('Circular reference detected: a.yaml -> a.yaml.');
+      },
+      entry: 'a.yaml',
+      collectErrors: true,
+    })
+  ).rejects.toThrow(
+    'Circular reference detected. File "a.yaml" references itself through:\n  -> a.yaml\n  -> a.yaml'
+  );
 });
 
 test('keys mode emits lexical ~k tags, a merged keyMap, and a refMap that resolveConfigLocation consumes', async () => {

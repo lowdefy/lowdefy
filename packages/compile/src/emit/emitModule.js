@@ -190,7 +190,7 @@ function emitModule({
       }
       if (key === '_var' && !keys.includes('path')) {
         // getRefPath treats `_ref: { _var: x }` as a dynamic path.
-        props.push(`"path": ${emitVar(valueNode, structPath, wp)}`);
+        props.push(`"path": ${emitVar(entry, structPath, wp)}`);
         continue;
       }
       if (['transformer', 'resolver', 'module', 'component', 'menu'].includes(key)) {
@@ -306,8 +306,13 @@ function emitModule({
       varsExpr = emitRefDefVars(varsNode, structPath, wp);
     }
 
-    const keyNode = parts.get('key');
-    const keyExpr = keyNode ? emitNode(keyNode, childPath(structPath, '_ref.key'), wp) : 'null';
+    const defEntries = refNode.t === 'map' ? refNode.entries : [];
+    const defEntryOf = (name) => defEntries.find((e) => e.key === name) ?? null;
+
+    const keyEntry = defEntryOf('key');
+    const keyExpr = keyEntry
+      ? emitNode(keyEntry.value, childPath(structPath, '_ref.key'), wp, keyEntry.keyPos.line)
+      : 'null';
 
     let transformerIdent = 'null';
     let transformerPath = 'null';
@@ -329,9 +334,14 @@ function emitModule({
       transformerPath = json(transformerNode.value);
     }
 
-    const ignoreNode = parts.get('~ignoreBuildChecks');
-    const ignoreExpr = ignoreNode
-      ? emitNode(ignoreNode, childPath(structPath, '_ref.~ignoreBuildChecks'), wp)
+    const ignoreEntry = defEntryOf('~ignoreBuildChecks');
+    const ignoreExpr = ignoreEntry
+      ? emitNode(
+          ignoreEntry.value,
+          childPath(structPath, '_ref.~ignoreBuildChecks'),
+          wp,
+          ignoreEntry.keyPos.line
+        )
       : 'undefined';
 
     const common =
@@ -343,42 +353,64 @@ function emitModule({
       const cfgPath = moduleRoot ? path.posix.join(moduleRoot, pathNode.value) : pathNode.value;
       // Missing files are a collected error with null in place — walker
       // parity; the rest of the config still builds (the refMap entry is
-      // still registered, so sitePath/refLine ride along).
+      // still registered, so sitePath/refLine ride along). The resolved
+      // absolute path is baked in for the getConfigFile message.
       if (!refExists(cfgPath)) {
-        return `await _r.missingRef({ scope, path: ${json(cfgPath)}, sitePath: ${json(
-          wp
-        )}, refLine: ${refLine}, loc: ${loc(refNode)} })`;
+        return (
+          `await _r.missingRef({ scope, path: ${json(cfgPath)}, ` +
+          `resolvedPath: ${json(path.resolve(configDir, cfgPath))}, ` +
+          `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
+        );
       }
       const ident = importRef(cfgPath);
       return `await _r.ref({ scope, factory: ${ident}, file: ${json(cfgPath)}, ${common} })`;
     }
-    const pathExpr = emitNode(pathNode, childPath(structPath, '_ref.path'), wp);
+    const pathExpr = emitNode(
+      pathNode,
+      childPath(structPath, '_ref.path'),
+      wp,
+      defEntryOf('path')?.keyPos.line
+    );
     return `await _r.dynRef({ scope, path: ${pathExpr}, ${common} })`;
   }
 
-  function emitVar(varNode, structPath, wp) {
+  // varEntry is the `_var` map entry — inner values carry their KEY's line
+  // (addLineNumbers parity), so a _state inside `default:` reports the
+  // `default:` line exactly like the walker.
+  function emitVar(varEntry, structPath, wp) {
+    const varNode = varEntry.value;
     let defExpr;
     if (varNode.t === 'lit') {
       defExpr = json(varNode.value);
     } else if (varNode.t === 'map') {
-      const parts = entryMap(varNode);
-      const keyNode = parts.get('key');
-      const defaultNode = parts.get('default');
-      const keyExpr = keyNode
-        ? emitNode(keyNode, childPath(structPath, '_var.key'), childWp(childWp(wp, '_var'), 'key'))
+      const keyEntry = varNode.entries.find((e) => e.key === 'key') ?? null;
+      const defaultEntry = varNode.entries.find((e) => e.key === 'default') ?? null;
+      const keyExpr = keyEntry
+        ? emitNode(
+            keyEntry.value,
+            childPath(structPath, '_var.key'),
+            childWp(childWp(wp, '_var'), 'key'),
+            keyEntry.keyPos.line
+          )
         : 'undefined';
       // The walker resolves children before _var substitution — the default
       // expression evaluates eagerly, parity-true.
-      const defaultExpr = defaultNode
+      const defaultExpr = defaultEntry
         ? `, default: ${emitNode(
-            defaultNode,
+            defaultEntry.value,
             childPath(structPath, '_var.default'),
-            childWp(childWp(wp, '_var'), 'default')
+            childWp(childWp(wp, '_var'), 'default'),
+            defaultEntry.keyPos.line
           )}, hasDefault: true`
         : '';
       defExpr = `{ key: ${keyExpr}${defaultExpr} }`;
     } else {
-      defExpr = emitNode(varNode, childPath(structPath, '_var'), childWp(wp, '_var'));
+      defExpr = emitNode(
+        varNode,
+        childPath(structPath, '_var'),
+        childWp(wp, '_var'),
+        varEntry.keyPos.line
+      );
     }
     return `_r.getVar({ scope, def: ${defExpr}, loc: ${loc(varNode)} })`;
   }
@@ -417,22 +449,30 @@ function emitModule({
       return emitRef(refEntry, structPath, wp, markLine);
     }
     if (has('_var')) {
-      return emitVar(entryMap(node).get('_var'), structPath, wp);
+      return emitVar(
+        node.entries.find((e) => e.key === '_var'),
+        structPath,
+        wp
+      );
     }
     if (has('_module.var')) {
+      const mvEntry = node.entries.find((e) => e.key === '_module.var');
       const keyExpr = emitNode(
-        entryMap(node).get('_module.var'),
+        mvEntry.value,
         childPath(structPath, '_module.var'),
-        childWp(wp, '_module.var')
+        childWp(wp, '_module.var'),
+        mvEntry.keyPos.line
       );
       return `await _r.moduleVar({ scope, key: ${keyExpr}, loc: ${loc(node)} })`;
     }
     const midKey = MODULE_ID_KEYS.find((k) => has(k));
     if (midKey) {
+      const midEntry = node.entries.find((e) => e.key === midKey);
       const argExpr = emitNode(
-        entryMap(node).get(midKey),
+        midEntry.value,
         childPath(structPath, midKey),
-        childWp(wp, midKey)
+        childWp(wp, midKey),
+        midEntry.keyPos.line
       );
       const kind = midKey.slice('_module.'.length);
       return `_r.moduleId({ scope, kind: ${json(kind)}, arg: ${argExpr}, loc: ${loc(node)} })`;
@@ -441,10 +481,12 @@ function emitModule({
     const nonTilde = keys.filter((k) => !k.startsWith('~'));
     if (nonTilde.length === 1 && nonTilde[0].startsWith('_build.')) {
       const opKey = nonTilde[0];
+      const opEntry = node.entries.find((e) => e.key === opKey);
       const paramsExpr = emitNode(
-        entryMap(node).get(opKey),
+        opEntry.value,
         childPath(structPath, opKey),
-        childWp(wp, opKey)
+        childWp(wp, opKey),
+        opEntry.keyPos.line
       );
       // The operator node carries its key-line so evaluateOperators can
       // transfer ~l onto the result (walker: the parse-time ~l rides the

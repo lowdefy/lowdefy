@@ -27,21 +27,23 @@ function outFileFor(cfgPath) {
 }
 
 // Compiles a config file graph starting at `entry`, mirroring sources into
-// `outDir` as ES modules. The module graph IS the ref graph: static cycles
-// are detected here at compile time with the inclusion chain; dynamic-path
-// cycles are caught at run time by the scope.refChain guard.
+// `outDir` as ES modules. The module graph IS the ref graph. Import cycles
+// are legal at the module level (factories only touch their imports when
+// called) — circular CONFIG inclusion is caught at run time by the
+// scope.refChain guard, which reproduces the walker's error and null
+// placement exactly.
 async function compileDir({ configDir, outDir, entry, mode = 'errors', runtimePath = null }) {
   const compiled = new Map(); // cfgPath -> { fileId, keyMap }
-  const compiling = []; // chain stack for cycle reporting
+  const compiling = []; // in-progress stack (cycle edges return early)
   const refMap = {};
   const keyMap = {};
 
   async function compileOne(cfgPath) {
     if (compiled.has(cfgPath)) return;
-    const cycleStart = compiling.indexOf(cfgPath);
-    if (cycleStart !== -1) {
-      const chain = [...compiling.slice(cycleStart), cfgPath].join(' -> ');
-      throw new ConfigError(`Circular reference detected: ${chain}.`, { filePath: cfgPath });
+    if (compiling.includes(cfgPath)) {
+      // Already being compiled higher up the stack — its module file is
+      // written before its refs recurse, so the import will resolve.
+      return;
     }
     compiling.push(cfgPath);
     try {

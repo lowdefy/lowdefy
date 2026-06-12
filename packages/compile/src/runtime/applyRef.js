@@ -72,12 +72,20 @@ async function applyRefSteps({
 }) {
   const globalPath = globalSitePath(scope, sitePath);
   const refId = allocRefId({ scope, globalPath, refLine, file });
+
+  // Walker step 7: the cycle error is thrown OUTSIDE the per-ref collect
+  // boundary — it propagates to the PARENT ref's catch (which nulls the
+  // parent), or to the top level when the entry references itself.
   if (scope.refChain.includes(file)) {
     throw new ConfigError(
-      `Circular reference detected: ${[...scope.refChain, file].join(' -> ')}.`,
-      { filePath: loc?.file, lineNumber: loc?.line }
+      `Circular reference detected. File "${file}" references itself through:\n  -> ${[
+        ...scope.refChain,
+        file,
+      ].join('\n  -> ')}`,
+      { filePath: scope.file, lineNumber: scope.file ? refLine : null }
     );
   }
+
   const childScope = {
     ...scope,
     vars: vars ?? {},
@@ -91,59 +99,62 @@ async function applyRefSteps({
     refChain: [...scope.refChain, file],
   };
 
-  let content = await factory(childScope);
-
-  if (transformer) {
-    try {
-      content = transformer(content, vars ?? {});
-    } catch (error) {
-      throw new ConfigError(`Error calling transformer "${transformerPath}" from "${file}".`, {
-        cause: error,
-        filePath: loc?.file,
-        lineNumber: loc?.line,
-      });
-    }
-  }
-
-  if (key !== null && key !== undefined) {
-    content = get(content, key, { default: null });
-  }
-
-  // Walker step 15: tag the resolved content with the instance ref id. This
-  // is where reffed nodes get their ~r (construction marks carry ~l only) —
-  // var-substituted and nested-ref subtrees already carry theirs and
-  // short-circuit, exactly like tagRefDeep.
-  if (refId !== null) {
-    markDeep(content, refId);
-  }
-
-  if (ignoreBuildChecks !== undefined) {
-    if (type.isObject(content)) {
-      content['~ignoreBuildChecks'] = ignoreBuildChecks;
-    } else if (type.isArray(content)) {
-      content.forEach((item) => {
-        if (type.isObject(item)) {
-          item['~ignoreBuildChecks'] = ignoreBuildChecks;
-        }
-      });
-    }
-  }
-
-  return content;
-}
-
-async function ref(args) {
+  // Walker steps 8-16: errors here (content load, child cycles propagating
+  // up, transformer, pluck) collect at THIS ref, which resolves to null.
   try {
-    return await applyRefSteps(args);
+    let content = await factory(childScope);
+
+    if (transformer) {
+      try {
+        content = transformer(content, vars ?? {});
+      } catch (error) {
+        throw new ConfigError(`Error calling transformer "${transformerPath}" from "${file}".`, {
+          cause: error,
+          filePath: loc?.file,
+          lineNumber: refLine ?? loc?.line,
+        });
+      }
+    }
+
+    if (key !== null && key !== undefined) {
+      content = get(content, key, { default: null });
+    }
+
+    // Walker step 15: tag the resolved content with the instance ref id. This
+    // is where reffed nodes get their ~r (construction marks carry ~l only) —
+    // var-substituted and nested-ref subtrees already carry theirs and
+    // short-circuit, exactly like tagRefDeep.
+    if (refId !== null) {
+      markDeep(content, refId);
+    }
+
+    if (ignoreBuildChecks !== undefined) {
+      if (type.isObject(content)) {
+        content['~ignoreBuildChecks'] = ignoreBuildChecks;
+      } else if (type.isArray(content)) {
+        content.forEach((item) => {
+          if (type.isObject(item)) {
+            item['~ignoreBuildChecks'] = ignoreBuildChecks;
+          }
+        });
+      }
+    }
+
+    return content;
   } catch (error) {
     if (error instanceof ConfigError) {
-      return collectOrThrow(args.scope, error);
+      return collectOrThrow(scope, error);
     }
     throw error;
   }
 }
 
+async function ref(args) {
+  return applyRefSteps(args);
+}
+
 async function dynRef({ scope, path, loc, ...rest }) {
+  let module;
   try {
     if (!type.isString(path)) {
       throw new ConfigError(
@@ -157,14 +168,16 @@ async function dynRef({ scope, path, loc, ...rest }) {
         { filePath: loc?.file, lineNumber: loc?.line }
       );
     }
-    const module = await scope.importer(path);
-    return await applyRefSteps({ scope, factory: module.default, file: path, loc, ...rest });
+    module = await scope.importer(path);
   } catch (error) {
     if (error instanceof ConfigError) {
       return collectOrThrow(scope, error);
     }
     throw error;
   }
+  // applyRefSteps owns step 8-16 collection; its cycle guard (step 7)
+  // deliberately propagates past this frame.
+  return applyRefSteps({ scope, factory: module.default, file: path, loc, ...rest });
 }
 
 // Refs the compiler does not resolve itself — module/component/menu refs,
@@ -202,12 +215,25 @@ async function delegatedRef({ scope, def, sitePath, refLine, loc }) {
 }
 
 // Walker getConfigFile parity for statically known missing files — the
-// refMap entry is still registered (the walker creates it before fetching).
-async function missingRef({ scope, path, sitePath, refLine, loc }) {
-  allocRefId({ scope, globalPath: globalSitePath(scope, sitePath), refLine, file: path });
-  const error = new ConfigError(`Referenced file does not exist: "${path}".`, {
-    filePath: loc?.file,
-    lineNumber: loc?.line,
+// refMap entry is still registered (the walker creates it before fetching),
+// and the message carries the resolved absolute path plus the common-mistake
+// tips. resolvedPath is emitted at compile time (the runtime has no
+// configDir). Line is the ref container's key line (refDef.lineNumber).
+async function missingRef({ scope, path: refPath, resolvedPath, sitePath, refLine, loc }) {
+  allocRefId({ scope, globalPath: globalSitePath(scope, sitePath), refLine, file: refPath });
+
+  let message = `Referenced file does not exist: "${refPath}". Resolved to: ${resolvedPath}`;
+  if (refPath.startsWith('../')) {
+    const suggestedPath = refPath.replace(/^(\.\.\/)+/, '');
+    message += ` Tip: Paths in _ref are resolved from config root. Did you mean "${suggestedPath}"?`;
+  } else if (refPath.startsWith('./')) {
+    const suggestedPath = refPath.substring(2);
+    message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
+  }
+
+  const error = new ConfigError(message, {
+    filePath: loc?.file ?? null,
+    lineNumber: loc?.file ? refLine : null,
   });
   return collectOrThrow(scope, error);
 }

@@ -114,7 +114,7 @@ function createRunBuild(build, fixturesDir) {
    * Runs build with a specific fixture directory and stage.
    * Returns captured errors, warnings, and the thrown error (if any).
    */
-  return async function runBuild(fixtureDir, stage = 'prod') {
+  return async function runBuild(fixtureDir, stage = 'prod', options = {}) {
     const configDir = path.join(fixturesDir, fixtureDir);
     const { logger, lines } = createTestLogger();
 
@@ -129,6 +129,7 @@ function createRunBuild(build, fixturesDir) {
         },
         logger,
         stage,
+        ...options,
       });
     } catch (err) {
       thrownError = err;
