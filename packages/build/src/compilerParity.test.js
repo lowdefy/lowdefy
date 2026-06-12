@@ -179,20 +179,23 @@ function canonicalizeKeyIds(artifacts) {
 }
 
 // The keyMap consumer contract: for a given ~k, resolveConfigLocation reads
-// the entry's key path, ~r (→ refMap → file), and ~l; suppression walks
+// the entry's key path, ~r → refMap → FILE, and ~l; suppression walks
 // ~k_parent chains reading ~ignoreBuildChecks. Two keyMaps are equivalent
-// when every positionally-paired id resolves an identical parent chain.
-function keyChain(id, keyMap) {
+// when every positionally-paired id resolves an identical parent chain. The
+// ~r id is compared by what it resolves to (the refMap path) — id strings
+// are allocation-order-dependent for counter ids and not a contract.
+function keyChain(id, keyMap, refMap) {
   const chain = [];
   let current = id;
   const guard = new Set();
   while (current !== undefined && keyMap[current] && !guard.has(current)) {
     guard.add(current);
     const entry = keyMap[current];
+    const refId = entry['~r'];
     chain.push({
       key: entry.key,
       l: entry['~l'] ?? null,
-      r: entry['~r'] ?? null,
+      file: refId === undefined ? null : refMap[refId]?.path ?? null,
       ignore: entry['~ignoreBuildChecks'] ?? null,
     });
     current = entry['~k_parent'];
@@ -266,11 +269,13 @@ describe('compiler parity — success fixture corpus', () => {
     // resolves an identical location/suppression parent chain.
     const walkerKeyMap = JSON.parse(walker.artifacts['keyMap.json']);
     const compiledKeyMap = JSON.parse(compiled.artifacts['keyMap.json']);
+    const walkerRefMap = JSON.parse(walker.artifacts['refMap.json']);
+    const compiledRefMap = JSON.parse(compiled.artifacts['refMap.json']);
     expect(Object.keys(compiledKeyMap).length).toBe(Object.keys(walkerKeyMap).length);
     for (const [canonical, walkerId] of walkerCanonical.inverse) {
       const compiledId = compiledCanonical.inverse.get(canonical);
-      const a = keyChain(walkerId, walkerKeyMap);
-      const b = keyChain(compiledId, compiledKeyMap);
+      const a = keyChain(walkerId, walkerKeyMap, walkerRefMap);
+      const b = keyChain(compiledId, compiledKeyMap, compiledRefMap);
       if (JSON.stringify(a) !== JSON.stringify(b)) {
         throw new Error(
           `keyMap chain differs in fixture "${fixtureDir}" for ${canonical} ` +
