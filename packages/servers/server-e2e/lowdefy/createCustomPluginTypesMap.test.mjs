@@ -47,9 +47,11 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   getFileExtension: jest.fn(),
   getFileSubExtension: jest.fn(),
   getSecretsFromEnv: jest.fn(),
+  installIfPackageJsonChanged: jest.fn(),
   spawnProcess: jest.fn(),
   readFile: jest.fn(async () => pluginYaml),
   writeFile: jest.fn(),
+  writeFileIfChanged: jest.fn(),
 }));
 
 jest.unstable_mockModule('node:module', () => ({
