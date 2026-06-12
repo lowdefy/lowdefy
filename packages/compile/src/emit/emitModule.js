@@ -91,15 +91,37 @@ function emitModule({
     return id;
   }
 
+  // Wraps map/seq expressions with the active provenance mechanism:
+  // - 'keys' — lexical ~k tags + a static keyMap (S2 shape)
+  // - 'markers' — non-enumerable ~r/~l for the existing addKeys pipeline (S1)
+  // Lines follow the parser's convention: a map/seq value carries its KEY's
+  // line (addLineNumbers parity).
   function tag(expr, structPath, line) {
-    if (mode !== 'keys') return expr;
-    return `_r.tag(${expr}, ${json(nextKey(structPath, line))})`;
+    if (mode === 'keys') {
+      return `_r.tag(${expr}, ${json(nextKey(structPath, line))})`;
+    }
+    if (mode === 'markers') {
+      // ~l only (addLineNumbers parity). ~r arrives later — applyRef's
+      // markDeep at ref completion (instance id; the same file included
+      // twice gets two ids), cloneVarValue at substitution — mirroring the
+      // walker's tagging timeline so evaluateOperators' marker transfer
+      // sees ~r-less nodes exactly when the walker does.
+      return `_r.mark(${expr}, ${line})`;
+    }
+    return expr;
   }
 
   const loc = (node) => `_l(${node.pos.line})`;
 
   function childPath(structPath, segment) {
     return structPath ? `${structPath}.${segment}` : segment;
+  }
+
+  // Walker tree path within this file — array indices are plain digits, no
+  // id/type decoration (WalkContext.child parity). Joined onto the caller's
+  // walkPath at runtime to form the global instance ref-id path.
+  function childWp(wp, segment) {
+    return wp ? `${wp}.${segment}` : segment;
   }
 
   function itemPath(structPath, index, item) {
@@ -114,7 +136,13 @@ function emitModule({
     return `${structPath}${segment}`;
   }
 
-  function emitRef(refNode, structPath) {
+  // wp is the walker path of the map node CONTAINING _ref; refLine is that
+  // node's key-line (the walker reads lineNumber from the container's ~l).
+  // Ref-def path/vars/key values resolve with the CONTAINER's walk context
+  // (resolveRef step 3 passes ctx, not ctx.child) — their emissions get the
+  // container's wp, so a nested ref inside a var value continues the global
+  // path from the container, skipping the _ref.vars.<key> segments.
+  function emitRef(refNode, structPath, wp, refLine) {
     let parts = new Map();
     if (refNode.t === 'lit' && typeof refNode.value === 'string') {
       parts.set('path', refNode);
@@ -164,11 +192,21 @@ function emitModule({
           { filePath: file, lineNumber: varsNode.pos.line }
         );
       }
-      varsExpr = emitPlainMapBody(varsNode, childPath(structPath, '_ref.vars'));
+      const varsStructPath = childPath(structPath, '_ref.vars');
+      const varProps = varsNode.entries.map((entry) => {
+        const expr = emitNode(
+          entry.value,
+          childPath(varsStructPath, entry.key),
+          wp,
+          entry.keyPos.line
+        );
+        return `${json(entry.key)}: ${expr}`;
+      });
+      varsExpr = `{ ${varProps.join(', ')} }`;
     }
 
     const keyNode = parts.get('key');
-    const keyExpr = keyNode ? emitNode(keyNode, childPath(structPath, '_ref.key')) : 'null';
+    const keyExpr = keyNode ? emitNode(keyNode, childPath(structPath, '_ref.key'), wp) : 'null';
 
     let transformerIdent = 'null';
     let transformerPath = 'null';
@@ -192,28 +230,32 @@ function emitModule({
 
     const ignoreNode = parts.get('~ignoreBuildChecks');
     const ignoreExpr = ignoreNode
-      ? emitNode(ignoreNode, childPath(structPath, '_ref.~ignoreBuildChecks'))
+      ? emitNode(ignoreNode, childPath(structPath, '_ref.~ignoreBuildChecks'), wp)
       : 'undefined';
 
     const common =
+      `sitePath: ${json(wp)}, refLine: ${refLine}, ` +
       `vars: ${varsExpr}, key: ${keyExpr}, transformer: ${transformerIdent}, ` +
       `transformerPath: ${transformerPath}, ignoreBuildChecks: ${ignoreExpr}, loc: ${loc(refNode)}`;
 
     if (pathNode.t === 'lit' && typeof pathNode.value === 'string') {
       const cfgPath = moduleRoot ? path.posix.join(moduleRoot, pathNode.value) : pathNode.value;
       // Missing files are a collected error with null in place — walker
-      // parity; the rest of the config still builds.
+      // parity; the rest of the config still builds (the refMap entry is
+      // still registered, so sitePath/refLine ride along).
       if (!refExists(cfgPath)) {
-        return `await _r.missingRef({ scope, path: ${json(cfgPath)}, loc: ${loc(refNode)} })`;
+        return `await _r.missingRef({ scope, path: ${json(cfgPath)}, sitePath: ${json(
+          wp
+        )}, refLine: ${refLine}, loc: ${loc(refNode)} })`;
       }
       const ident = importRef(cfgPath);
       return `await _r.ref({ scope, factory: ${ident}, file: ${json(cfgPath)}, ${common} })`;
     }
-    const pathExpr = emitNode(pathNode, childPath(structPath, '_ref.path'));
+    const pathExpr = emitNode(pathNode, childPath(structPath, '_ref.path'), wp);
     return `await _r.dynRef({ scope, path: ${pathExpr}, ${common} })`;
   }
 
-  function emitVar(varNode, structPath) {
+  function emitVar(varNode, structPath, wp) {
     let defExpr;
     if (varNode.t === 'lit') {
       defExpr = json(varNode.value);
@@ -221,37 +263,48 @@ function emitModule({
       const parts = entryMap(varNode);
       const keyNode = parts.get('key');
       const defaultNode = parts.get('default');
-      const keyExpr = keyNode ? emitNode(keyNode, childPath(structPath, '_var.key')) : 'undefined';
+      const keyExpr = keyNode
+        ? emitNode(keyNode, childPath(structPath, '_var.key'), childWp(childWp(wp, '_var'), 'key'))
+        : 'undefined';
       // The walker resolves children before _var substitution — the default
       // expression evaluates eagerly, parity-true.
       const defaultExpr = defaultNode
         ? `, default: ${emitNode(
             defaultNode,
-            childPath(structPath, '_var.default')
+            childPath(structPath, '_var.default'),
+            childWp(childWp(wp, '_var'), 'default')
           )}, hasDefault: true`
         : '';
       defExpr = `{ key: ${keyExpr}${defaultExpr} }`;
     } else {
-      defExpr = emitNode(varNode, childPath(structPath, '_var'));
+      defExpr = emitNode(varNode, childPath(structPath, '_var'), childWp(wp, '_var'));
     }
     return `_r.getVar({ scope, def: ${defExpr}, loc: ${loc(varNode)} })`;
   }
 
-  function emitPlainMapBody(node, structPath) {
+  function emitPlainMapBody(node, structPath, wp) {
     const props = node.entries.map((entry) => {
-      const expr = emitNode(entry.value, childPath(structPath, entry.key));
+      // A map/seq value carries its key's line (addLineNumbers parity).
+      const expr = emitNode(
+        entry.value,
+        childPath(structPath, entry.key),
+        childWp(wp, entry.key),
+        entry.keyPos.line
+      );
       return `${json(entry.key)}: ${expr}`;
     });
     return `{ ${props.join(', ')} }`;
   }
 
-  function emitNode(node, structPath) {
+  function emitNode(node, structPath, wp, markLine = node?.pos?.line) {
     if (node.t === 'lit') {
       return json(node.value === undefined ? null : node.value);
     }
     if (node.t === 'seq') {
-      const items = node.items.map((item, i) => emitNode(item, itemPath(structPath, i, item)));
-      return tag(`[ ${items.join(', ')} ]`, structPath, node.pos.line);
+      const items = node.items.map((item, i) =>
+        emitNode(item, itemPath(structPath, i, item), childWp(wp, String(i)), item.pos.line)
+      );
+      return tag(`[ ${items.join(', ')} ]`, structPath, markLine);
     }
 
     // Map — classify in the walker's order.
@@ -259,21 +312,26 @@ function emitModule({
     const has = (k) => keys.includes(k);
 
     if (has('_ref')) {
-      return emitRef(entryMap(node).get('_ref'), structPath);
+      return emitRef(entryMap(node).get('_ref'), structPath, wp, markLine);
     }
     if (has('_var')) {
-      return emitVar(entryMap(node).get('_var'), structPath);
+      return emitVar(entryMap(node).get('_var'), structPath, wp);
     }
     if (has('_module.var')) {
       const keyExpr = emitNode(
         entryMap(node).get('_module.var'),
-        childPath(structPath, '_module.var')
+        childPath(structPath, '_module.var'),
+        childWp(wp, '_module.var')
       );
       return `await _r.moduleVar({ scope, key: ${keyExpr}, loc: ${loc(node)} })`;
     }
     const midKey = MODULE_ID_KEYS.find((k) => has(k));
     if (midKey) {
-      const argExpr = emitNode(entryMap(node).get(midKey), childPath(structPath, midKey));
+      const argExpr = emitNode(
+        entryMap(node).get(midKey),
+        childPath(structPath, midKey),
+        childWp(wp, midKey)
+      );
       const kind = midKey.slice('_module.'.length);
       return `_r.moduleId({ scope, kind: ${json(kind)}, arg: ${argExpr}, loc: ${loc(node)} })`;
     }
@@ -281,21 +339,34 @@ function emitModule({
     const nonTilde = keys.filter((k) => !k.startsWith('~'));
     if (nonTilde.length === 1 && nonTilde[0].startsWith('_build.')) {
       const opKey = nonTilde[0];
-      const paramsExpr = emitNode(entryMap(node).get(opKey), childPath(structPath, opKey));
-      return `_r.buildOperator({ scope, node: { ${json(opKey)}: ${paramsExpr} }, loc: ${loc(
-        node
-      )} })`;
+      const paramsExpr = emitNode(
+        entryMap(node).get(opKey),
+        childPath(structPath, opKey),
+        childWp(wp, opKey)
+      );
+      // The operator node carries its key-line so evaluateOperators can
+      // transfer ~l onto the result (walker: the parse-time ~l rides the
+      // node into evaluateBuildOperator). Results are then tagged with the
+      // evaluating ref's instance id — resolve step 8 tagRefDeep parity —
+      // preserving markers the inputs already carry.
+      const opNode = `{ ${json(opKey)}: ${paramsExpr} }`;
+      const opNodeExpr = mode === 'markers' ? `_r.mark(${opNode}, ${markLine})` : opNode;
+      const call = `_r.buildOperator({ scope, node: ${opNodeExpr}, loc: ${loc(node)} })`;
+      if (mode === 'markers') {
+        return `_r.markDeep(${call}, scope.refId)`;
+      }
+      return call;
     }
     if (nonTilde.length === 1 && nonTilde[0].startsWith('_')) {
       // Runtime operator — emitted verbatim as data (stage A), children
       // compiled so _var/_ref inside operator params still resolve.
-      return tag(emitPlainMapBody(node, structPath), structPath, node.pos.line);
+      return tag(emitPlainMapBody(node, structPath, wp), structPath, markLine);
     }
 
-    return tag(emitPlainMapBody(node, structPath), structPath, node.pos.line);
+    return tag(emitPlainMapBody(node, structPath, wp), structPath, markLine);
   }
 
-  const rootExpr = emitNode(ir, '');
+  const rootExpr = emitNode(ir, '', '');
 
   const importLines = [`import { runtime as _r } from ${json(runtimeSpecifier)};`];
   for (const [cfgPath, ident] of refImports) {
@@ -309,12 +380,18 @@ function emitModule({
     `/* Generated by @lowdefy/compile — do not edit. Source: ${file} */`,
     ...importLines,
     `const _F = ${json(file)};`,
+    `const _R = ${json(fileId)};`,
     `const _l = (line) => ({ file: _F, line });`,
     `export const file = _F;`,
-    `export const fileId = ${json(fileId)};`,
+    `export const fileId = _R;`,
     `export const refs = ${json(staticRefs)};`,
     `export const keyMap = ${json(keyMap)};`,
-    `export default async (scope) => (${rootExpr});`,
+    `export default async (scope) => {`,
+    // Instance ref ids passed by the caller (markers mode) survive; the
+    // lexical file id is the fallback for errors/keys modes and direct calls.
+    `  scope = { ...scope, refId: scope.refId ?? _R };`,
+    `  return (${rootExpr});`,
+    `};`,
     '',
   ].join('\n');
 

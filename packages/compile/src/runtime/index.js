@@ -19,6 +19,7 @@
 import buildOperator from './buildOperator.js';
 import createScope from './createScope.js';
 import getVar from './getVar.js';
+import { mark, markDeep } from './mark.js';
 import { moduleId, moduleVar, bindModuleEntry } from './moduleHelpers.js';
 import { ref, dynRef, missingRef } from './applyRef.js';
 import synthKey from './synthKey.js';
@@ -28,6 +29,8 @@ const runtime = {
   buildOperator,
   dynRef,
   getVar,
+  mark,
+  markDeep,
   missingRef,
   moduleId,
   moduleVar,

@@ -17,23 +17,29 @@
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import cloneVarValue from './cloneVarValue.js';
+
 // Walker resolveVar parity:
 // - string form: deep-get from vars, missing → null
 // - object form: provided value wins even when null; missing → default ?? null
 // - anything else throws the walker's message
+// Every injection deep-clones (no shared structures across sites), re-tagging
+// provenance with the providing ref — defaults keep the template's markers.
 // The default expression is evaluated eagerly by the emitted code (the walker
 // resolves children before substitution).
 function getVar({ scope, def, loc }) {
   if (type.isString(def)) {
-    return get(scope.vars, def, { default: null });
+    const value = get(scope.vars, def, { default: null });
+    return cloneVarValue(value, scope.sourceRefId ?? null);
   }
   if (type.isObject(def) && type.isString(def.key)) {
     const varFromParent = get(scope.vars, def.key);
     if (!type.isUndefined(varFromParent)) {
-      return varFromParent;
+      return cloneVarValue(varFromParent, scope.sourceRefId ?? null);
     }
     if (def.hasDefault) {
-      return type.isNone(def.default) ? null : def.default;
+      const defaultValue = type.isNone(def.default) ? null : def.default;
+      return cloneVarValue(defaultValue, null);
     }
     return null;
   }

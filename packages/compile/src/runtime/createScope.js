@@ -28,8 +28,29 @@ function createScope({
   refChain = [],
   onError = null,
   env = process.env,
+  refId = null,
+  sourceRefId = null,
+  // Walker-parity instance tracking (markers mode): walkPath is the global
+  // tree path this file's content is rooted at (paths continue through ref
+  // boundaries), and refTracker allocates instance ref ids and registers
+  // refMap entries — injected by the build, which owns the id counter.
+  walkPath = '',
+  refTracker = null,
 } = {}) {
-  return { vars, module, importer, file, callSite, refChain, onError, env };
+  return {
+    vars,
+    module,
+    importer,
+    file,
+    callSite,
+    refChain,
+    onError,
+    env,
+    refId,
+    sourceRefId,
+    walkPath,
+    refTracker,
+  };
 }
 
 export default createScope;

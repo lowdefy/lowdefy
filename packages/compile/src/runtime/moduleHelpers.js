@@ -17,6 +17,8 @@
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import cloneVarValue from './cloneVarValue.js';
+
 // scope.module is bound per module REGISTRATION at the manifest boundary
 // (design D7) — one compiled file can serve several registrations. The
 // binding carries the registration id, consumer vars, var definitions,
@@ -90,7 +92,7 @@ async function moduleVar({ scope, key, loc }) {
       { filePath: loc?.file, lineNumber: loc?.line }
     );
   }
-  return resolveEffectiveVar(key, scope.module, loc);
+  return cloneVarValue(resolveEffectiveVar(key, scope.module, loc), scope.sourceRefId ?? null);
 }
 
 function resolveDep({ binding, depName, usage, loc }) {

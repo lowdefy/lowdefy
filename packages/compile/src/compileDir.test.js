@@ -157,16 +157,16 @@ section:
   expect(output.section['~k']).toBeDefined();
   const sectionKey = output.section['~k'];
   const entry = result.keyMap[sectionKey];
-  // The fixture has a leading blank line — the section value map starts on
-  // line 4 (node positions point at the value, like the parser's ~l).
-  expect(entry['~l']).toBe(4);
+  // The fixture has a leading blank line — the `section:` key sits on line 3.
+  // A map value carries its key's line (addLineNumbers parity).
+  expect(entry['~l']).toBe(3);
   const location = resolveConfigLocation({
     configKey: sectionKey,
     keyMap: result.keyMap,
     refMap: result.refMap,
     configDirectory: '/cfg',
   });
-  expect(location.source).toContain('a.yaml:4');
+  expect(location.source).toContain('a.yaml:3');
 });
 
 test('keys mode is deterministic — identical input produces identical keys', async () => {

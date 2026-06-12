@@ -17,6 +17,8 @@
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import { markDeep } from './mark.js';
+
 // Per-ref operation order is an invariant (design D3, walker steps 11-16):
 // produce content → transformer → pluck key → propagate ~ignoreBuildChecks.
 // (Module menu-id scoping joins at S1 with module ref compilation.)
@@ -30,6 +32,31 @@ function collectOrThrow(scope, error) {
   throw error;
 }
 
+// The walker continues tree paths through ref boundaries — reffed content is
+// rooted at the global path of the ref site.
+function globalSitePath(scope, sitePath) {
+  if (!scope.walkPath) {
+    return sitePath;
+  }
+  return sitePath ? `${scope.walkPath}.${sitePath}` : scope.walkPath;
+}
+
+// Instance ref ids match the walker: the global tree path of the ref site,
+// falling back to the build's id counter on collision — allocation and refMap
+// registration are injected by the build through scope.refTracker. Without a
+// tracker (errors/keys modes, unit harnesses) there is no instance id.
+function allocRefId({ scope, globalPath, refLine, file }) {
+  if (!scope.refTracker) {
+    return null;
+  }
+  const refId = scope.refTracker.alloc(globalPath, {
+    parent: scope.refId ?? null,
+    lineNumber: refLine,
+  });
+  scope.refTracker.setPath(refId, file);
+  return refId;
+}
+
 async function applyRefSteps({
   scope,
   factory,
@@ -39,8 +66,12 @@ async function applyRefSteps({
   transformer,
   transformerPath,
   ignoreBuildChecks,
+  sitePath,
+  refLine,
   loc,
 }) {
+  const globalPath = globalSitePath(scope, sitePath);
+  const refId = allocRefId({ scope, globalPath, refLine, file });
   if (scope.refChain.includes(file)) {
     throw new ConfigError(
       `Circular reference detected: ${[...scope.refChain, file].join(' -> ')}.`,
@@ -52,6 +83,11 @@ async function applyRefSteps({
     vars: vars ?? {},
     file,
     callSite: loc ?? null,
+    refId,
+    walkPath: globalPath ?? '',
+    // The ref that supplied the vars — _var injections re-tag provenance
+    // with it (walker cloneVarValue parity).
+    sourceRefId: scope.refId ?? null,
     refChain: [...scope.refChain, file],
   };
 
@@ -71,6 +107,14 @@ async function applyRefSteps({
 
   if (key !== null && key !== undefined) {
     content = get(content, key, { default: null });
+  }
+
+  // Walker step 15: tag the resolved content with the instance ref id. This
+  // is where reffed nodes get their ~r (construction marks carry ~l only) —
+  // var-substituted and nested-ref subtrees already carry theirs and
+  // short-circuit, exactly like tagRefDeep.
+  if (refId !== null) {
+    markDeep(content, refId);
   }
 
   if (ignoreBuildChecks !== undefined) {
@@ -123,8 +167,10 @@ async function dynRef({ scope, path, loc, ...rest }) {
   }
 }
 
-// Walker getConfigFile parity for statically known missing files.
-async function missingRef({ scope, path, loc }) {
+// Walker getConfigFile parity for statically known missing files — the
+// refMap entry is still registered (the walker creates it before fetching).
+async function missingRef({ scope, path, sitePath, refLine, loc }) {
+  allocRefId({ scope, globalPath: globalSitePath(scope, sitePath), refLine, file: path });
   const error = new ConfigError(`Referenced file does not exist: "${path}".`, {
     filePath: loc?.file,
     lineNumber: loc?.line,
