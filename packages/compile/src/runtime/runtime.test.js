@@ -20,7 +20,7 @@ import buildOperator from './buildOperator.js';
 import createScope from './createScope.js';
 import getVar from './getVar.js';
 import { bindModuleEntry, moduleVar, moduleId } from './moduleHelpers.js';
-import { ref, delegatedRef } from './applyRef.js';
+import { ref, contentRef, resolverRef, invalidModuleRef } from './applyRef.js';
 import createSynthKeys from './synthKey.js';
 import tag from './tag.js';
 
@@ -175,71 +175,142 @@ describe('ref — operation order and error contract', () => {
   });
 });
 
-describe('delegatedRef — walker delegation for module/resolver/non-YAML/dynamic refs', () => {
-  test('hands a ~l-marked walker node and the call-site state to walkerResolve', async () => {
-    const calls = [];
+describe('contentRef — non-YAML content with parseRefContent semantics', () => {
+  test('json content parses via JSON5, raw extensions stay strings', async () => {
+    const files = {
+      'data/settings.json': '{ theme: "dark", limits: { maxRows: 100 } }',
+      'content/notes.md': '# Notes\n',
+    };
     const scope = createScope({
       file: 'a.yaml',
-      refChain: ['lowdefy.yaml', 'a.yaml'],
-      vars: { v: 1 },
-      refId: 'pages.0',
-      sourceRefId: '1',
-      walkPath: 'pages.0',
-      walkerResolve: (node, site) => {
-        calls.push({ node, site });
-        return { resolved: true };
-      },
+      configDir: '/cfg',
+      readConfigFile: async (p) => files[p] ?? null,
     });
-    const result = await delegatedRef({
-      scope,
-      def: { module: 'core', component: 'stamp' },
-      sitePath: 'blocks.1',
-      refLine: 12,
-      loc,
-    });
-    expect(result).toEqual({ resolved: true });
-    expect(calls).toHaveLength(1);
-    expect(calls[0].node._ref).toEqual({ module: 'core', component: 'stamp' });
-    // The walker reads the ref line from the container's non-enumerable ~l.
-    expect(calls[0].node['~l']).toBe(12);
-    expect(Object.keys(calls[0].node)).toEqual(['_ref']);
-    expect(calls[0].site).toEqual({
-      refId: 'pages.0',
-      sourceRefId: '1',
-      walkPath: 'pages.0.blocks.1',
-      file: 'a.yaml',
-      refChain: ['lowdefy.yaml', 'a.yaml'],
-      vars: { v: 1 },
-    });
+    const json = await contentRef({ scope, path: 'data/settings.json', refLine: 2, loc });
+    expect(json).toEqual({ theme: 'dark', limits: { maxRows: 100 } });
+    const md = await contentRef({ scope, path: 'content/notes.md', refLine: 3, loc });
+    expect(md).toBe('# Notes\n');
   });
 
-  test('without walkerResolve collects a ConfigError and resolves to null', async () => {
+  test('missing content files collect the getConfigFile message with tips', async () => {
     const errors = [];
-    const scope = createScope({ file: 'a.yaml', onError: (e) => errors.push(e) });
-    const result = await delegatedRef({
+    const scope = createScope({
+      file: 'a.yaml',
+      configDir: '/cfg',
+      readConfigFile: async () => null,
+      onError: (e) => errors.push(e),
+    });
+    const result = await contentRef({ scope, path: './data/x.json', refLine: 4, loc });
+    expect(result).toBeNull();
+    expect(errors[0].message).toContain('Referenced file does not exist: "./data/x.json".');
+    expect(errors[0].message).toContain('Tip: Remove "./" prefix');
+  });
+
+  test('invalid JSON collects the parse error contract', async () => {
+    const errors = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      readConfigFile: async () => '{ broken',
+      onError: (e) => errors.push(e),
+    });
+    const result = await contentRef({ scope, path: 'data/x.json', refLine: 5, loc });
+    expect(result).toBeNull();
+    expect(errors[0].message).toBe('JSON parse error in "data/x.json".');
+  });
+});
+
+describe('resolverRef — user resolver functions', () => {
+  test('a missing resolver module collects the import error contract', async () => {
+    const errors = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      configDir: '/nonexistent-cfg',
+      onError: (e) => errors.push(e),
+    });
+    const result = await resolverRef({
       scope,
-      def: 'data/settings.json',
-      sitePath: '',
-      refLine: 1,
+      resolver: 'resolvers/missing.js',
+      path: undefined,
+      def: { resolver: 'resolvers/missing.js' },
+      refLine: 2,
       loc,
     });
     expect(result).toBeNull();
-    expect(errors).toHaveLength(1);
-    expect(errors[0].message).toContain('walkerResolve');
+    expect(errors[0].message).toBe('Error importing resolvers/missing.js.');
+  });
+});
+
+describe('invalidModuleRef — getModuleRefContent error ladder', () => {
+  test('unregistered module collects the registration error', async () => {
+    const errors = [];
+    const scope = createScope({ file: 'a.yaml', onError: (e) => errors.push(e) });
+    const result = await invalidModuleRef({
+      scope,
+      def: { module: 'ghost', component: 'x' },
+      module: 'ghost',
+      component: 'x',
+      refLine: 2,
+      loc,
+    });
+    expect(result).toBeNull();
+    expect(errors[0].message).toBe(
+      '_ref { module: "ghost", component: "x" } references module "ghost" but no module with that entry id was registered.'
+    );
   });
 
-  test('ConfigErrors thrown by the walker collect through scope.onError', async () => {
+  test('page form collects the ID-operator pointer', async () => {
     const errors = [];
     const scope = createScope({
       file: 'a.yaml',
       onError: (e) => errors.push(e),
-      walkerResolve: () => {
-        throw new ConfigError('Circular reference detected.');
-      },
+      getModuleEntry: () => ({ id: 'core' }),
     });
-    const result = await delegatedRef({ scope, def: { module: 'x' }, refLine: 3, loc });
-    expect(result).toBeNull();
-    expect(errors[0].message).toBe('Circular reference detected.');
+    await invalidModuleRef({
+      scope,
+      def: { module: 'core', page: 'home' },
+      module: 'core',
+      page: 'home',
+      refLine: 2,
+      loc,
+    });
+    expect(errors[0].message).toBe(
+      'Cross-module _ref does not support "page". Use _module.pageId: { id: "home", module: "core" } instead.'
+    );
+  });
+
+  test('module without component or menu collects the requires error', async () => {
+    const errors = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      onError: (e) => errors.push(e),
+      getModuleEntry: () => ({ id: 'core' }),
+    });
+    await invalidModuleRef({
+      scope,
+      def: { module: 'core' },
+      module: 'core',
+      refLine: 2,
+      loc,
+    });
+    expect(errors[0].message).toBe('Module _ref requires "component" or "menu" property.');
+  });
+
+  test('unknown export collects the does-not-export error', async () => {
+    const errors = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      onError: (e) => errors.push(e),
+      getModuleEntry: () => ({ id: 'core' }),
+    });
+    await invalidModuleRef({
+      scope,
+      def: { module: 'core', menu: 'ghost' },
+      module: 'core',
+      menu: 'ghost',
+      refLine: 2,
+      loc,
+    });
+    expect(errors[0].message).toBe('Module "core" does not export menu "ghost".');
   });
 });
 

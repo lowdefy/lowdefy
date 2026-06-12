@@ -117,6 +117,14 @@ async function runBuildForFixture(fixtureDir) {
     succeed: jest.fn(),
   };
 
+  // Fixtures exercising build OPTIONS (global refResolver) declare them in a
+  // buildOptions.json at the fixture root.
+  let buildOptions = {};
+  const optionsPath = path.join(configDir, 'buildOptions.json');
+  if (fs.existsSync(optionsPath)) {
+    buildOptions = JSON.parse(fs.readFileSync(optionsPath, 'utf8'));
+  }
+
   try {
     await build({
       customTypesMap: snapshotTypesMap,
@@ -127,6 +135,7 @@ async function runBuildForFixture(fixtureDir) {
       },
       logger,
       stage: 'prod',
+      ...buildOptions,
     });
   } catch (err) {
     // Log errors for debugging

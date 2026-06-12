@@ -19,13 +19,12 @@ import path from 'path';
 import { compileDir } from '@lowdefy/compile';
 import { createScope } from '@lowdefy/compile/runtime';
 
-import buildRefs from './buildRefs/buildRefs.js';
 import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import {
   makeRefTracker,
-  makeWalkerResolve,
   makeResolveModuleVarDefault,
   makeResolveModuleExport,
+  makeScopeFileAccess,
   runtimePath,
 } from './compileScopeTools.js';
 import collectExceptions from '../utils/collectExceptions.js';
@@ -37,15 +36,6 @@ import makeId from '../utils/makeId.js';
 // same bare-operator static pass. Compiled modules emit walker-compatible
 // ~r/~l markers, so addKeys and the keyMap pipeline run unchanged.
 async function compileRefs({ context }) {
-  // A global ref resolver intercepts every config read — the compiled
-  // reader would bypass it. Those builds stay on the walker (S1 scope).
-  if (context.refResolver) {
-    context.logger.warn(
-      'Global refResolver configured — the config compiler does not support it yet; building with the walker.'
-    );
-    return buildRefs({ context });
-  }
-
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const configDir = context.directories.config;
 
@@ -72,6 +62,7 @@ async function compileRefs({ context }) {
     runtimePath,
     // App-level: module names are registration ids directly.
     resolveModuleExport: makeResolveModuleExport(context),
+    refResolver: context.refResolver ?? null,
   });
 
   // Walker parity: the root ref consumes the id counter first (so addKeys ids
@@ -96,7 +87,8 @@ async function compileRefs({ context }) {
     refTracker: makeRefTracker(context),
     getModuleEntry: (id) => context.modules?.[id],
     resolveModuleVarDefault: makeResolveModuleVarDefault(context),
-    walkerResolve: makeWalkerResolve(context),
+    ...makeScopeFileAccess(context),
+    importSource: result.importSource,
   });
   let components = await mod.default(scope);
 

@@ -25,7 +25,10 @@ import { moduleId, moduleVar, bindModuleEntry } from './moduleHelpers.js';
 import {
   ref,
   dynRef,
-  delegatedRef,
+  contentRef,
+  jsRef,
+  resolverRef,
+  invalidModuleRef,
   missingRef,
   moduleComponentRef,
   moduleMenuRef,
@@ -35,9 +38,11 @@ import tag from './tag.js';
 
 const runtime = {
   buildOperator,
-  delegatedRef,
+  contentRef,
   dynRef,
   getVar,
+  invalidModuleRef,
+  jsRef,
   mark,
   markDeep,
   missingRef,
@@ -46,6 +51,7 @@ const runtime = {
   moduleMenuRef,
   moduleVar,
   ref,
+  resolverRef,
   tag,
 };
 

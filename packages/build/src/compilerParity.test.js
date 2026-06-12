@@ -97,6 +97,13 @@ async function runFixture(fixtureDir, compiler) {
     error: jest.fn(),
     succeed: jest.fn(),
   };
+  // Fixtures exercising build OPTIONS (global refResolver) declare them in a
+  // buildOptions.json — applied to walker and compiler builds alike.
+  let buildOptions = {};
+  const optionsPath = path.join(configDir, 'buildOptions.json');
+  if (fs.existsSync(optionsPath)) {
+    buildOptions = JSON.parse(fs.readFileSync(optionsPath, 'utf8'));
+  }
   try {
     await build({
       compiler,
@@ -108,6 +115,7 @@ async function runFixture(fixtureDir, compiler) {
       },
       logger,
       stage: 'prod',
+      ...buildOptions,
     });
   } catch (error) {
     // Surface the detail errors that went through the logger — the build

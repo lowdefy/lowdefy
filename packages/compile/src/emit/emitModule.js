@@ -65,6 +65,9 @@ function emitModule({
   // to a file target — ({module, component}) => {cfgPath, moduleRoot,
   // entryId, exportName, innerRefLine, manifestFile} | null.
   resolveModuleExport = null,
+  // Global refResolver (build option): every path ref except the lowdefy
+  // root emits as a resolver call.
+  refResolver = null,
   // D7b: walker-path zones emitted as raw ~l-marked data instead of compiled
   // expressions — manifest preserve zones (vars defaults, components content).
   preserveZones = null,
@@ -193,16 +196,6 @@ function emitModule({
     return `{ ${varProps.join(', ')} }`;
   }
 
-  function emitDelegatedRef(refEntry, structPath, wp, refLine) {
-    // The def is handed to the walker RAW — it resolves path/vars/key itself
-    // with the site vars, so refMap `original` and unresolvedRefVars match
-    // the walker byte-for-byte (including refs inside vars).
-    return (
-      `await _r.delegatedRef({ scope, def: ${emitRaw(refEntry.value, refEntry.keyPos.line)}, ` +
-      `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refEntry.value)} })`
-    );
-  }
-
   // D7a: `_ref: {module, component}` whose export target is a plain file ref
   // compiles — the target imports as a factory, the registration binds at
   // run time, and the def (with evaluated vars) doubles as the refMap
@@ -243,12 +236,27 @@ function emitModule({
         )
       : 'undefined';
 
-    const common =
-      `entryId: ${json(target.entryId)}, component: ${json(target.exportName)}, ` +
+    const tail =
       `def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
       `vars: ${varsExpr}, key: ${keyExpr}, ignoreBuildChecks: ${ignoreExpr}, ` +
       `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
       `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)}`;
+    if (target === null) {
+      // Registry mode: names evaluate at run time (literal or operator-built)
+      // and the export resolves against the registered manifest.
+      const moduleNode = parts.get('module');
+      const componentNode = parts.get('component');
+      const nameExpr = (node, name) =>
+        emitNode(node, childPath(structPath, `_ref.${name}`), wp, node.pos?.line);
+      return (
+        `await _r.moduleComponentRef({ scope, registry: true, ` +
+        `module: ${nameExpr(moduleNode, 'module')}, ` +
+        `component: ${nameExpr(componentNode, 'component')}, ${tail} })`
+      );
+    }
+    const common = `entryId: ${json(target.entryId)}, component: ${json(
+      target.exportName
+    )}, ${tail}`;
     if (target.kind === 'inline') {
       // The factory lives on the registry entry's compiled manifest.
       return (
@@ -304,9 +312,19 @@ function emitModule({
         )
       : 'undefined';
 
+    // Names evaluate at run time — literal strings emit as literals,
+    // operator-built names as compiled expressions (the registry lookup
+    // reproduces the walker's error ladder on failure).
+    const nameExpr = (name) => {
+      const node = parts.get(name);
+      if (node.t === 'lit') {
+        return json(node.value);
+      }
+      return emitNode(node, childPath(structPath, `_ref.${name}`), wp, node.pos?.line);
+    };
     return (
-      `await _r.moduleMenuRef({ scope, module: ${json(parts.get('module').value)}, ` +
-      `menu: ${json(parts.get('menu').value)}, def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
+      `await _r.moduleMenuRef({ scope, module: ${nameExpr('module')}, ` +
+      `menu: ${nameExpr('menu')}, def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
       `vars: ${varsExpr}, key: ${keyExpr}, ignoreBuildChecks: ${ignoreExpr}, ` +
       `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
       `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
@@ -347,41 +365,44 @@ function emitModule({
       staticCfgPath = moduleRoot ? path.posix.join(moduleRoot, staticPath) : staticPath;
     }
     // .njk stays on the compile path so compileSource rejects it with the
-    // codemod message (D5); other non-YAML extensions are walker content
+    // codemod message (D5); other non-YAML extensions emit content refs
     // (js functions, json5, raw strings — parseRefContent semantics).
     const ext =
       staticCfgPath === null
         ? null
         : staticCfgPath.slice(staticCfgPath.lastIndexOf('.') + 1).toLowerCase();
-    const compilableStatic = ext === 'yaml' || ext === 'yml' || ext === 'njk';
-    const walkerOnly =
-      parts.has('module') || parts.has('component') || parts.has('menu') || parts.has('resolver');
+    const moduleFormKeys = ['module', 'component', 'menu', 'page', 'connection', 'api'];
+    const hasModuleForm = moduleFormKeys.some((k) => parts.has(k));
 
     if (
       mode === 'markers' &&
-      resolveModuleExport &&
       parts.has('module') &&
-      parts.has('component')
+      parts.has('component') &&
+      !parts.has('menu') &&
+      !parts.has('resolver') &&
+      !parts.has('path') &&
+      !parts.has('page') &&
+      !parts.has('connection') &&
+      !parts.has('api')
     ) {
       const moduleNode = parts.get('module');
       const componentNode = parts.get('component');
+      let target = null;
       if (
+        resolveModuleExport &&
         moduleNode.t === 'lit' &&
         typeof moduleNode.value === 'string' &&
         componentNode.t === 'lit' &&
-        typeof componentNode.value === 'string' &&
-        !parts.has('menu') &&
-        !parts.has('resolver') &&
-        !parts.has('path')
+        typeof componentNode.value === 'string'
       ) {
-        const target = resolveModuleExport({
+        target = resolveModuleExport({
           module: moduleNode.value,
           component: componentNode.value,
         });
-        if (target) {
-          return emitModuleComponentRef(refEntry, target, structPath, wp, refLine);
-        }
       }
+      // No static target (operator-built export lists, walker-registered
+      // manifests, dynamic names) → registry lookup at run time.
+      return emitModuleComponentRef(refEntry, target, structPath, wp, refLine);
     }
     if (
       mode === 'markers' &&
@@ -394,47 +415,36 @@ function emitModule({
       !parts.has('connection') &&
       !parts.has('api')
     ) {
-      const moduleNode = parts.get('module');
-      const menuNode = parts.get('menu');
-      if (
-        moduleNode.t === 'lit' &&
-        typeof moduleNode.value === 'string' &&
-        menuNode.t === 'lit' &&
-        typeof menuNode.value === 'string'
-      ) {
-        return emitModuleMenuRef(refEntry, structPath, wp, refLine);
+      return emitModuleMenuRef(refEntry, structPath, wp, refLine);
+    }
+    // Module refs that did not resolve statically above — page/connection/api
+    // forms, operator-built names, unknown exports — emit the runtime error
+    // ladder (getModuleRefContent parity: collected at the ref, refMap entry
+    // registered with the raw def as original).
+    if (hasModuleForm) {
+      if (mode !== 'markers') {
+        for (const unsupported of moduleFormKeys) {
+          if (parts.has(unsupported)) {
+            throw new ConfigError(
+              `_ref ${unsupported} refs are not yet compiled (config-compiler S1 scope) — "${file}" line ${refNode.pos.line}.`,
+              { filePath: file, lineNumber: refNode.pos.line }
+            );
+          }
+        }
       }
-    }
-    if (mode === 'markers' && (walkerOnly || !compilableStatic)) {
-      return emitDelegatedRef(refEntry, structPath, wp, refLine);
-    }
-
-    for (const unsupported of ['module', 'component', 'menu']) {
-      if (parts.has(unsupported)) {
-        throw new ConfigError(
-          `_ref ${unsupported} refs are not yet compiled (config-compiler S1 scope) — "${file}" line ${refNode.pos.line}.`,
-          { filePath: file, lineNumber: refNode.pos.line }
-        );
-      }
-    }
-    if (parts.has('resolver')) {
-      throw new ConfigError(
-        `_ref resolver refs are not yet compiled (config-compiler S1 scope) — "${file}" line ${refNode.pos.line}.`,
-        { filePath: file, lineNumber: refNode.pos.line }
-      );
-    }
-
-    const pathNode = parts.get('path');
-    if (!pathNode) {
-      throw new ConfigError(`_ref requires a path in "${file}" (line ${refNode.pos.line}).`, {
-        filePath: file,
-        lineNumber: refNode.pos.line,
-      });
-    }
-    if (staticPath !== null && !compilableStatic) {
-      throw new ConfigError(
-        `_ref to non-YAML content ("${staticCfgPath}") is not yet compiled (config-compiler S1 scope) — "${file}" line ${refNode.pos.line}.`,
-        { filePath: file, lineNumber: refNode.pos.line }
+      const fieldExpr = (name) => {
+        const node = parts.get(name);
+        if (!node) {
+          return 'undefined';
+        }
+        return emitNode(node, childPath(structPath, `_ref.${name}`), wp, node.pos?.line);
+      };
+      return (
+        `await _r.invalidModuleRef({ scope, def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
+        `module: ${fieldExpr('module')}, component: ${fieldExpr('component')}, ` +
+        `menu: ${fieldExpr('menu')}, page: ${fieldExpr('page')}, ` +
+        `connection: ${fieldExpr('connection')}, api: ${fieldExpr('api')}, ` +
+        `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
       );
     }
 
@@ -487,8 +497,69 @@ function emitModule({
       `vars: ${varsExpr}, key: ${keyExpr}, transformer: ${transformerIdent}, ` +
       `transformerPath: ${transformerPath}, ignoreBuildChecks: ${ignoreExpr}, loc: ${loc(refNode)}`;
 
+    // Resolver dispatch — per-ref `resolver:`, or the build's global
+    // refResolver which supplies content for every path ref except the
+    // lowdefy root (walker getRefContent order). Content loads and parses at
+    // factory run; YAML text compiles through the runtime importer.
+    const resolverNode = parts.get('resolver') ?? null;
+    const isLowdefyRoot = staticPath === 'lowdefy.yaml' || staticPath === 'lowdefy.yml';
+    if (resolverNode || (refResolver && !isLowdefyRoot)) {
+      if (resolverNode && (resolverNode.t !== 'lit' || typeof resolverNode.value !== 'string')) {
+        throw new ConfigError(
+          `_ref resolver must be a string path in "${file}" (line ${resolverNode.pos.line}).`,
+          { filePath: file, lineNumber: resolverNode.pos.line }
+        );
+      }
+      // Resolver paths take the module-root prefix exactly like transformers
+      // (walker step 4).
+      let resolverPath = refResolver;
+      if (resolverNode) {
+        resolverPath = moduleRoot
+          ? path.posix.join(moduleRoot, resolverNode.value)
+          : resolverNode.value;
+      }
+      let pathArg = 'undefined';
+      if (staticPath !== null) {
+        pathArg = json(staticCfgPath);
+      } else if (rawPathNode) {
+        pathArg = emitNode(
+          rawPathNode,
+          childPath(structPath, '_ref.path'),
+          wp,
+          defEntryOf('path')?.keyPos.line
+        );
+      }
+      return (
+        `await _r.resolverRef({ scope, resolver: ${json(resolverPath)}, path: ${pathArg}, ` +
+        `def: ${emitRaw(refNode, refEntry.keyPos.line)}, ${common} })`
+      );
+    }
+
+    // getRefPath shorthand: a def with `_var` and no `path` IS the dynamic
+    // path — the var resolves to the path string at run time.
+    let pathNode = parts.get('path') ?? null;
+    if (!pathNode && parts.size === 1 && parts.has('_var')) {
+      pathNode = refNode;
+    }
+    if (!pathNode) {
+      throw new ConfigError(`_ref requires a path in "${file}" (line ${refNode.pos.line}).`, {
+        filePath: file,
+        lineNumber: refNode.pos.line,
+      });
+    }
+
     if (pathNode.t === 'lit' && typeof pathNode.value === 'string') {
       const cfgPath = moduleRoot ? path.posix.join(moduleRoot, pathNode.value) : pathNode.value;
+      // `.js` content refs import the user function at factory run — walker
+      // getRefContent's early return (no parse, no existence pre-check).
+      if (ext === 'js') {
+        return `await _r.jsRef({ scope, path: ${json(cfgPath)}, ${common} })`;
+      }
+      // Non-YAML content (json, md, txt, html, …) reads and parses at factory
+      // run through the build's cached reader.
+      if (ext !== 'yaml' && ext !== 'yml' && ext !== 'njk') {
+        return `await _r.contentRef({ scope, path: ${json(cfgPath)}, ${common} })`;
+      }
       // Missing files are a collected error with null in place — walker
       // parity; the rest of the config still builds (the refMap entry is
       // still registered, so sitePath/refLine ride along). The resolved

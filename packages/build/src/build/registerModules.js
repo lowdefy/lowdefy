@@ -329,6 +329,7 @@ async function compileManifest({ entryId, context }) {
   const mod = await import(result.entryUrl);
   moduleEntry.compiledManifestModule = mod;
   moduleEntry.compiledManifestImporter = result.importer;
+  moduleEntry.compiledManifestImportSource = result.importSource;
   moduleEntry.compiledFactories = mod.factories ?? {};
   moduleEntry.compiledVarDefaults = {};
   for (const [factoryKey, factoryFn] of Object.entries(moduleEntry.compiledFactories)) {

@@ -63,12 +63,22 @@ async function compileAndRun({
     vars,
     module,
     importer: result.importer,
+    importSource: result.importSource,
     file: entry,
     // The entry is on the chain from the start (walker buildRefs parity) —
     // a ref back to the entry is a cycle at the first inclusion.
     refChain: [entry],
     onError: collectErrors ? (e) => errors.push(e) : null,
     env,
+    configDir,
+    readConfigFile: async (refPath) => {
+      try {
+        return fs.readFileSync(path.resolve(configDir, refPath), 'utf8');
+      } catch {
+        return null;
+      }
+    },
+    fileExists: (refPath) => fs.existsSync(path.resolve(configDir, refPath)),
   });
   const output = await mod.default(scope);
   return { output, result, mod, errors, configDir, outDir };

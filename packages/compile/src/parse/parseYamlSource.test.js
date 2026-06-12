@@ -73,11 +73,6 @@ describe('S1-scope deferrals fail compilation with explicit messages', () => {
       `x:\n  _ref:\n    module: files\n    menu: main\n`,
       '_ref module refs are not yet compiled',
     ],
-    [
-      'resolver refs',
-      `x:\n  _ref:\n    path: a.yaml\n    resolver: r.js\n`,
-      '_ref resolver refs are not yet compiled',
-    ],
   ];
   test.each(cases)('%s', (name, source, message) => {
     expect(() => compileSource({ source, file: 'x.yaml', configDir: '/cfg' })).toThrow(message);

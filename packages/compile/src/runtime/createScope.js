@@ -36,15 +36,20 @@ function createScope({
   // refMap entries — injected by the build, which owns the id counter.
   walkPath = '',
   refTracker = null,
-  // Build-injected walker delegation for ref forms the compiler does not
-  // resolve itself (module/component/menu, resolver refs, non-YAML content,
-  // dynamic paths): (node, site) => resolved content.
-  walkerResolve = null,
   // Build-injected module registry lookup for compiled component refs (D7a).
   getModuleEntry = null,
   // Build-injected lazy resolution for structured module var defaults
   // (walker resolveVarDefault): (rawDefault, entryId) => resolved value.
   resolveModuleVarDefault = null,
+  // Content and resolver refs (E1): the config root for resolving user JS
+  // and content reads, the build's cached file reader (null on missing),
+  // a fast existence check for dynamic paths, the runtime source compiler
+  // (resolver-returned YAML), and the context handed to resolver functions.
+  configDir = null,
+  readConfigFile = null,
+  fileExists = null,
+  importSource = null,
+  resolverContext = null,
 } = {}) {
   return {
     vars,
@@ -59,9 +64,13 @@ function createScope({
     sourceRefId,
     walkPath,
     refTracker,
-    walkerResolve,
     getModuleEntry,
     resolveModuleVarDefault,
+    configDir,
+    readConfigFile,
+    fileExists,
+    importSource,
+    resolverContext,
   };
 }
 

@@ -1,0 +1,16 @@
+# 95: Global refResolver
+# =======================
+# A build-level refResolver supplies content for every _ref path — files
+# need not exist on disk. The lowdefy root itself always reads from disk
+# (getRefContent order). Exercises resolverRef with the global resolver in
+# the compiled path against runRefResolver in the walker.
+
+lowdefy: local
+name: Global Resolver Test
+
+pages:
+  - _ref:
+      path: virtual/home.yaml
+      vars:
+        title: Virtual Home
+  - _ref: virtual/about.yaml

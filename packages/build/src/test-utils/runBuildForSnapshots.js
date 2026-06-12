@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import fs from 'fs';
 import path from 'path';
 
 /**
@@ -286,6 +287,14 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
       succeed: jest.fn(),
     };
 
+    // Fixtures exercising build OPTIONS (global refResolver) declare them in
+    // a buildOptions.json at the fixture root.
+    let buildOptions = {};
+    const optionsPath = path.join(configDir, 'buildOptions.json');
+    if (fs.existsSync(optionsPath)) {
+      buildOptions = JSON.parse(fs.readFileSync(optionsPath, 'utf8'));
+    }
+
     await build({
       customTypesMap: snapshotTypesMap,
       directories: {
@@ -295,6 +304,7 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
       },
       logger,
       stage,
+      ...buildOptions,
     });
 
     // Parse JSON artifacts for snapshot comparison

@@ -58,4 +58,28 @@ function markDeep(node, refId) {
   return node;
 }
 
-export { mark, markDeep, setHidden };
+// Walker cloneForResolve parity: deep copy preserving the hidden provenance
+// markers — registry inline content is cloned per consumer so resolution
+// never mutates the registered manifest.
+const COPY_MARKS = ['~r', '~l', '~lk', '~k', '~arr', '~deferredFrom'];
+
+function copyMarked(value) {
+  if (!type.isObject(value) && !type.isArray(value)) return value;
+  let clone;
+  if (type.isArray(value)) {
+    clone = value.map((item) => copyMarked(item));
+  } else {
+    clone = {};
+    for (const key of Object.keys(value)) {
+      clone[key] = copyMarked(value[key]);
+    }
+  }
+  for (const markKey of COPY_MARKS) {
+    if (value[markKey] !== undefined) {
+      setHidden(clone, markKey, value[markKey]);
+    }
+  }
+  return clone;
+}
+
+export { mark, markDeep, setHidden, copyMarked };

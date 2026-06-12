@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
@@ -49,6 +50,9 @@ async function compileDir({
   entryPreserveZones = null,
   entryCollectFactoryExports = null,
   entryModuleRoot = null,
+  // Global refResolver (build option): every path ref emits as a resolver
+  // call — content comes from the user function, not the filesystem.
+  refResolver = null,
 }) {
   const compiled = new Map(); // cfgPath -> { fileId, keyMap }
   const compiling = []; // in-progress stack (cycle edges return early)
@@ -94,6 +98,7 @@ async function compileDir({
         configDir,
         moduleRoot: fileModuleRoot,
         resolveModuleExport,
+        refResolver,
         preserveZones: cfgPath === entry ? entryPreserveZones : null,
         collectFactoryExports: cfgPath === entry ? entryCollectFactoryExports : null,
         runtimeSpecifier,
@@ -125,6 +130,49 @@ async function compileDir({
     }
   }
 
+  // Runtime source compile for resolver-returned YAML text: content varies
+  // per call (resolvers interpolate vars), so virtual modules key by content
+  // hash; the fileId stays the label (the ref's path) for stable lexical ids.
+  // Nested static refs inside the content compile into the same graph, and
+  // keyMap/refMap additions land in the same (already returned) objects.
+  const virtualCompiled = new Map();
+  async function importSource(source, label) {
+    const hash = crypto.createHash('sha1').update(source).digest('hex').slice(0, 20);
+    const outRel = path.posix.join('__virtual__', `${hash}.js`);
+    if (!virtualCompiled.has(hash)) {
+      let runtimeSpecifier;
+      if (runtimePath) {
+        const outAbsDir = path.dirname(path.join(outDir, outRel));
+        let rel = path.relative(outAbsDir, runtimePath).split(path.sep).join('/');
+        if (!rel.startsWith('.')) rel = `./${rel}`;
+        runtimeSpecifier = rel;
+      }
+      const result = compileSource({
+        source,
+        file: label,
+        mode,
+        configDir,
+        resolveModuleExport,
+        refResolver,
+        runtimeSpecifier,
+        refExists: (refPath) => fs.existsSync(path.resolve(configDir, refPath)),
+        resolveImport: (refPath) => {
+          let specifier = path.posix.relative('__virtual__', outFileFor(refPath));
+          if (!specifier.startsWith('.')) specifier = `./${specifier}`;
+          return specifier;
+        },
+      });
+      await writeFile(path.join(outDir, outRel), result.code);
+      refMap[result.fileId] = { path: label };
+      Object.assign(keyMap, result.keyMap);
+      for (const refPath of result.staticRefs) {
+        await compileOne(refPath);
+      }
+      virtualCompiled.set(hash, outRel);
+    }
+    return import(pathToFileURL(path.join(outDir, virtualCompiled.get(hash))).href);
+  }
+
   await compileOne(entry, entryModuleRoot);
 
   return {
@@ -141,6 +189,7 @@ async function compileDir({
       }
       return import(pathToFileURL(path.join(outDir, outFileFor(cfgPath))).href);
     },
+    importSource,
   };
 }
 

@@ -60,35 +60,21 @@ function makeRefTracker(context) {
   };
 }
 
-// Ref forms the compiler does not resolve itself delegate to the real walker
-// with a context built from the call site — same refMap, same id counter.
-// moduleCtx carries the module binding for delegation inside manifest content
-// (moduleEntry, moduleRoot, packageRoot, moduleDependencies).
-function makeWalkerResolve(context, moduleCtx = {}) {
-  return (node, site) =>
-    resolve(
-      node,
-      new WalkContext({
-        buildContext: context,
-        refId: site.refId,
-        sourceRefId: site.sourceRefId,
-        vars: site.vars ?? {},
-        moduleDependencies: moduleCtx.moduleDependencies,
-        moduleEntry: moduleCtx.moduleEntry ?? null,
-        moduleRoot: moduleCtx.moduleRoot,
-        packageRoot: moduleCtx.packageRoot,
-        path: site.walkPath,
-        currentFile: site.file,
-        refChain: new Set(site.refChain),
-        operators,
-        env: process.env,
-        dynamicIdentifiers,
-      })
-    );
+// Content/resolver scope file access (E1): the build's cached config reader,
+// a config-root existence check, the config root for user-JS imports, and the
+// build context handed to resolver functions — walker getConfigFile /
+// runRefResolver parity.
+function makeScopeFileAccess(context) {
+  return {
+    configDir: context.directories.config,
+    readConfigFile: (refPath) => context.readConfigFile(refPath),
+    fileExists: (refPath) => fs.existsSync(path.resolve(context.directories.config, refPath)),
+    resolverContext: context,
+  };
 }
 
 // A compiled-factory scope rooted at a module manifest: the registration
-// binding, module-scoped delegation, and the shared refMap/id tracker.
+// binding and the shared refMap/id tracker.
 function makeManifestScope(context, moduleEntry) {
   const moduleYamlPath = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
   return createScope({
@@ -104,12 +90,8 @@ function makeManifestScope(context, moduleEntry) {
     refTracker: makeRefTracker(context),
     getModuleEntry: (id) => context.modules?.[id],
     resolveModuleVarDefault: makeResolveModuleVarDefault(context),
-    walkerResolve: makeWalkerResolve(context, {
-      moduleEntry,
-      moduleRoot: moduleEntry.moduleRoot,
-      packageRoot: moduleEntry.packageRoot,
-      moduleDependencies: moduleEntry.moduleDependencies,
-    }),
+    ...makeScopeFileAccess(context),
+    importSource: moduleEntry.compiledManifestImportSource ?? null,
     module: bindModuleEntry({
       id: moduleEntry.id,
       consumerVars: moduleEntry.consumerVars ?? {},
@@ -220,7 +202,7 @@ function manifestFactoryKey(wp) {
 
 export {
   makeRefTracker,
-  makeWalkerResolve,
+  makeScopeFileAccess,
   makeResolveModuleVarDefault,
   makeResolveModuleExport,
   makeManifestScope,

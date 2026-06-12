@@ -14,11 +14,16 @@
   limitations under the License.
 */
 
+import path from 'path';
+import YAML from 'yaml';
 import { get, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-import { markDeep, setHidden } from './mark.js';
+import { copyMarked, markDeep } from './mark.js';
 import { bindModuleEntry } from './moduleHelpers.js';
+import hasConfigDirectives from './hasConfigDirectives.js';
+import importUserFunction from './importUserFunction.js';
+import parseContentByExt from './parseContentByExt.js';
 
 // Per-ref operation order is an invariant (design D3, walker steps 11-16):
 // produce content → transformer → pluck key → propagate ~ignoreBuildChecks.
@@ -46,7 +51,9 @@ function globalSitePath(scope, sitePath) {
 // falling back to the build's id counter on collision — allocation and refMap
 // registration are injected by the build through scope.refTracker. Without a
 // tracker (errors/keys modes, unit harnesses) there is no instance id.
-function allocRefId({ scope, globalPath, refLine, file }) {
+// `original` registers the raw def for path-less refs (walker step 5 stores
+// it when refDef.path is undefined — resolver refs without a path).
+function allocRefId({ scope, globalPath, refLine, file, original }) {
   if (!scope.refTracker) {
     return null;
   }
@@ -55,8 +62,62 @@ function allocRefId({ scope, globalPath, refLine, file }) {
     lineNumber: refLine,
   });
   scope.refTracker.setPath(refId, file);
+  if (original !== undefined) {
+    scope.refTracker.setOriginal?.(refId, original);
+  }
   return refId;
 }
+
+// Walker getConfigFile parity for files missing at run time — same message,
+// same common-mistake tips, referencedFrom = the file containing the ref.
+function missingFileError({ scope, path: refPath, refLine }) {
+  const absolutePath = path.resolve(scope.configDir ?? '', refPath);
+  let message = `Referenced file does not exist: "${refPath}". Resolved to: ${absolutePath}`;
+  if (refPath.startsWith('../')) {
+    const suggestedPath = refPath.replace(/^(\.\.\/)+/, '');
+    message += ` Tip: Paths in _ref are resolved from config root. Did you mean "${suggestedPath}"?`;
+  } else if (refPath.startsWith('./')) {
+    const suggestedPath = refPath.substring(2);
+    message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
+  }
+  return new ConfigError(message, {
+    filePath: scope.file ?? null,
+    lineNumber: scope.file ? refLine : null,
+  });
+}
+
+async function readContentFile({ scope, path: refPath, refLine }) {
+  const content = scope.readConfigFile ? await scope.readConfigFile(refPath) : null;
+  if (content === null) {
+    throw missingFileError({ scope, path: refPath, refLine });
+  }
+  return content;
+}
+
+// Parsed (non-YAML-source) content — resolver objects, JSON — is walked
+// uniformly by the walker, so directives inside it resolve. Route through a
+// runtime compile only when one is present: plain data stays byte-identical
+// (no lexical marks, exactly like the walker's parsed content).
+async function compileParsedContent({ scope, childScope, content, label }) {
+  if (!scope.importSource) {
+    return content;
+  }
+  if (!type.isObject(content) && !type.isArray(content)) {
+    return content;
+  }
+  if (!hasConfigDirectives(content)) {
+    return content;
+  }
+  const mod = await scope.importSource(YAML.stringify(content), label);
+  return mod.default(childScope);
+}
+
+const NJK_REMOVED_MESSAGE = (file) =>
+  `Structural nunjucks templates (.yaml.njk) are no longer supported — "${file}". ` +
+  `Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become ` +
+  `_build.nunjucks or _build.string.concat, {% if %} becomes _build.if with ` +
+  `_build.array.compact for conditional list membership. ` +
+  `The runtime _nunjucks operator is unchanged.`;
 
 async function applyRefSteps({
   scope,
@@ -70,14 +131,20 @@ async function applyRefSteps({
   sitePath,
   refLine,
   loc,
+  // Walker step-5 variations: path-less refs (resolver without path) register
+  // an undefined refMap path with the raw def as `original`, and skip the
+  // cycle chain entirely (step 7 only guards when the path is truthy).
+  refMapPath = file,
+  original = undefined,
+  chainGuard = true,
 }) {
   const globalPath = globalSitePath(scope, sitePath);
-  const refId = allocRefId({ scope, globalPath, refLine, file });
+  const refId = allocRefId({ scope, globalPath, refLine, file: refMapPath, original });
 
   // Walker step 7: the cycle error is thrown OUTSIDE the per-ref collect
   // boundary — it propagates to the PARENT ref's catch (which nulls the
   // parent), or to the top level when the entry references itself.
-  if (scope.refChain.includes(file)) {
+  if (chainGuard && scope.refChain.includes(file)) {
     throw new ConfigError(
       `Circular reference detected. File "${file}" references itself through:\n  -> ${[
         ...scope.refChain,
@@ -97,7 +164,7 @@ async function applyRefSteps({
     // The ref that supplied the vars — _var injections re-tag provenance
     // with it (walker cloneVarValue parity).
     sourceRefId: scope.refId ?? null,
-    refChain: [...scope.refChain, file],
+    refChain: chainGuard ? [...scope.refChain, file] : scope.refChain,
   };
 
   // Walker steps 8-16: errors here (content load, child cycles propagating
@@ -154,22 +221,47 @@ async function ref(args) {
   return applyRefSteps(args);
 }
 
-async function dynRef({ scope, path, loc, ...rest }) {
-  let module;
+// Dynamic (operator-built) paths dispatch at run time on the resolved
+// extension — exactly the walker's getRefContent order with the resolver
+// branch handled at emit time (a configured resolver wins before dispatch,
+// so dynRef never sees one).
+async function dynRef({ scope, path: refPath, loc, sitePath, refLine, ...rest }) {
+  let factory;
   try {
-    if (!type.isString(path)) {
+    if (!type.isString(refPath)) {
       throw new ConfigError(
-        `_ref path resolved to a non-string value. Received: ${JSON.stringify(path)}.`,
+        `_ref path resolved to a non-string value. Received: ${JSON.stringify(refPath)}.`,
         { filePath: loc?.file, lineNumber: loc?.line }
       );
     }
-    if (!scope.importer) {
-      throw new ConfigError(
-        'Dynamic _ref paths require a scope importer (createScope({ importer })).',
-        { filePath: loc?.file, lineNumber: loc?.line }
-      );
+    const ext = refPath.slice(refPath.lastIndexOf('.') + 1).toLowerCase();
+    if (ext === 'njk') {
+      throw new ConfigError(NJK_REMOVED_MESSAGE(refPath), {
+        filePath: loc?.file,
+        lineNumber: loc?.line,
+      });
     }
-    module = await scope.importer(path);
+    if (ext === 'yaml' || ext === 'yml') {
+      if (!scope.importer) {
+        throw new ConfigError(
+          'Dynamic _ref paths require a scope importer (createScope({ importer })).',
+          { filePath: loc?.file, lineNumber: loc?.line }
+        );
+      }
+      if (scope.fileExists && !(await scope.fileExists(refPath))) {
+        throw missingFileError({ scope, path: refPath, refLine });
+      }
+      const module = await scope.importer(refPath);
+      factory = module.default;
+    } else if (ext === 'js') {
+      factory = () => importUserFunction({ configDir: scope.configDir, filePath: refPath });
+    } else {
+      factory = async (childScope) => {
+        const text = await readContentFile({ scope, path: refPath, refLine });
+        const parsed = parseContentByExt({ content: text, path: refPath });
+        return compileParsedContent({ scope, childScope, content: parsed, label: refPath });
+      };
+    }
   } catch (error) {
     if (error instanceof ConfigError) {
       return collectOrThrow(scope, error);
@@ -178,35 +270,182 @@ async function dynRef({ scope, path, loc, ...rest }) {
   }
   // applyRefSteps owns step 8-16 collection; its cycle guard (step 7)
   // deliberately propagates past this frame.
-  return applyRefSteps({ scope, factory: module.default, file: path, loc, ...rest });
+  return applyRefSteps({ scope, factory, file: refPath, loc, sitePath, refLine, ...rest });
 }
 
-// Refs the compiler does not resolve itself — module/component/menu refs,
-// resolver refs, non-YAML content files (js functions, json, raw strings),
-// and dynamic paths — delegate to the build's walker through
-// scope.walkerResolve. The def is rebuilt as a walker node (vars/key/path
-// expressions already evaluated, matching resolveRef step-3 order) and
-// resolved by the same code against the same refMap and id counter, so the
-// output is walker-identical by construction.
-async function delegatedRef({ scope, def, sitePath, refLine, loc }) {
+// Non-YAML static content (json, md, txt, html, …): read at factory run
+// through the build's cached reader, parse by extension, and compile
+// directive-bearing parsed content through the runtime importer.
+async function contentRef({ scope, path: refPath, sitePath, refLine, loc, ...rest }) {
+  const factory = async (childScope) => {
+    const text = await readContentFile({ scope, path: refPath, refLine });
+    const parsed = parseContentByExt({ content: text, path: refPath });
+    return compileParsedContent({ scope, childScope, content: parsed, label: refPath });
+  };
+  return applyRefSteps({ scope, factory, file: refPath, sitePath, refLine, loc, ...rest });
+}
+
+// `.js` content refs return the imported default directly — walker
+// getRefContent's early return: no content parse, transformer/key/tag still
+// apply through the shared steps.
+async function jsRef({ scope, path: refPath, ...rest }) {
+  const factory = () => importUserFunction({ configDir: scope.configDir, filePath: refPath });
+  return applyRefSteps({ scope, factory, file: refPath, ...rest });
+}
+
+// Resolver refs (per-ref `resolver:` and the build's global refResolver):
+// import the user function, call (path, vars, context), then dispatch the
+// returned content — YAML text compiles through importSource (nested refs
+// and vars resolve under this ref's scope), everything else follows the
+// content matrix. Path-less resolver refs register `original` and skip the
+// cycle chain (walker step-5/7 parity).
+async function resolverRef({
+  scope,
+  resolver,
+  path: refPath,
+  def,
+  sitePath,
+  refLine,
+  loc,
+  vars,
+  ...rest
+}) {
+  const hasPath = type.isString(refPath);
+  const factory = async (childScope) => {
+    const resolverFn = await importUserFunction({
+      configDir: scope.configDir,
+      filePath: resolver,
+    });
+    let content;
+    try {
+      content = await resolverFn(refPath, vars ?? {}, scope.resolverContext);
+    } catch (error) {
+      throw new ConfigError(`Error calling resolver "${resolver}".`, {
+        cause: error,
+        filePath: scope.file,
+        lineNumber: refLine,
+      });
+    }
+    if (type.isNone(content)) {
+      throw new ConfigError(`Resolver "${resolver}" returned "${content}".`, {
+        filePath: scope.file,
+        lineNumber: refLine,
+      });
+    }
+    if (hasPath && type.isString(content)) {
+      const ext = refPath.slice(refPath.lastIndexOf('.') + 1).toLowerCase();
+      if (ext === 'njk') {
+        throw new ConfigError(NJK_REMOVED_MESSAGE(refPath), {
+          filePath: scope.file,
+          lineNumber: refLine,
+        });
+      }
+      if (ext === 'yaml' || ext === 'yml') {
+        if (!scope.importSource) {
+          throw new ConfigError(
+            'Resolver YAML content requires a scope importSource (createScope({ importSource })).',
+            { filePath: scope.file, lineNumber: refLine }
+          );
+        }
+        const mod = await scope.importSource(content, refPath);
+        return mod.default(childScope);
+      }
+    }
+    const parsed = parseContentByExt({ content, path: hasPath ? refPath : undefined });
+    return compileParsedContent({
+      scope,
+      childScope,
+      content: parsed,
+      label: hasPath ? refPath : `resolver:${resolver}`,
+    });
+  };
+  return applyRefSteps({
+    scope,
+    factory,
+    file: hasPath ? refPath : undefined,
+    vars,
+    sitePath,
+    refLine,
+    loc,
+    ...rest,
+    refMapPath: hasPath ? refPath : undefined,
+    original: hasPath ? undefined : def,
+    chainGuard: hasPath,
+  });
+}
+
+// Module refs that cannot resolve statically — page/connection/api forms,
+// operator-built names, unknown exports — reproduce getModuleRefContent's
+// error ladder exactly, collected at this ref with the refMap entry
+// registered (path undefined, raw def as original — walker step 5).
+async function invalidModuleRef({
+  scope,
+  def,
+  module: rawName,
+  component,
+  menu,
+  page,
+  connection,
+  api,
+  sitePath,
+  refLine,
+  loc,
+}) {
+  allocRefId({
+    scope,
+    globalPath: globalSitePath(scope, sitePath),
+    refLine,
+    file: undefined,
+    original: def,
+  });
+  const parts = [];
+  if (rawName) parts.push(`module: "${rawName}"`);
+  if (component) parts.push(`component: "${component}"`);
+  if (menu) parts.push(`menu: "${menu}"`);
+  if (page) parts.push(`page: "${page}"`);
+  if (connection) parts.push(`connection: "${connection}"`);
+  if (api) parts.push(`api: "${api}"`);
+  const describe = `_ref { ${parts.join(', ')} }`;
   try {
-    if (!scope.walkerResolve) {
+    const deps = scope.module?.deps ?? null;
+    const entryId =
+      deps && typeof rawName === 'string' && rawName in deps ? deps[rawName] : rawName;
+    const entry = scope.getModuleEntry?.(entryId);
+    if (!entry) {
       throw new ConfigError(
-        'This _ref form is resolved by the build walker — compile it through the full build (scope.walkerResolve is not set).',
-        { filePath: loc?.file, lineNumber: loc?.line }
+        `${describe} references module "${rawName}" but no module with that entry id was registered` +
+          (entryId !== rawName
+            ? ` ("${rawName}" was mapped to "${entryId}" via dependency wiring).`
+            : '.')
       );
     }
-    const node = { _ref: def };
-    // The walker reads the ref line from the container's ~l.
-    setHidden(node, '~l', refLine);
-    return await scope.walkerResolve(node, {
-      refId: scope.refId ?? null,
-      sourceRefId: scope.sourceRefId ?? null,
-      walkPath: globalSitePath(scope, sitePath) ?? '',
-      file: scope.file,
-      refChain: scope.refChain,
-      vars: scope.vars,
-    });
+    if (page || connection || api) {
+      let refType = 'api';
+      let operator = '_module.endpointId';
+      if (page) {
+        refType = 'page';
+        operator = '_module.pageId';
+      } else if (connection) {
+        refType = 'connection';
+        operator = '_module.connectionId';
+      }
+      throw new ConfigError(
+        `Cross-module _ref does not support "${refType}". ` +
+          `Use ${operator}: { id: "${page ?? connection ?? api}", module: "${rawName}" } instead.`
+      );
+    }
+    let exportType = null;
+    if (component !== null && component !== undefined) {
+      exportType = 'component';
+    } else if (menu !== null && menu !== undefined) {
+      exportType = 'menu';
+    }
+    if (!exportType) {
+      throw new ConfigError('Module _ref requires "component" or "menu" property.');
+    }
+    throw new ConfigError(
+      `Module "${entryId}" does not export ${exportType} "${component ?? menu}".`
+    );
   } catch (error) {
     if (error instanceof ConfigError) {
       return collectOrThrow(scope, error);
@@ -243,6 +482,14 @@ async function moduleComponentRef({
   // compiled manifest (compiledFactories[factoryKey]) — no inner file ref.
   inline = false,
   factoryKey,
+  // Registry mode (E1): the export could not resolve at compile time —
+  // operator-built manifest export lists, walker-registered manifests. The
+  // module name maps through dependency wiring and the export looks up in
+  // the RESOLVED registry manifest at run time, dispatching to the compiled
+  // factory, an on-demand-compiled file target, or mark-preserving copied
+  // inline data (the walker's getModuleRefContent content paths).
+  registry = false,
+  module: rawName,
   sitePath,
   refLine,
   loc,
@@ -257,6 +504,10 @@ async function moduleComponentRef({
     scope.refTracker.setPath(outerId, null);
     scope.refTracker.setOriginal?.(outerId, def);
   }
+  if (registry) {
+    const deps = scope.module?.deps ?? null;
+    entryId = deps && typeof rawName === 'string' && rawName in deps ? deps[rawName] : rawName;
+  }
   const cycleKey = `module:${entryId}/component:${component}`;
   try {
     if (scope.refChain.includes(cycleKey)) {
@@ -268,10 +519,69 @@ async function moduleComponentRef({
     }
     const entry = scope.getModuleEntry?.(entryId);
     if (!entry) {
+      if (registry) {
+        throw new ConfigError(
+          `_ref { module: "${rawName}", component: "${component}" } references module "${rawName}" but no module with that entry id was registered` +
+            (entryId !== rawName
+              ? ` ("${rawName}" was mapped to "${entryId}" via dependency wiring).`
+              : '.')
+        );
+      }
       throw new ConfigError(
         'Module component refs require the build module registry (scope.getModuleEntry).',
         { filePath: loc?.file, lineNumber: loc?.line }
       );
+    }
+    let registryData;
+    if (registry) {
+      const components = entry.manifest?.components ?? [];
+      const index = components.findIndex((c) => c?.id === component);
+      const defNode = components[index]?.component;
+      if (defNode === undefined || defNode === null) {
+        throw new ConfigError(`Module "${entryId}" does not export component "${component}".`);
+      }
+      const compiledFactory = entry.compiledFactories?.[`component:${index}`];
+      if (compiledFactory) {
+        inline = true;
+        factoryKey = `component:${index}`;
+      } else {
+        let refPath = null;
+        if (type.isObject(defNode) && Object.keys(defNode).length === 1) {
+          if (typeof defNode._ref === 'string') {
+            refPath = defNode._ref;
+          } else if (
+            type.isObject(defNode._ref) &&
+            typeof defNode._ref.path === 'string' &&
+            Object.keys(defNode._ref).every((k) => k === 'path')
+          ) {
+            refPath = defNode._ref.path;
+          }
+        }
+        if (refPath !== null) {
+          // Plain file-target export: compile and import the target on
+          // demand (module files key by absolute path).
+          if (!scope.importer) {
+            throw new ConfigError(
+              'Module component refs require a scope importer (createScope({ importer })).',
+              { filePath: loc?.file, lineNumber: loc?.line }
+            );
+          }
+          const absPath = path.isAbsolute(refPath)
+            ? refPath
+            : path.resolve(entry.moduleRoot, refPath);
+          const mod = await scope.importer(absPath);
+          factory = mod.default;
+          file = absPath;
+          innerRefLine = defNode['~l'];
+          manifestFile =
+            defNode['~deferredFrom'] ?? path.join(entry.moduleRoot, 'module.lowdefy.yaml');
+        } else {
+          registryData = defNode;
+          manifestFile =
+            (type.isObject(defNode) ? defNode['~deferredFrom'] : undefined) ??
+            path.join(entry.moduleRoot, 'module.lowdefy.yaml');
+        }
+      }
     }
     const vars = consumerVars ?? {};
     let fromFile = manifestFile;
@@ -302,7 +612,25 @@ async function moduleComponentRef({
     };
 
     let content;
-    if (inline) {
+    if (registryData !== undefined) {
+      // Resolved inline data from the registry: clone per consumer with
+      // marks intact; directive-bearing content (raw preserved zones)
+      // compiles and runs under the consumer's scope.
+      content = copyMarked(registryData);
+      if (hasConfigDirectives(content)) {
+        if (!scope.importSource) {
+          throw new ConfigError(
+            'Module inline content with directives requires a scope importSource.',
+            { filePath: loc?.file, lineNumber: loc?.line }
+          );
+        }
+        const mod = await scope.importSource(
+          YAML.stringify(content),
+          `module:${entryId}/component:${component}`
+        );
+        content = await mod.default(outerScope);
+      }
+    } else if (inline) {
       const inlineFactory = entry.compiledFactories?.[factoryKey];
       if (!inlineFactory) {
         throw new ConfigError(
@@ -508,4 +836,14 @@ async function missingRef({ scope, path: refPath, resolvedPath, sitePath, refLin
   return collectOrThrow(scope, error);
 }
 
-export { ref, dynRef, delegatedRef, missingRef, moduleComponentRef, moduleMenuRef };
+export {
+  ref,
+  dynRef,
+  contentRef,
+  jsRef,
+  resolverRef,
+  invalidModuleRef,
+  missingRef,
+  moduleComponentRef,
+  moduleMenuRef,
+};

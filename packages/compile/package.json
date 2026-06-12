@@ -33,6 +33,7 @@
     "@lowdefy/node-utils": "5.3.0",
     "@lowdefy/operators": "5.3.0",
     "@lowdefy/operators-js": "5.3.0",
+    "json5": "2.2.3",
     "yaml": "2.9.0"
   },
   "devDependencies": {
