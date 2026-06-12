@@ -45,8 +45,9 @@ test('writePages write page', async () => {
   ]);
 });
 
-test('writePages public page emits a wire-shape data module and a registry entry', async () => {
+test('writePages public page emits data + types modules and a registry entry', async () => {
   const components = {
+    types: { blocks: {}, actions: {}, operators: { client: {} } },
     pages: [
       {
         id: 'page:page1',
@@ -57,14 +58,23 @@ test('writePages public page emits a wire-shape data module and a registry entry
       },
     ],
   };
-  await writePages({ components, context });
+  await writePages({
+    components,
+    context: {
+      ...context,
+      typesMap: { icons: {} },
+      directories: { server: process.cwd() },
+    },
+  });
   const calls = mockWriteBuildArtifact.mock.calls;
   expect(calls.map(([p]) => p)).toEqual([
     'pages/page1.json',
     'pages/page1.mjs',
+    'pages/page1.types.mjs',
     'pageRegistry.mjs',
   ]);
-  expect(calls[2][1]).toContain('"page1": () => import("./pages/page1.mjs")');
+  expect(calls[3][1]).toContain('import("./pages/page1.mjs")');
+  expect(calls[3][1]).toContain('import("./pages/page1.types.mjs")');
 });
 
 test('writePages protected page emits no data module and no registry entry', async () => {

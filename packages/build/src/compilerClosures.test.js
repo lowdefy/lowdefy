@@ -60,10 +60,6 @@ const { snapshotTypesMap } = await import('./test-utils/runBuildForSnapshots.js'
 
 afterAll(() => {
   fs.rmSync(tmpDir, { recursive: true, force: true });
-  fs.rmSync(path.join(fixturesDir, '49-request-payload-app/.lowdefy'), {
-    recursive: true,
-    force: true,
-  });
 });
 
 // Test operators standing in for the server runtime set — what matters is
@@ -86,8 +82,8 @@ test('every request and connection artifact has a closure twin matching ServerPa
     customTypesMap: snapshotTypesMap,
     directories: {
       config: configDir,
-      build: path.join(configDir, '.lowdefy'),
-      server: path.join(configDir, '.lowdefy', 'server'),
+      build: path.join(tmpDir, 'build'),
+      server: path.join(tmpDir, 'server'),
     },
     logger: { info() {}, log() {}, warn() {}, error() {}, succeed() {} },
     stage: 'prod',
@@ -152,8 +148,8 @@ test('S3b: public pages emit wire-shape data modules and the registry lists exac
     customTypesMap: snapshotTypesMap,
     directories: {
       config: configDir,
-      build: path.join(configDir, '.lowdefy'),
-      server: path.join(configDir, '.lowdefy', 'server'),
+      build: path.join(tmpDir, 'build'),
+      server: path.join(tmpDir, 'server'),
     },
     logger: { info() {}, log() {}, warn() {}, error() {}, succeed() {} },
     stage: 'prod',
@@ -176,6 +172,13 @@ test('S3b: public pages emit wire-shape data modules and the registry lists exac
     }
     expect(artifacts[moduleKey]).toBeDefined();
     expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${moduleKey}`));
+    // D14: the page's type imports emit as a sibling module the registry
+    // thunk loads with the config (kept separate so config data stays
+    // import-free).
+    const typesKey = jsonKey.replace(/\.json$/, '.types.mjs');
+    expect(artifacts[typesKey]).toBeDefined();
+    expect(artifacts[typesKey]).toContain('export default {');
+    expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${typesKey}`));
 
     const file = path.join(tmpDir, moduleKey.replace(/[/]/g, '__'));
     fs.writeFileSync(file, artifacts[moduleKey]);

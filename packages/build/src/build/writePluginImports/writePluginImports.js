@@ -41,10 +41,22 @@ async function writePluginImports({ components, context }) {
 
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
-  const blockPackages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
-  ];
+  const blockPackages = [...new Set((components.imports.blocks ?? []).map((b) => b.package))];
   await context.writeBuildArtifact('blockPackages.json', JSON.stringify(blockPackages));
+
+  // D14 fallback: one lazily-importable module carrying the full app type
+  // set — protected and unknown pages (no public chunk) load this once.
+  await context.writeBuildArtifact(
+    'plugins/allTypes.mjs',
+    [
+      `import actions from './actions.js';`,
+      `import blocks from './blocks.js';`,
+      `import icons from './icons.js';`,
+      `import operators from './operators/client.js';`,
+      `export default { actions, blocks, icons, operators };`,
+      ``,
+    ].join('\n')
+  );
 }
 
 export default writePluginImports;

@@ -21,21 +21,39 @@ import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 
-import actions from '../build/plugins/actions.js';
 import blockMetas from '../build/plugins/blockMetas.json';
-import blocks from '../build/plugins/blocks.js';
-import icons from '../build/plugins/icons.js';
-import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import pageRegistry from '../build/pageRegistry.mjs';
 
 // Replaces lib/client/Page.js. The first page renders from the config
-// embedded in the HTML. SPA navigations prefer the generated page registry —
-// public pages code-split into immutable per-page chunks (S3b/D14) — and
-// fall back to the authorized /api/page/* fetch for protected or unknown
-// pages (and for builds without a registry, where it exports null).
+// embedded in the HTML. Types load per page (D14): public pages code-split
+// into immutable chunks — config data plus exactly the block, action,
+// operator, and icon imports that page uses — merged into shared registries
+// the engine reads at render time. Protected and unknown pages fall back to
+// the authorized /api/page fetch with a lazily-imported full type set.
+let allTypesPromise;
+function loadAllTypes() {
+  allTypesPromise ??= import('../build/plugins/allTypes.mjs');
+  return allTypesPromise;
+}
+
+function mergeTypes(target, partial) {
+  for (const typeClass of ['actions', 'blocks', 'icons', 'operators']) {
+    Object.assign(target[typeClass], partial?.[typeClass] ?? {});
+  }
+}
+
 function Page({ auth, config, lowdefy }) {
   const [pageConfig, setPageConfig] = useState(config.pageConfig);
+  const [typesReady, setTypesReady] = useState(false);
+
+  // Stable registries — the client stores references at init and resolves
+  // block components, actions, operators, and icons from them at render
+  // time, so in-place merges are visible without re-initialization.
+  const typesRef = useRef(null);
+  if (!typesRef.current) {
+    typesRef.current = { actions: {}, blockMetas, blocks: {}, icons: {}, operators: {} };
+  }
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -48,15 +66,41 @@ function Page({ auth, config, lowdefy }) {
   const { router, Link } = routerRef.current;
 
   useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const loadPage = pageRegistry?.[config.pageConfig.pageId];
+        if (loadPage) {
+          const { types } = await loadPage();
+          mergeTypes(typesRef.current, types);
+        } else {
+          mergeTypes(typesRef.current, (await loadAllTypes()).default);
+        }
+      } catch (error) {
+        // Chunk failure on first paint — the full set is the safe ground.
+        mergeTypes(typesRef.current, (await loadAllTypes()).default);
+      }
+      if (mounted) {
+        setTypesReady(true);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
-        const loadPageModule = pageRegistry?.[targetPageId];
-        if (loadPageModule) {
-          const pageModule = await loadPageModule();
+        const loadPage = pageRegistry?.[targetPageId];
+        if (loadPage) {
+          const pageModule = await loadPage();
+          mergeTypes(typesRef.current, pageModule.types);
           setPageConfig(pageModule.default());
           return;
         }
+        mergeTypes(typesRef.current, (await loadAllTypes()).default);
         const res = await fetch(`${router.basePath}/api/page/${targetPageId}`);
         if (!res.ok) {
           if (targetPageId !== '404') {
@@ -76,6 +120,10 @@ function Page({ auth, config, lowdefy }) {
     return unsubscribe;
   }, []);
 
+  if (!typesReady) {
+    return null;
+  }
+
   return (
     <Client
       auth={auth}
@@ -87,13 +135,7 @@ function Page({ auth, config, lowdefy }) {
       jsMap={jsMap}
       lowdefy={lowdefy}
       router={router}
-      types={{
-        actions,
-        blockMetas,
-        blocks,
-        icons,
-        operators,
-      }}
+      types={typesRef.current}
       window={window}
     />
   );
