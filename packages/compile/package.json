@@ -1,0 +1,49 @@
+{
+  "name": "@lowdefy/compile",
+  "version": "5.3.0",
+  "license": "Apache-2.0",
+  "description": "Compiles Lowdefy YAML config to JavaScript modules.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./runtime": "./src/runtime/index.js"
+  },
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "build": "echo no build step — served from src",
+    "clean": "rm -rf dist",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "dependencies": {
+    "@lowdefy/errors": "5.3.0",
+    "@lowdefy/helpers": "5.3.0",
+    "@lowdefy/node-utils": "5.3.0",
+    "@lowdefy/operators": "5.3.0",
+    "@lowdefy/operators-js": "5.3.0",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@lowdefy/build": "5.3.0",
+    "@lowdefy/operators-nunjucks": "5.3.0",
+    "@swc/cli": "0.8.0",
+    "@swc/core": "1.15.18",
+    "@swc/jest": "0.2.39",
+    "jest": "28.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
