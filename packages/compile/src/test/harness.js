@@ -22,7 +22,10 @@ import compileDir from '../compileDir.js';
 import { createScope } from '../runtime/index.js';
 
 const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const tmpRoot = path.join(pkgRoot, '.tmp');
+// Per-worker tmp root: jest workers are separate processes running their
+// suites sequentially, so scoping by pid keeps one suite's cleanTmp from
+// deleting another worker's in-flight case dirs.
+const tmpRoot = path.join(pkgRoot, '.tmp', `worker-${process.pid}`);
 const runtimePath = path.join(pkgRoot, 'src/runtime/index.js');
 
 function makeTmpDir() {
