@@ -19,7 +19,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './walker.js';
 import getRefContent from './getRefContent.js';
 import makeRefDefinition from './makeRefDefinition.js';
-import evaluateStaticOperators from './evaluateStaticOperators.js';
+import evaluateStaticOperators from '../evaluateStaticOperators.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import isPageContentPath from '../jit/isPageContentPath.js';

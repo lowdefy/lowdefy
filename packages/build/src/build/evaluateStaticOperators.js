@@ -16,10 +16,10 @@
 
 import { evaluateOperators } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
-import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
-import collectTypeNames from '../collectTypeNames.js';
-import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
-import collectExceptions from '../../utils/collectExceptions.js';
+import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import collectTypeNames from './collectTypeNames.js';
+import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import collectExceptions from '../utils/collectExceptions.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
