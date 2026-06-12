@@ -16,6 +16,8 @@
 
 import { type, serializer } from '@lowdefy/helpers';
 
+import writeClosureArtifact from './full/writeClosureArtifact.js';
+
 async function writeAgents({ components, context }) {
   if (type.isNone(components.agents)) return;
   if (!type.isArray(components.agents)) {
@@ -26,6 +28,11 @@ async function writeAgents({ components, context }) {
       `agents/${agent.agentId}.json`,
       serializer.serializeToString(agent)
     );
+    await writeClosureArtifact({
+      context,
+      artifactPath: `agents/${agent.agentId}.mjs`,
+      input: agent.properties,
+    });
   });
   return Promise.all(writePromises);
 }

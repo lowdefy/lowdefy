@@ -17,8 +17,15 @@
 import { ConfigError } from '@lowdefy/errors';
 import { translate } from '@lowdefy/helpers';
 
-async function getAgentConfig({ i18n, logger, readConfigFile }, { agentId }) {
+async function getAgentConfig({ i18n, importConfigModule, logger, readConfigFile }, { agentId }) {
   const agent = await readConfigFile(`agents/${agentId}.json`);
+  // S3a: compiled builds ship a closure module for the agent properties.
+  if (agent && importConfigModule) {
+    const closureModule = await importConfigModule(`agents/${agentId}.mjs`);
+    if (closureModule?.default) {
+      agent.properties = closureModule.default;
+    }
+  }
   if (!agent) {
     const err = new ConfigError(
       translate({ key: 'agent.runtime.agentNotFound', values: { agentId }, i18n })

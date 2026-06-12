@@ -139,3 +139,48 @@ test('every request and connection artifact has a closure twin matching ServerPa
     expect(evaluated.errors).toEqual(parsed.errors);
   }
 });
+
+test('S3b: every page has a data-module twin and the registry covers all pages', async () => {
+  const configDir = path.join(fixturesDir, '49-request-payload-app');
+  const artifacts = {};
+  makeId.reset();
+  mockWriteBuildArtifact.mockImplementation((filePath, content) => {
+    artifacts[filePath] = content;
+  });
+  await build({
+    compiler: true,
+    customTypesMap: snapshotTypesMap,
+    directories: {
+      config: configDir,
+      build: path.join(configDir, '.lowdefy'),
+      server: path.join(configDir, '.lowdefy', 'server'),
+    },
+    logger: { info() {}, log() {}, warn() {}, error() {}, succeed() {} },
+    stage: 'prod',
+  });
+
+  const pageJsons = Object.keys(artifacts).filter(
+    (k) => k.startsWith('pages/') && k.endsWith('.json') && !k.includes('/requests/')
+  );
+  expect(pageJsons.length).toBeGreaterThan(0);
+  expect(artifacts['pageRegistry.mjs']).toBeDefined();
+
+  fs.mkdirSync(tmpDir, { recursive: true });
+  for (const jsonKey of pageJsons) {
+    const moduleKey = jsonKey.replace(/\.json$/, '.mjs');
+    expect(artifacts[moduleKey]).toBeDefined();
+    expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${moduleKey}`));
+
+    const file = path.join(tmpDir, moduleKey.replace(/[/]/g, '__'));
+    fs.writeFileSync(file, artifacts[moduleKey]);
+    const mod = await import(`${file}?v=1`);
+    const fromModule = mod.default();
+    const fromJson = serializer.deserializeFromString(artifacts[jsonKey]);
+    // Same data, including non-enumerable provenance markers; fresh per call.
+    expect(fromModule).toEqual(fromJson);
+    expect(JSON.stringify(serializer.serialize(fromModule))).toBe(
+      JSON.stringify(serializer.serialize(fromJson))
+    );
+    expect(mod.default()).not.toBe(fromModule);
+  }
+});

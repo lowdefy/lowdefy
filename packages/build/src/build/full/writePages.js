@@ -16,15 +16,39 @@
 import { serializer } from '@lowdefy/helpers';
 
 async function writePage({ page, context }) {
-  await context.writeBuildArtifact(
-    `pages/${page.pageId}.json`,
-    serializer.serializeToString(page ?? {})
-  );
+  const data = serializer.serializeToString(page ?? {});
+  await context.writeBuildArtifact(`pages/${page.pageId}.json`, data);
+  // S3b (data-first): compiled builds also emit the page as an ES module —
+  // the same serialized data, deserialized fresh per call (the engine
+  // mutates page config, so no shared trees across navigations). Operator
+  // positions stay verbatim data; closures land in S3c.
+  if (context.compiler === true) {
+    await context.writeBuildArtifact(
+      `pages/${page.pageId}.mjs`,
+      `import { serializer } from '@lowdefy/helpers';\n` +
+        `const raw = ${JSON.stringify(data)};\n` +
+        `export default () => serializer.deserializeFromString(raw);\n`
+    );
+  }
 }
 
 async function writePages({ components, context }) {
   const writePromises = components.pages.map((page) => writePage({ page, context }));
-  return Promise.all(writePromises);
+  await Promise.all(writePromises);
+  // D9: the generated page registry — static import-literal thunks so the
+  // client bundler code-splits one chunk per page.
+  if (context.compiler === true) {
+    const entries = components.pages.map(
+      (page) =>
+        `  ${JSON.stringify(page.pageId)}: () => import(${JSON.stringify(
+          `./pages/${page.pageId}.mjs`
+        )}),`
+    );
+    await context.writeBuildArtifact(
+      'pageRegistry.mjs',
+      `export default {\n${entries.join('\n')}\n};\n`
+    );
+  }
 }
 
 export default writePages;
