@@ -24,6 +24,12 @@ events:
         selector_no_allowclear: A
         selector_onclear: Apple
         selector_clearable: B
+        selector_object_value:
+          _id: b2
+          name: Bob
+        selector_object_primarykey:
+          _id: b2
+          name: Stale Name
 
 blocks:
   # ============================================
@@ -349,3 +355,73 @@ blocks:
         - A
         - B
         - C
+
+  # ============================================
+  # OBJECT-VALUED OPTIONS
+  # (regression: object values must display the selected value)
+  # ============================================
+
+  - id: selector_object_value
+    type: Selector
+    properties:
+      options:
+        - value:
+            _id: a1
+            name: Alice
+          label: Alice
+        - value:
+            _id: b2
+            name: Bob
+          label: Bob
+
+  - id: selector_object_select
+    type: Selector
+    properties:
+      options:
+        - value:
+            _id: a1
+            name: Alice
+          label: Alice
+        - value:
+            _id: b2
+            name: Bob
+          label: Bob
+    events:
+      onChange:
+        - id: set_selector_object_select
+          type: SetState
+          params:
+            selector_object_select_value:
+              _state: selector_object_select
+
+  - id: selector_object_select_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: selector_object_select_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: selector_object_select_value
+          else: ''
+
+  # primaryKey identity: stored value differs from the option value on every
+  # field except `_id`, so a correct match must project `_id` from both sides.
+  - id: selector_object_primarykey
+    type: Selector
+    properties:
+      primaryKey: _id
+      options:
+        - value:
+            _id: a1
+            name: Alice
+          label: Alice
+        - value:
+            _id: b2
+            name: Bob
+          label: Bob

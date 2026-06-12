@@ -30,7 +30,7 @@ async function writeActionSchemaMap({ components, context }) {
   for (const [packageName, actions] of Object.entries(actionsByPackage)) {
     let packageSchemas;
     try {
-      packageSchemas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
+      packageSchemas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
     } catch {
       // Package not resolvable from build context (custom plugins) — skip
     }

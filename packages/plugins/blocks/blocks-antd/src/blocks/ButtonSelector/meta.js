@@ -17,6 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import options from '../../schemas/options.js';
+import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
@@ -39,21 +40,31 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      variant: {
+        type: 'string',
+        enum: ['solid', 'outlined'],
+        default: 'solid',
+        description: 'Visual variant of the selected option button, matching the Button block.',
+      },
       buttonStyle: {
         type: 'string',
         enum: ['solid', 'outline'],
-        default: 'solid',
-        description: 'Style of the selected option button.',
+        description: 'Deprecated — use `variant` (solid | outlined) instead.',
       },
       color: {
         type: 'string',
-        description: 'Selected button color.',
+        description:
+          'Color applied to the selected button. Fills the background in solid mode (with auto-contrasting text) and the border/text in outline mode.',
         docs: {
           displayType: 'color',
         },
       },
       disabled,
       options,
+      data,
+      html,
+      valueKey,
+      primaryKey,
       size: sizeSmallDefaultLarge,
       label,
       title: inputTitle,

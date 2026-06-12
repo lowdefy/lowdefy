@@ -78,6 +78,16 @@ The run script does the following:
 
 const context = await getContext();
 
+// Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
+// signal forwarding) — terminal Ctrl+C signals the whole process group, but a
+// targeted SIGTERM would otherwise orphan the child.
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.on(signal, () => {
+    context.shutdownServer();
+    process.exit(0);
+  });
+}
+
 try {
   await context.initialBuild();
 

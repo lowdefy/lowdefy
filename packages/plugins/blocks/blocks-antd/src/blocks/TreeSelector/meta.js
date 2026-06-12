@@ -14,277 +14,85 @@
   limitations under the License.
 */
 
+import LabelMeta from '../Label/meta.js';
+import label from '../../schemas/label.js';
+import icon from '../../schemas/icon.js';
+import options from '../../schemas/options.js';
+import treeSelectTheme from '../../schemas/treeSelectTheme.js';
+import { data, html, valueKey, primaryKey, parentKey } from '../../schemas/dataOptions.js';
+import {
+  disabled,
+  placeholder,
+  inputTitle,
+  autoFocus,
+  variant,
+  bordered,
+  allowClear,
+  sizeSmallDefaultLarge,
+} from '../../schemas/inputProperties.js';
+
 export default {
   category: 'input',
-  icons: [],
-  valueType: 'array',
-  slots: {
-    options: 'Custom option content.',
-  },
+  icons: [...LabelMeta.icons, 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  valueType: 'any',
   cssKeys: {
     element: 'The TreeSelector element.',
+    label: 'The TreeSelector label.',
+    extra: 'The TreeSelector extra content.',
+    feedback: 'The TreeSelector validation feedback.',
+    suffixIcon: 'The suffix icon in the TreeSelector.',
+    clearIcon: 'The clear icon in the TreeSelector.',
   },
   events: {
+    onBlur: 'Trigger action when the selector loses focus.',
     onChange: {
       description: 'Trigger action when selection is changed.',
       event: { value: 'The selected value.' },
+    },
+    onFocus: 'Trigger action when the selector gains focus.',
+    onClear: 'Trigger action when the selector is cleared.',
+    onSearch: {
+      description: 'Trigger action when the search input changes.',
+      event: { value: 'The search input value.' },
     },
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      checkable: {
-        type: 'boolean',
-        default: false,
-        description: 'Make nodes checkboxes.',
-      },
-      disabled: {
-        type: 'boolean',
-        default: false,
-        description: 'Disable the block if true.',
-      },
-      showLine: {
-        type: 'boolean',
-        default: false,
-        description: 'Show a connecting line if true.',
-      },
-      selectable: {
+      data,
+      html,
+      valueKey,
+      primaryKey,
+      parentKey,
+      options,
+      label,
+      disabled,
+      autoFocus,
+      allowClear: { ...allowClear, default: true },
+      bordered,
+      variant,
+      size: sizeSmallDefaultLarge,
+      title: inputTitle,
+      placeholder: { ...placeholder, default: 'Select item' },
+      showSearch: {
         type: 'boolean',
         default: true,
-        description: 'Selectable if true.',
+        description: 'Make the tree searchable.',
       },
-      options: {
-        default: [],
-        oneOf: [
-          {
-            type: 'array',
-            description: 'Options can either be an array of label, value pairs.',
-            items: {
-              type: 'object',
-              required: ['value'],
-              properties: {
-                label: {
-                  type: 'string',
-                  description: 'Value label shown to user - supports html.',
-                },
-                value: {
-                  description: 'Value selected. Can be of any type.',
-                  oneOf: [
-                    {
-                      type: 'string',
-                    },
-                    {
-                      type: 'number',
-                    },
-                    {
-                      type: 'boolean',
-                    },
-                    {
-                      type: 'object',
-                    },
-                    {
-                      type: 'array',
-                    },
-                  ],
-                  docs: {
-                    displayType: 'yaml',
-                  },
-                },
-                disabled: {
-                  type: 'boolean',
-                  description: 'Disable the node if true.',
-                  default: false,
-                },
-                disableCheckbox: {
-                  type: 'boolean',
-                  description: 'Disable the checkbox if true.',
-                  default: false,
-                },
-                style: {
-                  type: 'object',
-                  description: 'Css style to applied to option.',
-                  docs: {
-                    displayType: 'yaml',
-                  },
-                },
-                children: {
-                  type: 'array',
-                  description: 'Options can either be an array of label, value pairs.',
-                  items: {
-                    type: 'object',
-                    required: ['value'],
-                    properties: {
-                      label: {
-                        type: 'string',
-                        description: 'Value label shown to user - supports html.',
-                      },
-                      value: {
-                        description: 'Value selected. Can be of any type.',
-                        oneOf: [
-                          {
-                            type: 'string',
-                          },
-                          {
-                            type: 'number',
-                          },
-                          {
-                            type: 'boolean',
-                          },
-                          {
-                            type: 'object',
-                          },
-                          {
-                            type: 'array',
-                          },
-                        ],
-                        docs: {
-                          displayType: 'yaml',
-                        },
-                      },
-                      disabled: {
-                        type: 'boolean',
-                        description: 'Disable the node if true.',
-                        default: false,
-                      },
-                      disableCheckbox: {
-                        type: 'boolean',
-                        description: 'Disable the checkbox if true.',
-                        default: false,
-                      },
-                      style: {
-                        type: 'object',
-                        description: 'Css style to applied to option.',
-                        docs: {
-                          displayType: 'yaml',
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
+      treeDefaultExpandAll: {
+        type: 'boolean',
+        default: false,
+        description: 'Expand all tree nodes by default.',
       },
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-          link: 'https://ant.design/components/tree-select#design-token',
-        },
-        properties: {
-          nodeSelectedBg: {
-            type: 'string',
-            description: 'Background color of selected tree node.',
-          },
-          nodeHoverBg: {
-            type: 'string',
-            description: 'Background color of hovered tree node.',
-          },
-          titleHeight: {
-            type: 'number',
-            default: 24,
-            description: 'Height of tree node title.',
-          },
-          directoryNodeSelectedBg: {
-            type: 'string',
-            description: 'Background color of selected directory node.',
-          },
-          directoryNodeSelectedColor: {
-            type: 'string',
-            description: 'Text color of selected directory node.',
-          },
-          clearBg: {
-            type: 'string',
-            description: 'Background color of clear button.',
-          },
-          selectorBg: {
-            type: 'string',
-            description: 'Background color of the selector.',
-          },
-          hoverBorderColor: {
-            type: 'string',
-            description: 'Border color when hovered.',
-          },
-          activeBorderColor: {
-            type: 'string',
-            description: 'Border color when active/focused.',
-          },
-          activeOutlineColor: {
-            type: 'string',
-            description: 'Outline color when active/focused.',
-          },
-          optionSelectedBg: {
-            type: 'string',
-            description: 'Background of selected option.',
-          },
-          optionSelectedColor: {
-            type: 'string',
-            description: 'Text color of selected option.',
-          },
-          optionSelectedFontWeight: {
-            type: 'string',
-            description: 'Font weight of selected option.',
-          },
-          optionActiveBg: {
-            type: 'string',
-            description: 'Background of active (hovered) option.',
-          },
-          optionFontSize: {
-            type: 'number',
-            default: 14,
-            description: 'Font size of options.',
-          },
-          optionHeight: {
-            type: 'number',
-            default: 32,
-            description: 'Height of each option.',
-          },
-          optionLineHeight: {
-            type: 'string',
-            description: 'Line height of options.',
-          },
-          optionPadding: {
-            type: 'string',
-            description: 'Padding of options.',
-          },
-          multipleSelectorBgDisabled: {
-            type: 'string',
-            description: 'Background when disabled in multiple mode.',
-          },
-          multipleItemBg: {
-            type: 'string',
-            description: 'Background of tag items in multiple mode.',
-          },
-          multipleItemBorderColor: {
-            type: 'string',
-            description: 'Border color of tag items.',
-          },
-          multipleItemHeight: {
-            type: 'number',
-            default: 24,
-            description: 'Height of tag items.',
-          },
-          multipleItemHeightSM: {
-            type: 'number',
-            default: 16,
-            description: 'Height of tag items (small).',
-          },
-          multipleItemHeightLG: {
-            type: 'number',
-            default: 32,
-            description: 'Height of tag items (large).',
-          },
-          zIndexPopup: {
-            type: 'number',
-            default: 1050,
-            description: 'z-index of the dropdown.',
-          },
-        },
+      notFoundContent: {
+        type: 'string',
+        default: 'Not found',
+        description: 'Content shown when no nodes match the search.',
       },
+      suffixIcon: { ...icon, default: 'AiOutlineDown', description: 'Dropdown suffix icon.' },
+      clearIcon: { ...icon, default: 'AiOutlineCloseCircle', description: 'Clear icon.' },
+      theme: treeSelectTheme,
     },
   },
 };

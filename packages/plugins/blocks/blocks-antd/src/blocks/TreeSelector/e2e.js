@@ -17,27 +17,38 @@
 import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-tree`);
+const locator = (page, blockId) => page.locator(`.ant-select:has(#${escapeId(blockId)}_input)`);
+
+const openDropdown = (page) =>
+  page.locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
 
 export default createBlockHelper({
   locator,
   do: {
-    expand: (page, blockId, label) =>
-      locator(page, blockId)
-        .locator('.ant-tree-treenode')
+    select: async (page, blockId, label) => {
+      await locator(page, blockId).click();
+      await openDropdown(page)
+        .locator('.ant-select-tree-node-content-wrapper')
         .filter({ hasText: label })
-        .locator('.ant-tree-switcher')
-        .click(),
-    clickNode: (page, blockId, label) =>
-      locator(page, blockId)
-        .locator('.ant-tree-node-content-wrapper')
-        .filter({ hasText: label })
-        .click(),
+        .click();
+    },
+    clear: async (page, blockId) => {
+      const sel = locator(page, blockId);
+      await sel.hover();
+      await sel.locator('.ant-select-clear').click();
+    },
+    search: async (page, blockId, text) => {
+      await locator(page, blockId).click();
+      await page.keyboard.type(text);
+    },
   },
   expect: {
-    selected: (page, blockId, label) =>
-      expect(
-        locator(page, blockId).locator('.ant-tree-treenode-selected').filter({ hasText: label })
-      ).toBeVisible(),
+    disabled: (page, blockId) => expect(locator(page, blockId)).toHaveClass(/ant-select-disabled/),
+    enabled: (page, blockId) =>
+      expect(locator(page, blockId)).not.toHaveClass(/ant-select-disabled/),
+    value: (page, blockId, val) =>
+      expect(locator(page, blockId).locator('.ant-select-selection-item')).toHaveText(val),
+    placeholder: (page, blockId, text) =>
+      expect(locator(page, blockId).locator('.ant-select-selection-placeholder')).toHaveText(text),
   },
 });

@@ -1,0 +1,57 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: ListSelector
+    pageTitle: ListSelector
+    section: List Blocks
+    filePath: blocks/list/ListSelector.yaml
+    block_type: ListSelector
+    antd_component: Card
+    antd_url: card
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/ListSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ListSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/ListSelector/gallery.yaml
+    description: >
+      Data-driven vertical list of headerless cards that doubles as a single-select
+      input. Each card body is rendered from a Nunjucks template against its row
+      item. Clicking a card sets the block value to that data item and highlights
+      it; set `selectable: false` to turn selection off and render a read-only card
+      list. Virtualized via `react-virtuoso` so thousands of variable-height cards
+      render smoothly, with a memoized row component to skip unnecessary re-renders.
+      Optional client-side search bar filters rows by text across any field paths,
+      a built-in loading skeleton stands in while data loads, and `onChange` /
+      `onClick` events report `{ value, index, item }` for the row that was clicked.
+    onInit:
+      - id: init_cl_data
+        type: SetState
+        params:
+          people:
+            - name: Ada Lovelace
+              email: ada@hopper.io
+              role: Mathematician
+            - name: Linus Torvalds
+              email: linus@kernel.org
+              role: Engineer
+            - name: Grace Hopper
+              email: grace@compiler.dev
+              role: Computer Scientist
+            - name: Margaret Hamilton
+              email: margaret@apollo.nasa
+              role: Software Engineer
+            - name: Donald Knuth
+              email: don@tex.org
+              role: Author

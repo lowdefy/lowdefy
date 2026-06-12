@@ -265,4 +265,35 @@ test.describe('Selector Block', () => {
     const content = selector.locator('.ant-select-content');
     await expect(content).toHaveClass(/selector-selector-tailwind/);
   });
+
+  // ============================================
+  // OBJECT-VALUED OPTIONS
+  // ============================================
+
+  test('renders a pre-populated object value', async ({ page }) => {
+    // Regression: an object-valued selection must re-display its label.
+    const selector = getSelector(page, 'selector_object_value');
+    await expect(selector).toBeVisible();
+    await expect(selector.locator('.ant-select-content')).toHaveText('Bob');
+  });
+
+  test('selecting an object-valued option displays it and stores the object', async ({ page }) => {
+    const selector = getSelector(page, 'selector_object_select');
+    await selector.click();
+
+    await getOption(page, 'selector_object_select', 1).click(); // Bob
+    await expect(selector.locator('.ant-select-content')).toHaveText('Bob');
+
+    // The full object value (not just the label) is what reaches state.
+    const display = getBlock(page, 'selector_object_select_display');
+    await expect(display).toContainText('"b2"');
+    await expect(display).toContainText('"Bob"');
+  });
+
+  test('matches a pre-populated object value by primaryKey', async ({ page }) => {
+    // Stored value differs from the option value except on `_id`, so a correct
+    // match must project `_id` from both sides; the label "Bob" then renders.
+    const selector = getSelector(page, 'selector_object_primarykey');
+    await expect(selector.locator('.ant-select-content')).toHaveText('Bob');
+  });
 });

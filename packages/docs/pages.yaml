@@ -15,6 +15,7 @@
 - _ref: concepts/modules.yaml
 - _ref: concepts/module-authoring.yaml
 - _ref: concepts/page-and-app-state.yaml
+- _ref: concepts/selectors.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
@@ -59,7 +60,8 @@
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml
 
-- _ref: users/reference/next-auth-providers.yaml
+- _ref: users/reference/auth-js-providers.yaml
+- _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
@@ -100,6 +102,8 @@
 - _ref: blocks/input/TiptapInput.yaml
 - _ref: blocks/input/TiptapMentionInput.yaml
 - _ref: blocks/input/TitleInput.yaml
+- _ref: blocks/input/TreeInput.yaml
+- _ref: blocks/input/TreeMultipleSelector.yaml
 - _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
@@ -180,9 +184,9 @@
 - _ref: blocks/container/Tooltip.yaml
 - _ref: blocks/container/Watermark.yaml
 
-- _ref: blocks/list/CardList.yaml
 - _ref: blocks/list/ControlledList.yaml
 - _ref: blocks/list/List.yaml
+- _ref: blocks/list/ListSelector.yaml
 - _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
 
@@ -239,6 +243,7 @@
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
+- _ref: operators/_boolean.yaml
 - _ref: operators/_build.yaml
 - _ref: operators/_change_case.yaml
 - _ref: operators/_date.yaml
@@ -317,6 +322,7 @@
 
 - _ref: migration/upgrade-guide.yaml
 - _ref: migration/v3-to-v4.yaml
+- _ref: migration/v5-to-v6.yaml
 - _ref: migration/v4-to-v5.yaml
 
 - _ref: 404.yaml

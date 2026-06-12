@@ -28,16 +28,13 @@ export default {
   },
   events: {
     onChange: {
-      description: 'Trigger action on tab change.',
+      description: 'Trigger action on any tab change.',
       event: { activeKey: 'The key of the active tab.' },
     },
-    onTabScroll: {
-      description: 'Trigger action on tab scroll.',
-      event: { direction: 'The scroll direction.' },
-    },
-    onTabClick: {
-      description: 'Trigger action on tab click.',
-      event: { key: 'The key of the clicked tab.' },
+    onTabSelect: {
+      description:
+        'Documentation reference — not a fixed event name. When a tab becomes active, the `eventName` string declared on that `tabs[]` entry is triggered (in addition to onChange). Declare your named events under `events:` (e.g. `onProfileTab`, `onBillingTab`).',
+      event: { key: 'The key of the now-active tab.' },
     },
   },
   properties: {
@@ -85,6 +82,11 @@ export default {
             key: {
               type: 'string',
               description: 'Area key of the tab.',
+            },
+            eventName: {
+              type: 'string',
+              description:
+                'Block-level event name to trigger when this tab becomes active, in addition to onChange. Declare an event with this name under `events:`. The event receives `{ key }` of the now-active tab.',
             },
             disabled: {
               type: 'boolean',

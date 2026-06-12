@@ -728,3 +728,32 @@
             value: medium
           - label: '<span style="color: #52c41a;">&#x1F7E2; Low</span>'
             value: low
+
+- title: Per-option Color
+  blocks:
+    - id: radio_per_option_color
+      type: RadioSelector
+      properties:
+        title: 'Selected dot + label in its option color'
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_radio_selector
+      type: RadioSelector
+      properties:
+        title: Notify by
+        data:
+          - { id: 1, name: Email }
+          - { id: 2, name: SMS }
+          - { id: 3, name: Push }
+        html: '{{ item.name }}'
+        valueKey: id

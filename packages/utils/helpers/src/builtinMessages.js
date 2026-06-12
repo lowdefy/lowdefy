@@ -70,8 +70,13 @@ const builtinMessages = {
   'agent.toolResult.returnedFields': 'Returned object with {count} fields',
 
   // Block built-ins — surfaced directly by block components, overridable per-locale.
-  'blocks.cardList.search.placeholder': 'Search…',
-  'blocks.cardList.search.noResults': 'No results',
+  'blocks.listSelector.search.placeholder': 'Search…',
+  'blocks.listSelector.search.noResults': 'No results',
+  'blocks.listSelector.noData': 'No data',
+  'blocks.treeSelector.placeholder': 'Select item',
+  'blocks.treeSelector.notFound': 'Not found',
+  'blocks.treeMultipleSelector.placeholder': 'Select items',
+  'blocks.treeMultipleSelector.notFound': 'Not found',
 
   // antd X built-ins — apps can override per-locale via config.i18n.messages.
   // For en_US and zh_CN, XProvider's pack already covers these natively.

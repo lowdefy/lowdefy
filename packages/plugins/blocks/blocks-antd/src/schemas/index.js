@@ -15,6 +15,7 @@
 */
 
 export { default as breadcrumbList } from './breadcrumbList.js';
+export { data, html, valueKey, primaryKey, parentKey } from './dataOptions.js';
 export { default as disabledDates } from './disabledDates.js';
 export { default as icon } from './icon.js';
 export { default as label } from './label.js';

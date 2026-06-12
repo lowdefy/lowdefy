@@ -679,3 +679,32 @@
           - Blog Post
           - Conference or Event
           - Other
+
+- title: Per-option Color
+  blocks:
+    - id: checkbox_per_option_color
+      type: CheckboxSelector
+      properties:
+        title: 'Each checked box in its option color'
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_checkbox_selector
+      type: CheckboxSelector
+      properties:
+        title: Permissions
+        data:
+          - { id: 1, name: Read }
+          - { id: 2, name: Write }
+          - { id: 3, name: Admin }
+        html: '{{ item.name }}'
+        valueKey: id

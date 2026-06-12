@@ -1,0 +1,153 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: selectors
+    pageTitle: Driving Selectors
+    section: Concepts
+    filePath: concepts/selectors.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Selector blocks — `Selector`, `MultipleSelector`, `ButtonSelector`, `RadioSelector`,
+            `CheckboxSelector`, `SegmentedSelector` and the list-style `ListSelector` — can be driven
+            two ways. Both produce the same kind of value in [`state`](/page-and-app-state); pick the
+            one that fits where your data comes from.
+
+            ## Way 1 — `options` (label / value pairs)
+
+            Provide an array of primitives, or `{ label, value }` objects. The `value` is stored in
+            state and the `label` is shown to the user. This is ideal when you write the options by
+            hand, but when the data comes from a [request](/connections-and-requests) you usually have
+            to build the `label` and `value` fields in the query first.
+
+            ```yaml
+            id: plan
+            type: Selector
+            properties:
+              options:
+                - label: Starter
+                  value: 1
+                - label: Pro
+                  value: 2
+                - label: Enterprise
+                  value: 3
+            ```
+
+            ## Way 2 — `data` + `html`
+
+            Pass the raw rows in `data` and render each option's label with an `html`
+            [Nunjucks](/custom-html) template. There's no need to reshape the data into label/value
+            pairs — point the selector straight at a request's results.
+
+            - **`html`** — the template for each option label. The context exposes `item` (the row)
+              and `index`.
+            - **`valueKey`** — the field stored as the value when an option is selected. Omit it to
+              store the whole row.
+            - **`primaryKey`** — the field used to match the current value back to an option for
+              highlighting. Defaults to `valueKey`; set it when you store the whole row but a single
+              field (such as `id`) uniquely identifies it.
+
+            ```yaml
+            id: plan
+            type: Selector
+            properties:
+              data:
+                - id: 1
+                  name: Starter
+                - id: 2
+                  name: Pro
+                - id: 3
+                  name: Enterprise
+              html: '{{ item.name }}'
+              valueKey: id
+            ```
+
+            With `valueKey: id`, selecting "Pro" sets `state.plan` to `2`.
+
+            ## Tree selectors
+
+            `TreeSelector` (single) and `TreeMultipleSelector` (multiple) are searchable dropdowns that
+            present the options as a tree. They use the same model plus a **`parentKey`**: build a flat
+            `data`/`options` array where each row has a `primaryKey` (its own id) and a `parentKey`
+            whose value equals the parent row's `primaryKey`. Rows whose `parentKey` is empty or points
+            at no row become tree roots. `valueKey` is still the stored value; `primaryKey`/`parentKey`
+            only build the hierarchy.
+
+            ```yaml
+            id: category
+            type: TreeSelector
+            properties:
+              primaryKey: id
+              parentKey: parentId
+              valueKey: id
+              html: '{{ item.label }}'
+              data:
+                - { id: 1, label: Electronics }
+                - { id: 2, label: Phones, parentId: 1 }
+                - { id: 3, label: Laptops, parentId: 1 }
+            ```
+
+            (The `TreeInput` block is a different, inline antd `Tree` — not a dropdown.)
+
+            ## Controlling the selection from state
+
+            Because the value lives in state under the block's id, you can drive the selection with
+            [`SetState`](/SetState). The selector highlights the option whose `primaryKey` (or
+            `valueKey`) matches the value you set.
+
+            ```yaml
+            id: select_pro
+            type: Button
+            events:
+              onClick:
+                - id: select_pro
+                  type: SetState
+                  params:
+                    plan: 2 # highlights the "Pro" option
+            ```
+
+            For the multi-value selectors (`MultipleSelector`, `CheckboxSelector`) the value is an
+            array of keys, so `SetState` with `[1, 3]` selects those two options.
+
+            ## Large datasets — the `setData` method
+
+            Anything placed in a block's `properties` (including `data` and `options`) is re-parsed
+            and re-serialized by the engine on **every** update cycle — once per keystroke, anywhere
+            on the page. For a few hundred rows that's fine, but a selector holding tens of thousands
+            of rows in `properties` makes the whole page feel sluggish.
+
+            Every selector exposes a **`setData`** method instead. Call it with
+            [`CallMethod`](/CallMethod) from the block's **`onMount`** event — after a request has
+            loaded the rows — to push the dataset straight into the block. The data is held inside the
+            block and never enters `properties`, so the engine has nothing large to parse or
+            serialize: other inputs on the page stay responsive no matter how big the list is.
+            `ListSelector` additionally virtualises its rows, so only the visible cards are ever in
+            the DOM.
+
+            Use the block's `onMount` (not the page's `onInit`): `onInit` runs before any block has
+            mounted, so the `setData` method does not exist yet.
+
+            ```yaml
+            id: people
+            type: ListSelector
+            properties:
+              valueKey: id
+              html: '{{ item.name }}'
+            events:
+              onMount:
+                - id: load_rows
+                  type: Request
+                  params: get_rows
+                - id: fill
+                  type: CallMethod
+                  params:
+                    blockId: people
+                    method: setData
+                    args:
+                      - _request: get_rows
+            ```
+
+            The selector still falls back to `properties.data` / `properties.options` until `setData`
+            is called, so small lists need no extra wiring.

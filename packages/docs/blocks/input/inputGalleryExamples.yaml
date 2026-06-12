@@ -158,25 +158,18 @@
             tag:
               color: orange
     - id: ig_tree
-      type: TreeSelector
+      type: TreeInput
       properties:
-        label:
-          title: TreeSelector
+        primaryKey: value
+        parentKey: parent
+        defaultExpandAll: true
         options:
-          - label: Engineering
-            value: eng
-            children:
-              - label: Frontend
-                value: fe
-              - label: Backend
-                value: be
-          - label: Design
-            value: design
-            children:
-              - label: UX
-                value: ux
-              - label: UI
-                value: ui
+          - { value: eng, label: Engineering }
+          - { value: fe, label: Frontend, parent: eng }
+          - { value: be, label: Backend, parent: eng }
+          - { value: design, label: Design }
+          - { value: ux, label: UX, parent: design }
+          - { value: ui, label: UI, parent: design }
 
 - title: Choice Inputs
   blocks:

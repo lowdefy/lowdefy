@@ -1007,3 +1007,49 @@
                 params:
                   content: Order placed successfully!
                   duration: 3
+
+- title: Per-option Color
+  blocks:
+    - id: selector_color_solid
+      type: Selector
+      properties:
+        title: 'Solid — the whole input filled with the selected option color'
+        variant: solid
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+    - id: selector_color_outlined
+      type: Selector
+      properties:
+        title: 'Outlined — input border + value colored'
+        variant: outlined
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_selector
+      type: Selector
+      properties:
+        title: Plan
+        placeholder: Choose a plan...
+        data:
+          - { id: 1, name: Starter }
+          - { id: 2, name: Pro }
+          - { id: 3, name: Enterprise }
+        html: '{{ item.name }}'
+        valueKey: id

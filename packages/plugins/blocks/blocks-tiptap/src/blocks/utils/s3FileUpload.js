@@ -40,7 +40,9 @@ async function s3FileUpload({ file, methods }) {
   formData.append('file', file);
 
   await fetch(url, { method: 'POST', body: formData });
-  file.url = `${url}/${key}`;
+  // createPresignedPost returns the bucket endpoint with a trailing slash, so only
+  // add a separator when it is missing to avoid a double slash before the key.
+  file.url = url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
   return file.url;
 }
 

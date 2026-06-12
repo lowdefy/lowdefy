@@ -1,6 +1,6 @@
 # Lowdefy Project Guide for Claude Code
 
-Lowdefy is a config-driven web framework built on Next.js. Apps are defined in YAML with **Blocks** (React components), **Operators** (logic functions like `_if`, `_get`), **Actions** (event handlers), and **Connections/Requests** (database/API integrations).
+Lowdefy is a config-driven web framework built on Hono (server) and Vite (client). Apps are defined in YAML with **Blocks** (React components), **Operators** (logic functions like `_if`, `_get`), **Actions** (event handlers), and **Connections/Requests** (database/API integrations).
 
 ## Documentation Navigation
 
@@ -39,10 +39,10 @@ packages/
 
 | Package               | Purpose     | Entry Point       | Key Feature                             |
 | --------------------- | ----------- | ----------------- | --------------------------------------- |
-| `@lowdefy/server`     | Production  | `next start`      | Minimal, no watching                    |
+| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client |
 | `@lowdefy/server-dev` | Development | `manager/run.mjs` | File watching, hot reload, auto-rebuild |
 
-**server-dev manager** orchestrates: initial build → file watchers → server process → SSE-based hot reload. See `code-docs/architecture/` for details.
+**server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
 ## Code Principles
 

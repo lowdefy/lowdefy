@@ -17,7 +17,7 @@ This is the default block package included with Lowdefy. It provides:
 
 ### CSS Variables Mode
 
-Ant Design runs in CSS variables mode (`cssVar: { key: 'lowdefy' }`, `hashed: false`) configured in the server's `_app.js`. The `<Html>` element has `className="lowdefy"` in `_document.js` so the CSS variables are set on `:root`, allowing Tailwind and custom CSS to reference `--ant-*` tokens. No Less or CSS-in-JS hashing at runtime.
+Ant Design runs in CSS variables mode (`cssVar: { key: 'lowdefy' }`, `hashed: false`) configured in the server's `client/App.jsx`. The `<html>` element has `class="lowdefy"` in the server HTML template (`src/html/template.js`) so the CSS variables are set on `:root`, allowing Tailwind and custom CSS to reference `--ant-*` tokens. No Less or CSS-in-JS hashing at runtime.
 
 ### `withTheme` HOC
 
@@ -127,7 +127,9 @@ Form input components:
 | `RadioSelector`     | Single       | Radio button group              |
 | `CheckboxSelector`  | Array        | Checkbox group                  |
 | `ButtonSelector`    | Single/Array | Button-style selection          |
-| `TreeSelector`      | Single/Array | Hierarchical selection          |
+| `TreeInput`         | Array        | Inline hierarchical tree        |
+| `TreeSelector`      | Single       | Tree dropdown (single)          |
+| `TreeMultipleSelector` | Array     | Tree dropdown (multiple)        |
 | `DateSelector`      | Date         | Date picker                     |
 | `DateTimeSelector`  | Date         | Date and time picker            |
 | `DateRangeSelector` | Array        | Date range picker               |

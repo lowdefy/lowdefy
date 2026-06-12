@@ -42,6 +42,17 @@ test('collectPageContent collects string from properties.content', () => {
   expect(result).toBe('# Title');
 });
 
+test('collectPageContent excludes build marker values so identical builds produce identical content', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      properties: { title: 'Hello', '~k': '6xs', nested: { '~r': '12', '~l': 4, label: 'World' } },
+    },
+  ]);
+  expect(result).toBe('Hello\nWorld');
+});
+
 test('collectPageContent collects multiple string properties from one block', () => {
   const result = collectPageContent([
     {

@@ -61,7 +61,7 @@ _ref:
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
-            - `--no-next-build`: Do not build the Next.js server, and only build the Lowdefy config. Used in some deployment scripts where the Next.js build is done as a separate step.
+            - `--no-client-build`: Do not run the Vite client build, and only build the Lowdefy config. Used in some deployment scripts where the client build is done as a separate step. The previous `--no-next-build` flag still works as a deprecated alias.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.

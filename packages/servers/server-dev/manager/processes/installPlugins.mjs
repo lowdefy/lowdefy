@@ -14,21 +14,29 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import { installIfPackageJsonChanged, spawnProcess } from '@lowdefy/node-utils';
 
-function installPlugins({ logger, packageManagerCmd }) {
+function installPlugins({ directories, logger, packageManagerCmd }) {
   return async () => {
-    logger.info({ spin: 'start' }, 'Installing plugins...');
-    await spawnProcess({
-      processOptions: {
-        // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
-        shell: process.platform === 'win32',
+    const installed = await installIfPackageJsonChanged({
+      directory: directories.server,
+      install: async () => {
+        logger.info({ spin: 'start' }, 'Installing plugins...');
+        await spawnProcess({
+          processOptions: {
+            // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
+            shell: process.platform === 'win32',
+          },
+          command: packageManagerCmd,
+          args: ['install', '--no-frozen-lockfile'],
+          stdOutLineHandler: (line) => logger.debug(line),
+        });
+        logger.info('Installed plugins.');
       },
-      command: packageManagerCmd,
-      args: ['install', '--no-frozen-lockfile'],
-      stdOutLineHandler: (line) => logger.debug(line),
     });
-    logger.info('Installed plugins.');
+    if (!installed) {
+      logger.debug('Plugin dependencies unchanged, skipped install.');
+    }
   };
 }
 

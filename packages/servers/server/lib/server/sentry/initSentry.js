@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/node';
 
 import loggerConfig from '../../build/logger.js';
 

@@ -1196,3 +1196,50 @@
                 params:
                   content: Filters applied successfully.
                   duration: 3
+
+- title: Per-option Color
+  blocks:
+    - id: multiple_color_solid
+      type: MultipleSelector
+      properties:
+        title: 'Solid — filled colored tags'
+        variant: solid
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+    - id: multiple_color_outlined
+      type: MultipleSelector
+      properties:
+        title: 'Outlined — outlined colored tags'
+        variant: outlined
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_multiple_selector
+      type: MultipleSelector
+      properties:
+        title: Team
+        placeholder: Add people...
+        data:
+          - { id: 1, name: Ada }
+          - { id: 2, name: Linus }
+          - { id: 3, name: Grace }
+          - { id: 4, name: Alan }
+        html: '{{ item.name }}'
+        valueKey: id

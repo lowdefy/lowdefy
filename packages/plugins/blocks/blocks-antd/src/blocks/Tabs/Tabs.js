@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
@@ -50,11 +50,30 @@ function TabsBlock({
   }
 
   const [key, setKey] = useState(properties.defaultActiveKey ?? tabs[0].key);
+
+  // Read latest tabs inside the stable handler without re-binding listeners.
+  const tabsRef = useRef(tabs);
+  tabsRef.current = tabs;
+
+  // Fires the generic onChange plus, if the now-active tab declares one, its
+  // own dynamically-named event. Stable identity so shortcut listeners and the
+  // registered method don't re-bind on every render.
+  const fireTabChange = useCallback(
+    (activeKey) => {
+      setKey(activeKey);
+      methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+      const activeTab = tabsRef.current.find((tab) => tab.key === activeKey);
+      if (activeTab?.eventName) {
+        methods.triggerEvent({ name: activeTab.eventName, event: { key: activeKey } });
+      }
+    },
+    [methods]
+  );
+
   useEffect(() => {
     methods.registerMethod('setActiveKey', ({ activeKey }) => {
       if (activeKey !== key) {
-        setKey(activeKey);
-        methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+        fireTabChange(activeKey);
       }
     });
   });
@@ -62,33 +81,17 @@ function TabsBlock({
   const shortcutItems = tabs
     .filter((tab) => tab.shortcut)
     .map((tab) => ({ key: tab.key, shortcut: tab.shortcut, disabled: tab.disabled }));
-  const onShortcutMatch = useCallback(
-    (activeKey) => {
-      setKey(activeKey);
-      methods.triggerEvent({ name: 'onChange', event: { activeKey } });
-    },
-    [methods]
-  );
-  useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
+  useItemShortcuts({ items: shortcutItems, onMatch: fireTabChange });
 
   return (
     <Tabs
       activeKey={key}
       animated={properties.animated !== undefined ? properties.animated : true}
       id={blockId}
-      onChange={(activeKey) => {
-        setKey(activeKey);
-        methods.triggerEvent({ name: 'onChange', event: { activeKey } });
-      }}
+      onChange={(activeKey) => fireTabChange(activeKey)}
       size={properties.size ?? 'default'}
       tabPlacement={properties.tabPlacement ?? 'top'}
       type={properties.tabType ?? 'line'}
-      onTabScroll={({ direction }) =>
-        methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
-      }
-      onTabClick={(key) => {
-        methods.triggerEvent({ name: 'onTabClick', event: { key } });
-      }}
       className={classNames.element}
       classNames={{
         tabBar: classNames.tabBar,

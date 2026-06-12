@@ -103,6 +103,11 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
+        - id: selectors
+          type: MenuLink
+          pageId: selectors
+          properties:
+            title: Driving Selectors
         - id: lowdefy-api
           type: MenuLink
           pageId: lowdefy-api
@@ -326,11 +331,11 @@
           properties:
             title: Provider Reference
           links:
-            - id: next-auth-providers
+            - id: auth-js-providers
               type: MenuLink
-              pageId: next-auth-providers
+              pageId: auth-js-providers
               properties:
-                title: Next Auth Providers
+                title: Auth.js Providers
             - id: OpenIDConnectProvider
               type: MenuLink
               pageId: OpenIDConnectProvider
@@ -483,6 +488,12 @@
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
+        - id: TreeInput
+          type: MenuLink
+          pageId: TreeInput
+        - id: TreeMultipleSelector
+          type: MenuLink
+          pageId: TreeMultipleSelector
         - id: TreeSelector
           type: MenuLink
           pageId: TreeSelector
@@ -734,15 +745,15 @@
         title: List Blocks
         icon: AiOutlineOrderedList
       links:
-        - id: CardList
-          type: MenuLink
-          pageId: CardList
         - id: ControlledList
           type: MenuLink
           pageId: ControlledList
         - id: List
           type: MenuLink
           pageId: List
+        - id: ListSelector
+          type: MenuLink
+          pageId: ListSelector
         - id: MasonryList
           type: MenuLink
           pageId: MasonryList
@@ -934,6 +945,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _boolean
+          type: MenuLink
+          pageId: _boolean
         - id: _build
           type: MenuLink
           pageId: _build
@@ -1173,6 +1187,11 @@
           pageId: upgrade-guide
           properties:
             title: Upgrade Guide
+        - id: v5-to-v6
+          type: MenuLink
+          pageId: v5-to-v6
+          properties:
+            title: V5 to V6
         - id: v4-to-v5
           type: MenuLink
           pageId: v4-to-v5

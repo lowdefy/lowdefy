@@ -47,7 +47,6 @@ export default {
         'Options can either be an array of primitive values, on an array of label, value pairs.',
       items: {
         type: 'object',
-        required: ['value'],
         properties: {
           label: {
             type: 'string',
@@ -79,6 +78,14 @@ export default {
             description: 'Css style to apply to the option.',
             docs: {
               displayType: 'yaml',
+            },
+          },
+          color: {
+            type: 'string',
+            description:
+              'Color applied to this option when it is selected. Falls back to the block-level color when not set.',
+            docs: {
+              displayType: 'color',
             },
           },
         },

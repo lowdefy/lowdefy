@@ -1,0 +1,223 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: basic_card_list
+      type: ListSelector
+      properties:
+        data:
+          - Alpha
+          - Beta
+          - Gamma
+        html: |
+          <h3>{{ index + 1 }}. {{ item }}</h3>
+
+- title: Single Select
+  blocks:
+    - id: select_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        data:
+          - { id: 1, name: Starter, price: $0 }
+          - { id: 2, name: Pro, price: $20 }
+          - { id: 3, name: Enterprise, price: $99 }
+        html: |
+          <strong>{{ item.name }}</strong>
+          <div style="color:#666;">{{ item.price }} / month</div>
+      events:
+        onChange:
+          - id: capture_selected
+            type: SetState
+            params:
+              selected_plan:
+                _event: value
+    - id: selected_plan_display
+      type: Paragraph
+      properties:
+        content:
+          _nunjucks:
+            template: 'Selected: {{ selected_plan.name }}'
+            on:
+              _state: true
+
+- title: Selection Off (read-only list)
+  blocks:
+    - id: readonly_list
+      type: ListSelector
+      properties:
+        selectable: false
+        data:
+          - One
+          - Two
+          - Three
+        html: |
+          <span>{{ item }}</span>
+
+- title: Empty (no data)
+  blocks:
+    - id: empty_list
+      type: ListSelector
+      properties:
+        data: []
+        noData: No people to show yet.
+        html: |
+          <span>{{ item.name }}</span>
+
+- title: Object Data
+  blocks:
+    - id: people_card_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        bordered: false
+        data:
+          - name: Ada Lovelace
+            email: ada@example.com
+            role: Mathematician
+          - name: Linus Torvalds
+            email: linus@example.com
+            role: Engineer
+          - name: Grace Hopper
+            email: grace@example.com
+            role: Computer Scientist
+        html: |
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <strong>{{ item.name }}</strong>
+            <span style="color:#666;">{{ item.role }}</span>
+            <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+          </div>
+
+- title: With onClick
+  blocks:
+    - id: click_card_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        data:
+          - { id: 1, label: First }
+          - { id: 2, label: Second }
+          - { id: 3, label: Third }
+        html: |
+          <h4>{{ item.label }}</h4>
+          <p>Click to see which row was selected.</p>
+      events:
+        onClick:
+          - id: capture_clicked
+            type: SetState
+            params:
+              clicked_card:
+                _event: true
+
+- title: Small Cards with Custom Gap
+  blocks:
+    - id: compact_card_list
+      type: ListSelector
+      properties:
+        size: small
+        gap: 4
+        data:
+          - One
+          - Two
+          - Three
+          - Four
+        html: |
+          <span>{{ item }}</span>
+
+- title: Large Dataset (Virtualized)
+  blocks:
+    - id: large_card_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        height: 480
+        data:
+          _string.split:
+            on:
+              _string.repeat:
+                on: 'x,'
+                count: 999
+            separator: ','
+        html: |
+          <h4>Row {{ index + 1 }}</h4>
+          <p>This list renders one thousand cards. Only rows in (and near) the viewport are mounted in the DOM.</p>
+
+- title: With Search (all fields)
+  blocks:
+    - id: search_all_card_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        height: 360
+        search: {}
+        data:
+          - { name: Ada Lovelace, email: ada@example.com, role: Mathematician }
+          - { name: Linus Torvalds, email: linus@example.com, role: Engineer }
+          - { name: Grace Hopper, email: grace@example.com, role: Computer Scientist }
+          - { name: Alan Turing, email: alan@example.com, role: Mathematician }
+          - { name: Margaret Hamilton, email: margaret@example.com, role: Software Engineer }
+        html: |
+          <strong>{{ item.name }}</strong>
+          <div style="color:#666;">{{ item.role }} · <a href="mailto:{{ item.email }}">{{ item.email }}</a></div>
+
+- title: With Search (specific fields)
+  blocks:
+    - id: search_fields_card_list
+      type: ListSelector
+      properties:
+        hoverable: true
+        height: 360
+        search:
+          placeholder: Filter by name…
+          fields:
+            - name
+          minLength: 1
+        data:
+          - { name: Ada Lovelace, email: ada@example.com, role: Mathematician }
+          - { name: Linus Torvalds, email: linus@example.com, role: Engineer }
+          - { name: Grace Hopper, email: grace@example.com, role: Computer Scientist }
+        html: |
+          <strong>{{ item.name }}</strong>
+          <div style="color:#666;">{{ item.role }}</div>
+
+- title: Select by key (valueKey)
+  blocks:
+    - id: keyed_list
+      type: ListSelector
+      properties:
+        valueKey: id
+        primaryKey: id
+        data:
+          - { id: 1, name: Starter, price: $0 }
+          - { id: 2, name: Pro, price: $20 }
+          - { id: 3, name: Enterprise, price: $99 }
+        html: |
+          <strong>{{ item.name }}</strong>
+          <div style="color:#888;">{{ item.price }} / month</div>
+      events:
+        onChange:
+          - id: capture_keyed
+            type: SetState
+            params:
+              keyed_plan_id:
+                _event: value
+    - id: keyed_plan_display
+      type: Paragraph
+      properties:
+        content:
+          _nunjucks:
+            template: 'Selected plan id: {{ keyed_plan_id if keyed_plan_id != null else "—" }}'
+            on:
+              _state: true

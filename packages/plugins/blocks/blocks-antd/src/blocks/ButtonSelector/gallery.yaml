@@ -18,7 +18,7 @@
       type: ButtonSelector
       properties:
         title: Solid Style (default)
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Daily
             value: daily
@@ -30,7 +30,7 @@
       type: ButtonSelector
       properties:
         title: Outline Style
-        buttonStyle: outline
+        variant: outlined
         options:
           - label: Daily
             value: daily
@@ -42,7 +42,7 @@
       type: ButtonSelector
       properties:
         title: Solid - filled background on selected
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Left
             value: left
@@ -59,7 +59,7 @@
       type: ButtonSelector
       properties:
         title: Simple String Array
-        buttonStyle: solid
+        variant: solid
         options:
           - Red
           - Green
@@ -68,7 +68,7 @@
       type: ButtonSelector
       properties:
         title: Object Options with Labels
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Active
             value: active
@@ -80,7 +80,7 @@
       type: ButtonSelector
       properties:
         title: HTML in Option Labels
-        buttonStyle: solid
+        variant: solid
         options:
           - label: '<b>Bold</b>'
             value: bold
@@ -92,7 +92,7 @@
       type: ButtonSelector
       properties:
         title: Emoji Labels
-        buttonStyle: solid
+        variant: solid
         options:
           - label: '&#x2705; Approved'
             value: approved
@@ -108,7 +108,7 @@
       properties:
         title: Small
         size: small
-        buttonStyle: solid
+        variant: solid
         options:
           - Small
           - Medium
@@ -117,7 +117,7 @@
       type: ButtonSelector
       properties:
         title: Default
-        buttonStyle: solid
+        variant: solid
         options:
           - Small
           - Medium
@@ -127,7 +127,7 @@
       properties:
         title: Large
         size: large
-        buttonStyle: solid
+        variant: solid
         options:
           - Small
           - Medium
@@ -140,7 +140,7 @@
       properties:
         title: Small Outline
         size: small
-        buttonStyle: outline
+        variant: outlined
         options:
           - Option A
           - Option B
@@ -149,7 +149,7 @@
       type: ButtonSelector
       properties:
         title: Default Outline
-        buttonStyle: outline
+        variant: outlined
         options:
           - Option A
           - Option B
@@ -159,7 +159,7 @@
       properties:
         title: Large Outline
         size: large
-        buttonStyle: outline
+        variant: outlined
         options:
           - Option A
           - Option B
@@ -171,7 +171,7 @@
       type: ButtonSelector
       properties:
         title: Day of the Week
-        buttonStyle: solid
+        variant: solid
         size: small
         options:
           - label: Mon
@@ -192,7 +192,7 @@
       type: ButtonSelector
       properties:
         title: Toggle
-        buttonStyle: solid
+        variant: solid
         options:
           - label: 'Yes'
             value: true
@@ -206,7 +206,7 @@
       properties:
         title: Disabled (Solid)
         disabled: true
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -219,7 +219,7 @@
       properties:
         title: Disabled (Outline)
         disabled: true
-        buttonStyle: outline
+        variant: outlined
         options:
           - label: Option A
             value: a
@@ -231,7 +231,7 @@
       type: ButtonSelector
       properties:
         title: Disabled Individual Option (Solid)
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Available
             value: available
@@ -244,7 +244,7 @@
       type: ButtonSelector
       properties:
         title: Multiple Disabled Options
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Active
             value: active
@@ -263,7 +263,7 @@
       type: ButtonSelector
       properties:
         title: Custom Option Styles
-        buttonStyle: outline
+        variant: outlined
         options:
           - label: Normal
             value: normal
@@ -279,7 +279,7 @@
       type: ButtonSelector
       properties:
         title: Styled Solid Options
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Default
             value: default
@@ -297,7 +297,7 @@
       type: ButtonSelector
       properties:
         title: Mixed Option Styling
-        buttonStyle: outline
+        variant: outlined
         options:
           - label: Regular
             value: regular
@@ -317,7 +317,7 @@
       type: ButtonSelector
       properties:
         title: Default Color (primary)
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -329,7 +329,7 @@
       type: ButtonSelector
       properties:
         title: 'Color: red'
-        buttonStyle: solid
+        variant: solid
         color: red
         options:
           - label: Option A
@@ -342,7 +342,7 @@
       type: ButtonSelector
       properties:
         title: 'Color: green'
-        buttonStyle: solid
+        variant: solid
         color: green
         options:
           - label: Option A
@@ -355,7 +355,7 @@
       type: ButtonSelector
       properties:
         title: 'Color: purple'
-        buttonStyle: solid
+        variant: solid
         color: purple
         options:
           - label: Option A
@@ -371,7 +371,7 @@
       type: ButtonSelector
       properties:
         title: 'Coral (#ff6b6b)'
-        buttonStyle: solid
+        variant: solid
         color: '#ff6b6b'
         options:
           - Low
@@ -381,7 +381,7 @@
       type: ButtonSelector
       properties:
         title: 'Teal (#20c997)'
-        buttonStyle: solid
+        variant: solid
         color: '#20c997'
         options:
           - Low
@@ -391,8 +391,18 @@
       type: ButtonSelector
       properties:
         title: 'Indigo (#4c6ef5)'
-        buttonStyle: solid
+        variant: solid
         color: '#4c6ef5'
+        options:
+          - Low
+          - Medium
+          - High
+    - id: color_hex_light
+      type: ButtonSelector
+      properties:
+        title: 'Light color (#ffe58f) — text auto-contrasts to black'
+        variant: solid
+        color: '#ffe58f'
         options:
           - Low
           - Medium
@@ -404,7 +414,7 @@
       type: ButtonSelector
       properties:
         title: Red Outline
-        buttonStyle: outline
+        variant: outlined
         color: red
         options:
           - Option A
@@ -414,7 +424,7 @@
       type: ButtonSelector
       properties:
         title: Green Outline
-        buttonStyle: outline
+        variant: outlined
         color: green
         options:
           - Option A
@@ -424,12 +434,47 @@
       type: ButtonSelector
       properties:
         title: 'Custom Hex Outline (#e64980)'
-        buttonStyle: outline
+        variant: outlined
         color: '#e64980'
         options:
           - Option A
           - Option B
           - Option C
+
+- title: Color in Dark Mode
+  blocks:
+    - id: dark_mode_box
+      type: Box
+      style:
+        background: '#141414'
+        padding: 24
+        borderRadius: 8
+      blocks:
+        - id: dark_mode_provider
+          type: ConfigProvider
+          properties:
+            algorithm: dark
+          blocks:
+            - id: dark_color_solid
+              type: ButtonSelector
+              properties:
+                title: Solid color (dark)
+                variant: solid
+                color: '#1677ff'
+                options:
+                  - Option A
+                  - Option B
+                  - Option C
+            - id: dark_color_outline
+              type: ButtonSelector
+              properties:
+                title: Outline color with selected tint (dark)
+                variant: outlined
+                color: '#1677ff'
+                options:
+                  - Option A
+                  - Option B
+                  - Option C
 
 - title: Label Properties
   blocks:
@@ -437,7 +482,7 @@
       type: ButtonSelector
       properties:
         title: Default Label
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -449,7 +494,7 @@
         title: With Extra Text
         label:
           extra: Choose your preferred view mode.
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Grid
             value: grid
@@ -463,7 +508,7 @@
         title: No Colon
         label:
           colon: false
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -476,7 +521,7 @@
         label:
           inline: true
           span: 6
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Left
             value: left
@@ -489,7 +534,7 @@
       properties:
         label:
           disabled: true
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Left
             value: left
@@ -504,7 +549,7 @@
       type: ButtonSelector
       properties:
         title: '<b>Bold Title</b>'
-        buttonStyle: solid
+        variant: solid
         options:
           - Option A
           - Option B
@@ -513,7 +558,7 @@
       type: ButtonSelector
       properties:
         title: '<span style="color: #1677ff;">Colored Title</span>'
-        buttonStyle: solid
+        variant: solid
         options:
           - Option A
           - Option B
@@ -525,7 +570,7 @@
       type: ButtonSelector
       properties:
         title: Custom Width
-        buttonStyle: solid
+        variant: solid
         options:
           - Option A
           - Option B
@@ -539,7 +584,7 @@
       type: ButtonSelector
       properties:
         title: Tailwind Padding
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -552,7 +597,7 @@
       type: ButtonSelector
       properties:
         title: Shadow and Rounded
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -565,7 +610,7 @@
       type: ButtonSelector
       properties:
         title: Background Color
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -581,7 +626,7 @@
       type: ButtonSelector
       properties:
         title: Large Border Radius
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -595,7 +640,7 @@
       type: ButtonSelector
       properties:
         title: Custom Button Background
-        buttonStyle: solid
+        variant: solid
         options:
           - label: Option A
             value: a
@@ -611,7 +656,7 @@
       type: ButtonSelector
       properties:
         title: Custom Button Text Color
-        buttonStyle: outline
+        variant: outlined
         options:
           - label: Option A
             value: a
@@ -625,7 +670,7 @@
       type: ButtonSelector
       properties:
         title: Pill Style Selector
-        buttonStyle: solid
+        variant: solid
         color: '#7c3aed'
         options:
           - label: Free
@@ -642,7 +687,7 @@
       type: ButtonSelector
       properties:
         title: Compact Selector
-        buttonStyle: solid
+        variant: solid
         size: small
         options:
           - label: XS
@@ -675,7 +720,7 @@
           type: ButtonSelector
           properties:
             title: How satisfied are you with our service?
-            buttonStyle: solid
+            variant: solid
             color: '#1677ff'
             options:
               - label: Very Unsatisfied
@@ -692,7 +737,7 @@
           type: ButtonSelector
           properties:
             title: Would you recommend us to a friend?
-            buttonStyle: solid
+            variant: solid
             options:
               - label: Definitely
                 value: definitely
@@ -735,7 +780,7 @@
           type: ButtonSelector
           properties:
             title: Theme
-            buttonStyle: solid
+            variant: solid
             options:
               - label: Light
                 value: light
@@ -754,7 +799,7 @@
           type: ButtonSelector
           properties:
             title: Language
-            buttonStyle: outline
+            variant: outlined
             options:
               - label: English
                 value: en
@@ -768,7 +813,7 @@
           type: ButtonSelector
           properties:
             title: Font Size
-            buttonStyle: solid
+            variant: solid
             size: small
             options:
               - label: Small
@@ -799,3 +844,48 @@
                     _state: applied_settings_language
                   fontSize:
                     _state: applied_settings_font_size
+
+- title: Per-option Color
+  blocks:
+    - id: per_option_color_outline
+      type: ButtonSelector
+      properties:
+        title: 'Outline — color per option'
+        variant: outlined
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+    - id: per_option_color_solid
+      type: ButtonSelector
+      properties:
+        title: 'Solid — color per option (selected fills in its own color)'
+        variant: solid
+        options:
+          - label: To do
+            value: todo
+            color: '#64748b'
+          - label: Doing
+            value: doing
+            color: '#2563eb'
+          - label: Done
+            value: done
+            color: '#16a34a'
+- title: Data driven (valueKey)
+  blocks:
+    - id: data_button_selector
+      type: ButtonSelector
+      properties:
+        title: Priority
+        data:
+          - { id: 1, name: Low }
+          - { id: 2, name: Medium }
+          - { id: 3, name: High }
+        html: '{{ item.name }}'
+        valueKey: id

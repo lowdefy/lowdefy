@@ -1,6 +1,6 @@
 ---
 title: Agent System
-updated: 2026-05-05
+updated: 2026-06-10
 packages:
   [
     '@lowdefy/ai-utils',
@@ -60,7 +60,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 
 ### Server Side
 
-3. The Next.js catch-all route (`pages/api/agent/[...path].js`) extracts `pageId` and `agentId` from URL segments, validates the request body, and calls `callAgent()`. See `packages/servers/server/pages/api/agent/[...path].js`.
+3. The Hono route (`src/routes/agent.js`, mounted as `app.all('/api/agent/*')` behind a 10mb `hono/body-limit` middleware) rejects non-POST requests, extracts `pageId` and `agentId` from the catch-all segments, validates the request body, and calls `callAgent()`. See `packages/servers/server/src/routes/agent.js` (same shape in `server-dev`).
 
 4. `callAgent` (`packages/api/src/routes/agent/callAgent.js`) orchestrates the server-side flow:
 
@@ -86,7 +86,7 @@ This separation means the same endpoint can serve a page button, another endpoin
 
 ### Back to Client
 
-7. The response streams as SSE events back through Next.js to the browser.
+7. The response streams as SSE events back to the browser — `callAgent` returns a Web `Response`, and the route streams its body straight through via `c.body(webResponse.body, 200, ...)` as `text/event-stream`. The `/api/agent/` path is excluded from the compression middleware (`src/app.js`) so streaming is never buffered.
 8. The `useChat` hook updates messages reactively. `useAgentEvents` watches message changes and fires Lowdefy events (`onMessageComplete`, `onToolCall`, `onToolResult`, `onUserMessage`, `onTitleGenerated`, `onDataPart`).
 
 ## Build Pipeline
@@ -136,7 +136,7 @@ Generates `plugins/agents.js` -- an import registry that maps agent type names t
 
 `packages/build/src/build/copyAgentFileSystems.js`
 
-When the config directory differs from the server directory (production builds), copies each unique `fileSystem.basePath` directory to the server output. Uses a `Set` to avoid copying the same path twice when multiple agents share a base directory.
+When the config directory differs from the server directory (production builds), copies each unique `fileSystem.basePath` directory to the server output. Uses a `Set` to avoid copying the same path twice when multiple agents share a base directory. Also writes a `build/agentFileSystems.json` manifest listing every unique `basePath`.
 
 ## Tool System
 
@@ -189,17 +189,13 @@ All tools use `resolvePath()` (`packages/utils/ai-utils/src/fileSystem/resolvePa
 
 #### Deployment Considerations
 
-The fileSystem tools call Node's `fs/promises` and `glob` directly, so they require a Node.js runtime. Edge runtimes (Vercel Edge, Cloudflare Workers, Deno Deploy edge) and browsers cannot execute them, `fs/promises` is unavailable. Lowdefy's pages router (`pages/api/agent/[...path].js` in both `@lowdefy/server` and `@lowdefy/server-dev`) does not declare `runtime: 'edge'`, so the default Node runtime applies.
+The fileSystem tools call Node's `fs/promises` and `glob` directly, so they require a Node.js runtime. The agent route runs on the Hono server under `@hono/node-server`, so this is always satisfied. Edge runtimes (Cloudflare Workers, Deno Deploy edge) and browsers cannot execute them — `fs/promises` is unavailable there.
 
-The tools are read-only. There is no `write-file` or `delete-file`. Serverless platforms with a read-only deployment filesystem (Vercel, AWS Lambda) work without needing `/tmp` workarounds.
+The tools are read-only. There is no `write-file` or `delete-file`. Hosts with a read-only deployment filesystem work without needing `/tmp` workarounds.
 
-**Standard `next start`** (running the built server directory directly): `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server. This works as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.).
+`lowdefy build` writes a complete runnable server to `.lowdefy/server`, started with `node src/index.js`. `copyAgentFileSystems` copies each unique `basePath` into `context.directories.server` at build time, so the data sits alongside the built server — agents see their files as long as the entire server directory ships to the host (Docker, Fly.io, Railway, EC2, etc.). The build also writes a `build/agentFileSystems.json` manifest listing every unique `basePath`, so deployment tooling can discover which directories the app's agents need. The Next.js-era `LOWDEFY_BUILD_OUTPUT_STANDALONE` / `outputFileTracingIncludes` wiring is gone — there is no tracer-based bundling step that could drop the files.
 
-**Next.js standalone output** (`LOWDEFY_BUILD_OUTPUT_STANDALONE=1` in `@lowdefy/server`), **Vercel**, and other tracer-based bundlers need extra wiring. Next's file tracer follows static imports to decide what to include in the bundle. `basePath` is read from agent config at runtime in `buildAgentTools.js:202`, so the directory is not statically traceable. Without help, the files copied by `copyAgentFileSystems` would sit on the build host but never make it into the deployed bundle.
-
-The build handles this automatically. `copyAgentFileSystems` writes a `agentFileSystems.json` manifest to the server build directory listing every unique `basePath`. `packages/servers/server/next.config.js` reads the manifest and feeds the paths into `outputFileTracingIncludes` under the `/api/agent/*` route, so the tracer pulls each `basePath` directory into the standalone output and the Vercel function bundle. App developers don't need to configure anything.
-
-The trade-off is bundle size: pointing an agent at a large directory will bloat the deployment. That's the explicit intent of granting fileSystem access, but worth flagging when sizing deployments.
+The trade-off is deployment size: pointing an agent at a large directory will bloat the server directory. That's the explicit intent of granting fileSystem access, but worth flagging when sizing deployments.
 
 ### Reserved Platform Tool Names
 
@@ -544,7 +540,7 @@ Developers wire their own persistence. The block renders the list; the app confi
 | `packages/build/src/build/writeAgents.js`                                                                       | Serializes agent configs to JSON artifacts                                  |
 | `packages/build/src/build/writePluginImports/writeAgentImports.js`                                              | Generates agent type import registry                                        |
 | `packages/build/src/build/copyAgentFileSystems.js`                                                              | Copies fileSystem directories to server output                              |
-| `packages/servers/server/pages/api/agent/[...path].js`                                                          | Next.js API route, SSE streaming                                            |
+| `packages/servers/server/src/routes/agent.js`                                                                   | Hono route — streams callAgent's Web Response as SSE                        |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                       | Chat block component                                                        |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                            | DefaultChatTransport factory                                                |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                                  | AI SDK to Lowdefy event bridging                                            |

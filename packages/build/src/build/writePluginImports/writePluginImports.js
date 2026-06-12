@@ -39,7 +39,8 @@ async function writePluginImports({ components, context }) {
   await writeOperatorSchemaMap({ components, context });
   await writeGlobalsCss({ components, context });
 
-  // Write block package names for Next.js transpilePackages (CSS imports).
+  // Write block package names — available as a vite.config.js escape hatch
+  // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
   const blockPackages = [
     ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
   ];

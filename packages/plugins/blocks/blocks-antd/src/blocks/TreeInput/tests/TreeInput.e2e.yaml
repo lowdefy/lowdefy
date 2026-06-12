@@ -1,0 +1,139 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: treeinput
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        ts_with_value: child1
+
+blocks:
+  - id: ts_basic
+    type: TreeInput
+    properties:
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      defaultExpandAll: true
+      data:
+        - { id: parent1, label: Parent 1 }
+        - { id: child1, label: Child 1, parentId: parent1 }
+        - { id: child2, label: Child 2, parentId: parent1 }
+        - { id: parent2, label: Parent 2 }
+
+  - id: ts_with_value
+    type: TreeInput
+    properties:
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      defaultExpandAll: true
+      data:
+        - { id: parent1, label: Parent 1 }
+        - { id: child1, label: Child 1, parentId: parent1 }
+        - { id: child2, label: Child 2, parentId: parent1 }
+
+  - id: ts_disabled
+    type: TreeInput
+    properties:
+      disabled: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: item1, label: Item 1 }
+        - { id: item2, label: Item 2 }
+
+  - id: ts_show_line
+    type: TreeInput
+    properties:
+      showLine: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      defaultExpandAll: true
+      data:
+        - { id: parent, label: Parent }
+        - { id: child1, label: Child 1, parentId: parent }
+        - { id: child2, label: Child 2, parentId: parent }
+
+  - id: ts_checkable
+    type: TreeInput
+    properties:
+      checkable: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: item1, label: Item 1 }
+        - { id: item2, label: Item 2 }
+        - { id: item3, label: Item 3 }
+
+  - id: ts_onchange
+    type: TreeInput
+    properties:
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: parent, label: Parent }
+        - { id: apple, label: Apple, parentId: parent }
+        - { id: banana, label: Banana, parentId: parent }
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            ts_onchange_value:
+              _state: ts_onchange
+
+  - id: ts_onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ts_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: ts_onchange_value
+          else: ''
+
+  - id: ts_interaction
+    type: TreeInput
+    properties:
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: fruits, label: Fruits }
+        - { id: apple, label: Apple, parentId: fruits }
+        - { id: banana, label: Banana, parentId: fruits }
+        - { id: vegetables, label: Vegetables }
+        - { id: carrot, label: Carrot, parentId: vegetables }

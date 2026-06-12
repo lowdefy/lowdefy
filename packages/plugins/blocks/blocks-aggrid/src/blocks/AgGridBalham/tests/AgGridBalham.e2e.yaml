@@ -354,7 +354,9 @@ blocks:
       rowData:
         - id: u1
           name: Alice Johnson
-          picture: https://example.com/a.png
+          # antd Avatar drops the <img> when the src fails to load, so the
+          # fixture must always resolve — a data URI never touches the network.
+          picture: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=
         - id: u2
           name: Bob Smith
           picture: null

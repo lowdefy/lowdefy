@@ -15,20 +15,20 @@ import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
-    writeFile: jest.fn(),
+    writeFileIfChanged: jest.fn(),
   };
 });
 const directories = { build: '/build' };
 
-test('Write build artifact.', async () => {
+test('writeBuildArtifact writes content through writeFileIfChanged at the build path', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
-  nodeUtils.writeFile.mockImplementation(() => Promise.resolve(null));
+  nodeUtils.writeFileIfChanged.mockImplementation(() => Promise.resolve(true));
   const createWriteBuildArtifact = (await import('./writeBuildArtifact.js')).default;
 
   const writeBuildArtifact = createWriteBuildArtifact({ directories });
 
   await writeBuildArtifact('artifact.txt', 'Test artifact content');
-  expect(nodeUtils.writeFile.mock.calls).toEqual([
+  expect(nodeUtils.writeFileIfChanged.mock.calls).toEqual([
     ['/build/artifact.txt', 'Test artifact content'],
   ]);
 });

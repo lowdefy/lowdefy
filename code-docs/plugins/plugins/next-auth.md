@@ -1,6 +1,6 @@
 # @lowdefy/plugin-next-auth
 
-Authentication plugin for Lowdefy using Auth.js (NextAuth.js).
+Authentication plugin for Lowdefy using Auth.js. The package keeps its historical `plugin-next-auth` name this release.
 
 ## Overview
 
@@ -211,8 +211,8 @@ events:
 
 | Variable          | Purpose                           |
 | ----------------- | --------------------------------- |
-| `NEXTAUTH_SECRET` | Session encryption key (required) |
-| `NEXTAUTH_URL`    | App URL (for OAuth callbacks)     |
+| `AUTH_SECRET` | Session encryption key (required; `NEXTAUTH_SECRET` still honored) |
+| `AUTH_URL`    | App URL for OAuth callbacks (`NEXTAUTH_URL` still honored; usually auto-detected) |
 
 ## Example Configuration
 

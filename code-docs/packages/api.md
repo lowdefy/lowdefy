@@ -19,7 +19,7 @@ import {
   callRequest, // Execute data requests
   createApiContext, // Create server context with auth info
   getHomeAndMenus, // Fetch menu configuration
-  getNextAuthConfig, // Auth.js configuration
+  getAuthConfig, // Auth.js configuration
   getPageConfig, // Fetch page configuration
   getRootConfig, // Fetch app root configuration
   logClientError, // Process client errors with schema validation
@@ -219,7 +219,7 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 
 ### `/routes/auth/`
 
-Handles Auth.js (NextAuth) configuration retrieval.
+Handles Auth.js configuration retrieval.
 
 | Module                                | Purpose                                                     |
 | ------------------------------------- | ----------------------------------------------------------- |

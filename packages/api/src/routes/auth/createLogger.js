@@ -27,11 +27,8 @@ const authWarnings = {
 
 function createLogger({ logger }) {
   return {
-    error: (code, metadata) => {
-      const error = metadata instanceof Error ? metadata : metadata?.error;
-      if (error) {
-        error.code = code;
-      }
+    // Auth.js v5 logger contract: error(error), warn(code), debug(message, metadata).
+    error: (error) => {
       logger.error(error);
     },
     warn: (code) => {

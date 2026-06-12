@@ -33,10 +33,10 @@ async function writeBlockSchemaMap({ components, context }) {
   for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
     let packageMetas;
     try {
-      packageMetas = await import(/* webpackIgnore: true */ `${packageName}/metas`);
+      packageMetas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/metas`);
     } catch {
       try {
-        packageMetas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
+        packageMetas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
       } catch {
         // Package not resolvable from build context (custom plugins) — skip
       }

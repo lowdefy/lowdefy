@@ -4,6 +4,11 @@
   "license": "Apache-2.0",
   "description": "Lowdefy TipTap rich-text editor blocks.",
   "homepage": "https://lowdefy.com",
+  "lowdefy": {
+    "serverExternalPackages": [
+      "turndown"
+    ]
+  },
   "keywords": [
     "lowdefy",
     "lowdefy blocks",

@@ -111,16 +111,8 @@ _ref:
 
             | Variable | Purpose |
             |----------|---------|
-            | `NEXT_PUBLIC_LOWDEFY_E2E` | Set to `true` during build — exposes `window.lowdefy` for state and validation access |
             | `LOWDEFY_BUILD_DIR` | Absolute path to build artifacts — used by test fixtures to generate the block manifest |
             | `LOWDEFY_E2E_MOCKS_FILE` | Absolute path to `mocks.yaml` — used by test fixtures to load static mocks |
-
-      - id: env_alert
-        type: Alert
-        properties:
-          type: warning
-          showIcon: false
-          message: The <code>NEXT_PUBLIC_LOWDEFY_E2E</code> variable is critical. Without it, <code>window.lowdefy</code> is not exposed and all state, request, and validation assertions will fail.
 
       - id: md2
         type: MarkdownWithCode

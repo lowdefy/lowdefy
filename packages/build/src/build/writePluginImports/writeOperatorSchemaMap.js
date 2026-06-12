@@ -38,7 +38,7 @@ async function writeOperatorSchemaMap({ components, context }) {
   for (const [packageName, operators] of Object.entries(operatorsByPackage)) {
     let packageSchemas;
     try {
-      packageSchemas = await import(/* webpackIgnore: true */ `${packageName}/schemas`);
+      packageSchemas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
     } catch {
       // Package not resolvable from build context (custom plugins) — skip
     }

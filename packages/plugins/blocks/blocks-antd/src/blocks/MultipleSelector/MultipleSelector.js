@@ -19,25 +19,34 @@ import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { Select } from 'antd';
 
-import getUniqueValues from '../../getUniqueValues.js';
-import getValueIndex from '../../getValueIndex.js';
+import useSelectorOptions from '../../useSelectorOptions.js';
+import getSelectedIndex from '../../getSelectedIndex.js';
+import getContrastTextColor from '../../getContrastTextColor.js';
+import getOptionColorStyle from '../../getOptionColorStyle.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import Tag from '../Tag/Tag.js';
 
 const Option = Select.Option;
 
-const tagRender = (props, option, methods, components) => {
+const tagRender = (props, option, methods, components, isOutline) => {
   const { label, closable, onClose } = props;
+  // An explicit tag.color wins; otherwise the per-option color drives the pill.
+  const color = option?.tag?.color ?? option?.color;
+  const contrast = getContrastTextColor(color);
+  // Hex color → explicit solid/outlined pill (dark-mode safe), following the
+  // input variant. Preset name (or none) → antd's Tag color handling.
+  const colorStyle = contrast ? getOptionColorStyle({ color, isOutline }) : {};
   return (
     <Tag
       components={components}
       methods={methods}
       onClose={onClose}
-      styles={{ element: { marginRight: 3, ...(option?.tag?.style ?? {}) } }}
+      styles={{ element: { marginRight: 3, ...colorStyle, ...(option?.tag?.style ?? {}) } }}
       properties={{
         title: label ?? '',
         ...(option?.tag ?? {}),
+        color: contrast ? undefined : color,
         closable,
       }}
     />
@@ -59,7 +68,18 @@ const MultipleSelector = ({
 }) => {
   const [fetchState, setFetch] = useState(false);
   const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
-  const uniqueValueOptions = getUniqueValues(properties.options ?? []);
+  const uniqueValueOptions = useSelectorOptions({ properties, methods });
+  // Auto-enable custom tag rendering when any option carries a color/tag, so
+  // per-option pill colors work without requiring renderTags.
+  const hasTagStyling = uniqueValueOptions.some(
+    (opt) => !type.isPrimitive(opt) && (opt.color || opt.tag)
+  );
+  // `outlined` → outlined colored tags; `solid` (or default) → filled colored tags.
+  const isOutline = properties.variant === 'outlined';
+  // `solid` is not a valid antd Select input variant — use outlined for the frame.
+  let antdVariant = properties.variant;
+  if (properties.variant === 'solid') antdVariant = 'outlined';
+  if (properties.bordered === false) antdVariant = 'borderless';
   return (
     <Label
       blockId={blockId}
@@ -78,7 +98,7 @@ const MultipleSelector = ({
               allowClear={properties.allowClear !== false}
               autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={antdVariant}
               className={classNames.element}
               classNames={{ content: classNames.selector }}
               style={{ width: '100%', ...styles.element }}
@@ -87,12 +107,15 @@ const MultipleSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               mode="multiple"
               tagRender={
-                properties.renderTags &&
+                (properties.renderTags || hasTagStyling) &&
                 ((props) =>
-                  tagRender(props, uniqueValueOptions[props.value], methods, {
-                    Icon,
-                    ShortcutBadge,
-                  }))
+                  tagRender(
+                    props,
+                    uniqueValueOptions[props.value],
+                    methods,
+                    { Icon, ShortcutBadge },
+                    isOutline
+                  ))
               }
               maxTagCount={properties.maxTagCount}
               notFoundContent={
@@ -106,7 +129,7 @@ const MultipleSelector = ({
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
               status={validation.status}
-              value={loading ? [] : getValueIndex(value, uniqueValueOptions, true)}
+              value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
@@ -187,7 +210,11 @@ const MultipleSelector = ({
                   </Option>
                 ) : (
                   <Option
-                    style={{ ...styles.options, ...opt.style }}
+                    style={{
+                      ...styles.options,
+                      ...opt.style,
+                      ...(opt.color ? { color: opt.color } : {}),
+                    }}
                     className={classNames.options}
                     disabled={opt.disabled}
                     filterstring={opt.filterString}
