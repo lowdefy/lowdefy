@@ -269,6 +269,12 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
 
     // Create a mock that captures written artifacts
     mockWriteBuildArtifact.mockImplementation((filePath, content) => {
+      // ES-module artifacts (page modules, the registry, closure modules)
+      // derive 1:1 from the JSON artifacts snapshotted here — excluded to
+      // keep snapshots data-only; the compilerClosures round-trip gates them.
+      if (filePath.endsWith('.mjs')) {
+        return;
+      }
       artifacts[filePath] = content;
     });
 

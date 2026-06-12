@@ -83,8 +83,7 @@ function discoverFixtures() {
   return entries
     .filter(
       (entry) =>
-        entry.isDirectory() &&
-        fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
+        entry.isDirectory() && fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
     )
     .map((entry) => entry.name)
     .sort();
@@ -101,6 +100,12 @@ async function runBuildForFixture(fixtureDir) {
   makeId.reset();
   mockWriteBuildArtifact.mockReset();
   mockWriteBuildArtifact.mockImplementation((filePath, content) => {
+    // ES-module artifacts derive 1:1 from the JSON artifacts snapshotted
+    // here — excluded to keep snapshots data-only (compilerClosures gates
+    // their behavior).
+    if (filePath.endsWith('.mjs')) {
+      return;
+    }
     artifacts[filePath] = content;
   });
 

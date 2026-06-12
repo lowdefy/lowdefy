@@ -140,7 +140,7 @@ test('every request and connection artifact has a closure twin matching ServerPa
   }
 });
 
-test('S3b: every page has a data-module twin and the registry covers all pages', async () => {
+test('S3b: public pages emit wire-shape data modules and the registry lists exactly them', async () => {
   const configDir = path.join(fixturesDir, '49-request-payload-app');
   const artifacts = {};
   makeId.reset();
@@ -168,6 +168,12 @@ test('S3b: every page has a data-module twin and the registry covers all pages',
   fs.mkdirSync(tmpDir, { recursive: true });
   for (const jsonKey of pageJsons) {
     const moduleKey = jsonKey.replace(/\.json$/, '.mjs');
+    const pageData = JSON.parse(artifacts[jsonKey]);
+    if (pageData.auth?.public !== true) {
+      expect(artifacts[moduleKey]).toBeUndefined();
+      expect(artifacts['pageRegistry.mjs']).not.toContain(JSON.stringify(`./${moduleKey}`));
+      continue;
+    }
     expect(artifacts[moduleKey]).toBeDefined();
     expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${moduleKey}`));
 
@@ -175,12 +181,11 @@ test('S3b: every page has a data-module twin and the registry covers all pages',
     fs.writeFileSync(file, artifacts[moduleKey]);
     const mod = await import(`${file}?v=1`);
     const fromModule = mod.default();
-    const fromJson = serializer.deserializeFromString(artifacts[jsonKey]);
-    // Same data, including non-enumerable provenance markers; fresh per call.
-    expect(fromModule).toEqual(fromJson);
-    expect(JSON.stringify(serializer.serialize(fromModule))).toBe(
-      JSON.stringify(serializer.serialize(fromJson))
-    );
+    // The wire shape the client receives from /api/page: auth stripped,
+    // serializer-coded form with enumerable ~k keys.
+    const { auth, ...expected } = pageData;
+    expect(fromModule).toEqual(expected);
+    expect(fromModule.auth).toBeUndefined();
     expect(mod.default()).not.toBe(fromModule);
   }
 });

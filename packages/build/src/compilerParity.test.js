@@ -184,6 +184,12 @@ function canonicalizeKeyIds(artifacts) {
   const result = {};
   for (const name of Object.keys(artifacts).sort()) {
     const content = artifacts[name];
+    // ES-module artifacts derive 1:1 from JSON twins compared here — their
+    // embedded ~k ids differ by design (lexical vs counter) and behavior is
+    // gated by the compilerClosures round-trip.
+    if (name.endsWith('.mjs')) {
+      continue;
+    }
     if (!name.endsWith('.json') || name === 'refMap.json' || name === 'keyMap.json') {
       result[name] = content;
       continue;
@@ -248,13 +254,14 @@ describe('compiler parity — success fixture corpus', () => {
       return;
     }
 
-    // S3a: compiled builds additionally emit .mjs closure modules next to
-    // server config JSONs — compiled-only artifacts, excluded from parity.
-    expect(
-      Object.keys(compiled.artifacts)
+    // ES-module artifacts (page data modules + the registry on every build,
+    // closure modules on compiled builds) derive 1:1 from the JSON twins
+    // compared below — excluded from byte parity on both sides.
+    const jsonKeys = (artifacts) =>
+      Object.keys(artifacts)
         .filter((k) => !k.endsWith('.mjs'))
-        .sort()
-    ).toEqual(Object.keys(walker.artifacts).sort());
+        .sort();
+    expect(jsonKeys(compiled.artifacts)).toEqual(jsonKeys(walker.artifacts));
     const walkerCanonical = canonicalizeKeyIds(walker.artifacts);
     const compiledCanonical = canonicalizeKeyIds(compiled.artifacts);
     for (const key of Object.keys(walkerCanonical.artifacts).sort()) {

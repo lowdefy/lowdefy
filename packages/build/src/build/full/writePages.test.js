@@ -40,11 +40,49 @@ test('writePages write page', async () => {
   };
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'pages/page1.json',
-      '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}',
-    ],
+    ['pages/page1.json', '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}'],
+    ['pageRegistry.mjs', 'export default {\n\n};\n'],
   ]);
+});
+
+test('writePages public page emits a wire-shape data module and a registry entry', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page:page1',
+        pageId: 'page1',
+        blockId: 'page1',
+        auth: { public: true },
+        requests: [],
+      },
+    ],
+  };
+  await writePages({ components, context });
+  const calls = mockWriteBuildArtifact.mock.calls;
+  expect(calls.map(([p]) => p)).toEqual([
+    'pages/page1.json',
+    'pages/page1.mjs',
+    'pageRegistry.mjs',
+  ]);
+  expect(calls[2][1]).toContain('"page1": () => import("./pages/page1.mjs")');
+});
+
+test('writePages protected page emits no data module and no registry entry', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page:page1',
+        pageId: 'page1',
+        blockId: 'page1',
+        auth: { public: false },
+        requests: [],
+      },
+    ],
+  };
+  await writePages({ components, context });
+  const calls = mockWriteBuildArtifact.mock.calls;
+  expect(calls.map(([p]) => p)).toEqual(['pages/page1.json', 'pageRegistry.mjs']);
+  expect(calls[1][1]).toBe('export default {\n\n};\n');
 });
 
 test('writePages multiple pages', async () => {
@@ -66,21 +104,18 @@ test('writePages multiple pages', async () => {
   };
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'pages/page1.json',
-      '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}',
-    ],
-    [
-      'pages/page2.json',
-      '{"id":"page:page2","pageId":"page2","blockId":"page2","requests":[]}',
-    ],
+    ['pages/page1.json', '{"id":"page:page1","pageId":"page1","blockId":"page1","requests":[]}'],
+    ['pages/page2.json', '{"id":"page:page2","pageId":"page2","blockId":"page2","requests":[]}'],
+    ['pageRegistry.mjs', 'export default {\n\n};\n'],
   ]);
 });
 
-test('writePages no pages', async () => {
+test('writePages no pages still writes an empty registry', async () => {
   const components = {
     pages: [],
   };
   await writePages({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['pageRegistry.mjs', 'export default {\n\n};\n'],
+  ]);
 });

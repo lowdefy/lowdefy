@@ -18,16 +18,19 @@ import { serializer } from '@lowdefy/helpers';
 async function writePage({ page, context }) {
   const data = serializer.serializeToString(page ?? {});
   await context.writeBuildArtifact(`pages/${page.pageId}.json`, data);
-  // S3b (data-first): compiled builds also emit the page as an ES module —
-  // the same serialized data, deserialized fresh per call (the engine
-  // mutates page config, so no shared trees across navigations). Operator
-  // positions stay verbatim data; closures land in S3c.
-  if (context.compiler === true) {
+  // S3b (data-first): PUBLIC pages also emit as ES modules producing exactly
+  // the wire shape the client receives from /api/page — auth stripped,
+  // serializer-coded form, a fresh tree per call (the engine mutates page
+  // config). Protected pages stay fetch-only: page chunks are public static
+  // assets, so the registry must never reference them.
+  if (page.auth?.public === true) {
     await context.writeBuildArtifact(
       `pages/${page.pageId}.mjs`,
-      `import { serializer } from '@lowdefy/helpers';\n` +
-        `const raw = ${JSON.stringify(data)};\n` +
-        `export default () => serializer.deserializeFromString(raw);\n`
+      `const raw = ${JSON.stringify(data)};\n` +
+        `export default () => {\n` +
+        `  const { auth, ...config } = JSON.parse(raw);\n` +
+        `  return config;\n` +
+        `};\n`
     );
   }
 }
@@ -36,19 +39,21 @@ async function writePages({ components, context }) {
   const writePromises = components.pages.map((page) => writePage({ page, context }));
   await Promise.all(writePromises);
   // D9: the generated page registry — static import-literal thunks so the
-  // client bundler code-splits one chunk per page.
-  if (context.compiler === true) {
-    const entries = components.pages.map(
+  // client bundler code-splits one public-page chunk each. SPA navigation
+  // prefers these; registry misses (protected or unknown pages) fall back
+  // to the authorized /api/page fetch.
+  const entries = components.pages
+    .filter((page) => page.auth?.public === true)
+    .map(
       (page) =>
         `  ${JSON.stringify(page.pageId)}: () => import(${JSON.stringify(
           `./pages/${page.pageId}.mjs`
         )}),`
     );
-    await context.writeBuildArtifact(
-      'pageRegistry.mjs',
-      `export default {\n${entries.join('\n')}\n};\n`
-    );
-  }
+  await context.writeBuildArtifact(
+    'pageRegistry.mjs',
+    `export default {\n${entries.join('\n')}\n};\n`
+  );
 }
 
 export default writePages;

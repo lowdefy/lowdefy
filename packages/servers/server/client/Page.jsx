@@ -27,9 +27,13 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
+import pageRegistry from '../build/pageRegistry.mjs';
 
 // Replaces lib/client/Page.js. The first page renders from the config
-// embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
+// embedded in the HTML. SPA navigations prefer the generated page registry —
+// public pages code-split into immutable per-page chunks (S3b/D14) — and
+// fall back to the authorized /api/page/* fetch for protected or unknown
+// pages (and for builds without a registry, where it exports null).
 function Page({ auth, config, lowdefy }) {
   const [pageConfig, setPageConfig] = useState(config.pageConfig);
 
@@ -47,6 +51,12 @@ function Page({ auth, config, lowdefy }) {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
+        const loadPageModule = pageRegistry?.[targetPageId];
+        if (loadPageModule) {
+          const pageModule = await loadPageModule();
+          setPageConfig(pageModule.default());
+          return;
+        }
         const res = await fetch(`${router.basePath}/api/page/${targetPageId}`);
         if (!res.ok) {
           if (targetPageId !== '404') {

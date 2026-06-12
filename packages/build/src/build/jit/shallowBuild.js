@@ -177,6 +177,9 @@ async function shallowBuild(options) {
     await writeMenus({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    // Dev has no page chunks (pages build just-in-time) — a null registry
+    // makes the client's static import resolve and fall back to /api/page.
+    await context.writeBuildArtifact('pageRegistry.mjs', 'export default null;\n');
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
@@ -200,10 +203,7 @@ async function shallowBuild(options) {
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against
     // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact(
-      'iconImports.json',
-      JSON.stringify(components.imports.icons)
-    );
+    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
