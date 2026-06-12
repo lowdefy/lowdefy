@@ -21,6 +21,7 @@ import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
 import WebParser from './webParser.js';
+import { evaluateWebClosures } from './evaluateWebClosures.js';
 
 export {
   evaluateOperators,
@@ -31,5 +32,6 @@ export {
   ServerParser,
   runClass,
   runInstance,
+  evaluateWebClosures,
   WebParser,
 };

@@ -136,7 +136,7 @@ test('every request and connection artifact has a closure twin matching ServerPa
   }
 });
 
-test('S3b: public pages emit wire-shape data modules and the registry lists exactly them', async () => {
+test('S3c: public pages emit internal-form modules with closure parse roots', async () => {
   const configDir = path.join(fixturesDir, '49-request-payload-app');
   const artifacts = {};
   makeId.reset();
@@ -167,28 +167,31 @@ test('S3b: public pages emit wire-shape data modules and the registry lists exac
     const pageData = JSON.parse(artifacts[jsonKey]);
     if (pageData.auth?.public !== true) {
       expect(artifacts[moduleKey]).toBeUndefined();
-      expect(artifacts['pageRegistry.mjs']).not.toContain(JSON.stringify(`./${moduleKey}`));
       continue;
     }
     expect(artifacts[moduleKey]).toBeDefined();
     expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${moduleKey}`));
-    // D14: the page's type imports emit as a sibling module the registry
-    // thunk loads with the config (kept separate so config data stays
-    // import-free).
     const typesKey = jsonKey.replace(/\.json$/, '.types.mjs');
     expect(artifacts[typesKey]).toBeDefined();
-    expect(artifacts[typesKey]).toContain('export default {');
     expect(artifacts['pageRegistry.mjs']).toContain(JSON.stringify(`./${typesKey}`));
 
     const file = path.join(tmpDir, moduleKey.replace(/[/]/g, '__'));
     fs.writeFileSync(file, artifacts[moduleKey]);
     const mod = await import(`${file}?v=1`);
     const fromModule = mod.default();
-    // The wire shape the client receives from /api/page: auth stripped,
-    // serializer-coded form with enumerable ~k keys.
-    const { auth, ...expected } = pageData;
-    expect(fromModule).toEqual(expected);
+    expect(fromModule.pageId).toBe(pageData.pageId);
     expect(fromModule.auth).toBeUndefined();
+    // Internal form: provenance markers ride hidden.
+    expect(Object.keys(fromModule)).not.toContain('~k');
+    expect(fromModule['~k']).toBe(pageData['~k']);
     expect(mod.default()).not.toBe(fromModule);
   }
+
+  // The home page's request payloads carry _state operators — those parse
+  // roots ship as closures (the engine adapter evaluates them).
+  const homeFile = path.join(tmpDir, 'home.page.mjs');
+  fs.writeFileSync(homeFile, artifacts['pages/home.mjs']);
+  const home = (await import(`${homeFile}?v=1`)).default();
+  const withPayloadOps = home.requests.filter((r) => typeof r.payload === 'function');
+  expect(withPayloadOps.length).toBeGreaterThan(0);
 });

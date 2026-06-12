@@ -37,7 +37,16 @@ const Client = ({
   types,
   window,
 }) => {
-  const config = serializer.deserialize(rawConfig);
+  // Compiled page modules (S3c) produce the internal form directly — real
+  // arrays, hidden provenance markers, embedded evaluation closures — which
+  // the serializer's JSON round-trip would destroy. Wire-form configs
+  // (HTML embed, /api/page fetch) deserialize as before.
+  const config = {
+    pageConfig: rawConfig.pageConfigInternal
+      ? rawConfig.pageConfig
+      : serializer.deserialize(rawConfig.pageConfig),
+    rootConfig: serializer.deserialize(rawConfig.rootConfig),
+  };
   initLowdefyContext({
     auth,
     Components,

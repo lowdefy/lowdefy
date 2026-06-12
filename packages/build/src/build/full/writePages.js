@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { emitPageModule } from '@lowdefy/compile';
 import { serializer } from '@lowdefy/helpers';
 
 import collectPageTypes from './collectPageTypes.js';
@@ -65,14 +66,19 @@ async function writePage({ page, components, context }) {
   // assets, so the registry must never reference them. The page's types
   // (D14) emit as a SEPARATE module so config data stays import-free.
   if (page.auth?.public === true) {
-    await context.writeBuildArtifact(
-      `pages/${page.pageId}.mjs`,
-      `const raw = ${JSON.stringify(data)};\n` +
-        `export default () => {\n` +
-        `  const { auth, ...config } = JSON.parse(raw);\n` +
-        `  return config;\n` +
-        `};\n`
-    );
+    // S3c: parse roots containing client operators compile to closures; the
+    // known-operator set mirrors the client runtime (both from typesMap).
+    const clientOperators = {};
+    for (const name of Object.keys(context.typesMap?.operators?.client ?? {})) {
+      clientOperators[name] = true;
+    }
+    const { code } = emitPageModule({
+      // The in-memory page: the engine's internal form — hidden ~k markers
+      // readable by the emitter, real arrays and dates.
+      page,
+      operators: clientOperators,
+    });
+    await context.writeBuildArtifact(`pages/${page.pageId}.mjs`, code);
     await context.writeBuildArtifact(
       `pages/${page.pageId}.types.mjs`,
       pageTypesModule({ page, components, context })

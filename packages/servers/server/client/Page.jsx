@@ -44,7 +44,9 @@ function mergeTypes(target, partial) {
 }
 
 function Page({ auth, config, lowdefy }) {
-  const [pageConfig, setPageConfig] = useState(config.pageConfig);
+  // internal: registry-loaded module pages arrive in the engine's internal
+  // form (closures embedded) and skip the client's wire deserialization.
+  const [page, setPage] = useState({ pageConfig: config.pageConfig, internal: false });
   const [typesReady, setTypesReady] = useState(false);
 
   // Stable registries — the client stores references at init and resolves
@@ -71,8 +73,11 @@ function Page({ auth, config, lowdefy }) {
       try {
         const loadPage = pageRegistry?.[config.pageConfig.pageId];
         if (loadPage) {
-          const { types } = await loadPage();
-          mergeTypes(typesRef.current, types);
+          const pageModule = await loadPage();
+          mergeTypes(typesRef.current, pageModule.types);
+          // Swap the embedded wire config for the module's internal form so
+          // the first page evaluates through closures too.
+          setPage({ pageConfig: pageModule.default(), internal: true });
         } else {
           mergeTypes(typesRef.current, (await loadAllTypes()).default);
         }
@@ -97,7 +102,7 @@ function Page({ auth, config, lowdefy }) {
         if (loadPage) {
           const pageModule = await loadPage();
           mergeTypes(typesRef.current, pageModule.types);
-          setPageConfig(pageModule.default());
+          setPage({ pageConfig: pageModule.default(), internal: true });
           return;
         }
         mergeTypes(typesRef.current, (await loadAllTypes()).default);
@@ -109,7 +114,7 @@ function Page({ auth, config, lowdefy }) {
           return;
         }
         const { pageConfig: nextPageConfig } = await res.json();
-        setPageConfig(nextPageConfig);
+        setPage({ pageConfig: nextPageConfig, internal: false });
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
         window.location.assign(
@@ -129,7 +134,8 @@ function Page({ auth, config, lowdefy }) {
       auth={auth}
       Components={{ Head, Link }}
       config={{
-        pageConfig,
+        pageConfig: page.pageConfig,
+        pageConfigInternal: page.internal,
         rootConfig: config.rootConfig,
       }}
       jsMap={jsMap}

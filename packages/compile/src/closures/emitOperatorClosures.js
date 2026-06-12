@@ -24,7 +24,36 @@ import { type } from '@lowdefy/helpers';
 // All user-sourced strings emit through JSON.stringify (design D12).
 const json = (value) => JSON.stringify(value);
 
-function emitOperatorClosures({ input, operators, operatorPrefix = '_' }) {
+function hasOperators(node, operators, operatorPrefix = '_') {
+  if (type.isArray(node)) {
+    return node.some((item) => hasOperators(item, operators, operatorPrefix));
+  }
+  if (type.isObject(node)) {
+    const keys = Object.keys(node);
+    if (keys.length === 1 && keys[0].startsWith(operatorPrefix)) {
+      const op = `_${keys[0].slice(operatorPrefix.length)}`.split('.')[0];
+      if (!type.isUndefined(operators[op])) {
+        return true;
+      }
+    }
+    return keys.some((key) => hasOperators(node[key], operators, operatorPrefix));
+  }
+  return false;
+}
+
+// The closure-body expression for one tree — shared by whole-config closure
+// modules (server requests) and page parse-root closures (S3c). When a
+// markerHelper identifier is given, hidden provenance markers (~k) on data
+// nodes re-emit non-enumerably — matching the parsers, whose serializer
+// round-trip preserves them invisibly.
+function emitClosureExpression({ input, operators, operatorPrefix = '_', markerHelper = null }) {
+  function withMarkers(node, expr) {
+    if (!markerHelper || node['~k'] === undefined) {
+      return expr;
+    }
+    return `${markerHelper}(${expr}, { "~k": ${json(node['~k'])} })`;
+  }
+
   function emit(node) {
     if (node === undefined) {
       return 'undefined';
@@ -36,7 +65,7 @@ function emitOperatorClosures({ input, operators, operatorPrefix = '_' }) {
       return `new Date(${json(node.toISOString())})`;
     }
     if (type.isArray(node)) {
-      return `[${node.map(emit).join(', ')}]`;
+      return withMarkers(node, `[${node.map(emit).join(', ')}]`);
     }
     if (type.isObject(node)) {
       const keys = Object.keys(node);
@@ -53,12 +82,23 @@ function emitOperatorClosures({ input, operators, operatorPrefix = '_' }) {
         }
       }
       const props = keys.map((key) => `${json(key)}: ${emit(node[key])}`);
-      return `{ ${props.join(', ')} }`;
+      return withMarkers(node, `{ ${props.join(', ')} }`);
     }
     return json(node);
   }
 
-  return { code: `export default (_x) => (${emit(input)});\n` };
+  return emit(input);
+}
+
+function emitOperatorClosures({ input, operators, operatorPrefix = '_' }) {
+  return {
+    code: `export default (_x) => (${emitClosureExpression({
+      input,
+      operators,
+      operatorPrefix,
+    })});\n`,
+  };
 }
 
 export default emitOperatorClosures;
+export { emitClosureExpression, hasOperators };

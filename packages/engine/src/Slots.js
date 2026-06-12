@@ -19,13 +19,34 @@
 import { serializer, type } from '@lowdefy/helpers';
 import Block from './Block.js';
 
+function copyPreservingFunctions(node) {
+  if (type.isFunction(node)) {
+    return node;
+  }
+  if (type.isArray(node)) {
+    return node.map(copyPreservingFunctions);
+  }
+  if (type.isObject(node)) {
+    const out = {};
+    Object.keys(node).forEach((key) => {
+      out[key] = copyPreservingFunctions(node[key]);
+    });
+    return out;
+  }
+  return node;
+}
+
 class Slots {
   constructor({ arrayIndices = [], slots, context }) {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substring(0, 5);
-    this.slots = serializer.copy(slots || []);
+    // Slot defs copy for instance isolation (list sub-slots mutate their
+    // copies). Compiled page modules embed evaluation closures at parse
+    // roots (S3c) — functions are stateless and shared by reference, which
+    // the serializer's JSON round-trip would drop.
+    this.slots = copyPreservingFunctions(slots || []);
     this.arrayIndices = arrayIndices;
     this.context = context;
     this.map = {};

@@ -17,7 +17,8 @@
 import compileDir from './compileDir.js';
 import compileSource from './compileSource.js';
 import emitOperatorClosures from './closures/emitOperatorClosures.js';
+import emitPageModule from './closures/emitPageModule.js';
 import parseYamlSource from './parse/parseYamlSource.js';
 import fileId from './emit/fileId.js';
 
-export { compileDir, compileSource, emitOperatorClosures, parseYamlSource, fileId };
+export { compileDir, compileSource, emitOperatorClosures, emitPageModule, parseYamlSource, fileId };

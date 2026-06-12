@@ -17,6 +17,8 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
+import { evaluateWebClosures } from './evaluateWebClosures.js';
+
 class WebParser {
   constructor({ context, operators }) {
     this.context = context;
@@ -27,6 +29,20 @@ class WebParser {
   parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
+    }
+    // S3c adapter: compiled page modules ship parse roots as closures — a
+    // function input evaluates directly with the same { output, errors }
+    // contract; data inputs keep the reviver tree-walk below.
+    if (type.isFunction(input)) {
+      return evaluateWebClosures({
+        parser: this,
+        closure: input,
+        actions,
+        args,
+        arrayIndices,
+        event,
+        location,
+      });
     }
     if (event && !type.isObject(event)) {
       throw new Error('Operator parser event must be a object.');
