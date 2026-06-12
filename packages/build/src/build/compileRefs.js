@@ -19,9 +19,18 @@ import path from 'path';
 import { createRequire } from 'module';
 import { compileDir } from '@lowdefy/compile';
 import { createScope } from '@lowdefy/compile/runtime';
+import operators from '@lowdefy/operators-js/operators/build';
 
+import buildRefs from './buildRefs/buildRefs.js';
 import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
+import { resolve, WalkContext } from './buildRefs/walker.js';
+import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
+
+validateOperatorsDynamic({ operators });
+const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 // Compiled modules live in a tmp directory with no node_modules — the
 // runtime import is emitted as a relative path to the resolved package.
@@ -36,6 +45,15 @@ const runtimePath = fs.realpathSync(
 // same bare-operator static pass. Compiled modules emit walker-compatible
 // ~r/~l markers, so addKeys and the keyMap pipeline run unchanged.
 async function compileRefs({ context }) {
+  // A global ref resolver intercepts every config read — the compiled
+  // reader would bypass it. Those builds stay on the walker (S1 scope).
+  if (context.refResolver) {
+    context.logger.warn(
+      'Global refResolver configured — the config compiler does not support it yet; building with the walker.'
+    );
+    return buildRefs({ context });
+  }
+
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const configDir = context.directories.config;
 
@@ -69,7 +87,7 @@ async function compileRefs({ context }) {
     file: entry,
     refChain: [entry],
     onError: (error) => {
-      context.errors.push(error);
+      collectExceptions(context, error);
     },
     env: process.env,
     refId: rootRefId,
@@ -87,6 +105,26 @@ async function compileRefs({ context }) {
         context.refMap[id].path = refPath;
       },
     },
+    // Ref forms the compiler does not resolve itself (module/component/menu,
+    // resolver refs, non-YAML content, dynamic paths) delegate to the real
+    // walker with a context built from the call site — same refMap, same id
+    // counter, identical output by construction.
+    walkerResolve: (node, site) =>
+      resolve(
+        node,
+        new WalkContext({
+          buildContext: context,
+          refId: site.refId,
+          sourceRefId: site.sourceRefId,
+          vars: site.vars ?? {},
+          path: site.walkPath,
+          currentFile: site.file,
+          refChain: new Set(site.refChain),
+          operators,
+          env: process.env,
+          dynamicIdentifiers,
+        })
+      ),
   });
   let components = await mod.default(scope);
 

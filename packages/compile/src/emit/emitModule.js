@@ -136,13 +136,102 @@ function emitModule({
     return `${structPath}${segment}`;
   }
 
-  // wp is the walker path of the map node CONTAINING _ref; refLine is that
-  // node's key-line (the walker reads lineNumber from the container's ~l).
-  // Ref-def path/vars/key values resolve with the CONTAINER's walk context
-  // (resolveRef step 3 passes ctx, not ctx.child) — their emissions get the
-  // container's wp, so a nested ref inside a var value continues the global
-  // path from the container, skipping the _ref.vars.<key> segments.
-  function emitRef(refNode, structPath, wp, refLine) {
+  // Ref-def vars values resolve with the CONTAINER's walk context
+  // (resolveRef step 3 passes ctx, not ctx.child) — each value gets the
+  // container's wp, skipping the _ref.vars.<key> segments.
+  function emitRefDefVars(varsNode, structPath, wp) {
+    if (varsNode.t !== 'map') {
+      throw new ConfigError(
+        `_ref vars must be an object in "${file}" (line ${varsNode.pos.line}).`,
+        {
+          filePath: file,
+          lineNumber: varsNode.pos.line,
+        }
+      );
+    }
+    const varsStructPath = childPath(structPath, '_ref.vars');
+    const varProps = varsNode.entries.map((entry) => {
+      const expr = emitNode(
+        entry.value,
+        childPath(varsStructPath, entry.key),
+        wp,
+        entry.keyPos.line
+      );
+      return `${json(entry.key)}: ${expr}`;
+    });
+    return `{ ${varProps.join(', ')} }`;
+  }
+
+  // Emits a ref the compiler does not resolve itself — module/component/menu
+  // and resolver refs, non-YAML content files, dynamic paths, the
+  // `_ref: { _var }` path shorthand. The def is rebuilt with path/vars/key
+  // expressions evaluated in place (walker step-3 semantics: container walk
+  // path) and handed to the build's walker at run time. Map-form defs carry
+  // the parser's ~l marks — for path-less refs the walker stores the def as
+  // refMap `original`, where the serializer writes those markers.
+  function emitDelegatedRef(refEntry, structPath, wp, refLine) {
+    const refNode = refEntry.value;
+    if (refNode.t === 'lit') {
+      return (
+        `await _r.delegatedRef({ scope, def: ${json(refNode.value)}, ` +
+        `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
+      );
+    }
+    const keys = refNode.entries.map((e) => e.key);
+    const props = [];
+    for (const entry of refNode.entries) {
+      const { key, value: valueNode } = entry;
+      if (key === 'vars' && valueNode.t === 'map') {
+        // The vars map carries its key's line (addLineNumbers parity).
+        props.push(
+          `"vars": _r.mark(${emitRefDefVars(valueNode, structPath, wp)}, ${entry.keyPos.line})`
+        );
+        continue;
+      }
+      if (key === '_var' && !keys.includes('path')) {
+        // getRefPath treats `_ref: { _var: x }` as a dynamic path.
+        props.push(`"path": ${emitVar(valueNode, structPath, wp)}`);
+        continue;
+      }
+      if (['transformer', 'resolver', 'module', 'component', 'menu'].includes(key)) {
+        if (valueNode.t !== 'lit' || typeof valueNode.value !== 'string') {
+          throw new ConfigError(
+            `_ref ${key} must be a string path in "${file}" (line ${valueNode.pos.line}) — dynamic ${key} values are not yet compiled (config-compiler S1 scope).`,
+            { filePath: file, lineNumber: valueNode.pos.line }
+          );
+        }
+        props.push(`${json(key)}: ${json(valueNode.value)}`);
+        continue;
+      }
+      // path (incl. dynamic), key, ~ignoreBuildChecks, and unknown keys —
+      // emitted with the container's walk path (resolveRef step-3 ctx).
+      props.push(
+        `${json(key)}: ${emitNode(
+          valueNode,
+          childPath(structPath, `_ref.${key}`),
+          wp,
+          entry.keyPos.line
+        )}`
+      );
+    }
+    // The def map carries the _ref key's line, like any map value.
+    return (
+      `await _r.delegatedRef({ scope, def: _r.mark({ ${props.join(', ')} }, ` +
+      `${refEntry.keyPos.line}), sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(
+        refNode
+      )} })`
+    );
+  }
+
+  // refEntry is the `_ref` map entry; wp is the walker path of the map node
+  // CONTAINING _ref; refLine is that node's key-line (the walker reads
+  // lineNumber from the container's ~l). Ref-def path/vars/key values resolve
+  // with the CONTAINER's walk context (resolveRef step 3 passes ctx, not
+  // ctx.child) — their emissions get the container's wp, so a nested ref
+  // inside a var value continues the global path from the container,
+  // skipping the _ref.vars.<key> segments.
+  function emitRef(refEntry, structPath, wp, refLine) {
+    const refNode = refEntry.value;
     let parts = new Map();
     if (refNode.t === 'lit' && typeof refNode.value === 'string') {
       parts.set('path', refNode);
@@ -158,6 +247,28 @@ function emitModule({
         `_ref takes a string or object definition in "${file}" (line ${refNode.pos.line}).`,
         { filePath: file, lineNumber: refNode.pos.line }
       );
+    }
+
+    const rawPathNode = parts.get('path') ?? null;
+    const staticPath =
+      rawPathNode?.t === 'lit' && typeof rawPathNode.value === 'string' ? rawPathNode.value : null;
+    let staticCfgPath = null;
+    if (staticPath !== null) {
+      staticCfgPath = moduleRoot ? path.posix.join(moduleRoot, staticPath) : staticPath;
+    }
+    // .njk stays on the compile path so compileSource rejects it with the
+    // codemod message (D5); other non-YAML extensions are walker content
+    // (js functions, json5, raw strings — parseRefContent semantics).
+    const ext =
+      staticCfgPath === null
+        ? null
+        : staticCfgPath.slice(staticCfgPath.lastIndexOf('.') + 1).toLowerCase();
+    const compilableStatic = ext === 'yaml' || ext === 'yml' || ext === 'njk';
+    const walkerOnly =
+      parts.has('module') || parts.has('component') || parts.has('menu') || parts.has('resolver');
+
+    if (mode === 'markers' && (walkerOnly || !compilableStatic)) {
+      return emitDelegatedRef(refEntry, structPath, wp, refLine);
     }
 
     for (const unsupported of ['module', 'component', 'menu']) {
@@ -182,27 +293,17 @@ function emitModule({
         lineNumber: refNode.pos.line,
       });
     }
+    if (staticPath !== null && !compilableStatic) {
+      throw new ConfigError(
+        `_ref to non-YAML content ("${staticCfgPath}") is not yet compiled (config-compiler S1 scope) — "${file}" line ${refNode.pos.line}.`,
+        { filePath: file, lineNumber: refNode.pos.line }
+      );
+    }
 
     let varsExpr = '{}';
     const varsNode = parts.get('vars');
     if (varsNode) {
-      if (varsNode.t !== 'map') {
-        throw new ConfigError(
-          `_ref vars must be an object in "${file}" (line ${varsNode.pos.line}).`,
-          { filePath: file, lineNumber: varsNode.pos.line }
-        );
-      }
-      const varsStructPath = childPath(structPath, '_ref.vars');
-      const varProps = varsNode.entries.map((entry) => {
-        const expr = emitNode(
-          entry.value,
-          childPath(varsStructPath, entry.key),
-          wp,
-          entry.keyPos.line
-        );
-        return `${json(entry.key)}: ${expr}`;
-      });
-      varsExpr = `{ ${varProps.join(', ')} }`;
+      varsExpr = emitRefDefVars(varsNode, structPath, wp);
     }
 
     const keyNode = parts.get('key');
@@ -312,7 +413,8 @@ function emitModule({
     const has = (k) => keys.includes(k);
 
     if (has('_ref')) {
-      return emitRef(entryMap(node).get('_ref'), structPath, wp, markLine);
+      const refEntry = node.entries.find((e) => e.key === '_ref');
+      return emitRef(refEntry, structPath, wp, markLine);
     }
     if (has('_var')) {
       return emitVar(entryMap(node).get('_var'), structPath, wp);

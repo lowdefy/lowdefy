@@ -1,0 +1,18 @@
+# 93: Dynamic ref paths
+# =====================
+# Operator-built paths and the `_ref: { _var }` path shorthand resolve at
+# build time. The config compiler delegates dynamic paths to the walker.
+
+lowdefy: local
+
+pages:
+  - _ref:
+      path:
+        _build.string.concat:
+          - pages/
+          - home
+          - .yaml
+  - _ref:
+      path: pages/wrapper.yaml
+      vars:
+        contentFile: fragments/banner.yaml

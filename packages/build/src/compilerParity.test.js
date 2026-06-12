@@ -190,13 +190,13 @@ describe('compiler parity — success fixture corpus', () => {
   });
 
   afterAll(() => {
-    if (deferred.length > 0) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `compiler parity: ${
-          deferred.length
-        } fixture(s) deferred to S1 module/resolver compilation:\n  ${deferred.join('\n  ')}`
-      );
+    // The compiled path writes its modules under each fixture's .lowdefy.
+    for (const fixtureDir of fixtures) {
+      fs.rmSync(path.join(fixturesDir, fixtureDir, '.lowdefy'), { recursive: true, force: true });
     }
+    // S1b: walker delegation covers module/component/menu refs, resolver
+    // refs, non-YAML content, and dynamic paths — the whole corpus must
+    // build through the compiler. A deferral here is a regression.
+    expect(deferred).toEqual([]);
   });
 });

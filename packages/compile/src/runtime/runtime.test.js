@@ -20,7 +20,7 @@ import buildOperator from './buildOperator.js';
 import createScope from './createScope.js';
 import getVar from './getVar.js';
 import { bindModuleEntry, moduleVar, moduleId } from './moduleHelpers.js';
-import { ref } from './applyRef.js';
+import { ref, delegatedRef } from './applyRef.js';
 import createSynthKeys from './synthKey.js';
 import tag from './tag.js';
 
@@ -172,6 +172,74 @@ describe('ref — operation order and error contract', () => {
         loc,
       })
     ).rejects.toThrow(TypeError);
+  });
+});
+
+describe('delegatedRef — walker delegation for module/resolver/non-YAML/dynamic refs', () => {
+  test('hands a ~l-marked walker node and the call-site state to walkerResolve', async () => {
+    const calls = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      refChain: ['lowdefy.yaml', 'a.yaml'],
+      vars: { v: 1 },
+      refId: 'pages.0',
+      sourceRefId: '1',
+      walkPath: 'pages.0',
+      walkerResolve: (node, site) => {
+        calls.push({ node, site });
+        return { resolved: true };
+      },
+    });
+    const result = await delegatedRef({
+      scope,
+      def: { module: 'core', component: 'stamp' },
+      sitePath: 'blocks.1',
+      refLine: 12,
+      loc,
+    });
+    expect(result).toEqual({ resolved: true });
+    expect(calls).toHaveLength(1);
+    expect(calls[0].node._ref).toEqual({ module: 'core', component: 'stamp' });
+    // The walker reads the ref line from the container's non-enumerable ~l.
+    expect(calls[0].node['~l']).toBe(12);
+    expect(Object.keys(calls[0].node)).toEqual(['_ref']);
+    expect(calls[0].site).toEqual({
+      refId: 'pages.0',
+      sourceRefId: '1',
+      walkPath: 'pages.0.blocks.1',
+      file: 'a.yaml',
+      refChain: ['lowdefy.yaml', 'a.yaml'],
+      vars: { v: 1 },
+    });
+  });
+
+  test('without walkerResolve collects a ConfigError and resolves to null', async () => {
+    const errors = [];
+    const scope = createScope({ file: 'a.yaml', onError: (e) => errors.push(e) });
+    const result = await delegatedRef({
+      scope,
+      def: 'data/settings.json',
+      sitePath: '',
+      refLine: 1,
+      loc,
+    });
+    expect(result).toBeNull();
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain('walkerResolve');
+  });
+
+  test('ConfigErrors thrown by the walker collect through scope.onError', async () => {
+    const errors = [];
+    const scope = createScope({
+      file: 'a.yaml',
+      onError: (e) => errors.push(e),
+      walkerResolve: () => {
+        throw new ConfigError('Circular reference detected.');
+      },
+    });
+    const result = await delegatedRef({ scope, def: { module: 'x' }, refLine: 3, loc });
+    expect(result).toBeNull();
+    expect(errors[0].message).toBe('Circular reference detected.');
   });
 });
 

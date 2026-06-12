@@ -1,0 +1,5 @@
+id: wrapper
+type: Box
+blocks:
+  - _ref:
+      _var: contentFile

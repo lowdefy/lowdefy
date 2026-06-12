@@ -36,6 +36,10 @@ function createScope({
   // refMap entries — injected by the build, which owns the id counter.
   walkPath = '',
   refTracker = null,
+  // Build-injected walker delegation for ref forms the compiler does not
+  // resolve itself (module/component/menu, resolver refs, non-YAML content,
+  // dynamic paths): (node, site) => resolved content.
+  walkerResolve = null,
 } = {}) {
   return {
     vars,
@@ -50,6 +54,7 @@ function createScope({
     sourceRefId,
     walkPath,
     refTracker,
+    walkerResolve,
   };
 }
 

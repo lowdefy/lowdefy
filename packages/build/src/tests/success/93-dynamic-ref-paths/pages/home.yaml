@@ -1,0 +1,7 @@
+id: home
+type: Box
+blocks:
+  - id: homeTitle
+    type: Title
+    properties:
+      content: Home

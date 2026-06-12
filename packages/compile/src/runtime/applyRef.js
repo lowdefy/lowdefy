@@ -17,7 +17,7 @@
 import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-import { markDeep } from './mark.js';
+import { markDeep, setHidden } from './mark.js';
 
 // Per-ref operation order is an invariant (design D3, walker steps 11-16):
 // produce content → transformer → pluck key → propagate ~ignoreBuildChecks.
@@ -167,6 +167,40 @@ async function dynRef({ scope, path, loc, ...rest }) {
   }
 }
 
+// Refs the compiler does not resolve itself — module/component/menu refs,
+// resolver refs, non-YAML content files (js functions, json, raw strings),
+// and dynamic paths — delegate to the build's walker through
+// scope.walkerResolve. The def is rebuilt as a walker node (vars/key/path
+// expressions already evaluated, matching resolveRef step-3 order) and
+// resolved by the same code against the same refMap and id counter, so the
+// output is walker-identical by construction.
+async function delegatedRef({ scope, def, sitePath, refLine, loc }) {
+  try {
+    if (!scope.walkerResolve) {
+      throw new ConfigError(
+        'This _ref form is resolved by the build walker — compile it through the full build (scope.walkerResolve is not set).',
+        { filePath: loc?.file, lineNumber: loc?.line }
+      );
+    }
+    const node = { _ref: def };
+    // The walker reads the ref line from the container's ~l.
+    setHidden(node, '~l', refLine);
+    return await scope.walkerResolve(node, {
+      refId: scope.refId ?? null,
+      sourceRefId: scope.sourceRefId ?? null,
+      walkPath: globalSitePath(scope, sitePath) ?? '',
+      file: scope.file,
+      refChain: scope.refChain,
+      vars: scope.vars,
+    });
+  } catch (error) {
+    if (error instanceof ConfigError) {
+      return collectOrThrow(scope, error);
+    }
+    throw error;
+  }
+}
+
 // Walker getConfigFile parity for statically known missing files — the
 // refMap entry is still registered (the walker creates it before fetching).
 async function missingRef({ scope, path, sitePath, refLine, loc }) {
@@ -178,4 +212,4 @@ async function missingRef({ scope, path, sitePath, refLine, loc }) {
   return collectOrThrow(scope, error);
 }
 
-export { ref, dynRef, missingRef };
+export { ref, dynRef, delegatedRef, missingRef };

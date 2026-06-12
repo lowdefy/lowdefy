@@ -103,3 +103,77 @@ test('~ keys are emitted as plain data', async () => {
   });
   expect(output).toEqual({ '~ignoreBuildChecks': true, _state: 'x' });
 });
+
+describe('markers mode delegates walker-only ref forms (S1b)', () => {
+  const compileMarkers = (source) =>
+    compileSource({
+      source,
+      file: 'lowdefy.yaml',
+      mode: 'markers',
+      configDir: '/cfg',
+      resolveImport: (p) => `./${p}.js`,
+    }).code;
+
+  test('module component refs emit a delegatedRef call with a ~l-marked def', () => {
+    const code = compileMarkers(
+      'pages:\n  - _ref:\n      module: core\n      component: stamp\n      vars:\n        a: 1\n'
+    );
+    expect(code).toContain('_r.delegatedRef({ scope, def: _r.mark({');
+    expect(code).toContain('"module": "core"');
+    expect(code).toContain('"component": "stamp"');
+    // vars maps carry their key line for refMap `original` parity.
+    expect(code).toContain('"vars": _r.mark({ "a": 1 }');
+    expect(code).not.toContain('_r.ref(');
+  });
+
+  test('non-YAML content paths delegate, string form passing the string def', () => {
+    const code = compileMarkers('properties:\n  _ref: data/settings.json\n');
+    expect(code).toContain('_r.delegatedRef({ scope, def: "data/settings.json"');
+    expect(code).not.toContain('_r.ref(');
+  });
+
+  test('operator-built paths delegate with the path expression evaluated in place', () => {
+    const code = compileMarkers(
+      'pages:\n  - _ref:\n      path:\n        _build.string.concat:\n          - pages/\n          - home.yaml\n'
+    );
+    expect(code).toContain('_r.delegatedRef(');
+    expect(code).toContain('"path": _r.markDeep(_r.buildOperator(');
+  });
+
+  test('the _ref _var path shorthand delegates through getVar', () => {
+    const code = compileMarkers('blocks:\n  - _ref:\n      _var: contentFile\n');
+    expect(code).toContain('_r.delegatedRef(');
+    expect(code).toContain('"path": _r.getVar({ scope');
+  });
+
+  test('resolver refs delegate; non-string resolver values stay a compile error', () => {
+    const code = compileMarkers('pages:\n  - _ref:\n      resolver: resolvers/r.js\n');
+    expect(code).toContain('"resolver": "resolvers/r.js"');
+    expect(() => compileMarkers('pages:\n  - _ref:\n      resolver:\n        _var: r\n')).toThrow(
+      'not yet compiled (config-compiler S1 scope)'
+    );
+  });
+
+  test('yaml refs still compile to static imports, not delegation', () => {
+    const code = compileMarkers('pages:\n  - _ref: pages/home.yaml\n');
+    expect(code).toContain('_r.ref({ scope, factory:');
+    expect(code).not.toContain('_r.delegatedRef');
+  });
+});
+
+test('errors mode keeps explicit not-yet-compiled errors for walker-only forms', () => {
+  expect(() =>
+    compileSource({
+      source: 'pages:\n  - _ref:\n      module: core\n      component: stamp\n',
+      file: 'lowdefy.yaml',
+      configDir: '/cfg',
+    })
+  ).toThrow('not yet compiled (config-compiler S1 scope)');
+  expect(() =>
+    compileSource({
+      source: 'properties:\n  _ref: data/settings.json\n',
+      file: 'lowdefy.yaml',
+      configDir: '/cfg',
+    })
+  ).toThrow('_ref to non-YAML content');
+});

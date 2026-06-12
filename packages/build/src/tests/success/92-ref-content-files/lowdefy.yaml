@@ -1,0 +1,30 @@
+# 92: Refs to non-YAML content files (json, html, md, txt)
+# =========================================================
+# parseRefContent semantics: .json parses via JSON5, other extensions load
+# as raw strings. The config compiler delegates these refs to the walker.
+
+lowdefy: local
+
+pages:
+  - id: content
+    type: Box
+    blocks:
+      - id: settingsBox
+        type: Box
+        properties:
+          _ref: data/settings.json
+      - id: htmlSnippet
+        type: Html
+        properties:
+          html:
+            _ref: content/snippet.html
+      - id: markdownDoc
+        type: Paragraph
+        properties:
+          content:
+            _ref: content/notes.md
+      - id: disclaimer
+        type: Paragraph
+        properties:
+          content:
+            _ref: content/disclaimer.txt

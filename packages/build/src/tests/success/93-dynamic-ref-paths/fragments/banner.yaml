@@ -1,0 +1,4 @@
+id: banner
+type: Title
+properties:
+  content: Banner from a var path

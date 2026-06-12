@@ -1,0 +1,16 @@
+# 94: Resolver refs
+# =================
+# Per-ref resolvers load content through user JavaScript. With a path the
+# returned string parses by extension; without a path the resolver returns
+# config directly. The config compiler delegates resolver refs to the walker.
+
+lowdefy: local
+
+pages:
+  - _ref:
+      resolver: resolvers/virtualPage.js
+      path: virtual/dashboard.yaml
+      vars:
+        title: Resolved Dashboard
+  - _ref:
+      resolver: resolvers/metricsPage.js
