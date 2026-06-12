@@ -31,6 +31,7 @@ function compileSource({
   refExists,
   configDir,
   moduleRoot,
+  resolveModuleExport,
   runtimeSpecifier,
 }) {
   if (file.endsWith('.njk')) {
@@ -45,7 +46,7 @@ function compileSource({
   }
   const ir = parseYamlSource({ source, file });
   const fileId = makeFileId(file);
-  const { code, staticRefs, keyMap } = emitModule({
+  const { code, staticRefs, moduleImports, keyMap } = emitModule({
     ir,
     file,
     fileId,
@@ -54,9 +55,10 @@ function compileSource({
     refExists,
     configDir,
     moduleRoot,
+    resolveModuleExport,
     runtimeSpecifier,
   });
-  return { code, file, fileId, staticRefs, keyMap };
+  return { code, file, fileId, staticRefs, moduleImports, keyMap };
 }
 
 export default compileSource;

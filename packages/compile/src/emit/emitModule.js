@@ -61,11 +61,16 @@ function emitModule({
   refExists = () => true,
   configDir,
   moduleRoot = null,
+  // D7a: build-injected compile-time resolution of `_ref: {module, component}`
+  // to a file target — ({module, component}) => {cfgPath, moduleRoot,
+  // entryId, exportName, innerRefLine, manifestFile} | null.
+  resolveModuleExport = null,
   runtimeSpecifier = '@lowdefy/compile/runtime',
 }) {
   const refImports = new Map(); // cfgPath -> ident
   const transformerImports = new Map(); // absPath -> ident
   const staticRefs = [];
+  const moduleImports = []; // { path, moduleRoot } — compiled with their root
   const keyMap = {};
   let keyCounter = 0;
 
@@ -73,6 +78,14 @@ function emitModule({
     if (!refImports.has(cfgPath)) {
       refImports.set(cfgPath, `_f${refImports.size}`);
       staticRefs.push(cfgPath);
+    }
+    return refImports.get(cfgPath);
+  }
+
+  function importModuleTarget(cfgPath, targetModuleRoot) {
+    if (!refImports.has(cfgPath)) {
+      refImports.set(cfgPath, `_f${refImports.size}`);
+      moduleImports.push({ path: cfgPath, moduleRoot: targetModuleRoot });
     }
     return refImports.get(cfgPath);
   }
@@ -179,13 +192,10 @@ function emitModule({
   // path) and handed to the build's walker at run time. Map-form defs carry
   // the parser's ~l marks — for path-less refs the walker stores the def as
   // refMap `original`, where the serializer writes those markers.
-  function emitDelegatedRef(refEntry, structPath, wp, refLine) {
+  function emitMarkedRefDef(refEntry, structPath, wp) {
     const refNode = refEntry.value;
     if (refNode.t === 'lit') {
-      return (
-        `await _r.delegatedRef({ scope, def: ${json(refNode.value)}, ` +
-        `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
-      );
+      return json(refNode.value);
     }
     const keys = refNode.entries.map((e) => e.key);
     const props = [];
@@ -225,11 +235,46 @@ function emitModule({
       );
     }
     // The def map carries the _ref key's line, like any map value.
+    return `_r.mark({ ${props.join(', ')} }, ${refEntry.keyPos.line})`;
+  }
+
+  function emitDelegatedRef(refEntry, structPath, wp, refLine) {
     return (
-      `await _r.delegatedRef({ scope, def: _r.mark({ ${props.join(', ')} }, ` +
-      `${refEntry.keyPos.line}), sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(
-        refNode
-      )} })`
+      `await _r.delegatedRef({ scope, def: ${emitMarkedRefDef(refEntry, structPath, wp)}, ` +
+      `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refEntry.value)} })`
+    );
+  }
+
+  // D7a: `_ref: {module, component}` whose export target is a plain file ref
+  // compiles — the target imports as a factory, the registration binds at
+  // run time, and the def (with evaluated vars) doubles as the refMap
+  // `original`. Everything else falls through to walker delegation.
+  function emitModuleComponentRef(refEntry, target, structPath, wp, refLine) {
+    const refNode = refEntry.value;
+    const parts = entryMap(refNode);
+    let transformerIdent = 'null';
+    let transformerPath = 'null';
+    const transformerNode = parts.get('transformer');
+    if (transformerNode) {
+      if (transformerNode.t !== 'lit' || typeof transformerNode.value !== 'string') {
+        throw new ConfigError(
+          `_ref transformer must be a string path in "${file}" (line ${transformerNode.pos.line}) — dynamic transformers are not yet compiled (config-compiler S1 scope).`,
+          { filePath: file, lineNumber: transformerNode.pos.line }
+        );
+      }
+      transformerIdent = importTransformer(path.resolve(configDir, transformerNode.value));
+      transformerPath = json(transformerNode.value);
+    }
+    const ident = importModuleTarget(target.cfgPath, target.moduleRoot);
+    return (
+      `await _r.moduleComponentRef({ scope, factory: ${ident}, file: ${json(target.cfgPath)}, ` +
+      `entryId: ${json(target.entryId)}, component: ${json(target.exportName)}, ` +
+      `def: ${emitMarkedRefDef(refEntry, structPath, wp)}, ` +
+      `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
+      `manifestFile: ${json(target.manifestFile)}, innerRefLine: ${
+        target.innerRefLine ?? 'undefined'
+      }, ` +
+      `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
     );
   }
 
@@ -277,6 +322,32 @@ function emitModule({
     const walkerOnly =
       parts.has('module') || parts.has('component') || parts.has('menu') || parts.has('resolver');
 
+    if (
+      mode === 'markers' &&
+      resolveModuleExport &&
+      parts.has('module') &&
+      parts.has('component')
+    ) {
+      const moduleNode = parts.get('module');
+      const componentNode = parts.get('component');
+      if (
+        moduleNode.t === 'lit' &&
+        typeof moduleNode.value === 'string' &&
+        componentNode.t === 'lit' &&
+        typeof componentNode.value === 'string' &&
+        !parts.has('menu') &&
+        !parts.has('resolver') &&
+        !parts.has('path')
+      ) {
+        const target = resolveModuleExport({
+          module: moduleNode.value,
+          component: componentNode.value,
+        });
+        if (target) {
+          return emitModuleComponentRef(refEntry, target, structPath, wp, refLine);
+        }
+      }
+    }
     if (mode === 'markers' && (walkerOnly || !compilableStatic)) {
       return emitDelegatedRef(refEntry, structPath, wp, refLine);
     }
@@ -549,7 +620,7 @@ function emitModule({
     '',
   ].join('\n');
 
-  return { code, staticRefs, keyMap };
+  return { code, staticRefs, moduleImports, keyMap };
 }
 
 export default emitModule;

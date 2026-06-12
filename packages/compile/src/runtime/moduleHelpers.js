@@ -23,8 +23,16 @@ import cloneVarValue from './cloneVarValue.js';
 // (design D7) — one compiled file can serve several registrations. The
 // binding carries the registration id, consumer vars, var definitions,
 // connection/endpoint remappings, and resolvable dependencies.
-function bindModuleEntry({ id, consumerVars = {}, varDefs = {}, connections = {}, deps = {} }) {
-  const resolvedVarCache = {};
+function bindModuleEntry({
+  id,
+  consumerVars = {},
+  varDefs = {},
+  connections = {},
+  deps = {},
+  // Share the registration entry's cache when given (walker parity: lazy
+  // structured defaults resolve once per entry, not once per binding).
+  resolvedVarCache = {},
+}) {
   return { id, consumerVars, varDefs, connections, deps, resolvedVarCache };
 }
 
@@ -45,10 +53,11 @@ function getVarDef(varDefs, key) {
   return undefined;
 }
 
-// Walker resolveEffectiveVar parity, with one S1 deferral: defaults that need
-// walking (containing _ref/_var/operators) are out of S0 scope and throw a
-// clear error — static defaults resolve identically.
-function resolveEffectiveVar(key, binding, loc) {
+// Walker resolveEffectiveVar parity. Structured defaults (containing
+// refs/operators) resolve through the build-injected
+// scope.resolveModuleVarDefault — the walker's fresh manifest-rooted walk —
+// and cache on the binding (shared with the registration entry).
+async function resolveEffectiveVar(key, binding, loc, scope) {
   if (Object.hasOwn(binding.resolvedVarCache, key)) {
     return binding.resolvedVarCache[key];
   }
@@ -59,18 +68,22 @@ function resolveEffectiveVar(key, binding, loc) {
   if (varDef?.properties) {
     result = {};
     for (const propName of Object.keys(varDef.properties)) {
-      result[propName] = resolveEffectiveVar(`${key}.${propName}`, binding, loc);
+      result[propName] = await resolveEffectiveVar(`${key}.${propName}`, binding, loc, scope);
     }
   } else if (!type.isNone(consumerValue)) {
     result = consumerValue;
   } else if (varDef && !type.isUndefined(varDef.default)) {
     if (type.isObject(varDef.default) || type.isArray(varDef.default)) {
-      throw new ConfigError(
-        `Module var "${key}" has a structured default — compiling module var defaults that contain refs or operators lands in config-compiler S1.`,
-        { filePath: loc?.file, lineNumber: loc?.line }
-      );
+      if (!scope?.resolveModuleVarDefault) {
+        throw new ConfigError(
+          `Module var "${key}" has a structured default — compiling module var defaults that contain refs or operators lands in config-compiler S1.`,
+          { filePath: loc?.file, lineNumber: loc?.line }
+        );
+      }
+      result = await scope.resolveModuleVarDefault(varDef.default, binding.id);
+    } else {
+      result = varDef.default;
     }
-    result = varDef.default;
   } else {
     result = null;
   }
@@ -92,7 +105,10 @@ async function moduleVar({ scope, key, loc }) {
       { filePath: loc?.file, lineNumber: loc?.line }
     );
   }
-  return cloneVarValue(resolveEffectiveVar(key, scope.module, loc), scope.sourceRefId ?? null);
+  return cloneVarValue(
+    await resolveEffectiveVar(key, scope.module, loc, scope),
+    scope.sourceRefId ?? null
+  );
 }
 
 function resolveDep({ binding, depName, usage, loc }) {

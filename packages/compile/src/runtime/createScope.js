@@ -40,6 +40,11 @@ function createScope({
   // resolve itself (module/component/menu, resolver refs, non-YAML content,
   // dynamic paths): (node, site) => resolved content.
   walkerResolve = null,
+  // Build-injected module registry lookup for compiled component refs (D7a).
+  getModuleEntry = null,
+  // Build-injected lazy resolution for structured module var defaults
+  // (walker resolveVarDefault): (rawDefault, entryId) => resolved value.
+  resolveModuleVarDefault = null,
 } = {}) {
   return {
     vars,
@@ -55,6 +60,8 @@ function createScope({
     walkPath,
     refTracker,
     walkerResolve,
+    getModuleEntry,
+    resolveModuleVarDefault,
   };
 }
 

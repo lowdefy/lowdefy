@@ -71,7 +71,46 @@ async function compileRefs({ context }) {
   // build keeps Node's ESM cache from serving stale modules across rebuilds.
   fs.mkdirSync(context.directories.build, { recursive: true });
   const outDir = fs.realpathSync(fs.mkdtempSync(path.join(context.directories.build, '.compile-')));
-  const result = await compileDir({ configDir, outDir, entry, mode: 'markers', runtimePath });
+  // D7a: `_ref: {module, component}` whose manifest export is a plain file
+  // ref compiles — the hook resolves the registration (populated by
+  // buildModuleDefs before this phase) to an absolute target. Anything else
+  // returns null and stays on walker delegation.
+  const resolveModuleExport = ({ module: moduleName, component }) => {
+    const entry2 = context.modules?.[moduleName];
+    if (!entry2?.moduleRoot) return null;
+    const item = (entry2.manifest?.components ?? []).find((c2) => c2.id === component);
+    const defNode = item?.component;
+    if (!defNode || Object.keys(defNode).length !== 1) return null;
+    let refPath = null;
+    if (typeof defNode._ref === 'string') {
+      refPath = defNode._ref;
+    } else if (
+      defNode._ref &&
+      typeof defNode._ref === 'object' &&
+      typeof defNode._ref.path === 'string' &&
+      Object.keys(defNode._ref).every((k) => k === 'path')
+    ) {
+      refPath = defNode._ref.path;
+    }
+    if (refPath === null || path.isAbsolute(refPath)) return null;
+    return {
+      cfgPath: path.resolve(entry2.moduleRoot, refPath),
+      moduleRoot: entry2.moduleRoot,
+      entryId: moduleName,
+      exportName: component,
+      innerRefLine: defNode['~l'],
+      manifestFile: defNode['~deferredFrom'] ?? path.join(entry2.moduleRoot, 'module.lowdefy.yaml'),
+    };
+  };
+
+  const result = await compileDir({
+    configDir,
+    outDir,
+    entry,
+    mode: 'markers',
+    runtimePath,
+    resolveModuleExport,
+  });
 
   // Walker parity: the root ref consumes the id counter first (so addKeys ids
   // line up) and registers a path-less refMap entry. Instance ref ids are
@@ -104,6 +143,35 @@ async function compileRefs({ context }) {
       setPath: (id, refPath) => {
         context.refMap[id].path = refPath;
       },
+      // Module refs have a null path — the walker stores the raw def.
+      setOriginal: (id, original) => {
+        context.refMap[id].original = original;
+      },
+    },
+    getModuleEntry: (id) => context.modules?.[id],
+    // Walker resolveVarDefault parity: structured module-var defaults walk
+    // with a fresh context rooted at the manifest, cached on the entry.
+    resolveModuleVarDefault: async (rawDefault, entryId) => {
+      const moduleEntry = context.modules[entryId];
+      return resolve(
+        rawDefault,
+        new WalkContext({
+          buildContext: context,
+          refId: moduleEntry.refDef.id,
+          sourceRefId: null,
+          vars: {},
+          moduleDependencies: moduleEntry.moduleDependencies,
+          moduleEntry,
+          moduleRoot: moduleEntry.moduleRoot,
+          packageRoot: moduleEntry.packageRoot,
+          path: '',
+          currentFile: path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+          refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
+          operators,
+          env: process.env,
+          dynamicIdentifiers,
+        })
+      );
     },
     // Ref forms the compiler does not resolve itself (module/component/menu,
     // resolver refs, non-YAML content, dynamic paths) delegate to the real

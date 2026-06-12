@@ -18,6 +18,7 @@ import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import { markDeep, setHidden } from './mark.js';
+import { bindModuleEntry } from './moduleHelpers.js';
 
 // Per-ref operation order is an invariant (design D3, walker steps 11-16):
 // produce content → transformer → pluck key → propagate ~ignoreBuildChecks.
@@ -214,6 +215,133 @@ async function delegatedRef({ scope, def, sitePath, refLine, loc }) {
   }
 }
 
+// D7a: a `_ref: {module, component}` whose export target is a plain file ref
+// in the manifest. Walker semantics preserved: the outer ref allocates at the
+// site path with a null refMap path and the def stored as `original`; a
+// cross-module cycle key guards recursion (collected at THIS ref — walker
+// step 9 sits inside the per-ref try); the inner file ref allocates its own
+// id at the SAME site path (collision → counter, matching the walker's
+// nested makeRefDefinition during content resolution); consumer vars flow
+// into the inner ref (vars injection); the registration binds scope.module
+// for _module.* inside the component; outer transformer/key/tag/ignore
+// apply after.
+async function moduleComponentRef({
+  scope,
+  factory,
+  file,
+  entryId,
+  component,
+  def,
+  transformer,
+  transformerPath,
+  manifestFile,
+  innerRefLine,
+  sitePath,
+  refLine,
+  loc,
+}) {
+  const globalPath = globalSitePath(scope, sitePath);
+  let outerId = scope.refId ?? null;
+  if (scope.refTracker) {
+    outerId = scope.refTracker.alloc(globalPath, {
+      parent: scope.refId ?? null,
+      lineNumber: refLine,
+    });
+    scope.refTracker.setPath(outerId, null);
+    scope.refTracker.setOriginal?.(outerId, def);
+  }
+  const cycleKey = `module:${entryId}/component:${component}`;
+  try {
+    if (scope.refChain.includes(cycleKey)) {
+      throw new ConfigError(
+        `Circular module reference detected. Module "${entryId}" component "${component}" ` +
+          `references itself through:\n  -> ${[...scope.refChain, cycleKey].join('\n  -> ')}`,
+        { filePath: scope.file }
+      );
+    }
+    const entry = scope.getModuleEntry?.(entryId);
+    if (!entry) {
+      throw new ConfigError(
+        'Module component refs require the build module registry (scope.getModuleEntry).',
+        { filePath: loc?.file, lineNumber: loc?.line }
+      );
+    }
+    const vars = (type.isObject(def) ? def.vars : undefined) ?? {};
+    const outerScope = {
+      ...scope,
+      refId: outerId,
+      walkPath: globalPath ?? '',
+      sourceRefId: scope.refId ?? null,
+      vars,
+      file: manifestFile,
+      refChain: [...scope.refChain, manifestFile, cycleKey],
+      module: bindModuleEntry({
+        id: entry.id ?? entryId,
+        consumerVars: entry.consumerVars ?? {},
+        varDefs: entry.varDefs ?? {},
+        connections: entry.connections ?? {},
+        deps: entry.moduleDependencies ?? {},
+        resolvedVarCache: entry.resolvedVarCache,
+      }),
+    };
+
+    let content = await applyRefSteps({
+      scope: outerScope,
+      factory,
+      file,
+      vars,
+      key: null,
+      transformer: null,
+      transformerPath: null,
+      ignoreBuildChecks: undefined,
+      sitePath,
+      refLine: innerRefLine,
+      loc,
+    });
+
+    if (transformer) {
+      try {
+        content = transformer(content, vars);
+      } catch (error) {
+        throw new ConfigError(`Error calling transformer "${transformerPath}" from "${null}".`, {
+          cause: error,
+          filePath: loc?.file,
+          lineNumber: refLine ?? loc?.line,
+        });
+      }
+    }
+
+    const key = type.isObject(def) ? def.key : undefined;
+    if (key !== null && key !== undefined) {
+      content = get(content, key, { default: null });
+    }
+
+    if (outerId !== null) {
+      markDeep(content, outerId);
+    }
+
+    const ignoreBuildChecks = type.isObject(def) ? def['~ignoreBuildChecks'] : undefined;
+    if (ignoreBuildChecks !== undefined) {
+      if (type.isObject(content)) {
+        content['~ignoreBuildChecks'] = ignoreBuildChecks;
+      } else if (type.isArray(content)) {
+        content.forEach((item) => {
+          if (type.isObject(item)) {
+            item['~ignoreBuildChecks'] = ignoreBuildChecks;
+          }
+        });
+      }
+    }
+
+    return content;
+  } catch (error) {
+    if (error instanceof ConfigError) {
+      return collectOrThrow(scope, error);
+    }
+    throw error;
+  }
+}
+
 // Walker getConfigFile parity for statically known missing files — the
 // refMap entry is still registered (the walker creates it before fetching),
 // and the message carries the resolved absolute path plus the common-mistake
@@ -238,4 +366,4 @@ async function missingRef({ scope, path: refPath, resolvedPath, sitePath, refLin
   return collectOrThrow(scope, error);
 }
 
-export { ref, dynRef, delegatedRef, missingRef };
+export { ref, dynRef, delegatedRef, missingRef, moduleComponentRef };

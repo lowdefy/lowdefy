@@ -21,7 +21,7 @@ import createScope from './createScope.js';
 import getVar from './getVar.js';
 import { mark, markDeep } from './mark.js';
 import { moduleId, moduleVar, bindModuleEntry } from './moduleHelpers.js';
-import { ref, dynRef, delegatedRef, missingRef } from './applyRef.js';
+import { ref, dynRef, delegatedRef, missingRef, moduleComponentRef } from './applyRef.js';
 import synthKey from './synthKey.js';
 import tag from './tag.js';
 
@@ -33,6 +33,7 @@ const runtime = {
   mark,
   markDeep,
   missingRef,
+  moduleComponentRef,
   moduleId,
   moduleVar,
   ref,

@@ -22,7 +22,12 @@ import { writeFile } from '@lowdefy/node-utils';
 
 import compileSource from './compileSource.js';
 
+// Module files are keyed by absolute path (matching walker refMap paths);
+// their emitted modules mirror under __abs__/ inside outDir.
 function outFileFor(cfgPath) {
+  if (cfgPath.startsWith('/')) {
+    return path.posix.join('__abs__', cfgPath.slice(1)) + '.js';
+  }
   return `${cfgPath}.js`;
 }
 
@@ -32,13 +37,20 @@ function outFileFor(cfgPath) {
 // called) — circular CONFIG inclusion is caught at run time by the
 // scope.refChain guard, which reproduces the walker's error and null
 // placement exactly.
-async function compileDir({ configDir, outDir, entry, mode = 'errors', runtimePath = null }) {
+async function compileDir({
+  configDir,
+  outDir,
+  entry,
+  mode = 'errors',
+  runtimePath = null,
+  resolveModuleExport = null,
+}) {
   const compiled = new Map(); // cfgPath -> { fileId, keyMap }
   const compiling = []; // in-progress stack (cycle edges return early)
   const refMap = {};
   const keyMap = {};
 
-  async function compileOne(cfgPath) {
+  async function compileOne(cfgPath, fileModuleRoot = null) {
     if (compiled.has(cfgPath)) return;
     if (compiling.includes(cfgPath)) {
       // Already being compiled higher up the stack — its module file is
@@ -57,7 +69,9 @@ async function compileDir({ configDir, outDir, entry, mode = 'errors', runtimePa
           { filePath: compiling.at(-2) ?? cfgPath, cause: error }
         );
       }
-      const fromDir = path.posix.dirname(cfgPath);
+      // Import specifiers are relative in OUT space — module files mirror
+      // under __abs__/, so source-dir relativity does not hold.
+      const fromDir = path.posix.dirname(outFileFor(cfgPath));
       // Tests resolve the runtime by relative path (jest cannot resolve the
       // package self-reference from generated files); production emission
       // keeps the bare '@lowdefy/compile/runtime' specifier.
@@ -73,6 +87,8 @@ async function compileDir({ configDir, outDir, entry, mode = 'errors', runtimePa
         file: cfgPath,
         mode,
         configDir,
+        moduleRoot: fileModuleRoot,
+        resolveModuleExport,
         runtimeSpecifier,
         // Missing static refs emit a collected-error call (walker parity)
         // instead of an import that would fail the whole compile.
@@ -87,7 +103,12 @@ async function compileDir({ configDir, outDir, entry, mode = 'errors', runtimePa
       refMap[result.fileId] = { path: cfgPath };
       Object.assign(keyMap, result.keyMap);
       for (const refPath of result.staticRefs) {
-        await compileOne(refPath);
+        // Refs inside a module file are emitted module-root-joined already —
+        // the target compiles under the same root.
+        await compileOne(refPath, fileModuleRoot);
+      }
+      for (const moduleImport of result.moduleImports ?? []) {
+        await compileOne(moduleImport.path, moduleImport.moduleRoot);
       }
       // Marked complete only after the subtree compiled — a revisit while
       // still on the `compiling` stack is a cycle, not a cache hit.

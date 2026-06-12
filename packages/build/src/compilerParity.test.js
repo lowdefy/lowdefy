@@ -122,13 +122,28 @@ async function runFixture(fixtureDir, compiler) {
   return { artifacts, logger };
 }
 
-function canonicalJsonObject(content) {
-  const parsed = JSON.parse(content);
-  const sorted = {};
-  for (const key of Object.keys(parsed).sort()) {
-    sorted[key] = parsed[key];
-  }
-  return JSON.stringify(sorted);
+// refMap ids are internal pointers (tree paths or allocation-order counters)
+// — the contract is what an entry resolves to: its source line, file path,
+// stored original def, and the same data up its parent chain. Compare the
+// two maps as sorted multisets of those profiles, id-free and order-free.
+function refMapProfiles(content) {
+  const refMap = JSON.parse(content);
+  const profile = (id, depth = 0) => {
+    const entry = refMap[id];
+    if (!entry || depth > 64) return null;
+    return {
+      lineNumber: entry.lineNumber ?? null,
+      path: entry.path ?? null,
+      original: entry.original ?? null,
+      parent:
+        entry.parent === null || entry.parent === undefined
+          ? null
+          : profile(entry.parent, depth + 1),
+    };
+  };
+  return Object.keys(refMap)
+    .map((id) => JSON.stringify(profile(id)))
+    .sort();
 }
 
 // S2a: compiled builds use lexical ~k ids (`<fileId>:<n>`), the walker uses
@@ -239,11 +254,9 @@ describe('compiler parity — success fixture corpus', () => {
     for (const key of Object.keys(walkerCanonical.artifacts).sort()) {
       if (key === 'refMap.json') {
         // The walker registers refMap entries in parallel-IO completion order
-        // (siblings sync, children per read wave) — insertion order is
-        // incidental, not a contract. Compare ids and entries canonically;
-        // entry-internal key order still byte-checks.
-        expect(canonicalJsonObject(compiled.artifacts[key])).toBe(
-          canonicalJsonObject(walker.artifacts[key])
+        // and counter ids follow allocation order — neither is a contract.
+        expect(refMapProfiles(compiled.artifacts[key])).toEqual(
+          refMapProfiles(walker.artifacts[key])
         );
         continue;
       }
