@@ -16,8 +16,17 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
+async function getEndpointConfig({ importConfigModule, logger, readConfigFile }, { endpointId }) {
   const endpoint = await readConfigFile(`api/${endpointId}.json`);
+  // S3a: compiled builds ship the whole endpoint as a module — routine
+  // control inputs and step properties with operators are closures the
+  // evaluator calls. The factory returns a fresh tree per call.
+  if (endpoint && importConfigModule) {
+    const closureModule = await importConfigModule(`api/${endpointId}.mjs`);
+    if (closureModule?.default) {
+      return closureModule.default();
+    }
+  }
   if (!endpoint) {
     const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);

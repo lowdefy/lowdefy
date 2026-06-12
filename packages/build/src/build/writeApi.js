@@ -14,12 +14,26 @@
   limitations under the License.
 */
 import { type, serializer } from '@lowdefy/helpers';
+import { emitEndpointModule } from '@lowdefy/compile';
+
+import serverOperatorSet from './full/serverOperatorSet.js';
 
 async function writeEndpoint({ endpoint, context }) {
   await context.writeBuildArtifact(
     `api/${endpoint.endpointId}.json`,
     serializer.serializeToString(endpoint ?? {})
   );
+  // S3a (endpoints): compiled builds additionally ship the whole endpoint as
+  // a module — routine control inputs and step properties that contain
+  // server operators become closures; the routine runner's per-step
+  // evaluation dispatches on them. JIT (dev) builds skip — S4.
+  if (context.compiler === true) {
+    const { code } = emitEndpointModule({
+      endpoint: endpoint ?? {},
+      operators: serverOperatorSet(context),
+    });
+    await context.writeBuildArtifact(`api/${endpoint.endpointId}.mjs`, code);
+  }
 }
 
 async function writeApi({ components, context }) {

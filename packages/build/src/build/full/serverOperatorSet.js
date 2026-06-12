@@ -14,20 +14,15 @@
   limitations under the License.
 */
 
-import compileDir from './compileDir.js';
-import compileSource from './compileSource.js';
-import emitEndpointModule from './closures/emitEndpointModule.js';
-import emitOperatorClosures from './closures/emitOperatorClosures.js';
-import emitPageModule from './closures/emitPageModule.js';
-import parseYamlSource from './parse/parseYamlSource.js';
-import fileId from './emit/fileId.js';
+// S3a: the known-operator set for server closure emission mirrors the server
+// runtime exactly — both derive from the same typesMap, so emit-time
+// known/unknown matches run-time dispatch.
+function serverOperatorSet(context) {
+  const set = {};
+  for (const name of Object.keys(context.typesMap?.operators?.server ?? {})) {
+    set[name] = true;
+  }
+  return set;
+}
 
-export {
-  compileDir,
-  compileSource,
-  emitEndpointModule,
-  emitOperatorClosures,
-  emitPageModule,
-  parseYamlSource,
-  fileId,
-};
+export default serverOperatorSet;

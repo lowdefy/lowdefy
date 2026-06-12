@@ -195,3 +195,83 @@ test('S3c: public pages emit internal-form modules with closure parse roots', as
   const withPayloadOps = home.requests.filter((r) => typeof r.payload === 'function');
   expect(withPayloadOps.length).toBeGreaterThan(0);
 });
+
+test('S3a: endpoints emit whole-config modules with routine closures matching ServerParser', async () => {
+  const configDir = path.join(fixturesDir, '66-module-with-api');
+  const artifacts = {};
+  makeId.reset();
+  mockWriteBuildArtifact.mockImplementation((filePath, content) => {
+    artifacts[filePath] = content;
+  });
+  await build({
+    compiler: true,
+    customTypesMap: snapshotTypesMap,
+    directories: {
+      config: configDir,
+      build: path.join(tmpDir, 'build'),
+      server: path.join(tmpDir, 'server'),
+    },
+    logger: { info() {}, log() {}, warn() {}, error() {}, succeed() {} },
+    stage: 'prod',
+  });
+
+  const jsonKey = 'api/inviter/send-invite.json';
+  const moduleKey = 'api/inviter/send-invite.mjs';
+  expect(artifacts[jsonKey]).toBeDefined();
+  expect(artifacts[moduleKey]).toBeDefined();
+
+  fs.mkdirSync(tmpDir, { recursive: true });
+  const file = path.join(tmpDir, 'endpoint__send-invite.mjs');
+  fs.writeFileSync(file, artifacts[moduleKey]);
+  const mod = await import(`${file}?v=1`);
+
+  const config = serializer.deserializeFromString(artifacts[jsonKey]);
+  const endpoint = mod.default();
+
+  // The routine runner traverses structure as data — auth stays for
+  // authorizeApiEndpoint, ~k markers ride hidden for error locations.
+  expect(endpoint.endpointId).toBe(config.endpointId);
+  expect(endpoint.auth).toEqual(config.auth);
+  expect(Array.isArray(endpoint.routine)).toBe(true);
+  expect(Object.keys(endpoint)).not.toContain('~k');
+  expect(endpoint['~k']).toBe(config['~k']);
+  expect(mod.default()).not.toBe(endpoint);
+
+  // The send-email step's properties carry a _payload operator — that root
+  // ships as a closure and must match ServerParser.parse on the JSON twin.
+  const step = endpoint.routine[0];
+  const configStep = config.routine[0];
+  expect(step.id).toBe(configStep.id);
+  expect(step.type).toBe(configStep.type);
+  expect(step.connectionId).toBe(configStep.connectionId);
+  expect(step['~k']).toBe(configStep['~k']);
+  expect(typeof step.properties).toBe('function');
+
+  const env = {
+    location: 'endpoint-roundtrip',
+    payload: { email: 'ada@example.com' },
+    state: {},
+    secrets: { SENDGRID_KEY: 'sg-key' },
+    user: { id: 'u1' },
+  };
+  const parser = new ServerParser({ operators, secrets: env.secrets, user: env.user });
+  const parsed = parser.parse({
+    input: configStep.properties,
+    location: env.location,
+    payload: env.payload,
+    state: env.state,
+  });
+  const evaluated = evaluateClosures({
+    closure: step.properties,
+    operators,
+    location: env.location,
+    payload: env.payload,
+    state: env.state,
+    secrets: env.secrets,
+    user: env.user,
+    parser,
+  });
+  expect(evaluated.output).toEqual(parsed.output);
+  expect(evaluated.errors).toEqual(parsed.errors);
+  expect(evaluated.output.to).toBe('ada@example.com');
+});

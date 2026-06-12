@@ -16,18 +16,10 @@
 
 import { emitOperatorClosures } from '@lowdefy/compile';
 
-// S3a: server config properties (requests, connections) additionally emit as
-// closure modules next to their JSON artifacts when the compiler is on. The
-// known-operator set mirrors the server runtime exactly: both derive from
-// the same typesMap, so emit-time known/unknown matches run-time dispatch.
-function serverOperatorSet(context) {
-  const set = {};
-  for (const name of Object.keys(context.typesMap?.operators?.server ?? {})) {
-    set[name] = true;
-  }
-  return set;
-}
+import serverOperatorSet from './serverOperatorSet.js';
 
+// S3a: server config properties (requests, connections) additionally emit as
+// closure modules next to their JSON artifacts when the compiler is on.
 async function writeClosureArtifact({ context, artifactPath, input }) {
   if (context.compiler !== true) {
     return;
