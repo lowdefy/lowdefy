@@ -16,7 +16,10 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getConnectionConfig({ logger, readConfigFile }, { connectionId, configKey }) {
+async function getConnectionConfig(
+  { importConfigModule, logger, readConfigFile },
+  { connectionId, configKey }
+) {
   let err;
 
   if (!connectionId) {
@@ -26,6 +29,12 @@ async function getConnectionConfig({ logger, readConfigFile }, { connectionId, c
   }
 
   const connection = await readConfigFile(`connections/${connectionId}.json`);
+  if (connection && importConfigModule) {
+    const closureModule = await importConfigModule(`connections/${connectionId}.mjs`);
+    if (closureModule?.default) {
+      connection.properties = closureModule.default;
+    }
+  }
 
   if (!connection) {
     err = new ConfigError(`Connection "${connectionId}" does not exist.`, { configKey });

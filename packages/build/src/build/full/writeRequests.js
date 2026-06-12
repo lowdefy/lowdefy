@@ -16,6 +16,8 @@
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import writeClosureArtifact from './writeClosureArtifact.js';
+
 async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];
 
@@ -32,6 +34,11 @@ async function writeRequestsOnPage({ page, context }) {
         `pages/${page.pageId}/requests/${request.requestId}.json`,
         serializer.serializeToString(request ?? {})
       );
+      await writeClosureArtifact({
+        context,
+        artifactPath: `pages/${page.pageId}/requests/${request.requestId}.mjs`,
+        input: request.properties,
+      });
       delete request.properties;
       delete request.type;
       delete request.connectionId;

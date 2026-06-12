@@ -248,7 +248,13 @@ describe('compiler parity — success fixture corpus', () => {
       return;
     }
 
-    expect(Object.keys(compiled.artifacts).sort()).toEqual(Object.keys(walker.artifacts).sort());
+    // S3a: compiled builds additionally emit .mjs closure modules next to
+    // server config JSONs — compiled-only artifacts, excluded from parity.
+    expect(
+      Object.keys(compiled.artifacts)
+        .filter((k) => !k.endsWith('.mjs'))
+        .sort()
+    ).toEqual(Object.keys(walker.artifacts).sort());
     const walkerCanonical = canonicalizeKeyIds(walker.artifacts);
     const compiledCanonical = canonicalizeKeyIds(compiled.artifacts);
     for (const key of Object.keys(walkerCanonical.artifacts).sort()) {

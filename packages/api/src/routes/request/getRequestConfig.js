@@ -16,8 +16,19 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
+async function getRequestConfig(
+  { importConfigModule, logger, readConfigFile },
+  { pageId, requestId }
+) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
+  // S3a: compiled builds ship a closure module for the request properties —
+  // when present it replaces the data form and the evaluator calls it.
+  if (request && importConfigModule) {
+    const closureModule = await importConfigModule(`pages/${pageId}/requests/${requestId}.mjs`);
+    if (closureModule?.default) {
+      request.properties = closureModule.default;
+    }
+  }
   if (!request) {
     const err = new ConfigError(`Request "${requestId}" does not exist.`);
     logger.debug({ params: { pageId, requestId }, err }, err.message);

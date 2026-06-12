@@ -16,6 +16,8 @@
 
 import { type, serializer } from '@lowdefy/helpers';
 
+import writeClosureArtifact from './full/writeClosureArtifact.js';
+
 async function writeConnections({ components, context }) {
   if (type.isNone(components.connections)) return;
   if (!type.isArray(components.connections)) {
@@ -26,6 +28,11 @@ async function writeConnections({ components, context }) {
       `connections/${connection.connectionId}.json`,
       serializer.serializeToString(connection)
     );
+    await writeClosureArtifact({
+      context,
+      artifactPath: `connections/${connection.connectionId}.mjs`,
+      input: connection.properties,
+    });
   });
   return Promise.all(writePromises);
 }

@@ -59,3 +59,45 @@ test('createEvaluateOperators forwards undefined lowdefyApp when context.appMeta
   });
   expect(output).toEqual({ slug: null });
 });
+
+test('S3a adapter: a function input evaluates as a closure with the same contract', () => {
+  const operators = {
+    _payload: ({ params, payload }) => payload[params] ?? null,
+  };
+  const evaluateOperators = createEvaluateOperators({
+    appMeta: { name: 'app' },
+    operators,
+    secrets: {},
+    user: { id: 'u1' },
+  });
+  // The shape emitOperatorClosures emits: (_x) => expression of evalOp calls.
+  const closure = (_x) => ({
+    url: '/items',
+    q: _x.evalOp(_x, '_payload', null, 'query', '_payload', null),
+  });
+  const output = evaluateOperators({
+    input: closure,
+    location: 'request:test',
+    payload: { query: 'abc' },
+    state: {},
+  });
+  expect(output).toEqual({ url: '/items', q: 'abc' });
+});
+
+test('S3a adapter: closure operator errors throw like parser errors', () => {
+  const operators = {
+    _boom: () => {
+      throw new Error('boom');
+    },
+  };
+  const evaluateOperators = createEvaluateOperators({
+    appMeta: {},
+    operators,
+    secrets: {},
+    user: {},
+  });
+  const closure = (_x) => ({ a: _x.evalOp(_x, '_boom', null, 1, '_boom', null) });
+  expect(() =>
+    evaluateOperators({ input: closure, location: 'request:test', payload: {}, state: {} })
+  ).toThrow('boom');
+});

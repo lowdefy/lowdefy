@@ -15,6 +15,7 @@
 */
 
 import createAuthorize from './createAuthorize.js';
+import createImportConfigModule from './createImportConfigModule.js';
 import createReadConfigFile from './createReadConfigFile.js';
 import resolveLocale from './resolveLocale.js';
 
@@ -30,6 +31,7 @@ function createApiContext(context) {
 
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);
+  context.importConfigModule = createImportConfigModule(context);
 }
 
 export default createApiContext;
