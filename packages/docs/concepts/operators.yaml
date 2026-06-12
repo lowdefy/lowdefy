@@ -15,7 +15,7 @@
 # TODO: Add docs for build time operators
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: operators
     pageTitle: Operators

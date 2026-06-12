@@ -1,0 +1,270 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml
+  vars:
+    pageId:
+      _var: pageId
+    pageTitle:
+      _var: pageTitle
+    section:
+      _var: section
+    filePath:
+      _var: filePath
+    fullWidth: true
+    content:
+      _build.array.compact:
+        - id: gallery_intro
+          type: Markdown
+          properties:
+            content:
+              _var: description
+        - id: gallery_links
+          type: Box
+          layout:
+            gap: 8
+            justify: start
+          blocks:
+            _build.array.compact:
+              - _build.if:
+                  test:
+                    _build.boolean:
+                      _var: antd_component
+                  then:
+                    id: gallery_antd_link
+                    type: Button
+                    layout:
+                      flex: 0 0 auto
+                    properties:
+                      title:
+                        _build.string.concat:
+                          - 'Ant Design '
+                          - _var: antd_component
+                      type: link
+                      icon: AiOutlineLink
+                      size: small
+                    events:
+                      onClick:
+                        - id: open_antd
+                          type: Link
+                          params:
+                            url:
+                              _build.string.concat:
+                                - https://ant.design/components/
+                                - _var: antd_url
+                            newTab: true
+              - id: gallery_github_link
+                type: Button
+                layout:
+                  flex: 0 0 auto
+                properties:
+                  title:
+                    _build.string.concat:
+                      - _var: block_type
+                      - ' Source on GitHub'
+                  type: link
+                  icon: AiFillGithub
+                  size: small
+                events:
+                  onClick:
+                    - id: open_github
+                      type: Link
+                      params:
+                        url:
+                          _build.string.concat:
+                            - https://github.com/lowdefy/lowdefy/tree/main/
+                            - _var: github_path
+                        newTab: true
+        - _build.if:
+            test:
+              _build.boolean:
+                _var: note
+            then:
+              id: gallery_note
+              type: Alert
+              properties:
+                type: warning
+                showIcon: true
+                message:
+                  _var: note
+        - _build.if:
+            test:
+              _build.boolean:
+                _var: guide
+            then:
+              id: gallery_guide
+              type: MarkdownWithCode
+              properties:
+                content:
+                  _var: guide
+        - _build.if:
+            test:
+              _build.boolean:
+                _var: wrapperType
+            then:
+              id: gallery_wrapper
+              type:
+                _var: wrapperType
+              properties:
+                _var: wrapperProperties
+              blocks:
+                - id: gallery_grid
+                  type: Box
+                  style:
+                    columnCount:
+                      _build.if:
+                        test:
+                          _build.boolean:
+                            _var: fullWidthExamples
+                        then: 1
+                        else: 2
+                    columnGap: 16
+                  events:
+                    _build.if:
+                      test:
+                        _build.boolean:
+                          _var: onInit
+                      then:
+                        onMount:
+                          _var: onInit
+                  blocks:
+                    _ref:
+                      path:
+                        _var: gallery
+                      transformer: templates/blocks/galleryExampleTransformer.js
+                      vars:
+                        showState:
+                          _build.if:
+                            test:
+                              _build.or:
+                                - _build.eq:
+                                    - _var: section
+                                    - Input Blocks
+                                - _build.eq:
+                                    - _var: section
+                                    - List Blocks
+                            then: true
+            else:
+              id: gallery_grid
+              type: Box
+              style:
+                columnCount:
+                  _build.if:
+                    test:
+                      _build.boolean:
+                        _var: fullWidthExamples
+                    then: 1
+                    else: 2
+                columnGap: 16
+              events:
+                _build.if:
+                  test:
+                    _build.boolean:
+                      _var: onInit
+                  then:
+                    onMount:
+                      _var: onInit
+              blocks:
+                _ref:
+                  path:
+                    _var: gallery
+                  transformer: templates/blocks/galleryExampleTransformer.js
+                  vars:
+                    showState:
+                      _build.if:
+                        test:
+                          _build.or:
+                            - _build.eq:
+                                - _var: section
+                                - Input Blocks
+                            - _build.eq:
+                                - _var: section
+                                - List Blocks
+                        then: true
+        - id: gallery_ref_divider
+          type: Divider
+          properties:
+            title: API Reference
+        - id: gallery_properties_card
+          type: Card
+          properties:
+            title: Properties
+          blocks:
+            - id: gallery_properties_table
+              type: Markdown
+              properties:
+                content:
+                  _ref:
+                    path:
+                      _var: schema
+                    transformer: templates/blocks/galleryTransformer.js
+                    vars:
+                      table: properties
+        - id: gallery_events_keys_row
+          type: Box
+          layout:
+            gap: 16
+          blocks:
+            - id: gallery_events_card
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Events
+              blocks:
+                - id: gallery_events_table
+                  type: Markdown
+                  properties:
+                    content:
+                      _ref:
+                        path:
+                          _var: schema
+                        transformer: templates/blocks/galleryTransformer.js
+                        vars:
+                          table: events
+            - id: gallery_css_card
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Style & Class Keys
+              blocks:
+                - id: gallery_css_table
+                  type: Markdown
+                  properties:
+                    content:
+                      _ref:
+                        path:
+                          _var: schema
+                        transformer: templates/blocks/galleryTransformer.js
+                        vars:
+                          table: cssKeys
+            - id: gallery_slots_card
+              type: Card
+              layout:
+                flex: 1 1 0
+              properties:
+                title: Slots
+              blocks:
+                - id: gallery_slots_table
+                  type: Markdown
+                  properties:
+                    content:
+                      _ref:
+                        path:
+                          _var: schema
+                        transformer: templates/blocks/galleryTransformer.js
+                        vars:
+                          table: slots

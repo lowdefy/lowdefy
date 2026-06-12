@@ -1,4 +1,7 @@
-id: command_box_{{ id }}
+id:
+  _build.string.concat:
+    - command_box_
+    - _var: id
 type: Box
 style:
   backgroundColor: var(--ant-color-bg-layout)
@@ -7,7 +10,10 @@ style:
   borderWidth: 1px
 
 blocks:
-  - id: command_run_{{ id }}
+  - id:
+      _build.string.concat:
+        - command_run_
+        - _var: id
     type: Paragraph
     layout:
       flex: 0 1 auto
@@ -17,7 +23,10 @@ blocks:
       marginTop: 16px
     properties:
       content: '$'
-  - id: command_{{ id }}
+  - id:
+      _build.string.concat:
+        - command_
+        - _var: id
     type: Paragraph
     layout:
       flex: 0 1 auto

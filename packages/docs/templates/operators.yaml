@@ -1,0 +1,119 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+methods:
+  _var: methods
+page:
+  _ref:
+    path: templates/general.yaml
+    vars:
+      pageId:
+        _var: pageId
+      pageTitle:
+        _var: pageTitle
+      section: Operators
+      content:
+        _build.array.compact:
+          - id: warning
+            type: Alert
+            visible:
+              _not:
+                _not:
+                  _var: warning
+            properties:
+              message:
+                _var: warning
+              type: warning
+          - id: environment
+            type: Alert
+            visible:
+              _not:
+                _not:
+                  _var: env
+            properties:
+              message:
+                _string.concat:
+                  - 'Environment: '
+                  - _var: env
+              type: info
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: experimental
+              then:
+                id: experimental
+                type: Alert
+                properties:
+                  message: 'This operator is experimental and may change in future versions.'
+                  type: warning
+          - id: types
+            type: Markdown
+            style:
+              fontSize: 14px
+            properties:
+              content:
+                _var: types
+          - id: description
+            type: MarkdownWithCode
+            properties:
+              content:
+                _var: description
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: build
+              then:
+                id: build_operator
+                type: Markdown
+                properties:
+                  content: |
+                    > This operator can be used as a [`_build`](/_build) operator method.
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: arguments
+              then:
+                id: arguments_title
+                type: Markdown
+                properties:
+                  content: '#### Arguments'
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: arguments
+              then:
+                id: arguments
+                type: MarkdownWithCode
+                properties:
+                  content:
+                    _var: arguments
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: examples
+              then:
+                id: examples_title
+                type: Markdown
+                properties:
+                  content: '#### Examples'
+          - _build.if:
+              test:
+                _build.boolean:
+                  _var: examples
+              then:
+                id: examples
+                type: MarkdownWithCode
+                properties:
+                  content:
+                    _var: examples

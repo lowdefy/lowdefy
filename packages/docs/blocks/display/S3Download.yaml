@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/blocks/gallery.yaml.njk
+  path: templates/blocks/gallery.yaml
   vars:
     pageId: S3Download
     pageTitle: S3Download

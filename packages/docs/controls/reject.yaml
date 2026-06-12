@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/controls.yaml.njk
+  path: templates/controls.yaml
   vars:
     pageId: :reject
     pageTitle: :reject

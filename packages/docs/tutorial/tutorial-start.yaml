@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: tutorial-start
     pageTitle: 1. Getting started
@@ -52,7 +52,7 @@ _ref:
             Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making activating [Corepack](https://nodejs.org/api/corepack.html), even though it is an experimental feature, as this is the simplest way to install `pnpm`. Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation). To activate Corepack, run the following in your computer's command line interface (Windows CMD, Terminal on MacOS).
 
       - _ref:
-          path: templates/cli_command.yaml.njk
+          path: templates/cli_command.yaml
           vars:
             id: corepack_enable
             command: 'corepack enable'
@@ -86,7 +86,7 @@ _ref:
             Run the following in your terminal:
 
       - _ref:
-          path: templates/cli_command.yaml.njk
+          path: templates/cli_command.yaml
           vars:
             id: init
             command: 'pnpx lowdefy@5 init'
@@ -108,7 +108,7 @@ _ref:
             Run:
 
       - _ref:
-          path: templates/cli_command.yaml.njk
+          path: templates/cli_command.yaml
           vars:
             id: dev
             command: 'pnpx lowdefy@5 dev'

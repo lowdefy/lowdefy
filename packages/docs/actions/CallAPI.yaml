@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/actions.yaml.njk
+  path: templates/actions.yaml
   vars:
     pageId: CallAPI
     pageTitle: CallAPI

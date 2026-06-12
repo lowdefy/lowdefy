@@ -1,4 +1,7 @@
-id: discord_message_{{ key }}
+id:
+  _build.string.concat:
+    - discord_message_
+    - _var: key
 type: AxiosHttp
 connectionId: discord
 payload:

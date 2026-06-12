@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: tutorial-requests-sql
     pageTitle: 6. Saving data to SQL

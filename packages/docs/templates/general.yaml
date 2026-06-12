@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: "{{ pageId }}"
+id:
+  _var: pageId
 type: Box
 events:
   onInit:
@@ -29,12 +30,17 @@ events:
             type: string
             length: 16
 properties:
-  title: {{ pageTitle }}
+  title:
+    _var: pageTitle
 blocks:
-  - id: {{ pageId }}_page
+  - id:
+      _build.string.concat:
+        - _var: pageId
+        - _page
     type: PageSiderMenu
     properties:
-      title: {{ pageTitle }}
+      title:
+        _var: pageTitle
       darkModeToggle: true
       menu:
         forceSubMenuRender: true
@@ -50,11 +56,20 @@ blocks:
                 - lg
       breadcrumb:
         list:
-          - _ref: version.yaml
-      {% if section %}
-          - {{ section }}
-          - {{ pageTitle }}
-      {% endif %}
+          _build.array.compact:
+            - _ref: version.yaml
+            - _build.if:
+                test:
+                  _build.boolean:
+                    _var: section
+                then:
+                  _var: section
+            - _build.if:
+                test:
+                  _build.boolean:
+                    _var: section
+                then:
+                  _var: pageTitle
 
     style:
       .layout:
@@ -70,7 +85,7 @@ blocks:
       footer:
         blocks:
           _ref:
-            path: templates/footer.yaml.njk
+            path: templates/footer.yaml
             vars:
               hideFeedback:
                 _var: hideFeedback
@@ -85,25 +100,32 @@ blocks:
           - id: max_width
             type: Box
             layout:
-              {% if fullWidth %}
-              flex: 1 1 auto
-              {% else %}
-              flex: 0 1 800px
-              {% endif %}
+              _build.if:
+                test:
+                  _build.boolean:
+                    _var: fullWidth
+                then:
+                  flex: 1 1 auto
+                else:
+                  flex: 0 1 800px
             style:
               minWidth: 0
               overflow: hidden
             blocks:
-              {% if pageTitle %}
-              - id: page_title
-                type: Title
-                properties:
-                  content:
-                    _var: pageTitle
-              {% endif %}
-              - id: content
-                type: Box
-                layout:
-                  gap: 16
-                blocks:
-                  _var: content
+              _build.array.compact:
+                - _build.if:
+                    test:
+                      _build.boolean:
+                        _var: pageTitle
+                    then:
+                      id: page_title
+                      type: Title
+                      properties:
+                        content:
+                          _var: pageTitle
+                - id: content
+                  type: Box
+                  layout:
+                    gap: 16
+                  blocks:
+                    _var: content

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: introduction
     pageTitle: Introduction
@@ -34,7 +34,7 @@ _ref:
             Run the following command to initialize a new Lowdefy app in your current working directory.
 
       - _ref:
-          path: templates/cli_command.yaml.njk
+          path: templates/cli_command.yaml
           vars:
             id: quickstart
             command: 'pnpx lowdefy@5 init && pnpx lowdefy@5 dev'

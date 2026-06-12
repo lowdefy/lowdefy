@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: v4-to-v5
     pageTitle: Version 4 to Version 5

@@ -1,5 +1,5 @@
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: selectors
     pageTitle: Driving Selectors

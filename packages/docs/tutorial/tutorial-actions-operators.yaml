@@ -13,7 +13,7 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/general.yaml
   vars:
     pageId: tutorial-actions-operators
     pageTitle: 4. Interactive pages with actions and operators
