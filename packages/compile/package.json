@@ -37,7 +37,6 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@lowdefy/build": "5.3.0",
     "@lowdefy/operators-nunjucks": "5.3.0",
     "@swc/cli": "0.8.0",
     "@swc/core": "1.15.18",
