@@ -31,7 +31,7 @@ import validateStateReferences from '../buildPages/validateStateReferences.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import evaluateStaticOperators from '../evaluateStaticOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeId from '../../utils/makeId.js';

@@ -19,7 +19,7 @@ import path from 'path';
 import { compileDir } from '@lowdefy/compile';
 import { createScope } from '@lowdefy/compile/runtime';
 
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
+import evaluateStaticOperators from './evaluateStaticOperators.js';
 import {
   makeRefTracker,
   makeResolveModuleVarDefault,

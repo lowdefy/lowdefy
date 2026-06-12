@@ -23,7 +23,7 @@ import { createScope } from '@lowdefy/compile/runtime';
 import { resolve, WalkContext } from './buildRefs/walker.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
+import evaluateStaticOperators from './evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
