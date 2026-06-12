@@ -102,6 +102,23 @@ const meta = {
 };
 
 function _array({ params, location, methodName }) {
+  // compact is not an Array.prototype method — it filters null/undefined
+  // entries, the sanctioned idiom for conditional list membership
+  // (e.g. blocks: { _array.compact: [a, { _if: { test, then: b, else: null } }] }).
+  if (methodName === 'compact') {
+    const on = type.isObject(params) ? params.on : params;
+    if (type.isNone(on)) {
+      return [];
+    }
+    if (!type.isArray(on)) {
+      throw new Error(
+        `Operator Error: _array.compact takes an array or object with "on" array. Received: ${JSON.stringify(
+          params
+        )} at ${location}.`
+      );
+    }
+    return on.filter((item) => !type.isNone(item));
+  }
   return runInstance({
     location,
     meta,

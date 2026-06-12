@@ -1481,3 +1481,28 @@ test('_array invalid method', () => {
     `"_array.X is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
   );
 });
+
+describe('_array.compact', () => {
+  const methodName = 'compact';
+  test('_array.compact filters null and undefined entries from an array', () => {
+    expect(_array({ params: ['a', null, 'b', undefined, 0, false, ''], location, methodName })).toEqual([
+      'a',
+      'b',
+      0,
+      false,
+      '',
+    ]);
+  });
+  test('_array.compact accepts object form with on', () => {
+    expect(_array({ params: { on: [1, null, 2] }, location, methodName })).toEqual([1, 2]);
+  });
+  test('_array.compact returns empty array for null params', () => {
+    expect(_array({ params: null, location, methodName })).toEqual([]);
+    expect(_array({ params: { on: null }, location, methodName })).toEqual([]);
+  });
+  test('_array.compact throws when on is not an array', () => {
+    expect(() => _array({ params: { on: 'x' }, location, methodName })).toThrow(
+      '_array.compact takes an array'
+    );
+  });
+});
