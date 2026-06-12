@@ -18,6 +18,7 @@
 // preserves a walker contract — see the per-file comments.
 import buildOperator from './buildOperator.js';
 import createScope from './createScope.js';
+import { evaluateClosures } from './evaluateClosures.js';
 import getVar from './getVar.js';
 import { mark, markDeep } from './mark.js';
 import { moduleId, moduleVar, bindModuleEntry } from './moduleHelpers.js';
@@ -48,4 +49,4 @@ const runtime = {
   tag,
 };
 
-export { runtime, createScope, bindModuleEntry, synthKey };
+export { runtime, createScope, bindModuleEntry, evaluateClosures, synthKey };
