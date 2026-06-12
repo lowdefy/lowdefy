@@ -72,6 +72,10 @@ async function compileRefs({ context }) {
   const rootRefId = makeId.next();
   context.refMap[rootRefId] = { parent: null, lineNumber: undefined };
 
+  // The dev/JIT path re-runs page factories from this graph (full S4):
+  // importer compiles on demand, importSource compiles resolver content.
+  context.compileGraph = { importer: result.importer, importSource: result.importSource };
+
   const mod = await import(result.entryUrl);
   const scope = createScope({
     vars: {},

@@ -14,53 +14,75 @@
   limitations under the License.
 */
 
+// Full S4 (E3): JIT page builds re-run compiled factories from a fresh
+// per-build graph — these tests write real config files (the compiler reads
+// sources from disk) and assert the same behavioral contract the walker
+// path had: fresh vars resolution, file-change pickup, resolver re-runs,
+// error collection, keyMap population, icons, and CallAPI validation.
 import { jest } from '@jest/globals';
-
-const realNodeUtils = await import('@lowdefy/node-utils');
-const mockWriteFile = jest.fn();
-const mockWriteFileIfChanged = jest.fn();
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  ...realNodeUtils,
-  writeFile: mockWriteFile,
-  writeFileIfChanged: mockWriteFileIfChanged,
-}));
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const { default: testContext } = await import('../../test-utils/testContext.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 const { default: makeId } = await import('../../utils/makeId.js');
+const { default: createCounter } = await import('../../utils/createCounter.js');
 const { default: buildPageJit } = await import('./buildPageJit.js');
 
-const mockReadConfigFile = jest.fn();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkgRoot = path.resolve(__dirname, '../../..');
+const tmpRoot = path.join(pkgRoot, '.tmp-jit', `worker-${process.pid}`);
+const TEST_RESOLVER = path.join(pkgRoot, 'src/test-utils/buildRefs/testJitPageResolver.js');
+
 const mockWriteBuildArtifact = jest.fn();
+let configDir;
 
 function createTestContext() {
   const context = testContext({
-    readConfigFile: mockReadConfigFile,
+    configDirectory: configDir,
+    readConfigFile: (refPath) => {
+      try {
+        return fs.readFileSync(path.resolve(configDir, refPath), 'utf8');
+      } catch {
+        return null;
+      }
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   });
+  context.directories.build = path.join(configDir, '.lowdefy');
   context.errors = [];
   context.typesMap = snapshotTypesMap;
   context.unresolvedRefVars = {};
   return context;
 }
 
-function mockFiles(files) {
-  mockReadConfigFile.mockImplementation((filePath) => {
-    const file = files.find((f) => f.path === filePath);
-    return file ? file.content : null;
-  });
+function writeFiles(files) {
+  for (const file of files) {
+    const target = path.join(configDir, file.path);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, file.content);
+  }
 }
 
 beforeEach(() => {
+  fs.mkdirSync(tmpRoot, { recursive: true });
+  configDir = fs.mkdtempSync(path.join(tmpRoot, 'case-'));
   makeId.reset();
-  mockReadConfigFile.mockReset();
   mockWriteBuildArtifact.mockReset();
   mockWriteBuildArtifact.mockResolvedValue(undefined);
-  mockWriteFile.mockReset();
-  mockWriteFile.mockResolvedValue(undefined);
-  mockWriteFileIfChanged.mockReset();
-  mockWriteFileIfChanged.mockResolvedValue(true);
 });
+
+afterAll(() => {
+  fs.rmSync(path.join(pkgRoot, '.tmp-jit'), { recursive: true, force: true });
+});
+
+function resetForRebuild(context) {
+  makeId.reset();
+  context.errors = [];
+  context.typeCounters.blocks = createCounter();
+  context.typeCounters.actions = createCounter();
+}
 
 test('buildPageJit returns null for unknown pageId', async () => {
   const context = createTestContext();
@@ -75,7 +97,7 @@ test('buildPageJit returns null for unknown pageId', async () => {
 
 test('buildPageJit resolves simple page without vars', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
       path: 'home.yaml',
       content: `
@@ -111,14 +133,16 @@ type: PageHeaderMenu
 
 test('buildPageJit resolves page template with simple vars', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
-      path: 'template.yaml.njk',
+      path: 'template.yaml',
       content: `
-id: {{ pageId }}
+id:
+  _var: pageId
 type: PageHeaderMenu
 properties:
-  title: {{ title }}
+  title:
+    _var: title
 `,
     },
   ]);
@@ -130,7 +154,7 @@ properties:
         pageId: 'home',
         auth: { public: true },
         refId: 'ref-layout',
-        refPath: 'template.yaml.njk',
+        refPath: 'template.yaml',
         unresolvedVars: { pageId: 'home', title: 'Home Page' },
       },
     ],
@@ -149,20 +173,17 @@ properties:
 
 test('buildPageJit resolves vars containing inner _ref from disk', async () => {
   const context = createTestContext();
-
-  // The unresolved vars contain a _ref that should be resolved fresh from disk.
-  // makeRefDefinition normalizes _ref objects during skeleton build, giving them
-  // an id, path, etc. JIT ignores old IDs and re-resolves via getRefsFromFile.
-  mockFiles([
+  writeFiles([
     {
-      path: 'template.yaml.njk',
+      path: 'template.yaml',
       content: `
-id: {{ pageId }}
+id:
+  _var: pageId
 type: PageHeaderMenu
 areas:
   content:
     blocks:
-      {{ sidebar | dump | safe }}
+      _var: sidebar
 `,
     },
     {
@@ -183,9 +204,9 @@ areas:
         pageId: 'home',
         auth: { public: true },
         refId: 'ref-layout',
-        refPath: 'template.yaml.njk',
-        // Unresolved vars with an inner _ref — this is what recursiveBuild
-        // needs to resolve fresh from disk on each JIT build.
+        refPath: 'template.yaml',
+        // Unresolved vars with an inner _ref — resolved fresh from disk on
+        // each JIT build.
         unresolvedVars: {
           pageId: 'home',
           sidebar: { _ref: 'components/sidebar.yaml' },
@@ -202,7 +223,6 @@ areas:
 
   expect(result.id).toBe('page:home');
   expect(result.type).toBe('PageHeaderMenu');
-  // The sidebar var should have been resolved from components/sidebar.yaml
   const contentBlocks = result.slots?.content?.blocks ?? [];
   expect(contentBlocks).toHaveLength(1);
   expect(contentBlocks[0].blockId).toBe('sidebar_title');
@@ -211,18 +231,17 @@ areas:
 
 test('buildPageJit resolves vars with inner _ref and picks up file changes', async () => {
   const context = createTestContext();
-
-  // First build: sidebar has one block
-  mockFiles([
+  writeFiles([
     {
-      path: 'template.yaml.njk',
+      path: 'template.yaml',
       content: `
-id: {{ pageId }}
+id:
+  _var: pageId
 type: PageHeaderMenu
 areas:
   content:
     blocks:
-      {{ sidebar | dump | safe }}
+      _var: sidebar
 `,
     },
     {
@@ -240,7 +259,7 @@ areas:
     pageId: 'home',
     auth: { public: true },
     refId: 'ref-layout',
-    refPath: 'template.yaml.njk',
+    refPath: 'template.yaml',
     unresolvedVars: {
       pageId: 'home',
       sidebar: { _ref: 'components/sidebar.yaml' },
@@ -257,23 +276,8 @@ areas:
   expect(contentBlocks1[0].blockId).toBe('sidebar_v1');
 
   // Second build: sidebar file changed on disk
-  makeId.reset();
-  context.errors = [];
-  context.typeCounters.blocks = (await import('../../utils/createCounter.js')).default();
-  context.typeCounters.actions = (await import('../../utils/createCounter.js')).default();
-
-  mockFiles([
-    {
-      path: 'template.yaml.njk',
-      content: `
-id: {{ pageId }}
-type: PageHeaderMenu
-areas:
-  content:
-    blocks:
-      {{ sidebar | dump | safe }}
-`,
-    },
+  resetForRebuild(context);
+  writeFiles([
     {
       path: 'components/sidebar.yaml',
       content: `
@@ -296,16 +300,17 @@ areas:
 
 test('buildPageJit evaluates build operators in resolved vars', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
-      path: 'template.yaml.njk',
+      path: 'template.yaml',
       content: `
-id: {{ pageId }}
+id:
+  _var: pageId
 type: PageHeaderMenu
 areas:
   content:
     blocks:
-      {{ blocks | dump | safe }}
+      _var: blocks
 `,
     },
     {
@@ -331,7 +336,7 @@ type: TextInput
         pageId: 'home',
         auth: { public: true },
         refId: 'ref-layout',
-        refPath: 'template.yaml.njk',
+        refPath: 'template.yaml',
         // Vars with a _build operator that concatenates two ref-resolved arrays
         unresolvedVars: {
           pageId: 'home',
@@ -361,10 +366,10 @@ type: TextInput
 
 test('buildPageJit resolves resolver page without vars', async () => {
   const context = createTestContext();
-  mockFiles([]);
+  writeFiles([{ path: 'lowdefy.yaml', content: 'lowdefy: local\n' }]);
 
-  // No vars key on resolverOriginal — resolvedVars stays null,
-  // so resolverOriginal is passed through as-is to makeRefDefinition.
+  // No vars key on resolverOriginal — the resolver receives empty vars and
+  // falls back to defaults.
   const pageRegistry = new Map([
     [
       'resolved-page',
@@ -375,7 +380,8 @@ test('buildPageJit resolves resolver page without vars', async () => {
         refPath: null,
         unresolvedVars: null,
         resolverOriginal: {
-          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+          resolver: TEST_RESOLVER,
+          vars: { pageId: 'resolved-page' },
         },
       },
     ],
@@ -389,17 +395,14 @@ test('buildPageJit resolves resolver page without vars', async () => {
 
   expect(result.id).toBe('page:resolved-page');
   expect(result.type).toBe('PageHeaderMenu');
-  // Resolver receives empty vars (makeRefDefinition default), falls back to defaults
   expect(result.properties.title).toBe('Default');
 });
 
 test('buildPageJit resolves resolver page by re-running the resolver with fresh vars', async () => {
   const context = createTestContext();
-  mockFiles([
-    {
-      path: 'config.yaml',
-      content: `MyApp`,
-    },
+  writeFiles([
+    { path: 'lowdefy.yaml', content: 'lowdefy: local\n' },
+    { path: 'config.yaml', content: `MyApp` },
   ]);
 
   const pageRegistry = new Map([
@@ -412,7 +415,7 @@ test('buildPageJit resolves resolver page by re-running the resolver with fresh 
         refPath: null,
         unresolvedVars: null,
         resolverOriginal: {
-          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+          resolver: TEST_RESOLVER,
           vars: {
             pageId: 'home',
             app_name: { _ref: 'config.yaml' },
@@ -435,13 +438,9 @@ test('buildPageJit resolves resolver page by re-running the resolver with fresh 
 
 test('buildPageJit resolver page picks up config file changes on subsequent JIT builds', async () => {
   const context = createTestContext();
-
-  // First build: config.yaml has 'AppV1'
-  mockFiles([
-    {
-      path: 'config.yaml',
-      content: `AppV1`,
-    },
+  writeFiles([
+    { path: 'lowdefy.yaml', content: 'lowdefy: local\n' },
+    { path: 'config.yaml', content: `AppV1` },
   ]);
 
   const pageEntry = {
@@ -451,7 +450,7 @@ test('buildPageJit resolver page picks up config file changes on subsequent JIT 
     refPath: null,
     unresolvedVars: null,
     resolverOriginal: {
-      resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+      resolver: TEST_RESOLVER,
       vars: {
         pageId: 'home',
         app_name: { _ref: 'config.yaml' },
@@ -468,17 +467,8 @@ test('buildPageJit resolver page picks up config file changes on subsequent JIT 
   expect(result1.properties.title).toBe('AppV1');
 
   // Second build: config.yaml changed on disk
-  makeId.reset();
-  context.errors = [];
-  context.typeCounters.blocks = (await import('../../utils/createCounter.js')).default();
-  context.typeCounters.actions = (await import('../../utils/createCounter.js')).default();
-
-  mockFiles([
-    {
-      path: 'config.yaml',
-      content: `AppV2`,
-    },
-  ]);
+  resetForRebuild(context);
+  writeFiles([{ path: 'config.yaml', content: `AppV2` }]);
 
   const result2 = await buildPageJit({
     pageId: 'home',
@@ -490,9 +480,9 @@ test('buildPageJit resolver page picks up config file changes on subsequent JIT 
 
 test('buildPageJit throws when inner _ref in vars references missing file', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
-      path: 'template.yaml.njk',
+      path: 'template.yaml',
       content: `
 id: home
 type: PageHeaderMenu
@@ -507,7 +497,7 @@ type: PageHeaderMenu
         pageId: 'home',
         auth: { public: true },
         refId: 'ref-layout',
-        refPath: 'template.yaml.njk',
+        refPath: 'template.yaml',
         unresolvedVars: {
           sidebar: { _ref: 'components/missing.yaml' },
         },
@@ -535,7 +525,7 @@ type: PageHeaderMenu
 
 test('buildPageJit resolver page traces errors back to resolver when inner _ref fails', async () => {
   const context = createTestContext();
-  mockFiles([]);
+  writeFiles([{ path: 'lowdefy.yaml', content: 'lowdefy: local\n' }]);
 
   const pageRegistry = new Map([
     [
@@ -547,7 +537,7 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
         refPath: null,
         unresolvedVars: null,
         resolverOriginal: {
-          resolver: 'src/test-utils/buildRefs/testJitPageResolver.js',
+          resolver: TEST_RESOLVER,
           vars: {
             app_name: { _ref: 'config/missing.yaml' },
           },
@@ -576,7 +566,7 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
 
 test('buildPageJit populates the in-memory keyMap so error handlers resolve correct locations', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
       path: 'page-with-action.yaml',
       content: `id: action-page
@@ -619,7 +609,7 @@ blocks:
   expect(writeArgs).not.toContain('keyMap.json');
   expect(writeArgs).not.toContain('refMap.json');
 
-  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
+  // Find the entry for the UndefinedAction (line 8 in the YAML: the action map)
   const actionEntry = Object.values(context.keyMap).find(
     (entry) => entry.key && entry.key.includes('UndefinedAction')
   );
@@ -629,7 +619,7 @@ blocks:
 
 test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {
   const context = createTestContext();
-  mockFiles([
+  writeFiles([
     {
       path: 'page-template.yaml',
       content: `
@@ -657,7 +647,6 @@ areas:
   };
   const pageRegistry = new Map([['home', pageEntry]]);
 
-  // First build
   const result1 = await buildPageJit({
     pageId: 'home',
     pageRegistry,
@@ -671,13 +660,8 @@ areas:
   // Verify unresolvedVars not mutated after first build
   expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
 
-  // Reset for second build
-  makeId.reset();
-  context.errors = [];
-  context.typeCounters.blocks = (await import('../../utils/createCounter.js')).default();
-  context.typeCounters.actions = (await import('../../utils/createCounter.js')).default();
+  resetForRebuild(context);
 
-  // Second build
   const result2 = await buildPageJit({
     pageId: 'home',
     pageRegistry,
@@ -707,9 +691,9 @@ test('buildPageJit detects missing icons and writes dynamic icon data', async ()
     { icons: [], package: 'react-icons/io5' },
   ];
   context.dynamicIconData = {};
-  context.directories.server = '/test/server';
+  context.directories.server = path.join(configDir, 'server');
 
-  mockFiles([
+  writeFiles([
     {
       path: 'home.yaml',
       content: `
@@ -745,12 +729,8 @@ blocks:
   });
 
   expect(result.id).toBe('page:home');
-
-  // Icon imports should have been updated
-  const io5Entry = context.iconImports.find((e) => e.package === 'react-icons/io5');
+  const io5Entry = context.iconImports.find((i) => i.package === 'react-icons/io5');
   expect(io5Entry.icons).toContain('IoAddCircle');
-
-  // plugins/iconsDynamic.js should have been written
   const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
     (c) => c[0] === 'plugins/iconsDynamic.js'
   );
@@ -762,7 +742,7 @@ test('buildPageJit does not write dynamic icons when all icons already present',
   context.iconImports = [{ icons: ['AiFillHome'], package: 'react-icons/ai' }];
   context.dynamicIconData = {};
 
-  mockFiles([
+  writeFiles([
     {
       path: 'home.yaml',
       content: `
@@ -856,7 +836,7 @@ test('buildPageJit does not warn for a CallAPI action when the endpoint exists i
   const warnings = [];
   context.handleWarning = (warning) => warnings.push(warning);
 
-  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+  writeFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
   const result = await buildPageJit({
     pageId: 'home',
@@ -873,7 +853,7 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
   const warnings = [];
   context.handleWarning = (warning) => warnings.push(warning);
 
-  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+  writeFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
   await buildPageJit({
     pageId: 'home',

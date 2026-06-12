@@ -36,8 +36,8 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
-import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
+import compileRefs from '../compileRefs.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -67,6 +67,7 @@ import buildJsShallow from './buildJsShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
+import stripJitPageContent from './stripJitPageContent.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -75,17 +76,17 @@ async function shallowBuild(options) {
   let context;
   try {
     context = createContext(options);
+    // Full S4 (E3): the dev shallow build resolves through the compiler.
+    context.compiler = true;
 
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
 
     let components;
     try {
-      // Phase 2: Ref resolution (with shallow options)
-      components = await buildRefs({
-        context,
-        shallowOptions: true,
-      });
+      // Phase 2: Ref resolution — full compiled resolution; the walker's
+      // shallow content stripping happens post-resolution below.
+      components = await compileRefs({ context });
     } catch (err) {
       if (err.isLowdefyError) {
         context.handleError(err);
@@ -94,13 +95,17 @@ async function shallowBuild(options) {
       throw err;
     }
 
-    // Stop early if buildRefs collected errors (e.g., YAML parse errors).
-    // Failed _ref resolutions leave null entries in arrays — logging now
-    // surfaces the real error before downstream code crashes on nulls.
+    // Stop early if ref resolution collected errors (e.g., YAML parse
+    // errors). Failed _ref resolutions leave null entries in arrays —
+    // logging now surfaces the real error before downstream code crashes
+    // on nulls.
     logCollectedErrors(context);
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
+    // Strip ref-backed page content (JIT re-resolves from source) BEFORE
+    // skeleton collection so page files never classify as skeleton sources.
+    stripJitPageContent({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 

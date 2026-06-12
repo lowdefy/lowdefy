@@ -16,10 +16,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import YAML from 'yaml';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
-import operators from '@lowdefy/operators-js/operators/build';
+import { compileDir } from '@lowdefy/compile';
+import { createScope, bindModuleEntry, runtime } from '@lowdefy/compile/runtime';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
@@ -28,25 +30,24 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
-import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
+import collectExceptions from '../../utils/collectExceptions.js';
 import evaluateStaticOperators from '../evaluateStaticOperators.js';
-import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeId from '../../utils/makeId.js';
-import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
-import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
-import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import {
+  makeRefTracker,
+  makeResolveModuleVarDefault,
+  makeScopeFileAccess,
+  runtimePath,
+} from '../compileScopeTools.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
 import writePageJit from './writePageJit.js';
-
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 async function updateDynamicIcons({ page, context }) {
   if (!context.iconImports) return;
@@ -127,75 +128,136 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       );
     }
 
-    // Resolve unresolved vars (which may contain inner _ref objects) fresh from disk.
-    // For resolver pages, unresolved vars live in resolverOriginal.vars (single source).
-    // For file-backed pages, they're stored separately in unresolvedVars.
-    const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
-    let resolvedVars = null;
-    if (unresolvedVars) {
-      const varRefDef = makeRefDefinition({}, null, buildContext.refMap);
-      const varCtx = new WalkContext({
-        buildContext,
-        refId: varRefDef.id,
-        sourceRefId: null,
+    // Full S4 (E3): the page resolves by re-running its compiled factory.
+    // A fresh per-build graph (new outDir = new ESM module URLs) picks up
+    // every edited file in the page's static ref subtree; the build cache
+    // dir is cleaned after import.
+    const configDir = buildContext.directories.config;
+    fs.mkdirSync(buildContext.directories.build, { recursive: true });
+    const outDir = fs.realpathSync(
+      fs.mkdtempSync(path.join(buildContext.directories.build, '.compile-jit-'))
+    );
+
+    const moduleBinding = moduleEntry
+      ? bindModuleEntry({
+          id: moduleEntry.id,
+          consumerVars: moduleEntry.consumerVars ?? {},
+          varDefs: moduleEntry.varDefs ?? {},
+          connections: moduleEntry.connections ?? {},
+          deps: moduleEntry.moduleDependencies ?? {},
+          resolvedVarCache: moduleEntry.resolvedVarCache,
+        })
+      : null;
+
+    function makeJitScope(graph) {
+      return createScope({
         vars: {},
-        moduleDependencies,
-        moduleEntry: moduleEntry ?? null,
-        moduleRoot: moduleEntry?.moduleRoot ?? null,
-        packageRoot: moduleEntry?.packageRoot ?? null,
-        path: '',
-        currentFile: pageEntry.refPath ?? pageEntry.resolverOriginal?.resolver ?? '',
-        refChain: new Set(),
-        operators,
+        importer: graph.importer,
+        importSource: graph.importSource,
+        file: pageEntry.refPath ?? null,
+        refChain: [],
+        onError: (error) => {
+          collectExceptions(buildContext, error);
+        },
         env: process.env,
-        dynamicIdentifiers,
-        shouldStop: null,
+        refId: null,
+        walkPath: '',
+        refTracker: makeRefTracker(buildContext),
+        getModuleEntry: (id) => buildContext.modules?.[id],
+        resolveModuleVarDefault: makeResolveModuleVarDefault(buildContext),
+        ...makeScopeFileAccess(buildContext),
+        module: moduleBinding,
       });
-      resolvedVars = await resolve(cloneForResolve(unresolvedVars), varCtx);
     }
 
-    let refDef;
-    if (pageEntry.resolverOriginal) {
-      const resolverDefinition = resolvedVars
-        ? { ...pageEntry.resolverOriginal, vars: resolvedVars }
-        : pageEntry.resolverOriginal;
-      refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = null;
-    } else {
-      const refDefinition = resolvedVars
-        ? { path: pageEntry.refPath, vars: resolvedVars }
-        : pageEntry.refPath;
-      refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
-      buildContext.refMap[refDef.id].path = refDef.path;
+    let processed;
+    try {
+      let graph;
+      if (pageEntry.resolverOriginal) {
+        // Resolver pages re-run the resolver — content compiles through
+        // importSource, so a graph rooted anywhere works; use the entry.
+        graph = await compileDir({
+          configDir,
+          outDir,
+          entry: fs.existsSync(path.join(configDir, 'lowdefy.yaml'))
+            ? 'lowdefy.yaml'
+            : 'lowdefy.yml',
+          mode: 'markers',
+          runtimePath,
+          refResolver: buildContext.refResolver ?? null,
+          // The entry only anchors the graph — nothing resolves from it.
+          entryPreserveZones: () => true,
+        });
+      } else {
+        graph = await compileDir({
+          configDir,
+          outDir,
+          entry: pageEntry.refPath,
+          mode: 'markers',
+          runtimePath,
+          refResolver: buildContext.refResolver ?? null,
+          entryModuleRoot: moduleEntry?.moduleRoot ?? null,
+        });
+      }
+
+      // Unresolved vars (which may contain inner _ref objects and operators)
+      // resolve fresh — directive-bearing vars compile through importSource.
+      const unresolvedVars = pageEntry.unresolvedVars ?? pageEntry.resolverOriginal?.vars;
+      let resolvedVars = null;
+      if (unresolvedVars) {
+        const varsScope = makeJitScope(graph);
+        if (type.isObject(unresolvedVars) || type.isArray(unresolvedVars)) {
+          const varsMod = await graph.importSource(
+            YAML.stringify(unresolvedVars),
+            `jit:vars:${pageId}`
+          );
+          resolvedVars = await varsMod.default(varsScope);
+        } else {
+          resolvedVars = unresolvedVars;
+        }
+      }
+
+      const scope = makeJitScope(graph);
+      if (pageEntry.resolverOriginal) {
+        const def = pageEntry.resolverOriginal;
+        processed = await runtime.resolverRef({
+          scope,
+          resolver: def.resolver,
+          path: def.path,
+          def,
+          vars: resolvedVars ?? def.vars ?? {},
+          key: def.key ?? null,
+          transformer: null,
+          transformerPath: null,
+          ignoreBuildChecks: undefined,
+          sitePath: '',
+          refLine: undefined,
+          loc: null,
+        });
+      } else {
+        const mod = await graph.importer(pageEntry.refPath, moduleEntry?.moduleRoot ?? null);
+        processed = await runtime.ref({
+          scope,
+          factory: mod.default,
+          file: pageEntry.refPath,
+          vars: resolvedVars ?? {},
+          key: null,
+          transformer: null,
+          transformerPath: null,
+          ignoreBuildChecks: undefined,
+          sitePath: '',
+          refLine: undefined,
+          loc: { file: pageEntry.refPath, line: null },
+        });
+      }
+    } finally {
+      fs.rmSync(outDir, { recursive: true, force: true });
     }
 
-    const pageContent = await getRefContent({
-      context: buildContext,
-      refDef,
-      referencedFrom: null,
-    });
-    const pageCtx = new WalkContext({
-      buildContext,
-      refId: refDef.id,
-      sourceRefId: null,
-      vars: refDef.vars ?? {},
-      moduleDependencies,
-      moduleEntry: moduleEntry ?? null,
-      moduleRoot: moduleEntry?.moduleRoot ?? null,
-      packageRoot: moduleEntry?.packageRoot ?? null,
-      path: '',
-      currentFile: refDef.path ?? '',
-      refChain: new Set(),
-      operators,
-      env: process.env,
-      dynamicIdentifiers,
-      shouldStop: null,
-    });
-    let processed = await resolve(pageContent, pageCtx);
     processed = evaluateStaticOperators({
       context: buildContext,
       input: processed,
-      refDef,
+      refDef: { path: pageEntry.refPath ?? null },
     });
 
     // When resolving from a collection file (with vars), the result is an array of pages.
@@ -213,9 +275,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       processed.id = `${moduleEntry.id}/${processed.id}`;
     }
 
-    // Tag all objects with ~r for ref provenance (normally done inside _ref
-    // resolution by the walker; JIT resolves the page file directly).
-    tagRefDeep(processed, refDef.id);
+    // ~r provenance is applied by the runtime ref (markDeep at completion)
+    // with the refMap entry it allocated — no separate tagging pass.
 
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;

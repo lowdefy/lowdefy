@@ -59,6 +59,12 @@ async function compileDir({
   const refMap = {};
   const keyMap = {};
 
+  // Out modules are ESM regardless of any enclosing package.json — declare
+  // the type so loaders (Node outside the repo, jest's VM) never classify
+  // them as CommonJS.
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'package.json'), '{ "type": "module" }\n');
+
   async function compileOne(cfgPath, fileModuleRoot = null) {
     if (compiled.has(cfgPath)) return;
     if (compiling.includes(cfgPath)) {
@@ -181,11 +187,13 @@ async function compileDir({
     files: [...compiled.keys()],
     keyMap,
     refMap,
-    // Importer for dynamic (operator-built) ref paths — maps a config path to
-    // its compiled module, compiling on demand if the static graph missed it.
-    importer: async (cfgPath) => {
+    // Importer for dynamic (operator-built) ref paths and dev/JIT page
+    // re-resolution — maps a config path to its compiled module, compiling
+    // on demand (with the module root when the caller knows it) if the
+    // static graph missed it.
+    importer: async (cfgPath, fileModuleRoot = null) => {
       if (!compiled.has(cfgPath)) {
-        await compileOne(cfgPath);
+        await compileOne(cfgPath, fileModuleRoot);
       }
       return import(pathToFileURL(path.join(outDir, outFileFor(cfgPath))).href);
     },
