@@ -174,8 +174,11 @@ function makeResolveModuleExport(context, moduleDeps = null) {
       }
     }
     // Inline export: the compiled manifest exposes it as a factory keyed by
-    // component index (D7c). Fallback-registered modules delegate.
-    if (entry.compiledManifest) {
+    // component index (D7c) — claimed only when the factory verifiably
+    // exists (operator-built export lists collect none; compile order may
+    // not have reached the target yet). Everything else resolves through
+    // the runtime registry mode.
+    if (entry.compiledManifest && entry.compiledFactories?.[`component:${index}`]) {
       return {
         kind: 'inline',
         entryId,

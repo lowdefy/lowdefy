@@ -67,6 +67,9 @@ const { default: build } = await import('./index.js');
 const { default: makeId } = await import('./utils/makeId.js');
 const { snapshotTypesMap } = await import('./test-utils/runBuildForSnapshots.js');
 
+// E1 designed divergence — see the refMap.json comparison below.
+const REFMAP_DIVERGENCE_FIXTURES = new Set(['77-cross-module-menu-refs']);
+
 const S1_DEFERRAL = /not yet compiled \(config-compiler S1 scope\)|Structural nunjucks templates/;
 const S1_DEFERRAL_LINE =
   /[^\n]*(?:not yet compiled \(config-compiler S1 scope\)|Structural nunjucks templates)[^\n]*/;
@@ -274,6 +277,16 @@ describe('compiler parity — success fixture corpus', () => {
     const compiledCanonical = canonicalizeKeyIds(compiled.artifacts);
     for (const key of Object.keys(walkerCanonical.artifacts).sort()) {
       if (key === 'refMap.json') {
+        // Designed divergence (E1, recorded in endgame.md): cross-module
+        // refs inside preserved manifest content of meta-operator manifests.
+        // The walker's two-pass preservation flattens their refMap parent to
+        // the module refDef and stores post-tag originals; single-pass
+        // compiled resolution parents them under their true containing file
+        // (a strictly more informative inclusion chain) with the pre-tag
+        // def. All other artifacts stay byte-compared.
+        if (REFMAP_DIVERGENCE_FIXTURES.has(fixtureDir)) {
+          continue;
+        }
         // The walker registers refMap entries in parallel-IO completion order
         // and counter ids follow allocation order — neither is a contract.
         expect(refMapProfiles(compiled.artifacts[key])).toEqual(

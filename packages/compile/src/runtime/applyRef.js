@@ -763,7 +763,15 @@ async function moduleMenuRef({
         { filePath: scope.file }
       );
     }
-    const links = (entry.manifest?.menus ?? []).find((m) => m?.id === menu)?.links;
+    // Early-compiled manifests resolve their menus on demand with the
+    // consumer chain (this consumption's cycle key included) — circular
+    // cross-module menu refs throw from the re-entered resolution and
+    // collect here (walker recursion parity).
+    let menus = entry.manifest?.menus;
+    if (entry.resolveMenus) {
+      menus = await entry.resolveMenus([...scope.refChain, cycleKey], menu);
+    }
+    const links = (menus ?? []).find((m) => m?.id === menu)?.links;
     if (!links) {
       throw new ConfigError(`Module "${entryId}" does not export menu "${menu}".`);
     }

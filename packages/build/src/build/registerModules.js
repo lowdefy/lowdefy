@@ -84,6 +84,67 @@ function manifestPreserveZones(wp) {
   return !CONTENT_TOP_KEYS.has(top);
 }
 
+// Extraction-compile preserve zones (E1, meta-operator manifests) — the
+// walker's step-1 shouldStop list with menus preserved WHOLE: cross-module
+// menu refs inside menu content must resolve on demand with the consumer's
+// cycle chain (walker recursion), never at extraction time when the
+// registry is incomplete.
+function localManifestPreserveZones(wp) {
+  if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(wp)) return true;
+  if (/^components\.\d+\.component$/.test(wp)) return true;
+  if (/^pages(\..*)?$/.test(wp)) return true;
+  if (/^api(\..*)?$/.test(wp)) return true;
+  if (/^connections(\..*)?$/.test(wp)) return true;
+  if (/^menus(\..*)?$/.test(wp)) return true;
+  return false;
+}
+
+// The step-1-preserved content zones double as factories for full resolve.
+function localZoneFactoryKey(wp) {
+  if (wp === 'pages' || wp === 'api' || wp === 'connections' || wp === 'menus') {
+    return `zone:${wp}`;
+  }
+  return null;
+}
+
+// On-demand menu resolution for early-compiled manifests: resolves once
+// (the menu files load once — walker step-1 parity), threading the
+// consumer's refChain so cross-module menu refs inside the content carry
+// the module cycle keys. Re-entry while resolving IS a circular module
+// reference — thrown here with the consumer's chain, collected at the
+// consuming ref (walker recursion parity, chain rendering differs).
+function makeResolveMenus({ context, entryId, moduleYamlPath }) {
+  let resolved = false;
+  let resolving = false;
+  return async function resolveMenus(refChain, menuName) {
+    const moduleEntry = context.modules[entryId];
+    const factory = moduleEntry.localZones?.factories?.['zone:menus'];
+    if (resolved || !factory) {
+      return moduleEntry.manifest?.menus;
+    }
+    if (resolving) {
+      throw new ConfigError(
+        `Circular module reference detected. Module "${entryId}" menu "${menuName}" ` +
+          `references itself through:\n  -> ${(refChain ?? []).join('\n  -> ')}`
+      );
+    }
+    resolving = true;
+    try {
+      const scope = {
+        ...makeManifestScope(context, moduleEntry),
+        importer: moduleEntry.localZones.importer,
+        importSource: moduleEntry.localZones.importSource,
+        refChain: refChain ?? [moduleYamlPath],
+      };
+      moduleEntry.manifest.menus = await factory(scope);
+      resolved = true;
+      return moduleEntry.manifest.menus;
+    } finally {
+      resolving = false;
+    }
+  };
+}
+
 function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
@@ -197,11 +258,66 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     },
   });
 
-  // D7b: with the compiler on and no operators/refs in registration meta,
-  // skip the local walk — meta extracts from the raw parse, content resolves
-  // through the compiled manifest at full-resolve time.
-  const compiledManifest = context.compiler === true && !manifestMetaHasOperators(content);
-  const manifest = compiledManifest ? content : await resolve(content, ctx);
+  // D7b/E1: compiled builds never walk the manifest. Operator-free meta
+  // extracts straight from the raw parse; manifests with operators in meta
+  // zones run an EXTRACTION COMPILE mirroring the walker's local walk —
+  // step-1 preserve zones stay raw (content tops, links, component content,
+  // var defaults — collected as zone factories for full-resolve), meta
+  // resolves once, and extraction reads resolved values.
+  const compiledManifest = context.compiler === true;
+  let manifest;
+  let localZones = null;
+  if (!compiledManifest) {
+    manifest = await resolve(content, ctx);
+  } else if (!manifestMetaHasOperators(content)) {
+    manifest = content;
+  } else {
+    fs.mkdirSync(context.directories.build, { recursive: true });
+    const outDir = fs.realpathSync(
+      fs.mkdtempSync(path.join(context.directories.build, '.compile-local-'))
+    );
+    const extraction = await compileDir({
+      configDir: context.directories.config,
+      outDir,
+      entry: moduleYamlPath,
+      mode: 'markers',
+      runtimePath,
+      refResolver: context.refResolver ?? null,
+      entryPreserveZones: localManifestPreserveZones,
+      entryCollectFactoryExports: localZoneFactoryKey,
+      entryModuleRoot: moduleRoot,
+    });
+    const extractionMod = await import(extraction.entryUrl);
+    // Preliminary registration — makeManifestScope needs the entry.
+    context.modules[entry.id] = {
+      id: entry.id,
+      source: entry.source,
+      packageRoot,
+      moduleRoot,
+      isLocal,
+      consumerVars: entry.vars ?? {},
+      varDefs: {},
+      resolvedVarCache: {},
+      connections: entry.connections ?? {},
+      manifest: content,
+      dependencies: [],
+      moduleDependencies: entry.dependencies ?? {},
+      refDef,
+      compiledManifest,
+    };
+    const scope = {
+      ...makeManifestScope(context, context.modules[entry.id]),
+      importer: extraction.importer,
+      importSource: extraction.importSource,
+    };
+    manifest = await extractionMod.default(scope);
+    setDeferredFromMarks(manifest, moduleYamlPath);
+    localZones = {
+      factories: extractionMod.factories ?? {},
+      importer: extraction.importer,
+      importSource: extraction.importSource,
+    };
+  }
 
   // Parse dependencies array from manifest
   const dependencies = manifest.dependencies ?? [];
@@ -275,6 +391,13 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     moduleDependencies: entry.dependencies ?? {},
     refDef,
     compiledManifest,
+    // Extraction-compile zone factories (meta-operator manifests): full
+    // resolve applies these to the stored manifest instead of re-running a
+    // whole-manifest factory, so step-1 resolutions never repeat.
+    localZones,
+    resolveMenus: localZones
+      ? makeResolveMenus({ context, entryId: entry.id, moduleYamlPath })
+      : null,
   };
 }
 
@@ -348,7 +471,32 @@ async function resolveFullManifest({ entryId, context }) {
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
   let resolved;
-  if (moduleEntry.compiledManifest) {
+  if (moduleEntry.compiledManifest && moduleEntry.localZones) {
+    // Early-compiled manifest (meta operators): step 1 already resolved the
+    // meta — only the step-1-preserved content zones resolve now, applied
+    // as zone factories over the stored manifest. Running the whole-manifest
+    // factory here would repeat the step-1 resolutions (duplicate refMap
+    // entries — the walker resolves each ref exactly once).
+    resolved = manifest;
+    for (const [factoryKey, factory] of Object.entries(moduleEntry.localZones.factories)) {
+      if (factoryKey === 'zone:menus') {
+        // Resolves once into the manifest (idempotent if a cross-module
+        // consumer already triggered it).
+        await moduleEntry.resolveMenus();
+        continue;
+      }
+      const zone = factoryKey.slice('zone:'.length);
+      const scope = {
+        ...makeManifestScope(context, moduleEntry),
+        importer: moduleEntry.localZones.importer,
+        importSource: moduleEntry.localZones.importSource,
+      };
+      if (resolved[zone] !== undefined) {
+        resolved[zone] = await factory(scope);
+      }
+    }
+    setDeferredFromMarks(resolved, moduleYamlPath);
+  } else if (moduleEntry.compiledManifest) {
     const scope = {
       ...makeManifestScope(context, moduleEntry),
       importer: moduleEntry.compiledManifestImporter,

@@ -44,6 +44,12 @@ const runBuild = createRunBuild(build, fixturesDir);
 // fixtures assert the codemod error instead of walker parity.
 const NJK_FIXTURES = new Set(['M3-ref-njk-template', 'M4-ref-njk-ignored']);
 
+// E1 designed divergence (recorded in endgame.md): circular cross-module
+// menu refs in meta-operator manifests detect through the on-demand
+// resolution chain — same error class and message head, different chain
+// rendering than walker recursion.
+const MENU_CYCLE_FIXTURES = new Set(['M3-cross-module-menu-cycle']);
+
 function discoverFixtures() {
   return fs
     .readdirSync(fixturesDir, { withFileTypes: true })
@@ -72,6 +78,14 @@ describe.each(['dev', 'prod'])('compiler error parity — %s', (stage) => {
     if (NJK_FIXTURES.has(fixtureName)) {
       const all = [...compiled.errors, ...compiled.warnings].join('\n');
       expect(all).toContain('Structural nunjucks templates (.yaml.njk) are no longer supported');
+      return;
+    }
+
+    if (MENU_CYCLE_FIXTURES.has(fixtureName)) {
+      const all = compiled.errors.join('\n');
+      expect(all).toContain('Circular module reference detected.');
+      expect(walker.errors.join('\n')).toContain('Circular module reference detected.');
+      expect(compiled.thrownError === null).toBe(walker.thrownError === null);
       return;
     }
 
