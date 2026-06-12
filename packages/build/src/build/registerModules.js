@@ -22,17 +22,14 @@ import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { compileDir } from '@lowdefy/compile';
-import { createScope, bindModuleEntry } from '@lowdefy/compile/runtime';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
 import {
-  makeRefTracker,
-  makeWalkerResolve,
-  makeResolveModuleVarDefault,
+  makeManifestScope,
   makeResolveModuleExport,
+  manifestFactoryKey,
   runtimePath,
 } from './compileScopeTools.js';
-import collectExceptions from '../utils/collectExceptions.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
@@ -303,6 +300,46 @@ function setDeferredFromMarks(manifest, moduleYamlPath) {
   markDefaults(manifest?.vars);
 }
 
+// D7b/D7c compile phase: every compiled-mode manifest compiles and its
+// factory exports (inline components, structured var defaults) register on
+// the entry BEFORE any content factory runs — cross-module consumption is
+// order-independent, like the walker reading raw registry content.
+async function compileManifest({ entryId, context }) {
+  const moduleEntry = context.modules[entryId];
+  if (!moduleEntry.compiledManifest) {
+    return;
+  }
+  const { moduleRoot, moduleDependencies } = moduleEntry;
+  const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
+  fs.mkdirSync(context.directories.build, { recursive: true });
+  const outDir = fs.realpathSync(
+    fs.mkdtempSync(path.join(context.directories.build, '.compile-mod-'))
+  );
+  const result = await compileDir({
+    configDir: context.directories.config,
+    outDir,
+    entry: moduleYamlPath,
+    mode: 'markers',
+    runtimePath,
+    resolveModuleExport: makeResolveModuleExport(context, moduleDependencies),
+    entryPreserveZones: manifestPreserveZones,
+    entryCollectFactoryExports: manifestFactoryKey,
+    entryModuleRoot: moduleRoot,
+  });
+  const mod = await import(result.entryUrl);
+  moduleEntry.compiledManifestModule = mod;
+  moduleEntry.compiledManifestImporter = result.importer;
+  moduleEntry.compiledFactories = mod.factories ?? {};
+  moduleEntry.compiledVarDefaults = {};
+  for (const [factoryKey, factoryFn] of Object.entries(moduleEntry.compiledFactories)) {
+    if (factoryKey.startsWith('varDefault:')) {
+      const wp = factoryKey.slice('varDefault:'.length);
+      const varKey = wp.slice('vars.'.length, -'.default'.length).split('.properties.').join('.');
+      moduleEntry.compiledVarDefaults[varKey] = factoryFn;
+    }
+  }
+}
+
 async function resolveFullManifest({ entryId, context }) {
   const moduleEntry = context.modules[entryId];
   const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
@@ -311,54 +348,11 @@ async function resolveFullManifest({ entryId, context }) {
 
   let resolved;
   if (moduleEntry.compiledManifest) {
-    // D7b: the manifest compiles once — content zones (pages, api,
-    // connections, menus) as compiled expressions, everything else raw —
-    // and the content factory runs with the registration bound.
-    fs.mkdirSync(context.directories.build, { recursive: true });
-    const outDir = fs.realpathSync(
-      fs.mkdtempSync(path.join(context.directories.build, '.compile-mod-'))
-    );
-    const result = await compileDir({
-      configDir: context.directories.config,
-      outDir,
-      entry: moduleYamlPath,
-      mode: 'markers',
-      runtimePath,
-      resolveModuleExport: makeResolveModuleExport(context, moduleDependencies),
-      entryPreserveZones: manifestPreserveZones,
-      entryModuleRoot: moduleRoot,
-    });
-    const mod = await import(result.entryUrl);
-    const scope = createScope({
-      vars: {},
-      importer: result.importer,
-      file: moduleYamlPath,
-      refChain: [moduleYamlPath],
-      onError: (error) => {
-        collectExceptions(context, error);
-      },
-      env: process.env,
-      refId: refDef.id,
-      walkPath: '',
-      refTracker: makeRefTracker(context),
-      getModuleEntry: (id) => context.modules?.[id],
-      resolveModuleVarDefault: makeResolveModuleVarDefault(context),
-      walkerResolve: makeWalkerResolve(context, {
-        moduleEntry,
-        moduleRoot,
-        packageRoot,
-        moduleDependencies,
-      }),
-      module: bindModuleEntry({
-        id: entryId,
-        consumerVars: moduleEntry.consumerVars ?? {},
-        varDefs: moduleEntry.varDefs ?? {},
-        connections: moduleEntry.connections ?? {},
-        deps: moduleDependencies ?? {},
-        resolvedVarCache: moduleEntry.resolvedVarCache,
-      }),
-    });
-    resolved = await mod.default(scope);
+    const scope = {
+      ...makeManifestScope(context, moduleEntry),
+      importer: moduleEntry.compiledManifestImporter,
+    };
+    resolved = await moduleEntry.compiledManifestModule.default(scope);
     setDeferredFromMarks(resolved, moduleYamlPath);
   } else {
     const ctx = new WalkContext({
@@ -405,4 +399,4 @@ async function resolveFullManifest({ entryId, context }) {
   }
 }
 
-export { resolveLocalManifest, resolveFullManifest, validateRequiredVars };
+export { resolveLocalManifest, compileManifest, resolveFullManifest, validateRequiredVars };

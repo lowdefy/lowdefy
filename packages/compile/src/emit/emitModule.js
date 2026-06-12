@@ -68,14 +68,19 @@ function emitModule({
   // D7b: walker-path zones emitted as raw ~l-marked data instead of compiled
   // expressions — manifest preserve zones (vars defaults, components content).
   preserveZones = null,
+  // D7c: preserve-zone nodes that ALSO compile as exported factories
+  // (inline component exports, structured var defaults): (wp) => key | null.
+  collectFactoryExports = null,
   runtimeSpecifier = '@lowdefy/compile/runtime',
 }) {
   const refImports = new Map(); // cfgPath -> ident
   const transformerImports = new Map(); // absPath -> ident
   const staticRefs = [];
   const moduleImports = []; // { path, moduleRoot } — compiled with their root
+  const factoryExports = []; // [key, factoryBodyExpr] — manifest factories
   const keyMap = {};
   let keyCounter = 0;
+  let zonesSuspended = false;
 
   function importRef(cfgPath) {
     if (!refImports.has(cfgPath)) {
@@ -238,16 +243,72 @@ function emitModule({
         )
       : 'undefined';
 
-    const ident = importModuleTarget(target.cfgPath, target.moduleRoot);
-    return (
-      `await _r.moduleComponentRef({ scope, factory: ${ident}, file: ${json(target.cfgPath)}, ` +
+    const common =
       `entryId: ${json(target.entryId)}, component: ${json(target.exportName)}, ` +
       `def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
       `vars: ${varsExpr}, key: ${keyExpr}, ignoreBuildChecks: ${ignoreExpr}, ` +
       `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
+      `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)}`;
+    if (target.kind === 'inline') {
+      // The factory lives on the registry entry's compiled manifest.
+      return (
+        `await _r.moduleComponentRef({ scope, inline: true, ` +
+        `factoryKey: ${json(target.factoryKey)}, ${common} })`
+      );
+    }
+    const ident = importModuleTarget(target.cfgPath, target.moduleRoot);
+    return (
+      `await _r.moduleComponentRef({ scope, factory: ${ident}, file: ${json(target.cfgPath)}, ` +
       `manifestFile: ${json(target.manifestFile)}, innerRefLine: ${
         target.innerRefLine ?? 'undefined'
       }, ` +
+      `${common} })`
+    );
+  }
+
+  // `_ref: {module, menu}` consumption reads resolved links from the build
+  // registry at run time (works for compiled and walker-registered modules
+  // alike) — only the def shape compiles here.
+  function emitModuleMenuRef(refEntry, structPath, wp, refLine) {
+    const refNode = refEntry.value;
+    const parts = entryMap(refNode);
+    const defEntries = refNode.entries;
+    const entryOf = (name) => defEntries.find((e) => e.key === name) ?? null;
+
+    let transformerIdent = 'null';
+    let transformerPath = 'null';
+    const transformerNode = parts.get('transformer');
+    if (transformerNode) {
+      if (transformerNode.t !== 'lit' || typeof transformerNode.value !== 'string') {
+        throw new ConfigError(
+          `_ref transformer must be a string path in "${file}" (line ${transformerNode.pos.line}) — dynamic transformers are not yet compiled (config-compiler S1 scope).`,
+          { filePath: file, lineNumber: transformerNode.pos.line }
+        );
+      }
+      transformerIdent = importTransformer(path.resolve(configDir, transformerNode.value));
+      transformerPath = json(transformerNode.value);
+    }
+    const varsNode = parts.get('vars');
+    const varsExpr = varsNode ? emitRefDefVars(varsNode, structPath, wp) : '{}';
+    const keyEntry = entryOf('key');
+    const keyExpr = keyEntry
+      ? emitNode(keyEntry.value, childPath(structPath, '_ref.key'), wp, keyEntry.keyPos.line)
+      : 'null';
+    const ignoreEntry = entryOf('~ignoreBuildChecks');
+    const ignoreExpr = ignoreEntry
+      ? emitNode(
+          ignoreEntry.value,
+          childPath(structPath, '_ref.~ignoreBuildChecks'),
+          wp,
+          ignoreEntry.keyPos.line
+        )
+      : 'undefined';
+
+    return (
+      `await _r.moduleMenuRef({ scope, module: ${json(parts.get('module').value)}, ` +
+      `menu: ${json(parts.get('menu').value)}, def: ${emitRaw(refNode, refEntry.keyPos.line)}, ` +
+      `vars: ${varsExpr}, key: ${keyExpr}, ignoreBuildChecks: ${ignoreExpr}, ` +
+      `transformer: ${transformerIdent}, transformerPath: ${transformerPath}, ` +
       `sitePath: ${json(wp)}, refLine: ${refLine}, loc: ${loc(refNode)} })`
     );
   }
@@ -320,6 +381,28 @@ function emitModule({
         if (target) {
           return emitModuleComponentRef(refEntry, target, structPath, wp, refLine);
         }
+      }
+    }
+    if (
+      mode === 'markers' &&
+      parts.has('module') &&
+      parts.has('menu') &&
+      !parts.has('component') &&
+      !parts.has('resolver') &&
+      !parts.has('path') &&
+      !parts.has('page') &&
+      !parts.has('connection') &&
+      !parts.has('api')
+    ) {
+      const moduleNode = parts.get('module');
+      const menuNode = parts.get('menu');
+      if (
+        moduleNode.t === 'lit' &&
+        typeof moduleNode.value === 'string' &&
+        menuNode.t === 'lit' &&
+        typeof menuNode.value === 'string'
+      ) {
+        return emitModuleMenuRef(refEntry, structPath, wp, refLine);
       }
     }
     if (mode === 'markers' && (walkerOnly || !compilableStatic)) {
@@ -486,26 +569,45 @@ function emitModule({
 
   // Raw data emission for preserve zones: no classification, no operator or
   // ref compilation — nodes carry ~l only (walker-preserved subtrees are
-  // parse-marked and resolved later or consumed as raw defs).
-  function emitRaw(node, markLine) {
+  // parse-marked and resolved later or consumed as raw defs). Factory-export
+  // collection (D7c) rides the recursion: a raw zone node whose walker path
+  // matches ALSO compiles as an exported factory, with zones suspended and
+  // wp rooted at '' (consumer-site-relative instance paths).
+  function emitRaw(node, markLine, wp = null) {
+    if (!zonesSuspended && wp && collectFactoryExports) {
+      const factoryKey = collectFactoryExports(wp);
+      if (factoryKey) {
+        zonesSuspended = true;
+        const expr = emitNode(node, '', '', markLine);
+        zonesSuspended = false;
+        factoryExports.push([factoryKey, expr]);
+      }
+    }
     if (node.t === 'lit') {
       return json(node.value === undefined ? null : node.value);
     }
     if (node.t === 'seq') {
-      const items = node.items.map((item) => emitRaw(item, item.pos.line));
+      const items = node.items.map((item, i) =>
+        emitRaw(item, item.pos.line, wp === null ? null : childWp(wp, String(i)))
+      );
       const body = `[ ${items.join(', ')} ]`;
       return mode === 'markers' ? `_r.mark(${body}, ${markLine})` : body;
     }
     const props = node.entries.map(
-      (entry) => `${json(entry.key)}: ${emitRaw(entry.value, entry.keyPos.line)}`
+      (entry) =>
+        `${json(entry.key)}: ${emitRaw(
+          entry.value,
+          entry.keyPos.line,
+          wp === null ? null : childWp(wp, entry.key)
+        )}`
     );
     const body = `{ ${props.join(', ')} }`;
     return mode === 'markers' ? `_r.mark(${body}, ${markLine})` : body;
   }
 
   function emitNode(node, structPath, wp, markLine = node?.pos?.line) {
-    if (preserveZones && wp && preserveZones(wp)) {
-      return emitRaw(node, markLine);
+    if (!zonesSuspended && preserveZones && wp && preserveZones(wp)) {
+      return emitRaw(node, markLine, wp);
     }
     if (node.t === 'lit') {
       return json(node.value === undefined ? null : node.value);
@@ -607,6 +709,17 @@ function emitModule({
     `export const fileId = _R;`,
     `export const refs = ${json(staticRefs)};`,
     `export const keyMap = ${json(keyMap)};`,
+    ...(factoryExports.length > 0
+      ? [
+          `export const factories = {`,
+          ...factoryExports.map(
+            ([factoryKey, expr]) =>
+              `  ${json(factoryKey)}: async (scope) => { ` +
+              `scope = { ...scope, refId: scope.refId ?? _R }; return (${expr}); },`
+          ),
+          `};`,
+        ]
+      : []),
     `export default async (scope) => {`,
     // Instance ref ids passed by the caller (markers mode) survive; the
     // lexical file id is the fallback for errors/keys modes and direct calls.

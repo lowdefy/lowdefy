@@ -47,6 +47,7 @@ async function compileDir({
   // D7b: preserve zones apply to the ENTRY file only (manifest compiles);
   // entryModuleRoot compiles the entry with module-root path prefixing.
   entryPreserveZones = null,
+  entryCollectFactoryExports = null,
   entryModuleRoot = null,
 }) {
   const compiled = new Map(); // cfgPath -> { fileId, keyMap }
@@ -94,6 +95,7 @@ async function compileDir({
         moduleRoot: fileModuleRoot,
         resolveModuleExport,
         preserveZones: cfgPath === entry ? entryPreserveZones : null,
+        collectFactoryExports: cfgPath === entry ? entryCollectFactoryExports : null,
         runtimeSpecifier,
         // Missing static refs emit a collected-error call (walker parity)
         // instead of an import that would fail the whole compile.

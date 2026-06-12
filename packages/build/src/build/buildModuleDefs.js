@@ -25,6 +25,7 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
 import {
   resolveLocalManifest,
+  compileManifest,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
@@ -138,7 +139,12 @@ async function buildModuleDefs({ context }) {
     await resolveEntryConfig({ entry, context });
   }
 
-  // Step 3: Full resolve — cross-module refs, preserved content
+  // Step 3: Full resolve — cross-module refs, preserved content. Compiled
+  // manifests compile (and register their factory exports) before any
+  // content factory runs, so cross-module consumption is order-independent.
+  for (const entryId of Object.keys(context.modules)) {
+    await compileManifest({ entryId, context });
+  }
   for (const entryId of Object.keys(context.modules)) {
     await resolveFullManifest({ entryId, context });
   }

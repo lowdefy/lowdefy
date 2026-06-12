@@ -33,6 +33,7 @@ function compileSource({
   moduleRoot,
   resolveModuleExport,
   preserveZones,
+  collectFactoryExports,
   runtimeSpecifier,
 }) {
   if (file.endsWith('.njk')) {
@@ -58,6 +59,7 @@ function compileSource({
     moduleRoot,
     resolveModuleExport,
     preserveZones,
+    collectFactoryExports,
     runtimeSpecifier,
   });
   return { code, file, fileId, staticRefs, moduleImports, keyMap };

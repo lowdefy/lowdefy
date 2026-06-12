@@ -80,7 +80,7 @@ async function resolveEffectiveVar(key, binding, loc, scope) {
           { filePath: loc?.file, lineNumber: loc?.line }
         );
       }
-      result = await scope.resolveModuleVarDefault(varDef.default, binding.id);
+      result = await scope.resolveModuleVarDefault(varDef.default, binding.id, key);
     } else {
       result = varDef.default;
     }

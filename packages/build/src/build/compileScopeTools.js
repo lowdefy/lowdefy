@@ -19,7 +19,10 @@ import path from 'path';
 import { createRequire } from 'module';
 import operators from '@lowdefy/operators-js/operators/build';
 
+import { createScope, bindModuleEntry } from '@lowdefy/compile/runtime';
+
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import collectExceptions from '../utils/collectExceptions.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import makeId from '../utils/makeId.js';
@@ -84,11 +87,50 @@ function makeWalkerResolve(context, moduleCtx = {}) {
     );
 }
 
+// A compiled-factory scope rooted at a module manifest: the registration
+// binding, module-scoped delegation, and the shared refMap/id tracker.
+function makeManifestScope(context, moduleEntry) {
+  const moduleYamlPath = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
+  return createScope({
+    vars: {},
+    file: moduleYamlPath,
+    refChain: [moduleYamlPath],
+    onError: (error) => {
+      collectExceptions(context, error);
+    },
+    env: process.env,
+    refId: moduleEntry.refDef.id,
+    walkPath: '',
+    refTracker: makeRefTracker(context),
+    getModuleEntry: (id) => context.modules?.[id],
+    resolveModuleVarDefault: makeResolveModuleVarDefault(context),
+    walkerResolve: makeWalkerResolve(context, {
+      moduleEntry,
+      moduleRoot: moduleEntry.moduleRoot,
+      packageRoot: moduleEntry.packageRoot,
+      moduleDependencies: moduleEntry.moduleDependencies,
+    }),
+    module: bindModuleEntry({
+      id: moduleEntry.id,
+      consumerVars: moduleEntry.consumerVars ?? {},
+      varDefs: moduleEntry.varDefs ?? {},
+      connections: moduleEntry.connections ?? {},
+      deps: moduleEntry.moduleDependencies ?? {},
+      resolvedVarCache: moduleEntry.resolvedVarCache,
+    }),
+  });
+}
+
 // Walker resolveVarDefault parity: structured module-var defaults walk with a
-// fresh context rooted at the manifest, cached on the entry.
+// fresh context rooted at the manifest, cached on the entry. Compiled
+// manifests expose defaults as factories (D7c) — preferred when present.
 function makeResolveModuleVarDefault(context) {
-  return async (rawDefault, entryId) => {
+  return async (rawDefault, entryId, key) => {
     const moduleEntry = context.modules[entryId];
+    const compiledDefault = key ? moduleEntry.compiledVarDefaults?.[key] : undefined;
+    if (compiledDefault) {
+      return compiledDefault(makeManifestScope(context, moduleEntry));
+    }
     return resolve(
       rawDefault,
       new WalkContext({
@@ -120,30 +162,60 @@ function makeResolveModuleExport(context, moduleDeps = null) {
     const entryId = moduleDeps && rawName in moduleDeps ? moduleDeps[rawName] : rawName;
     const entry = context.modules?.[entryId];
     if (!entry?.moduleRoot) return null;
-    const item = (entry.manifest?.components ?? []).find((c) => c.id === component);
-    const defNode = item?.component;
-    if (!defNode || Object.keys(defNode).length !== 1) return null;
-    let refPath = null;
-    if (typeof defNode._ref === 'string') {
-      refPath = defNode._ref;
-    } else if (
-      defNode._ref &&
-      typeof defNode._ref === 'object' &&
-      typeof defNode._ref.path === 'string' &&
-      Object.keys(defNode._ref).every((k) => k === 'path')
-    ) {
-      refPath = defNode._ref.path;
+    const index = (entry.manifest?.components ?? []).findIndex((c) => c?.id === component);
+    const defNode = entry.manifest?.components?.[index]?.component;
+    if (!defNode) return null;
+    // Plain file-target export: a static import of the compiled target.
+    if (Object.keys(defNode).length === 1) {
+      let refPath = null;
+      if (typeof defNode._ref === 'string') {
+        refPath = defNode._ref;
+      } else if (
+        defNode._ref &&
+        typeof defNode._ref === 'object' &&
+        typeof defNode._ref.path === 'string' &&
+        Object.keys(defNode._ref).every((k) => k === 'path')
+      ) {
+        refPath = defNode._ref.path;
+      }
+      if (refPath !== null && !path.isAbsolute(refPath)) {
+        return {
+          kind: 'file',
+          cfgPath: path.resolve(entry.moduleRoot, refPath),
+          moduleRoot: entry.moduleRoot,
+          entryId,
+          exportName: component,
+          innerRefLine: defNode['~l'],
+          manifestFile:
+            defNode['~deferredFrom'] ?? path.join(entry.moduleRoot, 'module.lowdefy.yaml'),
+        };
+      }
     }
-    if (refPath === null || path.isAbsolute(refPath)) return null;
-    return {
-      cfgPath: path.resolve(entry.moduleRoot, refPath),
-      moduleRoot: entry.moduleRoot,
-      entryId,
-      exportName: component,
-      innerRefLine: defNode['~l'],
-      manifestFile: defNode['~deferredFrom'] ?? path.join(entry.moduleRoot, 'module.lowdefy.yaml'),
-    };
+    // Inline export: the compiled manifest exposes it as a factory keyed by
+    // component index (D7c). Fallback-registered modules delegate.
+    if (entry.compiledManifest) {
+      return {
+        kind: 'inline',
+        entryId,
+        exportName: component,
+        factoryKey: `component:${index}`,
+      };
+    }
+    return null;
   };
+}
+
+// D7c manifest factory exports: inline component contents and structured var
+// defaults compile as factories alongside their raw preserve-zone data.
+function manifestFactoryKey(wp) {
+  const componentMatch = wp.match(/^components\.(\d+)\.component$/);
+  if (componentMatch) {
+    return `component:${componentMatch[1]}`;
+  }
+  if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default$/.test(wp)) {
+    return `varDefault:${wp}`;
+  }
+  return null;
 }
 
 export {
@@ -151,5 +223,7 @@ export {
   makeWalkerResolve,
   makeResolveModuleVarDefault,
   makeResolveModuleExport,
+  makeManifestScope,
+  manifestFactoryKey,
   runtimePath,
 };

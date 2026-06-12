@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import { markDeep, setHidden } from './mark.js';
@@ -239,6 +239,10 @@ async function moduleComponentRef({
   transformerPath,
   manifestFile,
   innerRefLine,
+  // Inline manifest exports: the factory comes from the registry entry's
+  // compiled manifest (compiledFactories[factoryKey]) — no inner file ref.
+  inline = false,
+  factoryKey,
   sitePath,
   refLine,
   loc,
@@ -270,17 +274,23 @@ async function moduleComponentRef({
       );
     }
     const vars = consumerVars ?? {};
+    let fromFile = manifestFile;
+    if (inline) {
+      const index = Number(factoryKey?.split(':')[1]);
+      const defNode = entry.manifest?.components?.[index]?.component;
+      fromFile = defNode?.['~deferredFrom'] ?? `${entry.moduleRoot}/module.lowdefy.yaml`;
+    }
     const outerScope = {
       ...scope,
       refId: outerId,
       walkPath: globalPath ?? '',
       sourceRefId: scope.refId ?? null,
       vars,
-      file: manifestFile,
+      file: fromFile,
       // Walker refChain is a Set — re-adding an existing member is a no-op.
-      refChain: scope.refChain.includes(manifestFile)
+      refChain: scope.refChain.includes(fromFile)
         ? [...scope.refChain, cycleKey]
-        : [...scope.refChain, manifestFile, cycleKey],
+        : [...scope.refChain, fromFile, cycleKey],
       module: bindModuleEntry({
         id: entry.id ?? entryId,
         consumerVars: entry.consumerVars ?? {},
@@ -291,23 +301,151 @@ async function moduleComponentRef({
       }),
     };
 
-    let content = await applyRefSteps({
-      scope: outerScope,
-      factory,
-      file,
-      vars,
-      key: null,
-      transformer: null,
-      transformerPath: null,
-      ignoreBuildChecks: undefined,
-      sitePath,
-      refLine: innerRefLine,
-      loc,
-    });
+    let content;
+    if (inline) {
+      const inlineFactory = entry.compiledFactories?.[factoryKey];
+      if (!inlineFactory) {
+        throw new ConfigError(
+          `Module "${entryId}" compiled manifest is missing factory "${factoryKey}".`,
+          { filePath: loc?.file, lineNumber: loc?.line }
+        );
+      }
+      // Walker: inline content walks directly under the OUTER ref's context
+      // — no inner ref, content tagged with the outer id (markDeep below).
+      content = await inlineFactory(outerScope);
+    } else {
+      content = await applyRefSteps({
+        scope: outerScope,
+        factory,
+        file,
+        vars,
+        key: null,
+        transformer: null,
+        transformerPath: null,
+        ignoreBuildChecks: undefined,
+        sitePath,
+        refLine: innerRefLine,
+        loc,
+      });
+    }
 
     if (transformer) {
       try {
         content = transformer(content, vars);
+      } catch (error) {
+        throw new ConfigError(`Error calling transformer "${transformerPath}" from "${null}".`, {
+          cause: error,
+          filePath: loc?.file,
+          lineNumber: refLine ?? loc?.line,
+        });
+      }
+    }
+
+    if (key !== null && key !== undefined) {
+      content = get(content, key, { default: null });
+    }
+
+    if (outerId !== null) {
+      markDeep(content, outerId);
+    }
+
+    if (ignoreBuildChecks !== undefined) {
+      if (type.isObject(content)) {
+        content['~ignoreBuildChecks'] = ignoreBuildChecks;
+      } else if (type.isArray(content)) {
+        content.forEach((item) => {
+          if (type.isObject(item)) {
+            item['~ignoreBuildChecks'] = ignoreBuildChecks;
+          }
+        });
+      }
+    }
+
+    return content;
+  } catch (error) {
+    if (error instanceof ConfigError) {
+      return collectOrThrow(scope, error);
+    }
+    throw error;
+  }
+}
+
+// Walker scopeMenuItemIds parity: menu item ids namespace under the
+// exporting registration.
+function scopeMenuItemIds(links, entryId) {
+  if (!Array.isArray(links)) return;
+  for (const item of links) {
+    if (!item) continue;
+    if (item.id) {
+      item.id = `${entryId}/${item.id}`;
+    }
+    if (Array.isArray(item.links)) {
+      scopeMenuItemIds(item.links, entryId);
+    }
+  }
+}
+
+// `_ref: {module, menu}` consumption from the registry: the manifest's menu
+// links are resolved at registration (both compiled and walker paths), so
+// consumption is per-consumer copy → id scoping → transformer → key → tag →
+// ignore — walker getModuleRefContent + resolveRef steps 12-16. Module names
+// map through the consuming binding's dependency wiring at run time, with
+// getModuleRefContent's exact errors (no location — configKey undefined).
+async function moduleMenuRef({
+  scope,
+  module: rawName,
+  menu,
+  def,
+  vars,
+  key,
+  ignoreBuildChecks,
+  transformer,
+  transformerPath,
+  sitePath,
+  refLine,
+  loc,
+}) {
+  const globalPath = globalSitePath(scope, sitePath);
+  let outerId = scope.refId ?? null;
+  if (scope.refTracker) {
+    outerId = scope.refTracker.alloc(globalPath, {
+      parent: scope.refId ?? null,
+      lineNumber: refLine,
+    });
+    scope.refTracker.setPath(outerId, null);
+    scope.refTracker.setOriginal?.(outerId, def);
+  }
+  try {
+    const deps = scope.module?.deps ?? null;
+    const entryId = deps && rawName in deps ? deps[rawName] : rawName;
+    const entry = scope.getModuleEntry?.(entryId);
+    if (!entry) {
+      throw new ConfigError(
+        `_ref { module: "${rawName}", menu: "${menu}" } references module "${rawName}" but no module with that entry id was registered` +
+          (entryId !== rawName
+            ? ` ("${rawName}" was mapped to "${entryId}" via dependency wiring).`
+            : '.')
+      );
+    }
+    const cycleKey = `module:${entryId}/menu:${menu}`;
+    if (scope.refChain.includes(cycleKey)) {
+      throw new ConfigError(
+        `Circular module reference detected. Module "${entryId}" menu "${menu}" ` +
+          `references itself through:\n  -> ${[...scope.refChain, cycleKey].join('\n  -> ')}`,
+        { filePath: scope.file }
+      );
+    }
+    const links = (entry.manifest?.menus ?? []).find((m) => m?.id === menu)?.links;
+    if (!links) {
+      throw new ConfigError(`Module "${entryId}" does not export menu "${menu}".`);
+    }
+
+    let content = serializer.copy(links);
+    scopeMenuItemIds(content, entry.id);
+
+    if (transformer) {
+      try {
+        content = transformer(content, vars ?? {});
       } catch (error) {
         throw new ConfigError(`Error calling transformer "${transformerPath}" from "${null}".`, {
           cause: error,
@@ -370,4 +508,4 @@ async function missingRef({ scope, path: refPath, resolvedPath, sitePath, refLin
   return collectOrThrow(scope, error);
 }
 
-export { ref, dynRef, delegatedRef, missingRef, moduleComponentRef };
+export { ref, dynRef, delegatedRef, missingRef, moduleComponentRef, moduleMenuRef };
