@@ -1,0 +1,1702 @@
+{
+  "A1-invalid-connection-type": {
+    "dev": {
+      "errors": [
+        "<errors>/A1-invalid-connection-type/lowdefy.yaml:14\n[ConfigError] Connection type \"NonExistentConnection\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/A1-invalid-connection-type/lowdefy.yaml:14\n[ConfigError] Connection type \"NonExistentConnection\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "A2-missing-connection-id": {
+    "dev": {
+      "errors": [
+        "<errors>/A2-missing-connection-id/lowdefy.yaml:13\n[ConfigError] Connection id missing."
+      ],
+      "warnings": [
+        "<errors>/A2-missing-connection-id/lowdefy.yaml:13\n[ConfigWarning] Connection should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/A2-missing-connection-id/lowdefy.yaml:13\n[ConfigError] Connection id missing."
+      ],
+      "warnings": [
+        "<errors>/A2-missing-connection-id/lowdefy.yaml:13\n[ConfigWarning] Connection should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "A3-duplicate-connection-id": {
+    "dev": {
+      "errors": [
+        "<errors>/A3-duplicate-connection-id/lowdefy.yaml:17\n[ConfigError] Duplicate connectionId \"testApi\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/A3-duplicate-connection-id/lowdefy.yaml:17\n[ConfigError] Duplicate connectionId \"testApi\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "B1-auth-not-object": {
+    "dev": {
+      "errors": [
+        "<errors>/B1-auth-not-object/lowdefy.yaml:11\n[ConfigError] lowdefy.auth is not an object."
+      ],
+      "warnings": [
+        "<errors>/B1-auth-not-object/lowdefy.yaml:11\n[ConfigWarning] App \"auth\" should be an object.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/B1-auth-not-object/lowdefy.yaml:11\n[ConfigError] lowdefy.auth is not an object."
+      ],
+      "warnings": [
+        "<errors>/B1-auth-not-object/lowdefy.yaml:11\n[ConfigWarning] App \"auth\" should be an object.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "B2-auth-provider-missing-id": {
+    "dev": {
+      "errors": [
+        "<errors>/B2-auth-provider-missing-id/lowdefy.yaml:14\n[ConfigError] Auth Auth provider should have required property \"id\".."
+      ],
+      "warnings": [
+        "<errors>/B2-auth-provider-missing-id/lowdefy.yaml:14\n[ConfigWarning] Auth provider should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/B2-auth-provider-missing-id/lowdefy.yaml:14\n[ConfigError] Auth Auth provider should have required property \"id\".."
+      ],
+      "warnings": [
+        "<errors>/B2-auth-provider-missing-id/lowdefy.yaml:14\n[ConfigWarning] Auth provider should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "B3-public-protected-conflict": {
+    "dev": {
+      "errors": [
+        "<errors>/B3-public-protected-conflict/lowdefy.yaml:13\n[ConfigError] Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/B3-public-protected-conflict/lowdefy.yaml:13\n[ConfigError] Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "B4-missing-nextauth-secret": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "C1-duplicate-menu-id": {
+    "dev": {
+      "errors": [
+        "<errors>/C1-duplicate-menu-id/lowdefy.yaml:20\n[ConfigError] Duplicate menuId \"default\"."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/C1-duplicate-menu-id/lowdefy.yaml:20\n[ConfigError] Duplicate menuId \"default\"."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "C2-menu-missing-page": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/C2-menu-missing-page/lowdefy.yaml:15\n[ConfigWarning] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/C2-menu-missing-page/lowdefy.yaml:15\n[ConfigWarning] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "D1-duplicate-page-id": {
+    "dev": {
+      "errors": [
+        "<errors>/D1-duplicate-page-id/lowdefy.yaml:15\n[ConfigError] Duplicate pageId \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/D1-duplicate-page-id/lowdefy.yaml:15\n[ConfigError] Duplicate pageId \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "E1-invalid-action-type": {
+    "dev": {
+      "errors": [
+        "<errors>/E1-invalid-action-type/lowdefy.yaml:23\n[ConfigError] Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/E1-invalid-action-type/lowdefy.yaml:23\n[ConfigError] Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "E2-invalid-block-type": {
+    "dev": {
+      "errors": [
+        "<errors>/E2-invalid-block-type/lowdefy.yaml:17\n[ConfigError] Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/E2-invalid-block-type/lowdefy.yaml:17\n[ConfigError] Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "E3-missing-block-id": {
+    "dev": {
+      "errors": [
+        "<errors>/E3-missing-block-id/lowdefy.yaml:16\n[ConfigError] Block id missing at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E3-missing-block-id/lowdefy.yaml:16\n[ConfigWarning] Block should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/E3-missing-block-id/lowdefy.yaml:16\n[ConfigError] Block id missing at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E3-missing-block-id/lowdefy.yaml:16\n[ConfigWarning] Block should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "E4-block-id-not-string": {
+    "dev": {
+      "errors": [
+        "<errors>/E4-block-id-not-string/lowdefy.yaml:16\n[ConfigError] Block id is not a string at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E4-block-id-not-string/lowdefy.yaml:16\n[ConfigWarning] Block \"id\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/E4-block-id-not-string/lowdefy.yaml:16\n[ConfigError] Block id is not a string at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E4-block-id-not-string/lowdefy.yaml:16\n[ConfigWarning] Block \"id\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "E5-block-type-not-string": {
+    "dev": {
+      "errors": [
+        "<errors>/E5-block-type-not-string/lowdefy.yaml:16\n[ConfigError] Block type is not a string at \"badType\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E5-block-type-not-string/lowdefy.yaml:17\n[ConfigWarning] Block \"type\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/E5-block-type-not-string/lowdefy.yaml:16\n[ConfigError] Block type is not a string at \"badType\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/E5-block-type-not-string/lowdefy.yaml:17\n[ConfigWarning] Block \"type\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F1-invalid-request-reference": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning] Request \"nonExistentRequest\" not defined on page \"home\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning] Request \"nonExistentRequest\" not defined on page \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F2-request-missing-id": {
+    "dev": {
+      "errors": [
+        "<errors>/F2-request-missing-id/lowdefy.yaml:22\n[ConfigError] Request id missing at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/F2-request-missing-id/lowdefy.yaml:22\n[ConfigWarning] Request should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F2-request-missing-id/lowdefy.yaml:22\n[ConfigError] Request id missing at page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/F2-request-missing-id/lowdefy.yaml:22\n[ConfigWarning] Request should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F3-duplicate-request-id": {
+    "dev": {
+      "errors": [
+        "<errors>/F3-duplicate-request-id/lowdefy.yaml:27\n[ConfigError] Duplicate requestId \"myRequest\" on page \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F3-duplicate-request-id/lowdefy.yaml:27\n[ConfigError] Duplicate requestId \"myRequest\" on page \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F4-request-id-with-period": {
+    "dev": {
+      "errors": [
+        "<errors>/F4-request-id-with-period/lowdefy.yaml:23\n[ConfigError] Request id \"my.request\" at page \"home\" contains invalid characters. IDs must only contain A-Z, a-z, 0-9, \"-\", \"_\", \"/\", and \":\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F4-request-id-with-period/lowdefy.yaml:23\n[ConfigError] Request id \"my.request\" at page \"home\" contains invalid characters. IDs must only contain A-Z, a-z, 0-9, \"-\", \"_\", \"/\", and \":\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F5-invalid-request-type": {
+    "dev": {
+      "errors": [
+        "<errors>/F5-invalid-request-type/lowdefy.yaml:23\n[ConfigError] Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F5-invalid-request-type/lowdefy.yaml:23\n[ConfigError] Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F6-nonexistent-connection": {
+    "dev": {
+      "errors": [
+        "<errors>/F6-nonexistent-connection/lowdefy.yaml:17\n[ConfigError] Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/F6-nonexistent-connection/lowdefy.yaml:17\n[ConfigError] Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "F7-nonexistent-connection-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "G1-invalid-page-link": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "G2-duplicate-action-id": {
+    "dev": {
+      "errors": [
+        "<errors>/G2-duplicate-action-id/lowdefy.yaml:26\n[ConfigError] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/G2-duplicate-action-id/lowdefy.yaml:26\n[ConfigError] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "G3-missing-action-id": {
+    "dev": {
+      "errors": [
+        "<errors>/G3-missing-action-id/lowdefy.yaml:22\n[ConfigError] Action id missing on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G3-missing-action-id/lowdefy.yaml:22\n[ConfigWarning] Action should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/G3-missing-action-id/lowdefy.yaml:22\n[ConfigError] Action id missing on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G3-missing-action-id/lowdefy.yaml:22\n[ConfigWarning] Action should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "G4-action-type-not-string": {
+    "dev": {
+      "errors": [
+        "<errors>/G4-action-type-not-string/lowdefy.yaml:23\n[ConfigError] Action type is not a string on action \"action1\" on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G4-action-type-not-string/lowdefy.yaml:24\n[ConfigWarning] Action \"type\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/G4-action-type-not-string/lowdefy.yaml:23\n[ConfigError] Action type is not a string on action \"action1\" on event \"onClick\" on block \"button\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G4-action-type-not-string/lowdefy.yaml:24\n[ConfigWarning] Action \"type\" should be a string.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "G5-events-not-array": {
+    "dev": {
+      "errors": [
+        "<errors>/G5-events-not-array/lowdefy.yaml:21\n[ConfigError] Actions must be an array at \"button\" in event \"onClick\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G5-events-not-array/lowdefy.yaml:21\n[ConfigWarning] \"onClick\" must be array",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/G5-events-not-array/lowdefy.yaml:21\n[ConfigError] Actions must be an array at \"button\" in event \"onClick\" on page \"home\"."
+      ],
+      "warnings": [
+        "<errors>/G5-events-not-array/lowdefy.yaml:21\n[ConfigWarning] \"onClick\" must be array",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H1-operator-typo-state": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/H1-operator-typo-state/lowdefy.yaml:21\n[ConfigWarning] Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/H1-operator-typo-state/lowdefy.yaml:21\n[ConfigWarning] Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H2-operator-typo-if": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/H2-operator-typo-if/lowdefy.yaml:21\n[ConfigWarning] Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/H2-operator-typo-if/lowdefy.yaml:21\n[ConfigWarning] Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H3-operator-typo-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H4-action-type-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H5-block-type-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H6-connection-type-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "H7-request-type-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "I1-missing-ref-file": {
+    "dev": {
+      "errors": [
+        "<errors>/I1-missing-ref-file/lowdefy.yaml:15\n[ConfigError] Referenced file does not exist: \"nonexistent.yaml\". Resolved to: <errors>/I1-missing-ref-file/nonexistent.yaml"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/I1-missing-ref-file/lowdefy.yaml:15\n[ConfigError] Referenced file does not exist: \"nonexistent.yaml\". Resolved to: <errors>/I1-missing-ref-file/nonexistent.yaml"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "I2-circular-ref": {
+    "dev": {
+      "errors": [
+        "<errors>/I2-circular-ref/b.yaml:4\n[ConfigError] Circular reference detected. File \"a.yaml\" references itself through:\n  -> lowdefy.yaml\n  -> a.yaml\n  -> b.yaml\n  -> a.yaml"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/I2-circular-ref/b.yaml:4\n[ConfigError] Circular reference detected. File \"a.yaml\" references itself through:\n  -> lowdefy.yaml\n  -> a.yaml\n  -> b.yaml\n  -> a.yaml"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "J1-undefined-state": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J1-undefined-state/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J1-undefined-state/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J2-undefined-state-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J3-undefined-state-in-request": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J3-undefined-state-in-request/lowdefy.yaml:33\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J3-undefined-state-in-request/lowdefy.yaml:33\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J4-undefined-state-in-ref-default": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J4-undefined-state-in-ref-default/request-template.yaml:11\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J4-undefined-state-in-ref-default/request-template.yaml:11\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J5-state-dot-notation-child": {
+    "dev": {
+      "errors": [
+        "<errors>/J5-state-dot-notation-child/lowdefy.yaml:14\n[ConfigError] Block type \"PageHeaderMenu\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/J5-state-dot-notation-child/lowdefy.yaml:14\n[ConfigError] Block type \"PageHeaderMenu\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J6-state-in-request-properties": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J6-state-in-request-properties/lowdefy.yaml:23\n[ConfigWarning] _state is not available in request properties. Found _state in request \"insert_contact\" on page \"page_1\". Request properties are evaluated on the server where state is not available. To use a state value in a request, add it to the request \"payload\" using _state, then reference it in request properties using _payload.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/J6-state-in-request-properties/lowdefy.yaml:23\n[ConfigWarning] _state is not available in request properties. Found _state in request \"insert_contact\" on page \"page_1\". Request properties are evaluated on the server where state is not available. To use a state value in a request, add it to the request \"payload\" using _state, then reference it in request properties using _payload."
+      ],
+      "warnings": [
+        "<errors>/J6-state-in-request-properties/lowdefy.yaml:23\n[ConfigWarning] Operator type \"_state\" was used but is not defined. Did you mean \"_step\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J7-state-in-request-properties-no-duplicate": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J7-state-in-request-properties-no-duplicate/lowdefy.yaml:33\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/J7-state-in-request-properties-no-duplicate/lowdefy.yaml:37\n[ConfigWarning] _state is not available in request properties. Found _state in request \"insert_contact\" on page \"contacts-new\". Request properties are evaluated on the server where state is not available. To use a state value in a request, add it to the request \"payload\" using _state, then reference it in request properties using _payload.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/J7-state-in-request-properties-no-duplicate/lowdefy.yaml:37\n[ConfigWarning] _state is not available in request properties. Found _state in request \"insert_contact\" on page \"contacts-new\". Request properties are evaluated on the server where state is not available. To use a state value in a request, add it to the request \"payload\" using _state, then reference it in request properties using _payload."
+      ],
+      "warnings": [
+        "<errors>/J7-state-in-request-properties-no-duplicate/lowdefy.yaml:33\n[ConfigWarning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/J7-state-in-request-properties-no-duplicate/lowdefy.yaml:37\n[ConfigWarning] Operator type \"_state\" was used but is not defined. Did you mean \"_step\"?",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "J8-undefined-state-in-ref-page": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J8-undefined-state-in-ref-page/pages/home.yaml:7\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/J8-undefined-state-in-ref-page/pages/home.yaml:7\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "K1-undefined-payload": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/K1-undefined-payload/lowdefy.yaml:28\n[ConfigWarning] _state references \"selectedUser\" on page \"home\", but no input block with id \"selectedUser\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/K1-undefined-payload/lowdefy.yaml:33\n[ConfigWarning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/K1-undefined-payload/lowdefy.yaml:33\n[ConfigWarning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+      ],
+      "warnings": [
+        "<errors>/K1-undefined-payload/lowdefy.yaml:28\n[ConfigWarning] _state references \"selectedUser\" on page \"home\", but no input block with id \"selectedUser\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "K2-undefined-payload-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "L1-undefined-step": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/L1-undefined-step/lowdefy.yaml:32\n[ConfigWarning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/L1-undefined-step/lowdefy.yaml:32\n[ConfigWarning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine. Step IDs are defined by the \"id\" property of each step. Check for typos or add a step with this id."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "L2-undefined-step-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "M1-cross-module-circular-component": {
+    "dev": {
+      "errors": [
+        "<errors>/M1-cross-module-circular-component/modules/contacts/components/contact-selector.yaml\n[ConfigError] Circular module reference detected. Module \"companies\" component \"company-selector\" references itself through:\n  -> <errors>/M1-cross-module-circular-component/modules/contacts/module.lowdefy.yaml\n  -> <errors>/M1-cross-module-circular-component/modules/companies/module.lowdefy.yaml\n  -> module:companies/component:company-selector\n  -> <errors>/M1-cross-module-circular-component/modules/companies/components/company-selector.yaml\n  -> module:contacts/component:contact-selector\n  -> <errors>/M1-cross-module-circular-component/modules/contacts/components/contact-selector.yaml\n  -> module:companies/component:company-selector"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/M1-cross-module-circular-component/modules/contacts/components/contact-selector.yaml\n[ConfigError] Circular module reference detected. Module \"companies\" component \"company-selector\" references itself through:\n  -> <errors>/M1-cross-module-circular-component/modules/contacts/module.lowdefy.yaml\n  -> <errors>/M1-cross-module-circular-component/modules/companies/module.lowdefy.yaml\n  -> module:companies/component:company-selector\n  -> <errors>/M1-cross-module-circular-component/modules/companies/components/company-selector.yaml\n  -> module:contacts/component:contact-selector\n  -> <errors>/M1-cross-module-circular-component/modules/contacts/components/contact-selector.yaml\n  -> module:companies/component:company-selector"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M1-ref-var-wrong-location": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/M1-ref-var-wrong-location/lowdefy.yaml:30\n[ConfigWarning] _state references \"undefinedBlockId\" on page \"templatePage\", but no input block with id \"undefinedBlockId\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/M1-ref-var-wrong-location/lowdefy.yaml:30\n[ConfigWarning] _state references \"undefinedBlockId\" on page \"templatePage\", but no input block with id \"undefinedBlockId\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "M2-cross-module-indirect-cycle": {
+    "dev": {
+      "errors": [
+        "<errors>/M2-cross-module-indirect-cycle/modules/mod-a/module.lowdefy.yaml\n[ConfigError] Circular module reference detected. Module \"mod-b\" component \"comp-b\" references itself through:\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-a/module.lowdefy.yaml\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-b/module.lowdefy.yaml\n  -> module:mod-b/component:comp-b\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-c/module.lowdefy.yaml\n  -> module:mod-c/component:comp-c\n  -> module:mod-a/component:comp-a\n  -> module:mod-b/component:comp-b"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/M2-cross-module-indirect-cycle/modules/mod-a/module.lowdefy.yaml\n[ConfigError] Circular module reference detected. Module \"mod-b\" component \"comp-b\" references itself through:\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-a/module.lowdefy.yaml\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-b/module.lowdefy.yaml\n  -> module:mod-b/component:comp-b\n  -> <errors>/M2-cross-module-indirect-cycle/modules/mod-c/module.lowdefy.yaml\n  -> module:mod-c/component:comp-c\n  -> module:mod-a/component:comp-a\n  -> module:mod-b/component:comp-b"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M2-ref-var-ignored": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "M3-cross-module-menu-cycle": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Circular module reference detected. Module \"contacts\" menu \"default\" references itself through:\n  -> <errors>/M3-cross-module-menu-cycle/modules/contacts/module.lowdefy.yaml\n  -> <errors>/M3-cross-module-menu-cycle/modules/contacts/menus.yaml\n  -> module:companies/menu:default\n  -> <errors>/M3-cross-module-menu-cycle/modules/companies/menus.yaml\n  -> module:contacts/menu:default"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Circular module reference detected. Module \"contacts\" menu \"default\" references itself through:\n  -> <errors>/M3-cross-module-menu-cycle/modules/contacts/module.lowdefy.yaml\n  -> <errors>/M3-cross-module-menu-cycle/modules/contacts/menus.yaml\n  -> module:companies/menu:default\n  -> <errors>/M3-cross-module-menu-cycle/modules/companies/menus.yaml\n  -> module:contacts/menu:default"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M3-ref-njk-template": {
+    "dev": {
+      "errors": [
+        "<errors>/M3-ref-njk-template/page-template.yaml.njk\n[ConfigError] Structural nunjucks templates (.yaml.njk) are no longer supported — \"page-template.yaml.njk\". Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become _build.nunjucks or _build.string.concat, {% if %} becomes _build.if with _build.array.compact for conditional list membership. The runtime _nunjucks operator is unchanged."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/M3-ref-njk-template/page-template.yaml.njk\n[ConfigError] Structural nunjucks templates (.yaml.njk) are no longer supported — \"page-template.yaml.njk\". Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become _build.nunjucks or _build.string.concat, {% if %} becomes _build.if with _build.array.compact for conditional list membership. The runtime _nunjucks operator is unchanged."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M4-cross-module-missing-dep-mapping": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" declares dependency \"companies\" but no mapping provided and no module entry \"companies\" exists.\n  companies: Company management\n  Add dependencies.companies to the \"contacts\" entry in lowdefy.yaml, or add a module entry with id \"companies\"."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" declares dependency \"companies\" but no mapping provided and no module entry \"companies\" exists.\n  companies: Company management\n  Add dependencies.companies to the \"contacts\" entry in lowdefy.yaml, or add a module entry with id \"companies\"."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M4-ref-njk-ignored": {
+    "dev": {
+      "errors": [
+        "<errors>/M4-ref-njk-ignored/page-template.yaml.njk\n[ConfigError] Structural nunjucks templates (.yaml.njk) are no longer supported — \"page-template.yaml.njk\". Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become _build.nunjucks or _build.string.concat, {% if %} becomes _build.if with _build.array.compact for conditional list membership. The runtime _nunjucks operator is unchanged."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/M4-ref-njk-ignored/page-template.yaml.njk\n[ConfigError] Structural nunjucks templates (.yaml.njk) are no longer supported — \"page-template.yaml.njk\". Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become _build.nunjucks or _build.string.concat, {% if %} becomes _build.if with _build.array.compact for conditional list membership. The runtime _nunjucks operator is unchanged."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M5-cross-module-unknown-dep-key": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" does not declare dependency \"nonexistent\". Check dependencies in lowdefy.yaml.\n  Declared dependencies: (none)"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" does not declare dependency \"nonexistent\". Check dependencies in lowdefy.yaml.\n  Declared dependencies: (none)"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M6-cross-module-nonexistent-target": {
+    "dev": {
+      "errors": [
+        "[ConfigError] dependencies.companies references \"does-not-exist\" but no module entry \"does-not-exist\" exists."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] dependencies.companies references \"does-not-exist\" but no module entry \"does-not-exist\" exists."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "M7-cross-module-self-reference": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" dependency \"companies\" maps to itself. A module cannot depend on its own entry."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"contacts\" dependency \"companies\" maps to itself. A module cannot depend on its own entry."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "N1-dedup-warnings": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/N1-dedup-warnings/lowdefy.yaml:28\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/N1-dedup-warnings/lowdefy.yaml:28\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
+      ],
+      "threw": true
+    }
+  },
+  "N2-dedup-multi-file": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/N2-dedup-multi-file/pages/page1.yaml:8\n[ConfigWarning] _state references \"sharedKey\" on page \"page1\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/N2-dedup-multi-file/pages/page2.yaml:9\n[ConfigWarning] _state references \"sharedKey\" on page \"page2\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/N2-dedup-multi-file/pages/page3.yaml:9\n[ConfigWarning] _state references \"uniqueKey\" on page \"page3\", but no input block with id \"uniqueKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/N2-dedup-multi-file/pages/page1.yaml:8\n[ConfigWarning] _state references \"sharedKey\" on page \"page1\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/N2-dedup-multi-file/pages/page2.yaml:9\n[ConfigWarning] _state references \"sharedKey\" on page \"page2\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/N2-dedup-multi-file/pages/page3.yaml:9\n[ConfigWarning] _state references \"uniqueKey\" on page \"page3\", but no input block with id \"uniqueKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
+      ],
+      "threw": true
+    }
+  },
+  "O1-module-missing-required-var": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"widget\" (file:modules/widget) requires var \"color\"\n  - Widget color theme\n  - Define it in lowdefy.yaml under modules[id=widget].vars.color"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"widget\" (file:modules/widget) requires var \"color\"\n  - Widget color theme\n  - Define it in lowdefy.yaml under modules[id=widget].vars.color"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O2-module-var-wrong-type": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"widget\" (file:modules/widget) var \"count\" must be type \"number\" but got \"string\".\n  - Number of items to display"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"widget\" (file:modules/widget) var \"count\" must be type \"number\" but got \"string\".\n  - Number of items to display"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O3-module-undeclared-secret": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"leaky\" references secret \"UNDECLARED_SECRET\" but does not declare it in module.lowdefy.yaml secrets. Add it to the module's secrets list or remove the reference."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"leaky\" references secret \"UNDECLARED_SECRET\" but does not declare it in module.lowdefy.yaml secrets. Add it to the module's secrets list or remove the reference."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O4-module-invalid-connection-remap": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"widget\" connection remapping references \"nonexistent-conn\", but the module has no connection with that id."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"widget\" connection remapping references \"nonexistent-conn\", but the module has no connection with that id."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O5-module-duplicate-entry-id": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Duplicate module entry id \"widget\"."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Duplicate module entry id \"widget\"."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O6-module-entry-id-with-slash": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module entry id \"team/users\" must not contain '/'. Use a flat identifier like \"team-users\"."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module entry id \"team/users\" must not contain '/'. Use a flat identifier like \"team-users\"."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "O7-module-nonexistent-page-ref": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/O7-module-nonexistent-page-ref/modules/widget/pages/main.yaml:8\n[ConfigWarning] Page \"widget/nonexistent-page\" not found. Link on page \"widget/main\" references non-existent page.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/O7-module-nonexistent-page-ref/modules/widget/pages/main.yaml:8\n[ConfigWarning] Page \"widget/nonexistent-page\" not found. Link on page \"widget/main\" references non-existent page."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "O8-module-nonexistent-connection-ref": {
+    "dev": {
+      "errors": [
+        "<errors>/O8-module-nonexistent-connection-ref/modules/widget/pages/main.yaml:7\n[ConfigError] Request \"get-data\" at page \"widget/main\" references non-existent connection \"widget/nonexistent-db\".",
+        "<errors>/O8-module-nonexistent-connection-ref/modules/widget/pages/main.yaml:7\n[ConfigError] Request type \"MongoDBFind\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/O8-module-nonexistent-connection-ref/modules/widget/pages/main.yaml:7\n[ConfigError] Request \"get-data\" at page \"widget/main\" references non-existent connection \"widget/nonexistent-db\".",
+        "<errors>/O8-module-nonexistent-connection-ref/modules/widget/pages/main.yaml:7\n[ConfigError] Request type \"MongoDBFind\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "O9-module-missing-plugin": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"widget\" requires plugin \"@example/custom-blocks\" version \"^4\".\nAdd it to your app's plugins array in lowdefy.yaml:\n\n  plugins:\n    - name: \"@example/custom-blocks\"\n      version: \"4.0.0\""
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"widget\" requires plugin \"@example/custom-blocks\" version \"^4\".\nAdd it to your app's plugins array in lowdefy.yaml:\n\n  plugins:\n    - name: \"@example/custom-blocks\"\n      version: \"4.0.0\""
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "OA-module-missing-module-lowdefy-yaml": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"empty\": module.lowdefy.yaml not found at <errors>/OA-module-missing-module-lowdefy-yaml/modules/empty"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"empty\": module.lowdefy.yaml not found at <errors>/OA-module-missing-module-lowdefy-yaml/modules/empty"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "OB-module-namespace-var-non-object": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"dashboard\" (file:modules/dashboard) var \"components\" must be type \"object\" (has properties) but got \"string\"."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"dashboard\" (file:modules/dashboard) var \"components\" must be type \"object\" (has properties) but got \"string\"."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "OC-module-undeclared-namespace-property": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"dashboard\" (file:modules/dashboard) var \"components\" has undeclared property \"charts\". Declared properties: table."
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"dashboard\" (file:modules/dashboard) var \"components\" has undeclared property \"charts\". Declared properties: table."
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "OD-module-nested-required-var": {
+    "dev": {
+      "errors": [
+        "[ConfigError] Module \"app\" (file:modules/app) requires var \"api.endpoint\"\n  - Define it in lowdefy.yaml under modules[id=app].vars.api.endpoint"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[ConfigError] Module \"app\" (file:modules/app) requires var \"api.endpoint\"\n  - Define it in lowdefy.yaml under modules[id=app].vars.api.endpoint"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "OE-module-nonexistent-endpoint-ref": {
+    "dev": {
+      "errors": [
+        "<errors>/OE-module-nonexistent-endpoint-ref/modules/widget/pages/main.yaml:8\n[ConfigError] Action type \"CallAPI\" was used but is not defined."
+      ],
+      "warnings": [
+        "<errors>/OE-module-nonexistent-endpoint-ref/modules/widget/pages/main.yaml:8\n[ConfigWarning] CallAPI action on page \"widget/main\" references non-existent endpoint \"widget/nonexistent-endpoint\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/OE-module-nonexistent-endpoint-ref/modules/widget/pages/main.yaml:8\n[ConfigError] Action type \"CallAPI\" was used but is not defined.",
+        "<errors>/OE-module-nonexistent-endpoint-ref/modules/widget/pages/main.yaml:8\n[ConfigWarning] CallAPI action on page \"widget/main\" references non-existent endpoint \"widget/nonexistent-endpoint\"."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S1-ignore-all-checks": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S2-ignore-specific-slug": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S3-ignore-inherited": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S4-ignore-invalid-slug": {
+    "dev": {
+      "errors": [
+        "<errors>/S4-ignore-invalid-slug/lowdefy.yaml:10\n[ConfigError] Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, types, schema"
+      ],
+      "warnings": [],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/S4-ignore-invalid-slug/lowdefy.yaml:10\n[ConfigError] Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, types, schema"
+      ],
+      "warnings": [],
+      "threw": true
+    }
+  },
+  "S6-ignore-not-matching": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/S6-ignore-not-matching/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/S6-ignore-not-matching/lowdefy.yaml:21\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S7-ignore-cascades-into-ref": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "S8-ignore-cascades-into-ref-array": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "multi-file-error": {
+    "dev": {
+      "errors": [
+        "<errors>/multi-file-error/pages/home.yaml:12\n[ConfigError] Block type \"NonExistentBlockType\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/multi-file-error/pages/home.yaml:12\n[ConfigError] Block type \"NonExistentBlockType\" was used but is not defined."
+      ],
+      "warnings": [
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "multi-page-errors": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/multi-page-errors/lowdefy.yaml:19\n[ConfigWarning] _state references \"undefinedState1\" on page \"page1\", but no input block with id \"undefinedState1\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-page-errors/lowdefy.yaml:28\n[ConfigWarning] _state references \"undefinedState2\" on page \"page2\", but no input block with id \"undefinedState2\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-page-errors/lowdefy.yaml:37\n[ConfigWarning] _state references \"undefinedState3\" on page \"page3\", but no input block with id \"undefinedState3\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/multi-page-errors/lowdefy.yaml:19\n[ConfigWarning] _state references \"undefinedState1\" on page \"page1\", but no input block with id \"undefinedState1\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-page-errors/lowdefy.yaml:28\n[ConfigWarning] _state references \"undefinedState2\" on page \"page2\", but no input block with id \"undefinedState2\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-page-errors/lowdefy.yaml:37\n[ConfigWarning] _state references \"undefinedState3\" on page \"page3\", but no input block with id \"undefinedState3\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "multi-page-schema-errors": {
+    "dev": {
+      "errors": [
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:17\n[ConfigError] Block id missing at page \"page1\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:25\n[ConfigError] Block id missing at page \"page2\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:33\n[ConfigError] Block id missing at page \"page3\"."
+      ],
+      "warnings": [
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:17\n[ConfigWarning] Block should have required property \"id\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:25\n[ConfigWarning] Block should have required property \"id\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:33\n[ConfigWarning] Block should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:17\n[ConfigError] Block id missing at page \"page1\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:25\n[ConfigError] Block id missing at page \"page2\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:33\n[ConfigError] Block id missing at page \"page3\"."
+      ],
+      "warnings": [
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:17\n[ConfigWarning] Block should have required property \"id\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:25\n[ConfigWarning] Block should have required property \"id\".",
+        "<errors>/multi-page-schema-errors/lowdefy.yaml:33\n[ConfigWarning] Block should have required property \"id\".",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  },
+  "multi-validation-errors": {
+    "dev": {
+      "errors": [
+        "[LowdefyInternalError] Cannot read properties of null (reading 'dependencies')"
+      ],
+      "warnings": [
+        "<errors>/multi-validation-errors/lowdefy.yaml:25\n[ConfigWarning] _state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-validation-errors/lowdefy.yaml:30\n[ConfigWarning] _payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition.",
+        "<errors>/multi-validation-errors/lowdefy.yaml:36\n[ConfigWarning] _state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    },
+    "prod": {
+      "errors": [
+        "<errors>/multi-validation-errors/lowdefy.yaml:30\n[ConfigWarning] _payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition. Payload keys are defined in the request's \"payload\" property. Check for typos or add the key to the payload definition."
+      ],
+      "warnings": [
+        "<errors>/multi-validation-errors/lowdefy.yaml:25\n[ConfigWarning] _state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "<errors>/multi-validation-errors/lowdefy.yaml:36\n[ConfigWarning] _state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference.",
+        "No menus found. Building default menu."
+      ],
+      "threw": true
+    }
+  }
+}

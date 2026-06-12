@@ -38,7 +38,6 @@ import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
 import buildPages from './build/full/buildPages.js';
-import buildRefs from './build/buildRefs/buildRefs.js';
 import compileRefs from './build/compileRefs.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
@@ -72,16 +71,13 @@ async function build(options) {
   // Reset makeId counter for each build (dev server may run multiple builds)
   makeId.reset();
 
-  // Config-compiler S1: opt-in compiled ref resolution. The walker remains
-  // the default until the full fixture corpus passes byte-parity with module
-  // and resolver support compiled (see compilerParity.test.js).
-  const useCompiler = options.compiler === true || process.env.LOWDEFY_BUILD_COMPILER === 'true';
-
   let context;
   try {
     context = createContext(options);
-    // Registration (buildModuleDefs) branches on this for compiled manifests.
-    context.compiler = useCompiler;
+    // E2: the compiler is the only full-build resolution path (the walker
+    // default and the opt-in flag are gone). The marker stays for the
+    // dev/JIT path, which produces JSON-only artifacts until full S4.
+    context.compiler = true;
 
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
@@ -90,9 +86,9 @@ async function build(options) {
     let components;
     try {
       // Phase 2: Ref resolution (handles _ref: { module, component/menu })
-      components = useCompiler ? await compileRefs({ context }) : await buildRefs({ context });
+      components = await compileRefs({ context });
     } catch (err) {
-      // Root lowdefy.yaml failure still throws from buildRefs — collect it
+      // Root lowdefy.yaml failure still throws — collect it
       if (err instanceof ConfigError) {
         context.errors.push(err);
       } else {

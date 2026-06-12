@@ -55,7 +55,6 @@ async function run() {
     directories,
     logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
-    compiler: argv.compiler === true || process.env.LOWDEFY_BUILD_COMPILER === 'true',
   });
 }
 

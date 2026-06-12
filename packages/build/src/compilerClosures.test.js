@@ -78,7 +78,6 @@ test('every request and connection artifact has a closure twin matching ServerPa
     artifacts[filePath] = content;
   });
   await build({
-    compiler: true,
     customTypesMap: snapshotTypesMap,
     directories: {
       config: configDir,
@@ -144,7 +143,6 @@ test('S3c: public pages emit internal-form modules with closure parse roots', as
     artifacts[filePath] = content;
   });
   await build({
-    compiler: true,
     customTypesMap: snapshotTypesMap,
     directories: {
       config: configDir,
@@ -204,7 +202,6 @@ test('S3a: endpoints emit whole-config modules with routine closures matching Se
     artifacts[filePath] = content;
   });
   await build({
-    compiler: true,
     customTypesMap: snapshotTypesMap,
     directories: {
       config: configDir,

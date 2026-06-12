@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-// Config-compiler S1 error-parity gate: every error fixture builds twice —
-// walker and compiler — in both dev and prod, and the formatted error and
-// warning lists (message AND file:line source) must match exactly. The two
-// .yaml.njk fixtures are the designed D5 divergence: the compiler fails them
-// with the codemod error instead of rendering the template.
+// E2 golden gate (replaces the walker error-parity comparison): every error
+// fixture builds in dev and prod, and the formatted error and warning lists
+// (message AND file:line source) compare against goldens captured from the
+// final walker-parity-green state (E1). Paths are stored portable.
+// Regenerate intentionally with UPDATE_GOLDENS=true after a reviewed
+// behavior change.
 import { jest } from '@jest/globals';
 import fs from 'fs';
 import path from 'path';
@@ -29,8 +30,9 @@ import { createRunBuild } from './test-utils/runBuild.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/errors');
+const goldensPath = path.join(__dirname, 'tests/errors.golden.json');
 
-process.env.NEXTAUTH_SECRET = 'test-secret-for-error-parity-tests';
+process.env.NEXTAUTH_SECRET = 'test-secret-for-error-golden-tests';
 
 jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
   default: () => jest.fn(),
@@ -38,17 +40,10 @@ jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
 
 const { default: build } = await import('./index.js');
 
-const runBuild = createRunBuild(build, fixturesDir);
+const runBuild = createRunBuild(build, fixturesDir, '.lowdefy-errgolden');
 
-// D5: structural nunjucks templates are removed under the compiler — these
-// fixtures assert the codemod error instead of walker parity.
-const NJK_FIXTURES = new Set(['M3-ref-njk-template', 'M4-ref-njk-ignored']);
-
-// E1 designed divergence (recorded in endgame.md): circular cross-module
-// menu refs in meta-operator manifests detect through the on-demand
-// resolution chain — same error class and message head, different chain
-// rendering than walker recursion.
-const MENU_CYCLE_FIXTURES = new Set(['M3-cross-module-menu-cycle']);
+const UPDATE_GOLDENS = process.env.UPDATE_GOLDENS === 'true';
+const goldens = UPDATE_GOLDENS ? {} : JSON.parse(fs.readFileSync(goldensPath, 'utf8'));
 
 function discoverFixtures() {
   return fs
@@ -61,42 +56,43 @@ function discoverFixtures() {
     .sort();
 }
 
-// Error collection order can differ legitimately (the walker resolves
-// sibling refs concurrently; compiled factories run sequentially) — compare
-// as sorted lists so content and counts gate, not interleaving.
-function sorted(lines) {
-  return [...lines].sort();
+// Collection order is not a contract (factories may interleave) — compare
+// sorted; absolute fixture paths store as a portable placeholder.
+function portable(lines) {
+  return [...lines].map((line) => line.split(fixturesDir).join('<errors>')).sort();
 }
 
 const allFixtures = discoverFixtures();
 
-describe.each(['dev', 'prod'])('compiler error parity — %s', (stage) => {
+describe.each(['dev', 'prod'])('build error goldens — %s', (stage) => {
   test.each(allFixtures.map((f) => [f]))('%s', async (fixtureName) => {
-    const walker = await runBuild(fixtureName, stage);
-    const compiled = await runBuild(fixtureName, stage, { compiler: true });
-
-    if (NJK_FIXTURES.has(fixtureName)) {
-      const all = [...compiled.errors, ...compiled.warnings].join('\n');
-      expect(all).toContain('Structural nunjucks templates (.yaml.njk) are no longer supported');
+    const result = await runBuild(fixtureName, stage);
+    const snapshot = {
+      errors: portable(result.errors),
+      warnings: portable(result.warnings),
+      threw: result.thrownError !== null,
+    };
+    if (UPDATE_GOLDENS) {
+      goldens[fixtureName] = goldens[fixtureName] ?? {};
+      goldens[fixtureName][stage] = snapshot;
       return;
     }
-
-    if (MENU_CYCLE_FIXTURES.has(fixtureName)) {
-      const all = compiled.errors.join('\n');
-      expect(all).toContain('Circular module reference detected.');
-      expect(walker.errors.join('\n')).toContain('Circular module reference detected.');
-      expect(compiled.thrownError === null).toBe(walker.thrownError === null);
-      return;
-    }
-
-    expect(sorted(compiled.errors)).toEqual(sorted(walker.errors));
-    expect(sorted(compiled.warnings)).toEqual(sorted(walker.warnings));
-    expect(compiled.thrownError === null).toBe(walker.thrownError === null);
+    expect(snapshot).toEqual(goldens[fixtureName]?.[stage]);
   });
 });
 
 afterAll(() => {
+  if (UPDATE_GOLDENS) {
+    const ordered = {};
+    for (const name of Object.keys(goldens).sort()) {
+      ordered[name] = goldens[name];
+    }
+    fs.writeFileSync(goldensPath, JSON.stringify(ordered, null, 2) + '\n');
+  }
   for (const fixtureName of allFixtures) {
-    fs.rmSync(path.join(fixturesDir, fixtureName, '.lowdefy'), { recursive: true, force: true });
+    fs.rmSync(path.join(fixturesDir, fixtureName, '.lowdefy-errgolden'), {
+      recursive: true,
+      force: true,
+    });
   }
 });

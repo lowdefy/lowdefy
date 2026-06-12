@@ -2,22 +2,22 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
-        "undefinedBlockId"
+      "errors": [
+        "Structural nunjucks templates (.yaml.njk) are no longer supported"
       ],
-      "warningContains": [
-        "_state references \"undefinedBlockId\" on page \"templatePage\"",
-        "page-template.yaml.njk:11"
+      "errorContains": [
+        "page-template.yaml.njk",
+        "The runtime _nunjucks operator is unchanged."
       ]
     },
     {
       "mode": "prod",
-      "warnings": [
-        "undefinedBlockId"
+      "errors": [
+        "Structural nunjucks templates (.yaml.njk) are no longer supported"
       ],
-      "warningContains": [
-        "_state references \"undefinedBlockId\" on page \"templatePage\"",
-        "page-template.yaml.njk:11"
+      "errorContains": [
+        "page-template.yaml.njk",
+        "The runtime _nunjucks operator is unchanged."
       ]
     }
   ]

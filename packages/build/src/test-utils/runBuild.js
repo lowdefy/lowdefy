@@ -109,10 +109,12 @@ function formatLine(line) {
  * @param {string} fixturesDir - Absolute path to the fixtures directory
  * @returns {Function} runBuild helper function
  */
-function createRunBuild(build, fixturesDir) {
+function createRunBuild(build, fixturesDir, buildDirName = '.lowdefy') {
   /**
    * Runs build with a specific fixture directory and stage.
    * Returns captured errors, warnings, and the thrown error (if any).
+   * `buildDirName` isolates suites that build the same fixtures in
+   * parallel jest workers (each suite gets its own build-cache dir).
    */
   return async function runBuild(fixtureDir, stage = 'prod', options = {}) {
     const configDir = path.join(fixturesDir, fixtureDir);
@@ -124,8 +126,8 @@ function createRunBuild(build, fixturesDir) {
         customTypesMap: testTypesMap,
         directories: {
           config: configDir,
-          build: path.join(configDir, '.lowdefy'),
-          server: path.join(configDir, '.lowdefy', 'server'),
+          build: path.join(configDir, buildDirName),
+          server: path.join(configDir, buildDirName, 'server'),
         },
         logger,
         stage,
