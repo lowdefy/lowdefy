@@ -21,13 +21,29 @@ import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
-function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
+// S2a: compiled modules carry a lexical key id (`<fileId>:<n>`, non-enumerable
+// ~lk) — deterministic per source position, stable across builds. It becomes
+// the ~k id; the same source position instantiated more than once (a file
+// reffed twice, a var injected at several sites) gets a deterministic
+// tree-walk-order suffix. Nodes without ~lk (walker-resolved content,
+// synthesized config) keep the sequential counter.
+function nextKeyMapId(node, usedLexIds) {
+  const lexId = node['~lk'];
+  if (lexId === undefined) {
+    return makeId.next();
+  }
+  const seen = usedLexIds.get(lexId) ?? 0;
+  usedLexIds.set(lexId, seen + 1);
+  return seen === 0 ? lexId : `${lexId}.${seen}`;
+}
+
+function recArray({ array, arrayKey, keyMap, parentKeyMapId, context, usedLexIds }) {
   let arrayKeyMapId;
 
   if (array['~k']) {
     arrayKeyMapId = array['~k'];
   } else {
-    arrayKeyMapId = makeId.next();
+    arrayKeyMapId = nextKeyMapId(array, usedLexIds);
     const entry = {
       key: arrayKey,
       '~k_parent': parentKeyMapId,
@@ -43,6 +59,7 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     });
     delete array['~r'];
     delete array['~l'];
+    delete array['~lk'];
   }
 
   array.forEach((item, index) => {
@@ -68,6 +85,7 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
         keyMap: keyMap,
         parentKeyMapId: arrayKeyMapId,
         context,
+        usedLexIds,
       });
     }
     if (type.isArray(item)) {
@@ -77,12 +95,13 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
         keyMap,
         parentKeyMapId: arrayKeyMapId,
         context,
+        usedLexIds,
       });
     }
   });
 }
 
-function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
+function recAddKeys({ object, key, keyMap, parentKeyMapId, context, usedLexIds }) {
   let keyMapId;
   let storedKey = key;
 
@@ -92,7 +111,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     // Use the stored key from keyMap for correct child paths
     storedKey = keyMap[keyMapId]?.key ?? key;
   } else {
-    keyMapId = makeId.next();
+    keyMapId = nextKeyMapId(object, usedLexIds);
     const entry = {
       key,
       '~k_parent': parentKeyMapId,
@@ -114,7 +133,9 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
           collectExceptions(
             context,
             new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(
+                ', '
+              )}`,
               { configKey: keyMapId }
             )
           );
@@ -134,6 +155,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
     delete object['~l'];
+    delete object['~lk'];
     delete object['~ignoreBuildChecks'];
   }
 
@@ -146,6 +168,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         keyMap: keyMap,
         parentKeyMapId: keyMapId,
         context,
+        usedLexIds,
       });
     }
     if (type.isArray(object[nextKey])) {
@@ -155,6 +178,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         keyMap,
         parentKeyMapId: keyMapId,
         context,
+        usedLexIds,
       });
     }
   });
@@ -162,12 +186,17 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
 function addKeys({ components, context }) {
   const keyMapId = makeId.next();
+  // Lexical-id instance counts live on the context: addKeys runs more than
+  // once per build (synthesized nodes), and suffix assignment must not
+  // restart between passes.
+  context.usedLexIds = context.usedLexIds ?? new Map();
   recAddKeys({
     object: components,
     key: 'root',
     keyMap: context.keyMap,
     parentKeyMapId: keyMapId,
     context,
+    usedLexIds: context.usedLexIds,
   });
 }
 

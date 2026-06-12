@@ -27,14 +27,19 @@ function setHidden(node, prop, value) {
   });
 }
 
-// Construction-time marks carry the line only (addLineNumbers parity). ~r is
-// never set at construction: the walker's timeline is ~l at parse, then ~r
-// via tagRefDeep at ref completion / build-operator evaluation and via
+// Construction-time marks carry the line (addLineNumbers parity) and, in
+// S2a, the lexical key id (`<fileId>:<n>`, deterministic per source
+// position) that addKeys consumes as the ~k id. ~r is never set at
+// construction: the walker's timeline is ~l at parse, then ~r via
+// tagRefDeep at ref completion / build-operator evaluation and via
 // cloneVarValue at _var substitution — evaluateOperators' marker transfer
 // (result['~r'] === undefined) depends on nodes being ~r-less until then.
-function mark(node, line) {
+function mark(node, line, lexId) {
   if (type.isObject(node) || type.isArray(node)) {
     setHidden(node, '~l', line);
+    if (lexId !== undefined) {
+      setHidden(node, '~lk', lexId);
+    }
   }
   return node;
 }

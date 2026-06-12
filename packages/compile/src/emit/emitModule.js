@@ -91,6 +91,15 @@ function emitModule({
     return id;
   }
 
+  // S2a lexical key ids — same shape and traversal order as keys mode, but
+  // carried as a non-enumerable ~lk marker for addKeys to consume as the ~k
+  // id (deterministic per source position; instances disambiguated by
+  // addKeys with a tree-order suffix).
+  function nextLexId() {
+    keyCounter += 1;
+    return `${fileId}:${keyCounter.toString(36)}`;
+  }
+
   // Wraps map/seq expressions with the active provenance mechanism:
   // - 'keys' — lexical ~k tags + a static keyMap (S2 shape)
   // - 'markers' — non-enumerable ~r/~l for the existing addKeys pipeline (S1)
@@ -101,12 +110,13 @@ function emitModule({
       return `_r.tag(${expr}, ${json(nextKey(structPath, line))})`;
     }
     if (mode === 'markers') {
-      // ~l only (addLineNumbers parity). ~r arrives later — applyRef's
-      // markDeep at ref completion (instance id; the same file included
-      // twice gets two ids), cloneVarValue at substitution — mirroring the
-      // walker's tagging timeline so evaluateOperators' marker transfer
-      // sees ~r-less nodes exactly when the walker does.
-      return `_r.mark(${expr}, ${line})`;
+      // ~l (addLineNumbers parity) plus the S2a lexical key id. ~r arrives
+      // later — applyRef's markDeep at ref completion (instance id; the
+      // same file included twice gets two ids), cloneVarValue at
+      // substitution — mirroring the walker's tagging timeline so
+      // evaluateOperators' marker transfer sees ~r-less nodes exactly when
+      // the walker does.
+      return `_r.mark(${expr}, ${line}, ${json(nextLexId())})`;
     }
     return expr;
   }

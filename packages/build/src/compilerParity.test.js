@@ -131,6 +131,75 @@ function canonicalJsonObject(content) {
   return JSON.stringify(sorted);
 }
 
+// S2a: compiled builds use lexical ~k ids (`<fileId>:<n>`), the walker uses
+// counter ids — the id STRINGS differ by design, everything else must not.
+// Tree artifacts are rewritten to positional ids by first-encounter order
+// over a deterministic walk (sorted artifact names, parse order within
+// each), then byte-compared. The inverse map (canonical → original id) pairs
+// walker and compiler ids occupying the same position for the keyMap gate.
+function canonicalizeKeyIds(artifacts) {
+  const idMap = new Map();
+  const inverse = new Map();
+  const rename = (id) => {
+    if (typeof id !== 'string') return id;
+    if (!idMap.has(id)) {
+      const canonical = `k${idMap.size.toString(36)}`;
+      idMap.set(id, canonical);
+      inverse.set(canonical, id);
+    }
+    return idMap.get(id);
+  };
+  const walk = (node) => {
+    if (Array.isArray(node)) {
+      return node.map(walk);
+    }
+    if (node && typeof node === 'object') {
+      const out = {};
+      for (const [key, value] of Object.entries(node)) {
+        if (key === '~k' || key === '~k_parent') {
+          out[key] = rename(value);
+        } else {
+          out[key] = walk(value);
+        }
+      }
+      return out;
+    }
+    return node;
+  };
+  const result = {};
+  for (const name of Object.keys(artifacts).sort()) {
+    const content = artifacts[name];
+    if (!name.endsWith('.json') || name === 'refMap.json' || name === 'keyMap.json') {
+      result[name] = content;
+      continue;
+    }
+    result[name] = JSON.stringify(walk(JSON.parse(content)));
+  }
+  return { artifacts: result, inverse };
+}
+
+// The keyMap consumer contract: for a given ~k, resolveConfigLocation reads
+// the entry's key path, ~r (→ refMap → file), and ~l; suppression walks
+// ~k_parent chains reading ~ignoreBuildChecks. Two keyMaps are equivalent
+// when every positionally-paired id resolves an identical parent chain.
+function keyChain(id, keyMap) {
+  const chain = [];
+  let current = id;
+  const guard = new Set();
+  while (current !== undefined && keyMap[current] && !guard.has(current)) {
+    guard.add(current);
+    const entry = keyMap[current];
+    chain.push({
+      key: entry.key,
+      l: entry['~l'] ?? null,
+      r: entry['~r'] ?? null,
+      ignore: entry['~ignoreBuildChecks'] ?? null,
+    });
+    current = entry['~k_parent'];
+  }
+  return chain;
+}
+
 const deferred = [];
 
 describe('compiler parity — success fixture corpus', () => {
@@ -162,7 +231,9 @@ describe('compiler parity — success fixture corpus', () => {
     }
 
     expect(Object.keys(compiled.artifacts).sort()).toEqual(Object.keys(walker.artifacts).sort());
-    for (const key of Object.keys(walker.artifacts).sort()) {
+    const walkerCanonical = canonicalizeKeyIds(walker.artifacts);
+    const compiledCanonical = canonicalizeKeyIds(compiled.artifacts);
+    for (const key of Object.keys(walkerCanonical.artifacts).sort()) {
       if (key === 'refMap.json') {
         // The walker registers refMap entries in parallel-IO completion order
         // (siblings sync, children per read wave) — insertion order is
@@ -173,17 +244,38 @@ describe('compiler parity — success fixture corpus', () => {
         );
         continue;
       }
-      if (compiled.artifacts[key] !== walker.artifacts[key]) {
+      if (key === 'keyMap.json') {
+        continue;
+      }
+      if (compiledCanonical.artifacts[key] !== walkerCanonical.artifacts[key]) {
         // Surface the artifact name and first divergence point for diagnosis.
-        const a = walker.artifacts[key];
-        const b = compiled.artifacts[key];
+        const a = walkerCanonical.artifacts[key];
+        const b = compiledCanonical.artifacts[key];
         let i = 0;
         while (i < Math.min(a.length, b.length) && a[i] === b[i]) i += 1;
         const start = Math.max(0, i - 80);
         throw new Error(
-          `Artifact "${key}" differs in fixture "${fixtureDir}" at offset ${i}:\n` +
+          `Artifact "${key}" differs in fixture "${fixtureDir}" at offset ${i} (canonical ~k):\n` +
             `walker:   …${a.slice(start, i + 120)}…\n` +
             `compiler: …${b.slice(start, i + 120)}…`
+        );
+      }
+    }
+
+    // keyMap gate: identical entry counts, and every positionally-paired ~k
+    // resolves an identical location/suppression parent chain.
+    const walkerKeyMap = JSON.parse(walker.artifacts['keyMap.json']);
+    const compiledKeyMap = JSON.parse(compiled.artifacts['keyMap.json']);
+    expect(Object.keys(compiledKeyMap).length).toBe(Object.keys(walkerKeyMap).length);
+    for (const [canonical, walkerId] of walkerCanonical.inverse) {
+      const compiledId = compiledCanonical.inverse.get(canonical);
+      const a = keyChain(walkerId, walkerKeyMap);
+      const b = keyChain(compiledId, compiledKeyMap);
+      if (JSON.stringify(a) !== JSON.stringify(b)) {
+        throw new Error(
+          `keyMap chain differs in fixture "${fixtureDir}" for ${canonical} ` +
+            `(walker ${walkerId} vs compiler ${compiledId}):\n` +
+            `walker:   ${JSON.stringify(a)}\ncompiler: ${JSON.stringify(b)}`
         );
       }
     }

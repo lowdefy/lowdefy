@@ -40,6 +40,9 @@ function cloneDeep(node, sourceRefId) {
   }
   if (node['~l'] !== undefined) setHidden(clone, '~l', node['~l']);
   if (node['~k'] !== undefined) setHidden(clone, '~k', node['~k']);
+  // S2a lexical key id: every injection site carries the template's id —
+  // addKeys disambiguates instances with a deterministic tree-order suffix.
+  if (node['~lk'] !== undefined) setHidden(clone, '~lk', node['~lk']);
   return clone;
 }
 
