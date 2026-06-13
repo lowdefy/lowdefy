@@ -228,48 +228,23 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
 
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
-  // Use makeRefDefinition + getRefContent to read and parse module.lowdefy.yaml.
-  // The absolute path works because path.resolve(configDir, absolutePath) = absolutePath.
-  const refDef = makeRefDefinition(moduleYamlPath, null, context.refMap);
-  const content = await getRefContent({ context, refDef, referencedFrom: null });
+  // The manifest's refMap entry — counter id, registered before content
+  // loads (the menus chain and manifest scopes root at it).
+  const refId = makeId.next();
+  context.refMap[refId] = { parent: null, lineNumber: undefined };
+  const refDef = { id: refId, parent: null, lineNumber: undefined, path: moduleYamlPath, vars: {} };
 
-  // Run walker with shouldStop preserving content that may contain cross-module refs
-  const ctx = new WalkContext({
-    buildContext: context,
-    refId: refDef.id,
-    sourceRefId: null,
-    vars: {},
-    moduleRoot,
-    packageRoot,
-    path: '',
-    currentFile: moduleYamlPath,
-    refChain: new Set(refDef.path ? [refDef.path] : []),
-    operators,
-    env: process.env,
-    dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
-      if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^api(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^connections(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^menus\.\d+\.links$/.test(childPath)) return 'preserve';
-      return false;
-    },
-  });
+  const content = await readManifestFile({ context, filePath: moduleYamlPath });
 
-  // D7b/E1: compiled builds never walk the manifest. Operator-free meta
-  // extracts straight from the raw parse; manifests with operators in meta
-  // zones run an EXTRACTION COMPILE mirroring the walker's local walk —
-  // step-1 preserve zones stay raw (content tops, links, component content,
-  // var defaults — collected as zone factories for full-resolve), meta
-  // resolves once, and extraction reads resolved values.
-  const compiledManifest = context.compiler === true;
+  // D7b/E2: operator-free meta extracts straight from the raw parse;
+  // manifests with operators in meta zones run an EXTRACTION COMPILE
+  // mirroring the old step-1 walk — step-1 preserve zones stay raw (content
+  // tops, component content, var defaults — collected as zone factories for
+  // full-resolve), meta resolves once, and extraction reads resolved values.
+  const compiledManifest = true;
   let manifest;
   let localZones = null;
-  if (!compiledManifest) {
-    manifest = await resolve(content, ctx);
-  } else if (!manifestMetaHasOperators(content)) {
+  if (!manifestMetaHasOperators(content)) {
     manifest = content;
   } else {
     fs.mkdirSync(context.directories.build, { recursive: true });
