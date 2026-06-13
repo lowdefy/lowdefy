@@ -369,8 +369,9 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   };
 }
 
-// Walker parity for the compiled manifest: preserved zones carry
-// ~deferredFrom — getModuleRefContent and the component-export hook read it.
+// Preserved manifest zones carry ~deferredFrom — the compiled module-ref
+// runtime and the component-export resolver read it to attribute reffed
+// content to the module file.
 function setDeferredFromMarks(manifest, moduleYamlPath) {
   for (const item of manifest?.components ?? []) {
     if (type.isObject(item?.component) || type.isArray(item?.component)) {
