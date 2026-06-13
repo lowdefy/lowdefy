@@ -19,11 +19,9 @@ import path from 'path';
 import semver from 'semver';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
-import operators from '@lowdefy/operators-js/operators/build';
 
 import { compileDir } from '@lowdefy/compile';
 
-import { resolve, WalkContext } from './buildRefs/walker.js';
 import {
   makeManifestScope,
   makeResolveModuleExport,
@@ -31,20 +29,15 @@ import {
   runtimePath,
 } from './compileScopeTools.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
-import getRefContent from './buildRefs/getRefContent.js';
-import makeRefDefinition from './buildRefs/makeRefDefinition.js';
+import makeId from '../utils/makeId.js';
+import readManifestFile from './readManifestFile.js';
 import evaluateStaticOperators from './evaluateStaticOperators.js';
-import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
-import validateOperatorsDynamic from './validateOperatorsDynamic.js';
-
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 // D7b zone rules. Content zones compile (refs/operators live); preserve
 // zones stay raw data (consumed lazily — var defaults, component defs).
-// Anything else is registration meta, which the compiled path extracts from
-// the raw parse — a manifest carrying operators/refs there falls back to
-// walker registration for that module.
+// Anything else is registration meta: a manifest with no operators/refs
+// there extracts straight from the raw parse; one carrying them in meta
+// zones runs an extraction compile (resolveLocalManifest).
 const OP_ALLOWED_ZONES = [
   /^pages(\..*)?$/,
   /^api(\..*)?$/,
@@ -441,17 +434,17 @@ async function compileManifest({ entryId, context }) {
 
 async function resolveFullManifest({ entryId, context }) {
   const moduleEntry = context.modules[entryId];
-  const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
+  const { manifest, moduleRoot, refDef } = moduleEntry;
 
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
   let resolved;
-  if (moduleEntry.compiledManifest && moduleEntry.localZones) {
+  if (moduleEntry.localZones) {
     // Early-compiled manifest (meta operators): step 1 already resolved the
     // meta — only the step-1-preserved content zones resolve now, applied
     // as zone factories over the stored manifest. Running the whole-manifest
     // factory here would repeat the step-1 resolutions (duplicate refMap
-    // entries — the walker resolves each ref exactly once).
+    // entries — each ref resolves exactly once).
     resolved = manifest;
     for (const [factoryKey, factory] of Object.entries(moduleEntry.localZones.factories)) {
       if (factoryKey === 'zone:menus') {
@@ -471,38 +464,13 @@ async function resolveFullManifest({ entryId, context }) {
       }
     }
     setDeferredFromMarks(resolved, moduleYamlPath);
-  } else if (moduleEntry.compiledManifest) {
+  } else {
     const scope = {
       ...makeManifestScope(context, moduleEntry),
       importer: moduleEntry.compiledManifestImporter,
     };
     resolved = await moduleEntry.compiledManifestModule.default(scope);
     setDeferredFromMarks(resolved, moduleYamlPath);
-  } else {
-    const ctx = new WalkContext({
-      buildContext: context,
-      refId: refDef.id,
-      sourceRefId: null,
-      vars: {},
-      moduleDependencies,
-      moduleEntry,
-      moduleRoot,
-      packageRoot,
-      path: '',
-      currentFile: moduleYamlPath,
-      refChain: new Set(refDef.path ? [refDef.path] : []),
-      operators,
-      env: process.env,
-      dynamicIdentifiers,
-      shouldStop: (childPath) => {
-        if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath))
-          return 'preserve';
-        if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
-        return false;
-      },
-    });
-
-    resolved = await resolve(manifest, ctx);
   }
 
   resolved = evaluateStaticOperators({ context, input: resolved, refDef });

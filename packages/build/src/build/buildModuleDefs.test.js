@@ -15,6 +15,9 @@
 */
 
 import { jest } from '@jest/globals';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 jest.unstable_mockModule('./fetchModules.js', () => ({
   default: jest.fn(),
@@ -30,7 +33,13 @@ beforeAll(async () => {
   buildModuleDefs = buildModuleDefsModule.default;
 });
 
-import testContext from '../test-utils/testContext.js';
+const { default: testContext } = await import('../test-utils/testContext.js');
+const { snapshotTypesMap } = await import('../test-utils/runBuildForSnapshots.js');
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkgRoot = path.resolve(__dirname, '../..');
+const tmpRoot = path.join(pkgRoot, '.tmp-buildmoduledefs', `worker-${process.pid}`);
+let configDir;
 
 const mockReadConfigFile = jest.fn();
 
@@ -41,22 +50,57 @@ function createTestContext(overrides = {}) {
   context.modules = {};
   context.plugins = overrides.plugins ?? [];
   context.errors = [];
-  context.typesMap = overrides.typesMap ?? {};
+  context.typesMap = overrides.typesMap ?? snapshotTypesMap;
   context.unresolvedRefVars = {};
+  context.directories.config = configDir;
+  context.directories.build = path.join(configDir, '.lowdefy');
   return context;
 }
 
-const readConfigFileMockImplementation = (files) => {
-  return (filePath) => {
-    const file = files.find((f) => f.path === filePath);
-    if (!file) return null;
-    return file.content;
-  };
-};
+// buildModuleDefs compiles lowdefy.yaml and module manifests through the real
+// compiler (filesystem), so fixtures are written to a temp config dir and the
+// reader points at disk. Absolute fixture keys (/mod-a/...) are placed under
+// the config dir so module roots resolve to real paths.
+function writeFiles(files) {
+  for (const file of files) {
+    const rel = file.path.startsWith('/') ? file.path.slice(1) : file.path;
+    const target = path.join(configDir, rel);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, file.content);
+  }
+  mockReadConfigFile.mockImplementation((filePath) => {
+    try {
+      return fs.readFileSync(path.resolve(configDir, filePath), 'utf8');
+    } catch {
+      return null;
+    }
+  });
+}
+
+// fetchModules mock: rewrite the test's /abs roots to real paths under the
+// temp config dir (where writeFiles placed the manifests).
+function fetchRoots(map) {
+  const resolved = {};
+  for (const [id, entry] of Object.entries(map)) {
+    const under = (p) => path.join(configDir, String(p).replace(/^\//, ''));
+    resolved[id] = {
+      ...entry,
+      packageRoot: under(entry.packageRoot),
+      moduleRoot: under(entry.moduleRoot),
+    };
+  }
+  mockFetchModules.mockResolvedValue(resolved);
+}
 
 beforeEach(() => {
   mockReadConfigFile.mockReset();
   mockFetchModules.mockReset();
+  fs.mkdirSync(tmpRoot, { recursive: true });
+  configDir = fs.mkdtempSync(path.join(tmpRoot, 'case-'));
+});
+
+afterAll(() => {
+  fs.rmSync(path.join(pkgRoot, '.tmp-buildmoduledefs'), { recursive: true, force: true });
 });
 
 test('buildModuleDefs does nothing when no modules array is defined', async () => {
@@ -72,7 +116,7 @@ pages:
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  writeFiles(files);
 
   await buildModuleDefs({ context });
 
@@ -94,7 +138,7 @@ pages:
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  writeFiles(files);
 
   await buildModuleDefs({ context });
 
@@ -126,8 +170,8 @@ pages:
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     'team-users': {
       packageRoot: '/modules/team-users',
       moduleRoot: '/modules/team-users',
@@ -174,8 +218,8 @@ pages: []
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     'mod-a': { packageRoot: '/mod-a', moduleRoot: '/mod-a', isLocal: true },
     'mod-b': { packageRoot: '/mod-b', moduleRoot: '/mod-b', isLocal: true },
   });
@@ -215,8 +259,8 @@ pages: []
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     'my-mod': { packageRoot: '/my-mod', moduleRoot: '/my-mod', isLocal: true },
   });
 
@@ -250,8 +294,8 @@ pages:
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     'my-mod': { packageRoot: '/my-mod', moduleRoot: '/my-mod', isLocal: true },
   });
 
@@ -276,7 +320,7 @@ menus:
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  writeFiles(files);
 
   await buildModuleDefs({ context });
 
@@ -326,8 +370,8 @@ components:
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     activities: { packageRoot: '/activities', moduleRoot: '/activities', isLocal: true },
     companies: { packageRoot: '/companies', moduleRoot: '/companies', isLocal: true },
   });
@@ -377,8 +421,8 @@ pages:
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     contacts: { packageRoot: '/contacts', moduleRoot: '/contacts', isLocal: true },
     app: { packageRoot: '/app', moduleRoot: '/app', isLocal: true },
   });
@@ -412,8 +456,8 @@ pages: []
         content: 'pages: []',
       },
     ];
-    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    mockFetchModules.mockResolvedValue({
+    writeFiles(files);
+    fetchRoots({
       'my-mod': { packageRoot: '/my-mod', moduleRoot: '/my-mod', isLocal: true },
     });
 
@@ -467,8 +511,8 @@ pages: []
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     shared: { packageRoot: '/shared', moduleRoot: '/shared', isLocal: true },
     consumer: { packageRoot: '/consumer', moduleRoot: '/consumer', isLocal: true },
   });
@@ -509,8 +553,8 @@ pages: []
 `,
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     consumer: { packageRoot: '/consumer', moduleRoot: '/consumer', isLocal: true },
   });
 
@@ -539,8 +583,8 @@ modules:
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     companies: { packageRoot: '/companies', moduleRoot: '/companies', isLocal: true },
   });
 
@@ -580,13 +624,15 @@ modules:
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     companies: { packageRoot: '/companies', moduleRoot: '/companies', isLocal: true },
   });
 
+  // Same condition the walker guarded (app-level _module.var), clearer
+  // compiled-runtime message.
   await expect(buildModuleDefs({ context })).rejects.toThrow(
-    '_module.var cannot be used at the app level.'
+    '_module.var "some_var" used outside a module — no module to resolve against.'
   );
 });
 
@@ -620,8 +666,8 @@ pages: []
       content: 'pages: []',
     },
   ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  mockFetchModules.mockResolvedValue({
+  writeFiles(files);
+  fetchRoots({
     data: { packageRoot: '/data', moduleRoot: '/data', isLocal: true },
     companies: { packageRoot: '/companies', moduleRoot: '/companies', isLocal: true },
   });

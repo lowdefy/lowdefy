@@ -16,16 +16,10 @@
 
 import fs from 'fs';
 import path from 'path';
-import operators from '@lowdefy/operators-js/operators/build';
 import { compileDir } from '@lowdefy/compile';
 import { createScope } from '@lowdefy/compile/runtime';
 
-import { resolve, WalkContext } from './buildRefs/walker.js';
-import getRefContent from './buildRefs/getRefContent.js';
-import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import evaluateStaticOperators from './evaluateStaticOperators.js';
-import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
-import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
 import {
   resolveLocalManifest,
@@ -38,13 +32,9 @@ import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 import resolveModuleDependencies from './resolveModuleDependencies.js';
 
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
-
-// Phase-1 zones (compiled path): only the modules registration zone
-// resolves; entry vars and connections stay raw — they may contain
-// cross-module refs that need the registry (phase 2.5 factories) — and
-// everything else is phase-2 content.
+// Phase-1 zones: only the modules registration zone resolves; entry vars and
+// connections stay raw — they may contain cross-module refs that need the
+// registry (phase 2.5 factories) — and everything else is phase-2 content.
 function entryPreserveZones(wp) {
   if (/^modules\.\d+\.(vars|connections)(\..*)?$/.test(wp)) return true;
   if (wp === 'modules' || wp.startsWith('modules.')) return false;
@@ -56,11 +46,10 @@ function entryFactoryKey(wp) {
   return match ? `${match[2]}:${match[1]}` : null;
 }
 
-// Compiled phase 1 (E1): lowdefy.yaml's modules zone resolves through its
-// compiled factory — same preserve semantics as the walker's shouldStop,
-// with the preserved vars/connections zones doubling as factories for
-// phase 2.5 (walker resolveEntryConfig parity).
-async function parseLowdefyYamlCompiled({ context }) {
+// Phase 1: lowdefy.yaml's modules zone resolves through its compiled factory;
+// the preserved vars/connections zones double as factories for phase 2.5
+// (cross-module refs in entry vars resolve against the registry).
+async function parseLowdefyYaml({ context }) {
   const configDir = context.directories.config;
   let entry = 'lowdefy.yaml';
   if (
@@ -70,8 +59,8 @@ async function parseLowdefyYamlCompiled({ context }) {
     entry = 'lowdefy.yml';
   }
 
-  // Root refDef — walker parseLowdefyYaml parity: counter id, path-less
-  // refMap entry, stashed for phase-2.5 parenting.
+  // Root refDef: counter id, path-less refMap entry, stashed for phase-2.5
+  // parenting.
   const rootId = makeId.next();
   context.refMap[rootId] = { parent: null, lineNumber: undefined };
   const refDef = { id: rootId, parent: null, lineNumber: undefined, path: entry, vars: {} };
@@ -119,99 +108,23 @@ async function parseLowdefyYamlCompiled({ context }) {
   return config ?? {};
 }
 
-async function parseLowdefyYaml({ context }) {
-  if (context.compiler === true) {
-    return parseLowdefyYamlCompiled({ context });
-  }
-  const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
-  // Stash for Phase 2.5 — consumer vars come from lowdefy.yaml, so refs
-  // within them must be parented to lowdefy.yaml's refDef.
-  context.lowdefyYamlRefDef = refDef;
-
-  const content = await getRefContent({
-    context,
-    refDef,
-    referencedFrom: null,
-  });
-
-  const ctx = new WalkContext({
-    buildContext: context,
-    refId: refDef.id,
-    sourceRefId: null,
-    vars: {},
-    path: '',
-    currentFile: refDef.path,
-    refChain: new Set(refDef.path ? [refDef.path] : []),
-    operators,
-    env: process.env,
-    dynamicIdentifiers,
-    shouldStop: (path) => {
-      // Defer entry vars and connections: they may contain cross-module
-      // refs that require modules to be registered first.
-      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
-      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
-      if (path.startsWith('modules')) return false;
-      return 'preserve';
-    },
-  });
-
-  let config = await resolve(content, ctx);
-
-  config = evaluateStaticOperators({ context, input: config, refDef });
-
-  return config ?? {};
-}
-
 async function resolveEntryConfig({ entry, index, context }) {
   const moduleEntry = context.modules[entry.id];
-  const lowdefyYamlRefDef = context.lowdefyYamlRefDef;
-  const refDef = lowdefyYamlRefDef;
+  const refDef = context.lowdefyYamlRefDef;
 
-  if (context.compiler === true) {
-    // Phase-2.5 factories from the compiled lowdefy.yaml — registry-aware
-    // (cross-module refs in entry vars resolve against registered modules).
-    const varsFactory = context.lowdefyEntryFactories[`vars:${index}`];
-    let resolvedVars = varsFactory
-      ? await varsFactory(context.makeAppLevelScope())
-      : moduleEntry.consumerVars;
-    resolvedVars = evaluateStaticOperators({ context, input: resolvedVars, refDef });
-    moduleEntry.consumerVars = resolvedVars ?? {};
-
-    const connectionsFactory = context.lowdefyEntryFactories[`connections:${index}`];
-    let resolvedConnections = connectionsFactory
-      ? await connectionsFactory(context.makeAppLevelScope())
-      : moduleEntry.connections;
-    resolvedConnections = evaluateStaticOperators({
-      context,
-      input: resolvedConnections,
-      refDef,
-    });
-    moduleEntry.connections = resolvedConnections ?? {};
-
-    validateRequiredVars(moduleEntry.varDefs, moduleEntry.consumerVars, entry.id, entry.source);
-    return;
-  }
-
-  function makeAppLevelCtx() {
-    return new WalkContext({
-      buildContext: context,
-      refId: lowdefyYamlRefDef.id,
-      sourceRefId: null,
-      vars: {},
-      path: '',
-      currentFile: lowdefyYamlRefDef.path,
-      refChain: new Set(lowdefyYamlRefDef.path ? [lowdefyYamlRefDef.path] : []),
-      operators,
-      env: process.env,
-      dynamicIdentifiers,
-    });
-  }
-
-  let resolvedVars = await resolve(moduleEntry.consumerVars, makeAppLevelCtx());
+  // Phase-2.5 factories from the compiled lowdefy.yaml — registry-aware
+  // (cross-module refs in entry vars resolve against registered modules).
+  const varsFactory = context.lowdefyEntryFactories[`vars:${index}`];
+  let resolvedVars = varsFactory
+    ? await varsFactory(context.makeAppLevelScope())
+    : moduleEntry.consumerVars;
   resolvedVars = evaluateStaticOperators({ context, input: resolvedVars, refDef });
   moduleEntry.consumerVars = resolvedVars ?? {};
 
-  let resolvedConnections = await resolve(moduleEntry.connections, makeAppLevelCtx());
+  const connectionsFactory = context.lowdefyEntryFactories[`connections:${index}`];
+  let resolvedConnections = connectionsFactory
+    ? await connectionsFactory(context.makeAppLevelScope())
+    : moduleEntry.connections;
   resolvedConnections = evaluateStaticOperators({
     context,
     input: resolvedConnections,

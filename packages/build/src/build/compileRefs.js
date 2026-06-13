@@ -30,11 +30,11 @@ import {
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 
-// Config-compiler S1: replaces the walker for ref resolution. Mirrors the
-// buildRefs contract — returns the resolved components tree, collects
-// ConfigErrors into context.errors, populates context.refMap, and runs the
-// same bare-operator static pass. Compiled modules emit walker-compatible
-// ~r/~l markers, so addKeys and the keyMap pipeline run unchanged.
+// The build's ref-resolution phase: compiles the config graph and runs the
+// entry factory. Returns the resolved components tree, collects ConfigErrors
+// into context.errors, populates context.refMap, and runs the bare-operator
+// static pass. Compiled modules emit ~r/~l markers, so addKeys and the keyMap
+// pipeline run unchanged.
 async function compileRefs({ context }) {
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const configDir = context.directories.config;
@@ -65,10 +65,10 @@ async function compileRefs({ context }) {
     refResolver: context.refResolver ?? null,
   });
 
-  // Walker parity: the root ref consumes the id counter first (so addKeys ids
-  // line up) and registers a path-less refMap entry. Instance ref ids are
-  // global tree paths with a counter fallback on collision — allocation is
-  // injected so the build owns the counter and the refMap.
+  // The root ref consumes the id counter first (so addKeys ids line up) and
+  // registers a path-less refMap entry. Instance ref ids are global tree
+  // paths with a counter fallback on collision — allocation is injected so
+  // the build owns the counter and the refMap.
   const rootRefId = makeId.next();
   context.refMap[rootRefId] = { parent: null, lineNumber: undefined };
 
@@ -96,9 +96,8 @@ async function compileRefs({ context }) {
   });
   let components = await mod.default(scope);
 
-  // The same static pass the walker output goes through — bare `_` operators
-  // with static subtrees evaluate at build; typeNames and dynamic identifiers
-  // defer runtime operators.
+  // Bare `_` operators with static subtrees evaluate at build; typeNames and
+  // dynamic identifiers defer runtime operators.
   components = evaluateStaticOperators({
     context,
     input: components,

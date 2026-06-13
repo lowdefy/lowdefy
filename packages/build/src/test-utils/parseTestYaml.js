@@ -107,7 +107,7 @@ function addLineNumbersAndRefs(node, content, refCounter) {
 
 /**
  * Parse YAML string for testing, adding ~l (line numbers) and ~r (ref IDs)
- * to simulate real buildRefs output.
+ * to simulate real compiled ref-resolution output.
  *
  * @param {string} yamlContent - YAML string to parse (use template literals for multiline)
  * @returns {object} Parsed object with ~l and ~r properties

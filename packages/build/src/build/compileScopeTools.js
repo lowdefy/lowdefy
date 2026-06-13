@@ -17,18 +17,13 @@
 import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
-import operators from '@lowdefy/operators-js/operators/build';
+import YAML from 'yaml';
+import { type } from '@lowdefy/helpers';
 
 import { createScope, bindModuleEntry } from '@lowdefy/compile/runtime';
 
-import { resolve, WalkContext } from './buildRefs/walker.js';
 import collectExceptions from '../utils/collectExceptions.js';
-import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
-import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import makeId from '../utils/makeId.js';
-
-validateOperatorsDynamic({ operators });
-const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 // Compiled modules live in a tmp directory with no node_modules — the
 // runtime import is emitted as a relative path to the resolved package.
@@ -103,9 +98,11 @@ function makeManifestScope(context, moduleEntry) {
   });
 }
 
-// Walker resolveVarDefault parity: structured module-var defaults walk with a
-// fresh context rooted at the manifest, cached on the entry. Compiled
-// manifests expose defaults as factories (D7c) — preferred when present.
+// resolveVarDefault: structured module-var defaults resolve through the
+// compiled default factory (D7c — collected from every compiled manifest).
+// The importSource fallback compiles a raw default on demand for any default
+// not pre-collected as a factory (defensive — both manifest compile passes
+// collect var-default factories).
 function makeResolveModuleVarDefault(context) {
   return async (rawDefault, entryId, key) => {
     const moduleEntry = context.modules[entryId];
@@ -113,25 +110,13 @@ function makeResolveModuleVarDefault(context) {
     if (compiledDefault) {
       return compiledDefault(makeManifestScope(context, moduleEntry));
     }
-    return resolve(
-      rawDefault,
-      new WalkContext({
-        buildContext: context,
-        refId: moduleEntry.refDef.id,
-        sourceRefId: null,
-        vars: {},
-        moduleDependencies: moduleEntry.moduleDependencies,
-        moduleEntry,
-        moduleRoot: moduleEntry.moduleRoot,
-        packageRoot: moduleEntry.packageRoot,
-        path: '',
-        currentFile: path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
-        refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
-        operators,
-        env: process.env,
-        dynamicIdentifiers,
-      })
-    );
+    const scope = makeManifestScope(context, moduleEntry);
+    if (!scope.importSource || (!type.isObject(rawDefault) && !type.isArray(rawDefault))) {
+      return rawDefault;
+    }
+    const label = `module:${entryId}/var:${key}`;
+    const mod = await scope.importSource(YAML.stringify(rawDefault), label);
+    return mod.default(scope);
   };
 }
 

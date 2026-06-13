@@ -39,7 +39,7 @@ function evaluateStaticOperators({ context, input, refDef }) {
   if (errors.length > 0) {
     errors.forEach((error) => {
       // Resolve source file path for error location.
-      // Only called from buildRefs top-level where refDef is root lowdefy.yaml,
+      // Only called at the resolved-config top level where refDef is root lowdefy.yaml,
       // but ~r on each operator object identifies the real source file via refMap.
       // Falls back to refDef.path if ~r is missing (shouldn't happen at this stage
       // since all objects have ~r after recursiveBuild completes).

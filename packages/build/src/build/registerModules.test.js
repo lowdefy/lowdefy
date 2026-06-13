@@ -15,13 +15,23 @@
 */
 
 import { jest } from '@jest/globals';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import testContext from '../test-utils/testContext.js';
 import {
   resolveLocalManifest,
+  compileManifest,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
+import { snapshotTypesMap } from '../test-utils/runBuildForSnapshots.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkgRoot = path.resolve(__dirname, '../..');
+const tmpRoot = path.join(pkgRoot, '.tmp-registermodules', `worker-${process.pid}`);
+let configDir;
 
 const mockReadConfigFile = jest.fn();
 
@@ -45,8 +55,47 @@ const readConfigFileMockImplementation = (files) => {
   };
 };
 
+// On-disk module fixture: the compiled registration path (compileManifest +
+// resolveFullManifest) runs real compileDir over the filesystem, so these
+// tests write the manifest to a temp config dir, point readConfigFile at
+// disk, and wire a real build out-dir. Returns the absolute module root.
+function writeModuleOnDisk({ context, relRoot, files }) {
+  for (const file of files) {
+    const target = path.join(configDir, file.path);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, file.content);
+  }
+  context.directories.config = configDir;
+  context.directories.build = path.join(configDir, '.lowdefy');
+  context.typesMap = snapshotTypesMap;
+  mockReadConfigFile.mockImplementation((filePath) => {
+    try {
+      return fs.readFileSync(path.resolve(configDir, filePath), 'utf8');
+    } catch {
+      return null;
+    }
+  });
+  return path.join(configDir, relRoot);
+}
+
+// Run the full registration sequence the build's phase 3 runs.
+async function registerOnDisk({ context, entry, moduleRoot }) {
+  await resolveLocalManifest({
+    entry,
+    resolvedPaths: { packageRoot: moduleRoot, moduleRoot, isLocal: true },
+    context,
+  });
+  await compileManifest({ entryId: entry.id, context });
+}
+
 beforeEach(() => {
   mockReadConfigFile.mockReset();
+  fs.mkdirSync(tmpRoot, { recursive: true });
+  configDir = fs.mkdtempSync(path.join(tmpRoot, 'case-'));
+});
+
+afterAll(() => {
+  fs.rmSync(path.join(pkgRoot, '.tmp-registermodules'), { recursive: true, force: true });
 });
 
 test('resolveLocalManifest registers a module with locally resolved manifest', async () => {
@@ -170,10 +219,13 @@ test('validateRequiredVars throws when required var is missing', () => {
 
 test('validateVarTypes catches type mismatch after Phase 2', async () => {
   const context = createTestContext();
-  const files = [
-    {
-      path: '/modules/my-mod/module.lowdefy.yaml',
-      content: `
+  const moduleRoot = writeModuleOnDisk({
+    context,
+    relRoot: 'modules/my-mod',
+    files: [
+      {
+        path: 'modules/my-mod/module.lowdefy.yaml',
+        content: `
 vars:
   count:
     type: number
@@ -184,19 +236,15 @@ pages:
       value:
         _module.var: count
 `,
-    },
-  ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+      },
+    ],
+  });
 
   // Phase 1a succeeds — no type validation yet
-  await resolveLocalManifest({
-    entry: { id: 'my-mod', source: 'file:../mod', vars: { count: 'not-a-number' } },
-    resolvedPaths: {
-      packageRoot: '/modules/my-mod',
-      moduleRoot: '/modules/my-mod',
-      isLocal: true,
-    },
+  await registerOnDisk({
     context,
+    entry: { id: 'my-mod', source: 'file:../mod', vars: { count: 'not-a-number' } },
+    moduleRoot,
   });
 
   expect(context.modules['my-mod']).toBeDefined();
@@ -694,37 +742,31 @@ test('validateRequiredVars throws for undeclared namespace property', () => {
   };
 
   expect(() =>
-    validateRequiredVars(
-      varDefs,
-      { ui: { theme: 'dark', color: 'blue' } },
-      'my-mod',
-      'file:../mod'
-    )
+    validateRequiredVars(varDefs, { ui: { theme: 'dark', color: 'blue' } }, 'my-mod', 'file:../mod')
   ).toThrow('undeclared property "color"');
 });
 
 test('resolveFullManifest resolves preserved content in second pass', async () => {
   const context = createTestContext();
-  const files = [
-    {
-      path: '/modules/my-mod/module.lowdefy.yaml',
-      content: `
+  const moduleRoot = writeModuleOnDisk({
+    context,
+    relRoot: 'modules/my-mod',
+    files: [
+      {
+        path: 'modules/my-mod/module.lowdefy.yaml',
+        content: `
 pages:
   - id: my-page
     type: Box
 `,
-    },
-  ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+      },
+    ],
+  });
 
-  await resolveLocalManifest({
-    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
-    resolvedPaths: {
-      packageRoot: '/modules/my-mod',
-      moduleRoot: '/modules/my-mod',
-      isLocal: true,
-    },
+  await registerOnDisk({
     context,
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    moduleRoot,
   });
 
   await resolveFullManifest({ entryId: 'my-mod', context });
@@ -736,26 +778,25 @@ pages:
 
 test('resolveFullManifest filters null entries from pages, connections, api', async () => {
   const context = createTestContext();
-  const files = [
-    {
-      path: '/modules/my-mod/module.lowdefy.yaml',
-      content: `
+  const moduleRoot = writeModuleOnDisk({
+    context,
+    relRoot: 'modules/my-mod',
+    files: [
+      {
+        path: 'modules/my-mod/module.lowdefy.yaml',
+        content: `
 pages:
   - id: good-page
     type: Box
 `,
-    },
-  ];
-  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+      },
+    ],
+  });
 
-  await resolveLocalManifest({
-    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
-    resolvedPaths: {
-      packageRoot: '/modules/my-mod',
-      moduleRoot: '/modules/my-mod',
-      isLocal: true,
-    },
+  await registerOnDisk({
     context,
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    moduleRoot,
   });
 
   // Manually inject a null to simulate a failed ref resolution

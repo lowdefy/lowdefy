@@ -15,7 +15,7 @@
 */
 
 // Walk an object/array tree collecting non-enumerable ~r ref IDs.
-// ~r is set by buildRefs (walker.js) on every resolved object/array
+// ~r is set during ref resolution (markDeep) on every resolved object/array
 // and is non-enumerable, so Object.keys() won't find it.
 function walkRefIds(obj, refIds) {
   if (obj === null || typeof obj !== 'object') return;

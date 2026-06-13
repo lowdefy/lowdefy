@@ -95,7 +95,8 @@ async function build(options) {
         throw err;
       }
     }
-    // Stop if buildRefs collected any errors (YAML parse, missing files, etc.)
+    // Stop if ref resolution collected any errors (YAML parse, missing
+    // files, etc.)
     logCollectedErrors(context);
 
     // Phase 3: Process modules — scopes IDs, merges into components

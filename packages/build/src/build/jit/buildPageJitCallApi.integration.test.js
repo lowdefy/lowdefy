@@ -36,7 +36,7 @@ process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
 
 // Mock the steps that touch the real server filesystem / git so shallowBuild can
 // run against a throwaway temp directory. Everything that matters for CallAPI
-// validation (buildRefs/walker, buildModules, buildApi, writeApi, buildShallowPages,
+// validation (compileRefs, buildModules, buildApi, writeApi, buildShallowPages,
 // writeMaps, buildPageJit, validateCallApiRefs) runs for real.
 jest.unstable_mockModule('../buildApp.js', () => ({
   default: ({ components }) => {

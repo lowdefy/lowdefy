@@ -18,7 +18,7 @@
 
 import { isMap, isSeq, isPair, isScalar } from 'yaml';
 
-import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
+import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 import getLineNumber from './getLineNumber.js';
 
 function addLineNumbers(node, content, result) {
