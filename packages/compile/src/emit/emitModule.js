@@ -492,9 +492,15 @@ function emitModule({
         )
       : 'undefined';
 
+    // Raw (un-evaluated) vars are recorded as unresolvedRefVars[refId] so the
+    // dev page registry can identify the page source ref (the outermost ref
+    // WITHOUT vars) and JIT can re-resolve a page-source ref's own vars from
+    // disk — walker resolveRef unresolvedRefVars parity.
+    const rawVarsExpr = varsNode ? emitRaw(varsNode, varsNode.pos?.line ?? refLine) : 'undefined';
+
     const common =
       `sitePath: ${json(wp)}, refLine: ${refLine}, ` +
-      `vars: ${varsExpr}, key: ${keyExpr}, transformer: ${transformerIdent}, ` +
+      `vars: ${varsExpr}, rawVars: ${rawVarsExpr}, key: ${keyExpr}, transformer: ${transformerIdent}, ` +
       `transformerPath: ${transformerPath}, ignoreBuildChecks: ${ignoreExpr}, loc: ${loc(refNode)}`;
 
     // Resolver dispatch — per-ref `resolver:`, or the build's global

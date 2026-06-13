@@ -176,7 +176,9 @@ async function compileDir({
       }
       virtualCompiled.set(hash, outRel);
     }
-    return import(pathToFileURL(path.join(outDir, virtualCompiled.get(hash))).href);
+    return import(
+      /* @vite-ignore */ pathToFileURL(path.join(outDir, virtualCompiled.get(hash))).href
+    );
   }
 
   await compileOne(entry, entryModuleRoot);
@@ -195,7 +197,7 @@ async function compileDir({
       if (!compiled.has(cfgPath)) {
         await compileOne(cfgPath, fileModuleRoot);
       }
-      return import(pathToFileURL(path.join(outDir, outFileFor(cfgPath))).href);
+      return import(/* @vite-ignore */ pathToFileURL(path.join(outDir, outFileFor(cfgPath))).href);
     },
     importSource,
   };

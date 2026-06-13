@@ -50,6 +50,10 @@ function createScope({
   fileExists = null,
   importSource = null,
   resolverContext = null,
+  // Build-injected sink for raw per-ref vars, keyed by instance ref id — the
+  // dev page registry reads it to locate page source refs (walker
+  // unresolvedRefVars parity). Shared object across the whole resolution.
+  unresolvedRefVars = null,
 } = {}) {
   return {
     vars,
@@ -71,6 +75,7 @@ function createScope({
     fileExists,
     importSource,
     resolverContext,
+    unresolvedRefVars,
   };
 }
 

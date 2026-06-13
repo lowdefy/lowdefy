@@ -166,6 +166,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         getModuleEntry: (id) => buildContext.modules?.[id],
         resolveModuleVarDefault: makeResolveModuleVarDefault(buildContext),
         ...makeScopeFileAccess(buildContext),
+        unresolvedRefVars: buildContext.unresolvedRefVars ?? {},
         module: moduleBinding,
       });
     }

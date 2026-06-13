@@ -147,12 +147,37 @@ api:
 pages:
   - _ref: pages/home.yaml
   - _ref: pages/missing.yaml
+  - _ref: pages/templated.yaml
 `
   );
 
   write('api/top-endpoint.yaml', returnEndpoint('top_endpoint'));
   write('pages/home.yaml', callApiPage('home', 'top_endpoint'));
   write('pages/missing.yaml', callApiPage('missing', 'does_not_exist'));
+
+  // A page defined as a _ref to a shared template WITH vars (the docs-app
+  // pattern). The page source ref is pages/templated.yaml (no vars at its
+  // site); JIT must re-run it so the template's _var: pageId resolves —
+  // regression guard for unresolvedRefVars / page-source-ref detection.
+  write(
+    'pages/templated.yaml',
+    `_ref:
+  path: templates/page.yaml
+  vars:
+    pageId: templated
+    heading: Templated Heading
+`
+  );
+  write(
+    'templates/page.yaml',
+    `id:
+  _var: pageId
+type: Box
+properties:
+  title:
+    _var: heading
+`
+  );
 
   write(
     'modules/inviter/module.lowdefy.yaml',
@@ -171,7 +196,9 @@ api:
 
 function readArtifact(buildDir, fileName) {
   try {
-    return serializer.deserialize(JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8')));
+    return serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8'))
+    );
   } catch {
     return null;
   }
@@ -270,7 +297,9 @@ beforeAll(async () => {
 async function buildAndCollectWarnings(pageId) {
   const context = hydrateContext({ buildDir, configDir });
   const result = await buildPageJit({ pageId, pageRegistry, context });
-  const warnings = (result?._warnings ?? []).filter((w) => w.message.includes('non-existent endpoint'));
+  const warnings = (result?._warnings ?? []).filter((w) =>
+    w.message.includes('non-existent endpoint')
+  );
   return { result, warnings };
 }
 
@@ -298,4 +327,15 @@ test('JIT build still warns when a CallAPI targets a genuinely missing endpoint'
   expect(warnings[0].message).toBe(
     'CallAPI action on page "missing" references non-existent endpoint "does_not_exist".'
   );
+});
+
+test('JIT build of a template-ref page resolves the template vars (regression)', async () => {
+  // pages/templated.yaml is `_ref: { path: templates/page.yaml, vars }` — the
+  // shallow build must record the inner ref's vars so the page registry picks
+  // pages/templated.yaml (not templates/page.yaml) as the source ref, and JIT
+  // re-runs it so `_var: pageId` / `_var: heading` resolve.
+  const context = hydrateContext({ buildDir, configDir });
+  const result = await buildPageJit({ pageId: 'templated', pageRegistry, context });
+  expect(result.id).toBe('page:templated');
+  expect(result.properties.title).toBe('Templated Heading');
 });

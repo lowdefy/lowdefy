@@ -124,6 +124,7 @@ async function applyRefSteps({
   factory,
   file,
   vars,
+  rawVars,
   key,
   transformer,
   transformerPath,
@@ -140,6 +141,19 @@ async function applyRefSteps({
 }) {
   const globalPath = globalSitePath(scope, sitePath);
   const refId = allocRefId({ scope, globalPath, refLine, file: refMapPath, original });
+
+  // Record raw (un-evaluated) vars keyed by instance ref id — the dev page
+  // registry reads this to find the page source ref (walker unresolvedRefVars
+  // parity). Only refs that actually carry vars register.
+  if (
+    refId !== null &&
+    scope.unresolvedRefVars &&
+    rawVars &&
+    typeof rawVars === 'object' &&
+    Object.keys(rawVars).length > 0
+  ) {
+    scope.unresolvedRefVars[refId] = rawVars;
+  }
 
   // Walker step 7: the cycle error is thrown OUTSIDE the per-ref collect
   // boundary — it propagates to the PARENT ref's catch (which nulls the

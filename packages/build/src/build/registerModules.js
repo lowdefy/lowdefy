@@ -255,7 +255,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
       entryCollectFactoryExports: localZoneFactoryKey,
       entryModuleRoot: moduleRoot,
     });
-    const extractionMod = await import(extraction.entryUrl);
+    const extractionMod = await import(/* @vite-ignore */ extraction.entryUrl);
     // Preliminary registration — makeManifestScope needs the entry.
     context.modules[entry.id] = {
       id: entry.id,
@@ -418,7 +418,7 @@ async function compileManifest({ entryId, context }) {
     entryCollectFactoryExports: manifestFactoryKey,
     entryModuleRoot: moduleRoot,
   });
-  const mod = await import(result.entryUrl);
+  const mod = await import(/* @vite-ignore */ result.entryUrl);
   moduleEntry.compiledManifestModule = mod;
   moduleEntry.compiledManifestImporter = result.importer;
   moduleEntry.compiledManifestImportSource = result.importSource;

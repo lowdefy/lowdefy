@@ -87,6 +87,7 @@ function makeManifestScope(context, moduleEntry) {
     resolveModuleVarDefault: makeResolveModuleVarDefault(context),
     ...makeScopeFileAccess(context),
     importSource: moduleEntry.compiledManifestImportSource ?? null,
+    unresolvedRefVars: context.unresolvedRefVars,
     module: bindModuleEntry({
       id: moduleEntry.id,
       consumerVars: moduleEntry.consumerVars ?? {},

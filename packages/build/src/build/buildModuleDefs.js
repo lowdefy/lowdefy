@@ -50,6 +50,7 @@ function entryFactoryKey(wp) {
 // the preserved vars/connections zones double as factories for phase 2.5
 // (cross-module refs in entry vars resolve against the registry).
 async function parseLowdefyYaml({ context }) {
+  context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const configDir = context.directories.config;
   let entry = 'lowdefy.yaml';
   if (
@@ -80,7 +81,7 @@ async function parseLowdefyYaml({ context }) {
     entryPreserveZones,
     entryCollectFactoryExports: entryFactoryKey,
   });
-  const mod = await import(result.entryUrl);
+  const mod = await import(/* @vite-ignore */ result.entryUrl);
 
   function makeAppLevelScope() {
     return createScope({
@@ -98,6 +99,7 @@ async function parseLowdefyYaml({ context }) {
       refTracker: makeRefTracker(context),
       getModuleEntry: (id) => context.modules?.[id],
       ...makeScopeFileAccess(context),
+      unresolvedRefVars: context.unresolvedRefVars,
     });
   }
   context.lowdefyEntryFactories = mod.factories ?? {};

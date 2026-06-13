@@ -76,7 +76,7 @@ async function compileRefs({ context }) {
   // importer compiles on demand, importSource compiles resolver content.
   context.compileGraph = { importer: result.importer, importSource: result.importSource };
 
-  const mod = await import(result.entryUrl);
+  const mod = await import(/* @vite-ignore */ result.entryUrl);
   const scope = createScope({
     vars: {},
     importer: result.importer,
@@ -93,6 +93,7 @@ async function compileRefs({ context }) {
     resolveModuleVarDefault: makeResolveModuleVarDefault(context),
     ...makeScopeFileAccess(context),
     importSource: result.importSource,
+    unresolvedRefVars: context.unresolvedRefVars,
   });
   let components = await mod.default(scope);
 
