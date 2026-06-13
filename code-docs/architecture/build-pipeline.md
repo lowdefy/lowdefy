@@ -103,13 +103,16 @@ After Phase 1, `context.modules` contains fully resolved manifests with all cros
 
 ### Phase 2: Ref Resolution
 
+> **v6 (config compiler).** Ref resolution no longer runs the runtime tree-walker. `build/index.js` calls `compileRefs()`, which compiles the config graph to ES module factories (`@lowdefy/compile`) and runs the entry factory; the compiled `_r.*` runtime (`packages/compile/src/runtime/applyRef.js`) reproduces every `_ref`/`_var`/`_build`/`_module.*` form the walker handled, including module component/menu refs, resolver refs, non-YAML content, and dynamic paths. The walker (`buildRefs/`) was deleted. The sections below describing `buildRefs`/`walker.js` document the **removed v5 architecture** and are pending a full code-docs refresh — see [config-compiler design](../../../lowdefy-design/designs/config-compiler/) for the current model.
+
 ```javascript
 createContext()     // Initialize build context
-buildRefs()         // Load and resolve all _ref operators
-                    // EXTENDED: handles _ref { module, component/menu }
+compileRefs()       // Compile the config graph and run the entry factory
+                    // (replaces buildRefs; resolves _ref { module, component/menu },
+                    //  resolver/content/dynamic refs, _build operators)
 ```
 
-When the walker encounters `_ref: { module, component }`, it calls `getModuleRefContent` to look up the export in the already-resolved manifest from Phase 1.
+The compiled runtime resolves `_ref: { module, component }` against the registered manifest (compiled factory, on-demand file import, or mark-preserving inline data) — the same registry the walker read.
 
 ### Phase 3: Build Modules
 
@@ -164,11 +167,13 @@ writeMaps(), writeTypes(), writePluginImports()
 //     tailwind-candidates.css, per-page tailwind HTML files)
 ```
 
-## The buildRefs System
+## The buildRefs System (removed in v6)
 
-**File:** `packages/build/src/build/buildRefs/buildRefs.js`
+> **Historical — describes the deleted v5 walker.** v6 resolves refs by compiling the config graph (`compileRefs` → `@lowdefy/compile`); `buildRefs/` no longer exists. This section is retained until the code-docs are refreshed for the compiler. The compiled runtime's per-ref contract (operation order, marker timeline, cycle handling) mirrors the steps described here — see `packages/compile/src/runtime/applyRef.js`.
 
-The `_ref` operator system resolves all configuration file references in a single async tree walk.
+**File (removed):** `packages/build/src/build/buildRefs/buildRefs.js`
+
+The `_ref` operator system resolved all configuration file references in a single async tree walk.
 
 ### How It Works: Single-Pass Walker
 
