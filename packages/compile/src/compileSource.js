@@ -40,7 +40,7 @@ function compileSource({
   if (file.endsWith('.njk')) {
     throw new ConfigError(
       `Structural nunjucks templates (.yaml.njk) are no longer supported — "${file}". ` +
-        `Run the v7 migration codemod: {{ var }} becomes _var, string-built ids become ` +
+        `Run the v6 migration codemod: {{ var }} becomes _var, string-built ids become ` +
         `_build.nunjucks or _build.string.concat, {% if %} becomes _build.if with ` +
         `_build.array.compact for conditional list membership. ` +
         `The runtime _nunjucks operator is unchanged.`,

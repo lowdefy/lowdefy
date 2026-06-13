@@ -28,7 +28,7 @@ _ref:
             - Splitting out the config for readability and code navigation.
             - Splitting out a piece of config in order to use the exact same config in multiple places.
             - Using a reference with variables to make use of a shared piece of config with dynamic variables.
-            - Using a `.njk` file to create config files using the Nunjucks templating language.
+            - Using `_build` operators to template config at build time (conditionals, mapping over lists).
             - Using resolver and transformer functions to create Lowdefy config using Javascript functions.
 
             ## Using References to Improve Readability
@@ -88,18 +88,20 @@ _ref:
                         _var: content
             ```
 
-            ## Nunjucks Templating
+            ## Build-time Templating with Operators
 
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. If a file ends with the `.njk` file extension, the file will first be hydrated as a Nunjucks template, using the `vars` as template variables. If the file ends with `.yaml.njk` or `.json.njk`, the output of the template will then be parsed. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
+            > **Changed in v6.** Structural Nunjucks template files (`.yaml.njk`, `.yml.njk`, `.json.njk` — where `{% %}` tags shape the YAML before it is parsed) are no longer supported. Build-time templating is now done with [`_build` operators](/_build) inside ordinary `.yaml` files, which the config compiler evaluates at build time. The runtime [`_nunjucks`](/_nunjucks) operator (for rendering strings at request/render time) and the `_build.nunjucks` build operator (for string-built ids and values) are unchanged. See the [v5 to v6 migration guide](/v5-to-v6) and the `migrate-njk-templates` codemod.
+
+            The build operators cover the same needs structural templates did: `_build.if` for conditionals, `_build.array.map` to repeat blocks over a list, and `_build.array.compact` to drop conditional list entries. Because they operate on resolved values (not pre-parse text), the template file is always valid YAML.
 
             Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
 
-            We can modify the example above to make use of nunjucks templating to allow us to add subsections to our page. This can be done as follows:
+            We can modify the example above to add subsections to our page using `_build.array.map`:
 
             ###### pages/page1.yaml
             ```yaml
             _ref:
-              path: templates/text_page.yaml.njk
+              path: templates/text_page.yaml
               vars:
                 id: page1
                 title: Page 1
@@ -121,7 +123,7 @@ _ref:
             Page content text.
             ```
 
-            ###### templates/text_page.yaml.njk
+            ###### templates/text_page.yaml
             ```yaml
             id:
               _var: id
@@ -143,18 +145,27 @@ _ref:
                     properties:
                       content:
                         _var: content
-                  {% if subsections %}
-                  {% for subsection in subsections %}
-                  - id: {{ subsection.id }}_title
-                    type: Title
-                    properties:
-                      content: {{ subsection.title }}
-                  - id: {{ subsection.id }}_content
-                    type: Markdown
-                    properties:
-                      content: {{ subsection.content }}
-                  {% endfor %}
-                  {% endif %}
+                  # One title + content block per subsection, flattened into
+                  # the surrounding blocks list.
+                  _build.array.flat:
+                    - _build.array.map:
+                        - _var: subsections
+                        - - id:
+                              _build.string.concat:
+                                - _args: { key: '0.id' }
+                                - _title
+                            type: Title
+                            properties:
+                              content:
+                                _args: { key: '0.title' }
+                          - id:
+                              _build.string.concat:
+                                - _args: { key: '0.id' }
+                                - _content
+                            type: Markdown
+                            properties:
+                              content:
+                                _args: { key: '0.content' }
             ```
 
             ## Custom JavaScript Functions

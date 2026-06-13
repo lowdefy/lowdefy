@@ -3,12 +3,17 @@
     {
       "version": "6.0.0",
       "from": ">=5.0.0 <6.0.0",
-      "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports)",
+      "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports); config compiler (structural .yaml.njk templates removed)",
       "codemods": [
         {
           "id": "migrate-plugin-packages",
           "description": "Convert custom plugin packages for the unbundled Node ESM server: exports subpaths must resolve to files (fixes ERR_UNSUPPORTED_DIR_IMPORT), next-auth imports move to @auth/core, next/* imports and NEXT_PUBLIC_* reads are removed.",
           "path": "v6-0-0/01-migrate-plugin-packages.md"
+        },
+        {
+          "id": "migrate-njk-templates",
+          "description": "Report-only: convert structural .yaml.njk templates to operators. {{ var }} becomes _var, string-built ids become _build.nunjucks/_build.string.concat, {% if %}/{% for %} become _build.if/_build.array.map with _build.array.compact. The runtime _nunjucks operator and _build.nunjucks are unchanged.",
+          "path": "v6-0-0/02-migrate-njk-templates.md"
         }
       ]
     },

@@ -42,6 +42,7 @@ _ref:
             | `NEXT_PUBLIC_SENTRY_DSN` removed | Apps using Sentry | Set `SENTRY_DSN` only |
             | CLI `--no-next-build` renamed | Deployment scripts | Use `--no-client-build` (old flag is a deprecated alias) |
             | Page navigation is client-side (SPA) | All apps | No action; full reloads no longer happen on navigation |
+            | Structural `.yaml.njk` templates removed | Apps using `.yaml.njk` files | Convert to `_build` operators (codemod: `migrate-njk-templates`) |
 
             ## Server runs on Hono + Vite
 
@@ -60,6 +61,14 @@ _ref:
             - **Users sign in again once.** The session cookie prefix changes from `next-auth.*` to `authjs.*`, so existing sessions are invalidated on upgrade.
             - **`NEXTAUTH_SECRET` and `NEXTAUTH_URL` still work**, but `AUTH_SECRET` and `AUTH_URL` are the preferred names going forward.
             - **Email sign-in flows expect `nodemailer@^7`.** Auth.js declares a `nodemailer@^7` peer dependency. Custom email providers (or plugins) that pin `nodemailer@6` keep working but log a peer-dependency warning during install — upgrade the `nodemailer` dependency in your app or plugin to `^7` to clear it.
+
+            ## Config compiler
+
+            v6 compiles your config ahead of time instead of resolving it with a runtime tree-walker. This is internal — `_ref`, `_var`, `_build` operators, modules, resolvers and transformers all behave as before — with one breaking change:
+
+            - **Structural Nunjucks template files are removed.** Files whose `{% %}` / `{{ }}` tags shape the YAML *before it parses* (`.yaml.njk`, `.yml.njk`, `.json.njk`) are no longer supported; a build that finds one now fails with an error pointing here. Convert them to [`_build` operators](/_build) inside ordinary `.yaml` files — `_build.if` for conditionals, `_build.array.map` to repeat blocks, `_build.array.compact` for conditional list entries, and `_build.nunjucks` or `_build.string.concat` for string-built ids. The `migrate-njk-templates` codemod reports every `.yaml.njk` file and the operator equivalents for each construct.
+            - **The runtime `_nunjucks` operator and the `_build.nunjucks` build operator are unchanged.** Only the structural template *file* form is gone — string templating still works through these operators.
+            - **A global `refResolver` is still supported** (in `lowdefy.yaml` `cli.refResolver` or `--ref-resolver`), as are per-`_ref` `resolver` and `transformer` functions.
 
       - _ref:
           path: templates/navigation_buttons.yaml

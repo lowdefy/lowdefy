@@ -323,10 +323,10 @@ _ref:
             - Splitting out the config for readability and code navigation.
             - Splitting out a piece of config in order to use the exact same config in multiple places.
             - Using a reference with variables to make use of a shared piece of config with dynamic variables.
-            - Using a `.njk` file to create config files using the Nunjucks templating language.
+            - Using `_build` operators to template config at build time (conditionals, mapping over lists).
             - Using resolver and transformer functions to create Lowdefy config using Javascript functions.
 
-            References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema. Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
+            References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema. Build-time templating is done with [`_build` operators](/_build) — `_build.if`, `_build.array.map`, `_build.array.compact` and friends — evaluated by the config compiler while the app builds. (Structural Nunjucks template files — `.yaml.njk` — were removed in v6; see the [v5 to v6 migration guide](/v5-to-v6).)
 
             See more about references and templates [here](/references-and-templates).
 
