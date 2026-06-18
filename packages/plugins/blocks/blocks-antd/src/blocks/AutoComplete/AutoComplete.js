@@ -40,6 +40,7 @@ const AutoCompleteInput = ({
   return (
     <Label
       blockId={blockId}
+      methods={methods}
       classNames={classNames}
       components={components}
       events={events}

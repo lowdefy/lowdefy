@@ -44,6 +44,7 @@ export default {
     },
     onFocus: 'Trigger action when text input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

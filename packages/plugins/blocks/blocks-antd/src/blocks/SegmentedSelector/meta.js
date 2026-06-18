@@ -35,6 +35,7 @@ export default {
       description: 'Trigger actions when selection is changed.',
       event: { value: 'The selected value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

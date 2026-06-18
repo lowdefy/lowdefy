@@ -3607,6 +3607,36 @@
                   "type": "string",
                   "description": "Label title - supports html."
                 },
+                "tooltip": {
+                  "description": "Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "Tooltip text shown on hover - supports html."
+                        },
+                        "icon": {
+                          "type": "string",
+                          "default": "AiOutlineQuestionCircle",
+                          "description": "Name of the icon to show beside the label."
+                        },
+                        "color": {
+                          "type": "string",
+                          "description": "Color of the tooltip icon.",
+                          "docs": {
+                            "displayType": "color"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
                 "span": {
                   "type": "number",
                   "description": "Label inline span."
@@ -4392,6 +4422,23 @@
                       "value": "The search input value."
                     }
                   }
+                },
+                "onTooltipClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the tooltip icon is clicked."
                 }
               }
             }

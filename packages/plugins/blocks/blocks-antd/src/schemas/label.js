@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import tooltip from './labelTooltip.js';
+
 export default {
   type: 'object',
   description: 'Label properties.',
@@ -38,6 +40,7 @@ export default {
       type: 'string',
       description: 'Label title - supports html.',
     },
+    tooltip,
     span: {
       type: 'number',
       description: 'Label inline span.',

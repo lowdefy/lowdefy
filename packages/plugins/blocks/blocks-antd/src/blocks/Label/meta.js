@@ -14,9 +14,20 @@
   limitations under the License.
 */
 
+import tooltip from '../../schemas/labelTooltip.js';
+
 export default {
   category: 'container',
-  icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
+  events: {
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
+  },
+  icons: [
+    'AiFillCloseCircle',
+    'AiFillCheckCircle',
+    'AiOutlineLoading',
+    'AiFillExclamationCircle',
+    'AiOutlineQuestionCircle',
+  ],
   valueType: null,
   slots: {
     content: 'The labeled input or content blocks.',
@@ -61,6 +72,7 @@ export default {
         type: 'string',
         description: 'Label title - supports html.',
       },
+      tooltip,
       span: {
         type: 'number',
         description: 'Label inline span.',

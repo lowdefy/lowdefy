@@ -90,7 +90,7 @@ _ref:
             | Property | Type | Default | Description |
             | --- | --- | --- | --- |
             | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
-            | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. |
+            | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
             | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
             | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
@@ -315,6 +315,7 @@ _ref:
             | Event | When | Event data |
             | --- | --- | --- |
             | `onBeforeSend` | Before a message is sent. Return `success: false` to cancel. | `text`, `files`, `messages`, `switches` |
+            | `onConversationStart` | Once per conversation, on its first user message. | `conversationId` |
             | `onUserMessage` | User sends a message. | `role`, `content`, `messageId`, `parts`, `messages` |
             | `onMessageComplete` | Agent finishes responding. | `role`, `content`, `messageId`, `parts`, `finishReason`, `isAbort`, `isDisconnect`, `messages` |
             | `onToolCall` | Agent calls a tool. | `toolName`, `toolCallId`, `input` |
@@ -327,7 +328,7 @@ _ref:
             | `onEditMessage` | User edits and resubmits. | `messageId`, `originalContent`, `newContent`, `messages` |
             | `onSuggestionClick` | User clicks a suggestion. | `suggestion` |
             | `onSwitchChange` | User toggles a sender switch. | `key`, `checked` |
-            | `onTitleGenerated` | A `data-chat-title` data part arrives. | `title` |
+            | `onTitleGenerated` | A `data-chat-title` data part arrives — emitted automatically when the agent's [`generateTitle`](/agent-properties) property is set, or manually from an `onFinish` hook. | `title` |
             | `onDataPart` | Any data part arrives from the server. | `type`, `data`, `id` |
 
             ###### Validate messages before sending:

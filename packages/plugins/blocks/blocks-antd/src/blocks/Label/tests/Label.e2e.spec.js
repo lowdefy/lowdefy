@@ -79,12 +79,8 @@ test.describe('Label Block', () => {
     const block = getBlock(page, 'label_disabled');
     await expect(block).toBeVisible();
 
-    // When disabled, Label doesn't render the outer label element
-    // Only the nested content's label (from TextInput) should be present
-    // Check the outer Label's element count is 0 by checking for title attribute
-    const outerLabel = getLabel(page, 'label_disabled').locator(
-      'label[title="This Should Not Appear"]'
-    );
+    // When disabled, Label renders no <label> element of its own.
+    const outerLabel = getLabel(page, 'label_disabled').locator('> div > label');
     await expect(outerLabel).toHaveCount(0);
   });
 

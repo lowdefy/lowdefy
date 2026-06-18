@@ -15,6 +15,7 @@
 */
 
 import LabelMeta from '../Label/meta.js';
+import tooltip from '../../schemas/labelTooltip.js';
 
 export default {
   category: 'input',
@@ -31,6 +32,7 @@ export default {
       description: 'Trigger actions when selection is changed.',
       event: { value: 'The checkbox value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',
@@ -76,6 +78,7 @@ export default {
             type: 'string',
             description: 'Label title - supports html.',
           },
+          tooltip,
           span: {
             type: 'number',
             description: 'Label inline span.',

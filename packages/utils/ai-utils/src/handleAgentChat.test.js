@@ -40,18 +40,36 @@ function createMockReadableStream(chunks = []) {
 const mockWriter = {
   write: jest.fn(),
 };
-const mockCreateAgentUIStream = jest
-  .fn()
-  .mockImplementation(async () => createMockReadableStream());
+// The AI SDK delivers the full updated UI message list (input + this assistant
+// message) to the stream-level onFinish. The mocks below invoke onFinish with
+// that shape so tests can assert the onFinish hook payload includes the reply.
+const MOCK_ASSISTANT_MESSAGE = {
+  id: 'assistant-1',
+  role: 'assistant',
+  parts: [{ type: 'text', text: 'Hello there' }],
+};
+async function defaultCreateAgentUIStream(opts) {
+  if (opts?.onFinish) {
+    opts.onFinish({ messages: [...(opts.uiMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  }
+  return createMockReadableStream();
+}
+const mockCreateAgentUIStream = jest.fn().mockImplementation(defaultCreateAgentUIStream);
 const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => {
   mockCreateUIMessageStream._lastExecute = execute;
   return { type: 'readable-stream' };
 });
 const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
+const mockGenerateText = jest.fn().mockResolvedValue({ text: 'Generated Title' });
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
-const mockToUIMessageStream = jest.fn().mockImplementation(() => createMockReadableStream());
+const mockToUIMessageStream = jest.fn().mockImplementation((opts) => {
+  if (opts?.onFinish) {
+    opts.onFinish({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  }
+  return createMockReadableStream();
+});
 class MockToolLoopAgent {
   constructor(config) {
     this.config = config;
@@ -75,6 +93,7 @@ jest.unstable_mockModule('ai', () => ({
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
+  generateText: mockGenerateText,
   pruneMessages: mockPruneMessages,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
@@ -979,7 +998,7 @@ test('stream-level onFinish calls hook endpoints with messages payload', async (
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
     payload: expect.objectContaining({
-      messages,
+      messages: [...messages, MOCK_ASSISTANT_MESSAGE],
       steps: [],
       toolResults: [],
       finishReason: 'stop',
@@ -1467,7 +1486,7 @@ test('repairToolCall is not set when not configured', async () => {
   expect(lastAgentConfig.experimental_repairToolCall).toBeUndefined();
 });
 
-test('onFinish hook receives original input messages in payload', async () => {
+test('onFinish hook payload messages include the generated assistant reply', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
 
@@ -1494,7 +1513,7 @@ test('onFinish hook receives original input messages in payload', async () => {
 
   expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
     payload: expect.objectContaining({
-      messages: inputMessages,
+      messages: [...inputMessages, MOCK_ASSISTANT_MESSAGE],
       finishReason: 'stop',
       isAborted: false,
     }),
@@ -1556,7 +1575,14 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
         stepNumber: 0,
         text: 'Looking up products...',
         toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
-        toolResults: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' }, output: [{ name: 'MacBook' }] }],
+        toolResults: [
+          {
+            toolCallId: 'tc1',
+            toolName: 'search',
+            input: { q: 'laptop' },
+            output: [{ name: 'MacBook' }],
+          },
+        ],
         finishReason: 'tool-calls',
         usage: {
           inputTokens: 100,
@@ -1613,7 +1639,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
   });
 
   // Restore default mock
-  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
 });
 
 test('usage accumulator handles missing usage gracefully', async () => {
@@ -1661,7 +1687,7 @@ test('usage accumulator handles missing usage gracefully', async () => {
   });
 
   // Restore default mocks
-  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
 });
 
 test('pageContext true prepends context block to instructions', async () => {
@@ -1940,7 +1966,7 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
   ]);
   expect(payload.toolResults).toEqual([mockToolResult]);
 
-  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
 });
 
 test('onFinish hook payload has empty toolResults when no tools called', async () => {
@@ -1986,7 +2012,7 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
   expect(payload.steps[0].text).toBe('Hello!');
   expect(payload.toolResults).toEqual([]);
 
-  mockCreateAgentUIStream.mockImplementation(async () => createMockReadableStream());
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
 });
 
 test('prune config triggers decomposed stream pipeline instead of createAgentUIStream', async () => {
@@ -2042,6 +2068,7 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
   });
   expect(mockToUIMessageStream).toHaveBeenCalledWith({
     originalMessages: mockValidated,
+    onFinish: expect.any(Function),
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
 });
@@ -2147,4 +2174,150 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
     timeout: 30000,
     onStepFinish: expect.any(Function),
   });
+});
+
+test('onFinish hook payload messages include the assistant reply on the prune path', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const validated = [{ id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Hi' }] }];
+  mockValidateUIMessages.mockResolvedValue(validated);
+  mockConvertToModelMessages.mockResolvedValue([]);
+  mockPruneMessages.mockReturnValue([]);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o', prune: { reasoning: 'all' } },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hi' }] }],
+    },
+    context: { callEndpoint, getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
+    payload: expect.objectContaining({
+      messages: [...validated, MOCK_ASSISTANT_MESSAGE],
+    }),
+  });
+});
+
+test('generateTitle disabled does not call generateText or write a title part', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const localWriter = { write: jest.fn() };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(mockGenerateText).not.toHaveBeenCalled();
+  expect(localWriter.write).not.toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'data-chat-title' })
+  );
+});
+
+test('generateTitle true generates a title from the first user message on the first turn', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockGenerateText.mockResolvedValue({ text: '  Laptop Shopping Help  ' });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Help me find a laptop' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const localWriter = { write: jest.fn() };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(mockGenerateText).toHaveBeenCalledTimes(1);
+  expect(mockGenerateText.mock.calls[0][0].prompt).toContain('Help me find a laptop');
+  expect(localWriter.write).toHaveBeenCalledWith({
+    type: 'data-chat-title',
+    data: { title: 'Laptop Shopping Help' },
+  });
+
+  mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
+});
+
+test('generateTitle does not run when the conversation already has an assistant message', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [
+        { role: 'user', parts: [{ type: 'text', text: 'Hi' }] },
+        { role: 'assistant', parts: [{ type: 'text', text: 'Hello!' }] },
+        { role: 'user', parts: [{ type: 'text', text: 'Tell me more' }] },
+      ],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+
+  expect(mockGenerateText).not.toHaveBeenCalled();
+});
+
+test('generateTitle failure is non-fatal and does not break the stream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockGenerateText.mockRejectedValueOnce(new Error('model unavailable'));
+  const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const localWriter = { write: jest.fn() };
+  await expect(
+    mockCreateUIMessageStream._lastExecute({ writer: localWriter })
+  ).resolves.toBeUndefined();
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('generateTitle failed'));
+  expect(localWriter.write).not.toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'data-chat-title' })
+  );
+
+  consoleSpy.mockRestore();
+  mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
 });

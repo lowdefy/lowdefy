@@ -31,6 +31,7 @@ export default {
       description: 'Trigger action when the slider value changes.',
       event: { value: 'The current slider value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

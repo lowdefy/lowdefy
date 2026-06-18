@@ -54,6 +54,7 @@ export default {
     onBlur: 'Trigger action event occurs when input loses focus.',
     onFocus: 'Trigger action when input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

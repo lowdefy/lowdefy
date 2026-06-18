@@ -44,6 +44,7 @@ export default {
       description: 'Trigger action when week is changed.',
       event: { value: 'The selected week value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

@@ -45,6 +45,7 @@ export default {
       description: 'Trigger actions when the color picker popup open state changes.',
       event: { open: 'Whether the popup is open.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

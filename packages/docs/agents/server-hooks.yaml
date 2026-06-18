@@ -75,12 +75,15 @@ _ref:
 
             | Field | Type | Description |
             | --- | --- | --- |
-            | `messages` | array | All messages in the conversation, including the agent's latest response. |
+            | `messages` | array | The full conversation as `UIMessage[]`, **including the agent's latest assistant reply** (with any tool parts). Upsert this by `conversationId` to persist the whole thread. |
             | `steps` | array | One entry per agent step. Each step has `stepNumber`, `text`, `toolCalls`, `toolResults`, and `finishReason`. |
             | `toolResults` | array | Flattened tool results across all steps — convenience for hooks that only care about what tools returned. |
             | `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
             | `isAborted` | boolean | `true` if the client cancelled the request. |
-            | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `sharedState` | | Context values mirrored from the request. |
+            | `usage` | object | Token usage for the turn: `inputTokens`, `outputTokens`, `totalTokens`, `reasoningTokens`, `cacheReadTokens`, `cacheWriteTokens`. |
+            | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `sharedState` | | Context values mirrored from the request, **at the top level** of the payload. |
+
+            Read these fields at the **top level** of `_payload` (e.g. `_payload: conversationId`, `_payload: usage`) — they are not nested under an `agentContext` key.
 
             Use `steps` or `toolResults` to drive agent → page sync — for example, returning a `data-...` part that a form block consumes via `onDataPart`.
 
@@ -128,6 +131,8 @@ _ref:
             ```
 
             ## Generating Titles
+
+            > **Built-in option:** set the agent's [`generateTitle`](/agent-properties) property to `true` and Lowdefy generates a short title from the first user message automatically, emitting the `data-chat-title` part for you. The manual approach below is only needed when you want custom title logic.
 
             Use a `data-chat-title` data part to send a generated title back to the client. The [`AgentChat`](/AgentChat) block fires an `onTitleGenerated` event when it receives this data part.
 

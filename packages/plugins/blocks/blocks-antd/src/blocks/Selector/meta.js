@@ -54,6 +54,7 @@ export default {
       description: 'Trigger actions when input is changed.',
       event: { value: 'The search input value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

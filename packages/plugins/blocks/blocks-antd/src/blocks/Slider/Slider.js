@@ -37,6 +37,7 @@ const SliderBlock = ({
   return (
     <Label
       blockId={blockId}
+      methods={methods}
       classNames={classNames}
       components={{ Icon, Link }}
       events={events}
