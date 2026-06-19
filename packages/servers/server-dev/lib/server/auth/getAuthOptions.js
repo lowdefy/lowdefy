@@ -23,8 +23,10 @@ import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
-function getAuthOptions({ logger }) {
+function getAuthOptions({ appMeta, logger }) {
   return getNextAuthConfig({
+    appMeta,
+    dev: true,
     authJson,
     logger,
     plugins: { adapters, callbacks, events, providers },

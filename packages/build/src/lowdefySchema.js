@@ -292,6 +292,9 @@ export default {
         advanced: {
           type: 'object',
           properties: {
+            cookiePrefix: {
+              type: 'string',
+            },
             cookies: {
               type: 'object',
             },

@@ -16,6 +16,8 @@
 
 import { spawn } from 'child_process';
 
+import reconcileNextAuthUrl from './reconcileNextAuthUrl.mjs';
+
 function createStdErrLineHandler({ context }) {
   const port = context.options.port;
   return function stdErrLineHandler(line) {
@@ -37,6 +39,7 @@ function startServer(context) {
     env: {
       ...process.env,
       LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+      NEXTAUTH_URL: reconcileNextAuthUrl({ context }),
       PORT: context.options.port,
     },
   });

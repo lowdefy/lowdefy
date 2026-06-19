@@ -22,11 +22,12 @@ import createCallbacks from './callbacks/createCallbacks.js';
 import createEvents from './events/createEvents.js';
 import createLogger from './createLogger.js';
 import createProviders from './createProviders.js';
+import resolveCookies from './resolveCookies.js';
 
 const nextAuthConfig = {};
 let initialized = false;
 
-function getNextAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
+function getNextAuthConfig({ appMeta, authJson, dev, logger, plugins, secrets }) {
   if (initialized) return nextAuthConfig;
 
   const operatorsParser = new ServerParser({
@@ -55,7 +56,7 @@ function getNextAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
   nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
-  nextAuthConfig.cookies = authConfig?.advanced?.cookies;
+  nextAuthConfig.cookies = resolveCookies({ appMeta, authConfig, dev });
   nextAuthConfig.originalRedirectCallback = nextAuthConfig.callbacks.redirect;
   initialized = true;
   return nextAuthConfig;
