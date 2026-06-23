@@ -38,7 +38,10 @@ import usageHandler from './routes/usage.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
-function createApp() {
+// `serveStaticAssets` is true for the Node server (it serves `dist/client` itself). On a
+// platform that serves the built client + public files from a CDN (e.g. Vercel), pass false so
+// the request handler skips the Node-only static middleware and only owns the dynamic routes.
+function createApp({ serveStaticAssets = true } = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
@@ -68,13 +71,15 @@ function createApp() {
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.
-  app.use(
-    '/*',
-    serveStatic({
-      root: './dist/client',
-      rewriteRequestPath: basePath ? (path) => path.replace(basePath, '') : undefined,
-    })
-  );
+  if (serveStaticAssets) {
+    app.use(
+      '/*',
+      serveStatic({
+        root: './dist/client',
+        rewriteRequestPath: basePath ? (path) => path.replace(basePath, '') : undefined,
+      })
+    );
+  }
 
   app.use('/*', apiContext());
   app.get('/', (c) => renderPage(c, { pageId: '' }));

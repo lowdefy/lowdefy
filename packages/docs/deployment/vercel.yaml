@@ -24,32 +24,42 @@ _ref:
         type: Markdown
         properties:
           content: |
-            To deploy a Lowdefy app on Vercel a custom install script needs to run to download the server and build the Lowdefy configuration. This script prepares the Lowdefy server, which Vercel then builds with the Vite client build. The install script needs to be placed in an empty directory and it installs the server in its working directory - by default this directory is called `deploy`.
+            A Lowdefy app builds a [Hono](https://hono.dev) server serving a Vite-built React client. On Vercel it runs as **static assets on the CDN plus one Serverless Function** that runs the Hono app for every dynamic request (page rendering, `/api/*` requests, endpoints, auth and agents).
 
-            The script can be created using the `init-vercel` CLI command, or the following file can be created at `<config-directory>/deploy/vercel.install.sh`:
-
-            ###### vercel.install.sh
+            Run the `init-vercel` CLI command in your project to scaffold everything into a `deploy/` directory next to your `lowdefy.yaml`:
 
             ```bash
-            # Read Lowdefy version from lowdefy.yaml using sed
-            LOWDEFY_VERSION=$(sed -nE "s/lowdefy:(.*)/\1/p" ../lowdefy.yaml)
-            # Substitution params are to trim whitespace from the LOWDEFY_VERSION var
-            npx lowdefy@${LOWDEFY_VERSION//[[:space:]]/} build --config-directory ../  --server-directory . --no-client-build --log-level=debug
+            npx lowdefy@latest init-vercel
             ```
 
-            To deploy a Lowdefy app on Vercel:
+            This creates:
 
-            - Create a new project
-            - Connect the GitHub, Gitlab or BitBucket repository with your Lowdefy app to the Vercel project
-            - The framework preset should be `Other`
-            - The root directory should be `<config-directory>/deploy`
-                -  `<config-directory>` is the path to the directory in which the `lowdefy.yaml` file is placed
-                - Eg: If the `lowdefy.yaml` is in the top level of the repository the configured root directory should be `deploy`
-                - Eg: If the `lowdefy.yaml` is in the directory `apps/app_name` the configured root directory should be `apps/app_name/deploy`
-            - The build command should be `pnpm run build:client`
-            - The install command should be `sh vercel.install.sh`
+            - `deploy/vercel.install.sh` — the install command; downloads the Lowdefy server into `deploy/` (skipping the client build, which Vercel runs as the build step).
+            - `deploy/vercel.json` — serves the built client (`dist/client`) from the CDN and rewrites every other request to the function. It also sets the build command (`pnpm run build:client`) and output directory (`dist/client`).
+            - `deploy/api/index.js` — the Serverless Function; wraps the Lowdefy Hono app with `hono/vercel`.
+            - `deploy/README.md` — these instructions.
 
+            All four files are safe to commit.
 
-            Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Different secrets can be set for production and preview deployments.
+            ###### Project settings
+
+            In the Vercel project:
+
+            - **Framework Preset:** `Other` (Lowdefy is not a Next.js app).
+            - **Root Directory:** `<config-directory>/deploy`
+                - `<config-directory>` is the directory in which the `lowdefy.yaml` file is placed.
+                - Eg: if `lowdefy.yaml` is at the top level of the repository, set the root directory to `deploy`; if it is in `apps/app_name`, set it to `apps/app_name/deploy`.
+            - **Install Command:** `sh vercel.install.sh`. Leave the **Build Command** and **Output Directory** to `vercel.json` (do not override them in the dashboard).
+            - Enable **"Include files outside the root directory in the Build Step"** — the Lowdefy config usually lives in the parent of `deploy/`.
+
+            ###### Public files
+
+            Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build and served by the Vercel CDN — no extra configuration needed.
+
+            ###### Secrets and environment variables
+
+            Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and `AUTH_URL` for OAuth) for authentication. Different secrets can be set for production and preview deployments.
+
+            > The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are subject to Vercel's function response and duration limits — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) running `node src/index.js` may suit better.
 
             All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.
