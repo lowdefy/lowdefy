@@ -1608,6 +1608,15 @@ export default {
             type: 'App "config.basePath" should be a string.',
           },
         },
+        requestTimeout: {
+          type: 'number',
+          minimum: 0,
+          description:
+            'Maximum time in milliseconds a request may run before the server returns a timeout. Protects against hung upstream calls (database, SMTP, external APIs) running to the platform function limit — important on serverless hosts billed by duration. Defaults to 30000 (30s). Set to 0 to disable. Agent streaming routes are exempt.',
+          errorMessage: {
+            type: 'App "config.requestTimeout" should be a number.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:

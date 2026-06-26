@@ -60,6 +60,13 @@ _ref:
 
             Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and `AUTH_URL` for OAuth) for authentication. Different secrets can be set for production and preview deployments.
 
-            > The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are subject to Vercel's function response and duration limits — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) running `node src/index.js` may suit better.
+            ###### Cost protection
+
+            Vercel Fluid bills by execution duration, so a request that hangs (a stuck database, SMTP or external API call) is a real cost risk. Two guardrails apply:
+
+            - **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on. Set to `0` to disable. Agent streaming routes are exempt.
+            - **`maxDuration`** in the generated `vercel.json` (default `60`) — a hard platform cap; Vercel stops the function at this many seconds. Raise it if you run long agent streams, lower it to tighten the ceiling.
+
+            > The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
 
             All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.

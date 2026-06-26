@@ -5,7 +5,8 @@
   "outputDirectory": "dist/client",
   "functions": {
     "api/index.js": {
-      "includeFiles": "{build/**,lib/build/**,dist/client/.vite/manifest.json,package.json}"
+      "includeFiles": "{build/**,lib/build/**,dist/client/.vite/manifest.json,package.json}",
+      "maxDuration": 60
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
