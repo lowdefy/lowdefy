@@ -13,6 +13,10 @@
     box-shadow 0.2s,
     background 0.2s;
   padding: 0;
+  /* Column flex so the editable fills the wrapper's min-height (see ProseMirror rule), making the
+     whole multi-line box a click/focus target — not just the first line of content. */
+  display: flex;
+  flex-direction: column;
 }
 
 .tiptap-wrapper:hover {
@@ -76,10 +80,12 @@
   cursor: not-allowed;
 }
 
-/* ProseMirror editable — sits inside the wrapper. */
+/* ProseMirror editable — sits inside the wrapper. Grow to fill the wrapper's min-height so a click
+   anywhere in the box (not only the first content line) lands in the editor and places the cursor. */
 .tiptap.ProseMirror {
   padding: 8px;
   outline: none;
+  flex: 1 1 auto;
 }
 
 /* Editor content styling.
