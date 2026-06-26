@@ -30,7 +30,7 @@ import statusClass from '../utils/statusClass.js';
 import suggestion from './suggestion.js';
 import useTiptapMentionState from './useTiptapMentionState.js';
 
-import './style.module.css';
+import './style.css';
 
 function mentionLabel(id) {
   return id?.tag?.title ?? id?.label ?? id;

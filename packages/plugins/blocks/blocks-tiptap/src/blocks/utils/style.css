@@ -3,7 +3,7 @@
    stylesheet class — we replicate the input look using antd's theme
    CSS variables (--ant-color-*, --ant-border-radius) so the block
    tracks the active theme without depending on cssinjs. */
-:global(.tiptap-wrapper) {
+.tiptap-wrapper {
   border: 1px solid var(--ant-color-border, #d9d9d9);
   border-radius: var(--ant-border-radius, 6px);
   background: var(--ant-color-bg-container, #fff);
@@ -15,69 +15,69 @@
   padding: 0;
 }
 
-:global(.tiptap-wrapper):hover {
+.tiptap-wrapper:hover {
   border-color: var(--ant-color-primary-hover, #4096ff);
 }
 
-:global(.tiptap-wrapper):focus-within {
+.tiptap-wrapper:focus-within {
   border-color: var(--ant-color-primary, #1677ff);
   box-shadow: 0 0 0 2px var(--ant-color-primary-bg, rgba(22, 119, 255, 0.1));
   outline: none;
 }
 
-:global(.tiptap-wrapper-borderless) {
+.tiptap-wrapper-borderless {
   border-color: transparent;
   background: transparent;
 }
 
-:global(.tiptap-wrapper-borderless):hover,
-:global(.tiptap-wrapper-borderless):focus-within {
+.tiptap-wrapper-borderless:hover,
+.tiptap-wrapper-borderless:focus-within {
   border-color: transparent;
   box-shadow: none;
 }
 
-:global(.tiptap-wrapper-error) {
+.tiptap-wrapper-error {
   border-color: var(--ant-color-error, #ff4d4f);
 }
 
-:global(.tiptap-wrapper-error):hover {
+.tiptap-wrapper-error:hover {
   border-color: var(--ant-color-error-hover, var(--ant-color-error, #ff4d4f));
 }
 
-:global(.tiptap-wrapper-error):focus-within {
+.tiptap-wrapper-error:focus-within {
   border-color: var(--ant-color-error, #ff4d4f);
   box-shadow: 0 0 0 2px var(--ant-color-error-bg, rgba(255, 77, 79, 0.1));
 }
 
-:global(.tiptap-wrapper-warning) {
+.tiptap-wrapper-warning {
   border-color: var(--ant-color-warning, #faad14);
 }
 
-:global(.tiptap-wrapper-warning):hover {
+.tiptap-wrapper-warning:hover {
   border-color: var(--ant-color-warning-hover, var(--ant-color-warning, #faad14));
 }
 
-:global(.tiptap-wrapper-warning):focus-within {
+.tiptap-wrapper-warning:focus-within {
   border-color: var(--ant-color-warning, #faad14);
   box-shadow: 0 0 0 2px var(--ant-color-warning-bg, rgba(250, 173, 20, 0.1));
 }
 
-:global(.tiptap-wrapper-disabled) {
+.tiptap-wrapper-disabled {
   background: var(--ant-color-bg-container-disabled, rgba(0, 0, 0, 0.04));
   color: var(--ant-color-text-disabled, rgba(0, 0, 0, 0.25));
   cursor: not-allowed;
 }
 
-:global(.tiptap-wrapper-disabled):hover {
+.tiptap-wrapper-disabled:hover {
   border-color: var(--ant-color-border, #d9d9d9);
 }
 
-:global(.tiptap-wrapper-disabled) :global(.tiptap.ProseMirror) {
+.tiptap-wrapper-disabled .tiptap.ProseMirror {
   cursor: not-allowed;
 }
 
 /* ProseMirror editable — sits inside the wrapper. */
-:global(.tiptap.ProseMirror) {
+.tiptap.ProseMirror {
   padding: 8px;
   outline: none;
 }
@@ -100,38 +100,38 @@
 
 /* Paragraphs: a small gap so successive lines (each a new <p> from pressing
    Enter) read as separate lines instead of merging. */
-:global(.tiptap) :global(p) {
+.tiptap p {
   margin: 0 0 0.5em;
 }
 
-:global(.tiptap) > :global(p):last-child {
+.tiptap > p:last-child {
   margin-bottom: 0;
 }
 
 /* Lists: restore the markers and indent the antd reset removes. */
-:global(.tiptap) :global(ul),
-:global(.tiptap) :global(ol) {
+.tiptap ul,
+.tiptap ol {
   margin: 0 0 0.5em;
   padding-left: 1.5em;
 }
 
-:global(.tiptap) :global(ul) {
+.tiptap ul {
   list-style: disc;
 }
 
-:global(.tiptap) :global(ol) {
+.tiptap ol {
   list-style: decimal;
 }
 
 /* Keep paragraphs inside list items and nested lists tight. */
-:global(.tiptap) :global(li) :global(p),
-:global(.tiptap) :global(li) :global(ul),
-:global(.tiptap) :global(li) :global(ol) {
+.tiptap li p,
+.tiptap li ul,
+.tiptap li ol {
   margin-bottom: 0;
 }
 
 /* Blockquote: restore the indent and add a quote bar. */
-:global(.tiptap) :global(blockquote) {
+.tiptap blockquote {
   margin: 0 0 0.5em;
   padding-left: 1em;
   border-left: 3px solid var(--ant-color-border, #d9d9d9);
@@ -140,44 +140,44 @@
 
 /* Headings: the reset flattens all six to weight 500 with no size scale.
    Restore a distinct, descending scale so heading levels are visible. */
-:global(.tiptap) :global(h1),
-:global(.tiptap) :global(h2),
-:global(.tiptap) :global(h3),
-:global(.tiptap) :global(h4),
-:global(.tiptap) :global(h5),
-:global(.tiptap) :global(h6) {
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
   margin: 0 0 0.5em;
   font-weight: 600;
   line-height: 1.3;
 }
 
-:global(.tiptap) :global(h1) {
+.tiptap h1 {
   font-size: 2em;
 }
 
-:global(.tiptap) :global(h2) {
+.tiptap h2 {
   font-size: 1.5em;
 }
 
-:global(.tiptap) :global(h3) {
+.tiptap h3 {
   font-size: 1.25em;
 }
 
-:global(.tiptap) :global(h4) {
+.tiptap h4 {
   font-size: 1.1em;
 }
 
-:global(.tiptap) :global(h5) {
+.tiptap h5 {
   font-size: 1em;
 }
 
-:global(.tiptap) :global(h6) {
+.tiptap h6 {
   font-size: 0.9em;
 }
 
 /* Horizontal rule: the reset sets height 0 with no border, making it invisible.
    Render it as a themed divider. */
-:global(.tiptap) :global(hr) {
+.tiptap hr {
   height: 0;
   margin: 0.5em 0;
   border: none;
@@ -186,7 +186,7 @@
 
 /* Inline code: monospace from the reset, but no background — give it the
    code chip look. */
-:global(.tiptap) :global(code) {
+.tiptap code {
   padding: 0.1em 0.3em;
   border-radius: var(--ant-border-radius-sm, 4px);
   background: var(--ant-color-fill-tertiary, rgba(0, 0, 0, 0.04));
@@ -195,7 +195,7 @@
 
 /* Code block: a padded, scrollable monospace box. The nested <code> resets to
    plain so it doesn't inherit the inline-code chip styling above. */
-:global(.tiptap) :global(pre) {
+.tiptap pre {
   margin: 0 0 0.5em;
   padding: 8px 12px;
   border-radius: var(--ant-border-radius, 6px);
@@ -203,7 +203,7 @@
   overflow-x: auto;
 }
 
-:global(.tiptap) :global(pre) :global(code) {
+.tiptap pre code {
   padding: 0;
   border-radius: 0;
   background: none;
@@ -213,12 +213,12 @@
 /* Highlight marks normally carry an inline background-color from the extension;
    this is a fallback so a color-less <mark> (e.g. pasted or seeded HTML) stays
    visible instead of blending into the text. */
-:global(.tiptap) :global(mark) {
+.tiptap mark {
   background-color: var(--ant-color-warning-bg, rgba(255, 229, 143, 0.5));
   color: inherit;
 }
 
-:global(.tiptap) :global(p.is-editor-empty):first-child::before {
+.tiptap p.is-editor-empty:first-child::before {
   color: var(--ant-color-text-placeholder, rgba(0, 0, 0, 0.25));
   content: attr(data-placeholder);
   float: left;
@@ -226,7 +226,7 @@
   pointer-events: none;
 }
 
-:global(.tiptap-popover) {
+.tiptap-popover {
   background: rgba(0, 0, 0, 0.85);
   color: var(--ant-color-text-light-solid, #fff);
   border-radius: var(--ant-border-radius, 8px);
@@ -235,7 +235,7 @@
   display: flex;
 }
 
-:global(.tiptap-icon) {
+.tiptap-icon {
   border-radius: var(--ant-border-radius-sm, 4px);
   display: flex;
   width: 16px;
@@ -245,16 +245,16 @@
   color: var(--ant-color-text-light-solid, #fff);
 }
 
-:global(.tiptap-icon.disabled) {
+.tiptap-icon.disabled {
   pointer-events: none;
 }
 
-:global(.tiptap-icon):hover {
+.tiptap-icon:hover {
   background: var(--ant-color-icon-hover, rgba(0, 0, 0, 0.75));
   color: var(--ant-color-text-light-solid, #fff);
   cursor: pointer;
 }
 
-:global(.tiptap-icon) + :global(.tiptap-icon) {
+.tiptap-icon + .tiptap-icon {
   margin-left: 4px;
 }

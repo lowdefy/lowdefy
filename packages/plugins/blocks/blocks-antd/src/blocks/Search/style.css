@@ -15,13 +15,13 @@
 */
 
 @layer components {
-  :global(.lf-search-results) {
+  .lf-search-results {
     max-height: 60vh;
     overflow-y: auto;
     padding: var(--ant-padding-xs) 0;
   }
 
-  :global(.lf-search-item) {
+  .lf-search-item {
     display: flex;
     align-items: center;
     gap: var(--ant-margin-sm);
@@ -31,25 +31,25 @@
     transition: background-color 0.2s;
   }
 
-  :global(.lf-search-item:hover) {
+  .lf-search-item:hover {
     background-color: var(--ant-color-bg-text-hover);
   }
 
-  :global(.lf-search-item-selected) {
+  .lf-search-item-selected {
     background-color: var(--ant-color-primary-bg);
   }
 
-  :global(.lf-search-item-content) {
+  .lf-search-item-content {
     flex: 1;
     min-width: 0;
   }
 
-  :global(.lf-search-item-title) {
+  .lf-search-item-title {
     font-weight: 500;
     color: var(--ant-color-text);
   }
 
-  :global(.lf-search-item-description) {
+  .lf-search-item-description {
     font-size: var(--ant-font-size-sm);
     color: var(--ant-color-text-secondary);
     white-space: nowrap;
@@ -57,7 +57,7 @@
     text-overflow: ellipsis;
   }
 
-  :global(.lf-search-group-header) {
+  .lf-search-group-header {
     padding: var(--ant-padding-xs) var(--ant-padding-md);
     font-size: var(--ant-font-size-sm);
     font-weight: 600;
@@ -66,20 +66,20 @@
     letter-spacing: 0.05em;
   }
 
-  :global(.lf-search-highlight) mark {
+  .lf-search-highlight mark {
     background-color: var(--ant-color-warning-bg);
     color: inherit;
     padding: 0 1px;
     border-radius: 2px;
   }
 
-  :global(.lf-search-trigger) {
+  .lf-search-trigger {
     display: inline-flex;
     align-items: center;
     gap: var(--ant-margin-xs);
   }
 
-  :global(.lf-search-recent-header) {
+  .lf-search-recent-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -89,7 +89,7 @@
   }
 
   @media (max-width: 640px) {
-    :global(.lf-search-trigger-label) {
+    .lf-search-trigger-label {
       display: none;
     }
   }

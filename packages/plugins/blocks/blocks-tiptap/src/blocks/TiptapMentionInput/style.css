@@ -1,0 +1,96 @@
+@import '../utils/style.css';
+
+.tiptap-mention {
+  box-decoration-break: clone;
+  font-weight: 600;
+  color: var(--ant-color-link);
+}
+
+.tiptap-mention-items {
+  background: var(--ant-color-bg-container);
+  border-radius: var(--ant-border-radius, 8px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0px 10px 20px rgba(0, 0, 0, 0.1);
+  color: var(--ant-color-text);
+  font-size: var(--ant-font-size);
+  overflow: hidden;
+  padding: 0.2rem;
+  position: relative;
+}
+
+.tiptap-mention-item {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--ant-border-radius, 8px);
+  display: block;
+  margin: 0;
+  padding: 0.2rem 0.4rem;
+  text-align: left;
+  line-height: normal;
+  width: 100%;
+}
+
+.tiptap-mention-item.is-selected {
+  border-color: var(--ant-color-primary);
+  background: var(--ant-control-item-bg-hover);
+}
+
+.tableWrapper,
+.tiptap-table {
+  display: block;
+  overflow-x: auto;
+  max-width: 80%;
+}
+
+.tableWrapper table,
+.tiptap-table table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 75px;
+}
+
+.tableWrapper colgroup col,
+.tiptap-table colgroup col {
+  width: auto;
+}
+
+.tableWrapper table,
+.tableWrapper th,
+.tableWrapper td,
+.tiptap-table table,
+.tiptap-table th,
+.tiptap-table td {
+  border: 1px solid var(--ant-color-border);
+}
+
+.tableWrapper th,
+.tableWrapper td,
+.tiptap-table th,
+.tiptap-table td {
+  padding: 2px;
+  text-align: left;
+}
+
+.tableWrapper th,
+.tiptap-table th {
+  background-color: var(--ant-color-fill-tertiary);
+  font-weight: bold;
+}
+
+.tableWrapper tr:nth-child(even),
+.tiptap-table tr:nth-child(even) {
+  background-color: var(--ant-color-fill-quaternary);
+}
+
+.tableWrapper tr:hover,
+.tiptap-table tr:hover {
+  background-color: var(--ant-color-primary-bg);
+}
+
+.tableWrapper td p,
+.tableWrapper th p,
+.tiptap-table td p,
+.tiptap-table th p {
+  margin: 0;
+}

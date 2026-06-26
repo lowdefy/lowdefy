@@ -1,0 +1,60 @@
+@import '../utils/style.css';
+
+.tableWrapper,
+.tiptap-table {
+  display: block;
+  overflow-x: auto;
+  max-width: 80%;
+}
+
+.tableWrapper table,
+.tiptap-table table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 75px;
+}
+
+.tableWrapper colgroup col,
+.tiptap-table colgroup col {
+  width: auto;
+}
+
+.tableWrapper table,
+.tableWrapper th,
+.tableWrapper td,
+.tiptap-table table,
+.tiptap-table th,
+.tiptap-table td {
+  border: 1px solid var(--ant-color-border);
+}
+
+.tableWrapper th,
+.tableWrapper td,
+.tiptap-table th,
+.tiptap-table td {
+  padding: 2px;
+  text-align: left;
+}
+
+.tableWrapper th,
+.tiptap-table th {
+  background-color: var(--ant-color-fill-tertiary);
+  font-weight: bold;
+}
+
+.tableWrapper tr:nth-child(even),
+.tiptap-table tr:nth-child(even) {
+  background-color: var(--ant-color-fill-quaternary);
+}
+
+.tableWrapper tr:hover,
+.tiptap-table tr:hover {
+  background-color: var(--ant-color-primary-bg);
+}
+
+.tableWrapper td p,
+.tableWrapper th p,
+.tiptap-table td p,
+.tiptap-table th p {
+  margin: 0;
+}

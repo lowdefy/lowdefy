@@ -15,7 +15,7 @@
 */
 
 @layer components {
-  :global(.lf-controlled-list-remove) {
+  .lf-controlled-list-remove {
     display: inline-flex;
     align-items: center;
     padding-left: var(--ant-padding-xs);
@@ -25,11 +25,11 @@
     transition: color 0.2s;
   }
 
-  :global(.lf-controlled-list-remove:hover) {
+  .lf-controlled-list-remove:hover {
     color: var(--ant-color-error-hover);
   }
 
-  :global(.lf-controlled-list-remove:active) {
+  .lf-controlled-list-remove:active {
     color: var(--ant-color-error-active);
   }
 }
