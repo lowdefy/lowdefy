@@ -30,6 +30,11 @@ function createAuthorize({ session }) {
 
   function authorize(config) {
     const { auth } = config;
+    if (!auth) {
+      throw new ConfigError('config.auth is required.', {
+        configKey: config['~k'],
+      });
+    }
     if (auth.public === true) return true;
     if (auth.public === false) {
       if (auth.roles) {
