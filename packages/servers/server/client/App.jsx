@@ -67,7 +67,11 @@ function App({ config }) {
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
 
-  const { active: activeLocale, antdLocale, antdXLocale } = useLocale({
+  const {
+    active: activeLocale,
+    antdLocale,
+    antdXLocale,
+  } = useLocale({
     i18n: rootConfig?.i18n,
     antdLocaleLoaders,
     antdXLocaleLoaders,

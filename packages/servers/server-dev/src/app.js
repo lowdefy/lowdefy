@@ -58,7 +58,10 @@ function createApp() {
   app.get('/api/dev-tools', devToolsHandler);
 
   if (authJson.configured === true) {
-    app.use('*', initAuthConfig(() => getAuthConfig({ logger })));
+    app.use(
+      '*',
+      initAuthConfig(() => getAuthConfig({ logger }))
+    );
   }
 
   app.use('/api/*', apiContext());

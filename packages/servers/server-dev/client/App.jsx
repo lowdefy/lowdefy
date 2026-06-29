@@ -40,7 +40,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
   return children;
 }
 
-function App({ config, router }) {
+function App({ router }) {
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
   // Subscribe to rootConfig SWR cache — deduplicates with Routing's fetch.
@@ -55,7 +55,11 @@ function App({ config, router }) {
     configDarkMode: lowdefyRef.current.theme?.darkMode,
   });
 
-  const { active: activeLocale, antdLocale, antdXLocale } = useLocale({
+  const {
+    active: activeLocale,
+    antdLocale,
+    antdXLocale,
+  } = useLocale({
     i18n: rootConfig?.i18n,
     antdLocaleLoaders,
     antdXLocaleLoaders,

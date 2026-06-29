@@ -71,7 +71,6 @@ async function fetchPageConfig(url) {
   data._jsEntries = jsEntries;
   data._dynamicIcons = dynamicIcons;
 
-
   return data;
 }
 
