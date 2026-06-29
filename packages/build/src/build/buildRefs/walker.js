@@ -20,6 +20,7 @@ import { get, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
+import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
 import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
@@ -545,17 +546,7 @@ async function resolveRef(node, ctx) {
   }
 
   // 4. Module path resolution: resolve relative paths from the module root
-  if (ctx.moduleRoot) {
-    if (type.isString(refDef.path) && !path.isAbsolute(refDef.path)) {
-      refDef.path = path.resolve(ctx.moduleRoot, refDef.path);
-    }
-    if (type.isString(refDef.resolver) && !path.isAbsolute(refDef.resolver)) {
-      refDef.resolver = path.resolve(ctx.moduleRoot, refDef.resolver);
-    }
-    if (type.isString(refDef.transformer) && !path.isAbsolute(refDef.transformer)) {
-      refDef.transformer = path.resolve(ctx.moduleRoot, refDef.transformer);
-    }
-  }
+  rebaseModuleRefPaths({ refDef, moduleRoot: ctx.moduleRoot });
 
   // 5. Update refMap with resolved path; store original for resolver refs
   ctx.refMap[refDef.id].path = refDef.path;
