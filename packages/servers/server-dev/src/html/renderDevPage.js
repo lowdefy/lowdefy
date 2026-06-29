@@ -47,9 +47,9 @@ function renderDevPage(c, { basePath = '' }) {
   const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
   const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
 
-  const darkModeScript = `(function(){var c=${safeScriptJson(configColorMode)};var db=${safeScriptJson(
-    darkBg
-  )};var lb=${safeScriptJson(
+  const darkModeScript = `(function(){var c=${safeScriptJson(
+    configColorMode
+  )};var db=${safeScriptJson(darkBg)};var lb=${safeScriptJson(
     lightBg
   )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;if(bg)document.documentElement.style.backgroundColor=bg})();`;
 

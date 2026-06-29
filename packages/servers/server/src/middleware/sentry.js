@@ -24,9 +24,8 @@ function sentryMiddleware() {
     if (!process.env.SENTRY_DSN) {
       return next();
     }
-    return Sentry.startSpan(
-      { name: `${c.req.method} ${c.req.path}`, op: 'http.server' },
-      () => next()
+    return Sentry.startSpan({ name: `${c.req.method} ${c.req.path}`, op: 'http.server' }, () =>
+      next()
     );
   };
 }

@@ -17,9 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const packageJson = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8')
-);
+const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
 
 async function usageHandler(c) {
   if (c.req.method !== 'POST') {

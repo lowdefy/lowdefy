@@ -24,6 +24,14 @@ rules:
   no-underscore-dangle: 'off'
   no-param-reassign: warn
   no-nested-ternary: warn
+  no-unused-vars:
+    - error
+    - args: after-used
+      argsIgnorePattern: '^_'
+      varsIgnorePattern: '^_'
+      # Destructure-to-omit, e.g. `const { drop, ...rest } = obj` — `drop` is
+      # intentionally pulled out to exclude it from `rest`.
+      ignoreRestSiblings: true
   react/display-name: 'off'
   react/jsx-filename-extension: 'off'
   react/prop-types: 'off'
@@ -49,17 +57,25 @@ parserOptions:
   sourceType: module
   ecmaVersion: latest
 overrides:
+  # Server packages import build-time generated artifacts (../build/*) and
+  # runtime deps that ship exports maps the legacy import resolver can't
+  # follow, so unresolved-import checks only produce false positives there.
+  - files:
+      - 'packages/servers/**/*.js'
+      - 'packages/servers/**/*.jsx'
+    rules:
+      import/no-unresolved: 'off'
   # Playwright e2e tests
   - files:
-      - "**/*.e2e.spec.js"
+      - '**/*.e2e.spec.js'
     extends:
       - plugin:playwright/recommended
     rules:
       # Disable import/named as eslint-plugin-import can't resolve Playwright's TypeScript exports
-      import/named: "off"
+      import/named: 'off'
   # Playwright e2e utilities and block helpers
   - files:
-      - "packages/utils/e2e-utils/src/**/*.js"
-      - "packages/plugins/blocks/*/src/blocks/*/e2e.js"
+      - 'packages/utils/e2e-utils/src/**/*.js'
+      - 'packages/plugins/blocks/*/src/blocks/*/e2e.js'
     rules:
-      import/named: "off"
+      import/named: 'off'
