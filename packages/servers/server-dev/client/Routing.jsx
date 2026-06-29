@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { startTransition, Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
@@ -24,7 +24,6 @@ import Reload from './Reload.jsx';
 import Page from './Page.jsx';
 import setPageId from '../lib/client/setPageId.js';
 import { getReloadVersion } from '../lib/client/utils/useMutateCache.js';
-import { prefetchPageConfig } from '../lib/client/utils/usePageConfig.js';
 import useRootConfig from '../lib/client/utils/useRootConfig.js';
 
 import actions from '../build/plugins/actions.js';
@@ -41,18 +40,10 @@ function Routing({ auth, lowdefy, router }) {
   const [location, setLocation] = useState(() => router.getLocation());
 
   useEffect(() => {
-    // Mark navigation as a transition so Suspense keeps the current page
-    // visible while the next page's config loads, instead of falling back to
-    // BuildingPage.
-    return router.subscribe((nextLocation) => startTransition(() => setLocation(nextLocation)));
+    return router.subscribe(setLocation);
   }, [router]);
 
-  const [Link] = useState(() =>
-    createLinkComponent({
-      router,
-      prefetch: (pageId) => prefetchPageConfig(pageId, router.basePath),
-    })
-  );
+  const [Link] = useState(() => createLinkComponent({ router }));
 
   if (rootConfig?.theme) {
     lowdefy.theme = rootConfig.theme;
@@ -71,7 +62,7 @@ function Routing({ auth, lowdefy, router }) {
   return (
     <Reload basePath={router.basePath} lowdefy={lowdefy}>
       {(resetContext) => (
-        <Suspense key={getReloadVersion()} fallback={<BuildingPage />}>
+        <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
           <Page
             auth={auth}
             Components={{ Head, Link }}
