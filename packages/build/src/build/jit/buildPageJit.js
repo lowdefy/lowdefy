@@ -35,6 +35,7 @@ import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
+import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
@@ -160,6 +161,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         : pageEntry.refPath;
       refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
       buildContext.refMap[refDef.id].path = refDef.path;
+    }
+
+    // Module path resolution: resolve relative path/resolver/transformer from the
+    // module root. The full build does this in walker.js step 4 when an _ref node
+    // is encountered, but the JIT path builds the page refDef directly from
+    // resolverOriginal (the un-rebased authored _ref) and calls getRefContent
+    // without going through the walker — so a module resolver like
+    // "resolvers/makeActionPages.js" would otherwise resolve against the app
+    // config dir instead of the module root. (File-based module pages are
+    // unaffected: their paths are stored already-rebased in refMap.)
+    if (moduleEntry?.moduleRoot) {
+      rebaseModuleRefPaths({ refDef, moduleRoot: moduleEntry.moduleRoot });
+      if (type.isString(refDef.path)) {
+        buildContext.refMap[refDef.id].path = refDef.path;
+      }
     }
 
     const pageContent = await getRefContent({

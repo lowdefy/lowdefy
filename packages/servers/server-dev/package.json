@@ -101,7 +101,6 @@
     "yargs": "17.7.2"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "16.1.6",
     "jest": "28.1.3",
     "webpack": "5.94.0"
   },

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
@@ -531,6 +532,56 @@ type: PageHeaderMenu
       'Referenced file does not exist: "components/missing.yaml"'
     );
   }
+});
+
+test('buildPageJit resolves a module page resolver relative to the module root, not the app config dir', async () => {
+  const context = createTestContext();
+  // The app config dir does NOT contain the resolver — only the module root
+  // does. A module authors its resolver path relative to itself
+  // (e.g. "resolvers/makeActionPages.js"); the JIT path must rebase it against
+  // the module root the same way walker.js step 4 does in the full build.
+  // Without rebasing, the relative path resolves against directories.config and
+  // the import fails.
+  context.directories.config = path.resolve('src/test-utils');
+  const moduleRoot = path.resolve('src/test-utils/buildRefs');
+  context.modules = {
+    mymod: {
+      id: 'mymod',
+      moduleRoot,
+      packageRoot: moduleRoot,
+      moduleDependencies: null,
+    },
+  };
+  mockFiles([]);
+
+  const pageRegistry = new Map([
+    [
+      'mymod/home',
+      {
+        pageId: 'mymod/home',
+        auth: { public: true },
+        refId: 'ref-resolver',
+        refPath: null,
+        unresolvedVars: null,
+        moduleEntryId: 'mymod',
+        // Authored relative to the module — must rebase against moduleRoot.
+        resolverOriginal: {
+          resolver: 'testJitPageResolver.js',
+          vars: { pageId: 'home', app_name: 'ModuleApp' },
+        },
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'mymod/home',
+    pageRegistry,
+    context,
+  });
+
+  expect(result.id).toBe('page:mymod/home');
+  expect(result.type).toBe('PageHeaderMenu');
+  expect(result.properties.title).toBe('ModuleApp');
 });
 
 test('buildPageJit resolver page traces errors back to resolver when inner _ref fails', async () => {
