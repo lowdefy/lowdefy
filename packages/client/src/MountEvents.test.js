@@ -33,22 +33,26 @@ function renderMountEvents({ onInitDone, triggerEvent, triggerEventAsync }) {
   );
 }
 
-test('renders children immediately for a prewarmed context without re-running onInit', () => {
-  const triggerEvent = jest.fn();
-  const triggerEventAsync = jest.fn();
-  renderMountEvents({ onInitDone: true, triggerEvent, triggerEventAsync });
-
-  expect(screen.getByText('ready')).toBeTruthy();
-  expect(triggerEvent).not.toHaveBeenCalled();
-  expect(triggerEventAsync).toHaveBeenCalledTimes(1);
-});
-
-test('blanks during onInit then renders children when the context is not prewarmed', async () => {
+test('blanks during the event then renders children once it resolves', async () => {
   const triggerEvent = jest.fn().mockResolvedValue(undefined);
   const triggerEventAsync = jest.fn();
   renderMountEvents({ onInitDone: false, triggerEvent, triggerEventAsync });
 
   expect(screen.getByText('loading')).toBeTruthy();
+  await waitFor(() => expect(screen.getByText('ready')).toBeTruthy());
+  expect(triggerEvent).toHaveBeenCalledTimes(1);
+  expect(triggerEventAsync).toHaveBeenCalledTimes(1);
+});
+
+// Regression: MountEvents is shared by Context (page onInit) and Block (per-block
+// onMount). It must always fire triggerEvent, regardless of the page context's
+// onInitDone flag — gating on it skipped every block's onMount once the page had
+// initialised (e.g. dashboards loading data in onMount rendered with no data).
+test('fires triggerEvent even when the page context onInitDone is already true', async () => {
+  const triggerEvent = jest.fn().mockResolvedValue(undefined);
+  const triggerEventAsync = jest.fn();
+  renderMountEvents({ onInitDone: true, triggerEvent, triggerEventAsync });
+
   await waitFor(() => expect(screen.getByText('ready')).toBeTruthy());
   expect(triggerEvent).toHaveBeenCalledTimes(1);
   expect(triggerEventAsync).toHaveBeenCalledTimes(1);

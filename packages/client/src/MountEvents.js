@@ -17,15 +17,9 @@
 import React, { useEffect, useState } from 'react';
 
 const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => {
-  // A context prewarmed before mount (see prewarmPageContext) has already run
-  // onInit, so render its children on the first commit instead of blanking.
-  const [loading, setLoading] = useState(!context._internal.onInitDone);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    if (context._internal.onInitDone) {
-      triggerEventAsync();
-      return;
-    }
     setLoading(true);
     const mount = async () => {
       try {
