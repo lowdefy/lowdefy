@@ -5,6 +5,11 @@ packages:
   - packages/utils/*
   - packages/ides/*
 onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
   - '@sentry/cli'
+  - '@swc/core'
+  - better-sqlite3
+  - esbuild
+packageExtensions:
+  echarts-for-react:
+    dependencies:
+      tslib: '*'

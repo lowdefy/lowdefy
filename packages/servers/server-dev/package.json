@@ -79,8 +79,8 @@
     "@lowdefy/operators-uuid": "5.3.0",
     "@lowdefy/operators-yaml": "5.3.0",
     "@lowdefy/plugin-next-auth": "5.3.0",
-    "@tailwindcss/postcss": "4.2.1",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@tailwindcss/postcss": "4.3.1",
+    "@vitejs/plugin-react": "6.0.2",
     "antd": "6.3.1",
     "chokidar": "3.5.3",
     "dayjs": "1.11.19",
@@ -94,7 +94,7 @@
     "react-dom": "18.2.0",
     "react-icons": "5.6.0",
     "swr": "2.2.4",
-    "tailwindcss": "4.2.1",
+    "tailwindcss": "4.3.1",
     "uuid": "13.0.0",
     "vite": "8.0.16",
     "yaml": "2.9.0",
@@ -106,11 +106,6 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
   },
   "publishConfig": {
     "access": "public"
