@@ -118,6 +118,44 @@ test('string href navigates by pathname', () => {
   });
 });
 
+function setupPrefetch({ basePath = '' } = {}) {
+  const router = { basePath, push: jest.fn(), replace: jest.fn() };
+  const prefetch = jest.fn();
+  const Link = createLinkComponent({ router, prefetch });
+  return { Link, prefetch };
+}
+
+test('hover, focus and touchstart prefetch the target pageId', () => {
+  const { Link, prefetch } = setupPrefetch();
+  const { container } = render(<Link href={{ pathname: '/page-1' }}>Go</Link>);
+  const a = container.querySelector('a');
+  fireEvent.mouseEnter(a);
+  fireEvent.focus(a);
+  fireEvent.touchStart(a);
+  expect(prefetch).toHaveBeenCalledTimes(3);
+  expect(prefetch).toHaveBeenCalledWith('page-1');
+});
+
+test('prefetch strips the basePath and ignores the query', () => {
+  const { Link, prefetch } = setupPrefetch({ basePath: '/admin' });
+  const { container } = render(<Link href={{ pathname: '/users', query: 'a=1' }}>Go</Link>);
+  fireEvent.mouseEnter(container.querySelector('a'));
+  expect(prefetch).toHaveBeenCalledWith('users');
+});
+
+test('does not prefetch the home route (null pageId)', () => {
+  const { Link, prefetch } = setupPrefetch();
+  const { container } = render(<Link href={{ pathname: '/' }}>Home</Link>);
+  fireEvent.mouseEnter(container.querySelector('a'));
+  expect(prefetch).not.toHaveBeenCalled();
+});
+
+test('hover is safe when no prefetch handler is provided', () => {
+  const { Link } = setup();
+  const { container } = render(<Link href={{ pathname: '/page-1' }}>Go</Link>);
+  expect(() => fireEvent.mouseEnter(container.querySelector('a'))).not.toThrow();
+});
+
 test('passes through anchor attributes', () => {
   const { Link } = setup();
   const { container } = render(

@@ -2146,6 +2146,9 @@ importers:
       react-icons:
         specifier: 5.6.0
         version: 5.6.0(react@18.2.0)
+      swr:
+        specifier: 2.2.4
+        version: 2.2.4(react@18.2.0)
       tailwindcss:
         specifier: 4.2.1
         version: 4.2.1

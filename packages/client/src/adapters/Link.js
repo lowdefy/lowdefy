@@ -17,17 +17,24 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 
-import { createUrl } from './url.js';
+import { createUrl, parsePageId } from './url.js';
 
 // Replaces next/link for the contract used by @lowdefy/client's
 // createLinkComponent: href as { pathname, query } or string, replace,
 // scroll, onClick fired before navigation. Modified clicks (new tab,
 // middle click, download) fall through to native browser handling.
-function createLinkComponent({ router }) {
+// An optional prefetch(pageId) warms the target page's config on hover/focus.
+function createLinkComponent({ router, prefetch }) {
   function Link({ children, href, onClick, replace, scroll, ...props }) {
-    const hrefObject = type.isString(href) ? { pathname: href } : (href ?? {});
+    const hrefObject = type.isString(href) ? { pathname: href } : href ?? {};
     const { pathname, query } = hrefObject;
     const url = createUrl({ basePath: router.basePath, pathname, query });
+
+    function handlePrefetch() {
+      if (!prefetch) return;
+      const pageId = parsePageId(url, router.basePath);
+      if (pageId) prefetch(pageId);
+    }
 
     function handleClick(event) {
       if (onClick) {
@@ -53,7 +60,14 @@ function createLinkComponent({ router }) {
     }
 
     return (
-      <a {...props} href={url} onClick={handleClick}>
+      <a
+        {...props}
+        href={url}
+        onClick={handleClick}
+        onMouseEnter={handlePrefetch}
+        onFocus={handlePrefetch}
+        onTouchStart={handlePrefetch}
+      >
         {children}
       </a>
     );

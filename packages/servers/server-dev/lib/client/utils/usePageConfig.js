@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-import useSWR from 'swr';
+import useSWR, { preload } from 'swr';
 
 import { getReloadVersion } from './useMutateCache.js';
 
@@ -71,19 +71,32 @@ async function fetchPageConfig(url) {
   data._jsEntries = jsEntries;
   data._dynamicIcons = dynamicIcons;
 
-
   return data;
 }
 
+// SWR key + fetcher shared by usePageConfig and prefetchPageConfig, so a
+// prefetch-on-hover populates the exact cache entry the navigation read uses.
+// Include reloadVersion in the key so that after a config reload, previously
+// cached page data is not reused. The fetcher receives [url, version] but only
+// uses url — the version just busts the cache.
+function pageConfigKey(pageId, basePath) {
+  return [`${basePath}/api/page/${pageId}`, getReloadVersion()];
+}
+
+const pageConfigFetcher = ([fetchUrl]) => fetchPageConfig(fetchUrl);
+
 function usePageConfig(pageId, basePath) {
-  const url = `${basePath}/api/page/${pageId}`;
-  // Include reloadVersion in the SWR key so that after a config reload,
-  // previously cached page data is not reused. The fetcher receives
-  // [url, version] but only uses url — the version just busts the cache.
-  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
+  const { data } = useSWR(pageConfigKey(pageId, basePath), pageConfigFetcher, {
     suspense: true,
   });
   return { data };
 }
 
+// Warm the SWR cache for a page (Link hover/focus) so the subsequent
+// navigation read resolves from cache instead of suspending on a fetch.
+function prefetchPageConfig(pageId, basePath) {
+  return preload(pageConfigKey(pageId, basePath), pageConfigFetcher);
+}
+
 export default usePageConfig;
+export { prefetchPageConfig };

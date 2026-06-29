@@ -15,11 +15,14 @@
 */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { preload } from 'swr';
 
 import Client from '@lowdefy/client';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import Head from '@lowdefy/client/adapters/Head.js';
+import fetchPageConfig, { pageConfigKey } from '@lowdefy/client/fetchPageConfig.js';
+import prewarmPageContext from '@lowdefy/client/prewarmPageContext.js';
 
 import actions from '../build/plugins/actions.js';
 import blockMetas from '../build/plugins/blockMetas.json';
@@ -36,9 +39,10 @@ function Page({ auth, config, lowdefy }) {
   const routerRef = useRef(null);
   if (!routerRef.current) {
     const router = createRouter({ basePath: config.basePath ?? '', window });
+    const prefetch = (pageId) => preload(pageConfigKey(router.basePath, pageId), fetchPageConfig);
     routerRef.current = {
       router,
-      Link: createLinkComponent({ router }),
+      Link: createLinkComponent({ router, prefetch }),
     };
   }
   const { router, Link } = routerRef.current;
@@ -47,14 +51,21 @@ function Page({ auth, config, lowdefy }) {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
-        const res = await fetch(`${router.basePath}/api/page/${targetPageId}`);
-        if (!res.ok) {
+        // preload shares its SWR cache entry with the hover prefetch, so a
+        // hovered link's request is reused rather than re-fetched.
+        const { pageConfig: nextPageConfig } = await preload(
+          pageConfigKey(router.basePath, targetPageId),
+          fetchPageConfig
+        );
+        if (!nextPageConfig) {
           if (targetPageId !== '404') {
             router.replace({ pathname: '/404' });
           }
           return;
         }
-        const { pageConfig: nextPageConfig } = await res.json();
+        // Run the next page's onInit while the current page stays visible, then
+        // swap to an already-initialised page — no blank frame.
+        await prewarmPageContext({ pageConfig: nextPageConfig, jsMap, lowdefy });
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
