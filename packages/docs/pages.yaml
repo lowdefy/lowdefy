@@ -41,6 +41,9 @@
 - _ref: agents/server-hooks.yaml
 - _ref: agents/AgentChat.yaml
 - _ref: agents/AgentConversations.yaml
+- _ref: websockets/introduction.yaml
+- _ref: websockets/subscriptions.yaml
+- _ref: websockets/publish.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
