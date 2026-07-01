@@ -43,6 +43,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
+      websockets: createCounter(),
       controls: createCounter(),
       operators: {
         client: createCounter(),
@@ -56,6 +57,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),
+    websocketIds: new Set(),
   };
 
   context.logger = {

@@ -2064,6 +2064,15 @@ importers:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
+      '@lowdefy/block-dev-e2e':
+        specifier: 5.3.0
+        version: link:../../../utils/block-dev-e2e
+      '@lowdefy/e2e-utils':
+        specifier: 5.3.0
+        version: link:../../../utils/e2e-utils
+      '@playwright/test':
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -2151,6 +2160,9 @@ importers:
       '@lowdefy/plugin-next-auth':
         specifier: 5.3.0
         version: link:../../plugins/plugins/plugin-next-auth
+      '@lowdefy/websockets-core':
+        specifier: 5.3.0
+        version: link:../../plugins/websockets/websockets-core
       '@sentry/browser':
         specifier: 10.57.0
         version: 10.57.0
@@ -2320,6 +2332,9 @@ importers:
       '@lowdefy/plugin-next-auth':
         specifier: 5.3.0
         version: link:../../plugins/plugins/plugin-next-auth
+      '@lowdefy/websockets-core':
+        specifier: 5.3.0
+        version: link:../../plugins/websockets/websockets-core
       '@tailwindcss/postcss':
         specifier: 4.3.1
         version: 4.3.1
@@ -2468,6 +2483,9 @@ importers:
       '@lowdefy/operators-uuid':
         specifier: 5.3.0
         version: link:../../plugins/operators/operators-uuid
+      '@lowdefy/websockets-core':
+        specifier: 5.3.0
+        version: link:../../plugins/websockets/websockets-core
       '@tailwindcss/postcss':
         specifier: 4.3.1
         version: 4.3.1

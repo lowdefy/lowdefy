@@ -1,0 +1,149 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: websockets-core E2E Tests
+
+websockets:
+  - id: ticker
+    type: Interval
+    properties:
+      ms: 200
+  - id: chat
+    type: Channel
+    properties:
+      publish: true
+  - id: locked_channel
+    type: Channel
+    properties:
+      publish: false
+
+pages:
+  - id: interval
+    type: Box
+    subscriptions:
+      - id: ticker
+        client:
+          throttleRender: 100
+        events:
+          onSubscribe:
+            - id: mark_subscribed
+              type: SetState
+              params:
+                subscribed: true
+    blocks:
+      - id: subscribed_status
+        type: Html
+        properties:
+          html:
+            _if:
+              test:
+                _websocket: ticker.connected
+              then: 'connected'
+              else: 'waiting'
+      - id: tick_count
+        type: Html
+        properties:
+          html:
+            _string.concat:
+              - 'count:'
+              - _websocket: ticker.messageCount
+      - id: last_tick
+        type: Html
+        properties:
+          html:
+            _string.concat:
+              - 'tick:'
+              - _if_none:
+                  - _websocket: ticker.lastMessage.tick
+                  - 'none'
+
+  - id: chat
+    type: Box
+    subscriptions:
+      - id: chat
+        client:
+          throttleRender: 100
+          maxMessages: 50
+    blocks:
+      - id: chat_input
+        type: TextInput
+        properties:
+          title: Message
+      - id: send
+        type: Button
+        properties:
+          title: Send
+        events:
+          onClick:
+            - id: publish
+              type: Publish
+              params:
+                websocketId: chat
+                payload:
+                  text:
+                    _state: chat_input
+            - id: clear
+              type: SetState
+              params:
+                chat_input: ''
+      - id: message_count
+        type: Html
+        properties:
+          html:
+            _string.concat:
+              - 'received:'
+              - _websocket: chat.messageCount
+      - id: last_message
+        type: Html
+        properties:
+          html:
+            _string.concat:
+              - 'last:'
+              - _if_none:
+                  - _websocket: chat.lastMessage.text
+                  - 'none'
+
+  - id: locked
+    type: Box
+    blocks:
+      - id: publish_locked
+        type: Button
+        properties:
+          title: Publish Locked
+        events:
+          onClick:
+            try:
+              - id: publish
+                type: Publish
+                params:
+                  websocketId: locked_channel
+                  payload:
+                    text: nope
+            catch:
+              - id: mark_error
+                type: SetState
+                params:
+                  publish_failed: true
+      - id: publish_result
+        type: Html
+        properties:
+          html:
+            _if:
+              test:
+                _if_none:
+                  - _state: publish_failed
+                  - false
+              then: 'publish-rejected'
+              else: 'no-error'
