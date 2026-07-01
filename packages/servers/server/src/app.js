@@ -29,6 +29,7 @@ import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import cronHandler from './routes/cron.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import lowdefyConfig from '../lib/build/config.js';
@@ -86,6 +87,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.use('/api/auth/*', authMiddleware());
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
+  app.get('/api/cron/*', cronHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
