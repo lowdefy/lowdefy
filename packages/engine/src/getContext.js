@@ -20,6 +20,7 @@ import Actions from './Actions.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import WebSockets from './WebSockets.js';
 
 const blockData = (config) => {
   const {
@@ -35,6 +36,7 @@ const blockData = (config) => {
     requests,
     required,
     style,
+    subscriptions,
     type,
     validate,
     visible,
@@ -52,6 +54,7 @@ const blockData = (config) => {
     requests,
     required,
     style,
+    subscriptions,
     type,
     validate,
     visible,
@@ -105,6 +108,7 @@ function getContext({
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
+  _internal.WebSockets = new WebSockets(ctx);
   _internal.RootSlots = new Slots({
     slots: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,

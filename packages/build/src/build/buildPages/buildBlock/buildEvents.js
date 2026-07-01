@@ -38,6 +38,7 @@ function checkAction(
     pageId,
     requestActionRefs,
     typeCounters,
+    websocketActionRefs,
   }
 ) {
   const configKey = action['~k'];
@@ -112,6 +113,32 @@ function checkAction(
       });
     }
   }
+
+  // Collect static Subscribe/Unsubscribe/Publish action references for validation
+  if (['Subscribe', 'Unsubscribe'].includes(action.type) && type.isString(action.params)) {
+    (websocketActionRefs ?? []).push({
+      websocketId: action.params,
+      action,
+      actionType: action.type,
+      blockId,
+      eventId,
+      sourcePageId: pageId,
+    });
+  }
+  if (
+    action.type === 'Publish' &&
+    type.isObject(action.params) &&
+    type.isString(action.params.websocketId)
+  ) {
+    (websocketActionRefs ?? []).push({
+      websocketId: action.params.websocketId,
+      action,
+      actionType: action.type,
+      blockId,
+      eventId,
+      sourcePageId: pageId,
+    });
+  }
 }
 
 function buildEvents(block, pageContext) {
@@ -161,6 +188,7 @@ function buildEvents(block, pageContext) {
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,
           requestActionRefs: pageContext.requestActionRefs,
+          websocketActionRefs: pageContext.websocketActionRefs,
           checkDuplicateActionId,
         })
       );
@@ -173,6 +201,7 @@ function buildEvents(block, pageContext) {
           pageId: pageContext.pageId,
           linkActionRefs: pageContext.linkActionRefs,
           requestActionRefs: pageContext.requestActionRefs,
+          websocketActionRefs: pageContext.websocketActionRefs,
           checkDuplicateActionId,
         })
       );

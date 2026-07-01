@@ -40,6 +40,7 @@ function buildImportsProd({ components, context }) {
     connections: buildImportClassProd(components.types.connections),
     icons: buildIconImports({ blocks, components, context, defaults: defaultIconsProd }),
     requests: buildImportClassProd(components.types.requests),
+    websockets: buildImportClassProd(components.types.websockets),
     operators: {
       client: buildImportClassProd(components.types.operators.client),
       server: buildImportClassProd(components.types.operators.server),

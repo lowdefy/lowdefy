@@ -28,6 +28,7 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
@@ -245,6 +246,16 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.callApiActionRefs) {
       buildContext.callApiActionRefs = [];
     }
+    if (!buildContext.websocketActionRefs) {
+      buildContext.websocketActionRefs = [];
+    }
+    // buildSubscriptions validates against websocketIds — rebuild the set from
+    // skeleton-built websockets when the JIT context doesn't carry it.
+    if (!buildContext.websocketIds) {
+      buildContext.websocketIds = new Set(
+        (buildContext.components?.websockets ?? []).map((websocket) => websocket.websocketId)
+      );
+    }
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
@@ -288,6 +299,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateCallApiRefs({
       callApiActionRefs: buildContext.callApiActionRefs,
       endpointConfigs,
+      context: buildContext,
+    });
+    validateWebsocketRefs({
+      websocketActionRefs: buildContext.websocketActionRefs,
+      websocketIds: buildContext.websocketIds,
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });

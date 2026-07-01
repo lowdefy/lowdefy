@@ -37,6 +37,7 @@ function createContext({
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
     connectionIds: new Set(),
+    websocketIds: new Set(),
     directories,
     errors: [],
     jsMap: {},
@@ -63,6 +64,7 @@ function createContext({
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
+      websockets: createCounter(),
       controls: createCounter(),
       operators: {
         client: createCounter('client'),

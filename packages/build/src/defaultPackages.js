@@ -56,6 +56,7 @@ const defaultPackages = [
   '@lowdefy/plugin-aws',
   '@lowdefy/plugin-csv',
   '@lowdefy/plugin-next-auth',
+  '@lowdefy/websockets-core',
 ];
 
 export default defaultPackages;

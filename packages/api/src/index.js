@@ -18,6 +18,8 @@ import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
 import getAuthConfig from './routes/auth/getAuthConfig.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
@@ -30,7 +32,9 @@ export {
   callEndpoint,
   callRequest,
   createApiContext,
+  createChannelRegistry,
   createSessionCallback,
+  createWebSocketConnection,
   getAuthConfig,
   getHomeAndMenus,
   getPageConfig,

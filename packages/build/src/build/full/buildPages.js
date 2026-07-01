@@ -25,6 +25,7 @@ import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
@@ -35,6 +36,7 @@ function buildPages({ components, context }) {
   // Initialize action ref collections across all pages
   context.linkActionRefs = [];
   context.callApiActionRefs = [];
+  context.websocketActionRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -79,6 +81,13 @@ function buildPages({ components, context }) {
   validateCallApiRefs({
     callApiActionRefs: context.callApiActionRefs,
     endpointConfigs,
+    context,
+  });
+
+  // Validate that Subscribe/Unsubscribe/Publish actions reference defined websockets
+  validateWebsocketRefs({
+    websocketActionRefs: context.websocketActionRefs,
+    websocketIds: context.websocketIds ?? new Set(),
     context,
   });
 

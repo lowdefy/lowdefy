@@ -53,6 +53,14 @@ function validateBlock(block, { pageId }, parentConfigKey) {
       });
     }
   }
+  // Page subscriptions are extracted before block building — any subscriptions
+  // key reaching here is defined on a nested block, where it has no effect.
+  if (!type.isNone(block.subscriptions)) {
+    throw new ConfigError(
+      `Subscriptions are only allowed on the page, not on block "${block.id}" on page "${pageId}".`,
+      { configKey }
+    );
+  }
 }
 
 export default validateBlock;
