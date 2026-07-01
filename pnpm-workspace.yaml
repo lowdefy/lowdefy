@@ -4,18 +4,20 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+
 onlyBuiltDependencies:
   - '@sentry/cli'
   - '@swc/core'
   - better-sqlite3
   - esbuild
+
 overrides:
-  # better-sqlite3 <12.11.0 ships no Node 26 (N-API v147) prebuilt binary, so
-  # `pnpm install` on Node 26 falls back to a source build — which breaks CI on
-  # Windows (node-gyp cannot detect Visual Studio on Node 26). 12.11.1 ships the
-  # Node 26 prebuild. Pulled in transitively via knex.
-  better-sqlite3: '12.11.1'
+  better-sqlite3: 12.11.1
+
 packageExtensions:
   echarts-for-react:
     dependencies:
       tslib: '*'
+
+patchedDependencies:
+  buffer-equal-constant-time@1.0.1: patches/buffer-equal-constant-time@1.0.1.patch

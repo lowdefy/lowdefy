@@ -9,6 +9,11 @@ overrides:
 
 packageExtensionsChecksum: sha256-8WIGWQNf+ia1tU2lBx5ORU6YJQC1bgcuatkCdqqyesQ=
 
+patchedDependencies:
+  buffer-equal-constant-time@1.0.1:
+    hash: dd1bd5e7d44b09282824ff95ac138076b146c28db0dbdcd29596779bbed11709
+    path: patches/buffer-equal-constant-time@1.0.1.patch
+
 importers:
 
   .:
@@ -18358,7 +18363,7 @@ snapshots:
 
   buffer-crc32@0.2.13: {}
 
-  buffer-equal-constant-time@1.0.1: {}
+  buffer-equal-constant-time@1.0.1(patch_hash=dd1bd5e7d44b09282824ff95ac138076b146c28db0dbdcd29596779bbed11709): {}
 
   buffer-equal@0.0.1: {}
 
@@ -21645,13 +21650,13 @@ snapshots:
 
   jwa@1.4.1:
     dependencies:
-      buffer-equal-constant-time: 1.0.1
+      buffer-equal-constant-time: 1.0.1(patch_hash=dd1bd5e7d44b09282824ff95ac138076b146c28db0dbdcd29596779bbed11709)
       ecdsa-sig-formatter: 1.0.11
       safe-buffer: 5.2.1
 
   jwa@2.0.0:
     dependencies:
-      buffer-equal-constant-time: 1.0.1
+      buffer-equal-constant-time: 1.0.1(patch_hash=dd1bd5e7d44b09282824ff95ac138076b146c28db0dbdcd29596779bbed11709)
       ecdsa-sig-formatter: 1.0.11
       safe-buffer: 5.2.1
 
