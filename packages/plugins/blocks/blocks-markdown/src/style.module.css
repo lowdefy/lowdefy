@@ -113,12 +113,13 @@
   .markdown-body ul {
     margin-bottom: 0;
     margin-top: 0;
-    padding-left: 2em;
+    padding-left: 0;
   }
 
   /* Restore top-level markers. The Tailwind preflight (base layer) resets
      `list-style: none`; without an explicit type here the markers vanish, since
-     only the nested rules below set a type. */
+     only the nested rules below set a type. (Indentation comes from the
+     `padding-left` rule lower in this file.) */
   .markdown-body ol {
     list-style-type: decimal;
   }
