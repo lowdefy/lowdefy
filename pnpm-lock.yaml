@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  better-sqlite3: 12.11.1
+
 packageExtensionsChecksum: sha256-8WIGWQNf+ia1tU2lBx5ORU6YJQC1bgcuatkCdqqyesQ=
 
 importers:
@@ -1388,11 +1391,11 @@ importers:
         specifier: 5.3.0
         version: link:../../../utils/helpers
       better-sqlite3:
-        specifier: 12.9.0
-        version: 12.9.0
+        specifier: 12.11.1
+        version: 12.11.1
       knex:
         specifier: 3.2.9
-        version: 3.2.9(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@20.6.2))(pg@8.20.0)(tedious@19.2.1)
+        version: 3.2.9(better-sqlite3@12.11.1)(mysql2@3.22.3(@types/node@20.6.2))(pg@8.20.0)(tedious@19.2.1)
       mysql2:
         specifier: 3.22.3
         version: 3.22.3(@types/node@20.6.2)
@@ -7029,9 +7032,9 @@ packages:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
 
-  better-sqlite3@12.9.0:
-    resolution: {integrity: sha512-wqUv4Gm3toFpHDQmaKD4QhZm3g1DjUBI0yzS4UBl6lElUmXFYdTQmmEDpAFa5o8FiFiymURypEnfVHzILKaxqQ==}
-    engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x}
+  better-sqlite3@12.11.1:
+    resolution: {integrity: sha512-dq9AtApgg5PGFtBzPFSBl3HZQjHok5gaQCM6zh2Yk0aSmDCs1CbnVI8/HgASQkNKsWFpseIO9beg5xxpYhbIfA==}
+    engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x || 26.x}
 
   big-integer@1.6.51:
     resolution: {integrity: sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==}
@@ -18210,7 +18213,7 @@ snapshots:
     dependencies:
       is-windows: 1.0.2
 
-  better-sqlite3@12.9.0:
+  better-sqlite3@12.11.1:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -21685,7 +21688,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  knex@3.2.9(better-sqlite3@12.9.0)(mysql2@3.22.3(@types/node@20.6.2))(pg@8.20.0)(tedious@19.2.1):
+  knex@3.2.9(better-sqlite3@12.11.1)(mysql2@3.22.3(@types/node@20.6.2))(pg@8.20.0)(tedious@19.2.1):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -21702,7 +21705,7 @@ snapshots:
       tarn: 3.0.2
       tildify: 2.0.0
     optionalDependencies:
-      better-sqlite3: 12.9.0
+      better-sqlite3: 12.11.1
       mysql2: 3.22.3(@types/node@20.6.2)
       pg: 8.20.0
       tedious: 19.2.1
