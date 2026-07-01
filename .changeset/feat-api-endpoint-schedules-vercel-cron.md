@@ -3,7 +3,7 @@
 '@lowdefy/api': minor
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
-'@lowdefy/cli': minor
+'lowdefy': minor
 ---
 
 feat: Scheduled API endpoints (cron) on Vercel.
