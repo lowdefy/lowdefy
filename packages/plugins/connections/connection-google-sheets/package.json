@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.3.0",
-    "google-spreadsheet": "3.3.0",
+    "google-auth-library": "9.15.1",
+    "google-spreadsheet": "5.3.0",
     "mingo": "6.4.9",
     "dayjs": "1.11.19"
   },
