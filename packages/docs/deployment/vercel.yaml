@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            A Lowdefy app builds a [Hono](https://hono.dev) server serving a Vite-built React client. On Vercel it runs as **static assets on the CDN plus one Serverless Function** that runs the Hono app for every dynamic request (page rendering, `/api/*` requests, endpoints, auth and agents).
+            A Lowdefy app builds a [Hono](https://hono.dev) server serving a Vite-built React client. On Vercel it is deployed with the [Build Output API](https://vercel.com/docs/build-output-api) as **static assets on the CDN plus one Serverless Function** that runs the Hono app for every dynamic request (page rendering, `/api/*` requests, endpoints, cron, auth and agents).
 
             Run the `init-vercel` CLI command in your project to scaffold everything into a `deploy/` directory next to your `lowdefy.yaml`:
 
@@ -34,9 +34,9 @@ _ref:
 
             This creates:
 
-            - `deploy/vercel.install.sh` — the install command; downloads the Lowdefy server into `deploy/` (skipping the client build, which Vercel runs as the build step).
-            - `deploy/vercel.json` — serves the built client (`dist/client`) from the CDN and rewrites every other request to the function. It also sets the build command (`pnpm run build:client`) and output directory (`dist/client`).
-            - `deploy/api/index.js` — the Serverless Function; wraps the Lowdefy Hono app with `hono/vercel`.
+            - `deploy/vercel.install.sh` — the install command; downloads the Lowdefy server into `deploy/` and builds the config artifacts (skipping the client build, which the build step runs).
+            - `deploy/vercel.build.sh` — the build command; builds the Vite client, then runs `lowdefy vercel-output` to assemble the Vercel Build Output (`.vercel/output/`).
+            - `deploy/vercel.json` — sets the build command. The deployment itself is described by the generated `.vercel/output/config.json`.
             - `deploy/README.md` — these instructions.
 
             All four files are safe to commit.
@@ -49,23 +49,51 @@ _ref:
             - **Root Directory:** `<config-directory>/deploy`
                 - `<config-directory>` is the directory in which the `lowdefy.yaml` file is placed.
                 - Eg: if `lowdefy.yaml` is at the top level of the repository, set the root directory to `deploy`; if it is in `apps/app_name`, set it to `apps/app_name/deploy`.
-            - **Install Command:** `sh vercel.install.sh`. Leave the **Build Command** and **Output Directory** to `vercel.json` (do not override them in the dashboard).
+            - **Install Command:** `bash vercel.install.sh`. Leave the **Build Command** to `vercel.json` (do not override it in the dashboard). There is no **Output Directory** setting — the build emits `.vercel/output`, which Vercel detects automatically.
             - Enable **"Include files outside the root directory in the Build Step"** — the Lowdefy config usually lives in the parent of `deploy/`.
 
             ###### Public files
 
-            Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build and served by the Vercel CDN — no extra configuration needed.
+            Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed.
 
             ###### Secrets and environment variables
 
             Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and `AUTH_URL` for OAuth) for authentication. Different secrets can be set for production and preview deployments.
+
+            ###### Scheduled endpoints (cron)
+
+            An `Api` (or `InternalApi`) endpoint can declare `schedules` to run its routine on a timer. Each build turns those schedules into Vercel cron jobs in `.vercel/output/config.json`, so nothing is committed by hand and the crons stay in sync with your config:
+
+            ```yaml
+            id: purge-stale-conversations
+            type: Api
+            schedules:
+              - cron: '0 6 * * *'
+                payload: { mode: full }
+              - cron: '*/15 * * * *'
+                payload: { mode: incremental }
+            routine:
+              - id: purge
+                type: MongoDBDeleteMany
+                connectionId: conversations
+                properties:
+                  filter: { updatedAt: { $lt: { _payload: cutoff } } }
+            ```
+
+            Each schedule becomes a cron job pointing at `/api/cron/<endpointId>`. When it fires, Vercel makes a GET request to that path and the Hono app runs the endpoint's routine with the matching schedule's `payload` (available as `_payload`).
+
+            - **Secure it:** add an Environment Variable named exactly `CRON_SECRET` (a random string of 16+ characters). Vercel automatically sends it as `Authorization: Bearer <CRON_SECRET>`; the `/api/cron/*` route rejects requests whose header does not match, and returns `401` if `CRON_SECRET` is unset (fail closed).
+            - **System context:** scheduled runs have no logged-in user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a user.
+            - **UTC only.** Cron expressions have 5 fields (`minute hour day-of-month month day-of-week`); named values like `MON`/`JAN` are not supported, and day-of-month and day-of-week are mutually exclusive.
+            - **Plan limits:** Vercel **Hobby** only allows daily crons (a sub-daily expression fails the deployment); **Pro**/**Enterprise** allow per-minute. Up to 100 cron jobs per project.
+            - **Idempotency:** Vercel does not retry failed runs and delivery is best-effort (a run can be missed or delivered more than once). Design scheduled routines to be idempotent.
 
             ###### Cost protection
 
             Vercel Fluid bills by execution duration, so a request that hangs (a stuck database, SMTP or external API call) is a real cost risk. Two guardrails apply:
 
             - **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on. Set to `0` to disable. Agent streaming routes are exempt.
-            - **`maxDuration`** in the generated `vercel.json` (default `60`) — a hard platform cap; Vercel stops the function at this many seconds. Raise it if you run long agent streams, lower it to tighten the ceiling.
+            - **`maxDuration`** in the generated `.vercel/output/functions/api.func/.vc-config.json` (default `60`) — a hard platform cap; Vercel stops the function at this many seconds.
 
             > The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
 
