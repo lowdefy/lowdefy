@@ -52,6 +52,7 @@ function evaluateOperators({
   operators,
   operatorPrefix = '_',
   env,
+  lowdefyApp,
   dynamicIdentifiers,
   typeNames,
   args,
@@ -74,6 +75,7 @@ function evaluateOperators({
         operators,
         operatorPrefix: callPrefix ?? operatorPrefix,
         env,
+        lowdefyApp,
         dynamicIdentifiers: resolvedDynamicIdentifiers,
         typeNames: resolvedTypeNames,
         args: callArgs,
@@ -138,8 +140,21 @@ function evaluateOperators({
       }
     }
 
-    // Unknown operator — mark as dynamic
+    // Unknown operator. Under the default prefix an operator may be runtime-only,
+    // so it is deferred by marking it dynamic. Under the explicit '_build.' prefix
+    // the author asked for build-time evaluation, so an unknown operator (typo, or
+    // a runtime-only operator misused at build time) is a config error.
     if (type.isUndefined(operators[op])) {
+      if (operatorPrefix === '_build.') {
+        const error = new ConfigError(`Operator "${key}" is not a valid _build operator.`, {
+          configKey: node['~k'],
+          received: { [key]: node[key] },
+        });
+        error.lineNumber = node['~l'];
+        error.refId = node['~r'];
+        errors.push(error);
+        return null;
+      }
       return setDynamicMarker(node);
     }
 
@@ -160,6 +175,7 @@ function evaluateOperators({
         args,
         arrayIndices: [],
         env,
+        lowdefyApp,
         methodName,
         operators,
         params,

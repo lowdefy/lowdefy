@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 import { execSync } from 'child_process';
 
-import buildApp from './buildApp.js';
+import buildApp, { computeAppMeta } from './buildApp.js';
 import testContext from '../test-utils/testContext.js';
 
 const context = testContext();
@@ -161,6 +161,39 @@ test('buildApp absent root fields become null in appMeta', () => {
     lowdefyVersion: null,
     gitSha,
   });
+});
+
+test('computeAppMeta builds appMeta shape from source fields', () => {
+  expect(
+    computeAppMeta({
+      slug: 'my-app',
+      name: 'My App',
+      version: '1.2.3',
+      description: 'Useful.',
+      license: 'MIT',
+      lowdefy: '5.0.0',
+    })
+  ).toEqual({
+    slug: 'my-app',
+    name: 'My App',
+    version: '1.2.3',
+    description: 'Useful.',
+    license: 'MIT',
+    lowdefyVersion: '5.0.0',
+    gitSha,
+  });
+});
+
+test('buildApp prefers context.appMeta when present', () => {
+  const precomputed = { ...emptyAppMeta, slug: 'precomputed' };
+  const contextWithMeta = testContext();
+  contextWithMeta.appMeta = precomputed;
+  const result = buildApp({
+    components: { slug: 'from-components' },
+    context: contextWithMeta,
+  });
+  expect(result.appMeta).toBe(precomputed);
+  expect(result.appMeta.slug).toBe('precomputed');
 });
 
 test('buildApp LOWDEFY_GIT_SHA env var wins over git rev-parse', async () => {

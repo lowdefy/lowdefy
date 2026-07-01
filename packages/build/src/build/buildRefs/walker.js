@@ -45,6 +45,7 @@ class WalkContext {
     refChain,
     operators,
     env,
+    lowdefyApp,
     dynamicIdentifiers,
     shouldStop,
   }) {
@@ -61,6 +62,7 @@ class WalkContext {
     this.refChain = refChain;
     this.operators = operators;
     this.env = env;
+    this.lowdefyApp = lowdefyApp;
     this.dynamicIdentifiers = dynamicIdentifiers;
     this.shouldStop = shouldStop;
   }
@@ -80,6 +82,7 @@ class WalkContext {
       refChain: this.refChain,
       operators: this.operators,
       env: this.env,
+      lowdefyApp: this.lowdefyApp,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
     });
@@ -109,6 +112,7 @@ class WalkContext {
       refChain: newChain,
       operators: this.operators,
       env: this.env,
+      lowdefyApp: this.lowdefyApp,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
     });
@@ -227,6 +231,7 @@ function evaluateBuildOperator(node, ctx) {
     operators: ctx.operators,
     operatorPrefix: '_build.',
     env: ctx.env,
+    lowdefyApp: ctx.lowdefyApp,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
   });
   if (errors.length > 0) {
@@ -319,6 +324,7 @@ async function resolveVarDefault(rawDefault, moduleEntry, ctx) {
     refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
     operators: ctx.operators,
     env: ctx.env,
+    lowdefyApp: ctx.lowdefyApp,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
   });
 

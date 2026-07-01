@@ -29,7 +29,21 @@ function computeGitSha() {
   }
 }
 
-function buildApp({ components }) {
+// App metadata resolved from the root lowdefy.yaml. Computed before buildRefs
+// so it can back the _build.app operator, and reused by the buildApp step.
+function computeAppMeta(source = {}) {
+  return {
+    slug: source.slug ?? null,
+    name: source.name ?? null,
+    version: source.version ?? null,
+    description: source.description ?? null,
+    license: source.license ?? null,
+    lowdefyVersion: source.lowdefy ?? null,
+    gitSha: computeGitSha(),
+  };
+}
+
+function buildApp({ components, context }) {
   if (type.isNone(components.app)) {
     components.app = {};
   }
@@ -45,16 +59,9 @@ function buildApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
-  components.appMeta = {
-    slug: components.slug ?? null,
-    name: components.name ?? null,
-    version: components.version ?? null,
-    description: components.description ?? null,
-    license: components.license ?? null,
-    lowdefyVersion: components.lowdefy ?? null,
-    gitSha: computeGitSha(),
-  };
+  components.appMeta = context?.appMeta ?? computeAppMeta(components);
   return components;
 }
 
+export { computeAppMeta };
 export default buildApp;
