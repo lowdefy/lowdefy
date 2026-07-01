@@ -27,7 +27,7 @@ import tryBuildStep from './utils/tryBuildStep.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildAgents from './build/buildAgents.js';
-import buildApp from './build/buildApp.js';
+import buildApp, { computeAppMeta } from './build/buildApp.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
@@ -78,6 +78,10 @@ async function build(options) {
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
     await buildModuleDefs({ context });
+
+    // Compute app metadata from the parsed root lowdefy.yaml before ref
+    // resolution so the _build.app operator can resolve it during buildRefs.
+    context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
 
     let components;
     try {

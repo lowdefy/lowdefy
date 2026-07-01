@@ -26,7 +26,7 @@ import tryBuildStep from '../../utils/tryBuildStep.js';
 
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
-import buildApp from '../buildApp.js';
+import buildApp, { computeAppMeta } from '../buildApp.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
@@ -78,6 +78,10 @@ async function shallowBuild(options) {
 
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
+
+    // Compute app metadata before ref resolution so the _build.app operator can
+    // resolve it during buildRefs (matches the full build in index.js).
+    context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
 
     let components;
     try {

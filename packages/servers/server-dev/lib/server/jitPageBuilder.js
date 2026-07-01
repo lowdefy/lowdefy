@@ -127,6 +127,9 @@ function getBuildContext(buildDirectory, configDirectory) {
     Object.assign(cachedBuildContext.modules, modules);
   }
 
+  // Restore app metadata so the _build.app operator resolves during JIT page builds.
+  cachedBuildContext.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no
   // components.api and every CallAPI action is flagged as a non-existent endpoint.

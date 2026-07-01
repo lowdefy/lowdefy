@@ -27,8 +27,18 @@ const fixturesDir = path.join(__dirname, 'tests/success');
 process.env.NEXTAUTH_SECRET = 'test-secret-for-snapshot-tests';
 
 // Mock buildApp to return constant gitSha
+const mockComputeAppMeta = (source = {}) => ({
+  slug: source.slug ?? null,
+  name: source.name ?? null,
+  version: source.version ?? null,
+  description: source.description ?? null,
+  license: source.license ?? null,
+  lowdefyVersion: source.lowdefy ?? null,
+  gitSha: 'test-git-sha-for-snapshots',
+});
 jest.unstable_mockModule('./build/buildApp.js', () => ({
-  default: ({ components }) => {
+  computeAppMeta: mockComputeAppMeta,
+  default: ({ components, context }) => {
     if (!components.app) {
       components.app = {};
     }
@@ -41,15 +51,7 @@ jest.unstable_mockModule('./build/buildApp.js', () => ({
     if (!components.app.html.appendHead) {
       components.app.html.appendHead = '';
     }
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha-for-snapshots',
-    };
+    components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
     return components;
   },
 }));

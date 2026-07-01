@@ -15,6 +15,7 @@
 */
 
 import _and from './operators/shared/and.js';
+import _app from './operators/shared/app.js';
 import _args from './operators/shared/args.js';
 import _array from './operators/shared/array.js';
 import _boolean from './operators/shared/boolean.js';
@@ -56,6 +57,7 @@ import _env from './operators/build/env.js';
 
 export default {
   _and,
+  _app,
   _args,
   _array,
   _base64,
