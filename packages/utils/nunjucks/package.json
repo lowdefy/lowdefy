@@ -40,11 +40,11 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.3.0",
-    "dayjs": "1.11.19"
+    "dayjs": "1.11.20"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "clean-webpack-plugin": "4.0.0",
     "jest": "28.1.3",
