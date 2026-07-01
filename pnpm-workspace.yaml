@@ -4,12 +4,20 @@ packages:
   - packages/servers/*
   - packages/utils/*
   - packages/ides/*
+
 onlyBuiltDependencies:
   - '@sentry/cli'
   - '@swc/core'
   - better-sqlite3
   - esbuild
+
+overrides:
+  better-sqlite3: 12.11.1
+
 packageExtensions:
   echarts-for-react:
     dependencies:
       tslib: '*'
+
+patchedDependencies:
+  buffer-equal-constant-time@1.0.1: patches/buffer-equal-constant-time@1.0.1.patch

@@ -48,7 +48,7 @@ _ref:
 
             ## Prerequisites
 
-            - **Node.js 18+**
+            - **Node.js 22+**
             - A working Lowdefy app (your app must build successfully)
             - **Playwright** (installed automatically during setup)
 

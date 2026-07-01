@@ -597,3 +597,56 @@ nested:
     expect(res.out.nested['~r']).toBe(templateRefId);
   });
 });
+
+describe('_build.app', () => {
+  afterEach(() => {
+    delete context.appMeta;
+  });
+
+  test('_build.app resolves an app metadata field during ref resolution', async () => {
+    context.appMeta = { slug: 'my-app', version: '1.2.3' };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+appVersion:
+  _build.app: version`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.appVersion).toBe('1.2.3');
+  });
+
+  test('_build.app: true resolves the whole app metadata object', async () => {
+    context.appMeta = { slug: 'my-app', version: '1.2.3' };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+meta:
+  _build.app: true`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.meta).toEqual({ slug: 'my-app', version: '1.2.3' });
+  });
+
+  test('unknown _build operator collects a config error', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+oops:
+  _build.appp: version`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain('_build.appp');
+  });
+});

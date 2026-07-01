@@ -38,21 +38,23 @@ process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
 // run against a throwaway temp directory. Everything that matters for CallAPI
 // validation (buildRefs/walker, buildModules, buildApi, writeApi, buildShallowPages,
 // writeMaps, buildPageJit, validateCallApiRefs) runs for real.
+const mockComputeAppMeta = (source = {}) => ({
+  slug: source.slug ?? null,
+  name: source.name ?? null,
+  version: source.version ?? null,
+  description: source.description ?? null,
+  license: source.license ?? null,
+  lowdefyVersion: source.lowdefy ?? null,
+  gitSha: 'test-git-sha',
+});
 jest.unstable_mockModule('../buildApp.js', () => ({
-  default: ({ components }) => {
+  computeAppMeta: mockComputeAppMeta,
+  default: ({ components, context }) => {
     components.app = components.app ?? {};
     components.app.html = components.app.html ?? {};
     components.app.html.appendBody = components.app.html.appendBody ?? '';
     components.app.html.appendHead = components.app.html.appendHead ?? '';
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha',
-    };
+    components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
     return components;
   },
 }));
