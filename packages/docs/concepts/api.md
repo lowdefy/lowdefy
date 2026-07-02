@@ -266,6 +266,66 @@ Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws a
 
 Connection plugin resolvers can also invoke endpoints from inside their JS code using the `callApi` function on the resolver argument bag. The semantics — depth cap, isolated routine context, caller's user identity, `InternalApi` reachable — match the `CallApi` step. See [Connection and Request Plugins](/plugins-connections) for the resolver-side API.
 
+## Running Agents As A Routine Step
+
+Routines can run an [agent](/agents-introduction) to completion using `CallAgent` steps. The agent runs headlessly — no chat UI, no streaming — looping through its tools until it finishes, and the result is stored as the step result. This lets endpoints delegate open-ended, multi-step work to an agent, while the surrounding routine stays explicit. For a single model call without tools, prefer the one-shot `GenerateText` / `GenerateObject` [request types](/Anthropic) — they are cheaper and more predictable.
+
+A `CallAgent` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: CallAgent`: **Required** - Identifies this as an agent call step.
+- `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
+- `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
+
+The step result contains:
+
+- `text: string`: The agent's final text output.
+- `finishReason: string`: Why the run ended (`stop`, `length`, `tool-calls`, ...).
+- `usage: object`: Accumulated token usage across all steps (`{ inputTokens, outputTokens, totalTokens, reasoningTokens, cacheReadTokens, cacheWriteTokens }`).
+- `toolCalls: object[]`: The tool calls the agent made (`{ toolCallId, toolName, input }`).
+- `toolResults: object[]`: The corresponding tool results (`{ toolCallId, toolName, output }`).
+
+```yaml
+agents:
+  - id: research_agent
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5
+      instructions: You research signup data and summarize findings.
+      maxSteps: 5
+    tools:
+      - lookup-signups
+
+api:
+  - id: daily-research
+    type: Api
+    routine:
+      - id: research
+        type: CallAgent
+        properties:
+          agentId: research_agent
+          prompt: Summarize yesterday's signups and flag anomalies.
+
+      - id: send_report
+        type: SendGridMail
+        connectionId: email
+        properties:
+          to: team@example.com
+          subject: Daily signup report
+          text:
+            _step: research.text
+```
+
+Headless agent runs differ from interactive chat in a few ways:
+
+- **Tool approval is not supported.** Tools configured with `confirm: true` auto-execute — there is no client to approve them. The build emits a warning when a `CallAgent` step references an agent with confirm tools.
+- **No page context.** The `update-page-state` tool is not available, and no conversation title is generated.
+- **Hooks still fire.** Agent [server hooks](/agent-server-hooks) (`onStart`, `onStepFinish`, `onFinish`, etc.) run as endpoint calls — useful for logging and persistence. `dataParts` returned by `onFinish` endpoints are ignored (there is no stream to write to), and the `messages` in the `onFinish` payload are model messages rather than UI messages.
+- **Authorization is per tool endpoint.** Each tool call authorizes against that endpoint's `auth` config with the caller's identity. In a system context with no user, tools calling protected endpoints will fail.
+
+Agent tool and hook endpoint calls share the same depth cap of 10 as `CallApi`, so mutually recursive agent and endpoint configurations terminate with an error instead of looping forever.
+
 ## Validating Data As A Routine Step
 
 API routines can validate any value against a JSON Schema using `ValidateSchema` steps. This is useful for guarding endpoint inputs that need stricter checks than the endpoint's request schema enforces, or for asserting the shape of data returned by a prior step before it flows downstream.
