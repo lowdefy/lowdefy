@@ -118,6 +118,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
     websockets: { roles: {} },
     pages: { roles: {} },
     providers: [],
+    hooks: [],
     authPages: {
       signIn: '/login',
       signUp: '/signup',

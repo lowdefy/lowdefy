@@ -17,6 +17,7 @@
 */
 
 import buildApiAuth from './buildApiAuth.js';
+import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildPageAuth from './buildPageAuth.js';
 import buildTrustedProviders from './buildTrustedProviders.js';
@@ -30,6 +31,7 @@ function buildAuth({ components, context }) {
   setAuthConfigured({ components, context });
   setAuthDefaults({ components, context });
   buildTrustedProviders({ components, context });
+  buildAuthHooks({ components, context });
   buildApiAuth({ components, context });
   buildWebsocketAuth({ components, context });
   buildPageAuth({ components, context });

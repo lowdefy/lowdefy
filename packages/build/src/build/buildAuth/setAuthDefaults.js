@@ -44,6 +44,8 @@ function setAuthDefaults({ components }) {
     return components;
   }
 
+  setDefault(auth, 'hooks', []);
+
   setDefault(auth, 'authPages', {});
   setDefault(auth.authPages, 'signIn', '/login');
   setDefault(auth.authPages, 'signUp', '/signup');

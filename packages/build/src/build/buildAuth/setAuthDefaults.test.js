@@ -59,6 +59,7 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
       pages: { roles: {} },
       websockets: { roles: {} },
       providers: [],
+      hooks: [],
       authPages: {
         signIn: '/login',
         signUp: '/signup',

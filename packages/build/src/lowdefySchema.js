@@ -1044,6 +1044,48 @@ export default {
             type: 'Auth "authPages" should be an object.',
           },
         },
+        hooks: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "hooks" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'point', 'endpointId'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "id" should be a string.',
+                },
+              },
+              point: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "point" should be a string.',
+                },
+              },
+              endpointId: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "endpointId" should be a string.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth hook should be an object.',
+              required: {
+                id: 'Auth hook should have required property "id".',
+                point: 'Auth hook should have required property "point".',
+                endpointId: 'Auth hook should have required property "endpointId".',
+              },
+            },
+          },
+        },
         dev: {
           type: 'object',
           additionalProperties: false,

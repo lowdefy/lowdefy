@@ -303,3 +303,62 @@ test('validateAuthConfig throws when both protected and public websockets are se
     'Protected and public websockets are mutually exclusive. When protected websockets are listed, all unlisted websockets are public by default and vice versa.'
   );
 });
+
+test('validateAuthConfig passes a valid hooks array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      hooks: [{ id: 'link-contact', point: 'user.create.before', endpointId: 'auth/link-contact' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when a hook entry is missing a required property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      hooks: [{ id: 'link-contact', endpointId: 'auth/link-contact' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth hook should have required property "point".'
+  );
+});
+
+test('validateAuthConfig throws when a hook entry contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      hooks: [
+        {
+          id: 'link-contact',
+          point: 'user.create.before',
+          endpointId: 'auth/link-contact',
+          properties: {},
+        },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow();
+});
+
+test('validateAuthConfig throws when hooks is not an array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      hooks: { id: 'link-contact' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "hooks" should be an array.'
+  );
+});
