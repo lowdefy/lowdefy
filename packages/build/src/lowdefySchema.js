@@ -402,6 +402,83 @@ export default {
             },
           },
         },
+        websockets: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.websockets" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.websockets.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Websocket ids for which authentication is required. When specified, all unspecified websockets will be public.',
+                errorMessage: {
+                  type: 'App "auth.websockets.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.websockets.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Websocket ids for which authentication is not required. When specified, all unspecified websockets will be protected.',
+                errorMessage: {
+                  type: 'App "auth.websockets.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.websockets.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.websockets.roles" should be an object.',
+              },
+            },
+          },
+        },
         authPages: {
           type: 'object',
           additionalProperties: false,
@@ -758,6 +835,15 @@ export default {
             type: 'Block "requests" should be an array.',
           },
         },
+        subscriptions: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/subscription',
+          },
+          errorMessage: {
+            type: 'Page "subscriptions" should be an array.',
+          },
+        },
         required: {},
         validate: {
           type: 'array',
@@ -1014,6 +1100,176 @@ export default {
               },
             },
           ],
+        },
+        schedules: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['cron'],
+            properties: {
+              cron: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].cron" should be a cron expression string.',
+                },
+              },
+              payload: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].payload" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Api endpoint "schedules[]" should be an object.',
+              required: {
+                cron: 'Api endpoint schedule should have required property "cron".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Api endpoint "schedules" should be an array.',
+          },
+        },
+      },
+    },
+    websocket: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "type" should be a string.',
+          },
+        },
+        connectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "connectionId" should be a string.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Websocket "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Websocket should be an object.',
+        required: {
+          id: 'Websocket should have required property "id".',
+          type: 'Websocket should have required property "type".',
+        },
+      },
+    },
+    subscription: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['websocketId'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        websocketId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Subscription "websocketId" should be a string.',
+          },
+        },
+        payload: {
+          type: 'object',
+          errorMessage: {
+            type: 'Subscription "payload" should be an object.',
+          },
+        },
+        events: {
+          type: 'object',
+          errorMessage: {
+            type: 'Subscription "events" should be an object.',
+          },
+        },
+        client: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            maxMessages: {
+              type: 'integer',
+              minimum: 1,
+              errorMessage: {
+                type: 'Subscription "client.maxMessages" should be a positive integer.',
+              },
+            },
+            throttleRender: {
+              type: 'number',
+              errorMessage: {
+                type: 'Subscription "client.throttleRender" should be a number.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Subscription "client" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Subscription should be an object.',
+        required: {
+          websocketId: 'Subscription should have required property "websocketId".',
         },
       },
     },
@@ -1742,6 +1998,15 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
+      },
+    },
+    websockets: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/websocket',
+      },
+      errorMessage: {
+        type: 'App "websockets" should be an array.',
       },
     },
     menus: {

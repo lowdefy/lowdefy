@@ -29,6 +29,7 @@ import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import cronHandler from './routes/cron.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import lowdefyConfig from '../lib/build/config.js';
@@ -36,6 +37,7 @@ import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
+import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
@@ -59,7 +61,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
     app.use('*', async (c, next) => {
-      if (c.req.path.includes('/api/agent/')) {
+      if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
         return next();
       }
       return timeout(requestTimeoutMs)(c, next);
@@ -67,9 +69,9 @@ function createApp({ serveStaticAssets = true } = {}) {
   }
 
   // Next.js compressed responses by default — keep parity, but leave
-  // streaming responses (agent SSE) uncompressed.
+  // streaming responses (agent SSE) and websocket upgrades uncompressed.
   app.use('*', async (c, next) => {
-    if (c.req.path.includes('/api/agent/')) {
+    if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
       return next();
     }
     return compress()(c, next);
@@ -86,9 +88,11 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.use('/api/auth/*', authMiddleware());
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
+  app.get('/api/cron/*', cronHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls

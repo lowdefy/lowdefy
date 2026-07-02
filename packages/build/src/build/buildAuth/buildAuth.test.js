@@ -33,6 +33,9 @@ test('buildAuth default', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: false,
@@ -58,6 +61,9 @@ test('buildAuth no pages', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -92,6 +98,9 @@ test('buildAuth all protected, some public', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -134,6 +143,9 @@ test('buildAuth all public, some protected', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -174,6 +186,9 @@ test('buildAuth all public', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -212,6 +227,9 @@ test('buildAuth all protected', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -298,6 +316,9 @@ test('buildAuth roles', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -355,6 +376,9 @@ test('buildAuth roles and protected pages array', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -389,6 +413,9 @@ test('buildAuth roles and protected true', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -456,6 +483,9 @@ test('Auth plugins are counted', () => {
     expect(res).toEqual({
       auth: {
         api: {
+          roles: {},
+        },
+        websockets: {
           roles: {},
         },
         authPages: {},

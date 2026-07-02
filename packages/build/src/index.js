@@ -39,6 +39,7 @@ import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
@@ -56,6 +57,7 @@ import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
 import writeI18n from './build/writeI18n.js';
 import writeTheme from './build/writeTheme.js';
@@ -121,9 +123,9 @@ async function build(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
-    tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    tryBuildStep(buildAgents, 'buildAgents', { components, context })
     // Runs after buildAgents — needs context.agentIds and normalized agent.tools
-    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
@@ -151,6 +153,7 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeWebsockets({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });
