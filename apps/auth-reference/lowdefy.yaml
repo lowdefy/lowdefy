@@ -10,6 +10,10 @@ lowdefy: local
 # invitations, merge-on-signup against user-contacts, and org switching.
 # The sibling apps auth-reference-b (pinned org-b, invite-only) and
 # auth-reference-tenant (tenant policy) share the same auth database.
+# Phase 6 adds the admin steps: role-gated admin-* Api endpoints drive the
+# user and member administration routines (/users and /members), a
+# system: true step runs caller-less in the audit-login hook, and
+# ImpersonateUser/StopImpersonating exercise impersonation.
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -83,8 +87,17 @@ auth:
         - admin
         - members
         - contacts
+        - users
       auditor:
         - audit-reports
+
+  # The admin step endpoints carry no authorization of their own - this gate
+  # is the authority. A caller without the admin role gets the opaque
+  # endpoint-does-not-exist rejection before the routine runs.
+  api:
+    roles:
+      admin:
+        - 'admin-*'
 
   authPages:
     signIn: /login
@@ -107,6 +120,13 @@ auth:
     - id: on-email-verified
       point: email.verified
       endpointId: on-email-verified
+    # Uncomment to hand invitation email dispatch to the invitation-send
+    # endpoint - the stock auth.email template then does NOT send; the hook
+    # owns dispatch (phase-6 walkthrough). Leave commented to exercise the
+    # stock-template fallback through Mailpit.
+    # - id: invitation-send
+    #   point: invitation.send
+    #   endpointId: invitation-send
 
   # Uncomment to exercise the wrong-roles opaque /404 redirect and the
   # pre-resolved dev caller (roles are authoritative; no engine runs):
@@ -151,6 +171,23 @@ api:
   - _ref: api/normalize-signup.yaml
   - _ref: api/audit-login.yaml
   - _ref: api/on-email-verified.yaml
+  # The invitation.send hook body - unreachable until its auth.hooks entry
+  # above is uncommented.
+  - _ref: api/invitation-send.yaml
+  # Phase-6 admin step endpoints - role-gated by auth.api.roles above.
+  - _ref: api/admin-list-users.yaml
+  - _ref: api/admin-ban-user.yaml
+  - _ref: api/admin-unban-user.yaml
+  - _ref: api/admin-revoke-user-sessions.yaml
+  - _ref: api/admin-delete-user.yaml
+  - _ref: api/admin-update-user-attributes.yaml
+  - _ref: api/admin-list-members.yaml
+  - _ref: api/admin-invite-member.yaml
+  - _ref: api/admin-cancel-invitation.yaml
+  - _ref: api/admin-remove-member.yaml
+  - _ref: api/admin-update-member-roles.yaml
+  - _ref: api/admin-update-member-attributes.yaml
+  - _ref: api/admin-create-organization.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -163,6 +200,7 @@ pages:
   - _ref: pages/organizations.yaml
   - _ref: pages/sessions.yaml
   - _ref: pages/admin.yaml
+  - _ref: pages/users.yaml
   - _ref: pages/members.yaml
   - _ref: pages/contacts.yaml
   - _ref: pages/audit-reports.yaml

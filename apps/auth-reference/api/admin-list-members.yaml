@@ -1,0 +1,13 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# No organizationId - org-scoped steps default to the caller's active
+# organization (org-a in this deployment). A caller-less (system) invocation
+# would have to pass organizationId explicitly.
+id: admin-list-members
+type: Api
+routine:
+  - id: list_members
+    type: ListMembers
+    properties:
+      limit: 100
+  - ':return':
+      _step: list_members

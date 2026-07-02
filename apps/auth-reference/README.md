@@ -7,8 +7,11 @@ revocation. Phase 2 adds auth hooks: `InternalApi` endpoints bound to
 `user.create.before`, `session.create.after`, and `email.verified`. Phase 3
 adds organizations: this app pins **org-a** with open signup; the sibling
 apps `auth-reference-b` (pins **org-b**, invite-only) and
-`auth-reference-tenant` (tenant policy) share the walkthrough below. Each
-later phase grows this suite with a scenario.
+`auth-reference-tenant` (tenant policy) share the walkthrough below. Phase 6
+adds the admin steps: role-gated `Api` endpoints drive user and member
+administration routines from `/users` and `/members`, a `system: true` step
+runs caller-less in the audit-login hook, and impersonation runs through
+client auth actions. Each later phase grows this suite with a scenario.
 
 ## Prerequisites
 
@@ -107,7 +110,7 @@ and add `LOWDEFY_SECRET_TENANT_DATABASE_URI` for the tenant app).
 The bindings live under `auth.hooks` in `lowdefy.yaml`; the hook bodies are
 the `InternalApi` endpoints in `api/`. Hooks run in a system context: the
 endpoints are unreachable over HTTP (`curl -X POST
-http://localhost:3000/api/endpoint/audit-login` answers "does not exist"),
+http://localhost:3000/api/endpoints/audit-login` answers "does not exist"),
 `_user` is empty inside the routine, the subject is in `_payload`, and
 `_secret` resolves.
 
@@ -256,3 +259,165 @@ the old one) so pre-phase-3 users do not confuse the wall.
 Automation note: these scenarios are manual walkthroughs, like phases 1-2;
 they need live email verification loops and three side-by-side dev servers.
 Automate with the repo's e2e tooling as it grows.
+
+## Walkthrough (phase-6 gate - admin steps)
+
+The admin steps are the sanctioned writers for the auth-owned collections.
+They execute with server authority inside the `admin-*` `Api` endpoints; the
+endpoint role gate (`auth.api.roles` in `lowdefy.yaml`) is the **only**
+authorization - the steps carry none of their own. `/users` drives the user
+steps (`ListUsers`, `BanUser`, `UnbanUser`, `RevokeUserSessions`,
+`DeleteUser`, `UpdateUserAttributes`, `CreateOrganization`, and the
+impersonation actions), `/members` the member steps (`ListMembers`,
+`InviteMember`, `CancelInvitation`, `RemoveMember`, `UpdateMemberRoles`,
+`UpdateMemberAttributes`). Seed yourself as an admin member first (the
+`set-member.mjs` command from scenario 20); the scenarios also use a couple
+of disposable signed-up-and-verified users.
+
+29. **The endpoint role gate rejects opaquely, before the routine runs**:
+    sign up and verify a fresh user (open signup makes them a plain
+    `member`). Signed in as them, run in the browser console on
+    `/dashboard`:
+
+    ```js
+    await (
+      await fetch('/api/endpoints/admin-list-users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payload: {} }),
+      })
+    ).json();
+    ```
+
+    The response is `API Endpoint "admin-list-users" does not exist.` - the
+    same answer an unknown endpoint id gets, so forbidden and missing are
+    indistinguishable, and the routine never ran. The `/users` and
+    `/members` pages 404 for the same caller. As the admin from scenario
+    20, the same fetch returns the user list.
+
+30. **Invite through the step - with and without a contact**: as the admin
+    on `/members`, invite a fresh email with role `member` and no contact
+    id - the response renders the pending invitation and the **stock
+    template** lands in Mailpit ("You have been invited to org-a", carrying
+    the invitation id): no `invitation.send` hook is bound by default, so
+    `auth.email` sends. Then create a contact on `/contacts` for a second
+    fresh email and invite it **with** the contact id - the response
+    carries `contactId`. As that invitee: sign up, verify, and accept on
+    `/accept-invitation?invitationId=<id>` -
+    `db.users.find({email: "<invitee>"})` shows the stamped `contactId`
+    (the phase-3 accept hook, now fed by the step). Keep this invitee
+    around: scenarios 35 and 38 act on them.
+
+31. **An unregistered role fails loudly at the rail**: invite any email
+    with role `not-a-role` (deliberately in the selector, absent from the
+    catalog) - the page shows BetterAuth's `ROLE_NOT_FOUND` failure ("Role
+    not found"). Nothing happened: no Mailpit message and no new
+    `user-invitations` row.
+
+32. **A bound invitation.send hook owns dispatch**: uncomment the
+    `invitation-send` entry under `auth.hooks` in `lowdefy.yaml` and
+    restart. Invite a fresh email - Mailpit gets **nothing** (the bound
+    hook replaces the stock template) and `db['hook-audit']` gains an
+    `invitation.send` row with
+    `payloadKeys: ['invitation', 'organization', 'inviter']` and the
+    invitation id: the hook routine dispatched (`api/invitation-send.yaml`;
+    a real module hook would send the email itself). The invite response
+    still carries the invitation id for the accept flow. Re-comment the
+    binding afterwards.
+
+33. **Neither a binding nor auth.email - a clear error**: with the hook
+    still unbound, comment out the whole `auth.email` block in
+    `lowdefy.yaml` and restart. Invite any email - the page error reads
+    `Cannot send the invitation email. Bind an "invitation.send" auth hook
+    or configure "auth.email".` Restore `auth.email` (verification emails
+    need it too).
+
+34. **Roles and both attribute kinds through steps**: on `/members`, update
+    your own member's roles to `admin,auditor` and its attributes to
+    `{"branches":["a","b"]}`; on `/users`, update your user attributes to
+    `{"region":"emea","branches":["hq"]}`. On `/dashboard`, press Refresh
+    session - roles are `["admin", "auditor"]` and attributes show the
+    merged bag with the member's `branches` winning. The attributes steps
+    write through the adapter's CRUD interface and fire **no**
+    `user.update` hooks - documented behavior, not an oversight.
+
+35. **Ban revokes sessions and refuses sign-in; unban restores**: in a
+    second browser, sign in as scenario 30's invitee and leave it on
+    `/dashboard`. On `/users`, ban that user id with a reason - the list
+    shows **banned** with the reason, and in the second browser the next
+    navigation lands on the login page (`BanUser` revoked the sessions).
+    Signing in again fails with "You have been banned from this
+    application". Empty "expires in" means permanent; give it seconds to
+    watch the ban lapse instead. Unban - sign-in succeeds and `/dashboard`
+    shows the same roles and attributes as before the ban. (Banning
+    yourself fails: BetterAuth's `YOU_CANNOT_BAN_YOURSELF`.)
+
+36. **system: true runs caller-less; without it the step refuses**: log in
+    as anyone - the newest `session.create.after` row on `/hook-audit`
+    carries a numeric `systemStepUserTotal`, written by the `ListUsers`
+    step running with `system: true` inside the caller-less hook routine.
+    Delete the `system: true` line in `api/audit-login.yaml` - the next
+    sign-in surfaces an operational error (`requires an authenticated
+    caller. Set system: true...`) while the session row still committed
+    (the after-hook contract from scenario 15). Restore the line.
+
+37. **Last-owner protection holds at the rail**: on `/members`, set your
+    member roles to `admin,owner` (keeping `admin` keeps this page
+    reachable) and make sure no other member holds `owner`. Demote
+    yourself to `admin` - the update fails: "You cannot leave the
+    organization without an owner." Remove your own member id - "You
+    cannot leave the organization as the only owner". Promote a second
+    member to `admin,owner` and the same demotion goes through.
+
+38. **DeleteUser cascades and leaves the contact untouched**: scenario 30's
+    invitee has a user row, an org-a member row, a stamped `contactId`,
+    and sessions; invite the same email once more so a **pending**
+    invitation row also exists (`resend: true` reissues it). Note the user
+    id, then delete it on `/users` - the response lists the removed user,
+    member rows, and pending invitations. Verify the cascade:
+
+    ```sh
+    mongosh auth-reference --eval '
+      const email = "<invitee>"; const userId = "<deleted user id>";
+      print("users:", db.users.countDocuments({ email }));
+      print("members:", db["user-members"].countDocuments({ userId }));
+      print("invitations:", db["user-invitations"].countDocuments({ email, status: "pending" }));
+      print("sessions:", db["user-sessions"].countDocuments({ userId }));
+      print("accounts:", db["user-accounts"].countDocuments({ userId }));
+      print("contacts:", db["user-contacts"].countDocuments({ email }));'
+    ```
+
+    Everything is 0 - `removeUser` itself clears sessions and accounts
+    (the phase-0 probe's answer), the step cascades members and pending
+    invitations - except `contacts: 1`: the app-owned contact survives.
+
+39. **Impersonation - refused, then the settled presentation**:
+    impersonation is a client auth action against BetterAuth's **own**
+    admin access control, which checks your `user.role` field - not the
+    member role that gates the page. Before seeding it, impersonate a
+    target user id on `/users` - the page error reads "You are not allowed
+    to impersonate users" (the member role got you to the page; the AC
+    still refused). Seed and retry:
+
+    ```sh
+    AUTH_DATABASE_URI='mongodb://localhost:27017/auth-reference' \
+      node scripts/set-user-role.mjs --email <you> --role admin
+    ```
+
+    Impersonating now lands on `/home` with the warning alert
+    `Impersonating <target email> (impersonatedBy: <your user id>)` -
+    `_user` presents the impersonated user with `_user.impersonatedBy`
+    carrying your admin user id, and `/dashboard` shows the target's
+    roles. Press Stop impersonating - the alert clears and `_user` is you
+    again.
+
+40. **CreateOrganization makes the caller the owner**: on `/users`, create
+    an organization with a fresh name and slug - the response shows the
+    new org, and `db["user-members"]` gains your `owner` row for it.
+    Client-side org creation stays off
+    (`allowUserToCreateOrganization: false`); the step is the sanctioned
+    path.
+
+Automation note: like phases 1-3 these stay manual - they need config
+toggles with restarts, two browsers, and live email loops. Automate with
+the repo's e2e tooling as it grows.

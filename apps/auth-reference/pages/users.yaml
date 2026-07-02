@@ -1,0 +1,347 @@
+# Phase-6 user administration on the admin steps, driven through role-gated
+# admin-* Api endpoints (auth.api.roles). The endpoint gate is the only
+# authorization for the steps. Impersonation is the exception: it is a client
+# auth action against BetterAuth's own admin access control, which checks the
+# CALLER's user.role field (the admin plugin's user field, NOT the Lowdefy
+# member role) - see scripts/set-user-role.mjs.
+id: users
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_users
+      type: CallAPI
+      params:
+        endpointId: admin-list-users
+blocks:
+  - id: users_title
+    type: Title
+    properties:
+      content: Users (admin)
+      level: 2
+  - id: users_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for user in users %}
+              <li><b>{{ user.email }}</b> - {{ user.name }} (user id:
+              <code>{{ user.id }}</code>){% if user.banned %},
+              <b>banned</b>{% if user.banReason %}: {{ user.banReason }}{% endif %}{% endif %}</li>
+            {% endfor %}
+            </ul>
+          on:
+            users:
+              _api: admin-list-users.response.users
+  - id: refresh_users_button
+    type: Button
+    properties:
+      title: Refresh users (ListUsers)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: reload_users
+          type: CallAPI
+          params:
+            endpointId: admin-list-users
+  - id: target_user_title
+    type: Title
+    properties:
+      content: Act on a user
+      level: 4
+  - id: target_user_id
+    type: TextInput
+    properties:
+      title: User id (from the list above)
+  - id: ban_reason
+    type: TextInput
+    properties:
+      title: Ban reason (optional)
+  - id: ban_expires_in
+    type: NumberInput
+    properties:
+      title: Ban expires in seconds (optional - empty means permanent)
+  - id: ban_button
+    type: Button
+    properties:
+      title: Ban user (BanUser)
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: ban_user
+            type: CallAPI
+            params:
+              endpointId: admin-ban-user
+              payload:
+                userId:
+                  _state: target_user_id
+                banReason:
+                  _state: ban_reason
+                banExpiresIn:
+                  _state: ban_expires_in
+          - id: show_ban_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-ban-user.response
+              last_error: null
+          - id: reload_after_ban
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_ban_error
+            type: SetState
+            params:
+              last_error:
+                _actions: ban_user.error.message
+  - id: unban_button
+    type: Button
+    properties:
+      title: Unban user (UnbanUser)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: unban_user
+            type: CallAPI
+            params:
+              endpointId: admin-unban-user
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_unban_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-unban-user.response
+              last_error: null
+          - id: reload_after_unban
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_unban_error
+            type: SetState
+            params:
+              last_error:
+                _actions: unban_user.error.message
+  - id: revoke_sessions_button
+    type: Button
+    properties:
+      title: Revoke sessions (RevokeUserSessions)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: revoke_user_sessions
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-sessions
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_revoke_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-sessions.response
+              last_error: null
+        catch:
+          - id: show_revoke_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_user_sessions.error.message
+  - id: delete_user_button
+    type: Button
+    properties:
+      title: Delete user (DeleteUser - cascades members and pending invitations)
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: delete_user
+            type: CallAPI
+            params:
+              endpointId: admin-delete-user
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_delete_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-delete-user.response
+              last_error: null
+          - id: reload_after_delete
+            type: CallAPI
+            params:
+              endpointId: admin-list-users
+        catch:
+          - id: show_delete_error
+            type: SetState
+            params:
+              last_error:
+                _actions: delete_user.error.message
+  - id: user_attributes_title
+    type: Title
+    properties:
+      content: Update user attributes (UpdateUserAttributes)
+      level: 4
+  - id: user_attributes_json
+    type: TextInput
+    properties:
+      title: Attributes as JSON, e.g. {"region":"emea"} (uses the user id above)
+  - id: update_user_attributes_button
+    type: Button
+    properties:
+      title: Update user attributes
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_user_attributes
+            type: CallAPI
+            params:
+              endpointId: admin-update-user-attributes
+              payload:
+                userId:
+                  _state: target_user_id
+                attributes:
+                  _json.parse:
+                    _state: user_attributes_json
+          - id: show_user_attributes_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-user-attributes.response
+              last_error: null
+        catch:
+          - id: show_user_attributes_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_user_attributes.error.message
+  - id: impersonate_title
+    type: Title
+    properties:
+      content: Impersonate (ImpersonateUser)
+      level: 4
+  - id: impersonate_help
+    type: Html
+    properties:
+      html: |
+        <p>Gated by BetterAuth's own admin access control against YOUR
+        user.role field (not the member role that gates this page) - set it
+        with <code>scripts/set-user-role.mjs</code> first. While
+        impersonating, <code>_user.impersonatedBy</code> carries your admin
+        user id; the home page shows a stop affordance.</p>
+  - id: impersonate_button
+    type: Button
+    properties:
+      title: Impersonate user (uses the user id above)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: impersonate
+            type: ImpersonateUser
+            params:
+              userId:
+                _state: target_user_id
+          # Re-sync the client caller - _user becomes the impersonated user
+          # with _user.impersonatedBy set to the admin's user id.
+          - id: resync_after_impersonate
+            type: UpdateSession
+          - id: go_home
+            type: Link
+            params:
+              pageId: home
+        catch:
+          - id: show_impersonate_error
+            type: SetState
+            params:
+              last_error:
+                _actions: impersonate.error.message
+  - id: create_org_title
+    type: Title
+    properties:
+      content: Create an organization (CreateOrganization)
+      level: 4
+  - id: org_name
+    type: TextInput
+    properties:
+      title: Organization name
+  - id: org_slug
+    type: TextInput
+    properties:
+      title: Organization slug
+  - id: create_org_button
+    type: Button
+    properties:
+      title: Create organization (you become the owner)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: create_organization
+            type: CallAPI
+            params:
+              endpointId: admin-create-organization
+              payload:
+                name:
+                  _state: org_name
+                slug:
+                  _state: org_slug
+          - id: show_create_org_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-create-organization.response
+              last_error: null
+        catch:
+          - id: show_create_org_error
+            type: SetState
+            params:
+              last_error:
+                _actions: create_organization.error.message
+  - id: last_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: last_response
+  - id: last_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: last_error

@@ -1,8 +1,10 @@
-# Admin surface driving the organization plugin's own APIs from an
-# owner/admin session (the phase-6 admin steps land later). inviteMember and
-# updateMemberRole run the plugin's access-control check against the
-# caller's member role - a caller holding only empty-statement catalog roles
-# is refused (the recorded limitation); owner/admin passes.
+# Admin surface on the phase-6 admin steps: every call below is a CallAPI to
+# a role-gated admin-* Api endpoint (auth.api.roles) whose routine runs the
+# step. The hosting endpoint's admin gate is the ONLY authorization - the
+# steps execute with server authority, so the recorded phase-3 limitation
+# (a catalog-role member could not call inviteMember through the plugin's own
+# AC) no longer applies. The direct /api/auth/organization/* fetches this
+# page used before phase 6 are gone.
 id: members
 type: Box
 properties:
@@ -12,15 +14,9 @@ properties:
 events:
   onInit:
     - id: load_members
-      type: Fetch
+      type: CallAPI
       params:
-        url: /api/auth/organization/list-members
-        responseFunction: json
-    - id: set_members
-      type: SetState
-      params:
-        members:
-          _actions: load_members.response
+        endpointId: admin-list-members
 blocks:
   - id: members_title
     type: Title
@@ -34,27 +30,48 @@ blocks:
         _nunjucks:
           template: |
             <ul>
-            {% for member in members.members %}
+            {% for member in members %}
               <li><b>{{ member.user.email }}</b> - member id: {{ member.id }},
               role: <code>{{ member.role }}</code></li>
             {% endfor %}
             </ul>
           on:
             members:
-              _state: members
+              _api: admin-list-members.response.members
+  - id: refresh_members_button
+    type: Button
+    properties:
+      title: Refresh members (ListMembers)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: reload_members
+          type: CallAPI
+          params:
+            endpointId: admin-list-members
   - id: invite_title
     type: Title
     properties:
-      content: Invite a member
+      content: Invite a member (InviteMember)
       level: 4
   - id: invite_email
     type: TextInput
     properties:
       title: Email
+  # The catalog roles (owner, admin, member built-ins plus the app's declared
+  # roles) are the registered set; "not-a-role" is deliberately unregistered
+  # to exercise BetterAuth's ROLE_NOT_FOUND failure.
   - id: invite_role
-    type: TextInput
+    type: Selector
     properties:
-      title: Role (e.g. member, or admin,auditor)
+      title: Role
+      options:
+        - member
+        - admin
+        - auditor
+        - owner
+        - not-a-role
   - id: invite_contact_id
     type: TextInput
     properties:
@@ -66,55 +83,70 @@ blocks:
       block: true
     events:
       onClick:
-        - id: invite
-          type: Fetch
-          params:
-            url: /api/auth/organization/invite-member
-            responseFunction: json
-            options:
-              method: POST
-              headers:
-                Content-Type: application/json
-              body:
-                _json.stringify:
-                  - _object.assign:
-                      - email:
-                          _state: invite_email
-                        role:
-                          _state: invite_role
-                      - _if:
-                          test:
-                            _type:
-                              type: string
-                              on:
-                                _state: invite_contact_id
-                          then:
-                            contactId:
-                              _state: invite_contact_id
-                          else: {}
-        - id: show_invite_response
-          type: SetState
-          params:
-            invite_response:
-              _actions: invite.response
-  - id: invite_response_html
-    type: Html
-    visible:
-      _ne:
-        - _state: invite_response
-        - null
+        try:
+          - id: invite
+            type: CallAPI
+            params:
+              endpointId: admin-invite-member
+              payload:
+                email:
+                  _state: invite_email
+                role:
+                  _state: invite_role
+                contactId:
+                  _state: invite_contact_id
+          - id: show_invite_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-invite-member.response
+              last_error: null
+        catch:
+          - id: show_invite_error
+            type: SetState
+            params:
+              last_error:
+                _actions: invite.error.message
+  - id: cancel_invitation_title
+    type: Title
     properties:
-      html:
-        _nunjucks:
-          template: |
-            <pre>{{ response | dump(2) }}</pre>
-          on:
-            response:
-              _state: invite_response
+      content: Cancel a pending invitation (CancelInvitation)
+      level: 4
+  - id: cancel_invitation_id
+    type: TextInput
+    properties:
+      title: Invitation id (from the invite response above)
+  - id: cancel_invitation_button
+    type: Button
+    properties:
+      title: Cancel invitation
+      block: true
+    events:
+      onClick:
+        try:
+          - id: cancel_invitation
+            type: CallAPI
+            params:
+              endpointId: admin-cancel-invitation
+              payload:
+                invitationId:
+                  _state: cancel_invitation_id
+          - id: show_cancel_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-cancel-invitation.response
+              last_error: null
+        catch:
+          - id: show_cancel_error
+            type: SetState
+            params:
+              last_error:
+                _actions: cancel_invitation.error.message
   - id: update_role_title
     type: Title
     properties:
-      content: Update a member's roles
+      content: Update a member's roles (UpdateMemberRoles)
       level: 4
   - id: update_member_id
     type: TextInput
@@ -127,39 +159,126 @@ blocks:
   - id: update_role_button
     type: Button
     properties:
-      title: Update member role
+      title: Update member roles
       block: true
     events:
       onClick:
-        # The plugin accepts an array and stores it as one comma-separated
-        # string on member.role; resolveAuthentication splits it back.
-        - id: update_role
-          type: Fetch
-          params:
-            url: /api/auth/organization/update-member-role
-            responseFunction: json
-            options:
-              method: POST
-              headers:
-                Content-Type: application/json
-              body:
-                _json.stringify:
-                  - memberId:
-                      _state: update_member_id
-                    role:
-                      _string.split:
-                        - _state: update_roles
-                        - ','
-        - id: show_update_response
-          type: SetState
-          params:
-            update_response:
-              _actions: update_role.response
-  - id: update_response_html
+        # The step accepts an array and the plugin stores it as one
+        # comma-separated string on member.role; resolveAuthentication splits
+        # it back. Demoting the last owner fails here (last-owner protection).
+        try:
+          - id: update_member_roles
+            type: CallAPI
+            params:
+              endpointId: admin-update-member-roles
+              payload:
+                memberId:
+                  _state: update_member_id
+                role:
+                  _string.split:
+                    - _state: update_roles
+                    - ','
+          - id: show_update_roles_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-member-roles.response
+              last_error: null
+          - id: reload_after_update_roles
+            type: CallAPI
+            params:
+              endpointId: admin-list-members
+        catch:
+          - id: show_update_roles_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_member_roles.error.message
+  - id: update_member_attributes_title
+    type: Title
+    properties:
+      content: Update a member's attributes (UpdateMemberAttributes)
+      level: 4
+  - id: member_attributes_json
+    type: TextInput
+    properties:
+      title: Attributes as JSON, e.g. {"branches":["a","b"]} (uses the member id above)
+  - id: update_member_attributes_button
+    type: Button
+    properties:
+      title: Update member attributes
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_member_attributes
+            type: CallAPI
+            params:
+              endpointId: admin-update-member-attributes
+              payload:
+                memberId:
+                  _state: update_member_id
+                attributes:
+                  _json.parse:
+                    _state: member_attributes_json
+          - id: show_update_attributes_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-member-attributes.response
+              last_error: null
+        catch:
+          - id: show_update_attributes_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_member_attributes.error.message
+  - id: remove_member_title
+    type: Title
+    properties:
+      content: Remove a member (RemoveMember)
+      level: 4
+  - id: remove_member_id_or_email
+    type: TextInput
+    properties:
+      title: Member id or email
+  - id: remove_member_button
+    type: Button
+    properties:
+      title: Remove member
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: remove_member
+            type: CallAPI
+            params:
+              endpointId: admin-remove-member
+              payload:
+                memberIdOrEmail:
+                  _state: remove_member_id_or_email
+          - id: show_remove_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-remove-member.response
+              last_error: null
+          - id: reload_after_remove
+            type: CallAPI
+            params:
+              endpointId: admin-list-members
+        catch:
+          - id: show_remove_error
+            type: SetState
+            params:
+              last_error:
+                _actions: remove_member.error.message
+  - id: last_response_html
     type: Html
     visible:
       _ne:
-        - _state: update_response
+        - _state: last_response
         - null
     properties:
       html:
@@ -168,4 +287,18 @@ blocks:
             <pre>{{ response | dump(2) }}</pre>
           on:
             response:
-              _state: update_response
+              _state: last_response
+  - id: last_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: last_error

@@ -1,0 +1,13 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# Revokes every session of the target user - their next request is
+# unauthenticated.
+id: admin-revoke-user-sessions
+type: Api
+routine:
+  - id: revoke_sessions
+    type: RevokeUserSessions
+    properties:
+      userId:
+        _payload: userId
+  - ':return':
+      _step: revoke_sessions

@@ -15,6 +15,18 @@ routine:
         - after-throw@example.test
     ':then':
       - ':throw': Deliberate after-hook failure for the walkthrough.
+  # Phase-6 system-step demo: a hook routine runs caller-less (_user is
+  # empty), so an admin step here refuses with the caller-required error
+  # unless it sets system: true - an explicit trust decision to run as the
+  # system. Delete the system line and log in to see the refusal surface as
+  # an operational error on the sign-in call (like the deliberate throw
+  # above). Org-scoped steps would also need an explicit organizationId in a
+  # system invocation; ListUsers is not org-scoped.
+  - id: list_users_system
+    type: ListUsers
+    system: true
+    properties:
+      limit: 1
   - ':try':
       - id: write_audit
         type: MongoDBInsertOne
@@ -42,6 +54,11 @@ routine:
               _eq:
                 - _secret: HOOK_AUDIT_KEY
                 - audit-secret-value
+            # Written by the system: true ListUsers step above - the row
+            # carrying a number proves a caller-less hook routine ran an
+            # admin step as the system.
+            systemStepUserTotal:
+              _step: list_users_system.total
             at:
               _date: now
     ':catch':

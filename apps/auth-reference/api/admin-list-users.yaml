@@ -1,0 +1,16 @@
+# Phase-6 admin step endpoint. Every admin-* endpoint is role-gated by
+# auth.api.roles in lowdefy.yaml - the endpoint gate is the ONLY
+# authorization: a caller without the admin role gets the opaque
+# endpoint-does-not-exist rejection before the routine runs, and the steps
+# inside execute with server authority (no per-step permission checks).
+id: admin-list-users
+type: Api
+routine:
+  - id: list_users
+    type: ListUsers
+    properties:
+      limit: 100
+      sortBy: createdAt
+      sortDirection: desc
+  - ':return':
+      _step: list_users
