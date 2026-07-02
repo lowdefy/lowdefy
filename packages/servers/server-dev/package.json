@@ -62,6 +62,7 @@
     "@lowdefy/build": "5.3.0",
     "@lowdefy/client": "5.3.0",
     "@lowdefy/connection-axios-http": "5.3.0",
+    "@lowdefy/connection-mongodb": "5.3.0",
     "@lowdefy/engine": "5.3.0",
     "@lowdefy/errors": "5.3.0",
     "@lowdefy/helpers": "5.3.0",
