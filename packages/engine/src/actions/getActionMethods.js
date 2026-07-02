@@ -35,6 +35,7 @@ import createPublish from './createPublish.js';
 import createRequest from './createRequest.js';
 import createReset from './createReset.js';
 import createResetValidation from './createResetValidation.js';
+import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
 import createSignUp from './createSignUp.js';
@@ -67,6 +68,7 @@ function getActionMethods(props) {
     request: createRequest(props),
     reset: createReset(props),
     resetValidation: createResetValidation(props),
+    setActiveOrganization: createSetActiveOrganization(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
     signUp: createSignUp(props),

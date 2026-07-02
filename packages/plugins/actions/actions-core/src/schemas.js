@@ -28,6 +28,7 @@ export { default as Request } from './actions/Request/schema.js';
 export { default as Reset } from './actions/Reset/schema.js';
 export { default as ResetValidation } from './actions/ResetValidation/schema.js';
 export { default as ScrollTo } from './actions/ScrollTo/schema.js';
+export { default as SetActiveOrganization } from './actions/SetActiveOrganization/schema.js';
 export { default as SetDarkMode } from './actions/SetDarkMode/schema.js';
 export { default as SetFocus } from './actions/SetFocus/schema.js';
 export { default as SetGlobal } from './actions/SetGlobal/schema.js';

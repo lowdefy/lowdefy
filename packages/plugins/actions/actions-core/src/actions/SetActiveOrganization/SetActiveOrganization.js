@@ -14,34 +14,11 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+// Switches the session's active organization. Roles and attributes resolve
+// from the new active membership server-side - chain UpdateSession after to
+// re-sync the client.
+function SetActiveOrganization({ methods: { setActiveOrganization }, params }) {
+  return setActiveOrganization(params);
+}
+
+export default SetActiveOrganization;

@@ -18,7 +18,11 @@
 
 import React, { useEffect, useRef } from 'react';
 import { createAuthClient } from 'better-auth/react';
-import { genericOAuthClient, magicLinkClient } from 'better-auth/client/plugins';
+import {
+  genericOAuthClient,
+  magicLinkClient,
+  organizationClient,
+} from 'better-auth/client/plugins';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -28,14 +32,21 @@ const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
-  plugins: [genericOAuthClient(), magicLinkClient()],
+  plugins: [genericOAuthClient(), magicLinkClient(), organizationClient()],
 });
 
 // The server resolves the caller per request and embeds it in the page
 // config, so the first render never flashes unauthenticated. The BetterAuth
 // client store takes over once its session fetch settles.
+//
+// Roles and merged attributes resolve server-side from the active member row
+// - the base session carries neither. The last server-resolved caller is
+// kept in a ref: while the session user is unchanged its roles and
+// attributes stay authoritative, and UpdateSession refreshes the ref from
+// /api/user after a change (e.g. SetActiveOrganization).
 function Session({ children, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
+  const resolvedUserRef = useRef(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
 
   useEffect(() => {
@@ -50,10 +61,17 @@ function Session({ children, serverUser }) {
   }, [session, isPending]);
 
   if (isPending) {
-    return children(serverUser);
+    return children(resolvedUserRef.current, resolvedUserRef);
   }
-  // Roles resolve server-side; the base session carries none.
-  return children(session?.user ? { roles: [], ...session.user } : null);
+  if (!session?.user) {
+    return children(null, resolvedUserRef);
+  }
+  const resolved = resolvedUserRef.current;
+  const user =
+    resolved && resolved.id === session.user.id
+      ? { ...session.user, roles: resolved.roles, attributes: resolved.attributes }
+      : { roles: [], ...session.user };
+  return children(user, resolvedUserRef);
 }
 
 function AuthConfigured({ authConfig, children, serverUser }) {
@@ -61,6 +79,15 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     authConfig,
     getSession: ({ disableCookieCache } = {}) =>
       authClient.getSession(disableCookieCache ? { query: { disableCookieCache: true } } : {}),
+    // The server-resolved caller - roles from the active member row and the
+    // merged attributes bag - for re-syncing after session changes.
+    getResolvedUser: async () => {
+      const response = await fetch(`${lowdefyConfig.basePath ?? ''}/api/user`, {
+        credentials: 'same-origin',
+      });
+      return response.json();
+    },
+    setActiveOrganization: (params) => authClient.organization.setActive(params),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
     signInOauth2: (params) => authClient.signIn.oauth2(params),
@@ -70,8 +97,11 @@ function AuthConfigured({ authConfig, children, serverUser }) {
   };
   return (
     <Session serverUser={serverUser}>
-      {(user) => {
+      {(user, resolvedUserRef) => {
         auth.user = user;
+        auth.updateResolvedUser = (resolved) => {
+          resolvedUserRef.current = resolved;
+        };
         return children(auth);
       }}
     </Session>

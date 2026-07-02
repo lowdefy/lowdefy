@@ -36,6 +36,7 @@ import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -92,6 +93,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.

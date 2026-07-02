@@ -14,34 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+function createSetActiveOrganization({ context }) {
+  return function setActiveOrganization(params) {
+    return context._internal.lowdefy._internal.auth.setActiveOrganization(params);
+  };
+}
+
+export default createSetActiveOrganization;

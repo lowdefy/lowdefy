@@ -139,16 +139,35 @@ function createAuthMethods(lowdefy, auth) {
     return data;
   }
 
+  // Switches the session's active organization - the session-scoped org
+  // switch. Roles and attributes resolve from the new active member row
+  // server-side; chain UpdateSession after to re-sync the client.
+  async function setActiveOrganization({ organizationId, organizationSlug } = {}) {
+    if (type.isNone(organizationId) && type.isNone(organizationSlug)) {
+      throw new Error(
+        'SetActiveOrganization requires an "organizationId" or "organizationSlug" param.'
+      );
+    }
+    return unwrap(auth.setActiveOrganization({ organizationId, organizationSlug }));
+  }
+
   // Bypasses the cookie cache (a live re-resolve), so role, attribute or
   // session changes surface immediately instead of after cookieCache.maxAge.
+  // Roles and merged attributes come from the server-resolved caller - the
+  // active member row read the base session does not carry.
   async function updateSession() {
-    const session = await unwrap(auth.getSession({ disableCookieCache: true }));
-    lowdefy.user = session?.user ? { roles: [], ...session.user } : null;
+    await unwrap(auth.getSession({ disableCookieCache: true }));
+    const { user } = await auth.getResolvedUser();
+    if (auth.updateResolvedUser) {
+      auth.updateResolvedUser(user ?? null);
+    }
+    lowdefy.user = user ?? null;
   }
 
   return {
     login,
     logout,
+    setActiveOrganization,
     signUp,
     updateSession,
   };

@@ -40,6 +40,7 @@ import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -82,6 +83,7 @@ function createApp() {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.get('/api/websocket', websocketHandler);
+  app.get('/api/user', userHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.
   app.use(

@@ -36,6 +36,14 @@ function Auth({ children, user }) {
       }
       return { data: null, error: null };
     },
+    getResolvedUser: async () => {
+      const res = await fetch('/api/user');
+      if (res.ok) {
+        return res.json();
+      }
+      return { user: null };
+    },
+    setActiveOrganization: e2eNotSupported,
     signInEmail: e2eNotSupported,
     signInMagicLink: e2eNotSupported,
     signInOauth2: e2eNotSupported,

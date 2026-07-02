@@ -14,34 +14,14 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+// The resolved caller for the client - the same resolveAuthentication output
+// the first page load embeds. The base session carries neither roles (read
+// live from the active member row) nor the merged attributes bag, so the
+// client re-syncs from here (UpdateSession) after a session change such as
+// SetActiveOrganization.
+async function userHandler(c) {
+  const context = c.get('lowdefyContext');
+  return c.json({ user: context.user ?? null });
+}
+
+export default userHandler;

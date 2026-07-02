@@ -14,34 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+import { jest } from '@jest/globals';
+import SetActiveOrganization from './SetActiveOrganization.js';
+
+const mockSetActiveOrganization = jest.fn();
+const methods = { setActiveOrganization: mockSetActiveOrganization };
+
+test('SetActiveOrganization passes params to the setActiveOrganization method', async () => {
+  await SetActiveOrganization({ methods, params: { organizationSlug: 'org-b' } });
+  expect(mockSetActiveOrganization.mock.calls).toEqual([[{ organizationSlug: 'org-b' }]]);
+});
