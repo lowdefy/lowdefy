@@ -1,12 +1,11 @@
 {
-  "name": "@lowdefy/connection-mongodb",
+  "name": "@lowdefy/plugin-better-auth",
   "version": "5.3.0",
   "license": "Apache-2.0",
-  "description": "",
+  "description": "Lowdefy provider type definitions for the BetterAuth engine.",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy connection",
     "lowdefy plugin"
   ],
   "bugs": {
@@ -20,10 +19,6 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
-    },
-    {
-      "name": "Stephanie Smit",
-      "url": "https://github.com/StephanieJKS"
     }
   ],
   "repository": {
@@ -32,10 +27,8 @@
   },
   "type": "module",
   "exports": {
-    "./auth/adapters": "./dist/auth/adapters.js",
-    "./connections": "./dist/connections.js",
-    "./types": "./dist/types.js",
-    "./websockets": "./dist/websockets.js"
+    "./auth/providers": "./dist/auth/providers.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
@@ -44,24 +37,12 @@
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
-  },
-  "dependencies": {
-    "@lowdefy/helpers": "5.3.0",
-    "better-auth": "^1.6.23",
-    "mongodb": "7.2.0",
-    "saslprep": "1.0.3"
+    "test": "echo \"No tests\""
   },
   "devDependencies": {
-    "@lowdefy/ajv": "5.3.0",
-    "@shelf/jest-mongodb": "4.3.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "@swc/jest": "0.2.39",
-    "jest": "28.1.3",
-    "jest-environment-node": "28.1.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "jest": "28.1.3"
   },
   "publishConfig": {
     "access": "public"

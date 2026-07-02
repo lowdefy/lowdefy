@@ -14,22 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertMany',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-  ],
-  auth: {
-    adapters: ['MongoDBAuthAdapter'],
-  },
-  websockets: ['MongoDBChangeStream'],
-};
+// GenericOAuth covers any OAuth 2.0 / OIDC provider BetterAuth does not ship
+// built-in. The Lowdefy provider id becomes the generic OAuth providerId.
+function GenericOAuth({ id, properties }) {
+  return { kind: 'generic', config: { providerId: id, ...properties } };
+}
+
+export default GenericOAuth;

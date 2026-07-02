@@ -14,22 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertMany',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-  ],
-  auth: {
-    adapters: ['MongoDBAuthAdapter'],
-  },
-  websockets: ['MongoDBChangeStream'],
-};
+// Each built-in provider maps a Lowdefy providers entry onto BetterAuth's
+// socialProviders config, keyed by the BetterAuth provider key. Every
+// PascalCase Lowdefy type name lowercases to its BetterAuth key.
+function createSocialProvider(provider) {
+  return function socialProvider({ properties }) {
+    return { kind: 'social', provider, options: properties };
+  };
+}
+
+export default createSocialProvider;
