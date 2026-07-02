@@ -1,10 +1,15 @@
 name: auth-reference
 lowdefy: local
 
-# Reference app for the BetterAuth engine (auth-upgrade phases 1-2).
+# Reference app for the BetterAuth engine (auth-upgrade phases 1-3).
 # Exercises: email/password signup with email verification, magic link,
 # OAuth (Google), protected/public/role-gated pages, sign out, sessions,
-# and auth hooks (user.create.before, session.create.after, email.verified).
+# auth hooks (user.create.before, session.create.after, email.verified),
+# and organizations: this deployment pins org-a with open signup (auto-join
+# with the built-in member role), member-resolved roles and attributes,
+# invitations, merge-on-signup against user-contacts, and org switching.
+# The sibling apps auth-reference-b (pinned org-b, invite-only) and
+# auth-reference-tenant (tenant policy) share the same auth database.
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -56,6 +61,14 @@ auth:
     expiresIn: 604800
     updateAge: 86400
 
+  # This deployment pins org-a as the active organization. Signup is open:
+  # a new signup auto-joins org-a with the plugin's built-in member role -
+  # it passes the membership wall while role-gated pages still gate it.
+  organizations:
+    policy: pinned
+    org: org-a
+    signup: open
+
   pages:
     protected: true
     public:
@@ -63,10 +76,15 @@ auth:
       - signup
       - check-email
       - verify-email
+      - accept-invitation
       - home
     roles:
       admin:
         - admin
+        - members
+        - contacts
+      auditor:
+        - audit-reports
 
   authPages:
     signIn: /login
@@ -75,7 +93,10 @@ auth:
 
   # Each entry binds an auth lifecycle point to an InternalApi endpoint.
   # The endpoint's routine is the hook body; it runs in a system context
-  # (_user empty, subject in _payload, _secret working).
+  # (_user empty, subject in _payload, _secret working). One hook per point,
+  # so normalize-signup also carries the merge-on-signup match for
+  # trusted-provider OAuth (arrives verified), and on-email-verified carries
+  # the email/password merge (verified only at this point).
   hooks:
     - id: normalize-signup
       point: user.create.before
@@ -97,7 +118,8 @@ auth:
   #     roles: []
 
 # The hooks write an audit trail here; the same database as auth so no
-# extra infrastructure is needed for the walkthrough.
+# extra infrastructure is needed for the walkthrough. user-contacts is the
+# app-owned CRM contact collection the merge-on-signup hooks match against.
 connections:
   - id: audit_db
     type: MongoDBCollection
@@ -105,6 +127,24 @@ connections:
       databaseUri:
         _secret: AUTH_DATABASE_URI
       collection: hook-audit
+      write: true
+  - id: contacts_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: user-contacts
+      write: true
+  # The email.verified merge writes user.contactId with an explicit update.
+  # The sanctioned write pathway for this one field is an open design
+  # question (hooks/design.md); the reference app writes it directly over a
+  # connection until the auth module settles the mechanism.
+  - id: users_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: users
       write: true
 
 api:
@@ -118,7 +158,12 @@ pages:
   - _ref: pages/signup.yaml
   - _ref: pages/check-email.yaml
   - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
   - _ref: pages/dashboard.yaml
+  - _ref: pages/organizations.yaml
   - _ref: pages/sessions.yaml
   - _ref: pages/admin.yaml
+  - _ref: pages/members.yaml
+  - _ref: pages/contacts.yaml
+  - _ref: pages/audit-reports.yaml
   - _ref: pages/hook-audit.yaml

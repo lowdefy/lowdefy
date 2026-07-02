@@ -3,9 +3,52 @@
 # callback, not a database hook. It fires after the user write, so a hook
 # here reacts (or updates explicitly); an inline :return is ignored.
 # _payload is { user } - the user whose email just became verified.
+#
+# Phase 3: this point carries the merge-on-signup match for email/password
+# signups, whose email is unverified at user-create time. The user row
+# already exists, so the link is written with an explicit update - the
+# sanctioned pathway for this one write is an open design question
+# (hooks/design.md); the reference app updates the users collection over a
+# connection until the auth module settles the mechanism. An invited user
+# accepting with a stamped contactId skips the merge (contactId is set).
 id: on-email-verified
 type: InternalApi
 routine:
+  - ':if':
+      _eq:
+        - _payload: user.contactId
+        - null
+    ':then':
+      - id: match_contact_on_verified
+        type: MongoDBFindOne
+        connectionId: contacts_db
+        properties:
+          query:
+            email:
+              _payload: user.email
+      - ':if':
+          _ne:
+            - _step: match_contact_on_verified
+            - null
+        ':then':
+          # The adapter stores users._id as an ObjectId; the payload carries
+          # its hex string, so the filter wraps it for revival ({ _oid } is
+          # the MongoDB connection's ObjectId marker, not an operator -
+          # hence the types build-check suppression).
+          - id: link_contact
+            type: MongoDBUpdateOne
+            connectionId: users_db
+            properties:
+              '~ignoreBuildChecks':
+                - types
+              filter:
+                _id:
+                  _oid:
+                    _payload: user.id
+              update:
+                $set:
+                  contactId:
+                    _step: match_contact_on_verified._id
   - ':try':
       - id: write_audit
         type: MongoDBInsertOne

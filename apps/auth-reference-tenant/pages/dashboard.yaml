@@ -1,0 +1,60 @@
+id: dashboard
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: dashboard_title
+    type: Title
+    properties:
+      content: Tenant dashboard (protected)
+      level: 2
+  - id: user_details
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Your active organization is your tenant - minted lazily at
+            your first session (owner) unless you were invited into another
+            tenant.</p>
+            <ul>
+              <li><b>id:</b> {{ user.id }}</li>
+              <li><b>email:</b> {{ user.email }}</li>
+              <li><b>roles:</b> {{ user.roles | dump }}</li>
+              <li><b>attributes:</b> {{ user.attributes | dump }}</li>
+            </ul>
+          on:
+            user:
+              _user: true
+  - id: organizations_button
+    type: Button
+    properties:
+      title: My organizations
+      type: default
+    events:
+      onClick:
+        - id: to_organizations
+          type: Link
+          params:
+            pageId: organizations
+  - id: members_button
+    type: Button
+    properties:
+      title: Members (invite into your tenant)
+      type: default
+    events:
+      onClick:
+        - id: to_members
+          type: Link
+          params:
+            pageId: members
+  - id: logout_button
+    type: Button
+    properties:
+      title: Log out
+    events:
+      onClick:
+        - id: logout
+          type: Logout

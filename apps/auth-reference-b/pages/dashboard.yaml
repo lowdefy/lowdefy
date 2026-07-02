@@ -1,0 +1,46 @@
+id: dashboard
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: dashboard_title
+    type: Title
+    properties:
+      content: org-b dashboard (protected)
+      level: 2
+  - id: user_details
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Seeing this page means you hold a member row in org-b.</p>
+            <ul>
+              <li><b>id:</b> {{ user.id }}</li>
+              <li><b>email:</b> {{ user.email }}</li>
+              <li><b>roles:</b> {{ user.roles | dump }}</li>
+              <li><b>attributes:</b> {{ user.attributes | dump }}</li>
+              <li><b>contactId:</b> {{ user.contactId }}</li>
+            </ul>
+          on:
+            user:
+              _user: true
+  - id: refresh_session_button
+    type: Button
+    properties:
+      title: Refresh session (UpdateSession)
+      type: default
+    events:
+      onClick:
+        - id: update_session
+          type: UpdateSession
+  - id: logout_button
+    type: Button
+    properties:
+      title: Log out
+    events:
+      onClick:
+        - id: logout
+          type: Logout

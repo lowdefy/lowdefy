@@ -1,0 +1,171 @@
+# Admin surface driving the organization plugin's own APIs from an
+# owner/admin session (the phase-6 admin steps land later). inviteMember and
+# updateMemberRole run the plugin's access-control check against the
+# caller's member role - a caller holding only empty-statement catalog roles
+# is refused (the recorded limitation); owner/admin passes.
+id: members
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_members
+      type: Fetch
+      params:
+        url: /api/auth/organization/list-members
+        responseFunction: json
+    - id: set_members
+      type: SetState
+      params:
+        members:
+          _actions: load_members.response
+blocks:
+  - id: members_title
+    type: Title
+    properties:
+      content: Members (admin)
+      level: 2
+  - id: members_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for member in members.members %}
+              <li><b>{{ member.user.email }}</b> - member id: {{ member.id }},
+              role: <code>{{ member.role }}</code></li>
+            {% endfor %}
+            </ul>
+          on:
+            members:
+              _state: members
+  - id: invite_title
+    type: Title
+    properties:
+      content: Invite a member
+      level: 4
+  - id: invite_email
+    type: TextInput
+    properties:
+      title: Email
+  - id: invite_role
+    type: TextInput
+    properties:
+      title: Role (e.g. member, or admin,auditor)
+  - id: invite_contact_id
+    type: TextInput
+    properties:
+      title: Contact id (optional - stamped onto the user on accept)
+  - id: invite_button
+    type: Button
+    properties:
+      title: Send invitation
+      block: true
+    events:
+      onClick:
+        - id: invite
+          type: Fetch
+          params:
+            url: /api/auth/organization/invite-member
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - _object.assign:
+                      - email:
+                          _state: invite_email
+                        role:
+                          _state: invite_role
+                      - _if:
+                          test:
+                            _type:
+                              type: string
+                              on:
+                                _state: invite_contact_id
+                          then:
+                            contactId:
+                              _state: invite_contact_id
+                          else: {}
+        - id: show_invite_response
+          type: SetState
+          params:
+            invite_response:
+              _actions: invite.response
+  - id: invite_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: invite_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: invite_response
+  - id: update_role_title
+    type: Title
+    properties:
+      content: Update a member's roles
+      level: 4
+  - id: update_member_id
+    type: TextInput
+    properties:
+      title: Member id
+  - id: update_roles
+    type: TextInput
+    properties:
+      title: Roles (comma-separated, e.g. admin,auditor)
+  - id: update_role_button
+    type: Button
+    properties:
+      title: Update member role
+      block: true
+    events:
+      onClick:
+        # The plugin accepts an array and stores it as one comma-separated
+        # string on member.role; resolveAuthentication splits it back.
+        - id: update_role
+          type: Fetch
+          params:
+            url: /api/auth/organization/update-member-role
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - memberId:
+                      _state: update_member_id
+                    role:
+                      _string.split:
+                        - _state: update_roles
+                        - ','
+        - id: show_update_response
+          type: SetState
+          params:
+            update_response:
+              _actions: update_role.response
+  - id: update_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: update_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: update_response

@@ -1,0 +1,74 @@
+name: auth-reference-tenant
+lowdefy: local
+
+# Multi-tenant deployment of the auth-reference suite (auth-upgrade phase
+# 3): the tenant policy. An organization is a business, never a personal
+# workspace - a fresh signup mints its own organization lazily at first
+# session (as owner, set active); an invited signup joins the inviter's
+# tenant and mints nothing. Inherently open signup; the signup key does not
+# apply. Uses its own database so tenants do not mix with the pinned apps.
+# See ../auth-reference/README.md for the walkthrough.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: TENANT_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    # Lazy creation means no tenants for abandoned signups: an unverified
+    # signup never reaches session.create, so no org is minted until a
+    # login completes.
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  email:
+    from: auth-reference-tenant@localhost
+    provider:
+      type: smtp
+      properties:
+        host:
+          _secret: SMTP_HOST
+        port: 1025
+        secure: false
+
+  # tenant: active org = the user's business, oldest membership when they
+  # belong to several; the user switches with SetActiveOrganization.
+  organizations:
+    policy: tenant
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/organizations.yaml
+  - _ref: pages/members.yaml
