@@ -55,11 +55,15 @@ function createAuthJson(overrides = {}) {
     api: { roles: {} },
     pages: { roles: {} },
     websockets: { roles: {} },
+    organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
+    roles: [],
     ...overrides,
   };
 }
 
 const appMeta = { name: 'Test App', slug: 'test-app' };
+
+const getAuth = () => ({});
 
 function createLogger() {
   return {
@@ -88,6 +92,7 @@ test('resolves secret via the _secret operator', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -100,6 +105,7 @@ test('throws ConfigError when secret does not resolve to a string', () => {
     getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
       secrets: { AUTH_DB_URI: baseSecrets.AUTH_DB_URI },
@@ -109,6 +115,7 @@ test('throws ConfigError when secret does not resolve to a string', () => {
     getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson(),
+      getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
       secrets: { AUTH_DB_URI: baseSecrets.AUTH_DB_URI },
@@ -124,6 +131,7 @@ test('throws the first operator error when an operator fails while resolving aut
     getBetterAuthConfig({
       appMeta,
       authJson,
+      getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
       secrets: baseSecrets,
@@ -136,6 +144,7 @@ test('logs a warning when the resolved secret is shorter than 32 characters', ()
   getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger,
     plugins: createPlugins(),
     secrets: { ...baseSecrets, BETTER_AUTH_SECRET: 'short-secret' },
@@ -150,6 +159,7 @@ test('does not warn about a short secret when the resolved secret is 32 characte
   getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger,
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -162,6 +172,7 @@ test('resolves the database adapter using the matching plugin and resolved secre
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins({ adapters: { MongoDBAuthAdapter: adapterPlugin } }),
     secrets: baseSecrets,
@@ -183,6 +194,7 @@ test('throws ConfigError when the database adapter type is not found', () => {
     getBetterAuthConfig({
       appMeta,
       authJson,
+      getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
       secrets: baseSecrets,
@@ -192,6 +204,7 @@ test('throws ConfigError when the database adapter type is not found', () => {
     getBetterAuthConfig({
       appMeta,
       authJson,
+      getAuth,
       logger: createLogger(),
       plugins: createPlugins(),
       secrets: baseSecrets,
@@ -208,6 +221,7 @@ test('sets basePath to /api/auth when config.basePath is not set', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -220,6 +234,7 @@ test('prefixes basePath with config.basePath when set', () => {
     appMeta,
     authJson: createAuthJson(),
     config: { basePath: '/my-app' },
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -231,6 +246,7 @@ test('maps model names to the fixed user-* collection naming convention', () => 
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -245,6 +261,7 @@ test('passes rateLimit config through unchanged', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ rateLimit: { enabled: false, window: 30, max: 10 } }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -263,6 +280,7 @@ test('passes session config through, including cookieCache', () => {
         crossSubDomainCookies: { enabled: false },
       },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -283,6 +301,7 @@ test('enables crossSubDomainCookies on advanced when configured', () => {
         crossSubDomainCookies: { enabled: true, domain: '.example.com' },
       },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -299,6 +318,7 @@ test('passes account accountLinking config through', () => {
     authJson: createAuthJson({
       account: { accountLinking: { enabled: false, trustedProviders: ['google'] } },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -311,6 +331,7 @@ test('adds emailAndPassword block when enabled, without sendResetPassword when e
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger,
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -338,6 +359,7 @@ test('omits emailAndPassword block when not enabled', () => {
         disableSignUp: false,
       },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -355,6 +377,7 @@ test('adds sendResetPassword and emailVerification when email is configured', ()
         provider: { properties: { host: 'smtp.example.com', port: 587 } },
       },
     }),
+    getAuth,
     logger,
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -370,6 +393,7 @@ test('does not add emailVerification when email is not configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -386,6 +410,7 @@ test('sets socialProviders only when at least one built-in provider is configure
     authJson: createAuthJson({
       providers: [{ id: 'google', type: 'Google', properties: { clientId: 'cid' } }],
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins({ providers: { Google } }),
     secrets: baseSecrets,
@@ -397,6 +422,7 @@ test('omits socialProviders when no built-in providers are configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -413,6 +439,7 @@ test('pushes the generic-oauth plugin when a GenericOAuth provider is configured
     authJson: createAuthJson({
       providers: [{ id: 'okta', type: 'GenericOAuthProvider', properties: { clientId: 'cid' } }],
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins({ providers: { GenericOAuthProvider } }),
     secrets: baseSecrets,
@@ -424,6 +451,7 @@ test('does not push the generic-oauth plugin when no GenericOAuth provider is co
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -441,6 +469,7 @@ test('pushes the magic-link plugin when magicLink is enabled', () => {
       },
       magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -452,6 +481,7 @@ test('does not push the magic-link plugin when magicLink is not enabled', () => 
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -463,6 +493,7 @@ test('pushes the two-factor plugin when twoFactor is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ twoFactor: { enabled: true } }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -474,6 +505,7 @@ test('does not push the two-factor plugin when twoFactor is not enabled', () => 
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -487,6 +519,7 @@ test('pushes the passkey plugin when passkey is enabled', () => {
     authJson: createAuthJson({
       passkey: { enabled: true, rpId: 'example.com', rpName: 'Test App' },
     }),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -498,6 +531,7 @@ test('does not push the passkey plugin when passkey is not enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -509,6 +543,7 @@ test('always pushes the admin plugin', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -521,6 +556,7 @@ test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', ()
     appMeta,
     authJson: createAuthJson(),
     dev: true,
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -533,6 +569,7 @@ test('sets cookie prefix to lowdefy in production', () => {
     appMeta,
     authJson: createAuthJson(),
     dev: false,
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -550,6 +587,7 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
       ],
     }),
     createSystemContext: jest.fn(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
@@ -559,16 +597,18 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
   expect(options.emailVerification?.afterEmailVerification).toBeUndefined();
 });
 
-test('does not set databaseHooks when no hooks are bound', () => {
+test('always sets the engine session.create.before policy slot even with no user hooks', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ hooks: [] }),
     createSystemContext: jest.fn(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(options.databaseHooks).toBeUndefined();
+  expect(options.databaseHooks.session.create.before).toBeInstanceOf(Function);
+  expect(options.databaseHooks.user).toBeUndefined();
 });
 
 test('an email.verified hook sets emailVerification.afterEmailVerification and preserves sendVerificationEmail', () => {
@@ -582,11 +622,12 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
       hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
     }),
     createSystemContext: jest.fn(),
+    getAuth,
     logger: createLogger(),
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
   expect(options.emailVerification.afterEmailVerification).toBeInstanceOf(Function);
   expect(options.emailVerification.sendVerificationEmail).toBeInstanceOf(Function);
-  expect(options.databaseHooks).toBeUndefined();
+  expect(options.databaseHooks.user).toBeUndefined();
 });

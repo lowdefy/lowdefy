@@ -22,6 +22,9 @@ const modelNames = {
   session: 'user-sessions',
   account: 'user-accounts',
   verification: 'user-verifications',
+  organization: 'user-organizations',
+  member: 'user-members',
+  invitation: 'user-invitations',
   twoFactor: 'user-two-factors',
   passkey: 'user-passkeys',
 };

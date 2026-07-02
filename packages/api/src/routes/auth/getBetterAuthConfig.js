@@ -19,12 +19,14 @@ import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
 import { _app, _secret } from '@lowdefy/operators-js/operators/server';
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import buildHooks from './hooks/buildHooks.js';
+import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
 import createSendEmail from './createSendEmail.js';
+import createStockInvitationEmail from './organizations/createStockInvitationEmail.js';
 import modelNames from './modelNames.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
 
@@ -34,16 +36,24 @@ import resolveCookiePrefix from './resolveCookiePrefix.js';
 // BetterAuth's options - no fallback defaults here.
 // createSystemContext builds a fresh off-request context per hook fire - the
 // bridge a firing hook uses to invoke its InternalApi endpoint.
+// getAuth returns the constructed BetterAuth instance - the engine-tier
+// hooks resolve it lazily at fire time, after construction completes.
 function getBetterAuthConfig({
   appMeta,
   authJson,
   config = {},
   createSystemContext,
   dev = false,
+  getAuth,
   logger,
   plugins,
   secrets,
 }) {
+  if (type.isNone(getAuth)) {
+    throw new LowdefyInternalError(
+      'No getAuth accessor was provided to getBetterAuthConfig - the engine-tier membership hooks resolve the BetterAuth instance through it.'
+    );
+  }
   const operatorsParser = new ServerParser({
     lowdefyApp: appMeta,
     operators: { _app, _secret },
@@ -98,7 +108,16 @@ function getBetterAuthConfig({
     database: adapterPlugin({ properties: authConfig.database.properties ?? {} }),
     telemetry: { enabled: false },
     logger: createAuthLogger({ logger }),
-    user: { modelName: modelNames.user },
+    user: {
+      modelName: modelNames.user,
+      // Internal additionalFields, deliberately not an app-facing surface:
+      // contactId links the user to the app-owned contact record;
+      // attributes holds admin-set, cross-app authorization inputs.
+      additionalFields: {
+        contactId: { type: 'string', required: false, input: false },
+        attributes: { type: 'json', required: false, input: false },
+      },
+    },
     verification: { modelName: modelNames.verification },
     session: {
       modelName: modelNames.session,
@@ -218,10 +237,10 @@ function getBetterAuthConfig({
   // the user record.
   options.plugins.push(admin());
 
-  const { afterEmailVerification, databaseHooks } = buildHooks({
+  const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildHooks({
     authConfig,
     createSystemContext,
-    logger,
+    getAuth,
   });
   if (Object.keys(databaseHooks).length > 0) {
     options.databaseHooks = databaseHooks;
@@ -232,6 +251,17 @@ function getBetterAuthConfig({
       afterEmailVerification,
     };
   }
+
+  // Organizations are always on. A bound "invitation.send" hook owns the
+  // invitation email; unbound, the engine falls back to a stock template
+  // through auth.email.
+  options.plugins.push(
+    buildOrganizationPlugin({
+      authConfig,
+      getAuth,
+      sendInvitationEmail: sendInvitationEmail ?? createStockInvitationEmail({ sendEmail }),
+    })
+  );
 
   return options;
 }

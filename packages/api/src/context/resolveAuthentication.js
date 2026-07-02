@@ -19,9 +19,24 @@
 import { type } from '@lowdefy/helpers';
 
 // resolveAuthentication is the single writer of context.user - nothing
-// downstream rewrites it. Phase 1 provides the session path; API strategies
-// (no-session callers) and role resolution from membership follow in later
-// phases. Interim contract: a real session resolves with roles = [].
+// downstream rewrites it. API strategies (no-session callers) resolve on a
+// separate path in a later phase; the session branch is terminal.
+//
+// The active member row is the hard membership wall and the role source in
+// one indexed read ({ userId, organizationId } on the member model), live on
+// every request so membership removal and role changes take effect
+// immediately - roles are deliberately not stamped onto the session. A
+// session whose user holds no member row in the active org resolves to
+// unauthenticated: an invitee's pre-accept session (the session.create
+// carve-out), a stale cookie from another app's deployment, and a member
+// removed mid-session are all treated as logged out, not logged-in with no
+// roles.
+//
+// member.role stores multiple roles as a comma-separated string - split back
+// into the array Lowdefy authorization expects. context.user.attributes is
+// the one merged bag of authorization inputs: user.attributes (global) and
+// the active member's attributes (per-org), shallow per-key merge where the
+// member value wins - nested objects replace, never deep-merge.
 async function resolveAuthentication(context, { auth, headers }) {
   if (type.isNone(auth)) {
     context.user = null;
@@ -32,7 +47,35 @@ async function resolveAuthentication(context, { auth, headers }) {
     context.user = null;
     return;
   }
-  context.user = { ...session.user, roles: [] };
+  const activeOrganizationId = session.session.activeOrganizationId;
+  if (type.isNone(activeOrganizationId)) {
+    context.user = null;
+    return;
+  }
+  const { adapter } = await auth.$context;
+  const member = await adapter.findOne({
+    model: 'member',
+    where: [
+      { field: 'userId', value: session.user.id },
+      { field: 'organizationId', value: activeOrganizationId },
+    ],
+  });
+  if (type.isNone(member)) {
+    context.user = null;
+    return;
+  }
+  const roles = (member.role ?? '')
+    .split(',')
+    .map((role) => role.trim())
+    .filter(Boolean);
+  context.user = {
+    ...session.user,
+    roles,
+    attributes: {
+      ...(session.user.attributes ?? {}),
+      ...(member.attributes ?? {}),
+    },
+  };
 }
 
 export default resolveAuthentication;

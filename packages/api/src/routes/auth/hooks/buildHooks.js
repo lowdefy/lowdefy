@@ -18,19 +18,19 @@ import { set, type } from '@lowdefy/helpers';
 import { LowdefyInternalError } from '@lowdefy/errors';
 
 import authHookPoints from './authHookPoints.js';
+import buildEngineHooks from './buildEngineHooks.js';
 import composeAfterSlot from './composeAfterSlot.js';
 import composeBeforeSlot from './composeBeforeSlot.js';
 import createHookDispatch from './createHookDispatch.js';
 import createUserAfterHook from './createUserAfterHook.js';
 import createUserBeforeHook from './createUserBeforeHook.js';
-import engineHooks from './engineHooks.js';
 
 // Assembles BetterAuth's databaseHooks and the synthetic points' backing
 // callbacks from the engine-tier bindings and the validated auth.hooks
 // entries. Each point resolves to one composed slot with engine hooks first,
 // then the single user hook. Build validation guarantees every entry binds a
 // known point, at most once, to an existing InternalApi endpoint.
-function buildHooks({ authConfig, createSystemContext, logger }) {
+function buildHooks({ authConfig, createSystemContext, getAuth }) {
   const userHooks = {};
   (authConfig.hooks ?? []).forEach((hook) => {
     userHooks[hook.point] = hook;
@@ -42,22 +42,16 @@ function buildHooks({ authConfig, createSystemContext, logger }) {
     );
   }
 
+  const engineHooks = buildEngineHooks({ authConfig, getAuth });
+
   const databaseHooks = {};
   let afterEmailVerification;
+  let sendInvitationEmail;
 
   const points = new Set([...Object.keys(engineHooks), ...Object.keys(userHooks)]);
   points.forEach((point) => {
     const pointDef = authHookPoints[point];
     const userHook = userHooks[point];
-
-    if (pointDef.unwired === true) {
-      if (userHook) {
-        logger.warn(
-          `Auth hook "${userHook.id}" binds point "${point}", which has no backing callback yet - the organization plugin ships in a later phase. The hook will not fire.`
-        );
-      }
-      return;
-    }
 
     const hooks = [...(engineHooks[point] ?? [])];
     if (userHook) {
@@ -77,9 +71,12 @@ function buildHooks({ authConfig, createSystemContext, logger }) {
     if (point === 'email.verified') {
       afterEmailVerification = composeAfterSlot({ hooks });
     }
+    if (point === 'invitation.send') {
+      sendInvitationEmail = composeAfterSlot({ hooks });
+    }
   });
 
-  return { afterEmailVerification, databaseHooks };
+  return { afterEmailVerification, databaseHooks, sendInvitationEmail };
 }
 
 export default buildHooks;

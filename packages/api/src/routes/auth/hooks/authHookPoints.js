@@ -27,8 +27,8 @@ import findHookUser from './findHookUser.js';
 // (no way to identify the subject), the after hook only the updated record.
 //
 // Synthetic points are backed by BetterAuth config callbacks, not database
-// hooks. "invitation.send" is accepted at build but its backing callback
-// ships with the organization plugin in a later phase.
+// hooks: "email.verified" by emailVerification.afterEmailVerification,
+// "invitation.send" by the organization plugin's sendInvitationEmail.
 const authHookPoints = {
   'user.create.before': {
     kind: 'database',
@@ -130,7 +130,11 @@ const authHookPoints = {
   'invitation.send': {
     kind: 'synthetic',
     timing: 'after',
-    unwired: true,
+    buildPayload: (data) => ({
+      invitation: data.invitation,
+      organization: data.organization,
+      inviter: data.inviter,
+    }),
   },
 };
 

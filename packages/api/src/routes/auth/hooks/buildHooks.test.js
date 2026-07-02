@@ -61,11 +61,13 @@ function createMockSystemContextFactory({ endpointConfigs = {} } = {}) {
   };
 }
 
-function buildTestHooks({ endpointConfigs, hooks }) {
+const defaultOrganizations = { policy: 'pinned', org: 'default', signup: 'invite-only' };
+
+function buildTestHooks({ endpointConfigs, hooks, organizations = defaultOrganizations }) {
   return buildHooks({
-    authConfig: { hooks },
+    authConfig: { hooks, organizations },
     createSystemContext: createMockSystemContextFactory({ endpointConfigs }),
-    logger,
+    getAuth: () => ({}),
   });
 }
 
@@ -73,26 +75,50 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('buildHooks returns empty databaseHooks and no afterEmailVerification when no hooks bound', () => {
-  const { afterEmailVerification, databaseHooks } = buildTestHooks({ hooks: [] });
-  expect(databaseHooks).toEqual({});
+test('buildHooks always registers the engine session.create.before policy slot', () => {
+  const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildTestHooks({
+    hooks: [],
+  });
+  expect(databaseHooks.session.create.before).toBeInstanceOf(Function);
+  expect(databaseHooks.user).toBeUndefined();
   expect(afterEmailVerification).toBeUndefined();
+  expect(sendInvitationEmail).toBeUndefined();
+});
+
+test('buildHooks registers the auto-join user.create.after slot for open signup under pinned', () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [],
+    organizations: { policy: 'pinned', org: 'default', signup: 'open' },
+  });
+  expect(databaseHooks.user.create.after).toBeInstanceOf(Function);
+});
+
+test('buildHooks registers no auto-join slot under the tenant policy', () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [],
+    organizations: { policy: 'tenant' },
+  });
+  expect(databaseHooks.user).toBeUndefined();
+  expect(databaseHooks.session.create.before).toBeInstanceOf(Function);
 });
 
 test('buildHooks tolerates an authConfig without a hooks array', () => {
   const { databaseHooks } = buildHooks({
-    authConfig: {},
+    authConfig: { organizations: defaultOrganizations },
     createSystemContext: createMockSystemContextFactory(),
-    logger,
+    getAuth: () => ({}),
   });
-  expect(databaseHooks).toEqual({});
+  expect(databaseHooks.user).toBeUndefined();
 });
 
 test('buildHooks throws when hooks are configured without a createSystemContext factory', () => {
   expect(() =>
     buildHooks({
-      authConfig: { hooks: [{ id: 'h', point: 'user.create.before', endpointId: 'auth/h' }] },
-      logger,
+      authConfig: {
+        hooks: [{ id: 'h', point: 'user.create.before', endpointId: 'auth/h' }],
+        organizations: defaultOrganizations,
+      },
+      getAuth: () => ({}),
     })
   ).toThrow(LowdefyInternalError);
 });
@@ -298,22 +324,36 @@ test('email.verified builds an afterEmailVerification callback, not a database h
       },
     },
   });
-  expect(databaseHooks).toEqual({});
+  expect(databaseHooks.user).toBeUndefined();
   await expect(afterEmailVerification({ id: 'user_1', email: 'a@b.c' })).rejects.toThrow(
     'verified:a@b.c'
   );
 });
 
-test('invitation.send is accepted but not wired - a warning is logged and nothing assembles', () => {
-  const { afterEmailVerification, databaseHooks } = buildTestHooks({
+test('invitation.send builds the sendInvitationEmail callback with the catalog payload', async () => {
+  const { databaseHooks, sendInvitationEmail } = buildTestHooks({
     hooks: [{ id: 'invite', point: 'invitation.send', endpointId: 'auth/invite' }],
-    endpointConfigs: {},
+    endpointConfigs: {
+      'auth/invite': {
+        endpointId: 'auth/invite',
+        type: 'InternalApi',
+        routine: {
+          ':reject': { '_string.concat': ['invite:', { _payload: 'invitation.email' }] },
+        },
+      },
+    },
   });
-  expect(databaseHooks).toEqual({});
-  expect(afterEmailVerification).toBeUndefined();
-  expect(logger.warn).toHaveBeenCalledWith(
-    expect.stringContaining('Auth hook "invite" binds point "invitation.send"')
-  );
+  expect(databaseHooks.invitation).toBeUndefined();
+  await expect(
+    sendInvitationEmail({
+      id: 'inv_1',
+      role: 'member',
+      email: 'a@b.c',
+      invitation: { id: 'inv_1', email: 'a@b.c' },
+      organization: { id: 'org_1', name: 'Org One' },
+      inviter: { user: { email: 'inviter@b.c' } },
+    })
+  ).rejects.toThrow('invite:a@b.c');
 });
 
 test('multiple hooks assemble slots at their own points', async () => {
