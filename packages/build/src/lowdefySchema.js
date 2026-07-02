@@ -1101,6 +1101,37 @@ export default {
             },
           ],
         },
+        schedules: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['cron'],
+            properties: {
+              cron: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].cron" should be a cron expression string.',
+                },
+              },
+              payload: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].payload" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Api endpoint "schedules[]" should be an object.',
+              required: {
+                cron: 'Api endpoint schedule should have required property "cron".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Api endpoint "schedules" should be an array.',
+          },
+        },
       },
     },
     websocket: {

@@ -30,6 +30,7 @@ The schema for a Lowdefy API is:
 - `id: string`: **Required** - A unique identifier for the API endpoint.
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
+- `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
 
@@ -89,6 +90,39 @@ api:
   # Your API definitions
   # ...
 ```
+
+## Scheduled Endpoints (Cron)
+
+An endpoint can declare `schedules` to run its routine on a timer instead of (or in addition to) being called from the client. This is currently supported on [Vercel deployments](/deployment-vercel), where each schedule becomes a native Vercel cron job.
+
+```yaml
+api:
+  - id: purge_stale_conversations
+    type: Api
+    schedules:
+      - cron: '0 6 * * *'
+        payload: { mode: full }
+      - cron: '*/15 * * * *'
+        payload: { mode: incremental }
+    routine:
+      - id: purge
+        type: MongoDBDeleteMany
+        connectionId: conversations
+        properties:
+          filter:
+            updatedAt:
+              $lt:
+                _payload: cutoff
+```
+
+Each schedule item has:
+
+- `cron: string`: **Required** - A 5-field cron expression (`minute hour day-of-month month day-of-week`), evaluated in **UTC**. Named values like `MON`/`JAN` are not supported, and day-of-month and day-of-week are mutually exclusive (one must be `*`). Cron expressions must be unique within an endpoint.
+- `payload: object`: **Optional** - The payload passed to the routine for this schedule, available via the `_payload` operator. Different schedules can pass different payloads to the same routine.
+
+When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
+
+See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ## Routines
 
@@ -304,8 +338,8 @@ api:
             additionalProperties: false
             properties:
               email: { type: string, format: email }
-              name:  { type: string, minLength: 1, maxLength: 80 }
-              age:   { type: integer, minimum: 0 }
+              name: { type: string, minLength: 1, maxLength: 80 }
+              age: { type: integer, minimum: 0 }
           data:
             _payload: true
 
@@ -383,7 +417,7 @@ routine:
         type: object
         required: [_id, tier]
         properties:
-          _id:  { type: string }
+          _id: { type: string }
           tier: { type: string, enum: [free, pro, enterprise] }
       data:
         _step: load_profile
@@ -413,12 +447,12 @@ api:
           _step: charge
 
   - id: checkout
-    type: Api  # Callable from the client
+    type: Api # Callable from the client
     routine:
       - id: process_payment
         type: CallApi
         properties:
-          endpointId: charge_payment  # Can call InternalApi endpoints
+          endpointId: charge_payment # Can call InternalApi endpoints
           payload:
             amount:
               _payload: total

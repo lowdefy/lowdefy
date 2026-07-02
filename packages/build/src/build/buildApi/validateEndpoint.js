@@ -18,6 +18,54 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../utils/validateId.js';
+import validateCronExpression from '../../utils/validateCronExpression.js';
+
+function validateSchedules({ endpoint, configKey }) {
+  if (type.isUndefined(endpoint.schedules)) return;
+  if (!type.isArray(endpoint.schedules)) {
+    throw new ConfigError(`Endpoint schedules is not an array at "${endpoint.id}".`, {
+      received: endpoint.schedules,
+      configKey,
+    });
+  }
+  const seenCrons = new Set();
+  endpoint.schedules.forEach((schedule, scheduleIndex) => {
+    if (!type.isObject(schedule)) {
+      throw new ConfigError(
+        `Endpoint schedule ${scheduleIndex} is not an object at "${endpoint.id}".`,
+        { received: schedule, configKey }
+      );
+    }
+    if (!type.isString(schedule.cron)) {
+      throw new ConfigError(
+        `Endpoint schedule ${scheduleIndex} cron is not a string at "${endpoint.id}".`,
+        { received: schedule.cron, configKey }
+      );
+    }
+    const reason = validateCronExpression(schedule.cron);
+    if (reason) {
+      throw new ConfigError(
+        `Endpoint schedule ${scheduleIndex} cron "${schedule.cron}" is invalid at "${endpoint.id}": ${reason}.`,
+        { received: schedule.cron, configKey }
+      );
+    }
+    // The x-vercel-cron-schedule header disambiguates which schedule fired at runtime, so an
+    // endpoint's cron expressions must be unique.
+    if (seenCrons.has(schedule.cron)) {
+      throw new ConfigError(
+        `Endpoint schedule ${scheduleIndex} has duplicate cron "${schedule.cron}" at "${endpoint.id}".`,
+        { received: schedule.cron, configKey }
+      );
+    }
+    seenCrons.add(schedule.cron);
+    if (!type.isUndefined(schedule.payload) && !type.isObject(schedule.payload)) {
+      throw new ConfigError(
+        `Endpoint schedule ${scheduleIndex} payload is not an object at "${endpoint.id}".`,
+        { received: schedule.payload, configKey }
+      );
+    }
+  });
+}
 
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
@@ -43,11 +91,14 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const validEndpointTypes = ['Api', 'InternalApi'];
   if (!validEndpointTypes.includes(endpoint.type)) {
     throw new ConfigError(
-      `Endpoint type "${endpoint.type}" is not valid at "${endpoint.id}". Must be one of: ${validEndpointTypes.join(', ')}.`,
+      `Endpoint type "${endpoint.type}" is not valid at "${
+        endpoint.id
+      }". Must be one of: ${validEndpointTypes.join(', ')}.`,
       { received: endpoint.type, configKey }
     );
   }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });
+  validateSchedules({ endpoint, configKey });
 }
 
 export default validateEndpoint;

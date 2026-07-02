@@ -2,7 +2,6 @@
 '@lowdefy/operators-mql': patch
 '@lowdefy/connection-mongodb': patch
 '@lowdefy/connection-google-sheets': patch
-'@lowdefy/cli': patch
 '@lowdefy/server': patch
 '@lowdefy/server-dev': patch
 '@lowdefy/server-e2e': patch

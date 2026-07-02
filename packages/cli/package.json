@@ -43,6 +43,7 @@
     "@lowdefy/helpers": "5.3.0",
     "@lowdefy/logger": "5.3.0",
     "@lowdefy/node-utils": "5.3.0",
+    "@vercel/nft": "1.10.2",
     "axios": "1.15.2",
     "commander": "14.0.3",
     "decompress": "4.2.1",
