@@ -73,6 +73,14 @@ test('createSystemContext carries the singletons and per-fire fields', () => {
   expect(context.req.url).toBe('system:auth-hook');
 });
 
+test('createSystemContext carries auth and steps so hook routines can run auth steps', () => {
+  const auth = { api: {} };
+  const steps = { CreateApiKey: jest.fn() };
+  const context = createTestSystemContext({ auth, steps });
+  expect(context.auth).toBe(auth);
+  expect(context.steps).toBe(steps);
+});
+
 test('createSystemContext activates the default locale when i18n is configured', () => {
   const context = createTestSystemContext({
     i18n: { defaultLocale: 'en', locales: ['en', 'de'] },

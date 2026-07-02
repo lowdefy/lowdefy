@@ -18,6 +18,7 @@ import createAuthorize from '../context/createAuthorize.js';
 
 function testContext({
   appMeta = {},
+  auth,
   config = {},
   connections = {},
   headers = {},
@@ -32,10 +33,12 @@ function testContext({
   },
   readConfigFile,
   secrets = {},
+  steps = {},
   user = null,
 } = {}) {
   return {
     appMeta,
+    auth,
     authorize: createAuthorize({ user }),
     config,
     connections,
@@ -47,7 +50,7 @@ function testContext({
     operators,
     readConfigFile,
     secrets,
-    steps: {},
+    steps,
     user,
   };
 }

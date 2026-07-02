@@ -32,6 +32,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
+import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
@@ -69,10 +70,15 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      steps,
       websockets,
     };
     context.logger = createLogger();
     context.handleError = createHandleError({ context });
+    // Hoisted once per request - resolveAuthentication also needs it, and
+    // getBetterAuth memoizes the instance, but this keeps the auth engine
+    // construction to a single call site per request.
+    context.auth = getAuth({ logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
       const mockUser = getMockUser();
       if (mockUser) {
@@ -82,7 +88,7 @@ function apiContext() {
       } else {
         // resolveAuthentication is the single writer of context.user.
         await resolveAuthentication(context, {
-          auth: getAuth({ logger: context.logger }),
+          auth: context.auth,
           headers: c.req.raw.headers,
         });
       }

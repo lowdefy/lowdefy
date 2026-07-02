@@ -75,7 +75,14 @@ async function resolveAuthentication(context, { auth, headers }) {
       ...(session.user.attributes ?? {}),
       ...(member.attributes ?? {}),
     },
+    activeOrganizationId,
   };
+  // impersonatedBy is a BetterAuth admin plugin session field - present only
+  // while an admin is impersonating this session. Steps read it off the
+  // settled _user surface, so it is omitted (not set to undefined) when absent.
+  if (!type.isNone(session.session.impersonatedBy)) {
+    context.user.impersonatedBy = session.session.impersonatedBy;
+  }
 }
 
 export default resolveAuthentication;

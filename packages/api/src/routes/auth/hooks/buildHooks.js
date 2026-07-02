@@ -55,7 +55,7 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
 
     const hooks = [...(engineHooks[point] ?? [])];
     if (userHook) {
-      const dispatch = createHookDispatch({ createSystemContext, hook: userHook });
+      const dispatch = createHookDispatch({ createSystemContext, getAuth, hook: userHook });
       hooks.push(
         pointDef.timing === 'before'
           ? createUserBeforeHook({ dispatch, hook: userHook })

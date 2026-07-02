@@ -22,12 +22,17 @@ import authHookPoints from './authHookPoints.js';
 // the routine's terminal envelope ({ status, response?, error? }); the
 // translation to BetterAuth's hook contract lives in createUserBeforeHook /
 // createUserAfterHook.
-function createHookDispatch({ createSystemContext, hook }) {
+function createHookDispatch({ createSystemContext, getAuth, hook }) {
   const { buildPayload } = authHookPoints[hook.point];
   return async function dispatchHook(data, ctx) {
     const start = performance.now();
     const payload = await buildPayload(data, ctx);
-    const context = createSystemContext();
+    // getAuth resolves the BetterAuth instance lazily at fire time - hooks
+    // only fire after construction completes, so the accessor is always
+    // resolved by now. This is the same chicken-and-egg fix used by the
+    // engine hooks (e.g. createActiveOrgPolicyHook): the instance cannot be
+    // passed in directly because building it is what registers this hook.
+    const context = createSystemContext({ auth: getAuth() });
     const result = await invokeEndpoint(context, {
       endpointId: hook.endpointId,
       payload,

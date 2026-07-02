@@ -29,21 +29,26 @@ import fileCache from '../fileCache.js';
 import i18nConfig from '../../build/i18n.js';
 import loadDynamicJsMap from '../loadDynamicJsMap.js';
 import operators from '../../../build/plugins/operators/server.js';
+import steps from '../../../build/plugins/steps.js';
 import websockets from '../../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
 
 // Builds a fresh system context per auth hook fire - the trusted internal
 // caller the BetterAuth engine uses to invoke hook endpoints. All fields are
-// startup singletons except the per-fire rid, logger, handleError, and the
-// dynamic jsMap re-read (JIT rebuilds rewrite serverJsMap.js).
-function createSystemContext() {
+// startup singletons except the per-fire rid, logger, handleError, the
+// dynamic jsMap re-read (JIT rebuilds rewrite serverJsMap.js), and auth -
+// auth is threaded in by the caller (createHookDispatch) rather than
+// imported directly, since it comes from the same BetterAuth construction
+// that this factory is a dependency of (see createHookDispatch.js).
+function createSystemContext({ auth } = {}) {
   const rid = uuid();
   const buildDirectory = path.join(process.cwd(), 'build');
   return buildSystemContext({
     rid,
     agents,
     appMeta,
+    auth,
     buildDirectory,
     config,
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
@@ -55,6 +60,7 @@ function createSystemContext() {
     logger: createLogger({ rid }),
     operators,
     secrets,
+    steps,
     websockets,
   });
 }

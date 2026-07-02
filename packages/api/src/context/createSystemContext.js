@@ -25,6 +25,7 @@ import createReadConfigFile from './createReadConfigFile.js';
 function createSystemContext({
   agents,
   appMeta,
+  auth,
   buildDirectory,
   config,
   configDirectory,
@@ -37,12 +38,14 @@ function createSystemContext({
   operators,
   rid,
   secrets,
+  steps,
   websockets,
 }) {
   const context = {
     rid,
     agents,
     appMeta,
+    auth,
     buildDirectory,
     config,
     configDirectory,
@@ -59,6 +62,7 @@ function createSystemContext({
       hostname: null,
     },
     secrets,
+    steps,
     user: {},
     websockets,
   };
