@@ -15,6 +15,7 @@
 */
 
 const prefixByType = {
+  CallAgent: 'agent',
   CallApi: 'endpoint',
   ValidateSchema: 'validate',
 };

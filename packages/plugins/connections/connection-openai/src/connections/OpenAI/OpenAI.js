@@ -14,13 +14,21 @@
   limitations under the License.
 */
 
-import { createOpenAI } from '@ai-sdk/openai';
+import { createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
 function create({ connection }) {
-  const { apiKey, baseURL } = connection ?? {};
-  return { provider: createOpenAI({ apiKey, baseURL }) };
+  return { provider: createProvider({ connection }) };
 }
 
-const OpenAI = { schema, create };
+const OpenAI = {
+  schema,
+  create,
+  requests: {
+    GenerateObject: createGenerateObject({ createProvider }),
+    GenerateText: createGenerateText({ createProvider }),
+  },
+};
 export default OpenAI;

@@ -481,3 +481,98 @@ test('endpoint tool unwraps a marker-wrapped array nested under an object key', 
   expect(result).toEqual({ items: ['phone', 'tablet', 'laptop'], total: 3 });
   expect(Array.isArray(result.items)).toBe(true);
 });
+
+test('buildAgentTools sets needsApproval on confirm endpoint tools by default', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'create-ticket', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create a ticket',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await buildAgentTools({ agent, context });
+
+  expect(mockTool.mock.calls[0][0].needsApproval).toBe(true);
+});
+
+test('buildAgentTools autoApprove strips needsApproval from confirm endpoint tools', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'create-ticket', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create a ticket',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await buildAgentTools({ agent, context, autoApprove: true });
+
+  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+});
+
+test('buildAgentTools autoApprove strips needsApproval from confirm MCP tools', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const mcpTool = { description: 'External tool', execute: jest.fn() };
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ 'ext-tool': mcpTool }),
+    close: jest.fn(),
+  });
+
+  const agent = {
+    mcp: [{ url: 'https://mcp.example.com', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const withApproval = await buildAgentTools({ agent, context });
+  expect(withApproval.tools['ext-tool'].needsApproval).toBe(true);
+
+  const autoApproved = await buildAgentTools({ agent, context, autoApprove: true });
+  expect(autoApproved.tools['ext-tool'].needsApproval).toBeUndefined();
+});
+
+test('buildAgentTools propagates autoApprove into recursive sub-agent tool builds', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const subAgentConfig = {
+    agentId: 'worker',
+    connectionId: 'anthropic',
+    tools: [{ endpointId: 'sub-confirm-tool', confirm: true }],
+    mcp: [],
+    properties: { model: 'test-model' },
+  };
+
+  const agent = {
+    tools: [],
+    agents: [{ agentId: 'worker' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Sub tool',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  await buildAgentTools({ agent, context, autoApprove: true });
+
+  // First tool() call is the sub-agent's confirm endpoint tool.
+  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+});

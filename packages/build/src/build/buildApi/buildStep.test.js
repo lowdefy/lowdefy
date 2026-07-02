@@ -557,3 +557,165 @@ test('count steps', () => {
     MongoDBAggregation: 1,
   });
 });
+
+test('CallAgent step builds with agent prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Summarize the signups.',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_callagent_step',
+        endpointId: 'test_callagent_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'agent:test_callagent_step:run_agent',
+            endpointId: 'test_callagent_step',
+            stepId: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Summarize the signups.',
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('CallAgent step allows operator objects for agentId and prompt', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: { _payload: 'agent' },
+              prompt: { _payload: 'instruction' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('CallAgent step without properties.agentId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_agent',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_no_agent" requires properties.agentId.'
+  );
+});
+
+test('CallAgent step without properties.prompt throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_prompt',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_no_prompt" requires properties.prompt.'
+  );
+});
+
+test('CallAgent step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            connectionId: 'test_connection',
+            properties: { agentId: 'research_agent', prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_with_connection" should not have a connectionId.'
+  );
+});
+
+test('CallAgent step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent', prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});

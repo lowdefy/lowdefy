@@ -14,13 +14,21 @@
   limitations under the License.
 */
 
-import { createGateway } from '@ai-sdk/gateway';
+import { createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
 function create({ connection }) {
-  const { apiKey, baseURL, headers } = connection ?? {};
-  return { provider: createGateway({ apiKey, baseURL, headers }) };
+  return { provider: createProvider({ connection }) };
 }
 
-const AIGateway = { schema, create };
+const AIGateway = {
+  schema,
+  create,
+  requests: {
+    GenerateObject: createGenerateObject({ createProvider }),
+    GenerateText: createGenerateText({ createProvider }),
+  },
+};
 export default AIGateway;

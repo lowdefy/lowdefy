@@ -47,7 +47,9 @@ function assertNotReserved(name, kind, i18n) {
   }
 }
 
-async function buildAgentTools({ agent, context, depth = 0 }) {
+// autoApprove skips needsApproval on confirm tools — used by headless
+// run-to-completion agents, where no client exists to resolve an approval.
+async function buildAgentTools({ agent, context, depth = 0, autoApprove = false }) {
   const MAX_DEPTH = 5;
   if (depth > MAX_DEPTH) {
     throw new Error(
@@ -71,7 +73,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
     tools[endpointId] = tool({
       description: endpointConfig.description,
       inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-      ...(confirm ? { needsApproval: true } : {}),
+      ...(confirm && !autoApprove ? { needsApproval: true } : {}),
       execute: async (input, { abortSignal } = {}) => {
         const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
         if (!result.success) {
@@ -136,7 +138,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
           );
           continue;
         }
-        if (source.confirm) {
+        if (source.confirm && !autoApprove) {
           tools[name] = { ...mcpTool, needsApproval: true };
         } else {
           tools[name] = mcpTool;
@@ -160,6 +162,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
       agent: subAgentConfig,
       context,
       depth: depth + 1,
+      autoApprove,
     });
 
     const subModel = subConnection.provider(subAgentConfig.properties.model);
