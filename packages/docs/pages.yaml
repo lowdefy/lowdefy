@@ -324,6 +324,7 @@
 # - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
 - _ref: migration/upgrade-guide.yaml
+- _ref: migration/auth-upgrade.yaml
 - _ref: migration/v3-to-v4.yaml
 - _ref: migration/v5-to-v6.yaml
 - _ref: migration/v4-to-v5.yaml
