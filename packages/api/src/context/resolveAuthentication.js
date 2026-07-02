@@ -18,9 +18,14 @@
 
 import { type } from '@lowdefy/helpers';
 
+import resolveStrategyCaller from './resolveStrategyCaller.js';
+
 // resolveAuthentication is the single writer of context.user - nothing
-// downstream rewrites it. API strategies (no-session callers) resolve on a
-// separate path in a later phase; the session branch is terminal.
+// downstream rewrites it. The session and strategy branches are disjoint
+// ways to become a caller: a resolved session is terminal - it never falls
+// through to strategies, so a walled-out member cannot be silently
+// re-admitted by an apiKey/jwt strategy carrying config-granted roles. API
+// strategies are tried, in config order, only when no session resolves.
 //
 // The active member row is the hard membership wall and the role source in
 // one indexed read ({ userId, organizationId } on the member model), live on
@@ -37,14 +42,18 @@ import { type } from '@lowdefy/helpers';
 // the one merged bag of authorization inputs: user.attributes (global) and
 // the active member's attributes (per-org), shallow per-key merge where the
 // member value wins - nested objects replace, never deep-merge.
-async function resolveAuthentication(context, { auth, headers }) {
+async function resolveAuthentication(context, { auth, headers, strategies }) {
   if (type.isNone(auth)) {
     context.user = null;
     return;
   }
   const session = await auth.api.getSession({ headers });
   if (type.isNone(session)) {
-    context.user = null;
+    context.user = await resolveStrategyCaller({
+      headers,
+      logger: context.logger,
+      strategies,
+    });
     return;
   }
   const activeOrganizationId = session.session.activeOrganizationId;

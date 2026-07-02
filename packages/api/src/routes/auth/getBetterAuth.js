@@ -53,8 +53,10 @@ function getBetterAuth({
 
   // Ensure the pinned organization exists at startup - created if missing,
   // untouched otherwise. The engine hooks await the same memoized ensure per
-  // fire, so a failure here only defers seeding to the first sign-in.
-  if (authJson.organizations?.policy === 'pinned') {
+  // fire, so a failure here only defers seeding to the first sign-in. A
+  // strategies-only app has no database - seeding an in-memory org would be
+  // meaningless, and no session user can ever reach the membership wall.
+  if (authJson.organizations?.policy === 'pinned' && authJson.database) {
     ensureOrganization({ auth: instance, slug: authJson.organizations.org }).catch((error) => {
       logger.warn(
         { err: error },
