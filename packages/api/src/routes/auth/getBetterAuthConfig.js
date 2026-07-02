@@ -21,6 +21,7 @@ import { _app, _secret } from '@lowdefy/operators-js/operators/server';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import buildHooks from './hooks/buildHooks.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
 import createSendEmail from './createSendEmail.js';
@@ -31,7 +32,18 @@ import resolveCookiePrefix from './resolveCookiePrefix.js';
 // Build has validated the config and written all defaults, so this function
 // resolves the _secret operators and maps the Lowdefy surface onto
 // BetterAuth's options - no fallback defaults here.
-function getBetterAuthConfig({ appMeta, authJson, config = {}, dev = false, logger, plugins, secrets }) {
+// createSystemContext builds a fresh off-request context per hook fire - the
+// bridge a firing hook uses to invoke its InternalApi endpoint.
+function getBetterAuthConfig({
+  appMeta,
+  authJson,
+  config = {},
+  createSystemContext,
+  dev = false,
+  logger,
+  plugins,
+  secrets,
+}) {
   const operatorsParser = new ServerParser({
     lowdefyApp: appMeta,
     operators: { _app, _secret },
@@ -205,6 +217,21 @@ function getBetterAuthConfig({ appMeta, authJson, config = {}, dev = false, logg
   // impersonation (phase 6); its banned/banReason/banExpires fields land on
   // the user record.
   options.plugins.push(admin());
+
+  const { afterEmailVerification, databaseHooks } = buildHooks({
+    authConfig,
+    createSystemContext,
+    logger,
+  });
+  if (Object.keys(databaseHooks).length > 0) {
+    options.databaseHooks = databaseHooks;
+  }
+  if (afterEmailVerification) {
+    options.emailVerification = {
+      ...options.emailVerification,
+      afterEmailVerification,
+    };
+  }
 
   return options;
 }

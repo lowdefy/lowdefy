@@ -19,6 +19,7 @@ import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import getBetterAuthConfig from './routes/auth/getBetterAuthConfig.js';
@@ -35,6 +36,7 @@ export {
   callRequest,
   createApiContext,
   createChannelRegistry,
+  createSystemContext,
   createWebSocketConnection,
   getBetterAuth,
   getBetterAuthConfig,

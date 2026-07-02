@@ -539,3 +539,54 @@ test('sets cookie prefix to lowdefy in production', () => {
   });
   expect(options.advanced.cookiePrefix).toBe('lowdefy');
 });
+
+test('assembles databaseHooks from auth.hooks bindings', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      hooks: [
+        { id: 'normalize', point: 'user.create.before', endpointId: 'auth/normalize' },
+        { id: 'audit', point: 'session.create.after', endpointId: 'auth/audit' },
+      ],
+    }),
+    createSystemContext: jest.fn(),
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.databaseHooks.user.create.before).toBeInstanceOf(Function);
+  expect(options.databaseHooks.session.create.after).toBeInstanceOf(Function);
+  expect(options.emailVerification?.afterEmailVerification).toBeUndefined();
+});
+
+test('does not set databaseHooks when no hooks are bound', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ hooks: [] }),
+    createSystemContext: jest.fn(),
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.databaseHooks).toBeUndefined();
+});
+
+test('an email.verified hook sets emailVerification.afterEmailVerification and preserves sendVerificationEmail', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      email: {
+        from: 'noreply@example.com',
+        provider: { type: 'smtp', properties: { host: 'localhost', port: 1025 } },
+      },
+      hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
+    }),
+    createSystemContext: jest.fn(),
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.emailVerification.afterEmailVerification).toBeInstanceOf(Function);
+  expect(options.emailVerification.sendVerificationEmail).toBeInstanceOf(Function);
+  expect(options.databaseHooks).toBeUndefined();
+});

@@ -22,10 +22,28 @@ let instance;
 
 // The BetterAuth instance is constructed once per process at first use -
 // it handles /api/auth/* and resolves sessions for every request.
-function getBetterAuth({ appMeta, authJson, config, dev, logger, plugins, secrets }) {
+function getBetterAuth({
+  appMeta,
+  authJson,
+  config,
+  createSystemContext,
+  dev,
+  logger,
+  plugins,
+  secrets,
+}) {
   if (instance) return instance;
   instance = betterAuth(
-    getBetterAuthConfig({ appMeta, authJson, config, dev, logger, plugins, secrets })
+    getBetterAuthConfig({
+      appMeta,
+      authJson,
+      config,
+      createSystemContext,
+      dev,
+      logger,
+      plugins,
+      secrets,
+    })
   );
   return instance;
 }
