@@ -13,101 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
 
-import collectExceptions from '../../utils/collectExceptions.js';
-
-function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
-  if (type.isArray(pluginConfig)) {
-    pluginConfig.forEach((plugin) => {
-      const configKey = plugin['~k'];
-      if (type.isUndefined(plugin.id)) {
-        collectExceptions(
-          context,
-          new ConfigError(`Auth ${typeClass} id missing.`, { configKey })
-        );
-        return;
-      }
-      if (!type.isString(plugin.id)) {
-        collectExceptions(
-          context,
-          new ConfigError(`Auth ${typeClass} id is not a string.`, {
-            received: plugin.id,
-            configKey,
-          })
-        );
-        return;
-      }
-      if (!type.isString(plugin.type)) {
-        collectExceptions(
-          context,
-          new ConfigError(`Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`, {
-            received: plugin.type,
-            configKey,
-          })
-        );
-        return;
-      }
-      counter.increment(plugin.type, plugin['~k']);
-    });
-  }
-}
-
-function buildAdapter({ components, context }) {
-  const { adapter } = components.auth;
-  if (type.isNone(adapter)) {
-    return;
-  }
-  const configKey = adapter['~k'];
-  if (type.isUndefined(adapter.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Auth adapter id missing.', { configKey })
-    );
-    return;
-  }
-  if (!type.isString(adapter.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Auth adapter id is not a string.', { received: adapter.id, configKey })
-    );
-    return;
-  }
-  if (!type.isString(adapter.type)) {
-    collectExceptions(
-      context,
-      new ConfigError(`Auth adapter type is not a string at adapter "${adapter.id}".`, {
-        received: adapter.type,
-        configKey,
-      })
-    );
-    return;
-  }
-  context.typeCounters.auth.adapters.increment(adapter.type, adapter['~k']);
-}
-
+// Register auth plugin type usage so buildTypes resolves each type to an
+// installed plugin package and buildImports generates the import files.
+// Shapes are already validated by validateAuthConfig before this step runs.
 function buildAuthPlugins({ components, context }) {
   const counters = context.typeCounters.auth;
-  const authConfig = components.auth;
-  buildAdapter({ components, context });
-  buildAuthPlugin({
-    counter: counters.callbacks,
-    pluginConfig: authConfig.callbacks,
-    typeClass: 'callback',
-    context,
-  });
-  buildAuthPlugin({
-    counter: counters.events,
-    pluginConfig: authConfig.events,
-    typeClass: 'event',
-    context,
-  });
-  buildAuthPlugin({
-    counter: counters.providers,
-    pluginConfig: authConfig.providers,
-    typeClass: 'provider',
-    context,
+  const { database, providers } = components.auth;
+  if (!type.isNone(database)) {
+    counters.adapters.increment(database.type, database['~k']);
+  }
+  (providers ?? []).forEach((provider) => {
+    counters.providers.increment(provider.type, provider['~k']);
   });
 }
 

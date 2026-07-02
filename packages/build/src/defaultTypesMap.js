@@ -3,8 +3,6 @@ const defaultTypesMap = {
   agents: {},
   auth: {
     adapters: {},
-    callbacks: {},
-    events: {},
     providers: {},
   },
   blockMetas: {},

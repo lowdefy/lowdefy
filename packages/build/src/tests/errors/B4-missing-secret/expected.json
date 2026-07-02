@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Auth \"secret\" is required when auth is configured."
+      ],
+      "errorContains": [
+        "Auth \"secret\" is required when auth is configured. Reference it with the _secret operator.",
+        "lowdefy.yaml:13"
+      ]
+    }
+  ]
+}

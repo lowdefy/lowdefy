@@ -52,10 +52,9 @@ const defaultPackages = [
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
-  '@lowdefy/plugin-auth0',
   '@lowdefy/plugin-aws',
   '@lowdefy/plugin-csv',
-  '@lowdefy/plugin-next-auth',
+  '@lowdefy/plugin-better-auth',
   '@lowdefy/websockets-core',
 ];
 

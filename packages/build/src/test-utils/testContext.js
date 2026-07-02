@@ -36,8 +36,6 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       agents: createCounter(),
       auth: {
         adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
         providers: createCounter(),
       },
       blocks: createCounter(),

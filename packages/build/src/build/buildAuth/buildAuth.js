@@ -16,17 +16,20 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import buildAuthPlugins from './buildAuthPlugins.js';
 import buildApiAuth from './buildApiAuth.js';
+import buildAuthPlugins from './buildAuthPlugins.js';
 import buildPageAuth from './buildPageAuth.js';
+import buildTrustedProviders from './buildTrustedProviders.js';
 import buildWebsocketAuth from './buildWebsocketAuth.js';
+import setAuthConfigured from './setAuthConfigured.js';
+import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
-  const configured = !type.isNone(components.auth);
   validateAuthConfig({ components, context });
-  components.auth.configured = configured;
+  setAuthConfigured({ components, context });
+  setAuthDefaults({ components, context });
+  buildTrustedProviders({ components, context });
   buildApiAuth({ components, context });
   buildWebsocketAuth({ components, context });
   buildPageAuth({ components, context });

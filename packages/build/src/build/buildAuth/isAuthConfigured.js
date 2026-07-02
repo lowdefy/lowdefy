@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import { getAuthUser } from '@hono/auth-js';
+import { type } from '@lowdefy/helpers';
 
-import authJson from '../../build/auth.js';
+const markerKeys = ['~ignoreBuildChecks', '~r', '~l', '~k'];
 
-// Replaces getServerSession.js — reads the session from the Hono context
-// populated by the initAuthConfig middleware.
-async function getSession(c) {
-  if (authJson.configured !== true) {
-    return undefined;
+// configured = auth block present and non-empty. Intent, not completeness,
+// is the gate: validation runs on any configured block and errors on missing
+// pieces, instead of silently skipping incomplete auth config.
+function isAuthConfigured({ components }) {
+  if (!type.isObject(components.auth)) {
+    return false;
   }
-  const authUser = await getAuthUser(c);
-  return authUser?.session ?? undefined;
+  return Object.keys(components.auth).some((key) => !markerKeys.includes(key));
 }
 
-export default getSession;
+export default isAuthConfigured;

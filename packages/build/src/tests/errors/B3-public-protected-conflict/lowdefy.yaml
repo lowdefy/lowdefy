@@ -5,11 +5,21 @@
 # Expected error:
 #   [Config Error] "protected" and "public" page lists are mutually exclusive.
 #
-# The error points to line 13 where auth.pages is defined.
+# The error points to the line where auth.pages is defined. A login
+# mechanism, secret and database are configured so validation reaches the
+# mutual exclusivity check instead of failing earlier.
 
 lowdefy: local
 
 auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
   pages:
     public:
       - home

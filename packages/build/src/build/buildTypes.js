@@ -70,8 +70,6 @@ function buildTypes({ components, context }) {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
     },
     blocks: {},
@@ -104,20 +102,6 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.adapters,
     store: components.types.auth.adapters,
     typeClass: 'Auth adapter',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.callbacks,
-    definitions: context.typesMap.auth.callbacks,
-    store: components.types.auth.callbacks,
-    typeClass: 'Auth callback',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.events,
-    definitions: context.typesMap.auth.events,
-    store: components.types.auth.events,
-    typeClass: 'Auth event',
   });
 
   buildTypeClass(context, {

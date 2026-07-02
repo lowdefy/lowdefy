@@ -57,8 +57,6 @@ function createContext({
       agents: createCounter(),
       auth: {
         adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
         providers: createCounter(),
       },
       blocks: createCounter(),

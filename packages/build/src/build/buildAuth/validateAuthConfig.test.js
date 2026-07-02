@@ -19,65 +19,197 @@ import testContext from '../../test-utils/testContext.js';
 
 const context = testContext();
 
-test('validateAuthConfig no auth defined', () => {
+const validSecret = { _secret: 'BETTER_AUTH_SECRET' };
+const validDatabase = { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} };
+
+test('validateAuthConfig sets auth to an empty object when auth is absent', () => {
   const components = {};
   const result = validateAuthConfig({ components, context });
-  expect(result).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      events: [],
-      pages: {
-        roles: {},
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-  });
+  expect(result).toEqual({ auth: {} });
 });
 
-test('validateAuthConfig auth not an object', () => {
-  const components = {
-    auth: 'auth',
-  };
+test('validateAuthConfig does not throw when auth is already an empty object', () => {
+  const components = { auth: {} };
+  const result = validateAuthConfig({ components, context });
+  expect(result).toEqual({ auth: {} });
+});
+
+test('validateAuthConfig throws when auth is not an object', () => {
+  const components = { auth: 'auth' };
   expect(() => validateAuthConfig({ components, context })).toThrow(
     'lowdefy.auth is not an object.'
   );
 });
 
-test('validateAuthConfig invalid auth config', () => {
-  let components = {
+test('validateAuthConfig throws when auth contains an unknown key', () => {
+  const components = {
     auth: {
-      pages: {
-        protected: {},
-      },
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      notAKnownAuthKey: true,
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'App "auth.pages.protected.$" should be an array of strings.'
-  );
-  components = {
-    auth: {
-      pages: {
-        roles: ['a'],
-      },
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'App "auth.pages.roles" should be an object.'
+    /contains an unknown property/
   );
 });
 
-test('validateAuthConfig config error when both protected and public pages are both arrays', () => {
+test('validateAuthConfig throws when configured without an authentication mechanism', () => {
   const components = {
     auth: {
+      secret: validSecret,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true") or an OAuth provider in "providers".'
+  );
+});
+
+test('validateAuthConfig throws when only dev.mockUser is set, since it is not a mechanism', () => {
+  const components = {
+    auth: {
+      dev: {
+        mockUser: { id: 'user-1', roles: ['admin'] },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism.'
+  );
+});
+
+test('validateAuthConfig throws when secret is missing', () => {
+  const components = {
+    auth: {
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "secret" is required when auth is configured. Reference it with the _secret operator.'
+  );
+});
+
+test('validateAuthConfig throws when database is missing for a login method', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "database" is required when a login method or provider is configured.'
+  );
+});
+
+test('validateAuthConfig throws when database is missing for a configured provider', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      providers: [{ id: 'okta', type: 'GenericOAuth', properties: {} }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "database" is required when a login method or provider is configured.'
+  );
+});
+
+test('validateAuthConfig throws when email is missing and magicLink is enabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "email" is required when "magicLink" is enabled or "emailAndPassword.requireEmailVerification" is true.'
+  );
+});
+
+test('validateAuthConfig throws when email is missing and requireEmailVerification is true', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true, requireEmailVerification: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "email" is required when "magicLink" is enabled or "emailAndPassword.requireEmailVerification" is true.'
+  );
+});
+
+test('validateAuthConfig passes with a minimal valid emailAndPassword mechanism', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig passes with a magicLink mechanism when email is configured', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: {
+        from: 'noreply@example.com',
+        provider: { type: 'smtp', properties: {} },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig passes with an OAuth provider mechanism', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'okta', type: 'GenericOAuth', properties: {} }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when emailAndPassword is missing "enabled"', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    /should have required property "enabled"/
+  );
+});
+
+test('validateAuthConfig throws when magicLink is missing "enabled"', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    /should have required property "enabled"/
+  );
+});
+
+test('validateAuthConfig throws when both protected and public pages are arrays', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         protected: [],
         public: [],
@@ -89,9 +221,12 @@ test('validateAuthConfig config error when both protected and public pages are b
   );
 });
 
-test('validateAuthConfig config error when both protected and public pages are true', () => {
+test('validateAuthConfig throws when both protected and public pages are true', () => {
   const components = {
     auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         protected: true,
         public: true,
@@ -103,9 +238,12 @@ test('validateAuthConfig config error when both protected and public pages are t
   );
 });
 
-test('validateAuthConfig config error when protected or public are false.', () => {
-  let components = {
+test('validateAuthConfig throws when pages.protected is false', () => {
+  const components = {
     auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         protected: false,
       },
@@ -114,8 +252,14 @@ test('validateAuthConfig config error when protected or public are false.', () =
   expect(() => validateAuthConfig({ components, context })).toThrow(
     'Protected pages can not be set to false.'
   );
-  components = {
+});
+
+test('validateAuthConfig throws when pages.public is false', () => {
+  const components = {
     auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         public: false,
       },
@@ -126,63 +270,36 @@ test('validateAuthConfig config error when protected or public are false.', () =
   );
 });
 
-test('validateAuthConfig throws when auth providers configured but NEXTAUTH_SECRET not set', () => {
-  const originalEnv = process.env.NEXTAUTH_SECRET;
-  delete process.env.NEXTAUTH_SECRET;
-
+test('validateAuthConfig throws when both protected and public api are set', () => {
   const components = {
     auth: {
-      providers: [
-        {
-          id: 'google',
-          type: 'GoogleProvider',
-          properties: {
-            clientId: 'test-id',
-            clientSecret: 'test-secret',
-          },
-        },
-      ],
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      api: {
+        protected: ['a'],
+        public: ['b'],
+      },
     },
   };
-
-  try {
-    expect(() => validateAuthConfig({ components, context })).toThrow(
-      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
-    );
-  } finally {
-    if (originalEnv !== undefined) {
-      process.env.NEXTAUTH_SECRET = originalEnv;
-    }
-  }
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Protected and public api are mutually exclusive. When protected api are listed, all unlisted api are public by default and vice versa.'
+  );
 });
 
-test('validateAuthConfig passes when auth providers configured and NEXTAUTH_SECRET is set', () => {
-  const originalEnv = process.env.NEXTAUTH_SECRET;
-  process.env.NEXTAUTH_SECRET = 'test-secret-value';
-
+test('validateAuthConfig throws when both protected and public websockets are set', () => {
   const components = {
     auth: {
-      providers: [
-        {
-          id: 'google',
-          type: 'GoogleProvider',
-          properties: {
-            clientId: 'test-id',
-            clientSecret: 'test-secret',
-          },
-        },
-      ],
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      websockets: {
+        protected: true,
+        public: true,
+      },
     },
   };
-
-  try {
-    const result = validateAuthConfig({ components, context });
-    expect(result.auth.providers).toHaveLength(1);
-  } finally {
-    if (originalEnv !== undefined) {
-      process.env.NEXTAUTH_SECRET = originalEnv;
-    } else {
-      delete process.env.NEXTAUTH_SECRET;
-    }
-  }
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Protected and public websockets are mutually exclusive. When protected websockets are listed, all unlisted websockets are public by default and vice versa.'
+  );
 });

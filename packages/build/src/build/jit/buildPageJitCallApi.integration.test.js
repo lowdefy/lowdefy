@@ -32,8 +32,6 @@ import os from 'os';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
-process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
-
 // Mock the steps that touch the real server filesystem / git so shallowBuild can
 // run against a throwaway temp directory. Everything that matters for CallAPI
 // validation (buildRefs/walker, buildModules, buildApi, writeApi, buildShallowPages,

@@ -23,9 +23,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/success');
 
-// Set NEXTAUTH_SECRET for auth-related tests
-process.env.NEXTAUTH_SECRET = 'test-secret-for-snapshot-tests';
-
 // Mock buildApp to return constant gitSha
 const mockComputeAppMeta = (source = {}) => ({
   slug: source.slug ?? null,

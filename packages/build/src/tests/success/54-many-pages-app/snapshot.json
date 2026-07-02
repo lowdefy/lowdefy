@@ -19,46 +19,29 @@
     "~k": "2g"
   },
   "auth.json": {
+    "configured": false,
     "api": {
       "roles": {
         "~k": "4k"
       },
       "~k": "4j"
     },
-    "websockets": {
+    "pages": {
       "roles": {
         "~k": "4m"
       },
       "~k": "4l"
     },
-    "authPages": {
-      "~k": "4n"
-    },
-    "pages": {
+    "websockets": {
       "roles": {
-        "~k": "4p"
+        "~k": "4o"
       },
-      "~k": "4o"
-    },
-    "callbacks": {
-      "~arr": [],
-      "~k": "4q"
-    },
-    "events": {
-      "~arr": [],
-      "~k": "4r"
+      "~k": "4n"
     },
     "providers": {
       "~arr": [],
-      "~k": "4s"
+      "~k": "4p"
     },
-    "session": {
-      "~k": "4t"
-    },
-    "theme": {
-      "~k": "4u"
-    },
-    "configured": false,
     "~k": "4i"
   },
   "blockPackages.json": [
@@ -277,164 +260,164 @@
       "~k_parent": "44"
     },
     "50": {
-      "key": "root.types.auth",
-      "~k_parent": "4v"
+      "key": "root.types.blocks.Title",
+      "~k_parent": "4y"
     },
     "51": {
-      "key": "root.types.auth.adapters",
-      "~k_parent": "50"
+      "key": "root.types.blocks.Result",
+      "~k_parent": "4y"
     },
     "52": {
-      "key": "root.types.auth.callbacks",
-      "~k_parent": "50"
+      "key": "root.types.blocks.Button",
+      "~k_parent": "4y"
     },
     "53": {
-      "key": "root.types.auth.events",
-      "~k_parent": "50"
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "4y"
     },
     "54": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "50"
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "4y"
     },
     "55": {
-      "key": "root.types.blocks",
-      "~k_parent": "4v"
+      "key": "root.types.blocks.Html",
+      "~k_parent": "4y"
     },
     "56": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "4y"
     },
     "57": {
-      "key": "root.types.blocks.Title",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Img",
+      "~k_parent": "4y"
     },
     "58": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "55"
+      "key": "root.types.blocks.List",
+      "~k_parent": "4y"
     },
     "59": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Span",
+      "~k_parent": "4y"
     },
     "60": {
-      "key": "root.imports.actions",
-      "~k_parent": "5z"
+      "key": "root.imports.blocks",
+      "~k_parent": "5s"
     },
     "61": {
-      "key": "root.imports.actions[0]",
+      "key": "root.imports.blocks[0]",
       "~k_parent": "60"
     },
     "62": {
-      "key": "root.imports.actions[1]",
+      "key": "root.imports.blocks[1]",
       "~k_parent": "60"
     },
     "63": {
-      "key": "root.imports.agents",
-      "~k_parent": "5z"
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "60"
     },
     "64": {
-      "key": "root.imports.auth",
-      "~k_parent": "5z"
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "60"
     },
     "65": {
-      "key": "root.imports.auth.adapters",
-      "~k_parent": "64"
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "60"
     },
     "66": {
-      "key": "root.imports.auth.callbacks",
-      "~k_parent": "64"
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "60"
     },
     "67": {
-      "key": "root.imports.auth.events",
-      "~k_parent": "64"
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "60"
     },
     "68": {
-      "key": "root.imports.auth.providers",
-      "~k_parent": "64"
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "60"
     },
     "69": {
-      "key": "root.imports.blocks",
-      "~k_parent": "5z"
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "60"
     },
     "70": {
-      "key": "root.imports.icons[2]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[6].icons",
+      "~k_parent": "6z"
     },
     "71": {
-      "key": "root.imports.icons[2].icons",
-      "~k_parent": "70"
+      "key": "root.imports.icons[7]",
+      "~k_parent": "6m"
     },
     "72": {
-      "key": "root.imports.icons[3]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[7].icons",
+      "~k_parent": "71"
     },
     "73": {
-      "key": "root.imports.icons[3].icons",
-      "~k_parent": "72"
+      "key": "root.imports.icons[8]",
+      "~k_parent": "6m"
     },
     "74": {
-      "key": "root.imports.icons[4]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[8].icons",
+      "~k_parent": "73"
     },
     "75": {
-      "key": "root.imports.icons[4].icons",
-      "~k_parent": "74"
+      "key": "root.imports.icons[9]",
+      "~k_parent": "6m"
     },
     "76": {
-      "key": "root.imports.icons[5]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[9].icons",
+      "~k_parent": "75"
     },
     "77": {
-      "key": "root.imports.icons[5].icons",
-      "~k_parent": "76"
+      "key": "root.imports.icons[10]",
+      "~k_parent": "6m"
     },
     "78": {
-      "key": "root.imports.icons[6]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[10].icons",
+      "~k_parent": "77"
     },
     "79": {
-      "key": "root.imports.icons[6].icons",
-      "~k_parent": "78"
+      "key": "root.imports.icons[11]",
+      "~k_parent": "6m"
     },
     "80": {
-      "key": "root.imports.icons[20]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "7z"
     },
     "81": {
-      "key": "root.imports.icons[20].icons",
-      "~k_parent": "80"
+      "key": "root.imports.icons[25]",
+      "~k_parent": "6m"
     },
     "82": {
-      "key": "root.imports.icons[21]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "81"
     },
     "83": {
-      "key": "root.imports.icons[21].icons",
-      "~k_parent": "82"
+      "key": "root.imports.icons[26]",
+      "~k_parent": "6m"
     },
     "84": {
-      "key": "root.imports.icons[22]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "83"
     },
     "85": {
-      "key": "root.imports.icons[22].icons",
-      "~k_parent": "84"
+      "key": "root.imports.icons[27]",
+      "~k_parent": "6m"
     },
     "86": {
-      "key": "root.imports.icons[23]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "85"
     },
     "87": {
-      "key": "root.imports.icons[23].icons",
-      "~k_parent": "86"
+      "key": "root.imports.requests",
+      "~k_parent": "5s"
     },
     "88": {
-      "key": "root.imports.icons[24]",
-      "~k_parent": "6v"
+      "key": "root.imports.websockets",
+      "~k_parent": "5s"
     },
     "89": {
-      "key": "root.imports.icons[24].icons",
-      "~k_parent": "88"
+      "key": "root.imports.operators",
+      "~k_parent": "5s"
     },
     "a": {
       "key": "root.menus[0:default].links[1:section1:MenuGroup]",
@@ -940,428 +923,392 @@
       "~k_parent": "4j"
     },
     "4l": {
-      "key": "root.auth.websockets",
-      "~k_parent": "4i"
-    },
-    "4m": {
-      "key": "root.auth.websockets.roles",
-      "~k_parent": "4l"
-    },
-    "4n": {
-      "key": "root.auth.authPages",
-      "~k_parent": "4i"
-    },
-    "4o": {
       "key": "root.auth.pages",
       "~k_parent": "4i"
     },
-    "4p": {
+    "4m": {
       "key": "root.auth.pages.roles",
-      "~k_parent": "4o"
+      "~k_parent": "4l"
     },
-    "4q": {
-      "key": "root.auth.callbacks",
+    "4n": {
+      "key": "root.auth.websockets",
       "~k_parent": "4i"
     },
-    "4r": {
-      "key": "root.auth.events",
-      "~k_parent": "4i"
+    "4o": {
+      "key": "root.auth.websockets.roles",
+      "~k_parent": "4n"
     },
-    "4s": {
+    "4p": {
       "key": "root.auth.providers",
       "~k_parent": "4i"
     },
-    "4t": {
-      "key": "root.auth.session",
-      "~k_parent": "4i"
-    },
-    "4u": {
-      "key": "root.auth.theme",
-      "~k_parent": "4i"
-    },
-    "4v": {
+    "4q": {
       "key": "root.types",
       "~k_parent": "4"
     },
-    "4w": {
+    "4r": {
       "key": "root.types.actions",
+      "~k_parent": "4q"
+    },
+    "4s": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "4r"
+    },
+    "4t": {
+      "key": "root.types.actions.SetDarkMode",
+      "~k_parent": "4r"
+    },
+    "4u": {
+      "key": "root.types.agents",
+      "~k_parent": "4q"
+    },
+    "4v": {
+      "key": "root.types.auth",
+      "~k_parent": "4q"
+    },
+    "4w": {
+      "key": "root.types.auth.adapters",
       "~k_parent": "4v"
     },
     "4x": {
-      "key": "root.types.actions.Link",
-      "~k_parent": "4w"
+      "key": "root.types.auth.providers",
+      "~k_parent": "4v"
     },
     "4y": {
-      "key": "root.types.actions.SetDarkMode",
-      "~k_parent": "4w"
+      "key": "root.types.blocks",
+      "~k_parent": "4q"
     },
     "4z": {
-      "key": "root.types.agents",
-      "~k_parent": "4v"
+      "key": "root.types.blocks.Box",
+      "~k_parent": "4y"
     },
     "5a": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "4y"
     },
     "5b": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "55"
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "4y"
     },
     "5c": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "4y"
     },
     "5d": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "55"
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "4y"
     },
     "5e": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "55"
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "4y"
     },
     "5f": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "55"
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "4y"
     },
     "5g": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "55"
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "4y"
     },
     "5h": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "4y"
     },
     "5i": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Message",
+      "~k_parent": "4y"
     },
     "5j": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "55"
+      "key": "root.types.connections",
+      "~k_parent": "4q"
     },
     "5k": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "55"
+      "key": "root.types.requests",
+      "~k_parent": "4q"
     },
     "5l": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "55"
+      "key": "root.types.websockets",
+      "~k_parent": "4q"
     },
     "5m": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "55"
+      "key": "root.types.api",
+      "~k_parent": "4q"
     },
     "5n": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "55"
+      "key": "root.types.operators",
+      "~k_parent": "4q"
     },
     "5o": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "55"
+      "key": "root.types.operators.client",
+      "~k_parent": "5n"
     },
     "5p": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "55"
+      "key": "root.types.operators.client._not",
+      "~k_parent": "5o"
     },
     "5q": {
-      "key": "root.types.connections",
-      "~k_parent": "4v"
+      "key": "root.types.operators.client._type",
+      "~k_parent": "5o"
     },
     "5r": {
-      "key": "root.types.requests",
-      "~k_parent": "4v"
+      "key": "root.types.operators.server",
+      "~k_parent": "5n"
     },
     "5s": {
-      "key": "root.types.websockets",
-      "~k_parent": "4v"
-    },
-    "5t": {
-      "key": "root.types.api",
-      "~k_parent": "4v"
-    },
-    "5u": {
-      "key": "root.types.operators",
-      "~k_parent": "4v"
-    },
-    "5v": {
-      "key": "root.types.operators.client",
-      "~k_parent": "5u"
-    },
-    "5w": {
-      "key": "root.types.operators.client._not",
-      "~k_parent": "5v"
-    },
-    "5x": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "5v"
-    },
-    "5y": {
-      "key": "root.types.operators.server",
-      "~k_parent": "5u"
-    },
-    "5z": {
       "key": "root.imports",
       "~k_parent": "4"
     },
+    "5t": {
+      "key": "root.imports.actions",
+      "~k_parent": "5s"
+    },
+    "5u": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "5t"
+    },
+    "5v": {
+      "key": "root.imports.actions[1]",
+      "~k_parent": "5t"
+    },
+    "5w": {
+      "key": "root.imports.agents",
+      "~k_parent": "5s"
+    },
+    "5x": {
+      "key": "root.imports.auth",
+      "~k_parent": "5s"
+    },
+    "5y": {
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "5x"
+    },
+    "5z": {
+      "key": "root.imports.auth.providers",
+      "~k_parent": "5x"
+    },
     "6a": {
-      "key": "root.imports.blocks[0]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "60"
     },
     "6b": {
-      "key": "root.imports.blocks[1]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "60"
     },
     "6c": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "60"
     },
     "6d": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "60"
     },
     "6e": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "60"
     },
     "6f": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "60"
     },
     "6g": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "60"
     },
     "6h": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "60"
     },
     "6i": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "60"
     },
     "6j": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "60"
     },
     "6k": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "60"
     },
     "6l": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "69"
+      "key": "root.imports.connections",
+      "~k_parent": "5s"
     },
     "6m": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "69"
+      "key": "root.imports.icons",
+      "~k_parent": "5s"
     },
     "6n": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[0]",
+      "~k_parent": "6m"
     },
     "6o": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[0].icons",
+      "~k_parent": "6n"
     },
     "6p": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[1]",
+      "~k_parent": "6m"
     },
     "6q": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[1].icons",
+      "~k_parent": "6p"
     },
     "6r": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[2]",
+      "~k_parent": "6m"
     },
     "6s": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[2].icons",
+      "~k_parent": "6r"
     },
     "6t": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[3]",
+      "~k_parent": "6m"
     },
     "6u": {
-      "key": "root.imports.connections",
-      "~k_parent": "5z"
+      "key": "root.imports.icons[3].icons",
+      "~k_parent": "6t"
     },
     "6v": {
-      "key": "root.imports.icons",
-      "~k_parent": "5z"
+      "key": "root.imports.icons[4]",
+      "~k_parent": "6m"
     },
     "6w": {
-      "key": "root.imports.icons[0]",
+      "key": "root.imports.icons[4].icons",
       "~k_parent": "6v"
     },
     "6x": {
-      "key": "root.imports.icons[0].icons",
-      "~k_parent": "6w"
+      "key": "root.imports.icons[5]",
+      "~k_parent": "6m"
     },
     "6y": {
-      "key": "root.imports.icons[1]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[5].icons",
+      "~k_parent": "6x"
     },
     "6z": {
-      "key": "root.imports.icons[1].icons",
-      "~k_parent": "6y"
+      "key": "root.imports.icons[6]",
+      "~k_parent": "6m"
     },
     "7a": {
-      "key": "root.imports.icons[7]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[11].icons",
+      "~k_parent": "79"
     },
     "7b": {
-      "key": "root.imports.icons[7].icons",
-      "~k_parent": "7a"
+      "key": "root.imports.icons[12]",
+      "~k_parent": "6m"
     },
     "7c": {
-      "key": "root.imports.icons[8]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "7b"
     },
     "7d": {
-      "key": "root.imports.icons[8].icons",
-      "~k_parent": "7c"
+      "key": "root.imports.icons[13]",
+      "~k_parent": "6m"
     },
     "7e": {
-      "key": "root.imports.icons[9]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "7d"
     },
     "7f": {
-      "key": "root.imports.icons[9].icons",
-      "~k_parent": "7e"
+      "key": "root.imports.icons[14]",
+      "~k_parent": "6m"
     },
     "7g": {
-      "key": "root.imports.icons[10]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[14].icons",
+      "~k_parent": "7f"
     },
     "7h": {
-      "key": "root.imports.icons[10].icons",
-      "~k_parent": "7g"
+      "key": "root.imports.icons[15]",
+      "~k_parent": "6m"
     },
     "7i": {
-      "key": "root.imports.icons[11]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "7h"
     },
     "7j": {
-      "key": "root.imports.icons[11].icons",
-      "~k_parent": "7i"
+      "key": "root.imports.icons[16]",
+      "~k_parent": "6m"
     },
     "7k": {
-      "key": "root.imports.icons[12]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "7j"
     },
     "7l": {
-      "key": "root.imports.icons[12].icons",
-      "~k_parent": "7k"
+      "key": "root.imports.icons[17]",
+      "~k_parent": "6m"
     },
     "7m": {
-      "key": "root.imports.icons[13]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "7l"
     },
     "7n": {
-      "key": "root.imports.icons[13].icons",
-      "~k_parent": "7m"
+      "key": "root.imports.icons[18]",
+      "~k_parent": "6m"
     },
     "7o": {
-      "key": "root.imports.icons[14]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "7n"
     },
     "7p": {
-      "key": "root.imports.icons[14].icons",
-      "~k_parent": "7o"
+      "key": "root.imports.icons[19]",
+      "~k_parent": "6m"
     },
     "7q": {
-      "key": "root.imports.icons[15]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "7p"
     },
     "7r": {
-      "key": "root.imports.icons[15].icons",
-      "~k_parent": "7q"
+      "key": "root.imports.icons[20]",
+      "~k_parent": "6m"
     },
     "7s": {
-      "key": "root.imports.icons[16]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "7r"
     },
     "7t": {
-      "key": "root.imports.icons[16].icons",
-      "~k_parent": "7s"
+      "key": "root.imports.icons[21]",
+      "~k_parent": "6m"
     },
     "7u": {
-      "key": "root.imports.icons[17]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "7t"
     },
     "7v": {
-      "key": "root.imports.icons[17].icons",
-      "~k_parent": "7u"
+      "key": "root.imports.icons[22]",
+      "~k_parent": "6m"
     },
     "7w": {
-      "key": "root.imports.icons[18]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "7v"
     },
     "7x": {
-      "key": "root.imports.icons[18].icons",
-      "~k_parent": "7w"
+      "key": "root.imports.icons[23]",
+      "~k_parent": "6m"
     },
     "7y": {
-      "key": "root.imports.icons[19]",
-      "~k_parent": "6v"
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "7x"
     },
     "7z": {
-      "key": "root.imports.icons[19].icons",
-      "~k_parent": "7y"
+      "key": "root.imports.icons[24]",
+      "~k_parent": "6m"
     },
     "8a": {
-      "key": "root.imports.icons[25]",
-      "~k_parent": "6v"
+      "key": "root.imports.operators.client",
+      "~k_parent": "89"
     },
     "8b": {
-      "key": "root.imports.icons[25].icons",
+      "key": "root.imports.operators.client[0]",
       "~k_parent": "8a"
     },
     "8c": {
-      "key": "root.imports.icons[26]",
-      "~k_parent": "6v"
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "8a"
     },
     "8d": {
-      "key": "root.imports.icons[26].icons",
-      "~k_parent": "8c"
-    },
-    "8e": {
-      "key": "root.imports.icons[27]",
-      "~k_parent": "6v"
-    },
-    "8f": {
-      "key": "root.imports.icons[27].icons",
-      "~k_parent": "8e"
-    },
-    "8g": {
-      "key": "root.imports.requests",
-      "~k_parent": "5z"
-    },
-    "8h": {
-      "key": "root.imports.websockets",
-      "~k_parent": "5z"
-    },
-    "8i": {
-      "key": "root.imports.operators",
-      "~k_parent": "5z"
-    },
-    "8j": {
-      "key": "root.imports.operators.client",
-      "~k_parent": "8i"
-    },
-    "8k": {
-      "key": "root.imports.operators.client[0]",
-      "~k_parent": "8j"
-    },
-    "8l": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "8j"
-    },
-    "8m": {
       "key": "root.imports.operators.server",
-      "~k_parent": "8i"
+      "~k_parent": "89"
     }
   },
   "layer-order.css": "/* Generated by Lowdefy build */\n@layer theme, base, antd, components, utilities;\n",
@@ -2037,8 +1984,6 @@
   "plugins/actions.js": "import { Link as Link } from '@lowdefy/actions-core/actions';\nimport { SetDarkMode as SetDarkMode } from '@lowdefy/actions-core/actions';\nexport default {\n  Link,\n  SetDarkMode,\n  };",
   "plugins/agents.js": "export default {\n  };",
   "plugins/auth/adapters.js": "export default {\n  };",
-  "plugins/auth/callbacks.js": "export default {\n  };",
-  "plugins/auth/events.js": "export default {\n  };",
   "plugins/auth/providers.js": "export default {\n  };",
   "plugins/blockMetas.json": {
     "Box": {
@@ -6514,168 +6459,162 @@
         "originalTypeName": "Link",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "4x"
+        "~k": "4s"
       },
       "SetDarkMode": {
         "originalTypeName": "SetDarkMode",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "4y"
+        "~k": "4t"
       },
-      "~k": "4w"
+      "~k": "4r"
     },
     "agents": {
-      "~k": "4z"
+      "~k": "4u"
     },
     "auth": {
       "adapters": {
-        "~k": "51"
-      },
-      "callbacks": {
-        "~k": "52"
-      },
-      "events": {
-        "~k": "53"
+        "~k": "4w"
       },
       "providers": {
-        "~k": "54"
+        "~k": "4x"
       },
-      "~k": "50"
+      "~k": "4v"
     },
     "blocks": {
       "Box": {
         "originalTypeName": "Box",
         "package": "@lowdefy/blocks-basic",
         "count": 9,
-        "~k": "56"
+        "~k": "4z"
       },
       "Title": {
         "originalTypeName": "Title",
         "package": "@lowdefy/blocks-basic",
         "count": 8,
-        "~k": "57"
+        "~k": "50"
       },
       "Result": {
         "originalTypeName": "Result",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "58"
+        "~k": "51"
       },
       "Button": {
         "originalTypeName": "Button",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "59"
+        "~k": "52"
       },
       "Anchor": {
         "originalTypeName": "Anchor",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5a"
+        "~k": "53"
       },
       "DangerousHtml": {
         "originalTypeName": "DangerousHtml",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5b"
+        "~k": "54"
       },
       "Html": {
         "originalTypeName": "Html",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5c"
+        "~k": "55"
       },
       "Icon": {
         "originalTypeName": "Icon",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5d"
+        "~k": "56"
       },
       "Img": {
         "originalTypeName": "Img",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5e"
+        "~k": "57"
       },
       "List": {
         "originalTypeName": "List",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5f"
+        "~k": "58"
       },
       "Span": {
         "originalTypeName": "Span",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5g"
+        "~k": "59"
       },
       "Throw": {
         "originalTypeName": "Throw",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "5h"
+        "~k": "5a"
       },
       "ProgressBar": {
         "originalTypeName": "ProgressBar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5i"
+        "~k": "5b"
       },
       "Skeleton": {
         "originalTypeName": "Skeleton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5j"
+        "~k": "5c"
       },
       "SkeletonAvatar": {
         "originalTypeName": "SkeletonAvatar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5k"
+        "~k": "5d"
       },
       "SkeletonButton": {
         "originalTypeName": "SkeletonButton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5l"
+        "~k": "5e"
       },
       "SkeletonInput": {
         "originalTypeName": "SkeletonInput",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5m"
+        "~k": "5f"
       },
       "SkeletonParagraph": {
         "originalTypeName": "SkeletonParagraph",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5n"
+        "~k": "5g"
       },
       "Spinner": {
         "originalTypeName": "Spinner",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "5o"
+        "~k": "5h"
       },
       "Message": {
         "originalTypeName": "Message",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "5p"
+        "~k": "5i"
       },
-      "~k": "55"
+      "~k": "4y"
     },
     "connections": {
-      "~k": "5q"
+      "~k": "5j"
     },
     "requests": {
-      "~k": "5r"
+      "~k": "5k"
     },
     "websockets": {
-      "~k": "5s"
+      "~k": "5l"
     },
     "api": {
-      "~k": "5t"
+      "~k": "5m"
     },
     "operators": {
       "client": {
@@ -6683,21 +6622,21 @@
           "originalTypeName": "_not",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "5w"
+          "~k": "5p"
         },
         "_type": {
           "originalTypeName": "_type",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "5x"
+          "~k": "5q"
         },
-        "~k": "5v"
+        "~k": "5o"
       },
       "server": {
-        "~k": "5y"
+        "~k": "5r"
       },
-      "~k": "5u"
+      "~k": "5n"
     },
-    "~k": "4v"
+    "~k": "4q"
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -13,19 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { get, set } from '@lowdefy/helpers';
 
-function addUserFieldsToSession({ session, token, authConfig, user }) {
-  if (token) {
-    Object.keys(authConfig.userFields).forEach((fieldName) => {
-      set(session.user, fieldName, get(token, fieldName));
-    });
-  }
-  if (user) {
-    Object.keys(authConfig.userFields).forEach((fieldName) => {
-      set(session.user, fieldName, get(user, fieldName));
-    });
-  }
+import isAuthConfigured from './isAuthConfigured.js';
+
+function setAuthConfigured({ components }) {
+  components.auth.configured = isAuthConfigured({ components });
+  return components;
 }
 
-export default addUserFieldsToSession;
+export default setAuthConfigured;

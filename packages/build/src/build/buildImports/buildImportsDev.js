@@ -28,8 +28,6 @@ function getPluginPackages({ components }) {
   getPackages(components.types.actions);
   getPackages(components.types.agents);
   getPackages(components.types.auth.adapters);
-  getPackages(components.types.auth.callbacks);
-  getPackages(components.types.auth.events);
   getPackages(components.types.auth.providers);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
@@ -58,8 +56,6 @@ function buildImportsDev({ components, context }) {
     agents: buildImportClassDev({ pluginPackages, map: context.typesMap.agents }),
     auth: {
       adapters: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.adapters }),
-      callbacks: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.callbacks }),
-      events: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.events }),
       providers: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.providers }),
     },
     blocks,
