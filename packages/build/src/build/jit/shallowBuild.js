@@ -179,6 +179,10 @@ async function shallowBuild(options) {
       JSON.stringify([...context.connectionIds].sort())
     );
     await context.writeBuildArtifact(
+      'websocketIds.json',
+      JSON.stringify([...context.websocketIds].sort())
+    );
+    await context.writeBuildArtifact(
       'skeletonSourceFiles.json',
       JSON.stringify([...skeletonSourceFiles].sort())
     );
