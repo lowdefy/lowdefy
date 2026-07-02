@@ -48,6 +48,13 @@ function Page({ auth, config, lowdefy }) {
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
         const res = await fetch(`${router.basePath}/api/page/${targetPageId}`);
+        if (res.status === 401) {
+          // Logged-out navigation to a protected page - full load to the
+          // login page so it can return here after sign-in.
+          const { redirect } = await res.json();
+          window.location.assign(redirect ?? `${router.basePath}/404`);
+          return;
+        }
         if (!res.ok) {
           if (targetPageId !== '404') {
             router.replace({ pathname: '/404' });

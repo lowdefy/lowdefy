@@ -88,7 +88,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
   lowdefy.home = config.rootConfig.home || {};
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
-  lowdefy.user = auth?.session?.user ?? null;
+  lowdefy.user = auth?.user ?? null;
 
   return lowdefy;
 }

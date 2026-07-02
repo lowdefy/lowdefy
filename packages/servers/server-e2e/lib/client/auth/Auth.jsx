@@ -24,19 +24,24 @@ function e2eNotSupported() {
   throw new Error('Sign-in and sign-out are not supported in e2e testing.');
 }
 
-function Auth({ children, session }) {
+function Auth({ children, user }) {
   const auth = {
     authConfig,
-    session,
+    user,
+    // Matches the BetterAuth client contract: { data, error }.
     getSession: async () => {
       const res = await fetch('/api/auth/session');
       if (res.ok) {
-        return res.json();
+        return { data: await res.json(), error: null };
       }
-      return null;
+      return { data: null, error: null };
     },
-    signIn: e2eNotSupported,
+    signInEmail: e2eNotSupported,
+    signInMagicLink: e2eNotSupported,
+    signInOauth2: e2eNotSupported,
+    signInSocial: e2eNotSupported,
     signOut: e2eNotSupported,
+    signUpEmail: e2eNotSupported,
   };
   return children(auth);
 }

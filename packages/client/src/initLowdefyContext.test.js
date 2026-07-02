@@ -19,7 +19,7 @@ import initLowdefyContext from './initLowdefyContext.js';
 function baseArgs(overrides = {}) {
   const lowdefy = {};
   return {
-    auth: { session: null },
+    auth: { user: null },
     Components: { Link: () => null },
     config: {
       pageConfig: { pageId: 'home' },

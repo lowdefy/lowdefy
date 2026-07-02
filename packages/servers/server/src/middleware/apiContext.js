@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, resolveAuthentication } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -26,7 +26,7 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
-import getSession from '../../lib/server/auth/session.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
@@ -75,10 +75,14 @@ function apiContext() {
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
     if (!c.req.path.includes('/api/auth')) {
-      context.session = await getSession(c);
+      // resolveAuthentication is the single writer of context.user.
+      await resolveAuthentication(context, {
+        auth: getAuth({ logger: context.logger }),
+        headers: c.req.raw.headers,
+      });
       // Set Sentry user context for authenticated requests
       setSentryUser({
-        user: context.session?.user,
+        user: context.user,
         sentryConfig: loggerConfig.sentry,
       });
     }

@@ -1,0 +1,47 @@
+id: dashboard
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: dashboard_title
+    type: Title
+    properties:
+      content: Dashboard (protected)
+      level: 2
+  - id: user_details
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>You can only see this page while signed in.</p>
+            <ul>
+              <li><b>id:</b> {{ user.id }}</li>
+              <li><b>name:</b> {{ user.name }}</li>
+              <li><b>email:</b> {{ user.email }}</li>
+              <li><b>emailVerified:</b> {{ user.emailVerified }}</li>
+              <li><b>roles:</b> {{ user.roles | dump }}</li>
+            </ul>
+          on:
+            user:
+              _user: true
+  - id: refresh_session_button
+    type: Button
+    properties:
+      title: Refresh session (UpdateSession)
+      type: default
+    events:
+      onClick:
+        # Bypasses the cookie cache - a live re-resolve of the session.
+        - id: update_session
+          type: UpdateSession
+  - id: logout_button
+    type: Button
+    properties:
+      title: Log out
+    events:
+      onClick:
+        - id: logout
+          type: Logout

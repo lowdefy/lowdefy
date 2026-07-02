@@ -49,6 +49,13 @@ async function fetchPageConfig(url) {
   if (res.status === 404) {
     return null;
   }
+  if (res.status === 401) {
+    // Logged-out navigation to a protected page - full load to the login
+    // page so it can return here after sign-in.
+    const { redirect } = await res.json();
+    window.location.assign(redirect ?? '/404');
+    return new Promise(() => {});
+  }
   const data = await res.json();
   if (data?.buildError) {
     return data;

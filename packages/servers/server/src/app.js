@@ -18,7 +18,6 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
 import { timeout } from 'hono/timeout';
-import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -31,7 +30,7 @@ import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import endpointsHandler from './routes/endpoints.js';
-import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
+import getAuth from '../lib/server/auth/getAuth.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
@@ -78,14 +77,13 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
 
   if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
+    // Construct the BetterAuth instance at startup so config errors fail
+    // boot instead of the first request.
+    getAuth({ logger });
   }
 
   app.use('/api/*', apiContext());
-  app.use('/api/auth/*', authMiddleware());
+  app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
   app.get('/api/cron/*', cronHandler);

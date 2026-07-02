@@ -16,7 +16,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, resolveAuthentication } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -27,7 +27,8 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
-import getSession from '../../lib/server/auth/session.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
+import getMockUser from '../../lib/server/auth/getMockUser.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
@@ -99,7 +100,18 @@ function apiContext() {
     context.logger = createLogger();
     context.handleError = createHandleError({ context });
     if (!c.req.path.includes('/api/auth')) {
-      context.session = await getSession(c);
+      const mockUser = getMockUser();
+      if (mockUser) {
+        // The mock user is a pre-resolved caller - it substitutes for the
+        // whole resolveAuthentication step and its roles are authoritative.
+        context.user = mockUser;
+      } else {
+        // resolveAuthentication is the single writer of context.user.
+        await resolveAuthentication(context, {
+          auth: getAuth({ logger: context.logger }),
+          headers: c.req.raw.headers,
+        });
+      }
     }
     createApiContext(context);
     logRequest({ context });

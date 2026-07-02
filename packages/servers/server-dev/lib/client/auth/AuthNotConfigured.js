@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 /* eslint-disable react/jsx-props-no-spreading */
 
 function authNotConfigured() {
@@ -22,9 +23,14 @@ function authNotConfigured() {
 function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
+    user: null,
     getSession: authNotConfigured,
-    signIn: authNotConfigured,
+    signInEmail: authNotConfigured,
+    signInMagicLink: authNotConfigured,
+    signInOauth2: authNotConfigured,
+    signInSocial: authNotConfigured,
     signOut: authNotConfigured,
+    signUpEmail: authNotConfigured,
   };
 
   return children(auth);

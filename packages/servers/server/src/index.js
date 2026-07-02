@@ -19,12 +19,6 @@ import { WebSocketServer } from 'ws';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
 
-// Auth.js v5 reads AUTH_URL but not NEXTAUTH_URL — alias the v4 variable
-// before any auth config loads so existing deployments keep working.
-if (process.env.NEXTAUTH_URL && !process.env.AUTH_URL) {
-  process.env.AUTH_URL = process.env.NEXTAUTH_URL;
-}
-
 initSentryServer();
 
 // Import after Sentry init so instrumentation observes the module graph.

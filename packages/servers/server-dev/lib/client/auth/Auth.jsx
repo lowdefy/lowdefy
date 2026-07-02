@@ -25,15 +25,15 @@ import { serializer } from '@lowdefy/helpers';
 // Client code imports the build JSON directly — Vite handles JSON imports;
 // the lib/build/*.js wrappers are server-only (they read from disk).
 // Deserialize to restore arrays from their ~arr build markers (providers
-// must be a real array for single-provider inference in createAuthMethods).
+// must be a real array for provider lookups in createAuthMethods).
 import rawAuthConfig from '../../../build/auth.json';
 
 const authConfig = serializer.deserialize(rawAuthConfig);
 
-function Auth({ children, session }) {
+function Auth({ children, user }) {
   if (authConfig.configured === true) {
     return (
-      <AuthConfigured serverSession={session} authConfig={authConfig}>
+      <AuthConfigured serverUser={user} authConfig={authConfig}>
         {(auth) => children(auth)}
       </AuthConfigured>
     );

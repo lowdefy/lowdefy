@@ -1,0 +1,92 @@
+name: auth-reference
+lowdefy: local
+
+# Reference app for the BetterAuth engine (auth-upgrade phase 1).
+# Exercises: email/password signup with email verification, magic link,
+# OAuth (Google), protected/public/role-gated pages, sign out, sessions.
+# See README.md for the full walkthrough and required environment variables.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  # Local dev sending: run Mailpit (see README) and point SMTP at it.
+  email:
+    from: auth-reference@localhost
+    provider:
+      type: smtp
+      properties:
+        host:
+          _secret: SMTP_HOST
+        port: 1025
+        secure: false
+
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+
+  account:
+    accountLinking:
+      enabled: true
+      trustedProviders: [google, emailAndPassword]
+
+  session:
+    expiresIn: 604800
+    updateAge: 86400
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - home
+    roles:
+      admin:
+        - admin
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+  # Uncomment to exercise the wrong-roles opaque /404 redirect and the
+  # pre-resolved dev caller (roles are authoritative; no engine runs):
+  # dev:
+  #   mockUser:
+  #     id: mock-user
+  #     email: mock@example.com
+  #     name: Mock User
+  #     roles: []
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/sessions.yaml
+  - _ref: pages/admin.yaml

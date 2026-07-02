@@ -26,7 +26,7 @@ import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getE2eSecrets from '../../lib/server/getE2eSecrets.js';
-import getSession from '../../lib/server/auth/session.js';
+import getUser from '../../lib/server/auth/getUser.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
@@ -73,7 +73,8 @@ function apiContext() {
     };
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
-    context.session = getSession(c);
+    // The cookie user is a pre-resolved caller substituting for resolveAuthentication.
+    context.user = getUser(c);
     createApiContext(context);
     logRequest({ context });
     c.set('lowdefyContext', context);

@@ -1,0 +1,59 @@
+id: signup
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: signup_title
+    type: Title
+    properties:
+      content: Create an account
+      level: 2
+  - id: name
+    type: TextInput
+    properties:
+      title: Name
+  - id: email
+    type: TextInput
+    properties:
+      title: Email
+  - id: password
+    type: PasswordInput
+    properties:
+      title: Password (min 8 characters)
+  - id: signup_button
+    type: Button
+    properties:
+      title: Sign up
+      block: true
+    events:
+      onClick:
+        # With requireEmailVerification the response carries no session -
+        # verification precedes sign-in.
+        - id: sign_up
+          type: Login
+          params:
+            signUp: true
+            name:
+              _state: name
+            email:
+              _state: email
+            password:
+              _state: password
+        - id: to_check_email
+          type: Link
+          params:
+            pageId: check-email
+  - id: login_link
+    type: Button
+    properties:
+      title: Already have an account? Log in
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_login
+          type: Link
+          params:
+            pageId: login

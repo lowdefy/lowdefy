@@ -47,7 +47,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
 }
 
 function App({ config }) {
-  const { rootConfig, session } = config;
+  const { rootConfig, user } = config;
 
   // Sentry DSN arrives at runtime via the embedded config (the server reads
   // SENTRY_DSN per process) — no build-time env inlining.
@@ -126,12 +126,12 @@ function App({ config }) {
         <AntdApp>
           <ThemeTokenResolver lowdefyRef={lowdefyRef}>
             <ErrorBoundary fullPage onError={handleError}>
-              <Auth session={session}>
+              <Auth user={user}>
                 {(auth) => {
-                  usageDataRef.current.user = auth.session?.hashed_id;
+                  usageDataRef.current.user = auth.user?.id;
                   // Set Sentry user context when auth changes
                   setSentryUser({
-                    user: auth.session,
+                    user: auth.user,
                     sentryConfig: loggerConfig.sentry,
                   });
                   return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;

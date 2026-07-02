@@ -14,22 +14,23 @@
   limitations under the License.
 */
 
-// E2E test-user injection: the session is read from the lowdefy_e2e_user
+// E2E test-user injection: the caller is read from the lowdefy_e2e_user
 // cookie (base64-encoded JSON user object) instead of a real auth engine.
-function getSession(c) {
+// The cookie user is pre-resolved - it substitutes for resolveAuthentication
+// and its roles are authoritative.
+function getUser(c) {
   const cookieHeader = c.req.header('cookie') ?? '';
   const match = cookieHeader.match(/lowdefy_e2e_user=([^;]+)/);
   if (!match) {
-    return undefined;
+    return null;
   }
 
   try {
     const decoded = Buffer.from(decodeURIComponent(match[1]), 'base64').toString();
-    const user = JSON.parse(decoded);
-    return { user };
+    return JSON.parse(decoded);
   } catch {
-    return undefined;
+    return null;
   }
 }
 
-export default getSession;
+export default getUser;

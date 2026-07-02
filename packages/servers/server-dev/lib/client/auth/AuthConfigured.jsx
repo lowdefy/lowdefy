@@ -17,14 +17,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useRef } from 'react';
-import {
-  authConfigManager,
-  getSession,
-  SessionProvider,
-  signIn,
-  signOut,
-  useSession,
-} from '@hono/auth-js/react';
+import { createAuthClient } from 'better-auth/react';
+import { genericOAuthClient, magicLinkClient } from 'better-auth/client/plugins';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -32,42 +26,55 @@ import rawLowdefyConfig from '../../../build/config.json';
 
 const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
-// @hono/auth-js/react configures its fetch paths through a module-level
-// manager instead of SessionProvider props.
-if (lowdefyConfig.basePath) {
-  authConfigManager.setConfig({ basePath: `${lowdefyConfig.basePath}/api/auth` });
-}
+const authClient = createAuthClient({
+  baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
+  plugins: [genericOAuthClient(), magicLinkClient()],
+});
 
-function Session({ children }) {
-  const wasAuthenticated = useRef(false);
-  const { data: session, status } = useSession();
-  wasAuthenticated.current = wasAuthenticated.current || status === 'authenticated';
+// The server resolves the caller per request and embeds it in the page
+// config, so the first render never flashes unauthenticated. The BetterAuth
+// client store takes over once its session fetch settles.
+function Session({ children, serverUser }) {
+  const { data: session, isPending } = authClient.useSession();
+  const wasAuthenticated = useRef(Boolean(serverUser));
 
   useEffect(() => {
-    if (wasAuthenticated.current && status === 'unauthenticated') {
+    if (session) {
+      wasAuthenticated.current = true;
+    }
+    // Reload after sign-out (or session revocation) so the server can apply
+    // the page auth fork - a protected page redirects to the login page.
+    if (wasAuthenticated.current && !isPending && !session) {
       window.location.reload();
     }
-  }, [status]);
+  }, [session, isPending]);
 
-  // If session is passed to SessionProvider from the server-rendered config
-  // we won't have a loading state here, but unauthenticated first loads do.
-  if (status === 'loading') {
-    return '';
+  if (isPending) {
+    return children(serverUser);
   }
-  return children(session);
+  // Roles resolve server-side; the base session carries none.
+  return children(session?.user ? { roles: [], ...session.user } : null);
 }
 
-function AuthConfigured({ authConfig, children, serverSession }) {
-  const auth = { authConfig, getSession, signIn, signOut };
+function AuthConfigured({ authConfig, children, serverUser }) {
+  const auth = {
+    authConfig,
+    getSession: ({ disableCookieCache } = {}) =>
+      authClient.getSession(disableCookieCache ? { query: { disableCookieCache: true } } : {}),
+    signInEmail: (params) => authClient.signIn.email(params),
+    signInMagicLink: (params) => authClient.signIn.magicLink(params),
+    signInOauth2: (params) => authClient.signIn.oauth2(params),
+    signInSocial: (params) => authClient.signIn.social(params),
+    signOut: () => authClient.signOut(),
+    signUpEmail: (params) => authClient.signUp.email(params),
+  };
   return (
-    <SessionProvider session={serverSession}>
-      <Session>
-        {(session) => {
-          auth.session = session;
-          return children(auth);
-        }}
-      </Session>
-    </SessionProvider>
+    <Session serverUser={serverUser}>
+      {(user) => {
+        auth.user = user;
+        return children(auth);
+      }}
+    </Session>
   );
 }
 
