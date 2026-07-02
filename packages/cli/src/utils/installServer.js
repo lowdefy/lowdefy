@@ -14,9 +14,17 @@
   limitations under the License.
 */
 
-import { installIfPackageJsonChanged, spawnProcess } from '@lowdefy/node-utils';
+import path from 'path';
+import { installIfPackageJsonChanged, spawnProcess, writeFile } from '@lowdefy/node-utils';
 
 async function installServer({ context, directory }) {
+  // Install with a hoisted (flat, real-directory) node_modules rather than pnpm's default isolated
+  // layout. The isolated layout symlinks packages into a .pnpm store, and those symlinks do not
+  // survive being copied into a Vercel Build Output function (`lowdefy vercel-output`) — the server
+  // would fail at runtime with "Cannot find package 'hono'". A local .npmrc only sets node-linker,
+  // so registry/auth settings from parent .npmrc files still apply.
+  await writeFile(path.join(directory, '.npmrc'), 'node-linker=hoisted\n');
+
   const installed = await installIfPackageJsonChanged({
     directory,
     install: async () => {
