@@ -14,36 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'ImpersonateUser',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'StopImpersonating',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+import { jest } from '@jest/globals';
+import StopImpersonating from './StopImpersonating.js';
+
+const mockStopImpersonating = jest.fn();
+const methods = { stopImpersonating: mockStopImpersonating };
+
+test('StopImpersonating calls the stopImpersonating method with no params', async () => {
+  await StopImpersonating({ methods, params: undefined });
+  expect(mockStopImpersonating.mock.calls).toEqual([[]]);
+});

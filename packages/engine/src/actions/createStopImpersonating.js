@@ -14,36 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'ImpersonateUser',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'StopImpersonating',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+function createStopImpersonating({ context }) {
+  return function stopImpersonating(params) {
+    return context._internal.lowdefy._internal.auth.stopImpersonating(params);
+  };
+}
+
+export default createStopImpersonating;

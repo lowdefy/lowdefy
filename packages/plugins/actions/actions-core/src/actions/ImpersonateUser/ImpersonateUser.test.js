@@ -14,36 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'ImpersonateUser',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetActiveOrganization',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'StopImpersonating',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+import { jest } from '@jest/globals';
+import ImpersonateUser from './ImpersonateUser.js';
+
+const mockImpersonateUser = jest.fn();
+const methods = { impersonateUser: mockImpersonateUser };
+
+test('ImpersonateUser passes params to the impersonateUser method', async () => {
+  await ImpersonateUser({ methods, params: { userId: 'user-1' } });
+  expect(mockImpersonateUser.mock.calls).toEqual([[{ userId: 'user-1' }]]);
+});

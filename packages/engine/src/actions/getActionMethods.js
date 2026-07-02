@@ -27,6 +27,7 @@ import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
 import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
+import createImpersonateUser from './createImpersonateUser.js';
 import createLink from './createLink.js';
 import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
@@ -39,6 +40,7 @@ import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
 import createSignUp from './createSignUp.js';
+import createStopImpersonating from './createStopImpersonating.js';
 import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
 import createUnsubscribe from './createUnsubscribe.js';
@@ -61,6 +63,7 @@ function getActionMethods(props) {
     getState: createGetState(props),
     getUrlQuery: createGetUrlQuery(props),
     getUser: createGetUser(props),
+    impersonateUser: createImpersonateUser(props),
     link: createLink(props),
     login: createLogin(props),
     logout: createLogout(props),
@@ -72,6 +75,7 @@ function getActionMethods(props) {
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
     signUp: createSignUp(props),
+    stopImpersonating: createStopImpersonating(props),
     subscribe: createSubscribe(props),
     translate: createTranslate(props),
     unsubscribe: createUnsubscribe(props),

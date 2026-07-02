@@ -19,6 +19,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
+  adminClient,
   genericOAuthClient,
   magicLinkClient,
   organizationClient,
@@ -32,7 +33,7 @@ const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
-  plugins: [genericOAuthClient(), magicLinkClient(), organizationClient()],
+  plugins: [adminClient(), genericOAuthClient(), magicLinkClient(), organizationClient()],
 });
 
 // The server resolves the caller per request and embeds it in the page
@@ -87,6 +88,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       });
       return response.json();
     },
+    impersonateUser: (params) => authClient.admin.impersonateUser(params),
     setActiveOrganization: (params) => authClient.organization.setActive(params),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
@@ -94,6 +96,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
+    stopImpersonating: () => authClient.admin.stopImpersonating(),
   };
   return (
     <Session serverUser={serverUser}>
