@@ -1,0 +1,74 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import callPluginEndpoint from './support/callPluginEndpoint.js';
+
+function splitRoles(role) {
+  const roles = type.isArray(role) ? role : [role];
+  return roles
+    .flatMap((entry) => String(entry).split(','))
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+async function UpdateMemberRoles({ acting, auth, properties }) {
+  const { memberId, organizationId, role } = properties;
+  if (type.isNone(memberId)) {
+    throw new Error('UpdateMemberRoles requires a "memberId" property.');
+  }
+  if (type.isNone(role)) {
+    throw new Error('UpdateMemberRoles requires a "role" property.');
+  }
+
+  // At better-auth 1.6.23, updateMemberRole's "cannot leave the organization
+  // without an owner" check only fires when the updater edits their own row.
+  // The step acts with a virtual owner session, so demoting the LAST real owner
+  // would slip through - guard here, mirroring BetterAuth's
+  // YOU_CANNOT_LEAVE_THE_ORGANIZATION_WITHOUT_AN_OWNER semantics.
+  const { adapter } = await auth.$context;
+  const member = await adapter.findOne({
+    model: 'member',
+    where: [{ field: 'id', value: memberId }],
+  });
+  if (!type.isNone(member)) {
+    const currentRoles = splitRoles(member.role);
+    const newRoles = splitRoles(role);
+    if (currentRoles.includes('owner') && !newRoles.includes('owner')) {
+      const members = await adapter.findMany({
+        model: 'member',
+        where: [{ field: 'organizationId', value: member.organizationId }],
+      });
+      const ownerCount = (members ?? []).filter((row) =>
+        splitRoles(row.role).includes('owner')
+      ).length;
+      if (ownerCount <= 1) {
+        throw new Error('You cannot leave the organization without an owner.');
+      }
+    }
+  }
+
+  return callPluginEndpoint({
+    acting,
+    auth,
+    body: { memberId, organizationId, role },
+    endpointKey: 'updateMemberRole',
+    pluginId: 'organization',
+  });
+}
+
+export default UpdateMemberRoles;
