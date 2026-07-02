@@ -16,6 +16,8 @@
 
 import { spawn } from 'child_process';
 
+import warnAuthUrlPortMismatch from './warnAuthUrlPortMismatch.mjs';
+
 function createStdErrLineHandler({ context }) {
   const port = context.options.port;
   return function stdErrLineHandler(line) {
@@ -31,6 +33,7 @@ function createStdErrLineHandler({ context }) {
 
 function startServer(context) {
   context.shutdownServer();
+  warnAuthUrlPortMismatch({ context });
 
   const devServer = spawn('node', [context.bin.vite, '--port', String(context.options.port), '--strictPort'], {
     stdio: ['ignore', 'inherit', 'pipe'],

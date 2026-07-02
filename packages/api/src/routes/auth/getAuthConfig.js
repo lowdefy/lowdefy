@@ -22,11 +22,12 @@ import createCallbacks from './callbacks/createCallbacks.js';
 import createEvents from './events/createEvents.js';
 import createLogger from './createLogger.js';
 import createProviders from './createProviders.js';
+import resolveCookies from './resolveCookies.js';
 
 const authConfigCache = {};
 let initialized = false;
 
-function getAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
+function getAuthConfig({ appMeta, authJson, dev, logger, plugins, secrets }) {
   if (initialized) return authConfigCache;
 
   const operatorsParser = new ServerParser({
@@ -55,7 +56,7 @@ function getAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
   authConfigCache.pages = authConfig.authPages;
   authConfigCache.session = authConfig.session;
   authConfigCache.theme = authConfig.theme;
-  authConfigCache.cookies = authConfig?.advanced?.cookies;
+  authConfigCache.cookies = resolveCookies({ appMeta, authConfig, dev });
   // Auth.js v5 reads AUTH_SECRET from env but not NEXTAUTH_SECRET — map the
   // v4 variable here so existing deployments keep working without env changes.
   authConfigCache.secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
