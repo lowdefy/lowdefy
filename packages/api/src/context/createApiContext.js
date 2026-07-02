@@ -19,8 +19,8 @@ import createReadConfigFile from './createReadConfigFile.js';
 import resolveLocale from './resolveLocale.js';
 
 function createApiContext(context) {
-  context.user = context?.session?.user;
-
+  // context.user is written by resolveAuthentication (or a pre-resolved
+  // dev/e2e caller) before this runs - never assigned here.
   if (context.i18n?.defaultLocale) {
     const active = resolveLocale({ i18n: context.i18n, headers: context.headers });
     context.i18n = { ...context.i18n, active };

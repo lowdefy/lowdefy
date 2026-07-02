@@ -14,18 +14,30 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
-async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
+// Returns a status object so the page route can fork on the auth outcome:
+// - ok: render the page.
+// - not_found and unauthorized both collapse to the opaque /404 redirect -
+//   wrong roles never reveal that the page exists.
+// - unauthenticated: a logged-out human gets the authPages.signIn redirect
+//   with a callbackUrl back to the requested page.
+async function getPageConfig({ authorize, readConfigFile, user }, { pageId }) {
   const pageConfig = await readConfigFile(`pages/${pageId}.json`);
-  if (pageConfig && authorize(pageConfig)) {
+  if (!pageConfig) {
+    return { status: 'not_found' };
+  }
+  if (authorize(pageConfig)) {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
     // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
     // are made enumerable again for JSON transfer to client
-    return serializer.serialize(rest);
+    return { status: 'ok', pageConfig: serializer.serialize(rest) };
   }
-  return null;
+  if (type.isNone(user)) {
+    return { status: 'unauthenticated' };
+  }
+  return { status: 'unauthorized' };
 }
 
 export default getPageConfig;

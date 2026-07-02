@@ -32,11 +32,11 @@ function testContext({
   },
   readConfigFile,
   secrets = {},
-  session,
+  user = null,
 } = {}) {
   return {
     appMeta,
-    authorize: createAuthorize({ session }),
+    authorize: createAuthorize({ user }),
     config,
     connections,
     handleError: async (error) => {
@@ -47,9 +47,8 @@ function testContext({
     operators,
     readConfigFile,
     secrets,
-    session,
     steps: {},
-    user: session?.user,
+    user,
   };
 }
 

@@ -32,7 +32,7 @@ function createTestContext() {
   const context = testContext({
     operators: operatorsServer,
     logger,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';

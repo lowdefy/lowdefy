@@ -77,7 +77,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -107,7 +107,7 @@ test('callAgent throws ConfigError when agent does not exist', async () => {
   const context = testContext({
     logger,
     readConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = {};
 
@@ -149,7 +149,7 @@ test('callAgent throws ConfigError when agent type not found in registry', async
     connections: {
       SomeConnection: { create: jest.fn().mockReturnValue({}), requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = {};
 
@@ -189,7 +189,7 @@ test('callAgent throws when connection type not found in registry', async () => 
     logger,
     readConfigFile,
     connections: {},
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
 
@@ -253,7 +253,7 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -315,7 +315,7 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -378,7 +378,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -423,7 +423,7 @@ test('callAgent propagates error when connection.create throws', async () => {
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
 
@@ -462,7 +462,7 @@ test('callAgent propagates error when resolver throws', async () => {
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -519,7 +519,7 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -566,7 +566,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -607,7 +607,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { sub: 'user_abc', id: 'user_id_fallback' } },
+    user: { sub: 'user_abc', id: 'user_id_fallback' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -655,7 +655,7 @@ test('callAgent passes userId from context.user.id when sub is not present', asy
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_456' } },
+    user: { id: 'user_456' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -748,7 +748,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -792,7 +792,7 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -835,7 +835,7 @@ test('callAgent evaluates operators in agent properties before passing to resolv
     connections: {
       Anthropic: { create: mockCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -886,7 +886,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
         return payload;
       },
     },
-    session: { user: { sub: 'user_xyz' } },
+    user: { sub: 'user_xyz' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
@@ -950,7 +950,7 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
       Anthropic: { create: mockCreate, requests: {} },
       McpServer: { create: mockMcpCreate, requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 

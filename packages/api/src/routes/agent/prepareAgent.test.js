@@ -62,7 +62,7 @@ function createContext() {
     connections: {
       Anthropic: { create: jest.fn().mockReturnValue({ provider: 'mock-provider' }), requests: {} },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
   context.evaluateOperators = createEvaluateOperators(context);
