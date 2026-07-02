@@ -1,9 +1,10 @@
 name: auth-reference
 lowdefy: local
 
-# Reference app for the BetterAuth engine (auth-upgrade phase 1).
+# Reference app for the BetterAuth engine (auth-upgrade phases 1-2).
 # Exercises: email/password signup with email verification, magic link,
-# OAuth (Google), protected/public/role-gated pages, sign out, sessions.
+# OAuth (Google), protected/public/role-gated pages, sign out, sessions,
+# and auth hooks (user.create.before, session.create.after, email.verified).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -72,6 +73,20 @@ auth:
     signUp: /signup
     verifyEmail: /verify-email
 
+  # Each entry binds an auth lifecycle point to an InternalApi endpoint.
+  # The endpoint's routine is the hook body; it runs in a system context
+  # (_user empty, subject in _payload, _secret working).
+  hooks:
+    - id: normalize-signup
+      point: user.create.before
+      endpointId: normalize-signup
+    - id: audit-login
+      point: session.create.after
+      endpointId: audit-login
+    - id: on-email-verified
+      point: email.verified
+      endpointId: on-email-verified
+
   # Uncomment to exercise the wrong-roles opaque /404 redirect and the
   # pre-resolved dev caller (roles are authoritative; no engine runs):
   # dev:
@@ -80,6 +95,22 @@ auth:
   #     email: mock@example.com
   #     name: Mock User
   #     roles: []
+
+# The hooks write an audit trail here; the same database as auth so no
+# extra infrastructure is needed for the walkthrough.
+connections:
+  - id: audit_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: hook-audit
+      write: true
+
+api:
+  - _ref: api/normalize-signup.yaml
+  - _ref: api/audit-login.yaml
+  - _ref: api/on-email-verified.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -90,3 +121,4 @@ pages:
   - _ref: pages/dashboard.yaml
   - _ref: pages/sessions.yaml
   - _ref: pages/admin.yaml
+  - _ref: pages/hook-audit.yaml

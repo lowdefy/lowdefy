@@ -1,0 +1,27 @@
+# Bound to email.verified (see auth.hooks in lowdefy.yaml) - a synthetic
+# point backed by BetterAuth's emailVerification.afterEmailVerification
+# callback, not a database hook. It fires after the user write, so a hook
+# here reacts (or updates explicitly); an inline :return is ignored.
+# _payload is { user } - the user whose email just became verified.
+id: on-email-verified
+type: InternalApi
+routine:
+  - ':try':
+      - id: write_audit
+        type: MongoDBInsertOne
+        connectionId: audit_db
+        properties:
+          doc:
+            event: email.verified
+            userId:
+              _payload: user.id
+            email:
+              _payload: user.email
+            payloadKeys:
+              _object.keys:
+                _payload: true
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'on-email-verified hook failed to write the audit row'

@@ -1,0 +1,29 @@
+# Bound to user.create.before (see auth.hooks in lowdefy.yaml).
+# _payload is { user } - the record BetterAuth is about to write.
+id: normalize-signup
+type: InternalApi
+routine:
+  # Veto: a :reject in a before hook aborts the write end to end - no user
+  # row is written and the signup call fails with the reject message.
+  - ':if':
+      _regex:
+        pattern: '@blocked\.example$'
+        on:
+          _payload: user.email
+    ':then':
+      - ':reject': Signups from blocked.example are not allowed.
+  # Replace the record BetterAuth writes - the plain :return value is the
+  # new record (the adapter wraps it as { data }).
+  - ':if':
+      _type:
+        type: string
+        on:
+          _payload: user.name
+    ':then':
+      - ':return':
+          _object.assign:
+            - _payload: user
+            - name:
+                _string.toUpperCase:
+                  _payload: user.name
+  # No :return - fall through, record written unchanged.

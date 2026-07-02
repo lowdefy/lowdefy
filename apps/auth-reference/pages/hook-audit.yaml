@@ -1,0 +1,45 @@
+id: hook-audit
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+requests:
+  - id: fetch_audit
+    type: MongoDBFind
+    connectionId: audit_db
+    properties:
+      query: {}
+      options:
+        sort:
+          at: -1
+        limit: 20
+events:
+  onInit:
+    - id: fetch
+      type: Request
+      params: fetch_audit
+blocks:
+  - id: hook_audit_title
+    type: Title
+    properties:
+      content: Hook audit trail (protected)
+      level: 2
+  - id: hook_audit_intro
+    type: Html
+    properties:
+      html: |
+        <p>The last 20 rows the auth hooks wrote to the <code>hook-audit</code>
+        collection - <code>session.create.after</code> rows from the
+        audit-login hook and <code>email.verified</code> rows from the
+        on-email-verified hook.</p>
+  - id: hook_audit_rows
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ rows | dump(2) }}</pre>
+          on:
+            rows:
+              _request: fetch_audit
