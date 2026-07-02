@@ -37,6 +37,7 @@ test('buildAuth returns unconfigured defaults when auth is absent', () => {
       configured: false,
       pages: { roles: {} },
       providers: [],
+      roles: [],
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -57,6 +58,7 @@ test('buildAuth returns unconfigured defaults when there are no pages', () => {
       configured: false,
       pages: { roles: {} },
       providers: [],
+      roles: [],
     },
   });
 });
@@ -118,7 +120,13 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
     websockets: { roles: {} },
     pages: { roles: {} },
     providers: [],
+    roles: [],
     hooks: [],
+    organizations: {
+      policy: 'pinned',
+      org: 'default',
+      signup: 'invite-only',
+    },
     authPages: {
       signIn: '/login',
       signUp: '/signup',

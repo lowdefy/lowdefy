@@ -1086,6 +1086,43 @@ export default {
             },
           },
         },
+        organizations: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            policy: {
+              type: 'string',
+              enum: ['pinned', 'tenant'],
+              errorMessage: {
+                type: 'Auth "organizations.policy" should be a string.',
+                enum: 'Auth "organizations.policy" should be "pinned" or "tenant".',
+              },
+            },
+            org: {
+              type: 'string',
+              description: 'Organization slug the deployment pins as the active organization.',
+              errorMessage: {
+                type: 'Auth "organizations.org" should be a string.',
+              },
+            },
+            signup: {
+              type: 'string',
+              enum: ['invite-only', 'open'],
+              errorMessage: {
+                type: 'Auth "organizations.signup" should be a string.',
+                enum: 'Auth "organizations.signup" should be "invite-only" or "open".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "organizations" should be an object.',
+            additionalProperties:
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org" and "signup".',
+          },
+        },
         dev: {
           type: 'object',
           additionalProperties: false,

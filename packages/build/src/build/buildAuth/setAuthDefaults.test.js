@@ -60,6 +60,11 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
       websockets: { roles: {} },
       providers: [],
       hooks: [],
+      organizations: {
+        policy: 'pinned',
+        org: 'default',
+        signup: 'invite-only',
+      },
       authPages: {
         signIn: '/login',
         signUp: '/signup',
@@ -98,6 +103,46 @@ test('setAuthDefaults does not overwrite explicitly provided values', () => {
   expect(res.auth.session.updateAge).toBe(86400);
   expect(res.auth.rateLimit.enabled).toBe(false);
   expect(res.auth.rateLimit.window).toBe(60);
+});
+
+test('setAuthDefaults pins the auto-seeded default org with invite-only signup', () => {
+  const components = {
+    auth: {
+      configured: true,
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations).toEqual({
+    policy: 'pinned',
+    org: 'default',
+    signup: 'invite-only',
+  });
+});
+
+test('setAuthDefaults does not overwrite explicit organizations values under pinned', () => {
+  const components = {
+    auth: {
+      configured: true,
+      organizations: { policy: 'pinned', org: 'team-portal', signup: 'open' },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations).toEqual({
+    policy: 'pinned',
+    org: 'team-portal',
+    signup: 'open',
+  });
+});
+
+test('setAuthDefaults sets no org or signup defaults under the tenant policy', () => {
+  const components = {
+    auth: {
+      configured: true,
+      organizations: { policy: 'tenant' },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations).toEqual({ policy: 'tenant' });
 });
 
 test('setAuthDefaults does not add emailAndPassword or magicLink blocks when absent', () => {

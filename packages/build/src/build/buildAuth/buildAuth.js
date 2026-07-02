@@ -20,6 +20,7 @@ import buildApiAuth from './buildApiAuth.js';
 import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildPageAuth from './buildPageAuth.js';
+import buildRoleCatalog from './buildRoleCatalog.js';
 import buildTrustedProviders from './buildTrustedProviders.js';
 import buildWebsocketAuth from './buildWebsocketAuth.js';
 import setAuthConfigured from './setAuthConfigured.js';
@@ -30,6 +31,7 @@ function buildAuth({ components, context }) {
   validateAuthConfig({ components, context });
   setAuthConfigured({ components, context });
   setAuthDefaults({ components, context });
+  buildRoleCatalog({ components, context });
   buildTrustedProviders({ components, context });
   buildAuthHooks({ components, context });
   buildApiAuth({ components, context });

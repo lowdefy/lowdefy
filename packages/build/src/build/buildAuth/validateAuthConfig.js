@@ -113,6 +113,23 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  // An explicitly pinned deployment is the multi-app case, where silently
+  // pinning the auto-seeded "default" org would point the app at the wrong
+  // organization - the slug must be stated. An omitted block (or omitted
+  // policy) is the single-org app, which defaults to the seeded org.
+  if (auth.organizations?.policy === 'pinned' && type.isNone(auth.organizations.org)) {
+    throw new ConfigError(
+      'Auth "organizations.org" is required when "organizations.policy" is "pinned". Set the organization slug the deployment pins.',
+      { configKey: auth.organizations['~k'] ?? configKey }
+    );
+  }
+  if (auth.organizations?.policy === 'tenant' && !type.isNone(auth.organizations.org)) {
+    throw new ConfigError(
+      'Auth "organizations.org" applies only to the "pinned" policy - under "tenant" organizations are created per user at first session.',
+      { configKey: auth.organizations['~k'] ?? configKey }
+    );
+  }
+
   validateMutualExclusivity({ components, entity: 'api' });
   validateMutualExclusivity({ components, entity: 'pages' });
   validateMutualExclusivity({ components, entity: 'websockets' });

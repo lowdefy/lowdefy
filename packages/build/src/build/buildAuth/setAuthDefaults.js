@@ -46,6 +46,17 @@ function setAuthDefaults({ components }) {
 
   setDefault(auth, 'hooks', []);
 
+  // Organizations are always on - an app that sets nothing gets one
+  // auto-seeded organization (slug "default") pinned as the active org,
+  // with the safe invite-only signup policy. Under "tenant" there is no
+  // pinned org and signup is inherently open, so neither key defaults.
+  setDefault(auth, 'organizations', {});
+  setDefault(auth.organizations, 'policy', 'pinned');
+  if (auth.organizations.policy === 'pinned') {
+    setDefault(auth.organizations, 'org', 'default');
+    setDefault(auth.organizations, 'signup', 'invite-only');
+  }
+
   setDefault(auth, 'authPages', {});
   setDefault(auth.authPages, 'signIn', '/login');
   setDefault(auth.authPages, 'signUp', '/signup');
