@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import { cleanDirectory, copyFileOrDirectory, readFile, writeFile } from '@lowdefy/node-utils';
 
 import apiHandler from './apiHandler.js';
-
-// One serverless function handles every dynamic path; config.json routes send all non-static
-// requests to it (equivalent to the old vercel.json catch-all rewrite).
-const vcConfig = {
-  runtime: 'nodejs22.x',
-  handler: 'api/index.js',
-  launcherType: 'Nodejs',
-  maxDuration: 60,
-};
+import copyTracedFiles from './copyTracedFiles.js';
+import findTraceBase from './findTraceBase.js';
 
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
 // that declare `schedules`). A missing file means no schedules → no crons.
@@ -48,12 +42,29 @@ async function vercelOutput({ context }) {
   const { directories, logger } = context;
   logger.info('Assembling Vercel Build Output.');
 
-  const serverDirectory = directories.server;
-  const buildDirectory = directories.build;
+  const serverDirectory = path.resolve(directories.server);
+  const buildDirectory = path.resolve(directories.build);
   const clientDirectory = path.join(serverDirectory, 'dist', 'client');
   const outputDirectory = path.join(serverDirectory, '.vercel', 'output');
   const staticDirectory = path.join(outputDirectory, 'static');
   const functionDirectory = path.join(outputDirectory, 'functions', 'api.func');
+
+  const entrypoints = [
+    path.join(serverDirectory, 'src', 'index.js'),
+    path.join(serverDirectory, 'src', 'app.js'),
+  ];
+  entrypoints.forEach((entrypoint) => {
+    if (!fs.existsSync(entrypoint)) {
+      throw new Error(`Cannot trace "${entrypoint}" — run "lowdefy build" first.`);
+    }
+  });
+
+  // The function preserves paths relative to the trace base (the pnpm workspace root when the
+  // server directory is a workspace member), so the server's relative node_modules symlinks still
+  // resolve inside the function. The server lands at <relServer>/ inside api.func.
+  const base = findTraceBase({ serverDirectory });
+  const relServer = path.relative(base, serverDirectory);
+  const functionServerDirectory = path.join(functionDirectory, relServer);
 
   // Start clean so artifacts from a previous build do not leak into the deployment.
   await cleanDirectory(outputDirectory);
@@ -61,30 +72,56 @@ async function vercelOutput({ context }) {
   // 1. Static assets + public files served by the Vercel CDN.
   await copyFileOrDirectory(clientDirectory, staticDirectory);
 
-  // 2. The single serverless function — the Hono app plus everything it reads at runtime. The
-  //    Build Output API has no includeFiles glob: the .func directory must physically contain these.
-  await copyFileOrDirectory(path.join(serverDirectory, 'src'), path.join(functionDirectory, 'src'));
-  await copyFileOrDirectory(path.join(serverDirectory, 'lib'), path.join(functionDirectory, 'lib'));
-  await copyFileOrDirectory(buildDirectory, path.join(functionDirectory, 'build'));
+  // 2. The runtime file closure of the Hono server, traced with @vercel/nft — the app source, the
+  //    build-generated plugin import files, and exactly the node_modules files they resolve to
+  //    (through pnpm's symlinks, which are preserved).
+  const fileCount = await copyTracedFiles({
+    base,
+    entrypoints,
+    functionDirectory,
+    logger,
+    processCwd: serverDirectory,
+  });
+  logger.info(`Traced ${fileCount} runtime files into the function.`);
+
+  // 3. Artifacts the server reads from the filesystem at runtime (not imported, so not traced),
+  //    plus src/ and lib/ wholesale as belt-and-braces alongside the traced copies.
+  await copyFileOrDirectory(
+    path.join(serverDirectory, 'src'),
+    path.join(functionServerDirectory, 'src')
+  );
+  await copyFileOrDirectory(
+    path.join(serverDirectory, 'lib'),
+    path.join(functionServerDirectory, 'lib')
+  );
+  await copyFileOrDirectory(buildDirectory, path.join(functionServerDirectory, 'build'));
   await copyFileOrDirectory(
     path.join(clientDirectory, '.vite', 'manifest.json'),
-    path.join(functionDirectory, 'dist', 'client', '.vite', 'manifest.json')
+    path.join(functionServerDirectory, 'dist', 'client', '.vite', 'manifest.json')
   );
   await copyFileOrDirectory(
     path.join(serverDirectory, 'package.json'),
-    path.join(functionDirectory, 'package.json')
-  );
-  await copyFileOrDirectory(
-    path.join(serverDirectory, 'node_modules'),
-    path.join(functionDirectory, 'node_modules')
-  );
-  await writeFile(path.join(functionDirectory, 'api', 'index.js'), apiHandler);
-  await writeFile(
-    path.join(functionDirectory, '.vc-config.json'),
-    JSON.stringify(vcConfig, null, 2)
+    path.join(functionServerDirectory, 'package.json')
   );
 
-  // 3. Deployment config: serve static files first, route everything else to the function, and
+  // 4. The function entry and its config. The handler path is relative to the api.func root.
+  const handler = path.posix.join(...relServer.split(path.sep), 'api', 'index.js');
+  await writeFile(path.join(functionServerDirectory, 'api', 'index.js'), apiHandler);
+  await writeFile(
+    path.join(functionDirectory, '.vc-config.json'),
+    JSON.stringify(
+      {
+        runtime: 'nodejs22.x',
+        handler,
+        launcherType: 'Nodejs',
+        maxDuration: 60,
+      },
+      null,
+      2
+    )
+  );
+
+  // 5. Deployment config: serve static files first, route everything else to the function, and
   //    register the cron jobs.
   const crons = await readCrons({ buildDirectory });
   const config = {

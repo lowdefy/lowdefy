@@ -84,9 +84,11 @@ Hono app runs the endpoint's routine.
 `vercel.build.sh` builds the client and runs `lowdefy vercel-output`, which assembles:
 
 - `.vercel/output/static/` — the built client and `public/` files, served by the CDN.
-- `.vercel/output/functions/api.func/` — one Node Serverless Function: the Hono app plus the
-  `build/**`, `lib/**`, `dist/client/.vite/manifest.json`, `package.json` and `node_modules/` it
-  reads at runtime, with a `.vc-config.json`.
+- `.vercel/output/functions/api.func/` — one Node Serverless Function: the Hono app plus its exact
+  runtime dependency closure, traced with [`@vercel/nft`](https://github.com/vercel/nft) (pnpm
+  symlinks and workspace packages included), and the `build/**`,
+  `dist/client/.vite/manifest.json` and `package.json` files it reads at runtime, with a
+  `.vc-config.json`.
 - `.vercel/output/config.json` — routes that serve static files first and send every other request
   to the function (running with `serveStaticAssets: false`), plus the `crons` array.
 

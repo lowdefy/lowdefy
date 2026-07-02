@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
-// The Vercel function entry, written verbatim into the Build Output at
-// .vercel/output/functions/api.func/api/index.js. Kept as a string (not a template file) so it
-// ships verbatim — a real source file would be transpiled by the CLI's swc build, stripping these
-// comments. Its `../src/app.js` import and the chdir to `..` resolve to the api.func root, where the
-// assembly places src/, build/, lib/, dist/ and node_modules/.
+// The Vercel function entry, written into the Build Output at
+// .vercel/output/functions/api.func/<relServer>/api/index.js, where <relServer> is the server
+// directory's path relative to the trace base (empty for standalone apps). Kept as a string (not a
+// template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
+// build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
+// server directory inside the function, where the assembly places src/, build/, lib/ and the traced
+// dependency closure.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -36,7 +38,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
-// lambda root (e.g. /var/task), not this directory, so point the cwd at the api.func root (the
+// lambda root (e.g. /var/task), not this directory, so point the cwd at the server directory (the
 // parent of this api/ folder) before loading the app. The import is dynamic so it runs AFTER chdir —
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
