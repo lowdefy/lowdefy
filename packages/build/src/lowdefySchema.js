@@ -1167,7 +1167,7 @@ export default {
     subscription: {
       type: 'object',
       additionalProperties: false,
-      required: ['id'],
+      required: ['websocketId'],
       properties: {
         '~ignoreBuildChecks': {
           oneOf: [
@@ -1192,10 +1192,10 @@ export default {
         },
         '~r': {},
         '~l': {},
-        id: {
+        websocketId: {
           type: 'string',
           errorMessage: {
-            type: 'Subscription "id" should be a string.',
+            type: 'Subscription "websocketId" should be a string.',
           },
         },
         payload: {
@@ -1238,7 +1238,7 @@ export default {
       errorMessage: {
         type: 'Subscription should be an object.',
         required: {
-          id: 'Subscription should have required property "id".',
+          websocketId: 'Subscription should have required property "websocketId".',
         },
       },
     },

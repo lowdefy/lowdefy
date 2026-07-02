@@ -46,7 +46,7 @@ _ref:
                   - id: chat
                     type: PageHeaderMenu
                     subscriptions:
-                      - id: team_chat
+                      - websocketId: team_chat
                         client:
                           maxMessages: 200
                     blocks:

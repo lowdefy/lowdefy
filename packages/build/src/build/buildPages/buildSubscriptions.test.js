@@ -76,7 +76,7 @@ test('buildSubscriptions throws when subscription id is missing', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Subscription id missing at page "page_1".'
+    'Subscription websocketId missing at page "page_1".'
   );
 });
 
@@ -88,12 +88,12 @@ test('buildSubscriptions throws when subscription id is not a string', () => {
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: true }],
+        subscriptions: [{ websocketId: true }],
       },
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Subscription id is not a string at page "page_1".'
+    'Subscription websocketId is not a string at page "page_1".'
   );
 });
 
@@ -105,7 +105,7 @@ test('buildSubscriptions throws when subscription references a websocket which d
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'missing_ws' }],
+        subscriptions: [{ websocketId: 'missing_ws' }],
       },
     ],
   };
@@ -122,7 +122,7 @@ test('buildSubscriptions throws on duplicate subscription ids on the same page',
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1' }, { id: 'ws1' }],
+        subscriptions: [{ websocketId: 'ws1' }, { websocketId: 'ws1' }],
       },
     ],
   };
@@ -139,7 +139,7 @@ test('buildSubscriptions sets payload, client and events defaults on a valid sub
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1' }],
+        subscriptions: [{ websocketId: 'ws1' }],
       },
     ],
   };
@@ -167,7 +167,7 @@ test('buildSubscriptions throws when payload is not an object', () => {
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', payload: 'payload' }],
+        subscriptions: [{ websocketId: 'ws1', payload: 'payload' }],
       },
     ],
   };
@@ -184,7 +184,7 @@ test('buildSubscriptions throws when client is not an object', () => {
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: 'client' }],
+        subscriptions: [{ websocketId: 'ws1', client: 'client' }],
       },
     ],
   };
@@ -201,7 +201,7 @@ test('buildSubscriptions throws when client.maxMessages is not a positive intege
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: { maxMessages: 0 } }],
+        subscriptions: [{ websocketId: 'ws1', client: { maxMessages: 0 } }],
       },
     ],
   };
@@ -218,7 +218,7 @@ test('buildSubscriptions throws when client.maxMessages is not an integer', () =
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: { maxMessages: 'many' } }],
+        subscriptions: [{ websocketId: 'ws1', client: { maxMessages: 'many' } }],
       },
     ],
   };
@@ -235,7 +235,7 @@ test('buildSubscriptions throws when client.throttleRender is not a number', () 
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: { throttleRender: 'fast' } }],
+        subscriptions: [{ websocketId: 'ws1', client: { throttleRender: 'fast' } }],
       },
     ],
   };
@@ -252,7 +252,7 @@ test('buildSubscriptions clamps client.throttleRender below 100 to 100 and warns
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: { throttleRender: 50 } }],
+        subscriptions: [{ websocketId: 'ws1', client: { throttleRender: 50 } }],
       },
     ],
   };
@@ -274,7 +274,7 @@ test('buildSubscriptions keeps configured client values above the minimums', () 
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1', client: { maxMessages: 5, throttleRender: 500 } }],
+        subscriptions: [{ websocketId: 'ws1', client: { maxMessages: 5, throttleRender: 500 } }],
       },
     ],
   };
@@ -296,7 +296,7 @@ test('buildSubscriptions warns on unsupported event names which will never fire'
         type: 'Container',
         subscriptions: [
           {
-            id: 'ws1',
+            websocketId: 'ws1',
             events: {
               onFoo: [{ id: 'set_foo', type: 'SetState', params: { foo: true } }],
             },
@@ -324,7 +324,7 @@ test('buildSubscriptions does not warn on supported event names', () => {
         type: 'Container',
         subscriptions: [
           {
-            id: 'ws1',
+            websocketId: 'ws1',
             events: {
               onMessage: [{ id: 'set_message', type: 'SetState', params: { message: true } }],
               onSubscribe: [{ id: 'set_subscribed', type: 'SetState', params: { on: true } }],
@@ -349,7 +349,7 @@ test('buildSubscriptions normalizes onMessage actions to try and catch and count
         type: 'Container',
         subscriptions: [
           {
-            id: 'ws1',
+            websocketId: 'ws1',
             events: {
               onMessage: [{ id: 'set_message', type: 'SetState', params: { message: true } }],
             },
@@ -378,7 +378,7 @@ test('buildSubscriptions counts client operators in payload and events', () => {
         type: 'Container',
         subscriptions: [
           {
-            id: 'ws1',
+            websocketId: 'ws1',
             payload: {
               value: { _state: 'value' },
             },
@@ -411,7 +411,7 @@ test('buildSubscriptions renames subscription id to internal format with websock
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1' }, { id: 'ws2' }],
+        subscriptions: [{ websocketId: 'ws1' }, { websocketId: 'ws2' }],
       },
     ],
   };
@@ -432,13 +432,13 @@ test('buildSubscriptions allows the same subscription id on different pages', ()
         id: 'page_1',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1' }],
+        subscriptions: [{ websocketId: 'ws1' }],
       },
       {
         id: 'page_2',
         auth,
         type: 'Container',
-        subscriptions: [{ id: 'ws1' }],
+        subscriptions: [{ websocketId: 'ws1' }],
       },
     ],
   };
@@ -459,7 +459,7 @@ test('buildSubscriptions throws when a nested block defines subscriptions', () =
           {
             id: 'box',
             type: 'Container',
-            subscriptions: [{ id: 'ws1' }],
+            subscriptions: [{ websocketId: 'ws1' }],
           },
         ],
       },

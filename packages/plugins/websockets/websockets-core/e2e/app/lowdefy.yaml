@@ -33,7 +33,7 @@ pages:
   - id: interval
     type: Box
     subscriptions:
-      - id: ticker
+      - websocketId: ticker
         client:
           throttleRender: 100
         events:
@@ -72,7 +72,7 @@ pages:
   - id: chat
     type: Box
     subscriptions:
-      - id: chat
+      - websocketId: chat
         client:
           throttleRender: 100
           maxMessages: 50

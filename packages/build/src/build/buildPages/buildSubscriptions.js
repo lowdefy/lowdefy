@@ -31,20 +31,20 @@ function buildSubscription({ subscription, pageContext }) {
   const { context, pageId } = pageContext;
   const configKey = subscription['~k'];
 
-  if (type.isUndefined(subscription.id)) {
-    throw new ConfigError(`Subscription id missing at page "${pageId}".`, { configKey });
+  if (type.isUndefined(subscription.websocketId)) {
+    throw new ConfigError(`Subscription websocketId missing at page "${pageId}".`, { configKey });
   }
-  if (!type.isString(subscription.id)) {
-    throw new ConfigError(`Subscription id is not a string at page "${pageId}".`, {
-      received: subscription.id,
+  if (!type.isString(subscription.websocketId)) {
+    throw new ConfigError(`Subscription websocketId is not a string at page "${pageId}".`, {
+      received: subscription.websocketId,
       configKey,
     });
   }
-  pageContext.checkDuplicateSubscriptionId({ id: subscription.id, configKey, pageId });
+  pageContext.checkDuplicateSubscriptionId({ id: subscription.websocketId, configKey, pageId });
 
-  if (!context.websocketIds.has(subscription.id)) {
+  if (!context.websocketIds.has(subscription.websocketId)) {
     throw new ConfigError(
-      `Subscription "${subscription.id}" at page "${pageId}" references a websocket which does not exist.`,
+      `Subscription "${subscription.websocketId}" at page "${pageId}" references a websocket which does not exist.`,
       { configKey }
     );
   }
@@ -54,7 +54,7 @@ function buildSubscription({ subscription, pageContext }) {
   }
   if (!type.isObject(subscription.payload)) {
     throw new ConfigError(
-      `Subscription "${subscription.id}" at page "${pageId}" payload should be an object.`,
+      `Subscription "${subscription.websocketId}" at page "${pageId}" payload should be an object.`,
       { received: subscription.payload, configKey }
     );
   }
@@ -64,7 +64,7 @@ function buildSubscription({ subscription, pageContext }) {
   }
   if (!type.isObject(subscription.client)) {
     throw new ConfigError(
-      `Subscription "${subscription.id}" at page "${pageId}" client should be an object.`,
+      `Subscription "${subscription.websocketId}" at page "${pageId}" client should be an object.`,
       { received: subscription.client, configKey }
     );
   }
@@ -73,7 +73,7 @@ function buildSubscription({ subscription, pageContext }) {
   }
   if (!type.isInt(subscription.client.maxMessages) || subscription.client.maxMessages < 1) {
     throw new ConfigError(
-      `Subscription "${subscription.id}" at page "${pageId}" client.maxMessages should be a positive integer.`,
+      `Subscription "${subscription.websocketId}" at page "${pageId}" client.maxMessages should be a positive integer.`,
       { received: subscription.client.maxMessages, configKey }
     );
   }
@@ -82,14 +82,14 @@ function buildSubscription({ subscription, pageContext }) {
   }
   if (!type.isNumber(subscription.client.throttleRender)) {
     throw new ConfigError(
-      `Subscription "${subscription.id}" at page "${pageId}" client.throttleRender should be a number.`,
+      `Subscription "${subscription.websocketId}" at page "${pageId}" client.throttleRender should be a number.`,
       { received: subscription.client.throttleRender, configKey }
     );
   }
   if (subscription.client.throttleRender < MIN_THROTTLE_RENDER) {
     context.handleWarning(
       new ConfigWarning(
-        `Subscription "${subscription.id}" at page "${pageId}" client.throttleRender is below the minimum of ${MIN_THROTTLE_RENDER}ms and will be clamped.`,
+        `Subscription "${subscription.websocketId}" at page "${pageId}" client.throttleRender is below the minimum of ${MIN_THROTTLE_RENDER}ms and will be clamped.`,
         { configKey }
       )
     );
@@ -104,7 +104,7 @@ function buildSubscription({ subscription, pageContext }) {
     if (!SUBSCRIPTION_EVENTS.includes(eventName)) {
       context.handleWarning(
         new ConfigWarning(
-          `Subscription "${subscription.id}" at page "${pageId}" has event "${eventName}" which will never fire. Supported events: ${SUBSCRIPTION_EVENTS.join(', ')}.`,
+          `Subscription "${subscription.websocketId}" at page "${pageId}" has event "${eventName}" which will never fire. Supported events: ${SUBSCRIPTION_EVENTS.join(', ')}.`,
           { configKey: subscription.events[eventName]?.['~k'] ?? configKey }
         )
       );
@@ -116,7 +116,7 @@ function buildSubscription({ subscription, pageContext }) {
   // refs so subscription events can trigger page requests.
   buildEvents(
     {
-      blockId: `subscription:${subscription.id}`,
+      blockId: `subscription:${subscription.websocketId}`,
       events: subscription.events,
       '~k': configKey,
     },
@@ -131,7 +131,6 @@ function buildSubscription({ subscription, pageContext }) {
     { counter: pageContext.typeCounters.operators.client }
   );
 
-  subscription.websocketId = subscription.id;
   subscription.pageId = pageId;
   subscription.id = `subscription:${pageId}:${subscription.websocketId}`;
 }

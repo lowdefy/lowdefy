@@ -33,7 +33,7 @@ _ref:
 
                 ## Subscription Definition
 
-                - `id: string`: __Required__ - The id of a websocket defined in the top-level `websockets` array.
+                - `websocketId: string`: __Required__ - The id of a websocket defined in the top-level `websockets` array.
                 - `payload: object`: Client-side operators (`_state`, `_url_query`, `_global`) evaluated at subscribe time. The server reads these values with `_payload` in the websocket `properties`.
                 - `events: object`: Actions for `onMessage`, `onSubscribe` and `onError`.
                 - `client.maxMessages: number`: How many messages to retain in `messages` (default 100, oldest dropped first).
@@ -54,7 +54,7 @@ _ref:
                         properties:
                           query: {}
                     subscriptions:
-                      - id: order_updates
+                      - websocketId: order_updates
                         events:
                           onMessage:
                             - id: refetch
@@ -106,7 +106,7 @@ _ref:
                   - id: activity
                     type: PageHeaderMenu
                     subscriptions:
-                      - id: activity_feed
+                      - websocketId: activity_feed
                         payload:
                           project_id:
                             _url_query: project_id

@@ -50,7 +50,7 @@ _ref:
                   - id: dashboard
                     type: PageHeaderMenu
                     subscriptions:
-                      - id: ticker
+                      - websocketId: ticker
                     blocks:
                       - id: ticks
                         type: Html
