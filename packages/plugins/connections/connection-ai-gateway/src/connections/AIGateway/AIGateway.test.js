@@ -24,11 +24,11 @@ jest.unstable_mockModule('@ai-sdk/gateway', () => ({
 }));
 
 // Prevent the real 'ai' package (imported via @lowdefy/ai-utils in the request
-// resolvers) from loading — it imports more from '@ai-sdk/gateway' than the
-// mock above provides.
+// resolver factories) from loading — it imports more from '@ai-sdk/gateway'
+// than the mock above provides.
 jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
-  handleGenerateObject: jest.fn(),
-  handleGenerateText: jest.fn(),
+  createGenerateObject: jest.fn(() => jest.fn()),
+  createGenerateText: jest.fn(() => jest.fn()),
 }));
 
 test('AIGateway create returns provider with apiKey', async () => {

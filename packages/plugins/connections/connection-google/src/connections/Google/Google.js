@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import GenerateObject from './GenerateObject/GenerateObject.js';
-import GenerateText from './GenerateText/GenerateText.js';
+import { createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+
 import createProvider from './createProvider.js';
 import schema from './schema.js';
 
@@ -23,5 +23,12 @@ function create({ connection }) {
   return { provider: createProvider({ connection }) };
 }
 
-const Google = { schema, create, requests: { GenerateObject, GenerateText } };
+const Google = {
+  schema,
+  create,
+  requests: {
+    GenerateObject: createGenerateObject({ createProvider }),
+    GenerateText: createGenerateText({ createProvider }),
+  },
+};
 export default Google;
