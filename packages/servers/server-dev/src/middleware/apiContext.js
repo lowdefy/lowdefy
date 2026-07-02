@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
 import path from 'node:path';
 import { createApiContext, resolveAuthentication } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
@@ -30,37 +29,12 @@ import fileCache from '../../lib/server/fileCache.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
 import getMockUser from '../../lib/server/auth/getMockUser.js';
 import i18nConfig from '../../lib/build/i18n.js';
+import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
-import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
-
-// Dynamic JS map loading for JIT-built pages — the build rewrites
-// serverJsMap.js when a JIT page discovers new _js operators.
-let cachedJsMapMtime = null;
-let cachedJsMap = staticJsMap;
-
-function loadDynamicJsMap(buildDirectory) {
-  const jsMapPath = path.join(buildDirectory, 'plugins', 'operators', 'serverJsMap.js');
-  try {
-    const stat = fs.statSync(jsMapPath);
-    if (cachedJsMapMtime && stat.mtimeMs === cachedJsMapMtime) {
-      return cachedJsMap;
-    }
-    cachedJsMapMtime = stat.mtimeMs;
-    // For server-side, we can read and eval the JS file
-    const content = fs.readFileSync(jsMapPath, 'utf8');
-    const fn = new Function('exports', content.replace('export default', 'exports.default ='));
-    const exports = {};
-    fn(exports);
-    cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
-    return cachedJsMap;
-  } catch {
-    return cachedJsMap;
-  }
-}
 
 // Replaces lib/server/apiWrapper.js. Errors thrown by handlers are routed by
 // Hono to the app-level error handler (src/middleware/errorHandler.js).

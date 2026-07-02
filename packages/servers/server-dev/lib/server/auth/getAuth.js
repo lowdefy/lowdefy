@@ -20,6 +20,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import adapters from '../../../build/plugins/auth/adapters.js';
 import appMeta from '../../build/appMeta.js';
 import authJson from '../../build/auth.js';
+import createSystemContext from './createSystemContext.js';
 import lowdefyConfig from '../../build/config.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
@@ -34,6 +35,7 @@ function getAuth({ logger }) {
     appMeta,
     authJson,
     config: lowdefyConfig,
+    createSystemContext,
     dev: true,
     logger,
     plugins: { adapters, providers },
