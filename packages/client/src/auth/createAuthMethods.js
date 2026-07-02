@@ -75,16 +75,7 @@ async function unwrap(promise) {
 function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy functions that handle action params;
   // the auth object provides the BetterAuth client methods.
-  async function login({
-    callbackUrl,
-    email,
-    magicLink,
-    name,
-    password,
-    providerId,
-    signUp,
-    ...rest
-  } = {}) {
+  async function login({ callbackUrl, email, magicLink, password, providerId, ...rest } = {}) {
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const providers = auth.authConfig?.providers ?? [];
 
@@ -110,11 +101,6 @@ function createAuthMethods(lowdefy, auth) {
       }
       return unwrap(auth.signInMagicLink({ email, callbackURL, ...rest }));
     }
-    if (signUp === true) {
-      // With requireEmailVerification the response carries no session - the
-      // page shows a "verify your email" message instead of navigating.
-      return unwrap(auth.signUpEmail({ email, password, name, callbackURL, ...rest }));
-    }
     if (!type.isNone(email) || !type.isNone(password)) {
       const data = await unwrap(auth.signInEmail({ email, password, ...rest }));
       const window = lowdefy._internal?.globals?.window;
@@ -124,8 +110,23 @@ function createAuthMethods(lowdefy, auth) {
       return data;
     }
     throw new Error(
-      'Login requires a "providerId", "email" and "password", "magicLink: true", or "signUp: true" param.'
+      'Login requires a "providerId", "email" and "password", or "magicLink: true" param.'
     );
+  }
+
+  // Creates an email/password account (BetterAuth's one signup endpoint).
+  // Social, magic-link and passkey have no separate signup - the account is
+  // created on first sign-in via login - so SignUp is email/password only.
+  async function signUp({ callbackUrl, email, name, password, ...rest } = {}) {
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(auth.signUpEmail({ email, password, name, callbackURL, ...rest }));
+    // With requireEmailVerification the response carries no session - do not
+    // navigate; the page shows a "verify your email" message instead.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && callbackURL && window) {
+      window.location.assign(callbackURL);
+    }
+    return data;
   }
 
   async function logout({ callbackUrl } = {}) {
@@ -148,6 +149,7 @@ function createAuthMethods(lowdefy, auth) {
   return {
     login,
     logout,
+    signUp,
     updateSession,
   };
 }

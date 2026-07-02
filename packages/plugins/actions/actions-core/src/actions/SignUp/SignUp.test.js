@@ -14,33 +14,15 @@
   limitations under the License.
 */
 
-export default {
-  actions: [
-    'CallAPI',
-    'CallMethod',
-    'CopyToClipboard',
-    'DisplayMessage',
-    'Fetch',
-    'GeolocationCurrentPosition',
-    'Link',
-    'Login',
-    'Logout',
-    'Publish',
-    'Request',
-    'Reset',
-    'ResetValidation',
-    'ScrollTo',
-    'SetDarkMode',
-    'SetFocus',
-    'SetGlobal',
-    'SetLocale',
-    'SetState',
-    'SignUp',
-    'Subscribe',
-    'Throw',
-    'Unsubscribe',
-    'UpdateSession',
-    'Validate',
-    'Wait',
-  ],
-};
+import { jest } from '@jest/globals';
+import SignUp from './SignUp.js';
+
+const mockSignUp = jest.fn();
+const methods = { signUp: mockSignUp };
+
+test('SignUp action invocation', () => {
+  SignUp({ methods, params: { email: 'user@example.com', password: 'password123', name: 'User' } });
+  expect(mockSignUp.mock.calls).toEqual([
+    [{ email: 'user@example.com', password: 'password123', name: 'User' }],
+  ]);
+});

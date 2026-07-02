@@ -33,6 +33,7 @@ export { default as SetFocus } from './actions/SetFocus/schema.js';
 export { default as SetGlobal } from './actions/SetGlobal/schema.js';
 export { default as SetLocale } from './actions/SetLocale/schema.js';
 export { default as SetState } from './actions/SetState/schema.js';
+export { default as SignUp } from './actions/SignUp/schema.js';
 export { default as Subscribe } from './actions/Subscribe/schema.js';
 export { default as Throw } from './actions/Throw/schema.js';
 export { default as Unsubscribe } from './actions/Unsubscribe/schema.js';

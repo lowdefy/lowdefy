@@ -37,6 +37,7 @@ import createReset from './createReset.js';
 import createResetValidation from './createResetValidation.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createSignUp from './createSignUp.js';
 import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
 import createUnsubscribe from './createUnsubscribe.js';
@@ -68,6 +69,7 @@ function getActionMethods(props) {
     resetValidation: createResetValidation(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    signUp: createSignUp(props),
     subscribe: createSubscribe(props),
     translate: createTranslate(props),
     unsubscribe: createUnsubscribe(props),
