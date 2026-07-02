@@ -46,6 +46,7 @@ import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
+import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
@@ -121,6 +122,8 @@ async function build(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    // Runs after buildAgents — needs context.agentIds and normalized agent.tools
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });

@@ -28,6 +28,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
+import handleAgentGenerate from './handleAgentGenerate.js';
 
 // Convert data: URLs in file parts to raw base64 so the AI SDK does not attempt
 // to download them (it only supports http/https).  The mediaType field already
@@ -59,6 +60,12 @@ function getFirstUserText(messages) {
 }
 
 async function handleAgentChat({ connection, properties, context }) {
+  // Headless run-to-completion mode (CallAgent routine step) — dispatched here
+  // so provider agent plugins delegate unchanged in both modes.
+  if (context.mode === 'generate') {
+    return handleAgentGenerate({ connection, properties, context });
+  }
+
   const { agent, messages: rawMessages } = properties;
   const messages = convertDataUrlsToBase64(rawMessages);
 

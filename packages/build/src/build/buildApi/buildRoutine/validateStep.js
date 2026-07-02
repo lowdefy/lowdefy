@@ -69,6 +69,40 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (step.type === 'CallAgent') {
+    if (type.isNone(step.properties?.agentId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" requires properties.agentId.`,
+        { configKey }
+      );
+    }
+    if (!type.isString(step.properties.agentId) && !type.isObject(step.properties.agentId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.agentId is not a string.`,
+        { received: step.properties.agentId, configKey }
+      );
+    }
+    if (type.isNone(step.properties?.prompt)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" requires properties.prompt.`,
+        { configKey }
+      );
+    }
+    if (!type.isString(step.properties.prompt) && !type.isObject(step.properties.prompt)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.prompt is not a string.`,
+        { received: step.properties.prompt, configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
   if (step.type === 'ValidateSchema') {
     if (type.isNone(step.properties?.schema)) {
       throw new ConfigError(

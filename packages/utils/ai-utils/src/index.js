@@ -15,6 +15,7 @@
 */
 
 export { default as handleAgentChat } from './handleAgentChat.js';
+export { default as handleAgentGenerate } from './handleAgentGenerate.js';
 export { default as handleGenerateObject } from './handleGenerateObject.js';
 export { default as handleGenerateText } from './handleGenerateText.js';
 export { default as RESERVED_PLATFORM_TOOL_NAMES } from './reservedToolNames.js';

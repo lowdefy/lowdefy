@@ -149,6 +149,9 @@ const snapshotTypesMap = {
     AWSS3GetObject: { package: '@lowdefy/plugin-aws' },
     AWSS3PutObject: { package: '@lowdefy/plugin-aws' },
   },
+  agents: {
+    ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
+  },
   auth: {
     adapters: {
       MongoDBAdapter: { package: '@lowdefy/plugin-next-auth' },
