@@ -1,0 +1,136 @@
+# Migration fixture — a synthetic Lowdefy v4 app in the OLD (NextAuth-shaped) auth config.
+# Exercises every config breaking change the codemod prompts convert or flag.
+# Synthetic data only; no client names.
+name: migration-fixture
+lowdefy: 4.4.0
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  database:
+    id: auth_adapter
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: MONGODB_URI
+
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+    - id: gitlab
+      type: GitLab
+      properties:
+        clientId:
+          _secret: GITLAB_CLIENT_ID
+        clientSecret:
+          _secret: GITLAB_CLIENT_SECRET
+    - id: corporate-idp
+      type: GenericOAuth
+      properties:
+        discoveryUrl: https://idp.example.com/.well-known/openid-configuration
+        clientId:
+          _secret: CORP_CLIENT_ID
+        clientSecret:
+          _secret: CORP_CLIENT_SECRET
+        scopes:
+          - openid
+          - profile
+          - email
+
+  magicLink:
+    enabled: true
+    expiresIn: 600
+
+  email:
+    from: noreply@fixture.example.com
+    provider:
+      type: smtp
+      properties:
+        host:
+          _secret: SMTP_HOST
+        port: 1025
+        auth:
+          user:
+            _secret: SMTP_USER
+          pass:
+            _secret: SMTP_PASS
+
+  session:
+    expiresIn: 43200
+    updateAge: 3600
+
+  authPages:
+    signIn: /login
+    error: /auth-error
+
+  hooks:
+    - id: check-email-domain
+      point: session.create.before
+      endpointId: auth/check-email-domain
+    - id: welcome-new-user
+      point: user.create.after
+      endpointId: auth/welcome-new-user
+    - id: audit-login
+      point: session.create.after
+      endpointId: auth/audit-login
+    - id: audit-logout
+      point: session.delete.after
+      endpointId: auth/audit-logout
+
+  # unchanged surface — must survive the codemod untouched
+  pages:
+    protected: true
+    public:
+      - login
+      - goodbye
+      - check-email
+      - welcome
+      - auth-error
+    roles:
+      admin:
+        - admin
+  api:
+    protected: true
+    public: []
+    roles:
+      admin:
+        - admin-report
+  # dev.mockUser survives the codemod unchanged, but an active mockUser
+  # disables the real auth engine in server-dev — commented out so the
+  # live walkthrough exercises real sign-in.
+  # dev:
+  #   mockUser:
+  #     id: test-user
+  #     email: test@fixture.example.com
+  #     name: Test User
+  #     roles:
+  #       - admin
+
+connections:
+  - id: app_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: records
+      write: true
+
+api:
+  - _ref: api/whoami.yaml
+  - _ref: api/admin-report.yaml
+  - _ref: api/auth/check-email-domain.yaml
+  - _ref: api/auth/welcome-new-user.yaml
+  - _ref: api/auth/audit-login.yaml
+  - _ref: api/auth/audit-logout.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/profile.yaml
+  - _ref: pages/admin.yaml
+  - _ref: pages/login.yaml
