@@ -108,6 +108,46 @@ auth:
       point: email.verified
       endpointId: on-email-verified
 
+  # API auth strategies (phase 4) - external callers authenticate with a
+  # static API key or an HMAC-signed JWT. A logged-in session always wins
+  # over a presented credential, and strategy callers bypass the
+  # org-membership wall (they are members of no organization); their roles
+  # are deployment-global and check against auth.api.roles below.
+  strategies:
+    - id: partner-access
+      type: apiKey
+      properties:
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+      roles:
+        - partner
+      attributes:
+        branches: [north, east]
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        issuer: https://auth.example.test
+        audience: auth-reference-api
+        claimMapping:
+          id: sub
+          roles: roles
+      roles: []
+
+  # HTTP API authorization. partner-data is role-gated; whoami is
+  # deliberately public - it echoes the resolved caller for the session-
+  # vs-strategy precedence scenarios (resolution runs on public endpoints
+  # too; only the authorization gate differs).
+  api:
+    roles:
+      partner:
+        - partner-data
+
   # Uncomment to exercise the wrong-roles opaque /404 redirect and the
   # pre-resolved dev caller (roles are authoritative; no engine runs):
   # dev:
@@ -151,6 +191,8 @@ api:
   - _ref: api/normalize-signup.yaml
   - _ref: api/audit-login.yaml
   - _ref: api/on-email-verified.yaml
+  - _ref: api/partner-data.yaml
+  - _ref: api/whoami.yaml
 
 pages:
   - _ref: pages/home.yaml

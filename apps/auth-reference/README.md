@@ -37,6 +37,9 @@ later phase grows this suite with a scenario.
   # Only for apps/auth-reference-tenant (its own database - tenants do not
   # mix with the pinned apps):
   LOWDEFY_SECRET_TENANT_DATABASE_URI=mongodb://localhost:27017/auth-reference-tenant
+  # Only needed for the phase-4 API strategy scenarios:
+  LOWDEFY_SECRET_PARTNER_KEY_ACME=partner-key-acme-0123456789abcdef
+  LOWDEFY_SECRET_JWT_SIGNING_SECRET=jwt-shared-secret-0123456789abcdef
   # The hook scenarios assert this exact value lands in the audit row:
   LOWDEFY_SECRET_HOOK_AUDIT_KEY=audit-secret-value
   # Only needed to exercise the OAuth scenario:
@@ -256,3 +259,56 @@ the old one) so pre-phase-3 users do not confuse the wall.
 Automation note: these scenarios are manual walkthroughs, like phases 1-2;
 they need live email verification loops and three side-by-side dev servers.
 Automate with the repo's e2e tooling as it grows.
+
+## Walkthrough (phase-4 gate - API strategies)
+
+The strategies-only scenarios (no database, JWKS, rejection matrix) live in
+the [auth-strategies fixture app](../auth-strategies/README.md); this
+section covers the scenarios that need a real login next to a strategy.
+Endpoints are POST-only with a JSON body:
+
+```sh
+call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
+```
+
+29. **API key authenticates against a full auth app**:
+    `call -H "X-API-Key: partner-key-acme-0123456789abcdef"
+    http://localhost:3000/api/endpoints/partner-data` returns
+    `{"data":"partner-report","caller":"apiKey:partner-access:acme","branches":["north","east"]}`.
+    Without the header the same call returns `401` with one
+    `Unauthenticated request` warning line in the terminal - no structured
+    error log. With a session user lacking the `partner` role (log in, call
+    from the browser console with `credentials: 'include'`), it returns the
+    opaque `does not exist` error.
+30. **A logged-in session wins over a presented API key (no privilege
+    swap)**: sign in as a member, copy the session cookie from the browser
+    devtools, then present both credentials together:
+
+    ```sh
+    call -H "Cookie: <your lowdefy_auth-reference.session_token cookie>" \
+      -H "X-API-Key: partner-key-acme-0123456789abcdef" \
+      http://localhost:3000/api/endpoints/whoami
+    ```
+
+    The caller is the **session user** (your user id, member-resolved
+    roles, no `authMethod`/`strategyId` fields) - the session branch is
+    terminal, so the key is never consulted. Drop the Cookie header and the
+    same call resolves the **strategy caller**
+    (`id: "apiKey:partner-access:acme"`, `authMethod: "apiKey"`,
+    `strategyId: "partner-access"`, `roles: ["partner"]`,
+    `attributes: {"branches":["north","east"]}`).
+31. **A walled-out session does not fall through to strategies**: remove
+    your membership (`node scripts/set-member.mjs --email <you> --org org-a
+    --remove`), then repeat the two-credential call from 30. The caller is
+    `null` - the rejected session does not retry as an API caller, so a
+    removed member cannot re-admit themselves with a key. (Re-add your
+    membership afterwards.)
+32. **HMAC JWT with claim-derived roles**: mint a token with the shared
+    secret (`JWT_SIGNING_SECRET='jwt-shared-secret-0123456789abcdef'
+    node ../auth-strategies/scripts/mint-jwt.mjs --aud auth-reference-api
+    --roles partner` - note this app's audience) and present it as
+    `Authorization: Bearer` on `whoami`: the caller shows
+    `authMethod: "jwt"`, `strategyId: "service-jwt"`, and
+    `roles: ["partner"]` derived from the token's `roles` claim (the
+    strategy grants no static roles). The same token reaches
+    `partner-data`.
