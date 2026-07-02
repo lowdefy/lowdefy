@@ -14,22 +14,4 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertMany',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-  ],
-  auth: {
-    adapters: ['MongoDBAdapter'],
-  },
-  websockets: ['MongoDBChangeStream'],
-};
+export { default as MongoDBChangeStream } from './connections/MongoDBCollection/MongoDBChangeStream/MongoDBChangeStream.js';

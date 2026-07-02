@@ -115,14 +115,15 @@ _ref:
                 ```yaml
                 websockets:
                   - id: activity_feed
-                    type: MyFeedSource
-                    connectionId: my_connection
+                    type: MongoDBChangeStream
+                    connectionId: mongodb
                     properties:
-                      filter:
-                        project:
-                          _payload: project_id
-                        owner:
-                          _user: id
+                      pipeline:
+                        - $match:
+                            fullDocument.project_id:
+                              _payload: project_id
+                            fullDocument.owner_id:
+                              _user: id
                 ```
 
                 The payload is evaluated once, at subscribe time. To subscribe with new values — say a changed filter — run [`Unsubscribe` then `Subscribe`](/websocket-publish).

@@ -78,7 +78,7 @@ _ref:
                 Websockets are defined in the top-level `websockets` array:
 
                 - `id: string`: __Required__ - A unique identifier for the channel.
-                - `type: string`: __Required__ - The websocket type. `Channel` and `Interval` ship with Lowdefy; connection plugins can provide types like database change streams.
+                - `type: string`: __Required__ - The websocket type. `Channel` and `Interval` ship with Lowdefy; connection plugins provide types like [`MongoDBChangeStream`](/MongoDB).
                 - `connectionId: string`: The `id` of a [connection](/connections) for connection-backed types.
                 - `properties: object`: Settings for the type. __Operators are evaluated server-side per subscription__ — `_secret`, `_user`, and `_payload` are available.
 
@@ -86,14 +86,15 @@ _ref:
                 ```yaml
                 websockets:
                   - id: my_feed
-                    type: MyFeedSource
-                    connectionId: my_connection
+                    type: MongoDBChangeStream
+                    connectionId: mongodb
                     properties:
-                      filter:
-                        owner:
-                          _user: id
-                        category:
-                          _payload: category
+                      pipeline:
+                        - $match:
+                            fullDocument.owner_id:
+                              _user: id
+                            fullDocument.category:
+                              _payload: category
                 ```
 
                 Because `properties` evaluate per subscription, two users subscribing to `my_feed` get two independent server sources — but a thousand subscribers to a channel with static properties share just one.

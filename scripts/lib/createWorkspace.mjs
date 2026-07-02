@@ -32,11 +32,13 @@ function createWorkspace({ targetDir }) {
       "  - '@swc/core'",
       '  - better-sqlite3',
       '  - esbuild',
+      '  - sharp',
       'allowBuilds:',
       "  '@sentry/cli': true",
       "  '@swc/core': true",
       '  better-sqlite3: true',
       '  esbuild: true',
+      '  sharp: true',
       '',
     ].join('\n')
   );
