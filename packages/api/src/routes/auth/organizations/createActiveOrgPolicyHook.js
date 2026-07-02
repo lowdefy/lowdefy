@@ -15,9 +15,11 @@
 */
 
 import { APIError } from 'better-auth/api';
+import { getOrgAdapter } from 'better-auth/plugins';
 
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
+import getHookRequestHeaders from './getHookRequestHeaders.js';
 
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for
@@ -35,7 +37,7 @@ import findPendingInvitation from './findPendingInvitation.js';
 // lazily, as owner, through the plugin's createOrganization so its
 // invariants and hooks run.
 function createActiveOrgPolicyHook({ getAuth, organizations }) {
-  async function applyPinnedPolicy({ auth, adapter, internalAdapter, session }) {
+  async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
     const organization = await ensureOrganization({ auth, slug: organizations.org });
     const member = await adapter.findOne({
       model: 'member',
@@ -45,6 +47,22 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       ],
     });
     if (member) {
+      return { data: { ...session, activeOrganizationId: organization.id } };
+    }
+    // Open signup ensures membership here as well as at user.create.after:
+    // BetterAuth queues after-hooks and flushes them at the end of the
+    // request (confirmed at 1.6.23), so a signup that mints an immediate
+    // session reaches this hook before the auto-join has run. The two joins
+    // are idempotent - each skips when the member row already exists.
+    if (organizations.signup === 'open') {
+      await auth.api.addMember({
+        body: {
+          userId: session.userId,
+          organizationId: organization.id,
+          role: 'member',
+        },
+        headers: getHookRequestHeaders(ctx),
+      });
       return { data: { ...session, activeOrganizationId: organization.id } };
     }
     const user = await internalAdapter.findUserById(session.userId);
@@ -86,23 +104,35 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       // no pending invitation and mints their own tenant.
       return;
     }
-    const organization = await auth.api.createOrganization({
-      body: {
+    // Minted through the org plugin's own adapter layer - the same layer its
+    // createOrganization endpoint drives. The endpoint itself cannot serve
+    // this call at 1.6.23: a headerless system-action call cannot resolve
+    // the engine's dynamic baseURL, and forwarding the firing request's
+    // headers makes the endpoint demand a session that does not exist yet.
+    const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
+    const orgAdapter = getOrgAdapter(await auth.$context, orgPlugin.options);
+    const organization = await orgAdapter.createOrganization({
+      organization: {
         name: user?.name || user?.email || session.userId,
         slug: `org-${session.userId}`,
-        userId: session.userId,
+        createdAt: new Date(),
       },
+    });
+    await orgAdapter.createMember({
+      userId: session.userId,
+      organizationId: organization.id,
+      role: 'owner',
     });
     return { data: { ...session, activeOrganizationId: organization.id } };
   }
 
-  return async function activeOrgPolicyHook(session) {
+  return async function activeOrgPolicyHook(session, ctx) {
     const auth = getAuth();
     const { adapter, internalAdapter } = await auth.$context;
     if (organizations.policy === 'tenant') {
       return applyTenantPolicy({ auth, adapter, internalAdapter, session });
     }
-    return applyPinnedPolicy({ auth, adapter, internalAdapter, session });
+    return applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx });
   };
 }
 

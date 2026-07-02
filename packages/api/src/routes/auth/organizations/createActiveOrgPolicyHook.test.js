@@ -51,7 +51,7 @@ function createMockAuth({
       }
       throw new Error(`Unexpected findMany model ${model}.`);
     }),
-    create: jest.fn(),
+    create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
   const internalAdapter = {
     findUserById: jest.fn(async () => user),
@@ -59,8 +59,9 @@ function createMockAuth({
   const auth = {
     $context: Promise.resolve({ adapter, internalAdapter }),
     api: {
-      createOrganization: jest.fn(async () => ({ id: 'org_new', slug: 'org-user_1' })),
+      addMember: jest.fn(async () => ({ id: 'member_new' })),
     },
+    options: { plugins: [{ id: 'organization', options: {} }] },
   };
   return { auth, adapter, internalAdapter };
 }
@@ -142,28 +143,54 @@ test('tenant: the oldest membership becomes the active organization', async () =
 });
 
 test('tenant: a pending invitation admits the session and mints nothing', async () => {
-  const { auth } = createMockAuth({
+  const { auth, adapter } = createMockAuth({
     members: [],
     invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
   });
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
   const result = await hook({ userId: 'user_1' });
   expect(result).toBeUndefined();
-  expect(auth.api.createOrganization).not.toHaveBeenCalled();
+  expect(adapter.create).not.toHaveBeenCalled();
 });
 
 test('tenant: a fresh signup lazily mints its own organization as owner and sets it active', async () => {
-  const { auth } = createMockAuth({ members: [], invitations: [] });
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [] });
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
   const result = await hook({ userId: 'user_1' });
-  expect(auth.api.createOrganization).toHaveBeenCalledWith({
-    body: {
-      name: 'User One',
-      slug: 'org-user_1',
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'organization',
+    data: expect.objectContaining({ name: 'User One', slug: 'org-user_1' }),
+    forceAllowId: true,
+  });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'member',
+    data: expect.objectContaining({
       userId: 'user_1',
-    },
+      organizationId: 'organization_new',
+      role: 'owner',
+    }),
   });
   expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_new' },
+    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
+  });
+});
+
+test('pinned open signup: a session for a not-yet-joined user ensures membership and sets the org active', async () => {
+  const { auth } = createMockAuth({ member: null, invitations: [] });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'pinned', org: 'team-portal', signup: 'open' },
+  });
+  const result = await hook({ userId: 'user_1' });
+  expect(auth.api.addMember).toHaveBeenCalledWith({
+    body: {
+      userId: 'user_1',
+      organizationId: 'org_pinned',
+      role: 'member',
+    },
+    headers: undefined,
+  });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_pinned' },
   });
 });

@@ -631,3 +631,42 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
   expect(options.emailVerification.sendVerificationEmail).toBeInstanceOf(Function);
   expect(options.databaseHooks.user).toBeUndefined();
 });
+
+test('always pushes the organization plugin', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'organization')).toBe(true);
+});
+
+test('registers the internal user additionalFields (contactId, attributes)', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.user.additionalFields).toEqual({
+    contactId: { type: 'string', required: false, input: false },
+    attributes: { type: 'json', required: false, input: false },
+  });
+});
+
+test('throws when no getAuth accessor is provided', () => {
+  expect(() =>
+    getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    })
+  ).toThrow('No getAuth accessor was provided to getBetterAuthConfig');
+});

@@ -15,6 +15,7 @@
 */
 
 import ensureOrganization from './ensureOrganization.js';
+import getHookRequestHeaders from './getHookRequestHeaders.js';
 
 // The engine-tier user.create.after hook for open signup under the pinned
 // policy: auto-join the pinned org with the plugin's built-in "member" role,
@@ -23,16 +24,33 @@ import ensureOrganization from './ensureOrganization.js';
 // membership wall while role-gated pages still gate them. With
 // requireEmailVerification the signup holds this member row but obtains no
 // session until verified, so joining at user-create is safe.
+//
+// BetterAuth flushes after-hooks at the end of the request (confirmed at
+// 1.6.23), so a signup minting an immediate session runs the session.create
+// policy hook first - that hook also ensures membership under open signup,
+// and this one skips when the member row already exists.
 function createAutoJoinHook({ getAuth, organizations }) {
-  return async function autoJoinHook(user) {
+  return async function autoJoinHook(user, ctx) {
     const auth = getAuth();
     const organization = await ensureOrganization({ auth, slug: organizations.org });
+    const { adapter } = await auth.$context;
+    const member = await adapter.findOne({
+      model: 'member',
+      where: [
+        { field: 'userId', value: user.id },
+        { field: 'organizationId', value: organization.id },
+      ],
+    });
+    if (member) {
+      return;
+    }
     await auth.api.addMember({
       body: {
         userId: user.id,
         organizationId: organization.id,
         role: 'member',
       },
+      headers: getHookRequestHeaders(ctx),
     });
   };
 }
