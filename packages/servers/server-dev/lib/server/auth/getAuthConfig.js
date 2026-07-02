@@ -28,6 +28,7 @@ function getAuthConfig({ logger }) {
   return getApiAuthConfig({
     appMeta,
     authJson,
+    dev: true,
     logger,
     plugins: { adapters, callbacks, events, providers },
     secrets: getSecretsFromEnv(),

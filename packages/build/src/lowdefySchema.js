@@ -292,6 +292,12 @@ export default {
         advanced: {
           type: 'object',
           properties: {
+            cookiePrefix: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "advanced.cookiePrefix" should be a string.',
+              },
+            },
             cookies: {
               type: 'object',
             },
