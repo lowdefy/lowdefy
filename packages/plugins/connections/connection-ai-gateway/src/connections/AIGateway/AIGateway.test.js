@@ -23,6 +23,14 @@ jest.unstable_mockModule('@ai-sdk/gateway', () => ({
   createGateway: mockCreateGateway,
 }));
 
+// Prevent the real 'ai' package (imported via @lowdefy/ai-utils in the request
+// resolvers) from loading — it imports more from '@ai-sdk/gateway' than the
+// mock above provides.
+jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+  handleGenerateObject: jest.fn(),
+  handleGenerateText: jest.fn(),
+}));
+
 test('AIGateway create returns provider with apiKey', async () => {
   const mockProvider = jest.fn();
   mockCreateGateway.mockReturnValue(mockProvider);
@@ -143,4 +151,11 @@ test('headers is not an object', async () => {
   expect(() => validate({ schema, data: { headers: 'x-org: lowdefy' } })).toThrow(
     'AIGateway connection property "headers" should be an object of strings.'
   );
+});
+
+test('All requests are present', async () => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+
+  expect(AIGateway.requests.GenerateObject).toBeDefined();
+  expect(AIGateway.requests.GenerateText).toBeDefined();
 });

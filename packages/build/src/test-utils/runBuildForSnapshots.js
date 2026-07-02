@@ -114,6 +114,7 @@ const snapshotTypesMap = {
     TreeSelector: { package: '@lowdefy/blocks-antd' },
   },
   connections: {
+    Anthropic: { package: '@lowdefy/connection-anthropic' },
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
     Knex: { package: '@lowdefy/connection-knex' },
@@ -126,6 +127,8 @@ const snapshotTypesMap = {
   },
   requests: {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    GenerateObject: { package: '@lowdefy/connection-anthropic' },
+    GenerateText: { package: '@lowdefy/connection-anthropic' },
     MongoDBFind: { package: '@lowdefy/connection-mongodb' },
     MongoDBFindOne: { package: '@lowdefy/connection-mongodb' },
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },

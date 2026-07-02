@@ -14,14 +14,23 @@
   limitations under the License.
 */
 
-import GenerateObject from './GenerateObject/GenerateObject.js';
-import GenerateText from './GenerateText/GenerateText.js';
-import createProvider from './createProvider.js';
-import schema from './schema.js';
+import { generateText } from 'ai';
 
-function create({ connection }) {
-  return { provider: createProvider({ connection }) };
+import buildGenerateCallOptions from './buildGenerateCallOptions.js';
+
+async function handleGenerateText({ model, request }) {
+  const result = await generateText({
+    model,
+    ...buildGenerateCallOptions({ request }),
+  });
+  return {
+    text: result.text,
+    reasoningText: result.reasoningText,
+    finishReason: result.finishReason,
+    usage: result.usage,
+    providerMetadata: result.providerMetadata,
+    warnings: result.warnings,
+  };
 }
 
-const OpenAI = { schema, create, requests: { GenerateObject, GenerateText } };
-export default OpenAI;
+export default handleGenerateText;

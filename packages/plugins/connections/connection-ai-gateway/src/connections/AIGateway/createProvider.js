@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import GenerateObject from './GenerateObject/GenerateObject.js';
-import GenerateText from './GenerateText/GenerateText.js';
-import createProvider from './createProvider.js';
-import schema from './schema.js';
+import { createGateway } from '@ai-sdk/gateway';
 
-function create({ connection }) {
-  return { provider: createProvider({ connection }) };
+// Shared by the connection's create and the request resolvers, which receive
+// evaluated connection properties (not a provider instance) from the request
+// interface layer and must construct the provider themselves.
+function createProvider({ connection }) {
+  const { apiKey, baseURL, headers } = connection ?? {};
+  return createGateway({ apiKey, baseURL, headers });
 }
 
-const OpenAI = { schema, create, requests: { GenerateObject, GenerateText } };
-export default OpenAI;
+export default createProvider;

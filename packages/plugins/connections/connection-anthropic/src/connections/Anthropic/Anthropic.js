@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { createAnthropic } from '@ai-sdk/anthropic';
+import GenerateObject from './GenerateObject/GenerateObject.js';
+import GenerateText from './GenerateText/GenerateText.js';
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
 function create({ connection }) {
-  const { apiKey, baseURL } = connection ?? {};
-  return { provider: createAnthropic({ apiKey, baseURL }) };
+  return { provider: createProvider({ connection }) };
 }
 
-const Anthropic = { schema, create };
+const Anthropic = { schema, create, requests: { GenerateObject, GenerateText } };
 export default Anthropic;

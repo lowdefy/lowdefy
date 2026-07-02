@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import GenerateObject from './GenerateObject/GenerateObject.js';
+import GenerateText from './GenerateText/GenerateText.js';
+import createProvider from './createProvider.js';
 import schema from './schema.js';
 
 function create({ connection }) {
-  const { apiKey, baseURL } = connection ?? {};
-  return { provider: createGoogleGenerativeAI({ apiKey, baseURL }) };
+  return { provider: createProvider({ connection }) };
 }
 
-const Google = { schema, create };
+const Google = { schema, create, requests: { GenerateObject, GenerateText } };
 export default Google;

@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
-import GenerateObject from './GenerateObject/GenerateObject.js';
-import GenerateText from './GenerateText/GenerateText.js';
-import createProvider from './createProvider.js';
+import { handleGenerateObject } from '@lowdefy/ai-utils';
+
+import createProvider from '../createProvider.js';
 import schema from './schema.js';
 
-function create({ connection }) {
-  return { provider: createProvider({ connection }) };
+async function GenerateObject({ connection, request }) {
+  const provider = createProvider({ connection });
+  return handleGenerateObject({ model: provider(request.model), request });
 }
 
-const OpenAI = { schema, create, requests: { GenerateObject, GenerateText } };
-export default OpenAI;
+GenerateObject.schema = schema;
+GenerateObject.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
+
+export default GenerateObject;
