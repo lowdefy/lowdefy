@@ -50,9 +50,7 @@ test('validateAuthConfig throws when auth contains an unknown key', () => {
       notAKnownAuthKey: true,
     },
   };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    /contains an unknown property/
-  );
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
 test('validateAuthConfig throws when configured without an authentication mechanism', () => {
@@ -62,7 +60,64 @@ test('validateAuthConfig throws when configured without an authentication mechan
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true") or an OAuth provider in "providers".'
+    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
+  );
+});
+
+test('validateAuthConfig passes a strategies-only auth block without a database or login method', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      strategies: [
+        {
+          id: 'partner-access',
+          type: 'apiKey',
+          properties: { keys: [{ value: { _secret: 'PARTNER_KEY' } }] },
+        },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when a strategies-only auth block is missing secret', () => {
+  const components = {
+    auth: {
+      strategies: [
+        {
+          id: 'partner-access',
+          type: 'apiKey',
+          properties: { keys: [{ value: { _secret: 'PARTNER_KEY' } }] },
+        },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "secret" is required when auth is configured. Reference it with the _secret operator.'
+  );
+});
+
+test('validateAuthConfig throws when a strategy entry is missing a required property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      strategies: [{ id: 'partner-access' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth strategy should have required property "type".'
+  );
+});
+
+test('validateAuthConfig throws when strategies is not an array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      strategies: { id: 'partner-access' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "strategies" should be an array.'
   );
 });
 
@@ -464,7 +519,5 @@ test('validateAuthConfig throws when organizations contains an unknown property'
       organizations: { enabled: true },
     },
   };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    /contains an unknown property/
-  );
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });

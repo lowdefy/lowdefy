@@ -60,6 +60,7 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
       websockets: { roles: {} },
       providers: [],
       hooks: [],
+      strategies: [],
       organizations: {
         policy: 'pinned',
         org: 'default',
@@ -85,6 +86,26 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
       rateLimit: { enabled: true, window: 60, max: 100 },
     },
   });
+});
+
+test('setAuthDefaults sets strategies to an empty array when auth is configured', () => {
+  const components = {
+    auth: {
+      configured: true,
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.strategies).toEqual([]);
+});
+
+test('setAuthDefaults does not set strategies when auth is not configured', () => {
+  const components = {
+    auth: {
+      configured: false,
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.strategies).toBeUndefined();
 });
 
 test('setAuthDefaults does not overwrite explicitly provided values', () => {

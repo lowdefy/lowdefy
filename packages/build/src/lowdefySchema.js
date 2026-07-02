@@ -1086,6 +1086,65 @@ export default {
             },
           },
         },
+        strategies: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "strategies" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "properties" should be an object.',
+                },
+              },
+              roles: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth strategy "roles" should be an array of role names.',
+                  },
+                },
+                errorMessage: {
+                  type: 'Auth strategy "roles" should be an array of role names.',
+                },
+              },
+              attributes: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "attributes" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth strategy should be an object.',
+              required: {
+                id: 'Auth strategy should have required property "id".',
+                type: 'Auth strategy should have required property "type".',
+              },
+            },
+          },
+        },
         organizations: {
           type: 'object',
           additionalProperties: false,

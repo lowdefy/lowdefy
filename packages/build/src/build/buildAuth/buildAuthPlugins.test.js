@@ -81,6 +81,34 @@ test('buildAuthPlugins does not count providers when the list is absent', () => 
   expect(context.typeCounters.auth.providers.getCounts()).toEqual({});
 });
 
+test('buildAuthPlugins counts each strategy type with its config location', () => {
+  const context = testContext();
+  const components = {
+    auth: {
+      strategies: [
+        { id: 'partner-access', type: 'apiKey', properties: {}, '~k': 'k-api-key' },
+        { id: 'service-jwt', type: 'jwt', properties: {}, '~k': 'k-jwt' },
+      ],
+    },
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.strategies.getCounts()).toEqual({
+    apiKey: 1,
+    jwt: 1,
+  });
+  expect(context.typeCounters.auth.strategies.getLocation('apiKey')).toBe('k-api-key');
+  expect(context.typeCounters.auth.strategies.getLocation('jwt')).toBe('k-jwt');
+});
+
+test('buildAuthPlugins does not count strategies when the list is absent', () => {
+  const context = testContext();
+  const components = {
+    auth: {},
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.strategies.getCounts()).toEqual({});
+});
+
 test('buildAuthPlugins counts both database and provider types together', () => {
   const context = testContext();
   const components = {

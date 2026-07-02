@@ -21,12 +21,15 @@ import { type } from '@lowdefy/helpers';
 // Shapes are already validated by validateAuthConfig before this step runs.
 function buildAuthPlugins({ components, context }) {
   const counters = context.typeCounters.auth;
-  const { database, providers } = components.auth;
+  const { database, providers, strategies } = components.auth;
   if (!type.isNone(database)) {
     counters.adapters.increment(database.type, database['~k']);
   }
   (providers ?? []).forEach((provider) => {
     counters.providers.increment(provider.type, provider['~k']);
+  });
+  (strategies ?? []).forEach((strategy) => {
+    counters.strategies.increment(strategy.type, strategy['~k']);
   });
 }
 

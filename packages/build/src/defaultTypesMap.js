@@ -4,6 +4,7 @@ const defaultTypesMap = {
   auth: {
     adapters: {},
     providers: {},
+    strategies: {},
   },
   blockMetas: {},
   blocks: {},

@@ -29,6 +29,7 @@ async function generateDefaultTypesMap() {
     auth: {
       adapters: {},
       providers: {},
+      strategies: {},
     },
     blockMetas: {},
     blocks: {},
