@@ -28,6 +28,7 @@ import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
 import getMockUser from '../../lib/server/auth/getMockUser.js';
+import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
@@ -84,6 +85,7 @@ function apiContext() {
         await resolveAuthentication(context, {
           auth: getAuth({ logger: context.logger }),
           headers: c.req.raw.headers,
+          strategies: getStrategies({ logger: context.logger }),
         });
       }
     }
