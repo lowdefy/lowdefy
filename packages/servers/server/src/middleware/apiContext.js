@@ -33,6 +33,7 @@ import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
 import operators from '../../build/plugins/operators/server.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
+import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -69,6 +70,7 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      websockets,
     };
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });

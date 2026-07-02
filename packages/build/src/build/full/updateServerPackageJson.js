@@ -25,6 +25,12 @@ async function updateServerPackageJson({ components, context }) {
   const dependencies = packageJson.dependencies;
   function getPackages(types) {
     Object.values(types).forEach((type) => {
+      // Deployment tooling may have rewritten a workspace plugin to a link:
+      // path — overwriting it with the configured version (e.g. workspace:*)
+      // would break installs outside the monorepo workspace.
+      if (dependencies[type.package]?.startsWith('link:')) {
+        return;
+      }
       dependencies[type.package] = type.version;
     });
   }
@@ -37,6 +43,7 @@ async function updateServerPackageJson({ components, context }) {
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.requests);
+  getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
 

@@ -41,6 +41,7 @@ async function generateDefaultTypesMap() {
       server: {},
     },
     requests: {},
+    websockets: {},
   };
 
   for (const packageName of defaultPackages) {

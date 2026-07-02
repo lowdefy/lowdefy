@@ -32,6 +32,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
+import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -93,6 +94,7 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      websockets,
     };
     context.logger = createLogger();
     context.handleError = createHandleError({ context });

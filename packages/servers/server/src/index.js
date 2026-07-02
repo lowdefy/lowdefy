@@ -15,6 +15,7 @@
 */
 
 import { serve } from '@hono/node-server';
+import { WebSocketServer } from 'ws';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
 
@@ -32,7 +33,11 @@ const { default: createApp } = await import('./app.js');
 const app = createApp();
 const port = Number(process.env.PORT ?? 3000);
 
-const server = serve({ fetch: app.fetch, port }, (info) => {
+// Handles /api/websocket upgrades via serve({ websocket }). 256 KiB max frame,
+// aligned with Vercel's documented default for WebSocket functions.
+const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+
+const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
   console.log(`Lowdefy server listening on http://localhost:${info.port}`);
 });
 
@@ -44,3 +49,7 @@ function shutdown() {
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+
+// Vercel's Node.js builder consumes the exported server — the same pattern
+// Vercel documents for WebSocket support with Hono on Fluid compute.
+export default server;

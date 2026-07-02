@@ -19,6 +19,7 @@ import { translate } from '@lowdefy/helpers';
 import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
+import createWebSocketClient from './websocket/createWebSocketClient.js';
 import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
@@ -68,6 +69,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
+    lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.translate = (key, values) =>

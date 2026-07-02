@@ -27,6 +27,9 @@ test('validateAuthConfig no auth defined', () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       events: [],

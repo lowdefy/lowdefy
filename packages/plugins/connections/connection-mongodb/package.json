@@ -34,7 +34,8 @@
   "exports": {
     "./auth/adapters": "./dist/auth/adapters.js",
     "./connections": "./dist/connections.js",
-    "./types": "./dist/types.js"
+    "./types": "./dist/types.js",
+    "./websockets": "./dist/websockets.js"
   },
   "files": [
     "dist/*"

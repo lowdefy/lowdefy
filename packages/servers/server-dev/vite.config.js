@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
+import { WebSocketServer } from 'ws';
 
 // basePath from the Lowdefy build — assets and routes are served under it.
 let basePath = '';
@@ -28,10 +29,40 @@ try {
   // No build yet — default base.
 }
 
+// Vite owns the HTTP server in dev, so /api/websocket upgrades are handled
+// here instead of @hono/node-server. The upgrade handler module is loaded
+// through Vite's SSR graph so it shares the Hono app and @lowdefy/api module
+// instances with the dev server routes. Vite's own HMR websocket uses a
+// different path and is untouched.
+function lowdefyWebSocket() {
+  return {
+    name: 'lowdefy-websocket',
+    configureServer(server) {
+      const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+      server.httpServer?.on('upgrade', async (request, socket, head) => {
+        const { pathname } = new URL(request.url ?? '/', 'http://localhost');
+        if (pathname !== `${basePath}/api/websocket`) {
+          return;
+        }
+        try {
+          const { handleWebSocketUpgrade } = await server.ssrLoadModule(
+            './src/websocket/devWebSocket.js'
+          );
+          await handleWebSocketUpgrade({ request, socket, head, wss });
+        } catch (error) {
+          console.error(error);
+          socket.destroy();
+        }
+      });
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
     react(),
+    lowdefyWebSocket(),
     devServer({
       entry: './src/app.js',
       // Vite serves these itself; everything else routes to the Hono app.

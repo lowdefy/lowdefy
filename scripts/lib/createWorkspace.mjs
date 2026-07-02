@@ -18,7 +18,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function createWorkspace({ targetDir }) {
-  fs.writeFileSync(path.join(targetDir, 'pnpm-workspace.yaml'), 'packages: []\n');
+  // Carry the repo's build-script allowlist into the isolated workspace —
+  // pnpm refuses to run dependency build scripts (@swc/core, @sentry/cli,
+  // better-sqlite3, esbuild) unless they are approved in the workspace file.
+  // pnpm 10 reads onlyBuiltDependencies; pnpm 11 reads allowBuilds and fails
+  // the install without it.
+  fs.writeFileSync(
+    path.join(targetDir, 'pnpm-workspace.yaml'),
+    [
+      'packages: []',
+      'onlyBuiltDependencies:',
+      "  - '@sentry/cli'",
+      "  - '@swc/core'",
+      '  - better-sqlite3',
+      '  - esbuild',
+      '  - sharp',
+      'allowBuilds:',
+      "  '@sentry/cli': true",
+      "  '@swc/core': true",
+      '  better-sqlite3: true',
+      '  esbuild: true',
+      '  sharp: true',
+      '',
+    ].join('\n')
+  );
   if (!fs.existsSync(path.join(targetDir, '.npmrc'))) {
     fs.writeFileSync(path.join(targetDir, '.npmrc'), 'strict-peer-dependencies=false\n');
   }

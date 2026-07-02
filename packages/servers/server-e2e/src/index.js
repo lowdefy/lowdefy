@@ -15,13 +15,16 @@
 */
 
 import { serve } from '@hono/node-server';
+import { WebSocketServer } from 'ws';
 
 import createApp from './app.js';
 
 const app = createApp();
 const port = Number(process.env.PORT ?? 3000);
 
-const server = serve({ fetch: app.fetch, port }, (info) => {
+const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+
+const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
   console.log(`Lowdefy e2e server listening on http://localhost:${info.port}`);
 });
 

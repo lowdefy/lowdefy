@@ -38,6 +38,7 @@ import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
+import buildWebsockets from '../buildWebsockets.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -52,6 +53,7 @@ import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
+import writeWebsockets from '../writeWebsockets.js';
 import writeLogger from '../writeLogger.js';
 import codegenI18nLocales from '../codegenI18nLocales.js';
 import writeI18n from '../writeI18n.js';
@@ -134,6 +136,7 @@ async function shallowBuild(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
@@ -163,6 +166,7 @@ async function shallowBuild(options) {
     await writeConnections({ components, context });
     await writeApi({ components, context });
     await writeAgents({ components, context });
+    await writeWebsockets({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
@@ -173,6 +177,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'connectionIds.json',
       JSON.stringify([...context.connectionIds].sort())
+    );
+    await context.writeBuildArtifact(
+      'websocketIds.json',
+      JSON.stringify([...context.websocketIds].sort())
     );
     await context.writeBuildArtifact(
       'skeletonSourceFiles.json',

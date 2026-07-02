@@ -117,6 +117,14 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
     version,
   });
 
+  createTypeDefinitions({
+    typeNames: packageTypes.websockets,
+    store: typesMap.websockets,
+    packageName,
+    typePrefix,
+    version,
+  });
+
   if (type.isObject(packageTypes.icons)) {
     Object.entries(packageTypes.icons).forEach(([blockType, icons]) => {
       typesMap.icons[`${typePrefix}${blockType}`] = icons;

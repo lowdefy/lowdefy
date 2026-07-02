@@ -29,6 +29,14 @@ const ShortcutEffect = ({ context }) => {
   return null;
 };
 
+const WebSocketsEffect = ({ context }) => {
+  useEffect(() => {
+    context._internal.WebSockets.subscribeAll();
+    return () => context._internal.WebSockets.unsubscribeAll();
+  }, [context]);
+  return null;
+};
+
 const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
   const context = getContext({ config, jsMap, lowdefy, resetContext });
   return (
@@ -54,6 +62,7 @@ const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
         return (
           <>
             <ShortcutEffect context={context} />
+            <WebSocketsEffect context={context} />
             {children(context)}
           </>
         );
