@@ -27,6 +27,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
+    stepTypes: context.typesMap?.steps ?? {},
   });
 
   // Validate that _step references point to defined step IDs

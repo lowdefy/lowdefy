@@ -719,3 +719,132 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
     MongoDBInsertOne: 1,
   });
 });
+
+test('Auth step builds with auth prefix', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_auth_step',
+        endpointId: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'auth:test_auth_step:ban_user',
+            endpointId: 'test_auth_step',
+            stepId: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('Auth step with connectionId throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_connection',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', connectionId: 'test_connection' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_connection" should not have a connectionId.'
+  );
+});
+
+test('Auth step with non-object properties throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_properties',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', properties: 'not-an-object' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_properties" properties is not an object.'
+  );
+});
+
+test('Auth step with non-boolean system throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: 'yes' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_system" system must be a boolean.'
+  );
+});
+
+test('Auth step with boolean system does not throw', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system_valid',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: true }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('Auth step is counted in typeCounters.steps and not typeCounters.requests', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_count',
+        type: 'Api',
+        routine: [
+          { id: 'db_step', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          { id: 'ban_user', type: 'BanUser', properties: { userId: 'user_1' } },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+  expect(context.typeCounters.steps.getCounts()).toEqual({
+    BanUser: 1,
+  });
+});

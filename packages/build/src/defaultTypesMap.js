@@ -14,6 +14,7 @@ const defaultTypesMap = {
     server: {},
   },
   requests: {},
+  steps: {},
   websockets: {},
   schemas: {
     actions: {},

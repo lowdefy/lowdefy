@@ -75,6 +75,7 @@ function buildTypes({ components, context }) {
     blocks: {},
     connections: {},
     requests: {},
+    steps: {},
     websockets: {},
     api: {},
     operators: {
@@ -130,6 +131,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.steps,
+    definitions: context.typesMap.steps,
+    store: components.types.steps,
+    typeClass: 'Step',
   });
 
   buildTypeClass(context, {

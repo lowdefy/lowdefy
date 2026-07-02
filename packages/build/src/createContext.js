@@ -62,6 +62,7 @@ function createContext({
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
+      steps: createCounter(),
       websockets: createCounter(),
       controls: createCounter(),
       operators: {

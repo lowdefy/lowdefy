@@ -32,6 +32,7 @@ function getPluginPackages({ components }) {
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.requests);
+  getPackages(components.types.steps);
   getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
@@ -62,6 +63,7 @@ function buildImportsDev({ components, context }) {
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
     icons: buildIconImports({ blocks, components, context, defaults: defaultIconsDev }),
     requests: buildImportClassDev({ pluginPackages, map: context.typesMap.requests }),
+    steps: buildImportClassDev({ pluginPackages, map: context.typesMap.steps }),
     websockets: buildImportClassDev({ pluginPackages, map: context.typesMap.websockets }),
     operators: {
       client: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.client }),
