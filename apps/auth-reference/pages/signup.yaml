@@ -32,9 +32,8 @@ blocks:
         # With requireEmailVerification the response carries no session -
         # verification precedes sign-in.
         - id: sign_up
-          type: Login
+          type: SignUp
           params:
-            signUp: true
             name:
               _state: name
             email:

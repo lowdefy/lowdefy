@@ -54,8 +54,9 @@ node scripts/dev.mjs --config-directory apps/auth-reference
 
 1. **Public page**: open `/home` logged out - it renders. `/dashboard`
    redirects to `/login?callbackUrl=/dashboard`.
-2. **Sign up (email/password)**: `/signup` → submit. The response carries
-   **no session** (check the Mailpit inbox); you land on `/check-email`.
+2. **Sign up (email/password)**: `/signup` → submit (the `SignUp` action,
+   email/password only). The response carries **no session** (check the
+   Mailpit inbox); you land on `/check-email`.
 3. **Unverified sign-in refused**: `/login` with the same credentials →
    sign-in fails (403 EMAIL_NOT_VERIFIED) until the email is verified.
 4. **Verify**: click the link in Mailpit → BetterAuth verifies and
