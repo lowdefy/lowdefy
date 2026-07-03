@@ -1,0 +1,20 @@
+# Migration stub for the old `welcome-new-user` event
+# (local plugin WelcomeNewUserEvent, meta.type: 'createUser' → hook point: user.create.after).
+# TODO(migration): port the plugin's logic into this routine (e.g. send a welcome email,
+# seed app records for the new user). Read the new user record with `_payload`.
+# `after` points are fire-and-forget — wrap side effects in `:try`.
+id: auth/welcome-new-user
+type: InternalApi
+routine:
+  - :try:
+      # TODO(migration): replace this placeholder step with the ported logic.
+      - id: record_new_user
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          doc:
+            event: user_created
+            userId:
+              _payload: user.id
+            at:
+              _date: now

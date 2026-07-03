@@ -1206,6 +1206,11 @@
           pageId: upgrade-guide
           properties:
             title: Upgrade Guide
+        - id: auth-upgrade
+          type: MenuLink
+          pageId: auth-upgrade
+          properties:
+            title: Auth Upgrade
         - id: v5-to-v6
           type: MenuLink
           pageId: v5-to-v6

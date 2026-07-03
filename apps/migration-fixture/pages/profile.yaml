@@ -1,0 +1,86 @@
+# Seeded dropped-claim reads (class A) and userFields-projected reads (class C).
+# Every `_user` read on this page except `name` must appear in the prompt-07 report.
+id: profile
+type: Box
+blocks:
+  - id: profile_title
+    type: Title
+    properties:
+      content:
+        _user: name # kept — not reported
+  - id: subject
+    type: Html
+    properties:
+      html:
+        _user: sub # A → _user.id (different value)
+  - id: full_name
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - _user: given_name # A → contact
+          - ' '
+          - _user: family_name # A → contact
+  - id: username
+    type: Html
+    properties:
+      html:
+        _user: preferred_username # A → contact
+  - id: photo
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<img src="'
+          - _user: picture # A → _user.image
+          - '" />'
+  - id: verified
+    type: Html
+    properties:
+      html:
+        _if:
+          test:
+            _user: email_verified # A → _user.emailVerified
+          then: Email verified
+          else: Email not verified
+  - id: phone
+    type: Html
+    properties:
+      html:
+        _user: phone_number # A → contact
+  - id: country
+    type: Html
+    properties:
+      html:
+        _user: address.country # A → contact
+  - id: locale
+    type: Html
+    properties:
+      html:
+        _user:
+          key: locale # A (object form) → contact or attributes
+          default: en
+  - id: last_updated
+    type: Html
+    properties:
+      html:
+        _user: updated_at # A → not carried; hook-persist if needed
+  - id: website_card
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: '<p>Website: {{ user.website }}</p>' # A via whole-object embed
+          on:
+            user:
+              _user: true # A — whole user object read
+  - id: groups
+    type: Html
+    properties:
+      html:
+        _user: idp_groups # C — userFields-projected custom claim
+  - id: company
+    type: Html
+    properties:
+      html:
+        _user: profile.company # C — userFields `profile` dump, deeper read → contact

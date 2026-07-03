@@ -1,0 +1,20 @@
+# Migration stub for the old `audit-login` event
+# (local plugin AuditLoginEvent, meta.type: 'signIn' → hook point: session.create.after).
+# TODO(migration): port the plugin's audit logic into this routine.
+# Read the hook payload with `_payload` (`_user` is empty inside a hook).
+# `after` points are fire-and-forget — wrap side effects in `:try`.
+id: auth/audit-login
+type: InternalApi
+routine:
+  - :try:
+      # TODO(migration): verify collection/shape against the old plugin's behaviour.
+      - id: record_login
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          doc:
+            event: login
+            userId:
+              _payload: user.id
+            at:
+              _date: now
