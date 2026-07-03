@@ -29,9 +29,7 @@ async function runEmailPreview({ context }) {
   );
 
   if (!fs.existsSync(emailBin)) {
-    throw new Error(
-      'react-email is not installed. It is added to the server when "notifications:" is configured — check your lowdefy.yaml.'
-    );
+    throw new Error('react-email is not installed. Rerun "lowdefy emails" to install it.');
   }
 
   const port = context.options.port ?? 3001;

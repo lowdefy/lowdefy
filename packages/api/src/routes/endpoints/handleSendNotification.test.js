@@ -171,8 +171,9 @@ test('SendNotification inserts a record and sends inline', async () => {
     sent: false,
     send_attempts: 0,
     read: false,
-    popup: false,
   });
+  // UI-only hints like popup are app data — never hoisted onto the record
+  expect(record.popup).toBeUndefined();
   expect(record.created.app_name).toBe('test-app');
   expect(record.created.timestamp).toBeInstanceOf(Date);
 
@@ -363,6 +364,32 @@ test('SendNotification resolves pageId links directly when notificationLandingPa
   // Stored record still keeps the original link objects
   const record = mockInsertNotification.mock.calls[0][0].notification;
   expect(record.data.links.button).toEqual({ pageId: 'task-view', urlQuery: { _id: 'T-1' } });
+});
+
+test('SendNotification resolves array link fields for the data keys the template declares', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { serverUrl: 'https://myapp.com', notificationLandingPage: '/notifications/link' },
+  });
+  // Custom template declaring its own data key — link resolution must follow it
+  context.notifications.NotificationEmail.dataKeys = ['rows'];
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    rows: [{ title: 'Row', link: { pageId: 'row-view' } }],
+    actions: [{ title: 'Ignored', link: { pageId: 'action-view' } }],
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.data.rows[0].link).toContain('option=rows.0.link');
+  // 'actions' is not one of this template's dataKeys — left untouched
+  expect(renderArgs.data.actions[0].link).toEqual({ pageId: 'action-view' });
+  context.notifications.NotificationEmail.dataKeys = ['actions'];
 });
 
 test('SendNotification falls back to VERCEL_URL when app.serverUrl is unset', async () => {

@@ -21,6 +21,7 @@ import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 
 import generateEmailShims from './generateEmailShims.js';
+import installReactEmail from './installReactEmail.js';
 import readNotificationArtifacts from './readNotificationArtifacts.js';
 import runEmailPreview from './runEmailPreview.js';
 import warnMissingDataKeys from './warnMissingDataKeys.js';
@@ -50,6 +51,7 @@ async function emails({ context }) {
     return;
   }
 
+  await installReactEmail({ context, directory });
   await generateEmailShims({ context, notifications, appEmail, notificationTypes });
   await warnMissingDataKeys({ context, notifications, notificationTypes });
   context.logger.info(

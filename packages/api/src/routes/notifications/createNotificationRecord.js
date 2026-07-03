@@ -84,7 +84,6 @@ function createNotificationRecord({
     email_result: null,
 
     read: false,
-    popup: item.popup ?? false,
 
     created: { timestamp: new Date(), app_name: appName ?? null },
   };

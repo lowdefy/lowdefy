@@ -29,9 +29,9 @@ import resolveNotificationLinks from '../notifications/resolveNotificationLinks.
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function itemHasPageLinks(item) {
+function itemHasPageLinks(item, dataKeys) {
   const links = Object.values(item.links ?? {});
-  const arrayLinks = ['actions', 'items'].flatMap((key) =>
+  const arrayLinks = dataKeys.flatMap((key) =>
     (type.isArray(item[key]) ? item[key] : []).map((entry) => entry?.link)
   );
   return [...links, ...arrayLinks].some(
@@ -146,7 +146,7 @@ async function handleSendNotification(context, routineContext, { step }) {
     // Generated before link resolution because landing URLs embed the record id.
     const recordId = crypto.randomUUID();
 
-    if (itemHasPageLinks(item) && serverUrl === null) {
+    if (itemHasPageLinks(item, Template.dataKeys ?? []) && serverUrl === null) {
       throw new ConfigError(
         `Notification "${notificationId}" has links but no server URL is available. Set app.serverUrl.`,
         { configKey }
@@ -154,6 +154,7 @@ async function handleSendNotification(context, routineContext, { step }) {
     }
     const resolvedItem = resolveNotificationLinks({
       item,
+      dataKeys: Template.dataKeys ?? [],
       serverUrl: serverUrl ?? '',
       basePath,
       landingPage,

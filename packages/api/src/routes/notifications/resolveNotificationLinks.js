@@ -39,7 +39,10 @@ function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, reco
 
 // Resolves link values in a copy of the data item to URLs; the stored record
 // keeps the original { pageId, urlQuery } objects for in-app navigation.
-function resolveNotificationLinks({ item, serverUrl, basePath, landingPage, recordId }) {
+// data.links is the framework convention; link fields inside arrays are
+// resolved for the data keys the template declares (Template.dataKeys), so
+// custom templates get the same treatment as the built-in ones.
+function resolveNotificationLinks({ item, dataKeys, serverUrl, basePath, landingPage, recordId }) {
   const resolved = serializer.copy(item);
 
   Object.keys(resolved.links ?? {}).forEach((key) => {
@@ -53,7 +56,7 @@ function resolveNotificationLinks({ item, serverUrl, basePath, landingPage, reco
     });
   });
 
-  ['actions', 'items'].forEach((arrayKey) => {
+  (dataKeys ?? []).forEach((arrayKey) => {
     if (!type.isArray(resolved[arrayKey])) return;
     resolved[arrayKey].forEach((entry, index) => {
       if (!type.isObject(entry) || type.isNone(entry.link)) return;
