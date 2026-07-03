@@ -1728,3 +1728,138 @@ pages:
     }
   );
 });
+
+describe('build operators over deferred operands', () => {
+  const mockModulePaths3 = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  test('a _build operator with a nested module-ref operand folds after demand, not during prepare', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+lowdefy: 4.0.0
+modules:
+  - id: companies
+    source: "file:../companies"
+    vars:
+      slot:
+        _ref:
+          module: layout
+          component: wrapper
+          vars:
+            on_complete:
+              _build.array.concat:
+                - _ref:
+                    module: actions
+                    component: complete-actions
+                - - id: extra
+                    type: SetState
+  - id: layout
+    source: "file:../layout"
+  - id: actions
+    source: "file:../actions"
+`,
+      },
+      {
+        path: '/companies/module.lowdefy.yaml',
+        content: `
+vars:
+  slot: {}
+pages: []
+`,
+      },
+      {
+        path: '/layout/module.lowdefy.yaml',
+        content: `
+components:
+  - id: wrapper
+    component:
+      type: Box
+      events:
+        onComplete:
+          _var: on_complete
+pages: []
+`,
+      },
+      {
+        path: '/actions/module.lowdefy.yaml',
+        content: `
+components:
+  - id: complete-actions
+    component:
+      - id: notify
+        type: Message
+pages: []
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    mockFetchModules.mockResolvedValue(mockModulePaths3(['companies', 'layout', 'actions']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'deferred operand fold hang');
+
+    expect(context.errors).toEqual([]);
+    expect(context.modules['companies'].consumerVars.slot.events.onComplete).toEqual([
+      { id: 'notify', type: 'Message' },
+      { id: 'extra', type: 'SetState' },
+    ]);
+  });
+
+  test('a _build operator with a deferred operand directly in entry vars folds at the sweep', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+lowdefy: 4.0.0
+modules:
+  - id: companies
+    source: "file:../companies"
+    vars:
+      merged:
+        _build.array.concat:
+          - _ref:
+              module: actions
+              component: complete-actions
+          - - id: extra
+              type: SetState
+  - id: actions
+    source: "file:../actions"
+`,
+      },
+      {
+        path: '/companies/module.lowdefy.yaml',
+        content: `
+vars:
+  merged: {}
+pages: []
+`,
+      },
+      {
+        path: '/actions/module.lowdefy.yaml',
+        content: `
+components:
+  - id: complete-actions
+    component:
+      - id: notify
+        type: Message
+pages: []
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    mockFetchModules.mockResolvedValue(mockModulePaths3(['companies', 'actions']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'deferred operand fold hang');
+
+    expect(context.errors).toEqual([]);
+    expect(context.modules['companies'].consumerVars.merged).toEqual([
+      { id: 'notify', type: 'Message' },
+      { id: 'extra', type: 'SetState' },
+    ]);
+  });
+});

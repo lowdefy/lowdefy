@@ -979,12 +979,32 @@ async function resolve(node, ctx) {
 
   // 9. _build.* operator
   if (isBuildOperator(node)) {
+    // Under prepare (deferModuleRefs), an operand subtree can hold a deferred
+    // placeholder where a module ref used to be — the operator cannot fold
+    // over it. Leave the node unevaluated: the finalize/demand walk (deferral
+    // off) splices concrete values via the placeholder dispatch before this
+    // branch runs, and the fold happens then, in the same enclosing scope.
+    if (ctx.deferModuleRefs && findPlaceholderInSubtree(node)) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
   }
 
   return node;
+}
+
+// Does any node in the subtree carry a deferred-record placeholder?
+function findPlaceholderInSubtree(node) {
+  if (getPlaceholderId(node) !== undefined) return true;
+  if (type.isArray(node)) {
+    return node.some((item) => findPlaceholderInSubtree(item));
+  }
+  if (type.isObject(node)) {
+    return Object.keys(node).some((key) => findPlaceholderInSubtree(node[key]));
+  }
+  return false;
 }
 
 export { resolve, loadAndWalkRef, WalkContext, tagRefDeep };
