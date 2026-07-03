@@ -166,6 +166,24 @@ test('dynamic page config builds a fresh context for a new config object', () =>
   expect(c1._internal.RootSlots.id).not.toEqual(c2._internal.RootSlots.id);
 });
 
+test('dynamic rebuild does not call mounted updaters during construction', () => {
+  const lowdefy = getLowdefy();
+  const updateBlockSpy = jest.fn();
+  lowdefy._internal.updateBlock = updateBlockSpy;
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config1.dynamic = true;
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  updateBlockSpy.mockClear();
+  // getContext runs in the render body — updating mounted Block components
+  // during the rebuild would setState mid-render.
+  getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(updateBlockSpy).not.toHaveBeenCalled();
+  // updateBlock is restored after construction.
+  expect(lowdefy._internal.updateBlock).toBe(updateBlockSpy);
+});
+
 test('static page config memoizes context across different config objects', () => {
   const lowdefy = getLowdefy();
   const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
