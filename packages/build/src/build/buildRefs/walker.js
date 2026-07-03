@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { get, serializer, type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
@@ -781,12 +781,6 @@ async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
         moduleEntry,
         extraRefChainKeys: [cycleKey],
       });
-
-      // Clone so each consumer gets an independent copy — getModuleRefContent
-      // returns a shared reference, and resolve() mutates in place.
-      // deferredFrom was read above before the clone (serializer.copy strips
-      // non-enumerable properties).
-      content = serializer.copy(content);
 
       // When component/menu content is a file _ref, the inner ref would create
       // a fresh var scope and lose the consumer's vars. Inject them into the clone.
