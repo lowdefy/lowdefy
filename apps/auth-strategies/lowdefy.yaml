@@ -1,0 +1,124 @@
+name: auth-strategies
+lowdefy: local
+
+# Strategies-only reference app for auth-upgrade phase 4 (API auth
+# strategies). No database and no login method are configured - external
+# callers authenticate with a static API key (X-API-Key) or a Bearer JWT
+# (HMAC shared secret or JWKS). The BetterAuth instance runs stateless, so
+# getSession resolves null on every request and resolution falls through to
+# the strategies. See README.md for the full walkthrough.
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  strategies:
+    # Static API keys - config-defined, no database needed.
+    - id: partner-access
+      type: apiKey
+      properties:
+        headerName: X-API-Key
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+          - id: globex
+            value:
+              _secret: PARTNER_KEY_GLOBEX
+      roles:
+        - partner
+      attributes:
+        branches: [north, east]
+
+    # JWT verified with an HMAC shared secret.
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        issuer: https://auth.example.test
+        audience: auth-strategies-api
+        claimMapping:
+          id: sub
+          email: email
+          roles: roles
+      roles:
+        - api-user
+
+    # JWT verified against a JWKS endpoint - scripts/jwks-server.mjs plays
+    # the external IdP and mints RS256 tokens for the walkthrough.
+    - id: external-idp
+      type: jwt
+      properties:
+        jwksUri: http://localhost:4100/jwks.json
+        algorithms:
+          - RS256
+        issuer: http://localhost:4100
+        audience: auth-strategies-api
+        claimMapping:
+          id: sub
+          roles: realm_access.roles
+          attributes.branches: resource_access.branches
+      roles: []
+
+  api:
+    protected: true
+    public:
+      - health
+    roles:
+      partner:
+        - partner-data
+      api-user:
+        - service-data
+
+api:
+  - id: health
+    type: Api
+    routine:
+      - ':return':
+          ok: true
+
+  # Role-gated per auth.api.roles - a partner key reaches this; a service
+  # JWT gets the opaque "does not exist".
+  - id: partner-data
+    type: Api
+    routine:
+      - ':return':
+          data: partner-report
+          caller:
+            _user: id
+          branches:
+            _user: attributes.branches
+
+  - id: service-data
+    type: Api
+    routine:
+      - ':return':
+          data: service-report
+          caller:
+            _user: id
+
+  # Protected but not role-gated - any authenticated caller may call it.
+  # Returns the resolved caller so the walkthrough can assert the strategy
+  # caller shape (id, authMethod, strategyId, roles, attributes).
+  - id: caller
+    type: Api
+    routine:
+      - ':return':
+          user:
+            _user: true
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Strategies-only reference app
+      - id: info
+        type: Paragraph
+        properties:
+          content: This app has no login method - see README.md for the API walkthrough.

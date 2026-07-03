@@ -2000,6 +2000,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.3.0
         version: link:../../../utils/helpers
+      jose:
+        specifier: ^6.2.3
+        version: 6.2.3
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3

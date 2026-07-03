@@ -181,6 +181,33 @@ test('resolves the database adapter using the matching plugin and resolved secre
   expect(options.database).toBe('adapter-instance');
 });
 
+test('constructs a stateless instance without a database for a strategies-only app', () => {
+  const adapterPlugin = jest.fn(() => 'adapter-instance');
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      database: undefined,
+      emailAndPassword: undefined,
+      strategies: [
+        {
+          id: 'partner-access',
+          type: 'apiKey',
+          properties: { headerName: 'X-API-Key', keys: [{ id: 'acme', value: 'k'.repeat(32) }] },
+          roles: ['partner'],
+          attributes: {},
+        },
+      ],
+    }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins({ adapters: { MongoDBAuthAdapter: adapterPlugin } }),
+    secrets: baseSecrets,
+  });
+  expect(adapterPlugin).not.toHaveBeenCalled();
+  expect(options.database).toBeUndefined();
+  expect(options.secret).toBe(baseSecrets.BETTER_AUTH_SECRET);
+});
+
 test('throws ConfigError when the database adapter type is not found', () => {
   const authJson = createAuthJson({
     database: {

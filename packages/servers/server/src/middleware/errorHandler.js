@@ -23,6 +23,18 @@ import { serializer } from '@lowdefy/helpers';
 // page routes get a plain 500.
 function createErrorHandler({ basePath = '', logger }) {
   return async function errorHandler(error, c) {
+    const path = basePath ? c.req.path.replace(basePath, '') : c.req.path;
+    // Unauthenticated requests to protected endpoints are expected traffic -
+    // one warning line and a 401, skipping the structured error log and the
+    // Sentry capture so probing cannot flood either. Keys strictly on the
+    // error name; the 500 path below is untouched.
+    if (error.name === 'AuthenticationError') {
+      logger.warn(`Unauthenticated request: ${c.req.method} ${c.req.path}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 401);
+      }
+      return c.text('Unauthorized', 401);
+    }
     const context = c.get('lowdefyContext');
     if (context) {
       await context.handleError(error);
@@ -32,7 +44,6 @@ function createErrorHandler({ basePath = '', logger }) {
     if (process.env.SENTRY_DSN) {
       Sentry.captureException(error);
     }
-    const path = basePath ? c.req.path.replace(basePath, '') : c.req.path;
     if (path.startsWith('/api/')) {
       const serialized = serializer.serialize(error);
       if (serialized?.['~e']) {

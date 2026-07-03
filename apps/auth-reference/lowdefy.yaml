@@ -94,10 +94,16 @@ auth:
   # The admin step endpoints carry no authorization of their own - this gate
   # is the authority. A caller without the admin role gets the opaque
   # endpoint-does-not-exist rejection before the routine runs.
+  # HTTP API authorization. admin-* and partner-data are role-gated; whoami
+  # is deliberately public - it echoes the resolved caller for the session-
+  # vs-strategy precedence scenarios (resolution runs on public endpoints
+  # too; only the authorization gate differs).
   api:
     roles:
       admin:
         - 'admin-*'
+      partner:
+        - partner-data
 
   authPages:
     signIn: /login
@@ -127,6 +133,37 @@ auth:
     # - id: invitation-send
     #   point: invitation.send
     #   endpointId: invitation-send
+
+  # API auth strategies (phase 4) - external callers authenticate with a
+  # static API key or an HMAC-signed JWT. A logged-in session always wins
+  # over a presented credential, and strategy callers bypass the
+  # org-membership wall (they are members of no organization); their roles
+  # are deployment-global and check against auth.api.roles below.
+  strategies:
+    - id: partner-access
+      type: apiKey
+      properties:
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+      roles:
+        - partner
+      attributes:
+        branches: [north, east]
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        issuer: https://auth.example.test
+        audience: auth-reference-api
+        claimMapping:
+          id: sub
+          roles: roles
+      roles: []
 
   # Uncomment to exercise the wrong-roles opaque /404 redirect and the
   # pre-resolved dev caller (roles are authoritative; no engine runs):
@@ -171,6 +208,9 @@ api:
   - _ref: api/normalize-signup.yaml
   - _ref: api/audit-login.yaml
   - _ref: api/on-email-verified.yaml
+  # Phase-4 API strategy endpoints.
+  - _ref: api/partner-data.yaml
+  - _ref: api/whoami.yaml
   # The invitation.send hook body - unreachable until its auth.hooks entry
   # above is uncommented.
   - _ref: api/invitation-send.yaml

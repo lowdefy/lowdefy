@@ -31,6 +31,13 @@ async function writeAuthImports({ components, context }) {
       importPath: 'auth/providers',
     })
   );
+  await context.writeBuildArtifact(
+    'plugins/auth/strategies.js',
+    generateImportFile({
+      imports: components.imports.auth.strategies,
+      importPath: 'auth/strategies',
+    })
+  );
 }
 
 export default writeAuthImports;

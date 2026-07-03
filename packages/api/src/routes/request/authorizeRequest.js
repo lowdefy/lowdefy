@@ -14,15 +14,23 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-function authorizeRequest({ authorize, logger }, { requestConfig }) {
+function authorizeRequest({ authorize, logger, user }, { requestConfig }) {
   if (!authorize(requestConfig)) {
     logger.debug({
       event: 'debug_request_authorize',
       authorized: false,
       auth_config: requestConfig.auth,
     });
+    // Unauthenticated on a protected request - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(
+        `Authentication required for request "${requestConfig.requestId}".`
+      );
+    }
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
     throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {
       configKey: requestConfig['~k'],

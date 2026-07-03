@@ -161,6 +161,10 @@ const snapshotTypesMap = {
       GitHub: { package: '@lowdefy/plugin-better-auth' },
       GenericOAuth: { package: '@lowdefy/plugin-better-auth' },
     },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-better-auth' },
+      jwt: { package: '@lowdefy/plugin-better-auth' },
+    },
   },
   operators: {
     client: {

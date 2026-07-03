@@ -29,6 +29,7 @@ function getPluginPackages({ components }) {
   getPackages(components.types.agents);
   getPackages(components.types.auth.adapters);
   getPackages(components.types.auth.providers);
+  getPackages(components.types.auth.strategies);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.requests);
@@ -58,6 +59,7 @@ function buildImportsDev({ components, context }) {
     auth: {
       adapters: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.adapters }),
       providers: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.providers }),
+      strategies: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.strategies }),
     },
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),

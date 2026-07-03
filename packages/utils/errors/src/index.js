@@ -49,6 +49,11 @@
  *    - Caught: Caller of the action/resolver; signals "the called routine deliberately failed" as distinct from a system fault
  *    - Format: [User Error] message
  *
+ * 7. AuthenticationError - Unauthenticated request to a protected endpoint
+ *    - Thrown: API/request authorization when no caller resolved
+ *    - Caught: Server error handlers, before structured logging and Sentry (401)
+ *    - Format: [AuthenticationError] message
+ *
  * Location Resolution Utilities:
  *   resolveConfigLocation     - Sync: configKey → {source, config} via keyMap/refMap
  *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
@@ -57,6 +62,7 @@
  */
 
 import ActionError from './ActionError.js';
+import AuthenticationError from './AuthenticationError.js';
 import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
@@ -75,6 +81,7 @@ import UserError from './UserError.js';
 
 export {
   ActionError,
+  AuthenticationError,
   BlockError,
   BuildError,
   ConfigError,

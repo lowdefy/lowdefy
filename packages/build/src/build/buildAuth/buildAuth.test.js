@@ -122,6 +122,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
     providers: [],
     roles: [],
     hooks: [],
+    strategies: [],
     organizations: {
       policy: 'pinned',
       org: 'default',

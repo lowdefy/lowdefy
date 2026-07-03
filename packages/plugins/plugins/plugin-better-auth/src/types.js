@@ -54,6 +54,7 @@ export default {
       'WeChat',
       'Zoom',
     ],
+    strategies: ['apiKey', 'jwt'],
   },
   steps: [
     'BanUser',

@@ -28,6 +28,7 @@
   "type": "module",
   "exports": {
     "./auth/providers": "./dist/auth/providers.js",
+    "./auth/strategies": "./dist/auth/strategies.js",
     "./steps": "./dist/steps.js",
     "./types": "./dist/types.js"
   },
@@ -41,7 +42,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "5.3.0"
+    "@lowdefy/helpers": "5.3.0",
+    "jose": "^6.2.3"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

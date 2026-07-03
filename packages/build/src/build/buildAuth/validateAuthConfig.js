@@ -79,12 +79,13 @@ function validateAuthConfig({ components }) {
   const magicLinkEnabled = auth.magicLink?.enabled === true;
   const hasProviders = type.isArray(auth.providers) && auth.providers.length > 0;
   const hasLoginMethod = emailAndPasswordEnabled || magicLinkEnabled || hasProviders;
+  const hasStrategies = type.isArray(auth.strategies) && auth.strategies.length > 0;
 
   // dev.mockUser is a server-dev-only bypass, not a mechanism - a block whose
   // only substance is dev.mockUser still fails this check.
-  if (!hasLoginMethod) {
+  if (!hasLoginMethod && !hasStrategies) {
     throw new ConfigError(
-      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true") or an OAuth provider in "providers".',
+      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
       { configKey }
     );
   }
