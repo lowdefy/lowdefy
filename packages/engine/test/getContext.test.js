@@ -20,14 +20,12 @@ import getContext from '../src/getContext.js';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 
 const getLowdefy = () => {
-  const updateBlock = () => jest.fn();
   const testLowdefy = {
     contexts: {},
     inputs: { test: {} },
     urlQuery: {},
     _internal: {
       displayMessage: () => () => {},
-      updateBlock,
       translate: (key) => key,
       operators: {},
       actions: {},
@@ -184,20 +182,20 @@ test('dynamic rebuild does not lower an already-lowered reset flag', () => {
 
 test('dynamic rebuild does not call mounted updaters during construction', () => {
   const lowdefy = getLowdefy();
-  const updateBlockSpy = jest.fn();
-  lowdefy._internal.updateBlock = updateBlockSpy;
   const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
   config1.dynamic = true;
   const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
   config2.dynamic = true;
-  getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
-  updateBlockSpy.mockClear();
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  // Simulate a mounted Block component registered on the live context.
+  const updaterSpy = jest.fn();
+  c1._internal.updaters[c1._internal.rootBlock.id] = updaterSpy;
   // getContext runs in the render body — updating mounted Block components
-  // during the rebuild would setState mid-render.
-  getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
-  expect(updateBlockSpy).not.toHaveBeenCalled();
-  // updateBlock is restored after construction.
-  expect(lowdefy._internal.updateBlock).toBe(updateBlockSpy);
+  // during the rebuild would setState mid-render. Updaters are scoped per
+  // context, so construction of the new context cannot reach the old ones.
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(updaterSpy).not.toHaveBeenCalled();
+  expect(c2._internal.updaters).toEqual({});
 });
 
 test('static page config memoizes context across different config objects', () => {

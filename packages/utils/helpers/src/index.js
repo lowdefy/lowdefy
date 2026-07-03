@@ -22,6 +22,7 @@ import get from './get.js';
 import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
+import getOperatorType from './getOperatorType.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
@@ -44,6 +45,7 @@ export {
   getLocaleDateFormat,
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
+  getOperatorType,
   LRUCache,
   mergeObjects,
   omit,

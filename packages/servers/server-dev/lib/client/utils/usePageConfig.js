@@ -13,8 +13,7 @@
 
 import useSWR from 'swr';
 
-import { getNavVersion } from './navVersion.js';
-import { getReloadVersion } from './useMutateCache.js';
+import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 
 // URLs whose config is server-resolved per request — learned from the fetched
 // config's dynamic flag, so the first visit caches like a static page and

@@ -95,25 +95,13 @@ function getContext({
   }
   // Lower the context reset flag — only when raised: setReset is a React
   // state setter on the Reload component, and getContext runs in the render
-  // body, so calling it on dynamic rebuilds (reset already false) would
-  // setState another component mid-render.
+  // body, so skip the redundant cross-component setState on rebuilds where
+  // the flag is already down.
   if (resetContext.reset) {
     resetContext.setReset(false);
   }
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
-  }
-  // When rebuilding over a live context (dynamic page navigation or reset),
-  // the previous context's Block components are still mounted with updaters
-  // registered under the same block ids. Construction renders below would
-  // call setState on them mid-render (a React violation) — suppress
-  // updateBlock for the construction; they re-render when the new context
-  // propagates through React.
-  const rebuildingOverLiveContext =
-    Boolean(lowdefy.contexts[id]) && typeof lowdefy._internal.updateBlock === 'function';
-  const mountedUpdateBlock = lowdefy._internal.updateBlock;
-  if (rebuildingOverLiveContext) {
-    lowdefy._internal.updateBlock = () => {};
   }
   const ctx = {
     id,
@@ -129,50 +117,49 @@ function getContext({
       pageConfig: config,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
+      // React updaters register here per block id when the context's Block
+      // components mount — scoped per context so rebuilding over a live
+      // context (dynamic page navigation, reset) never notifies the previous
+      // context's still-mounted components.
+      updaters: {},
     },
   };
-  try {
-    const _internal = ctx._internal;
-    _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
-    _internal.State = new State(ctx);
-    _internal.Actions = new Actions(ctx);
-    _internal.Requests = new Requests(ctx);
-    _internal.WebSockets = new WebSockets(ctx);
-    _internal.RootSlots = new Slots({
-      slots: { root: { blocks: [_internal.rootBlock] } },
-      context: ctx,
-    });
-    _internal.RootSlots.init();
-    _internal.update = () => {
-      _internal.RootSlots.update();
-    };
-    _internal.runOnInit = async (progress) => {
-      progress();
-      if (!_internal.onInitDone) {
-        await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
-          name: 'onInit',
-          progress,
-        });
-        _internal.update();
-        _internal.State.freezeState();
-        _internal.onInitDone = true;
-      }
-    };
-    _internal.runOnInitAsync = async (progress) => {
-      if (_internal.onInitDone && !_internal.onInitAsyncDone) {
-        await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
-          name: 'onInitAsync',
-          progress,
-        });
-        _internal.onInitAsyncDone = true;
-      }
-    };
-    ctx._internal.update();
-  } finally {
-    if (rebuildingOverLiveContext) {
-      lowdefy._internal.updateBlock = mountedUpdateBlock;
+  const _internal = ctx._internal;
+  _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
+  _internal.State = new State(ctx);
+  _internal.Actions = new Actions(ctx);
+  _internal.Requests = new Requests(ctx);
+  _internal.WebSockets = new WebSockets(ctx);
+  _internal.RootSlots = new Slots({
+    slots: { root: { blocks: [_internal.rootBlock] } },
+    context: ctx,
+  });
+  _internal.RootSlots.init();
+  _internal.update = () => {
+    _internal.RootSlots.update();
+  };
+  _internal.runOnInit = async (progress) => {
+    progress();
+    if (!_internal.onInitDone) {
+      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
+        name: 'onInit',
+        progress,
+      });
+      _internal.update();
+      _internal.State.freezeState();
+      _internal.onInitDone = true;
     }
-  }
+  };
+  _internal.runOnInitAsync = async (progress) => {
+    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
+      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
+        name: 'onInitAsync',
+        progress,
+      });
+      _internal.onInitAsyncDone = true;
+    }
+  };
+  ctx._internal.update();
   lowdefy.contexts[id] = ctx;
   return ctx;
 }

@@ -14,18 +14,5 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
-import { expect } from '@playwright/test';
-
-const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
-
-export default createBlockHelper({
-  locator,
-  do: {
-    click: (page, blockId) => locator(page, blockId).click(),
-  },
-  expect: {
-    text: (page, blockId, text) => expect(locator(page, blockId)).toHaveText(text),
-    containsText: (page, blockId, text) => expect(locator(page, blockId)).toContainText(text),
-  },
-});
+// Dynamic renders a plain container div like Box — same e2e surface.
+export { default } from '../Box/e2e.js';

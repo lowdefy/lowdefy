@@ -147,9 +147,7 @@ async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
     context.readConfigFile('plugins/blockMetas.json'),
     context.readConfigFile('plugins/blockSchemas.json'),
   ]);
-  if (!context.evaluateOperators) {
-    context.evaluateOperators = createEvaluateOperators(context);
-  }
+  context.evaluateOperators = createEvaluateOperators(context);
   const shared = {
     blockMetas: blockMetas ?? {},
     blockSchemas: blockSchemas ?? {},

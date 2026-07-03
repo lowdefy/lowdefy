@@ -15,19 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import { type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
-
 function isOperatorObject(value) {
-  if (!type.isObject(value)) return false;
-  const nonTildeKeys = Object.keys(value).filter((key) => !key.startsWith('~'));
-  if (nonTildeKeys.length !== 1) return false;
-  const [op] = nonTildeKeys[0].split('.');
-  const operator = op.replace(/^(_+)/gm, '_');
-  return operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator);
+  return getOperatorType(value) !== null;
 }
 
 function escapePointerSegment(segment) {
@@ -66,12 +58,12 @@ function validateBlockProperties(block, { blockSchemas, dynamicBlockId, pageId }
   if (type.isNone(propertiesSchema)) {
     return;
   }
-  const operatorPaths = [];
-  collectOperatorPaths(properties, '', operatorPaths);
   const result = validate({ schema: propertiesSchema, data: properties, returnErrors: true });
   if (result.valid) {
     return;
   }
+  const operatorPaths = [];
+  collectOperatorPaths(properties, '', operatorPaths);
   const errors = result.errors.filter(
     (error) =>
       !operatorPaths.some(
@@ -128,14 +120,16 @@ async function validateFragment(
 
   // CallAPI refs fail resolution instead of the user's click — same checks the
   // HTTP endpoint route applies.
-  for (const { endpointId, blockId, eventId } of callApiActionRefs) {
-    const endpointConfig = await context.readConfigFile(`api/${endpointId}.json`);
-    if (!endpointConfig || endpointConfig.type === 'InternalApi') {
-      throw new ConfigError(
-        `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content has a CallAPI action on event "${eventId}" on block "${blockId}" targeting endpoint "${endpointId}" which does not exist or is not accessible from client pages.`
-      );
-    }
-  }
+  await Promise.all(
+    callApiActionRefs.map(async ({ endpointId, blockId, eventId }) => {
+      const endpointConfig = await context.readConfigFile(`api/${endpointId}.json`);
+      if (!endpointConfig || endpointConfig.type === 'InternalApi') {
+        throw new ConfigError(
+          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content has a CallAPI action on event "${eventId}" on block "${blockId}" targeting endpoint "${endpointId}" which does not exist or is not accessible from client pages.`
+        );
+      }
+    })
+  );
 }
 
 export default validateFragment;

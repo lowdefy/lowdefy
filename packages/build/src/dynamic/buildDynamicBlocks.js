@@ -36,6 +36,23 @@ function createMembershipCounter({ category, allowed, dynamicBlockId, pageId }) 
   };
 }
 
+// types.json is fileCache-cached (same object per server lifetime), so the
+// allowed-type sets are derived once per types object, not per Dynamic block.
+const allowedSetsCache = new WeakMap();
+
+function getAllowedSets(types) {
+  let sets = allowedSetsCache.get(types);
+  if (!sets) {
+    sets = {
+      actions: new Set(Object.keys(types.actions ?? {})),
+      blocks: new Set(Object.keys(types.blocks ?? {})),
+      operators: new Set(Object.keys(types.operators?.client ?? {})),
+    };
+    allowedSetsCache.set(types, sets);
+  }
+  return sets;
+}
+
 // Counter for categories dynamic content cannot reach (requests are forbidden,
 // so request types and server operators never occur in a valid fragment).
 const noopCounter = { increment: () => {} };
@@ -49,8 +66,8 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
   }
   const warnings = [];
   const callApiActionRefs = [];
-  const dynamicBlockRefs = [];
   const requestActionRefs = [];
+  const allowed = getAllowedSets(types);
   const pageContext = {
     blockIdCounter: createCounter(),
     // Namespace runtime ids under the resolving Dynamic block's built id —
@@ -66,7 +83,9 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
         warnings.push(warning);
       },
     },
-    dynamicBlockRefs,
+    // Pure sink — buildDynamicBlock pushes nested Dynamic refs here, but at
+    // runtime a bad endpointId surfaces through resolution, not ref checking.
+    dynamicBlockRefs: [],
     forbidRequests: true,
     linkActionRefs: [],
     pageId,
@@ -76,20 +95,20 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
     typeCounters: {
       actions: createMembershipCounter({
         category: 'action',
-        allowed: new Set(Object.keys(types.actions ?? {})),
+        allowed: allowed.actions,
         dynamicBlockId,
         pageId,
       }),
       blocks: createMembershipCounter({
         category: 'block',
-        allowed: new Set(Object.keys(types.blocks ?? {})),
+        allowed: allowed.blocks,
         dynamicBlockId,
         pageId,
       }),
       operators: {
         client: createMembershipCounter({
           category: 'operator',
-          allowed: new Set(Object.keys(types.operators?.client ?? {})),
+          allowed: allowed.operators,
           dynamicBlockId,
           pageId,
         }),
