@@ -237,6 +237,44 @@ export default {
         },
         '~r': {},
         '~l': {},
+        email: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "app.email" should be an object.',
+          },
+          properties: {
+            logo: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.logo" should be a string.',
+              },
+            },
+            companyName: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.companyName" should be a string.',
+              },
+            },
+            primaryColor: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.primaryColor" should be a string.',
+              },
+            },
+            signature: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.signature" should be a string.',
+              },
+            },
+            footer: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.footer" should be a string.',
+              },
+            },
+          },
+        },
         html: {
           type: 'object',
           errorMessage: {
@@ -255,6 +293,18 @@ export default {
                 type: 'App "app.html.appendHead" should be a string.',
               },
             },
+          },
+        },
+        notificationLandingPage: {
+          type: 'string',
+          errorMessage: {
+            type: 'App "app.notificationLandingPage" should be a string.',
+          },
+        },
+        serverUrl: {
+          type: 'string',
+          errorMessage: {
+            type: 'App "app.serverUrl" should be a string.',
           },
         },
       },
@@ -1201,6 +1251,95 @@ export default {
         },
       },
     },
+    notification: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type', 'emailConnectionId', 'dataConnectionId'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "type" should be a string.',
+          },
+        },
+        emailConnectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "emailConnectionId" should be a string.',
+          },
+        },
+        dataConnectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "dataConnectionId" should be a string.',
+          },
+        },
+        delivery: {
+          type: 'string',
+          enum: ['inline', 'deferred'],
+          errorMessage: {
+            type: 'Notification "delivery" should be a string.',
+            enum: 'Notification "delivery" should be one of "inline" or "deferred".',
+          },
+        },
+        theme: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "theme" should be an object.',
+          },
+        },
+        testData: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "testData" should be an object.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Notification should be an object.',
+        required: {
+          id: 'Notification should have required property "id".',
+          type: 'Notification should have required property "type".',
+          emailConnectionId: 'Notification should have required property "emailConnectionId".',
+          dataConnectionId: 'Notification should have required property "dataConnectionId".',
+        },
+      },
+    },
     subscription: {
       type: 'object',
       additionalProperties: false,
@@ -2013,6 +2152,15 @@ export default {
       },
       errorMessage: {
         type: 'App "websockets" should be an array.',
+      },
+    },
+    notifications: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/notification',
+      },
+      errorMessage: {
+        type: 'App "notifications" should be an array.',
       },
     },
     menus: {

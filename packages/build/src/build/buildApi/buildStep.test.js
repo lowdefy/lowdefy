@@ -719,3 +719,187 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
     MongoDBInsertOne: 1,
   });
 });
+
+test('SendNotification step builds with notification prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_sendnotification_step',
+        endpointId: 'test_sendnotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'notification:test_sendnotification_step:send',
+            endpointId: 'test_sendnotification_step',
+            stepId: 'send',
+            type: 'SendNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('SendNotification step allows operator objects for notificationId and array data', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: {
+              notificationId: { _payload: 'notificationId' },
+              data: [{ contact: { _id: 'UC-1' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('SendNotification step without properties.notificationId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_no_id',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: { data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'SendNotification step "send" at endpoint "test_sendnotification_no_id" requires properties.notificationId.'
+  );
+});
+
+test('SendNotification step without properties.data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_no_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: { notificationId: 'task-assigned' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'SendNotification step "send" at endpoint "test_sendnotification_no_data" requires properties.data.'
+  );
+});
+
+test('SendNotification step with string data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_bad_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: { notificationId: 'task-assigned', data: 'data' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'SendNotification step "send" at endpoint "test_sendnotification_bad_data" properties.data is not an object or array.'
+  );
+});
+
+test('SendNotification step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'send',
+            type: 'SendNotification',
+            connectionId: 'test_connection',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'SendNotification step "send" at endpoint "test_sendnotification_with_connection" should not have a connectionId.'
+  );
+});
+
+test('SendNotification step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_sendnotification_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'send',
+            type: 'SendNotification',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});

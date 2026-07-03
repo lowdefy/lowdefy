@@ -103,6 +103,43 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (step.type === 'SendNotification') {
+    if (type.isNone(step.properties?.notificationId)) {
+      throw new ConfigError(
+        `SendNotification step "${step.id}" at endpoint "${endpointId}" requires properties.notificationId.`,
+        { configKey }
+      );
+    }
+    if (
+      !type.isString(step.properties.notificationId) &&
+      !type.isObject(step.properties.notificationId)
+    ) {
+      throw new ConfigError(
+        `SendNotification step "${step.id}" at endpoint "${endpointId}" properties.notificationId is not a string.`,
+        { received: step.properties.notificationId, configKey }
+      );
+    }
+    if (type.isNone(step.properties?.data)) {
+      throw new ConfigError(
+        `SendNotification step "${step.id}" at endpoint "${endpointId}" requires properties.data.`,
+        { configKey }
+      );
+    }
+    if (!type.isObject(step.properties.data) && !type.isArray(step.properties.data)) {
+      throw new ConfigError(
+        `SendNotification step "${step.id}" at endpoint "${endpointId}" properties.data is not an object or array.`,
+        { received: step.properties.data, configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `SendNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
   if (step.type === 'ValidateSchema') {
     if (type.isNone(step.properties?.schema)) {
       throw new ConfigError(

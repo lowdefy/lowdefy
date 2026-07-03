@@ -36,6 +36,7 @@ async function generateDefaultTypesMap() {
     blocks: {},
     connections: {},
     icons: {},
+    notifications: {},
     operators: {
       client: {},
       server: {},

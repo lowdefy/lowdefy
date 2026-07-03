@@ -76,6 +76,7 @@ function buildTypes({ components, context }) {
     },
     blocks: {},
     connections: {},
+    notifications: {},
     requests: {},
     websockets: {},
     api: {},
@@ -139,6 +140,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.connections,
     store: components.types.connections,
     typeClass: 'Connection',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.notifications,
+    definitions: context.typesMap.notifications,
+    store: components.types.notifications,
+    typeClass: 'Notification',
   });
 
   buildTypeClass(context, {

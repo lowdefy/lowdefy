@@ -59,6 +59,14 @@ function buildApp({ components, context }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
+  if (type.isNone(components.app.email)) {
+    components.app.email = {};
+  }
+  if (type.isNone(components.app.notificationLandingPage)) {
+    components.app.notificationLandingPage = '/lowdefy/notification';
+  }
+  // app.serverUrl is deliberately not defaulted — its absence triggers the
+  // VERCEL_URL fallback (or an error when notification links need a URL).
   components.appMeta = context?.appMeta ?? computeAppMeta(components);
   return components;
 }

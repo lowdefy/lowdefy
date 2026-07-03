@@ -42,10 +42,28 @@ async function updateServerPackageJson({ components, context }) {
   getPackages(components.types.auth.providers);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
+  getPackages(components.types.notifications);
   getPackages(components.types.requests);
   getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
+
+  if ((components.notifications ?? []).length > 0) {
+    // plugins/notifications.js re-exports renderEmail from @lowdefy/email-templates
+    // for every app with notifications — including apps that only use custom
+    // template types, where no framework template appears in components.types.
+    const emailTemplates = Object.values(context.typesMap.notifications ?? {}).find(
+      (t) => t.package === '@lowdefy/email-templates'
+    );
+    if (emailTemplates && !dependencies['@lowdefy/email-templates']?.startsWith('link:')) {
+      dependencies['@lowdefy/email-templates'] = emailTemplates.version;
+    }
+    // The react-email preview CLI backs the `lowdefy emails` command; apps
+    // without notifications never install it.
+    if (!dependencies['react-email']?.startsWith('link:')) {
+      dependencies['react-email'] = '6.6.6';
+    }
+  }
 
   // Sort dependencies
   packageJson.dependencies = {};
