@@ -37,7 +37,14 @@ const Client = ({
   types,
   window,
 }) => {
-  const config = serializer.deserialize(rawConfig);
+  // Memoize on the fetched config objects, not the per-render wrapper — the
+  // engine memoizes dynamic page contexts by config object identity, so the
+  // deserialized config must be stable across re-renders and only change when
+  // a new page fetch delivers new config.
+  const config = React.useMemo(
+    () => serializer.deserialize(rawConfig),
+    [rawConfig.pageConfig, rawConfig.rootConfig]
+  );
   initLowdefyContext({
     auth,
     Components,
