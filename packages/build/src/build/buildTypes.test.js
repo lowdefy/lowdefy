@@ -36,7 +36,7 @@ function createTypesMapContext(overrides = {}) {
   context.typesMap = {
     actions: createDefinitions(['SetDarkMode']),
     agents: {},
-    auth: { adapters: {}, providers: {} },
+    auth: { adapters: {}, providers: {}, strategies: {} },
     blocks: createDefinitions([...basicTypes.blocks, ...loaderTypes.blocks, 'Message']),
     connections: {},
     requests: {},
