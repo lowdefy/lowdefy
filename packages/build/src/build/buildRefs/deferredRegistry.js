@@ -229,6 +229,61 @@ function cloneRecordBody(value) {
   return clone;
 }
 
+// Placeholder lifetime differs by record kind: component and menuLinks
+// placeholders persist by design (per-consumer resolution; JIT consumes them
+// from modules.json), and varDefault placeholders persist in varDefs
+// (demand-only). Everywhere else a placeholder after the final sweep is a
+// build bug. The allowed positions, per module entry:
+const MANIFEST_PLACEHOLDER_PATHS = [
+  /^components\.\d+\.component$/,
+  /^menus\.\d+\.links$/,
+  // varDefs is extracted from manifest.vars by reference, so demand-only
+  // default placeholders legitimately show through the manifest too.
+  /^vars(\.[^.]+\.properties)*\.[^.]+\.default$/,
+];
+const VARDEFS_PLACEHOLDER_PATHS = [/^[^.]+(\.properties\.[^.]+)*\.default$/];
+
+function findPlaceholderLeaks(context) {
+  const leaks = [];
+  const scan = (value, path, allowed, location) => {
+    const id = getPlaceholderId(value);
+    if (id !== undefined) {
+      if (!allowed.some((pattern) => pattern.test(path))) {
+        leaks.push({ id, location: `${location}.${path}` });
+      }
+      return;
+    }
+    if (type.isArray(value)) {
+      value.forEach((item, i) => scan(item, path ? `${path}.${i}` : String(i), allowed, location));
+    } else if (type.isObject(value)) {
+      for (const key of Object.keys(value)) {
+        scan(value[key], path ? `${path}.${key}` : key, allowed, location);
+      }
+    }
+  };
+  for (const [entryId, entry] of Object.entries(context.modules ?? {})) {
+    scan(entry.manifest ?? {}, '', MANIFEST_PLACEHOLDER_PATHS, `${entryId}.manifest`);
+    scan(entry.consumerVars ?? {}, '', [], `${entryId}.consumerVars`);
+    scan(entry.connections ?? {}, '', [], `${entryId}.connections`);
+    scan(entry.varDefs ?? {}, '', VARDEFS_PLACEHOLDER_PATHS, `${entryId}.varDefs`);
+  }
+  return leaks;
+}
+
+// Post-sweep leak check: every entryRef/connRemap placeholder must be gone from
+// entry configs, and manifests may hold placeholders only at per-consumer
+// slots. The runtime var cache is not scanned — the deep-forcing read path
+// guarantees it placeholder-free (pinned by its own tests).
+function assertNoPlaceholderLeaks(context) {
+  const leaks = findPlaceholderLeaks(context);
+  if (leaks.length > 0) {
+    const detail = leaks.map((leak) => `"${leak.id}" at ${leak.location}`).join('; ');
+    throw new LowdefyInternalError(
+      `Deferred placeholder leaked past the final sweep: ${detail}.`
+    );
+  }
+}
+
 // Serialize the registry's data for the deferredRecords.json build artifact.
 // Runtime state (promise, waitingOn, done, value) is stripped — JIT re-derives
 // it empty. Must go through the marker-preserving serializer: record bodies
@@ -268,6 +323,7 @@ export {
   makePlaceholder,
   getPlaceholderId,
   resolveDeferred,
+  assertNoPlaceholderLeaks,
   serializeRegistry,
   hydrateDeferredRecords,
 };
