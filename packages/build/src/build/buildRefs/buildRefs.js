@@ -46,13 +46,22 @@ async function buildRefs({ context, shallowOptions }) {
     env: process.env,
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
-    shouldStop: shallowOptions
-      ? // Strip page content (blocks, events, etc.) from ref-backed pages so
+    shouldStop: (path, refId) => {
+      // Module entry vars/connections were already resolved by parseLowdefyYaml
+      // (same predicate) and live on context.modules — preserve the raw blobs so
+      // the app pass doesn't pull and walk their refs a second time. buildModules
+      // reads entry ids only and deletes components.modules before testSchema.
+      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
+      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      if (shallowOptions) {
+        // Strip page content (blocks, events, etc.) from ref-backed pages so
         // JIT can re-resolve them from source files. Inline pages (defined
         // directly in lowdefy.yaml) live in the root ref and have no separate
         // source file — their content must be preserved for buildShallowPages.
-        (path, refId) => isPageContentPath(path) && refId !== refDef.id
-      : null,
+        return isPageContentPath(path) && refId !== refDef.id;
+      }
+      return null;
+    },
   });
 
   const content = await getRefContent({
