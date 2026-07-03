@@ -340,29 +340,27 @@ function getVarDef(varDefs, key) {
 // at the module manifest. The fresh context prevents false circular-ref detection
 // from the consumer's refChain and ensures _ref paths resolve relative to the
 // module root.
-async function resolveVarDefault(rawDefault, moduleEntry, ctx) {
-  const moduleYamlPath = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
-
-  const defaultCtx = new WalkContext({
-    buildContext: ctx.buildContext,
-    refId: moduleEntry.refDef.id,
-    sourceRefId: null,
-    vars: {},
-    moduleDependencies: moduleEntry.moduleDependencies,
-    moduleEntry,
-    moduleRoot: moduleEntry.moduleRoot,
-    packageRoot: moduleEntry.packageRoot,
-    path: '',
-    currentFile: moduleYamlPath,
-    refChain: new Set(moduleEntry.refDef.path ? [moduleEntry.refDef.path] : []),
-    entryResolveChain: ctx.entryResolveChain,
-    operators: ctx.operators,
-    env: ctx.env,
-    lowdefyApp: ctx.lowdefyApp,
-    dynamicIdentifiers: ctx.dynamicIdentifiers,
-  });
-
-  return await resolve(rawDefault, defaultCtx);
+// Deep-force: demand every deferred-record placeholder in a value's subtree
+// and splice the results in place, so cached var values are placeholder-free
+// pure data — no consumer of the var cache needs to know records exist.
+async function deepForcePlaceholders(value, ctx) {
+  const rootId = getPlaceholderId(value);
+  if (rootId !== undefined) {
+    return cloneVarValue(await resolveDeferred(ctx, rootId), null);
+  }
+  if (type.isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      value[i] = await deepForcePlaceholders(value[i], ctx);
+    }
+    return value;
+  }
+  if (type.isObject(value)) {
+    for (const key of Object.keys(value)) {
+      value[key] = await deepForcePlaceholders(value[key], ctx);
+    }
+    return value;
+  }
+  return value;
 }
 
 // Build a merged object for namespace vars (vars with `properties`). Each
@@ -478,9 +476,18 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
   if (varDef?.properties) {
     result = await resolveNamespaceVar(key, varDef, moduleEntry, ctx);
   } else if (!type.isNone(consumerValue)) {
-    result = consumerValue;
+    // Deep-force: a consumer value can carry deferred-record placeholders at
+    // any depth — demand each and splice, so the cache holds pure data.
+    result = await deepForcePlaceholders(consumerValue, ctx);
   } else if (varDef && !type.isUndefined(varDef.default)) {
-    result = await resolveVarDefault(varDef.default, moduleEntry, ctx);
+    // Object/array defaults are varDefault records (demand-only — never swept,
+    // a broken default nobody reads must not fail the build); scalar defaults
+    // stay raw in varDefs and need no walk.
+    const defaultRecordId = getPlaceholderId(varDef.default);
+    result =
+      defaultRecordId !== undefined
+        ? await resolveDeferred(ctx, defaultRecordId)
+        : varDef.default;
   } else {
     result = null;
   }

@@ -1595,3 +1595,65 @@ pages: []
     );
   });
 });
+
+describe('demand-only var defaults', () => {
+  const mockModulePaths = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  const brokenDefaultFiles = (entryVars) => [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+lowdefy: 4.0.0
+modules:
+  - id: a
+    source: "file:../a"${entryVars}
+`,
+    },
+    {
+      path: '/a/module.lowdefy.yaml',
+      content: `
+vars:
+  x:
+    default:
+      _ref: /a/missing.yaml
+pages:
+  - id: home
+    type: Box
+    properties:
+      value:
+        _module.var: x
+`,
+    },
+  ];
+
+  test('a broken default builds green when the consumer supplies the var', async () => {
+    const context = createTestContext();
+    mockReadConfigFile.mockImplementation(
+      readConfigFileMockImplementation(
+        brokenDefaultFiles(`
+    vars:
+      x: supplied-value`)
+      )
+    );
+    mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'demand-only default hang');
+
+    expect(context.errors).toHaveLength(0);
+    expect(context.modules['a'].manifest.pages[0].properties.value).toBe('supplied-value');
+  });
+
+  test('a broken default errors only when demanded', async () => {
+    const context = createTestContext();
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(brokenDefaultFiles('')));
+    mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'demanded broken default hang');
+
+    expect(context.errors.length).toBeGreaterThan(0);
+    expect(String(context.errors[0].message)).toContain('missing.yaml');
+  });
+});

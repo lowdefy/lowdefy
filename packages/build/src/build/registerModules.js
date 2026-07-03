@@ -215,7 +215,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
+      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'record:varDefault';
       if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
       if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
       if (/^api(\..*)?$/.test(childPath)) return 'preserve';
@@ -334,7 +334,7 @@ async function resolveFullManifest({ entryId, context }) {
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
+      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'record:varDefault';
       if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
       return false;
     },

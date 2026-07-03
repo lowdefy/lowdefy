@@ -733,10 +733,14 @@ pages: []
   // Schema structure is walked (type, properties resolved)
   expect(varDefs.components.type).toBe('object');
   expect(varDefs.components.properties.detail).toBeDefined();
-  // Default values are preserved — _ref NOT resolved during Phase 1a
+  // Default values are record-ified raw — the _ref is NOT resolved during
+  // Phase 1a; the record body keeps it for demand-time resolution.
   expect(varDefs.components.properties.detail.default).toEqual({
-    _ref: 'defaults/detail.yaml',
+    '~deferred': 'my-mod:vars.components.properties.detail.default',
   });
+  const record = getRecord(context, 'my-mod:vars.components.properties.detail.default');
+  expect(record.kind).toBe('varDefault');
+  expect(record.body).toEqual({ _ref: 'defaults/detail.yaml' });
 });
 
 test('resolveLocalManifest does not throw for required var with default', async () => {
