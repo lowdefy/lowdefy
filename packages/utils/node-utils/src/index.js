@@ -16,9 +16,11 @@
 
 import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import findAvailablePort from './findAvailablePort.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
+import isPortAvailable from './isPortAvailable.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -27,10 +29,12 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 export {
   cleanDirectory,
   copyFileOrDirectory,
+  findAvailablePort,
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,
   installIfPackageJsonChanged,
+  isPortAvailable,
   spawnProcess,
   readFile,
   writeFile,

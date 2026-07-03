@@ -14,28 +14,12 @@
   limitations under the License.
 */
 
-import net from 'net';
-
-function isPortAvailable(port) {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-    server.on('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
-        resolve(false);
-      } else {
-        reject(error);
-      }
-    });
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-  });
-}
+import isPortAvailable from './isPortAvailable.js';
 
 async function findAvailablePort({ port, maxAttempts = 100 }) {
   const startPort = Number(port);
   for (let candidate = startPort; candidate < startPort + maxAttempts; candidate += 1) {
-    if (await isPortAvailable(candidate)) {
+    if (await isPortAvailable({ port: candidate })) {
       return candidate;
     }
   }
