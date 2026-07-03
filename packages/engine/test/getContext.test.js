@@ -131,3 +131,18 @@ test('update memoized context', () => {
   getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(mockUpdate.mock.calls.length).toBe(1);
 });
+
+test('dynamic page config always builds a fresh context', () => {
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+  };
+  const config = buildTestPage({ pageConfig: page });
+  // Server-resolved pages carry dynamic: true — content changes per request.
+  config.dynamic = true;
+  const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).not.toBe(c2);
+  expect(c1._internal.RootSlots.id).not.toEqual(c2._internal.RootSlots.id);
+});

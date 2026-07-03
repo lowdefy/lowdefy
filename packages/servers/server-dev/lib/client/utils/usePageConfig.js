@@ -75,7 +75,10 @@ async function fetchPageConfig(url) {
 }
 
 function usePageConfig(pageId, basePath) {
-  const url = `${basePath}/api/page/${pageId}`;
+  // Forward the current query string so server-side Dynamic block resolution
+  // sees the same urlQuery as an initial HTML load. Including it in the SWR
+  // key also caches dynamic pages per query string.
+  const url = `${basePath}/api/page/${pageId}${window.location.search}`;
   // Include reloadVersion in the SWR key so that after a config reload,
   // previously cached page data is not reused. The fetcher receives
   // [url, version] but only uses url — the version just busts the cache.

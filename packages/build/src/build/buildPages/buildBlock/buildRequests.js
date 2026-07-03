@@ -75,6 +75,15 @@ function buildRequest(request, pageContext) {
 }
 
 function buildRequests(block, pageContext) {
+  // Runtime-resolved dynamic content cannot define requests — request
+  // artifacts are written at build time, so a runtime request would have no
+  // server-side properties to execute.
+  if (pageContext.forbidRequests === true && !type.isNone(block.requests)) {
+    throw new ConfigError(
+      `Dynamic content must not define requests — found "requests" on block "${block.blockId}" on page "${pageContext.pageId}". Reference requests defined statically on the page instead.`,
+      { received: block.requests, configKey: block['~k'] }
+    );
+  }
   (block.requests || []).forEach((request) => {
     buildRequest(request, pageContext);
   });

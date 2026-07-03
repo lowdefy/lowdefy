@@ -81,7 +81,9 @@ function getContext({
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  if (lowdefy.contexts[id] && !resetContext.reset) {
+  // Dynamic pages are server-resolved per request — a memoized context would
+  // render the previous request's content, so always rebuild.
+  if (lowdefy.contexts[id] && !resetContext.reset && config.dynamic !== true) {
     // memoize context if already created, eg between page transitions, unless the reset flag is raised
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];

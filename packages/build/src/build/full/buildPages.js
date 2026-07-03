@@ -21,6 +21,7 @@ import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -37,6 +38,7 @@ function buildPages({ components, context }) {
   context.linkActionRefs = [];
   context.callApiActionRefs = [];
   context.websocketActionRefs = [];
+  context.dynamicBlockRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -80,6 +82,13 @@ function buildPages({ components, context }) {
   const endpointConfigs = type.isArray(components.api) ? components.api : [];
   validateCallApiRefs({
     callApiActionRefs: context.callApiActionRefs,
+    endpointConfigs,
+    context,
+  });
+
+  // Validate that Dynamic blocks reference existing endpoints
+  validateDynamicBlockRefs({
+    dynamicBlockRefs: context.dynamicBlockRefs,
     endpointConfigs,
     context,
   });

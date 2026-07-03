@@ -24,6 +24,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -249,6 +250,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.websocketActionRefs) {
       buildContext.websocketActionRefs = [];
     }
+    if (!buildContext.dynamicBlockRefs) {
+      buildContext.dynamicBlockRefs = [];
+    }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
     // it from skeleton-built websockets when the context doesn't carry it
@@ -300,6 +304,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       : [];
     validateCallApiRefs({
       callApiActionRefs: buildContext.callApiActionRefs,
+      endpointConfigs,
+      context: buildContext,
+    });
+    validateDynamicBlockRefs({
+      dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
       context: buildContext,
     });
