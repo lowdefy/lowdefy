@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, type } from '@lowdefy/helpers';
-import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
@@ -34,6 +34,7 @@ import {
   getRecord,
   makePlaceholder,
   makeRecordId,
+  resolveDeferred,
 } from './deferredRegistry.js';
 
 class WalkContext {
@@ -57,6 +58,7 @@ class WalkContext {
     dynamicIdentifiers,
     shouldStop,
     entryId,
+    activeRecord,
   }) {
     this.buildContext = buildContext;
     this.refId = refId;
@@ -68,6 +70,11 @@ class WalkContext {
     // manifest resolvers even before the entry object exists (the local pass
     // walks the manifest before registration completes).
     this.entryId = entryId ?? this.moduleEntry?.id ?? null;
+    // The deferred record this walk resolves (null in ordinary walks). Threads
+    // through child() and forRef() unchanged, like refChain — every demand made
+    // anywhere inside a record's resolution attributes to that record in the
+    // wait-graph.
+    this.activeRecord = activeRecord ?? null;
     this.moduleRoot = moduleRoot;
     this.packageRoot = packageRoot;
     this.path = path;
@@ -103,6 +110,7 @@ class WalkContext {
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
       entryId: this.entryId,
+      activeRecord: this.activeRecord,
     });
   }
 
@@ -137,6 +145,7 @@ class WalkContext {
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
       entryId: (moduleEntry ?? this.moduleEntry)?.id ?? this.entryId,
+      activeRecord: this.activeRecord,
     });
   }
 
@@ -909,8 +918,8 @@ async function resolve(node, ctx) {
   // 2b. Deferred-record placeholder — kind-aware dispatch. Per-consumer kinds
   // (component, menuLinks) pass through every generic walk untouched; only
   // module-ref consumption dereferences them. Single-value kinds (entryRef,
-  // varDefault) force-and-splice via resolveDeferred, which lands with the
-  // wait-graph — until then no single-value records exist.
+  // varDefault) force the record and splice a clone in place — the memoized
+  // value is shared across demanders, and the tree gets mutated downstream.
   if (type.isObject(node)) {
     const deferredId = getPlaceholderId(node);
     if (deferredId !== undefined) {
@@ -918,9 +927,7 @@ async function resolve(node, ctx) {
       if (record.kind === 'component' || record.kind === 'menuLinks') {
         return node;
       }
-      throw new LowdefyInternalError(
-        `Deferred record "${deferredId}" of kind "${record.kind}" cannot be resolved yet.`
-      );
+      return cloneVarValue(await resolveDeferred(ctx, deferredId), null);
     }
   }
 

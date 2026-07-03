@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
-import { LowdefyInternalError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
+
+// Circular import by design: the walker dispatches placeholders into
+// resolveDeferred, and resolveDeferred walks record bodies. Both modules only
+// reference each other's bindings at call time, after evaluation completes.
+import { resolve, WalkContext } from './walker.js';
 
 // The deferred-content record registry. Every deferred region of module config
 // becomes a record { kind, body, env, slot } in context.deferred; the config
@@ -86,6 +91,134 @@ function getPlaceholderId(node) {
   return type.isString(id) ? id : undefined;
 }
 
+// Wait-graph reachability: is `targetId` reachable from `fromId` through
+// waitingOn edges? A synchronous set walk — edges only change between awaits,
+// so check-then-insert is atomic.
+function findPathTo(context, fromId, targetId, path = []) {
+  if (fromId === targetId) return [...path, fromId];
+  if (path.includes(fromId)) return null;
+  const record = context.deferred[fromId];
+  if (!record) return null;
+  for (const nextId of record.waitingOn) {
+    const found = findPathTo(context, nextId, targetId, [...path, fromId]);
+    if (found) return found;
+  }
+  return null;
+}
+
+// Demand-driven resolution for single-value record kinds (entryRef,
+// varDefault), promise-memoized per record. Cycle detection is a wait-graph —
+// standard deadlock detection: when resolution of record R demands record S,
+// add edge R → S; if S is in flight and R is reachable from S, the demand
+// closes a cycle in "who is awaiting whom" and awaiting would deadlock — throw
+// the named chain instead. Demands from outside any record
+// (ctx.activeRecord = null) add no edges: they can wait on anything.
+//
+// The returned value is the memoized instance — callers that splice it into
+// mutable config must clone (the walker's placeholder dispatch does).
+// A rejected promise stays memoized: a record whose resolution throws is
+// genuinely broken, and every demander should see the same error once.
+async function resolveDeferred(ctx, id) {
+  const context = ctx.buildContext;
+  const record = getRecord(context, id);
+  if (record.kind === 'component' || record.kind === 'menuLinks') {
+    throw new LowdefyInternalError(
+      `Deferred record "${id}" of kind "${record.kind}" resolves per consumer — ` +
+        `it cannot be demanded through resolveDeferred.`
+    );
+  }
+  if (record.done) return record.value;
+
+  const demanderId = ctx.activeRecord;
+  const demander = demanderId ? context.deferred[demanderId] : null;
+
+  if (record.promise && demander) {
+    // In flight: if the demander is reachable from this record, awaiting would
+    // deadlock — the actual dependency cycle, named record by record.
+    const path = findPathTo(context, id, demanderId);
+    if (path) {
+      throw new ConfigError(
+        `Circular deferred value dependency: ${[demanderId, ...path].join(' → ')}.`,
+        { filePath: record.env?.file ?? null }
+      );
+    }
+  }
+
+  if (demander) {
+    demander.waitingOn.add(id);
+  }
+  try {
+    if (!record.promise) {
+      // Defer the body walk by a microtask so the memo is assigned before any
+      // synchronous prefix of the walk can re-enter this record — otherwise a
+      // self-cycle recurses on a still-null promise instead of hitting the
+      // wait-graph check.
+      record.promise = Promise.resolve().then(() => resolveRecordBody(ctx, id, record));
+    }
+    return await record.promise;
+  } finally {
+    if (demander) {
+      demander.waitingOn.delete(id);
+    }
+  }
+}
+
+// Walk a record's body under a fresh context built from record.env — no
+// reconstruction from in-tree markers. Operators and identifier tables come
+// from the demanding context (they are build-wide singletons); the resolution
+// environment (file, roots, module entry) comes from the record.
+async function resolveRecordBody(ctx, id, record) {
+  const context = ctx.buildContext;
+  const env = record.env ?? {};
+  const moduleEntry = env.entryId ? (context.modules[env.entryId] ?? null) : null;
+  const recordCtx = new WalkContext({
+    buildContext: context,
+    refId: env.refId ?? null,
+    sourceRefId: null,
+    vars: {},
+    moduleDependencies: moduleEntry?.moduleDependencies,
+    moduleEntry,
+    moduleRoot: env.moduleRoot ?? null,
+    packageRoot: env.packageRoot ?? null,
+    path: '',
+    currentFile: env.file ?? null,
+    refChain: new Set(env.file ? [env.file] : []),
+    entryResolveChain: ctx.entryResolveChain,
+    operators: ctx.operators,
+    env: ctx.env,
+    lowdefyApp: ctx.lowdefyApp,
+    dynamicIdentifiers: ctx.dynamicIdentifiers,
+    activeRecord: id,
+  });
+  // Clone before walking — the raw body must stay pristine in the registry
+  // (deferredRecords.json serializes it, and demand order must not change it).
+  const value = await resolve(cloneRecordBody(record.body), recordCtx);
+  record.value = value;
+  record.done = true;
+  return value;
+}
+
+// Marker-preserving deep clone for record bodies (~r ~l ~k ~arr). Kept local
+// to avoid a second circular binding on the walker's clone family; clone
+// unification replaces both with cloneWithMarkers.
+function cloneRecordBody(value) {
+  if (!type.isObject(value) && !type.isArray(value)) return value;
+  const clone = type.isArray(value)
+    ? value.map((item) => cloneRecordBody(item))
+    : Object.fromEntries(Object.keys(value).map((key) => [key, cloneRecordBody(value[key])]));
+  for (const marker of ['~r', '~l', '~k', '~arr']) {
+    if (value[marker] !== undefined) {
+      Object.defineProperty(clone, marker, {
+        value: value[marker],
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+  }
+  return clone;
+}
+
 // Serialize the registry's data for the deferredRecords.json build artifact.
 // Runtime state (promise, waitingOn, done, value) is stripped — JIT re-derives
 // it empty. Must go through the marker-preserving serializer: record bodies
@@ -124,6 +257,7 @@ export {
   getRecord,
   makePlaceholder,
   getPlaceholderId,
+  resolveDeferred,
   serializeRegistry,
   hydrateDeferredRecords,
 };
