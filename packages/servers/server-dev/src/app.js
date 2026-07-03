@@ -34,6 +34,7 @@ import iconsDynamicHandler from './routes/iconsDynamic.js';
 import jitPageHandler from './routes/jitPage.js';
 import jsEnvHandler from './routes/jsEnv.js';
 import lowdefyConfig from '../lib/build/config.js';
+import notificationLandingHandler from './routes/notificationLanding.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
@@ -77,6 +78,11 @@ function createApp() {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.get('/api/websocket', websocketHandler);
+
+  // Fixed framework route for notification email links. apiContext is mounted
+  // here explicitly — dev only mounts it on /api/* paths.
+  app.use('/lowdefy/notification', apiContext());
+  app.get('/lowdefy/notification', notificationLandingHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.
   app.use(

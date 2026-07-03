@@ -33,6 +33,7 @@ import cronHandler from './routes/cron.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import lowdefyConfig from '../lib/build/config.js';
+import notificationLandingHandler from './routes/notificationLanding.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
@@ -108,6 +109,10 @@ function createApp({ serveStaticAssets = true } = {}) {
   }
 
   app.use('/*', apiContext());
+  // Fixed framework route: app.notificationLandingPage only changes where
+  // composed email links point — an app-owned landing page simply makes this
+  // route go unused.
+  app.get('/lowdefy/notification', notificationLandingHandler);
   app.get('/', (c) => renderPage(c, { pageId: '' }));
   app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
   app.get('/:rest{.+}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
