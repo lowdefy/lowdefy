@@ -166,6 +166,22 @@ test('dynamic page config builds a fresh context for a new config object', () =>
   expect(c1._internal.RootSlots.id).not.toEqual(c2._internal.RootSlots.id);
 });
 
+test('dynamic rebuild does not lower an already-lowered reset flag', () => {
+  const lowdefy = getLowdefy();
+  const setReset = jest.fn();
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config1.dynamic = true;
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  getContext({ config: config1, lowdefy, resetContext: { reset: false, setReset } });
+  getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset } });
+  // setReset is a React state setter on another component — calling it with
+  // the flag already down would setState mid-render.
+  expect(setReset).not.toHaveBeenCalled();
+  getContext({ config: config2, lowdefy, resetContext: { reset: true, setReset } });
+  expect(setReset).toHaveBeenCalledWith(false);
+});
+
 test('dynamic rebuild does not call mounted updaters during construction', () => {
   const lowdefy = getLowdefy();
   const updateBlockSpy = jest.fn();

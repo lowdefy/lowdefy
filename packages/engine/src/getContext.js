@@ -93,7 +93,13 @@ function getContext({
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
-  resetContext.setReset(false); // lower context reset flag.
+  // Lower the context reset flag — only when raised: setReset is a React
+  // state setter on the Reload component, and getContext runs in the render
+  // body, so calling it on dynamic rebuilds (reset already false) would
+  // setState another component mid-render.
+  if (resetContext.reset) {
+    resetContext.setReset(false);
+  }
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
   }
