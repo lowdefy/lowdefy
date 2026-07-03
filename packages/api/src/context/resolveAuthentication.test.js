@@ -223,3 +223,83 @@ test('does not mutate the original session user object', async () => {
   expect(sessionUser).toEqual({ id: 'user_1' });
   expect(context.user).not.toBe(sessionUser);
 });
+
+function mockStrategy({ attributes = {}, id, match = null, roles = [], type = 'apiKey' }) {
+  return { attributes, id, roles, type, verify: jest.fn().mockResolvedValue(match) };
+}
+
+function mockLogger() {
+  return { debug: jest.fn(), warn: jest.fn() };
+}
+
+test('resolves a strategy caller when no session resolves', async () => {
+  const { auth } = mockAuth({ session: null });
+  const context = { logger: mockLogger() };
+  const strategies = [
+    mockStrategy({
+      id: 'partner-access',
+      match: { user: { id: 'apiKey:partner-access:acme' } },
+      roles: ['partner'],
+    }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user).toEqual({
+    id: 'apiKey:partner-access:acme',
+    authMethod: 'apiKey',
+    strategyId: 'partner-access',
+    roles: ['partner'],
+    attributes: {},
+  });
+});
+
+test('sets context.user to null when no session resolves and no strategy matches', async () => {
+  const { auth } = mockAuth({ session: null });
+  const context = { logger: mockLogger() };
+  const strategies = [mockStrategy({ id: 'partner-access' })];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user).toBe(null);
+  expect(strategies[0].verify).toHaveBeenCalled();
+});
+
+test('a resolved session wins over a presented strategy credential', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = { logger: mockLogger() };
+  const strategies = [
+    mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user.id).toBe('user_1');
+  expect(context.user.authMethod).toBeUndefined();
+  expect(strategies[0].verify).not.toHaveBeenCalled();
+});
+
+test('a session rejected by the membership wall does not fall through to strategies', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: null,
+  });
+  const context = { logger: mockLogger() };
+  const strategies = [
+    mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect(context.user).toBe(null);
+  expect(strategies[0].verify).not.toHaveBeenCalled();
+});

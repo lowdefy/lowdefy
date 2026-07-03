@@ -45,6 +45,7 @@ function setAuthDefaults({ components }) {
   }
 
   setDefault(auth, 'hooks', []);
+  setDefault(auth, 'strategies', []);
 
   // Organizations are always on - an app that sets nothing gets one
   // auto-seeded organization (slug "default") pinned as the active org,

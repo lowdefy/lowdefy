@@ -84,12 +84,19 @@ function getBetterAuthConfig({
     );
   }
 
-  const adapterPlugin = plugins.adapters[authConfig.database.type];
-  if (type.isNone(adapterPlugin)) {
-    throw new ConfigError(
-      `Auth database adapter type "${authConfig.database.type}" not found at database "${authConfig.database.id}".`,
-      { configKey: authConfig.database['~k'] }
-    );
+  // A strategies-only app configures no database - BetterAuth is constructed
+  // without an adapter (its stateless mode, backed by a memory adapter), so
+  // getSession runs guard-free and returns null on every request.
+  let database;
+  if (!type.isNone(authConfig.database)) {
+    const adapterPlugin = plugins.adapters[authConfig.database.type];
+    if (type.isNone(adapterPlugin)) {
+      throw new ConfigError(
+        `Auth database adapter type "${authConfig.database.type}" not found at database "${authConfig.database.id}".`,
+        { configKey: authConfig.database['~k'] }
+      );
+    }
+    database = adapterPlugin({ properties: authConfig.database.properties ?? {} });
   }
 
   const { socialProviders, genericOAuthConfigs } = buildProviders({ authConfig, plugins });
@@ -105,7 +112,6 @@ function getBetterAuthConfig({
     baseURL: { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' },
     basePath: `${config.basePath ?? ''}/api/auth`,
     secret: authConfig.secret,
-    database: adapterPlugin({ properties: authConfig.database.properties ?? {} }),
     telemetry: { enabled: false },
     logger: createAuthLogger({ logger }),
     user: {
@@ -145,6 +151,10 @@ function getBetterAuthConfig({
     },
     plugins: [],
   };
+
+  if (!type.isNone(database)) {
+    options.database = database;
+  }
 
   if (authConfig.session.crossSubDomainCookies.enabled === true) {
     options.advanced.crossSubDomainCookies = {

@@ -33,6 +33,7 @@ function buildImportsProd({ components, context }) {
     auth: {
       adapters: buildImportClassProd(components.types.auth.adapters),
       providers: buildImportClassProd(components.types.auth.providers),
+      strategies: buildImportClassProd(components.types.auth.strategies),
     },
     blocks,
     connections: buildImportClassProd(components.types.connections),

@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigError, RequestError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, RequestError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 
@@ -203,7 +203,7 @@ test('call request, protected auth with user', async () => {
   });
 });
 
-test('call request, protected auth without user', async () => {
+test('call request, protected auth without user throws AuthenticationError', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       requestConfig: {
@@ -220,8 +220,31 @@ test('call request, protected auth without user', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(AuthenticationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
+    'Authentication required for request "requestId".'
+  );
+});
+
+test('call request, protected auth with user missing the required roles stays opaque', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      requestConfig: {
+        id: 'request:pageId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        auth: { public: false, roles: ['admin'] },
+        properties: {
+          requestProperty: 'requestProperty',
+        },
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
     'Request "requestId" does not exist.'
   );
 });
