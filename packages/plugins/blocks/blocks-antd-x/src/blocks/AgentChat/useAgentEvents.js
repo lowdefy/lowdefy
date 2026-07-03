@@ -16,12 +16,13 @@
 
 import { useRef, useEffect } from 'react';
 
-function useAgentEvents({ messages, status, methods, finishMetaRef }) {
+function useAgentEvents({ messages, status, methods, finishMetaRef, conversationId }) {
   const prevStatusRef = useRef(status);
   const firedToolCallIds = useRef(new Set());
   const firedToolResultIds = useRef(new Set());
   const firedUserMessageIds = useRef(new Set());
   const firedTitleIds = useRef(new Set());
+  const firedConversationStartRef = useRef(false);
   const lastMessageCountRef = useRef(0);
 
   // Fire onMessageComplete when streaming finishes
@@ -66,6 +67,16 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
       !firedUserMessageIds.current.has(lastMessage.id)
     ) {
       firedUserMessageIds.current.add(lastMessage.id);
+      // Announce the conversation once, on its first user message, with the
+      // effective (possibly auto-minted) conversationId so apps can persist or
+      // track with a guaranteed id.
+      if (!firedConversationStartRef.current) {
+        firedConversationStartRef.current = true;
+        methods.triggerEvent({
+          name: 'onConversationStart',
+          event: { conversationId },
+        });
+      }
       const textContent = lastMessage.parts
         ?.filter((p) => p.type === 'text')
         .map((p) => p.text)
@@ -85,7 +96,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
         },
       });
     }
-  }, [messages, methods]);
+  }, [messages, methods, conversationId]);
 
   // Scan for new tool calls and results
   useEffect(() => {
@@ -156,6 +167,7 @@ function useAgentEvents({ messages, status, methods, finishMetaRef }) {
       firedToolResultIds.current.clear();
       firedUserMessageIds.current.clear();
       firedTitleIds.current.clear();
+      firedConversationStartRef.current = false;
     }
     lastMessageCountRef.current = messages.length;
   }, [messages.length]);

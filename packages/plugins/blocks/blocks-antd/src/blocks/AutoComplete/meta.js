@@ -49,6 +49,7 @@ export default {
       description: 'Called when searching items.',
       event: { value: 'The search input value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

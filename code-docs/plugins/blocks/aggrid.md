@@ -65,6 +65,11 @@ Define `cell` on a column to opt into a Lowdefy-managed renderer. The build regi
 | `progress`  | progress bar with thresholds     | —              |
 | `number`    | `Intl.NumberFormat` (currency, percent, etc.) | — |
 | `buttons`   | list of antd `Button`s, one event per button  | per-button `eventName:` |
+| `selector`  | antd `Select` (single) per row                 | `eventName:` on change  |
+| `multipleSelector` | antd `Select` (multiple) per row        | `eventName:` on change  |
+| `switch`    | antd `Switch` (boolean) per row                | `eventName:` on toggle  |
+| `textInput` | antd `Input` per row                           | `eventName:` on blur / Enter |
+| `paragraphInput` | antd `Typography.Paragraph` with inline edit | `eventName:` on edit confirm |
 
 \* Avatar emits `onCellLink` only when given a `link` config.
 
@@ -136,6 +141,71 @@ Per-button properties **mirror the antd `Button` block schema** (`title`, `icon`
 
 Only the resolved view of the button (`eventName`, `title`) is included — not the full schema entry — to avoid leaking schema keys into action chains. Action chains read row data via `_event: row.<field>`.
 
+### `cell.type: selector` / `multipleSelector` — dropdown per row
+
+Renders an antd `Select` inside each cell (single-select for `selector`, multi-select for `multipleSelector`). On change the cell fires the column's `eventName` as a block-level event — **event-only, like buttons**: it does not write to the Lowdefy block value. The displayed value is driven by the cell's row data, so **the app persists the change** by updating whatever feeds `rowData` (a `SetState` or `Request` in the event chain). The example below binds each row value to state and writes the new value back so the selection sticks.
+
+For immediate feedback before an async persist completes, the cell also calls ag-grid's `node.setDataValue(colId, newValue)` so the new value shows at once. This is a transient client-side update to ag-grid's own row node, **not** the Lowdefy block value — if the app never persists, `AgGrid`'s row-data sync restores the value from `rowData` on the next render. The source of truth remains `properties.rowData`.
+
+```yaml
+properties:
+  rowData:
+    - id: r1
+      name: Task one
+      priority: { _state: { key: priorities.r1, default: high } }   # bound to state
+  columnDefs:
+    - { field: name }
+    - field: priority
+      cell:
+        type: selector
+        eventName: onPriorityChange     # block-level event fired on change
+        options:
+          - { label: Low, value: low, color: green }
+          - { label: Medium, value: medium, color: orange }
+          - { label: High, value: high, color: red }
+    - field: labels
+      cell:
+        type: multipleSelector
+        eventName: onLabelsChange
+        options: [bug, feature, docs, urgent]
+events:
+  onPriorityChange:                     # persist: write newValue back into the bound state
+    - id: save
+      type: SetState
+      params:
+        priorities:
+          _object.assign:
+            - { _state: priorities }
+            - _object.fromEntries:
+                - [{ _event: row.id }, { _event: newValue }]
+```
+
+**Option handling reuses the `Selector` block.** `SelectorCell` imports the standalone block's pure utils — `getSelectorOptions` and `getSelectedIndex` from `@lowdefy/blocks-antd` (a declared dependency) — so `options` accepts the same shape (`primitives` or `{ label, value, disabled, color, filterString, style }`) and the same `valueKey` / `primaryKey` identity matching. The block's `useSelectorOptions` hook (imperative `setData` binding) is intentionally **not** used per cell; the cell calls the pure `getSelectorOptions` directly. Static options only — no per-row `optionsField`.
+
+**Cell config keys:** `options`, `valueKey`, `primaryKey`, `eventName`, `placeholder`, `allowClear` (default `true`), `showSearch` (default `true`), `size` (default `small`), `disabled`.
+
+**Click bubbling.** Like `ButtonsCell`, the `Select` is wrapped in a `div` with `onClick={e => e.stopPropagation()}` so opening the dropdown does not fire `onCellClick` / `onRowClick`. The dropdown uses `getPopupContainer={() => document.body}` so it is not clipped by the cell.
+
+**Event payload.**
+
+```js
+{ row: data, value, newValue }   // value = previous cell value; newValue is an array for multipleSelector
+```
+
+### `cell.type: switch` / `textInput` / `paragraphInput` — input cells
+
+The same event-only model as the selector cells: each renders an antd input bound to the row value, writes back into ag-grid's row node for immediate feedback, and fires the column's `eventName` with `{ row, value, newValue }`. The app persists by updating the data bound to `rowData`. **When** the event fires differs by control:
+
+- `switch` — on every toggle (`newValue` is a boolean). Config: `checkedText`, `uncheckedText`, `checkedIcon`, `uncheckedIcon`, `color`, `size`, `disabled`.
+- `textInput` — on blur / Enter, **not** per keystroke. Typing is held in local state so the cell does not re-render and lose focus mid-edit. Config: `placeholder`, `allowClear`, `maxLength`, `showCount`, `inputType` (HTML input type — named to avoid clashing with `cell.type`), `variant`/`bordered`, `size`, `disabled`.
+- `paragraphInput` — `Typography.Paragraph` with inline editing; commits when the edit is confirmed (blur / Enter). Config: `editable` (false → read-only), `maxLength`, `autoSize`, `editTooltip`, `copyable`, `ellipsis`, and text styling (`code`, `strong`, `italic`, `underline`, `delete`, `mark`, `textType`).
+
+```js
+{ row: data, value, newValue }   // newValue: boolean (switch) | string (textInput / paragraphInput)
+```
+
+> `textInput`/`paragraphInput` commit once (on blur/confirm) rather than per keystroke — committing per keystroke would re-render the grid, remount the cell, and lose input focus.
+
 ## Components Plumbing
 
 Cell renderers need access to the framework's `Icon` component (the same one the standalone `Button` block uses) so that `icon: AiOutlineEdit` and full Icon-block config objects render consistently. The path:
@@ -179,6 +249,7 @@ Without this plumbing, `components.Icon` is `undefined` inside cell renderers an
 | `onSortChanged`       | User changed sort                                    | `{ rows, sort }`                                                       |
 | `onCellLink`          | Click on a `cell.type: link` (or avatar with `link`) | `{ link, row, value }` — wire to `Link` action with `params: { _event: link }` |
 | user-defined          | Click on a `cell.type: buttons` button               | `{ row, value, button: { eventName, title }, buttonIndex }` — name is the button's `eventName:` string |
+| user-defined          | Change on a `cell.type: selector` / `multipleSelector` | `{ row, value, newValue }` — name is the cell's `eventName:` string (`newValue` is an array for `multipleSelector`) |
 
 The buttons-cell entry intentionally lists "user-defined" because each button declares its own block-level event name. The meta files include a documentation-only `onCellButton` entry describing the payload shape.
 

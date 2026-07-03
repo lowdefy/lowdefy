@@ -83,6 +83,7 @@ const MultipleSelector = ({
   return (
     <Label
       blockId={blockId}
+      methods={methods}
       classNames={classNames}
       components={{ Icon }}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}

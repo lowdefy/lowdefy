@@ -23,6 +23,8 @@ export default {
     onToolCall: 'Trigger when a tool is invoked.',
     onToolResult: 'Trigger when a tool completes.',
     onUserMessage: 'Trigger when the user sends a message.',
+    onConversationStart:
+      'Trigger once when a conversation starts, on its first user message. Event contains the conversationId (auto-minted when no conversationId property is set).',
     onError: 'Trigger on stream error.',
     onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
     onRegenerate: 'Trigger when the user clicks regenerate on a message.',

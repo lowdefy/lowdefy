@@ -696,6 +696,9 @@ importers:
       '@lowdefy/block-utils':
         specifier: 5.3.0
         version: link:../../../utils/block-utils
+      '@lowdefy/blocks-antd':
+        specifier: 5.3.0
+        version: link:../blocks-antd
       '@lowdefy/helpers':
         specifier: 5.3.0
         version: link:../../../utils/helpers

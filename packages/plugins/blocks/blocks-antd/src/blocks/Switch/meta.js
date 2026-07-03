@@ -36,6 +36,7 @@ export default {
       description: 'Trigger action when switch is changed.',
       event: { value: 'The switch value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

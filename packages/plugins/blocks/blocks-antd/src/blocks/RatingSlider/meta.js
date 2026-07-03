@@ -36,6 +36,7 @@ export default {
       description: 'Trigger action when rating is changed.',
       event: { value: 'The selected rating value.' },
     },
+    onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',

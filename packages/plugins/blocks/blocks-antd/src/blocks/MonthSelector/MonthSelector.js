@@ -44,6 +44,7 @@ const MonthSelector = ({
   return (
     <Label
       blockId={blockId}
+      methods={methods}
       classNames={classNames}
       components={{ Icon }}
       events={events}

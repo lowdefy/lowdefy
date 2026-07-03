@@ -1159,3 +1159,199 @@
                 _string.concat:
                   - 'Delete '
                   - _event: row.name
+
+# Selector cells fire an event on change (event-only, like buttons) — the cell does not write to
+# the grid's row data. The app persists the change by updating the data bound to `rowData`. Here
+# each row's value is bound to state (with a `default`) and the event writes the new value back
+# into that state, so the selection sticks.
+- title: Selector cells (single + multiple)
+  fullWidth: true
+  blocks:
+    - id: selector_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 280
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Task
+            field: name
+            flex: 1
+          - headerName: Priority
+            field: priority
+            width: 200
+            cell:
+              type: selector
+              eventName: onPriorityChange
+              options:
+                - label: Low
+                  value: low
+                  color: green
+                - label: Medium
+                  value: medium
+                  color: orange
+                - label: High
+                  value: high
+                  color: red
+          - headerName: Labels
+            field: labels
+            width: 340
+            cell:
+              type: multipleSelector
+              eventName: onLabelsChange
+              placeholder: Add labels
+              options:
+                - bug
+                - feature
+                - docs
+                - urgent
+        rowData:
+          - id: r1
+            name: Wire main switchboard
+            priority:
+              _state:
+                key: sel_priority.r1
+                default: high
+            labels:
+              _state:
+                key: sel_labels.r1
+                default:
+                  - urgent
+          - id: r2
+            name: HVAC balancing
+            priority:
+              _state:
+                key: sel_priority.r2
+                default: medium
+            labels:
+              _state:
+                key: sel_labels.r2
+                default: []
+          - id: r3
+            name: Utility connections
+            priority:
+              _state:
+                key: sel_priority.r3
+                default: low
+            labels:
+              _state:
+                key: sel_labels.r3
+                default:
+                  - docs
+                  - feature
+      events:
+        onPriorityChange:
+          - id: persist_priority
+            type: SetState
+            params:
+              sel_priority:
+                _object.assign:
+                  - _state: sel_priority
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onLabelsChange:
+          - id: persist_labels
+            type: SetState
+            params:
+              sel_labels:
+                _object.assign:
+                  - _state: sel_labels
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+
+# Input cells (switch / textInput / paragraphInput) work like the selector cells: event-only, the
+# app persists the new value into the data bound to `rowData`. Switch fires on toggle; textInput
+# commits on blur / Enter; paragraphInput commits when the inline edit is confirmed.
+- title: Input cells (switch, text, paragraph)
+  fullWidth: true
+  blocks:
+    - id: input_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+        rowData:
+          - id: t1
+            name:
+              _state:
+                key: inp_name.t1
+                default: Wire main switchboard
+            active:
+              _state:
+                key: inp_active.t1
+                default: true
+            notes:
+              _state:
+                key: inp_notes.t1
+                default: Awaiting sign-off from the project engineer.
+          - id: t2
+            name:
+              _state:
+                key: inp_name.t2
+                default: HVAC balancing
+            active:
+              _state:
+                key: inp_active.t2
+                default: false
+            notes:
+              _state:
+                key: inp_notes.t2
+                default: Waiting on updated ductwork drawings.
+        columnDefs:
+          - headerName: Task
+            field: name
+            width: 260
+            cell:
+              type: textInput
+              eventName: onNameChange
+              placeholder: Task name
+          - headerName: Active
+            field: active
+            width: 110
+            cell:
+              type: switch
+              eventName: onActiveChange
+              checkedText: 'on'
+              uncheckedText: 'off'
+          - headerName: Notes
+            field: notes
+            flex: 1
+            cell:
+              type: paragraphInput
+              eventName: onNotesChange
+              ellipsis:
+                rows: 2
+      events:
+        onNameChange:
+          - id: persist_name
+            type: SetState
+            params:
+              inp_name:
+                _object.assign:
+                  - _state: inp_name
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onActiveChange:
+          - id: persist_active
+            type: SetState
+            params:
+              inp_active:
+                _object.assign:
+                  - _state: inp_active
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onNotesChange:
+          - id: persist_notes
+            type: SetState
+            params:
+              inp_notes:
+                _object.assign:
+                  - _state: inp_notes
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue

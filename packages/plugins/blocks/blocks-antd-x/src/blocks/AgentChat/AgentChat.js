@@ -68,11 +68,26 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return initial;
   });
 
+  // When no conversationId is supplied, mint a stable session id so every turn
+  // (including a welcome prompt sent before the app sets the prop) posts a
+  // consistent id. App-supplied ids remain authoritative.
+  const mintedIdRef = useRef(null);
+  if (!conversationId && !mintedIdRef.current) {
+    mintedIdRef.current = crypto.randomUUID();
+  }
+  const effectiveConversationId = conversationId ?? mintedIdRef.current;
+
   const urlQueryKey = JSON.stringify(urlQuery ?? null);
   const transport = useMemo(
     () =>
-      createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }),
-    [pageId, agentId, conversationId, urlQueryKey]
+      createLowdefyChatTransport({
+        pageId,
+        agentId,
+        conversationId: effectiveConversationId,
+        urlQuery,
+        sharedStateRef,
+      }),
+    [pageId, agentId, effectiveConversationId, urlQueryKey]
   );
 
   const bubbleListRef = useRef(null);
@@ -154,13 +169,13 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
-  const prevConversationIdRef = useRef(conversationId);
+  const prevConversationIdRef = useRef(effectiveConversationId);
   useEffect(() => {
-    if (conversationId !== prevConversationIdRef.current) {
-      prevConversationIdRef.current = conversationId;
+    if (effectiveConversationId !== prevConversationIdRef.current) {
+      prevConversationIdRef.current = effectiveConversationId;
       setMessages([]);
     }
-  }, [conversationId, setMessages]);
+  }, [effectiveConversationId, setMessages]);
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
@@ -230,7 +245,13 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     }
   }, []);
 
-  useAgentEvents({ messages, status, methods, finishMetaRef });
+  useAgentEvents({
+    messages,
+    status,
+    methods,
+    finishMetaRef,
+    conversationId: effectiveConversationId,
+  });
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
