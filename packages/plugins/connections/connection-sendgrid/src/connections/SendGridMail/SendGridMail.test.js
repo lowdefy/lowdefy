@@ -23,6 +23,10 @@ test('All requests are present', () => {
   expect(SendGridMail.requests.SendGridMailSend).toBeDefined();
 });
 
+test('email.send capability is present', () => {
+  expect(SendGridMail.email.send).toBeDefined();
+});
+
 test('valid connection schema', () => {
   let connection = {
     apiKey: 'API_KEY',
@@ -95,14 +99,83 @@ test('valid connection schema, all properties', () => {
       name: 'Some One',
       email: 'someone@example.com',
     },
+    replyTo: 'reply@example.com',
     templateId: 'templateId',
     mailSettings: {
       sandboxMode: {
         enable: true,
       },
     },
+    filter: {
+      replaceAddress: 'dev@example.com',
+      allowlist: ['example.com'],
+      regex: '^dev',
+    },
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('valid connection schema, filter properties may be null', () => {
+  const connection = {
+    apiKey: 'API_KEY',
+    from: 'someone@example.com',
+    filter: {
+      replaceAddress: null,
+      allowlist: null,
+      regex: null,
+    },
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('property filter is not an object', () => {
+  const connection = {
+    apiKey: 'API_KEY',
+    from: 'someone@example.com',
+    filter: 'filter',
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'SendGridMail connection property "filter" should be an object.'
+  );
+});
+
+test('property filter.replaceAddress is not a string', () => {
+  const connection = {
+    apiKey: 'API_KEY',
+    from: 'someone@example.com',
+    filter: {
+      replaceAddress: true,
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'SendGridMail connection property "filter.replaceAddress" should be a string.'
+  );
+});
+
+test('property filter.allowlist is not an array', () => {
+  const connection = {
+    apiKey: 'API_KEY',
+    from: 'someone@example.com',
+    filter: {
+      allowlist: 'example.com',
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'SendGridMail connection property "filter.allowlist" should be an array.'
+  );
+});
+
+test('property filter.regex is not a string', () => {
+  const connection = {
+    apiKey: 'API_KEY',
+    from: 'someone@example.com',
+    filter: {
+      regex: true,
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'SendGridMail connection property "filter.regex" should be a string.'
+  );
 });
 
 test('property apiKey is missing', () => {
