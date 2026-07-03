@@ -54,7 +54,7 @@ async function getContext() {
       destination: pino.destination({ dest: 1, sync: true }),
     }),
     options: {
-      port: argv.port ?? env.PORT ?? 3000,
+      port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
       watch:
         argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],

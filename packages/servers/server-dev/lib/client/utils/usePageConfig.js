@@ -13,7 +13,13 @@
 
 import useSWR from 'swr';
 
+import { getNavVersion } from './navVersion.js';
 import { getReloadVersion } from './useMutateCache.js';
+
+// URLs whose config is server-resolved per request — learned from the fetched
+// config's dynamic flag, so the first visit caches like a static page and
+// every later navigation refetches.
+const dynamicUrls = new Set();
 
 function parseJsModule(text) {
   const fn = new Function('exports', text.replace('export default', 'exports.default ='));
@@ -71,6 +77,10 @@ async function fetchPageConfig(url) {
   data._jsEntries = jsEntries;
   data._dynamicIcons = dynamicIcons;
 
+  if (data?.dynamic === true) {
+    dynamicUrls.add(url);
+  }
+
   return data;
 }
 
@@ -80,11 +90,18 @@ function usePageConfig(pageId, basePath) {
   // key also caches dynamic pages per query string.
   const url = `${basePath}/api/page/${pageId}${window.location.search}`;
   // Include reloadVersion in the SWR key so that after a config reload,
-  // previously cached page data is not reused. The fetcher receives
-  // [url, version] but only uses url — the version just busts the cache.
-  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
-    suspense: true,
-  });
+  // previously cached page data is not reused. Dynamic pages also key on the
+  // navigation version — server-resolved content must re-resolve on every
+  // navigation, never serve from the SWR cache. The fetcher receives
+  // [url, ...versions] but only uses url — the versions just bust the cache.
+  const navVersion = dynamicUrls.has(url) ? getNavVersion() : 0;
+  const { data } = useSWR(
+    [url, getReloadVersion(), navVersion],
+    ([fetchUrl]) => fetchPageConfig(fetchUrl),
+    {
+      suspense: true,
+    }
+  );
   return { data };
 }
 

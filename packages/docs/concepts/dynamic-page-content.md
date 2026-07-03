@@ -145,7 +145,7 @@ api:
                     - '"'
 ```
 
-Navigating to the same page with different query parameters re-resolves the content on the server.
+The resolver executes on every navigation to the page — a menu link, a `Link` action (including to the same page), or the browser back and forward buttons all re-resolve the content on the server. Dynamic page config is never served from a client cache.
 
 ## Client Bundle Types
 
