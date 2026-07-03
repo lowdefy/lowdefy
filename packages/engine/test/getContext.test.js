@@ -132,7 +132,7 @@ test('update memoized context', () => {
   expect(mockUpdate.mock.calls.length).toBe(1);
 });
 
-test('dynamic page config always builds a fresh context', () => {
+test('dynamic page config memoizes context for the same config object', () => {
   const lowdefy = getLowdefy();
   const page = {
     id: 'pageId',
@@ -141,8 +141,36 @@ test('dynamic page config always builds a fresh context', () => {
   const config = buildTestPage({ pageConfig: page });
   // Server-resolved pages carry dynamic: true — content changes per request.
   config.dynamic = true;
+  // getContext runs in the render body — re-renders of the same fetched config
+  // must reuse the context, or context creation would loop.
   const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
   const c2 = getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).toBe(c2);
+});
+
+test('dynamic page config builds a fresh context for a new config object', () => {
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+  };
+  const config1 = buildTestPage({ pageConfig: page });
+  config1.dynamic = true;
+  // A new fetch delivers a new config object — SPA navigation to the same
+  // dynamic page must render the newly resolved content.
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(c1).not.toBe(c2);
   expect(c1._internal.RootSlots.id).not.toEqual(c2._internal.RootSlots.id);
+});
+
+test('static page config memoizes context across different config objects', () => {
+  const lowdefy = getLowdefy();
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).toBe(c2);
 });

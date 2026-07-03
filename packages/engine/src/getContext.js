@@ -81,9 +81,14 @@ function getContext({
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  // Dynamic pages are server-resolved per request — a memoized context would
-  // render the previous request's content, so always rebuild.
-  if (lowdefy.contexts[id] && !resetContext.reset && config.dynamic !== true) {
+  // Dynamic pages are server-resolved per request — a context memoized across
+  // navigations would render the previous request's content. Rebuild when a
+  // new config object arrives (a fresh fetch), but stay memoized across
+  // re-renders of the same config: getContext runs in the render body, so
+  // rebuilding per render would loop.
+  const sameDynamicConfig =
+    config.dynamic !== true || lowdefy.contexts[id]?._internal.pageConfig === config;
+  if (lowdefy.contexts[id] && !resetContext.reset && sameDynamicConfig) {
     // memoize context if already created, eg between page transitions, unless the reset flag is raised
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
@@ -101,6 +106,9 @@ function getContext({
     state: {},
     _internal: {
       lowdefy,
+      // Config object reference for dynamic page memoization — identity marks
+      // which fetch this context was built from.
+      pageConfig: config,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
     },
