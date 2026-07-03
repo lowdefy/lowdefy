@@ -32,6 +32,7 @@
 - _ref: concepts/theming.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
+- _ref: concepts/dynamic-page-content.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
