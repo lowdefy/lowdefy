@@ -1,0 +1,17 @@
+# Public HTTP endpoint reading the resolved pinned organization through the
+# _organization server operator (phase-8 walkthrough). The engine retains the
+# startup ensure-by-slug's { id, slug, name }; _organization evaluates at
+# request time like _secret / _payload - the org id is minted at creation, so
+# no config var can carry it. Under the tenant policy the same endpoint fails
+# with an operator error naming the policy (see auth-reference-tenant).
+id: org-info
+type: Api
+routine:
+  - ':return':
+      organization:
+        id:
+          _organization: id
+        slug:
+          _organization: slug
+        name:
+          _organization: name

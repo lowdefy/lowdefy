@@ -62,6 +62,13 @@ auth:
     signUp: /signup
     verifyEmail: /verify-email
 
+# Phase-8 error demos: under the tenant policy there is no single implied
+# organization, so _organization fails at evaluation and an org-scoped step
+# with no organizationId fails naming the fix.
+api:
+  - _ref: api/org-info.yaml
+  - _ref: api/list-members-no-org.yaml
+
 pages:
   - _ref: pages/home.yaml
   - _ref: pages/login.yaml

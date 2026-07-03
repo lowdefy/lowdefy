@@ -430,7 +430,8 @@ of disposable signed-up-and-verified users.
 42. **DeleteUser cascades and leaves the contact untouched**: scenario 34's
     invitee has a user row, an org-a member row, a stamped `contactId`,
     and sessions; invite the same email once more so a **pending**
-    invitation row also exists (`resend: true` reissues it). Note the user
+    invitation row also exists (re-inviting replaces any pending
+    invitation and creates a fresh one - phase-8 semantics). Note the user
     id, then delete it on `/users` - the response lists the removed user,
     member rows, and pending invitations. Verify the cascade:
 
@@ -479,3 +480,116 @@ of disposable signed-up-and-verified users.
 Automation note: like phases 1-3 these stay manual - they need config
 toggles with restarts, two browsers, and live email loops. Automate with
 the repo's e2e tooling as it grows.
+
+## Walkthrough (phase-8 gate - user-admin platform asks)
+
+Phase 8 lands the platform asks the user-admin module design surfaced:
+attributes stored as **native sub-documents** (the adapter's `supportsJSON`
+opt-in, carried as a pnpm patch on `@better-auth/mongo-adapter` until the
+upstream passthrough ships), invite-time member attributes with
+re-invite-replaces / resend-re-sends semantics
+(`cancelPendingInvitationsOnReInvite`), org-scoped steps defaulting an
+omitted `organizationId` to the **pinned** org, and the `_organization`
+server operator reading the org the startup ensure resolved. Run as the
+admin from scenario 20 unless a step says otherwise. The console fetches
+follow scenario 33's shape:
+
+```js
+const call = async (endpoint, payload = {}) =>
+  await (
+    await fetch(`/api/endpoints/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ payload }),
+    })
+  ).json();
+```
+
+45. **Attributes land as sub-documents; a native aggregation filters on
+    their contents**: on `/members`, set your member attributes to
+    `{"region":"emea","branches":["a","b"]}` (and on `/users`, user
+    attributes to `{"region":"apac"}`). Verify the storage shape is an
+    object, not a JSON string:
+
+    ```sh
+    mongosh auth-reference --eval '
+      const m = db["user-members"].findOne({ "attributes.region": "emea" });
+      print("member attributes type:", typeof m.attributes, JSON.stringify(m.attributes));
+      const u = db.users.findOne({ "attributes.region": "apac" });
+      print("user attributes type:", typeof u.attributes);'
+    ```
+
+    Both print `object` - and the member query itself already filtered on
+    attribute **contents**, which a JSON string cannot do. The rails read
+    the same rows back as objects: `/dashboard` Refresh session shows the
+    merged bag (`resolveAuthentication`), and `call('admin-list-members')`
+    returns members whose `attributes` are objects (`ListMembers`). Now the
+    read-only native aggregation over `user-members`
+    (`api/admin-members-by-attribute.yaml`, `$match` on
+    `attributes.region`): `call('admin-members-by-attribute', { region:
+    'emea' })` returns your member row; `{ region: 'nowhere' }` returns
+    `[]`.
+
+46. **`_organization` resolves in a request and fails under tenant**:
+    `call('org-info')` (public, no auth needed) returns
+    `{ organization: { id, slug: "org-a", name: "org-a" } }` - the `id`
+    matches `db["user-organizations"].findOne({ slug: "org-a" })`. The
+    operator evaluates at request time inside the endpoint's routine; the
+    same read works in any server config position (step properties,
+    routine logic, connection requests). For the **auto-seeded default
+    org**: comment out the whole `auth.organizations` block in
+    `lowdefy.yaml` and restart - the build defaults the policy to `pinned`
+    with slug `default`, the startup ensure seeds it, and `call('org-info')`
+    now returns `slug: "default"`. Restore the block. For the **tenant
+    error**: run the `auth-reference-tenant` app and call the same
+    `org-info` there - the response is an operator error naming the
+    policy: `_organization cannot resolve under the "tenant" organizations
+    policy - there is no single pinned organization.`
+
+47. **Org-scoped steps default `organizationId` to the pinned org;
+    explicit wins; tenant omission errors**: `call('admin-list-members')`
+    (no `organizationId` in the payload - see
+    `api/admin-list-members.yaml`) returns **org-a**'s members: the step
+    defaulted to the pinned org. Explicit wins:
+    `call('admin-list-members', { organizationId: '<org-b id>' })` (id
+    from `db["user-organizations"].findOne({ slug: "org-b" })`, shared
+    auth database) returns org-b's members instead. Under tenant: in the
+    `auth-reference-tenant` app, `call('list-members-no-org')` (signed in
+    as any tenant user) fails with `ListMembers requires an
+    "organizationId" property under the "tenant" organizations policy -
+    there is no pinned organization to default to. Set organizationId on
+    the step properties.`; the same call with
+    `{ organizationId: '<your tenant org id>' }` succeeds.
+
+48. **Invite with attributes - the member row carries them from the first
+    session**: invite a fresh email with attributes:
+    `call('admin-invite-member', { email: '<fresh>', role: 'member',
+    attributes: { region: 'emea', plan: 'gold' } })` - the response
+    carries the `attributes`, and
+    `db["user-invitations"].findOne({ email: "<fresh>" })` shows them as a
+    **sub-document** on the invitation row. As the invitee: sign up,
+    verify, accept on `/accept-invitation?invitationId=<id>` - the accept
+    hook copied the attributes onto the minted member row
+    (`db["user-members"]`, an object again), and `/dashboard` immediately
+    shows `region: emea, plan: gold` under attributes: the first session
+    resolved them on `_user.attributes` with no admin edit in between.
+
+49. **Re-invite replaces; resend re-sends unchanged**: invite a fresh
+    email - `call('admin-invite-member', { email: '<fresh2>', role:
+    'member', attributes: { region: 'emea' } })` - and note the invitation
+    id and the Mailpit message. Re-invite with corrections:
+    `call('admin-invite-member', { email: '<fresh2>', role: 'auditor',
+    attributes: { region: 'apac' } })` - the response is a **new**
+    invitation id carrying the new role and attributes;
+    `db["user-invitations"].findOne({ _id: <old id> })` shows
+    `status: "canceled"`, and opening the old accept link fails (the old
+    invitation is dead). Now resend:
+    `call('admin-invite-member', { email: '<fresh2>', role: 'member',
+    resend: true })` - the response is the **same** invitation id with
+    role still `auditor` and attributes still `apac` (only `expiresAt`
+    refreshed): a resend re-sends what was invited, it never rewrites it.
+    Corrections are re-invites.
+
+Automation note: these stay manual for the same reasons as phases 1-6
+(restarts, a second app, live email); the console `call` helper keeps each
+scenario a copy-paste. Automate with the repo's e2e tooling as it grows.
