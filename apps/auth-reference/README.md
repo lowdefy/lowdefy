@@ -484,9 +484,9 @@ the repo's e2e tooling as it grows.
 ## Walkthrough (phase-8 gate - user-admin platform asks)
 
 Phase 8 lands the platform asks the user-admin module design surfaced:
-attributes stored as **native sub-documents** (the adapter's `supportsJSON`
-opt-in, carried as a pnpm patch on `@better-auth/mongo-adapter` until the
-upstream passthrough ships), invite-time member attributes with
+attributes stored as **native sub-documents** (the vendored MongoDB adapter
+in `@lowdefy/connection-mongodb` enables `supportsJSON` and parses legacy
+JSON-string rows on read), invite-time member attributes with
 re-invite-replaces / resend-re-sends semantics
 (`cancelPendingInvitationsOnReInvite`), org-scoped steps defaulting an
 omitted `organizationId` to the **pinned** org, and the `_organization`

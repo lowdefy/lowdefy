@@ -24,8 +24,8 @@ jest.unstable_mockModule('mongodb', () => ({
   MongoClient: mockMongoClient,
 }));
 
-jest.unstable_mockModule('better-auth/adapters/mongodb', () => ({
-  mongodbAdapter: mockMongodbAdapter,
+jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
+  default: mockMongodbAdapter,
 }));
 
 beforeEach(() => {
@@ -40,13 +40,13 @@ test('MongoDBAuthAdapter throws when uri is missing', async () => {
   );
 });
 
-test('MongoDBAuthAdapter opts into native sub-document storage for json fields', async () => {
+test('MongoDBAuthAdapter returns the vendored adapter over the selected database', async () => {
   const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
   const adapter = MongoDBAuthAdapter({
     properties: { uri: 'mongodb://localhost:27017', database: 'auth' },
   });
   expect(mockMongodbAdapter).toHaveBeenCalledTimes(1);
-  expect(mockMongodbAdapter).toHaveBeenCalledWith(mockDb, { supportsJSON: true });
+  expect(mockMongodbAdapter).toHaveBeenCalledWith({ db: mockDb });
   expect(adapter).toBe('betterAuthAdapter');
 });
 
