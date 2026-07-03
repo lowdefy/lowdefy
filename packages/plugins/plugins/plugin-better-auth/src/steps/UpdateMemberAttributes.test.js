@@ -19,32 +19,88 @@ import { jest } from '@jest/globals';
 import UpdateMemberAttributes from './UpdateMemberAttributes.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
-test('UpdateMemberAttributes updates the member row directly through the adapter', async () => {
+const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
+
+test('UpdateMemberAttributes updates the member row directly through the adapter, scoped to the resolved organization', async () => {
   const updated = { id: 'member-1', attributes: { region: 'eu' } };
   const adapter = { update: jest.fn().mockResolvedValue(updated) };
   const { auth } = createMockAuth({ adapter });
   const result = await UpdateMemberAttributes({
     auth,
-    properties: { memberId: 'member-1', attributes: { region: 'eu' } },
+    organization,
+    properties: { memberId: 'member-1', attributes: { region: 'eu' }, organizationId: 'org-1' },
   });
   expect(result).toEqual(updated);
   expect(adapter.update).toHaveBeenCalledWith({
     model: 'member',
-    where: [{ field: 'id', value: 'member-1' }],
+    where: [
+      { field: 'id', value: 'member-1' },
+      { field: 'organizationId', value: 'org-1' },
+    ],
     update: { attributes: { region: 'eu' } },
   });
 });
 
+test('UpdateMemberAttributes defaults organizationId to the pinned organization when omitted', async () => {
+  const updated = { id: 'member-1', attributes: { region: 'eu' } };
+  const adapter = { update: jest.fn().mockResolvedValue(updated) };
+  const { auth } = createMockAuth({ adapter });
+  await UpdateMemberAttributes({
+    auth,
+    organization,
+    properties: { memberId: 'member-1', attributes: { region: 'eu' } },
+  });
+  expect(adapter.update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'id', value: 'member-1' },
+      { field: 'organizationId', value: 'org_pinned' },
+    ],
+    update: { attributes: { region: 'eu' } },
+  });
+});
+
+test('UpdateMemberAttributes throws under the tenant organizations policy when organizationId is omitted', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    UpdateMemberAttributes({
+      auth,
+      organization: { policy: 'tenant', pinned: null },
+      properties: { memberId: 'member-1', attributes: { region: 'eu' } },
+    })
+  ).rejects.toThrow(
+    'UpdateMemberAttributes requires an "organizationId" property under the "tenant" organizations policy - there is no pinned organization to default to. Set organizationId on the step properties.'
+  );
+});
+
+test('UpdateMemberAttributes throws when no member matches the memberId within the resolved organization', async () => {
+  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateMemberAttributes({
+      auth,
+      organization,
+      properties: { memberId: 'member-1', attributes: { region: 'eu' }, organizationId: 'org-1' },
+    })
+  ).rejects.toThrow(
+    'UpdateMemberAttributes found no member "member-1" in organization "org-1".'
+  );
+});
+
 test('UpdateMemberAttributes throws when memberId property is missing', async () => {
   const { auth } = createMockAuth();
-  await expect(UpdateMemberAttributes({ auth, properties: { attributes: {} } })).rejects.toThrow(
-    'UpdateMemberAttributes requires a "memberId" property.'
-  );
+  await expect(
+    UpdateMemberAttributes({ auth, organization, properties: { attributes: {} } })
+  ).rejects.toThrow('UpdateMemberAttributes requires a "memberId" property.');
 });
 
 test('UpdateMemberAttributes throws when attributes is not a plain object', async () => {
   const { auth } = createMockAuth();
   await expect(
-    UpdateMemberAttributes({ auth, properties: { memberId: 'member-1', attributes: null } })
+    UpdateMemberAttributes({
+      auth,
+      organization,
+      properties: { memberId: 'member-1', attributes: null },
+    })
   ).rejects.toThrow('UpdateMemberAttributes requires an "attributes" object. Received null.');
 });

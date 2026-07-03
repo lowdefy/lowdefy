@@ -16,10 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Adapter-direct per the mongodb design Decision 5: the base adapter applies the
-// json additionalField transform (JSON string storage on MongoDB) on both ends.
-// Fires NO user.update database hooks - attributes are admin-set authorization
-// inputs, not user-driven edits.
+// Adapter-direct per the mongodb design Decision 5: the adapter applies the
+// json additionalField transform (native sub-document storage on MongoDB via
+// supportsJSON) on both ends. Fires NO user.update database hooks -
+// attributes are admin-set authorization inputs, not user-driven edits.
 async function UpdateUserAttributes({ auth, properties }) {
   const { attributes, userId } = properties;
   if (type.isNone(userId)) {

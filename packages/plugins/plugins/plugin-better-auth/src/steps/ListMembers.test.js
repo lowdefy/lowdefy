@@ -20,6 +20,7 @@ import ListMembers from './ListMembers.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 const acting = { system: true, user: null };
+const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
 
 test('ListMembers passes properties through as query with headers to the org listMembers endpoint', async () => {
   const listMembers = jest.fn().mockResolvedValue({ members: [], total: 0 });
@@ -27,6 +28,7 @@ test('ListMembers passes properties through as query with headers to the org lis
   const result = await ListMembers({
     acting,
     auth,
+    organization,
     properties: {
       organizationId: 'org-1',
       organizationSlug: 'org-one',
@@ -55,7 +57,7 @@ test('ListMembers passes properties through as query with headers to the org lis
   expect(input.headers).toBeInstanceOf(Headers);
 });
 
-test('ListMembers falls back to the acting session activeOrganizationId when organizationId is omitted', async () => {
+test('ListMembers does not default organizationId when organizationSlug is present', async () => {
   const listMembers = jest.fn().mockResolvedValue({ members: [] });
   const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
   await ListMembers({
@@ -71,10 +73,37 @@ test('ListMembers falls back to the acting session activeOrganizationId when org
       },
     },
     auth,
-    properties: {},
+    organization,
+    properties: { organizationSlug: 'org-one' },
   });
   const input = listMembers.mock.calls[0][0];
+  // An explicit organizationSlug is an explicit org selection - it is not
+  // overridden by the pinned organization default.
   expect(input.query.organizationId).toBe(undefined);
+  expect(input.query.organizationSlug).toBe('org-one');
   // The org handler falls back to session.session.activeOrganizationId.
   expect(input.context.session.session.activeOrganizationId).toEqual('org-1');
+});
+
+test('ListMembers defaults organizationId to the pinned organization when both organizationId and organizationSlug are omitted', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
+  await ListMembers({ acting, auth, organization, properties: {} });
+  const input = listMembers.mock.calls[0][0];
+  expect(input.query.organizationId).toBe('org_pinned');
+  expect(input.query.organizationSlug).toBe(undefined);
+});
+
+test('ListMembers throws under the tenant organizations policy when organizationId and organizationSlug are omitted', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    ListMembers({
+      acting,
+      auth,
+      organization: { policy: 'tenant', pinned: null },
+      properties: {},
+    })
+  ).rejects.toThrow(
+    'ListMembers requires an "organizationId" property under the "tenant" organizations policy - there is no pinned organization to default to. Set organizationId on the step properties.'
+  );
 });

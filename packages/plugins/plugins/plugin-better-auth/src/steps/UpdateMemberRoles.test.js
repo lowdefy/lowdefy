@@ -20,6 +20,7 @@ import UpdateMemberRoles from './UpdateMemberRoles.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 const acting = { system: true, user: null };
+const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
 
 function createAdapter({ member, members }) {
   return {
@@ -39,9 +40,44 @@ test('UpdateMemberRoles throws when demoting the only owner of an organization',
   const updateMemberRole = jest.fn();
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
   await expect(
-    UpdateMemberRoles({ acting, auth, properties: { memberId: 'member-1', role: 'member' } })
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization,
+      properties: { memberId: 'member-1', role: 'member' },
+    })
   ).rejects.toThrow('You cannot leave the organization without an owner.');
   expect(updateMemberRole).not.toHaveBeenCalled();
+});
+
+test('UpdateMemberRoles defaults organizationId to the pinned organization when omitted', async () => {
+  const adapter = createAdapter({
+    member: { id: 'member-2', organizationId: 'org_pinned', role: 'member' },
+    members: [],
+  });
+  const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-2', role: 'admin' });
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+  await UpdateMemberRoles({
+    acting,
+    auth,
+    organization,
+    properties: { memberId: 'member-2', role: 'admin' },
+  });
+  expect(updateMemberRole.mock.calls[0][0].body.organizationId).toBe('org_pinned');
+});
+
+test('UpdateMemberRoles throws under the tenant organizations policy when organizationId is omitted', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization: { policy: 'tenant', pinned: null },
+      properties: { memberId: 'member-1', role: 'member' },
+    })
+  ).rejects.toThrow(
+    'UpdateMemberRoles requires an "organizationId" property under the "tenant" organizations policy - there is no pinned organization to default to. Set organizationId on the step properties.'
+  );
 });
 
 test('UpdateMemberRoles demotes an owner when another owner remains', async () => {
@@ -77,6 +113,7 @@ test('UpdateMemberRoles passes through when the new role set keeps owner', async
   await UpdateMemberRoles({
     acting,
     auth,
+    organization,
     properties: { memberId: 'member-1', role: ['owner', 'admin'] },
   });
   expect(adapter.findMany).not.toHaveBeenCalled();
@@ -90,7 +127,12 @@ test('UpdateMemberRoles passes through when the target member is not an owner', 
   });
   const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-2', role: 'admin' });
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await UpdateMemberRoles({ acting, auth, properties: { memberId: 'member-2', role: 'admin' } });
+  await UpdateMemberRoles({
+    acting,
+    auth,
+    organization,
+    properties: { memberId: 'member-2', role: 'admin' },
+  });
   expect(adapter.findMany).not.toHaveBeenCalled();
   expect(updateMemberRole).toHaveBeenCalledTimes(1);
 });
@@ -103,7 +145,12 @@ test('UpdateMemberRoles detects owner demotion in comma-separated role strings',
   const updateMemberRole = jest.fn();
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
   await expect(
-    UpdateMemberRoles({ acting, auth, properties: { memberId: 'member-1', role: 'admin' } })
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization,
+      properties: { memberId: 'member-1', role: 'admin' },
+    })
   ).rejects.toThrow('You cannot leave the organization without an owner.');
 });
 
@@ -115,20 +162,25 @@ test('UpdateMemberRoles passes through when the member row is not found so the e
   const updateMemberRole = jest.fn().mockRejectedValue(apiError);
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
   await expect(
-    UpdateMemberRoles({ acting, auth, properties: { memberId: 'missing', role: 'member' } })
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization,
+      properties: { memberId: 'missing', role: 'member' },
+    })
   ).rejects.toThrow('Member not found');
 });
 
 test('UpdateMemberRoles throws when memberId property is missing', async () => {
   const { auth } = createMockAuth();
-  await expect(UpdateMemberRoles({ acting, auth, properties: { role: 'member' } })).rejects.toThrow(
-    'UpdateMemberRoles requires a "memberId" property.'
-  );
+  await expect(
+    UpdateMemberRoles({ acting, auth, organization, properties: { role: 'member' } })
+  ).rejects.toThrow('UpdateMemberRoles requires a "memberId" property.');
 });
 
 test('UpdateMemberRoles throws when role property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
-    UpdateMemberRoles({ acting, auth, properties: { memberId: 'member-1' } })
+    UpdateMemberRoles({ acting, auth, organization, properties: { memberId: 'member-1' } })
   ).rejects.toThrow('UpdateMemberRoles requires a "role" property.');
 });

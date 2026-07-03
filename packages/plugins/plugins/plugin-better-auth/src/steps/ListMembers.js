@@ -14,20 +14,31 @@
   limitations under the License.
 */
 
-import callPluginEndpoint from './support/callPluginEndpoint.js';
+import { type } from '@lowdefy/helpers';
 
-async function ListMembers({ acting, auth, properties }) {
+import callPluginEndpoint from './support/callPluginEndpoint.js';
+import resolveOrganizationId from './support/resolveOrganizationId.js';
+
+async function ListMembers({ acting, auth, organization, properties }) {
   const {
     filterField,
     filterOperator,
     filterValue,
     limit,
     offset,
-    organizationId,
     organizationSlug,
     sortBy,
     sortDirection,
   } = properties;
+  // An explicit organizationSlug is an explicit org selection too - only
+  // default the id when the step names no organization at all.
+  const organizationId = type.isNone(organizationSlug)
+    ? resolveOrganizationId({
+        organization,
+        organizationId: properties.organizationId,
+        step: 'ListMembers',
+      })
+    : properties.organizationId;
   return callPluginEndpoint({
     acting,
     auth,
