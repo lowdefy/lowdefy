@@ -16,11 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Adapter-direct per the mongodb design Decision 5: the base adapter applies the
-// json additionalField transform (JSON string storage on MongoDB) on both ends.
-// Fires NO member.update database hooks - attributes are admin-set authorization
-// inputs, not user-driven edits.
-async function UpdateMemberAttributes({ auth, properties }) {
+import resolveOrganizationId from './support/resolveOrganizationId.js';
+
+// Adapter-direct per the mongodb design Decision 5: the adapter applies the
+// json additionalField transform (native sub-document storage on MongoDB via
+// supportsJSON) on both ends. Fires NO member.update database hooks -
+// attributes are admin-set authorization inputs, not user-driven edits.
+async function UpdateMemberAttributes({ auth, organization, properties }) {
   const { attributes, memberId } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberAttributes requires a "memberId" property.');
@@ -32,12 +34,28 @@ async function UpdateMemberAttributes({ auth, properties }) {
       )}.`
     );
   }
+  const organizationId = resolveOrganizationId({
+    organization,
+    organizationId: properties.organizationId,
+    step: 'UpdateMemberAttributes',
+  });
   const { adapter } = await auth.$context;
-  return adapter.update({
+  const member = await adapter.update({
     model: 'member',
-    where: [{ field: 'id', value: memberId }],
+    where: [
+      { field: 'id', value: memberId },
+      { field: 'organizationId', value: organizationId },
+    ],
     update: { attributes },
   });
+  if (type.isNone(member)) {
+    // Mirrors the rails' member-not-found semantics - a memberId outside the
+    // resolved organization must fail loudly, not skip the write silently.
+    throw new Error(
+      `UpdateMemberAttributes found no member "${memberId}" in organization "${organizationId}".`
+    );
+  }
+  return member;
 }
 
 export default UpdateMemberAttributes;

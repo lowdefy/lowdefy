@@ -15,19 +15,27 @@
 */
 
 import { MongoClient } from 'mongodb';
-import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 
-// A thin wrapper around BetterAuth's MongoDB adapter. The adapter selects
-// the database and nothing more - no app-scoping, no tenancy, no query
-// interception. Physical collection names follow the fixed user-* mapping
-// applied by the engine at startup; there is no modelName escape hatch.
+import mongodbAdapter from '../mongodbAdapter/mongodbAdapter.js';
+
+// A thin wrapper around the vendored MongoDB adapter (see mongodbAdapter.js
+// for provenance). The wrapper selects the database and nothing more - no
+// app-scoping, no tenancy, no query interception. Physical collection names
+// follow the fixed user-* mapping applied by the engine at startup; there is
+// no modelName escape hatch. The adapter stores json additionalFields
+// (user.attributes, member.attributes, invitation.attributes) as native
+// sub-documents so native reads can filter and aggregate on attribute
+// contents, and parses legacy JSON-string rows on read - native filtering on
+// pre-release stringified rows still requires reshaping them to
+// sub-documents (nothing shipped - a one-off script, no app-facing
+// migration).
 function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
     throw new Error('MongoDBAuthAdapter requires "uri" property.');
   }
   const client = new MongoClient(properties.uri, properties.mongoDBClientOptions);
   const db = client.db(properties.database);
-  return mongodbAdapter(db);
+  return mongodbAdapter({ db });
 }
 
 export default MongoDBAuthAdapter;

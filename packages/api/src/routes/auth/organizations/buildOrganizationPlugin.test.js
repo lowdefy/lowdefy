@@ -68,6 +68,15 @@ test('buildOrganizationPlugin blocks client-driven organization creation', () =>
   expect(plugin.options.allowUserToCreateOrganization).toBe(false);
 });
 
+test('buildOrganizationPlugin cancels a pending invitation when the same email is re-invited', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.cancelPendingInvitationsOnReInvite).toBe(true);
+});
+
 test('buildOrganizationPlugin maps the user-* collection names and internal additionalFields', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,
@@ -78,5 +87,6 @@ test('buildOrganizationPlugin maps the user-* collection names and internal addi
   expect(plugin.options.schema.member.modelName).toBe('user-members');
   expect(plugin.options.schema.invitation.modelName).toBe('user-invitations');
   expect(plugin.options.schema.member.additionalFields.attributes.type).toBe('json');
+  expect(plugin.options.schema.invitation.additionalFields.attributes.type).toBe('json');
   expect(plugin.options.schema.invitation.additionalFields.contactId.type).toBe('string');
 });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { setPinnedOrganization } from './getOrganizationBinding.js';
+
 // Ensure-by-slug seeding for the pinned organization: no org with the
 // configured slug means create it, otherwise do nothing. Idempotent and
 // self-bootstrapping - a fresh environment needs no manual seed step.
@@ -64,11 +66,18 @@ function ensureOrganization({ auth, slug }) {
     ensuredByAuth.set(auth, bySlug);
   }
   if (!bySlug.has(slug)) {
-    const promise = ensure({ auth, slug }).catch((error) => {
-      // Do not memoize a failure - the next fire retries the ensure.
-      bySlug.delete(slug);
-      throw error;
-    });
+    const promise = ensure({ auth, slug })
+      .then((organization) => {
+        // Retain the ensured row for synchronous request-time reads - the
+        // _organization operator and step organizationId defaulting.
+        setPinnedOrganization({ auth, organization, slug });
+        return organization;
+      })
+      .catch((error) => {
+        // Do not memoize a failure - the next fire retries the ensure.
+        bySlug.delete(slug);
+        throw error;
+      });
     bySlug.set(slug, promise);
   }
   return bySlug.get(slug);

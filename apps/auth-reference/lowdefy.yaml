@@ -14,6 +14,12 @@ lowdefy: local
 # user and member administration routines (/users and /members), a
 # system: true step runs caller-less in the audit-login hook, and
 # ImpersonateUser/StopImpersonating exercise impersonation.
+# Phase 8 adds the user-admin platform asks: attributes stored as native
+# sub-documents (a native aggregation filters on attribute contents at
+# admin-members-by-attribute), invite-time member attributes with
+# re-invite-replaces/resend-re-sends semantics, org-scoped steps defaulting
+# organizationId to the pinned org, and the _organization server operator
+# (org-info).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -209,6 +215,14 @@ connections:
         _secret: AUTH_DATABASE_URI
       collection: users
       write: true
+  # Phase-8 native-read demo: reads of auth-owned collections may go native
+  # (steps for writes, connections for reads). Read-only - no write: true.
+  - id: members_read_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: user-members
 
 api:
   - _ref: api/normalize-signup.yaml
@@ -234,6 +248,10 @@ api:
   - _ref: api/admin-update-member-roles.yaml
   - _ref: api/admin-update-member-attributes.yaml
   - _ref: api/admin-create-organization.yaml
+  # Phase-8 endpoints: the _organization operator read and the native
+  # attribute-filtered aggregation over user-members.
+  - _ref: api/org-info.yaml
+  - _ref: api/admin-members-by-attribute.yaml
 
 pages:
   - _ref: pages/home.yaml

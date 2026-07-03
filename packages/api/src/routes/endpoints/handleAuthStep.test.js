@@ -32,7 +32,7 @@ const logger = {
 
 const mockStepFn = jest.fn();
 
-function createTestContext({ auth = {}, steps, user } = {}) {
+function createTestContext({ auth = {}, organization, steps, user } = {}) {
   const context = testContext({
     auth,
     logger,
@@ -40,6 +40,9 @@ function createTestContext({ auth = {}, steps, user } = {}) {
     steps: steps === undefined ? { TestAuthStep: mockStepFn } : steps,
     user: user === undefined ? { id: 'user_1', roles: ['member'] } : user,
   });
+  // testContext has no organization field of its own - set it directly so
+  // tests can opt into a retained organization binding.
+  context.organization = organization;
   context.evaluateOperators = createEvaluateOperators(context);
   return context;
 }
@@ -86,8 +89,33 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
   expect(mockStepFn).toHaveBeenCalledWith({
     acting: { system: false, user: { id: 'user_1', roles: ['member'] } },
     auth: context.auth,
+    organization: null,
     properties: { name: 'ci key' },
   });
+});
+
+test('AuthStep step passes context.organization through to the step function', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const organization = {
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'default', name: 'Default' },
+  };
+  const context = createTestContext({ organization });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(mockStepFn.mock.calls[0][0].organization).toBe(organization);
+});
+
+test('AuthStep step passes null organization to the step function when context.organization is not set', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext();
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(mockStepFn.mock.calls[0][0].organization).toBeNull();
 });
 
 test('AuthStep step returns error status when the auth step type is not defined', async () => {

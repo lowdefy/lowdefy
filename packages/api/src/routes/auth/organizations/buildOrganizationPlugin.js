@@ -47,6 +47,11 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
     // ensure-by-slug and tenant orgs are minted lazily at session.create -
     // both system actions that bypass this client-facing switch.
     allowUserToCreateOrganization: false,
+    // Re-invite replaces: inviting an email with a pending invitation cancels
+    // it and creates a fresh one with the new role, attributes, and contactId
+    // (old accept links die with the canceled row). resend: true instead
+    // re-sends the existing invitation unchanged with a refreshed expiry.
+    cancelPendingInvitationsOnReInvite: true,
     schema: {
       organization: { modelName: modelNames.organization },
       member: {
@@ -60,8 +65,12 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
       invitation: {
         modelName: modelNames.invitation,
         // An invitation created against an existing contact carries the
-        // contactId; accepting stamps it onto the user.
+        // contactId; accepting stamps it onto the user. Invite-time member
+        // attributes ride the invitation the same way - accepting copies them
+        // onto the minted member row, so an invited user's authorization
+        // parameters hold from their first session.
         additionalFields: {
+          attributes: { type: 'json', required: false },
           contactId: { type: 'string', required: false },
         },
       },

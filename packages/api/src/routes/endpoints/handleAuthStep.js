@@ -65,7 +65,14 @@ async function handleAuthStep(context, routineContext, { step }) {
     throw new Error(`Auth step "${step.stepId}" requires auth to be configured.`);
   }
 
-  const result = await stepFn({ acting, auth: context.auth, properties: evaluatedProperties });
+  // The retained organizations state ({ policy, pinned }) - org-scoped steps
+  // default an omitted organizationId from it.
+  const result = await stepFn({
+    acting,
+    auth: context.auth,
+    organization: context.organization ?? null,
+    properties: evaluatedProperties,
+  });
 
   addStepResult(context, routineContext, {
     result,

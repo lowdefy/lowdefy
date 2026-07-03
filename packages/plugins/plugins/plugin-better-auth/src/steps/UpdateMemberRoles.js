@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import resolveOrganizationId from './support/resolveOrganizationId.js';
 
 function splitRoles(role) {
   const roles = type.isArray(role) ? role : [role];
@@ -26,14 +27,19 @@ function splitRoles(role) {
     .filter(Boolean);
 }
 
-async function UpdateMemberRoles({ acting, auth, properties }) {
-  const { memberId, organizationId, role } = properties;
+async function UpdateMemberRoles({ acting, auth, organization, properties }) {
+  const { memberId, role } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberRoles requires a "memberId" property.');
   }
   if (type.isNone(role)) {
     throw new Error('UpdateMemberRoles requires a "role" property.');
   }
+  const organizationId = resolveOrganizationId({
+    organization,
+    organizationId: properties.organizationId,
+    step: 'UpdateMemberRoles',
+  });
 
   // At better-auth 1.6.23, updateMemberRole's "cannot leave the organization
   // without an owner" check only fires when the updater edits their own row.

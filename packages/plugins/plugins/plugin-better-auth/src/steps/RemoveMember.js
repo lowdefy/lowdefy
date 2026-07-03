@@ -17,12 +17,18 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import resolveOrganizationId from './support/resolveOrganizationId.js';
 
-async function RemoveMember({ acting, auth, properties }) {
-  const { memberIdOrEmail, organizationId } = properties;
+async function RemoveMember({ acting, auth, organization, properties }) {
+  const { memberIdOrEmail } = properties;
   if (type.isNone(memberIdOrEmail)) {
     throw new Error('RemoveMember requires a "memberIdOrEmail" property.');
   }
+  const organizationId = resolveOrganizationId({
+    organization,
+    organizationId: properties.organizationId,
+    step: 'RemoveMember',
+  });
   return callPluginEndpoint({
     acting,
     auth,

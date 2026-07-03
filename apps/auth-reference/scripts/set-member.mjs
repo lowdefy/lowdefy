@@ -23,10 +23,9 @@
   codemod): without it a fresh environment has no owner/admin to drive
   invitations from.
 
-  Note: attributes are declared as type "json" additionalFields; at
-  better-auth@1.6.23 the MongoDB adapter round-trips them as JSON *strings*
-  (supportsJSON is false), so this script stores them the same way the
-  engine writes them - as JSON strings.
+  Note: attributes are declared as type "json" additionalFields; the
+  vendored MongoDB adapter stores them as native sub-documents, so this
+  script stores them the same way the engine writes them - as objects.
 
   Usage:
     AUTH_DATABASE_URI='mongodb://...' node scripts/set-member.mjs \
@@ -82,7 +81,7 @@ try {
   } else {
     const set = { userId, organizationId };
     if (roles) set.role = roles;
-    if (memberAttributes) set.attributes = JSON.stringify(JSON.parse(memberAttributes));
+    if (memberAttributes) set.attributes = JSON.parse(memberAttributes);
     await db.collection('user-members').updateOne(
       { userId, organizationId },
       {
@@ -99,7 +98,7 @@ try {
       .collection('users')
       .updateOne(
         { _id: user._id },
-        { $set: { attributes: JSON.stringify(JSON.parse(userAttributes)) } }
+        { $set: { attributes: JSON.parse(userAttributes) } }
       );
     console.log(`Set user.attributes for ${email}.`);
   }

@@ -2270,6 +2270,9 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 5.3.0
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-mongodb':
+        specifier: 5.3.0
+        version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/engine':
         specifier: 5.3.0
         version: link:../../engine

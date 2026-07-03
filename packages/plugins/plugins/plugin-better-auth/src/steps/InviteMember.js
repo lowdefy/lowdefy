@@ -17,20 +17,33 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
+import resolveOrganizationId from './support/resolveOrganizationId.js';
 
-async function InviteMember({ acting, auth, properties }) {
-  // contactId is a registered invitation additionalField in the engine config.
-  const { contactId, email, organizationId, resend, role } = properties;
+async function InviteMember({ acting, auth, organization, properties }) {
+  // contactId and attributes are registered invitation additionalFields in
+  // the engine config; accepting the invitation stamps contactId onto the
+  // user and copies attributes onto the minted member row.
+  const { attributes, contactId, email, resend, role } = properties;
   if (type.isNone(email)) {
     throw new Error('InviteMember requires an "email" property.');
   }
   if (type.isNone(role)) {
     throw new Error('InviteMember requires a "role" property.');
   }
+  if (!type.isNone(attributes) && !type.isObject(attributes)) {
+    throw new Error(
+      `InviteMember "attributes" is not an object. Received ${JSON.stringify(attributes)}.`
+    );
+  }
+  const organizationId = resolveOrganizationId({
+    organization,
+    organizationId: properties.organizationId,
+    step: 'InviteMember',
+  });
   return callPluginEndpoint({
     acting,
     auth,
-    body: { contactId, email, organizationId, resend, role },
+    body: { attributes, contactId, email, organizationId, resend, role },
     endpointKey: 'createInvitation',
     pluginId: 'organization',
   });

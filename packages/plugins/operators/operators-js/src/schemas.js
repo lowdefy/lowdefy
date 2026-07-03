@@ -75,6 +75,7 @@ export { default as _url_query } from './operators/client/url_query.schema.js';
 // Server operators
 export { default as _hash } from './operators/server/hash.schema.js';
 export { default as _item } from './operators/server/item.schema.js';
+export { default as _organization } from './operators/server/organization.schema.js';
 export { default as _payload } from './operators/server/payload.schema.js';
 export { default as _secret } from './operators/server/secret.schema.js';
 export { default as _step } from './operators/server/step.schema.js';

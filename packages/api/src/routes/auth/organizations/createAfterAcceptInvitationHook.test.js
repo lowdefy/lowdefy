@@ -20,12 +20,18 @@ import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.j
 
 function createMockAuth() {
   const updateUser = jest.fn(async () => ({}));
-  const auth = { $context: Promise.resolve({ internalAdapter: { updateUser } }) };
-  return { auth, updateUser };
+  const update = jest.fn(async () => ({}));
+  const auth = {
+    $context: Promise.resolve({
+      adapter: { update },
+      internalAdapter: { updateUser },
+    }),
+  };
+  return { auth, update, updateUser };
 }
 
 test('afterAcceptInvitationHook stamps the invitation contactId onto the accepting user', async () => {
-  const { auth, updateUser } = createMockAuth();
+  const { auth, update, updateUser } = createMockAuth();
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
 
   await hook({
@@ -36,10 +42,51 @@ test('afterAcceptInvitationHook stamps the invitation contactId onto the accepti
   });
 
   expect(updateUser).toHaveBeenCalledWith('user_1', { contactId: 'contact_9' });
+  expect(update).not.toHaveBeenCalled();
 });
 
-test('afterAcceptInvitationHook does nothing when the invitation carries no contactId', async () => {
-  const { auth, updateUser } = createMockAuth();
+test('afterAcceptInvitationHook copies invitation attributes onto the minted member row', async () => {
+  const { auth, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const attributes = { branch: 'north' };
+
+  await hook({
+    invitation: { id: 'inv_1', attributes },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { attributes },
+  });
+  expect(updateUser).not.toHaveBeenCalled();
+});
+
+test('afterAcceptInvitationHook stamps contactId and copies attributes when the invitation carries both', async () => {
+  const { auth, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const attributes = { branch: 'north' };
+
+  await hook({
+    invitation: { id: 'inv_1', contactId: 'contact_9', attributes },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(updateUser).toHaveBeenCalledWith('user_1', { contactId: 'contact_9' });
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { attributes },
+  });
+});
+
+test('afterAcceptInvitationHook does nothing when the invitation carries neither contactId nor attributes', async () => {
+  const { auth, update, updateUser } = createMockAuth();
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
 
   await hook({
@@ -49,5 +96,21 @@ test('afterAcceptInvitationHook does nothing when the invitation carries no cont
     organization: { id: 'org_1' },
   });
 
+  expect(updateUser).not.toHaveBeenCalled();
+  expect(update).not.toHaveBeenCalled();
+});
+
+test('afterAcceptInvitationHook does not update the member row when attributes is not a plain object', async () => {
+  const { auth, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', attributes: 'not-an-object' },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).not.toHaveBeenCalled();
   expect(updateUser).not.toHaveBeenCalled();
 });

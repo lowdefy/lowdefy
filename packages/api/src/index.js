@@ -29,6 +29,7 @@ import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
+import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
@@ -47,5 +48,6 @@ export {
   getRootConfig,
   logClientError,
   resolveAuthentication,
+  resolvePinnedOrganization,
   runScheduledEndpoint,
 };
