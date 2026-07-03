@@ -60,11 +60,12 @@ async function parseLowdefyYaml({ context }) {
     dynamicIdentifiers,
     shouldStop: (path) => {
       // Defer entry vars and connections: they may contain cross-module
-      // refs that require modules to be registered first.
-      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
-      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      // refs that require modules to be registered first. Non-modules keys
+      // stay raw for the app buildRefs pass.
+      if (/^modules\.\d+\.vars$/.test(path)) return 'skip';
+      if (/^modules\.\d+\.connections$/.test(path)) return 'skip';
       if (path.startsWith('modules')) return false;
-      return 'preserve';
+      return 'skip';
     },
   });
 
