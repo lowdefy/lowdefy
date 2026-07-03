@@ -1,0 +1,29 @@
+diff --git a/dist/index.d.mts b/dist/index.d.mts
+index 515f4346c026ad164538de67647fdb2a6b0130bc..bb5b23b4aad30fbcf0e72c44f224200e755de00e 100644
+--- a/dist/index.d.mts
++++ b/dist/index.d.mts
+@@ -31,6 +31,12 @@ interface MongoDBAdapterConfig {
+    *   you must explicitly set `transaction: false`.
+    */
+   transaction?: boolean | undefined;
++  /**
++   * Store `json` fields as native sub-documents instead of JSON strings.
++   *
++   * @default false
++   */
++  supportsJSON?: boolean | undefined;
+ }
+ declare const mongodbAdapter: (db: Db, config?: MongoDBAdapterConfig | undefined) => (options: BetterAuthOptions) => DBAdapter<BetterAuthOptions>;
+ //#endregion
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 5ed502bfb296819141f31db3b96c4249affd3a05..99ce74ed5fe3e42d175a5cd9839d6710520533b1 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -442,6 +442,7 @@ const mongodbAdapter = (db, config) => {
+ 			mapKeysTransformInput: { id: "_id" },
+ 			mapKeysTransformOutput: { _id: "id" },
+ 			supportsArrays: true,
++			supportsJSON: config?.supportsJSON ?? false,
+ 			supportsNumericIds: false,
+ 			transaction: config?.client && (config?.transaction ?? true) ? async (cb) => {
+ 				if (!config.client) return cb(lazyAdapter(lazyOptions));

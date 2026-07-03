@@ -20,4 +20,5 @@ packageExtensions:
       tslib: '*'
 
 patchedDependencies:
+  '@better-auth/mongo-adapter@1.6.23': patches/@better-auth__mongo-adapter@1.6.23.patch
   buffer-equal-constant-time@1.0.1: patches/buffer-equal-constant-time@1.0.1.patch

@@ -21,13 +21,21 @@ import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 // the database and nothing more - no app-scoping, no tenancy, no query
 // interception. Physical collection names follow the fixed user-* mapping
 // applied by the engine at startup; there is no modelName escape hatch.
+// supportsJSON stores json additionalFields (user.attributes,
+// member.attributes, invitation.attributes) as native sub-documents so
+// native reads can filter and aggregate on attribute contents. The flag is
+// a Lowdefy pnpm patch on @better-auth/mongo-adapter until the upstream
+// passthrough ships. One shape everywhere: with the flag on, the factory's
+// string-to-object parse on read is disabled too, so stringified rows from
+// pre-release phase-3 databases must be reshaped to sub-documents (nothing
+// shipped - a one-off script, no app-facing migration).
 function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
     throw new Error('MongoDBAuthAdapter requires "uri" property.');
   }
   const client = new MongoClient(properties.uri, properties.mongoDBClientOptions);
   const db = client.db(properties.database);
-  return mongodbAdapter(db);
+  return mongodbAdapter(db, { supportsJSON: true });
 }
 
 export default MongoDBAuthAdapter;
