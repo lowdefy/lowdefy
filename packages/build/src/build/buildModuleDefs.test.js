@@ -1653,3 +1653,78 @@ pages:
     expect(String(context.errors[0].message)).toContain('missing.yaml');
   });
 });
+
+describe('cross-entry consumption ordering (Phase C.5)', () => {
+  const mockModulePaths2 = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  // Mutual cross-module component refs INSIDE PAGES (not entry vars): entry A's
+  // pages consume B's component and vice versa. Records are created for every
+  // entry before any manifest resolve, so Phase D order is immaterial.
+  const mutualPageFiles = (order) => {
+    const a = `  - id: a
+    source: "file:../a"`;
+    const b = `  - id: b
+    source: "file:../b"`;
+    const mods = order === 'a-first' ? `${a}\n${b}` : `${b}\n${a}`;
+    return [
+      {
+        path: 'lowdefy.yaml',
+        content: `\nlowdefy: 4.0.0\nmodules:\n${mods}\npages:\n  - id: home\n    type: Box\n`,
+      },
+      {
+        path: '/a/module.lowdefy.yaml',
+        content: `
+dependencies:
+  - id: b
+components:
+  - id: a-badge
+    component: { type: Box, properties: { from: a } }
+pages:
+  - id: a-page
+    type: Box
+    blocks:
+      - _ref: { module: b, component: b-badge }
+`,
+      },
+      {
+        path: '/b/module.lowdefy.yaml',
+        content: `
+dependencies:
+  - id: a
+components:
+  - id: b-badge
+    component: { type: Box, properties: { from: b } }
+pages:
+  - id: b-page
+    type: Box
+    blocks:
+      - _ref: { module: a, component: a-badge }
+`,
+      },
+    ];
+  };
+
+  test.each(['a-first', 'b-first'])(
+    'mutual cross-module component refs inside pages resolve (order=%s)',
+    async (order) => {
+      const context = createTestContext();
+      mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(mutualPageFiles(order)));
+      mockFetchModules.mockResolvedValue(mockModulePaths2(['a', 'b']));
+
+      await expectTerminates(buildModuleDefs({ context }), 4000, 'cross-entry ordering hang');
+
+      expect(context.errors).toEqual([]);
+      expect(context.modules['a'].manifest.pages[0].blocks[0]).toEqual({
+        type: 'Box',
+        properties: { from: 'b' },
+      });
+      expect(context.modules['b'].manifest.pages[0].blocks[0]).toEqual({
+        type: 'Box',
+        properties: { from: 'a' },
+      });
+    }
+  );
+});

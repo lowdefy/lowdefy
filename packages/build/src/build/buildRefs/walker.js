@@ -965,6 +965,11 @@ async function resolve(node, ctx) {
           }
           return;
         }
+        if (stopMode === 'skip') {
+          // Leave raw, no marker — a later phase walks this region with its
+          // own predicate (Phase A/C.5 masking per the deferred-regions table).
+          return;
+        }
         if (type.isString(stopMode) && stopMode.startsWith('record:')) {
           // Record-ify: move the raw body into the registry and splice in the
           // placeholder. The body stays untagged, exactly like an in-place
@@ -1017,7 +1022,17 @@ async function resolve(node, ctx) {
   // 7. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
     if (!ctx.moduleEntry) {
-      if (ctx.moduleRoot) return node;
+      if (ctx.moduleRoot) {
+        // Module scope without an entry = the header parse or the exportables
+        // pass. Those walk module-static structure only: a _module.var here
+        // would make manifest headers or export ids vary per consumer, which
+        // makes by-name lookup order-dependent.
+        throw new ConfigError(
+          '_module.var cannot be used in manifest headers or component/menu ids — ' +
+            'these are module-static. Move it inside a component body, page, or api section.',
+          { filePath: ctx.currentFile }
+        );
+      }
       throw new ConfigError('_module.var cannot be used at the app level.');
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
