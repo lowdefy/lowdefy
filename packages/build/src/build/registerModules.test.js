@@ -851,3 +851,135 @@ pages:
     expect.objectContaining({ id: 'good-page', type: 'Box' }),
   ]);
 });
+
+describe('operator-generated components sections', () => {
+  const resolveLocal = async (context, manifestContent) => {
+    const files = [
+      { path: '/modules/team-users/module.lowdefy.yaml', content: manifestContent },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    return resolveLocalManifest({
+      entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/team-users',
+        moduleRoot: '/modules/team-users',
+        isLocal: true,
+      },
+      context,
+    });
+  };
+
+  test('throws when the components value is an operator whose content uses _var', async () => {
+    const context = createTestContext();
+    await expect(
+      resolveLocal(
+        context,
+        `
+components:
+  _build.array.map:
+    on: [a, b]
+    map:
+      id: { _var: item }
+      component: { type: Box }
+`
+      )
+    ).rejects.toThrow(
+      'Module "team-users": _var inside an operator-generated components section ' +
+        'cannot resolve per consumer. Found "_build.array.map" at "components" with a _var'
+    );
+  });
+
+  test('throws when a components array element is an operator whose content uses _var', async () => {
+    const context = createTestContext();
+    await expect(
+      resolveLocal(
+        context,
+        `
+components:
+  - id: static-one
+    component: { type: Box }
+  - _build.if:
+      test: true
+      then:
+        id: dyn
+        component:
+          type: Box
+          properties: { content: { _var: text } }
+`
+      )
+    ).rejects.toThrow(
+      'Module "team-users": _var inside an operator-generated components section ' +
+        'cannot resolve per consumer. Found "_build.if" at "components.1" with a _var'
+    );
+  });
+
+  test('allows var-free operator-composed components sections (fixture 81 contract)', async () => {
+    const context = createTestContext();
+    await resolveLocal(
+      context,
+      `
+components:
+  _build.array.concat:
+    - - id: inline-one
+        component: { type: Box }
+    - - id: inline-two
+        component: { type: Title }
+`
+    );
+    expect(context.errors).toEqual([]);
+    const components = context.modules['team-users'].manifest.components;
+    expect(components.map((c) => c.id)).toEqual(['inline-one', 'inline-two']);
+  });
+
+  test('allows _var inside a preserved body at components.<i>.component', async () => {
+    const context = createTestContext();
+    await resolveLocal(
+      context,
+      `
+components:
+  - id: dynamic-body
+    component:
+      type: Box
+      blocks:
+        - _var: content
+`
+    );
+    // Body preserved raw — the _var survives un-resolved for per-consumer resolution.
+    const body = context.modules['team-users'].manifest.components[0].component;
+    expect(body.blocks[0]).toEqual({ _var: 'content' });
+  });
+
+  test('allows components section composed via _ref', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: '/modules/team-users/module.lowdefy.yaml',
+        content: `
+components:
+  _ref: components.yaml
+`,
+      },
+      {
+        path: '/modules/team-users/components.yaml',
+        content: `
+- id: from-file
+  component: { type: Box }
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await resolveLocalManifest({
+      entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/team-users',
+        moduleRoot: '/modules/team-users',
+        isLocal: true,
+      },
+      context,
+    });
+    expect(context.modules['team-users'].manifest.components[0].id).toBe('from-file');
+    expect(context.modules['team-users'].manifest.components[0].component).toEqual({
+      type: 'Box',
+    });
+  });
+});

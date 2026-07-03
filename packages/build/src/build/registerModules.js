@@ -76,6 +76,53 @@ function suggestBuildOperator(operatorKey) {
   return `_build.${operatorKey.slice(1)}`;
 }
 
+// Component bodies are preserved by config path (components.<i>.component), so
+// bodies under an operator object at `components` itself or at an array element
+// escape preservation and resolve eagerly during the manifest walk. That is
+// harmless for static bodies (operator-composed component lists are supported —
+// pinned by fixture 81-cross-module-build-op-components), but a _var in such a
+// body resolves against the manifest walk's scope instead of the consumer's
+// per-ref vars — a silently wrong value. Error on that combination explicitly.
+// A _ref at either position is fully safe: it resolves top-down, so paths
+// inside the ref'd file still match the preserve regex. An operator at
+// components.<i>.component itself is inside the preserved body and is fine.
+function findVarNode(value) {
+  if (type.isArray(value)) {
+    for (const item of value) {
+      const found = findVarNode(item);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (!type.isObject(value)) return null;
+  if (getRuntimeOperatorKey(value) === '_var') return value;
+  for (const key of Object.keys(value)) {
+    const found = findVarNode(value[key]);
+    if (found) return found;
+  }
+  return null;
+}
+
+function assertStaticComponentsList({ components, entryId, filePath }) {
+  if (!type.isObject(components) && !type.isArray(components)) return;
+  const check = (value, position) => {
+    const operatorKey = getRuntimeOperatorKey(value);
+    if (operatorKey && operatorKey !== '_ref' && findVarNode(value)) {
+      throw new ConfigError(
+        `Module "${entryId}": _var inside an operator-generated components section ` +
+          `cannot resolve per consumer. Found "${operatorKey}" at ${position} with a _var ` +
+          `in its content. Define components whose bodies use _var as static ` +
+          `{ id, component } list items so the bodies are preserved.`,
+        { filePath }
+      );
+    }
+  };
+  check(components, '"components"');
+  if (type.isArray(components)) {
+    components.forEach((item, i) => check(item, `"components.${i}"`));
+  }
+}
+
 function validateVarTypes(varDefs, resolvedVarCache, entryId, source, prefix = '') {
   for (const [varName, varDef] of Object.entries(varDefs)) {
     const fullName = prefix ? `${prefix}.${varName}` : varName;
@@ -140,6 +187,14 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   // The absolute path works because path.resolve(configDir, absolutePath) = absolutePath.
   const refDef = makeRefDefinition(moduleYamlPath, null, context.refMap);
   const content = await getRefContent({ context, refDef, referencedFrom: null });
+
+  if (type.isObject(content)) {
+    assertStaticComponentsList({
+      components: content.components,
+      entryId: entry.id,
+      filePath: moduleYamlPath,
+    });
+  }
 
   // Run walker with shouldStop preserving content that may contain cross-module refs
   const ctx = new WalkContext({
@@ -249,6 +304,14 @@ async function resolveFullManifest({ entryId, context }) {
   const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
 
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
+
+  if (type.isObject(manifest)) {
+    assertStaticComponentsList({
+      components: manifest.components,
+      entryId,
+      filePath: moduleYamlPath,
+    });
+  }
 
   const ctx = new WalkContext({
     buildContext: context,
