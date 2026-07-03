@@ -2,11 +2,14 @@
 # the tenant policy is a runtime error naming the fix - there is no pinned
 # organization to default to. Pass an explicit organizationId (what a
 # multi-tenant admin module does) to make the same step succeed.
+# system: true so the walkthrough can drive it without a session - the
+# demo is the organizationId resolution, not the caller gate.
 id: list-members-no-org
 type: Api
 routine:
   - id: list_members
     type: ListMembers
+    system: true
     properties:
       limit: 10
       organizationId:

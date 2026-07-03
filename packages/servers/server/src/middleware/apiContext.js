@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { createApiContext, resolveAuthentication } from '@lowdefy/api';
+import { createApiContext, resolveAuthentication, resolvePinnedOrganization } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -81,6 +81,10 @@ function apiContext() {
     // getBetterAuth memoizes the instance, but this keeps the auth engine
     // construction to a single call site per request.
     context.auth = getAuth({ logger: context.logger });
+    // The engine is constructed lazily on the first request, which would
+    // otherwise race the startup pinned-org ensure - await the memoized
+    // resolve so createApiContext reads a retained binding.
+    await resolvePinnedOrganization({ auth: context.auth });
     if (!c.req.path.includes('/api/auth')) {
       // resolveAuthentication is the single writer of context.user.
       await resolveAuthentication(context, {

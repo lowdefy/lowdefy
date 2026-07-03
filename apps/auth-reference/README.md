@@ -554,8 +554,9 @@ const call = async (endpoint, payload = {}) =>
     `call('admin-list-members', { organizationId: '<org-b id>' })` (id
     from `db["user-organizations"].findOne({ slug: "org-b" })`, shared
     auth database) returns org-b's members instead. Under tenant: in the
-    `auth-reference-tenant` app, `call('list-members-no-org')` (signed in
-    as any tenant user) fails with `ListMembers requires an
+    `auth-reference-tenant` app, `call('list-members-no-org')` (a
+    `system: true` step, so no login needed) fails with `ListMembers
+    requires an
     "organizationId" property under the "tenant" organizations policy -
     there is no pinned organization to default to. Set organizationId on
     the step properties.`; the same call with

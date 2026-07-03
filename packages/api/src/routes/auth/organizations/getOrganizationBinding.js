@@ -25,12 +25,22 @@ import { type } from '@lowdefy/helpers';
 // the org id is minted at creation, so no build artifact can carry it.
 const bindingByAuth = new WeakMap();
 
-function registerOrganizationBinding({ auth, organizations }) {
+function registerOrganizationBinding({ auth, database = false, organizations }) {
   bindingByAuth.set(auth, {
+    database,
     policy: organizations.policy,
     slug: organizations.org ?? null,
     pinned: null,
   });
+}
+
+// The raw registered entry (policy, slug, database, pinned) - used by
+// resolvePinnedOrganization to decide whether an ensure is needed.
+function getRegisteredOrganization({ auth }) {
+  if (type.isNone(auth)) {
+    return null;
+  }
+  return bindingByAuth.get(auth) ?? null;
 }
 
 function setPinnedOrganization({ auth, organization, slug }) {
@@ -52,5 +62,5 @@ function getOrganizationBinding({ auth }) {
   return { policy: binding.policy, pinned: binding.pinned };
 }
 
-export { registerOrganizationBinding, setPinnedOrganization };
+export { getRegisteredOrganization, registerOrganizationBinding, setPinnedOrganization };
 export default getOrganizationBinding;

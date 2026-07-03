@@ -56,7 +56,11 @@ function getBetterAuth({
   // (the _organization operator, step organizationId defaulting) resolve the
   // policy and the ensured pinned org from it.
   if (authJson.organizations) {
-    registerOrganizationBinding({ auth: instance, organizations: authJson.organizations });
+    registerOrganizationBinding({
+      auth: instance,
+      database: Boolean(authJson.database),
+      organizations: authJson.organizations,
+    });
   }
 
   // Ensure the pinned organization exists at startup - created if missing,
