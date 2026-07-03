@@ -22,14 +22,24 @@ import { type } from '@lowdefy/helpers';
 // contact carries that contactId; accepting stamps it onto the user, making
 // the contact link deterministic - no email re-matching for invited users.
 // Merge-on-signup runs only for users with no contactId yet, so this
-// invitation-carried link always wins.
+// invitation-carried link always wins. Invite-time member attributes ride
+// the invitation the same way: accepting copies invitation.attributes onto
+// the minted member row (an adapter-layer update, the same authority as the
+// contactId stamp), so an invited user's authorization parameters hold from
+// their first session instead of an empty bag until an admin edits the member.
 function createAfterAcceptInvitationHook({ getAuth }) {
-  return async function afterAcceptInvitationHook({ invitation, user }) {
-    if (type.isNone(invitation.contactId)) {
-      return;
+  return async function afterAcceptInvitationHook({ invitation, member, user }) {
+    const { adapter, internalAdapter } = await getAuth().$context;
+    if (!type.isNone(invitation.contactId)) {
+      await internalAdapter.updateUser(user.id, { contactId: invitation.contactId });
     }
-    const { internalAdapter } = await getAuth().$context;
-    await internalAdapter.updateUser(user.id, { contactId: invitation.contactId });
+    if (type.isObject(invitation.attributes)) {
+      await adapter.update({
+        model: 'member',
+        where: [{ field: 'id', value: member.id }],
+        update: { attributes: invitation.attributes },
+      });
+    }
   };
 }
 
