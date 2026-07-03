@@ -264,6 +264,8 @@ export default {
       additionalProperties: false,
       errorMessage: {
         type: 'App "auth" should be an object.',
+        additionalProperties:
+          'App "auth" contains an unknown property. Auth keys are registered explicitly; check for typos.',
       },
       properties: {
         '~ignoreBuildChecks': {
@@ -289,45 +291,547 @@ export default {
         },
         '~r': {},
         '~l': {},
-        advanced: {
+        database: {
           type: 'object',
-          properties: {
-            cookiePrefix: {
-              type: 'string',
-              errorMessage: {
-                type: 'Auth "advanced.cookiePrefix" should be a string.',
-              },
-            },
-            cookies: {
-              type: 'object',
-            },
-          },
-        },
-        adapter: {
-          type: 'object',
+          additionalProperties: false,
           required: ['id', 'type'],
           properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
             id: {
               type: 'string',
               errorMessage: {
-                type: 'Auth adapter "id" should be a string.',
+                type: 'Auth "database.id" should be a string.',
               },
             },
             type: {
               type: 'string',
               errorMessage: {
-                type: 'Auth adapter "type" should be a string.',
+                type: 'Auth "database.type" should be a string.',
               },
             },
             properties: {
               type: 'object',
+              errorMessage: {
+                type: 'Auth "database.properties" should be an object.',
+              },
             },
           },
           errorMessage: {
-            type: 'Auth adapter should be an object.',
+            type: 'Auth "database" should be an object.',
             required: {
-              id: 'Auth adapter should have required property "id".',
-              type: 'Auth adapter should have required property "type".',
+              id: 'Auth "database" should have required property "id".',
+              type: 'Auth "database" should have required property "type".',
+            },
+          },
+        },
+        secret: {
+          type: 'object',
+          errorMessage: {
+            type: 'Auth "secret" should be a _secret operator reference.',
+          },
+        },
+        emailAndPassword: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.enabled" should be a boolean.',
+              },
+            },
+            requireEmailVerification: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.requireEmailVerification" should be a boolean.',
+              },
+            },
+            minPasswordLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.minPasswordLength" should be an integer.',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "emailAndPassword" should be an object.',
+            required: {
+              enabled: 'Auth "emailAndPassword" should have required property "enabled".',
+            },
+          },
+        },
+        magicLink: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "magicLink.enabled" should be a boolean.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "magicLink.expiresIn" should be an integer (seconds).',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "magicLink.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "magicLink" should be an object.',
+            required: {
+              enabled: 'Auth "magicLink" should have required property "enabled".',
+            },
+          },
+        },
+        email: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['from', 'provider'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            from: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "email.from" should be a string.',
+              },
+            },
+            provider: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['type'],
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                type: {
+                  type: 'string',
+                  enum: ['smtp'],
+                  errorMessage: {
+                    type: 'Auth "email.provider.type" should be a string.',
+                    enum: 'Auth "email.provider.type" should be "smtp".',
+                  },
+                },
+                properties: {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    '~ignoreBuildChecks': {},
+                    '~r': {},
+                    '~l': {},
+                    host: {
+                      type: ['string', 'object'],
+                      errorMessage: {
+                        type: 'Auth "email.provider.properties.host" should be a string or _secret operator reference.',
+                      },
+                    },
+                    port: {
+                      type: ['integer', 'object'],
+                      errorMessage: {
+                        type: 'Auth "email.provider.properties.port" should be an integer or _secret operator reference.',
+                      },
+                    },
+                    secure: {
+                      type: ['boolean', 'object'],
+                      errorMessage: {
+                        type: 'Auth "email.provider.properties.secure" should be a boolean or _secret operator reference.',
+                      },
+                    },
+                    auth: {
+                      type: 'object',
+                      additionalProperties: false,
+                      properties: {
+                        '~ignoreBuildChecks': {},
+                        '~r': {},
+                        '~l': {},
+                        user: {
+                          type: ['string', 'object'],
+                          errorMessage: {
+                            type: 'Auth "email.provider.properties.auth.user" should be a string or _secret operator reference.',
+                          },
+                        },
+                        pass: {
+                          type: ['string', 'object'],
+                          errorMessage: {
+                            type: 'Auth "email.provider.properties.auth.pass" should be a string or _secret operator reference.',
+                          },
+                        },
+                      },
+                      errorMessage: {
+                        type: 'Auth "email.provider.properties.auth" should be an object.',
+                      },
+                    },
+                  },
+                  errorMessage: {
+                    type: 'Auth "email.provider.properties" should be an object.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "email.provider" should be an object.',
+                required: {
+                  type: 'Auth "email.provider" should have required property "type".',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "email" should be an object.',
+            required: {
+              from: 'Auth "email" should have required property "from".',
+              provider: 'Auth "email" should have required property "provider".',
+            },
+          },
+        },
+        providers: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "providers" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth provider "properties" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth provider should be an object.',
+              required: {
+                id: 'Auth provider should have required property "id".',
+                type: 'Auth provider should have required property "type".',
+              },
+            },
+          },
+        },
+        session: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "session.expiresIn" should be an integer (seconds).',
+              },
+            },
+            updateAge: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "session.updateAge" should be an integer (seconds).',
+              },
+            },
+            cookieCache: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "session.cookieCache.enabled" should be a boolean.',
+                  },
+                },
+                maxAge: {
+                  type: 'integer',
+                  errorMessage: {
+                    type: 'Auth "session.cookieCache.maxAge" should be an integer (seconds).',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "session.cookieCache" should be an object.',
+              },
+            },
+            crossSubDomainCookies: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "session.crossSubDomainCookies.enabled" should be a boolean.',
+                  },
+                },
+                domain: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "session.crossSubDomainCookies.domain" should be a string.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "session.crossSubDomainCookies" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "session" should be an object.',
+          },
+        },
+        account: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            accountLinking: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "account.accountLinking.enabled" should be a boolean.',
+                  },
+                },
+                trustedProviders: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    errorMessage: {
+                      type: 'Auth "account.accountLinking.trustedProviders" should be an array of provider ids.',
+                    },
+                  },
+                  errorMessage: {
+                    type: 'Auth "account.accountLinking.trustedProviders" should be an array of provider ids.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "account.accountLinking" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "account" should be an object.',
+          },
+        },
+        rateLimit: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "rateLimit.enabled" should be a boolean.',
+              },
+            },
+            window: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "rateLimit.window" should be an integer (seconds).',
+              },
+            },
+            max: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "rateLimit.max" should be an integer.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "rateLimit" should be an object.',
+          },
+        },
+        twoFactor: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.enabled" should be a boolean.',
+              },
+            },
+            totp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.totp" should be a boolean.',
+              },
+            },
+            otp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.otp" should be a boolean.',
+              },
+            },
+            backupCodes: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.backupCodes" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "twoFactor" should be an object.',
+          },
+        },
+        passkey: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "passkey.enabled" should be a boolean.',
+              },
+            },
+            rpId: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "passkey.rpId" should be a string.',
+              },
+            },
+            rpName: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "passkey.rpName" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "passkey" should be an object.',
+          },
+        },
+        pages: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.pages" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.pages.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
+                errorMessage: {
+                  type: 'App "auth.pages.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.pages.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
+                errorMessage: {
+                  type: 'App "auth.pages.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.pages.roles" should be an object.',
+              },
             },
           },
         },
@@ -369,7 +873,7 @@ export default {
               items: {
                 type: 'string',
                 description:
-                  'Page ids for which authentication is required. When specified, all unspecified api endpoints will be public.',
+                  'Api endpoint ids for which authentication is required. When specified, all unspecified api endpoints will be public.',
                 errorMessage: {
                   type: 'App "auth.api.protected.$" should be an array of strings.',
                 },
@@ -383,7 +887,7 @@ export default {
               items: {
                 type: 'string',
                 description:
-                  'Page ids for which authentication is not required. When specified, all unspecified api endpoints will be protected.',
+                  'Api endpoint ids for which authentication is not required. When specified, all unspecified api endpoints will be protected.',
                 errorMessage: {
                   type: 'App "auth.api.public.$" should be an array of strings.',
                 },
@@ -489,239 +993,194 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             signIn: {
               type: 'string',
-              default: '/auth/signin',
+              default: '/login',
+              errorMessage: {
+                type: 'Auth "authPages.signIn" should be a string.',
+              },
             },
-            signOut: {
+            signUp: {
               type: 'string',
-              default: '/auth/signout',
+              default: '/signup',
+              errorMessage: {
+                type: 'Auth "authPages.signUp" should be a string.',
+              },
             },
             error: {
               type: 'string',
               description: 'Error code passed in query string as ?error=',
               default: '/auth/error',
+              errorMessage: {
+                type: 'Auth "authPages.error" should be a string.',
+              },
             },
-            verifyRequest: {
+            forgotPassword: {
               type: 'string',
-              description: 'Used for check email message',
-              default: '/auth/verify-request',
+              default: '/forgot-password',
+              errorMessage: {
+                type: 'Auth "authPages.forgotPassword" should be a string.',
+              },
             },
-            newUser: {
+            resetPassword: {
               type: 'string',
-              description:
-                'New users will be directed here on first sign in (leave the property out if not of interest)',
-              default: '/auth/new-user',
-            },
-          },
-        },
-        callbacks: {
-          type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              id: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth callback "id" should be a string.',
-                },
-              },
-              type: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth callback "type" should be a string.',
-                },
-              },
-              properties: {
-                type: 'object',
+              default: '/reset-password',
+              errorMessage: {
+                type: 'Auth "authPages.resetPassword" should be a string.',
               },
             },
-            errorMessage: {
-              type: 'Auth callback should be an object.',
-              required: {
-                id: 'Auth callback should have required property "id".',
-                type: 'Auth callback should have required property "type".',
+            verifyEmail: {
+              type: 'string',
+              default: '/verify-email',
+              errorMessage: {
+                type: 'Auth "authPages.verifyEmail" should be a string.',
               },
             },
           },
-        },
-        debug: {
-          type: 'boolean',
           errorMessage: {
-            type: 'Auth debug should be a boolean.',
+            type: 'Auth "authPages" should be an object.',
           },
         },
-        events: {
+        hooks: {
           type: 'array',
+          errorMessage: {
+            type: 'Auth "hooks" should be an array.',
+          },
           items: {
             type: 'object',
-            required: ['id', 'type'],
+            additionalProperties: false,
+            required: ['id', 'point', 'endpointId'],
             properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
               id: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Auth event "id" should be a string.',
+                  type: 'Auth hook "id" should be a string.',
+                },
+              },
+              point: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "point" should be a string.',
+                },
+              },
+              endpointId: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "endpointId" should be a string.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth hook should be an object.',
+              required: {
+                id: 'Auth hook should have required property "id".',
+                point: 'Auth hook should have required property "point".',
+                endpointId: 'Auth hook should have required property "endpointId".',
+              },
+            },
+          },
+        },
+        strategies: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "strategies" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "id" should be a string.',
                 },
               },
               type: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Auth event "type" should be a string.',
+                  type: 'Auth strategy "type" should be a string.',
                 },
               },
               properties: {
                 type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "properties" should be an object.',
+                },
+              },
+              roles: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth strategy "roles" should be an array of role names.',
+                  },
+                },
+                errorMessage: {
+                  type: 'Auth strategy "roles" should be an array of role names.',
+                },
+              },
+              attributes: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "attributes" should be an object.',
+                },
               },
             },
             errorMessage: {
-              type: 'Auth event should be an object.',
+              type: 'Auth strategy should be an object.',
               required: {
-                id: 'Auth event should have required property "id".',
-                type: 'Auth event should have required property "type".',
+                id: 'Auth strategy should have required property "id".',
+                type: 'Auth strategy should have required property "type".',
               },
             },
           },
         },
-        pages: {
+        organizations: {
           type: 'object',
           additionalProperties: false,
-          errorMessage: {
-            type: 'App "config.auth.pages" should be an object.',
-          },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
-            protected: {
-              type: ['array', 'boolean'],
+            policy: {
+              type: 'string',
+              enum: ['pinned', 'tenant'],
               errorMessage: {
-                type: 'App "auth.pages.protected.$" should be an array of strings.',
-              },
-              items: {
-                type: 'string',
-                description:
-                  'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
-                errorMessage: {
-                  type: 'App "auth.pages.protected.$" should be an array of strings.',
-                },
+                type: 'Auth "organizations.policy" should be a string.',
+                enum: 'Auth "organizations.policy" should be "pinned" or "tenant".',
               },
             },
-            public: {
-              type: ['array', 'boolean'],
+            org: {
+              type: 'string',
+              description: 'Organization slug the deployment pins as the active organization.',
               errorMessage: {
-                type: 'App "auth.pages.public.$" should be an array of strings.',
-              },
-              items: {
-                type: 'string',
-                description:
-                  'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
-                errorMessage: {
-                  type: 'App "auth.pages.public.$" should be an array of strings.',
-                },
+                type: 'Auth "organizations.org" should be a string.',
               },
             },
-            roles: {
-              type: 'object',
-              patternProperties: {
-                '^.*$': {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                  },
-                  errorMessage: {
-                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
-                  },
-                },
-              },
+            signup: {
+              type: 'string',
+              enum: ['invite-only', 'open'],
               errorMessage: {
-                type: 'App "auth.pages.roles" should be an object.',
+                type: 'Auth "organizations.signup" should be a string.',
+                enum: 'Auth "organizations.signup" should be "invite-only" or "open".',
               },
             },
           },
-        },
-        providers: {
-          type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              id: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth provider "id" should be a string.',
-                },
-              },
-              type: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth provider "type" should be a string.',
-                },
-              },
-              properties: {
-                type: 'object',
-              },
-            },
-            errorMessage: {
-              type: 'Auth provider should be an object.',
-              required: {
-                id: 'Auth provider should have required property "id".',
-                type: 'Auth provider should have required property "type".',
-              },
-            },
+          errorMessage: {
+            type: 'Auth "organizations" should be an object.',
+            additionalProperties:
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org" and "signup".',
           },
-        },
-        session: {
-          type: 'object',
-        },
-        theme: {
-          type: 'object',
-        },
-        userFields: {
-          type: 'object',
         },
         dev: {
           type: 'object',
@@ -733,8 +1192,11 @@ export default {
             mockUser: {
               type: 'object',
               description:
-                'Mock user object for e2e testing in dev server. Any JSON structure accepted.',
+                'Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
             },
+          },
+          errorMessage: {
+            type: 'Auth "dev" should be an object.',
           },
         },
       },
@@ -1897,7 +2359,8 @@ export default {
             '~l': {},
             defaultLocale: {
               type: 'string',
-              description: 'BCP 47 locale code used when no user preference or browser match is available.',
+              description:
+                'BCP 47 locale code used when no user preference or browser match is available.',
             },
             locales: {
               type: 'array',
@@ -1920,7 +2383,8 @@ export default {
                   },
                   antd: {
                     type: 'string',
-                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                    description:
+                      'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
                   },
                   dayjs: {
                     type: 'string',
@@ -1931,7 +2395,8 @@ export default {
             },
             messages: {
               type: 'object',
-              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              description:
+                'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
               additionalProperties: {
                 type: 'object',
               },

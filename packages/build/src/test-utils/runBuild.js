@@ -66,11 +66,12 @@ const testTypesMap = {
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
   },
   auth: {
-    adapters: {},
-    callbacks: {},
-    events: {},
+    adapters: {
+      MongoDBAuthAdapter: { package: '@lowdefy/connection-mongodb' },
+    },
     providers: {
-      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
+      Google: { package: '@lowdefy/plugin-better-auth' },
+      GenericOAuth: { package: '@lowdefy/plugin-better-auth' },
     },
   },
   operators: {

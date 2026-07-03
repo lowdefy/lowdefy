@@ -29,7 +29,7 @@ export default {
     'MongoDBUpdateOne',
   ],
   auth: {
-    adapters: ['MongoDBAdapter'],
+    adapters: ['MongoDBAuthAdapter'],
   },
   websockets: ['MongoDBChangeStream'],
 };

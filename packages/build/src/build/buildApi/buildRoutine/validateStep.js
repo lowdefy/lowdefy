@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 
-function validateStep(step, { endpointId }) {
+function validateStep(step, { endpointId, stepTypes }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -120,6 +120,28 @@ function validateStep(step, { endpointId }) {
       throw new ConfigError(
         `ValidateSchema step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
         { configKey }
+      );
+    }
+    return;
+  }
+
+  if (stepTypes?.[step.type]) {
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.properties) && !type.isObject(step.properties)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" properties is not an object.`,
+        { received: step.properties, configKey }
+      );
+    }
+    if (!type.isNone(step.system) && !type.isBoolean(step.system)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" system must be a boolean.`,
+        { received: step.system, configKey }
       );
     }
     return;

@@ -17,315 +17,111 @@
 import buildAuthPlugins from './buildAuthPlugins.js';
 import testContext from '../../test-utils/testContext.js';
 
-test('Count adapter type', () => {
+test('buildAuthPlugins counts the database adapter type', () => {
   const context = testContext();
   const components = {
     auth: {
-      adapter: {
-        id: 'adapter',
-        type: 'Adapter',
-        properties: {
-          x: 1,
-        },
+      database: {
+        id: 'auth_db',
+        type: 'MongoDBAuthAdapter',
+        properties: {},
       },
     },
   };
   buildAuthPlugins({ components, context });
-  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ Adapter: 1 });
+  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ MongoDBAuthAdapter: 1 });
 });
 
-test('Count provider types', () => {
+test('buildAuthPlugins does not count adapters when database is absent', () => {
+  const context = testContext();
+  const components = {
+    auth: {},
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({});
+});
+
+test('buildAuthPlugins counts each provider type', () => {
   const context = testContext();
   const components = {
     auth: {
       providers: [
-        {
-          id: 'provider1',
-          type: 'Provider1',
-          properties: {
-            x: 1,
-          },
-        },
-        {
-          id: 'provider2',
-          type: 'Provider2',
-          properties: {
-            x: 1,
-          },
-        },
+        { id: 'google', type: 'Google', properties: {} },
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
       ],
     },
   };
   buildAuthPlugins({ components, context });
-  expect(context.typeCounters.auth.providers.getCounts()).toEqual({ Provider1: 1, Provider2: 1 });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({
+    Google: 1,
+    GenericOAuth: 1,
+  });
 });
 
-test('Count callback types', () => {
+test('buildAuthPlugins counts repeated provider types once per occurrence', () => {
   const context = testContext();
   const components = {
     auth: {
-      callbacks: [
-        {
-          id: 'callback1',
-          type: 'Callback1',
-          properties: {
-            x: 1,
-          },
-        },
-        {
-          id: 'callback2',
-          type: 'Callback2',
-          properties: {
-            x: 1,
-          },
-        },
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'auth0', type: 'GenericOAuth', properties: {} },
       ],
     },
   };
   buildAuthPlugins({ components, context });
-  expect(context.typeCounters.auth.callbacks.getCounts()).toEqual({ Callback1: 1, Callback2: 1 });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({ GenericOAuth: 2 });
 });
 
-test('Count event types types', () => {
+test('buildAuthPlugins does not count providers when the list is absent', () => {
+  const context = testContext();
+  const components = {
+    auth: {},
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({});
+});
+
+test('buildAuthPlugins counts each strategy type with its config location', () => {
   const context = testContext();
   const components = {
     auth: {
-      events: [
-        {
-          id: 'event1',
-          type: 'Event1',
-          properties: {
-            x: 1,
-          },
-        },
-        {
-          id: 'event2',
-          type: 'Event2',
-          properties: {
-            x: 1,
-          },
-        },
+      strategies: [
+        { id: 'partner-access', type: 'apiKey', properties: {}, '~k': 'k-api-key' },
+        { id: 'service-jwt', type: 'jwt', properties: {}, '~k': 'k-jwt' },
       ],
     },
   };
   buildAuthPlugins({ components, context });
-  expect(context.typeCounters.auth.events.getCounts()).toEqual({ Event1: 1, Event2: 1 });
+  expect(context.typeCounters.auth.strategies.getCounts()).toEqual({
+    apiKey: 1,
+    jwt: 1,
+  });
+  expect(context.typeCounters.auth.strategies.getLocation('apiKey')).toBe('k-api-key');
+  expect(context.typeCounters.auth.strategies.getLocation('jwt')).toBe('k-jwt');
 });
 
-test('Adapter validation', () => {
+test('buildAuthPlugins does not count strategies when the list is absent', () => {
   const context = testContext();
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          adapter: {
-            type: 'Adapter',
-            properties: {
-              x: 1,
-            },
-          },
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth adapter id missing.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          adapter: {
-            id: true,
-            type: 'Adapter',
-            properties: {
-              x: 1,
-            },
-          },
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth adapter id is not a string.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          adapter: {
-            id: 'adapter',
-            properties: {
-              x: 1,
-            },
-          },
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth adapter type is not a string at adapter "adapter".');
+  const components = {
+    auth: {},
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.strategies.getCounts()).toEqual({});
 });
 
-test('Provider validation', () => {
+test('buildAuthPlugins counts both database and provider types together', () => {
   const context = testContext();
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          providers: [
-            {
-              type: 'Provider',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
+  const components = {
+    auth: {
+      database: {
+        id: 'auth_db',
+        type: 'MongoDBAuthAdapter',
+        properties: {},
       },
-      context,
-    })
-  ).toThrow('Auth provider id missing.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          providers: [
-            {
-              id: true,
-              type: 'Provider',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth provider id is not a string.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          providers: [
-            {
-              id: 'provider',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth provider type is not a string at provider "provider".');
-});
-
-test('Callback validation', () => {
-  const context = testContext();
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          callbacks: [
-            {
-              type: 'Callback',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth callback id missing.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          callbacks: [
-            {
-              id: true,
-              type: 'Callback',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth callback id is not a string.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          callbacks: [
-            {
-              id: 'callback',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth callback type is not a string at callback "callback".');
-});
-
-test('Events validation', () => {
-  const context = testContext();
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          events: [
-            {
-              type: 'Event',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth event id missing.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          events: [
-            {
-              id: true,
-              type: 'Event',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth event id is not a string.');
-  expect(() =>
-    buildAuthPlugins({
-      components: {
-        auth: {
-          events: [
-            {
-              id: 'event',
-              properties: {
-                x: 1,
-              },
-            },
-          ],
-        },
-      },
-      context,
-    })
-  ).toThrow('Auth event type is not a string at event "event".');
+      providers: [{ id: 'google', type: 'Google', properties: {} }],
+    },
+  };
+  buildAuthPlugins({ components, context });
+  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ MongoDBAuthAdapter: 1 });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({ Google: 1 });
 });

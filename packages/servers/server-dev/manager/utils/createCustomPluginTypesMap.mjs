@@ -42,9 +42,8 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
+      strategies: {},
     },
     blockMetas: {},
     blocks: {},

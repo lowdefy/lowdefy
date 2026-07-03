@@ -23,13 +23,13 @@ import getPathSegments from '../lib/getPathSegments.js';
 async function apiPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
-  const pageConfig = await getPageConfig(context, { pageId });
-  if (!pageConfig) {
+  const result = await getPageConfig(context, { pageId });
+  if (result.status !== 'ok') {
     context.logger.info({ event: 'api_page_not_found', pageId });
     return c.json({ pageConfig: null }, 404);
   }
   context.logger.info({ event: 'api_page_view', pageId });
-  return c.json({ pageConfig });
+  return c.json({ pageConfig: result.pageConfig });
 }
 
 export default apiPageHandler;

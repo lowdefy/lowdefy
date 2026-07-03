@@ -1,0 +1,31 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# No invitation.send hook is bound in this app, so InviteMember dispatches
+# the stock template through auth.email (Mailpit). contactId is only
+# forwarded when the payload carries one - accepting the invitation stamps
+# it onto the user (the phase-3 hook). resend: true reissues a pending
+# invitation for the same email instead of failing, which keeps the
+# walkthrough repeatable.
+id: admin-invite-member
+type: Api
+routine:
+  - id: invite
+    type: InviteMember
+    properties:
+      _object.assign:
+        - email:
+            _payload: email
+          role:
+            _payload: role
+          resend: true
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: contactId
+            then:
+              contactId:
+                _payload: contactId
+            else: {}
+  - ':return':
+      _step: invite

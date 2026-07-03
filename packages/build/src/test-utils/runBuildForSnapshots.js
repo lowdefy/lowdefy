@@ -154,28 +154,16 @@ const snapshotTypesMap = {
   },
   auth: {
     adapters: {
-      MongoDBAdapter: { package: '@lowdefy/plugin-next-auth' },
-    },
-    callbacks: {
-      JwtCallback: { package: '@lowdefy/plugin-next-auth' },
-      SessionCallback: { package: '@lowdefy/plugin-next-auth' },
-      SignInCallback: { package: '@lowdefy/plugin-next-auth' },
-      RedirectCallback: { package: '@lowdefy/plugin-next-auth' },
-    },
-    events: {
-      SignIn: { package: '@lowdefy/plugin-next-auth' },
-      SignOut: { package: '@lowdefy/plugin-next-auth' },
-      CreateUser: { package: '@lowdefy/plugin-next-auth' },
-      UpdateUser: { package: '@lowdefy/plugin-next-auth' },
-      LinkAccount: { package: '@lowdefy/plugin-next-auth' },
-      Session: { package: '@lowdefy/plugin-next-auth' },
+      MongoDBAuthAdapter: { package: '@lowdefy/connection-mongodb' },
     },
     providers: {
-      Auth0Provider: { package: '@lowdefy/plugin-auth0' },
-      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
-      GitHubProvider: { package: '@lowdefy/plugin-next-auth' },
-      CredentialsProvider: { package: '@lowdefy/plugin-next-auth' },
-      EmailProvider: { package: '@lowdefy/plugin-next-auth' },
+      Google: { package: '@lowdefy/plugin-better-auth' },
+      GitHub: { package: '@lowdefy/plugin-better-auth' },
+      GenericOAuth: { package: '@lowdefy/plugin-better-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-better-auth' },
+      jwt: { package: '@lowdefy/plugin-better-auth' },
     },
   },
   operators: {

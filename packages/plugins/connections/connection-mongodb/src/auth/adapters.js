@@ -1,3 +1,3 @@
-import MongoDBAdapter from './adapters/MongoDBAdapter/MongoDBAdapter.js';
+import MongoDBAuthAdapter from './adapters/MongoDBAuthAdapter/MongoDBAuthAdapter.js';
 
-export { MongoDBAdapter };
+export { MongoDBAuthAdapter };

@@ -47,8 +47,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@auth/mongodb-adapter": "3.11.2",
     "@lowdefy/helpers": "5.3.0",
+    "better-auth": "^1.6.23",
     "mongodb": "7.2.0",
     "saslprep": "1.0.3"
   },

@@ -46,7 +46,7 @@ test('InternalApi endpoint throws ConfigError with "does not exist" message', as
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   await expect(
     callEndpoint(context, {
@@ -81,7 +81,7 @@ test('Api endpoint proceeds normally', async () => {
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   const result = await callEndpoint(context, {
     blockId: 'blockId',
@@ -108,7 +108,7 @@ test('InternalApi error matches missing endpoint error message', async () => {
   const context = testContext({
     logger,
     readConfigFile: mockReadConfigFile,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
 
   // InternalApi should throw the exact same message as a missing endpoint

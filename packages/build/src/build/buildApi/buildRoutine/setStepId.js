@@ -20,10 +20,10 @@ const prefixByType = {
   ValidateSchema: 'validate',
 };
 
-function setStepId(step, { endpointId }) {
+function setStepId(step, { endpointId, stepTypes }) {
   step.stepId = step.id;
   step.endpointId = endpointId;
-  const prefix = prefixByType[step.type] ?? 'request';
+  const prefix = prefixByType[step.type] ?? (stepTypes?.[step.type] ? 'auth' : 'request');
   step.id = `${prefix}:${endpointId}:${step.stepId}`;
 }
 

@@ -17,9 +17,11 @@
 import buildAuth from './buildAuth.js';
 import testContext from '../../test-utils/testContext.js';
 
-const context = testContext();
+const validSecret = { _secret: 'BETTER_AUTH_SECRET' };
+const validDatabase = { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} };
 
-test('buildAuth default', async () => {
+test('buildAuth returns unconfigured defaults when auth is absent', () => {
+  const context = testContext();
   const components = {
     pages: [
       { id: 'a', type: 'Context' },
@@ -30,22 +32,12 @@ test('buildAuth default', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
+      api: { roles: {} },
+      websockets: { roles: {} },
       configured: false,
-      events: [],
-      pages: {
-        roles: {},
-      },
+      pages: { roles: {} },
       providers: [],
-      session: {},
-      theme: {},
+      roles: [],
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -55,209 +47,140 @@ test('buildAuth default', async () => {
   });
 });
 
-test('buildAuth no pages', async () => {
+test('buildAuth returns unconfigured defaults when there are no pages', () => {
+  const context = testContext();
   const components = {};
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
+      api: { roles: {} },
+      websockets: { roles: {} },
       configured: false,
-      events: [],
-      pages: {
-        roles: {},
-      },
+      pages: { roles: {} },
       providers: [],
-      session: {},
-      theme: {},
+      roles: [],
     },
   });
 });
 
-test('buildAuth all protected, some public', async () => {
+test('buildAuth throws when auth is configured without an authentication mechanism', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        public: ['a', 'b'],
-        roles: {},
-      },
+      secret: validSecret,
+    },
+  };
+  expect(() => buildAuth({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism.'
+  );
+});
+
+test('buildAuth marks all pages public by default for a minimal valid auth config', () => {
+  const context = testContext();
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
     },
     pages: [
       { id: 'a', type: 'Context' },
       { id: 'b', type: 'Context' },
-      { id: 'c', type: 'Context' },
     ],
   };
   const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        public: ['a', 'b'],
-        roles: {},
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [
-      { id: 'a', type: 'Context', auth: { public: true } },
-      { id: 'b', type: 'Context', auth: { public: true } },
-      { id: 'c', type: 'Context', auth: { public: false } },
-    ],
-  });
+  expect(res.auth.configured).toBe(true);
+  expect(res.pages).toEqual([
+    { id: 'a', type: 'Context', auth: { public: true } },
+    { id: 'b', type: 'Context', auth: { public: true } },
+  ]);
 });
 
-test('buildAuth all public, some protected', async () => {
+test('buildAuth fills in configured defaults for a minimal valid auth config', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        protected: ['a', 'b'],
-        roles: {},
-      },
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
     },
-    pages: [
-      { id: 'a', type: 'Context' },
-      { id: 'b', type: 'Context' },
-      { id: 'c', type: 'Context' },
-    ],
   };
   const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        protected: ['a', 'b'],
-        roles: {},
-      },
-      providers: [],
-      session: {},
-      theme: {},
+  expect(res.auth).toEqual({
+    secret: validSecret,
+    database: validDatabase,
+    emailAndPassword: {
+      enabled: true,
+      requireEmailVerification: false,
+      minPasswordLength: 8,
+      disableSignUp: false,
     },
-    pages: [
-      { id: 'a', type: 'Context', auth: { public: false } },
-      { id: 'b', type: 'Context', auth: { public: false } },
-      { id: 'c', type: 'Context', auth: { public: true } },
-    ],
+    configured: true,
+    api: { roles: {} },
+    websockets: { roles: {} },
+    pages: { roles: {} },
+    providers: [],
+    roles: [],
+    hooks: [],
+    strategies: [],
+    organizations: {
+      policy: 'pinned',
+      org: 'default',
+      signup: 'invite-only',
+    },
+    authPages: {
+      signIn: '/login',
+      signUp: '/signup',
+      error: '/auth/error',
+      forgotPassword: '/forgot-password',
+      resetPassword: '/reset-password',
+      verifyEmail: '/verify-email',
+    },
+    session: {
+      expiresIn: 604800,
+      updateAge: 86400,
+      cookieCache: { enabled: false, maxAge: 300 },
+      crossSubDomainCookies: { enabled: false },
+    },
+    account: {
+      accountLinking: { enabled: true, trustedProviders: [] },
+    },
+    rateLimit: { enabled: true, window: 60, max: 100 },
   });
 });
 
-test('buildAuth all public', async () => {
+test('buildAuth marks all pages protected when auth.pages.protected is true', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        public: true,
-        roles: {},
-      },
-    },
-    pages: [
-      { id: 'a', type: 'Context' },
-      { id: 'b', type: 'Context' },
-      { id: 'c', type: 'Context' },
-    ],
-  };
-  const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        public: true,
-        roles: {},
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [
-      { id: 'a', type: 'Context', auth: { public: true } },
-      { id: 'b', type: 'Context', auth: { public: true } },
-      { id: 'c', type: 'Context', auth: { public: true } },
-    ],
-  });
-});
-
-test('buildAuth all protected', async () => {
-  const components = {
-    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         protected: true,
-        roles: {},
       },
     },
     pages: [
       { id: 'a', type: 'Context' },
       { id: 'b', type: 'Context' },
-      { id: 'c', type: 'Context' },
     ],
   };
   const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      events: [],
-      configured: true,
-      pages: {
-        protected: true,
-        roles: {},
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [
-      { id: 'a', type: 'Context', auth: { public: false } },
-      { id: 'b', type: 'Context', auth: { public: false } },
-      { id: 'c', type: 'Context', auth: { public: false } },
-    ],
-  });
+  expect(res.pages).toEqual([
+    { id: 'a', type: 'Context', auth: { public: false } },
+    { id: 'b', type: 'Context', auth: { public: false } },
+  ]);
 });
 
-test('buildAuth 404 page is always public even when all pages are protected', async () => {
+test('buildAuth 404 page is always public even when all pages are protected', () => {
+  const context = testContext();
   const components = {
     auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         protected: true,
-        roles: {},
       },
     },
     pages: [
@@ -272,31 +195,13 @@ test('buildAuth 404 page is always public even when all pages are protected', as
   ]);
 });
 
-test('buildAuth 404 page is always public with explicit public list', async () => {
+test('buildAuth applies page roles on top of a protected/public configuration', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        public: ['a'],
-        roles: {},
-      },
-    },
-    pages: [
-      { id: 'a', type: 'Context' },
-      { id: 'b', type: 'Context' },
-      { id: '404', type: 'Result' },
-    ],
-  };
-  const res = buildAuth({ components, context });
-  expect(res.pages).toEqual([
-    { id: 'a', type: 'Context', auth: { public: true } },
-    { id: 'b', type: 'Context', auth: { public: false } },
-    { id: '404', type: 'Result', auth: { public: true } },
-  ]);
-});
-
-test('buildAuth roles', async () => {
-  const components = {
-    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         roles: {
           role1: ['page1'],
@@ -311,39 +216,20 @@ test('buildAuth roles', async () => {
     ],
   };
   const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        roles: {
-          role1: ['page1'],
-          role2: ['page1', 'page2'],
-        },
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [
-      { id: 'page1', type: 'Context', auth: { public: false, roles: ['role1', 'role2'] } },
-      { id: 'page2', type: 'Context', auth: { public: false, roles: ['role2'] } },
-      { id: 'page3', type: 'Context', auth: { public: true } },
-    ],
-  });
+  expect(res.pages).toEqual([
+    { id: 'page1', type: 'Context', auth: { public: false, roles: ['role1', 'role2'] } },
+    { id: 'page2', type: 'Context', auth: { public: false, roles: ['role2'] } },
+    { id: 'page3', type: 'Context', auth: { public: true } },
+  ]);
 });
 
-test('buildAuth roles and public pages inconsistency', async () => {
+test('buildAuth throws when a page is both protected by roles and public', () => {
+  const context = testContext();
   const components = {
     auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
       pages: {
         roles: {
           role1: ['page1'],
@@ -358,184 +244,41 @@ test('buildAuth roles and public pages inconsistency', async () => {
   );
 });
 
-test('buildAuth roles and protected pages array', async () => {
+test('buildAuth translates account.accountLinking.trustedProviders', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        roles: {
-          role1: ['page1'],
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      providers: [{ id: 'okta', type: 'GenericOAuth', properties: {} }],
+      account: {
+        accountLinking: {
+          trustedProviders: ['emailAndPassword', 'okta'],
         },
-        protected: ['page1'],
       },
     },
-    pages: [{ id: 'page1', type: 'Context' }],
   };
   const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        roles: {
-          role1: ['page1'],
-        },
-        protected: ['page1'],
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
-  });
+  expect(res.auth.account.accountLinking.trustedProviders).toEqual(['email-password', 'okta']);
 });
 
-test('buildAuth roles and protected true', async () => {
+test('buildAuth counts the database adapter and provider types', () => {
+  const context = testContext();
   const components = {
     auth: {
-      pages: {
-        roles: {
-          role1: ['page1'],
-        },
-        protected: true,
-      },
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'google', type: 'Google', properties: {} },
+      ],
     },
-    pages: [{ id: 'page1', type: 'Context' }],
   };
-  const res = buildAuth({ components, context });
-  expect(res).toEqual({
-    auth: {
-      api: {
-        roles: {},
-      },
-      websockets: {
-        roles: {},
-      },
-      authPages: {},
-      callbacks: [],
-      configured: true,
-      events: [],
-      pages: {
-        roles: {
-          role1: ['page1'],
-        },
-        protected: true,
-      },
-      providers: [],
-      session: {},
-      theme: {},
-    },
-    pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
+  buildAuth({ components, context });
+  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ MongoDBAuthAdapter: 1 });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({
+    GenericOAuth: 1,
+    Google: 1,
   });
-});
-
-test('Auth plugins are counted', () => {
-  // NEXTAUTH_SECRET is required when auth.providers is configured (validateAuthConfig.js)
-  const originalSecret = process.env.NEXTAUTH_SECRET;
-  process.env.NEXTAUTH_SECRET = 'test-secret';
-  try {
-    const components = {
-      auth: {
-        adapter: {
-          id: 'adapter',
-          type: 'Adapter',
-          properties: {
-            x: 1,
-          },
-        },
-        providers: [
-          {
-            id: 'provider',
-            type: 'Provider',
-            properties: {
-              x: 1,
-            },
-          },
-        ],
-        callbacks: [
-          {
-            id: 'callback',
-            type: 'Callback',
-            properties: {
-              x: 1,
-            },
-          },
-        ],
-        events: [
-          {
-            id: 'event',
-            type: 'Event',
-            properties: {
-              x: 1,
-            },
-          },
-        ],
-      },
-    };
-    const res = buildAuth({ components, context });
-    expect(res).toEqual({
-      auth: {
-        api: {
-          roles: {},
-        },
-        websockets: {
-          roles: {},
-        },
-        authPages: {},
-        adapter: {
-          id: 'adapter',
-          properties: {
-            x: 1,
-          },
-          type: 'Adapter',
-        },
-        callbacks: [
-          {
-            id: 'callback',
-            properties: {
-              x: 1,
-            },
-            type: 'Callback',
-          },
-        ],
-        configured: true,
-        events: [
-          {
-            id: 'event',
-            properties: {
-              x: 1,
-            },
-            type: 'Event',
-          },
-        ],
-        pages: {
-          roles: {},
-        },
-        providers: [
-          {
-            id: 'provider',
-            properties: {
-              x: 1,
-            },
-            type: 'Provider',
-          },
-        ],
-        session: {},
-        theme: {},
-      },
-    });
-    expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ Adapter: 1 });
-    expect(context.typeCounters.auth.providers.getCounts()).toEqual({ Provider: 1 });
-    expect(context.typeCounters.auth.callbacks.getCounts()).toEqual({ Callback: 1 });
-    expect(context.typeCounters.auth.events.getCounts()).toEqual({ Event: 1 });
-  } finally {
-    process.env.NEXTAUTH_SECRET = originalSecret;
-  }
 });

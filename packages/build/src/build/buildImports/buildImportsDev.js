@@ -28,12 +28,12 @@ function getPluginPackages({ components }) {
   getPackages(components.types.actions);
   getPackages(components.types.agents);
   getPackages(components.types.auth.adapters);
-  getPackages(components.types.auth.callbacks);
-  getPackages(components.types.auth.events);
   getPackages(components.types.auth.providers);
+  getPackages(components.types.auth.strategies);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.requests);
+  getPackages(components.types.steps);
   getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
@@ -58,14 +58,14 @@ function buildImportsDev({ components, context }) {
     agents: buildImportClassDev({ pluginPackages, map: context.typesMap.agents }),
     auth: {
       adapters: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.adapters }),
-      callbacks: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.callbacks }),
-      events: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.events }),
       providers: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.providers }),
+      strategies: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.strategies }),
     },
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
     icons: buildIconImports({ blocks, components, context, defaults: defaultIconsDev }),
     requests: buildImportClassDev({ pluginPackages, map: context.typesMap.requests }),
+    steps: buildImportClassDev({ pluginPackages, map: context.typesMap.steps }),
     websockets: buildImportClassDev({ pluginPackages, map: context.typesMap.websockets }),
     operators: {
       client: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.client }),

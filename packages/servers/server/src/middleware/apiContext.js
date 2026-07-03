@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, resolveAuthentication } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -26,13 +26,15 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
-import getSession from '../../lib/server/auth/session.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
+import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
 import operators from '../../build/plugins/operators/server.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
+import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
@@ -70,15 +72,25 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      steps,
       websockets,
     };
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
+    // Hoisted once per request - resolveAuthentication also needs it, and
+    // getBetterAuth memoizes the instance, but this keeps the auth engine
+    // construction to a single call site per request.
+    context.auth = getAuth({ logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
-      context.session = await getSession(c);
+      // resolveAuthentication is the single writer of context.user.
+      await resolveAuthentication(context, {
+        auth: context.auth,
+        headers: c.req.raw.headers,
+        strategies: getStrategies({ logger: context.logger }),
+      });
       // Set Sentry user context for authenticated requests
       setSentryUser({
-        user: context.session?.user,
+        user: context.user,
         sentryConfig: loggerConfig.sentry,
       });
     }

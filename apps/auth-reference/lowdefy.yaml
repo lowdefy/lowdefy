@@ -1,0 +1,247 @@
+name: auth-reference
+lowdefy: local
+
+# Reference app for the BetterAuth engine (auth-upgrade phases 1-3).
+# Exercises: email/password signup with email verification, magic link,
+# OAuth (Google), protected/public/role-gated pages, sign out, sessions,
+# auth hooks (user.create.before, session.create.after, email.verified),
+# and organizations: this deployment pins org-a with open signup (auto-join
+# with the built-in member role), member-resolved roles and attributes,
+# invitations, merge-on-signup against user-contacts, and org switching.
+# The sibling apps auth-reference-b (pinned org-b, invite-only) and
+# auth-reference-tenant (tenant policy) share the same auth database.
+# Phase 6 adds the admin steps: role-gated admin-* Api endpoints drive the
+# user and member administration routines (/users and /members), a
+# system: true step runs caller-less in the audit-login hook, and
+# ImpersonateUser/StopImpersonating exercise impersonation.
+# See README.md for the full walkthrough and required environment variables.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  # Local dev sending: run Mailpit (see README) and point SMTP at it.
+  email:
+    from: auth-reference@localhost
+    provider:
+      type: smtp
+      properties:
+        host:
+          _secret: SMTP_HOST
+        port: 1025
+        secure: false
+
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+
+  account:
+    accountLinking:
+      enabled: true
+      trustedProviders: [google, emailAndPassword]
+
+  session:
+    expiresIn: 604800
+    updateAge: 86400
+
+  # This deployment pins org-a as the active organization. Signup is open:
+  # a new signup auto-joins org-a with the plugin's built-in member role -
+  # it passes the membership wall while role-gated pages still gate it.
+  organizations:
+    policy: pinned
+    org: org-a
+    signup: open
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+    roles:
+      admin:
+        - admin
+        - members
+        - contacts
+        - users
+      auditor:
+        - audit-reports
+
+  # The admin step endpoints carry no authorization of their own - this gate
+  # is the authority. A caller without the admin role gets the opaque
+  # endpoint-does-not-exist rejection before the routine runs.
+  # HTTP API authorization. admin-* and partner-data are role-gated; whoami
+  # is deliberately public - it echoes the resolved caller for the session-
+  # vs-strategy precedence scenarios (resolution runs on public endpoints
+  # too; only the authorization gate differs).
+  api:
+    roles:
+      admin:
+        - 'admin-*'
+      partner:
+        - partner-data
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+  # Each entry binds an auth lifecycle point to an InternalApi endpoint.
+  # The endpoint's routine is the hook body; it runs in a system context
+  # (_user empty, subject in _payload, _secret working). One hook per point,
+  # so normalize-signup also carries the merge-on-signup match for
+  # trusted-provider OAuth (arrives verified), and on-email-verified carries
+  # the email/password merge (verified only at this point).
+  hooks:
+    - id: normalize-signup
+      point: user.create.before
+      endpointId: normalize-signup
+    - id: audit-login
+      point: session.create.after
+      endpointId: audit-login
+    - id: on-email-verified
+      point: email.verified
+      endpointId: on-email-verified
+    # Uncomment to hand invitation email dispatch to the invitation-send
+    # endpoint - the stock auth.email template then does NOT send; the hook
+    # owns dispatch (phase-6 walkthrough). Leave commented to exercise the
+    # stock-template fallback through Mailpit.
+    # - id: invitation-send
+    #   point: invitation.send
+    #   endpointId: invitation-send
+
+  # API auth strategies (phase 4) - external callers authenticate with a
+  # static API key or an HMAC-signed JWT. A logged-in session always wins
+  # over a presented credential, and strategy callers bypass the
+  # org-membership wall (they are members of no organization); their roles
+  # are deployment-global and check against auth.api.roles below.
+  strategies:
+    - id: partner-access
+      type: apiKey
+      properties:
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+      roles:
+        - partner
+      attributes:
+        branches: [north, east]
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        issuer: https://auth.example.test
+        audience: auth-reference-api
+        claimMapping:
+          id: sub
+          roles: roles
+      roles: []
+
+  # Uncomment to exercise the wrong-roles opaque /404 redirect and the
+  # pre-resolved dev caller (roles are authoritative; no engine runs):
+  # dev:
+  #   mockUser:
+  #     id: mock-user
+  #     email: mock@example.com
+  #     name: Mock User
+  #     roles: []
+
+# The hooks write an audit trail here; the same database as auth so no
+# extra infrastructure is needed for the walkthrough. user-contacts is the
+# app-owned CRM contact collection the merge-on-signup hooks match against.
+connections:
+  - id: audit_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: hook-audit
+      write: true
+  - id: contacts_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: user-contacts
+      write: true
+  # The email.verified merge writes user.contactId with an explicit update.
+  # The sanctioned write pathway for this one field is an open design
+  # question (hooks/design.md); the reference app writes it directly over a
+  # connection until the auth module settles the mechanism.
+  - id: users_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: users
+      write: true
+
+api:
+  - _ref: api/normalize-signup.yaml
+  - _ref: api/audit-login.yaml
+  - _ref: api/on-email-verified.yaml
+  # Phase-4 API strategy endpoints.
+  - _ref: api/partner-data.yaml
+  - _ref: api/whoami.yaml
+  # The invitation.send hook body - unreachable until its auth.hooks entry
+  # above is uncommented.
+  - _ref: api/invitation-send.yaml
+  # Phase-6 admin step endpoints - role-gated by auth.api.roles above.
+  - _ref: api/admin-list-users.yaml
+  - _ref: api/admin-ban-user.yaml
+  - _ref: api/admin-unban-user.yaml
+  - _ref: api/admin-revoke-user-sessions.yaml
+  - _ref: api/admin-delete-user.yaml
+  - _ref: api/admin-update-user-attributes.yaml
+  - _ref: api/admin-list-members.yaml
+  - _ref: api/admin-invite-member.yaml
+  - _ref: api/admin-cancel-invitation.yaml
+  - _ref: api/admin-remove-member.yaml
+  - _ref: api/admin-update-member-roles.yaml
+  - _ref: api/admin-update-member-attributes.yaml
+  - _ref: api/admin-create-organization.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/organizations.yaml
+  - _ref: pages/sessions.yaml
+  - _ref: pages/admin.yaml
+  - _ref: pages/users.yaml
+  - _ref: pages/members.yaml
+  - _ref: pages/contacts.yaml
+  - _ref: pages/audit-reports.yaml
+  - _ref: pages/hook-audit.yaml

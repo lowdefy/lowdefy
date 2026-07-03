@@ -16,13 +16,18 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
+import authJson from '../../lib/build/auth.js';
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
+import lowdefyConfig from '../../lib/build/config.js';
+
+const basePath = lowdefyConfig.basePath ?? '';
 
 // JIT page build + config response. The response shapes are a frozen contract
 // with the dev client:
 //   200 { installing: true, packages }  — plugin install in progress, client polls
 //   500 { buildError: true, errors, message, source }  — build failed
+//   401 { redirect }  — logged-out navigation to a protected page
 //   404 'Page not found.'
 //   200 pageConfig (+ _warnings)
 async function jitPageHandler(c) {
@@ -67,10 +72,24 @@ async function jitPageHandler(c) {
     });
   }
 
-  const pageConfig = await getPageConfig(context, { pageId });
-  if (pageConfig === null) {
+  const result = await getPageConfig(context, { pageId });
+  if (result.status === 'unauthenticated') {
+    // The client follows this redirect with a full page load, so the login
+    // page can return to the requested page after sign-in.
+    const callbackUrl = `${basePath}/${pageId}`;
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      401
+    );
+  }
+  if (result.status !== 'ok') {
     return c.text('Page not found.', 404);
   }
+  const pageConfig = result.pageConfig;
   if (buildResult?.warnings?.length > 0) {
     pageConfig._warnings = buildResult.warnings;
   }

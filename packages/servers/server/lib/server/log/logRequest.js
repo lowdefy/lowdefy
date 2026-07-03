@@ -16,7 +16,8 @@
 
 // TODO: Better name needed here maybe?
 function logRequest({ context }) {
-  const { headers = {}, user = {} } = context;
+  const { headers = {} } = context;
+  const user = context.user ?? {};
   context.logger.info({
     // TODO:
     // app_name
@@ -27,8 +28,6 @@ function logRequest({ context }) {
     user: {
       id: user.id,
       roles: user.roles,
-      sub: user.sub,
-      session_id: user.session_id, // TODO: Implement session id
     },
     url: context.req.url,
     method: context.req.method,

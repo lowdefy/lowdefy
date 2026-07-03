@@ -19,13 +19,16 @@ import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
-import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
-import getAuthConfig from './routes/auth/getAuthConfig.js';
+import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
+import getBetterAuth from './routes/auth/getBetterAuth.js';
+import getBetterAuthConfig from './routes/auth/getBetterAuthConfig.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import resolveAuthentication from './context/resolveAuthentication.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
@@ -34,12 +37,15 @@ export {
   callRequest,
   createApiContext,
   createChannelRegistry,
-  createSessionCallback,
+  createSystemContext,
   createWebSocketConnection,
-  getAuthConfig,
+  getAuthStrategies,
+  getBetterAuth,
+  getBetterAuthConfig,
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,
   logClientError,
+  resolveAuthentication,
   runScheduledEndpoint,
 };

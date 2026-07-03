@@ -1,0 +1,41 @@
+id: home
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: home_title
+    type: Title
+    properties:
+      content: auth-reference-tenant (tenant policy)
+      level: 2
+  - id: home_body
+    type: Html
+    properties:
+      html: |
+        <p>Multi-tenant self-serve: sign up, verify your email, and your
+        first login lazily mints your own organization (you are its owner,
+        it becomes your active org). Invite someone from the members page -
+        they join <i>your</i> tenant and mint nothing.</p>
+  - id: to_login
+    type: Button
+    properties:
+      title: Log in
+    events:
+      onClick:
+        - id: link_login
+          type: Link
+          params:
+            pageId: login
+  - id: to_signup
+    type: Button
+    properties:
+      title: Sign up
+      type: default
+    events:
+      onClick:
+        - id: link_signup
+          type: Link
+          params:
+            pageId: signup

@@ -31,8 +31,6 @@ const trackedFiles = [
   'build/auth.json',
   'build/config.json',
   'build/plugins/auth/adapters.js',
-  'build/plugins/auth/callbacks.js',
-  'build/plugins/auth/events.js',
   'build/plugins/auth/providers.js',
   'build/plugins/connections.js',
   'build/plugins/operators/server.js',

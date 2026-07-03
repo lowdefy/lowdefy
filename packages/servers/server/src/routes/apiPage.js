@@ -16,20 +16,38 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
+import authJson from '../../lib/build/auth.js';
+import lowdefyConfig from '../../lib/build/config.js';
 import getPathSegments from '../lib/getPathSegments.js';
+
+const basePath = lowdefyConfig.basePath ?? '';
 
 // Page config as JSON for client-side SPA navigation. The first page load is
 // served embedded in the HTML; subsequent navigations fetch from here.
 async function apiPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
-  const pageConfig = await getPageConfig(context, { pageId });
-  if (!pageConfig) {
+  const result = await getPageConfig(context, { pageId });
+  if (result.status === 'unauthenticated') {
+    // The client follows this redirect with a full page load, so the login
+    // page can return to the requested page after sign-in.
+    const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.info({ event: 'api_page_unauthenticated', pageId });
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      401
+    );
+  }
+  if (result.status !== 'ok') {
     context.logger.info({ event: 'api_page_not_found', pageId });
     return c.json({ pageConfig: null }, 404);
   }
   context.logger.info({ event: 'api_page_view', pageId });
-  return c.json({ pageConfig });
+  return c.json({ pageConfig: result.pageConfig });
 }
 
 export default apiPageHandler;

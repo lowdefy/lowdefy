@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function createAuthorize({ session }) {
-  // Next-auth getSession provides a session object if the user is authenticated
-  // else session will be null
-
-  const authenticated = !!session;
-  const roles = session?.user?.roles ?? [];
-  if (!Array.isArray(roles)) {
-    throw new ConfigError('session.user.roles must be an array of strings.', {
+function createAuthorize({ user }) {
+  // resolveAuthentication is the single writer of context.user - a resolved
+  // caller object when authenticated, else null.
+  const authenticated = !type.isNone(user);
+  const roles = user?.roles ?? [];
+  if (!Array.isArray(roles) || roles.some((role) => !type.isString(role))) {
+    throw new ConfigError('user.roles must be an array of strings.', {
       received: roles,
     });
   }

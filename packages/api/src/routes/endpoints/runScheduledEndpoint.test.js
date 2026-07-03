@@ -35,11 +35,11 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-function makeContext(endpoint, { session } = {}) {
+function makeContext(endpoint, { user } = {}) {
   const readConfigFile = jest.fn((path) =>
     path === `api/${endpoint.endpointId}.json` ? endpoint : null
   );
-  return testContext({ logger, readConfigFile, session });
+  return testContext({ logger, readConfigFile, user });
 }
 
 test('runs a scheduled endpoint and injects the matching schedule payload', async () => {
@@ -61,14 +61,13 @@ test('runs a scheduled endpoint and injects the matching schedule payload', asyn
   expect(routineContext.payload).toEqual({ mode: 'incremental' });
 });
 
-test('forces a system context (no user) even if a session is present', async () => {
+test('forces a system context (no user) even if a user is present', async () => {
   const context = makeContext(
     { endpointId: 'purge', type: 'Api', schedules: [{ cron: '0 6 * * *' }], routine: [] },
-    { session: { user: { id: 'user_1', roles: ['admin'] } } }
+    { user: { id: 'user_1', roles: ['admin'] } }
   );
   await runScheduledEndpoint(context, { endpointId: 'purge', cron: '0 6 * * *' });
-  expect(context.user).toBe(undefined);
-  expect(context.session).toBe(undefined);
+  expect(context.user).toBe(null);
 });
 
 test('allows an InternalApi endpoint to be scheduled', async () => {

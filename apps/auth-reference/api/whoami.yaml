@@ -1,0 +1,11 @@
+# Public HTTP endpoint echoing the resolved caller - the phase-4
+# walkthrough uses it to show session-vs-strategy precedence: a session
+# cookie and an API key presented together resolve to the session user
+# (the session branch is terminal), while the key alone resolves to the
+# strategy caller shape (id, authMethod, strategyId, roles, attributes).
+id: whoami
+type: Api
+routine:
+  - ':return':
+      user:
+        _user: true

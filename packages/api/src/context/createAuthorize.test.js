@@ -33,7 +33,7 @@ test('authorize protected object, no roles', () => {
   let authorize = createAuthorize({});
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub' } } });
+  authorize = createAuthorize({ user: { sub: 'sub' } });
   expect(authorize({ auth })).toBe(true);
 });
 
@@ -43,19 +43,19 @@ test('authorize role protected object', () => {
   let authorize = createAuthorize({});
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub' } } });
+  authorize = createAuthorize({ user: { sub: 'sub' } });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub', roles: [] } } });
+  authorize = createAuthorize({ user: { sub: 'sub', roles: [] } });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub', roles: ['role2'] } } });
+  authorize = createAuthorize({ user: { sub: 'sub', roles: ['role2'] } });
   expect(authorize({ auth })).toBe(false);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub', roles: ['role1'] } } });
+  authorize = createAuthorize({ user: { sub: 'sub', roles: ['role1'] } });
   expect(authorize({ auth })).toBe(true);
 
-  authorize = createAuthorize({ session: { user: { sub: 'sub', roles: ['role1', 'role2'] } } });
+  authorize = createAuthorize({ user: { sub: 'sub', roles: ['role1', 'role2'] } });
   expect(authorize({ auth })).toBe(true);
 });
 
@@ -91,21 +91,21 @@ test('throws ConfigError with received value when auth.public is wrong type', ()
   }
 });
 
-test('throws ConfigError when session.user.roles is a string', () => {
+test('throws ConfigError when user.roles is a string', () => {
   try {
-    createAuthorize({ session: { user: { sub: 'sub', roles: 'admin' } } });
+    createAuthorize({ user: { sub: 'sub', roles: 'admin' } });
   } catch (e) {
     expect(e).toBeInstanceOf(ConfigError);
-    expect(e.message).toBe('session.user.roles must be an array of strings.');
+    expect(e.message).toBe('user.roles must be an array of strings.');
     expect(e.received).toBe('admin');
     return;
   }
   throw new Error('Expected ConfigError to be thrown');
 });
 
-test('throws ConfigError when session.user.roles is a number', () => {
+test('throws ConfigError when user.roles is a number', () => {
   try {
-    createAuthorize({ session: { user: { sub: 'sub', roles: 42 } } });
+    createAuthorize({ user: { sub: 'sub', roles: 42 } });
   } catch (e) {
     expect(e).toBeInstanceOf(ConfigError);
     expect(e.received).toBe(42);
@@ -114,12 +114,24 @@ test('throws ConfigError when session.user.roles is a number', () => {
   throw new Error('Expected ConfigError to be thrown');
 });
 
-test('throws ConfigError when session.user.roles is an object', () => {
+test('throws ConfigError when user.roles is an object', () => {
   try {
-    createAuthorize({ session: { user: { sub: 'sub', roles: { admin: true } } } });
+    createAuthorize({ user: { sub: 'sub', roles: { admin: true } } });
   } catch (e) {
     expect(e).toBeInstanceOf(ConfigError);
     expect(e.received).toEqual({ admin: true });
+    return;
+  }
+  throw new Error('Expected ConfigError to be thrown');
+});
+
+test('throws ConfigError when user.roles contains a non-string entry', () => {
+  try {
+    createAuthorize({ user: { sub: 'sub', roles: ['admin', 42] } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.message).toBe('user.roles must be an array of strings.');
+    expect(e.received).toEqual(['admin', 42]);
     return;
   }
   throw new Error('Expected ConfigError to be thrown');

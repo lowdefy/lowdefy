@@ -70,13 +70,13 @@ function createMockReadConfigFile({ agentConfig, endpointConfigs = {} }) {
   });
 }
 
-function createTestContext({ agentConfig, endpointConfigs, session } = {}) {
+function createTestContext({ agentConfig, endpointConfigs, user } = {}) {
   const context = testContext({
     connections: { Anthropic: { create: mockCreate, requests: {} } },
     operators,
     logger,
     readConfigFile: createMockReadConfigFile({ agentConfig, endpointConfigs }),
-    session: session === undefined ? { user: { id: 'user_1', sub: 'user_1' } } : session,
+    user: user === undefined ? { id: 'user_1', sub: 'user_1' } : user,
   });
   context.agents = { TestAgent: { resolver: mockResolver, schema: {} } };
   context.evaluateOperators = createEvaluateOperators(context);
@@ -243,7 +243,7 @@ test('CallAgent step returns error status when prompt does not evaluate to a str
 
 test('CallAgent step runs with userId null in system (scheduled) context', async () => {
   mockResolver.mockResolvedValue({ result: AGENT_RESULT });
-  const context = createTestContext({ agentConfig: createAgentConfig(), session: null });
+  const context = createTestContext({ agentConfig: createAgentConfig(), user: null });
   const routineContext = createRoutineContext();
 
   const res = await runRoutine(context, routineContext, {

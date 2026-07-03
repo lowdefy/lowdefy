@@ -1,0 +1,84 @@
+name: auth-reference-b
+lowdefy: local
+
+# Second deployment of the auth-reference suite (auth-upgrade phase 3):
+# pins org-b with the default invite-only signup, sharing the same auth
+# database as auth-reference (org-a). Exercises the hard membership wall
+# between deployments: a member of org-a signing in here is rejected at
+# session-create with the inline MEMBERSHIP_REQUIRED code, and membership
+# in org-b is granted only by invitation.
+# See ../auth-reference/README.md for the walkthrough.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  email:
+    from: auth-reference-b@localhost
+    provider:
+      type: smtp
+      properties:
+        host:
+          _secret: SMTP_HOST
+        port: 1025
+        secure: false
+
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+
+  # org-b, invite-only (the default and the safe choice for internal apps):
+  # a signup with no member row and no pending invitation is rejected at
+  # session-create - exactly the "you have not been granted access" flow.
+  organizations:
+    policy: pinned
+    org: org-b
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+    roles:
+      admin:
+        - members
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/members.yaml

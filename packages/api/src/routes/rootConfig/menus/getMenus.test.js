@@ -23,7 +23,7 @@ const mockReadConfigFile = jest.fn();
 const context = testContext({ readConfigFile: mockReadConfigFile });
 const contextUser = testContext({
   readConfigFile: mockReadConfigFile,
-  session: { user: { sub: 'sub' } },
+  user: { sub: 'sub' },
 });
 
 beforeEach(() => {

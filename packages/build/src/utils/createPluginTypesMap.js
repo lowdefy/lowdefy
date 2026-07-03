@@ -54,24 +54,16 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
-    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.callbacks : [],
-    store: typesMap.auth.callbacks,
-    packageName,
-    typePrefix,
-    version,
-  });
-
-  createTypeDefinitions({
-    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.events : [],
-    store: typesMap.auth.events,
-    packageName,
-    typePrefix,
-    version,
-  });
-
-  createTypeDefinitions({
     typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.providers : [],
     store: typesMap.auth.providers,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.strategies : [],
+    store: typesMap.auth.strategies,
     packageName,
     typePrefix,
     version,
@@ -112,6 +104,14 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   createTypeDefinitions({
     typeNames: packageTypes.requests,
     store: typesMap.requests,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: packageTypes.steps,
+    store: typesMap.steps,
     packageName,
     typePrefix,
     version,

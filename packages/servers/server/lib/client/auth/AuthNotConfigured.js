@@ -23,9 +23,16 @@ function authNotConfigured() {
 function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
+    user: null,
+    getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
-    signIn: authNotConfigured,
+    setActiveOrganization: authNotConfigured,
+    signInEmail: authNotConfigured,
+    signInMagicLink: authNotConfigured,
+    signInOauth2: authNotConfigured,
+    signInSocial: authNotConfigured,
     signOut: authNotConfigured,
+    signUpEmail: authNotConfigured,
   };
 
   return children(auth);

@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import handleAgentCall from './handleAgentCall.js';
+import handleAuthStep from './handleAuthStep.js';
 import handleControl from './control/handleControl.js';
 import handleEndpointCall from './handleEndpointCall.js';
 import handleRequest from './handleRequest.js';
@@ -42,6 +43,11 @@ async function runRoutine(context, routineContext, { routine }) {
       }
       if (routine.id?.startsWith?.('agent:')) {
         return await handleAgentCall(context, routineContext, {
+          step: routine,
+        });
+      }
+      if (routine.id?.startsWith?.('auth:')) {
+        return await handleAuthStep(context, routineContext, {
           step: routine,
         });
       }

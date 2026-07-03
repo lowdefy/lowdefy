@@ -43,12 +43,12 @@ function createMockReadConfigFile(endpointConfigs = {}) {
   });
 }
 
-function createTestContext({ endpointConfigs = {}, session } = {}) {
+function createTestContext({ endpointConfigs = {}, user } = {}) {
   const context = testContext({
     operators,
     logger,
     readConfigFile: createMockReadConfigFile(endpointConfigs),
-    session: session ?? { user: { id: 'user_1' } },
+    user: user ?? { id: 'user_1' },
   });
   context.evaluateOperators = createEvaluateOperators(context);
   return context;
@@ -140,7 +140,7 @@ test('throws ConfigError on authorization failure', async () => {
         auth: { roles: ['admin'] },
       },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })

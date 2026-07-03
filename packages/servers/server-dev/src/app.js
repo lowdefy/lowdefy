@@ -16,7 +16,6 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
-import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -29,7 +28,8 @@ import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import devToolsHandler from './routes/devTools.js';
 import endpointsHandler from './routes/endpoints.js';
-import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
+import getAuth from '../lib/server/auth/getAuth.js';
+import getMockUser from '../lib/server/auth/getMockUser.js';
 import iconsDynamicHandler from './routes/iconsDynamic.js';
 import jitPageHandler from './routes/jitPage.js';
 import jsEnvHandler from './routes/jsEnv.js';
@@ -40,6 +40,7 @@ import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -59,15 +60,20 @@ function createApp() {
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
 
-  if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
+  const mockUser = getMockUser();
+  if (authJson.configured === true && !mockUser) {
+    // Construct the BetterAuth instance at startup so config errors fail
+    // boot instead of the first request.
+    getAuth({ logger });
+  }
+  if (mockUser) {
+    // With a mock user active, no auth engine runs - the BetterAuth client
+    // still polls the session endpoint, so answer with the mock caller.
+    app.get('/api/auth/get-session', (c) => c.json({ session: { id: 'mock' }, user: mockUser }));
   }
 
   app.use('/api/*', apiContext());
-  app.use('/api/auth/*', authMiddleware());
+  app.use('/api/auth/*', authMiddleware({ logger }));
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
@@ -77,6 +83,7 @@ function createApp() {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.get('/api/websocket', websocketHandler);
+  app.get('/api/user', userHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.
   app.use(
