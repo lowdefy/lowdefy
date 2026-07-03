@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, serializer, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import getRefContent from './getRefContent.js';
@@ -28,6 +28,13 @@ import { scopeMenuItemIds } from '../resolveModuleOperators.js';
 import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';
+import {
+  createRecord,
+  getPlaceholderId,
+  getRecord,
+  makePlaceholder,
+  makeRecordId,
+} from './deferredRegistry.js';
 
 class WalkContext {
   constructor({
@@ -877,6 +884,24 @@ async function resolve(node, ctx) {
     });
   }
 
+  // 2b. Deferred-record placeholder — kind-aware dispatch. Per-consumer kinds
+  // (component, menuLinks) pass through every generic walk untouched; only
+  // module-ref consumption dereferences them. Single-value kinds (entryRef,
+  // varDefault) force-and-splice via resolveDeferred, which lands with the
+  // wait-graph — until then no single-value records exist.
+  if (type.isObject(node)) {
+    const deferredId = getPlaceholderId(node);
+    if (deferredId !== undefined) {
+      const record = getRecord(ctx.buildContext, deferredId);
+      if (record.kind === 'component' || record.kind === 'menuLinks') {
+        return node;
+      }
+      throw new LowdefyInternalError(
+        `Deferred record "${deferredId}" of kind "${record.kind}" cannot be resolved yet.`
+      );
+    }
+  }
+
   // 3. _ref — top-down (only operator that needs it)
   if (type.isObject(node) && !type.isUndefined(node._ref)) {
     return resolveRef(node, ctx);
@@ -907,6 +932,31 @@ async function resolve(node, ctx) {
           if (type.isObject(node[key]) || type.isArray(node[key])) {
             setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
           }
+          return;
+        }
+        if (type.isString(stopMode) && stopMode.startsWith('record:')) {
+          // Record-ify: move the raw body into the registry and splice in the
+          // placeholder. The body is tagged with ~r at creation — the tree walk
+          // (step 15) can no longer reach it, and provenance must survive for
+          // hot-reload classification and error pairing.
+          const kind = stopMode.slice('record:'.length);
+          const entryId = ctx.moduleEntry?.id ?? null;
+          const body = node[key];
+          tagRefDeep(body, ctx.refId);
+          const id = makeRecordId({ entryId, configPath: childPath });
+          createRecord(ctx.buildContext, {
+            id,
+            kind,
+            body,
+            env: {
+              file: ctx.currentFile,
+              moduleRoot: ctx.moduleRoot ?? null,
+              packageRoot: ctx.packageRoot ?? null,
+              entryId,
+              refId: ctx.refId,
+            },
+          });
+          node[key] = makePlaceholder(id);
           return;
         }
       }
