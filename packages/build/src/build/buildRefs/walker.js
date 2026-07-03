@@ -56,6 +56,7 @@ class WalkContext {
     lowdefyApp,
     dynamicIdentifiers,
     shouldStop,
+    entryId,
   }) {
     this.buildContext = buildContext;
     this.refId = refId;
@@ -63,6 +64,10 @@ class WalkContext {
     this.vars = vars;
     this.moduleDependencies = moduleDependencies;
     this.moduleEntry = moduleEntry ?? null;
+    // The owning module entry id for deferred-record coordinates. Set by the
+    // manifest resolvers even before the entry object exists (the local pass
+    // walks the manifest before registration completes).
+    this.entryId = entryId ?? this.moduleEntry?.id ?? null;
     this.moduleRoot = moduleRoot;
     this.packageRoot = packageRoot;
     this.path = path;
@@ -97,6 +102,7 @@ class WalkContext {
       lowdefyApp: this.lowdefyApp,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
+      entryId: this.entryId,
     });
   }
 
@@ -130,6 +136,7 @@ class WalkContext {
       lowdefyApp: this.lowdefyApp,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
+      entryId: (moduleEntry ?? this.moduleEntry)?.id ?? this.entryId,
     });
   }
 
@@ -727,7 +734,11 @@ async function prepareRef(node, ctx) {
 // applies the shared tail (steps 13–16). Replayed deferred sentinels route here
 // too — `fromFile` carries their original provenance.
 async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
-  // 8. Load content
+  // 8. Load content. Components dereference a deferred record and clone its
+  // immutable body — the record env names the source file explicitly. Menus
+  // (and scalar legacy bodies) still return live content preserved in place,
+  // where ~deferredFrom carries the source file when the body came from a
+  // ref'd file.
   const result = await getModuleRefContent({
     context: ctx.buildContext,
     refDef,
@@ -735,9 +746,20 @@ async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
     walkCtx: ctx,
     configKey,
   });
-  let content = cloneForResolve(result.content);
   const resolvedEntryId = result.entryId;
   const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
+
+  let content;
+  let sourceFile;
+  if (result.recordId !== undefined) {
+    const record = getRecord(ctx.buildContext, result.recordId);
+    content = cloneForResolve(record.body);
+    sourceFile = record.env.file;
+  } else {
+    content = cloneForResolve(result.content);
+    const deferredFrom = content['~deferredFrom'];
+    sourceFile = deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
+  }
 
   // 9. Circular detection for cross-module component/menu refs.
   // File-based cycle detection (prepareRef step 7) misses these because each
@@ -756,11 +778,10 @@ async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
   }
 
   // 10. Create module child context for the ref
-  const deferredFrom = content['~deferredFrom'];
   const childCtx = ctx.forRef({
     refId: refDef.id,
     vars: refDef.vars,
-    filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+    filePath: sourceFile,
     moduleRoot: moduleEntry.moduleRoot,
     packageRoot: moduleEntry.packageRoot,
     moduleDependencies: moduleEntry.moduleDependencies,
@@ -937,13 +958,18 @@ async function resolve(node, ctx) {
         }
         if (type.isString(stopMode) && stopMode.startsWith('record:')) {
           // Record-ify: move the raw body into the registry and splice in the
-          // placeholder. The body is tagged with ~r at creation — the tree walk
-          // (step 15) can no longer reach it, and provenance must survive for
-          // hot-reload classification and error pairing.
-          const kind = stopMode.slice('record:'.length);
-          const entryId = ctx.moduleEntry?.id ?? null;
+          // placeholder. The body stays untagged, exactly like an in-place
+          // preserved body: manifest walks call resolve() directly (no step 15),
+          // so consumer provenance is applied at consumption time by
+          // loadAndWalkRef's tagRefDeep over the cloned body.
           const body = node[key];
-          tagRefDeep(body, ctx.refId);
+          // Scalars stay in the tree (mirrors 'preserve', which cannot stamp
+          // them); a placeholder means the region was already record-ified by
+          // an earlier pass — do not create a duplicate.
+          if (!type.isObject(body) && !type.isArray(body)) return;
+          if (getPlaceholderId(body) !== undefined) return;
+          const kind = stopMode.slice('record:'.length);
+          const entryId = ctx.entryId;
           const id = makeRecordId({ entryId, configPath: childPath });
           createRecord(ctx.buildContext, {
             id,

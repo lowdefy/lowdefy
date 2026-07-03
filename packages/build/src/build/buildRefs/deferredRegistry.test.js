@@ -165,9 +165,9 @@ describe('walker record:<kind> mode', () => {
       entryId: 'team-users',
       refId: 'test:lowdefy.yaml:0',
     });
-    // Body carries ~r provenance from the creating ref (tree tagging can no
-    // longer reach it).
-    expect(record.body['~r']).toBe('test:lowdefy.yaml:0');
+    // Body stays untagged, like an in-place preserved body — consumer
+    // provenance is applied at consumption time.
+    expect(record.body['~r']).toBeUndefined();
   });
 
   test('per-consumer placeholders pass through later walks untouched', async () => {

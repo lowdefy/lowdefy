@@ -204,6 +204,9 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     vars: {},
     moduleRoot,
     packageRoot,
+    // The entry object is created after this walk; deferred-record coordinates
+    // still need the owning entry id.
+    entryId: entry.id,
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(refDef.path ? [refDef.path] : []),
@@ -213,7 +216,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     dynamicIdentifiers,
     shouldStop: (childPath) => {
       if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
+      if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
       if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
       if (/^api(\..*)?$/.test(childPath)) return 'preserve';
       if (/^connections(\..*)?$/.test(childPath)) return 'preserve';
@@ -332,7 +335,7 @@ async function resolveFullManifest({ entryId, context }) {
     dynamicIdentifiers,
     shouldStop: (childPath) => {
       if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'preserve';
+      if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
       return false;
     },
   });

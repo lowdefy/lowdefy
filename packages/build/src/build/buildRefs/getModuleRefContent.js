@@ -16,6 +16,8 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import { getPlaceholderId } from './deferredRegistry.js';
+
 function describeRef(refDef) {
   const parts = [];
   if (refDef.module) parts.push(`module: "${refDef.module}"`);
@@ -101,6 +103,15 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, c
       `The ${exportType} "${exportName}" in module "${entryId}" is empty.`,
       { configKey }
     );
+  }
+
+  // Component bodies live in the deferred-record registry — the manifest holds
+  // a placeholder. Return the record id; consumption dereferences it and walks
+  // a clone under the record's env. (Menus still return live links until they
+  // become records; scalar legacy bodies fall through as live content.)
+  const recordId = getPlaceholderId(content);
+  if (recordId !== undefined) {
+    return { recordId, entryId };
   }
 
   return { content, entryId };

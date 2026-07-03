@@ -22,6 +22,7 @@ import {
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
+import { getRecord } from './buildRefs/deferredRegistry.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -944,9 +945,12 @@ components:
         - _var: content
 `
     );
-    // Body preserved raw — the _var survives un-resolved for per-consumer resolution.
-    const body = context.modules['team-users'].manifest.components[0].component;
-    expect(body.blocks[0]).toEqual({ _var: 'content' });
+    // Body record-ified raw — the _var survives un-resolved for per-consumer resolution.
+    expect(context.modules['team-users'].manifest.components[0].component).toEqual({
+      '~deferred': 'team-users:components.0.component',
+    });
+    const record = getRecord(context, 'team-users:components.0.component');
+    expect(record.body.blocks[0]).toEqual({ _var: 'content' });
   });
 
   test('allows components section composed via _ref', async () => {
@@ -978,8 +982,9 @@ components:
       context,
     });
     expect(context.modules['team-users'].manifest.components[0].id).toBe('from-file');
-    expect(context.modules['team-users'].manifest.components[0].component).toEqual({
-      type: 'Box',
-    });
+    const record = getRecord(context, 'team-users:components.0.component');
+    expect(record.body).toEqual({ type: 'Box' });
+    // The record env names the ref'd file the body came from.
+    expect(record.env.file).toBe('/modules/team-users/components.yaml');
   });
 });
