@@ -17,6 +17,9 @@
 import { jest } from '@jest/globals';
 
 import ensureOrganization from './ensureOrganization.js';
+import getOrganizationBinding, {
+  registerOrganizationBinding,
+} from './getOrganizationBinding.js';
 
 function createMockAuth({ findOne, create }) {
   return {
@@ -97,4 +100,18 @@ test('ensureOrganization does not memoize a failure', async () => {
   );
   const org = await ensureOrganization({ auth, slug: 'team-portal' });
   expect(org.id).toBe('org_1');
+});
+
+test('ensureOrganization pins the resolved organization on the binding after a successful ensure', async () => {
+  const existing = { id: 'org_1', slug: 'team-portal', name: 'team-portal' };
+  const findOne = jest.fn(async () => existing);
+  const auth = createMockAuth({ findOne, create: jest.fn() });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+
+  await ensureOrganization({ auth, slug: 'team-portal' });
+
+  expect(getOrganizationBinding({ auth })).toEqual({
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'team-portal', name: 'team-portal' },
+  });
 });

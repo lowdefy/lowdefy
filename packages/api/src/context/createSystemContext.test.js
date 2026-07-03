@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import createSystemContext from './createSystemContext.js';
+import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 
 const logger = {
   debug: jest.fn(),
@@ -94,4 +95,16 @@ test('createSystemContext evaluateOperators resolves _secret and leaves _user em
   const context = createTestSystemContext();
   expect(context.user).toEqual({});
   expect(context.secrets.KEY).toBe('value');
+});
+
+test('createSystemContext resolves the retained organization binding for the given auth', () => {
+  const auth = { api: {} };
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'default' } });
+  const context = createTestSystemContext({ auth });
+  expect(context.organization).toEqual({ policy: 'pinned', pinned: null });
+});
+
+test('createSystemContext resolves organization to null when auth is not configured', () => {
+  const context = createTestSystemContext({ auth: undefined });
+  expect(context.organization).toBeNull();
 });

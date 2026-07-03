@@ -16,6 +16,7 @@
 
 import createAuthorize from './createAuthorize.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveLocale from './resolveLocale.js';
 
 function createApiContext(context) {
@@ -27,6 +28,11 @@ function createApiContext(context) {
   } else {
     context.i18n = undefined;
   }
+
+  // The retained organizations state ({ policy, pinned }) - read by the
+  // _organization operator and the org-scoped admin steps; null when auth
+  // (or organizations) is not configured.
+  context.organization = getOrganizationBinding({ auth: context.auth ?? null });
 
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);

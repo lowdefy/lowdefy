@@ -18,6 +18,7 @@ import { betterAuth } from 'better-auth';
 
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
+import { registerOrganizationBinding } from './organizations/getOrganizationBinding.js';
 
 let instance;
 
@@ -50,6 +51,13 @@ function getBetterAuth({
       secrets,
     })
   );
+
+  // Retain the organizations declaration per instance - request-time reads
+  // (the _organization operator, step organizationId defaulting) resolve the
+  // policy and the ensured pinned org from it.
+  if (authJson.organizations) {
+    registerOrganizationBinding({ auth: instance, organizations: authJson.organizations });
+  }
 
   // Ensure the pinned organization exists at startup - created if missing,
   // untouched otherwise. The engine hooks await the same memoized ensure per

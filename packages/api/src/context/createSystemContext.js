@@ -16,6 +16,7 @@
 
 import createEvaluateOperators from './createEvaluateOperators.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 
 // Builds a fresh off-request context for a trusted system caller - an auth
 // hook fire. The caller is the auth engine, not a user: `user` is empty so
@@ -66,6 +67,9 @@ function createSystemContext({
     user: {},
     websockets,
   };
+  // Hook routines read the retained organizations state too - a step or
+  // _organization inside a hook-bound endpoint resolves the same pinned org.
+  context.organization = getOrganizationBinding({ auth: auth ?? null });
   // System caller: trusted internal invocation - endpoint auth is not
   // re-checked against a session.
   context.authorize = () => true;

@@ -59,3 +59,23 @@ test('createEvaluateOperators forwards undefined lowdefyApp when context.appMeta
   });
   expect(output).toEqual({ slug: null });
 });
+
+test('createEvaluateOperators forwards context.organization to the operator parser', () => {
+  const organization = {
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'default', name: 'Default' },
+  };
+  const context = testContext({
+    operators: { _test: ({ organization }) => organization },
+  });
+  // testContext has no organization field of its own - set it directly to
+  // exercise the ServerParser pass-through.
+  context.organization = organization;
+  const evaluateOperators = createEvaluateOperators(context);
+  const output = evaluateOperators({
+    input: { org: { _test: null } },
+    location: 'test',
+    payload: {},
+  });
+  expect(output).toEqual({ org: organization });
+});
