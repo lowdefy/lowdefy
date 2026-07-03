@@ -68,7 +68,6 @@ test('buildApp no app defined', () => {
         appendBody: '',
         appendHead: '',
       },
-      notificationLandingPage: '/lowdefy/notification',
     },
     appMeta: emptyAppMeta,
   });
@@ -84,7 +83,6 @@ test('buildApp empty app object', () => {
         appendBody: '',
         appendHead: '',
       },
-      notificationLandingPage: '/lowdefy/notification',
     },
     appMeta: emptyAppMeta,
   });
@@ -100,7 +98,6 @@ test('buildApp empty html', () => {
         appendBody: '',
         appendHead: '',
       },
-      notificationLandingPage: '/lowdefy/notification',
     },
     appMeta: emptyAppMeta,
   });
@@ -123,7 +120,6 @@ test('buildApp appendHead and appendBody', () => {
         appendBody: 'body',
         appendHead: 'head',
       },
-      notificationLandingPage: '/lowdefy/notification',
     },
     appMeta: emptyAppMeta,
   });

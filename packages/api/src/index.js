@@ -25,7 +25,6 @@ import getAuthConfig from './routes/auth/getAuthConfig.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
-import handleNotificationLanding from './routes/notifications/handleNotificationLanding.js';
 import logClientError from './routes/log/logClientError.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
@@ -41,7 +40,6 @@ export {
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,
-  handleNotificationLanding,
   logClientError,
   runScheduledEndpoint,
 };

@@ -16,33 +16,40 @@
 
 import { serializer, type, urlQuery } from '@lowdefy/helpers';
 
-function resolveLinkValue({ link, option, baseUrl, recordId, notificationId }) {
+function resolveLinkValue({ link, option, serverUrl, basePath, landingPage, recordId }) {
   // Absolute URLs pass through — links into other apps or external destinations.
-  // They skip the landing page, so they carry no mark-as-read.
+  // They skip any landing page, so they carry no mark-as-read.
   if (type.isString(link)) {
     return link;
   }
   if (type.isObject(link) && !type.isNone(link.pageId)) {
-    const query = urlQuery.stringify({ _id: recordId, option, n: notificationId });
-    return `${baseUrl}?${query}`;
+    if (type.isNone(landingPage)) {
+      // No landing page configured — link straight to the target page.
+      const query = urlQuery.stringify(link.urlQuery ?? {});
+      return `${serverUrl}${basePath}/${link.pageId}${query ? `?${query}` : ''}`;
+    }
+    // The option query param is the dot-path of the link inside the record's
+    // data — the landing page reads the original target back with
+    // get(record.data, option) after marking the record read.
+    const query = urlQuery.stringify({ _id: recordId, option });
+    return `${serverUrl}${basePath}${landingPage}?${query}`;
   }
   return link;
 }
 
-// Resolves link values in a copy of the data item to landing-page URLs; the
-// stored record keeps the original { pageId, urlQuery } objects for in-app
-// navigation. The option query param is the dot-path of the link inside data —
-// the landing route reads the original link back with get(record.data, option).
-function resolveNotificationLinks({ item, baseUrl, recordId, notificationId }) {
+// Resolves link values in a copy of the data item to URLs; the stored record
+// keeps the original { pageId, urlQuery } objects for in-app navigation.
+function resolveNotificationLinks({ item, serverUrl, basePath, landingPage, recordId }) {
   const resolved = serializer.copy(item);
 
   Object.keys(resolved.links ?? {}).forEach((key) => {
     resolved.links[key] = resolveLinkValue({
       link: resolved.links[key],
       option: `links.${key}`,
-      baseUrl,
+      serverUrl,
+      basePath,
+      landingPage,
       recordId,
-      notificationId,
     });
   });
 
@@ -53,9 +60,10 @@ function resolveNotificationLinks({ item, baseUrl, recordId, notificationId }) {
       entry.link = resolveLinkValue({
         link: entry.link,
         option: `${arrayKey}.${index}.link`,
-        baseUrl,
+        serverUrl,
+        basePath,
+        landingPage,
         recordId,
-        notificationId,
       });
     });
   });

@@ -109,7 +109,10 @@ async function handleSendNotification(context, routineContext, { step }) {
 
   const app = (await context.readConfigFile('app.json')) ?? {};
   const theme = { ...(app.email ?? {}), ...(notificationConfig.theme ?? {}) };
-  const landingPage = app.notificationLandingPage ?? '/lowdefy/notification';
+  // Unset means links go directly to their target pages; setting it routes
+  // links through a landing page (e.g. a notifications module page) that
+  // marks the record read before redirecting.
+  const landingPage = app.notificationLandingPage;
   const basePath = context.config?.basePath ?? '';
   const serverUrl = getServerUrl({ app });
 
@@ -151,9 +154,10 @@ async function handleSendNotification(context, routineContext, { step }) {
     }
     const resolvedItem = resolveNotificationLinks({
       item,
-      baseUrl: `${serverUrl ?? ''}${basePath}${landingPage}`,
+      serverUrl: serverUrl ?? '',
+      basePath,
+      landingPage,
       recordId,
-      notificationId: notificationConfig.notificationId,
     });
 
     let interpolated;

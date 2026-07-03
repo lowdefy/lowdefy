@@ -33,10 +33,12 @@ test('All requests are present', () => {
 });
 
 test('All notificationAdapter functions are present', () => {
-  expect(MongoDBCollection.notificationAdapter.getNotification).toBeDefined();
   expect(MongoDBCollection.notificationAdapter.insertNotification).toBeDefined();
-  expect(MongoDBCollection.notificationAdapter.markNotificationRead).toBeDefined();
   expect(MongoDBCollection.notificationAdapter.updateNotificationSendResult).toBeDefined();
+  expect(Object.keys(MongoDBCollection.notificationAdapter)).toEqual([
+    'insertNotification',
+    'updateNotificationSendResult',
+  ]);
 });
 
 test('valid connection schema', () => {

@@ -62,11 +62,10 @@ function buildApp({ components, context }) {
   if (type.isNone(components.app.email)) {
     components.app.email = {};
   }
-  if (type.isNone(components.app.notificationLandingPage)) {
-    components.app.notificationLandingPage = '/lowdefy/notification';
-  }
-  // app.serverUrl is deliberately not defaulted — its absence triggers the
-  // VERCEL_URL fallback (or an error when notification links need a URL).
+  // app.serverUrl and app.notificationLandingPage are deliberately not
+  // defaulted: no serverUrl triggers the VERCEL_URL fallback (or an error when
+  // notification links need a URL); no notificationLandingPage means email
+  // links go directly to their target pages instead of through a landing page.
   components.appMeta = context?.appMeta ?? computeAppMeta(components);
   return components;
 }

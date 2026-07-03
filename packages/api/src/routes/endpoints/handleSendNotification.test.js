@@ -295,12 +295,12 @@ test('SendNotification records a failed send and continues the step', async () =
   expect(routineContext.steps.send).toHaveLength(1);
 });
 
-test('SendNotification resolves pageId links to landing URLs and stores original data', async () => {
+test('SendNotification resolves pageId links to landing URLs when notificationLandingPage is set', async () => {
   const context = createTestContext({
     notificationConfig: createNotificationConfig(),
     app: {
       serverUrl: 'https://myapp.com',
-      notificationLandingPage: '/lowdefy/notification',
+      notificationLandingPage: '/notifications/link',
       email: {},
     },
   });
@@ -322,14 +322,45 @@ test('SendNotification resolves pageId links to landing URLs and stores original
   const recordId = routineContext.steps.send[0];
 
   const renderArgs = mockRenderEmail.mock.calls[0][0];
-  expect(renderArgs.links.button).toContain('https://myapp.com/lowdefy/notification?');
+  expect(renderArgs.links.button).toContain('https://myapp.com/notifications/link?');
   expect(renderArgs.links.button).toContain(`_id=${recordId}`);
   expect(renderArgs.links.button).toContain('option=links.button');
-  expect(renderArgs.links.button).toContain('n=task-assigned');
+  const query = new URLSearchParams(renderArgs.links.button.split('?')[1]);
+  expect([...query.keys()].sort()).toEqual(['_id', 'option']);
   expect(renderArgs.links.external).toBe('https://other.example/page');
   expect(renderArgs.data.actions[0].link).toContain('option=actions.0.link');
 
   // Stored record keeps the original link objects for in-app navigation
+  const record = mockInsertNotification.mock.calls[0][0].notification;
+  expect(record.data.links.button).toEqual({ pageId: 'task-view', urlQuery: { _id: 'T-1' } });
+});
+
+test('SendNotification resolves pageId links directly when notificationLandingPage is unset', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { serverUrl: 'https://myapp.com', email: {} },
+  });
+  const routineContext = createRoutineContext();
+
+  const data = {
+    contact,
+    links: {
+      button: { pageId: 'task-view', urlQuery: { _id: 'T-1' } },
+      plain: { pageId: 'home' },
+      external: 'https://other.example/page',
+    },
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://myapp.com/task-view?_id=T-1');
+  expect(renderArgs.links.plain).toBe('https://myapp.com/home');
+  expect(renderArgs.links.external).toBe('https://other.example/page');
+
+  // Stored record still keeps the original link objects
   const record = mockInsertNotification.mock.calls[0][0].notification;
   expect(record.data.links.button).toEqual({ pageId: 'task-view', urlQuery: { _id: 'T-1' } });
 });
@@ -345,7 +376,7 @@ test('SendNotification falls back to VERCEL_URL when app.serverUrl is unset', as
 
   expect(res.status).toBe('continue');
   const renderArgs = mockRenderEmail.mock.calls[0][0];
-  expect(renderArgs.links.button).toContain('https://my-app.vercel.app/lowdefy/notification?');
+  expect(renderArgs.links.button).toBe('https://my-app.vercel.app/home');
 });
 
 test('SendNotification errors when links are present and no server URL is available', async () => {
