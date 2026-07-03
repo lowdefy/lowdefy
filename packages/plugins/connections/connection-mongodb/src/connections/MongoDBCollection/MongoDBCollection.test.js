@@ -32,6 +32,13 @@ test('All requests are present', () => {
   expect(MongoDBCollection.requests.MongoDBUpdateOne).toBeDefined();
 });
 
+test('All notificationAdapter functions are present', () => {
+  expect(MongoDBCollection.notificationAdapter.getNotification).toBeDefined();
+  expect(MongoDBCollection.notificationAdapter.insertNotification).toBeDefined();
+  expect(MongoDBCollection.notificationAdapter.markNotificationRead).toBeDefined();
+  expect(MongoDBCollection.notificationAdapter.updateNotificationSendResult).toBeDefined();
+});
+
 test('valid connection schema', () => {
   const connection = {
     databaseUri: 'databaseUri',

@@ -24,6 +24,10 @@ import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
+import getNotification from './notificationAdapter/getNotification.js';
+import insertNotification from './notificationAdapter/insertNotification.js';
+import markNotificationRead from './notificationAdapter/markNotificationRead.js';
+import updateNotificationSendResult from './notificationAdapter/updateNotificationSendResult.js';
 import schema from './schema.js';
 
 export default {
@@ -39,5 +43,11 @@ export default {
     MongoDBInsertOne,
     MongoDBUpdateMany,
     MongoDBUpdateOne,
+  },
+  notificationAdapter: {
+    getNotification,
+    insertNotification,
+    markNotificationRead,
+    updateNotificationSendResult,
   },
 };
