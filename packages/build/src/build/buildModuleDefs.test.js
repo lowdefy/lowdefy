@@ -31,6 +31,7 @@ beforeAll(async () => {
 });
 
 import testContext from '../test-utils/testContext.js';
+import expectTerminates from '../test-utils/expectTerminates.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -637,19 +638,12 @@ pages: []
 describe('demand-driven entry-config resolution', () => {
   // Fails fast with a clear message if a cycle/ordering regression deadlocks the
   // build instead of settling (resolved, or settled-with-collected-error).
-  async function buildWithTimeout(context, ms = 4000) {
-    let timer;
-    const timeout = new Promise((_, reject) => {
-      timer = setTimeout(
-        () => reject(new Error('build did not terminate — suspected cycle-detection regression')),
-        ms
-      );
-    });
-    try {
-      return await Promise.race([buildModuleDefs({ context }), timeout]);
-    } finally {
-      clearTimeout(timer);
-    }
+  function buildWithTimeout(context, ms = 4000) {
+    return expectTerminates(
+      buildModuleDefs({ context }),
+      ms,
+      'build did not terminate — suspected cycle-detection regression'
+    );
   }
 
   const mockPaths = (ids) =>

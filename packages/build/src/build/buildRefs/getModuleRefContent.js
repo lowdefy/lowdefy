@@ -81,16 +81,24 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, c
       menu: manifest.menus,
     }[exportType] ?? [];
 
-  let content;
-  if (exportType === 'component') {
-    content = manifestArray.find((item) => item.id === exportName)?.component;
-  } else if (exportType === 'menu') {
-    content = manifestArray.find((item) => item.id === exportName)?.links;
+  const entry = manifestArray.find((item) => item.id === exportName);
+
+  if (!entry) {
+    const availableIds = manifestArray.map((item) => item.id);
+    const available =
+      availableIds.length > 0
+        ? ` Available ${exportType}s: ${availableIds.join(', ')}.`
+        : ` The module defines no ${exportType}s.`;
+    throw new ConfigError(`Module "${entryId}" has no ${exportType} "${exportName}".${available}`, {
+      configKey,
+    });
   }
+
+  const content = exportType === 'component' ? entry.component : entry.links;
 
   if (!content) {
     throw new ConfigError(
-      `Module "${entryId}" does not export ${exportType} "${exportName}".`,
+      `The ${exportType} "${exportName}" in module "${entryId}" is empty.`,
       { configKey }
     );
   }

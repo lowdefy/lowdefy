@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { get, serializer, type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
@@ -24,7 +24,7 @@ import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
-import { scopeMenuItemIds } from '../resolveModuleOperators.js';
+import { scopeMenuItemIds } from './scopeMenuItemIds.js';
 import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';
@@ -721,104 +721,105 @@ async function prepareRef(node, ctx) {
   return refDef;
 }
 
+// Steps 8–12, module flavor: content lookup, cross-module cycle key, module
+// child context, consumer-var forwarding into file-ref bodies, walk under the
+// module context, menu item scoping. Returns the walked content; loadAndWalkRef
+// applies the shared tail (steps 13–16). Replayed deferred sentinels route here
+// too — `fromFile` carries their original provenance.
+async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
+  // 8. Load content
+  const result = await getModuleRefContent({
+    context: ctx.buildContext,
+    refDef,
+    referencedFrom: fromFile,
+    walkCtx: ctx,
+    configKey,
+  });
+  let content = cloneForResolve(result.content);
+  const resolvedEntryId = result.entryId;
+  const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
+
+  // 9. Circular detection for cross-module component/menu refs.
+  // File-based cycle detection (prepareRef step 7) misses these because each
+  // module has a different file path. Use a synthetic key with the resolved
+  // concrete entry ID: "module:<entryId>/<type>:<name>".
+  const exportType = refDef.component ? 'component' : 'menu';
+  const exportName = refDef.component ?? refDef.menu;
+  const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
+  if (ctx.refChain.has(cycleKey)) {
+    const chainDisplay = [...ctx.refChain, cycleKey].join('\n  -> ');
+    throw new ConfigError(
+      `Circular module reference detected. Module "${resolvedEntryId}" ${exportType} "${exportName}" ` +
+        `references itself through:\n  -> ${chainDisplay}`,
+      { filePath: fromFile }
+    );
+  }
+
+  // 10. Create module child context for the ref
+  const deferredFrom = content['~deferredFrom'];
+  const childCtx = ctx.forRef({
+    refId: refDef.id,
+    vars: refDef.vars,
+    filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
+    moduleRoot: moduleEntry.moduleRoot,
+    packageRoot: moduleEntry.packageRoot,
+    moduleDependencies: moduleEntry.moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys: [cycleKey],
+  });
+
+  // When component/menu content is a file _ref, the inner ref would create
+  // a fresh var scope and lose the consumer's vars. Inject them into the clone.
+  if (type.isObject(content) && content._ref) {
+    if (type.isObject(content._ref)) {
+      content._ref.vars = { ...(content._ref.vars ?? {}), ...refDef.vars };
+    } else if (type.isString(content._ref) && Object.keys(refDef.vars).length > 0) {
+      content._ref = { path: content._ref, vars: refDef.vars };
+    }
+  }
+
+  // 11. Walk the content
+  content = await resolve(content, childCtx);
+
+  // 12. Scope menu item IDs (menu refs only)
+  if (refDef.menu) {
+    scopeMenuItemIds(content, moduleEntry.id);
+  }
+
+  return content;
+}
+
 // Steps 8–16: load content, build child context, walk, transform, tag.
-// `referencedFrom` overrides ctx.currentFile for provenance (used when replaying
-// a deferred sentinel whose origin file differs from the stage-2 ctx.currentFile).
+// Module refs take steps 8–12 in resolveModuleExportRef; both paths share the
+// tail (steps 13–16). `referencedFrom` overrides ctx.currentFile for provenance
+// (used when replaying a deferred sentinel whose origin file differs from the
+// stage-2 ctx.currentFile).
 async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
   const fromFile = referencedFrom ?? ctx.currentFile;
 
   // Errors here are collected (not thrown) so the walker can continue
   // processing sibling refs and report multiple errors at once.
   try {
-    // 8. Load content
     let content;
-    let resolvedEntryId = null;
-
     if (refDef.module) {
-      const result = await getModuleRefContent({
-        context: ctx.buildContext,
-        refDef,
-        referencedFrom: fromFile,
-        walkCtx: ctx,
-        configKey,
-      });
-      content = cloneForResolve(result.content);
-      resolvedEntryId = result.entryId;
+      content = await resolveModuleExportRef(refDef, ctx, { configKey, fromFile });
     } else {
+      // 8. Load content
       content = await getRefContent({
         context: ctx.buildContext,
         refDef,
         referencedFrom: fromFile,
       });
-    }
 
-    // 9. Circular detection for cross-module component/menu refs.
-    // File-based cycle detection (step 7) misses these because each module
-    // has a different file path. Use a synthetic key with the resolved
-    // concrete entry ID: "module:<entryId>/<type>:<name>".
-    if (resolvedEntryId && (refDef.component || refDef.menu)) {
-      const exportType = refDef.component ? 'component' : 'menu';
-      const exportName = refDef.component ?? refDef.menu;
-      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
-      if (ctx.refChain.has(cycleKey)) {
-        const chainDisplay = [...ctx.refChain, cycleKey].join('\n  -> ');
-        throw new ConfigError(
-          `Circular module reference detected. Module "${resolvedEntryId}" ${exportType} "${exportName}" ` +
-            `references itself through:\n  -> ${chainDisplay}`,
-          { filePath: fromFile }
-        );
-      }
-    }
-
-    // 10. Create child context for the ref
-    let childCtx;
-    if (refDef.module && (refDef.component || refDef.menu)) {
-      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
-      const deferredFrom = content['~deferredFrom'];
-      const exportType = refDef.component ? 'component' : 'menu';
-      const exportName = refDef.component ?? refDef.menu;
-      const cycleKey = `module:${resolvedEntryId}/${exportType}:${exportName}`;
-      childCtx = ctx.forRef({
-        refId: refDef.id,
-        vars: refDef.vars,
-        filePath: deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml'),
-        moduleRoot: moduleEntry.moduleRoot,
-        packageRoot: moduleEntry.packageRoot,
-        moduleDependencies: moduleEntry.moduleDependencies,
-        moduleEntry,
-        extraRefChainKeys: [cycleKey],
-      });
-
-      // Clone so each consumer gets an independent copy — getModuleRefContent
-      // returns a shared reference, and resolve() mutates in place.
-      // deferredFrom was read above before the clone (serializer.copy strips
-      // non-enumerable properties).
-      content = serializer.copy(content);
-
-      // When component/menu content is a file _ref, the inner ref would create
-      // a fresh var scope and lose the consumer's vars. Inject them into the clone.
-      if ((refDef.component || refDef.menu) && type.isObject(content) && content._ref) {
-        if (type.isObject(content._ref)) {
-          content._ref.vars = { ...(content._ref.vars ?? {}), ...refDef.vars };
-        } else if (type.isString(content._ref) && Object.keys(refDef.vars).length > 0) {
-          content._ref = { path: content._ref, vars: refDef.vars };
-        }
-      }
-    } else {
-      childCtx = ctx.forRef({
+      // 10. Create child context for the ref
+      const childCtx = ctx.forRef({
         refId: refDef.id,
         vars: refDef.vars,
         filePath: refDef.path,
       });
-    }
 
-    // 11. Walk the content
-    content = await resolve(content, childCtx);
-
-    // 12. Scope menu item IDs (module menu refs only)
-    if (refDef.module && refDef.menu) {
-      const moduleEntry = ctx.buildContext.modules[resolvedEntryId];
-      scopeMenuItemIds(content, moduleEntry.id);
+      // 11. Walk the content
+      content = await resolve(content, childCtx);
     }
 
     // 13. Run transformer
