@@ -15,7 +15,7 @@
 */
 
 import { LowdefyInternalError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 // The deferred-content record registry. Every deferred region of module config
 // becomes a record { kind, body, env, slot } in context.deferred; the config
@@ -86,4 +86,44 @@ function getPlaceholderId(node) {
   return type.isString(id) ? id : undefined;
 }
 
-export { DEFERRED_KEY, makeRecordId, createRecord, getRecord, makePlaceholder, getPlaceholderId };
+// Serialize the registry's data for the deferredRecords.json build artifact.
+// Runtime state (promise, waitingOn, done, value) is stripped — JIT re-derives
+// it empty. Must go through the marker-preserving serializer: record bodies
+// carry non-enumerable ~r/~l/~k markers that plain JSON.stringify would drop,
+// breaking error line-number pairing in JIT.
+function serializeRegistry(context) {
+  const data = {};
+  for (const [id, record] of Object.entries(context.deferred ?? {})) {
+    data[id] = { kind: record.kind, body: record.body, env: record.env, slot: record.slot };
+  }
+  return serializer.serializeToString(data);
+}
+
+// Hydrate the registry from deserialized deferredRecords.json data (the caller
+// deserializes with the marker-restoring reviver, e.g. serializer.deserialize).
+function hydrateDeferredRecords(context, data) {
+  context.deferred = {};
+  for (const [id, record] of Object.entries(data ?? {})) {
+    context.deferred[id] = {
+      kind: record.kind,
+      body: record.body,
+      env: record.env,
+      slot: record.slot ?? null,
+      promise: null,
+      waitingOn: new Set(),
+      done: false,
+      value: undefined,
+    };
+  }
+}
+
+export {
+  DEFERRED_KEY,
+  makeRecordId,
+  createRecord,
+  getRecord,
+  makePlaceholder,
+  getPlaceholderId,
+  serializeRegistry,
+  hydrateDeferredRecords,
+};

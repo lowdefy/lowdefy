@@ -38,6 +38,7 @@ import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
@@ -206,6 +207,9 @@ async function shallowBuild(options) {
       'modules.json',
       serializer.serializeToString(context.modules ?? {})
     );
+    // Deferred-record bodies referenced by placeholders in modules.json.
+    // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
+    await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
     await writePluginImports({ components, context });
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against

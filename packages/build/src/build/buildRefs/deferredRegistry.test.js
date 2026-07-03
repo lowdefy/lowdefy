@@ -199,3 +199,59 @@ describe('walker record:<kind> mode', () => {
     );
   });
 });
+
+describe('registry serialization round-trip', () => {
+  test('serializeRegistry strips runtime state; hydrate rebuilds it empty', async () => {
+    const { serializeRegistry, hydrateDeferredRecords } = await import('./deferredRegistry.js');
+    const context = createBuildContext();
+    const record = createRecord(context, {
+      id: 'team-users:components.0.component',
+      kind: 'component',
+      body: { type: 'Box' },
+      env: { file: '/m/module.lowdefy.yaml', entryId: 'team-users', refId: 'r1' },
+    });
+    record.done = true;
+    record.value = 'runtime-state';
+    record.promise = Promise.resolve();
+
+    const str = serializeRegistry(context);
+    const hydrated = createBuildContext();
+    hydrateDeferredRecords(hydrated, serializer.deserializeFromString(str));
+
+    const back = getRecord(hydrated, 'team-users:components.0.component');
+    expect(back.kind).toBe('component');
+    expect(back.body).toEqual({ type: 'Box' });
+    expect(back.env).toEqual({ file: '/m/module.lowdefy.yaml', entryId: 'team-users', refId: 'r1' });
+    expect(back.slot).toBeNull();
+    expect(back.done).toBe(false);
+    expect(back.value).toBeUndefined();
+    expect(back.promise).toBeNull();
+    expect(back.waitingOn).toEqual(new Set());
+  });
+
+  test('record-body ~l/~r markers survive the artifact round-trip', async () => {
+    const { serializeRegistry, hydrateDeferredRecords } = await import('./deferredRegistry.js');
+    const setNonEnumerableProperty = (await import('../../utils/setNonEnumerableProperty.js'))
+      .default;
+    const context = createBuildContext();
+    const body = { type: 'Box', properties: { content: 'hi' } };
+    setNonEnumerableProperty(body, '~l', 12);
+    setNonEnumerableProperty(body, '~r', 'ref_7');
+    createRecord(context, {
+      id: 'team-users:components.0.component',
+      kind: 'component',
+      body,
+      env: { file: '/m/module.lowdefy.yaml' },
+    });
+
+    const str = serializeRegistry(context);
+    // Plain JSON parse would keep markers enumerable or drop them; the reviver
+    // re-attaches them non-enumerable — assert both value and enumerability.
+    const hydrated = createBuildContext();
+    hydrateDeferredRecords(hydrated, serializer.deserializeFromString(str));
+    const back = getRecord(hydrated, 'team-users:components.0.component');
+    expect(back.body['~l']).toBe(12);
+    expect(back.body['~r']).toBe('ref_7');
+    expect(Object.keys(back.body)).toEqual(['type', 'properties']);
+  });
+});
