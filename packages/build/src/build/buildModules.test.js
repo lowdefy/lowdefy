@@ -480,6 +480,36 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   );
 });
 
+test('buildModules does not treat multi-key objects containing _secret as secret references', () => {
+  // Pins the single-non-tilde-key operator shape (matches getRuntimeOperatorKey):
+  // { _secret: 'X', extra: 1 } is not operator shape, so it escapes validation.
+  const moduleEntry = makeModuleEntry({
+    id: 'team-users',
+    manifest: {
+      secrets: [],
+      pages: [
+        {
+          id: 'users-list',
+          type: 'PageHeaderMenu',
+          blocks: [
+            {
+              id: 'info',
+              type: 'Paragraph',
+              properties: { content: { _secret: 'UNDECLARED', extra: 1 } },
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'team-users' }],
+  };
+
+  expect(() => buildModules({ components, context })).not.toThrow();
+});
+
 test('buildModules throws ConfigError when _secret references undeclared secret in connection', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
