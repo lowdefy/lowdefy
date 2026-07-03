@@ -48,18 +48,24 @@ auth:
         secure: false
 
   providers:
-    - id: google
-      type: Google
+    - id: auth0
+      type: GenericOAuth
       properties:
         clientId:
-          _secret: GOOGLE_CLIENT_ID
+          _secret: AUTH0_CLIENT_ID
         clientSecret:
-          _secret: GOOGLE_CLIENT_SECRET
+          _secret: AUTH0_CLIENT_SECRET
+        discoveryUrl:
+          _secret: AUTH0_DISCOVERY_URL
+        scopes:
+          - openid
+          - profile
+          - email
 
   account:
     accountLinking:
       enabled: true
-      trustedProviders: [google, emailAndPassword]
+      trustedProviders: [auth0, emailAndPassword]
 
   session:
     expiresIn: 604800

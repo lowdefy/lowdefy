@@ -93,18 +93,18 @@ blocks:
           type: Link
           params:
             pageId: check-email
-  - id: google_button
+  - id: auth0_button
     type: Button
     properties:
-      title: Continue with Google
+      title: Continue with Auth0
       type: default
       block: true
     events:
       onClick:
-        - id: google_login
+        - id: auth0_login
           type: Login
           params:
-            providerId: google
+            providerId: auth0
   - id: signup_link
     type: Button
     properties:
