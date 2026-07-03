@@ -45,6 +45,18 @@ const Client = ({
     () => serializer.deserialize(rawConfig),
     [rawConfig.pageConfig, rawConfig.rootConfig]
   );
+  // Dynamic pages rebuild their engine context per fetch — remount the page
+  // tree with the rebuilt context instead of reconciling mounted blocks
+  // against it, which React can silently drop. Static pages keep their
+  // context and tree across navigations, so their key stays stable.
+  const buildRef = React.useRef({ config: null, build: 0 });
+  if (buildRef.current.config !== config) {
+    buildRef.current = { config, build: buildRef.current.build + 1 };
+  }
+  const contextKey =
+    config.pageConfig.dynamic === true
+      ? `${config.pageConfig.id}:${buildRef.current.build}`
+      : config.pageConfig.id;
   initLowdefyContext({
     auth,
     Components,
@@ -75,7 +87,7 @@ const Client = ({
         }}
       />
       <Context
-        key={config.pageConfig.id}
+        key={contextKey}
         config={config.pageConfig}
         jsMap={jsMap}
         lowdefy={lowdefy}
