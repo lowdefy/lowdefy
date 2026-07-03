@@ -94,7 +94,19 @@ api:
                           __args: 0.value
 ```
 
-Server operators (`_payload`, `_user`, `_step`, `_secret`) inside the returned config are evaluated during `:return`. Client operators (`_state`, `_request`, `_if`, ...) pass through untouched and evaluate on the client as usual — so dynamic blocks participate in page state exactly like static blocks.
+All operators registered on the server — including shared operators like `_state`, `_if` and `_string` — are evaluated during `:return` (`_state` reads the routine's own `:set_state` state). To defer an operator to the client instead, prefix it with one extra underscore, the same convention `_function` bodies use for `__args`:
+
+```yaml
+- :return:
+    blocks:
+      - id: greeting
+        type: Html
+        properties:
+          html:
+            __state: name_input # unescaped to `_state` — evaluates on the client
+```
+
+The server strips one leading underscore from `__`-prefixed keys in the returned config, so `__state` reaches the client as `_state` and binds to page state like any static block. Client-only operators (`_request`, `_global`, ...) have no server implementation and need no escaping, but the `__` form works for them too and is the consistent style.
 
 > **Never place `_secret` in returned block config.** It evaluates during `:return` and the resulting value ships to the browser.
 

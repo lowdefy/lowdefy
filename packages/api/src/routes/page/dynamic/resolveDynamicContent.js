@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
+import unescapeOperators from './unescapeOperators.js';
 import validateFragment from './validateFragment.js';
 
 const MAX_DYNAMIC_DEPTH = 5;
@@ -88,8 +89,10 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         { received: response, configKey: block['~k'] }
       );
     }
+    // Unescape before building so operator counting validates the real
+    // (client-evaluated) operators against the bundle.
     const { blocks, callApiActionRefs, requestActionRefs, warnings } = shared.buildDynamicBlocks({
-      blocks: response.blocks,
+      blocks: unescapeOperators(response.blocks),
       pageId: shared.pageId,
       dynamicBlockId: block.blockId,
       idPrefix: block.id,

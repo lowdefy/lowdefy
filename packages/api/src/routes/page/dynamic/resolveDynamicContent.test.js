@@ -34,7 +34,7 @@ const types = {
   actions: { Request: {} },
   blocks: { Box: {}, Dynamic: {}, Html: {} },
   operators: {
-    client: { _not: {}, _state: {}, _type: {} },
+    client: { _args: {}, _not: {}, _state: {}, _type: {} },
     server: {},
   },
 };
@@ -158,6 +158,67 @@ test('resolveDynamicContent passes pageId, blockId and urlQuery in the payload',
   expect(generated.properties.html).toBe('hello');
   expect(generated.properties.pageId).toBe('page1');
   expect(generated.properties.blockId).toBe('section_1');
+});
+
+test('resolveDynamicContent unescapes double-underscore operators for client evaluation', async () => {
+  const dynamicBlock = makeDynamicBlock();
+  const pageConfig = makePageConfig(dynamicBlock);
+  const context = createTestContext({
+    files: baseFiles({
+      resolve_section: {
+        routine: {
+          ':return': {
+            blocks: [
+              {
+                id: 'generated',
+                type: 'Html',
+                properties: {
+                  // _state is a shared operator — a plain `_state` would
+                  // evaluate server-side against empty routine state. The
+                  // extra underscore defers it to the client.
+                  html: { __state: 'message' },
+                  nested: { deep: { ___args: 'stays double' } },
+                },
+              },
+            ],
+          },
+        },
+      },
+    }),
+  });
+  await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
+  const generated = dynamicBlock.slots.content.blocks[0];
+  expect(generated.properties.html).toEqual({ _state: 'message' });
+  // Each unescape strips exactly one underscore level.
+  expect(generated.properties.nested.deep).toEqual({ __args: 'stays double' });
+});
+
+test('resolveDynamicContent evaluates plain _state server-side against routine state', async () => {
+  const dynamicBlock = makeDynamicBlock();
+  const pageConfig = makePageConfig(dynamicBlock);
+  const context = createTestContext({
+    files: baseFiles({
+      resolve_section: {
+        routine: [
+          { ':set_state': { greeting: 'from routine state' } },
+          {
+            ':return': {
+              blocks: [
+                {
+                  id: 'generated',
+                  type: 'Html',
+                  properties: { html: { _state: 'greeting' } },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    }),
+  });
+  await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
+  const generated = dynamicBlock.slots.content.blocks[0];
+  expect(generated.properties.html).toBe('from routine state');
 });
 
 test('resolveDynamicContent renders fallback when the endpoint does not exist', async () => {
