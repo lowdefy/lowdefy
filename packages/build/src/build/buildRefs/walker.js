@@ -24,7 +24,7 @@ import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
 import getKey from './getKey.js';
-import { scopeMenuItemIds } from '../resolveModuleOperators.js';
+import { scopeMenuItemIds } from './scopeMenuItemIds.js';
 import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 import collectExceptions from '../../utils/collectExceptions.js';

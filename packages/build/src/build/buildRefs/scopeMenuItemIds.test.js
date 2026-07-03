@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { scopeMenuItemIds } from './resolveModuleOperators.js';
+import { scopeMenuItemIds } from './scopeMenuItemIds.js';
 
 describe('scopeMenuItemIds', () => {
   test('prefixes all id fields in a flat links array', () => {
