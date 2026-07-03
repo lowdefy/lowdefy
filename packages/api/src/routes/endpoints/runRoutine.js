@@ -20,6 +20,7 @@ import handleAgentCall from './handleAgentCall.js';
 import handleControl from './control/handleControl.js';
 import handleEndpointCall from './handleEndpointCall.js';
 import handleRequest from './handleRequest.js';
+import handleSendNotification from './handleSendNotification.js';
 import handleValidateSchema from './handleValidateSchema.js';
 
 async function runRoutine(context, routineContext, { routine }) {
@@ -42,6 +43,11 @@ async function runRoutine(context, routineContext, { routine }) {
       }
       if (routine.id?.startsWith?.('agent:')) {
         return await handleAgentCall(context, routineContext, {
+          step: routine,
+        });
+      }
+      if (routine.id?.startsWith?.('notification:')) {
+        return await handleSendNotification(context, routineContext, {
           step: routine,
         });
       }
