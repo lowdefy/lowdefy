@@ -20,7 +20,7 @@ import { serializer, type } from '@lowdefy/helpers';
 // Circular import by design: the walker dispatches placeholders into
 // resolveDeferred, and resolveDeferred walks record bodies. Both modules only
 // reference each other's bindings at call time, after evaluation completes.
-import { resolve, WalkContext } from './walker.js';
+import { loadAndWalkRef, resolve, WalkContext } from './walker.js';
 
 // The deferred-content record registry. Every deferred region of module config
 // becomes a record { kind, body, env, slot } in context.deferred; the config
@@ -183,16 +183,26 @@ async function resolveRecordBody(ctx, id, record) {
     path: '',
     currentFile: env.file ?? null,
     refChain: new Set(env.file ? [env.file] : []),
-    entryResolveChain: ctx.entryResolveChain,
     operators: ctx.operators,
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
     activeRecord: id,
   });
-  // Clone before walking — the raw body must stay pristine in the registry
-  // (deferredRecords.json serializes it, and demand order must not change it).
-  const value = await resolve(cloneRecordBody(record.body), recordCtx);
+  let value;
+  if (record.kind === 'entryRef') {
+    // The body is a prepared refDef — replay it through loadAndWalkRef with
+    // the original provenance (env.file is where the ref was written).
+    value = await loadAndWalkRef(record.body, recordCtx, {
+      configKey: env.configKey ?? undefined,
+      referencedFrom: env.file ?? undefined,
+    });
+  } else {
+    // varDefault and connRemap bodies are raw config subtrees. Clone before
+    // walking — the raw body must stay pristine in the registry
+    // (deferredRecords.json serializes it, and demand order must not change it).
+    value = await resolve(cloneRecordBody(record.body), recordCtx);
+  }
   record.value = value;
   record.done = true;
   return value;

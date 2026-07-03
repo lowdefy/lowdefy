@@ -851,19 +851,11 @@ pages: []
     expect(companies.resolvedVarCache.collection_name).toBe('companies_main');
   };
 
-  test.each(['companies-first'])(
+  // Both orders must resolve identically — value-granular record demand makes
+  // entry order immaterial (the WIP's case-3 false cycle cannot recur).
+  test.each(['companies-first', 'workflows-first'])(
     'mutual acyclic embedding settles and resolves both entries (order=%s)',
     mutualEmbedCase
-  );
-
-  // Living reproducer of the order-dependent false cycle: the read path's case 3
-  // conflates "value is still deferred" with "value is part of a cycle", so this
-  // order resolves sidebar_slots to null and collects a false cycle error. The
-  // deferred-records rearchitecture fixes this at value granularity; when it
-  // does, this test "passes unexpectedly" and the .failing marker must be removed.
-  test.failing(
-    'mutual acyclic embedding settles and resolves both entries (order=workflows-first)',
-    () => mutualEmbedCase('workflows-first')
   );
 
   // Test 4 — self-embed. An entry embeds a component from ITS OWN module that
@@ -980,14 +972,17 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          // The wait-graph names the actual value cycle, record by record.
+          message: expect.stringMatching(
+            /Circular deferred value dependency: .*consumerVars\.dep_[xy] → .*consumerVars\.dep_[xy] → .*consumerVars\.dep_[xy]/
+          ),
         }),
       ])
     );
     const cycleError = context.errors.find((e) =>
-      /Circular module entry vars:/.test(e.message)
+      /Circular deferred value dependency:/.test(e.message)
     );
-    expect(cycleError.message).toContain('Var "dep_x"');
+    expect(cycleError.message).toContain('dep_x');
   });
 
   // Test 6 — whole-blob ref. An entry whose ENTIRE vars object is one cross-module
@@ -1096,7 +1091,9 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          message: expect.stringMatching(
+            /Circular deferred value dependency: [ab]:consumerVars → [ab]:consumerVars → [ab]:consumerVars/
+          ),
         }),
       ])
     );
@@ -1394,7 +1391,7 @@ modules:
     mockFetchModules.mockResolvedValue(mockPaths(['a', 'b']));
 
     await expect(buildWithTimeout(context)).rejects.toThrow(
-      /Circular module entry connections: a → b → a/
+      /Circular deferred value dependency: [ab]:connections\.c → [ab]:connections\.c → [ab]:connections\.c/
     );
   });
 
@@ -1455,15 +1452,10 @@ pages: []
     expect(slot.properties.vy).toBe('valy');
     expect(context.modules['b'].resolvedVarCache.x).toBe('valx');
     expect(context.modules['b'].resolvedVarCache.y).toBe('valy');
-    // Single-finalize: B reaches the terminal 'resolved' state exactly once and
-    // holds a single coalesced finalizePromise. NOTE: a direct spy on
-    // validateRequiredVars is impractical here — registerModules.js exports both
-    // validateRequiredVars and the heavy resolveLocalManifest/resolveFullManifest,
-    // and ESM whole-module mocking with self-passthrough recurses (OOM). The
-    // strongest clean signals available are asserted instead: B is terminally
-    // resolved, both racing reads coalesced onto correct values with no duplicate
-    // resolution artifacts, and no false cycle was collected.
-    expect(context.modules['b'].entryConfigState).toBe('resolved');
+    // Both racing reads coalesced onto correct values with no duplicate
+    // resolution artifacts and no false cycle collected — there is no entry
+    // state machine anymore; per-record memos carry coalescing.
+    expect(context.errors).toEqual([]);
   });
 
   // Test 15 — default that reads another var, mid-flight. Acyclic: b.x is absent
@@ -1589,7 +1581,11 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          // The chain crosses the default seam: entry values and the manifest
+          // default appear as distinct records in the named cycle.
+          message: expect.stringMatching(
+            /Circular deferred value dependency: .*(consumerVars\.dep_[xy]|vars\.x\.default).*→.*→.*/
+          ),
         }),
       ])
     );

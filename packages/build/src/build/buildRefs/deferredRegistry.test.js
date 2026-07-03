@@ -414,7 +414,6 @@ describe('varDefault records and the read path', () => {
       consumerVars,
       varDefs,
       resolvedVarCache: {},
-      entryConfigState: 'resolved',
       moduleDependencies: {},
     };
   }

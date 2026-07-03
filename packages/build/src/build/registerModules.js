@@ -298,7 +298,6 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     dependencies,
     moduleDependencies: entry.dependencies ?? {},
     refDef,
-    entryConfigState: 'registered',
   };
 }
 
@@ -328,7 +327,6 @@ async function resolveFullManifest({ entryId, context }) {
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(refDef.path ? [refDef.path] : []),
-    entryResolveChain: new Set([moduleEntry.id]),
     operators,
     env: process.env,
     lowdefyApp: context.appMeta,

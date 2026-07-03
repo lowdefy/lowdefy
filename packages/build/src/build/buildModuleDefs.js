@@ -16,7 +16,7 @@
 
 import operators from '@lowdefy/operators-js/operators/build';
 
-import { resolve, WalkContext, cloneForResolve } from './buildRefs/walker.js';
+import { resolve, WalkContext } from './buildRefs/walker.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
@@ -70,7 +70,7 @@ async function parseLowdefyYaml({ context }) {
   return config ?? {};
 }
 
-function makeAppLevelCtx({ context, deferModuleRefs = false, entryResolveChain }) {
+function makeAppLevelCtx({ context, deferModuleRefs = false, entryId, entrySection }) {
   const lowdefyYamlRefDef = context.lowdefyYamlRefDef;
   return new WalkContext({
     buildContext: context,
@@ -85,63 +85,58 @@ function makeAppLevelCtx({ context, deferModuleRefs = false, entryResolveChain }
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     deferModuleRefs,
-    ...(entryResolveChain !== undefined ? { entryResolveChain } : {}),
+    entryId,
+    entrySection,
   });
 }
 
+// Stage 1 — prepare: resolve entry vars/connections in the enclosing (app)
+// scope; cross-module refs become entryRef records with the prepared refDef as
+// body (their dynamic parts already resolved), leaving placeholders in the
+// blobs. Order-free: nothing is consumed here.
 async function prepareEntryConfig({ moduleEntry, context }) {
-  if (moduleEntry.entryConfigState !== 'registered') return;
-
   const varsResult = await resolve(
     moduleEntry.consumerVars,
-    makeAppLevelCtx({ context, deferModuleRefs: true })
+    makeAppLevelCtx({
+      context,
+      deferModuleRefs: true,
+      entryId: moduleEntry.id,
+      entrySection: 'consumerVars',
+    })
   );
   moduleEntry.consumerVars = varsResult ?? {};
 
   const connectionsResult = await resolve(
     moduleEntry.connections,
-    makeAppLevelCtx({ context, deferModuleRefs: true })
+    makeAppLevelCtx({
+      context,
+      deferModuleRefs: true,
+      entryId: moduleEntry.id,
+      entrySection: 'connections',
+    })
   );
   moduleEntry.connections = connectionsResult ?? {};
-
-  moduleEntry.entryConfigState = 'structural';
 }
 
-async function finalizeEntryConfig({ moduleEntry, context, callerChain }) {
-  moduleEntry.entryConfigState = 'resolving';
+// Final sweep: re-walk each entry's blobs with deferral off. Placeholders
+// dispatch into resolveDeferred (value-granular demand, wait-graph cycle
+// detection — order immaterial, memo skips already-demanded records), and the
+// _module.connectionId object form (deferred during prepare) resolves against
+// now-prepared targets. In-place walk mutation is the write-back, so resolved
+// values land in consumerVars/connections with consumption provenance.
+async function sweepEntryConfig({ moduleEntry, context }) {
+  const varsResult = await resolve(moduleEntry.consumerVars, makeAppLevelCtx({ context }));
+  moduleEntry.consumerVars = varsResult ?? {};
 
-  const entryResolveChain = new Set([...(callerChain ?? []), moduleEntry.id]);
+  const connectionsResult = await resolve(moduleEntry.connections, makeAppLevelCtx({ context }));
+  moduleEntry.connections = connectionsResult ?? {};
 
-  const resolvedVars = await resolve(
-    cloneForResolve(moduleEntry.consumerVars),
-    makeAppLevelCtx({ context, deferModuleRefs: false, entryResolveChain })
+  validateRequiredVars(
+    moduleEntry.varDefs,
+    moduleEntry.consumerVars,
+    moduleEntry.id,
+    moduleEntry.source
   );
-  const resolvedConnections = await resolve(
-    cloneForResolve(moduleEntry.connections),
-    makeAppLevelCtx({ context, deferModuleRefs: false, entryResolveChain })
-  );
-
-  validateRequiredVars(moduleEntry.varDefs, resolvedVars, moduleEntry.id, moduleEntry.source);
-
-  moduleEntry.consumerVars = resolvedVars ?? {};
-  moduleEntry.connections = resolvedConnections ?? {};
-
-  moduleEntry.entryConfigState = 'resolved';
-}
-
-function ensureEntryConfigResolved(moduleEntry, context, callerChain) {
-  if (moduleEntry.entryConfigState === 'resolved') return Promise.resolve();
-  if (moduleEntry.finalizePromise) return moduleEntry.finalizePromise;
-  // Assign the promise SYNCHRONOUSLY so concurrent sibling demands coalesce onto
-  // one finalize. Sweep 2.5a guarantees every entry is already 'structural' here,
-  // so prepare is a no-op and never introduces an await before the assignment.
-  moduleEntry.finalizePromise = (async () => {
-    if (moduleEntry.entryConfigState === 'registered') {
-      await prepareEntryConfig({ moduleEntry, context });
-    }
-    await finalizeEntryConfig({ moduleEntry, context, callerChain });
-  })();
-  return moduleEntry.finalizePromise;
 }
 
 async function buildModuleDefs({ context }) {
@@ -167,17 +162,15 @@ async function buildModuleDefs({ context }) {
   // Step 2: Auto-wire and validate dependency wiring
   resolveModuleDependencies({ context });
 
-  context.ensureEntryConfigResolved = (moduleEntry, callerChain) =>
-    ensureEntryConfigResolved(moduleEntry, context, callerChain);
-
   // Step 2.5a — prepare all entries. No cross-entry work; order-free.
   for (const entry of moduleEntries) {
     await prepareEntryConfig({ moduleEntry: context.modules[entry.id], context });
   }
-  // Step 2.5b — finalize all entries. Demand-driven ordering via ensure;
-  // entries finalized transitively are skipped by the memo.
+  // Step 2.5b — final sweep. Per-record demand through the wait-graph makes
+  // the order immaterial; required-var validation runs per entry after its
+  // blobs are concrete.
   for (const entry of moduleEntries) {
-    await context.ensureEntryConfigResolved(context.modules[entry.id]);
+    await sweepEntryConfig({ moduleEntry: context.modules[entry.id], context });
   }
 
   // Step 3: Full resolve — cross-module refs, preserved content
