@@ -24,7 +24,7 @@ import MountEvents from '../MountEvents.js';
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   const loggedErrorsRef = useRef(new Set());
-  lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
+  context._internal.updaters[block.id] = () => setUpdate(updates + 1);
 
   const handleError = (error) => {
     if (lowdefy._internal.handleError) {

@@ -67,7 +67,7 @@ async function jitPageHandler(c) {
     });
   }
 
-  const pageConfig = await getPageConfig(context, { pageId });
+  const pageConfig = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
   if (pageConfig === null) {
     return c.text('Page not found.', 404);
   }

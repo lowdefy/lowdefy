@@ -61,6 +61,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
@@ -187,6 +188,10 @@ async function shallowBuild(options) {
       JSON.stringify([...skeletonSourceFiles].sort())
     );
     await writeMenus({ components, context });
+    // The dev client bundle imports every installed type (addInstalledTypes),
+    // so types.json here describes that full bundle — dynamic page content
+    // resolution validates fragment types against it at page get.
+    await writeTypes({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));

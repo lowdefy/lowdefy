@@ -37,7 +37,26 @@ const Client = ({
   types,
   window,
 }) => {
-  const config = serializer.deserialize(rawConfig);
+  // Memoize on the fetched config objects, not the per-render wrapper — the
+  // engine memoizes dynamic page contexts by config object identity, so the
+  // deserialized config must be stable across re-renders and only change when
+  // a new page fetch delivers new config.
+  const config = React.useMemo(
+    () => serializer.deserialize(rawConfig),
+    [rawConfig.pageConfig, rawConfig.rootConfig]
+  );
+  // Dynamic pages rebuild their engine context per fetch — remount the page
+  // tree with the rebuilt context instead of reconciling mounted blocks
+  // against it, which React can silently drop. Static pages keep their
+  // context and tree across navigations, so their key stays stable.
+  const buildRef = React.useRef({ config: null, build: 0 });
+  if (buildRef.current.config !== config) {
+    buildRef.current = { config, build: buildRef.current.build + 1 };
+  }
+  const contextKey =
+    config.pageConfig.dynamic === true
+      ? `${config.pageConfig.id}:${buildRef.current.build}`
+      : config.pageConfig.id;
   initLowdefyContext({
     auth,
     Components,
@@ -68,7 +87,7 @@ const Client = ({
         }}
       />
       <Context
-        key={config.pageConfig.id}
+        key={contextKey}
         config={config.pageConfig}
         jsMap={jsMap}
         lowdefy={lowdefy}

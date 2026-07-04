@@ -113,6 +113,11 @@
           pageId: lowdefy-api
           properties:
             title: APIs
+        - id: dynamic-page-content
+          type: MenuLink
+          pageId: dynamic-page-content
+          properties:
+            title: Dynamic Page Content
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
