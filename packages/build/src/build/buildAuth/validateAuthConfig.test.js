@@ -224,6 +224,52 @@ test('validateAuthConfig passes with a magicLink mechanism when email is configu
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig throws on duplicate provider ids', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Duplicate auth provider id "okta".'
+  );
+});
+
+test('validateAuthConfig throws when a built-in provider type is configured twice', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'google-a', type: 'Google', properties: {} },
+        { id: 'google-b', type: 'Google', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider type "Google" is configured more than once. BetterAuth supports one configuration per built-in provider; use GenericOAuth for additional configurations.'
+  );
+});
+
+test('validateAuthConfig passes with multiple GenericOAuth providers with distinct ids', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'auth0', type: 'GenericOAuth', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
 test('validateAuthConfig passes with an OAuth provider mechanism', () => {
   const components = {
     auth: {

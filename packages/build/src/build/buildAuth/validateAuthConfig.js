@@ -110,6 +110,31 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  // Duplicate ids silently last-win in downstream maps (trustedProviders,
+  // runtime provider construction) - fail at build instead. Built-in
+  // provider types allow one configuration each in BetterAuth; GenericOAuth
+  // entries are keyed by id, so several may coexist.
+  const seenProviderIds = {};
+  const seenProviderTypes = {};
+  (auth.providers ?? []).forEach((provider) => {
+    const providerKey = provider['~k'] ?? configKey;
+    if (seenProviderIds[provider.id] === true) {
+      throw new ConfigError(`Duplicate auth provider id "${provider.id}".`, {
+        configKey: providerKey,
+      });
+    }
+    seenProviderIds[provider.id] = true;
+    if (provider.type !== 'GenericOAuth') {
+      if (seenProviderTypes[provider.type] === true) {
+        throw new ConfigError(
+          `Auth provider type "${provider.type}" is configured more than once. BetterAuth supports one configuration per built-in provider; use GenericOAuth for additional configurations.`,
+          { configKey: providerKey }
+        );
+      }
+      seenProviderTypes[provider.type] = true;
+    }
+  });
+
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
     throw new ConfigError(

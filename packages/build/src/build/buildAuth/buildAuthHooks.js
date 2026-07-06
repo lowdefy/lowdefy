@@ -24,8 +24,13 @@ import authHookPoints from './authHookPoints.js';
 // still carry their raw id and declared type.
 function buildAuthHooks({ components }) {
   const boundPoints = {};
+  const seenIds = {};
   (components.auth.hooks ?? []).forEach((hook) => {
     const configKey = hook['~k'];
+    if (seenIds[hook.id] === true) {
+      throw new ConfigError(`Duplicate auth hook id "${hook.id}".`, { configKey });
+    }
+    seenIds[hook.id] = true;
     if (!authHookPoints.includes(hook.point)) {
       throw new ConfigError(
         `Auth hook "${hook.id}" binds unknown point "${

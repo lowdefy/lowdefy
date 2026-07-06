@@ -96,6 +96,19 @@ test('buildAuthHooks throws when two hooks bind the same point', () => {
   );
 });
 
+test('buildAuthHooks throws on duplicate hook ids', () => {
+  const components = {
+    auth: {
+      hooks: [
+        { id: 'sync-user', point: 'user.create.before', endpointId: 'auth/hook' },
+        { id: 'sync-user', point: 'user.create.after', endpointId: 'auth/hook' },
+      ],
+    },
+    api: [{ id: 'auth/hook', type: 'InternalApi', routine: [] }],
+  };
+  expect(() => buildAuthHooks({ components })).toThrow('Duplicate auth hook id "sync-user".');
+});
+
 test('buildAuthHooks throws when the endpoint does not exist', () => {
   const components = {
     auth: {
