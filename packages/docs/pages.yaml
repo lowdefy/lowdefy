@@ -66,6 +66,7 @@
 - _ref: users/reference/auth-js-providers.yaml
 - _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
+- _ref: users/reference/MongoDBAuthAdapter.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 

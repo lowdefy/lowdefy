@@ -274,7 +274,7 @@ Each request gets a fresh connection context. Connections are:
 
 - **@lowdefy/build**: Consumes build output files (pages, requests, connections)
 - **@lowdefy/operators**: Uses ServerParser for operator evaluation
-- **plugin-next-auth**: Provides auth session and configuration
+- **plugin-better-auth**: Provides auth providers, API strategies and admin steps
 - **Connection plugins**: Provides request resolvers (MongoDB, HTTP, etc.)
 
 ## Error Handling
