@@ -36,9 +36,11 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
+import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
+import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -51,6 +53,7 @@ import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
+import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
@@ -138,6 +141,12 @@ async function shallowBuild(options) {
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    // Cross-config validation — needs buildApi (stepIds) and buildNotifications (id set)
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
+      components,
+      context,
+    });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
@@ -168,6 +177,7 @@ async function shallowBuild(options) {
     await writeApi({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });
+    await writeNotifications({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
