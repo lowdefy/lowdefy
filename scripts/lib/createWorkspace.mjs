@@ -23,6 +23,14 @@ function createWorkspace({ targetDir }) {
   // better-sqlite3, esbuild) unless they are approved in the workspace file.
   // pnpm 10 reads onlyBuiltDependencies; pnpm 11 reads allowBuilds and fails
   // the install without it.
+  // pnpm 11 also stopped reading pnpm.overrides from package.json, so the
+  // link: overrides written by rewriteDeps/addPlugins (this runs after both)
+  // are mirrored into pnpm-workspace.yaml — without them a fresh install
+  // resolves @lowdefy/* plugins from the npm registry instead of the monorepo.
+  const pkg = JSON.parse(fs.readFileSync(path.join(targetDir, 'package.json'), 'utf8'));
+  const overrides = Object.entries(pkg.pnpm?.overrides ?? {}).map(
+    ([name, target]) => `  '${name}': '${target}'`
+  );
   fs.writeFileSync(
     path.join(targetDir, 'pnpm-workspace.yaml'),
     [
@@ -39,6 +47,7 @@ function createWorkspace({ targetDir }) {
       '  better-sqlite3: true',
       '  esbuild: true',
       '  sharp: true',
+      ...(overrides.length > 0 ? ['overrides:', ...overrides] : []),
       '',
     ].join('\n')
   );
