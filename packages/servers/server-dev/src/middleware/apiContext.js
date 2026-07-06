@@ -60,10 +60,7 @@ function apiContext() {
       headers: c.req.header(),
       i18n: i18nConfig,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
+      logger: createLogger(),
       operators,
       req: {
         url: c.req.path,
@@ -74,7 +71,6 @@ function apiContext() {
       steps,
       websockets,
     };
-    context.logger = createLogger();
     context.handleError = createHandleError({ context });
     // Hoisted once per request - resolveAuthentication also needs it, and
     // getBetterAuth memoizes the instance, but this keeps the auth engine
