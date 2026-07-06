@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { admin, genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
+import { genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
 import { _app, _secret } from '@lowdefy/operators-js/operators/server';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
+import buildAdminPlugin from './buildAdminPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildProviders from './buildProviders.js';
@@ -257,9 +258,9 @@ function getBetterAuthConfig({
   }
 
   // The admin plugin is framework-controlled - it backs the admin steps and
-  // impersonation (phase 6); its banned/banReason/banExpires fields land on
-  // the user record.
-  options.plugins.push(admin());
+  // impersonation. A configured auth.userAdminRole registers a curated
+  // access control (see buildAdminPlugin).
+  options.plugins.push(buildAdminPlugin({ authConfig }));
 
   const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildHooks({
     authConfig,

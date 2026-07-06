@@ -167,3 +167,7 @@ test('UpdateUserProfile throws when userId matches no user', async () => {
   ).rejects.toThrow('UpdateUserProfile found no user with id "missing".');
   expect(adapter.update).not.toHaveBeenCalled();
 });
+
+test('UpdateUserProfile declares the userId self-target exemption for the step interface layer', () => {
+  expect(UpdateUserProfile.meta).toEqual({ selfTargetExempt: 'userId' });
+});

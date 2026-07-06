@@ -17,6 +17,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 // Collects every role name declared in config into auth.roles - the catalog
 // the runtime registers in the organization plugin's access control so its
@@ -25,20 +26,34 @@ import { ConfigError } from '@lowdefy/errors';
 function buildRoleCatalog({ components }) {
   const roleNames = new Set();
 
+  function addRoleName({ configKey, roleName }) {
+    // member.role stores multiple roles as one comma-separated string, so a
+    // comma inside a role name would corrupt the split back into an array.
+    if (roleName.includes(',')) {
+      throw new ConfigError(
+        `Auth role name "${roleName}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
+        { configKey }
+      );
+    }
+    roleNames.add(roleName);
+  }
+
   ['pages', 'api', 'websockets'].forEach((entity) => {
     const rolesMap = components.auth[entity].roles;
     Object.keys(rolesMap).forEach((roleName) => {
-      // member.role stores multiple roles as one comma-separated string, so a
-      // comma inside a role name would corrupt the split back into an array.
-      if (roleName.includes(',')) {
-        throw new ConfigError(
-          `Auth role name "${roleName}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
-          { configKey: rolesMap['~k'] ?? components.auth['~k'] }
-        );
-      }
-      roleNames.add(roleName);
+      addRoleName({ configKey: rolesMap['~k'] ?? components.auth['~k'], roleName });
     });
   });
+
+  // The configured user-admin role must be a grantable member role even when
+  // no entity roles map names it - UpdateMemberRoles grants through the org
+  // plugin's member APIs, which reject roles missing from its access control.
+  if (!type.isNone(components.auth.userAdminRole)) {
+    addRoleName({
+      configKey: components.auth['~k'],
+      roleName: components.auth.userAdminRole,
+    });
+  }
 
   components.auth.roles = [...roleNames].sort();
 

@@ -566,7 +566,7 @@ test('does not push the passkey plugin when passkey is not enabled', () => {
   expect(options.plugins.some((p) => p.id === 'passkey')).toBe(false);
 });
 
-test('always pushes the admin plugin', () => {
+test('always pushes the admin plugin, without a custom access control when userAdminRole is not configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -575,7 +575,33 @@ test('always pushes the admin plugin', () => {
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(options.plugins.some((p) => p.id === 'admin')).toBe(true);
+  const adminPlugin = options.plugins.find((p) => p.id === 'admin');
+  expect(adminPlugin).toBeDefined();
+  // admin() called with no options - BetterAuth's default roles apply.
+  expect(adminPlugin.options).toBeUndefined();
+});
+
+test('registers the curated admin access control when userAdminRole is configured', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ userAdminRole: 'user-admin', roles: ['user-admin'] }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const adminPlugin = options.plugins.find((p) => p.id === 'admin');
+  // The user-admin role holds exactly user: ['impersonate'] - no
+  // impersonate-admins, set-password, set-email, ban or delete.
+  expect(adminPlugin.options.roles['user-admin'].statements).toEqual({ user: ['impersonate'] });
+  // Impersonating a user-admin demands the excluded impersonate-admins.
+  expect(adminPlugin.options.adminRoles).toEqual(['admin', 'user-admin']);
+  // The built-in admin role keeps its default statements so the steps'
+  // injected acting sessions (role "admin") retain their authority.
+  expect(adminPlugin.options.roles.admin.statements.user).toEqual(
+    expect.arrayContaining(['ban', 'delete', 'impersonate', 'list', 'set-password'])
+  );
+  expect(adminPlugin.options.roles.user.statements).toEqual({ user: [], session: [] });
 });
 
 test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', () => {

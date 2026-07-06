@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import syncUserAdminRole from './syncUserAdminRole.js';
+
 // The engine-tier binding on the organization plugin's afterAcceptInvitation
 // hook (an organizationHooks callback, not a database hook - it fires after
 // the member row is created). An invitation may carry an opaque profile bag;
@@ -27,7 +29,7 @@ import { type } from '@lowdefy/helpers';
 // update, parallel to the opaque profile merge), so an invited user's
 // authorization parameters hold from their first session instead of an empty
 // bag until an admin edits the member.
-function createAfterAcceptInvitationHook({ getAuth }) {
+function createAfterAcceptInvitationHook({ getAuth, userAdminRole }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
     if (type.isObject(invitation.profile)) {
@@ -49,6 +51,10 @@ function createAfterAcceptInvitationHook({ getAuth }) {
         update: { attributes: invitation.attributes },
       });
     }
+    // The accept mints member roles from the invitation, so it is one of the
+    // engine-owned writers of the user.role denormalization. In-band like the
+    // copies above: a failed sync fails the accept and the user retries.
+    await syncUserAdminRole({ auth: getAuth(), userAdminRole, userId: user.id });
   };
 }
 

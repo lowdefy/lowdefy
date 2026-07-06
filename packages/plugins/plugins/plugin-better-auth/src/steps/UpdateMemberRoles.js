@@ -18,16 +18,10 @@ import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 import resolveOrganizationId from './support/resolveOrganizationId.js';
+import splitRoles from './support/splitRoles.js';
+import syncUserAdminRole from './support/syncUserAdminRole.js';
 
-function splitRoles(role) {
-  const roles = type.isArray(role) ? role : [role];
-  return roles
-    .flatMap((entry) => String(entry).split(','))
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-}
-
-async function UpdateMemberRoles({ acting, auth, organization, properties }) {
+async function UpdateMemberRoles({ acting, auth, organization, properties, userAdminRole }) {
   const { memberId, role } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberRoles requires a "memberId" property.');
@@ -73,13 +67,24 @@ async function UpdateMemberRoles({ acting, auth, organization, properties }) {
     }
   }
 
-  return callPluginEndpoint({
+  const updatedMember = await callPluginEndpoint({
     acting,
     auth,
     body: { memberId, organizationId, role },
     endpointKey: 'updateMemberRole',
     pluginId: 'organization',
   });
+
+  // Member-role writes are followed in-band by the engine's user.role
+  // denormalization - a sync failure fails the step.
+  await syncUserAdminRole({
+    auth,
+    organization,
+    userAdminRole,
+    userId: updatedMember?.userId ?? member?.userId,
+  });
+
+  return updatedMember;
 }
 
 export default UpdateMemberRoles;

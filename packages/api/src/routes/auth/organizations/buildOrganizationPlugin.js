@@ -77,7 +77,10 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
       },
     },
     organizationHooks: {
-      afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
+      afterAcceptInvitation: createAfterAcceptInvitationHook({
+        getAuth,
+        userAdminRole: authConfig.userAdminRole ?? null,
+      }),
     },
     sendInvitationEmail,
   });

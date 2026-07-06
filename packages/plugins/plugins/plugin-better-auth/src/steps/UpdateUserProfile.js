@@ -94,4 +94,11 @@ async function UpdateUserProfile({ auth, properties }) {
   });
 }
 
+// Self-targeting exemption from the user-administration floor: the step
+// interface layer (handleAuthStep) waives the auth.userAdminRole check when
+// properties.userId equals the caller's own id - the self-service profile
+// save is the core flow and profile is display/app data, not authorization
+// inputs. Targeting another user still requires the role.
+UpdateUserProfile.meta = { selfTargetExempt: 'userId' };
+
 export default UpdateUserProfile;
