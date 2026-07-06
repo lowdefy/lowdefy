@@ -81,6 +81,10 @@ const typesMap = {
     ...snapshotTypesMap.actions,
     CallAPI: { package: '@lowdefy/actions-core' },
   },
+  notifications: {
+    ...snapshotTypesMap.notifications,
+    NotificationEmail: { package: '@lowdefy/email-templates' },
+  },
 };
 
 // Packages that would be installed in a real dev server using these blocks/actions.
@@ -143,8 +147,16 @@ modules:
   - id: inviter
     source: 'file:modules/inviter'
 
+notifications:
+  - id: hello
+    type: NotificationEmail
+    properties:
+      subject: Hello
+      message: Hi there
+
 api:
   - _ref: api/top-endpoint.yaml
+  - _ref: api/render-endpoint.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -153,6 +165,20 @@ pages:
   );
 
   write('api/top-endpoint.yaml', returnEndpoint('top_endpoint'));
+  write(
+    'api/render-endpoint.yaml',
+    `id: render-test
+type: Api
+routine:
+  - id: render
+    type: RenderNotification
+    properties:
+      notificationId: hello
+      data:
+        contact:
+          email: test@example.com
+`
+  );
   write('pages/home.yaml', callApiPage('home', 'top_endpoint'));
   write('pages/missing.yaml', callApiPage('missing', 'does_not_exist'));
 
@@ -279,7 +305,17 @@ async function buildAndCollectWarnings(pageId) {
 test('shallowBuild writes scoped api endpoint artifacts to build/api', () => {
   const endpointIds = apiArtifacts.map((c) => c.endpointId).sort();
   // Top-level keeps its id; module endpoint is scoped with the module entry id.
-  expect(endpointIds).toEqual(['inviter/send-invite', 'top_endpoint']);
+  expect(endpointIds).toEqual(['inviter/send-invite', 'render-test', 'top_endpoint']);
+});
+
+test('shallowBuild writes the notifications config artifact to build/notifications', () => {
+  // Regression: the dev shallow build previously dropped the notifications: section,
+  // so RenderNotification threw "Notification does not exist" under lowdefy dev.
+  const notification = readArtifact(buildDir, 'notifications/hello.json');
+  expect(notification).not.toBeNull();
+  expect(notification.notificationId).toBe('hello');
+  expect(notification.type).toBe('NotificationEmail');
+  expect(notification.properties.subject).toBe('Hello');
 });
 
 test('JIT build of a page calling a top-level endpoint emits no false non-existent warning', async () => {
