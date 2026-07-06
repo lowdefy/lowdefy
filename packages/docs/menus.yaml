@@ -524,6 +524,15 @@
         - id: TreeSelector
           type: MenuLink
           pageId: TreeSelector
+        - id: Upload
+          type: MenuLink
+          pageId: Upload
+        - id: UploadDragger
+          type: MenuLink
+          pageId: UploadDragger
+        - id: UploadPhoto
+          type: MenuLink
+          pageId: UploadPhoto
         - id: WeekSelector
           type: MenuLink
           pageId: WeekSelector
@@ -572,6 +581,9 @@
         - id: Divider
           type: MenuLink
           pageId: Divider
+        - id: Download
+          type: MenuLink
+          pageId: Download
         - id: DropdownButton
           type: MenuLink
           pageId: DropdownButton
@@ -811,6 +823,16 @@
           pageId: AxiosHttp
           properties:
             title: Axios HTTP
+        - id: AzureBlobStorage
+          type: MenuLink
+          pageId: AzureBlobStorage
+          properties:
+            title: Azure Blob Storage
+        - id: GoogleCloudStorage
+          type: MenuLink
+          pageId: GoogleCloudStorage
+          properties:
+            title: Google Cloud Storage
         - id: Elasticsearch
           type: MenuLink
           pageId: Elasticsearch

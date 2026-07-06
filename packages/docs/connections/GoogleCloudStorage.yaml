@@ -1,0 +1,152 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: GoogleCloudStorage
+    pageTitle: Google Cloud Storage
+    section: Connections
+    filePath: connections/GoogleCloudStorage.yaml
+    content:
+      - id: markdown
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Google Cloud Storage is the object storage service provided by Google Cloud Platform. Data is stored as objects in buckets, and objects can be public or private. You can read more [here](https://cloud.google.com/storage/docs).
+
+            Lowdefy integrates with Google Cloud Storage using signed URLs and signed POST policies — short-lived credentials that let the browser upload and download objects directly, without file content passing through the Lowdefy server. The connection plugs into the provider-neutral <a href="/Upload">Upload</a> and <a href="/Download">Download</a> blocks.
+
+            Direct browser uploads require [CORS configuration on the bucket](https://cloud.google.com/storage/docs/using-cors) that allows your app's origin.
+
+            ## Connections
+
+            Connection types:
+              - GoogleCloudStorageBucket
+
+            ### GoogleCloudStorageBucket
+
+            The `GoogleCloudStorageBucket` connection is used to connect to a Google Cloud Storage bucket.
+
+            #### Properties
+            - `bucket: string`: __Required__ - Google Cloud Storage bucket name.
+            - `client_email: string`: The email of your service account. If omitted, Application Default Credentials are used (e.g. the attached service account when running on GCP).
+            - `private_key: string`: The private key for your service account. If omitted, Application Default Credentials are used.
+            - `projectId: string`: The Google Cloud project ID the bucket belongs to.
+            - `publicUrlBase: string`: Base URL used to construct stable public object URLs (e.g. a CDN domain in front of the bucket). Used by download requests when the request sets `public: true`.
+            - `read: boolean`: Default: `true` - Allow reads from the bucket.
+            - `write: boolean`: Default: `false` - Allow writes to the bucket.
+
+            #### Examples
+
+            ###### Reads and writes with a service account:
+            ```yaml
+            connections:
+              - id: my_bucket
+                type: GoogleCloudStorageBucket
+                properties:
+                  bucket: my-bucket-name
+                  projectId: my-project
+                  client_email:
+                    _secret: GCS_CLIENT_EMAIL
+                  private_key:
+                    _secret: GCS_PRIVATE_KEY
+                  write: true
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_GCS_CLIENT_EMAIL = service-account@my-project.iam.gserviceaccount.com
+            LOWDEFY_SECRET_GCS_PRIVATE_KEY = -----BEGIN PRIVATE KEY-----\n...
+            ```
+
+            ## Requests
+
+            Request types:
+              - GcsSignedPostPolicy
+              - GcsSignedGetUrl
+              - GcsPutObject
+
+            ### GcsSignedPostPolicy
+
+            The `GcsSignedPostPolicy` request signs a V4 POST policy for direct browser uploads. It returns the standard upload-policy descriptor `{ method: 'POST', url, key, bucket, fields }` used by the <a href="/Upload">Upload</a>, <a href="/UploadPhoto">UploadPhoto</a> and <a href="/UploadDragger">UploadDragger</a> blocks — reference the request id in the block's `uploadPolicyRequestId` property. The connection must set `write: true`.
+
+            #### Properties
+            - `key: string`: __Required__ - Key under which the object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
+            - `expires: number`: Default: `3600` - Number of seconds for which the policy should be valid.
+            - `fields: object`: Additional form fields to include in the POST policy (e.g. `acl`).
+            - `conditions: array`: Conditions to be enforced on the request. See [POST policy conditions](https://cloud.google.com/storage/docs/xml-api/post-object-forms#policy_document).
+
+            #### Examples
+
+            ###### Upload a file with the user's filename:
+            ```yaml
+            requests:
+              - id: upload_policy
+                type: GcsSignedPostPolicy
+                connectionId: my_bucket
+                payload:
+                  name:
+                    _event: file.name
+                properties:
+                  key:
+                    _string.concat:
+                      - 'uploads/'
+                      - _payload: name
+            ```
+
+            ### GcsSignedGetUrl
+
+            The `GcsSignedGetUrl` request signs a V4 read URL for downloads. Reference the request id in the <a href="/Download">Download</a> block's `downloadPolicyRequestId` property, or open the returned URL with the `Link` action.
+
+            #### Properties
+            - `key: string`: __Required__ - Key under which the object is stored.
+            - `expires: number`: Default: `3600` - Number of seconds for which the signed URL should be valid.
+            - `public: boolean`: Default: `false` - Return a stable, non-expiring public URL (`https://storage.googleapis.com/{bucket}/{key}`, or `${publicUrlBase}/${key}` when the connection sets `publicUrlBase`) instead of a signed URL. The object must be publicly readable; this is author-declared and never checked at runtime.
+            - `responseDisposition: string`: Sets the Content-Disposition header of the response.
+            - `responseType: string`: Sets the Content-Type header of the response.
+
+            ### GcsPutObject
+
+            The `GcsPutObject` request writes an object to the bucket from the server. It accepts base64 encoded content, which makes it the storage half of the server-side file handling pattern: an upload block with `emitFileContent: true` sends the file as a base64 payload to an [API endpoint](/lowdefy-api) with the `CallAPI` action, and a routine step stores it. The connection must set `write: true`.
+
+            #### Properties
+            - `key: string`: __Required__ - Key under which the object will be stored.
+            - `content: string`: __Required__ - Object content as a base64 encoded string.
+            - `contentType: string`: MIME type of the object (sets the Content-Type of the stored object).
+            - `public: boolean`: Default: `false` - Make the stored object publicly readable.
+
+            #### Examples
+
+            ###### Store a file sent as an endpoint payload:
+            ```yaml
+            api:
+              - id: store_report
+                type: Api
+                routine:
+                  - id: put_object
+                    type: GcsPutObject
+                    connectionId: my_bucket
+                    properties:
+                      key:
+                        _string.concat:
+                          - 'reports/'
+                          - _payload: name
+                      content:
+                        _payload: content
+                      contentType:
+                        _payload: type
+                  - ':return':
+                      key:
+                        _step: put_object.key
+            ```
