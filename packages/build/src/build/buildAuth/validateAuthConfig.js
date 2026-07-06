@@ -31,26 +31,30 @@ function validateSchema({ components }) {
   });
 
   if (!valid) {
-    errors.forEach((error) => {
-      // Try to get configKey from the item in the error path
-      const instancePath = error.instancePath.split('/').filter(Boolean);
-      let configKey = components.auth['~k'];
-      let currentData = components.auth;
+    // Only the first collected error is reported - one schema fault often
+    // cascades into many ajv errors, and the first is the actionable one.
+    const error = errors[0];
+    // Try to get configKey from the item in the error path
+    const instancePath = error.instancePath.split('/').filter(Boolean);
+    let configKey = components.auth['~k'];
+    let currentData = components.auth;
 
-      for (const part of instancePath) {
-        if (type.isArray(currentData)) {
-          const index = parseInt(part, 10);
-          currentData = currentData[index];
-        } else {
-          currentData = currentData?.[part];
-        }
-        if (currentData?.['~k']) {
-          configKey = currentData['~k'];
-        }
+    for (const part of instancePath) {
+      if (type.isArray(currentData)) {
+        const index = parseInt(part, 10);
+        currentData = currentData[index];
+      } else {
+        currentData = currentData?.[part];
       }
+      if (currentData?.['~k']) {
+        configKey = currentData['~k'];
+      }
+    }
 
-      throw new ConfigError(`Auth ${error.message}.`, { configKey });
-    });
+    // Custom errorMessage strings in the schema are already complete
+    // sentences - only raw ajv fallback messages need the Auth prefix.
+    const message = error.keyword === 'errorMessage' ? error.message : `Auth ${error.message}.`;
+    throw new ConfigError(message, { configKey });
   }
 }
 

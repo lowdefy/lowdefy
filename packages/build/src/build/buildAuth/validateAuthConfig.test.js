@@ -104,8 +104,10 @@ test('validateAuthConfig throws when a strategy entry is missing a required prop
       strategies: [{ id: 'partner-access' }],
     },
   };
+  // Anchored - the schema errorMessage is thrown verbatim, with no extra
+  // "Auth " prefix or trailing period added around it.
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth strategy should have required property "type".'
+    /^Auth strategy should have required property "type"\.$/
   );
 });
 
