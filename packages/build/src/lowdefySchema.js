@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -60,6 +76,114 @@ export default {
           id: 'Action should have required property "id".',
           type: 'Action should have required property "type".',
         },
+      },
+    },
+    actionOrControl: {
+      anyOf: [
+        { $ref: '#/definitions/action' },
+        { $ref: '#/definitions/controlIf' },
+        { $ref: '#/definitions/controlSwitch' },
+        { $ref: '#/definitions/controlReturn' },
+      ],
+    },
+    controlIf: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':if', ':then'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':if': {},
+        ':then': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":then" should be an array of actions.',
+          },
+        },
+        ':else': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":else" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":if" should be an object.',
+        required: {
+          ':then': 'Control ":if" should have required property ":then".',
+        },
+      },
+    },
+    controlReturn: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':return'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':return': {},
+      },
+      errorMessage: {
+        type: 'Control ":return" should be an object.',
+      },
+    },
+    controlSwitch: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':switch'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':switch': {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: [':case', ':then'],
+            properties: {
+              '~r': {},
+              '~l': {},
+              ':case': {},
+              ':then': {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+                errorMessage: {
+                  type: 'Control ":then" should be an array of actions.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Control ":switch" cases should be objects.',
+              required: {
+                ':case': 'Control ":switch" case should have required property ":case".',
+                ':then': 'Control ":switch" case should have required property ":then".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Control ":switch" should be an array of case objects.',
+          },
+        },
+        ':default': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":default" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":switch" should be an object.',
       },
     },
     agent: {
@@ -909,7 +1033,7 @@ export default {
                 {
                   type: 'array',
                   items: {
-                    $ref: '#/definitions/action',
+                    $ref: '#/definitions/actionOrControl',
                   },
                 },
                 {
@@ -942,13 +1066,13 @@ export default {
                     try: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     catch: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     debounce: {
