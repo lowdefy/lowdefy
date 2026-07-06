@@ -1,0 +1,42 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// Run work after the response is sent. On Vercel (fluid compute) the platform
+// request context's waitUntil keeps the invocation alive until the promise
+// settles (bounded by the function's maxDuration); locally / self-hosted the
+// promise simply runs detached on the still-alive Node process.
+//
+// The outcome only exists in logs — completion and failure are logged through
+// the request logger so they reach the platform log stream (and any log
+// drains); a background failure must never surface as an unhandled rejection.
+function scheduleBackground(context, { event, endpointId }, fn) {
+  const { logger } = context;
+  const promise = (async () => {
+    try {
+      const result = await fn();
+      logger.info({ event: `${event}_done`, endpointId, status: result?.status });
+    } catch (err) {
+      logger.error({ event: `${event}_failed`, endpointId, err }, err.message);
+    }
+  })();
+  const platformContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+  if (platformContext?.waitUntil) {
+    platformContext.waitUntil(promise);
+  }
+  return promise;
+}
+
+export default scheduleBackground;

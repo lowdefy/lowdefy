@@ -26,6 +26,7 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
@@ -41,5 +42,6 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  runDetachedEndpoint,
   runScheduledEndpoint,
 };

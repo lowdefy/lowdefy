@@ -1145,6 +1145,14 @@ export default {
             },
           ],
         },
+        respond: {
+          enum: ['sync', 'accepted'],
+          description:
+            'How the endpoint responds. "sync" (default) runs the routine and returns its result. "accepted" returns { accepted: true } immediately and runs the routine in the background (kept alive via the platform request context on Vercel fluid compute); the outcome is observable only through logs and whatever the routine writes.',
+          errorMessage: {
+            enum: 'Api endpoint "respond" should be "sync" or "accepted".',
+          },
+        },
         schedules: {
           type: 'array',
           items: {
@@ -1973,6 +1981,33 @@ export default {
           description: 'App base path to apply to all routes. Base path must start with "/".',
           errorMessage: {
             type: 'App "config.basePath" should be a string.',
+          },
+        },
+        vercel: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Vercel deployment function settings, applied by the CLI vercelOutput assembly.',
+          errorMessage: {
+            type: 'App "config.vercel" should be an object.',
+          },
+          properties: {
+            maxDuration: {
+              type: 'number',
+              minimum: 1,
+              description:
+                'Maximum function execution time in seconds for the deployed serverless function. Defaults to 60. Plan limits apply (Vercel rejects over-limit values at deploy).',
+              errorMessage: {
+                type: 'App "config.vercel.maxDuration" should be a number.',
+              },
+            },
+            memory: {
+              type: 'number',
+              description: 'Function memory in MB. Omit to use the Vercel default.',
+              errorMessage: {
+                type: 'App "config.vercel.memory" should be a number.',
+              },
+            },
           },
         },
         requestTimeout: {
