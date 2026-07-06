@@ -37,6 +37,7 @@ import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
@@ -84,6 +85,11 @@ async function shallowBuild(options) {
     // Compute app metadata before ref resolution so the _build.app operator can
     // resolve it during buildRefs (matches the full build in index.js).
     context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
+
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs
+    // and the dev server's JIT page walks (matches the full build in index.js).
+    await resolveAuthConfigProjection({ context });
 
     let components;
     try {
@@ -208,6 +214,12 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'modules.json',
       serializer.serializeToString(context.modules ?? {})
+    );
+    // Persist the auth config projection so JIT page builds (separate process)
+    // resolve _build.authConfig identically to the skeleton build.
+    await context.writeBuildArtifact(
+      'authConfigProjection.json',
+      JSON.stringify(context.authConfigProjection)
     );
     await writePluginImports({ components, context });
     // Persist icon imports snapshot for JIT icon detection.

@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "_build.authConfig cannot be used inside the auth block"
+      ],
+      "errorContains": [
+        "_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves."
+      ]
+    }
+  ]
+}

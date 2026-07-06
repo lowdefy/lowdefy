@@ -43,6 +43,7 @@ async function buildRefs({ context, shallowOptions }) {
     operators,
     env: process.env,
     lowdefyApp: context.appMeta,
+    authConfig: context.authConfigProjection,
     dynamicIdentifiers,
     shouldStop: shallowOptions
       ? // Strip page content (blocks, events, etc.) from ref-backed pages so

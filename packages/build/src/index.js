@@ -39,6 +39,7 @@ import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
@@ -85,6 +86,10 @@ async function build(options) {
     // Compute app metadata from the parsed root lowdefy.yaml before ref
     // resolution so the _build.app operator can resolve it during buildRefs.
     context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
+
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs.
+    await resolveAuthConfigProjection({ context });
 
     let components;
     try {

@@ -938,3 +938,102 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
     'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
   );
 });
+
+const authConfigPageYaml = `
+id: home
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  providers:
+    _build.authConfig: providers
+`;
+
+function authConfigPageRegistry() {
+  return new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+}
+
+test('buildPageJit resolves _build.authConfig from the projection on the context', async () => {
+  const context = createTestContext();
+  context.authConfigProjection = {
+    emailAndPassword: { enabled: true },
+    magicLink: { enabled: false },
+    twoFactor: { enabled: false },
+    passkey: { enabled: false },
+    providers: [{ id: 'google', type: 'Google' }],
+    organizations: { signup: 'invite-only' },
+  };
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.providers).toEqual([{ id: 'google', type: 'Google' }]);
+});
+
+test('buildPageJit restores the projection from the authConfigProjection.json artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-auth-'));
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: false },
+      magicLink: { enabled: true },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(false);
+  expect(context.authConfigProjection.magicLink.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('buildPageJit collects the unavailable-projection error when no projection or artifact exists', async () => {
+  const context = createTestContext();
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'home',
+      pageRegistry: authConfigPageRegistry(),
+      context,
+    })
+  ).rejects.toThrow('build failed with');
+  expect(
+    context.errors.some((e) =>
+      e.message.includes('_build.authConfig cannot be used inside the auth block')
+    )
+  ).toBe(true);
+});

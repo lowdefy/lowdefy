@@ -81,4 +81,5 @@ export { default as _secret } from './operators/server/secret.schema.js';
 export { default as _step } from './operators/server/step.schema.js';
 
 // Build operators
+export { default as _authConfig } from './operators/build/authConfig.schema.js';
 export { default as _env } from './operators/build/env.schema.js';

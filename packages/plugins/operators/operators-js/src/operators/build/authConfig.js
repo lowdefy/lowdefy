@@ -1,0 +1,57 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { get, type } from '@lowdefy/helpers';
+
+// The curated catalog of readable projection paths. Extending it is a
+// deliberate addition to this list — never a fall-through.
+const readablePaths = [
+  'emailAndPassword.enabled',
+  'magicLink.enabled',
+  'twoFactor.enabled',
+  'passkey.enabled',
+  'providers',
+  'organizations.signup',
+];
+
+// Build-only operator, addressed as { _build.authConfig: '<path>' }. Reads the
+// auth config projection the build computes in a scoped pre-pass before
+// buildRefs. It deliberately has no runtime sibling — none of this data ships
+// to the client or server at runtime.
+function _authConfig({ authConfig, params }) {
+  if (type.isUndefined(authConfig)) {
+    // The projection is threaded everywhere except while the auth: block
+    // itself resolves — the self-reference rule.
+    throw new Error(
+      '_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves.'
+    );
+  }
+  if (!readablePaths.includes(params)) {
+    throw new Error(
+      `_build.authConfig received an unreadable path ${JSON.stringify(
+        params
+      )}. Readable paths are: ${readablePaths.map((path) => `"${path}"`).join(', ')}.`
+    );
+  }
+  return get(authConfig, params, { copy: true });
+}
+
+// dynamic true keeps the bare _authConfig spelling out of build-time static
+// evaluation — the only supported address is the explicit _build.authConfig,
+// which evaluates regardless of dynamic (matching _build.app).
+_authConfig.dynamic = true;
+
+export default _authConfig;

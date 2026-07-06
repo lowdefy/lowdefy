@@ -72,6 +72,23 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       stage: 'dev',
     });
 
+  // Restore the skeleton-computed auth config projection so _build.authConfig
+  // resolves in JIT page builds identically to a full build. The dev server's
+  // JIT context is rebuilt from build artifacts in a separate process, so the
+  // projection is read from the artifact shallowBuild writes.
+  if (
+    type.isUndefined(buildContext.authConfigProjection) &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const projectionPath = path.join(buildContext.directories.build, 'authConfigProjection.json');
+    try {
+      const content = await fs.promises.readFile(projectionPath, 'utf8');
+      buildContext.authConfigProjection = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+    }
+  }
+
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
     : pageRegistry[pageId];
@@ -144,6 +161,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         operators,
         env: process.env,
         lowdefyApp: buildContext.appMeta,
+        authConfig: buildContext.authConfigProjection,
         dynamicIdentifiers,
         shouldStop: null,
       });
@@ -200,6 +218,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       operators,
       env: process.env,
       lowdefyApp: buildContext.appMeta,
+      authConfig: buildContext.authConfigProjection,
       dynamicIdentifiers,
       shouldStop: null,
     });

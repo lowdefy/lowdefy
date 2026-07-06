@@ -1,0 +1,27 @@
+# B5: _build.authConfig Self-Reference
+# =====================================
+# Tests that _build.authConfig inside the auth: block itself is a build
+# error — the projection is computed FROM the auth block, so reading it
+# there is a self-reference (the rule _build.app already applies to appMeta).
+#
+# Expected error:
+#   [Operator Error] _build.authConfig cannot be used inside the auth block ...
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  organizations:
+    signup:
+      _build.authConfig: organizations.signup
+
+pages:
+  - id: home
+    type: Box
