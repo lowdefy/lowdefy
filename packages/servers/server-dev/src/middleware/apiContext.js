@@ -48,8 +48,9 @@ function apiContext() {
     const buildDirectory = path.join(process.cwd(), 'build');
     const jsMap = loadDynamicJsMap(buildDirectory);
 
+    const rid = uuid();
     const context = {
-      rid: uuid(),
+      rid,
       agents,
       appMeta,
       buildDirectory,
@@ -60,7 +61,7 @@ function apiContext() {
       headers: c.req.header(),
       i18n: i18nConfig,
       jsMap,
-      logger: createLogger(),
+      logger: createLogger({ rid }),
       operators,
       req: {
         url: c.req.path,
@@ -72,21 +73,24 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
-    // Hoisted once per request - resolveAuthentication also needs it, and
-    // getBetterAuth memoizes the instance, but this keeps the auth engine
-    // construction to a single call site per request.
-    context.auth = getAuth({ logger: context.logger });
-    // The engine is constructed lazily on the first request, which would
-    // otherwise race the startup pinned-org ensure - await the memoized
-    // resolve so createApiContext reads a retained binding.
-    await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
-    if (!c.req.path.includes('/api/auth')) {
-      const mockUser = getMockUser();
-      if (mockUser) {
-        // The mock user is a pre-resolved caller - it substitutes for the
-        // whole resolveAuthentication step and its roles are authoritative.
-        context.user = mockUser;
-      } else {
+    const mockUser = getMockUser();
+    if (mockUser) {
+      // The mock user is a pre-resolved caller - it substitutes for the
+      // whole resolveAuthentication step and its roles are authoritative.
+      // No auth engine runs while dev.mockUser is active (see src/app.js),
+      // so mock mode never touches the auth database.
+      context.auth = null;
+      context.user = mockUser;
+    } else {
+      // Hoisted once per request - resolveAuthentication also needs it, and
+      // getBetterAuth memoizes the instance, but this keeps the auth engine
+      // construction to a single call site per request.
+      context.auth = getAuth({ logger: context.logger });
+      // The engine is constructed lazily on the first request, which would
+      // otherwise race the startup pinned-org ensure - await the memoized
+      // resolve so createApiContext reads a retained binding.
+      await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
+      if (!c.req.path.includes('/api/auth')) {
         // resolveAuthentication is the single writer of context.user.
         await resolveAuthentication(context, {
           auth: context.auth,
