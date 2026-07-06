@@ -28,6 +28,7 @@ import buildExtensions from '../utils/buildExtensions.js';
 import computeHeightStyle from '../utils/computeHeightStyle.js';
 import statusClass from '../utils/statusClass.js';
 import suggestion from './suggestion.js';
+import useGroupMembersPopover from './useGroupMembersPopover.js';
 import useTiptapMentionState from './useTiptapMentionState.js';
 
 import './style.css';
@@ -52,30 +53,39 @@ const TiptapMentionInput = ({
   const uploadEnabled = !type.isNone(properties.s3PostPolicyRequestId);
   const char = properties.mentions?.char ?? '@';
   const allowSpaces = properties.mentions?.allowSpaces !== false;
+  const limit = properties.mentions?.limit ?? 5;
 
   const mentionExtension = Mention.configure({
     HTMLAttributes: { class: 'tiptap-mention' },
     renderHTML({ options, node }) {
-      const label = mentionLabel(node.attrs.id);
-      if (type.isFunction(properties.mentions?.getHref)) {
+      const id = node.attrs.id;
+      const label = mentionLabel(id);
+      const group = id?.tag?.group;
+      const modifier = {};
+      if (!type.isNone(group)) {
+        modifier.class = 'tiptap-mention-group';
+        modifier['data-mention-group'] = group;
+      }
+      const color = id?.tag?.color;
+      if (!type.isNone(color)) {
+        modifier.style = `color: ${color}`;
+      }
+      const href = type.isFunction(properties.mentions?.getHref)
+        ? properties.mentions.getHref(id)
+        : undefined;
+      if (!type.isNone(href)) {
         return [
           'a',
-          mergeAttributes(
-            {
-              href: properties.mentions.getHref(node.attrs.id),
-              'data-id': node.attrs.id?._id,
-            },
-            options.HTMLAttributes
-          ),
+          mergeAttributes({ href, 'data-id': id?._id }, options.HTMLAttributes, modifier),
           `${char}${label}`,
         ];
       }
-      return ['span', mergeAttributes(options.HTMLAttributes), `${char}${label}`];
+      return ['span', mergeAttributes(options.HTMLAttributes, modifier), `${char}${label}`];
     },
     renderText({ node }) {
       return `${char}${mentionLabel(node.attrs.id)}`;
     },
-    suggestion: suggestion({ methods, char, allowSpaces }),
+    suggestion: suggestion({ methods, char, allowSpaces, limit }),
   });
 
   const extensions = buildExtensions({
@@ -102,6 +112,8 @@ const TiptapMentionInput = ({
       methods.triggerEvent({ name: 'onChange' });
     },
   });
+
+  useGroupMembersPopover({ editor, properties });
 
   useEffect(() => {
     if (editor) {

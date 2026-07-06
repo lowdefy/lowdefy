@@ -43,3 +43,48 @@
         - label: bug
           value:
             _id: tag_bug
+- id: properties.mentions.limit with sections
+  type: TiptapMentionInput
+  properties:
+    mentions:
+      limit: 2
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+          tag:
+            section: People
+        - label: Bob
+          value:
+            _id: user_2
+          tag:
+            section: People
+        - label: Finance
+          value:
+            _id: role_finance
+          tag:
+            section: Roles
+- id: properties.mentions group chips with tag.color
+  type: TiptapMentionInput
+  properties:
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+          tag:
+            section: People
+        - label: Finance
+          value:
+            role: finance-admin
+          tag:
+            section: Roles
+            group: finance
+            color: '#722ed1'
+        - label: Developers
+          value:
+            role: developer
+          tag:
+            section: Roles
+            group: devs
+            color: '#13c2c2'
