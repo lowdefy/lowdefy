@@ -31,6 +31,8 @@ async function AzureBlobGet({ request, connection }) {
     credential
   );
   const blobClient = serviceClient.getContainerClient(container).getBlockBlobClient(key);
+  // Properties are only used for contentType — size is derived from the returned
+  // content so it always matches, even if the blob is overwritten between calls.
   const [buffer, properties] = await Promise.all([
     blobClient.downloadToBuffer(),
     blobClient.getProperties(),
@@ -39,12 +41,10 @@ async function AzureBlobGet({ request, connection }) {
     bucket: container,
     key,
     content: buffer.toString('base64'),
+    size: buffer.length,
   };
   if (!type.isNone(properties.contentType)) {
     result.contentType = properties.contentType;
-  }
-  if (!type.isNone(properties.contentLength)) {
-    result.size = properties.contentLength;
   }
   return result;
 }

@@ -85,7 +85,7 @@ test('AwsS3GetObject passes versionId when provided', async () => {
   ]);
 });
 
-test('AwsS3GetObject omits contentType and size when the response has none', async () => {
+test('AwsS3GetObject omits contentType when the response has none and sizes from content', async () => {
   mockSend.mockImplementation(() => ({
     Body: {
       transformToByteArray: async () => new Uint8Array(Buffer.from('x')),
@@ -103,6 +103,7 @@ test('AwsS3GetObject omits contentType and size when the response has none', asy
     bucket: 'bucket',
     key: 'key',
     content: Buffer.from('x').toString('base64'),
+    size: 1,
   });
 });
 

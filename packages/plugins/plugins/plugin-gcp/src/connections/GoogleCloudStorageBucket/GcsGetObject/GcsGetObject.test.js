@@ -63,7 +63,7 @@ test('GcsGetObject reads the object and returns base64 content', async () => {
   expect(Buffer.from(res.content, 'base64').toString('utf8')).toEqual('file content');
 });
 
-test('GcsGetObject omits contentType and size when metadata has none', async () => {
+test('GcsGetObject omits contentType when metadata has none and sizes from content', async () => {
   mockGetMetadata.mockImplementation(async () => [{}]);
   const request = { key: 'key' };
   const connection = { bucket: 'bucket' };
@@ -72,7 +72,16 @@ test('GcsGetObject omits contentType and size when metadata has none', async () 
     bucket: 'bucket',
     key: 'key',
     content: Buffer.from('file content').toString('base64'),
+    size: 12,
   });
+});
+
+test('GcsGetObject sizes from the returned content even when metadata disagrees', async () => {
+  mockGetMetadata.mockImplementation(async () => [{ contentType: 'text/plain', size: '999' }]);
+  const request = { key: 'key' };
+  const connection = { bucket: 'bucket' };
+  const res = await GcsGetObject({ request, connection });
+  expect(res.size).toEqual(12);
 });
 
 test('Error from storage client', async () => {

@@ -85,7 +85,7 @@ test('AzureBlobGet reads the blob and returns base64 content', async () => {
   expect(Buffer.from(res.content, 'base64').toString('utf8')).toEqual('file content');
 });
 
-test('AzureBlobGet omits contentType and size when properties have none', async () => {
+test('AzureBlobGet omits contentType when properties have none and sizes from content', async () => {
   mockGetProperties.mockImplementation(async () => ({}));
   const request = { key: 'key' };
   const connection = {
@@ -98,6 +98,7 @@ test('AzureBlobGet omits contentType and size when properties have none', async 
     bucket: 'container',
     key: 'key',
     content: Buffer.from('file content').toString('base64'),
+    size: 12,
   });
 });
 

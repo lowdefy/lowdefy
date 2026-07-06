@@ -15,6 +15,7 @@
 */
 
 import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { type } from '@lowdefy/helpers';
 
 import createS3Client from '../createS3Client.js';
 import schema from './schema.js';
@@ -34,17 +35,16 @@ async function AwsS3GetObject({ request, connection }) {
   }
   const s3 = createS3Client({ connection });
   const response = await s3.send(new GetObjectCommand(params));
-  const bytes = await response.Body.transformToByteArray();
+  const buffer = Buffer.from(await response.Body.transformToByteArray());
   const result = {
     bucket,
     key,
-    content: Buffer.from(bytes).toString('base64'),
+    content: buffer.toString('base64'),
+    // Derived from the returned content so it always matches, byte for byte.
+    size: buffer.length,
   };
-  if (response.ContentType) {
+  if (!type.isNone(response.ContentType)) {
     result.contentType = response.ContentType;
-  }
-  if (response.ContentLength !== undefined) {
-    result.size = response.ContentLength;
   }
   return result;
 }

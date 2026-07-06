@@ -26,17 +26,17 @@ async function GcsGetObject({ request, connection }) {
   const { bucket } = connection;
   const { key } = request;
   const file = getBucket({ connection }).file(key);
+  // Metadata is only used for contentType — size is derived from the returned
+  // content so it always matches, even if the object is overwritten between calls.
   const [[content], [metadata]] = await Promise.all([file.download(), file.getMetadata()]);
   const result = {
     bucket,
     key,
     content: content.toString('base64'),
+    size: content.length,
   };
   if (!type.isNone(metadata.contentType)) {
     result.contentType = metadata.contentType;
-  }
-  if (!type.isNone(metadata.size)) {
-    result.size = Number(metadata.size);
   }
   return result;
 }
