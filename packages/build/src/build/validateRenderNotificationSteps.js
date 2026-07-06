@@ -17,28 +17,28 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function collectSendNotificationSteps(routine, steps) {
+function collectRenderNotificationSteps(routine, steps) {
   if (type.isArray(routine)) {
-    routine.forEach((item) => collectSendNotificationSteps(item, steps));
+    routine.forEach((item) => collectRenderNotificationSteps(item, steps));
     return;
   }
   if (type.isObject(routine)) {
-    if (routine.type === 'SendNotification') {
+    if (routine.type === 'RenderNotification') {
       steps.push(routine);
     }
     // Recurse into all values (handles control structures like :then, :else, :try, :catch)
-    Object.values(routine).forEach((value) => collectSendNotificationSteps(value, steps));
+    Object.values(routine).forEach((value) => collectRenderNotificationSteps(value, steps));
   }
 }
 
 // Runs after buildNotifications (needs context.notificationIds). Validates that
-// SendNotification steps with a static notificationId reference an existing
+// RenderNotification steps with a static notificationId reference an existing
 // notification. Operator (dynamic) notificationIds are skipped; they resolve at
 // runtime.
-function validateSendNotificationSteps({ components, context }) {
+function validateRenderNotificationSteps({ components, context }) {
   (components.api ?? []).forEach((endpoint) => {
     const steps = [];
-    collectSendNotificationSteps(endpoint.routine, steps);
+    collectRenderNotificationSteps(endpoint.routine, steps);
 
     steps.forEach((step) => {
       const notificationId = step.properties?.notificationId;
@@ -46,7 +46,7 @@ function validateSendNotificationSteps({ components, context }) {
 
       if (!context.notificationIds?.has(notificationId)) {
         throw new ConfigError(
-          `SendNotification step "${step.stepId}" at endpoint "${endpoint.endpointId}" references notification "${notificationId}" which does not exist.`,
+          `RenderNotification step "${step.stepId}" at endpoint "${endpoint.endpointId}" references notification "${notificationId}" which does not exist.`,
           { configKey: step['~k'] }
         );
       }
@@ -55,4 +55,4 @@ function validateSendNotificationSteps({ components, context }) {
   return components;
 }
 
-export default validateSendNotificationSteps;
+export default validateRenderNotificationSteps;

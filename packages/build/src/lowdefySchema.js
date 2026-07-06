@@ -295,18 +295,6 @@ export default {
             },
           },
         },
-        notificationLandingPage: {
-          type: 'string',
-          errorMessage: {
-            type: 'App "app.notificationLandingPage" should be a string.',
-          },
-        },
-        serverUrl: {
-          type: 'string',
-          errorMessage: {
-            type: 'App "app.serverUrl" should be a string.',
-          },
-        },
       },
     },
     authConfig: {
@@ -1254,7 +1242,7 @@ export default {
     notification: {
       type: 'object',
       additionalProperties: false,
-      required: ['id', 'type', 'emailConnectionId', 'dataConnectionId'],
+      required: ['id', 'type'],
       properties: {
         '~ignoreBuildChecks': {
           oneOf: [
@@ -1291,26 +1279,6 @@ export default {
             type: 'Notification "type" should be a string.',
           },
         },
-        emailConnectionId: {
-          type: 'string',
-          errorMessage: {
-            type: 'Notification "emailConnectionId" should be a string.',
-          },
-        },
-        dataConnectionId: {
-          type: 'string',
-          errorMessage: {
-            type: 'Notification "dataConnectionId" should be a string.',
-          },
-        },
-        delivery: {
-          type: 'string',
-          enum: ['inline', 'deferred'],
-          errorMessage: {
-            type: 'Notification "delivery" should be a string.',
-            enum: 'Notification "delivery" should be one of "inline" or "deferred".',
-          },
-        },
         theme: {
           type: 'object',
           errorMessage: {
@@ -1335,8 +1303,6 @@ export default {
         required: {
           id: 'Notification should have required property "id".',
           type: 'Notification should have required property "type".',
-          emailConnectionId: 'Notification should have required property "emailConnectionId".',
-          dataConnectionId: 'Notification should have required property "dataConnectionId".',
         },
       },
     },

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import validateSendNotificationSteps from './validateSendNotificationSteps.js';
+import validateRenderNotificationSteps from './validateRenderNotificationSteps.js';
 
 function createTestContext({ notificationIds = [] } = {}) {
   return {
@@ -22,13 +22,13 @@ function createTestContext({ notificationIds = [] } = {}) {
   };
 }
 
-test('validateSendNotificationSteps passes when no api endpoints are defined', () => {
+test('validateRenderNotificationSteps passes when no api endpoints are defined', () => {
   const context = createTestContext();
   const components = {};
-  expect(() => validateSendNotificationSteps({ components, context })).not.toThrow();
+  expect(() => validateRenderNotificationSteps({ components, context })).not.toThrow();
 });
 
-test('validateSendNotificationSteps passes when a step references an existing notification', () => {
+test('validateRenderNotificationSteps passes when a step references an existing notification', () => {
   const context = createTestContext({ notificationIds: ['task-assigned'] });
   const components = {
     api: [
@@ -37,17 +37,17 @@ test('validateSendNotificationSteps passes when a step references an existing no
         routine: [
           {
             stepId: 'send',
-            type: 'SendNotification',
+            type: 'RenderNotification',
             properties: { notificationId: 'task-assigned', data: {} },
           },
         ],
       },
     ],
   };
-  expect(() => validateSendNotificationSteps({ components, context })).not.toThrow();
+  expect(() => validateRenderNotificationSteps({ components, context })).not.toThrow();
 });
 
-test('validateSendNotificationSteps throws when a step references a missing notification', () => {
+test('validateRenderNotificationSteps throws when a step references a missing notification', () => {
   const context = createTestContext({ notificationIds: ['task-assigned'] });
   const components = {
     api: [
@@ -56,19 +56,19 @@ test('validateSendNotificationSteps throws when a step references a missing noti
         routine: [
           {
             stepId: 'send',
-            type: 'SendNotification',
+            type: 'RenderNotification',
             properties: { notificationId: 'missing-notification', data: {} },
           },
         ],
       },
     ],
   };
-  expect(() => validateSendNotificationSteps({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "notify" references notification "missing-notification" which does not exist.'
+  expect(() => validateRenderNotificationSteps({ components, context })).toThrow(
+    'RenderNotification step "send" at endpoint "notify" references notification "missing-notification" which does not exist.'
   );
 });
 
-test('validateSendNotificationSteps finds steps nested in control structures', () => {
+test('validateRenderNotificationSteps finds steps nested in control structures', () => {
   const context = createTestContext({ notificationIds: [] });
   const components = {
     api: [
@@ -82,7 +82,7 @@ test('validateSendNotificationSteps finds steps nested in control structures', (
                 ':try': [
                   {
                     stepId: 'send',
-                    type: 'SendNotification',
+                    type: 'RenderNotification',
                     properties: { notificationId: 'missing', data: {} },
                   },
                 ],
@@ -94,12 +94,12 @@ test('validateSendNotificationSteps finds steps nested in control structures', (
       },
     ],
   };
-  expect(() => validateSendNotificationSteps({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "notify" references notification "missing" which does not exist.'
+  expect(() => validateRenderNotificationSteps({ components, context })).toThrow(
+    'RenderNotification step "send" at endpoint "notify" references notification "missing" which does not exist.'
   );
 });
 
-test('validateSendNotificationSteps skips steps with operator notificationIds', () => {
+test('validateRenderNotificationSteps skips steps with operator notificationIds', () => {
   const context = createTestContext({ notificationIds: [] });
   const components = {
     api: [
@@ -108,12 +108,12 @@ test('validateSendNotificationSteps skips steps with operator notificationIds', 
         routine: [
           {
             stepId: 'send',
-            type: 'SendNotification',
+            type: 'RenderNotification',
             properties: { notificationId: { _payload: 'notificationId' }, data: {} },
           },
         ],
       },
     ],
   };
-  expect(() => validateSendNotificationSteps({ components, context })).not.toThrow();
+  expect(() => validateRenderNotificationSteps({ components, context })).not.toThrow();
 });

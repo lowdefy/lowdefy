@@ -720,17 +720,17 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
   });
 });
 
-test('SendNotification step builds with notification prefix', () => {
+test('RenderNotification step builds with notification prefix', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_step',
+        id: 'test_rendernotification_step',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: {
               notificationId: 'task-assigned',
               data: { _step: 'get_data' },
@@ -744,15 +744,15 @@ test('SendNotification step builds with notification prefix', () => {
   expect(res).toEqual({
     api: [
       {
-        id: 'endpoint:test_sendnotification_step',
-        endpointId: 'test_sendnotification_step',
+        id: 'endpoint:test_rendernotification_step',
+        endpointId: 'test_rendernotification_step',
         type: 'Api',
         routine: [
           {
-            id: 'notification:test_sendnotification_step:send',
-            endpointId: 'test_sendnotification_step',
-            stepId: 'send',
-            type: 'SendNotification',
+            id: 'notification:test_rendernotification_step:render',
+            endpointId: 'test_rendernotification_step',
+            stepId: 'render',
+            type: 'RenderNotification',
             properties: {
               notificationId: 'task-assigned',
               data: { _step: 'get_data' },
@@ -764,20 +764,20 @@ test('SendNotification step builds with notification prefix', () => {
   });
 });
 
-test('SendNotification step allows operator objects for notificationId and array data', () => {
+test('RenderNotification step allows operator objects for notificationId and data', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_operators',
+        id: 'test_rendernotification_operators',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: {
               notificationId: { _payload: 'notificationId' },
-              data: [{ contact: { _id: 'UC-1' } }],
+              data: { _payload: 'item' },
             },
           },
         ],
@@ -787,17 +787,17 @@ test('SendNotification step allows operator objects for notificationId and array
   expect(() => buildApi({ components, context })).not.toThrow();
 });
 
-test('SendNotification step without properties.notificationId throws', () => {
+test('RenderNotification step without properties.notificationId throws', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_no_id',
+        id: 'test_rendernotification_no_id',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: { data: {} },
           },
         ],
@@ -805,21 +805,21 @@ test('SendNotification step without properties.notificationId throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "test_sendnotification_no_id" requires properties.notificationId.'
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_id" requires properties.notificationId.'
   );
 });
 
-test('SendNotification step without properties.data throws', () => {
+test('RenderNotification step without properties.data throws', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_no_data',
+        id: 'test_rendernotification_no_data',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: { notificationId: 'task-assigned' },
           },
         ],
@@ -827,21 +827,21 @@ test('SendNotification step without properties.data throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "test_sendnotification_no_data" requires properties.data.'
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_data" requires properties.data.'
   );
 });
 
-test('SendNotification step with string data throws', () => {
+test('RenderNotification step with string data throws', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_bad_data',
+        id: 'test_rendernotification_bad_data',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: { notificationId: 'task-assigned', data: 'data' },
           },
         ],
@@ -849,21 +849,46 @@ test('SendNotification step with string data throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "test_sendnotification_bad_data" properties.data is not an object or array.'
+    'RenderNotification step "render" at endpoint "test_rendernotification_bad_data" properties.data is not an object.'
   );
 });
 
-test('SendNotification step with connectionId throws', () => {
+test('RenderNotification step with array data throws', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_with_connection',
+        id: 'test_rendernotification_array_data',
         type: 'Api',
         routine: [
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: [{ contact: { _id: 'UC-1' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_array_data" properties.data is not an object.'
+  );
+});
+
+test('RenderNotification step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
             connectionId: 'test_connection',
             properties: { notificationId: 'task-assigned', data: {} },
           },
@@ -872,16 +897,16 @@ test('SendNotification step with connectionId throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'SendNotification step "send" at endpoint "test_sendnotification_with_connection" should not have a connectionId.'
+    'RenderNotification step "render" at endpoint "test_rendernotification_with_connection" should not have a connectionId.'
   );
 });
 
-test('SendNotification step is not counted in typeCounters.requests', () => {
+test('RenderNotification step is not counted in typeCounters.requests', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_sendnotification_no_count',
+        id: 'test_rendernotification_no_count',
         type: 'Api',
         routine: [
           {
@@ -890,8 +915,8 @@ test('SendNotification step is not counted in typeCounters.requests', () => {
             connectionId: 'connection',
           },
           {
-            id: 'send',
-            type: 'SendNotification',
+            id: 'render',
+            type: 'RenderNotification',
             properties: { notificationId: 'task-assigned', data: {} },
           },
         ],

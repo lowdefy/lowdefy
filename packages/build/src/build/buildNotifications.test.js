@@ -25,17 +25,10 @@ function createTestContext() {
   return context;
 }
 
-const connections = [
-  { id: 'connection:smtp', connectionId: 'smtp', type: 'SMTP' },
-  { id: 'connection:mongodb', connectionId: 'mongodb', type: 'MongoDBCollection' },
-];
-
 function validNotification(overrides = {}) {
   return {
     id: 'task-assigned',
     type: 'NotificationEmail',
-    emailConnectionId: 'smtp',
-    dataConnectionId: 'mongodb',
     properties: { subject: 'New Task' },
     ...overrides,
   };
@@ -63,7 +56,6 @@ test('buildNotifications throws when notification id is missing', () => {
   const context = createTestContext();
   const components = {
     notifications: [{ type: 'NotificationEmail' }],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification id missing at notification 0.'
@@ -74,7 +66,6 @@ test('buildNotifications throws when notification id is not a string', () => {
   const context = createTestContext();
   const components = {
     notifications: [{ id: true, type: 'NotificationEmail' }],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification id is not a string at notification 0.'
@@ -85,7 +76,6 @@ test('buildNotifications throws when notification id contains invalid characters
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ id: 'my.notification' })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification id "my.notification" contains invalid characters.'
@@ -96,7 +86,6 @@ test('buildNotifications throws on duplicate notification ids', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification(), validNotification()],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Duplicate notificationId "task-assigned".'
@@ -107,109 +96,9 @@ test('buildNotifications throws when notification type is not a string', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ type: 123 })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification type is not a string at notification "task-assigned".'
-  );
-});
-
-test('buildNotifications throws when emailConnectionId is missing', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ emailConnectionId: undefined })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification emailConnectionId is not defined at notification "task-assigned".'
-  );
-});
-
-test('buildNotifications throws when emailConnectionId is not a string', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ emailConnectionId: 123 })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification emailConnectionId is not a string at notification "task-assigned".'
-  );
-});
-
-test('buildNotifications throws when emailConnectionId references a connection which does not exist', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ emailConnectionId: 'missing' })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification "task-assigned" references emailConnectionId "missing" which does not exist.'
-  );
-});
-
-test('buildNotifications throws when dataConnectionId is missing', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ dataConnectionId: undefined })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification dataConnectionId is not defined at notification "task-assigned".'
-  );
-});
-
-test('buildNotifications throws when dataConnectionId references a connection which does not exist', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ dataConnectionId: 'missing' })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification "task-assigned" references dataConnectionId "missing" which does not exist.'
-  );
-});
-
-test('buildNotifications passes when connection ids match connections with plain ids', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification()],
-    connections: [
-      { id: 'smtp', type: 'SMTP' },
-      { id: 'mongodb', type: 'MongoDBCollection' },
-    ],
-  };
-  const res = buildNotifications({ components, context });
-  expect(res.notifications[0].emailConnectionId).toBe('smtp');
-});
-
-test('buildNotifications defaults delivery to inline', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification()],
-    connections,
-  };
-  const res = buildNotifications({ components, context });
-  expect(res.notifications[0].delivery).toBe('inline');
-});
-
-test('buildNotifications accepts delivery deferred', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ delivery: 'deferred' })],
-    connections,
-  };
-  const res = buildNotifications({ components, context });
-  expect(res.notifications[0].delivery).toBe('deferred');
-});
-
-test('buildNotifications throws when delivery is not a valid value', () => {
-  const context = createTestContext();
-  const components = {
-    notifications: [validNotification({ delivery: 'later' })],
-    connections,
-  };
-  expect(() => buildNotifications({ components, context })).toThrow(
-    'Notification delivery is not one of "inline" or "deferred" at notification "task-assigned".'
   );
 });
 
@@ -217,7 +106,6 @@ test('buildNotifications throws when properties is not an object', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ properties: 'properties' })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification properties is not an object at notification "task-assigned".'
@@ -228,7 +116,6 @@ test('buildNotifications throws when properties.subject is missing', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ properties: {} })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification "task-assigned" requires "properties.subject" to be a non-empty string.'
@@ -239,7 +126,6 @@ test('buildNotifications throws when properties.subject is an empty string', () 
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ properties: { subject: '' } })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification "task-assigned" requires "properties.subject" to be a non-empty string.'
@@ -250,7 +136,6 @@ test('buildNotifications throws when properties is missing entirely', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ properties: undefined })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification "task-assigned" requires "properties.subject" to be a non-empty string.'
@@ -261,7 +146,6 @@ test('buildNotifications throws when theme is not an object', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ theme: 'dark' })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification theme is not an object at notification "task-assigned".'
@@ -272,7 +156,6 @@ test('buildNotifications throws when testData is not an object', () => {
   const context = createTestContext();
   const components = {
     notifications: [validNotification({ testData: ['data'] })],
-    connections,
   };
   expect(() => buildNotifications({ components, context })).toThrow(
     'Notification testData is not an object at notification "task-assigned".'
@@ -283,7 +166,6 @@ test('buildNotifications renames id to internal format and sets notificationId',
   const context = createTestContext();
   const components = {
     notifications: [validNotification()],
-    connections,
   };
   const res = buildNotifications({ components, context });
   expect(res.notifications[0].id).toBe('notification:task-assigned');
@@ -297,7 +179,6 @@ test('buildNotifications populates context.notificationIds with original ids', (
       validNotification(),
       validNotification({ id: 'weekly-digest', type: 'DigestEmail' }),
     ],
-    connections,
   };
   buildNotifications({ components, context });
   expect(context.notificationIds).toEqual(new Set(['task-assigned', 'weekly-digest']));
@@ -311,7 +192,6 @@ test('buildNotifications counts notification types in context.typeCounters.notif
       validNotification({ id: 'task-done' }),
       validNotification({ id: 'weekly-digest', type: 'DigestEmail' }),
     ],
-    connections,
   };
   buildNotifications({ components, context });
   expect(context.typeCounters.notifications.getCounts()).toEqual({
@@ -332,7 +212,6 @@ test('buildNotifications does not count operators in notification properties', (
         },
       }),
     ],
-    connections,
   };
   buildNotifications({ components, context });
   expect(context.typeCounters.operators.server.getCounts()).toEqual({});

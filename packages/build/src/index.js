@@ -50,7 +50,7 @@ import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
-import validateSendNotificationSteps from './build/validateSendNotificationSteps.js';
+import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
@@ -133,7 +133,7 @@ async function build(options) {
     // Cross-config step validations — need buildApi (stepIds) and the
     // buildAgents/buildNotifications id sets
     tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
-    tryBuildStep(validateSendNotificationSteps, 'validateSendNotificationSteps', {
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
       components,
       context,
     });

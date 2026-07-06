@@ -23,10 +23,6 @@ test('All requests are present', () => {
   expect(SendGridMail.requests.SendGridMailSend).toBeDefined();
 });
 
-test('email.send capability is present', () => {
-  expect(SendGridMail.email.send).toBeDefined();
-});
-
 test('valid connection schema', () => {
   let connection = {
     apiKey: 'API_KEY',

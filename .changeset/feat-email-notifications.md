@@ -2,7 +2,6 @@
 '@lowdefy/api': minor
 '@lowdefy/build': minor
 'lowdefy': minor
-'@lowdefy/connection-mongodb': minor
 '@lowdefy/connection-sendgrid': minor
 '@lowdefy/connection-smtp': minor
 '@lowdefy/email-templates': minor
@@ -11,17 +10,17 @@
 '@lowdefy/server-dev': minor
 ---
 
-feat: Built-in email notifications
+feat: Email notification rendering
 
-Lowdefy apps can now define notifications in config: branded emails rendered from framework templates, stored per recipient, delivered over any SMTP provider, with in-app inbox data and a mark-as-read landing page.
+Lowdefy apps can now define notifications in config: branded emails rendered from framework templates, delivered over any SMTP provider. The framework renders; storing and sending are composed in YAML routines — so any database works through its normal request types, and apps or modules own the notification record.
 
 **`notifications:` config section (`@lowdefy/build`, `@lowdefy/api`)**
 
-- New root section where the template is the type: `{ id, type, properties }` with `emailConnectionId`, `dataConnectionId`, optional `delivery: deferred`, per-notification `theme` overrides and `testData`
+- New root section where the template is the type: `{ id, type, properties }` with per-notification `theme` overrides and `testData`
 - Template properties are nunjucks data templates — `{{ task.title }}` interpolates against the pipeline's data with no operator syntax; interpolated values are inert (can never inject markup or links)
-- New `SendNotification` API routine step: renders the template, stores the record (with `deduplication_key` support), and sends inline or defers to a scheduled drain endpoint
-- New `app.email` (logo, companyName, primaryColor, signature, footer), `app.serverUrl` and `app.notificationLandingPage` settings
-- Email links go directly to their target pages by default; set `app.notificationLandingPage` to route them through a landing page (for example the modules-mongodb notifications module's link page) that marks the record read before redirecting
+- New `RenderNotification` API routine step: renders one data item per call and returns `{ subject, title, preview, html, text, data }` where `data` is the link-resolved item — inserting the record, deduplicating, sending and updating send results are plain routine steps (`:for`, requests, `_uuid`)
+- New `app.email` theme settings (logo, companyName, primaryColor, signature, footer)
+- Link resolution is driven by the step's `serverUrl`, `landingPage` and `recordId` properties: `{ pageId, urlQuery }` links resolve to direct page URLs, or through a landing page (`?_id=<recordId>&option=<dotpath>`) that can mark the record read before redirecting (for example the modules-mongodb notifications module's link page)
 
 **Email templates (`@lowdefy/email-templates`)**
 
@@ -36,12 +35,8 @@ Lowdefy apps can now define notifications in config: branded emails rendered fro
 
 **SendGrid (`@lowdefy/connection-sendgrid`)**
 
-- Supports the same delivery `filter` and default `replyTo`; interchangeable with SMTP wherever a notification references an email connection
+- Supports the same delivery `filter` and default `replyTo`; interchangeable with SMTP wherever a routine sends notification emails
 - Array requests now send per message; request-level `templateId` is no longer overridden by an unset connection `templateId`
-
-**MongoDB storage (`@lowdefy/connection-mongodb`)**
-
-- Notification records are stored with rendered content, so retries, deferred drains, inboxes and mark-as-read are plain YAML requests over the record schema; duplicate keys are enforced with a unique partial index
 
 **Preview CLI (`lowdefy`)**
 

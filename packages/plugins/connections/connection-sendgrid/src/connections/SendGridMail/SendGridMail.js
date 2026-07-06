@@ -15,15 +15,11 @@
 */
 
 import schema from './schema.js';
-import send from './send.js';
 import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
 
 export default {
   schema,
   requests: {
     SendGridMailSend,
-  },
-  email: {
-    send,
   },
 };

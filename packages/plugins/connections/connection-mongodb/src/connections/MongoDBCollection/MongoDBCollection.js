@@ -24,8 +24,6 @@ import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
-import insertNotification from './notificationAdapter/insertNotification.js';
-import updateNotificationSendResult from './notificationAdapter/updateNotificationSendResult.js';
 import schema from './schema.js';
 
 export default {
@@ -41,12 +39,5 @@ export default {
     MongoDBInsertOne,
     MongoDBUpdateMany,
     MongoDBUpdateOne,
-  },
-  // Insert + send-result bookkeeping only — reads and mark-as-read are app
-  // territory (plain requests over the record schema, e.g. the notifications
-  // module's landing page).
-  notificationAdapter: {
-    insertNotification,
-    updateNotificationSendResult,
   },
 };

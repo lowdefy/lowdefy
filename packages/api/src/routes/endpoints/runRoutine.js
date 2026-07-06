@@ -19,8 +19,8 @@ import { type } from '@lowdefy/helpers';
 import handleAgentCall from './handleAgentCall.js';
 import handleControl from './control/handleControl.js';
 import handleEndpointCall from './handleEndpointCall.js';
+import handleRenderNotification from './handleRenderNotification.js';
 import handleRequest from './handleRequest.js';
-import handleSendNotification from './handleSendNotification.js';
 import handleValidateSchema from './handleValidateSchema.js';
 
 async function runRoutine(context, routineContext, { routine }) {
@@ -47,7 +47,7 @@ async function runRoutine(context, routineContext, { routine }) {
         });
       }
       if (routine.id?.startsWith?.('notification:')) {
-        return await handleSendNotification(context, routineContext, {
+        return await handleRenderNotification(context, routineContext, {
           step: routine,
         });
       }

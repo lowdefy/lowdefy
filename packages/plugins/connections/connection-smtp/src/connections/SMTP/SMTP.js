@@ -16,14 +16,10 @@
 
 import SMTPMailSend from './SMTPMailSend/SMTPMailSend.js';
 import schema from './schema.js';
-import send from './send.js';
 
 export default {
   schema,
   requests: {
     SMTPMailSend,
-  },
-  email: {
-    send,
   },
 };

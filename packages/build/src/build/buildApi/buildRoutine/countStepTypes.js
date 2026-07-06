@@ -18,7 +18,7 @@ function countStepTypes(step, { typeCounters }) {
   if (
     step.type === 'CallAgent' ||
     step.type === 'CallApi' ||
-    step.type === 'SendNotification' ||
+    step.type === 'RenderNotification' ||
     step.type === 'ValidateSchema'
   ) {
     return;

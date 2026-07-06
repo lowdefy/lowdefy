@@ -103,10 +103,10 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
-  if (step.type === 'SendNotification') {
+  if (step.type === 'RenderNotification') {
     if (type.isNone(step.properties?.notificationId)) {
       throw new ConfigError(
-        `SendNotification step "${step.id}" at endpoint "${endpointId}" requires properties.notificationId.`,
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" requires properties.notificationId.`,
         { configKey }
       );
     }
@@ -115,25 +115,26 @@ function validateStep(step, { endpointId }) {
       !type.isObject(step.properties.notificationId)
     ) {
       throw new ConfigError(
-        `SendNotification step "${step.id}" at endpoint "${endpointId}" properties.notificationId is not a string.`,
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" properties.notificationId is not a string.`,
         { received: step.properties.notificationId, configKey }
       );
     }
     if (type.isNone(step.properties?.data)) {
       throw new ConfigError(
-        `SendNotification step "${step.id}" at endpoint "${endpointId}" requires properties.data.`,
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" requires properties.data.`,
         { configKey }
       );
     }
-    if (!type.isObject(step.properties.data) && !type.isArray(step.properties.data)) {
+    // One item per render — arrays are iterated with a :for control in the routine.
+    if (!type.isObject(step.properties.data)) {
       throw new ConfigError(
-        `SendNotification step "${step.id}" at endpoint "${endpointId}" properties.data is not an object or array.`,
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" properties.data is not an object.`,
         { received: step.properties.data, configKey }
       );
     }
     if (!type.isNone(step.connectionId)) {
       throw new ConfigError(
-        `SendNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
         { configKey }
       );
     }

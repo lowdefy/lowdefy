@@ -21,35 +21,6 @@ import { ConfigError } from '@lowdefy/errors';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
 
-const deliveryValues = ['inline', 'deferred'];
-
-function validateConnectionRef({ notification, field, configKey, components }) {
-  const connectionId = notification[field];
-  if (type.isNone(connectionId)) {
-    throw new ConfigError(
-      `Notification ${field} is not defined at notification "${notification.id}".`,
-      { configKey }
-    );
-  }
-  if (!type.isString(connectionId)) {
-    throw new ConfigError(
-      `Notification ${field} is not a string at notification "${notification.id}".`,
-      { received: connectionId, configKey }
-    );
-  }
-  // Connections may have been renamed by buildConnections:
-  //   connection.connectionId = original id, connection.id = 'connection:' + original id
-  const connectionExists = (components.connections ?? []).some(
-    (c) => c.id === connectionId || c.connectionId === connectionId
-  );
-  if (!connectionExists) {
-    throw new ConfigError(
-      `Notification "${notification.id}" references ${field} "${connectionId}" which does not exist.`,
-      { configKey, checkSlug: 'connection-refs' }
-    );
-  }
-}
-
 function buildNotifications({ components, context }) {
   if (components.notifications && !type.isArray(components.notifications)) {
     throw new ConfigError('Notifications is not an array.', {
@@ -89,19 +60,6 @@ function buildNotifications({ components, context }) {
     // Track type usage for buildTypes validation
     context.typeCounters.notifications.increment(notification.type, configKey);
 
-    validateConnectionRef({ notification, field: 'emailConnectionId', configKey, components });
-    validateConnectionRef({ notification, field: 'dataConnectionId', configKey, components });
-
-    if (type.isNone(notification.delivery)) {
-      notification.delivery = 'inline';
-    }
-    if (!deliveryValues.includes(notification.delivery)) {
-      throw new ConfigError(
-        `Notification delivery is not one of "inline" or "deferred" at notification "${notification.id}".`,
-        { received: notification.delivery, configKey }
-      );
-    }
-
     if (type.isNone(notification.properties)) {
       notification.properties = {};
     }
@@ -113,7 +71,7 @@ function buildNotifications({ components, context }) {
     }
 
     // subject is a framework contract, independent of the template type's own schema —
-    // the runtime reads it for the stored record and the mail header.
+    // the render step reads it for the mail header and the returned result.
     if (!type.isString(notification.properties.subject) || notification.properties.subject === '') {
       throw new ConfigError(
         `Notification "${notification.id}" requires "properties.subject" to be a non-empty string.`,

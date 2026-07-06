@@ -23,10 +23,6 @@ test('All requests are present', () => {
   expect(SMTP.requests.SMTPMailSend).toBeDefined();
 });
 
-test('email send capability is present', () => {
-  expect(SMTP.email.send).toBeDefined();
-});
-
 test('valid connection schema, all email variations', () => {
   let connection = {
     from: 'someone@example.com',
