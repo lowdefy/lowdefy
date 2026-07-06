@@ -24,10 +24,12 @@ import operators from '@lowdefy/operators-js/operators/build';
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
@@ -35,6 +37,7 @@ import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
+import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
@@ -164,6 +167,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       buildContext.refMap[refDef.id].path = refDef.path;
     }
 
+    // Module path resolution: resolve relative path/resolver/transformer from the
+    // module root. The full build does this in walker.js step 4 when an _ref node
+    // is encountered, but the JIT path builds the page refDef directly from
+    // resolverOriginal (the un-rebased authored _ref) and calls getRefContent
+    // without going through the walker — so a module resolver like
+    // "resolvers/makeActionPages.js" would otherwise resolve against the app
+    // config dir instead of the module root. (File-based module pages are
+    // unaffected: their paths are stored already-rebased in refMap.)
+    if (moduleEntry?.moduleRoot) {
+      rebaseModuleRefPaths({ refDef, moduleRoot: moduleEntry.moduleRoot });
+      if (type.isString(refDef.path)) {
+        buildContext.refMap[refDef.id].path = refDef.path;
+      }
+    }
+
     const pageContent = await getRefContent({
       context: buildContext,
       refDef,
@@ -230,6 +248,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.callApiActionRefs) {
       buildContext.callApiActionRefs = [];
     }
+    if (!buildContext.websocketActionRefs) {
+      buildContext.websocketActionRefs = [];
+    }
+    if (!buildContext.dynamicBlockRefs) {
+      buildContext.dynamicBlockRefs = [];
+    }
+    // buildSubscriptions validates against websocketIds — the dev server
+    // restores the set from the websocketIds.json skeleton artifact. Rebuild
+    // it from skeleton-built websockets when the context doesn't carry it
+    // (createContext initializes an empty set, so check size, not presence).
+    if (!buildContext.websocketIds?.size) {
+      buildContext.websocketIds = new Set(
+        (buildContext.components?.websockets ?? []).map((websocket) => websocket.websocketId)
+      );
+    }
 
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
@@ -273,6 +306,16 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateCallApiRefs({
       callApiActionRefs: buildContext.callApiActionRefs,
       endpointConfigs,
+      context: buildContext,
+    });
+    validateDynamicBlockRefs({
+      dynamicBlockRefs: buildContext.dynamicBlockRefs,
+      endpointConfigs,
+      context: buildContext,
+    });
+    validateWebsocketRefs({
+      websocketActionRefs: buildContext.websocketActionRefs,
+      websocketIds: buildContext.websocketIds,
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });

@@ -35,6 +35,12 @@ function validateAuthConfig({ components, context }) {
   if (type.isNone(components.auth.api.roles)) {
     components.auth.api.roles = {};
   }
+  if (type.isNone(components.auth.websockets)) {
+    components.auth.websockets = {};
+  }
+  if (type.isNone(components.auth.websockets.roles)) {
+    components.auth.websockets.roles = {};
+  }
   if (type.isNone(components.auth.authPages)) {
     components.auth.authPages = {};
   }
@@ -91,6 +97,7 @@ function validateAuthConfig({ components, context }) {
 
   validateMutualExclusivity({ components, context, entity: 'api' });
   validateMutualExclusivity({ components, context, entity: 'pages' });
+  validateMutualExclusivity({ components, context, entity: 'websockets' });
 
   // Validate NEXTAUTH_SECRET is set when auth providers are configured
   if (components.auth.providers.length > 0 && type.isNone(process.env.NEXTAUTH_SECRET)) {

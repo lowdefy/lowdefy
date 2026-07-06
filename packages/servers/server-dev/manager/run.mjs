@@ -16,6 +16,7 @@
 */
 
 import { wait } from '@lowdefy/helpers';
+import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
@@ -94,6 +95,17 @@ try {
   // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
+
+  // The manager is the component that binds the port, so it re-checks here to
+  // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
+  // process that grabbed the port during the initial build.
+  const availablePort = await findAvailablePort({ port: context.options.port });
+  if (availablePort !== context.options.port) {
+    context.logger.warn(
+      `Port ${context.options.port} is in use, using port ${availablePort} instead.`
+    );
+    context.options.port = availablePort;
+  }
 
   startServer(context);
   await wait(800);

@@ -144,6 +144,9 @@ async function sweepEntryConfig({ moduleEntry, context }) {
 
 async function buildModuleDefs({ context }) {
   const lowdefyConfig = await parseLowdefyYaml({ context });
+  // Stash for index.js to compute appMeta before buildRefs, so the _build.app
+  // operator can resolve app metadata during ref resolution.
+  context.lowdefyConfig = lowdefyConfig;
   context.plugins = lowdefyConfig.plugins ?? [];
   const moduleEntries = lowdefyConfig.modules ?? [];
 

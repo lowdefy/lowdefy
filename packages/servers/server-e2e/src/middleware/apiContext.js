@@ -31,6 +31,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
+import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getE2eSecrets();
 
@@ -68,6 +69,7 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      websockets,
     };
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });

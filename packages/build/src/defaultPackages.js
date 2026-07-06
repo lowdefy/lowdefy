@@ -42,7 +42,9 @@ const defaultPackages = [
   '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/connection-sendgrid',
+  '@lowdefy/connection-smtp',
   '@lowdefy/connection-stripe',
+  '@lowdefy/email-templates',
   '@lowdefy/operators-change-case',
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
@@ -56,6 +58,7 @@ const defaultPackages = [
   '@lowdefy/plugin-aws',
   '@lowdefy/plugin-csv',
   '@lowdefy/plugin-next-auth',
+  '@lowdefy/websockets-core',
 ];
 
 export default defaultPackages;

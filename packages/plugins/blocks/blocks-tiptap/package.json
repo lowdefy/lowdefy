@@ -58,6 +58,7 @@
     "@lowdefy/blocks-antd": "5.3.0",
     "@lowdefy/helpers": "5.3.0",
     "@tiptap/core": "2.27.2",
+    "@tiptap/extension-bubble-menu": "2.27.2",
     "@tiptap/extension-file-handler": "2.27.2",
     "@tiptap/extension-highlight": "2.27.2",
     "@tiptap/extension-image": "2.27.2",
@@ -82,9 +83,9 @@
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "5.3.0",
     "@lowdefy/e2e-utils": "5.3.0",
-    "@playwright/test": "1.50.1",
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@playwright/test": "1.59.1",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "copyfiles": "2.4.1"
   },
   "publishConfig": {

@@ -197,6 +197,7 @@ lowdefy/
 - [Plugin System](./architecture/plugin-system.md) - How plugins are loaded and registered
 - [Auth System](./architecture/auth-system.md) - Authentication integration
 - [Operator System](./architecture/operator-system.md) - Operator evaluation at build/runtime
+- [Notification Rendering](./architecture/notifications.md) - The render primitive and the composed send pipeline
 
 ### Plugin Documentation
 

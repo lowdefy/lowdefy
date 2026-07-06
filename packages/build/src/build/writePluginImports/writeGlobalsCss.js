@@ -97,7 +97,11 @@ async function writeGlobalsCss({ components, context }) {
 /* Layer order — locks cascade priority before Tailwind declares its own layers */
 @layer theme, base, antd, components, utilities;
 
-@import "tailwindcss";
+/* source(none) disables Tailwind's automatic source detection — without it the
+   oxide scanner walks the entire server directory tree (node_modules and all,
+   ~50s cold) on the first CSS compile. The explicit @source globs below are
+   the only scan inputs Lowdefy needs. */
+@import "tailwindcss" source(none);
 @import "@lowdefy/layout/grid.css";
 
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source.

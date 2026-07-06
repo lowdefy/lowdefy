@@ -14,21 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 const breakpointKeys = new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl']);
 
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
-
 function isOperator(value) {
-  const nonTildeKeys = Object.keys(value).filter((k) => !k.startsWith('~'));
-  if (nonTildeKeys.length !== 1) return false;
-  const key = nonTildeKeys[0];
-  const [op] = key.split('.');
-  const operator = op.replace(/^(_+)/gm, '_');
-  return operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator);
+  return getOperatorType(value) !== null;
 }
 
 function stripDotPrefix(key) {

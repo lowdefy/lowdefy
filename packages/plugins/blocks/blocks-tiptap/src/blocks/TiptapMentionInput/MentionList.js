@@ -16,23 +16,49 @@
 
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { renderHtml } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
+
+import itemSection from './itemSection.js';
+
+function groupItems(items) {
+  const groups = [];
+  const bySection = new Map();
+  items.forEach((item) => {
+    const section = itemSection(item);
+    if (!bySection.has(section)) {
+      const group = { section, items: [] };
+      bySection.set(section, group);
+      groups.push(group);
+    }
+    bySection.get(section).items.push(item);
+  });
+  let startIndex = 0;
+  groups.forEach((group) => {
+    group.startIndex = startIndex;
+    startIndex += group.items.length;
+  });
+  return groups;
+}
 
 const MentionList = forwardRef((props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const groups = groupItems(props.items);
+  const flatItems = groups.flatMap((group) => group.items);
+
   const selectItem = (index) => {
-    const item = props.items[index];
+    const item = flatItems[index];
     if (item) {
       props.command({ id: item });
     }
   };
 
   const upHandler = () => {
-    setSelectedIndex((selectedIndex + props.items.length - 1) % props.items.length);
+    setSelectedIndex((selectedIndex + flatItems.length - 1) % flatItems.length);
   };
 
   const downHandler = () => {
-    setSelectedIndex((selectedIndex + 1) % props.items.length);
+    setSelectedIndex((selectedIndex + 1) % flatItems.length);
   };
 
   const enterHandler = () => {
@@ -61,15 +87,25 @@ const MentionList = forwardRef((props, ref) => {
 
   return (
     <div className="tiptap-mention-items">
-      {props.items.length ? (
-        props.items.map((item, index) => (
-          <button
-            className={`tiptap-mention-item ${index === selectedIndex ? 'is-selected' : ''}`}
-            key={index}
-            onClick={() => selectItem(index)}
-          >
-            {renderHtml({ html: item?.label ?? item, methods: props.methods })}
-          </button>
+      {flatItems.length ? (
+        groups.map((group) => (
+          <React.Fragment key={group.startIndex}>
+            {!type.isNone(group.section) && (
+              <div className="tiptap-mention-section">{group.section}</div>
+            )}
+            {group.items.map((item, itemIndex) => {
+              const index = group.startIndex + itemIndex;
+              return (
+                <button
+                  className={`tiptap-mention-item ${index === selectedIndex ? 'is-selected' : ''}`}
+                  key={index}
+                  onClick={() => selectItem(index)}
+                >
+                  {renderHtml({ html: item?.label ?? item, methods: props.methods })}
+                </button>
+              );
+            })}
+          </React.Fragment>
         ))
       ) : (
         <div className="tiptap-mention-item secondary">No matching results</div>

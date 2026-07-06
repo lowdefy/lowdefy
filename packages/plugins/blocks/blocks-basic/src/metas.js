@@ -17,6 +17,7 @@
 export { default as Anchor } from './blocks/Anchor/meta.js';
 export { default as Box } from './blocks/Box/meta.js';
 export { default as DangerousHtml } from './blocks/DangerousHtml/meta.js';
+export { default as Dynamic } from './blocks/Dynamic/meta.js';
 export { default as Html } from './blocks/Html/meta.js';
 export { default as Icon } from './blocks/Icon/meta.js';
 export { default as Img } from './blocks/Img/meta.js';

@@ -120,3 +120,10 @@ test('baseURL is not a string', async () => {
     'Anthropic connection property "baseURL" should be a string.'
   );
 });
+
+test('All requests are present', async () => {
+  const { default: Anthropic } = await import('./Anthropic.js');
+
+  expect(Anthropic.requests.GenerateObject).toBeDefined();
+  expect(Anthropic.requests.GenerateText).toBeDefined();
+});

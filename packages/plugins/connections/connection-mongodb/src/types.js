@@ -31,4 +31,5 @@ export default {
   auth: {
     adapters: ['MongoDBAdapter'],
   },
+  websockets: ['MongoDBChangeStream'],
 };

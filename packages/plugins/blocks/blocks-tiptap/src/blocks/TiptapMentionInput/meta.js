@@ -132,8 +132,27 @@ export default {
           getHref: {
             type: 'object',
             description:
-              'Optional function (_function operator) that receives a selected mention id and returns an href. When provided, mentions render as <a> tags.',
+              'Optional _function that receives the selected mention option and returns an href. A non-nullish return renders the mention as an <a>; a nullish return renders a plain <span> (use this for options with no link, e.g. group mentions).',
             docs: { displayType: 'yaml' },
+          },
+          limit: {
+            type: 'integer',
+            minimum: 1,
+            default: 5,
+            description:
+              'Maximum suggestions shown — per section when options declare sections, otherwise across the flat list.',
+          },
+          groupMembers: {
+            type: 'object',
+            additionalProperties: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: { name: { type: 'string' }, email: { type: 'string' } },
+              },
+            },
+            description:
+              "Map of group key → array of { name, email } shown in a hover popover on that group's chips (live editor only).",
           },
         },
       },

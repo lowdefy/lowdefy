@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import buildBlock from './buildBlock/buildBlock.js';
+import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateId from '../../utils/validateId.js';
@@ -50,10 +51,16 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   const requests = [];
   const requestActionRefs = [];
   const shortcutRefs = [];
-  buildBlock(page, {
+  // Extract subscriptions before block building — validateBlock rejects the
+  // subscriptions key on nested blocks, so the page root must not carry it.
+  const subscriptions = page.subscriptions;
+  delete page.subscriptions;
+  const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
     callApiActionRefs: context.callApiActionRefs ?? [],
+    websocketActionRefs: context.websocketActionRefs ?? [],
+    dynamicBlockRefs: context.dynamicBlockRefs ?? [],
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
@@ -64,9 +71,28 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     shortcutRefs,
     linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
-  });
+  };
+  buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+
+  // Flag pages with Dynamic blocks so the server can skip resolution
+  // (and the deep copy it requires) for static pages with one property read.
+  if (pageContext.hasDynamicBlocks === true) {
+    page.dynamic = true;
+  }
+
+  page.subscriptions = subscriptions;
+  buildSubscriptions(page, {
+    callApiActionRefs: context.callApiActionRefs ?? [],
+    context,
+    linkActionRefs: context.linkActionRefs,
+    pageId: page.pageId,
+    requestActionRefs,
+    shortcutRefs,
+    typeCounters: context.typeCounters,
+    websocketActionRefs: context.websocketActionRefs ?? [],
+  });
 
   // Validate that all Request actions reference defined requests
   validateRequestReferences({

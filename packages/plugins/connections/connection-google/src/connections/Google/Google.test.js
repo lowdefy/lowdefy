@@ -120,3 +120,10 @@ test('baseURL is not a string', async () => {
     'Google connection property "baseURL" should be a string.'
   );
 });
+
+test('All requests are present', async () => {
+  const { default: Google } = await import('./Google.js');
+
+  expect(Google.requests.GenerateObject).toBeDefined();
+  expect(Google.requests.GenerateText).toBeDefined();
+});

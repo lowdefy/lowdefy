@@ -38,9 +38,11 @@ import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
+import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
@@ -48,7 +50,9 @@ import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
+import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
+import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
@@ -57,6 +61,7 @@ import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
 import writeI18n from './build/writeI18n.js';
 import writeTheme from './build/writeTheme.js';
@@ -64,6 +69,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeRequests from './build/full/writeRequests.js';
@@ -142,7 +148,17 @@ async function build(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
-    tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    tryBuildStep(buildAgents, 'buildAgents', { components, context })
+    // Runs after buildAgents — needs context.agentIds and normalized agent.tools
+    tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    // Cross-config step validations — need buildApi (stepIds) and the
+    // buildAgents/buildNotifications id sets
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
+      components,
+      context,
+    });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
@@ -170,6 +186,8 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeWebsockets({ components, context });
+    await writeNotifications({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });

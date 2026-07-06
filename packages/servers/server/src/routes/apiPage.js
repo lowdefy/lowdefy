@@ -23,7 +23,9 @@ import getPathSegments from '../lib/getPathSegments.js';
 async function apiPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
-  const pageConfig = await getPageConfig(context, { pageId });
+  // The client forwards its current query string on the fetch so Dynamic block
+  // resolution sees the same urlQuery as an initial HTML load.
+  const pageConfig = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
   if (!pageConfig) {
     context.logger.info({ event: 'api_page_not_found', pageId });
     return c.json({ pageConfig: null }, 404);

@@ -121,7 +121,29 @@ jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
   Experimental_StdioMCPTransport: MockStdioMCPTransport,
 }));
 
+const mockHandleAgentGenerate = jest.fn();
+jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
+  default: mockHandleAgentGenerate,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
+
+test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const mockResult = { result: { text: 'done', finishReason: 'stop' } };
+  mockHandleAgentGenerate.mockResolvedValue(mockResult);
+
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: { agent: { properties: { model: 'test-model' } }, prompt: 'Go.' },
+    context: { mode: 'generate' },
+  };
+  const result = await handleAgentChat(args);
+
+  expect(mockHandleAgentGenerate).toHaveBeenCalledWith(args);
+  expect(result).toBe(mockResult);
+  expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+});
 
 test('creates ToolLoopAgent with correct parameters', async () => {
   mockTool.mockImplementation((def) => def);

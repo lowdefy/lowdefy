@@ -113,6 +113,16 @@
           pageId: lowdefy-api
           properties:
             title: APIs
+        - id: notifications
+          type: MenuLink
+          pageId: notifications
+          properties:
+            title: Notifications
+        - id: dynamic-page-content
+          type: MenuLink
+          pageId: dynamic-page-content
+          properties:
+            title: Dynamic Page Content
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -230,6 +240,28 @@
           pageId: AgentConversations
           properties:
             title: AgentConversations
+
+    - id: websockets_group
+      type: MenuGroup
+      properties:
+        title: WebSockets
+        icon: AiOutlineWifi
+      links:
+        - id: websockets-introduction
+          type: MenuLink
+          pageId: websockets-introduction
+          properties:
+            title: Introduction
+        - id: websocket-subscriptions
+          type: MenuLink
+          pageId: websocket-subscriptions
+          properties:
+            title: Page Subscriptions
+        - id: websocket-publish
+          type: MenuLink
+          pageId: websocket-publish
+          properties:
+            title: Publish and Actions
 
     - id: deployment
       type: MenuGroup
@@ -837,6 +869,11 @@
           pageId: SendGridMail
           properties:
             title: SendGrid Email
+        - id: SMTP
+          type: MenuLink
+          pageId: SMTP
+          properties:
+            title: SMTP Email
         - id: SQLite
           type: MenuLink
           pageId: SQLite

@@ -207,6 +207,40 @@ test('_build.* operators ignore dynamic params — evaluates even with ~dyn in p
   expect(res.output.a).toEqual({ nested: 'value' });
 });
 
+test('lowdefyApp is passed to operators — _app resolves app metadata', () => {
+  const _app = jest.fn(({ lowdefyApp, params }) => lowdefyApp[params]);
+  const ops = { _app };
+  const input = { a: { '_build.app': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '_build.',
+    lowdefyApp: { version: '1.2.3', slug: 'my-app' },
+  });
+  expect(_app).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: '1.2.3' });
+});
+
+test('unknown _build.* operator — pushes a ConfigError instead of ~dyn', () => {
+  const input = { a: { '_build.appp': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    operatorPrefix: '_build.',
+  });
+  expect(res.output.a).toBeNull();
+  expect(res.errors).toHaveLength(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toContain('_build.appp');
+});
+
+test('unknown operator under default prefix — still gets ~dyn (not an error)', () => {
+  const input = { a: { _unknown: 'params' } };
+  const res = evaluateOperators({ input, operators: mockOperators });
+  expect(res.output.a['~dyn']).toBe(true);
+  expect(res.errors).toEqual([]);
+});
+
 test('~r on operator objects — still evaluated', () => {
   const input = { a: { _echo: 'hello' } };
   Object.defineProperty(input.a, '~r', {

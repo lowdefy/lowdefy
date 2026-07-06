@@ -34,6 +34,9 @@ function buildApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
+  if (type.isNone(components.app.email)) {
+    components.app.email = {};
+  }
   return components;
 }
 

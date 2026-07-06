@@ -33,7 +33,9 @@ function getPluginPackages({ components }) {
   getPackages(components.types.auth.providers);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
+  getPackages(components.types.notifications);
   getPackages(components.types.requests);
+  getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
   return pluginPackages;
@@ -64,7 +66,9 @@ function buildImportsDev({ components, context }) {
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
     icons: buildIconImports({ blocks, components, context, defaults: defaultIconsDev }),
+    notifications: buildImportClassDev({ pluginPackages, map: context.typesMap.notifications }),
     requests: buildImportClassDev({ pluginPackages, map: context.typesMap.requests }),
+    websockets: buildImportClassDev({ pluginPackages, map: context.typesMap.websockets }),
     operators: {
       client: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.client }),
       server: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.server }),

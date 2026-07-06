@@ -596,7 +596,6 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 AgentChat.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default AgentChat;

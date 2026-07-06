@@ -11,11 +11,13 @@ const defaultTypesMap = {
   blocks: {},
   connections: {},
   icons: {},
+  notifications: {},
   operators: {
     client: {},
     server: {},
   },
   requests: {},
+  websockets: {},
   schemas: {
     actions: {},
     blocks: {},

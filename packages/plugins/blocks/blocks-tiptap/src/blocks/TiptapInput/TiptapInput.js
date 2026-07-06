@@ -27,7 +27,7 @@ import computeHeightStyle from '../utils/computeHeightStyle.js';
 import statusClass from '../utils/statusClass.js';
 import useTiptapState from './useTiptapState.js';
 
-import './style.module.css';
+import './style.css';
 
 const TiptapInput = ({
   blockId,

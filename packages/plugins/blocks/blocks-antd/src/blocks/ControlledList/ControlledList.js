@@ -22,7 +22,7 @@ import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
 import withTheme from '../withTheme.js';
 
-import './style.module.css';
+import './style.css';
 
 const ControlledListBlock = ({
   blockId,

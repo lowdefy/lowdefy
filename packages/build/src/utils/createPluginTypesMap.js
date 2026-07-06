@@ -110,8 +110,24 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
+    typeNames: packageTypes.notifications,
+    store: typesMap.notifications,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
     typeNames: packageTypes.requests,
     store: typesMap.requests,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: packageTypes.websockets,
+    store: typesMap.websockets,
     packageName,
     typePrefix,
     version,

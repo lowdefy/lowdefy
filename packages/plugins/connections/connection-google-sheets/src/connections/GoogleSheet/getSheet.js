@@ -15,16 +15,20 @@
 */
 
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { JWT } from 'google-auth-library';
 
-async function authenticate({ doc, apiKey, client_email, private_key }) {
+// google-spreadsheet v4+ takes the auth object in the constructor instead of the
+// v3 doc.useApiKey / doc.useServiceAccountAuth methods. An API key gives read-only
+// access; a service account (JWT) is needed for writes.
+function getAuth({ apiKey, client_email, private_key }) {
   if (apiKey) {
-    doc.useApiKey(apiKey);
-  } else {
-    await doc.useServiceAccountAuth({
-      client_email,
-      private_key,
-    });
+    return { apiKey };
   }
+  return new JWT({
+    email: client_email,
+    key: private_key,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
 }
 
 function getSheetFromDoc({ doc, sheetId, sheetIndex }) {
@@ -45,9 +49,8 @@ function getSheetFromDoc({ doc, sheetId, sheetIndex }) {
 
 async function getSheet({ connection }) {
   const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
-  const doc = new GoogleSpreadsheet(spreadsheetId);
-
-  await authenticate({ doc, apiKey, client_email, private_key });
+  const auth = getAuth({ apiKey, client_email, private_key });
+  const doc = new GoogleSpreadsheet(spreadsheetId, auth);
 
   await doc.loadInfo();
 

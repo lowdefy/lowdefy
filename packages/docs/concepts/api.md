@@ -30,6 +30,7 @@ The schema for a Lowdefy API is:
 - `id: string`: **Required** - A unique identifier for the API endpoint.
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
+- `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
 
@@ -89,6 +90,39 @@ api:
   # Your API definitions
   # ...
 ```
+
+## Scheduled Endpoints (Cron)
+
+An endpoint can declare `schedules` to run its routine on a timer instead of (or in addition to) being called from the client. This is currently supported on [Vercel deployments](/deployment-vercel), where each schedule becomes a native Vercel cron job.
+
+```yaml
+api:
+  - id: purge_stale_conversations
+    type: Api
+    schedules:
+      - cron: '0 6 * * *'
+        payload: { mode: full }
+      - cron: '*/15 * * * *'
+        payload: { mode: incremental }
+    routine:
+      - id: purge
+        type: MongoDBDeleteMany
+        connectionId: conversations
+        properties:
+          filter:
+            updatedAt:
+              $lt:
+                _payload: cutoff
+```
+
+Each schedule item has:
+
+- `cron: string`: **Required** - A 5-field cron expression (`minute hour day-of-month month day-of-week`), evaluated in **UTC**. Named values like `MON`/`JAN` are not supported, and day-of-month and day-of-week are mutually exclusive (one must be `*`). Cron expressions must be unique within an endpoint.
+- `payload: object`: **Optional** - The payload passed to the routine for this schedule, available via the `_payload` operator. Different schedules can pass different payloads to the same routine.
+
+When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
+
+See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ## Routines
 
@@ -266,6 +300,66 @@ Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws a
 
 Connection plugin resolvers can also invoke endpoints from inside their JS code using the `callApi` function on the resolver argument bag. The semantics — depth cap, isolated routine context, caller's user identity, `InternalApi` reachable — match the `CallApi` step. See [Connection and Request Plugins](/plugins-connections) for the resolver-side API.
 
+## Running Agents As A Routine Step
+
+Routines can run an [agent](/agents-introduction) to completion using `CallAgent` steps. The agent runs headlessly — no chat UI, no streaming — looping through its tools until it finishes, and the result is stored as the step result. This lets endpoints delegate open-ended, multi-step work to an agent, while the surrounding routine stays explicit. For a single model call without tools, prefer the one-shot `GenerateText` / `GenerateObject` [request types](/Anthropic) — they are cheaper and more predictable.
+
+A `CallAgent` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: CallAgent`: **Required** - Identifies this as an agent call step.
+- `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
+- `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
+
+The step result contains:
+
+- `text: string`: The agent's final text output.
+- `finishReason: string`: Why the run ended (`stop`, `length`, `tool-calls`, ...).
+- `usage: object`: Accumulated token usage across all steps (`{ inputTokens, outputTokens, totalTokens, reasoningTokens, cacheReadTokens, cacheWriteTokens }`).
+- `toolCalls: object[]`: The tool calls the agent made (`{ toolCallId, toolName, input }`).
+- `toolResults: object[]`: The corresponding tool results (`{ toolCallId, toolName, output }`).
+
+```yaml
+agents:
+  - id: research_agent
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5
+      instructions: You research signup data and summarize findings.
+      maxSteps: 5
+    tools:
+      - lookup-signups
+
+api:
+  - id: daily-research
+    type: Api
+    routine:
+      - id: research
+        type: CallAgent
+        properties:
+          agentId: research_agent
+          prompt: Summarize yesterday's signups and flag anomalies.
+
+      - id: send_report
+        type: SendGridMail
+        connectionId: email
+        properties:
+          to: team@example.com
+          subject: Daily signup report
+          text:
+            _step: research.text
+```
+
+Headless agent runs differ from interactive chat in a few ways:
+
+- **Tool approval is not supported.** Tools configured with `confirm: true` auto-execute — there is no client to approve them. The build emits a warning when a `CallAgent` step references an agent with confirm tools.
+- **No page context.** The `update-page-state` tool is not available, and no conversation title is generated.
+- **Hooks still fire.** Agent [server hooks](/agent-server-hooks) (`onStart`, `onStepFinish`, `onFinish`, etc.) run as endpoint calls — useful for logging and persistence. `dataParts` returned by `onFinish` endpoints are ignored (there is no stream to write to), and the `messages` in the `onFinish` payload are model messages rather than UI messages.
+- **Authorization is per tool endpoint.** Each tool call authorizes against that endpoint's `auth` config with the caller's identity. In a system context with no user, tools calling protected endpoints will fail.
+
+Agent tool and hook endpoint calls share the same depth cap of 10 as `CallApi`, so mutually recursive agent and endpoint configurations terminate with an error instead of looping forever.
+
 ## Validating Data As A Routine Step
 
 API routines can validate any value against a JSON Schema using `ValidateSchema` steps. This is useful for guarding endpoint inputs that need stricter checks than the endpoint's request schema enforces, or for asserting the shape of data returned by a prior step before it flows downstream.
@@ -304,8 +398,8 @@ api:
             additionalProperties: false
             properties:
               email: { type: string, format: email }
-              name:  { type: string, minLength: 1, maxLength: 80 }
-              age:   { type: integer, minimum: 0 }
+              name: { type: string, minLength: 1, maxLength: 80 }
+              age: { type: integer, minimum: 0 }
           data:
             _payload: true
 
@@ -383,11 +477,66 @@ routine:
         type: object
         required: [_id, tier]
         properties:
-          _id:  { type: string }
+          _id: { type: string }
           tier: { type: string, enum: [free, pro, enterprise] }
       data:
         _step: load_profile
 ```
+
+## Rendering Notifications As A Routine Step
+
+API routines render a [notification](/notifications) to an email with `RenderNotification` steps. The step renders one notification item against a template defined in the app's `notifications:` section and returns the rendered content — it does **not** store or send anything. Storing a record, sending the email, and tracking delivery are ordinary routine steps you compose around it (or that the [`modules-mongodb` notifications module](https://github.com/lowdefy/modules-mongodb) composes for you).
+
+`RenderNotification` is a built-in step. It requires no `connectionId` and no plugin install.
+
+A `RenderNotification` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: RenderNotification`: **Required** - Identifies this as a render step.
+- `properties.notificationId: string`: **Required** - The id of the notification in the `notifications:` section to render. **Operators are evaluated**.
+- `properties.data: object`: **Required** - The data for **one** notification (the recipient and template data). Must be a single object — to render a batch, iterate with a [`:for`](/for) control and render one item per step. **Operators are evaluated**.
+- `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Required when the item carries page links.
+- `properties.landingPage: string`: A page path to route email links through (for example `/notifications/link`), so a landing page can mark the notification read before redirecting. When unset, links go directly to their target pages.
+- `properties.recordId: string`: The record id embedded in landing-page link URLs. Required when `landingPage` is set and the item has links — usually a `_uuid` minted earlier in the routine.
+
+The step result contains:
+
+- `subject: string`: The interpolated subject line.
+- `title: string`: The interpolated title (falls back to `subject`).
+- `preview: string`: A short preview string for inbox listings (the template's `preview`, else a markdown-stripped excerpt of the message).
+- `html: string`: The rendered email as HTML.
+- `text: string`: The rendered email as plain text.
+- `data: object`: The item with its links resolved to URLs.
+
+```yaml
+api:
+  - id: notify-task-assigned
+    type: Api
+    routine:
+      - id: render
+        type: RenderNotification
+        # Render one item; see /notifications for the notifications: section.
+        properties:
+          notificationId: task-assigned
+          data:
+            _payload: item
+          serverUrl: https://myapp.com
+
+      - id: send
+        type: SMTPMailSend
+        connectionId: smtp
+        properties:
+          to:
+            _payload: item.contact.email
+          subject:
+            _step: render.subject
+          html:
+            _step: render.html
+          text:
+            _step: render.text
+```
+
+See [Notifications](/notifications) for the `notifications:` section, the built-in templates, and how link URLs are composed.
 
 ## Internal API Endpoints
 
@@ -413,12 +562,12 @@ api:
           _step: charge
 
   - id: checkout
-    type: Api  # Callable from the client
+    type: Api # Callable from the client
     routine:
       - id: process_payment
         type: CallApi
         properties:
-          endpointId: charge_payment  # Can call InternalApi endpoints
+          endpointId: charge_payment # Can call InternalApi endpoints
           payload:
             amount:
               _payload: total

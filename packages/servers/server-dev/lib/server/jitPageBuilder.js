@@ -91,6 +91,7 @@ function getBuildContext(buildDirectory, configDirectory) {
   const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
+  const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
@@ -107,13 +108,16 @@ function getBuildContext(buildDirectory, configDirectory) {
     stage: 'dev',
   });
 
-  // Restore refMap, keyMap, jsMap, and connectionIds from skeleton build
+  // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
   Object.assign(cachedBuildContext.keyMap, keyMap);
   cachedBuildContext.jsMap.client = jsMap.client ?? {};
   cachedBuildContext.jsMap.server = jsMap.server ?? {};
   for (const id of connectionIds) {
     cachedBuildContext.connectionIds.add(id);
+  }
+  for (const id of websocketIds) {
+    cachedBuildContext.websocketIds.add(id);
   }
 
   // Load installed packages snapshot from skeleton build for missing-package detection

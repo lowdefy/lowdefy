@@ -31,8 +31,13 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
+import notifications, {
+  interpolateProperties,
+  renderEmail,
+} from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
+import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -57,18 +62,22 @@ function apiContext() {
       fileCache,
       headers: c.req.header(),
       i18n: i18nConfig,
+      interpolateProperties,
       jsMap,
       handleError: async (err) => {
         console.error(err);
       },
       logger: console,
+      notifications,
       operators,
+      renderEmail,
       req: {
         url: c.req.path,
         method: c.req.method,
         hostname: c.req.header('host'),
       },
       secrets,
+      websockets,
     };
     context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });

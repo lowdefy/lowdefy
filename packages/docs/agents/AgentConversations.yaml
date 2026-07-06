@@ -176,5 +176,5 @@ _ref:
           vars:
             previous_page_title: AgentChat
             previous_page_id: AgentChat
-            next_page_title: Docker
-            next_page_id: docker
+            next_page_title: WebSockets
+            next_page_id: websockets-introduction

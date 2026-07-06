@@ -99,7 +99,10 @@ async function build(options) {
 | `buildPages/` | Process page definitions, blocks, and areas |
 | `buildAuth/` | Process authentication providers and adapters (wildcard matching) |
 | `buildConnections.js` | Validate and process connection definitions |
-| `buildApi/` | Process API endpoint definitions |
+| `buildApi/` | Process API endpoint definitions (incl. the `RenderNotification` routine step) |
+| `buildNotifications.js` | Validate the `notifications:` section, namespace ids to `notification:<id>` |
+| `writeNotifications.js` | Write `notifications/<id>.json` artifacts |
+| `validateRenderNotificationSteps.js` | Validate `RenderNotification` steps reference existing notifications |
 | `buildMenu.js` | Generate navigation menus from page structure |
 | `buildJs/` | Compile custom JavaScript functions |
 | `buildTypes.js` | Resolve and validate block/operator types |
@@ -295,6 +298,8 @@ Block and operator types are resolved at build time:
 - Validates types exist in configured plugins
 - Generates import map for code splitting
 - Catches typos early (build fails, not runtime)
+
+`notifications` is a plugin type category alongside blocks, connections, operators, actions, and agents. `writePluginImports/writeNotificationImports.js` writes `plugins/notifications.js` — the email template registry plus `renderEmail`/`interpolateProperties` re-exports (or `undefined` placeholders when the app has no notifications). See [Notification Rendering](../architecture/notifications.md).
 
 ### `writeGlobalsCss` (CSS Generation)
 

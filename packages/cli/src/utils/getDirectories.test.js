@@ -26,6 +26,7 @@ test('default directories', () => {
     build: '/test/config/.lowdefy/server/build',
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
+    emails: '/test/config/.lowdefy/emails',
     server: '/test/config/.lowdefy/server',
   });
 });
@@ -42,6 +43,7 @@ test('specify serverDirectory in options', () => {
     build: '/test/server/build',
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
+    emails: '/test/config/.lowdefy/emails',
     server: '/test/server',
   });
 });
@@ -58,6 +60,7 @@ test('specify devDirectory in options', () => {
     build: '/test/config/.lowdefy/server/build',
     config: '/test/config',
     dev: '/test/dev',
+    emails: '/test/config/.lowdefy/emails',
     server: '/test/config/.lowdefy/server',
   });
 });

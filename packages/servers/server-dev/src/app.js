@@ -26,6 +26,7 @@ import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import cronHandler from './routes/cron.js';
 import devToolsHandler from './routes/devTools.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
@@ -39,6 +40,7 @@ import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
 import usageHandler from './routes/usage.js';
+import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
@@ -58,7 +60,10 @@ function createApp() {
   app.get('/api/dev-tools', devToolsHandler);
 
   if (authJson.configured === true) {
-    app.use('*', initAuthConfig(() => getAuthConfig({ logger })));
+    app.use(
+      '*',
+      initAuthConfig(() => getAuthConfig({ logger }))
+    );
   }
 
   app.use('/api/*', apiContext());
@@ -67,9 +72,11 @@ function createApp() {
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
+  app.get('/api/cron/*', cronHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.get('/api/websocket', websocketHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.
   app.use(

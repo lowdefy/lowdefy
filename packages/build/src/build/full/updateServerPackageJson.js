@@ -25,6 +25,12 @@ async function updateServerPackageJson({ components, context }) {
   const dependencies = packageJson.dependencies;
   function getPackages(types) {
     Object.values(types).forEach((type) => {
+      // Deployment tooling may have rewritten a workspace plugin to a link:
+      // path — overwriting it with the configured version (e.g. workspace:*)
+      // would break installs outside the monorepo workspace.
+      if (dependencies[type.package]?.startsWith('link:')) {
+        return;
+      }
       dependencies[type.package] = type.version;
     });
   }
@@ -36,9 +42,26 @@ async function updateServerPackageJson({ components, context }) {
   getPackages(components.types.auth.providers);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
+  getPackages(components.types.notifications);
   getPackages(components.types.requests);
+  getPackages(components.types.websockets);
   getPackages(components.types.operators.client);
   getPackages(components.types.operators.server);
+
+  if ((components.notifications ?? []).length > 0) {
+    // plugins/notifications.js re-exports renderEmail from @lowdefy/email-templates
+    // for every app with notifications — including apps that only use custom
+    // template types, where no framework template appears in components.types.
+    // The react-email preview CLI is deliberately NOT added here — it is a
+    // dev-only tool the `lowdefy emails` command installs just-in-time, so
+    // production servers never carry it.
+    const emailTemplates = Object.values(context.typesMap.notifications ?? {}).find(
+      (t) => t.package === '@lowdefy/email-templates'
+    );
+    if (emailTemplates && !dependencies['@lowdefy/email-templates']?.startsWith('link:')) {
+      dependencies['@lowdefy/email-templates'] = emailTemplates.version;
+    }
+  }
 
   // Sort dependencies
   packageJson.dependencies = {};

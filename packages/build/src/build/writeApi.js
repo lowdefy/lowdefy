@@ -22,13 +22,34 @@ async function writeEndpoint({ endpoint, context }) {
   );
 }
 
+// Flat manifest of every scheduled endpoint, consumed by the Vercel Build Output assembly to
+// generate the `crons` array in config.json. The runtime reads schedules off the endpoint artifact
+// directly, so it does not depend on this file.
+async function writeSchedulesManifest({ components, context }) {
+  const schedules = [];
+  (components.api ?? []).forEach((endpoint) => {
+    (endpoint.schedules ?? []).forEach((schedule) => {
+      schedules.push({
+        endpointId: endpoint.endpointId,
+        cron: schedule.cron,
+        payload: schedule.payload ?? {},
+      });
+    });
+  });
+  // Only emit the manifest when something is scheduled; the Vercel assembly treats a missing
+  // schedules.json as "no crons".
+  if (schedules.length === 0) return;
+  await context.writeBuildArtifact('schedules.json', serializer.serializeToString(schedules));
+}
+
 async function writeApi({ components, context }) {
   if (type.isNone(components.api)) return;
   if (!type.isArray(components.api)) {
     throw new Error(`Api is not an array.`);
   }
   const writePromises = components.api.map((endpoint) => writeEndpoint({ endpoint, context }));
-  return Promise.all(writePromises);
+  await Promise.all(writePromises);
+  await writeSchedulesManifest({ components, context });
 }
 
 export default writeApi;
