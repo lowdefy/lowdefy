@@ -30,6 +30,7 @@ The schema for a Lowdefy API is:
 - `id: string`: **Required** - A unique identifier for the API endpoint.
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
+- `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
@@ -123,6 +124,24 @@ Each schedule item has:
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
+
+## Async Endpoints
+
+An endpoint with `async: true` responds with `{ accepted: true }` immediately and runs its routine in the background. The caller does not wait for the routine to finish — the same way `async: true` [actions](/events-and-actions) do not block the rest of an action chain.
+
+```yaml
+api:
+  - id: rebuild_search_index
+    type: Api
+    async: true
+    routine:
+      # long-running work ...
+```
+
+- Authorization is checked **before** the call is accepted — an unauthorized caller gets an error, not `{ accepted: true }`.
+- The routine's result never reaches the caller. Completion or failure is written to the server logs; anything else the caller needs to see must be written by the routine itself (for example a status document in a database).
+- `async: true` also applies to scheduled runs — the cron trigger is acknowledged immediately and the routine runs in the background.
+- On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/deployment-vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
 
 ## Routines
 
@@ -250,6 +269,7 @@ A `CallApi` step has:
 - `type: CallApi`: **Required** - Identifies this as an endpoint call step.
 - `properties.endpointId: string`: **Required** - The id of the target endpoint. **Operators are evaluated**.
 - `properties.payload: object`: Optional payload to pass to the target endpoint. **Operators are evaluated**.
+- `properties.detached: boolean`: Optional - Fire-and-forget: dispatch the call and continue immediately, running the target in a separate server invocation. See [Detached Endpoint Calls](#detached-endpoint-calls).
 
 The called endpoint runs in an isolated context — it has its own `_step` results and `_payload`. Its internal step results do not appear in the calling endpoint's `_step` namespace. Only the value returned by the called endpoint's `:return` is stored as the step result.
 
@@ -299,6 +319,28 @@ api:
 Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws an error — this prevents accidental infinite recursion.
 
 Connection plugin resolvers can also invoke endpoints from inside their JS code using the `callApi` function on the resolver argument bag. The semantics — depth cap, isolated routine context, caller's user identity, `InternalApi` reachable — match the `CallApi` step. See [Connection and Request Plugins](/plugins-connections) for the resolver-side API.
+
+### Detached Endpoint Calls
+
+A `CallApi` step with `detached: true` does not wait for — or ever see — the target's result. The step dispatches the call and immediately continues, storing `{ detached: true, endpointId }` as its step result. The target runs as a new HTTP request to the deployment itself, which matters on serverless hosts: it executes in its **own** function invocation with a fresh `maxDuration` budget, so chained detached calls can process work that outlives any single invocation, without needing a queue.
+
+```yaml
+- id: spawn_worker
+  type: CallApi
+  properties:
+    endpointId: process_batch
+    detached: true
+    payload:
+      batch_id:
+        _step: create_batch._id
+```
+
+Detached calls differ from normal `CallApi` steps in important ways:
+
+- **System context**: like a scheduled run, the target executes with no user — `_user` is `undefined` — regardless of who called the parent endpoint. `InternalApi` endpoints are callable.
+- **At-most-once, no retry**: if the dispatch or the target fails, nothing retries it. Design targets to be idempotent. The target's outcome exists only in the server logs and whatever its routine writes.
+- **Requires `CRON_SECRET`**: the dispatch authenticates against the deployment's own `/api/detached` route with the `CRON_SECRET` environment variable (the same secret that secures cron, fail closed). The step fails with a config error if it is not set.
+- **No depth cap across detached calls**: each detached target starts at call depth 0, so the 10-level nesting limit does not protect against detached recursion. An endpoint that (directly or indirectly) detaches back into itself will loop forever — spawning a new invocation each time.
 
 ## Running Agents As A Routine Step
 
