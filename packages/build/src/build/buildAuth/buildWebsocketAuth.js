@@ -30,7 +30,7 @@ function buildWebsocketAuth({ components, context }) {
     configPublicWebsockets = components.auth.websockets.public;
   }
 
-  (components.websockets || []).forEach((websocket) => {
+  (components.websockets ?? []).forEach((websocket) => {
     if (websocketRoles[websocket.id]) {
       if (isInPatternList(websocket.id, configPublicWebsockets)) {
         throw new ConfigError(

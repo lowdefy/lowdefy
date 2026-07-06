@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -980,14 +996,12 @@ export default {
             '~l': {},
             signIn: {
               type: 'string',
-              default: '/login',
               errorMessage: {
                 type: 'Auth "authPages.signIn" should be a string.',
               },
             },
             signUp: {
               type: 'string',
-              default: '/signup',
               errorMessage: {
                 type: 'Auth "authPages.signUp" should be a string.',
               },
@@ -995,28 +1009,24 @@ export default {
             error: {
               type: 'string',
               description: 'Error code passed in query string as ?error=',
-              default: '/auth/error',
               errorMessage: {
                 type: 'Auth "authPages.error" should be a string.',
               },
             },
             forgotPassword: {
               type: 'string',
-              default: '/forgot-password',
               errorMessage: {
                 type: 'Auth "authPages.forgotPassword" should be a string.',
               },
             },
             resetPassword: {
               type: 'string',
-              default: '/reset-password',
               errorMessage: {
                 type: 'Auth "authPages.resetPassword" should be a string.',
               },
             },
             verifyEmail: {
               type: 'string',
-              default: '/verify-email',
               errorMessage: {
                 type: 'Auth "authPages.verifyEmail" should be a string.',
               },

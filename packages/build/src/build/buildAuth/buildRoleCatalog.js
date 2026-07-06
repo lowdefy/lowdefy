@@ -23,21 +23,21 @@ import { ConfigError } from '@lowdefy/errors';
 // member APIs accept custom roles for assignment. Registration carries empty
 // permission statements; real statements are the permissions milestone's.
 function buildRoleCatalog({ components }) {
-  const roleNames = new Set([
-    ...Object.keys(components.auth.pages.roles),
-    ...Object.keys(components.auth.api.roles),
-    ...Object.keys(components.auth.websockets.roles),
-  ]);
+  const roleNames = new Set();
 
-  // member.role stores multiple roles as one comma-separated string, so a
-  // comma inside a role name would corrupt the split back into an array.
-  roleNames.forEach((roleName) => {
-    if (roleName.includes(',')) {
-      throw new ConfigError(
-        `Auth role name "${roleName}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
-        { configKey: components.auth['~k'] }
-      );
-    }
+  ['pages', 'api', 'websockets'].forEach((entity) => {
+    const rolesMap = components.auth[entity].roles;
+    Object.keys(rolesMap).forEach((roleName) => {
+      // member.role stores multiple roles as one comma-separated string, so a
+      // comma inside a role name would corrupt the split back into an array.
+      if (roleName.includes(',')) {
+        throw new ConfigError(
+          `Auth role name "${roleName}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
+          { configKey: rolesMap['~k'] ?? components.auth['~k'] }
+        );
+      }
+      roleNames.add(roleName);
+    });
   });
 
   components.auth.roles = [...roleNames].sort();

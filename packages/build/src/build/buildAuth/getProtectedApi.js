@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { isInPatternList } from './matchPattern.js';
 
 function getProtectedApi({ components }) {
-  const endpointIds = (components.api || []).map((endpoint) => endpoint.id);
+  const endpointIds = (components.api ?? []).map((endpoint) => endpoint.id);
   let protectedApi = [];
 
   if (type.isArray(components.auth.api.public)) {

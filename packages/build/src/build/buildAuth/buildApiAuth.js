@@ -30,7 +30,7 @@ function buildApiAuth({ components, context }) {
     configPublicApi = components.auth.api.public;
   }
 
-  (components.api || []).forEach((endpoint) => {
+  (components.api ?? []).forEach((endpoint) => {
     if (apiRoles[endpoint.id]) {
       if (isInPatternList(endpoint.id, configPublicApi)) {
         throw new ConfigError(`Endpoint "${endpoint.id}" is both protected by roles and public.`, {

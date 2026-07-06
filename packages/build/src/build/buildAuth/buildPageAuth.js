@@ -30,7 +30,7 @@ function buildPageAuth({ components, context }) {
     configPublicPages = components.auth.pages.public;
   }
 
-  (components.pages || []).forEach((page) => {
+  (components.pages ?? []).forEach((page) => {
     // The 404 page must always be public so unauthenticated users can see it.
     if (page.id === '404') {
       page.auth = {

@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { isInPatternList } from './matchPattern.js';
 
 function getProtectedPages({ components }) {
-  const pageIds = (components.pages || []).map((page) => page.id);
+  const pageIds = (components.pages ?? []).map((page) => page.id);
   let protectedPages = [];
 
   if (type.isArray(components.auth.pages.public)) {
