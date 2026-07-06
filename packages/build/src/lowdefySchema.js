@@ -1145,12 +1145,12 @@ export default {
             },
           ],
         },
-        respond: {
-          enum: ['sync', 'accepted'],
+        async: {
+          type: 'boolean',
           description:
-            'How the endpoint responds. "sync" (default) runs the routine and returns its result. "accepted" returns { accepted: true } immediately and runs the routine in the background (kept alive via the platform request context on Vercel fluid compute); the outcome is observable only through logs and whatever the routine writes.',
+            'Run the endpoint routine in the background. The endpoint returns { accepted: true } immediately and the routine runs after the response (kept alive via the platform request context on Vercel fluid compute, still bounded by the function maxDuration); the outcome is observable only through logs and whatever the routine writes.',
           errorMessage: {
-            enum: 'Api endpoint "respond" should be "sync" or "accepted".',
+            type: 'Api endpoint "async" should be a boolean.',
           },
         },
         schedules: {

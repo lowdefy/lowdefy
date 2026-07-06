@@ -80,6 +80,11 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      // On Vercel (fluid compute) the platform request context keeps the
+      // invocation alive until waitUntil promises settle; on long-lived hosts
+      // the lookup resolves to nothing and background promises just run.
+      waitUntil: (promise) =>
+        globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(promise),
       websockets,
     };
     context.logger = createLogger({ rid: context.rid });

@@ -32,7 +32,6 @@ const flush = () => new Promise((resolve) => setImmediate(resolve));
 
 beforeEach(() => {
   jest.clearAllMocks();
-  delete globalThis[Symbol.for('@vercel/request-context')];
 });
 
 test('scheduleBackground logs completion and failure, never rejects', async () => {
@@ -51,22 +50,21 @@ test('scheduleBackground logs completion and failure, never rejects', async () =
   );
 });
 
-test('scheduleBackground hands the promise to the platform request context', async () => {
+test('scheduleBackground hands the promise to context.waitUntil when the server injects it', async () => {
   const waitUntil = jest.fn();
-  globalThis[Symbol.for('@vercel/request-context')] = { get: () => ({ waitUntil }) };
-  const context = { logger };
+  const context = { logger, waitUntil };
   await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => ({}));
   expect(waitUntil).toHaveBeenCalledTimes(1);
 });
 
-test('respond: accepted returns immediately and runs the routine in the background', async () => {
+test('async: true returns immediately and runs the routine in the background', async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/bg_ep.json') {
       return {
         endpointId: 'bg_ep',
         type: 'Api',
         auth: { public: true },
-        respond: 'accepted',
+        async: true,
         routine: { ':return': 'done' },
       };
     }

@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-// Run work after the response is sent. On Vercel (fluid compute) the platform
-// request context's waitUntil keeps the invocation alive until the promise
-// settles (bounded by the function's maxDuration); locally / self-hosted the
-// promise simply runs detached on the still-alive Node process.
+// Run work after the response is sent. Platforms that reap the invocation once
+// the response is flushed (Vercel fluid compute) inject context.waitUntil in
+// their server's apiContext middleware to keep the invocation alive until the
+// promise settles (bounded by the function's maxDuration); locally /
+// self-hosted there is no waitUntil and the promise simply runs detached on
+// the still-alive Node process.
 //
 // The outcome only exists in logs — completion and failure are logged through
 // the request logger so they reach the platform log stream (and any log
@@ -32,9 +34,8 @@ function scheduleBackground(context, { event, endpointId }, fn) {
       logger.error({ event: `${event}_failed`, endpointId, err }, err.message);
     }
   })();
-  const platformContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
-  if (platformContext?.waitUntil) {
-    platformContext.waitUntil(promise);
+  if (context.waitUntil) {
+    context.waitUntil(promise);
   }
   return promise;
 }

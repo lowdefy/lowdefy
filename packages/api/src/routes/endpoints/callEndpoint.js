@@ -52,10 +52,10 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     endpointDepth: 0,
   };
 
-  // respond: accepted — acknowledge now, run the routine in the background.
+  // async: true — acknowledge now, run the routine in the background.
   // Auth was already checked above; the outcome lands in logs (scheduleBackground)
   // and in whatever the routine itself records.
-  if (endpointConfig.respond === 'accepted') {
+  if (endpointConfig.async === true) {
     scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );
