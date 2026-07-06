@@ -229,9 +229,6 @@ test('setAuthDefaults enables twoFactor sub-options by default when the block is
   const res = setAuthDefaults({ components });
   expect(res.auth.twoFactor).toEqual({
     enabled: true,
-    totp: true,
-    otp: true,
-    backupCodes: true,
   });
 });
 

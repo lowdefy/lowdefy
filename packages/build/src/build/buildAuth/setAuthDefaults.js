@@ -101,9 +101,6 @@ function setAuthDefaults({ components }) {
   // Presence of the twoFactor/passkey block implies intent to enable.
   if (!type.isNone(auth.twoFactor)) {
     setDefault(auth.twoFactor, 'enabled', true);
-    setDefault(auth.twoFactor, 'totp', true);
-    setDefault(auth.twoFactor, 'otp', true);
-    setDefault(auth.twoFactor, 'backupCodes', true);
   }
 
   if (!type.isNone(auth.passkey)) {

@@ -705,24 +705,6 @@ export default {
                 type: 'Auth "twoFactor.enabled" should be a boolean.',
               },
             },
-            totp: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.totp" should be a boolean.',
-              },
-            },
-            otp: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.otp" should be a boolean.',
-              },
-            },
-            backupCodes: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.backupCodes" should be a boolean.',
-              },
-            },
           },
           errorMessage: {
             type: 'Auth "twoFactor" should be an object.',
