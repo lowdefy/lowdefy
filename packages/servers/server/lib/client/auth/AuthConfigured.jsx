@@ -45,7 +45,7 @@ const authClient = createAuthClient({
 // kept in a ref: while the session user is unchanged its roles and
 // attributes stay authoritative, and UpdateSession refreshes the ref from
 // /api/user after a change (e.g. SetActiveOrganization).
-function Session({ children, serverUser }) {
+function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const resolvedUserRef = useRef(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
@@ -56,7 +56,9 @@ function Session({ children, serverUser }) {
     }
     // Reload after sign-out (or session revocation) so the server can apply
     // the page auth fork - a protected page redirects to the login page.
-    if (wasAuthenticated.current && !isPending && !session) {
+    // A logout with a callbackUrl suppresses the reload - its own navigation
+    // would otherwise race this one.
+    if (wasAuthenticated.current && !isPending && !session && !reloadSuppressedRef.current) {
       window.location.reload();
     }
   }, [session, isPending]);
@@ -76,6 +78,7 @@ function Session({ children, serverUser }) {
 }
 
 function AuthConfigured({ authConfig, children, serverUser }) {
+  const reloadSuppressedRef = useRef(false);
   const auth = {
     authConfig,
     getSession: ({ disableCookieCache } = {}) =>
@@ -86,7 +89,15 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       const response = await fetch(`${lowdefyConfig.basePath ?? ''}/api/user`, {
         credentials: 'same-origin',
       });
+      if (!response.ok) {
+        // Throw instead of parsing an error page - a silent { user: undefined }
+        // would read as a client-side logout in updateSession.
+        throw new Error(`Failed to fetch the resolved user (HTTP ${response.status}).`);
+      }
       return response.json();
+    },
+    suppressSignOutReload: () => {
+      reloadSuppressedRef.current = true;
     },
     impersonateUser: (params) => authClient.admin.impersonateUser(params),
     setActiveOrganization: (params) => authClient.organization.setActive(params),
@@ -99,7 +110,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     stopImpersonating: () => authClient.admin.stopImpersonating(),
   };
   return (
-    <Session serverUser={serverUser}>
+    <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>
       {(user, resolvedUserRef) => {
         auth.user = user;
         auth.updateResolvedUser = (resolved) => {

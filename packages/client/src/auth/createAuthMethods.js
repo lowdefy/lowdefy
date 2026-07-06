@@ -19,9 +19,10 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   const { home, pageId, urlQuery, url } = callbackUrl;
 
-  if ([!home, !pageId, !url].filter((v) => !v).length > 1) {
+  const targets = [home, pageId, url].filter((target) => target);
+  if (targets.length > 1) {
     throw new Error(
-      `Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
+      `Invalid callbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
@@ -130,11 +131,22 @@ function createAuthMethods(lowdefy, auth) {
   }
 
   async function logout({ callbackUrl } = {}) {
-    const data = await unwrap(auth.signOut());
     const callbackURL = getCallbackUrl({ lowdefy, callbackUrl });
     const window = lowdefy._internal?.globals?.window;
-    if (callbackURL && window) {
-      window.location.assign(`${lowdefy.basePath ?? ''}${callbackURL}`);
+    const willNavigate = Boolean(callbackURL && window);
+    if (willNavigate && auth.suppressSignOutReload) {
+      // The sign-out reload in the session provider would race the callback
+      // navigation - suppress it for this sign-out.
+      auth.suppressSignOutReload();
+    }
+    const data = await unwrap(auth.signOut());
+    if (willNavigate) {
+      // Prefix basePath only onto app-relative callbacks - absolute URLs
+      // (external logout landing pages) navigate as given.
+      const target = callbackURL.startsWith('/')
+        ? `${lowdefy.basePath ?? ''}${callbackURL}`
+        : callbackURL;
+      window.location.assign(target);
     }
     return data;
   }

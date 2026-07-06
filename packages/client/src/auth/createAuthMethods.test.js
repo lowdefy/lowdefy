@@ -87,6 +87,36 @@ test('signUp passes through rest params to signUpEmail', async () => {
   expect(auth.signUpEmail.mock.calls[0][0]).toMatchObject({ rememberMe: true });
 });
 
+test('logout prefixes basePath onto a relative callbackUrl and suppresses the sign-out reload', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSignOutReload = jest.fn();
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout({ callbackUrl: { pageId: 'goodbye' } });
+  expect(auth.suppressSignOutReload).toHaveBeenCalledTimes(1);
+  expect(assign.mock.calls).toEqual([['/base/goodbye']]);
+});
+
+test('logout navigates to an absolute callbackUrl without prefixing basePath', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout({ callbackUrl: { url: 'https://example.com/logged-out' } });
+  expect(assign.mock.calls).toEqual([['https://example.com/logged-out']]);
+});
+
+test('logout without a callbackUrl signs out without navigating or suppressing the reload', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSignOutReload = jest.fn();
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout();
+  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+  expect(assign).not.toHaveBeenCalled();
+});
+
 test('login no longer handles signUp - a signUp-only call is rejected', async () => {
   const { auth, lowdefy } = setup();
   const { login } = createAuthMethods(lowdefy, auth);
