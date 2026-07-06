@@ -20,7 +20,8 @@ import { serializer, type } from '@lowdefy/helpers';
 // Circular import by design: the walker dispatches placeholders into
 // resolveDeferred, and resolveDeferred walks record bodies. Both modules only
 // reference each other's bindings at call time, after evaluation completes.
-import { resolve, WalkContext } from './walker.js';
+import { loadAndWalkRef, resolve, WalkContext } from './walker.js';
+import cloneWithMarkers from './cloneWithMarkers.js';
 
 // The deferred-content record registry. Every deferred region of module config
 // becomes a record { kind, body, env, slot } in context.deferred; the config
@@ -183,40 +184,85 @@ async function resolveRecordBody(ctx, id, record) {
     path: '',
     currentFile: env.file ?? null,
     refChain: new Set(env.file ? [env.file] : []),
-    entryResolveChain: ctx.entryResolveChain,
     operators: ctx.operators,
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
     activeRecord: id,
   });
-  // Clone before walking — the raw body must stay pristine in the registry
-  // (deferredRecords.json serializes it, and demand order must not change it).
-  const value = await resolve(cloneRecordBody(record.body), recordCtx);
+  let value;
+  if (record.kind === 'entryRef') {
+    // The body is a prepared refDef — replay it through loadAndWalkRef with
+    // the original provenance (env.file is where the ref was written).
+    value = await loadAndWalkRef(record.body, recordCtx, {
+      configKey: env.configKey ?? undefined,
+      referencedFrom: env.file ?? undefined,
+    });
+  } else {
+    // varDefault and connRemap bodies are raw config subtrees. Clone before
+    // walking — the raw body must stay pristine in the registry
+    // (deferredRecords.json serializes it, and demand order must not change it).
+    value = await resolve(cloneWithMarkers(record.body), recordCtx);
+  }
   record.value = value;
   record.done = true;
   return value;
 }
 
-// Marker-preserving deep clone for record bodies (~r ~l ~k ~arr). Kept local
-// to avoid a second circular binding on the walker's clone family; clone
-// unification replaces both with cloneWithMarkers.
-function cloneRecordBody(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return value;
-  const clone = type.isArray(value)
-    ? value.map((item) => cloneRecordBody(item))
-    : Object.fromEntries(Object.keys(value).map((key) => [key, cloneRecordBody(value[key])]));
-  for (const marker of ['~r', '~l', '~k', '~arr']) {
-    if (value[marker] !== undefined) {
-      Object.defineProperty(clone, marker, {
-        value: value[marker],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+
+// Placeholder lifetime differs by record kind: component and menuLinks
+// placeholders persist by design (per-consumer resolution; JIT consumes them
+// from modules.json), and varDefault placeholders persist in varDefs
+// (demand-only). Everywhere else a placeholder after the final sweep is a
+// build bug. The allowed positions, per module entry:
+const MANIFEST_PLACEHOLDER_PATHS = [
+  /^components\.\d+\.component$/,
+  /^menus\.\d+\.links$/,
+  // varDefs is extracted from manifest.vars by reference, so demand-only
+  // default placeholders legitimately show through the manifest too.
+  /^vars(\.[^.]+\.properties)*\.[^.]+\.default$/,
+];
+const VARDEFS_PLACEHOLDER_PATHS = [/^[^.]+(\.properties\.[^.]+)*\.default$/];
+
+function findPlaceholderLeaks(context) {
+  const leaks = [];
+  const scan = (value, path, allowed, location) => {
+    const id = getPlaceholderId(value);
+    if (id !== undefined) {
+      if (!allowed.some((pattern) => pattern.test(path))) {
+        leaks.push({ id, location: `${location}.${path}` });
+      }
+      return;
     }
+    if (type.isArray(value)) {
+      value.forEach((item, i) => scan(item, path ? `${path}.${i}` : String(i), allowed, location));
+    } else if (type.isObject(value)) {
+      for (const key of Object.keys(value)) {
+        scan(value[key], path ? `${path}.${key}` : key, allowed, location);
+      }
+    }
+  };
+  for (const [entryId, entry] of Object.entries(context.modules ?? {})) {
+    scan(entry.manifest ?? {}, '', MANIFEST_PLACEHOLDER_PATHS, `${entryId}.manifest`);
+    scan(entry.consumerVars ?? {}, '', [], `${entryId}.consumerVars`);
+    scan(entry.connections ?? {}, '', [], `${entryId}.connections`);
+    scan(entry.varDefs ?? {}, '', VARDEFS_PLACEHOLDER_PATHS, `${entryId}.varDefs`);
   }
-  return clone;
+  return leaks;
+}
+
+// Post-sweep leak check: every entryRef/connRemap placeholder must be gone from
+// entry configs, and manifests may hold placeholders only at per-consumer
+// slots. The runtime var cache is not scanned — the deep-forcing read path
+// guarantees it placeholder-free (pinned by its own tests).
+function assertNoPlaceholderLeaks(context) {
+  const leaks = findPlaceholderLeaks(context);
+  if (leaks.length > 0) {
+    const detail = leaks.map((leak) => `"${leak.id}" at ${leak.location}`).join('; ');
+    throw new LowdefyInternalError(
+      `Deferred placeholder leaked past the final sweep: ${detail}.`
+    );
+  }
 }
 
 // Serialize the registry's data for the deferredRecords.json build artifact.
@@ -258,6 +304,7 @@ export {
   makePlaceholder,
   getPlaceholderId,
   resolveDeferred,
+  assertNoPlaceholderLeaks,
   serializeRegistry,
   hydrateDeferredRecords,
 };
