@@ -38,7 +38,7 @@ async function AwsS3PresignedPostPolicy({ request, connection }) {
     params.Fields.acl = acl;
   }
   if (type.isObject(fields) === false) {
-    throw new Error('properties.fields must be an object.');
+    throw new Error(`properties.fields must be an object. Received ${JSON.stringify(fields)}.`);
   }
   Object.keys(fields).forEach((field) => {
     if (fields[field]) {

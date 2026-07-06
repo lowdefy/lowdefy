@@ -15,10 +15,13 @@
 */
 
 import React, { useEffect } from 'react';
+import { cn } from '@lowdefy/block-utils';
 import { Upload } from '@lowdefy/blocks-files/blocks';
 
 // Deprecated alias for the generic Upload block in @lowdefy/blocks-files.
-// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId.
+// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId
+// and keeps the legacy element class so existing app CSS targeting the S3
+// block name keeps matching.
 const S3UploadButton = (props) => {
   useEffect(() => {
     console.warn(
@@ -26,9 +29,14 @@ const S3UploadButton = (props) => {
     );
   }, []);
   const { s3PostPolicyRequestId, ...properties } = props.properties ?? {};
+  const classNames = props.classNames ?? {};
   return (
     <Upload
       {...props}
+      classNames={{
+        ...classNames,
+        element: cn('lf-s3-upload-button', classNames.element),
+      }}
       properties={{
         uploadPolicyRequestId: s3PostPolicyRequestId,
         ...properties,

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import readFileAsBase64 from '../../utils/readFileAsBase64.js';
 
 // customRequest for emitFileContent mode: no upload happens. The file is read
@@ -23,7 +25,7 @@ import readFileAsBase64 from '../../utils/readFileAsBase64.js';
 const getEmitFileContent =
   ({ methods, setFileList, setLoading = () => null }) =>
   async ({ file }) => {
-    if (!file) {
+    if (type.isNone(file)) {
       console.warn('File is undefined in getEmitFileContent');
       return;
     }

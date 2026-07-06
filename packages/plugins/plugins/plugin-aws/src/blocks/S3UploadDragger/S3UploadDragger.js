@@ -15,10 +15,13 @@
 */
 
 import React, { useEffect } from 'react';
+import { cn } from '@lowdefy/block-utils';
 import { UploadDragger } from '@lowdefy/blocks-files/blocks';
 
 // Deprecated alias for the generic UploadDragger block in @lowdefy/blocks-files.
-// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId.
+// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId
+// and keeps the legacy element class so existing app CSS targeting the S3
+// block name keeps matching.
 const S3UploadDragger = (props) => {
   useEffect(() => {
     console.warn(
@@ -26,9 +29,14 @@ const S3UploadDragger = (props) => {
     );
   }, []);
   const { s3PostPolicyRequestId, ...properties } = props.properties ?? {};
+  const classNames = props.classNames ?? {};
   return (
     <UploadDragger
       {...props}
+      classNames={{
+        ...classNames,
+        element: cn('lf-s3-upload-dragger', classNames.element),
+      }}
       properties={{
         uploadPolicyRequestId: s3PostPolicyRequestId,
         ...properties,

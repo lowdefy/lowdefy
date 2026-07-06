@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
 import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
 import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
@@ -26,7 +27,7 @@ import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
 // download request the legacy unsigned object URL is used (S3-shaped,
 // deprecated).
 async function fileUpload({ file, methods, hasDownloadRequest }) {
-  if (!file) {
+  if (type.isNone(file)) {
     return;
   }
   const descriptor = await getUploadPolicy({ methods, file });

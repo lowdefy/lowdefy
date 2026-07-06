@@ -25,9 +25,10 @@ function getLegacyObjectUrl({ descriptor }) {
     // The signed PUT url already targets the object — strip the signature.
     return url.split('?')[0];
   }
+  const encodedKey = key.split('/').map(encodeURIComponent).join('/');
   // createPresignedPost returns the bucket endpoint with a trailing slash, so only
   // add a separator when it is missing to avoid a double slash before the key.
-  return url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
+  return url.endsWith('/') ? `${url}${encodedKey}` : `${url}/${encodedKey}`;
 }
 
 export default getLegacyObjectUrl;

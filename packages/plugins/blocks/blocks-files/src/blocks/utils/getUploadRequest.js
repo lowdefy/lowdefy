@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import getUploadPolicy from '../../utils/getUploadPolicy.js';
 import uploadFile from '../../utils/uploadFile.js';
 
 const getUploadRequest =
   ({ methods, setFileList, setLoading = () => null }) =>
   async ({ file }) => {
-    if (!file) {
+    if (type.isNone(file)) {
       console.warn('File is undefined in getUploadRequest');
       return;
     }

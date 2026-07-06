@@ -23,7 +23,7 @@ async function GcsSignedPostPolicy({ request, connection }) {
   const { bucket } = connection;
   const { conditions, expires = 3600, fields = {}, key } = request;
   if (type.isObject(fields) === false) {
-    throw new Error('properties.fields must be an object.');
+    throw new Error(`properties.fields must be an object. Received ${JSON.stringify(fields)}.`);
   }
   const options = {
     expires: Date.now() + expires * 1000,
