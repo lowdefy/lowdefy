@@ -31,6 +31,7 @@ import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
+import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
@@ -78,9 +79,12 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
 
   if (authJson.configured === true) {
-    // Construct the BetterAuth instance at startup so config errors fail
-    // boot instead of the first request.
+    // Construct the BetterAuth instance and strategy verifiers at startup so
+    // config errors fail boot instead of the first request, and so the
+    // process-memoized singletons capture the base logger rather than the
+    // first request's rid-scoped child.
     getAuth({ logger });
+    getStrategies({ logger });
   }
 
   app.use('/api/*', apiContext());

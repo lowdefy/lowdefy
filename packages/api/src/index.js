@@ -23,7 +23,6 @@ import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
-import getBetterAuthConfig from './routes/auth/getBetterAuthConfig.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
@@ -42,7 +41,6 @@ export {
   createWebSocketConnection,
   getAuthStrategies,
   getBetterAuth,
-  getBetterAuthConfig,
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,

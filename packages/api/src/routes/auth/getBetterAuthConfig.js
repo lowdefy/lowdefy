@@ -68,6 +68,9 @@ function getBetterAuthConfig({
   });
 
   if (operatorErrors.length > 0) {
+    // Startup fails on the first error; log the rest so they can all be
+    // fixed in one pass instead of one boot per error.
+    operatorErrors.slice(1).forEach((error) => logger.error(error));
     throw operatorErrors[0];
   }
 
