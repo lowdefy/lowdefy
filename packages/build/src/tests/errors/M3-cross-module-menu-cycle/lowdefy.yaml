@@ -1,4 +1,7 @@
-# M3: Circular menu embedding between two modules
+# M3: Circular menu embedding between two modules. Menu links resolve per
+# consumer (deferred records), so the cycle fires at consumption — the app
+# menu below consumes it. A dormant cyclic menu nobody consumes is benign,
+# like a broken var default nobody reads.
 lowdefy: local
 name: Menu Cycle Test
 
@@ -7,6 +10,13 @@ modules:
     source: 'file:modules/contacts'
   - id: companies
     source: 'file:modules/companies'
+
+menus:
+  - id: main
+    links:
+      _ref:
+        module: contacts
+        menu: default
 
 pages:
   - id: home
