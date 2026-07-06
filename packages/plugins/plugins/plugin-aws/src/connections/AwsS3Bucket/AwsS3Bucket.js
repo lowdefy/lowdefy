@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import AwsS3GetObject from './AwsS3GetObject/AwsS3GetObject.js';
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/AwsS3PresignedGetObject.js';
 import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/AwsS3PresignedPostPolicy.js';
 import AwsS3PutObject from './AwsS3PutObject/AwsS3PutObject.js';
@@ -22,6 +23,7 @@ import schema from './schema.js';
 export default {
   schema,
   requests: {
+    AwsS3GetObject,
     AwsS3PresignedGetObject,
     AwsS3PresignedPostPolicy,
     AwsS3PutObject,

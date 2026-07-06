@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import GcsGetObject from './GcsGetObject/GcsGetObject.js';
 import GcsPutObject from './GcsPutObject/GcsPutObject.js';
 import GcsSignedGetUrl from './GcsSignedGetUrl/GcsSignedGetUrl.js';
 import GcsSignedPostPolicy from './GcsSignedPostPolicy/GcsSignedPostPolicy.js';
@@ -22,6 +23,7 @@ import schema from './schema.js';
 export default {
   schema,
   requests: {
+    GcsGetObject,
     GcsPutObject,
     GcsSignedGetUrl,
     GcsSignedPostPolicy,

@@ -21,6 +21,7 @@ import AwsS3Bucket from './AwsS3Bucket.js';
 const schema = AwsS3Bucket.schema;
 
 test('All requests are present', () => {
+  expect(AwsS3Bucket.requests.AwsS3GetObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedGetObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedPostPolicy).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PutObject).toBeDefined();

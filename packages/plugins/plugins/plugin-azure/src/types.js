@@ -16,5 +16,5 @@
 
 export default {
   connections: ['AzureBlobContainer'],
-  requests: ['AzureBlobDownloadSas', 'AzureBlobPut', 'AzureBlobUploadSas'],
+  requests: ['AzureBlobDownloadSas', 'AzureBlobGet', 'AzureBlobPut', 'AzureBlobUploadSas'],
 };

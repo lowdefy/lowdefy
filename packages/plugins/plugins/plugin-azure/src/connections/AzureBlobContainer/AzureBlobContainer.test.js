@@ -22,6 +22,7 @@ const schema = AzureBlobContainer.schema;
 
 test('All requests are present', () => {
   expect(AzureBlobContainer.requests.AzureBlobDownloadSas).toBeDefined();
+  expect(AzureBlobContainer.requests.AzureBlobGet).toBeDefined();
   expect(AzureBlobContainer.requests.AzureBlobPut).toBeDefined();
   expect(AzureBlobContainer.requests.AzureBlobUploadSas).toBeDefined();
 });

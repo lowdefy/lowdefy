@@ -21,6 +21,7 @@ import GoogleCloudStorageBucket from './GoogleCloudStorageBucket.js';
 const schema = GoogleCloudStorageBucket.schema;
 
 test('All requests are present', () => {
+  expect(GoogleCloudStorageBucket.requests.GcsGetObject).toBeDefined();
   expect(GoogleCloudStorageBucket.requests.GcsPutObject).toBeDefined();
   expect(GoogleCloudStorageBucket.requests.GcsSignedGetUrl).toBeDefined();
   expect(GoogleCloudStorageBucket.requests.GcsSignedPostPolicy).toBeDefined();

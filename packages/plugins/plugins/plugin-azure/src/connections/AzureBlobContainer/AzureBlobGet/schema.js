@@ -14,18 +14,22 @@
   limitations under the License.
 */
 
-import AzureBlobDownloadSas from './AzureBlobDownloadSas/AzureBlobDownloadSas.js';
-import AzureBlobGet from './AzureBlobGet/AzureBlobGet.js';
-import AzureBlobPut from './AzureBlobPut/AzureBlobPut.js';
-import AzureBlobUploadSas from './AzureBlobUploadSas/AzureBlobUploadSas.js';
-import schema from './schema.js';
-
 export default {
-  schema,
-  requests: {
-    AzureBlobDownloadSas,
-    AzureBlobGet,
-    AzureBlobPut,
-    AzureBlobUploadSas,
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  title: 'Lowdefy Request Schema - AzureBlobGet',
+  type: 'object',
+  required: ['key'],
+  properties: {
+    key: {
+      type: 'string',
+      description: 'Key (blob name) under which the blob is stored.',
+      errorMessage: {
+        type: 'AzureBlobGet request property "key" should be a string.',
+      },
+    },
+  },
+  errorMessage: {
+    type: 'AzureBlobGet request properties should be an object.',
+    required: 'AzureBlobGet request should have required property "key".',
   },
 };

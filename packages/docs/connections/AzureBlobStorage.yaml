@@ -71,6 +71,7 @@ _ref:
             Request types:
               - AzureBlobUploadSas
               - AzureBlobDownloadSas
+              - AzureBlobGet
               - AzureBlobPut
 
             ### AzureBlobUploadSas
@@ -110,6 +111,16 @@ _ref:
             - `public: boolean`: Default: `false` - Return a stable, non-expiring public URL (`https://{account}.blob.core.windows.net/{container}/{key}`, or `${publicUrlBase}/${key}` when the connection sets `publicUrlBase`) instead of a SAS URL. The blob must be publicly readable (public container access); this is author-declared and never checked at runtime.
             - `contentDisposition: string`: Sets the Content-Disposition header of the response.
             - `contentType: string`: Sets the Content-Type header of the response.
+
+            ### AzureBlobGet
+
+            The `AzureBlobGet` request reads a blob from the container on the server and returns its content
+            as a base64 encoded string, so [API endpoint](/lowdefy-api) routine steps can process file content
+            with operators and pass it to other steps. The connection must allow reads (`read` is `true` by
+            default). Returns `{ bucket, key, content, contentType, size }`.
+
+            #### Properties
+            - `key: string`: __Required__ - Key (blob name) under which the blob is stored.
 
             ### AzureBlobPut
 

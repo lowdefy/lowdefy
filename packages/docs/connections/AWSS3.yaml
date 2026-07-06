@@ -93,6 +93,7 @@ _ref:
             ## Requests
 
             Request types:
+              - AwsS3GetObject
               - AwsS3PresignedGetObject
               - AwsS3PresignedPostPolicy
               - AwsS3PutObject
@@ -174,6 +175,49 @@ _ref:
                         _payload: filename
                       uid:
                         _payload: uid
+            ```
+
+            ### AwsS3GetObject
+
+            The `AwsS3GetObject` request reads an object from the bucket on the server and returns its
+            content as a base64 encoded string, so [API endpoint](/lowdefy-api) routine steps can process
+            file content with operators and pass it to other steps (e.g. transform an uploaded file and
+            store the result with `AwsS3PutObject`). The connection must allow reads (`read` is `true`
+            by default). Content rides through the routine as base64, so this suits small and medium files.
+
+            #### Properties
+            - `key: string`: __Required__ - Key under which the object is stored.
+            - `versionId: string`: VersionId used to reference a specific version of the object.
+
+            Returns `{ bucket, key, content, contentType, size }` — `content` is the base64 encoded object.
+
+            #### Examples
+
+            ###### Read a stored file and re-store a processed copy:
+            ```yaml
+            api:
+              - id: copy_report
+                type: Api
+                routine:
+                  - id: get_object
+                    type: AwsS3GetObject
+                    connectionId: my_bucket
+                    properties:
+                      key:
+                        _payload: key
+                  - id: put_copy
+                    type: AwsS3PutObject
+                    connectionId: my_bucket
+                    properties:
+                      key:
+                        _string.concat: ['copies/', { _payload: key }]
+                      content:
+                        _step: get_object.content
+                      contentType:
+                        _step: get_object.contentType
+                  - ':return':
+                      key:
+                        _step: put_copy.key
             ```
 
             ### AwsS3PutObject

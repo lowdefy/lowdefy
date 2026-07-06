@@ -16,5 +16,5 @@
 
 export default {
   connections: ['GoogleCloudStorageBucket'],
-  requests: ['GcsPutObject', 'GcsSignedGetUrl', 'GcsSignedPostPolicy'],
+  requests: ['GcsGetObject', 'GcsPutObject', 'GcsSignedGetUrl', 'GcsSignedPostPolicy'],
 };

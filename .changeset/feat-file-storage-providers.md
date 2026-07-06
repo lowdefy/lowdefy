@@ -22,16 +22,16 @@ feat: Provider-neutral file storage — upload and download files to S3-compatib
 
 - `AwsS3Bucket` connections accept `endpoint` and `forcePathStyle`, unlocking Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2, and Wasabi with a one-line config change.
 - `AwsS3PresignedGetObject` returns a stable, non-expiring public URL when the request sets `public: true`; the connection-level `publicUrlBase` overrides the constructed URL for CDN domains.
-- New `AwsS3PutObject` write request stores base64 content as an object from endpoint routines or page requests.
+- New `AwsS3PutObject` write and `AwsS3GetObject` read requests store and read base64 object content from endpoint routines or page requests, so routines can process file content in steps.
 - The `S3UploadButton`, `S3UploadPhoto`, `S3UploadDragger`, and `S3Download` blocks are now deprecated aliases of the generic blocks — existing apps keep working unchanged.
 
 **Google Cloud Storage (`@lowdefy/plugin-gcp`, new)**
 
-- `GoogleCloudStorageBucket` connection with `GcsSignedPostPolicy`, `GcsSignedGetUrl`, and `GcsPutObject` requests.
+- `GoogleCloudStorageBucket` connection with `GcsSignedPostPolicy`, `GcsSignedGetUrl`, `GcsGetObject`, and `GcsPutObject` requests.
 
 **Azure Blob Storage (`@lowdefy/plugin-azure`, new)**
 
-- `AzureBlobContainer` connection with `AzureBlobUploadSas`, `AzureBlobDownloadSas`, and `AzureBlobPut` requests.
+- `AzureBlobContainer` connection with `AzureBlobUploadSas`, `AzureBlobDownloadSas`, `AzureBlobGet`, and `AzureBlobPut` requests.
 
 **Editor and chat uploads (`@lowdefy/blocks-tiptap`, `@lowdefy/blocks-antd-x`)**
 
