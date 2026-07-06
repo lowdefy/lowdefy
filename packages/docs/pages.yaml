@@ -32,6 +32,7 @@
 - _ref: concepts/theming.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
+- _ref: concepts/notifications.yaml
 - _ref: concepts/dynamic-page-content.yaml
 
 - _ref: agents/introduction.yaml
@@ -212,6 +213,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/Redis.yaml
 - _ref: connections/SendGridMail.yaml
+- _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 

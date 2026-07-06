@@ -113,6 +113,11 @@
           pageId: lowdefy-api
           properties:
             title: APIs
+        - id: notifications
+          type: MenuLink
+          pageId: notifications
+          properties:
+            title: Notifications
         - id: dynamic-page-content
           type: MenuLink
           pageId: dynamic-page-content
@@ -864,6 +869,11 @@
           pageId: SendGridMail
           properties:
             title: SendGrid Email
+        - id: SMTP
+          type: MenuLink
+          pageId: SMTP
+          properties:
+            title: SMTP Email
         - id: SQLite
           type: MenuLink
           pageId: SQLite

@@ -36,7 +36,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: APIs
-            previous_page_id: lowdefy-api
+            previous_page_title: Notifications
+            previous_page_id: notifications
             next_page_title: References and Templates
             next_page_id: references-and-templates
