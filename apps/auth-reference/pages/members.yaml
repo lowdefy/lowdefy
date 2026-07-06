@@ -75,7 +75,7 @@ blocks:
   - id: invite_contact_id
     type: TextInput
     properties:
-      title: Contact id (optional - stamped onto the user on accept)
+      title: Contact id (optional - merged into user.profile on accept)
   - id: invite_button
     type: Button
     properties:

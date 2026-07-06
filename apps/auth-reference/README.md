@@ -214,7 +214,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
     `node scripts/set-member.mjs --email <you> --org org-a --remove` -
     the next navigation treats you as logged out (no member row = the hard
     wall, not "logged in with no roles"). Re-add with `--roles admin`.
-23. **Invite → sign-up → accept (org-b, with contact stamp)**: on
+23. **Invite → sign-up → accept (org-b, with contact link)**: on
     `auth-reference` `/contacts` create a contact for a fresh email and
     copy its contact id. Promote yourself in org-b
     (`--org org-b --roles admin`), then on `auth-reference-b` `/members`
@@ -226,7 +226,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
     `/dashboard` still treats you as logged out (no member row yet). Open
     `/accept-invitation?invitationId=<id>`, accept - membership exists,
     `/dashboard` renders, and `db.users.find({email: "<invitee>"})` shows
-    the invitation's `contactId` stamped onto the user.
+    the invitation's `profile.contactId` merged onto the user's profile bag.
 24. **Expired invitation gets the normal rejection**: expire a pending
     invitation
     (`db["user-invitations"].updateOne({email: "<x>"}, {$set: {expiresAt: new Date(0)}})`),
@@ -237,12 +237,13 @@ the old one) so pre-phase-3 users do not confuse the wall.
     At create time the user is unverified so `user.create.before` skips
     the match; after clicking the Mailpit link, the `email.verified`
     binding links it - `db.users.find({email: "merge-pw@example.test"})`
-    shows `contactId` (written by explicit update). For the OAuth path,
-    create a contact for your Google address and "Continue with Google" -
-    the signup arrives verified, so `user.create.before` returns the
-    record with `contactId` inline. An invited user whose accept stamped a
-    `contactId` (scenario 23) skips the merge - the hook only matches
-    users with no `contactId`.
+    shows `profile.contactId` (written through the `UpdateUserProfile`
+    step). For the OAuth path, create a contact for your Google address
+    and "Continue with Google" - the signup arrives verified, so
+    `user.create.before` returns the record with `profile.contactId`
+    inline. An invited user whose accept merged a `profile.contactId`
+    (scenario 23) skips the merge - the hook only matches users with no
+    `profile.contactId`.
 26. **Tenant policy - lazy minting**: on `auth-reference-tenant`, sign up
     and verify a fresh user; the tenant database's `user-organizations`
     stays empty until the first login (no tenants for abandoned signups).
@@ -360,11 +361,11 @@ of disposable signed-up-and-verified users.
     the invitation id): no `invitation.send` hook is bound by default, so
     `auth.email` sends. Then create a contact on `/contacts` for a second
     fresh email and invite it **with** the contact id - the response
-    carries `contactId`. As that invitee: sign up, verify, and accept on
-    `/accept-invitation?invitationId=<id>` -
-    `db.users.find({email: "<invitee>"})` shows the stamped `contactId`
-    (the phase-3 accept hook, now fed by the step). Keep this invitee
-    around: scenarios 39 and 42 act on them.
+    carries `profile.contactId`. As that invitee: sign up, verify, and
+    accept on `/accept-invitation?invitationId=<id>` -
+    `db.users.find({email: "<invitee>"})` shows the merged
+    `profile.contactId` (the phase-3 accept hook, now fed by the step).
+    Keep this invitee around: scenarios 39 and 42 act on them.
 
 35. **An unregistered role fails loudly at the rail**: invite any email
     with role `not-a-role` (deliberately in the selector, absent from the
@@ -428,7 +429,7 @@ of disposable signed-up-and-verified users.
     member to `admin,owner` and the same demotion goes through.
 
 42. **DeleteUser cascades and leaves the contact untouched**: scenario 34's
-    invitee has a user row, an org-a member row, a stamped `contactId`,
+    invitee has a user row, an org-a member row, a merged `profile.contactId`,
     and sessions; invite the same email once more so a **pending**
     invitation row also exists (re-inviting replaces any pending
     invitation and creates a fresh one - phase-8 semantics). Note the user

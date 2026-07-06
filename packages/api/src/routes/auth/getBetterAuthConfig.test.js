@@ -671,7 +671,7 @@ test('always pushes the organization plugin', () => {
   expect(options.plugins.some((p) => p.id === 'organization')).toBe(true);
 });
 
-test('registers the internal user additionalFields (contactId, attributes)', () => {
+test('registers the internal user additionalFields (attributes, profile)', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -681,8 +681,8 @@ test('registers the internal user additionalFields (contactId, attributes)', () 
     secrets: baseSecrets,
   });
   expect(options.user.additionalFields).toEqual({
-    contactId: { type: 'string', required: false, input: false },
     attributes: { type: 'json', required: false, input: false },
+    profile: { type: 'json', required: false, input: false },
   });
 });
 

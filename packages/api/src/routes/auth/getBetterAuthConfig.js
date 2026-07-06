@@ -129,11 +129,13 @@ function getBetterAuthConfig({
     user: {
       modelName: modelNames.user,
       // Internal additionalFields, deliberately not an app-facing surface:
-      // contactId links the user to the app-owned contact record;
-      // attributes holds admin-set, cross-app authorization inputs.
+      // attributes holds admin-set, cross-app authorization inputs;
+      // profile is the opaque display-and-app-data bag written by module or
+      // app logic (UpdateUserProfile) - the platform never validates,
+      // indexes, or reads inside it.
       additionalFields: {
-        contactId: { type: 'string', required: false, input: false },
         attributes: { type: 'json', required: false, input: false },
+        profile: { type: 'json', required: false, input: false },
       },
     },
     verification: { modelName: modelNames.verification },

@@ -20,9 +20,12 @@ import InviteMember from './InviteMember.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 const acting = { system: true, user: null };
-const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
+const organization = {
+  policy: 'pinned',
+  pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' },
+};
 
-test('InviteMember passes properties including contactId through as body to createInvitation', async () => {
+test('InviteMember passes properties including profile through as body to createInvitation', async () => {
   const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   const result = await InviteMember({
@@ -34,7 +37,7 @@ test('InviteMember passes properties including contactId through as body to crea
       role: 'member',
       organizationId: 'org-1',
       resend: true,
-      contactId: 'contact-1',
+      profile: { contactId: 'contact-1' },
     },
   });
   expect(result).toEqual({ id: 'invitation-1' });
@@ -44,7 +47,7 @@ test('InviteMember passes properties including contactId through as body to crea
     role: 'member',
     organizationId: 'org-1',
     resend: true,
-    contactId: 'contact-1',
+    profile: { contactId: 'contact-1' },
   });
 });
 
@@ -144,4 +147,33 @@ test('InviteMember throws when attributes is not a plain object', async () => {
       },
     })
   ).rejects.toThrow('InviteMember "attributes" is not an object. Received "not-an-object".');
+});
+
+test('InviteMember carries profile as undefined in the body when omitted', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organization,
+    properties: { email: 'new@example.com', role: 'member', organizationId: 'org-1' },
+  });
+  expect(createInvitation.mock.calls[0][0].body.profile).toBe(undefined);
+});
+
+test('InviteMember throws when profile is not a plain object', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    InviteMember({
+      acting,
+      auth,
+      organization,
+      properties: {
+        email: 'new@example.com',
+        role: 'member',
+        organizationId: 'org-1',
+        profile: 'not-an-object',
+      },
+    })
+  ).rejects.toThrow('InviteMember "profile" is not an object. Received "not-an-object".');
 });

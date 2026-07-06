@@ -18,15 +18,16 @@ routine:
   # Merge-on-signup: link a verified new signup to an existing contact
   # rather than duplicating it. Match by verified email only - an unverified
   # match is an account-takeover vector - and only when the user carries no
-  # contactId yet, so an invitation-stamped link always wins. Email/password
-  # signups are unverified here; their match runs at email.verified instead.
+  # profile.contactId yet, so an invitation-carried link always wins.
+  # Email/password signups are unverified here; their match runs at
+  # email.verified instead.
   - ':if':
       _and:
         - _eq:
             - _payload: user.emailVerified
             - true
         - _eq:
-            - _payload: user.contactId
+            - _payload: user.profile.contactId
             - null
     ':then':
       - id: match_contact
@@ -37,7 +38,9 @@ routine:
             email:
               _payload: user.email
       # Contacts are created with string _ids (see the contacts page), so
-      # the id lands on user.contactId without ObjectId conversion.
+      # the id lands on profile.contactId without ObjectId conversion. A
+      # before hook :returns the record with the key set inline - no step
+      # needed since the row is not written yet.
       - ':if':
           _ne:
             - _step: match_contact
@@ -46,8 +49,9 @@ routine:
           - ':return':
               _object.assign:
                 - _payload: user
-                - contactId:
-                    _step: match_contact._id
+                - profile:
+                    contactId:
+                      _step: match_contact._id
   # Replace the record BetterAuth writes - the plain :return value is the
   # new record (the adapter wraps it as { data }).
   - ':if':

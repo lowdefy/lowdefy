@@ -88,5 +88,5 @@ test('buildOrganizationPlugin maps the user-* collection names and internal addi
   expect(plugin.options.schema.invitation.modelName).toBe('user-invitations');
   expect(plugin.options.schema.member.additionalFields.attributes.type).toBe('json');
   expect(plugin.options.schema.invitation.additionalFields.attributes.type).toBe('json');
-  expect(plugin.options.schema.invitation.additionalFields.contactId.type).toBe('string');
+  expect(plugin.options.schema.invitation.additionalFields.profile.type).toBe('json');
 });

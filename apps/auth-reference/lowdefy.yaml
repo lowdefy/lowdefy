@@ -204,17 +204,6 @@ connections:
         _secret: AUTH_DATABASE_URI
       collection: user-contacts
       write: true
-  # The email.verified merge writes user.contactId with an explicit update.
-  # The sanctioned write pathway for this one field is an open design
-  # question (hooks/design.md); the reference app writes it directly over a
-  # connection until the auth module settles the mechanism.
-  - id: users_db
-    type: MongoDBCollection
-    properties:
-      databaseUri:
-        _secret: AUTH_DATABASE_URI
-      collection: users
-      write: true
   # Phase-8 native-read demo: reads of auth-owned collections may go native
   # (steps for writes, connections for reads). Read-only - no write: true.
   - id: members_read_db
