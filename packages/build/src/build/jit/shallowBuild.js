@@ -40,6 +40,7 @@ import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
+import validateCallAgentSteps from '../validateCallAgentSteps.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
@@ -142,7 +143,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
-    // Cross-config validation — needs buildApi (stepIds) and buildNotifications (id set)
+    // Cross-config validations — need buildApi (stepIds) and the buildAgents/
+    // buildNotifications id sets. Match the full build (index.js).
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
     tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
       components,
       context,
