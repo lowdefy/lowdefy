@@ -21,6 +21,7 @@ import { serializer, type } from '@lowdefy/helpers';
 // resolveDeferred, and resolveDeferred walks record bodies. Both modules only
 // reference each other's bindings at call time, after evaluation completes.
 import { loadAndWalkRef, resolve, WalkContext } from './walker.js';
+import cloneWithMarkers from './cloneWithMarkers.js';
 
 // The deferred-content record registry. Every deferred region of module config
 // becomes a record { kind, body, env, slot } in context.deferred; the config
@@ -201,33 +202,13 @@ async function resolveRecordBody(ctx, id, record) {
     // varDefault and connRemap bodies are raw config subtrees. Clone before
     // walking — the raw body must stay pristine in the registry
     // (deferredRecords.json serializes it, and demand order must not change it).
-    value = await resolve(cloneRecordBody(record.body), recordCtx);
+    value = await resolve(cloneWithMarkers(record.body), recordCtx);
   }
   record.value = value;
   record.done = true;
   return value;
 }
 
-// Marker-preserving deep clone for record bodies (~r ~l ~k ~arr). Kept local
-// to avoid a second circular binding on the walker's clone family; clone
-// unification replaces both with cloneWithMarkers.
-function cloneRecordBody(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return value;
-  const clone = type.isArray(value)
-    ? value.map((item) => cloneRecordBody(item))
-    : Object.fromEntries(Object.keys(value).map((key) => [key, cloneRecordBody(value[key])]));
-  for (const marker of ['~r', '~l', '~k', '~arr']) {
-    if (value[marker] !== undefined) {
-      Object.defineProperty(clone, marker, {
-        value: value[marker],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-    }
-  }
-  return clone;
-}
 
 // Placeholder lifetime differs by record kind: component and menuLinks
 // placeholders persist by design (per-consumer resolution; JIT consumes them

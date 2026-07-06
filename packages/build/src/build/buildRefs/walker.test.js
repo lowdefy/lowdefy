@@ -1606,11 +1606,11 @@ describe('deferModuleRefs record deferral', () => {
     expect(result === null || result['~deferred'] === undefined).toBe(true);
   });
 
-  test('cloneForResolve carries placeholders through unchanged', async () => {
-    const { cloneForResolve } = await import('./walker.js');
+  test('cloneWithMarkers carries placeholders through unchanged', async () => {
+    const { default: cloneWithMarkers } = await import('./cloneWithMarkers.js');
 
     const placeholder = { '~deferred': 'consumer-entry:consumerVars.slot' };
-    const cloned = cloneForResolve({ wrapper: placeholder });
+    const cloned = cloneWithMarkers({ wrapper: placeholder });
 
     // Plain enumerable data — the whole point of the record placeholder.
     expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
