@@ -104,6 +104,13 @@ function createAuthMethods(lowdefy, auth) {
     }
     if (!type.isNone(email) || !type.isNone(password)) {
       const data = await unwrap(auth.signInEmail({ email, password, ...rest }));
+      // A 2FA-enrolled user gets a challenge, not a session - do not navigate
+      // as if signed in. The login page reads the outcome via _actions and
+      // routes to the app's challenge page, where TwoFactorVerify completes
+      // the session.
+      if (data?.twoFactorRedirect) {
+        return data;
+      }
       const window = lowdefy._internal?.globals?.window;
       if (callbackURL && window) {
         window.location.assign(callbackURL);
@@ -193,13 +200,118 @@ function createAuthMethods(lowdefy, auth) {
     lowdefy.user = user ?? null;
   }
 
+  // Accepts an organization invitation. BetterAuth's endpoint enforces the
+  // session-email to invitation-email match - no re-check here.
+  async function acceptInvitation({ invitationId } = {}) {
+    if (!type.isString(invitationId)) {
+      throw new Error('AcceptInvitation requires an "invitationId" param.');
+    }
+    return unwrap(auth.acceptInvitation({ invitationId }));
+  }
+
+  async function changePassword({ currentPassword, newPassword, revokeOtherSessions } = {}) {
+    if (!type.isString(currentPassword) || !type.isString(newPassword)) {
+      throw new Error('ChangePassword requires "currentPassword" and "newPassword" params.');
+    }
+    return unwrap(auth.changePassword({ currentPassword, newPassword, revokeOtherSessions }));
+  }
+
+  async function passkeyDelete({ passkeyId } = {}) {
+    if (!type.isString(passkeyId)) {
+      throw new Error('PasskeyDelete requires a "passkeyId" param.');
+    }
+    return unwrap(auth.deletePasskey({ id: passkeyId }));
+  }
+
+  // The BetterAuth client method runs the whole WebAuthn browser ceremony
+  // itself - it fetches the registration options, prompts the authenticator
+  // and verifies the result - so the ceremony runs inside the action.
+  async function passkeyRegister(params = {}) {
+    return unwrap(auth.addPasskey(params));
+  }
+
+  async function requestPasswordReset({ email, redirectTo, ...rest } = {}) {
+    if (!type.isString(email)) {
+      throw new Error('RequestPasswordReset requires an "email" param.');
+    }
+    return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest }));
+  }
+
+  async function resetPassword({ newPassword, token, ...rest } = {}) {
+    if (!type.isString(newPassword)) {
+      throw new Error('ResetPassword requires a "newPassword" param.');
+    }
+    return unwrap(auth.resetPassword({ newPassword, token, ...rest }));
+  }
+
+  // Revokes every session except the current one - the only session revoke
+  // exposed to config; per-session revoke would put session tokens in
+  // config reach.
+  async function revokeOtherSessions() {
+    return unwrap(auth.revokeOtherSessions());
+  }
+
+  // Resends the verification email for an unverified account - an unverified
+  // user holds no session, so this is a public call. The callbackUrl is
+  // where the emailed verification link lands after verifying, matching the
+  // signUp param of the same name.
+  async function sendVerificationEmail({ callbackUrl, email, ...rest } = {}) {
+    if (!type.isString(email)) {
+      throw new Error('SendVerificationEmail requires an "email" param.');
+    }
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    return unwrap(auth.sendVerificationEmail({ email, callbackURL, ...rest }));
+  }
+
+  async function twoFactorDisable({ password, ...rest } = {}) {
+    if (!type.isString(password)) {
+      throw new Error('TwoFactorDisable requires a "password" param.');
+    }
+    return unwrap(auth.twoFactorDisable({ password, ...rest }));
+  }
+
+  // Returns the totpURI and backup codes the page must render once - the
+  // action response is the only carrier (readable via _actions in the same
+  // event chain); no side-channel state.
+  async function twoFactorEnable({ password, ...rest } = {}) {
+    if (!type.isString(password)) {
+      throw new Error('TwoFactorEnable requires a "password" param.');
+    }
+    return unwrap(auth.twoFactorEnable({ password, ...rest }));
+  }
+
+  // Serves both enrolment confirmation and the sign-in challenge, dispatching
+  // by parameter (matching login): a backupCode param verifies a backup code,
+  // otherwise code verifies TOTP. The sign-in challenge verify sets the
+  // session cookie itself - navigation after is the app's business.
+  async function twoFactorVerify({ backupCode, code, trustDevice, ...rest } = {}) {
+    if (type.isString(backupCode)) {
+      return unwrap(auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest }));
+    }
+    if (type.isString(code)) {
+      return unwrap(auth.twoFactorVerifyTotp({ code, trustDevice, ...rest }));
+    }
+    throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
+  }
+
   return {
+    acceptInvitation,
+    changePassword,
     impersonateUser,
     login,
     logout,
+    passkeyDelete,
+    passkeyRegister,
+    requestPasswordReset,
+    resetPassword,
+    revokeOtherSessions,
+    sendVerificationEmail,
     setActiveOrganization,
     signUp,
     stopImpersonating,
+    twoFactorDisable,
+    twoFactorEnable,
+    twoFactorVerify,
     updateSession,
   };
 }

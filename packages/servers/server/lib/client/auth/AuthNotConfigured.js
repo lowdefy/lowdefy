@@ -22,9 +22,17 @@ function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
     user: null,
+    acceptInvitation: authNotConfigured,
+    addPasskey: authNotConfigured,
+    changePassword: authNotConfigured,
+    deletePasskey: authNotConfigured,
     getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
     impersonateUser: authNotConfigured,
+    requestPasswordReset: authNotConfigured,
+    resetPassword: authNotConfigured,
+    revokeOtherSessions: authNotConfigured,
+    sendVerificationEmail: authNotConfigured,
     setActiveOrganization: authNotConfigured,
     signInEmail: authNotConfigured,
     signInMagicLink: authNotConfigured,
@@ -33,6 +41,10 @@ function AuthNotConfigured({ authConfig, children }) {
     signOut: authNotConfigured,
     signUpEmail: authNotConfigured,
     stopImpersonating: authNotConfigured,
+    twoFactorDisable: authNotConfigured,
+    twoFactorEnable: authNotConfigured,
+    twoFactorVerifyBackupCode: authNotConfigured,
+    twoFactorVerifyTotp: authNotConfigured,
   };
 
   return children(auth);

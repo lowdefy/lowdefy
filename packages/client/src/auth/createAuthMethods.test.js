@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 import createAuthMethods from './createAuthMethods.js';
 
-function setup({ signUpResult } = {}) {
+function setup({ signInResult, signUpResult } = {}) {
   const assign = jest.fn();
   const lowdefy = {
     _internal: {
@@ -26,12 +26,37 @@ function setup({ signUpResult } = {}) {
   };
   const auth = {
     authConfig: { providers: [] },
+    acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
+    addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
+    changePassword: jest.fn(() =>
+      Promise.resolve({ data: { token: null, user: {} }, error: null })
+    ),
+    deletePasskey: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     impersonateUser: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
-    signInEmail: jest.fn(() => Promise.resolve({ data: { token: 't' }, error: null })),
+    requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    resetPassword: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    revokeOtherSessions: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    sendVerificationEmail: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    signInEmail: jest.fn(() =>
+      Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
+    ),
     signUpEmail: jest.fn(() =>
       Promise.resolve({ data: signUpResult ?? { token: null, user: {} }, error: null })
     ),
     stopImpersonating: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
+    twoFactorDisable: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    twoFactorEnable: jest.fn(() =>
+      Promise.resolve({
+        data: { totpURI: 'otpauth://totp/app', backupCodes: ['code-1'] },
+        error: null,
+      })
+    ),
+    twoFactorVerifyBackupCode: jest.fn(() =>
+      Promise.resolve({ data: { token: 't', user: {} }, error: null })
+    ),
+    twoFactorVerifyTotp: jest.fn(() =>
+      Promise.resolve({ data: { token: 't', user: {} }, error: null })
+    ),
   };
   return { auth, lowdefy, assign };
 }
@@ -143,7 +168,10 @@ test('impersonateUser throws when userId is missing', async () => {
 test('impersonateUser surfaces the error returned by the endpoint', async () => {
   const { auth, lowdefy } = setup();
   auth.impersonateUser = jest.fn(() =>
-    Promise.resolve({ data: null, error: { message: 'Forbidden.', code: 'FORBIDDEN', status: 403 } })
+    Promise.resolve({
+      data: null,
+      error: { message: 'Forbidden.', code: 'FORBIDDEN', status: 403 },
+    })
   );
   const { impersonateUser } = createAuthMethods(lowdefy, auth);
   await expect(impersonateUser({ userId: 'user-1' })).rejects.toThrow('Forbidden.');
@@ -163,4 +191,237 @@ test('stopImpersonating surfaces the error returned by the endpoint', async () =
   );
   const { stopImpersonating } = createAuthMethods(lowdefy, auth);
   await expect(stopImpersonating()).rejects.toThrow('No impersonation session.');
+});
+
+test('login with email and password navigates to callbackURL on a session response', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('login returns the two-factor challenge without navigating', async () => {
+  const { auth, lowdefy, assign } = setup({
+    signInResult: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ twoFactorRedirect: true, twoFactorMethods: ['totp'] });
+});
+
+test('changePassword calls auth.changePassword with the password params', async () => {
+  const { auth, lowdefy } = setup();
+  const { changePassword } = createAuthMethods(lowdefy, auth);
+  await changePassword({
+    currentPassword: 'old-pass',
+    newPassword: 'new-pass',
+    revokeOtherSessions: true,
+  });
+  expect(auth.changePassword.mock.calls).toEqual([
+    [{ currentPassword: 'old-pass', newPassword: 'new-pass', revokeOtherSessions: true }],
+  ]);
+});
+
+test('changePassword throws when currentPassword or newPassword is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { changePassword } = createAuthMethods(lowdefy, auth);
+  await expect(changePassword({ newPassword: 'new-pass' })).rejects.toThrow(
+    'ChangePassword requires "currentPassword" and "newPassword" params.'
+  );
+  await expect(changePassword({ currentPassword: 'old-pass' })).rejects.toThrow(
+    'ChangePassword requires "currentPassword" and "newPassword" params.'
+  );
+  expect(auth.changePassword).not.toHaveBeenCalled();
+});
+
+test('requestPasswordReset calls auth.requestPasswordReset with email and redirectTo', async () => {
+  const { auth, lowdefy } = setup();
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await requestPasswordReset({ email: 'user@example.com', redirectTo: '/reset-password' });
+  expect(auth.requestPasswordReset.mock.calls).toEqual([
+    [{ email: 'user@example.com', redirectTo: '/reset-password' }],
+  ]);
+});
+
+test('requestPasswordReset throws when email is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await expect(requestPasswordReset()).rejects.toThrow(
+    'RequestPasswordReset requires an "email" param.'
+  );
+  expect(auth.requestPasswordReset).not.toHaveBeenCalled();
+});
+
+test('resetPassword calls auth.resetPassword with newPassword and token', async () => {
+  const { auth, lowdefy } = setup();
+  const { resetPassword } = createAuthMethods(lowdefy, auth);
+  await resetPassword({ newPassword: 'new-pass', token: 'reset-token' });
+  expect(auth.resetPassword.mock.calls).toEqual([
+    [{ newPassword: 'new-pass', token: 'reset-token' }],
+  ]);
+});
+
+test('resetPassword throws when newPassword is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { resetPassword } = createAuthMethods(lowdefy, auth);
+  await expect(resetPassword({ token: 'reset-token' })).rejects.toThrow(
+    'ResetPassword requires a "newPassword" param.'
+  );
+  expect(auth.resetPassword).not.toHaveBeenCalled();
+});
+
+test('sendVerificationEmail resolves the callbackUrl and calls auth.sendVerificationEmail', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await sendVerificationEmail({ email: 'user@example.com', callbackUrl: { url: '/verified' } });
+  expect(auth.sendVerificationEmail.mock.calls).toEqual([
+    [{ email: 'user@example.com', callbackURL: '/verified' }],
+  ]);
+});
+
+test('sendVerificationEmail throws when email is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await expect(sendVerificationEmail()).rejects.toThrow(
+    'SendVerificationEmail requires an "email" param.'
+  );
+  expect(auth.sendVerificationEmail).not.toHaveBeenCalled();
+});
+
+test('twoFactorEnable calls auth.twoFactorEnable and returns totpURI and backup codes', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorEnable } = createAuthMethods(lowdefy, auth);
+  const data = await twoFactorEnable({ password: 'pass-123' });
+  expect(auth.twoFactorEnable.mock.calls).toEqual([[{ password: 'pass-123' }]]);
+  expect(data).toEqual({ totpURI: 'otpauth://totp/app', backupCodes: ['code-1'] });
+});
+
+test('twoFactorEnable throws when password is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorEnable } = createAuthMethods(lowdefy, auth);
+  await expect(twoFactorEnable()).rejects.toThrow('TwoFactorEnable requires a "password" param.');
+  expect(auth.twoFactorEnable).not.toHaveBeenCalled();
+});
+
+test('twoFactorVerify verifies a TOTP code with trustDevice', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345', trustDevice: true });
+  expect(auth.twoFactorVerifyTotp.mock.calls).toEqual([[{ code: '012345', trustDevice: true }]]);
+  expect(auth.twoFactorVerifyBackupCode).not.toHaveBeenCalled();
+});
+
+test('twoFactorVerify verifies a backup code when backupCode is given', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ backupCode: 'backup-1', trustDevice: false });
+  expect(auth.twoFactorVerifyBackupCode.mock.calls).toEqual([
+    [{ code: 'backup-1', trustDevice: false }],
+  ]);
+  expect(auth.twoFactorVerifyTotp).not.toHaveBeenCalled();
+});
+
+test('twoFactorVerify throws when neither code nor backupCode is given', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await expect(twoFactorVerify({ trustDevice: true })).rejects.toThrow(
+    'TwoFactorVerify requires a "code" or "backupCode" param.'
+  );
+  expect(auth.twoFactorVerifyTotp).not.toHaveBeenCalled();
+  expect(auth.twoFactorVerifyBackupCode).not.toHaveBeenCalled();
+});
+
+test('twoFactorDisable calls auth.twoFactorDisable with the password', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorDisable } = createAuthMethods(lowdefy, auth);
+  await twoFactorDisable({ password: 'pass-123' });
+  expect(auth.twoFactorDisable.mock.calls).toEqual([[{ password: 'pass-123' }]]);
+});
+
+test('twoFactorDisable throws when password is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { twoFactorDisable } = createAuthMethods(lowdefy, auth);
+  await expect(twoFactorDisable()).rejects.toThrow('TwoFactorDisable requires a "password" param.');
+  expect(auth.twoFactorDisable).not.toHaveBeenCalled();
+});
+
+test('passkeyRegister calls auth.addPasskey and returns the registered passkey', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyRegister } = createAuthMethods(lowdefy, auth);
+  const data = await passkeyRegister({ name: 'Work laptop' });
+  expect(auth.addPasskey.mock.calls).toEqual([[{ name: 'Work laptop' }]]);
+  expect(data).toEqual({ id: 'passkey-1' });
+});
+
+test('passkeyRegister surfaces a cancelled WebAuthn ceremony as an error', async () => {
+  const { auth, lowdefy } = setup();
+  auth.addPasskey = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'Registration cancelled.', code: 'ERROR_CEREMONY_ABORTED', status: 400 },
+    })
+  );
+  const { passkeyRegister } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyRegister()).rejects.toThrow('Registration cancelled.');
+});
+
+test('passkeyDelete maps passkeyId onto the deletePasskey id param', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyDelete } = createAuthMethods(lowdefy, auth);
+  await passkeyDelete({ passkeyId: 'passkey-1' });
+  expect(auth.deletePasskey.mock.calls).toEqual([[{ id: 'passkey-1' }]]);
+});
+
+test('passkeyDelete throws when passkeyId is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyDelete } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyDelete()).rejects.toThrow('PasskeyDelete requires a "passkeyId" param.');
+  expect(auth.deletePasskey).not.toHaveBeenCalled();
+});
+
+test('revokeOtherSessions calls auth.revokeOtherSessions with no params', async () => {
+  const { auth, lowdefy } = setup();
+  const { revokeOtherSessions } = createAuthMethods(lowdefy, auth);
+  await revokeOtherSessions();
+  expect(auth.revokeOtherSessions.mock.calls).toEqual([[]]);
+});
+
+test('acceptInvitation calls auth.acceptInvitation with the invitationId param', async () => {
+  const { auth, lowdefy } = setup();
+  const { acceptInvitation } = createAuthMethods(lowdefy, auth);
+  await acceptInvitation({ invitationId: 'invitation-1' });
+  expect(auth.acceptInvitation.mock.calls).toEqual([[{ invitationId: 'invitation-1' }]]);
+});
+
+test('acceptInvitation throws when invitationId is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { acceptInvitation } = createAuthMethods(lowdefy, auth);
+  await expect(acceptInvitation()).rejects.toThrow(
+    'AcceptInvitation requires an "invitationId" param.'
+  );
+  expect(auth.acceptInvitation).not.toHaveBeenCalled();
+});
+
+test('acceptInvitation surfaces the error returned by the endpoint', async () => {
+  const { auth, lowdefy } = setup();
+  auth.acceptInvitation = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'Invitation not found.', code: 'INVITATION_NOT_FOUND', status: 400 },
+    })
+  );
+  const { acceptInvitation } = createAuthMethods(lowdefy, auth);
+  await expect(acceptInvitation({ invitationId: 'invitation-1' })).rejects.toThrow(
+    'Invitation not found.'
+  );
 });

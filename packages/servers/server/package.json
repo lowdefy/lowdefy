@@ -47,6 +47,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
     "@ant-design/x": "2.7.0",
+    "@better-auth/passkey": "^1.6.23",
     "@hono/node-server": "2.0.4",
     "@lowdefy/actions-core": "5.3.0",
     "@lowdefy/api": "5.3.0",

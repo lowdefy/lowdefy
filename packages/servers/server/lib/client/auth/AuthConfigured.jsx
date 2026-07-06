@@ -21,7 +21,9 @@ import {
   genericOAuthClient,
   magicLinkClient,
   organizationClient,
+  twoFactorClient,
 } from 'better-auth/client/plugins';
+import { passkeyClient } from '@better-auth/passkey/client';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -31,7 +33,14 @@ const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
-  plugins: [adminClient(), genericOAuthClient(), magicLinkClient(), organizationClient()],
+  plugins: [
+    adminClient(),
+    genericOAuthClient(),
+    magicLinkClient(),
+    organizationClient(),
+    passkeyClient(),
+    twoFactorClient(),
+  ],
 });
 
 // The server resolves the caller per request and embeds it in the page
@@ -97,7 +106,17 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     suppressSignOutReload: () => {
       reloadSuppressedRef.current = true;
     },
+    acceptInvitation: (params) => authClient.organization.acceptInvitation(params),
+    // addPasskey runs the WebAuthn browser ceremony itself - options fetch,
+    // authenticator prompt, verification.
+    addPasskey: (params) => authClient.passkey.addPasskey(params),
+    changePassword: (params) => authClient.changePassword(params),
+    deletePasskey: (params) => authClient.passkey.deletePasskey(params),
     impersonateUser: (params) => authClient.admin.impersonateUser(params),
+    requestPasswordReset: (params) => authClient.requestPasswordReset(params),
+    resetPassword: (params) => authClient.resetPassword(params),
+    revokeOtherSessions: () => authClient.revokeOtherSessions(),
+    sendVerificationEmail: (params) => authClient.sendVerificationEmail(params),
     setActiveOrganization: (params) => authClient.organization.setActive(params),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
@@ -106,6 +125,10 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
     stopImpersonating: () => authClient.admin.stopImpersonating(),
+    twoFactorDisable: (params) => authClient.twoFactor.disable(params),
+    twoFactorEnable: (params) => authClient.twoFactor.enable(params),
+    twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
+    twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
   };
   return (
     <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>
