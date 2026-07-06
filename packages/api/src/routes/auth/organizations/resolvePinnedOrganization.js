@@ -24,10 +24,10 @@ import { getRegisteredOrganization } from './getOrganizationBinding.js';
 // otherwise race the startup ensure and read an unresolved pinned org.
 // After the first resolution this awaits an already-settled memoized
 // promise; the retained binding makes it a no-op read. A failed ensure is
-// swallowed here - the binding stays unresolved and the _organization
-// operator / step organizationId defaulting fail with their own clear
-// errors, instead of every request failing in the middleware.
-async function resolvePinnedOrganization({ auth }) {
+// logged but not rethrown - the binding stays unresolved and the
+// _organization operator / step organizationId defaulting fail with their
+// own clear errors, instead of every request failing in the middleware.
+async function resolvePinnedOrganization({ auth, logger }) {
   if (type.isNone(auth)) {
     return;
   }
@@ -44,6 +44,10 @@ async function resolvePinnedOrganization({ auth }) {
     await ensureOrganization({ auth, slug: registered.slug });
   } catch (error) {
     // Retried on the next fire - ensureOrganization does not memoize failures.
+    logger.warn(
+      { err: error },
+      `Failed to ensure the pinned organization "${registered.slug}" for the request.`
+    );
   }
 }
 

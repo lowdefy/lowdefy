@@ -79,7 +79,7 @@ function apiContext() {
     // The engine is constructed lazily on the first request, which would
     // otherwise race the startup pinned-org ensure - await the memoized
     // resolve so createApiContext reads a retained binding.
-    await resolvePinnedOrganization({ auth: context.auth });
+    await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
       const mockUser = getMockUser();
       if (mockUser) {
