@@ -302,25 +302,25 @@
     "b": {
       "key": "root.menus[0:main].links[1:admin/settings:MenuLink]",
       "~k_parent": "8",
-      "~r": "menus.0",
+      "~r": "menus.0.links._build.array.concat.1",
       "~l": 3
     },
     "c": {
       "key": "root.menus[0:main].links[1:admin/settings:MenuLink].properties",
       "~k_parent": "b",
-      "~r": "menus.0",
+      "~r": "menus.0.links._build.array.concat.1",
       "~l": 7
     },
     "d": {
       "key": "root.menus[0:main].links[2:admin/users:MenuLink]",
       "~k_parent": "8",
-      "~r": "menus.0",
+      "~r": "menus.0.links._build.array.concat.1",
       "~l": 9
     },
     "e": {
       "key": "root.menus[0:main].links[2:admin/users:MenuLink].properties",
       "~k_parent": "d",
-      "~r": "menus.0",
+      "~r": "menus.0.links._build.array.concat.1",
       "~l": 13
     },
     "f": {

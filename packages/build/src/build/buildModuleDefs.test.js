@@ -31,6 +31,7 @@ beforeAll(async () => {
 });
 
 import testContext from '../test-utils/testContext.js';
+import expectTerminates from '../test-utils/expectTerminates.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -637,19 +638,12 @@ pages: []
 describe('demand-driven entry-config resolution', () => {
   // Fails fast with a clear message if a cycle/ordering regression deadlocks the
   // build instead of settling (resolved, or settled-with-collected-error).
-  async function buildWithTimeout(context, ms = 4000) {
-    let timer;
-    const timeout = new Promise((_, reject) => {
-      timer = setTimeout(
-        () => reject(new Error('build did not terminate — suspected cycle-detection regression')),
-        ms
-      );
-    });
-    try {
-      return await Promise.race([buildModuleDefs({ context }), timeout]);
-    } finally {
-      clearTimeout(timer);
-    }
+  function buildWithTimeout(context, ms = 4000) {
+    return expectTerminates(
+      buildModuleDefs({ context }),
+      ms,
+      'build did not terminate — suspected cycle-detection regression'
+    );
   }
 
   const mockPaths = (ids) =>
@@ -857,19 +851,11 @@ pages: []
     expect(companies.resolvedVarCache.collection_name).toBe('companies_main');
   };
 
-  test.each(['companies-first'])(
+  // Both orders must resolve identically — value-granular record demand makes
+  // entry order immaterial (the WIP's case-3 false cycle cannot recur).
+  test.each(['companies-first', 'workflows-first'])(
     'mutual acyclic embedding settles and resolves both entries (order=%s)',
     mutualEmbedCase
-  );
-
-  // Living reproducer of the order-dependent false cycle: the read path's case 3
-  // conflates "value is still deferred" with "value is part of a cycle", so this
-  // order resolves sidebar_slots to null and collects a false cycle error. The
-  // deferred-records rearchitecture fixes this at value granularity; when it
-  // does, this test "passes unexpectedly" and the .failing marker must be removed.
-  test.failing(
-    'mutual acyclic embedding settles and resolves both entries (order=workflows-first)',
-    () => mutualEmbedCase('workflows-first')
   );
 
   // Test 4 — self-embed. An entry embeds a component from ITS OWN module that
@@ -986,14 +972,17 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          // The wait-graph names the actual value cycle, record by record.
+          message: expect.stringMatching(
+            /Circular deferred value dependency: .*consumerVars\.dep_[xy] → .*consumerVars\.dep_[xy] → .*consumerVars\.dep_[xy]/
+          ),
         }),
       ])
     );
     const cycleError = context.errors.find((e) =>
-      /Circular module entry vars:/.test(e.message)
+      /Circular deferred value dependency:/.test(e.message)
     );
-    expect(cycleError.message).toContain('Var "dep_x"');
+    expect(cycleError.message).toContain('dep_x');
   });
 
   // Test 6 — whole-blob ref. An entry whose ENTIRE vars object is one cross-module
@@ -1102,7 +1091,9 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          message: expect.stringMatching(
+            /Circular deferred value dependency: [ab]:consumerVars → [ab]:consumerVars → [ab]:consumerVars/
+          ),
         }),
       ])
     );
@@ -1400,7 +1391,7 @@ modules:
     mockFetchModules.mockResolvedValue(mockPaths(['a', 'b']));
 
     await expect(buildWithTimeout(context)).rejects.toThrow(
-      /Circular module entry connections: a → b → a/
+      /Circular deferred value dependency: [ab]:connections\.c → [ab]:connections\.c → [ab]:connections\.c/
     );
   });
 
@@ -1461,15 +1452,10 @@ pages: []
     expect(slot.properties.vy).toBe('valy');
     expect(context.modules['b'].resolvedVarCache.x).toBe('valx');
     expect(context.modules['b'].resolvedVarCache.y).toBe('valy');
-    // Single-finalize: B reaches the terminal 'resolved' state exactly once and
-    // holds a single coalesced finalizePromise. NOTE: a direct spy on
-    // validateRequiredVars is impractical here — registerModules.js exports both
-    // validateRequiredVars and the heavy resolveLocalManifest/resolveFullManifest,
-    // and ESM whole-module mocking with self-passthrough recurses (OOM). The
-    // strongest clean signals available are asserted instead: B is terminally
-    // resolved, both racing reads coalesced onto correct values with no duplicate
-    // resolution artifacts, and no false cycle was collected.
-    expect(context.modules['b'].entryConfigState).toBe('resolved');
+    // Both racing reads coalesced onto correct values with no duplicate
+    // resolution artifacts and no false cycle collected — there is no entry
+    // state machine anymore; per-record memos carry coalescing.
+    expect(context.errors).toEqual([]);
   });
 
   // Test 15 — default that reads another var, mid-flight. Acyclic: b.x is absent
@@ -1595,9 +1581,285 @@ pages: []
     expect(context.errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: expect.stringMatching(/Circular module entry vars: a → b → a/),
+          // The chain crosses the default seam: entry values and the manifest
+          // default appear as distinct records in the named cycle.
+          message: expect.stringMatching(
+            /Circular deferred value dependency: .*(consumerVars\.dep_[xy]|vars\.x\.default).*→.*→.*/
+          ),
         }),
       ])
     );
+  });
+});
+
+describe('demand-only var defaults', () => {
+  const mockModulePaths = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  const brokenDefaultFiles = (entryVars) => [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+lowdefy: 4.0.0
+modules:
+  - id: a
+    source: "file:../a"${entryVars}
+`,
+    },
+    {
+      path: '/a/module.lowdefy.yaml',
+      content: `
+vars:
+  x:
+    default:
+      _ref: /a/missing.yaml
+pages:
+  - id: home
+    type: Box
+    properties:
+      value:
+        _module.var: x
+`,
+    },
+  ];
+
+  test('a broken default builds green when the consumer supplies the var', async () => {
+    const context = createTestContext();
+    mockReadConfigFile.mockImplementation(
+      readConfigFileMockImplementation(
+        brokenDefaultFiles(`
+    vars:
+      x: supplied-value`)
+      )
+    );
+    mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'demand-only default hang');
+
+    expect(context.errors).toHaveLength(0);
+    expect(context.modules['a'].manifest.pages[0].properties.value).toBe('supplied-value');
+  });
+
+  test('a broken default errors only when demanded', async () => {
+    const context = createTestContext();
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(brokenDefaultFiles('')));
+    mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'demanded broken default hang');
+
+    expect(context.errors.length).toBeGreaterThan(0);
+    expect(String(context.errors[0].message)).toContain('missing.yaml');
+  });
+});
+
+describe('cross-entry consumption ordering (Phase C.5)', () => {
+  const mockModulePaths2 = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  // Mutual cross-module component refs INSIDE PAGES (not entry vars): entry A's
+  // pages consume B's component and vice versa. Records are created for every
+  // entry before any manifest resolve, so Phase D order is immaterial.
+  const mutualPageFiles = (order) => {
+    const a = `  - id: a
+    source: "file:../a"`;
+    const b = `  - id: b
+    source: "file:../b"`;
+    const mods = order === 'a-first' ? `${a}\n${b}` : `${b}\n${a}`;
+    return [
+      {
+        path: 'lowdefy.yaml',
+        content: `\nlowdefy: 4.0.0\nmodules:\n${mods}\npages:\n  - id: home\n    type: Box\n`,
+      },
+      {
+        path: '/a/module.lowdefy.yaml',
+        content: `
+dependencies:
+  - id: b
+components:
+  - id: a-badge
+    component: { type: Box, properties: { from: a } }
+pages:
+  - id: a-page
+    type: Box
+    blocks:
+      - _ref: { module: b, component: b-badge }
+`,
+      },
+      {
+        path: '/b/module.lowdefy.yaml',
+        content: `
+dependencies:
+  - id: a
+components:
+  - id: b-badge
+    component: { type: Box, properties: { from: b } }
+pages:
+  - id: b-page
+    type: Box
+    blocks:
+      - _ref: { module: a, component: a-badge }
+`,
+      },
+    ];
+  };
+
+  test.each(['a-first', 'b-first'])(
+    'mutual cross-module component refs inside pages resolve (order=%s)',
+    async (order) => {
+      const context = createTestContext();
+      mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(mutualPageFiles(order)));
+      mockFetchModules.mockResolvedValue(mockModulePaths2(['a', 'b']));
+
+      await expectTerminates(buildModuleDefs({ context }), 4000, 'cross-entry ordering hang');
+
+      expect(context.errors).toEqual([]);
+      expect(context.modules['a'].manifest.pages[0].blocks[0]).toEqual({
+        type: 'Box',
+        properties: { from: 'b' },
+      });
+      expect(context.modules['b'].manifest.pages[0].blocks[0]).toEqual({
+        type: 'Box',
+        properties: { from: 'a' },
+      });
+    }
+  );
+});
+
+describe('build operators over deferred operands', () => {
+  const mockModulePaths3 = (ids) =>
+    Object.fromEntries(
+      ids.map((id) => [id, { packageRoot: `/${id}`, moduleRoot: `/${id}`, isLocal: true }])
+    );
+
+  test('a _build operator with a nested module-ref operand folds after demand, not during prepare', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+lowdefy: 4.0.0
+modules:
+  - id: companies
+    source: "file:../companies"
+    vars:
+      slot:
+        _ref:
+          module: layout
+          component: wrapper
+          vars:
+            on_complete:
+              _build.array.concat:
+                - _ref:
+                    module: actions
+                    component: complete-actions
+                - - id: extra
+                    type: SetState
+  - id: layout
+    source: "file:../layout"
+  - id: actions
+    source: "file:../actions"
+`,
+      },
+      {
+        path: '/companies/module.lowdefy.yaml',
+        content: `
+vars:
+  slot: {}
+pages: []
+`,
+      },
+      {
+        path: '/layout/module.lowdefy.yaml',
+        content: `
+components:
+  - id: wrapper
+    component:
+      type: Box
+      events:
+        onComplete:
+          _var: on_complete
+pages: []
+`,
+      },
+      {
+        path: '/actions/module.lowdefy.yaml',
+        content: `
+components:
+  - id: complete-actions
+    component:
+      - id: notify
+        type: Message
+pages: []
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    mockFetchModules.mockResolvedValue(mockModulePaths3(['companies', 'layout', 'actions']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'deferred operand fold hang');
+
+    expect(context.errors).toEqual([]);
+    expect(context.modules['companies'].consumerVars.slot.events.onComplete).toEqual([
+      { id: 'notify', type: 'Message' },
+      { id: 'extra', type: 'SetState' },
+    ]);
+  });
+
+  test('a _build operator with a deferred operand directly in entry vars folds at the sweep', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+lowdefy: 4.0.0
+modules:
+  - id: companies
+    source: "file:../companies"
+    vars:
+      merged:
+        _build.array.concat:
+          - _ref:
+              module: actions
+              component: complete-actions
+          - - id: extra
+              type: SetState
+  - id: actions
+    source: "file:../actions"
+`,
+      },
+      {
+        path: '/companies/module.lowdefy.yaml',
+        content: `
+vars:
+  merged: {}
+pages: []
+`,
+      },
+      {
+        path: '/actions/module.lowdefy.yaml',
+        content: `
+components:
+  - id: complete-actions
+    component:
+      - id: notify
+        type: Message
+pages: []
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    mockFetchModules.mockResolvedValue(mockModulePaths3(['companies', 'actions']));
+
+    await expectTerminates(buildModuleDefs({ context }), 4000, 'deferred operand fold hang');
+
+    expect(context.errors).toEqual([]);
+    expect(context.modules['companies'].consumerVars.merged).toEqual([
+      { id: 'notify', type: 'Message' },
+      { id: 'extra', type: 'SetState' },
+    ]);
   });
 });
