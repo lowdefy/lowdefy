@@ -17,11 +17,11 @@
 import { useRef } from 'react';
 import TurndownService from 'turndown';
 
-import s3FileUpload from '../utils/s3FileUpload.js';
+import fileUpload from '../utils/fileUpload.js';
 
 // Ref-tracked controller for the mention editor's value. Mirrors TiptapInput's
 // useTiptapState but also extracts mentions from the document.
-function useTiptapMentionState({ value, methods }) {
+function useTiptapMentionState({ value, methods, hasDownloadRequest }) {
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -60,7 +60,7 @@ function useTiptapMentionState({ value, methods }) {
   };
 
   const insertImage = async (editor, file, pos) => {
-    const url = await s3FileUpload({ file, methods });
+    const url = await fileUpload({ file, methods, hasDownloadRequest });
     // The upload is async: bail if the editor was torn down meanwhile (e.g. the
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.

@@ -40,10 +40,17 @@ const TiptapInput = ({
   validation,
   value,
 }) => {
-  const { emit, insertImage } = useTiptapState({ value, methods });
+  const uploadPolicyRequestId =
+    properties.uploadPolicyRequestId ?? properties.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = properties.downloadPolicyRequestId;
+  const { emit, insertImage } = useTiptapState({
+    value,
+    methods,
+    hasDownloadRequest: !type.isNone(downloadPolicyRequestId),
+  });
 
   const disabled = properties.disabled === true || loading;
-  const uploadEnabled = !type.isNone(properties.s3PostPolicyRequestId);
+  const uploadEnabled = !type.isNone(uploadPolicyRequestId);
 
   const extensions = buildExtensions({
     properties,
@@ -67,19 +74,36 @@ const TiptapInput = ({
     },
   });
 
-  // Register upload-policy event once (if configured).
+  // Register upload-policy and download-policy events once (if configured).
   useEffect(() => {
     if (!uploadEnabled) return;
+    if (!type.isNone(properties.s3PostPolicyRequestId)) {
+      console.warn(
+        'TiptapInput property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+      );
+    }
     methods.registerEvent({
-      name: '__getS3PostPolicy',
+      name: '__getUploadPolicy',
       actions: [
         {
-          id: '__getS3PostPolicy',
+          id: '__getUploadPolicy',
           type: 'Request',
-          params: [properties.s3PostPolicyRequestId],
+          params: [uploadPolicyRequestId],
         },
       ],
     });
+    if (!type.isNone(downloadPolicyRequestId)) {
+      methods.registerEvent({
+        name: '__getDownloadPolicy',
+        actions: [
+          {
+            id: '__getDownloadPolicy',
+            type: 'Request',
+            params: [downloadPolicyRequestId],
+          },
+        ],
+      });
+    }
   }, []);
 
   // Register methods as soon as the editor is available.
