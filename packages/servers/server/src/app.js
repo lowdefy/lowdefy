@@ -87,7 +87,9 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
   app.all('/api/request/*', requestHandler);
-  app.all('/api/endpoints/*', endpointsHandler);
+  // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
+  // cap bodies at 10 MiB to match the agent route.
+  app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
   app.get('/api/cron/*', cronHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
