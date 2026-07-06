@@ -27,6 +27,7 @@ import getKey from './getKey.js';
 import { scopeMenuItemIds } from './scopeMenuItemIds.js';
 import resolveDepTarget from '../resolveDepTarget.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
+import cloneWithMarkers from './cloneWithMarkers.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import {
   createRecord,
@@ -51,13 +52,13 @@ class WalkContext {
     currentFile,
     refChain,
     deferModuleRefs,
-    entryResolveChain,
     operators,
     env,
     lowdefyApp,
     dynamicIdentifiers,
     shouldStop,
     entryId,
+    entrySection,
     activeRecord,
   }) {
     this.buildContext = buildContext;
@@ -81,7 +82,9 @@ class WalkContext {
     this.currentFile = currentFile;
     this.refChain = refChain;
     this.deferModuleRefs = deferModuleRefs ?? false;
-    this.entryResolveChain = entryResolveChain ?? new Set();
+    // Which entry-config section a prepare walk serves ('consumerVars' or
+    // 'connections') — entryRef record coordinates and slots need it.
+    this.entrySection = entrySection ?? null;
     this.operators = operators;
     this.env = env;
     this.lowdefyApp = lowdefyApp;
@@ -103,7 +106,7 @@ class WalkContext {
       currentFile: this.currentFile,
       refChain: this.refChain,
       deferModuleRefs: this.deferModuleRefs,
-      entryResolveChain: this.entryResolveChain,
+      entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
@@ -124,7 +127,6 @@ class WalkContext {
         newChain.add(key);
       }
     }
-    const newEntryResolveChain = new Set(this.entryResolveChain);
     return new WalkContext({
       buildContext: this.buildContext,
       refId,
@@ -138,7 +140,7 @@ class WalkContext {
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
       deferModuleRefs: this.deferModuleRefs,
-      entryResolveChain: newEntryResolveChain,
+      entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
@@ -194,68 +196,6 @@ function tagRefDeep(node, refId) {
   }
 }
 
-// Deep clone preserving non-enumerable build markers (~r, ~l, ~k, ~arr, ~deferredFrom, ~deferredModuleRef).
-// Used before resolving ref def path/vars to prevent mutation of stored originals.
-function cloneForResolve(value) {
-  if (!type.isObject(value) && !type.isArray(value)) return value;
-  if (type.isArray(value)) {
-    const clone = value.map((item) => cloneForResolve(item));
-    if (value['~r'] !== undefined) setNonEnumerableProperty(clone, '~r', value['~r']);
-    if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
-    if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
-    if (value['~arr'] !== undefined) setNonEnumerableProperty(clone, '~arr', value['~arr']);
-    if (value['~deferredFrom'] !== undefined)
-      setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
-    return clone;
-  }
-  const clone = {};
-  for (const key of Object.keys(value)) {
-    clone[key] = cloneForResolve(value[key]);
-  }
-  if (value['~r'] !== undefined) setNonEnumerableProperty(clone, '~r', value['~r']);
-  if (value['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', value['~l']);
-  if (value['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', value['~k']);
-  if (value['~deferredFrom'] !== undefined)
-    setNonEnumerableProperty(clone, '~deferredFrom', value['~deferredFrom']);
-  if (value['~deferredModuleRef'] !== undefined)
-    setNonEnumerableProperty(clone, '~deferredModuleRef', value['~deferredModuleRef']);
-  return clone;
-}
-
-// Deep clone a var value, preserving markers and setting ~r provenance.
-// When sourceRefId is null, preserves the template's existing ~r markers.
-function cloneVarValue(value, sourceRefId) {
-  if (!type.isObject(value) && !type.isArray(value)) return value;
-  return cloneDeepWithProvenance(value, sourceRefId);
-}
-
-function cloneDeepWithProvenance(node, sourceRefId) {
-  if (!type.isObject(node) && !type.isArray(node)) return node;
-  if (type.isArray(node)) {
-    const clone = node.map((item) => cloneDeepWithProvenance(item, sourceRefId));
-    if (node['~r'] !== undefined) {
-      setNonEnumerableProperty(clone, '~r', node['~r']);
-    } else if (sourceRefId) {
-      setNonEnumerableProperty(clone, '~r', sourceRefId);
-    }
-    if (node['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', node['~l']);
-    if (node['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', node['~k']);
-    if (node['~arr'] !== undefined) setNonEnumerableProperty(clone, '~arr', node['~arr']);
-    return clone;
-  }
-  const clone = {};
-  for (const key of Object.keys(node)) {
-    clone[key] = cloneDeepWithProvenance(node[key], sourceRefId);
-  }
-  if (node['~r'] !== undefined) {
-    setNonEnumerableProperty(clone, '~r', node['~r']);
-  } else if (sourceRefId) {
-    setNonEnumerableProperty(clone, '~r', sourceRefId);
-  }
-  if (node['~l'] !== undefined) setNonEnumerableProperty(clone, '~l', node['~l']);
-  if (node['~k'] !== undefined) setNonEnumerableProperty(clone, '~k', node['~k']);
-  return clone;
-}
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
@@ -283,7 +223,7 @@ function resolveVar(node, ctx) {
   // String form: { _var: "key" }
   if (type.isString(varDef)) {
     const value = get(ctx.vars, varDef, { default: null });
-    return cloneVarValue(value, ctx.sourceRefId);
+    return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
   }
 
   // Object form: { _var: { key, default } }
@@ -292,12 +232,12 @@ function resolveVar(node, ctx) {
 
     // Var provided (even if null) → use parent's sourceRefId for location
     if (!type.isUndefined(varFromParent)) {
-      return cloneVarValue(varFromParent, ctx.sourceRefId);
+      return cloneWithMarkers(varFromParent, { assignRefId: ctx.sourceRefId });
     }
 
     // Not provided → use default, preserve template's ~r
     const defaultValue = type.isNone(varDef.default) ? null : varDef.default;
-    return cloneVarValue(defaultValue, null);
+    return cloneWithMarkers(defaultValue);
   }
 
   throw new ConfigError('_var operator takes a string or object with "key" field as arguments.', {
@@ -316,7 +256,7 @@ async function resolveModuleVar(node, ctx) {
   }
 
   const value = await resolveEffectiveVar(key, ctx.moduleEntry, ctx);
-  return cloneVarValue(value, ctx.sourceRefId);
+  return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
 }
 
 // Navigate the var definitions tree by dot-path key, following `properties` nesting.
@@ -346,7 +286,7 @@ function getVarDef(varDefs, key) {
 async function deepForcePlaceholders(value, ctx) {
   const rootId = getPlaceholderId(value);
   if (rootId !== undefined) {
-    return cloneVarValue(await resolveDeferred(ctx, rootId), null);
+    return cloneWithMarkers(await resolveDeferred(ctx, rootId));
   }
   if (type.isArray(value)) {
     for (let i = 0; i < value.length; i++) {
@@ -377,71 +317,33 @@ async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
   return result;
 }
 
-function isDeferredSentinel(node) {
-  return type.isObject(node) && !type.isUndefined(node['~deferredModuleRef']);
-}
-
-// Returns the first ~deferredModuleRef sentinel found in node's subtree (node itself
-// or any descendant), else null. Detection is by direct property access since the
-// marker is non-enumerable.
-function findSentinelInSubtree(node) {
-  if (isDeferredSentinel(node)) return node;
-  if (type.isArray(node)) {
-    for (const item of node) {
-      const found = findSentinelInSubtree(item);
-      if (found) return found;
-    }
-  } else if (type.isObject(node)) {
-    for (const k of Object.keys(node)) {
-      const found = findSentinelInSubtree(node[k]);
-      if (found) return found;
-    }
+// Read a consumer value by dotted key, forcing any entryRef placeholder on the
+// path: a placeholder at the key or any ancestor resolves through
+// resolveDeferred and is spliced into consumerVars in place, then the read
+// continues. There is no case split on entry state and no structural-snapshot
+// read — a read forces exactly the records its value depends on.
+async function readConsumerValue(moduleEntry, key, ctx) {
+  // Whole-blob deferral: the entire consumerVars value can be a placeholder
+  // (vars: { _ref: { module, component } }) — force it before walking keys.
+  const rootPlaceholderId = getPlaceholderId(moduleEntry.consumerVars);
+  if (rootPlaceholderId !== undefined) {
+    moduleEntry.consumerVars =
+      cloneWithMarkers(await resolveDeferred(ctx, rootPlaceholderId)) ?? {};
   }
-  return null;
-}
-
-// Case 3 guard: walking `key`'s path through E's structural consumerVars, a true
-// value cycle exists iff an ANCESTOR on the path is a sentinel (the key's
-// visibility depends on unpulled content) or the value AT key has a sentinel
-// anywhere in its subtree. Either way → named-chain ConfigError. A miss with no
-// sentinel ancestor is a genuine miss (sentinel resolution replaces nodes in place
-// and can't add keys elsewhere) → caller falls back to the manifest default.
-function assertNoBlockingSentinel(key, moduleEntry, ctx) {
   const parts = key.split('.');
-  let node = moduleEntry.consumerVars;
+  let parent = moduleEntry.consumerVars;
   for (let i = 0; i < parts.length; i++) {
-    if (isDeferredSentinel(node)) {
-      throw entryConfigCycleError(node, key, moduleEntry, ctx);
+    if (!type.isObject(parent)) return undefined;
+    let node = parent[parts[i]];
+    const placeholderId = getPlaceholderId(node);
+    if (placeholderId !== undefined) {
+      node = cloneWithMarkers(await resolveDeferred(ctx, placeholderId));
+      parent[parts[i]] = node;
     }
-    if (!type.isObject(node)) return; // path runs into a non-object before key → genuine miss
-    node = node[parts[i]];
+    if (i === parts.length - 1) return node;
+    parent = node;
   }
-  // node is now the value at key (or undefined); the subtree scan catches a sentinel
-  // sitting at the leaf as well as anywhere beneath it.
-  const sentinel = findSentinelInSubtree(node);
-  if (sentinel) {
-    throw entryConfigCycleError(sentinel, key, moduleEntry, ctx);
-  }
-}
-
-function moduleConnectionCycleError(targetEntry, connectionId, moduleEntry, ctx, configKey) {
-  const chain = [...ctx.entryResolveChain, targetEntry.id].join(' → ');
-  return new ConfigError(
-    `Circular module entry connections: ${chain}.\n` +
-      `Connection "${connectionId}" cannot be remapped from entry ` +
-      `"${moduleEntry?.id ?? '(app)'}" because entry "${targetEntry.id}" is still resolving.`,
-    { configKey }
-  );
-}
-
-function entryConfigCycleError(sentinelNode, key, moduleEntry, ctx) {
-  const chain = [...ctx.entryResolveChain, moduleEntry.id].join(' → ');
-  const sourceFile = sentinelNode['~deferredFrom'] ?? '<unknown file>';
-  return new ConfigError(
-    `Circular module entry vars: ${chain}.\n` +
-      `Var "${key}" of entry "${moduleEntry.id}" cannot be read while its ` +
-      `cross-module ref (${sourceFile}) is still resolving.`
-  );
+  return undefined;
 }
 
 // Core lazy var resolution with caching on the module entry.
@@ -450,25 +352,7 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     return moduleEntry.resolvedVarCache[key];
   }
 
-  // Demand-driven read path. If the owner entry's config is not yet resolved,
-  // either we're transitively inside its own finalize (case 3: answer from the
-  // structural snapshot, or error on a true cycle) or it just hasn't been
-  // resolved yet on this branch (case 2: resolve it now, whatever the modules: order).
-  if (moduleEntry.entryConfigState !== 'resolved') {
-    if (ctx.entryResolveChain.has(moduleEntry.id)) {
-      // CASE 3 — true re-entry. Read E's structural blob.
-      assertNoBlockingSentinel(key, moduleEntry, ctx); // throws the named-chain ConfigError if blocked
-      // sentinel-free → fall through to the resolved-path body below.
-    } else {
-      // CASE 2 — lazily resolve E (pass our chain so cycle detection crosses the
-      // ensure→finalize boundary), then fall through to the resolved-path body.
-      await ctx.buildContext.ensureEntryConfigResolved(moduleEntry, ctx.entryResolveChain);
-    }
-  }
-
-  // CASE 1 (resolved entry) AND the sentinel-free fall-through of cases 2 & 3:
-  // the existing consumer-value / namespace / default / null logic, then cache.
-  const consumerValue = get(moduleEntry.consumerVars, key, { default: undefined });
+  const consumerValue = await readConsumerValue(moduleEntry, key, ctx);
   const varDef = getVarDef(moduleEntry.varDefs, key);
 
   let result;
@@ -540,6 +424,18 @@ function resolveModulePageId(arg, moduleEntry, context, configKey) {
 async function resolveModuleConnectionId(arg, moduleEntry, ctx, configKey) {
   const context = ctx.buildContext;
 
+  // A connections value can be an entryRef placeholder mid-build — demand it
+  // through the read path and splice, exactly like consumerVars reads. True
+  // remap cycles surface as named wait-graph errors from resolveDeferred.
+  const readRemapValue = async (entry, id) => {
+    const remapping = entry.connections ?? {};
+    const placeholderId = getPlaceholderId(remapping[id]);
+    if (placeholderId !== undefined) {
+      remapping[id] = cloneWithMarkers(await resolveDeferred(ctx, placeholderId));
+    }
+    return remapping[id];
+  };
+
   if (type.isString(arg)) {
     if (!moduleEntry) {
       throw new ConfigError(
@@ -547,9 +443,9 @@ async function resolveModuleConnectionId(arg, moduleEntry, ctx, configKey) {
         { configKey }
       );
     }
-    const remapping = moduleEntry.connections ?? {};
-    if (remapping[arg]) {
-      return remapping[arg];
+    const remapValue = await readRemapValue(moduleEntry, arg);
+    if (remapValue) {
+      return remapValue;
     }
     return `${moduleEntry.id}/${arg}`;
   }
@@ -562,15 +458,9 @@ async function resolveModuleConnectionId(arg, moduleEntry, ctx, configKey) {
       configKey,
       usage: `_module.connectionId { id: "${arg.id}", module: "${arg.module}" }`,
     });
-    // Cycle guard must be synchronous (before any await) to catch a true remap cycle
-    // before the target's in-flight finalizePromise could deadlock.
-    if (ctx.entryResolveChain.has(targetEntry.id)) {
-      throw moduleConnectionCycleError(targetEntry, arg.id, moduleEntry, ctx, configKey);
-    }
-    await context.ensureEntryConfigResolved(targetEntry, ctx.entryResolveChain);
-    const targetRemapping = targetEntry.connections ?? {};
-    if (targetRemapping[arg.id]) {
-      return targetRemapping[arg.id];
+    const remapValue = await readRemapValue(targetEntry, arg.id);
+    if (remapValue) {
+      return remapValue;
     }
     return `${targetEntry.id}/${arg.id}`;
   }
@@ -645,15 +535,36 @@ async function resolveModuleIdOperator(node, ctx) {
   }
   if (!type.isUndefined(node['_module.connectionId'])) {
     const connectionArg = node['_module.connectionId'];
-    // Stage 1 (deferModuleRefs) must not resolve the object form: it reads the
-    // TARGET entry's stage-2 connection remap table, which crosses a module
-    // boundary. Defer it unresolved into the structural blob so it resolves in
-    // stage 2 (finalize), where entryResolveChain is seeded and the cycle guard
-    // is armed — resolving here, with an empty chain, deadlocks a true remap
-    // cycle instead of erroring. The string form reads the current module's own
-    // remap and is left to resolve.
+    // Prepare (deferModuleRefs) must not resolve the object form: it reads the
+    // TARGET entry's remap table, which may not be prepared yet — an eager read
+    // would see a raw ref instead of a demandable placeholder. It becomes a
+    // connRemap record; demand resolves it once every entry is prepared, so
+    // chained remaps force each other value-granularly and true remap cycles
+    // surface as named wait-graph errors.
     if (ctx.deferModuleRefs && type.isObject(connectionArg)) {
-      return node;
+      const nested = ctx.path.split('.').includes('$refvars');
+      const section = ctx.entrySection ?? 'connections';
+      const recordId = makeRecordId({
+        entryId: ctx.entryId,
+        configPath: ctx.path ? `${section}.${ctx.path}` : section,
+      });
+      createRecord(ctx.buildContext, {
+        id: recordId,
+        kind: 'connRemap',
+        body: node,
+        env: {
+          file: ctx.currentFile,
+          moduleRoot: null,
+          packageRoot: null,
+          entryId: null,
+          refId: ctx.refId,
+          configKey: configKey ?? null,
+        },
+        slot: nested
+          ? null
+          : { entryId: ctx.entryId, section, path: ctx.path },
+      });
+      return makePlaceholder(recordId);
     }
     return resolveModuleConnectionId(connectionArg, moduleEntry, ctx, configKey);
   }
@@ -681,22 +592,29 @@ async function prepareRef(node, ctx) {
   const varKeys = Object.keys(refDef.vars);
   if (varKeys.length > 0) {
     ctx.unresolvedRefVars[refDef.id] = refDef.vars;
-    refDef.vars = cloneForResolve(refDef.vars);
+    refDef.vars = cloneWithMarkers(refDef.vars);
   }
 
   // 3. Resolve dynamic path/vars/key
   if (type.isObject(refDef.path)) {
-    refDef.path = await resolve(cloneForResolve(refDef.path), ctx);
+    refDef.path = await resolve(cloneWithMarkers(refDef.path), ctx);
   }
   await Promise.all(
     varKeys.map(async (varKey) => {
       if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
-        refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
+        // Under prepare (deferModuleRefs), nested module refs inside this ref's
+        // vars become entryRef records too. Extend the path with a reserved
+        // segment so their coordinates are unique (distinct from this ref's own
+        // record) and recognizably nested (slot: null — their placeholder lives
+        // in the prepared body, not in consumerVars).
+        const varCtx =
+          ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
+        refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
       }
     }),
   );
   if (type.isObject(refDef.key)) {
-    refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
+    refDef.key = await resolve(cloneWithMarkers(refDef.key), ctx);
   }
 
   // 4. Module path resolution: resolve relative paths from the module root
@@ -750,11 +668,10 @@ async function prepareRef(node, ctx) {
 // applies the shared tail (steps 13–16). Replayed deferred sentinels route here
 // too — `fromFile` carries their original provenance.
 async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
-  // 8. Load content. Components dereference a deferred record and clone its
-  // immutable body — the record env names the source file explicitly. Menus
-  // (and scalar legacy bodies) still return live content preserved in place,
-  // where ~deferredFrom carries the source file when the body came from a
-  // ref'd file.
+  // 8. Load content. Components and menus dereference a deferred record and
+  // clone its immutable body — the record env names the source file
+  // explicitly. Legacy live content (scalar bodies, sections produced inline
+  // by static operators) resolves against the manifest file.
   const result = await getModuleRefContent({
     context: ctx.buildContext,
     refDef,
@@ -769,12 +686,11 @@ async function resolveModuleExportRef(refDef, ctx, { configKey, fromFile }) {
   let sourceFile;
   if (result.recordId !== undefined) {
     const record = getRecord(ctx.buildContext, result.recordId);
-    content = cloneForResolve(record.body);
+    content = cloneWithMarkers(record.body);
     sourceFile = record.env.file;
   } else {
-    content = cloneForResolve(result.content);
-    const deferredFrom = content['~deferredFrom'];
-    sourceFile = deferredFrom ?? path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
+    content = cloneWithMarkers(result.content);
+    sourceFile = path.join(moduleEntry.moduleRoot, 'module.lowdefy.yaml');
   }
 
   // 9. Circular detection for cross-module component/menu refs.
@@ -901,10 +817,36 @@ async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
 async function resolveRef(node, ctx) {
   const refDef = await prepareRef(node, ctx);
   if (ctx.deferModuleRefs && refDef.module) {
-    const sentinel = {};
-    setNonEnumerableProperty(sentinel, '~deferredModuleRef', refDef);
-    setNonEnumerableProperty(sentinel, '~deferredFrom', ctx.currentFile);
-    return sentinel;
+    // Prepare-time deferral: the refDef's dynamic parts are already resolved
+    // in the enclosing scope (steps 1-7); only the content pull defers. The
+    // prepared refDef becomes an entryRef record and the tree gets a
+    // placeholder. Records created inside another prepared ref's vars
+    // ($refvars segment) have no consumerVars slot — their placeholder lives
+    // in the parent body and is spliced by the walk that encounters it.
+    const nested = ctx.path.split('.').includes('$refvars');
+    const section = ctx.entrySection ?? 'consumerVars';
+    const id = makeRecordId({
+      entryId: ctx.entryId,
+      // ctx.path is '' when the whole section value is the ref (whole-blob).
+      configPath: ctx.path ? `${section}.${ctx.path}` : section,
+    });
+    createRecord(ctx.buildContext, {
+      id,
+      kind: 'entryRef',
+      body: refDef,
+      env: {
+        // entryRef resolution runs at app level: no module scope; provenance
+        // is the file the ref was written in (replaces ~deferredFrom).
+        file: ctx.currentFile,
+        moduleRoot: null,
+        packageRoot: null,
+        entryId: null,
+        refId: ctx.refId,
+        configKey: node['~k'] ?? null,
+      },
+      slot: nested ? null : { entryId: ctx.entryId, section, path: ctx.path },
+    });
+    return makePlaceholder(id);
   }
   return loadAndWalkRef(refDef, ctx, { configKey: node['~k'] });
 }
@@ -914,15 +856,7 @@ async function resolve(node, ctx) {
   // 1. Primitives pass through
   if (!type.isObject(node) && !type.isArray(node)) return node;
 
-  // 2. Deferred module-ref sentinel — replay in stage 2 (flag off) with original provenance
-  if (type.isObject(node) && node['~deferredModuleRef'] !== undefined) {
-    return loadAndWalkRef(node['~deferredModuleRef'], ctx, {
-      configKey: node['~k'],
-      referencedFrom: node['~deferredFrom'],
-    });
-  }
-
-  // 2b. Deferred-record placeholder — kind-aware dispatch. Per-consumer kinds
+  // 2. Deferred-record placeholder — kind-aware dispatch. Per-consumer kinds
   // (component, menuLinks) pass through every generic walk untouched; only
   // module-ref consumption dereferences them. Single-value kinds (entryRef,
   // varDefault) force the record and splice a clone in place — the memoized
@@ -934,7 +868,7 @@ async function resolve(node, ctx) {
       if (record.kind === 'component' || record.kind === 'menuLinks') {
         return node;
       }
-      return cloneVarValue(await resolveDeferred(ctx, deferredId), null);
+      return cloneWithMarkers(await resolveDeferred(ctx, deferredId));
     }
   }
 
@@ -964,10 +898,10 @@ async function resolve(node, ctx) {
           delete node[key];
           return;
         }
-        if (stopMode === 'preserve') {
-          if (type.isObject(node[key]) || type.isArray(node[key])) {
-            setNonEnumerableProperty(node[key], '~deferredFrom', ctx.currentFile);
-          }
+        if (stopMode === 'skip' || stopMode === 'preserve') {
+          // Leave raw — a later phase or consumer handles this region.
+          // 'preserve' is a legacy synonym: the ~deferredFrom marker it used
+          // to stamp is gone (records carry the source file in env.file).
           return;
         }
         if (type.isString(stopMode) && stopMode.startsWith('record:')) {
@@ -1022,7 +956,17 @@ async function resolve(node, ctx) {
   // 7. _module.var — module variable substitution
   if (!type.isUndefined(node['_module.var'])) {
     if (!ctx.moduleEntry) {
-      if (ctx.moduleRoot) return node;
+      if (ctx.moduleRoot) {
+        // Module scope without an entry = the header parse or the exportables
+        // pass. Those walk module-static structure only: a _module.var here
+        // would make manifest headers or export ids vary per consumer, which
+        // makes by-name lookup order-dependent.
+        throw new ConfigError(
+          '_module.var cannot be used in manifest headers or component/menu ids — ' +
+            'these are module-static. Move it inside a component body, page, or api section.',
+          { filePath: ctx.currentFile }
+        );
+      }
       throw new ConfigError('_module.var cannot be used at the app level.');
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
@@ -1035,6 +979,14 @@ async function resolve(node, ctx) {
 
   // 9. _build.* operator
   if (isBuildOperator(node)) {
+    // Under prepare (deferModuleRefs), an operand subtree can hold a deferred
+    // placeholder where a module ref used to be — the operator cannot fold
+    // over it. Leave the node unevaluated: the finalize/demand walk (deferral
+    // off) splices concrete values via the placeholder dispatch before this
+    // branch runs, and the fold happens then, in the same enclosing scope.
+    if (ctx.deferModuleRefs && findPlaceholderInSubtree(node)) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
@@ -1043,4 +995,16 @@ async function resolve(node, ctx) {
   return node;
 }
 
-export { resolve, WalkContext, cloneForResolve, tagRefDeep };
+// Does any node in the subtree carry a deferred-record placeholder?
+function findPlaceholderInSubtree(node) {
+  if (getPlaceholderId(node) !== undefined) return true;
+  if (type.isArray(node)) {
+    return node.some((item) => findPlaceholderInSubtree(item));
+  }
+  if (type.isObject(node)) {
+    return Object.keys(node).some((key) => findPlaceholderInSubtree(node[key]));
+  }
+  return false;
+}
+
+export { resolve, loadAndWalkRef, WalkContext, tagRefDeep };

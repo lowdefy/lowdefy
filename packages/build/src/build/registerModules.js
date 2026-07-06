@@ -25,6 +25,7 @@ import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
+import { makeShouldStop } from './buildRefs/deferredRegions.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -196,7 +197,10 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     });
   }
 
-  // Run walker with shouldStop preserving content that may contain cross-module refs
+  // Phase A — header parse: walk only the static header keys (dependencies,
+  // plugins, secrets, vars definitions — defaults record-ified). Content
+  // sections stay raw parsed YAML; Phase C.5 record-ifies exportables and
+  // Phase D resolves the rest.
   const ctx = new WalkContext({
     buildContext: context,
     refId: refDef.id,
@@ -214,15 +218,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     env: process.env,
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'record:varDefault';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
-      if (/^pages(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^api(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^connections(\..*)?$/.test(childPath)) return 'preserve';
-      if (/^menus\.\d+\.links$/.test(childPath)) return 'preserve';
-      return false;
-    },
+    shouldStop: makeShouldStop('header'),
   });
 
   const manifest = await resolve(content, ctx);
@@ -298,14 +294,18 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     dependencies,
     moduleDependencies: entry.dependencies ?? {},
     refDef,
-    entryConfigState: 'registered',
   };
 }
 
-async function resolveFullManifest({ entryId, context }) {
+// Phase C.5 — record-ify exportables: walk only the components and menus
+// sections in module-static scope (entry id known, but NO moduleEntry on the
+// context — a _module.var at a structural position errors, because export ids
+// must not vary per consumer). File refs are entered and static operators
+// resolve; component bodies and menu links become records before any phase can
+// consume them, so cross-entry consumption never races record creation.
+async function recordifyExportables({ entryId, context }) {
   const moduleEntry = context.modules[entryId];
-  const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
-
+  const { manifest, packageRoot, moduleRoot, refDef } = moduleEntry;
   const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
 
   if (type.isObject(manifest)) {
@@ -321,6 +321,38 @@ async function resolveFullManifest({ entryId, context }) {
     refId: refDef.id,
     sourceRefId: null,
     vars: {},
+    moduleRoot,
+    packageRoot,
+    entryId,
+    path: '',
+    currentFile: moduleYamlPath,
+    refChain: new Set(refDef.path ? [refDef.path] : []),
+    operators,
+    env: process.env,
+    lowdefyApp: context.appMeta,
+    dynamicIdentifiers,
+    shouldStop: makeShouldStop('exportables'),
+  });
+
+  moduleEntry.manifest = await resolve(manifest, ctx);
+}
+
+// Phase D — manifest resolve: ONE full walk with the module entry in context.
+// Pages, api, and connections resolve completely; component/menuLinks
+// placeholders pass through the kind-aware dispatch untouched; varDefault
+// placeholders keep their rule so the dispatch cannot force demand-only
+// records.
+async function resolveFullManifest({ entryId, context }) {
+  const moduleEntry = context.modules[entryId];
+  const { manifest, packageRoot, moduleRoot, moduleDependencies, refDef } = moduleEntry;
+
+  const moduleYamlPath = path.join(moduleRoot, 'module.lowdefy.yaml');
+
+  const ctx = new WalkContext({
+    buildContext: context,
+    refId: refDef.id,
+    sourceRefId: null,
+    vars: {},
     moduleDependencies,
     moduleEntry,
     moduleRoot,
@@ -328,16 +360,11 @@ async function resolveFullManifest({ entryId, context }) {
     path: '',
     currentFile: moduleYamlPath,
     refChain: new Set(refDef.path ? [refDef.path] : []),
-    entryResolveChain: new Set([moduleEntry.id]),
     operators,
     env: process.env,
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
-    shouldStop: (childPath) => {
-      if (/^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/.test(childPath)) return 'record:varDefault';
-      if (/^components\.\d+\.component$/.test(childPath)) return 'record:component';
-      return false;
-    },
+    shouldStop: makeShouldStop('manifest'),
   });
 
   const resolved = await resolve(manifest, ctx);
@@ -358,4 +385,4 @@ async function resolveFullManifest({ entryId, context }) {
   }
 }
 
-export { resolveLocalManifest, resolveFullManifest, validateRequiredVars };
+export { resolveLocalManifest, recordifyExportables, resolveFullManifest, validateRequiredVars };

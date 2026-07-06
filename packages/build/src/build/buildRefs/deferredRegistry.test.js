@@ -414,7 +414,6 @@ describe('varDefault records and the read path', () => {
       consumerVars,
       varDefs,
       resolvedVarCache: {},
-      entryConfigState: 'resolved',
       moduleDependencies: {},
     };
   }
@@ -504,4 +503,62 @@ describe('varDefault records and the read path', () => {
       ).rejects.toThrow('Circular deferred value dependency:');
     }
   );
+});
+
+describe('placeholder leak check', () => {
+  const importCheck = async () => (await import('./deferredRegistry.js')).assertNoPlaceholderLeaks;
+
+  test('passes with placeholders at the expected per-consumer slots', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {
+          components: [{ id: 'badge', component: makePlaceholder('team-users:components.0.component') }],
+          menus: [{ id: 'sidebar', links: makePlaceholder('team-users:menus.0.links') }],
+          pages: [{ id: 'home', type: 'Box' }],
+        },
+        consumerVars: { title: 'concrete' },
+        connections: { db: 'app/db' },
+        varDefs: {
+          title: { default: makePlaceholder('team-users:vars.title.default') },
+          theme: { properties: { logo: { default: makePlaceholder('team-users:vars.theme.properties.logo.default') } } },
+        },
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).not.toThrow();
+  });
+
+  test('a placeholder left in consumerVars fails with id and location', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {},
+        consumerVars: { slot: makePlaceholder('team-users:consumerVars.slot') },
+        connections: {},
+        varDefs: {},
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).toThrow(
+      'Deferred placeholder leaked past the final sweep: ' +
+        '"team-users:consumerVars.slot" at team-users.consumerVars.slot.'
+    );
+  });
+
+  test('a placeholder inside a resolved manifest page fails', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {
+          pages: [{ id: 'home', blocks: [makePlaceholder('team-users:oops')] }],
+        },
+        consumerVars: {},
+        connections: {},
+        varDefs: {},
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).toThrow('at team-users.manifest.pages.0.blocks.0');
+  });
 });
