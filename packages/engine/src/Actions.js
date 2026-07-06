@@ -263,7 +263,7 @@ class Actions {
     if (parserErrors.length > 0) {
       const error = parserErrors[0];
       // Report against the nearest node's '~k' when the operator carries none.
-      if (!error.configKey) {
+      if (type.isNone(error.configKey)) {
         error.configKey = node['~k'];
       }
       // Controls are anonymous - no responses entry, so only {error} is thrown.

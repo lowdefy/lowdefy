@@ -29,13 +29,18 @@ const BROWSER_DEFAULT_SHORTCUTS = new Set([
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 const ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS = ['id', 'skip', 'messages'];
-const CONTROL_META_KEYS = ['~ignoreBuildChecks', '~k', '~l', '~r'];
 const CONTROL_ALLOWED_KEYS = {
   ':if': [':if', ':then', ':else'],
   ':return': [':return'],
   ':switch': [':switch', ':default'],
 };
 const CASE_ALLOWED_KEYS = [':case', ':then'];
+
+// '~'-prefixed keys are build meta markers (~k, ~r, ~l, ~ignoreBuildChecks) and
+// never user config - tolerate them by prefix, as the rest of the build does.
+function isMetaKey(key) {
+  return key.startsWith('~');
+}
 
 function isControl(item) {
   return type.isObject(item) && CONTROL_KEYS.some((key) => key in item);
@@ -171,24 +176,24 @@ function checkControl(control, ctx) {
   const configKey = control['~k'];
   const controlKeys = CONTROL_KEYS.filter((key) => key in control);
   if (controlKeys.length > 1) {
-    const received = controlKeys.map((key) => `"${key}"`).join(', ');
+    const keyList = controlKeys.map((key) => `"${key}"`).join(', ');
     throw new ConfigError(
-      `Control has more than one control key (${received}) on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
-      { configKey }
+      `Control has more than one control key (${keyList}) on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      { received: controlKeys, configKey }
     );
   }
   const [controlKey] = controlKeys;
-  const actionKeys = ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS.filter((key) => key in control);
-  if (actionKeys.length > 0) {
-    throw new ConfigError(
-      `Control "${controlKey}" can not have action property "${actionKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
-      { configKey }
-    );
-  }
   const invalidKeys = Object.keys(control).filter(
-    (key) => !CONTROL_ALLOWED_KEYS[controlKey].includes(key) && !CONTROL_META_KEYS.includes(key)
+    (key) => !CONTROL_ALLOWED_KEYS[controlKey].includes(key) && !isMetaKey(key)
   );
   if (invalidKeys.length > 0) {
+    // Action keys do nothing on a control - call out the likely mistake directly.
+    if (ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS.includes(invalidKeys[0])) {
+      throw new ConfigError(
+        `Control "${controlKey}" can not have action property "${invalidKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+        { received: invalidKeys, configKey }
+      );
+    }
     throw new ConfigError(
       `Control "${controlKey}" has invalid key "${invalidKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
       { received: invalidKeys, configKey }
@@ -234,7 +239,7 @@ function checkControl(control, ctx) {
         );
       }
       const invalidCaseKeys = Object.keys(caseObject).filter(
-        (key) => !CASE_ALLOWED_KEYS.includes(key) && !CONTROL_META_KEYS.includes(key)
+        (key) => !CASE_ALLOWED_KEYS.includes(key) && !isMetaKey(key)
       );
       if (invalidCaseKeys.length > 0) {
         throw new ConfigError(
