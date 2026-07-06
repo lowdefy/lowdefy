@@ -2746,3 +2746,69 @@ blocks:
     });
   });
 });
+
+describe('module entry config preservation', () => {
+  test('preserves modules.<i>.vars and connections without resolving their refs', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+modules:
+  - id: team-users
+    source: "file:../team-users"
+    vars:
+      slot:
+        _ref: shared-vars.yaml
+    connections:
+      users-db: my-app-mongodb
+pages:
+  - id: home
+    type: Box
+`,
+      },
+      {
+        path: 'shared-vars.yaml',
+        content: `title: Shared`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    // Raw blobs preserved — parseLowdefyYaml already resolved these onto
+    // context.modules; the app pass must not resolve them a second time.
+    expect(res.modules[0].vars).toEqual({ slot: { _ref: 'shared-vars.yaml' } });
+    expect(res.modules[0].connections).toEqual({ 'users-db': 'my-app-mongodb' });
+    // The var ref's file was never pulled by the app pass.
+    const pulledPaths = mockReadConfigFile.mock.calls.map(([filePath]) => filePath);
+    expect(pulledPaths).not.toContain('shared-vars.yaml');
+  });
+
+  test('refs outside module entry config still resolve in the app pass', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+modules:
+  - id: team-users
+    source: "file:../team-users"
+    vars:
+      title: My Title
+pages:
+  - _ref: page.yaml
+`,
+      },
+      {
+        path: 'page.yaml',
+        content: `
+id: home
+type: Box
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toHaveLength(0);
+    expect(res.pages).toEqual([{ id: 'home', type: 'Box' }]);
+    expect(res.modules[0].vars).toEqual({ title: 'My Title' });
+  });
+});
