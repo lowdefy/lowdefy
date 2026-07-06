@@ -1156,7 +1156,7 @@ export default {
         hook: {
           type: 'boolean',
           description:
-            'Expose this endpoint on the public POST /api/hooks/<endpointId> route for third-party webhooks (SNS, Event Grid, Stripe, ...). The routine receives { body, query, headers } as payload, runs as a system context, and must authenticate the caller itself (shared-secret query param or signature). Its return value is sent back raw as the response body — webhook handshakes require exact response shapes.',
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
           errorMessage: {
             type: 'Api endpoint "hook" should be a boolean.',
           },

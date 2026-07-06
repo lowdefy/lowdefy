@@ -16,6 +16,7 @@
 
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
+import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
@@ -33,6 +34,7 @@ import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 export {
   callAgent,
   callEndpoint,
+  getEndpointConfig,
   callRequest,
   createApiContext,
   createChannelRegistry,

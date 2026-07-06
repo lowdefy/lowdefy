@@ -31,6 +31,7 @@ The schema for a Lowdefy API is:
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
+- `hook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
@@ -142,6 +143,42 @@ api:
 - The routine's result never reaches the caller. Completion or failure is written to the server logs; anything else the caller needs to see must be written by the routine itself (for example a status document in a database).
 - `async: true` also applies to scheduled runs — the cron trigger is acknowledged immediately and the routine runs in the background.
 - On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/deployment-vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
+
+## Webhook Endpoints
+
+An endpoint with `hook: true` is a receiver for third-party webhooks (AWS SNS, Azure Event Grid, Stripe, GitHub, ...). It is served on the same `POST /api/endpoints/<endpointId>` URL as every other endpoint, but the request is handled raw:
+
+- The routine's `payload` is `{ body, query, headers }` — the caller's own body format (parsed as JSON when possible, the raw string otherwise; content-type is ignored since services like SNS post JSON as `text/plain`), plus the URL query parameters and request headers.
+- The routine's `:return` value is sent back **verbatim** as the response body — webhook handshakes like Event Grid's `{ validationResponse }` require exact response shapes, so no `{ error, response, status }` envelope is applied.
+- The routine runs as a system context (no user session; `_user` resolves to undefined), and the endpoint's `auth` config is not applied — **authenticating the caller is the routine's own first step**, typically a shared-secret query parameter (`?t=<token>`) compared against a stored value, or a signature header.
+
+```yaml
+id: stripe-webhook
+type: Api
+hook: true
+routine:
+  - :if:
+      _ne:
+        - _payload: query.t
+        - _secret: STRIPE_WEBHOOK_TOKEN
+    :then:
+      - :return:
+          error: unauthorized
+  - id: handle_event
+    type: MongoDBInsertOne
+    connectionId: stripe_events
+    properties:
+      doc:
+        _payload: body
+  - :return:
+      received: true
+```
+
+:::warning
+A `hook: true` endpoint is publicly reachable by design — never declare it on an endpoint that does not authenticate its caller inside the routine.
+:::
+
+Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.
 
 ## Routines
 

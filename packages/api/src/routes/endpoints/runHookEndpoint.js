@@ -22,14 +22,16 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 
-// Runs an endpoint invoked through the public /api/hooks route — the receiver
-// for third-party webhooks (SNS, Event Grid, Stripe, ...), whose bodies are
-// the caller's own format, not Lowdefy's { payload } envelope. Only endpoints
-// that opt in with `hook: true` are reachable (a missing flag reads as a
-// missing endpoint — no probing), and the routine receives
-// { body, query, headers } as its payload. The transport is public by design:
-// authenticating the caller (shared-secret query param, signature header) is
-// the hook routine's own first step. Executes as a system context.
+// Runs an endpoint declared `hook: true` — a third-party webhook receiver
+// (SNS, Event Grid, Stripe, ...) served on the standard /api/endpoints route,
+// but taking the request RAW: bodies are the caller's own format, not
+// Lowdefy's { payload } envelope, so the routine receives
+// { body, query, headers } as its payload and its return value is sent back
+// verbatim (handshakes require exact response shapes). Only endpoints that
+// opt in are runnable here (a missing flag reads as a missing endpoint — no
+// probing). The transport is public by design: authenticating the caller
+// (shared-secret query param, signature header) is the hook routine's own
+// first step. Executes as a system context.
 async function runHookEndpoint(context, { endpointId, body, query, headers }) {
   const { logger } = context;
 
