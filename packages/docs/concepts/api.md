@@ -31,7 +31,7 @@ The schema for a Lowdefy API is:
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
-- `hook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
+- `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
@@ -146,7 +146,7 @@ api:
 
 ## Webhook Endpoints
 
-An endpoint with `hook: true` is a receiver for third-party webhooks (AWS SNS, Azure Event Grid, Stripe, GitHub, ...). It is served on the same `POST /api/endpoints/<endpointId>` URL as every other endpoint, but the request is handled raw:
+An endpoint with `webhook: true` is a receiver for third-party webhooks (AWS SNS, Azure Event Grid, Stripe, GitHub, ...). It is served on the same `POST /api/endpoints/<endpointId>` URL as every other endpoint, but the request is handled raw:
 
 - The routine's `payload` is `{ body, query, headers }` — the caller's own body format (parsed as JSON when possible, the raw string otherwise; content-type is ignored since services like SNS post JSON as `text/plain`), plus the URL query parameters and request headers.
 - The routine's `:return` value is sent back **verbatim** as the response body — webhook handshakes like Event Grid's `{ validationResponse }` require exact response shapes, so no `{ error, response, status }` envelope is applied.
@@ -155,7 +155,7 @@ An endpoint with `hook: true` is a receiver for third-party webhooks (AWS SNS, A
 ```yaml
 id: stripe-webhook
 type: Api
-hook: true
+webhook: true
 routine:
   - :if:
       _ne:
@@ -175,7 +175,7 @@ routine:
 ```
 
 :::warning
-A `hook: true` endpoint is publicly reachable by design — never declare it on an endpoint that does not authenticate its caller inside the routine.
+A `webhook: true` endpoint is publicly reachable by design — never declare it on an endpoint that does not authenticate its caller inside the routine.
 :::
 
 Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.

@@ -1153,12 +1153,12 @@ export default {
             type: 'Api endpoint "async" should be a boolean.',
           },
         },
-        hook: {
+        webhook: {
           type: 'boolean',
           description:
             'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
           errorMessage: {
-            type: 'Api endpoint "hook" should be a boolean.',
+            type: 'Api endpoint "webhook" should be a boolean.',
           },
         },
         schedules: {

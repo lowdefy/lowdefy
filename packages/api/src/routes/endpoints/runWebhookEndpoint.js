@@ -22,7 +22,7 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 
-// Runs an endpoint declared `hook: true` — a third-party webhook receiver
+// Runs an endpoint declared `webhook: true` — a third-party webhook receiver
 // (SNS, Event Grid, Stripe, ...) served on the standard /api/endpoints route,
 // but taking the request RAW: bodies are the caller's own format, not
 // Lowdefy's { payload } envelope, so the routine receives
@@ -30,18 +30,18 @@ import runRoutine from './runRoutine.js';
 // verbatim (handshakes require exact response shapes). Only endpoints that
 // opt in are runnable here (a missing flag reads as a missing endpoint — no
 // probing). The transport is public by design: authenticating the caller
-// (shared-secret query param, signature header) is the hook routine's own
+// (shared-secret query param, signature header) is the webhook routine's own
 // first step. Executes as a system context.
-async function runHookEndpoint(context, { endpointId, body, query, headers }) {
+async function runWebhookEndpoint(context, { endpointId, body, query, headers }) {
   const { logger } = context;
 
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);
 
-  logger.debug({ event: 'debug_hook_endpoint', endpointId });
+  logger.debug({ event: 'debug_webhook_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  if (endpointConfig.hook !== true) {
+  if (endpointConfig.webhook !== true) {
     const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
@@ -75,4 +75,4 @@ async function runHookEndpoint(context, { endpointId, body, query, headers }) {
   };
 }
 
-export default runHookEndpoint;
+export default runWebhookEndpoint;

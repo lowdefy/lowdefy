@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callEndpoint, getEndpointConfig, runHookEndpoint } from '@lowdefy/api';
+import { callEndpoint, getEndpointConfig, runWebhookEndpoint } from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
@@ -25,21 +25,21 @@ async function endpointsHandler(c) {
   const context = c.get('lowdefyContext');
   const endpointId = getPathSegments(c, '/api/endpoints/').join('/');
 
-  // Endpoints opting in with `hook: true` are third-party webhook receivers
+  // Endpoints opting in with `webhook: true` are third-party webhook receivers
   // (SNS, Event Grid, Stripe, ...): they take the request RAW — body in the
   // caller's own format (not the { payload } envelope), plus query + headers —
   // and their return value is sent back verbatim, because webhook handshakes
   // (e.g. Event Grid's validationResponse) require exact response shapes.
   // The config lookup is a cached file read; an unknown endpoint falls through
   // to the standard path so its error shape is unchanged. Everything about
-  // non-hook endpoints is untouched.
+  // non-webhook endpoints is untouched.
   let endpointConfig = null;
   try {
     endpointConfig = await getEndpointConfig(context, { endpointId });
   } catch {
     /* unknown endpoint — the standard path below reports it exactly as before */
   }
-  if (endpointConfig?.hook === true) {
+  if (endpointConfig?.webhook === true) {
     // SNS posts JSON as text/plain — parse regardless of content-type; an
     // unparseable body arrives as the raw string.
     const raw = await c.req.text();
@@ -49,15 +49,15 @@ async function endpointsHandler(c) {
     } catch {
       /* non-JSON body — raw string passthrough */
     }
-    context.logger.info({ event: 'call_hook_endpoint', endpointId });
-    const result = await runHookEndpoint(context, {
+    context.logger.info({ event: 'call_webhook_endpoint', endpointId });
+    const result = await runWebhookEndpoint(context, {
       endpointId,
       body,
       query: c.req.query(),
       headers: c.req.header(),
     });
     if (!result.success) {
-      return c.json({ error: 'Hook failed.' }, 500);
+      return c.json({ error: 'Webhook failed.' }, 500);
     }
     return c.json(result.response ?? { ok: true });
   }
