@@ -28,8 +28,10 @@ function createWorkspace({ targetDir }) {
   // are mirrored into pnpm-workspace.yaml — without them a fresh install
   // resolves @lowdefy/* plugins from the npm registry instead of the monorepo.
   const pkg = JSON.parse(fs.readFileSync(path.join(targetDir, 'package.json'), 'utf8'));
+  // YAML single-quoted scalars escape embedded quotes by doubling them.
+  const quote = (value) => `'${String(value).replace(/'/g, "''")}'`;
   const overrides = Object.entries(pkg.pnpm?.overrides ?? {}).map(
-    ([name, target]) => `  '${name}': '${target}'`
+    ([name, target]) => `  ${quote(name)}: ${quote(target)}`
   );
   fs.writeFileSync(
     path.join(targetDir, 'pnpm-workspace.yaml'),
