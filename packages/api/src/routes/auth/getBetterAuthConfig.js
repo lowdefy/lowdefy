@@ -96,7 +96,16 @@ function getBetterAuthConfig({
         { configKey: authConfig.database['~k'] }
       );
     }
-    database = adapterPlugin({ properties: authConfig.database.properties ?? {} });
+    try {
+      database = adapterPlugin({ properties: authConfig.database.properties ?? {} });
+    } catch (error) {
+      // Adapter plugins throw plain errors (missing uri, malformed
+      // connection string) - attach the database block's config location.
+      throw new ConfigError(
+        `Auth database "${authConfig.database.id}" failed to construct: ${error.message}`,
+        { cause: error, configKey: authConfig.database['~k'] }
+      );
+    }
   }
 
   const { socialProviders, genericOAuthConfigs } = buildProviders({ authConfig, plugins });

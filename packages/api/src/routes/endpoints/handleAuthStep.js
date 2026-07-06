@@ -46,13 +46,23 @@ async function handleAuthStep(context, routineContext, { step }) {
     });
   }
 
+  // Checked before the caller - an auth-less app should hear "no auth
+  // engine", not a misleading missing-caller error.
+  if (type.isNone(context.auth)) {
+    throw new ConfigError(
+      `Auth step "${step.stepId}" requires the auth engine - auth is not configured (or dev.mockUser is active).`,
+      { configKey: step['~k'] }
+    );
+  }
+
   // A resolved caller is context.user carrying an id - hook routines run
   // with context.user = {}, which is a caller-less system invocation unless
   // the step explicitly opts into running as the system.
   const hasCaller = type.isObject(context.user) && !type.isNone(context.user.id);
   if (!hasCaller && step.system !== true) {
-    throw new Error(
-      `Auth step "${step.stepId}" requires an authenticated caller. Set system: true on the step for caller-less system routines.`
+    throw new ConfigError(
+      `Auth step "${step.stepId}" requires an authenticated caller. Set system: true on the step for caller-less system routines.`,
+      { configKey: step['~k'] }
     );
   }
 
@@ -60,10 +70,6 @@ async function handleAuthStep(context, routineContext, { step }) {
   // runs caller-less as the system even when a caller is present.
   const acting =
     step.system === true ? { system: true, user: null } : { system: false, user: context.user };
-
-  if (type.isNone(context.auth)) {
-    throw new Error(`Auth step "${step.stepId}" requires auth to be configured.`);
-  }
 
   // The retained organizations state ({ policy, pinned }) - org-scoped steps
   // default an omitted organizationId from it.

@@ -222,7 +222,9 @@ test('AuthStep step returns error status when auth is not configured on the cont
   });
 
   expect(res.status).toBe('error');
-  expect(res.error.message).toBe('Auth step "run_step" requires auth to be configured.');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" requires the auth engine - auth is not configured (or dev.mockUser is active).'
+  );
   expect(mockStepFn).not.toHaveBeenCalled();
 });
 
