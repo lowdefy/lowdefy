@@ -14,16 +14,16 @@
   limitations under the License.
 */
 
-// The composed slot for after and synthetic points - engine hooks first,
-// then the user hooks in array order, sequentially. Return values are
-// ignored; a thrown error propagates as an operational error on the
-// underlying operation.
-function composeAfterSlot({ hooks }) {
-  return async function afterSlot(data, ctx) {
-    for (const hook of hooks) {
-      await hook(data, ctx);
-    }
-  };
-}
+// The auth page roles an app (auth.authPages) or a module manifest
+// (auth.pages) may fill. Mirrors the authPages keys in lowdefySchema.js and
+// the defaults in setAuthDefaults.js - a role added there is added here too.
+const authPageRoles = [
+  'signIn',
+  'signUp',
+  'error',
+  'forgotPassword',
+  'resetPassword',
+  'verifyEmail',
+];
 
-export default composeAfterSlot;
+export default authPageRoles;

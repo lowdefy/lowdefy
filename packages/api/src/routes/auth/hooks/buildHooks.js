@@ -28,12 +28,18 @@ import createUserBeforeHook from './createUserBeforeHook.js';
 // Assembles BetterAuth's databaseHooks and the synthetic points' backing
 // callbacks from the engine-tier bindings and the validated auth.hooks
 // entries. Each point resolves to one composed slot with engine hooks first,
-// then the single user hook. Build validation guarantees every entry binds a
-// known point, at most once, to an existing InternalApi endpoint.
+// then every user hook bound to the point in array order - the build orders
+// the array as module contributions first, then app entries, so array order
+// IS the tier order. Build validation guarantees every entry binds a known
+// point to an existing InternalApi endpoint; one endpoint may bind several
+// points.
 function buildHooks({ authConfig, createSystemContext, getAuth }) {
   const userHooks = {};
   (authConfig.hooks ?? []).forEach((hook) => {
-    userHooks[hook.point] = hook;
+    if (type.isNone(userHooks[hook.point])) {
+      userHooks[hook.point] = [];
+    }
+    userHooks[hook.point].push(hook);
   });
 
   if (Object.keys(userHooks).length > 0 && type.isNone(createSystemContext)) {
@@ -51,17 +57,16 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
   const points = new Set([...Object.keys(engineHooks), ...Object.keys(userHooks)]);
   points.forEach((point) => {
     const pointDef = authHookPoints[point];
-    const userHook = userHooks[point];
 
     const hooks = [...(engineHooks[point] ?? [])];
-    if (userHook) {
+    (userHooks[point] ?? []).forEach((userHook) => {
       const dispatch = createHookDispatch({ createSystemContext, getAuth, hook: userHook });
       hooks.push(
         pointDef.timing === 'before'
           ? createUserBeforeHook({ dispatch, hook: userHook })
           : createUserAfterHook({ dispatch })
       );
-    }
+    });
 
     if (pointDef.kind === 'database') {
       const slot =

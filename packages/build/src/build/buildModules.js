@@ -19,6 +19,8 @@
 import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import buildModuleAuth from './buildModuleAuth.js';
+
 function validateModuleSecrets({ content, manifest, entryId }) {
   const declaredSecrets = new Set((manifest.secrets ?? []).map((s) => s.name));
 
@@ -104,6 +106,10 @@ function buildModules({ components, context }) {
       components.api.push(endpoint);
     }
   }
+
+  // Contribute manifest auth wiring (hooks, authPages roles, public pages)
+  // with scoped ids - buildAuth validates the merged result downstream.
+  buildModuleAuth({ components, context, moduleEntries });
 
   return components;
 }

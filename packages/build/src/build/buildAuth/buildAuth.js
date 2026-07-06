@@ -34,9 +34,9 @@ function buildAuth({ components, context }) {
   buildTrustedProviders({ components, context });
   buildAuthHooks({ components, context });
   buildAuthStrategies({ components, context });
-  buildEntityAuth({ components, entity: 'api' });
-  buildEntityAuth({ components, entity: 'websockets' });
-  buildEntityAuth({ components, entity: 'pages' });
+  buildEntityAuth({ components, context, entity: 'api' });
+  buildEntityAuth({ components, context, entity: 'websockets' });
+  buildEntityAuth({ components, context, entity: 'pages' });
   buildAuthPlugins({ components, context });
 
   return components;

@@ -81,19 +81,45 @@ test('buildAuthHooks throws when a hook binds an unknown point', () => {
   );
 });
 
-test('buildAuthHooks throws when two hooks bind the same point', () => {
+test('buildAuthHooks allows multiple hooks to bind the same point', () => {
   const components = {
     auth: {
       hooks: [
-        { id: 'first', point: 'user.create.before', endpointId: 'auth/hook' },
-        { id: 'second', point: 'user.create.before', endpointId: 'auth/hook' },
+        {
+          id: 'crm/link-contact:user.create.before',
+          point: 'user.create.before',
+          endpointId: 'crm/link-contact',
+        },
+        { id: 'normalize-signup', point: 'user.create.before', endpointId: 'auth/normalize' },
       ],
     },
-    api: [{ id: 'auth/hook', type: 'InternalApi', routine: [] }],
+    api: [
+      { id: 'crm/link-contact', type: 'InternalApi', routine: [] },
+      { id: 'auth/normalize', type: 'InternalApi', routine: [] },
+    ],
   };
-  expect(() => buildAuthHooks({ components })).toThrow(
-    'Auth hooks "first" and "second" both bind point "user.create.before". At most one hook may bind a point.'
-  );
+  const res = buildAuthHooks({ components });
+  expect(res.auth.hooks).toEqual([
+    {
+      id: 'crm/link-contact:user.create.before',
+      point: 'user.create.before',
+      endpointId: 'crm/link-contact',
+    },
+    { id: 'normalize-signup', point: 'user.create.before', endpointId: 'auth/normalize' },
+  ]);
+});
+
+test('buildAuthHooks allows one endpoint to bind several points', () => {
+  const components = {
+    auth: {
+      hooks: [
+        { id: 'link-on-signup', point: 'user.create.before', endpointId: 'auth/link-contact' },
+        { id: 'link-on-verified', point: 'email.verified', endpointId: 'auth/link-contact' },
+      ],
+    },
+    api: [{ id: 'auth/link-contact', type: 'InternalApi', routine: [] }],
+  };
+  expect(() => buildAuthHooks({ components })).not.toThrow();
 });
 
 test('buildAuthHooks throws on duplicate hook ids', () => {

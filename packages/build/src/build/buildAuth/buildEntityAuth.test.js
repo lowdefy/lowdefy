@@ -183,10 +183,130 @@ test('buildEntityAuth pages: the 404 page is always public even when all pages a
       { id: '404', type: 'Context' },
     ],
   };
-  const res = buildEntityAuth({ components, entity: 'pages' });
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
   expect(res.pages).toEqual([
     { id: 'home', type: 'Context', auth: { public: false } },
     { id: '404', type: 'Context', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth pages: pages holding an authPages role are public under protected true', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/login',
+        signUp: '/signup',
+        error: '/auth/error',
+        forgotPassword: '/forgot-password',
+        resetPassword: '/reset-password',
+        verifyEmail: '/verify-email',
+      },
+      pages: {
+        protected: true,
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'login', type: 'Context' },
+      { id: 'verify-email', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'home', type: 'Context', auth: { public: false } },
+    { id: 'login', type: 'Context', auth: { public: true } },
+    { id: 'verify-email', type: 'Context', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth pages: pages holding an authPages role are public without being in the public list', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/crm/login',
+      },
+      pages: {
+        public: ['home'],
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'crm/login', type: 'Context' },
+      { id: 'dashboard', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'home', type: 'Context', auth: { public: true } },
+    { id: 'crm/login', type: 'Context', auth: { public: true } },
+    { id: 'dashboard', type: 'Context', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth pages: pages holding an authPages role never join a protected list', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/login',
+      },
+      pages: {
+        protected: ['login', 'dashboard'],
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'login', type: 'Context' },
+      { id: 'dashboard', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'login', type: 'Context', auth: { public: true } },
+    { id: 'dashboard', type: 'Context', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth pages: module-contributed public pages stay public under protected true', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: true,
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'crm/accept-invitation', type: 'Context' },
+    ],
+  };
+  const context = { moduleAuthPublicPages: ['crm/accept-invitation'] };
+  const res = buildEntityAuth({ components, context, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'home', type: 'Context', auth: { public: false } },
+    { id: 'crm/accept-invitation', type: 'Context', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth pages: module-contributed public pages never join a protected list', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: ['crm/accept-invitation', 'dashboard'],
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'crm/accept-invitation', type: 'Context' },
+      { id: 'dashboard', type: 'Context' },
+    ],
+  };
+  const context = { moduleAuthPublicPages: ['crm/accept-invitation'] };
+  const res = buildEntityAuth({ components, context, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'crm/accept-invitation', type: 'Context', auth: { public: true } },
+    { id: 'dashboard', type: 'Context', auth: { public: false } },
   ]);
 });
 

@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
 import getEntityRoles from './getEntityRoles.js';
 import getProtectedEntities from './getProtectedEntities.js';
 import { isInPatternList } from './matchPattern.js';
@@ -29,9 +30,15 @@ const labels = {
 // Writes the auth artifact ({ public, roles? }) onto every item of one auth
 // entity (pages, api or websockets), so the runtime reads a resolved
 // decision and never re-derives it from patterns.
-function buildEntityAuth({ components, entity }) {
+function buildEntityAuth({ components, context, entity }) {
   const label = labels[entity];
-  const protectedIds = getProtectedEntities({ components, entity });
+  let protectedIds = getProtectedEntities({ components, entity });
+  if (entity === 'pages') {
+    // authPages role pages and module-contributed public pages stay public
+    // in both the protected-list and public-list modes.
+    const alwaysPublicIds = getAlwaysPublicPageIds({ components, context });
+    protectedIds = protectedIds.filter((id) => !alwaysPublicIds.includes(id));
+  }
   const entityRoles = getEntityRoles({ components, entity });
   let configPublic = [];
   if (type.isArray(components.auth[entity].public)) {

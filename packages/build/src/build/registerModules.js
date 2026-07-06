@@ -25,6 +25,7 @@ import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import validateModuleAuthManifest from './validateModuleAuthManifest.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 
 validateOperatorsDynamic({ operators });
@@ -46,7 +47,9 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
         if (!varDef.properties[key]) {
           throw new ConfigError(
             `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
-              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(
+                ', '
+              )}.`
           );
         }
       }
@@ -100,9 +103,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`);
   }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(
-      `Module entry "${entry.id}": 'source' is required and must be a string.`
-    );
+    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
   if (Object.hasOwn(context.modules, entry.id)) {
@@ -259,6 +260,10 @@ async function resolveFullManifest({ entryId, context }) {
   }
 
   moduleEntry.manifest = resolved;
+
+  // The auth section is fully resolved now - validate its shape before
+  // buildModules contributes it to the app's auth config.
+  validateModuleAuthManifest({ auth: resolved.auth, entryId });
 
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;

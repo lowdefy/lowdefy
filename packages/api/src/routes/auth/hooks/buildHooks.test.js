@@ -356,6 +356,114 @@ test('invitation.send builds the sendInvitationEmail callback with the catalog p
   ).rejects.toThrow('invite:a@b.c');
 });
 
+test('two before hooks on one point run in array order and thread the record through both', async () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [
+      { id: 'crm/link:user.create.before', point: 'user.create.before', endpointId: 'auth/first' },
+      { id: 'app-normalize', point: 'user.create.before', endpointId: 'auth/second' },
+    ],
+    endpointConfigs: {
+      'auth/first': {
+        endpointId: 'auth/first',
+        type: 'InternalApi',
+        routine: { ':return': { name: 'from-first', threaded: true } },
+      },
+      'auth/second': {
+        endpointId: 'auth/second',
+        type: 'InternalApi',
+        // The second hook reads the record as returned by the first - proof
+        // the fold threads the record in array order.
+        routine: {
+          ':return': { final: true, threadedSeen: { _payload: 'user.threaded' } },
+        },
+      },
+    },
+  });
+  const result = await databaseHooks.user.create.before({ name: 'Original', email: 'a@b.c' });
+  expect(result).toEqual({ data: { final: true, threadedSeen: true } });
+  const dispatchedHookIds = logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_auth_hook')
+    .map((call) => call[0].hookId);
+  expect(dispatchedHookIds).toEqual(['crm/link:user.create.before', 'app-normalize']);
+});
+
+test('the first before hook to reject short-circuits later hooks on the point', async () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [
+      { id: 'veto', point: 'user.create.before', endpointId: 'auth/veto' },
+      { id: 'never-runs', point: 'user.create.before', endpointId: 'auth/second' },
+    ],
+    endpointConfigs: {
+      'auth/veto': {
+        endpointId: 'auth/veto',
+        type: 'InternalApi',
+        routine: { ':reject': 'Signups are closed.' },
+      },
+      'auth/second': {
+        endpointId: 'auth/second',
+        type: 'InternalApi',
+        routine: { ':return': { ran: true } },
+      },
+    },
+  });
+  await expect(databaseHooks.user.create.before({ email: 'a@b.c' })).rejects.toThrow(
+    'Signups are closed.'
+  );
+  const dispatchedHookIds = logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_auth_hook')
+    .map((call) => call[0].hookId);
+  expect(dispatchedHookIds).toEqual(['veto']);
+});
+
+test('two hooks on a synthetic point both fire in array order', async () => {
+  const { afterEmailVerification } = buildTestHooks({
+    hooks: [
+      { id: 'crm/link:email.verified', point: 'email.verified', endpointId: 'auth/module-hook' },
+      { id: 'app-on-verified', point: 'email.verified', endpointId: 'auth/app-hook' },
+    ],
+    endpointConfigs: {
+      'auth/module-hook': {
+        endpointId: 'auth/module-hook',
+        type: 'InternalApi',
+        routine: [{ ':log': 'module hook fired' }],
+      },
+      'auth/app-hook': {
+        endpointId: 'auth/app-hook',
+        type: 'InternalApi',
+        routine: [{ ':log': 'app hook fired' }],
+      },
+    },
+  });
+  await expect(afterEmailVerification({ id: 'user_1', email: 'a@b.c' })).resolves.toBeUndefined();
+  const dispatchedHookIds = logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_auth_hook')
+    .map((call) => call[0].hookId);
+  expect(dispatchedHookIds).toEqual(['crm/link:email.verified', 'app-on-verified']);
+});
+
+test('one endpoint bound at two points fires at both', async () => {
+  const { afterEmailVerification, databaseHooks } = buildTestHooks({
+    hooks: [
+      { id: 'link-on-signup', point: 'user.create.before', endpointId: 'auth/link' },
+      { id: 'link-on-verified', point: 'email.verified', endpointId: 'auth/link' },
+    ],
+    endpointConfigs: {
+      'auth/link': {
+        endpointId: 'auth/link',
+        type: 'InternalApi',
+        routine: { ':return': { linked: true } },
+      },
+    },
+  });
+  const result = await databaseHooks.user.create.before({ email: 'a@b.c' });
+  expect(result).toEqual({ data: { linked: true } });
+  await expect(afterEmailVerification({ id: 'user_1', email: 'a@b.c' })).resolves.toBeUndefined();
+  const dispatchedHookIds = logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_auth_hook')
+    .map((call) => call[0].hookId);
+  expect(dispatchedHookIds).toEqual(['link-on-signup', 'link-on-verified']);
+});
+
 test('multiple hooks assemble slots at their own points', async () => {
   const { databaseHooks } = buildTestHooks({
     hooks: [
