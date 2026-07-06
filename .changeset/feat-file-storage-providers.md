@@ -6,6 +6,7 @@
 '@lowdefy/blocks-tiptap': minor
 '@lowdefy/blocks-antd-x': minor
 '@lowdefy/build': minor
+'@lowdefy/codemods': minor
 '@lowdefy/server': patch
 '@lowdefy/server-dev': patch
 ---
@@ -39,3 +40,7 @@ feat: Provider-neutral file storage — upload and download files to S3-compatib
 **Servers (`@lowdefy/server`, `@lowdefy/server-dev`)**
 
 - `/api/endpoints/*` request bodies are capped at 10 MiB (matching the agent route), bounding base64 file payloads sent via `CallAPI`.
+
+**Codemod (`@lowdefy/codemods`)**
+
+- Optional `s3-blocks-to-file-blocks` codemod renames the deprecated S3\* blocks and `s3PostPolicyRequestId`/`s3GetPolicyRequestId` properties to the provider-neutral names via `lowdefy upgrade`.
