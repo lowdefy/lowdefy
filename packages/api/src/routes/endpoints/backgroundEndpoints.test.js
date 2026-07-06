@@ -163,3 +163,41 @@ test('detached: true without CRON_SECRET throws a ConfigError', async () => {
   expect(result.success).toBe(false);
   expect(result.error).toBeTruthy();
 });
+
+test('hook endpoints: gated on hook: true, payload is { body, query, headers }', async () => {
+  const { default: runHookEndpoint } = await import('./runHookEndpoint.js');
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/hook_ep.json') {
+      return {
+        endpointId: 'hook_ep',
+        type: 'Api',
+        hook: true,
+        routine: { ':return': { echo: { _payload: 'query.t' } } },
+      };
+    }
+    if (path === 'api/plain_ep.json') {
+      return { endpointId: 'plain_ep', type: 'Api', routine: { ':return': 'x' } };
+    }
+    return null;
+  });
+  const operators = {
+    _payload: ({ params, payload }) =>
+      String(params)
+        .split('.')
+        .reduce((acc, key) => acc?.[key], payload),
+  };
+  const context = testContext({ logger, operators, readConfigFile: mockReadConfigFile });
+  const result = await runHookEndpoint(context, {
+    endpointId: 'hook_ep',
+    body: { hello: 1 },
+    query: { t: 'tok' },
+    headers: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ echo: 'tok' });
+
+  const context2 = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await expect(
+    runHookEndpoint(context2, { endpointId: 'plain_ep', body: {}, query: {}, headers: {} })
+  ).rejects.toThrow('does not exist');
+});
