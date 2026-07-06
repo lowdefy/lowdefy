@@ -38,6 +38,7 @@ import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
@@ -110,6 +111,19 @@ async function shallowBuild(options) {
     buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+
+    // Phase 3.5: Constant-fold static runtime operators, mirroring the full
+    // build (index.js). Without this, content preserved at skeleton — inline
+    // pages, slot content, module components consumed into them — reaches
+    // testSchema (spurious warnings) and the served dev artifacts (broken
+    // block ids: the client never operator-evaluates id positions) with raw
+    // runtime operators. Ref-backed page content is already stripped here and
+    // folds per page in buildPageJit.
+    components = precomputeRuntimeOperators({
+      context,
+      input: components,
+      refDef: context.rootRefDef,
+    });
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
