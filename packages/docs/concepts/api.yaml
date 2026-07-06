@@ -38,5 +38,5 @@ _ref:
           vars:
             previous_page_title: Page and App State
             previous_page_id: page-and-app-state
-            next_page_title: References and Templates
-            next_page_id: references-and-templates
+            next_page_title: Dynamic Page Content
+            next_page_id: dynamic-page-content

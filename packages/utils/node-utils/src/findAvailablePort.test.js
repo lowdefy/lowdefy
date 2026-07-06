@@ -17,11 +17,11 @@
 import net from 'net';
 import findAvailablePort from './findAvailablePort.js';
 
-function listen(port) {
+function listen(port, host) {
   return new Promise((resolve, reject) => {
     const server = net.createServer();
     server.on('error', reject);
-    server.listen(port, () => resolve(server));
+    server.listen(port, host, () => resolve(server));
   });
 }
 
@@ -49,6 +49,33 @@ test('findAvailablePort returns the requested port when it is free', async () =>
 test('findAvailablePort increments past a busy port to the next free one', async () => {
   const free = await getFreePort();
   const server = await listen(free);
+  try {
+    const port = await findAvailablePort({ port: free });
+    expect(port).toBeGreaterThan(free);
+  } finally {
+    await close(server);
+  }
+});
+
+test('findAvailablePort increments past a port held on 127.0.0.1 only', async () => {
+  // SO_REUSEADDR lets a wildcard probe bind while 127.0.0.1 is held (how Vite
+  // binds `localhost`), which reported the port as available and crashed the
+  // strictPort dev server.
+  const free = await getFreePort();
+  const server = await listen(free, '127.0.0.1');
+  try {
+    const port = await findAvailablePort({ port: free });
+    expect(port).toBeGreaterThan(free);
+  } finally {
+    await close(server);
+  }
+});
+
+test('findAvailablePort increments past a port held on ::1 only', async () => {
+  // Vite resolving `localhost` can land on the IPv6 loopback alone, so a
+  // wildcard or IPv4-only probe misses it.
+  const free = await getFreePort();
+  const server = await listen(free, '::1');
   try {
     const port = await findAvailablePort({ port: free });
     expect(port).toBeGreaterThan(free);

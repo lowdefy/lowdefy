@@ -39,7 +39,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./dev": "./dist/indexDev.js",
-    "./buildTestPage": "./dist/build/full/buildTestPage.js"
+    "./buildTestPage": "./dist/build/full/buildTestPage.js",
+    "./dynamic": "./dist/dynamic/buildDynamicBlocks.js"
   },
   "files": [
     "dist/*"
