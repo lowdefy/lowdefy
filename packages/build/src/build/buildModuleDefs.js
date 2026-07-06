@@ -25,6 +25,7 @@ import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
 import {
   resolveLocalManifest,
+  recordifyExportables,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
@@ -59,11 +60,12 @@ async function parseLowdefyYaml({ context }) {
     dynamicIdentifiers,
     shouldStop: (path) => {
       // Defer entry vars and connections: they may contain cross-module
-      // refs that require modules to be registered first.
-      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
-      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      // refs that require modules to be registered first. Non-modules keys
+      // stay raw for the app buildRefs pass.
+      if (/^modules\.\d+\.vars$/.test(path)) return 'skip';
+      if (/^modules\.\d+\.connections$/.test(path)) return 'skip';
       if (path.startsWith('modules')) return false;
-      return 'preserve';
+      return 'skip';
     },
   });
 
@@ -166,6 +168,12 @@ async function buildModuleDefs({ context }) {
   // Step 2.5a — prepare all entries. No cross-entry work; order-free.
   for (const entry of moduleEntries) {
     await prepareEntryConfig({ moduleEntry: context.modules[entry.id], context });
+  }
+  // Phase C.5 — record-ify exportables (components, menu links) for every
+  // entry BEFORE anything can consume them: record creation must precede all
+  // consumption, or cross-entry refs would race manifest resolve order.
+  for (const entry of moduleEntries) {
+    await recordifyExportables({ entryId: entry.id, context });
   }
   // Step 2.5b — final sweep. Per-record demand through the wait-graph makes
   // the order immaterial; required-var validation runs per entry after its

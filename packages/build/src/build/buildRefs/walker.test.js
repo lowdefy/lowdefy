@@ -824,9 +824,10 @@ describe('_module.var lazy resolution', () => {
     expect(result).toEqual({ show_header: true });
   });
 
-  test('preserves _module.var when moduleRoot set but no moduleEntry (Phase 1a)', async () => {
+  test('errors on _module.var in module scope without an entry (module-static positions)', async () => {
+    const buildContext = createBuildContext();
     const ctx = new WalkContext({
-      buildContext: createBuildContext(),
+      buildContext,
       refId: 'test:module.yaml:0',
       sourceRefId: null,
       vars: {},
@@ -840,9 +841,12 @@ describe('_module.var lazy resolution', () => {
       dynamicIdentifiers,
       shouldStop: null,
     });
+    // Manifest headers and export ids walk without a module entry — they are
+    // module-static, so _module.var there is a ConfigError, not a pass-through.
     const node = { '_module.var': 'theme' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'theme' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used in manifest headers or component/menu ids'
+    );
   });
 });
 
@@ -1602,11 +1606,11 @@ describe('deferModuleRefs record deferral', () => {
     expect(result === null || result['~deferred'] === undefined).toBe(true);
   });
 
-  test('cloneForResolve carries placeholders through unchanged', async () => {
-    const { cloneForResolve } = await import('./walker.js');
+  test('cloneWithMarkers carries placeholders through unchanged', async () => {
+    const { default: cloneWithMarkers } = await import('./cloneWithMarkers.js');
 
     const placeholder = { '~deferred': 'consumer-entry:consumerVars.slot' };
-    const cloned = cloneForResolve({ wrapper: placeholder });
+    const cloned = cloneWithMarkers({ wrapper: placeholder });
 
     // Plain enumerable data — the whole point of the record placeholder.
     expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
