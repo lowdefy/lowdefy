@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
-import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
+import { buildPageJit, createContext, hydrateDeferredRecords, makeId } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
@@ -125,6 +125,14 @@ function getBuildContext(buildDirectory, configDirectory) {
   const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
   if (modules) {
     Object.assign(cachedBuildContext.modules, modules);
+  }
+
+  // Hydrate the deferred-record registry — module component bodies referenced
+  // by '~deferred' placeholders in modules.json live here. readJsonFile runs
+  // the marker-restoring reviver, so record-body ~r/~l markers survive.
+  const deferredRecords = readJsonFile(path.join(buildDirectory, 'deferredRecords.json'));
+  if (deferredRecords) {
+    hydrateDeferredRecords(cachedBuildContext, deferredRecords);
   }
 
   // Restore app metadata so JIT page builds resolve _app / _build.app against
