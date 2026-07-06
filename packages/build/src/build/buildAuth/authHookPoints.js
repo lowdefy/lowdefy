@@ -17,6 +17,9 @@
 // The exhaustive launch set of bindable auth hook points. BetterAuth can hook
 // every model write, but unlisted points are deliberately not bindable -
 // adding a point later is an additive, non-breaking change.
+// Twin catalog: packages/api/src/routes/auth/hooks/authHookPoints.js maps the
+// same point names to their runtime definitions - a point added here without
+// a runtime definition crashes buildHooks at startup; keep the two in sync.
 // "invitation.send" is accepted here per the frozen point set; its backing
 // callback ships with the organization plugin in a later phase.
 const authHookPoints = [

@@ -19,6 +19,9 @@ import findHookUser from './findHookUser.js';
 // The bindable auth hook points and what each hands the hook routine as
 // _payload - the contract between the hook mechanism and the hook author.
 // Build validation guarantees every configured point is in this catalog.
+// Twin catalog: packages/build/src/build/buildAuth/authHookPoints.js lists
+// the point names build accepts - a point accepted there without a
+// definition here crashes buildHooks at startup; keep the two in sync.
 //
 // Database points receive BetterAuth's databaseHooks record; session and
 // account writes carry only a userId, so the subject user is read through

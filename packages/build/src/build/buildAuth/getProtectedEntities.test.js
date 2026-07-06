@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getProtectedPages from './getProtectedPages.js';
+import getProtectedEntities from './getProtectedEntities.js';
 
 test('No config', () => {
   const components = {
@@ -22,7 +22,7 @@ test('No config', () => {
       pages: {},
     },
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual([]);
 });
 
@@ -39,7 +39,7 @@ test('Public true', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual([]);
 });
 
@@ -56,7 +56,7 @@ test('Protected empty array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual([]);
 });
 
@@ -74,7 +74,7 @@ test('Protected empty array, public true', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual([]);
 });
 
@@ -91,7 +91,7 @@ test('Protected  true', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['a', 'b', 'c']);
 });
 
@@ -108,7 +108,7 @@ test('Public empty array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['a', 'b', 'c']);
 });
 
@@ -126,7 +126,7 @@ test('Protected true, public empty array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['a', 'b', 'c']);
 });
 
@@ -144,7 +144,7 @@ test('Protected true, public array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['b', 'c']);
 });
 
@@ -161,7 +161,7 @@ test('Public array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['b', 'c']);
 });
 
@@ -178,7 +178,7 @@ test('Protected array', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['a']);
 });
 
@@ -196,7 +196,7 @@ test('Protected array, public true', () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['a']);
 });
 
@@ -213,7 +213,7 @@ test('Protected wildcard pattern expands to matching page IDs', () => {
       { id: 'home', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['team-users/users-list', 'team-users/user-edit']);
 });
 
@@ -230,7 +230,7 @@ test('Public wildcard pattern excludes matching pages from protected', () => {
       { id: 'home', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['home']);
 });
 
@@ -246,7 +246,7 @@ test('Wildcard * does not match compound ids', () => {
       { id: 'team-users/users-list', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['home']);
 });
 
@@ -263,6 +263,6 @@ test('Mixed exact and wildcard in protected array', () => {
       { id: 'login', type: 'Context' },
     ],
   };
-  const res = getProtectedPages({ components });
+  const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['home', 'team-users/users-list']);
 });

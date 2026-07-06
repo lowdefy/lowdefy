@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-import buildWebsocketAuth from './buildWebsocketAuth.js';
-import testContext from '../../test-utils/testContext.js';
+import buildEntityAuth from './buildEntityAuth.js';
 
-const context = testContext();
-
-test('buildWebsocketAuth returns components when no websockets defined', () => {
+test('buildEntityAuth websockets: returns components when no websockets defined', () => {
   const components = {
     auth: {
       websockets: {
@@ -27,11 +24,11 @@ test('buildWebsocketAuth returns components when no websockets defined', () => {
       },
     },
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toBe(undefined);
 });
 
-test('buildWebsocketAuth sets all websockets public by default', () => {
+test('buildEntityAuth websockets: sets all websockets public by default', () => {
   const components = {
     auth: {
       websockets: {
@@ -43,14 +40,14 @@ test('buildWebsocketAuth sets all websockets public by default', () => {
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: true } },
     { id: 'ws2', type: 'Channel', auth: { public: true } },
   ]);
 });
 
-test('buildWebsocketAuth protected true makes all websockets protected', () => {
+test('buildEntityAuth websockets: protected true makes all websockets protected', () => {
   const components = {
     auth: {
       websockets: {
@@ -63,14 +60,14 @@ test('buildWebsocketAuth protected true makes all websockets protected', () => {
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
   ]);
 });
 
-test('buildWebsocketAuth protected list protects only listed websockets', () => {
+test('buildEntityAuth websockets: protected list protects only listed websockets', () => {
   const components = {
     auth: {
       websockets: {
@@ -83,14 +80,14 @@ test('buildWebsocketAuth protected list protects only listed websockets', () => 
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false } },
     { id: 'ws2', type: 'Channel', auth: { public: true } },
   ]);
 });
 
-test('buildWebsocketAuth public list protects all websockets not listed', () => {
+test('buildEntityAuth websockets: public list protects all websockets not listed', () => {
   const components = {
     auth: {
       websockets: {
@@ -103,14 +100,14 @@ test('buildWebsocketAuth public list protects all websockets not listed', () => 
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: true } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
   ]);
 });
 
-test('buildWebsocketAuth roles protect websockets and list the granted roles', () => {
+test('buildEntityAuth websockets: roles protect websockets and list the granted roles', () => {
   const components = {
     auth: {
       websockets: {
@@ -126,7 +123,7 @@ test('buildWebsocketAuth roles protect websockets and list the granted roles', (
       { id: 'ws3', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false, roles: ['role1', 'role2'] } },
     { id: 'ws2', type: 'Channel', auth: { public: false, roles: ['role2'] } },
@@ -134,7 +131,7 @@ test('buildWebsocketAuth roles protect websockets and list the granted roles', (
   ]);
 });
 
-test('buildWebsocketAuth throws when a websocket is both protected by roles and public', () => {
+test('buildEntityAuth websockets: throws when a websocket is both protected by roles and public', () => {
   const components = {
     auth: {
       websockets: {
@@ -146,12 +143,12 @@ test('buildWebsocketAuth throws when a websocket is both protected by roles and 
     },
     websockets: [{ id: 'ws1', type: 'Channel' }],
   };
-  expect(() => buildWebsocketAuth({ components, context })).toThrow(
+  expect(() => buildEntityAuth({ components, entity: 'websockets' })).toThrow(
     'Websocket "ws1" is both protected by roles and public.'
   );
 });
 
-test('buildWebsocketAuth roles with protected true still assigns roles', () => {
+test('buildEntityAuth websockets: roles with protected true still assigns roles', () => {
   const components = {
     auth: {
       websockets: {
@@ -166,9 +163,46 @@ test('buildWebsocketAuth roles with protected true still assigns roles', () => {
       { id: 'ws2', type: 'Channel' },
     ],
   };
-  const res = buildWebsocketAuth({ components, context });
+  const res = buildEntityAuth({ components, entity: 'websockets' });
   expect(res.websockets).toEqual([
     { id: 'ws1', type: 'Channel', auth: { public: false, roles: ['role1'] } },
     { id: 'ws2', type: 'Channel', auth: { public: false } },
   ]);
+});
+
+test('buildEntityAuth pages: the 404 page is always public even when all pages are protected', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: true,
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: '404', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'home', type: 'Context', auth: { public: false } },
+    { id: '404', type: 'Context', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth api: the roles-and-public conflict names the endpoint', () => {
+  const components = {
+    auth: {
+      api: {
+        roles: {
+          role1: ['ep1'],
+        },
+        public: ['ep1'],
+      },
+    },
+    api: [{ id: 'ep1', type: 'Api' }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+    'Endpoint "ep1" is both protected by roles and public.'
+  );
 });

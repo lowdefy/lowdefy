@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getPageRoles from './getPageRoles.js';
+import getEntityRoles from './getEntityRoles.js';
 
 test('No roles', () => {
   const components = {
@@ -24,7 +24,7 @@ test('No roles', () => {
       },
     },
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({});
 });
 
@@ -40,7 +40,7 @@ test('Roles, 1 page per role', () => {
     },
     pages: [{ id: 'page1' }, { id: 'page2' }],
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
     page1: ['role1'],
     page2: ['role2'],
@@ -59,7 +59,7 @@ test('Multiple roles on a page', () => {
     },
     pages: [{ id: 'page1' }, { id: 'page2' }, { id: 'page3' }],
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
     page1: ['role1'],
     page2: ['role1', 'role2'],
@@ -82,7 +82,7 @@ test('Wildcard pattern matches multiple pages', () => {
       { id: 'home' },
     ],
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
     'team-users/users-list': ['admin'],
     'team-users/user-edit': ['admin'],
@@ -105,7 +105,7 @@ test('Mixed exact and wildcard patterns in roles', () => {
       { id: 'home' },
     ],
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
     'team-users/users-list': ['admin'],
     settings: ['admin'],
@@ -124,7 +124,7 @@ test('Wildcard * does not match across slashes', () => {
     },
     pages: [{ id: 'team-users/sub/deep' }, { id: 'team-users/list' }],
   };
-  const res = getPageRoles({ components });
+  const res = getEntityRoles({ components, entity: 'pages' });
   expect(res).toEqual({
     'team-users/list': ['admin'],
   });

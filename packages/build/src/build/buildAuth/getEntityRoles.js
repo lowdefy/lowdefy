@@ -16,26 +16,28 @@
 
 import { matchesPattern } from './matchPattern.js';
 
-function getPageRoles({ components }) {
-  const roles = components.auth.pages.roles;
-  const pageIds = (components.pages ?? []).map((p) => p.id);
-  const pageRoles = {};
+// Maps each item id to the role names whose patterns match it, for one auth
+// entity (pages, api or websockets).
+function getEntityRoles({ components, entity }) {
+  const roles = components.auth[entity].roles;
+  const itemIds = (components[entity] ?? []).map((item) => item.id);
+  const itemRoles = {};
   Object.keys(roles).forEach((roleName) => {
     roles[roleName].forEach((pattern) => {
-      pageIds.forEach((pageId) => {
-        if (matchesPattern(pageId, pattern)) {
-          if (!pageRoles[pageId]) {
-            pageRoles[pageId] = new Set();
+      itemIds.forEach((itemId) => {
+        if (matchesPattern(itemId, pattern)) {
+          if (!itemRoles[itemId]) {
+            itemRoles[itemId] = new Set();
           }
-          pageRoles[pageId].add(roleName);
+          itemRoles[itemId].add(roleName);
         }
       });
     });
   });
-  Object.keys(pageRoles).forEach((pageId) => {
-    pageRoles[pageId] = [...pageRoles[pageId]];
+  Object.keys(itemRoles).forEach((itemId) => {
+    itemRoles[itemId] = [...itemRoles[itemId]];
   });
-  return pageRoles;
+  return itemRoles;
 }
 
-export default getPageRoles;
+export default getEntityRoles;
