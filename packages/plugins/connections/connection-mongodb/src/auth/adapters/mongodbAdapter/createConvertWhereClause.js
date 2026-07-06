@@ -24,13 +24,21 @@ import insensitiveNotIn from './insensitiveNotIn.js';
 import insensitiveStartsWith from './insensitiveStartsWith.js';
 
 // Converts a BetterAuth where array into a MongoDB filter document.
+// Adapted from @better-auth/mongo-adapter@1.6.23 - see mongodbAdapter.js for
+// provenance.
 function createConvertWhereClause({ getFieldAttributes, getFieldName, serializeId }) {
   return function convertWhereClause({ model, where }) {
     if (!where.length) {
       return {};
     }
     const conditions = where.map((w) => {
-      const { field: whereField, value, operator = 'eq', connector = 'AND', mode = 'sensitive' } = w;
+      const {
+        field: whereField,
+        value,
+        operator = 'eq',
+        connector = 'AND',
+        mode = 'sensitive',
+      } = w;
       let field = getFieldName({ model, field: whereField });
       if (field === 'id') {
         field = '_id';

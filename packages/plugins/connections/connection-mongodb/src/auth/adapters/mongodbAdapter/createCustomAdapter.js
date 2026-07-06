@@ -21,6 +21,8 @@ import createSerializeId from './createSerializeId.js';
 // createAdapterFactory. The creator signature ({ getFieldAttributes,
 // getFieldName, schema, getDefaultModelName, options }) is fixed by the
 // BetterAuth adapter API.
+// Adapted from @better-auth/mongo-adapter@1.6.23 - see mongodbAdapter.js for
+// provenance.
 function createCustomAdapter({ db }) {
   return function customAdapter({
     getFieldAttributes,
@@ -62,6 +64,10 @@ function createCustomAdapter({ db }) {
       return { $project: projection };
     }
 
+    // The join pipeline is kept for fidelity with the upstream
+    // @better-auth/mongo-adapter: at better-auth 1.6.23 the core only passes
+    // `join` when options.experimental.joins is enabled, which Lowdefy does
+    // not set - core serves joins through its fallback path instead.
     function pushJoinStages({ pipeline, model, isUnique, joinedModel, joinConfig, shouldLimit }) {
       const localField = getFieldName({ field: joinConfig.on.from, model });
       const foreignField = getFieldName({ field: joinConfig.on.to, model: joinedModel });
@@ -146,8 +152,13 @@ function createCustomAdapter({ db }) {
           pipeline.push(projectStage({ model, select, join }));
         }
         if (sortBy) {
+          // id is stored as _id, like the where-clause mapping in
+          // createConvertWhereClause.
+          const sortField = getFieldName({ field: sortBy.field, model });
           pipeline.push({
-            $sort: { [getFieldName({ field: sortBy.field, model })]: sortBy.direction === 'desc' ? -1 : 1 },
+            $sort: {
+              [sortField === 'id' ? '_id' : sortField]: sortBy.direction === 'desc' ? -1 : 1,
+            },
           });
         }
         if (offset) {
@@ -168,11 +179,13 @@ function createCustomAdapter({ db }) {
       },
       async update({ model, where, update }) {
         const clause = convertWhereClause({ model, where });
-        const result = await db.collection(model).findOneAndUpdate(
-          clause,
-          { $set: update },
-          { returnDocument: 'after', includeResultMetadata: true }
-        );
+        const result = await db
+          .collection(model)
+          .findOneAndUpdate(
+            clause,
+            { $set: update },
+            { returnDocument: 'after', includeResultMetadata: true }
+          );
         return result?.value ?? null;
       },
       async updateMany({ model, where, update }) {
