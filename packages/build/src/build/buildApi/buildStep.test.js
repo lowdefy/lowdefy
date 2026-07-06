@@ -719,3 +719,212 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
     MongoDBInsertOne: 1,
   });
 });
+
+test('RenderNotification step builds with notification prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_rendernotification_step',
+        endpointId: 'test_rendernotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'notification:test_rendernotification_step:render',
+            endpointId: 'test_rendernotification_step',
+            stepId: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('RenderNotification step allows operator objects for notificationId and data', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: { _payload: 'notificationId' },
+              data: { _payload: 'item' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('RenderNotification step without properties.notificationId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_id',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_id" requires properties.notificationId.'
+  );
+});
+
+test('RenderNotification step without properties.data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_data" requires properties.data.'
+  );
+});
+
+test('RenderNotification step with string data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_bad_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned', data: 'data' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_bad_data" properties.data is not an object.'
+  );
+});
+
+test('RenderNotification step with array data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_array_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: [{ contact: { _id: 'UC-1' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_array_data" properties.data is not an object.'
+  );
+});
+
+test('RenderNotification step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            connectionId: 'test_connection',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_with_connection" should not have a connectionId.'
+  );
+});
+
+test('RenderNotification step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});

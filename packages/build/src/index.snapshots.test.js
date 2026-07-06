@@ -51,6 +51,9 @@ jest.unstable_mockModule('./build/buildApp.js', () => ({
     if (!components.app.html.appendHead) {
       components.app.html.appendHead = '';
     }
+    if (!components.app.email) {
+      components.app.email = {};
+    }
     components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
     return components;
   },

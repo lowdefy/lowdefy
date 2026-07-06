@@ -63,6 +63,7 @@ test('buildApp no app defined', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
@@ -77,6 +78,7 @@ test('buildApp empty app object', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
@@ -91,6 +93,7 @@ test('buildApp empty html', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
@@ -112,6 +115,7 @@ test('buildApp appendHead and appendBody', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: 'body',
         appendHead: 'head',
