@@ -2,7 +2,7 @@
   "name": "@lowdefy/plugin-better-auth",
   "version": "5.3.0",
   "license": "Apache-2.0",
-  "description": "Lowdefy provider type definitions for the BetterAuth engine.",
+  "description": "Lowdefy providers, API auth strategies, and admin steps for the BetterAuth engine.",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
