@@ -35,6 +35,14 @@ test('UpdateUserAttributes updates the user row directly through the adapter', a
   });
 });
 
+test('UpdateUserAttributes throws when userId matches no user', async () => {
+  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateUserAttributes({ auth, properties: { userId: 'missing', attributes: { plan: 'pro' } } })
+  ).rejects.toThrow('UpdateUserAttributes found no user with id "missing".');
+});
+
 test('UpdateUserAttributes throws when userId property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(UpdateUserAttributes({ auth, properties: { attributes: {} } })).rejects.toThrow(

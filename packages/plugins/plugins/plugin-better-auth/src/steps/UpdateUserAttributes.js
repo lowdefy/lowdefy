@@ -33,11 +33,17 @@ async function UpdateUserAttributes({ auth, properties }) {
     );
   }
   const { adapter } = await auth.$context;
-  return adapter.update({
+  const user = await adapter.update({
     model: 'user',
     where: [{ field: 'id', value: userId }],
     update: { attributes },
   });
+  if (type.isNone(user)) {
+    // Mirrors UpdateMemberAttributes - an unknown userId must fail loudly,
+    // not skip the write silently.
+    throw new Error(`UpdateUserAttributes found no user with id "${userId}".`);
+  }
+  return user;
 }
 
 export default UpdateUserAttributes;
