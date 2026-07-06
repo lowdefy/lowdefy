@@ -21,5 +21,5 @@ import * as metas from './metas.js';
 export default {
   ...extractBlockTypes(metas),
   connections: ['AwsS3Bucket'],
-  requests: ['AwsS3PresignedGetObject', 'AwsS3PresignedPostPolicy'],
+  requests: ['AwsS3PresignedGetObject', 'AwsS3PresignedPostPolicy', 'AwsS3PutObject'],
 };

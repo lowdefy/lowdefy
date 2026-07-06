@@ -14,106 +14,27 @@
   limitations under the License.
 */
 
-import React, { useEffect, useState } from 'react';
-import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import React, { useEffect } from 'react';
+import { UploadPhoto } from '@lowdefy/blocks-files/blocks';
 
-import { Upload } from 'antd';
-
-import useFileList from '../utils/useFileList.js';
-import getS3Upload from '../utils/getS3Upload.js';
-import withTheme from '../withTheme.js';
-
-const S3UploadPhoto = ({
-  blockId,
-  classNames = {},
-  components: { Icon },
-  events,
-  methods,
-  properties,
-  styles = {},
-  value,
-}) => {
-  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
-    properties,
-    methods,
-    value,
-  });
-  const [loading, setLoading] = useState(false);
-  const s3UploadRequest = getS3Upload({ methods, setFileList, setLoading });
-
+// Deprecated alias for the generic UploadPhoto block in @lowdefy/blocks-files.
+// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId.
+const S3UploadPhoto = (props) => {
   useEffect(() => {
-    methods.setValue({ file: null, fileList: [] });
-    methods.registerEvent({
-      name: '__getS3PostPolicy',
-      actions: [
-        {
-          id: '__getS3PostPolicy',
-          type: 'Request',
-          params: [properties.s3PostPolicyRequestId],
-        },
-      ],
-    });
+    console.warn(
+      'The S3UploadPhoto block is deprecated. Use the UploadPhoto block with "uploadPolicyRequestId" instead.'
+    );
   }, []);
-  useEffect(() => {
-    if (JSON.stringify(value) !== JSON.stringify(state)) {
-      setValue(value);
-    }
-  }, [value]);
+  const { s3PostPolicyRequestId, ...properties } = props.properties ?? {};
   return (
-    <div
-      id={blockId}
-      className={cn('lf-s3-upload-photo', classNames.element)}
-      style={styles.element}
-    >
-      <Upload
-        accept="image/*"
-        beforeUpload={loadFileList}
-        classNames={{
-          trigger: classNames.trigger,
-          list: classNames.list,
-          item: classNames.item,
-        }}
-        styles={{
-          trigger: styles.trigger,
-          list: styles.list,
-          item: styles.item,
-        }}
-        customRequest={s3UploadRequest}
-        disabled={properties.disabled}
-        fileList={state.fileList}
-        listType="picture-card"
-        maxCount={properties.maxCount}
-        multiple={!properties.singleFile}
-        onRemove={removeFile}
-        showUploadList={properties.showUploadList}
-        onChange={() => {
-          methods.triggerEvent({ name: 'onChange' });
-        }}
-      >
-        <div className="lf-s3-upload-photo-content">
-          <Icon
-            blockId={`${blockId}_icon`}
-            classNames={{ element: cn('lf-s3-upload-photo-icon', classNames.icon) }}
-            events={events}
-            properties={{
-              name: loading ? 'AiOutlineLoading' : 'AiOutlineCamera',
-              size: 24,
-            }}
-            styles={{ element: styles.icon }}
-          />
-          <div
-            className={cn('lf-s3-upload-photo-title', classNames.title)}
-            style={{ marginTop: 8, ...styles.title }}
-          >
-            {renderHtml({
-              html: properties.title ?? 'Upload image',
-              methods,
-            })}
-          </div>
-        </div>
-      </Upload>
-    </div>
+    <UploadPhoto
+      {...props}
+      properties={{
+        uploadPolicyRequestId: s3PostPolicyRequestId,
+        ...properties,
+      }}
+    />
   );
 };
 
-export default withBlockDefaults(withTheme('Upload', S3UploadPhoto));
+export default S3UploadPhoto;

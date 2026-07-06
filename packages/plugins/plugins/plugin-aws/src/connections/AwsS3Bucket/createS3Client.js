@@ -14,16 +14,22 @@
   limitations under the License.
 */
 
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/AwsS3PresignedGetObject.js';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/AwsS3PresignedPostPolicy.js';
-import AwsS3PutObject from './AwsS3PutObject/AwsS3PutObject.js';
-import schema from './schema.js';
+import { S3Client } from '@aws-sdk/client-s3';
+import { type } from '@lowdefy/helpers';
 
-export default {
-  schema,
-  requests: {
-    AwsS3PresignedGetObject,
-    AwsS3PresignedPostPolicy,
-    AwsS3PutObject,
-  },
-};
+function createS3Client({ connection }) {
+  const { accessKeyId, secretAccessKey, region, endpoint, forcePathStyle } = connection;
+  const config = {
+    credentials: { accessKeyId, secretAccessKey },
+    region,
+  };
+  if (!type.isNone(endpoint)) {
+    config.endpoint = endpoint;
+  }
+  if (!type.isNone(forcePathStyle)) {
+    config.forcePathStyle = forcePathStyle;
+  }
+  return new S3Client(config);
+}
+
+export default createS3Client;

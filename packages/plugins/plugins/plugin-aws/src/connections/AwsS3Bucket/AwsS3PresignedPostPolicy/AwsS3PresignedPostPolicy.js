@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
-import schema from './schema.js';
 import { type } from '@lowdefy/helpers';
 
+import createS3Client from '../createS3Client.js';
+import schema from './schema.js';
+
 async function AwsS3PresignedPostPolicy({ request, connection }) {
-  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+  const { bucket } = connection;
   const { acl, conditions, expires, key, fields = {} } = request;
   const params = {
     Bucket: bucket,
@@ -49,11 +50,16 @@ async function AwsS3PresignedPostPolicy({ request, connection }) {
         : fields[field];
     }
   });
-  const s3 = new S3Client({
-    credentials: { accessKeyId, secretAccessKey },
-    region,
-  });
-  return createPresignedPost(s3, params);
+  const s3 = createS3Client({ connection });
+  const policy = await createPresignedPost(s3, params);
+  // Top-level key/bucket/method make the response a standard upload-policy
+  // descriptor — the client reads object identity from here, never from fields.
+  return {
+    ...policy,
+    bucket,
+    key,
+    method: 'POST',
+  };
 }
 
 AwsS3PresignedPostPolicy.schema = schema;
