@@ -47,9 +47,14 @@ async function UpdateMemberRoles({ acting, auth, organization, properties }) {
   // would slip through - guard here, mirroring BetterAuth's
   // YOU_CANNOT_LEAVE_THE_ORGANIZATION_WITHOUT_AN_OWNER semantics.
   const { adapter } = await auth.$context;
+  // Scoped to the resolved organization so a memberId from another org falls
+  // through to the endpoint's member-not-found error instead of this guard.
   const member = await adapter.findOne({
     model: 'member',
-    where: [{ field: 'id', value: memberId }],
+    where: [
+      { field: 'id', value: memberId },
+      { field: 'organizationId', value: organizationId },
+    ],
   });
   if (!type.isNone(member)) {
     const currentRoles = splitRoles(member.role);
@@ -57,7 +62,7 @@ async function UpdateMemberRoles({ acting, auth, organization, properties }) {
     if (currentRoles.includes('owner') && !newRoles.includes('owner')) {
       const members = await adapter.findMany({
         model: 'member',
-        where: [{ field: 'organizationId', value: member.organizationId }],
+        where: [{ field: 'organizationId', value: organizationId }],
       });
       const ownerCount = (members ?? []).filter((row) =>
         splitRoles(row.role).includes('owner')

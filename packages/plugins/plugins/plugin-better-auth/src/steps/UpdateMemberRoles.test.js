@@ -171,6 +171,30 @@ test('UpdateMemberRoles passes through when the member row is not found so the e
   ).rejects.toThrow('Member not found');
 });
 
+test('UpdateMemberRoles scopes the last-owner guard lookup to the resolved organization', async () => {
+  const adapter = createAdapter({
+    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
+    members: [{ id: 'member-1', organizationId: 'org-1', role: 'owner' }],
+  });
+  const updateMemberRole = jest.fn();
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+  await expect(
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization,
+      properties: { memberId: 'member-1', role: 'member' },
+    })
+  ).rejects.toThrow('You cannot leave the organization without an owner.');
+  expect(adapter.findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'id', value: 'member-1' },
+      { field: 'organizationId', value: 'org_pinned' },
+    ],
+  });
+});
+
 test('UpdateMemberRoles throws when memberId property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
