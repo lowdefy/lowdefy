@@ -29,9 +29,11 @@ blocks:
           name: report.pdf
           size: 1024
           type: application/pdf
+          status: done
         - key: reports/summary.xlsx
           name: summary.xlsx
           size: 2048
+          status: done
 
   - id: download_empty
     type: Download
@@ -50,6 +52,7 @@ blocks:
       fileList:
         - key: reports/removable.pdf
           name: removable.pdf
+          status: done
     events:
       onRemove:
         - id: set_removed_file
