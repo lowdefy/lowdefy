@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 import testContext from '../test-utils/testContext.js';
 import {
   resolveLocalManifest,
+  recordifyExportables,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
@@ -733,10 +734,14 @@ pages: []
   // Schema structure is walked (type, properties resolved)
   expect(varDefs.components.type).toBe('object');
   expect(varDefs.components.properties.detail).toBeDefined();
-  // Default values are preserved — _ref NOT resolved during Phase 1a
+  // Default values are record-ified raw — the _ref is NOT resolved during
+  // Phase 1a; the record body keeps it for demand-time resolution.
   expect(varDefs.components.properties.detail.default).toEqual({
-    _ref: 'defaults/detail.yaml',
+    '~deferred': 'my-mod:vars.components.properties.detail.default',
   });
+  const record = getRecord(context, 'my-mod:vars.components.properties.detail.default');
+  expect(record.kind).toBe('varDefault');
+  expect(record.body).toEqual({ _ref: 'defaults/detail.yaml' });
 });
 
 test('resolveLocalManifest does not throw for required var with default', async () => {
@@ -854,12 +859,14 @@ pages:
 });
 
 describe('operator-generated components sections', () => {
+  // Components are record-ified by the exportables pass (Phase C.5), which
+  // runs after the header parse — drive both, as buildModuleDefs does.
   const resolveLocal = async (context, manifestContent) => {
     const files = [
       { path: '/modules/team-users/module.lowdefy.yaml', content: manifestContent },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-    return resolveLocalManifest({
+    await resolveLocalManifest({
       entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
       resolvedPaths: {
         packageRoot: '/modules/team-users',
@@ -868,6 +875,7 @@ describe('operator-generated components sections', () => {
       },
       context,
     });
+    await recordifyExportables({ entryId: 'team-users', context });
   };
 
   test('throws when the components value is an operator whose content uses _var', async () => {
@@ -981,6 +989,7 @@ components:
       },
       context,
     });
+    await recordifyExportables({ entryId: 'team-users', context });
     expect(context.modules['team-users'].manifest.components[0].id).toBe('from-file');
     const record = getRecord(context, 'team-users:components.0.component');
     expect(record.body).toEqual({ type: 'Box' });

@@ -19,6 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import testContext from '../../test-utils/testContext.js';
+import expectTerminates from '../../test-utils/expectTerminates.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import { resolve, WalkContext } from './walker.js';
 import {
@@ -27,6 +28,7 @@ import {
   getRecord,
   makePlaceholder,
   makeRecordId,
+  resolveDeferred,
 } from './deferredRegistry.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -184,18 +186,161 @@ describe('walker record:<kind> mode', () => {
     expect(resolved.wrapper).toBe(placeholder);
   });
 
-  test('single-value placeholders throw until resolveDeferred lands', async () => {
+  test('single-value placeholders resolve and splice through the walk', async () => {
     const buildContext = createBuildContext();
     createRecord(buildContext, {
       id: 'team-users:vars.title.default',
       kind: 'varDefault',
-      body: 'Default Title',
+      body: { text: 'Default Title' },
       env: {},
     });
     const placeholder = makePlaceholder('team-users:vars.title.default');
     const ctx = createWalkContext({ buildContext });
-    await expect(resolve({ wrapper: placeholder }, ctx)).rejects.toThrow(
-      'cannot be resolved yet'
+    const resolved = await resolve({ wrapper: placeholder }, ctx);
+    expect(resolved.wrapper).toEqual({ text: 'Default Title' });
+    // The spliced value is a clone — the memoized instance stays unshared.
+    const record = getRecord(buildContext, 'team-users:vars.title.default');
+    expect(resolved.wrapper).not.toBe(record.value);
+  });
+});
+
+describe('resolveDeferred and the wait-graph', () => {
+  const guard = (promise) =>
+    expectTerminates(promise, 4000, 'suspected wait-graph cycle-detection regression');
+
+  test('memoizes: the second demand returns the memoized value without re-resolving', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.x',
+      kind: 'varDefault',
+      body: { value: 1 },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    const first = await guard(resolveDeferred(ctx, 'a:vars.x'));
+    const second = await guard(resolveDeferred(ctx, 'a:vars.x'));
+    expect(second).toBe(first);
+    expect(getRecord(buildContext, 'a:vars.x').done).toBe(true);
+  });
+
+  test('coalesces: concurrent demands of one record resolve it once', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.x',
+      kind: 'varDefault',
+      body: { value: 1 },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    const [first, second] = await guard(
+      Promise.all([resolveDeferred(ctx, 'a:vars.x'), resolveDeferred(ctx, 'a:vars.x')])
+    );
+    expect(second).toBe(first);
+  });
+
+  test('acyclic chains resolve through nested placeholders', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.outer',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('a:vars.inner') },
+      env: {},
+    });
+    createRecord(buildContext, {
+      id: 'a:vars.inner',
+      kind: 'varDefault',
+      body: { value: 'leaf' },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    const outer = await guard(resolveDeferred(ctx, 'a:vars.outer'));
+    expect(outer).toEqual({ nested: { value: 'leaf' } });
+  });
+
+  test.each([
+    ['a-first', 'a:vars.x', 'b:vars.y'],
+    ['b-first', 'b:vars.y', 'a:vars.x'],
+  ])('true cycle errors with the named chain (order=%s)', async (_, startId) => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.x',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('b:vars.y') },
+      env: { file: '/a/module.lowdefy.yaml' },
+    });
+    createRecord(buildContext, {
+      id: 'b:vars.y',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('a:vars.x') },
+      env: { file: '/b/module.lowdefy.yaml' },
+    });
+    const ctx = createWalkContext({ buildContext });
+    await expect(guard(resolveDeferred(ctx, startId))).rejects.toThrow(
+      'Circular deferred value dependency:'
+    );
+  });
+
+  test('concurrent mutual demands error, not deadlock', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.x',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('b:vars.y') },
+      env: {},
+    });
+    createRecord(buildContext, {
+      id: 'b:vars.y',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('a:vars.x') },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    await expect(
+      guard(
+        Promise.all([resolveDeferred(ctx, 'a:vars.x'), resolveDeferred(ctx, 'b:vars.y')])
+      )
+    ).rejects.toThrow('Circular deferred value dependency:');
+  });
+
+  test('demands from outside any record add no edges — diamonds are not cycles', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:vars.left',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('c:vars.shared') },
+      env: {},
+    });
+    createRecord(buildContext, {
+      id: 'b:vars.right',
+      kind: 'varDefault',
+      body: { nested: makePlaceholder('c:vars.shared') },
+      env: {},
+    });
+    createRecord(buildContext, {
+      id: 'c:vars.shared',
+      kind: 'varDefault',
+      body: { value: 'leaf' },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    const [left, right] = await guard(
+      Promise.all([resolveDeferred(ctx, 'a:vars.left'), resolveDeferred(ctx, 'b:vars.right')])
+    );
+    expect(left).toEqual({ nested: { value: 'leaf' } });
+    expect(right).toEqual({ nested: { value: 'leaf' } });
+  });
+
+  test('per-consumer kinds cannot be demanded', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'a:components.0.component',
+      kind: 'component',
+      body: { type: 'Box' },
+      env: {},
+    });
+    const ctx = createWalkContext({ buildContext });
+    await expect(resolveDeferred(ctx, 'a:components.0.component')).rejects.toThrow(
+      'resolves per consumer'
     );
   });
 });
@@ -253,5 +398,167 @@ describe('registry serialization round-trip', () => {
     expect(back.body['~l']).toBe(12);
     expect(back.body['~r']).toBe('ref_7');
     expect(Object.keys(back.body)).toEqual(['type', 'properties']);
+  });
+});
+
+describe('varDefault records and the read path', () => {
+  const guard = (promise) =>
+    expectTerminates(promise, 4000, 'suspected var-default cycle-detection regression');
+
+  function makeEntry({ consumerVars = {}, varDefs = {} } = {}) {
+    return {
+      id: 'test-module',
+      source: 'file:modules/test',
+      moduleRoot: '/modules/test',
+      packageRoot: '/modules/test',
+      consumerVars,
+      varDefs,
+      resolvedVarCache: {},
+      moduleDependencies: {},
+    };
+  }
+
+  test('deep-force: consumer values with placeholders at depth read fully concrete', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'test-module:vars.logo',
+      kind: 'varDefault',
+      body: { src: 'logo.png' },
+      env: {},
+    });
+    const moduleEntry = makeEntry({
+      consumerVars: {
+        theme: { logo: makePlaceholder('test-module:vars.logo'), color: 'red' },
+      },
+      varDefs: { theme: {} },
+    });
+    buildContext.modules = { 'test-module': moduleEntry };
+    const ctx = createWalkContext({ buildContext, moduleEntry });
+
+    const resolved = await guard(resolve({ value: { '_module.var': 'theme' } }, ctx));
+
+    expect(resolved.value).toEqual({ logo: { src: 'logo.png' }, color: 'red' });
+    // The cache holds placeholder-free pure data.
+    expect(moduleEntry.resolvedVarCache.theme).toEqual({
+      logo: { src: 'logo.png' },
+      color: 'red',
+    });
+  });
+
+  test('object defaults resolve through their varDefault record', async () => {
+    const buildContext = createBuildContext();
+    createRecord(buildContext, {
+      id: 'test-module:vars.title.default',
+      kind: 'varDefault',
+      body: { text: 'Default Title' },
+      env: { entryId: 'test-module', file: '/modules/test/module.lowdefy.yaml' },
+    });
+    const moduleEntry = makeEntry({
+      varDefs: { title: { default: makePlaceholder('test-module:vars.title.default') } },
+    });
+    buildContext.modules = { 'test-module': moduleEntry };
+    const ctx = createWalkContext({ buildContext, moduleEntry });
+
+    const resolved = await guard(resolve({ value: { '_module.var': 'title' } }, ctx));
+    expect(resolved.value).toEqual({ text: 'Default Title' });
+  });
+
+  test('scalar defaults stay raw in varDefs and resolve without a record', async () => {
+    const buildContext = createBuildContext();
+    const moduleEntry = makeEntry({ varDefs: { title: { default: 'plain' } } });
+    buildContext.modules = { 'test-module': moduleEntry };
+    const ctx = createWalkContext({ buildContext, moduleEntry });
+
+    const resolved = await guard(resolve({ value: { '_module.var': 'title' } }, ctx));
+    expect(resolved.value).toBe('plain');
+  });
+
+  test.each(['a', 'b'])(
+    'cyclic defaults error with the named chain instead of overflowing (demand %s first)',
+    async (first) => {
+      const buildContext = createBuildContext();
+      const moduleEntry = makeEntry({
+        varDefs: {
+          a: { default: makePlaceholder('test-module:vars.a.default') },
+          b: { default: makePlaceholder('test-module:vars.b.default') },
+        },
+      });
+      buildContext.modules = { 'test-module': moduleEntry };
+      createRecord(buildContext, {
+        id: 'test-module:vars.a.default',
+        kind: 'varDefault',
+        body: { '_module.var': 'b' },
+        env: { entryId: 'test-module', file: '/modules/test/module.lowdefy.yaml' },
+      });
+      createRecord(buildContext, {
+        id: 'test-module:vars.b.default',
+        kind: 'varDefault',
+        body: { '_module.var': 'a' },
+        env: { entryId: 'test-module', file: '/modules/test/module.lowdefy.yaml' },
+      });
+      const ctx = createWalkContext({ buildContext, moduleEntry });
+
+      await expect(
+        guard(resolve({ value: { '_module.var': first } }, ctx))
+      ).rejects.toThrow('Circular deferred value dependency:');
+    }
+  );
+});
+
+describe('placeholder leak check', () => {
+  const importCheck = async () => (await import('./deferredRegistry.js')).assertNoPlaceholderLeaks;
+
+  test('passes with placeholders at the expected per-consumer slots', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {
+          components: [{ id: 'badge', component: makePlaceholder('team-users:components.0.component') }],
+          menus: [{ id: 'sidebar', links: makePlaceholder('team-users:menus.0.links') }],
+          pages: [{ id: 'home', type: 'Box' }],
+        },
+        consumerVars: { title: 'concrete' },
+        connections: { db: 'app/db' },
+        varDefs: {
+          title: { default: makePlaceholder('team-users:vars.title.default') },
+          theme: { properties: { logo: { default: makePlaceholder('team-users:vars.theme.properties.logo.default') } } },
+        },
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).not.toThrow();
+  });
+
+  test('a placeholder left in consumerVars fails with id and location', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {},
+        consumerVars: { slot: makePlaceholder('team-users:consumerVars.slot') },
+        connections: {},
+        varDefs: {},
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).toThrow(
+      'Deferred placeholder leaked past the final sweep: ' +
+        '"team-users:consumerVars.slot" at team-users.consumerVars.slot.'
+    );
+  });
+
+  test('a placeholder inside a resolved manifest page fails', async () => {
+    const assertNoPlaceholderLeaks = await importCheck();
+    const context = createBuildContext();
+    context.modules = {
+      'team-users': {
+        manifest: {
+          pages: [{ id: 'home', blocks: [makePlaceholder('team-users:oops')] }],
+        },
+        consumerVars: {},
+        connections: {},
+        varDefs: {},
+      },
+    };
+    expect(() => assertNoPlaceholderLeaks(context)).toThrow('at team-users.manifest.pages.0.blocks.0');
   });
 });

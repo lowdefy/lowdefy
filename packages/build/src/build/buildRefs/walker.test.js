@@ -21,6 +21,7 @@ import { jest } from '@jest/globals';
 import operators from '@lowdefy/operators-js/operators/build';
 import testContext from '../../test-utils/testContext.js';
 import { resolve, WalkContext } from './walker.js';
+import { getRecord } from './deferredRegistry.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -66,7 +67,6 @@ function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
     consumerVars,
     varDefs,
     resolvedVarCache: {},
-    entryConfigState: overrides.entryConfigState ?? 'resolved',
     moduleDependencies: overrides.moduleDependencies ?? {},
     refDef:
       overrides.refDef ?? {
@@ -824,9 +824,10 @@ describe('_module.var lazy resolution', () => {
     expect(result).toEqual({ show_header: true });
   });
 
-  test('preserves _module.var when moduleRoot set but no moduleEntry (Phase 1a)', async () => {
+  test('errors on _module.var in module scope without an entry (module-static positions)', async () => {
+    const buildContext = createBuildContext();
     const ctx = new WalkContext({
-      buildContext: createBuildContext(),
+      buildContext,
       refId: 'test:module.yaml:0',
       sourceRefId: null,
       vars: {},
@@ -840,9 +841,12 @@ describe('_module.var lazy resolution', () => {
       dynamicIdentifiers,
       shouldStop: null,
     });
+    // Manifest headers and export ids walk without a module entry — they are
+    // module-static, so _module.var there is a ConfigError, not a pass-through.
     const node = { '_module.var': 'theme' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'theme' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used in manifest headers or component/menu ids'
+    );
   });
 });
 
@@ -1523,8 +1527,8 @@ describe('module ref JS path resolution (resolver / transformer / .js content)',
   });
 });
 
-describe('deferModuleRefs sentinel', () => {
-  test('resolving a cross-module _ref with deferModuleRefs true returns a sentinel with no enumerable keys', async () => {
+describe('deferModuleRefs record deferral', () => {
+  test('resolving a cross-module _ref with deferModuleRefs true returns an entryRef record placeholder', async () => {
     const buildContext = createBuildContext();
     // Give the refMap an entry for the ref id that will be created
     buildContext.refMap = {};
@@ -1540,32 +1544,40 @@ describe('deferModuleRefs sentinel', () => {
       currentFile: 'lowdefy.yaml',
       refChain: new Set(['lowdefy.yaml']),
       deferModuleRefs: true,
+      entryId: 'consumer-entry',
+      entrySection: 'consumerVars',
       operators,
       env: process.env,
       dynamicIdentifiers,
       shouldStop: null,
     });
 
-    const node = { _ref: { module: 'my-module', component: 'MyComponent' } };
+    const node = { slot: { _ref: { module: 'my-module', component: 'MyComponent' } } };
 
-    const sentinel = await resolve(node, ctx);
+    const resolved = await resolve(node, ctx);
 
-    // No enumerable keys — it must look like {}
-    expect(Object.keys(sentinel)).toEqual([]);
-    // The prepared refDef is stored under the non-enumerable marker
-    expect(sentinel['~deferredModuleRef']).toBeDefined();
-    expect(sentinel['~deferredModuleRef'].module).toBe('my-module');
-    expect(sentinel['~deferredModuleRef'].component).toBe('MyComponent');
-    // Provenance is recorded
-    expect(sentinel['~deferredFrom']).toBe('lowdefy.yaml');
+    // The tree holds an enumerable placeholder; the prepared refDef is the
+    // record body and the env replaces ~deferredFrom with explicit provenance.
+    const id = 'consumer-entry:consumerVars.slot';
+    expect(resolved.slot).toEqual({ '~deferred': id });
+    const record = getRecord(buildContext, id);
+    expect(record.kind).toBe('entryRef');
+    expect(record.body.module).toBe('my-module');
+    expect(record.body.component).toBe('MyComponent');
+    expect(record.env.file).toBe('lowdefy.yaml');
+    expect(record.env.entryId).toBeNull();
+    expect(record.slot).toEqual({
+      entryId: 'consumer-entry',
+      section: 'consumerVars',
+      path: 'slot',
+    });
   });
 
-  test('resolving a file _ref with deferModuleRefs true does not produce a sentinel', async () => {
+  test('resolving a file _ref with deferModuleRefs true does not produce a placeholder', async () => {
     // A file _ref (no module key) must not be deferred — the refDef.module guard
-    // in resolveRef ensures only module refs become sentinels.
-    // We verify this by checking the result is NOT a deferred sentinel object.
+    // in resolveRef ensures only module refs become records.
     // (The actual file resolution may fail due to missing test fixtures; we only
-    //  care about the deferred-sentinel branch not activating.)
+    //  care about the deferral branch not activating.)
     const buildContext = createBuildContext();
     buildContext.refMap = {};
 
@@ -1589,26 +1601,18 @@ describe('deferModuleRefs sentinel', () => {
 
     const node = { _ref: '/app/some-file.yaml' };
     const result = await resolve(node, ctx);
-    // Result must NOT be a deferred sentinel — either resolved content or null
+    // Result must NOT be a placeholder — either resolved content or null
     // (null when getRefContent fails due to missing file in tests).
-    expect(result === null || result['~deferredModuleRef'] === undefined).toBe(true);
+    expect(result === null || result['~deferred'] === undefined).toBe(true);
   });
 
-  test('cloneForResolve preserves ~deferredModuleRef on a sentinel object', async () => {
-    const { cloneForResolve } = await import('./walker.js');
+  test('cloneWithMarkers carries placeholders through unchanged', async () => {
+    const { default: cloneWithMarkers } = await import('./cloneWithMarkers.js');
 
-    const refDef = { module: 'mod', component: 'Comp' };
-    const sentinel = {};
-    Object.defineProperty(sentinel, '~deferredModuleRef', { value: refDef, enumerable: false });
-    Object.defineProperty(sentinel, '~deferredFrom', {
-      value: 'origin.yaml',
-      enumerable: false,
-    });
+    const placeholder = { '~deferred': 'consumer-entry:consumerVars.slot' };
+    const cloned = cloneWithMarkers({ wrapper: placeholder });
 
-    const cloned = cloneForResolve(sentinel);
-
-    expect(Object.keys(cloned)).toEqual([]);
-    expect(cloned['~deferredModuleRef']).toBe(refDef);
-    expect(cloned['~deferredFrom']).toBe('origin.yaml');
+    // Plain enumerable data — the whole point of the record placeholder.
+    expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
   });
 });
