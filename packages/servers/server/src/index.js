@@ -23,8 +23,10 @@ initSentryServer();
 
 // Import after Sentry init so instrumentation observes the module graph.
 const { default: createApp } = await import('./app.js');
+const { default: createLogger } = await import('../lib/server/log/createLogger.js');
 
 const app = createApp();
+const logger = createLogger();
 const port = Number(process.env.PORT ?? 3000);
 
 // Handles /api/websocket upgrades via serve({ websocket }). 256 KiB max frame,
@@ -32,7 +34,7 @@ const port = Number(process.env.PORT ?? 3000);
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
-  console.log(`Lowdefy server listening on http://localhost:${info.port}`);
+  logger.info(`Lowdefy server listening on http://localhost:${info.port}`);
 });
 
 function shutdown() {
