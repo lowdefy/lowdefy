@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 function authNotConfigured() {
   throw new Error('Auth not configured.');
 }
@@ -26,6 +24,7 @@ function AuthNotConfigured({ authConfig, children }) {
     user: null,
     getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
+    impersonateUser: authNotConfigured,
     setActiveOrganization: authNotConfigured,
     signInEmail: authNotConfigured,
     signInMagicLink: authNotConfigured,
@@ -33,6 +32,7 @@ function AuthNotConfigured({ authConfig, children }) {
     signInSocial: authNotConfigured,
     signOut: authNotConfigured,
     signUpEmail: authNotConfigured,
+    stopImpersonating: authNotConfigured,
   };
 
   return children(auth);

@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useRef } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
