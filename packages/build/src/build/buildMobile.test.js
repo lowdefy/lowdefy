@@ -16,16 +16,23 @@
 
 import buildMobile from './buildMobile.js';
 
-test('buildMobile defaults mobile to an empty normalized object when not defined', () => {
+test('buildMobile defaults mobile to an empty unconfigured object when not defined', () => {
   const components = {};
   buildMobile({ components });
   expect(components.mobile).toEqual({
+    configured: false,
     config: {},
     theme: {},
     capacitor: {},
     pages: [],
     menus: [],
   });
+});
+
+test('buildMobile marks mobile as configured when the key is defined', () => {
+  const components = { mobile: {} };
+  buildMobile({ components });
+  expect(components.mobile.configured).toBe(true);
 });
 
 test('buildMobile throws when mobile is not an object', () => {

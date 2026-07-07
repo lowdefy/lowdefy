@@ -37,6 +37,10 @@ function validateThemeVariables({ theme, configKey }) {
 }
 
 function buildMobile({ components }) {
+  // Configured means the app has a mobile key — the mobile bundle artifacts
+  // (plugin imports, theme) are only populated for configured apps, while
+  // config.json and menus.json are always written for /api/root?target=mobile.
+  const configured = !type.isNone(components.mobile);
   if (type.isNone(components.mobile)) {
     components.mobile = {};
   }
@@ -46,6 +50,7 @@ function buildMobile({ components }) {
     });
   }
   const mobile = components.mobile;
+  mobile.configured = configured;
   const configKey = mobile['~k'];
 
   // Reserved for the app-shell design — reject now so configs stay forward-compatible.

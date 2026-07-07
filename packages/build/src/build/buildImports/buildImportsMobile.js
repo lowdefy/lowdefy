@@ -29,6 +29,17 @@ function buildImportClass(types) {
 // Builds the import lists for the mobile client bundle — blocks, actions,
 // client operators, and icons only; everything else is served by the server.
 function buildImportsMobile({ components, context }) {
+  // Apps without a mobile key never build the mobile bundle — write empty
+  // import lists so their mobile plugin artifacts stay contentless.
+  if (components.mobile?.configured !== true) {
+    components.importsMobile = {
+      actions: [],
+      blocks: [],
+      icons: [],
+      operators: { client: [] },
+    };
+    return;
+  }
   let actions;
   let blocks;
   let operatorsClient;

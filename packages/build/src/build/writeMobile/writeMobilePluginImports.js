@@ -59,11 +59,12 @@ async function writeMobilePluginImports({ components, context }) {
   );
 
   // Same client jsMap as the web bundle — _js functions are keyed globally,
-  // so mobile pages' functions are included; unused entries are inert.
+  // so mobile pages' functions are included; unused entries are inert. Apps
+  // without a mobile key get an empty map instead of a web duplicate.
   await context.writeBuildArtifact(
     'mobile/plugins/operators/clientJsMap.js',
     generateJsFile({
-      map: context.jsMap.client,
+      map: components.mobile?.configured === true ? context.jsMap.client : {},
       functionPrototype: `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`,
     })
   );

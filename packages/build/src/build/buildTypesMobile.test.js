@@ -60,7 +60,7 @@ const typesMapMobile = {
 
 test('buildTypesMobile force-adds Message, basic and loader blocks', () => {
   const context = testContext({ typesMapMobile });
-  const components = {};
+  const components = { mobile: { configured: true } };
   buildTypesMobile({ components, context });
   expect(components.typesMobile.blocks.Message).toEqual({
     originalTypeName: 'Message',
@@ -78,7 +78,7 @@ test('buildTypesMobile resolves counted mobile blocks against the mobile map', (
   context.typeCountersMobile.blocks.increment('NavBar');
   context.typeCountersMobile.blocks.increment('Button');
   context.typeCountersMobile.actions.increment('SetState');
-  const components = {};
+  const components = { mobile: { configured: true } };
   buildTypesMobile({ components, context });
   expect(components.typesMobile.blocks.NavBar.package).toEqual('@lowdefy/blocks-antd-mobile');
   expect(components.typesMobile.blocks.Button.count).toEqual(1);
@@ -88,7 +88,7 @@ test('buildTypesMobile resolves counted mobile blocks against the mobile map', (
 test('buildTypesMobile throws when a counted block type is not in the mobile map', () => {
   const context = testContext({ typesMapMobile });
   context.typeCountersMobile.blocks.increment('AgGridAlpine');
-  const components = {};
+  const components = { mobile: { configured: true } };
   expect(() => buildTypesMobile({ components, context })).toThrow(
     'Block type "AgGridAlpine" was used but is not defined.'
   );
@@ -97,7 +97,18 @@ test('buildTypesMobile throws when a counted block type is not in the mobile map
 test('buildTypesMobile does not include web-counted blocks', () => {
   const context = testContext({ typesMapMobile });
   context.typeCounters.blocks.increment('Title');
-  const components = {};
+  const components = { mobile: { configured: true } };
   buildTypesMobile({ components, context });
   expect(components.typesMobile.blocks.Title).toBeUndefined();
+});
+
+test('buildTypesMobile skips mandatory types when mobile is not configured', () => {
+  const context = testContext({ typesMapMobile });
+  const components = { mobile: { configured: false } };
+  buildTypesMobile({ components, context });
+  expect(components.typesMobile).toEqual({
+    actions: {},
+    blocks: {},
+    operators: { client: {} },
+  });
 });

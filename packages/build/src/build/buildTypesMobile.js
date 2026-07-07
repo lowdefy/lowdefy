@@ -25,16 +25,20 @@ import buildTypeClass from '../utils/buildTypeClass.js';
 function buildTypesMobile({ components, context }) {
   const { typeCountersMobile } = context;
 
-  // Add Mandatory Types
-  // Add operators used by form validation
-  typeCountersMobile.operators.client.increment('_not');
-  typeCountersMobile.operators.client.increment('_type');
-  // Add loaders and basic
-  basicTypes.blocks.forEach((block) => typeCountersMobile.blocks.increment(block));
-  loaderTypes.blocks.forEach((block) => typeCountersMobile.blocks.increment(block));
-  // Used for DisplayMessage in @lowdefy/client — resolves to the Toast-based
-  // Message block in @lowdefy/blocks-antd-mobile.
-  typeCountersMobile.blocks.increment('Message');
+  // Mandatory types only apply to apps with a mobile key — the mobile bundle
+  // is never built for other apps, and force-adding here would bloat every
+  // app's mobile plugin artifacts with the full block schema set.
+  if (components.mobile?.configured === true) {
+    // Add operators used by form validation
+    typeCountersMobile.operators.client.increment('_not');
+    typeCountersMobile.operators.client.increment('_type');
+    // Add loaders and basic
+    basicTypes.blocks.forEach((block) => typeCountersMobile.blocks.increment(block));
+    loaderTypes.blocks.forEach((block) => typeCountersMobile.blocks.increment(block));
+    // Used for DisplayMessage in @lowdefy/client — resolves to the Toast-based
+    // Message block in @lowdefy/blocks-antd-mobile.
+    typeCountersMobile.blocks.increment('Message');
+  }
 
   components.typesMobile = {
     actions: {},
