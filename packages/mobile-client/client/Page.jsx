@@ -15,6 +15,7 @@
 */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { GenIcon } from 'react-icons/lib';
 
 import Client from '@lowdefy/client/Client.js';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
@@ -30,6 +31,23 @@ import jsMap from 'build/mobile/plugins/operators/clientJsMap.js';
 
 import NotFound from './NotFound.jsx';
 
+// Dev-only: JIT page builds can add client _js entries and icons after the
+// skeleton build — fetch the module text the dev server serves and evaluate
+// it, mirroring the web dev client.
+async function fetchDevModule(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return {};
+    const text = await res.text();
+    const fn = new Function('exports', text.replace('export default', 'exports.default ='));
+    const mod = {};
+    fn(mod);
+    return mod.default ?? {};
+  } catch {
+    return {};
+  }
+}
+
 // Mobile mirror of the web Page.jsx — no embedded config: every page,
 // including the first, is fetched from /api/page/*. Routing stays
 // origin-local inside the webview while API calls go to apiBase.
@@ -37,6 +55,7 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
   const [pageConfig, setPageConfig] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [buildError, setBuildError] = useState(null);
+  const [jsEntries, setJsEntries] = useState(null);
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -79,6 +98,23 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
         if (nextPageConfig.target !== 'mobile') {
           setNotFound(true);
           return;
+        }
+        // JIT-discovered client _js functions and icons are exposed through
+        // dev-only routes; merge them like the web dev client does. The
+        // whole branch is compiled out of production bundles.
+        if (import.meta.env.DEV) {
+          const [entries, dynamicIcons] = await Promise.all([
+            fetchDevModule(`${apiBase}/api/js/client`),
+            fetchDevModule(`${apiBase}/api/icons/dynamic`),
+          ]);
+          // createIcon looks up icons[name] on every render from the captured
+          // reference, so mutating the imported object publishes new icons.
+          Object.entries(dynamicIcons).forEach(([name, data]) => {
+            if (!icons[name]) {
+              icons[name] = GenIcon(data);
+            }
+          });
+          setJsEntries(entries);
         }
         setBuildError(null);
         setNotFound(false);
@@ -128,7 +164,7 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
         pageConfig,
         rootConfig,
       }}
-      jsMap={jsMap}
+      jsMap={jsEntries ? { ...jsMap, ...jsEntries } : jsMap}
       lowdefy={lowdefy}
       router={router}
       types={{

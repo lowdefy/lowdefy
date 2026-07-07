@@ -16,9 +16,10 @@
 
 import enUS from 'antd-mobile/es/locales/en-US';
 
-// antd-mobile locale packs are small string maps — load the supported set
-// lazily and fall back to en-US.
-const loaders = {
+// Loader map for @lowdefy/client's useLocale — keyed by the antd-mobile
+// locale codes; unsupported active locales fall back to en-US in App.jsx.
+// en-US is bundled eagerly as the synchronous initial value and fallback.
+const antdMobileLocaleLoaders = {
   'da-DK': () => import('antd-mobile/es/locales/da-DK'),
   'de-DE': () => import('antd-mobile/es/locales/de-DE'),
   'en-US': () => Promise.resolve({ default: enUS }),
@@ -40,17 +41,6 @@ const loaders = {
   'zh-TW': () => import('antd-mobile/es/locales/zh-TW'),
 };
 
-async function getAntdMobileLocale(localeCode) {
-  const loader = loaders[localeCode];
-  if (!loader) return enUS;
-  try {
-    const mod = await loader();
-    return mod.default ?? enUS;
-  } catch {
-    return enUS;
-  }
-}
-
 export { enUS };
 
-export default getAntdMobileLocale;
+export default antdMobileLocaleLoaders;

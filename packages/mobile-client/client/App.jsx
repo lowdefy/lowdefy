@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { ConfigProvider } from 'antd-mobile';
 import { ErrorBoundary } from '@lowdefy/block-utils';
+// Direct file import — the package index also exports useDarkMode, which
+// would pull antd into the mobile bundle graph.
+import useLocale from '@lowdefy/client/useLocale.js';
 
+import antdMobileLocaleLoaders, { enUS } from './antdMobileLocales.js';
 import Auth from './auth/Auth.jsx';
-import getAntdMobileLocale, { enUS } from './getAntdMobileLocale.js';
 import Page from './Page.jsx';
 import useMobileDarkMode from './useMobileDarkMode.js';
 
@@ -33,15 +36,14 @@ function App({ apiBase, rootConfig, session }) {
   // only resolves and stamps the dark mode attribute on <html>.
   useMobileDarkMode({ configDarkMode: rootConfig?.theme?.darkMode });
 
-  const [locale, setLocale] = useState(enUS);
-  const localeCode = rootConfig?.i18n?.defaultLocale;
-  useEffect(() => {
-    if (localeCode) {
-      getAntdMobileLocale(localeCode).then(setLocale);
-    }
-  }, [localeCode]);
+  // Same resolve order as web (stored preference > browser languages >
+  // defaultLocale) via the shared hook, loading antd-mobile locale packs.
+  const { active: activeLocale, antdLocale } = useLocale({
+    i18n: rootConfig?.i18n,
+    antdLocaleLoaders: antdMobileLocaleLoaders,
+  });
   if (rootConfig?.i18n?.defaultLocale) {
-    lowdefyRef.current.i18n = { ...rootConfig.i18n, active: localeCode };
+    lowdefyRef.current.i18n = { ...rootConfig.i18n, active: activeLocale };
   }
 
   const handleError = useCallback((error) => {
@@ -53,7 +55,7 @@ function App({ apiBase, rootConfig, session }) {
   }, []);
 
   return (
-    <ConfigProvider locale={locale}>
+    <ConfigProvider locale={antdLocale ?? enUS}>
       {/* Safe-area chrome — status bar / notch / home indicator insets. */}
       <div
         style={{
