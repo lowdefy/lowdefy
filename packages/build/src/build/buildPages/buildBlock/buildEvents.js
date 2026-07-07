@@ -27,6 +27,25 @@ const BROWSER_DEFAULT_SHORTCUTS = new Set([
   'mod+l',
 ]);
 
+const CONTROL_KEYS = [':if', ':switch', ':return'];
+const ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS = ['id', 'skip', 'messages'];
+const CONTROL_ALLOWED_KEYS = {
+  ':if': [':if', ':then', ':else'],
+  ':return': [':return'],
+  ':switch': [':switch', ':default'],
+};
+const CASE_ALLOWED_KEYS = [':case', ':then'];
+
+// '~'-prefixed keys are build meta markers (~k, ~r, ~l, ~ignoreBuildChecks) and
+// never user config - tolerate them by prefix, as the rest of the build does.
+function isMetaKey(key) {
+  return key.startsWith('~');
+}
+
+function isControl(item) {
+  return type.isObject(item) && CONTROL_KEYS.some((key) => key in item);
+}
+
 function checkAction(
   action,
   {
@@ -141,6 +160,115 @@ function checkAction(
   }
 }
 
+function checkBranchList({ list, listName, configKey }, ctx) {
+  const { blockId, eventId, pageId } = ctx;
+  if (!type.isArray(list)) {
+    throw new ConfigError(
+      `Control "${listName}" must be an array on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      { received: list, configKey }
+    );
+  }
+  checkActionList(list, ctx);
+}
+
+function checkControl(control, ctx) {
+  const { blockId, eventId, pageId } = ctx;
+  const configKey = control['~k'];
+  const controlKeys = CONTROL_KEYS.filter((key) => key in control);
+  if (controlKeys.length > 1) {
+    const keyList = controlKeys.map((key) => `"${key}"`).join(', ');
+    throw new ConfigError(
+      `Control has more than one control key (${keyList}) on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      { received: controlKeys, configKey }
+    );
+  }
+  const [controlKey] = controlKeys;
+  const invalidKeys = Object.keys(control).filter(
+    (key) => !CONTROL_ALLOWED_KEYS[controlKey].includes(key) && !isMetaKey(key)
+  );
+  if (invalidKeys.length > 0) {
+    // Action keys do nothing on a control - call out the likely mistake directly.
+    if (ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS.includes(invalidKeys[0])) {
+      throw new ConfigError(
+        `Control "${controlKey}" can not have action property "${invalidKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+        { received: invalidKeys, configKey }
+      );
+    }
+    throw new ConfigError(
+      `Control "${controlKey}" has invalid key "${invalidKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      { received: invalidKeys, configKey }
+    );
+  }
+  if (controlKey === ':if') {
+    if (type.isNone(control[':then'])) {
+      throw new ConfigError(
+        `Control ":if" requires a ":then" list on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+        { configKey }
+      );
+    }
+    checkBranchList({ list: control[':then'], listName: ':then', configKey }, ctx);
+    if (!type.isNone(control[':else'])) {
+      checkBranchList({ list: control[':else'], listName: ':else', configKey }, ctx);
+    }
+  }
+  if (controlKey === ':switch') {
+    if (!type.isArray(control[':switch'])) {
+      throw new ConfigError(
+        `Control ":switch" must be an array of case objects on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+        { received: control[':switch'], configKey }
+      );
+    }
+    control[':switch'].forEach((caseObject) => {
+      if (!type.isObject(caseObject)) {
+        throw new ConfigError(
+          `Control ":switch" case must be an object on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+          { received: caseObject, configKey }
+        );
+      }
+      const caseConfigKey = caseObject['~k'] ?? configKey;
+      if (!(':case' in caseObject)) {
+        throw new ConfigError(
+          `Control ":switch" case requires a ":case" condition on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+          { configKey: caseConfigKey }
+        );
+      }
+      if (type.isNone(caseObject[':then'])) {
+        throw new ConfigError(
+          `Control ":case" requires a ":then" list on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+          { configKey: caseConfigKey }
+        );
+      }
+      const invalidCaseKeys = Object.keys(caseObject).filter(
+        (key) => !CASE_ALLOWED_KEYS.includes(key) && !isMetaKey(key)
+      );
+      if (invalidCaseKeys.length > 0) {
+        throw new ConfigError(
+          `Control ":switch" case has invalid key "${invalidCaseKeys[0]}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+          { received: invalidCaseKeys, configKey: caseConfigKey }
+        );
+      }
+      checkBranchList(
+        { list: caseObject[':then'], listName: ':then', configKey: caseConfigKey },
+        ctx
+      );
+    });
+    if (!type.isNone(control[':default'])) {
+      checkBranchList({ list: control[':default'], listName: ':default', configKey }, ctx);
+    }
+  }
+  // ':return' takes a value, not a list - nothing more to validate.
+}
+
+function checkActionList(list, ctx) {
+  list.forEach((item) => {
+    if (isControl(item)) {
+      checkControl(item, ctx);
+    } else {
+      checkAction(item, ctx);
+    }
+  });
+}
+
 function buildEvents(block, pageContext) {
   if (block.events) {
     Object.keys(block.events).map((key) => {
@@ -179,32 +307,19 @@ function buildEvents(block, pageContext) {
         message:
           'Duplicate actionId "{{ id }}" on event "{{ eventId }}" on block "{{ blockId }}" on page "{{ pageId }}".',
       });
-      block.events[key].try.map((action) =>
-        checkAction(action, {
-          eventId: key,
-          blockId: block.blockId,
-          callApiActionRefs: pageContext.callApiActionRefs,
-          typeCounters: pageContext.typeCounters,
-          pageId: pageContext.pageId,
-          linkActionRefs: pageContext.linkActionRefs,
-          requestActionRefs: pageContext.requestActionRefs,
-          websocketActionRefs: pageContext.websocketActionRefs,
-          checkDuplicateActionId,
-        })
-      );
-      block.events[key].catch.map((action) =>
-        checkAction(action, {
-          eventId: key,
-          blockId: block.blockId,
-          callApiActionRefs: pageContext.callApiActionRefs,
-          typeCounters: pageContext.typeCounters,
-          pageId: pageContext.pageId,
-          linkActionRefs: pageContext.linkActionRefs,
-          requestActionRefs: pageContext.requestActionRefs,
-          websocketActionRefs: pageContext.websocketActionRefs,
-          checkDuplicateActionId,
-        })
-      );
+      const actionContext = {
+        eventId: key,
+        blockId: block.blockId,
+        callApiActionRefs: pageContext.callApiActionRefs,
+        typeCounters: pageContext.typeCounters,
+        pageId: pageContext.pageId,
+        linkActionRefs: pageContext.linkActionRefs,
+        requestActionRefs: pageContext.requestActionRefs,
+        websocketActionRefs: pageContext.websocketActionRefs,
+        checkDuplicateActionId,
+      };
+      checkActionList(block.events[key].try, actionContext);
+      checkActionList(block.events[key].catch, actionContext);
 
       // Validate shortcut strings and collect refs for duplicate detection
       if (type.isObject(block.events[key]) && !type.isNone(block.events[key].shortcut)) {

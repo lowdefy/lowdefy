@@ -41,6 +41,8 @@ _ref:
       skipped: boolean,
       type: string,
       ```
+
+      Actions the event does not execute for a control-flow reason — actions in an untaken [`:if`](/:if) branch, in an unmatched [`:switch`](/:switch) case, or after a [`:return`](/:return) — are recorded as `skipped: true`, the same as actions skipped by their own `skip` field. Their operators are not evaluated, and `_actions` lookups on them return the skipped response object. Skipped entries are recorded in config order: when a branch executes, untaken branches written above it (an untaken `:then` when `:else` runs, or already-unmatched earlier cases) are recorded and readable, while branches below it are only recorded once the control completes. Actions after the control can read all of them.
     arguments: |
       ###### string
       If the `_actions` operator is called with a string equal to a preceding action id in the same event list, the action response object returned. If a string is passed which does not match preceding action id in the same event list, `null` is returned. Dot notation is supported.
