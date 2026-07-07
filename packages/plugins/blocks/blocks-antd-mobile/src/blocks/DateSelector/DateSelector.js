@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import FieldWrapper from '../../FieldWrapper.js';
+import PickerTrigger from '../../PickerTrigger.js';
 
 function formatValue(value, precision, locale) {
   if (!type.isDate(value)) return null;
@@ -53,27 +54,15 @@ function DateSelector({
       styles={styles}
       validation={validation}
     >
-      <div
-        id={`${blockId}_input`}
-        role="button"
-        className={classNames.element}
-        style={{
-          border: '1px solid var(--adm-color-border)',
-          borderRadius: 'var(--adm-radius-s)',
-          padding: '6px 10px',
-          minHeight: 36,
-          color: formatted ? 'var(--adm-color-text)' : 'var(--adm-color-light)',
-          opacity: properties.disabled ? 0.4 : 1,
-          ...styles.element,
-        }}
-        onClick={() => {
-          if (!properties.disabled && !loading) {
-            setVisible(true);
-          }
-        }}
-      >
-        {formatted ?? (properties.placeholder ?? 'Select date')}
-      </div>
+      <PickerTrigger
+        blockId={blockId}
+        classNames={classNames}
+        disabled={properties.disabled || loading}
+        hasValue={Boolean(formatted)}
+        label={formatted ?? (properties.placeholder ?? 'Select date')}
+        onOpen={() => setVisible(true)}
+        styles={styles}
+      />
       <DatePicker
         cancelText={properties.cancelText}
         confirmText={properties.confirmText}

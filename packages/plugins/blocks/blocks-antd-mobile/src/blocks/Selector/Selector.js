@@ -21,6 +21,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import FieldWrapper from '../../FieldWrapper.js';
 import getOptions from '../../getOptions.js';
+import PickerTrigger from '../../PickerTrigger.js';
 
 function Selector({
   blockId,
@@ -46,27 +47,15 @@ function Selector({
       styles={styles}
       validation={validation}
     >
-      <div
-        id={`${blockId}_input`}
-        role="button"
-        className={classNames.element}
-        style={{
-          border: '1px solid var(--adm-color-border)',
-          borderRadius: 'var(--adm-radius-s)',
-          padding: '6px 10px',
-          minHeight: 36,
-          color: selected ? 'var(--adm-color-text)' : 'var(--adm-color-light)',
-          opacity: properties.disabled ? 0.4 : 1,
-          ...styles.element,
-        }}
-        onClick={() => {
-          if (!properties.disabled && !loading) {
-            setVisible(true);
-          }
-        }}
-      >
-        {selected ? selected.label : (properties.placeholder ?? 'Select')}
-      </div>
+      <PickerTrigger
+        blockId={blockId}
+        classNames={classNames}
+        disabled={properties.disabled || loading}
+        hasValue={Boolean(selected)}
+        label={selected ? selected.label : (properties.placeholder ?? 'Select')}
+        onOpen={() => setVisible(true)}
+        styles={styles}
+      />
       <Picker
         columns={[options]}
         cancelText={properties.cancelText}
