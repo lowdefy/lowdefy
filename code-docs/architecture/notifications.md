@@ -67,7 +67,7 @@ For one call the handler:
 
 1. Evaluates `step.properties` → `{ notificationId, data, serverUrl, landingPage, recordId }`. Validates `notificationId` is a string and `data` is a single object (arrays error, pointing at `:for`). `serverUrl` is trailing-slash-trimmed; `landingPage`/`recordId` are optional strings.
 2. Loads the `notifications/<id>.json` config (`getNotificationConfig.js`) and looks up the template in `context.notifications`.
-3. Merges the theme (`{ ...app.email, ...config.theme }`).
+3. Merges the theme (`{ ...app.email, ...config.theme }`) and resolves a relative `theme.logo` (`resolveThemeLogo.js`) — a `/path` logo becomes `<serverUrl><basePath><path>`; absolute and protocol-relative (`//`) URLs pass through; a relative logo with no `serverUrl` is dropped (EmailLayout falls back to the `companyName` text header). Resolution runs after the merge, so per-notification `theme.logo` overrides also resolve. Note `app.email` arrives with build-time defaults baked in: `buildApp` derives `companyName` from the root `name:` and `primaryColor` from `theme.antd.token.colorPrimary` when unset.
 4. Resolves links (`resolveNotificationLinks.js`) — `{ pageId, urlQuery }` link objects in `data.links` and in the template's declared `dataKeys` arrays become URLs. With `landingPage` set they route through `<serverUrl><basePath><landingPage>?_id=<recordId>&option=<dotpath>`; otherwise direct page URLs. Absolute URL strings pass through. Guards: links present with no `serverUrl` errors; `landingPage` set with links but no `recordId` errors.
 5. Interpolates the template properties against the resolved item (`interpolateProperties`), validates against the template's `schema`, and renders to `{ html, text }` (`renderEmail`).
 6. Adds the step result `{ subject, title, preview, html, text, data }` — `title` falls back to `subject`; `preview` is derived (`derivePreview.js`) from the template `preview` or a markdown-stripped message excerpt; `data` is the link-resolved item.
@@ -83,14 +83,14 @@ The surrounding routine composes the pipeline: mint a record id (`_uuid`) before
 
 ## Package Responsibilities
 
-| Package                      | Role in notification rendering                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `@lowdefy/build`             | Builds the `notifications:` section, the `RenderNotification` step, the type category      |
-| `@lowdefy/api`               | Runs the `RenderNotification` step (interpolate → validate → resolve links → render)       |
-| `@lowdefy/email-templates`   | `renderEmail`, injection-safe `interpolateProperties`, `resolveLink`, the three templates  |
-| `@lowdefy/connection-smtp`   | `SMTP` connection, `SMTPMailSend` request, delivery filter (used by the app-composed send) |
-| `@lowdefy/connection-sendgrid` | Same delivery filter + `replyTo`; the SendGrid alternative for sending                   |
-| `@lowdefy/server(-dev)`      | Places the template registry + render helpers on the api context                           |
+| Package                        | Role in notification rendering                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| `@lowdefy/build`               | Builds the `notifications:` section, the `RenderNotification` step, the type category      |
+| `@lowdefy/api`                 | Runs the `RenderNotification` step (interpolate → validate → resolve links → render)       |
+| `@lowdefy/email-templates`     | `renderEmail`, injection-safe `interpolateProperties`, `resolveLink`, the three templates  |
+| `@lowdefy/connection-smtp`     | `SMTP` connection, `SMTPMailSend` request, delivery filter (used by the app-composed send) |
+| `@lowdefy/connection-sendgrid` | Same delivery filter + `replyTo`; the SendGrid alternative for sending                     |
+| `@lowdefy/server(-dev)`        | Places the template registry + render helpers on the api context                           |
 
 ## Data Structures
 
@@ -205,6 +205,7 @@ All `RenderNotification` failures are `ConfigError`s anchored to the step or not
 - `packages/api/src/routes/endpoints/runRoutine.js` — dispatches the `notification:` prefix
 - `packages/api/src/routes/notifications/getNotificationConfig.js` — loads the config artifact
 - `packages/api/src/routes/notifications/resolveNotificationLinks.js` — link → URL composition
+- `packages/api/src/routes/notifications/resolveThemeLogo.js` — relative theme logo → URL resolution
 - `packages/api/src/routes/notifications/derivePreview.js` — preview text derivation
 
 ### Templates
