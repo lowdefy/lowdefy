@@ -1607,6 +1607,22 @@ export default {
             },
           ],
         },
+        async: {
+          type: 'boolean',
+          description:
+            'Run the endpoint routine in the background. The endpoint returns { accepted: true } immediately and the routine runs after the response (kept alive via the platform request context on Vercel fluid compute, still bounded by the function maxDuration); the outcome is observable only through logs and whatever the routine writes.',
+          errorMessage: {
+            type: 'Api endpoint "async" should be a boolean.',
+          },
+        },
+        webhook: {
+          type: 'boolean',
+          description:
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
+          errorMessage: {
+            type: 'Api endpoint "webhook" should be a boolean.',
+          },
+        },
         schedules: {
           type: 'array',
           items: {
@@ -2435,6 +2451,33 @@ export default {
           description: 'App base path to apply to all routes. Base path must start with "/".',
           errorMessage: {
             type: 'App "config.basePath" should be a string.',
+          },
+        },
+        vercel: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Vercel deployment function settings, applied by the CLI vercelOutput assembly.',
+          errorMessage: {
+            type: 'App "config.vercel" should be an object.',
+          },
+          properties: {
+            maxDuration: {
+              type: 'number',
+              minimum: 1,
+              description:
+                'Maximum function execution time in seconds for the deployed serverless function. Defaults to 60. Plan limits apply (Vercel rejects over-limit values at deploy).',
+              errorMessage: {
+                type: 'App "config.vercel.maxDuration" should be a number.',
+              },
+            },
+            memory: {
+              type: 'number',
+              description: 'Function memory in MB. Omit to use the Vercel default.',
+              errorMessage: {
+                type: 'App "config.vercel.memory" should be a number.',
+              },
+            },
           },
         },
         requestTimeout: {

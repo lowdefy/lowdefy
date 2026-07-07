@@ -17,55 +17,49 @@
 import { serializer } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-import authorizeApiEndpoint from './authorizeApiEndpoint.js';
+import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
-import scheduleBackground from './scheduleBackground.js';
 
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
+// Runs an endpoint declared `webhook: true` — a third-party webhook receiver
+// (SNS, Event Grid, Stripe, ...) served on the standard /api/endpoints route,
+// but taking the request RAW: bodies are the caller's own format, not
+// Lowdefy's { payload } envelope, so the routine receives
+// { body, query, headers } as its payload and its return value is sent back
+// verbatim (handshakes require exact response shapes). Only endpoints that
+// opt in are runnable here (a missing flag reads as a missing endpoint — no
+// probing). The transport is public by design: authenticating the caller
+// (shared-secret query param, signature header) is the webhook routine's own
+// first step. Executes as a system context.
+async function runWebhookEndpoint(context, { endpointId, body, query, headers }) {
   const { logger } = context;
 
-  context.blockId = blockId;
   context.endpointId = endpointId;
-  context.pageId = pageId;
   context.evaluateOperators = createEvaluateOperators(context);
 
-  logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
+  logger.debug({ event: 'debug_webhook_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  // Block HTTP access to InternalApi endpoints — same error as missing endpoint
-  if (endpointConfig.type === 'InternalApi') {
+  if (endpointConfig.webhook !== true) {
     const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }
 
-  authorizeApiEndpoint(context, { endpointConfig });
+  // Force a system context regardless of any session cookie sent with the request.
+  context.session = undefined;
+  context.user = undefined;
+  context.authorize = createAuthorize({ session: undefined });
 
   const routineContext = {
     steps: {},
-    payload: serializer.deserialize(payload),
+    payload: { body: body ?? null, query: query ?? {}, headers: headers ?? {} },
     arrayIndices: [],
     items: {},
     state: {},
     endpointDepth: 0,
   };
-
-  // async: true — acknowledge now, run the routine in the background.
-  // Auth was already checked above; the outcome lands in logs (scheduleBackground)
-  // and in whatever the routine itself records.
-  if (endpointConfig.async === true) {
-    scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
-      runRoutine(context, routineContext, { routine: endpointConfig.routine })
-    );
-    return {
-      error: null,
-      response: serializer.serialize({ accepted: true }),
-      status: 'accepted',
-      success: true,
-    };
-  }
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
@@ -81,4 +75,4 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   };
 }
 
-export default callEndpoint;
+export default runWebhookEndpoint;

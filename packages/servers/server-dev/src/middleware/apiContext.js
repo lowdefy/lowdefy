@@ -63,6 +63,9 @@ function apiContext() {
       connections,
       fileCache,
       headers: c.req.header(),
+      // The deployment's own origin — detached endpoint calls loop back
+      // through it so the target runs in its own function invocation.
+      origin: new URL(c.req.url).origin,
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,

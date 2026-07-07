@@ -64,6 +64,9 @@ function apiContext() {
       connections,
       fileCache,
       headers: c.req.header(),
+      // The deployment's own origin — detached endpoint calls loop back
+      // through it so the target runs in its own function invocation.
+      origin: new URL(c.req.url).origin,
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,
@@ -78,6 +81,11 @@ function apiContext() {
       },
       secrets,
       steps,
+      // On Vercel (fluid compute) the platform request context keeps the
+      // invocation alive until waitUntil promises settle; on long-lived hosts
+      // the lookup resolves to nothing and background promises just run.
+      waitUntil: (promise) =>
+        globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(promise),
       websockets,
     };
     context.handleError = createHandleError({ context });
