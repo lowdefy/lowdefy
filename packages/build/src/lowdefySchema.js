@@ -1009,8 +1009,14 @@ export default {
             },
             endpoints: {
               type: 'array',
+              // An empty array would silently fall back to BetterAuth's
+              // static default set inside the plugin - refuse the middle:
+              // name the endpoints or omit the key for the computed set.
+              minItems: 1,
               errorMessage: {
                 type: 'Auth "captcha.endpoints" should be an array of strings.',
+                minItems:
+                  'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.',
               },
               items: {
                 type: 'string',

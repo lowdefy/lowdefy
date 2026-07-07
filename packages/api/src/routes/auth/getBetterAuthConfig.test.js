@@ -835,3 +835,62 @@ test('does not push the phone-number plugin when phoneNumber is not enabled', ()
   });
   expect(options.plugins.some((p) => p.id === 'phone-number')).toBe(false);
 });
+
+test('pushes the captcha plugin when captcha is enabled, resolving secretKey via _secret', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      captcha: {
+        enabled: true,
+        provider: 'cloudflare-turnstile',
+        siteKey: '0x4AAAAAAA',
+        secretKey: { _secret: 'TURNSTILE_SECRET_KEY' },
+      },
+    }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: { ...baseSecrets, TURNSTILE_SECRET_KEY: 'turnstile-secret-value' },
+  });
+  const captchaPlugin = options.plugins.find((p) => p.id === 'captcha');
+  expect(captchaPlugin).toBeDefined();
+  expect(captchaPlugin.options.secretKey).toBe('turnstile-secret-value');
+  expect(captchaPlugin.options.endpoints).toEqual([
+    '/sign-up/email',
+    '/sign-in/email',
+    '/request-password-reset',
+    '/send-verification-email',
+  ]);
+});
+
+test('throws ConfigError when captcha.secretKey does not resolve to a string', () => {
+  expect(() =>
+    getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        captcha: {
+          enabled: true,
+          provider: 'cloudflare-turnstile',
+          siteKey: '0x4AAAAAAA',
+          secretKey: null,
+        },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    })
+  ).toThrow('Auth "captcha.secretKey" did not resolve to a string.');
+});
+
+test('does not push the captcha plugin when captcha is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'captcha')).toBe(false);
+});

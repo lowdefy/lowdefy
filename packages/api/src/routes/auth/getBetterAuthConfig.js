@@ -22,6 +22,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import buildAdminPlugin from './buildAdminPlugin.js';
+import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
@@ -275,6 +276,12 @@ function getBetterAuthConfig({
         schema: { passkey: { modelName: modelNames.passkey } },
       })
     );
+  }
+
+  // Captcha is server middleware only - the client half is the Captcha block
+  // and the captchaToken action param carrying the x-captcha-response header.
+  if (authConfig.captcha?.enabled === true) {
+    options.plugins.push(buildCaptchaPlugin({ authConfig }));
   }
 
   // The admin plugin is framework-controlled - it backs the admin steps and

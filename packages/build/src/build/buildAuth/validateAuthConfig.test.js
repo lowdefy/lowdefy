@@ -851,3 +851,17 @@ test('validateAuthConfig throws when captcha contains an unknown property', () =
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
+
+test('validateAuthConfig throws when captcha.endpoints is an empty array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, endpoints: [] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.'
+  );
+});
