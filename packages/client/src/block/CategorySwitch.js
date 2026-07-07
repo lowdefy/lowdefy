@@ -80,6 +80,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           <Component
             methods={Object.assign(block.methods, {
               getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              link: lowdefy._internal.link,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
@@ -125,6 +126,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           <Component
             methods={Object.assign(block.methods, {
               getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              link: lowdefy._internal.link,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               translate: lowdefy._internal.translate,

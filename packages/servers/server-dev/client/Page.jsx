@@ -66,6 +66,12 @@ const Page = ({
   if (resetContext.restarting) {
     return <RestartingPage />;
   }
+  // Cross-target links resolve at runtime — mobile pages must not
+  // half-render in the web bundle with missing block types.
+  if (pageConfig.target && pageConfig.target !== 'web') {
+    router.replace({ pathname: '/404' });
+    return '';
+  }
 
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
   const mergedJsMap = pageConfig._jsEntries ? { ...jsMap, ...pageConfig._jsEntries } : jsMap;

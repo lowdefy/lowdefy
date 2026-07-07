@@ -36,6 +36,7 @@ import NotFound from './NotFound.jsx';
 function Page({ apiBase, auth, lowdefy, rootConfig }) {
   const [pageConfig, setPageConfig] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [buildError, setBuildError] = useState(null);
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -56,12 +57,21 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
       }
       try {
         const res = await fetch(`${apiBase}/api/page/${targetPageId}${window.location.search}`);
-        if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        // Dev JIT states — surface the build error and retry while plugins install.
+        if (body?.buildError) {
+          setBuildError(body);
+          return;
+        }
+        if (body?.installing) {
+          setTimeout(() => fetchPage({ pageId }), 2500);
+          return;
+        }
+        if (!res.ok || !body) {
           setNotFound(true);
           return;
         }
         // Prod wraps the config ({ pageConfig }), the dev JIT route returns it bare.
-        const body = await res.json();
         const nextPageConfig = body.pageConfig ?? body;
         // Cross-target Links resolve at runtime — a web page in the mobile
         // app shows the 404 view instead of half-rendering with missing
@@ -70,6 +80,7 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
           setNotFound(true);
           return;
         }
+        setBuildError(null);
         setNotFound(false);
         setPageConfig(nextPageConfig);
       } catch (error) {
@@ -81,6 +92,18 @@ function Page({ apiBase, auth, lowdefy, rootConfig }) {
     fetchPage(router.getLocation());
     return unsubscribe;
   }, []);
+
+  if (buildError) {
+    return (
+      <div style={{ padding: 24, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+        <h3>Build error</h3>
+        <p>{buildError.message}</p>
+        {(buildError.errors ?? []).map((error, index) => (
+          <p key={index}>{error.message ?? String(error)}</p>
+        ))}
+      </div>
+    );
+  }
 
   if (notFound) {
     return (

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { TabBar } from 'antd-mobile';
 import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
@@ -29,14 +29,13 @@ function getMenuLinks(menus, menuId) {
 function TabBarBlock({
   blockId,
   classNames = {},
-  components: { Icon, Link },
+  components: { Icon },
   menus,
   methods,
   pageId,
   properties,
   styles = {},
 }) {
-  const linkRefs = useRef({});
   const links = getMenuLinks(menus, properties.menuId);
   return (
     <div id={blockId} className={classNames.element} style={styles.element}>
@@ -45,10 +44,15 @@ function TabBarBlock({
         safeArea={properties.safeArea !== false}
         onChange={(key) => {
           methods.triggerEvent({ name: 'onChange', event: { pageId: key } });
-          // Navigate through the client Link adapter — the hidden anchors
-          // below carry the SPA router behavior, so tabs follow menu links
-          // exactly like Menu items do on web.
-          linkRefs.current[key]?.click();
+          const link = links.find((item) => (item.pageId ?? item.menuItemId) === key);
+          if (link) {
+            methods.link({
+              pageId: link.pageId,
+              url: link.url,
+              urlQuery: link.urlQuery,
+              input: link.input,
+            });
+          }
         }}
       >
         {links.map((link) => (
@@ -66,25 +70,6 @@ function TabBarBlock({
           />
         ))}
       </TabBar>
-      <div style={{ display: 'none' }}>
-        {links.map((link) => (
-          <Link
-            key={link.pageId ?? link.menuItemId}
-            id={`${blockId}_link_${link.menuItemId}`}
-            pageId={link.pageId}
-            url={link.url}
-            urlQuery={link.urlQuery}
-          >
-            {() => (
-              <span
-                ref={(el) => {
-                  linkRefs.current[link.pageId ?? link.menuItemId] = el;
-                }}
-              />
-            )}
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

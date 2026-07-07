@@ -24,6 +24,7 @@ const blockDefaultProps = {
   list: [],
   menus: [],
   methods: {
+    link: () => undefined,
     registerEvent: () => undefined,
     registerMethod: () => undefined,
     triggerEvent: () => undefined,

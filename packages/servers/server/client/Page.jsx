@@ -59,6 +59,12 @@ function Page({ auth, config, lowdefy }) {
           return;
         }
         const { pageConfig: nextPageConfig } = await res.json();
+        // Cross-target links resolve at runtime — mobile pages must not
+        // half-render in the web bundle with missing block types.
+        if (nextPageConfig.target && nextPageConfig.target !== 'web') {
+          router.replace({ pathname: '/404' });
+          return;
+        }
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
