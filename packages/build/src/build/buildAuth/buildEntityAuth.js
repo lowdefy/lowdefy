@@ -73,6 +73,16 @@ function buildEntityAuth({ components, context, entity }) {
         public: true,
       };
     }
+    // Webhook endpoints serve third-party callers with no session - the
+    // webhook route bypasses the session check by design, so a protected
+    // webhook endpoint would silently serve unauthenticated traffic. Make
+    // the contradiction a build error instead.
+    if (entity === 'api' && item.webhook === true && item.auth.public !== true) {
+      throw new ConfigError(
+        `Endpoint "${item.id}" is a webhook receiver but is protected by auth.api. Webhook endpoints run as a system context and must authenticate the caller in the routine - list the endpoint in auth.api.public or remove the webhook flag.`,
+        { configKey: item['~k'] }
+      );
+    }
   });
 
   return components;

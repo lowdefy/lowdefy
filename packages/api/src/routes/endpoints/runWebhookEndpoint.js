@@ -48,9 +48,8 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
   }
 
   // Force a system context regardless of any session cookie sent with the request.
-  context.session = undefined;
-  context.user = undefined;
-  context.authorize = createAuthorize({ session: undefined });
+  context.user = null;
+  context.authorize = createAuthorize({ user: null });
 
   const routineContext = {
     steps: {},

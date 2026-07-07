@@ -326,3 +326,83 @@ test('buildEntityAuth api: the roles-and-public conflict names the endpoint', ()
     'Endpoint "ep1" is both protected by roles and public.'
   );
 });
+
+test('buildEntityAuth api: webhook endpoints stay public by default', () => {
+  const components = {
+    auth: {
+      api: {
+        roles: {},
+      },
+    },
+    api: [{ id: 'hook', type: 'Api', webhook: true }],
+  };
+  const res = buildEntityAuth({ components, entity: 'api' });
+  expect(res.api).toEqual([{ id: 'hook', type: 'Api', webhook: true, auth: { public: true } }]);
+});
+
+test('buildEntityAuth api: throws when a webhook endpoint is protected by auth.api.protected true', () => {
+  const components = {
+    auth: {
+      api: {
+        protected: true,
+        roles: {},
+      },
+    },
+    api: [{ id: 'hook', type: 'Api', webhook: true }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+  );
+});
+
+test('buildEntityAuth api: throws when a webhook endpoint is listed in auth.api.protected', () => {
+  const components = {
+    auth: {
+      api: {
+        protected: ['hook'],
+        roles: {},
+      },
+    },
+    api: [{ id: 'hook', type: 'Api', webhook: true }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+  );
+});
+
+test('buildEntityAuth api: throws when a webhook endpoint is protected by roles', () => {
+  const components = {
+    auth: {
+      api: {
+        roles: {
+          role1: ['hook'],
+        },
+      },
+    },
+    api: [{ id: 'hook', type: 'Api', webhook: true }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+  );
+});
+
+test('buildEntityAuth api: a webhook endpoint listed in auth.api.public builds under protected true', () => {
+  const components = {
+    auth: {
+      api: {
+        protected: true,
+        public: ['hook'],
+        roles: {},
+      },
+    },
+    api: [
+      { id: 'hook', type: 'Api', webhook: true },
+      { id: 'ep1', type: 'Api' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'api' });
+  expect(res.api).toEqual([
+    { id: 'hook', type: 'Api', webhook: true, auth: { public: true } },
+    { id: 'ep1', type: 'Api', auth: { public: false } },
+  ]);
+});
