@@ -59,10 +59,10 @@ function createMockReadConfigFile({ notificationConfig, app = {} }) {
   });
 }
 
-function createTestContext({ notificationConfig, app } = {}) {
+function createTestContext({ notificationConfig, app, config } = {}) {
   const context = testContext({
     appMeta: { name: 'test-app' },
-    config: { basePath: '' },
+    config: config ?? { basePath: '' },
     operators,
     logger,
     readConfigFile: createMockReadConfigFile({ notificationConfig, app }),
@@ -159,9 +159,7 @@ test('RenderNotification errors when data is an array', async () => {
   });
 
   expect(res.status).toBe('error');
-  expect(res.error.message).toContain(
-    'iterate with a ":for" control and render one item per step'
-  );
+  expect(res.error.message).toContain('iterate with a ":for" control and render one item per step');
 });
 
 test('RenderNotification errors when data is not an object', async () => {
@@ -332,9 +330,7 @@ test('RenderNotification errors when serverUrl is not a non-empty string', async
   });
 
   expect(res.status).toBe('error');
-  expect(res.error.message).toContain(
-    'properties.serverUrl must evaluate to a non-empty string.'
-  );
+  expect(res.error.message).toContain('properties.serverUrl must evaluate to a non-empty string.');
 });
 
 test('RenderNotification interpolates properties with the resolved data item and markdownProperties', async () => {
@@ -445,4 +441,78 @@ test('RenderNotification merges notification theme over app.email', async () => 
     companyName: 'MyApp',
     logo: 'https://cdn/x.png',
   });
+});
+
+test('RenderNotification resolves a relative app.email logo against serverUrl', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { companyName: 'MyApp', logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme).toEqual({
+    companyName: 'MyApp',
+    logo: 'https://myapp.com/logo-light.png',
+  });
+});
+
+test('RenderNotification resolves a relative logo including basePath', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { logo: '/logo-light.png' } },
+    config: { basePath: '/base' },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/base/logo-light.png');
+});
+
+test('RenderNotification drops a relative logo when no serverUrl is available', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { companyName: 'MyApp', logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact } }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme).toEqual({ companyName: 'MyApp' });
+});
+
+test('RenderNotification resolves a relative per-notification theme logo override', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig({ theme: { logo: '/sub-brand.png' } }),
+    app: { email: { logo: 'https://cdn/default.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/sub-brand.png');
+});
+
+test('RenderNotification trims trailing serverUrl slash before resolving a relative logo', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    app: { email: { logo: '/logo-light.png' } },
+  });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact }, serverUrl: 'https://myapp.com/' }),
+  });
+
+  expect(mockRenderEmail.mock.calls[0][0].theme.logo).toBe('https://myapp.com/logo-light.png');
 });

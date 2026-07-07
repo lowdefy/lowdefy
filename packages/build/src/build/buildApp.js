@@ -37,6 +37,15 @@ function buildApp({ components }) {
   if (type.isNone(components.app.email)) {
     components.app.email = {};
   }
+  // Email branding defaults from existing app config — baked into app.json at
+  // build so the runtime theme merge stays a plain shallow spread.
+  if (type.isNone(components.app.email.companyName) && type.isString(components.name)) {
+    components.app.email.companyName = components.name;
+  }
+  const colorPrimary = components.theme?.antd?.token?.colorPrimary;
+  if (type.isNone(components.app.email.primaryColor) && type.isString(colorPrimary)) {
+    components.app.email.primaryColor = colorPrimary;
+  }
   return components;
 }
 

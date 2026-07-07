@@ -128,7 +128,7 @@ testSchema()        // Validate against schema (unchanged)
 ### Phase 5: Domain Building
 
 ```javascript
-buildApp()          // Process app.html, app.git_sha
+buildApp()          // Process app.html, app.git_sha; default app.email branding from name/theme
 validateConfig()    // Validate basePath and config
 addDefaultPages()   // Generate 404 if missing
 buildAuth()         // Process authentication (MODIFIED: wildcard auth matching)

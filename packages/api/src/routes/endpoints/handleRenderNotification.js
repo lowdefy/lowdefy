@@ -22,15 +22,14 @@ import addStepResult from './addStepResult.js';
 import derivePreview from '../notifications/derivePreview.js';
 import getNotificationConfig from '../notifications/getNotificationConfig.js';
 import resolveNotificationLinks from '../notifications/resolveNotificationLinks.js';
+import resolveThemeLogo from '../notifications/resolveThemeLogo.js';
 
 function itemHasPageLinks(item, dataKeys) {
   const links = Object.values(item.links ?? {});
   const arrayLinks = dataKeys.flatMap((key) =>
     (type.isArray(item[key]) ? item[key] : []).map((entry) => entry?.link)
   );
-  return [...links, ...arrayLinks].some(
-    (link) => type.isObject(link) && !type.isNone(link.pageId)
-  );
+  return [...links, ...arrayLinks].some((link) => type.isObject(link) && !type.isNone(link.pageId));
 }
 
 async function handleRenderNotification(context, routineContext, { step }) {
@@ -54,7 +53,11 @@ async function handleRenderNotification(context, routineContext, { step }) {
   let { serverUrl } = evaluatedProperties;
   if (!type.isString(notificationId)) {
     throw new ConfigError(
-      `RenderNotification step "${step.stepId}" properties.notificationId must evaluate to a string. Received ${JSON.stringify(notificationId)}.`,
+      `RenderNotification step "${
+        step.stepId
+      }" properties.notificationId must evaluate to a string. Received ${JSON.stringify(
+        notificationId
+      )}.`,
       { configKey: step['~k'] }
     );
   }
@@ -66,14 +69,20 @@ async function handleRenderNotification(context, routineContext, { step }) {
   }
   if (!type.isObject(data)) {
     throw new ConfigError(
-      `RenderNotification step "${step.stepId}" properties.data must evaluate to an object. Received ${JSON.stringify(data)}.`,
+      `RenderNotification step "${
+        step.stepId
+      }" properties.data must evaluate to an object. Received ${JSON.stringify(data)}.`,
       { configKey: step['~k'] }
     );
   }
   if (!type.isNone(serverUrl)) {
     if (!type.isString(serverUrl) || serverUrl === '') {
       throw new ConfigError(
-        `RenderNotification step "${step.stepId}" properties.serverUrl must evaluate to a non-empty string. Received ${JSON.stringify(serverUrl)}.`,
+        `RenderNotification step "${
+          step.stepId
+        }" properties.serverUrl must evaluate to a non-empty string. Received ${JSON.stringify(
+          serverUrl
+        )}.`,
         { configKey: step['~k'] }
       );
     }
@@ -81,13 +90,19 @@ async function handleRenderNotification(context, routineContext, { step }) {
   }
   if (!type.isNone(landingPage) && !type.isString(landingPage)) {
     throw new ConfigError(
-      `RenderNotification step "${step.stepId}" properties.landingPage must evaluate to a string. Received ${JSON.stringify(landingPage)}.`,
+      `RenderNotification step "${
+        step.stepId
+      }" properties.landingPage must evaluate to a string. Received ${JSON.stringify(
+        landingPage
+      )}.`,
       { configKey: step['~k'] }
     );
   }
   if (!type.isNone(recordId) && !type.isString(recordId)) {
     throw new ConfigError(
-      `RenderNotification step "${step.stepId}" properties.recordId must evaluate to a string. Received ${JSON.stringify(recordId)}.`,
+      `RenderNotification step "${
+        step.stepId
+      }" properties.recordId must evaluate to a string. Received ${JSON.stringify(recordId)}.`,
       { configKey: step['~k'] }
     );
   }
@@ -117,8 +132,14 @@ async function handleRenderNotification(context, routineContext, { step }) {
   }
 
   const app = (await context.readConfigFile('app.json')) ?? {};
-  const theme = { ...(app.email ?? {}), ...(notificationConfig.theme ?? {}) };
   const basePath = context.config?.basePath ?? '';
+  // Resolve after the merge so a per-notification theme.logo override also
+  // resolves; precedence stays notification theme over app.email.
+  const theme = resolveThemeLogo({
+    theme: { ...(app.email ?? {}), ...(notificationConfig.theme ?? {}) },
+    serverUrl,
+    basePath,
+  });
 
   if (itemHasPageLinks(data, Template.dataKeys ?? [])) {
     if (type.isNone(serverUrl)) {
