@@ -21,6 +21,7 @@ import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import scheduleBackground from './scheduleBackground.js';
 
 // Runs an endpoint routine on a schedule (cron). Unlike callEndpoint this does NOT check the
 // endpoint's `auth` config and does NOT block InternalApi: a cron run is authorized by the transport
@@ -67,6 +68,20 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
     state: {},
     endpointDepth: 0,
   };
+
+  // async: true — acknowledge the cron trigger immediately and run in the
+  // background; transport auth (CRON_SECRET) already passed at the route.
+  if (endpointConfig.async === true) {
+    scheduleBackground(context, { event: 'background_scheduled_endpoint', endpointId }, () =>
+      runRoutine(context, routineContext, { routine: endpointConfig.routine })
+    );
+    return {
+      error: null,
+      response: serializer.serialize({ accepted: true }),
+      status: 'accepted',
+      success: true,
+    };
+  }
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
