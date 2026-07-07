@@ -162,6 +162,8 @@ Requests are server-side data operations:
 | `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`      |
 | `server-e2e` | Playwright e2e testing — production server minus auth/Sentry, with a cookie-based session mock |
 
+A `mobile:` key in `lowdefy.yaml` additionally builds an installable iOS/Android app: a Capacitor-wrapped static Vite SPA (`@lowdefy/mobile-client` + `@lowdefy/blocks-antd-mobile`) that talks to the same server. See [Mobile Apps](./architecture/mobile-apps.md).
+
 ## File Structure
 
 ```
@@ -192,6 +194,7 @@ lowdefy/
 
 - [Agent System](./architecture/agent-system.md) - AI agent orchestration, tools, and streaming
 - [Build Pipeline](./architecture/build-pipeline.md) - How YAML becomes a runnable server
+- [Mobile Apps](./architecture/mobile-apps.md) - Capacitor apps from the same config (per-target builds, mobile client, CLI)
 - [Request Lifecycle](./architecture/request-lifecycle.md) - Data flow from action to database
 - [State Management](./architecture/state-management.md) - Page state and reactivity
 - [Plugin System](./architecture/plugin-system.md) - How plugins are loaded and registered

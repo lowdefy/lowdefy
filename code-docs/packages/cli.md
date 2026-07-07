@@ -110,6 +110,34 @@ Generate Vercel deployment scripts.
 lowdefy init-vercel [options]
 ```
 
+### `lowdefy mobile init | build | dev`
+
+Commander sub-command group for building the app as an installable iOS/Android app
+(Capacitor). Handlers live in `src/commands/mobile/`; `getDirectories` adds
+`mobile` (`.lowdefy/mobile` — the fetched `@lowdefy/mobile-client` Vite tooling)
+and `mobileProject` (default `<config>/mobile` — the committed Capacitor project,
+`--mobile-project-directory` to change).
+
+```bash
+lowdefy mobile init [--no-ios] [--no-android]   # scaffold mobile/ + cap add
+lowdefy mobile build [--no-server-build]        # full build → vite build → cap sync
+lowdefy mobile dev [--ios|--android] [--mobile-port <port>]
+```
+
+- `init` runs a full build first when artifacts are missing, scaffolds the
+  Capacitor project, generates `capacitor.config.json`, and adds platforms.
+- `build` validates `mobile.serverUrl` (env override `LOWDEFY_MOBILE_SERVER_URL`),
+  builds the mobile bundle, copies it to `mobile/www`, regenerates
+  `capacitor.config.json` from `mobile.*`, runs `cap sync`, and `@capacitor/assets`
+  when `mobile/assets/` exists.
+- `dev` runs the standard dev manager plus a mobile Vite lane on a second port
+  (env-flag `LOWDEFY_SERVER_DEV_MOBILE`, `/api` proxied); `--ios`/`--android`
+  writes a dev Capacitor config with the LAN `server.url` and runs `cap run`.
+
+Subcommands report their full name (`mobile init`) through `startUp`, so they
+require `lowdefy.yaml` unlike top-level `init`. See
+[architecture/mobile-apps.md](../architecture/mobile-apps.md).
+
 ### `lowdefy upgrade`
 
 Upgrade a Lowdefy app by walking through migration prompts that handle breaking changes between versions.

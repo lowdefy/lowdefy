@@ -168,6 +168,11 @@
           pageId: hosting-files
           properties:
             title: Hosting Files
+        - id: mobile-apps
+          type: MenuLink
+          pageId: mobile-apps
+          properties:
+            title: Mobile Apps
         - id: custom-styling
           type: MenuLink
           pageId: custom-styling

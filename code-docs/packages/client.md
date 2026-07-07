@@ -80,6 +80,16 @@ import Client from '@lowdefy/client';
 | `createCallAPI.js`     | Creates function to call custom endpoints |
 | `request.js`           | HTTP request utilities                    |
 
+All API URLs are built from `lowdefy.apiBase` (defaults to `basePath`; the mobile
+client passes the remote server origin as a Client prop — see
+[architecture/mobile-apps.md](../architecture/mobile-apps.md)). This includes
+`createHandleError.js`'s `/api/client-error` reports and the websocket client.
+
+Blocks receive `methods.link` (wired to `lowdefy._internal.link`, the same
+function the Link action calls) in every block category's method assembly
+(`block/CategorySwitch.js`, `Container.js`, `InputContainer.js`, `List.js`) —
+the programmatic navigation seam for menu-driven blocks like the mobile TabBar.
+
 ### Keyboard Shortcuts
 
 | Module                     | Purpose                                                 |
@@ -119,6 +129,10 @@ lowdefy = {
   // Navigation
   router: router,
   Link: LinkComponent,
+  basePath: '',                // Routing prefix (history URLs)
+  apiBase: '',                 // URL prefix for API calls — defaults to basePath;
+                               // the mobile client passes the remote server origin
+                               // (Client prop) while routing stays origin-local
 
   // Configuration
   home: { pageId, configured },

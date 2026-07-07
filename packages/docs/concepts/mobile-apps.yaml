@@ -1,0 +1,141 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: mobile-apps
+    pageTitle: Mobile Apps
+    section: Concepts
+    filePath: concepts/mobile-apps.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Lowdefy apps can ship as installable iOS and Android apps. You add a top-level `mobile:` key to `lowdefy.yaml` and author mobile views in the same config language against the same backend — the same connections, requests, API endpoints, auth and global state as your web app. The mobile app is a native [Capacitor](https://capacitorjs.com) app that talks to your existing Lowdefy server over HTTPS.
+
+            Mobile pages use a mobile-native block set based on [antd-mobile](https://mobile.ant.design) — tab bars, nav bars, wheel pickers and native scrolling feel — while everything else works exactly like the web: operators, actions, requests, menus and auth.
+
+            # The mobile key
+
+            ```yaml
+            lowdefy: 6.0.0
+
+            mobile:
+              appId: com.acme.tracker          # native bundle id (reverse-DNS)
+              name: Acme Tracker               # app display name
+              serverUrl: https://app.acme.com  # your deployed Lowdefy server
+              config:
+                homePageId: m-home             # optional; else first mobile menu link
+              theme:
+                '--adm-color-primary': '#1677ff'   # antd-mobile CSS variables
+                dark:
+                  '--adm-color-background': '#000000'
+              menus:
+                - id: default
+                  links:
+                    - id: home
+                      type: MenuLink
+                      pageId: m-home
+                      properties:
+                        title: Home
+                        icon: AiOutlineHome
+              pages:
+                - id: m-home
+                  type: Box
+                  blocks:
+                    - id: nav
+                      type: NavBar
+                      properties:
+                        title: Home
+                    - id: tab_bar
+                      type: TabBar
+
+            pages:        # web pages, unchanged
+            connections:  # shared with the web app
+            auth:         # shared
+            global:       # shared
+            ```
+
+            Web and mobile pages share one `pageId` namespace — using the same id for a web and a mobile page is a build error. A `Link` to a page of the other target shows a 404 at runtime.
+
+            Inside mobile pages, block types resolve against the mobile block set: `type: Button` is the antd-mobile Button on mobile pages and the Ant Design Button on web pages — the config language stays the same.
+
+            # Mobile blocks
+
+            The v1 mobile block set, plus all blocks from `@lowdefy/blocks-basic` and `@lowdefy/blocks-loaders`:
+
+            | Block          | Renders                              | Category  |
+            | -------------- | ------------------------------------ | --------- |
+            | `Button`       | antd-mobile Button                   | display   |
+            | `TextInput`    | Input                                | input     |
+            | `TextArea`     | TextArea                             | input     |
+            | `Switch`       | Switch                               | input     |
+            | `Selector`     | Wheel picker with a trigger field    | input     |
+            | `DateSelector` | Date picker                          | input     |
+            | `Card`         | Card container                       | container |
+            | `List`         | List with a List.Item per data item  | list      |
+            | `NavBar`       | Top navigation bar (`onBack` event)  | display   |
+            | `TabBar`       | Bottom tab bar, driven by your menus | display   |
+
+            The `TabBar` reads `mobile.menus` and navigates between pages automatically. The `DisplayMessage` action shows a native-styled toast.
+
+            # CLI commands
+
+            ```bash
+            lowdefy mobile init     # scaffold the mobile/ Capacitor project + native platforms
+            lowdefy mobile build    # build the app bundle and sync the native project
+            lowdefy mobile dev      # dev server + mobile preview in the browser
+            ```
+
+            `lowdefy mobile init` creates a `mobile/` directory in your project — a Capacitor project you commit to git. It holds your native platforms (`ios/`, `android/`), signing configuration, and icons. Add `logo.png` and `splash.png` to `mobile/assets/` and `lowdefy mobile build` generates all icon and splash sizes.
+
+            `lowdefy mobile build` requires `mobile.serverUrl` — the deployed server your app talks to. To build against a different environment, override it per build:
+
+            ```bash
+            LOWDEFY_MOBILE_SERVER_URL=https://staging.acme.com lowdefy mobile build
+            ```
+
+            After a build, open the native project with Capacitor's own tooling to run or archive it:
+
+            ```bash
+            cd mobile
+            npx cap open ios        # Xcode
+            npx cap open android    # Android Studio
+            ```
+
+            # Developing
+
+            `lowdefy mobile dev` starts the standard Lowdefy dev server plus a mobile preview server (default port 3001). Open `http://localhost:3001` in your browser and use device emulation in dev tools — config changes hot reload just like the web dev server.
+
+            To develop on a real device or simulator with live reload:
+
+            ```bash
+            lowdefy mobile dev --ios       # or --android
+            ```
+
+            Your device must be on the same network as your machine.
+
+            # Auth
+
+            Public pages, role-filtered menus and `auth.pages` rules work on mobile exactly as on web — mobile page ids participate in the same `protected`, `public` and `roles` patterns. Signing in supports credentials-type providers in v1; OAuth providers (Google, GitHub, ...) are not yet supported on mobile.
+
+            # Not supported in v1
+
+            - Offline use — the app requires connectivity, like the web app.
+            - Push notifications.
+            - OAuth sign-in providers.
+            - WebSockets, subscriptions and agent chat streaming.
+            - `Dynamic` blocks on mobile pages.
