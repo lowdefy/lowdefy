@@ -162,6 +162,22 @@ test('SMTPMailSend schema validates a valid request', async () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
+test('SMTPMailSend schema accepts null cc, bcc and replyTo', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const schema = SMTPMailSend.schema;
+  // Operator-driven configs (e.g. `_if_none: [item.cc, null]`) resolve
+  // absent optional address fields to null; the schema must treat that as omitted.
+  const request = {
+    to: 'someone@example.com',
+    cc: null,
+    bcc: null,
+    replyTo: null,
+    subject: 'A',
+    text: 'B',
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
 test('SMTPMailSend schema validates an array request', async () => {
   const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
   const schema = SMTPMailSend.schema;

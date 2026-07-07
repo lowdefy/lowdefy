@@ -86,15 +86,17 @@ export default {
           description: 'Email address to send to.',
         },
         cc: {
-          $ref: '#/definitions/emails',
+          // Optional address fields accept null so operator-driven configs
+          // (e.g. `_if_none: [item.cc, null]`) resolve to an omitted cc.
+          anyOf: [{ $ref: '#/definitions/emails' }, { type: 'null' }],
           description: 'Email address to cc in communication.',
         },
         bcc: {
-          $ref: '#/definitions/emails',
+          anyOf: [{ $ref: '#/definitions/emails' }, { type: 'null' }],
           description: 'Email address to bcc in communication.',
         },
         replyTo: {
-          $ref: '#/definitions/emails',
+          anyOf: [{ $ref: '#/definitions/emails' }, { type: 'null' }],
           description: 'Email address to reply to.',
         },
         subject: {
