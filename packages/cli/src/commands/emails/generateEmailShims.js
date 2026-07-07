@@ -91,10 +91,11 @@ async function generateEmailShims({ context, notifications, appEmail, notificati
       continue;
     }
     const content = createShimContent({ notification, typeDefinition, appEmail });
-    await fs.promises.writeFile(
-      path.join(emailsDirectory, `${notification.notificationId}.jsx`),
-      content
-    );
+    // Module notifications have scoped ids ("invites/invite-user") — nested
+    // shim paths group the preview sidebar by module entry.
+    const shimPath = path.join(emailsDirectory, `${notification.notificationId}.jsx`);
+    await fs.promises.mkdir(path.dirname(shimPath), { recursive: true });
+    await fs.promises.writeFile(shimPath, content);
   }
 }
 

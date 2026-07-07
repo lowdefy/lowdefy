@@ -23,7 +23,9 @@ async function readNotificationArtifacts({ context }) {
 
   let notifications = [];
   if (fs.existsSync(notificationsDirectory)) {
-    const files = await fs.promises.readdir(notificationsDirectory);
+    // Recursive — module notifications write scoped artifacts in
+    // subdirectories (notifications/<entry>/<id>.json).
+    const files = await fs.promises.readdir(notificationsDirectory, { recursive: true });
     notifications = await Promise.all(
       files
         .filter((file) => file.endsWith('.json'))
