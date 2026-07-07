@@ -54,3 +54,19 @@ test('initLowdefyContext sets lowdefyGlobal from rootConfig', () => {
   const result = initLowdefyContext(args);
   expect(result.lowdefyGlobal).toEqual({ key: 'value' });
 });
+
+test('initLowdefyContext defaults apiBase to router basePath', () => {
+  const args = baseArgs();
+  args.router = { basePath: '/base' };
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toEqual('/base');
+  expect(result.basePath).toEqual('/base');
+});
+
+test('initLowdefyContext sets apiBase independently of basePath when passed', () => {
+  const args = baseArgs();
+  args.apiBase = 'https://app.acme.com';
+  const result = initLowdefyContext(args);
+  expect(result.apiBase).toEqual('https://app.acme.com');
+  expect(result.basePath).toEqual('');
+});

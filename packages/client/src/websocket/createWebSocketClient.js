@@ -44,9 +44,14 @@ function createWebSocketClient(lowdefy) {
   let publishCounter = 0;
 
   function url() {
+    const apiBase = lowdefy.apiBase ?? lowdefy.basePath ?? '';
+    // An absolute apiBase (mobile app → remote server) carries its own origin.
+    if (/^https?:\/\//.test(apiBase)) {
+      return `${apiBase.replace(/^http/, 'ws')}/api/websocket`;
+    }
     const { location } = window;
     const scheme = location.protocol === 'https:' ? 'wss' : 'ws';
-    return `${scheme}://${location.host}${lowdefy.basePath ?? ''}/api/websocket`;
+    return `${scheme}://${location.host}${apiBase}/api/websocket`;
   }
 
   function clearIdleTimer() {

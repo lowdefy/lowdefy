@@ -27,7 +27,17 @@ import createHandleError from './createHandleError.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setupLink from './setupLink.js';
 
-function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
+function initLowdefyContext({
+  apiBase,
+  auth,
+  Components,
+  config,
+  lowdefy,
+  router,
+  stage,
+  types,
+  window,
+}) {
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
@@ -58,6 +68,10 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       router,
     };
     lowdefy.apiResponses = {};
+    // basePath keeps its routing meaning (history URLs); apiBase is the URL
+    // prefix for API calls. They coincide on the web — the mobile client
+    // passes the remote server origin as apiBase while routing stays local.
+    lowdefy.apiBase = apiBase ?? router.basePath;
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};

@@ -26,6 +26,7 @@ import ProgressBarController from './ProgressBarController.js';
 import initLowdefyContext from './initLowdefyContext.js';
 
 const Client = ({
+  apiBase,
   auth,
   Components,
   config: rawConfig,
@@ -58,6 +59,7 @@ const Client = ({
       ? `${config.pageConfig.id}:${buildRef.current.build}`
       : config.pageConfig.id;
   initLowdefyContext({
+    apiBase,
     auth,
     Components,
     config,
