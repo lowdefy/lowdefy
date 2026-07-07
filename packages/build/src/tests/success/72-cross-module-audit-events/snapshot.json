@@ -1144,9 +1144,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1b"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Audit Events Test",
     "serverUrl": null

@@ -1194,9 +1194,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1o"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Lazy Default Resolution Test",
     "serverUrl": null

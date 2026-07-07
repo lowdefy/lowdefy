@@ -1272,9 +1272,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1m"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "API Generate Requests Test",
     "serverUrl": null

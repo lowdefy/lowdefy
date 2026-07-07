@@ -1055,9 +1055,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "13"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Module Test App",
     "serverUrl": null

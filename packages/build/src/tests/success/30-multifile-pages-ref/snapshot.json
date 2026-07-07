@@ -1227,9 +1227,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1j"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": null,
     "serverUrl": null

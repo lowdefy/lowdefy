@@ -1160,9 +1160,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1g"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Nested Refs Test",
     "serverUrl": null

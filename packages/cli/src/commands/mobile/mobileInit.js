@@ -20,7 +20,7 @@ import path from 'path';
 import build from '../build/build.js';
 import generateCapacitorConfig from './generateCapacitorConfig.js';
 import getServer from '../../utils/getServer.js';
-import installMobileProject from './installMobileProject.js';
+import installServer from '../../utils/installServer.js';
 import readMobileBuildConfig from './readMobileBuildConfig.js';
 import runCapacitorCommand from './runCapacitorCommand.js';
 import scaffoldMobileProject from './scaffoldMobileProject.js';
@@ -46,17 +46,17 @@ async function mobileInit({ context }) {
     throw new Error('"mobile.appId" is required in lowdefy.yaml to initialize a mobile project.');
   }
   await scaffoldMobileProject({ context, appId: mobileConfig.appId });
-  await installMobileProject({ context });
-  await generateCapacitorConfig({ context });
+  await installServer({ context, directory: context.directories.mobileProject });
+  await generateCapacitorConfig({ context, mobileConfig });
 
   const projectDirectory = context.directories.mobileProject;
   if (context.options.ios !== false && !fs.existsSync(path.join(projectDirectory, 'ios'))) {
-    await runCapacitorCommand({ context, args: ['add', 'ios'], message: 'Adding iOS platform.' });
+    await runCapacitorCommand({ context, exec: ['cap', 'add', 'ios'], message: 'Adding iOS platform.' });
   }
   if (context.options.android !== false && !fs.existsSync(path.join(projectDirectory, 'android'))) {
     await runCapacitorCommand({
       context,
-      args: ['add', 'android'],
+      exec: ['cap', 'add', 'android'],
       message: 'Adding Android platform.',
     });
   }

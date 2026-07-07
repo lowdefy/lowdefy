@@ -1110,9 +1110,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "17"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Module Connections Test",
     "serverUrl": null

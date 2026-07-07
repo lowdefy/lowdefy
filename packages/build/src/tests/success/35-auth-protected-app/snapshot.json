@@ -1660,9 +1660,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "32"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Protected App",
     "serverUrl": null

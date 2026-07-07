@@ -1640,9 +1640,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "2n"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Large App",
     "serverUrl": null

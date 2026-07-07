@@ -1110,9 +1110,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1n"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Component Data Export Test",
     "serverUrl": null

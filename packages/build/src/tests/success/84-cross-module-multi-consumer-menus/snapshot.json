@@ -1264,9 +1264,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1n"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Multi Consumer Menus Test",
     "serverUrl": null

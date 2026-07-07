@@ -22,8 +22,10 @@ import readMobileBuildConfig from './readMobileBuildConfig.js';
 
 // capacitor.config.json is a build artifact — config lives in lowdefy.yaml
 // (mobile.appId, mobile.name, mobile.capacitor passthrough), one correct way.
-async function generateCapacitorConfig({ context, devServerUrl }) {
-  const mobileConfig = await readMobileBuildConfig({ context });
+async function generateCapacitorConfig({ context, devServerUrl, mobileConfig }) {
+  if (!mobileConfig) {
+    mobileConfig = await readMobileBuildConfig({ context });
+  }
   if (!mobileConfig.appId) {
     throw new Error('"mobile.appId" is required in lowdefy.yaml to generate the Capacitor config.');
   }

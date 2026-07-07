@@ -1143,9 +1143,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "1d"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Module Menu Test",
     "serverUrl": null

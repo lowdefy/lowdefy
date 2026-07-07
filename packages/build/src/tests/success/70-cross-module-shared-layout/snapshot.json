@@ -1064,9 +1064,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "15"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": "Shared Layout Test",
     "serverUrl": null

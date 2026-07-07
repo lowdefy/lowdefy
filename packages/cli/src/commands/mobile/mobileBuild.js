@@ -23,10 +23,10 @@ import build from '../build/build.js';
 import generateCapacitorConfig from './generateCapacitorConfig.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
+import readMobileBuildConfig from './readMobileBuildConfig.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
-import runCapacitorAssets from './runCapacitorAssets.js';
 import runCapacitorCommand from './runCapacitorCommand.js';
-import runMobileClientBuild from './runMobileClientBuild.js';
+import runClientBuild from '../../utils/runClientBuild.js';
 
 async function mobileBuild({ context }) {
   context.logger.info('Starting mobile build.');
@@ -37,12 +37,26 @@ async function mobileBuild({ context }) {
     await build({ context });
   }
 
+  // The bundle bakes serverUrl as its API origin — an empty value ships an
+  // app that can never reach a server, so fail the build instead.
+  const mobileConfig = await readMobileBuildConfig({ context });
+  if (!process.env.LOWDEFY_MOBILE_SERVER_URL && !mobileConfig.serverUrl) {
+    throw new Error(
+      '"mobile.serverUrl" is required to build the mobile app. Set it in lowdefy.yaml or override with LOWDEFY_MOBILE_SERVER_URL.'
+    );
+  }
+
   const directory = context.directories.mobile;
   await getServer({ context, packageName: '@lowdefy/mobile-client', directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
-  await runMobileClientBuild({ context, directory });
+  await runClientBuild({
+    context,
+    directory,
+    env: { LOWDEFY_DIRECTORY_BUILD: context.directories.build },
+    name: 'mobile client',
+  });
 
   // The static Vite output becomes Capacitor's webDir.
   const wwwDirectory = path.join(context.directories.mobileProject, 'www');
@@ -50,12 +64,12 @@ async function mobileBuild({ context }) {
   await copyFileOrDirectory(path.join(directory, 'dist'), wwwDirectory);
   context.logger.info('Copied mobile bundle to mobile project www.');
 
-  await generateCapacitorConfig({ context });
+  await generateCapacitorConfig({ context, mobileConfig });
 
   const hasIos = fs.existsSync(path.join(context.directories.mobileProject, 'ios'));
   const hasAndroid = fs.existsSync(path.join(context.directories.mobileProject, 'android'));
   if (hasIos || hasAndroid) {
-    await runCapacitorCommand({ context, args: ['sync'], message: 'Running cap sync.' });
+    await runCapacitorCommand({ context, exec: ['cap', 'sync'], message: 'Running cap sync.' });
   } else {
     context.logger.warn(
       'No native platforms found in the mobile project. Run "lowdefy mobile init" to add them.'
@@ -65,7 +79,11 @@ async function mobileBuild({ context }) {
   // Icon and splash generation via the @capacitor/assets convention
   // (mobile/assets/logo.png, splash.png).
   if (fs.existsSync(path.join(context.directories.mobileProject, 'assets'))) {
-    await runCapacitorAssets({ context });
+    await runCapacitorCommand({
+      context,
+      exec: ['capacitor-assets', 'generate'],
+      message: 'Generating icons and splash screens.',
+    });
   }
 
   await context.sendTelemetry({ sendTypes: true });

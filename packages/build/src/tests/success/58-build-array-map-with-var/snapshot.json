@@ -991,9 +991,7 @@
   "mobile/blockPackages.json": [],
   "mobile/config.json": {
     "appId": null,
-    "capacitor": {
-      "~k": "y"
-    },
+    "capacitor": {},
     "homePageId": null,
     "name": null,
     "serverUrl": null

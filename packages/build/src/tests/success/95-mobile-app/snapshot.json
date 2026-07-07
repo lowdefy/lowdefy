@@ -1695,10 +1695,8 @@
     "appId": "com.acme.tracker",
     "capacitor": {
       "ios": {
-        "scheme": "AcmeTracker",
-        "~k": "d"
-      },
-      "~k": "c"
+        "scheme": "AcmeTracker"
+      }
     },
     "homePageId": "m-home",
     "name": "Acme Tracker",

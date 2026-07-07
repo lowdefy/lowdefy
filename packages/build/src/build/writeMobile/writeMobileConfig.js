@@ -25,7 +25,12 @@ async function writeMobileConfig({ components, context }) {
     name: mobile.name ?? components.name ?? null,
     serverUrl: mobile.serverUrl ?? null,
   };
-  await context.writeBuildArtifact('mobile/config.json', serializer.serializeToString(config));
+  // skipMarkers: consumers (CLI capacitor config, mobile vite build, /api/root)
+  // read this artifact as plain JSON — build markers must not leak into it.
+  await context.writeBuildArtifact(
+    'mobile/config.json',
+    serializer.serializeToString(config, { skipMarkers: true })
+  );
 }
 
 export default writeMobileConfig;
