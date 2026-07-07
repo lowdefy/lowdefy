@@ -18,8 +18,9 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import operators from '@lowdefy/operators-js/operators/build';
 
-import { resolve, WalkContext, cloneForResolve } from '../buildRefs/walker.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import { resolve, WalkContext } from '../buildRefs/walker.js';
+import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import collectExceptions from '../../utils/collectExceptions.js';
@@ -62,8 +63,8 @@ async function resolveAuthConfigProjection({ context }) {
   });
 
   try {
-    let auth = await resolve(cloneForResolve(authSource), ctx);
-    auth = evaluateStaticOperators({ context, input: auth, refDef });
+    let auth = await resolve(cloneWithMarkers(authSource), ctx);
+    auth = precomputeRuntimeOperators({ context, input: auth, refDef });
     context.authConfigProjection = computeAuthConfigProjection(auth);
   } catch (error) {
     // Resolution failures (e.g. a circular ref rooted at the auth: block) are
