@@ -902,6 +902,77 @@ export default {
             type: 'Auth "passkey" should be an object.',
           },
         },
+        phoneNumber: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.enabled" should be a boolean.',
+              },
+            },
+            otpLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.otpLength" should be an integer.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.expiresIn" should be an integer (seconds).',
+              },
+            },
+            allowedAttempts: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.allowedAttempts" should be an integer.',
+              },
+            },
+            requireVerification: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.requireVerification" should be a boolean.',
+              },
+            },
+            signUpOnVerification: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['tempEmailDomain'],
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                tempEmailDomain: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "phoneNumber.signUpOnVerification.tempEmailDomain" should be a string.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "phoneNumber.signUpOnVerification" should be an object.',
+                required: {
+                  tempEmailDomain:
+                    'Auth "phoneNumber.signUpOnVerification" should have required property "tempEmailDomain". Temp emails land in "user.email", so name a domain the app controls (or a reserved non-routable one) - there is no default.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "phoneNumber" should be an object.',
+            additionalProperties:
+              'Auth "phoneNumber" contains an unknown property. The known properties are "enabled", "otpLength", "expiresIn", "allowedAttempts", "requireVerification" and "signUpOnVerification".',
+            required: {
+              enabled: 'Auth "phoneNumber" should have required property "enabled".',
+            },
+          },
+        },
         pages: {
           type: 'object',
           additionalProperties: false,

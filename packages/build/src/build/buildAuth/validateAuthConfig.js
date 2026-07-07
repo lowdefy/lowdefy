@@ -81,15 +81,17 @@ function validateAuthConfig({ components }) {
 
   const emailAndPasswordEnabled = auth.emailAndPassword?.enabled === true;
   const magicLinkEnabled = auth.magicLink?.enabled === true;
+  const phoneNumberEnabled = auth.phoneNumber?.enabled === true;
   const hasProviders = type.isArray(auth.providers) && auth.providers.length > 0;
-  const hasLoginMethod = emailAndPasswordEnabled || magicLinkEnabled || hasProviders;
+  const hasLoginMethod =
+    emailAndPasswordEnabled || magicLinkEnabled || phoneNumberEnabled || hasProviders;
   const hasStrategies = type.isArray(auth.strategies) && auth.strategies.length > 0;
 
   // dev.mockUser is a server-dev-only bypass, not a mechanism - a block whose
   // only substance is dev.mockUser still fails this check.
   if (!hasLoginMethod && !hasStrategies) {
     throw new ConfigError(
-      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
+      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
       { configKey }
     );
   }
@@ -134,6 +136,20 @@ function validateAuthConfig({ components }) {
       seenProviderTypes[provider.type] = true;
     }
   });
+
+  // An enabled phone login with no way to send codes is dead config - there
+  // is no fallback SMS transport, so a "phone.otp.send" binding is required.
+  // This runs on the merged hooks array (module contributions + app entries),
+  // so a module-shipped binding satisfies it.
+  if (phoneNumberEnabled) {
+    const hasSendOtpBinding = (auth.hooks ?? []).some((hook) => hook.point === 'phone.otp.send');
+    if (!hasSendOtpBinding) {
+      throw new ConfigError(
+        'Auth "phoneNumber" is enabled but no hook binds the "phone.otp.send" point. Bind an InternalApi endpoint in "auth.hooks" to send the OTP SMS.',
+        { configKey: auth.phoneNumber['~k'] ?? configKey }
+      );
+    }
+  }
 
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {

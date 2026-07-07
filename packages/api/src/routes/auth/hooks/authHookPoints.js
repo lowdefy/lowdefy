@@ -31,7 +31,9 @@ import findHookUser from './findHookUser.js';
 //
 // Synthetic points are backed by BetterAuth config callbacks, not database
 // hooks: "email.verified" by emailVerification.afterEmailVerification,
-// "invitation.send" by the organization plugin's sendInvitationEmail.
+// "invitation.send" by the organization plugin's sendInvitationEmail, and the
+// "phone.*" points by the phoneNumber plugin's sendOTP /
+// sendPasswordResetOTP / callbackOnVerification.
 const authHookPoints = {
   'user.create.before': {
     kind: 'database',
@@ -137,6 +139,30 @@ const authHookPoints = {
       invitation: data.invitation,
       organization: data.organization,
       inviter: data.inviter,
+    }),
+  },
+  'phone.otp.send': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      phoneNumber: data.phoneNumber,
+      code: data.code,
+    }),
+  },
+  'phone.passwordReset.send': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      phoneNumber: data.phoneNumber,
+      code: data.code,
+    }),
+  },
+  'phone.verified': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      user: data.user,
+      phoneNumber: data.phoneNumber,
     }),
   },
 };

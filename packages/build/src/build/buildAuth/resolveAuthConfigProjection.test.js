@@ -48,6 +48,7 @@ test('resolveAuthConfigProjection sets default projection when no auth block', a
     magicLink: { enabled: false },
     twoFactor: { enabled: false },
     passkey: { enabled: false },
+    phoneNumber: { enabled: false, signUpOnVerification: false },
     providers: [],
     organizations: { signup: 'invite-only' },
   });
@@ -71,6 +72,7 @@ test('resolveAuthConfigProjection computes projection from an inline auth block'
     magicLink: { enabled: false },
     twoFactor: { enabled: true },
     passkey: { enabled: false },
+    phoneNumber: { enabled: false, signUpOnVerification: false },
     providers: [{ id: 'google', type: 'Google' }],
     organizations: { signup: 'open' },
   });

@@ -22,6 +22,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
     magicLink: { enabled: false },
     twoFactor: { enabled: false },
     passkey: { enabled: false },
+    phoneNumber: { enabled: false, signUpOnVerification: false },
     providers: [],
     organizations: { signup: 'invite-only' },
   });
@@ -95,4 +96,28 @@ test('computeAuthConfigProjection explicit organizations signup wins', () => {
   expect(
     computeAuthConfigProjection({ organizations: { signup: 'open' } }).organizations.signup
   ).toBe('open');
+});
+
+test('computeAuthConfigProjection reflects phoneNumber enabled and signUpOnVerification presence', () => {
+  const projection = computeAuthConfigProjection({
+    phoneNumber: {
+      enabled: true,
+      signUpOnVerification: { tempEmailDomain: 'phone.example.com' },
+    },
+  });
+  expect(projection.phoneNumber).toEqual({ enabled: true, signUpOnVerification: true });
+});
+
+test('computeAuthConfigProjection projects signUpOnVerification as a boolean, never the domain', () => {
+  const projection = computeAuthConfigProjection({
+    phoneNumber: { enabled: true },
+  });
+  expect(projection.phoneNumber).toEqual({ enabled: true, signUpOnVerification: false });
+});
+
+test('computeAuthConfigProjection treats phoneNumber enabled false as disabled', () => {
+  const projection = computeAuthConfigProjection({
+    phoneNumber: { enabled: false },
+  });
+  expect(projection.phoneNumber.enabled).toBe(false);
 });

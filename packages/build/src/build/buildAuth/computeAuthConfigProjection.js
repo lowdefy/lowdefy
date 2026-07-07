@@ -32,6 +32,12 @@ function computeAuthConfigProjection(auth = {}) {
     magicLink: { enabled: source.magicLink?.enabled === true },
     twoFactor: { enabled: !type.isNone(source.twoFactor) && source.twoFactor.enabled !== false },
     passkey: { enabled: !type.isNone(source.passkey) && source.passkey.enabled !== false },
+    phoneNumber: {
+      enabled: source.phoneNumber?.enabled === true,
+      // Boolean, not the block - gates whether phone sign-up UI renders;
+      // tempEmailDomain is server wiring the client has no use for.
+      signUpOnVerification: !type.isNone(source.phoneNumber?.signUpOnVerification),
+    },
     providers: (type.isArray(source.providers) ? source.providers : []).map((provider) => ({
       id: provider?.id ?? null,
       type: provider?.type ?? null,

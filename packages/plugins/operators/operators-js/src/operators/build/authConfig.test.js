@@ -21,6 +21,7 @@ const authConfig = {
   magicLink: { enabled: false },
   twoFactor: { enabled: true },
   passkey: { enabled: false },
+  phoneNumber: { enabled: true, signUpOnVerification: false },
   providers: [
     { id: 'google', type: 'Google' },
     { id: 'custom-oauth', type: 'GenericOAuth' },
@@ -48,6 +49,14 @@ test('_authConfig returns passkey.enabled boolean', () => {
   expect(_authConfig({ authConfig, params: 'passkey.enabled' })).toBe(false);
 });
 
+test('_authConfig returns phoneNumber.enabled boolean', () => {
+  expect(_authConfig({ authConfig, params: 'phoneNumber.enabled' })).toBe(true);
+});
+
+test('_authConfig returns phoneNumber.signUpOnVerification boolean', () => {
+  expect(_authConfig({ authConfig, params: 'phoneNumber.signUpOnVerification' })).toBe(false);
+});
+
 test('_authConfig returns providers projected to id and type only', () => {
   expect(_authConfig({ authConfig, params: 'providers' })).toEqual([
     { id: 'google', type: 'Google' },
@@ -69,6 +78,7 @@ test('_authConfig throws for unknown path and names all readable paths', () => {
   expect(() => _authConfig({ authConfig, params: 'authPages.signIn' })).toThrow(
     '_build.authConfig received an unreadable path "authPages.signIn". Readable paths are: ' +
       '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", ' +
+      '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
       '"providers", "organizations.signup".'
   );
 });

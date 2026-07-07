@@ -107,6 +107,13 @@ function setAuthDefaults({ components }) {
     setDefault(auth.passkey, 'enabled', true);
   }
 
+  if (!type.isNone(auth.phoneNumber)) {
+    setDefault(auth.phoneNumber, 'otpLength', 6);
+    setDefault(auth.phoneNumber, 'expiresIn', 300);
+    setDefault(auth.phoneNumber, 'allowedAttempts', 3);
+    setDefault(auth.phoneNumber, 'requireVerification', false);
+  }
+
   return components;
 }
 

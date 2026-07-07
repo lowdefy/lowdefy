@@ -36,6 +36,9 @@ const authHookPoints = [
   'verification.create.after',
   'email.verified',
   'invitation.send',
+  'phone.otp.send',
+  'phone.passwordReset.send',
+  'phone.verified',
 ];
 
 export default authHookPoints;

@@ -23,6 +23,8 @@ export default {
       'magicLink.enabled',
       'twoFactor.enabled',
       'passkey.enabled',
+      'phoneNumber.enabled',
+      'phoneNumber.signUpOnVerification',
       'providers',
       'organizations.signup',
     ],

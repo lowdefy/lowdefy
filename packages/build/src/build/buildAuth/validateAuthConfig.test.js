@@ -60,7 +60,7 @@ test('validateAuthConfig throws when configured without an authentication mechan
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
+    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
   );
 });
 
@@ -650,4 +650,93 @@ test('validateAuthConfig throws when userAdminRole is the reserved "user" role',
   expect(() => validateAuthConfig({ components, context })).toThrow(
     'Auth "userAdminRole" cannot be "user" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
   );
+});
+
+test('validateAuthConfig passes an enabled phoneNumber block with a phone.otp.send binding', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig counts phoneNumber as a login method for the mechanism check', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      phoneNumber: { enabled: true },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "database" is required when a login method or provider is configured.'
+  );
+});
+
+test('validateAuthConfig throws when phoneNumber is enabled without a phone.otp.send binding', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber" is enabled but no hook binds the "phone.otp.send" point. Bind an InternalApi endpoint in "auth.hooks" to send the OTP SMS.'
+  );
+});
+
+test('validateAuthConfig does not require a phone.otp.send binding when phoneNumber is disabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      phoneNumber: { enabled: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when phoneNumber is missing the enabled property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber" should have required property "enabled".'
+  );
+});
+
+test('validateAuthConfig throws when signUpOnVerification is missing tempEmailDomain', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true, signUpOnVerification: {} },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber.signUpOnVerification" should have required property "tempEmailDomain".'
+  );
+});
+
+test('validateAuthConfig throws when phoneNumber contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true, getTempEmail: 'nope' },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });

@@ -242,3 +242,55 @@ test('setAuthDefaults enables passkey by default when the block is present', () 
   const res = setAuthDefaults({ components });
   expect(res.auth.passkey).toEqual({ enabled: true });
 });
+
+test('setAuthDefaults does not add a phoneNumber block when absent', () => {
+  const components = {
+    auth: {
+      configured: true,
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.phoneNumber).toBeUndefined();
+});
+
+test('setAuthDefaults writes phoneNumber OTP defaults when the block is present', () => {
+  const components = {
+    auth: {
+      configured: true,
+      phoneNumber: { enabled: true },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.phoneNumber).toEqual({
+    enabled: true,
+    otpLength: 6,
+    expiresIn: 300,
+    allowedAttempts: 3,
+    requireVerification: false,
+  });
+});
+
+test('setAuthDefaults keeps explicit phoneNumber values', () => {
+  const components = {
+    auth: {
+      configured: true,
+      phoneNumber: {
+        enabled: true,
+        otpLength: 8,
+        expiresIn: 120,
+        allowedAttempts: 5,
+        requireVerification: true,
+        signUpOnVerification: { tempEmailDomain: 'phone.example.com' },
+      },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.phoneNumber).toEqual({
+    enabled: true,
+    otpLength: 8,
+    expiresIn: 120,
+    allowedAttempts: 5,
+    requireVerification: true,
+    signUpOnVerification: { tempEmailDomain: 'phone.example.com' },
+  });
+});
