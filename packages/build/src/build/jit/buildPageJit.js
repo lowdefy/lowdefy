@@ -33,12 +33,13 @@ import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
-import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
+import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
+import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -148,7 +149,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         dynamicIdentifiers,
         shouldStop: null,
       });
-      resolvedVars = await resolve(cloneForResolve(unresolvedVars), varCtx);
+      resolvedVars = await resolve(cloneWithMarkers(unresolvedVars), varCtx);
     }
 
     let refDef;
@@ -205,7 +206,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
-    processed = evaluateStaticOperators({
+    processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
       refDef,

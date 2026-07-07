@@ -76,6 +76,10 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
   // handleError delegates to logger.error
   context.handleError = context.logger.error;
 
+  // No-op stub for demand-driven module entry resolution used by resolveModuleConnectionId.
+  // In tests, module entries are already in their final state so no resolution is needed.
+  context.ensureEntryConfigResolved = () => Promise.resolve();
+
   return context;
 }
 

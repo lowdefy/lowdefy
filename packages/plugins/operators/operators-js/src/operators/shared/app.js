@@ -15,17 +15,26 @@
 */
 
 import { getFromObject } from '@lowdefy/operators';
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 function _app({ arrayIndices, location, lowdefyApp, params }) {
-  return getFromObject({
+  const value = getFromObject({
     arrayIndices,
     location,
     object: lowdefyApp,
     operator: '_app',
     params,
   });
+  if (params === 'slug' && type.isNone(value)) {
+    throw new ConfigError(
+      '`slug` is required on the app but is not set. Declare `slug` in `lowdefy.yaml`.',
+      { received: { slug: value } }
+    );
+  }
+  return value;
 }
 
-_app.dynamic = true;
+_app.dynamic = false;
 
 export default _app;
