@@ -16,8 +16,9 @@
 
 import filterMenus from './filterMenus.js';
 
-async function getMenus(context) {
-  const unfilteredMenus = await context.readConfigFile('menus.json');
+async function getMenus(context, { target = 'web' } = {}) {
+  const menusFile = target === 'mobile' ? 'mobile/menus.json' : 'menus.json';
+  const unfilteredMenus = await context.readConfigFile(menusFile);
   return filterMenus(context, { menus: unfilteredMenus || [] });
 }
 

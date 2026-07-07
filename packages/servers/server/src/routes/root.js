@@ -16,6 +16,10 @@
 
 import { getRootConfig } from '@lowdefy/api';
 
+// The web client gets root config embedded in the server-rendered HTML shell;
+// this route serves clients without a shell — the mobile app boots by fetching
+// /api/root?target=mobile. Menus keep their session-role filtering because the
+// fetch carries the session cookie through apiContext.
 async function rootHandler(c) {
   const context = c.get('lowdefyContext');
   const target = c.req.query('target') === 'mobile' ? 'mobile' : 'web';

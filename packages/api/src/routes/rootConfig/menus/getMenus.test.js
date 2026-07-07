@@ -754,3 +754,72 @@ test('MenuGroup with only a MenuDivider child is dropped', async () => {
     },
   ]);
 });
+
+test('getMenus, mobile target reads mobile/menus.json', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'mobile/menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'm-home',
+              auth: { public: true },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context, { target: 'mobile' });
+  expect(mockReadConfigFile).toHaveBeenCalledWith('mobile/menus.json');
+  expect(res).toEqual([
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'm-home',
+          auth: { public: true },
+        },
+      ],
+    },
+  ]);
+});
+
+test('getMenus, mobile target filters protected links for public request', async () => {
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'mobile/menus.json') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:home',
+              menuItemId: 'home',
+              type: 'MenuLink',
+              pageId: 'm-home',
+              auth: { public: true },
+            },
+            {
+              id: 'menuitem:default:admin',
+              menuItemId: 'admin',
+              type: 'MenuLink',
+              pageId: 'm-admin',
+              auth: { public: false },
+            },
+          ],
+        },
+      ];
+    }
+    return null;
+  });
+  const res = await getMenus(context, { target: 'mobile' });
+  expect(res[0].links.map((link) => link.pageId)).toEqual(['m-home']);
+});

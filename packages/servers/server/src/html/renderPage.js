@@ -56,6 +56,13 @@ async function renderPage(c, { pageId, status = 200 }) {
     return c.redirect(`${basePath}/404`, 302);
   }
 
+  // Mobile page artifacts must not half-render in a browser with missing
+  // block types — a UX check, not access control (auth ran in getPageConfig).
+  if (pageConfig.target && pageConfig.target !== 'web') {
+    logger.info({ event: 'redirect_non_web_target', pageId: resolvedPageId });
+    return c.redirect(`${basePath}/404`, 302);
+  }
+
   logger.info({ event: 'page_view', pageId: resolvedPageId });
 
   const html = template({
