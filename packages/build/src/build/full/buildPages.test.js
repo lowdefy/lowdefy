@@ -228,6 +228,7 @@ test('no blocks on page', () => {
         blockId: '1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [],
       },
     ],
@@ -296,6 +297,7 @@ test('nested blocks', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [],
         slots: {
           content: {
@@ -368,6 +370,7 @@ describe('block areas', () => {
           pageId: 'page1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -409,6 +412,7 @@ describe('block areas', () => {
           pageId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -457,6 +461,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -513,6 +518,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -575,6 +581,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -645,6 +652,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -731,6 +739,7 @@ describe('block areas', () => {
           blockId: '1',
           type: 'Container',
           subscriptions: [],
+          target: 'web',
           requests: [],
           slots: {
             content: {
@@ -830,6 +839,7 @@ test('user defined skeleton', () => {
           },
         ],
         subscriptions: [],
+        target: 'web',
         requests: [],
         slots: {
           content: {
@@ -886,6 +896,7 @@ test('create unique block ids', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [],
         slots: {
           content: {
@@ -979,6 +990,7 @@ test('different blockId counter for each page', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [],
         slots: {
           content: {
@@ -1004,6 +1016,7 @@ test('different blockId counter for each page', () => {
         blockId: 'page_2',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [],
         slots: {
           content: {

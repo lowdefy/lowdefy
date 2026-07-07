@@ -262,6 +262,46 @@ const snapshotTypesMap = {
 };
 
 /**
+ * Mobile types map for success tests — mirrors the generated mobile map:
+ * blocks from blocks-antd-mobile/basic/loaders; target-neutral classes shared.
+ */
+const snapshotTypesMapMobile = {
+  ...snapshotTypesMap,
+  blocks: {
+    // Basic blocks
+    Anchor: { package: '@lowdefy/blocks-basic' },
+    Box: { package: '@lowdefy/blocks-basic' },
+    DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
+    Html: { package: '@lowdefy/blocks-basic' },
+    Icon: { package: '@lowdefy/blocks-basic' },
+    Img: { package: '@lowdefy/blocks-basic' },
+    Span: { package: '@lowdefy/blocks-basic' },
+    Throw: { package: '@lowdefy/blocks-basic' },
+    // Loaders
+    ProgressBar: { package: '@lowdefy/blocks-loaders' },
+    Skeleton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonAvatar: { package: '@lowdefy/blocks-loaders' },
+    SkeletonButton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonInput: { package: '@lowdefy/blocks-loaders' },
+    SkeletonParagraph: { package: '@lowdefy/blocks-loaders' },
+    Spinner: { package: '@lowdefy/blocks-loaders' },
+    // antd-mobile blocks
+    Button: { package: '@lowdefy/blocks-antd-mobile' },
+    Card: { package: '@lowdefy/blocks-antd-mobile' },
+    DateSelector: { package: '@lowdefy/blocks-antd-mobile' },
+    List: { package: '@lowdefy/blocks-antd-mobile' },
+    Message: { package: '@lowdefy/blocks-antd-mobile' },
+    NavBar: { package: '@lowdefy/blocks-antd-mobile' },
+    Selector: { package: '@lowdefy/blocks-antd-mobile' },
+    Switch: { package: '@lowdefy/blocks-antd-mobile' },
+    TabBar: { package: '@lowdefy/blocks-antd-mobile' },
+    TextArea: { package: '@lowdefy/blocks-antd-mobile' },
+    TextInput: { package: '@lowdefy/blocks-antd-mobile' },
+  },
+};
+
+/**
  * Creates a runBuild helper function for snapshot testing build artifacts.
  *
  * @param {Function} build - The build function
@@ -289,6 +329,7 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
 
     await build({
       customTypesMap: snapshotTypesMap,
+      customTypesMapMobile: snapshotTypesMapMobile,
       directories: {
         config: configDir,
         build: path.join(configDir, '.lowdefy'),
@@ -319,4 +360,4 @@ function createRunBuildForSnapshots(build, fixturesDir, mockWriteBuildArtifact) 
   };
 }
 
-export { snapshotTypesMap, createRunBuildForSnapshots };
+export { snapshotTypesMap, snapshotTypesMapMobile, createRunBuildForSnapshots };

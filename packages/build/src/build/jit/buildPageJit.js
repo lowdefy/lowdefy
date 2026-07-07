@@ -264,11 +264,18 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       );
     }
 
-    // Build the page (validation, block processing)
+    // Build the page (validation, block processing) against its target's
+    // types map — the registry entry carries the target from the skeleton build.
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
     });
-    buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
+    buildPage({
+      page: processed,
+      index: 0,
+      context: buildContext,
+      checkDuplicatePageId,
+      target: pageEntry.target ?? 'web',
+    });
 
     // Validate that all page-level types (blocks, actions, operators) exist
     validatePageTypes({ context: buildContext });

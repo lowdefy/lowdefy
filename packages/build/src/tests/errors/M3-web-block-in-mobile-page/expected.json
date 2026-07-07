@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errorContains": [
+        "Block type \"Title\" was used but is not defined."
+      ]
+    }
+  ]
+}

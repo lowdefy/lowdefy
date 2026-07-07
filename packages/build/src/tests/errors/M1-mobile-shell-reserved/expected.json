@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errorContains": [
+        "App \"mobile.shell\" is reserved and not supported in this version of Lowdefy."
+      ]
+    }
+  ]
+}

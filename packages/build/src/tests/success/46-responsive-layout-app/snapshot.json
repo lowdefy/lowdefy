@@ -24,45 +24,45 @@
   "auth.json": {
     "api": {
       "roles": {
-        "~k": "3m"
+        "~k": "3t"
       },
-      "~k": "3l"
+      "~k": "3s"
     },
     "websockets": {
       "roles": {
-        "~k": "3o"
+        "~k": "3v"
       },
-      "~k": "3n"
+      "~k": "3u"
     },
     "authPages": {
-      "~k": "3p"
+      "~k": "3w"
     },
     "pages": {
       "roles": {
-        "~k": "3r"
+        "~k": "3y"
       },
-      "~k": "3q"
+      "~k": "3x"
     },
     "callbacks": {
       "~arr": [],
-      "~k": "3s"
+      "~k": "3z"
     },
     "events": {
       "~arr": [],
-      "~k": "3t"
+      "~k": "40"
     },
     "providers": {
       "~arr": [],
-      "~k": "3u"
+      "~k": "41"
     },
     "session": {
-      "~k": "3v"
+      "~k": "42"
     },
     "theme": {
-      "~k": "3w"
+      "~k": "43"
     },
     "configured": false,
-    "~k": "3k"
+    "~k": "3r"
   },
   "blockPackages.json": [
     "@lowdefy/blocks-basic",
@@ -200,212 +200,284 @@
       "~k_parent": "28"
     },
     "30": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[0:gutterCard1:Card].slots",
-      "~k_parent": "14"
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[2:card3:Card].slots",
+      "~k_parent": "p"
     },
     "31": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[0:gutterCard1:Card].slots.content",
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[2:card3:Card].slots.content",
       "~k_parent": "30"
     },
     "32": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[1:gutterCard2:Card].slots",
-      "~k_parent": "1a"
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[3:card4:Card].slots",
+      "~k_parent": "v"
     },
     "33": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[1:gutterCard2:Card].slots.content",
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[3:card4:Card].slots.content",
       "~k_parent": "32"
     },
     "34": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[2:gutterCard3:Card].slots",
-      "~k_parent": "1g"
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].slots",
+      "~k_parent": "11"
     },
     "35": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[2:gutterCard3:Card].slots.content",
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].slots.content",
       "~k_parent": "34"
     },
     "36": {
-      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].style",
-      "~k_parent": "1m"
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[0:gutterCard1:Card].slots",
+      "~k_parent": "14"
     },
     "37": {
-      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].style.block",
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[0:gutterCard1:Card].slots.content",
       "~k_parent": "36"
     },
     "38": {
-      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].slots",
-      "~k_parent": "1m"
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[1:gutterCard2:Card].slots",
+      "~k_parent": "1a"
     },
     "39": {
-      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].slots.content",
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[1:gutterCard2:Card].slots.content",
       "~k_parent": "38"
     },
     "40": {
-      "key": "root.menus[0:default].links[0:0:MenuLink]",
-      "~k_parent": "3z"
+      "key": "root.auth.events",
+      "~k_parent": "3r"
     },
     "41": {
-      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
-      "~k_parent": "40"
+      "key": "root.auth.providers",
+      "~k_parent": "3r"
     },
     "42": {
-      "key": "root.types",
-      "~k_parent": "4"
+      "key": "root.auth.session",
+      "~k_parent": "3r"
     },
     "43": {
-      "key": "root.types.actions",
-      "~k_parent": "42"
+      "key": "root.auth.theme",
+      "~k_parent": "3r"
     },
     "44": {
-      "key": "root.types.actions.Link",
-      "~k_parent": "43"
+      "key": "root.menus",
+      "~k_parent": "4"
     },
     "45": {
-      "key": "root.types.actions.SetDarkMode",
-      "~k_parent": "43"
+      "key": "root.menus[0:default]",
+      "~k_parent": "44"
     },
     "46": {
-      "key": "root.types.agents",
-      "~k_parent": "42"
+      "key": "root.menus[0:default].links",
+      "~k_parent": "45"
     },
     "47": {
-      "key": "root.types.auth",
-      "~k_parent": "42"
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "46"
     },
     "48": {
-      "key": "root.types.auth.adapters",
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
       "~k_parent": "47"
     },
     "49": {
-      "key": "root.types.auth.callbacks",
-      "~k_parent": "47"
+      "key": "root.types",
+      "~k_parent": "4"
     },
     "50": {
-      "key": "root.types.connections",
-      "~k_parent": "42"
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "4j"
     },
     "51": {
-      "key": "root.types.notifications",
-      "~k_parent": "42"
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "4j"
     },
     "52": {
-      "key": "root.types.requests",
-      "~k_parent": "42"
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "4j"
     },
     "53": {
-      "key": "root.types.websockets",
-      "~k_parent": "42"
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "4j"
     },
     "54": {
-      "key": "root.types.api",
-      "~k_parent": "42"
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "4j"
     },
     "55": {
-      "key": "root.types.operators",
-      "~k_parent": "42"
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "4j"
     },
     "56": {
-      "key": "root.types.operators.client",
-      "~k_parent": "55"
+      "key": "root.types.blocks.Message",
+      "~k_parent": "4j"
     },
     "57": {
-      "key": "root.types.operators.client._not",
-      "~k_parent": "56"
+      "key": "root.types.connections",
+      "~k_parent": "49"
     },
     "58": {
-      "key": "root.types.operators.client._type",
-      "~k_parent": "56"
+      "key": "root.types.notifications",
+      "~k_parent": "49"
     },
     "59": {
-      "key": "root.types.operators.server",
-      "~k_parent": "55"
+      "key": "root.types.requests",
+      "~k_parent": "49"
     },
     "60": {
-      "key": "root.imports.blocks[15]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Spinner",
+      "~k_parent": "5j"
     },
     "61": {
-      "key": "root.imports.blocks[16]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Message",
+      "~k_parent": "5j"
     },
     "62": {
-      "key": "root.imports.blocks[17]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.operators",
+      "~k_parent": "5h"
     },
     "63": {
-      "key": "root.imports.blocks[18]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.operators.client",
+      "~k_parent": "62"
     },
     "64": {
-      "key": "root.imports.blocks[19]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.operators.client._not",
+      "~k_parent": "63"
     },
     "65": {
-      "key": "root.imports.blocks[20]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.operators.client._type",
+      "~k_parent": "63"
     },
     "66": {
-      "key": "root.imports.blocks[21]",
-      "~k_parent": "5k"
+      "key": "root.imports",
+      "~k_parent": "4"
     },
     "67": {
-      "key": "root.imports.blocks[22]",
-      "~k_parent": "5k"
+      "key": "root.imports.actions",
+      "~k_parent": "66"
     },
     "68": {
-      "key": "root.imports.connections",
-      "~k_parent": "5a"
+      "key": "root.imports.actions[0]",
+      "~k_parent": "67"
     },
     "69": {
-      "key": "root.imports.icons",
-      "~k_parent": "5a"
+      "key": "root.imports.actions[1]",
+      "~k_parent": "67"
     },
     "70": {
-      "key": "root.imports.icons[13]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "6g"
     },
     "71": {
-      "key": "root.imports.icons[13].icons",
-      "~k_parent": "70"
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "6g"
     },
     "72": {
-      "key": "root.imports.icons[14]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "6g"
     },
     "73": {
-      "key": "root.imports.icons[14].icons",
-      "~k_parent": "72"
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "6g"
     },
     "74": {
-      "key": "root.imports.icons[15]",
-      "~k_parent": "69"
+      "key": "root.imports.connections",
+      "~k_parent": "66"
     },
     "75": {
-      "key": "root.imports.icons[15].icons",
-      "~k_parent": "74"
+      "key": "root.imports.icons",
+      "~k_parent": "66"
     },
     "76": {
-      "key": "root.imports.icons[16]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[0]",
+      "~k_parent": "75"
     },
     "77": {
-      "key": "root.imports.icons[16].icons",
+      "key": "root.imports.icons[0].icons",
       "~k_parent": "76"
     },
     "78": {
-      "key": "root.imports.icons[17]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[1]",
+      "~k_parent": "75"
     },
     "79": {
-      "key": "root.imports.icons[17].icons",
+      "key": "root.imports.icons[1].icons",
       "~k_parent": "78"
     },
     "80": {
-      "key": "root.imports.operators.client[1]",
-      "~k_parent": "7y"
+      "key": "root.imports.icons[15]",
+      "~k_parent": "75"
     },
     "81": {
-      "key": "root.imports.operators.server",
-      "~k_parent": "7x"
+      "key": "root.imports.icons[15].icons",
+      "~k_parent": "80"
+    },
+    "82": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "75"
+    },
+    "83": {
+      "key": "root.imports.icons[16].icons",
+      "~k_parent": "82"
+    },
+    "84": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "75"
+    },
+    "85": {
+      "key": "root.imports.icons[17].icons",
+      "~k_parent": "84"
+    },
+    "86": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "75"
+    },
+    "87": {
+      "key": "root.imports.icons[18].icons",
+      "~k_parent": "86"
+    },
+    "88": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "75"
+    },
+    "89": {
+      "key": "root.imports.icons[19].icons",
+      "~k_parent": "88"
+    },
+    "90": {
+      "key": "root.importsMobile.blocks",
+      "~k_parent": "8y"
+    },
+    "91": {
+      "key": "root.importsMobile.blocks[0]",
+      "~k_parent": "90"
+    },
+    "92": {
+      "key": "root.importsMobile.blocks[1]",
+      "~k_parent": "90"
+    },
+    "93": {
+      "key": "root.importsMobile.blocks[2]",
+      "~k_parent": "90"
+    },
+    "94": {
+      "key": "root.importsMobile.blocks[3]",
+      "~k_parent": "90"
+    },
+    "95": {
+      "key": "root.importsMobile.blocks[4]",
+      "~k_parent": "90"
+    },
+    "96": {
+      "key": "root.importsMobile.blocks[5]",
+      "~k_parent": "90"
+    },
+    "97": {
+      "key": "root.importsMobile.blocks[6]",
+      "~k_parent": "90"
+    },
+    "98": {
+      "key": "root.importsMobile.blocks[7]",
+      "~k_parent": "90"
+    },
+    "99": {
+      "key": "root.importsMobile.blocks[8]",
+      "~k_parent": "90"
     },
     "a": {
       "key": "root.pages[0:home:Box].blocks[0:title:Title].properties",
@@ -692,593 +764,977 @@
       "key": "root.config",
       "~k_parent": "4"
     },
+    "2i": {
+      "key": "root.mobile",
+      "~k_parent": "4"
+    },
     "2j": {
+      "key": "root.mobile.config",
+      "~k_parent": "2i"
+    },
+    "2k": {
+      "key": "root.mobile.theme",
+      "~k_parent": "2i"
+    },
+    "2l": {
+      "key": "root.mobile.capacitor",
+      "~k_parent": "2i"
+    },
+    "2m": {
+      "key": "root.mobile.pages",
+      "~k_parent": "2i"
+    },
+    "2n": {
+      "key": "root.mobile.menus",
+      "~k_parent": "2i"
+    },
+    "2p": {
       "key": "root.pages",
       "~k_parent": "4"
     },
-    "2k": {
-      "key": "root.pages[0:home:Box]",
-      "~k_parent": "2j"
-    },
-    "2l": {
-      "key": "root.pages[0:home:Box].auth",
-      "~k_parent": "2k"
-    },
-    "2m": {
-      "key": "root.pages[0:home:Box].slots",
-      "~k_parent": "2k"
-    },
-    "2n": {
-      "key": "root.pages[0:home:Box].slots.content",
-      "~k_parent": "2m"
-    },
-    "2o": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].slots",
-      "~k_parent": "b"
-    },
-    "2p": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].slots.content",
-      "~k_parent": "2o"
-    },
     "2q": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[0:card1:Card].slots",
-      "~k_parent": "d"
+      "key": "root.pages[0:home:Box]",
+      "~k_parent": "2p"
     },
     "2r": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[0:card1:Card].slots.content",
+      "key": "root.pages[0:home:Box].auth",
       "~k_parent": "2q"
     },
     "2s": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[1:card2:Card].slots",
-      "~k_parent": "j"
+      "key": "root.pages[0:home:Box].slots",
+      "~k_parent": "2q"
     },
     "2t": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[1:card2:Card].slots.content",
+      "key": "root.pages[0:home:Box].slots.content",
       "~k_parent": "2s"
     },
     "2u": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[2:card3:Card].slots",
-      "~k_parent": "p"
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].slots",
+      "~k_parent": "b"
     },
     "2v": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[2:card3:Card].slots.content",
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].slots.content",
       "~k_parent": "2u"
     },
     "2w": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[3:card4:Card].slots",
-      "~k_parent": "v"
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[0:card1:Card].slots",
+      "~k_parent": "d"
     },
     "2x": {
-      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[3:card4:Card].slots.content",
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[0:card1:Card].slots.content",
       "~k_parent": "2w"
     },
     "2y": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].slots",
-      "~k_parent": "11"
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[1:card2:Card].slots",
+      "~k_parent": "j"
     },
     "2z": {
-      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].slots.content",
+      "key": "root.pages[0:home:Box].blocks[1:responsiveRow:Box].blocks[1:card2:Card].slots.content",
       "~k_parent": "2y"
     },
     "3a": {
-      "key": "root.pages[0:home:Box].subscriptions",
-      "~k_parent": "2k"
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[2:gutterCard3:Card].slots",
+      "~k_parent": "1g"
     },
     "3b": {
-      "key": "root.pages[0:home:Box].requests",
-      "~k_parent": "2k"
+      "key": "root.pages[0:home:Box].blocks[2:gutterDemo:Box].blocks[2:gutterCard3:Card].slots.content",
+      "~k_parent": "3a"
     },
     "3c": {
-      "key": "root.pages[1:404:Result]",
-      "~k_parent": "2j"
+      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].style",
+      "~k_parent": "1m"
     },
     "3d": {
-      "key": "root.pages[1:404:Result].style",
+      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].style.block",
       "~k_parent": "3c"
     },
     "3e": {
-      "key": "root.pages[1:404:Result].style.block",
-      "~k_parent": "3d"
+      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].slots",
+      "~k_parent": "1m"
     },
     "3f": {
+      "key": "root.pages[0:home:Box].blocks[3:flexDemo:Box].slots.content",
+      "~k_parent": "3e"
+    },
+    "3g": {
+      "key": "root.pages[0:home:Box].subscriptions",
+      "~k_parent": "2q"
+    },
+    "3h": {
+      "key": "root.pages[0:home:Box].requests",
+      "~k_parent": "2q"
+    },
+    "3i": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "2p"
+    },
+    "3j": {
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "3i"
+    },
+    "3k": {
+      "key": "root.pages[1:404:Result].style.block",
+      "~k_parent": "3j"
+    },
+    "3l": {
       "key": "root.pages[1:404:Result].slots.extra.blocks[0:home:Button].events.onClick",
       "~k_parent": "28"
     },
-    "3g": {
-      "key": "root.pages[1:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
-      "~k_parent": "3f"
-    },
-    "3h": {
-      "key": "root.pages[1:404:Result].auth",
-      "~k_parent": "3c"
-    },
-    "3i": {
-      "key": "root.pages[1:404:Result].subscriptions",
-      "~k_parent": "3c"
-    },
-    "3j": {
-      "key": "root.pages[1:404:Result].requests",
-      "~k_parent": "3c"
-    },
-    "3k": {
-      "key": "root.auth",
-      "~k_parent": "4"
-    },
-    "3l": {
-      "key": "root.auth.api",
-      "~k_parent": "3k"
-    },
     "3m": {
-      "key": "root.auth.api.roles",
+      "key": "root.pages[1:404:Result].slots.extra.blocks[0:home:Button].events.onClick.catch",
       "~k_parent": "3l"
     },
     "3n": {
-      "key": "root.auth.websockets",
-      "~k_parent": "3k"
+      "key": "root.pages[1:404:Result].auth",
+      "~k_parent": "3i"
     },
     "3o": {
-      "key": "root.auth.websockets.roles",
-      "~k_parent": "3n"
+      "key": "root.pages[1:404:Result].subscriptions",
+      "~k_parent": "3i"
     },
     "3p": {
-      "key": "root.auth.authPages",
-      "~k_parent": "3k"
+      "key": "root.pages[1:404:Result].requests",
+      "~k_parent": "3i"
     },
     "3q": {
-      "key": "root.auth.pages",
-      "~k_parent": "3k"
+      "key": "root.mobile.pages",
+      "~k_parent": "2i"
     },
     "3r": {
-      "key": "root.auth.pages.roles",
-      "~k_parent": "3q"
-    },
-    "3s": {
-      "key": "root.auth.callbacks",
-      "~k_parent": "3k"
-    },
-    "3t": {
-      "key": "root.auth.events",
-      "~k_parent": "3k"
-    },
-    "3u": {
-      "key": "root.auth.providers",
-      "~k_parent": "3k"
-    },
-    "3v": {
-      "key": "root.auth.session",
-      "~k_parent": "3k"
-    },
-    "3w": {
-      "key": "root.auth.theme",
-      "~k_parent": "3k"
-    },
-    "3x": {
-      "key": "root.menus",
+      "key": "root.auth",
       "~k_parent": "4"
     },
+    "3s": {
+      "key": "root.auth.api",
+      "~k_parent": "3r"
+    },
+    "3t": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "3s"
+    },
+    "3u": {
+      "key": "root.auth.websockets",
+      "~k_parent": "3r"
+    },
+    "3v": {
+      "key": "root.auth.websockets.roles",
+      "~k_parent": "3u"
+    },
+    "3w": {
+      "key": "root.auth.authPages",
+      "~k_parent": "3r"
+    },
+    "3x": {
+      "key": "root.auth.pages",
+      "~k_parent": "3r"
+    },
     "3y": {
-      "key": "root.menus[0:default]",
+      "key": "root.auth.pages.roles",
       "~k_parent": "3x"
     },
     "3z": {
-      "key": "root.menus[0:default].links",
-      "~k_parent": "3y"
+      "key": "root.auth.callbacks",
+      "~k_parent": "3r"
     },
     "4a": {
-      "key": "root.types.auth.events",
-      "~k_parent": "47"
+      "key": "root.types.actions",
+      "~k_parent": "49"
     },
     "4b": {
-      "key": "root.types.auth.providers",
-      "~k_parent": "47"
+      "key": "root.types.actions.Link",
+      "~k_parent": "4a"
     },
     "4c": {
-      "key": "root.types.blocks",
-      "~k_parent": "42"
+      "key": "root.types.actions.SetDarkMode",
+      "~k_parent": "4a"
     },
     "4d": {
-      "key": "root.types.blocks.Box",
-      "~k_parent": "4c"
+      "key": "root.types.agents",
+      "~k_parent": "49"
     },
     "4e": {
-      "key": "root.types.blocks.Title",
-      "~k_parent": "4c"
+      "key": "root.types.auth",
+      "~k_parent": "49"
     },
     "4f": {
-      "key": "root.types.blocks.Card",
-      "~k_parent": "4c"
+      "key": "root.types.auth.adapters",
+      "~k_parent": "4e"
     },
     "4g": {
-      "key": "root.types.blocks.Paragraph",
-      "~k_parent": "4c"
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "4e"
     },
     "4h": {
-      "key": "root.types.blocks.Button",
-      "~k_parent": "4c"
+      "key": "root.types.auth.events",
+      "~k_parent": "4e"
     },
     "4i": {
-      "key": "root.types.blocks.Result",
-      "~k_parent": "4c"
+      "key": "root.types.auth.providers",
+      "~k_parent": "4e"
     },
     "4j": {
-      "key": "root.types.blocks.Anchor",
-      "~k_parent": "4c"
+      "key": "root.types.blocks",
+      "~k_parent": "49"
     },
     "4k": {
-      "key": "root.types.blocks.DangerousHtml",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Box",
+      "~k_parent": "4j"
     },
     "4l": {
-      "key": "root.types.blocks.Dynamic",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Title",
+      "~k_parent": "4j"
     },
     "4m": {
-      "key": "root.types.blocks.Html",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Card",
+      "~k_parent": "4j"
     },
     "4n": {
-      "key": "root.types.blocks.Icon",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "4j"
     },
     "4o": {
-      "key": "root.types.blocks.Img",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Button",
+      "~k_parent": "4j"
     },
     "4p": {
-      "key": "root.types.blocks.List",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Result",
+      "~k_parent": "4j"
     },
     "4q": {
-      "key": "root.types.blocks.Span",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "4j"
     },
     "4r": {
-      "key": "root.types.blocks.Throw",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "4j"
     },
     "4s": {
-      "key": "root.types.blocks.ProgressBar",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Dynamic",
+      "~k_parent": "4j"
     },
     "4t": {
-      "key": "root.types.blocks.Skeleton",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Html",
+      "~k_parent": "4j"
     },
     "4u": {
-      "key": "root.types.blocks.SkeletonAvatar",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "4j"
     },
     "4v": {
-      "key": "root.types.blocks.SkeletonButton",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Img",
+      "~k_parent": "4j"
     },
     "4w": {
-      "key": "root.types.blocks.SkeletonInput",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.List",
+      "~k_parent": "4j"
     },
     "4x": {
-      "key": "root.types.blocks.SkeletonParagraph",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Span",
+      "~k_parent": "4j"
     },
     "4y": {
-      "key": "root.types.blocks.Spinner",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "4j"
     },
     "4z": {
-      "key": "root.types.blocks.Message",
-      "~k_parent": "4c"
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "4j"
     },
     "5a": {
-      "key": "root.imports",
-      "~k_parent": "4"
+      "key": "root.types.websockets",
+      "~k_parent": "49"
     },
     "5b": {
-      "key": "root.imports.actions",
-      "~k_parent": "5a"
+      "key": "root.types.api",
+      "~k_parent": "49"
     },
     "5c": {
-      "key": "root.imports.actions[0]",
-      "~k_parent": "5b"
+      "key": "root.types.operators",
+      "~k_parent": "49"
     },
     "5d": {
-      "key": "root.imports.actions[1]",
-      "~k_parent": "5b"
+      "key": "root.types.operators.client",
+      "~k_parent": "5c"
     },
     "5e": {
-      "key": "root.imports.agents",
-      "~k_parent": "5a"
+      "key": "root.types.operators.client._not",
+      "~k_parent": "5d"
     },
     "5f": {
-      "key": "root.imports.auth",
-      "~k_parent": "5a"
+      "key": "root.types.operators.client._type",
+      "~k_parent": "5d"
     },
     "5g": {
-      "key": "root.imports.auth.adapters",
-      "~k_parent": "5f"
+      "key": "root.types.operators.server",
+      "~k_parent": "5c"
     },
     "5h": {
-      "key": "root.imports.auth.callbacks",
-      "~k_parent": "5f"
+      "key": "root.typesMobile",
+      "~k_parent": "4"
     },
     "5i": {
-      "key": "root.imports.auth.events",
-      "~k_parent": "5f"
+      "key": "root.typesMobile.actions",
+      "~k_parent": "5h"
     },
     "5j": {
-      "key": "root.imports.auth.providers",
-      "~k_parent": "5f"
+      "key": "root.typesMobile.blocks",
+      "~k_parent": "5h"
     },
     "5k": {
-      "key": "root.imports.blocks",
-      "~k_parent": "5a"
+      "key": "root.typesMobile.blocks.Anchor",
+      "~k_parent": "5j"
     },
     "5l": {
-      "key": "root.imports.blocks[0]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Box",
+      "~k_parent": "5j"
     },
     "5m": {
-      "key": "root.imports.blocks[1]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.DangerousHtml",
+      "~k_parent": "5j"
     },
     "5n": {
-      "key": "root.imports.blocks[2]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Dynamic",
+      "~k_parent": "5j"
     },
     "5o": {
-      "key": "root.imports.blocks[3]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Html",
+      "~k_parent": "5j"
     },
     "5p": {
-      "key": "root.imports.blocks[4]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Icon",
+      "~k_parent": "5j"
     },
     "5q": {
-      "key": "root.imports.blocks[5]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Img",
+      "~k_parent": "5j"
     },
     "5r": {
-      "key": "root.imports.blocks[6]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.List",
+      "~k_parent": "5j"
     },
     "5s": {
-      "key": "root.imports.blocks[7]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Span",
+      "~k_parent": "5j"
     },
     "5t": {
-      "key": "root.imports.blocks[8]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Throw",
+      "~k_parent": "5j"
     },
     "5u": {
-      "key": "root.imports.blocks[9]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.ProgressBar",
+      "~k_parent": "5j"
     },
     "5v": {
-      "key": "root.imports.blocks[10]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.Skeleton",
+      "~k_parent": "5j"
     },
     "5w": {
-      "key": "root.imports.blocks[11]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.SkeletonAvatar",
+      "~k_parent": "5j"
     },
     "5x": {
-      "key": "root.imports.blocks[12]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.SkeletonButton",
+      "~k_parent": "5j"
     },
     "5y": {
-      "key": "root.imports.blocks[13]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.SkeletonInput",
+      "~k_parent": "5j"
     },
     "5z": {
-      "key": "root.imports.blocks[14]",
-      "~k_parent": "5k"
+      "key": "root.typesMobile.blocks.SkeletonParagraph",
+      "~k_parent": "5j"
     },
     "6a": {
-      "key": "root.imports.icons[0]",
-      "~k_parent": "69"
+      "key": "root.imports.agents",
+      "~k_parent": "66"
     },
     "6b": {
-      "key": "root.imports.icons[0].icons",
-      "~k_parent": "6a"
+      "key": "root.imports.auth",
+      "~k_parent": "66"
     },
     "6c": {
-      "key": "root.imports.icons[1]",
-      "~k_parent": "69"
+      "key": "root.imports.auth.adapters",
+      "~k_parent": "6b"
     },
     "6d": {
-      "key": "root.imports.icons[1].icons",
-      "~k_parent": "6c"
+      "key": "root.imports.auth.callbacks",
+      "~k_parent": "6b"
     },
     "6e": {
-      "key": "root.imports.icons[2]",
-      "~k_parent": "69"
+      "key": "root.imports.auth.events",
+      "~k_parent": "6b"
     },
     "6f": {
-      "key": "root.imports.icons[2].icons",
-      "~k_parent": "6e"
+      "key": "root.imports.auth.providers",
+      "~k_parent": "6b"
     },
     "6g": {
-      "key": "root.imports.icons[3]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks",
+      "~k_parent": "66"
     },
     "6h": {
-      "key": "root.imports.icons[3].icons",
+      "key": "root.imports.blocks[0]",
       "~k_parent": "6g"
     },
     "6i": {
-      "key": "root.imports.icons[4]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "6g"
     },
     "6j": {
-      "key": "root.imports.icons[4].icons",
-      "~k_parent": "6i"
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "6g"
     },
     "6k": {
-      "key": "root.imports.icons[5]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "6g"
     },
     "6l": {
-      "key": "root.imports.icons[5].icons",
-      "~k_parent": "6k"
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "6g"
     },
     "6m": {
-      "key": "root.imports.icons[6]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "6g"
     },
     "6n": {
-      "key": "root.imports.icons[6].icons",
-      "~k_parent": "6m"
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "6g"
     },
     "6o": {
-      "key": "root.imports.icons[7]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "6g"
     },
     "6p": {
-      "key": "root.imports.icons[7].icons",
-      "~k_parent": "6o"
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "6g"
     },
     "6q": {
-      "key": "root.imports.icons[8]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "6g"
     },
     "6r": {
-      "key": "root.imports.icons[8].icons",
-      "~k_parent": "6q"
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "6g"
     },
     "6s": {
-      "key": "root.imports.icons[9]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "6g"
     },
     "6t": {
-      "key": "root.imports.icons[9].icons",
-      "~k_parent": "6s"
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "6g"
     },
     "6u": {
-      "key": "root.imports.icons[10]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "6g"
     },
     "6v": {
-      "key": "root.imports.icons[10].icons",
-      "~k_parent": "6u"
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "6g"
     },
     "6w": {
-      "key": "root.imports.icons[11]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "6g"
     },
     "6x": {
-      "key": "root.imports.icons[11].icons",
-      "~k_parent": "6w"
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "6g"
     },
     "6y": {
-      "key": "root.imports.icons[12]",
-      "~k_parent": "69"
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "6g"
     },
     "6z": {
-      "key": "root.imports.icons[12].icons",
-      "~k_parent": "6y"
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "6g"
     },
     "7a": {
-      "key": "root.imports.icons[18]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[2]",
+      "~k_parent": "75"
     },
     "7b": {
-      "key": "root.imports.icons[18].icons",
+      "key": "root.imports.icons[2].icons",
       "~k_parent": "7a"
     },
     "7c": {
-      "key": "root.imports.icons[19]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[3]",
+      "~k_parent": "75"
     },
     "7d": {
-      "key": "root.imports.icons[19].icons",
+      "key": "root.imports.icons[3].icons",
       "~k_parent": "7c"
     },
     "7e": {
-      "key": "root.imports.icons[20]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[4]",
+      "~k_parent": "75"
     },
     "7f": {
-      "key": "root.imports.icons[20].icons",
+      "key": "root.imports.icons[4].icons",
       "~k_parent": "7e"
     },
     "7g": {
-      "key": "root.imports.icons[21]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[5]",
+      "~k_parent": "75"
     },
     "7h": {
-      "key": "root.imports.icons[21].icons",
+      "key": "root.imports.icons[5].icons",
       "~k_parent": "7g"
     },
     "7i": {
-      "key": "root.imports.icons[22]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[6]",
+      "~k_parent": "75"
     },
     "7j": {
-      "key": "root.imports.icons[22].icons",
+      "key": "root.imports.icons[6].icons",
       "~k_parent": "7i"
     },
     "7k": {
-      "key": "root.imports.icons[23]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[7]",
+      "~k_parent": "75"
     },
     "7l": {
-      "key": "root.imports.icons[23].icons",
+      "key": "root.imports.icons[7].icons",
       "~k_parent": "7k"
     },
     "7m": {
-      "key": "root.imports.icons[24]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[8]",
+      "~k_parent": "75"
     },
     "7n": {
-      "key": "root.imports.icons[24].icons",
+      "key": "root.imports.icons[8].icons",
       "~k_parent": "7m"
     },
     "7o": {
-      "key": "root.imports.icons[25]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[9]",
+      "~k_parent": "75"
     },
     "7p": {
-      "key": "root.imports.icons[25].icons",
+      "key": "root.imports.icons[9].icons",
       "~k_parent": "7o"
     },
     "7q": {
-      "key": "root.imports.icons[26]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[10]",
+      "~k_parent": "75"
     },
     "7r": {
-      "key": "root.imports.icons[26].icons",
+      "key": "root.imports.icons[10].icons",
       "~k_parent": "7q"
     },
     "7s": {
-      "key": "root.imports.icons[27]",
-      "~k_parent": "69"
+      "key": "root.imports.icons[11]",
+      "~k_parent": "75"
     },
     "7t": {
-      "key": "root.imports.icons[27].icons",
+      "key": "root.imports.icons[11].icons",
       "~k_parent": "7s"
     },
     "7u": {
-      "key": "root.imports.notifications",
-      "~k_parent": "5a"
+      "key": "root.imports.icons[12]",
+      "~k_parent": "75"
     },
     "7v": {
-      "key": "root.imports.requests",
-      "~k_parent": "5a"
+      "key": "root.imports.icons[12].icons",
+      "~k_parent": "7u"
     },
     "7w": {
-      "key": "root.imports.websockets",
-      "~k_parent": "5a"
+      "key": "root.imports.icons[13]",
+      "~k_parent": "75"
     },
     "7x": {
-      "key": "root.imports.operators",
-      "~k_parent": "5a"
+      "key": "root.imports.icons[13].icons",
+      "~k_parent": "7w"
     },
     "7y": {
-      "key": "root.imports.operators.client",
-      "~k_parent": "7x"
+      "key": "root.imports.icons[14]",
+      "~k_parent": "75"
     },
     "7z": {
-      "key": "root.imports.operators.client[0]",
+      "key": "root.imports.icons[14].icons",
       "~k_parent": "7y"
+    },
+    "8a": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "75"
+    },
+    "8b": {
+      "key": "root.imports.icons[20].icons",
+      "~k_parent": "8a"
+    },
+    "8c": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "75"
+    },
+    "8d": {
+      "key": "root.imports.icons[21].icons",
+      "~k_parent": "8c"
+    },
+    "8e": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "75"
+    },
+    "8f": {
+      "key": "root.imports.icons[22].icons",
+      "~k_parent": "8e"
+    },
+    "8g": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "75"
+    },
+    "8h": {
+      "key": "root.imports.icons[23].icons",
+      "~k_parent": "8g"
+    },
+    "8i": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "75"
+    },
+    "8j": {
+      "key": "root.imports.icons[24].icons",
+      "~k_parent": "8i"
+    },
+    "8k": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "75"
+    },
+    "8l": {
+      "key": "root.imports.icons[25].icons",
+      "~k_parent": "8k"
+    },
+    "8m": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "75"
+    },
+    "8n": {
+      "key": "root.imports.icons[26].icons",
+      "~k_parent": "8m"
+    },
+    "8o": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "75"
+    },
+    "8p": {
+      "key": "root.imports.icons[27].icons",
+      "~k_parent": "8o"
+    },
+    "8q": {
+      "key": "root.imports.notifications",
+      "~k_parent": "66"
+    },
+    "8r": {
+      "key": "root.imports.requests",
+      "~k_parent": "66"
+    },
+    "8s": {
+      "key": "root.imports.websockets",
+      "~k_parent": "66"
+    },
+    "8t": {
+      "key": "root.imports.operators",
+      "~k_parent": "66"
+    },
+    "8u": {
+      "key": "root.imports.operators.client",
+      "~k_parent": "8t"
+    },
+    "8v": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "8u"
+    },
+    "8w": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "8u"
+    },
+    "8x": {
+      "key": "root.imports.operators.server",
+      "~k_parent": "8t"
+    },
+    "8y": {
+      "key": "root.importsMobile",
+      "~k_parent": "4"
+    },
+    "8z": {
+      "key": "root.importsMobile.actions",
+      "~k_parent": "8y"
+    },
+    "9a": {
+      "key": "root.importsMobile.blocks[9]",
+      "~k_parent": "90"
+    },
+    "9b": {
+      "key": "root.importsMobile.blocks[10]",
+      "~k_parent": "90"
+    },
+    "9c": {
+      "key": "root.importsMobile.blocks[11]",
+      "~k_parent": "90"
+    },
+    "9d": {
+      "key": "root.importsMobile.blocks[12]",
+      "~k_parent": "90"
+    },
+    "9e": {
+      "key": "root.importsMobile.blocks[13]",
+      "~k_parent": "90"
+    },
+    "9f": {
+      "key": "root.importsMobile.blocks[14]",
+      "~k_parent": "90"
+    },
+    "9g": {
+      "key": "root.importsMobile.blocks[15]",
+      "~k_parent": "90"
+    },
+    "9h": {
+      "key": "root.importsMobile.blocks[16]",
+      "~k_parent": "90"
+    },
+    "9i": {
+      "key": "root.importsMobile.blocks[17]",
+      "~k_parent": "90"
+    },
+    "9j": {
+      "key": "root.importsMobile.icons",
+      "~k_parent": "8y"
+    },
+    "9k": {
+      "key": "root.importsMobile.icons[0]",
+      "~k_parent": "9j"
+    },
+    "9l": {
+      "key": "root.importsMobile.icons[0].icons",
+      "~k_parent": "9k"
+    },
+    "9m": {
+      "key": "root.importsMobile.icons[1]",
+      "~k_parent": "9j"
+    },
+    "9n": {
+      "key": "root.importsMobile.icons[1].icons",
+      "~k_parent": "9m"
+    },
+    "9o": {
+      "key": "root.importsMobile.icons[2]",
+      "~k_parent": "9j"
+    },
+    "9p": {
+      "key": "root.importsMobile.icons[2].icons",
+      "~k_parent": "9o"
+    },
+    "9q": {
+      "key": "root.importsMobile.icons[3]",
+      "~k_parent": "9j"
+    },
+    "9r": {
+      "key": "root.importsMobile.icons[3].icons",
+      "~k_parent": "9q"
+    },
+    "9s": {
+      "key": "root.importsMobile.icons[4]",
+      "~k_parent": "9j"
+    },
+    "9t": {
+      "key": "root.importsMobile.icons[4].icons",
+      "~k_parent": "9s"
+    },
+    "9u": {
+      "key": "root.importsMobile.icons[5]",
+      "~k_parent": "9j"
+    },
+    "9v": {
+      "key": "root.importsMobile.icons[5].icons",
+      "~k_parent": "9u"
+    },
+    "9w": {
+      "key": "root.importsMobile.icons[6]",
+      "~k_parent": "9j"
+    },
+    "9x": {
+      "key": "root.importsMobile.icons[6].icons",
+      "~k_parent": "9w"
+    },
+    "9y": {
+      "key": "root.importsMobile.icons[7]",
+      "~k_parent": "9j"
+    },
+    "9z": {
+      "key": "root.importsMobile.icons[7].icons",
+      "~k_parent": "9y"
+    },
+    "a0": {
+      "key": "root.importsMobile.icons[8]",
+      "~k_parent": "9j"
+    },
+    "a1": {
+      "key": "root.importsMobile.icons[8].icons",
+      "~k_parent": "a0"
+    },
+    "a2": {
+      "key": "root.importsMobile.icons[9]",
+      "~k_parent": "9j"
+    },
+    "a3": {
+      "key": "root.importsMobile.icons[9].icons",
+      "~k_parent": "a2"
+    },
+    "a4": {
+      "key": "root.importsMobile.icons[10]",
+      "~k_parent": "9j"
+    },
+    "a5": {
+      "key": "root.importsMobile.icons[10].icons",
+      "~k_parent": "a4"
+    },
+    "a6": {
+      "key": "root.importsMobile.icons[11]",
+      "~k_parent": "9j"
+    },
+    "a7": {
+      "key": "root.importsMobile.icons[11].icons",
+      "~k_parent": "a6"
+    },
+    "a8": {
+      "key": "root.importsMobile.icons[12]",
+      "~k_parent": "9j"
+    },
+    "a9": {
+      "key": "root.importsMobile.icons[12].icons",
+      "~k_parent": "a8"
+    },
+    "aa": {
+      "key": "root.importsMobile.icons[13]",
+      "~k_parent": "9j"
+    },
+    "ab": {
+      "key": "root.importsMobile.icons[13].icons",
+      "~k_parent": "aa"
+    },
+    "ac": {
+      "key": "root.importsMobile.icons[14]",
+      "~k_parent": "9j"
+    },
+    "ad": {
+      "key": "root.importsMobile.icons[14].icons",
+      "~k_parent": "ac"
+    },
+    "ae": {
+      "key": "root.importsMobile.icons[15]",
+      "~k_parent": "9j"
+    },
+    "af": {
+      "key": "root.importsMobile.icons[15].icons",
+      "~k_parent": "ae"
+    },
+    "ag": {
+      "key": "root.importsMobile.icons[16]",
+      "~k_parent": "9j"
+    },
+    "ah": {
+      "key": "root.importsMobile.icons[16].icons",
+      "~k_parent": "ag"
+    },
+    "ai": {
+      "key": "root.importsMobile.icons[17]",
+      "~k_parent": "9j"
+    },
+    "aj": {
+      "key": "root.importsMobile.icons[17].icons",
+      "~k_parent": "ai"
+    },
+    "ak": {
+      "key": "root.importsMobile.icons[18]",
+      "~k_parent": "9j"
+    },
+    "al": {
+      "key": "root.importsMobile.icons[18].icons",
+      "~k_parent": "ak"
+    },
+    "am": {
+      "key": "root.importsMobile.icons[19]",
+      "~k_parent": "9j"
+    },
+    "an": {
+      "key": "root.importsMobile.icons[19].icons",
+      "~k_parent": "am"
+    },
+    "ao": {
+      "key": "root.importsMobile.icons[20]",
+      "~k_parent": "9j"
+    },
+    "ap": {
+      "key": "root.importsMobile.icons[20].icons",
+      "~k_parent": "ao"
+    },
+    "aq": {
+      "key": "root.importsMobile.icons[21]",
+      "~k_parent": "9j"
+    },
+    "ar": {
+      "key": "root.importsMobile.icons[21].icons",
+      "~k_parent": "aq"
+    },
+    "as": {
+      "key": "root.importsMobile.icons[22]",
+      "~k_parent": "9j"
+    },
+    "at": {
+      "key": "root.importsMobile.icons[22].icons",
+      "~k_parent": "as"
+    },
+    "au": {
+      "key": "root.importsMobile.icons[23]",
+      "~k_parent": "9j"
+    },
+    "av": {
+      "key": "root.importsMobile.icons[23].icons",
+      "~k_parent": "au"
+    },
+    "aw": {
+      "key": "root.importsMobile.icons[24]",
+      "~k_parent": "9j"
+    },
+    "ax": {
+      "key": "root.importsMobile.icons[24].icons",
+      "~k_parent": "aw"
+    },
+    "ay": {
+      "key": "root.importsMobile.icons[25]",
+      "~k_parent": "9j"
+    },
+    "az": {
+      "key": "root.importsMobile.icons[25].icons",
+      "~k_parent": "ay"
+    },
+    "b0": {
+      "key": "root.importsMobile.icons[26]",
+      "~k_parent": "9j"
+    },
+    "b1": {
+      "key": "root.importsMobile.icons[26].icons",
+      "~k_parent": "b0"
+    },
+    "b2": {
+      "key": "root.importsMobile.icons[27]",
+      "~k_parent": "9j"
+    },
+    "b3": {
+      "key": "root.importsMobile.icons[27].icons",
+      "~k_parent": "b2"
+    },
+    "b4": {
+      "key": "root.importsMobile.operators",
+      "~k_parent": "8y"
+    },
+    "b5": {
+      "key": "root.importsMobile.operators.client",
+      "~k_parent": "b4"
+    },
+    "b6": {
+      "key": "root.importsMobile.operators.client[0]",
+      "~k_parent": "b5"
+    },
+    "b7": {
+      "key": "root.importsMobile.operators.client[1]",
+      "~k_parent": "b5"
     }
   },
   "layer-order.css": "/* Generated by Lowdefy build */\n@layer theme, base, antd, components, utilities;\n",
@@ -1297,20 +1753,4296 @@
               "pageId": "home",
               "auth": {
                 "public": true,
-                "~k": "41"
+                "~k": "48"
               },
               "menuItemId": "0",
-              "~k": "40"
+              "~k": "47"
             }
           ],
-          "~k": "3z"
+          "~k": "46"
         },
         "menuId": "default",
-        "~k": "3y"
+        "~k": "45"
       }
     ],
-    "~k": "3x"
+    "~k": "44"
   },
+  "mobile/blockPackages.json": [
+    "@lowdefy/blocks-basic",
+    "@lowdefy/blocks-antd-mobile",
+    "@lowdefy/blocks-loaders"
+  ],
+  "mobile/config.json": {
+    "appId": null,
+    "capacitor": {
+      "~k": "2l"
+    },
+    "homePageId": null,
+    "name": null,
+    "serverUrl": null
+  },
+  "mobile/menus.json": {
+    "~arr": [],
+    "~k": "2n"
+  },
+  "mobile/plugins/actions.js": "export default {\n  };",
+  "mobile/plugins/blockMetas.json": {
+    "Anchor": {
+      "category": "display"
+    },
+    "Box": {
+      "category": "container"
+    },
+    "DangerousHtml": {
+      "category": "display"
+    },
+    "Dynamic": {
+      "category": "container"
+    },
+    "Html": {
+      "category": "display"
+    },
+    "Icon": {
+      "category": "display"
+    },
+    "Img": {
+      "category": "display"
+    },
+    "List": {
+      "category": "list",
+      "valueType": "array"
+    },
+    "Span": {
+      "category": "container"
+    },
+    "Throw": {
+      "category": "display"
+    },
+    "ProgressBar": {
+      "category": "display"
+    },
+    "Skeleton": {
+      "category": "display"
+    },
+    "SkeletonAvatar": {
+      "category": "display"
+    },
+    "SkeletonButton": {
+      "category": "display"
+    },
+    "SkeletonInput": {
+      "category": "display"
+    },
+    "SkeletonParagraph": {
+      "category": "display"
+    },
+    "Spinner": {
+      "category": "display"
+    },
+    "Message": {
+      "category": "display"
+    }
+  },
+  "mobile/plugins/blockSchemas.json": {
+    "Anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ariaLabel": {
+              "type": "string",
+              "description": "Arial-label to apply to link tag."
+            },
+            "back": {
+              "type": "boolean",
+              "description": "When the link is clicked, trigger the browser back."
+            },
+            "home": {
+              "type": "boolean",
+              "description": "When the link is clicked, route to the home page."
+            },
+            "input": {
+              "type": "object",
+              "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "urlQuery": {
+              "type": "object",
+              "description": "When the link is clicked, pass data as a url query to the next page.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the anchor if true."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "pageId": {
+              "type": "string",
+              "description": "When the link is clicked, route to the provided Lowdefy page."
+            },
+            "href": {
+              "type": "string",
+              "description": "The href to link to when the anchor link is clicked."
+            },
+            "url": {
+              "type": "string",
+              "description": "External url to link to when the anchor link is clicked."
+            },
+            "rel": {
+              "type": "string",
+              "default": "noopener noreferrer",
+              "description": "The relationship of the linked URL as space-separated link types."
+            },
+            "newTab": {
+              "type": "boolean",
+              "default": false,
+              "description": "Open link in a new tab when the anchor link is clicked."
+            },
+            "replace": {
+              "type": "boolean",
+              "default": false,
+              "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+            },
+            "scroll": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
+            },
+            "title": {
+              "type": "string",
+              "description": "Text to display in the anchor."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The anchor element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Anchor."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The anchor element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Anchor."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Called when Anchor is clicked. Renders a shortcut badge when a shortcut is configured."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Box content string. Overrides the \"content\" content area."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Box element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Box element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the Box is clicked."
+                },
+                "onPaste": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the element is focused and a paste event is triggered."
+                }
+              }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "DangerousHtml": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "html": {
+              "type": "string",
+              "description": "Content to be rendered as Html.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            },
+            "DOMPurifyOptions": {
+              "type": "object",
+              "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The DangerousHtml element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The DangerousHtml element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Dynamic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "endpointId": {
+              "type": "string",
+              "description": "Required. The api endpoint that resolves this block content at page get. InternalApi endpoints are recommended."
+            },
+            "params": {
+              "type": "object",
+              "description": "Static values passed to the endpoint payload as params. Operators are not allowed — read runtime values in the endpoint routine with _payload, _user or _secret."
+            },
+            "required": {
+              "type": "boolean",
+              "default": false,
+              "description": "When true, a resolution failure fails the whole page request instead of rendering the fallback slot."
+            },
+            "types": {
+              "type": "object",
+              "description": "Extra block, action and operator types the endpoint may return, so build includes them in the client bundle.",
+              "additionalProperties": false,
+              "properties": {
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Block types the endpoint may return."
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Action types the endpoint may return."
+                },
+                "operators": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Client operator types the endpoint may return."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Dynamic element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Dynamic element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the Dynamic container is clicked."
+                }
+              }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "Html": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "html": {
+              "type": "string",
+              "description": "Content to be rendered as Html.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Html element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Html element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onTextSelection": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Icon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "string",
+              "description": "Primary icon color.",
+              "docs": {
+                "displayType": "color"
+              }
+            },
+            "name": {
+              "type": "string",
+              "default": "AiOutlineCloseCircle",
+              "description": "Name of icon to be displayed."
+            },
+            "rotate": {
+              "type": "number",
+              "description": "Number of degrees to rotate the icon."
+            },
+            "size": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon.",
+              "docs": {
+                "displayType": "number"
+              }
+            },
+            "spin": {
+              "type": "boolean",
+              "default": false,
+              "description": "Continuously spin icon with animation."
+            },
+            "title": {
+              "type": "string",
+              "description": "Icon hover title for accessibility."
+            },
+            "disableLoadingIcon": {
+              "type": "boolean",
+              "default": false,
+              "description": "While loading after the icon has been clicked, don't render the loading icon."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Icon element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Icon element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when icon is clicked."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Img": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "src"
+          ],
+          "properties": {
+            "src": {
+              "type": "string",
+              "description": "The image URL."
+            },
+            "alt": {
+              "type": "string",
+              "description": "Alternative text description of the image."
+            },
+            "crossOrigin": {
+              "type": "string",
+              "enum": [
+                "anonymous",
+                "use-credentials"
+              ],
+              "description": "Indicates if the fetching of the image must be done using a CORS request."
+            },
+            "decoding": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async",
+                "auto"
+              ],
+              "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
+            },
+            "height": {
+              "type": "number",
+              "description": "Height of the image."
+            },
+            "loading": {
+              "type": "string",
+              "enum": [
+                "eager",
+                "lazy"
+              ],
+              "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
+            },
+            "sizes": {
+              "type": "string",
+              "description": "Indicating a set of source sizes of strings separated by commas."
+            },
+            "srcSet": {
+              "type": "string",
+              "description": "Possible image sources for the user agent to use, strings separated by commas.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            },
+            "width": {
+              "type": "number",
+              "description": "Width of the image."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Img element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Img element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Span content string. Overrides the \"content\" content area."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Span element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Span element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the Span is clicked."
+                }
+              }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "Throw": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Error message to throw.",
+              "default": "Intentional error thrown by Throw block"
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "List": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "header": {
+              "type": "string",
+              "description": "Header text above the list."
+            },
+            "itemArrow": {
+              "type": "boolean",
+              "description": "Show a link arrow on every item. By default the arrow only shows on clickable items (when onItemClick is set)."
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "default",
+                "card"
+              ],
+              "default": "default",
+              "description": "List display mode - \"card\" renders the list as an inset card."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The List element."
+                },
+                ".item": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Each List.Item element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The List element."
+                },
+                ".item": {
+                  "type": "object",
+                  "description": "Each List.Item element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onItemClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when a list item is clicked. The event object contains the item index as \"index\". Setting this event makes items clickable (pressed style and link arrow)."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Message content - supports html."
+            },
+            "duration": {
+              "type": "number",
+              "description": "Seconds the message is shown for.",
+              "default": 2
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
+              "default": "success",
+              "description": "Message status - controls the Toast icon."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClose": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message closes."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ProgressBar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "height": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the skeleton."
+            },
+            "width": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The ProgressBar element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The ProgressBar element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Skeleton": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "height": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            },
+            "width": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Skeleton element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Skeleton element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "SkeletonAvatar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "size": {
+              "type": "string",
+              "default": "medium",
+              "description": "Size of the skeleton.",
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
+            },
+            "shape": {
+              "type": "string",
+              "default": "round",
+              "description": "Shape of the skeleton.",
+              "enum": [
+                "square",
+                "round"
+              ]
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The SkeletonAvatar element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The SkeletonAvatar element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "SkeletonButton": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "size": {
+              "type": "string",
+              "default": "medium",
+              "description": "Size of the skeleton.",
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
+            },
+            "width": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The SkeletonButton element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The SkeletonButton element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "SkeletonInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "size": {
+              "type": "string",
+              "default": "medium",
+              "description": "Size of the skeleton.",
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
+            },
+            "width": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            },
+            "labelHeight": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            },
+            "labelWidth": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            },
+            "inputHeight": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Height of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The outer container."
+                },
+                ".input": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The input skeleton."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The outer container."
+                },
+                ".input": {
+                  "type": "object",
+                  "description": "The input skeleton."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "SkeletonParagraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "lines": {
+              "type": "number",
+              "default": 4,
+              "description": "Number of paragraph lines of the skeleton."
+            },
+            "width": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Width of the skeleton.",
+              "docs": {
+                "displayType": "string"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The SkeletonParagraph element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The SkeletonParagraph element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Spinner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "Size of the icon spinner.",
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Spinner element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Spinner element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mobile/plugins/blocks.js": "import { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-antd-mobile/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd-mobile/blocks';\nexport default {\n  Anchor,\n  Box,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "mobile/plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "mobile/plugins/operators/client.js": "import { _not as _not } from '@lowdefy/operators-js/operators/client';\nimport { _type as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
+  "mobile/plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "mobile/theme.css": "",
   "pages/404.json": {
     "id": "page:404",
     "type": "Result",
@@ -1318,9 +6050,9 @@
       "block": {
         "minHeight": "100vh",
         "background": "var(--ant-color-bg-layout)",
-        "~k": "3e"
+        "~k": "3k"
       },
-      "~k": "3d"
+      "~k": "3j"
     },
     "properties": {
       "status": "info",
@@ -1363,9 +6095,9 @@
                   },
                   "catch": {
                     "~arr": [],
-                    "~k": "3g"
+                    "~k": "3m"
                   },
-                  "~k": "3f"
+                  "~k": "3l"
                 },
                 "~k": "28"
               },
@@ -1381,19 +6113,20 @@
     },
     "auth": {
       "public": true,
-      "~k": "3h"
+      "~k": "3n"
     },
     "pageId": "404",
     "blockId": "404",
+    "target": "web",
     "subscriptions": {
       "~arr": [],
-      "~k": "3i"
+      "~k": "3o"
     },
     "requests": {
       "~arr": [],
-      "~k": "3j"
+      "~k": "3p"
     },
-    "~k": "3c"
+    "~k": "3i"
   },
   "pages/home.json": {
     "id": "page:home",
@@ -1404,7 +6137,7 @@
     },
     "auth": {
       "public": true,
-      "~k": "2l"
+      "~k": "2r"
     },
     "pageId": "home",
     "blockId": "home",
@@ -1463,9 +6196,9 @@
                               ],
                               "~k": "g"
                             },
-                            "~k": "2r"
+                            "~k": "2x"
                           },
-                          "~k": "2q"
+                          "~k": "2w"
                         },
                         "~k": "d"
                       },
@@ -1502,9 +6235,9 @@
                               ],
                               "~k": "m"
                             },
-                            "~k": "2t"
+                            "~k": "2z"
                           },
-                          "~k": "2s"
+                          "~k": "2y"
                         },
                         "~k": "j"
                       },
@@ -1541,9 +6274,9 @@
                               ],
                               "~k": "s"
                             },
-                            "~k": "2v"
+                            "~k": "31"
                           },
-                          "~k": "2u"
+                          "~k": "30"
                         },
                         "~k": "p"
                       },
@@ -1580,18 +6313,18 @@
                               ],
                               "~k": "y"
                             },
-                            "~k": "2x"
+                            "~k": "33"
                           },
-                          "~k": "2w"
+                          "~k": "32"
                         },
                         "~k": "v"
                       }
                     ],
                     "~k": "c"
                   },
-                  "~k": "2p"
+                  "~k": "2v"
                 },
-                "~k": "2o"
+                "~k": "2u"
               },
               "~k": "b"
             },
@@ -1636,9 +6369,9 @@
                               ],
                               "~k": "17"
                             },
-                            "~k": "31"
+                            "~k": "37"
                           },
-                          "~k": "30"
+                          "~k": "36"
                         },
                         "~k": "14"
                       },
@@ -1671,9 +6404,9 @@
                               ],
                               "~k": "1d"
                             },
-                            "~k": "33"
+                            "~k": "39"
                           },
-                          "~k": "32"
+                          "~k": "38"
                         },
                         "~k": "1a"
                       },
@@ -1706,18 +6439,18 @@
                               ],
                               "~k": "1j"
                             },
-                            "~k": "35"
+                            "~k": "3b"
                           },
-                          "~k": "34"
+                          "~k": "3a"
                         },
                         "~k": "1g"
                       }
                     ],
                     "~k": "13"
                   },
-                  "~k": "2z"
+                  "~k": "35"
                 },
-                "~k": "2y"
+                "~k": "34"
               },
               "~k": "11"
             },
@@ -1737,9 +6470,9 @@
                 "block": {
                   "padding": 16,
                   "backgroundColor": "#f5f5f5",
-                  "~k": "37"
+                  "~k": "3d"
                 },
-                "~k": "36"
+                "~k": "3c"
               },
               "blockId": "flexDemo",
               "slots": {
@@ -1779,28 +6512,29 @@
                     ],
                     "~k": "1q"
                   },
-                  "~k": "39"
+                  "~k": "3f"
                 },
-                "~k": "38"
+                "~k": "3e"
               },
               "~k": "1m"
             }
           ],
           "~k": "8"
         },
-        "~k": "2n"
+        "~k": "2t"
       },
-      "~k": "2m"
+      "~k": "2s"
     },
+    "target": "web",
     "subscriptions": {
       "~arr": [],
-      "~k": "3a"
+      "~k": "3g"
     },
     "requests": {
       "~arr": [],
-      "~k": "3b"
+      "~k": "3h"
     },
-    "~k": "2k"
+    "~k": "2q"
   },
   "plugins/actionSchemas.json": {
     "Link": {
@@ -7098,189 +11832,189 @@
         "originalTypeName": "Link",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "44"
+        "~k": "4b"
       },
       "SetDarkMode": {
         "originalTypeName": "SetDarkMode",
         "package": "@lowdefy/actions-core",
         "count": 1,
-        "~k": "45"
+        "~k": "4c"
       },
-      "~k": "43"
+      "~k": "4a"
     },
     "agents": {
-      "~k": "46"
+      "~k": "4d"
     },
     "auth": {
       "adapters": {
-        "~k": "48"
+        "~k": "4f"
       },
       "callbacks": {
-        "~k": "49"
+        "~k": "4g"
       },
       "events": {
-        "~k": "4a"
+        "~k": "4h"
       },
       "providers": {
-        "~k": "4b"
+        "~k": "4i"
       },
-      "~k": "47"
+      "~k": "4e"
     },
     "blocks": {
       "Box": {
         "originalTypeName": "Box",
         "package": "@lowdefy/blocks-basic",
         "count": 5,
-        "~k": "4d"
+        "~k": "4k"
       },
       "Title": {
         "originalTypeName": "Title",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4e"
+        "~k": "4l"
       },
       "Card": {
         "originalTypeName": "Card",
         "package": "@lowdefy/blocks-antd",
         "count": 7,
-        "~k": "4f"
+        "~k": "4m"
       },
       "Paragraph": {
         "originalTypeName": "Paragraph",
         "package": "@lowdefy/blocks-basic",
         "count": 7,
-        "~k": "4g"
+        "~k": "4n"
       },
       "Button": {
         "originalTypeName": "Button",
         "package": "@lowdefy/blocks-basic",
         "count": 4,
-        "~k": "4h"
+        "~k": "4o"
       },
       "Result": {
         "originalTypeName": "Result",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "4i"
+        "~k": "4p"
       },
       "Anchor": {
         "originalTypeName": "Anchor",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4j"
+        "~k": "4q"
       },
       "DangerousHtml": {
         "originalTypeName": "DangerousHtml",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4k"
+        "~k": "4r"
       },
       "Dynamic": {
         "originalTypeName": "Dynamic",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4l"
+        "~k": "4s"
       },
       "Html": {
         "originalTypeName": "Html",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4m"
+        "~k": "4t"
       },
       "Icon": {
         "originalTypeName": "Icon",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4n"
+        "~k": "4u"
       },
       "Img": {
         "originalTypeName": "Img",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4o"
+        "~k": "4v"
       },
       "List": {
         "originalTypeName": "List",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4p"
+        "~k": "4w"
       },
       "Span": {
         "originalTypeName": "Span",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4q"
+        "~k": "4x"
       },
       "Throw": {
         "originalTypeName": "Throw",
         "package": "@lowdefy/blocks-basic",
         "count": 1,
-        "~k": "4r"
+        "~k": "4y"
       },
       "ProgressBar": {
         "originalTypeName": "ProgressBar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4s"
+        "~k": "4z"
       },
       "Skeleton": {
         "originalTypeName": "Skeleton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4t"
+        "~k": "50"
       },
       "SkeletonAvatar": {
         "originalTypeName": "SkeletonAvatar",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4u"
+        "~k": "51"
       },
       "SkeletonButton": {
         "originalTypeName": "SkeletonButton",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4v"
+        "~k": "52"
       },
       "SkeletonInput": {
         "originalTypeName": "SkeletonInput",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4w"
+        "~k": "53"
       },
       "SkeletonParagraph": {
         "originalTypeName": "SkeletonParagraph",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4x"
+        "~k": "54"
       },
       "Spinner": {
         "originalTypeName": "Spinner",
         "package": "@lowdefy/blocks-loaders",
         "count": 1,
-        "~k": "4y"
+        "~k": "55"
       },
       "Message": {
         "originalTypeName": "Message",
         "package": "@lowdefy/blocks-antd",
         "count": 1,
-        "~k": "4z"
+        "~k": "56"
       },
-      "~k": "4c"
+      "~k": "4j"
     },
     "connections": {
-      "~k": "50"
+      "~k": "57"
     },
     "notifications": {
-      "~k": "51"
+      "~k": "58"
     },
     "requests": {
-      "~k": "52"
+      "~k": "59"
     },
     "websockets": {
-      "~k": "53"
+      "~k": "5a"
     },
     "api": {
-      "~k": "54"
+      "~k": "5b"
     },
     "operators": {
       "client": {
@@ -7288,21 +12022,21 @@
           "originalTypeName": "_not",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "57"
+          "~k": "5e"
         },
         "_type": {
           "originalTypeName": "_type",
           "package": "@lowdefy/operators-js",
           "count": 1,
-          "~k": "58"
+          "~k": "5f"
         },
-        "~k": "56"
+        "~k": "5d"
       },
       "server": {
-        "~k": "59"
+        "~k": "5g"
       },
-      "~k": "55"
+      "~k": "5c"
     },
-    "~k": "42"
+    "~k": "49"
   }
 }

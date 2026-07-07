@@ -39,7 +39,7 @@ function validateTypeClass({ context, counter, definitions, typeClass, warnIfMis
 }
 
 function validatePageTypes({ context }) {
-  const { typeCounters, typesMap } = context;
+  const { typeCounters, typeCountersMobile, typesMap, typesMapMobile } = context;
 
   validateTypeClass({
     context,
@@ -70,6 +70,32 @@ function validatePageTypes({ context }) {
     typeClass: 'Operator',
     warnIfMissing: true,
   });
+
+  // Mobile pages count into their own client-side counters, resolved against
+  // the mobile types map. Server operators are shared and validated above.
+  if (typeCountersMobile && typesMapMobile) {
+    validateTypeClass({
+      context,
+      counter: typeCountersMobile.blocks,
+      definitions: typesMapMobile.blocks,
+      typeClass: 'Block',
+    });
+
+    validateTypeClass({
+      context,
+      counter: typeCountersMobile.actions,
+      definitions: typesMapMobile.actions,
+      typeClass: 'Action',
+    });
+
+    validateTypeClass({
+      context,
+      counter: typeCountersMobile.operators.client,
+      definitions: typesMapMobile.operators.client,
+      typeClass: 'Operator',
+      warnIfMissing: true,
+    });
+  }
 }
 
 export default validatePageTypes;

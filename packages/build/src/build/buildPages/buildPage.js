@@ -27,8 +27,12 @@ import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
-function buildPage({ page, index, context, checkDuplicatePageId }) {
+function buildPage({ page, index, context, checkDuplicatePageId, target = 'web' }) {
   const configKey = page['~k'];
+  // Mobile pages resolve block types against the mobile types map and count
+  // client-side types into the mobile counters (see createContext).
+  const typeCounters = target === 'mobile' ? context.typeCountersMobile : context.typeCounters;
+  const blockMetas = target === 'mobile' ? context.blockMetasMobile : context.blockMetas;
   if (type.isUndefined(page.id)) {
     collectExceptions(
       context,
@@ -58,6 +62,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
+    blockMetas,
     callApiActionRefs: context.callApiActionRefs ?? [],
     websocketActionRefs: context.websocketActionRefs ?? [],
     dynamicBlockRefs: context.dynamicBlockRefs ?? [],
@@ -70,11 +75,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     requestActionRefs,
     shortcutRefs,
     linkActionRefs: context.linkActionRefs,
-    typeCounters: context.typeCounters,
+    typeCounters,
   };
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+  page.target = target;
 
   // Flag pages with Dynamic blocks so the server can skip resolution
   // (and the deep copy it requires) for static pages with one property read.
@@ -90,7 +96,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     pageId: page.pageId,
     requestActionRefs,
     shortcutRefs,
-    typeCounters: context.typeCounters,
+    typeCounters,
     websocketActionRefs: context.websocketActionRefs ?? [],
   });
 

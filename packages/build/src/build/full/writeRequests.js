@@ -41,7 +41,8 @@ async function writeRequestsOnPage({ page, context }) {
 }
 
 async function writeRequests({ components, context }) {
-  const writePromises = components.pages.map((page) => writeRequestsOnPage({ page, context }));
+  const pages = [...components.pages, ...(components.mobile?.pages ?? [])];
+  const writePromises = pages.map((page) => writeRequestsOnPage({ page, context }));
   return Promise.all(writePromises);
 }
 

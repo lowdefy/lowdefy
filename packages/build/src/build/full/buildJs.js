@@ -16,14 +16,21 @@
 
 import jsMapParser from '../buildJs/jsMapParser.js';
 
-function buildJs({ components, context }) {
-  components.pages = components.pages.map((page) => {
+function extractPageJs({ pages, context }) {
+  return pages.map((page) => {
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
     const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
     const cleanRequests = jsMapParser({ input: pageRequests, jsMap: context.jsMap, env: 'server' });
     return { ...cleanPage, requests: cleanRequests };
   });
+}
+
+function buildJs({ components, context }) {
+  components.pages = extractPageJs({ pages: components.pages, context });
+  if (components.mobile?.pages) {
+    components.mobile.pages = extractPageJs({ pages: components.mobile.pages, context });
+  }
   components.api = jsMapParser({
     input: components.api,
     jsMap: context.jsMap,

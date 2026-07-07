@@ -17,26 +17,34 @@
 import iconPackages from './iconPackages.js';
 import validateIconImports from './validateIconImports.js';
 
-function getConfigIcons({ components, icons, regex }) {
-  [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+function getConfigIcons({ scan, icons, regex }) {
+  [...JSON.stringify(scan.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
+  [...JSON.stringify(scan.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
+  [...JSON.stringify(scan.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
 }
 
-function getBlockDefaultIcons({ blocks, context, icons, regex }) {
+function getBlockDefaultIcons({ blocks, iconsMap, icons, regex }) {
   blocks.forEach((block) => {
-    (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
+    (iconsMap[block.typeName] || []).forEach((icon) => {
       [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
     });
   });
 }
 
-function buildIconImports({ blocks, components, context, defaults = {} }) {
+// scan and iconsMap default to the web config surfaces; the mobile imports
+// pass mobile pages/menus and the mobile types map.
+function buildIconImports({ blocks, components, context, defaults = {}, scan, iconsMap }) {
+  const scanRoots = scan ?? {
+    global: components.global,
+    menus: components.menus,
+    pages: components.pages,
+  };
+  const blockIconsMap = iconsMap ?? context.typesMap.icons;
   const iconImports = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     const icons = new Set(defaults[iconPackage]);
-    getConfigIcons({ components, icons, regex });
-    getBlockDefaultIcons({ blocks, context, icons, regex });
+    getConfigIcons({ scan: scanRoots, icons, regex });
+    getBlockDefaultIcons({ blocks, iconsMap: blockIconsMap, icons, regex });
     iconImports.push({ icons: [...icons], package: iconPackage });
   });
   return validateIconImports({ iconImports, context });

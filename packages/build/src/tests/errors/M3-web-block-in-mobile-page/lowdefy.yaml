@@ -1,0 +1,21 @@
+# M3: Web-only block type in a mobile page
+# =========================================
+# Mobile pages resolve block types against the mobile types map — a type that
+# only exists in the web map is a normal "type not defined" build error.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+
+mobile:
+  pages:
+    - id: m-home
+      type: Box
+      blocks:
+        - id: title
+          type: Title

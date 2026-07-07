@@ -1,0 +1,11 @@
+# M2: Invalid mobile.appId
+# ========================
+# appId must be a reverse-DNS identifier.
+
+lowdefy: local
+
+mobile:
+  appId: Not A Valid AppId!
+  pages:
+    - id: m-home
+      type: Box

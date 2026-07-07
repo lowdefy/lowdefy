@@ -23,7 +23,10 @@ async function writePage({ page, context }) {
 }
 
 async function writePages({ components, context }) {
-  const writePromises = components.pages.map((page) => writePage({ page, context }));
+  // Mobile pages share the pages/ tree — same pageId namespace, same
+  // getPageConfig/request/auth machinery. Each artifact carries its target.
+  const pages = [...components.pages, ...(components.mobile?.pages ?? [])];
+  const writePromises = pages.map((page) => writePage({ page, context }));
   return Promise.all(writePromises);
 }
 

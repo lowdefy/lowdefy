@@ -1,0 +1,100 @@
+# 95: Mobile App
+# Web pages and a mobile: key building together — mobile pages land in the
+# shared pages/ tree with target: mobile, mobile menus/config/theme/plugins
+# are written under mobile/, and mobile requests join the shared requests tree.
+lowdefy: local
+name: Mobile App Demo
+
+connections:
+  - id: tasks_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://api.example.com
+
+mobile:
+  appId: com.acme.tracker
+  name: Acme Tracker
+  serverUrl: https://app.acme.com
+  config:
+    homePageId: m-home
+  theme:
+    '--adm-color-primary': '#1677ff'
+    dark:
+      '--adm-color-background': '#000000'
+  capacitor:
+    ios:
+      scheme: AcmeTracker
+  menus:
+    - id: default
+      links:
+        - id: home
+          type: MenuLink
+          pageId: m-home
+          properties:
+            title: Home
+            icon: AiOutlineHome
+        - id: tasks
+          type: MenuLink
+          pageId: m-tasks
+          properties:
+            title: Tasks
+            icon: AiOutlineUnorderedList
+  pages:
+    - id: m-home
+      type: Box
+      blocks:
+        - id: nav
+          type: NavBar
+          properties:
+            title: Home
+        - id: name_input
+          type: TextInput
+          properties:
+            label: Name
+        - id: save
+          type: Button
+          properties:
+            title: Save
+          events:
+            onClick:
+              - id: save_task
+                type: Request
+                params: create_task
+      requests:
+        - id: create_task
+          type: AxiosHttp
+          connectionId: tasks_api
+          properties:
+            url: /tasks
+            method: post
+    - id: m-tasks
+      type: Box
+      blocks:
+        - id: nav
+          type: NavBar
+          properties:
+            title: Tasks
+        - id: task_list
+          type: List
+          properties:
+            header: Tasks
+        - id: tab_bar
+          type: TabBar
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Html
+        properties:
+          html: Welcome to the web app
+
+menus:
+  - id: default
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home

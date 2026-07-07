@@ -28,28 +28,14 @@ import validateServerStateReferences from '../buildPages/validateServerStateRefe
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
-function buildPages({ components, context }) {
-  const pages = type.isArray(components.pages) ? components.pages : [];
-  const checkDuplicatePageId = createCheckDuplicateId({
-    message: 'Duplicate pageId "{{ id }}".',
-  });
-
-  // Initialize action ref collections across all pages
-  context.linkActionRefs = [];
-  context.callApiActionRefs = [];
-  context.websocketActionRefs = [];
-  context.dynamicBlockRefs = [];
-
-  // Track which pages failed to build so we skip them in validation
-  const failedPageIndices = new Set();
-
+function buildTargetPages({ pages, target, failedPages, context, checkDuplicatePageId }) {
   // Wrap each page build to collect errors instead of stopping on first error
   pages.forEach((page, index) => {
     try {
-      const result = buildPage({ page, index, context, checkDuplicatePageId });
+      const result = buildPage({ page, index, context, checkDuplicatePageId, target });
       // buildPage returns { failed: true } when validation fails
       if (result?.failed) {
-        failedPageIndices.add(index);
+        failedPages.add(page);
       }
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
@@ -62,16 +48,45 @@ function buildPages({ components, context }) {
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
       if (context?.errors) {
         context.errors.push(error);
-        failedPageIndices.add(index);
+        failedPages.add(page);
       } else {
         throw error;
       }
     }
   });
+}
+
+function buildPages({ components, context }) {
+  const pages = type.isArray(components.pages) ? components.pages : [];
+  const mobilePages = type.isArray(components.mobile?.pages) ? components.mobile.pages : [];
+  // One duplicate-pageId check across both targets — pageIds share a global
+  // namespace (requests, auth rules, and /api/page/* are keyed by pageId).
+  const checkDuplicatePageId = createCheckDuplicateId({
+    message: 'Duplicate pageId "{{ id }}".',
+  });
+
+  // Initialize action ref collections across all pages
+  context.linkActionRefs = [];
+  context.callApiActionRefs = [];
+  context.websocketActionRefs = [];
+  context.dynamicBlockRefs = [];
+
+  // Track which pages failed to build so we skip them in validation
+  const failedPages = new Set();
+
+  buildTargetPages({ pages, target: 'web', failedPages, context, checkDuplicatePageId });
+  buildTargetPages({
+    pages: mobilePages,
+    target: 'mobile',
+    failedPages,
+    context,
+    checkDuplicatePageId,
+  });
 
   // Validate that all Link actions reference existing pages
-  // Include all pages — a link to a broken page is valid; the page error is already reported
-  const pageIds = pages.map((page) => page.pageId);
+  // Include all pages — a link to a broken page is valid; the page error is already reported.
+  // Cross-target links are valid; the client checks the fetched config's target at runtime.
+  const pageIds = [...pages, ...mobilePages].map((page) => page.pageId);
   validateLinkReferences({
     linkActionRefs: context.linkActionRefs,
     pageIds,
@@ -103,8 +118,8 @@ function buildPages({ components, context }) {
   // Validate that _state references use defined block IDs
   // and _payload references use defined payload keys
   // Skip pages that failed to build
-  pages.forEach((page, index) => {
-    if (failedPageIndices.has(index)) return;
+  [...pages, ...mobilePages].forEach((page) => {
+    if (failedPages.has(page)) return;
     validateStateReferences({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });

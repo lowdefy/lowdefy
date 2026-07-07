@@ -15,8 +15,15 @@
 */
 
 import createCounter from '../utils/createCounter.js';
+import createTypeCounters from '../utils/createTypeCounters.js';
 
-function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
+function testContext({
+  writeBuildArtifact,
+  configDirectory,
+  readConfigFile,
+  logger = {},
+  typesMapMobile,
+} = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -31,25 +38,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       config: configDirectory || '',
       server: '',
     },
-    typeCounters: {
-      actions: createCounter(),
-      agents: createCounter(),
-      auth: {
-        adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
-        providers: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      requests: createCounter(),
-      websockets: createCounter(),
-      controls: createCounter(),
-      operators: {
-        client: createCounter(),
-        server: createCounter(),
-      },
-    },
+    typeCounters: createTypeCounters(),
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),
     refMap: {},
@@ -59,6 +48,25 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     connectionIds: new Set(),
     websocketIds: new Set(),
   };
+
+  // Mobile counters share server-side counters with the main set (see createContext).
+  context.typeCountersMobile = {
+    ...context.typeCounters,
+    actions: createCounter(),
+    blocks: createCounter(),
+    operators: {
+      client: createCounter(),
+      server: context.typeCounters.operators.server,
+    },
+  };
+  context.typesMapMobile = typesMapMobile ?? {
+    actions: {},
+    blocks: {},
+    icons: {},
+    blockMetas: {},
+    operators: { client: {}, server: {} },
+  };
+  context.blockMetasMobile = context.typesMapMobile.blockMetas ?? {};
 
   context.logger = {
     ...defaultLogger,

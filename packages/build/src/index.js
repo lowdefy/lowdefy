@@ -33,9 +33,12 @@ import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
+import buildImportsMobile from './build/buildImports/buildImportsMobile.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
+import buildMobile from './build/buildMobile.js';
+import buildMobileMenu from './build/buildMobileMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
@@ -45,6 +48,7 @@ import buildRefs from './build/buildRefs/buildRefs.js';
 import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
+import buildTypesMobile from './build/buildTypesMobile.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -69,6 +73,10 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeMobileConfig from './build/writeMobile/writeMobileConfig.js';
+import writeMobileMenus from './build/writeMobile/writeMobileMenus.js';
+import writeMobilePluginImports from './build/writeMobile/writeMobilePluginImports.js';
+import writeMobileTheme from './build/writeMobile/writeMobileTheme.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
@@ -142,6 +150,8 @@ async function build(options) {
     components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    // Normalizes mobile.* before buildAuth assigns auth to mobile pages
+    tryBuildStep(buildMobile, 'buildMobile', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -161,9 +171,12 @@ async function build(options) {
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    tryBuildStep(buildMobileMenu, 'buildMobileMenu', { components, context });
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(buildImportsMobile, 'buildImportsMobile', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
     // Collect page content strings for Tailwind to scan
@@ -200,6 +213,10 @@ async function build(options) {
     await writeMenus({ components, context });
     await writeTypes({ components, context });
     await writePluginImports({ components, context });
+    await writeMobileConfig({ components, context });
+    await writeMobileMenus({ components, context });
+    await writeMobileTheme({ components, context });
+    await writeMobilePluginImports({ components, context });
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });

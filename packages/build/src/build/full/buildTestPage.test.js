@@ -48,6 +48,7 @@ test('buildTestPage', () => {
       public: true,
     },
     subscriptions: [],
+    target: 'web',
     requests: [
       {
         id: 'request:page:request',

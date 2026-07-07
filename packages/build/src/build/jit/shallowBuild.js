@@ -34,7 +34,10 @@ import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
+import buildImportsMobile from '../buildImports/buildImportsMobile.js';
 import buildMenu from '../buildMenu.js';
+import buildMobile from '../buildMobile.js';
+import buildMobileMenu from '../buildMobileMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
 import buildNotifications from '../buildNotifications.js';
@@ -42,6 +45,7 @@ import buildRefs from '../buildRefs/buildRefs.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
+import buildTypesMobile from '../buildTypesMobile.js';
 import buildWebsockets from '../buildWebsockets.js';
 import validateCallAgentSteps from '../validateCallAgentSteps.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
@@ -68,6 +72,10 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeMobileConfig from '../writeMobile/writeMobileConfig.js';
+import writeMobileMenus from '../writeMobile/writeMobileMenus.js';
+import writeMobilePluginImports from '../writeMobile/writeMobilePluginImports.js';
+import writeMobileTheme from '../writeMobile/writeMobileTheme.js';
 import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
@@ -155,6 +163,8 @@ async function shallowBuild(options) {
     components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    // Normalizes mobile.* before buildAuth assigns auth to mobile pages
+    tryBuildStep(buildMobile, 'buildMobile', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
@@ -176,7 +186,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    tryBuildStep(buildMobileMenu, 'buildMobileMenu', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
 
     // Update server package.json before addInstalledTypes so that addInstalledTypes
     // sees the full set of dependencies on every run (not just after the first build).
@@ -186,6 +198,7 @@ async function shallowBuild(options) {
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(buildImportsMobile, 'buildImportsMobile', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     logCollectedErrors(context);
@@ -250,6 +263,10 @@ async function shallowBuild(options) {
     // Deferred-record bodies referenced by placeholders in modules.json.
     // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
     await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
+    await writeMobileConfig({ components, context });
+    await writeMobileMenus({ components, context });
+    await writeMobileTheme({ components, context });
+    await writeMobilePluginImports({ components, context });
     await writePluginImports({ components, context });
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against

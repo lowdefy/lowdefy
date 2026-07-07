@@ -1,0 +1,21 @@
+# M4: Mobile-only block type in a web page
+# =========================================
+# Web pages resolve against the web types map — antd-mobile types are not
+# defined there.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: nav
+        type: NavBar
+
+mobile:
+  pages:
+    - id: m-home
+      type: Box
+      blocks:
+        - id: nav
+          type: NavBar

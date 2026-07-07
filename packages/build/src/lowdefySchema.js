@@ -2305,6 +2305,112 @@ export default {
         type: 'App "menus" should be an array.',
       },
     },
+    mobile: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mobile" should be an object.',
+      },
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        appId: {
+          type: 'string',
+          description: 'Native bundle id in reverse-DNS form, e.g. "com.acme.tracker".',
+          errorMessage: {
+            type: 'App "mobile.appId" should be a string.',
+          },
+        },
+        name: {
+          type: 'string',
+          description: 'Native app display name.',
+          errorMessage: {
+            type: 'App "mobile.name" should be a string.',
+          },
+        },
+        serverUrl: {
+          type: 'string',
+          description: 'Backend origin baked into the mobile app build.',
+          errorMessage: {
+            type: 'App "mobile.serverUrl" should be a string.',
+          },
+        },
+        config: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "mobile.config" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            homePageId: {
+              type: 'string',
+              description:
+                'Mobile home page id. If not provided, the first link in the default or first mobile menu is used.',
+              errorMessage: {
+                type: 'App "mobile.config.homePageId" should be a string.',
+              },
+            },
+          },
+        },
+        theme: {
+          type: 'object',
+          description:
+            'antd-mobile CSS variable map, with an optional "dark" object applied when dark mode is active.',
+          errorMessage: {
+            type: 'App "mobile.theme" should be an object.',
+          },
+        },
+        capacitor: {
+          type: 'object',
+          description: 'Free-form object merged into the generated Capacitor config.',
+          errorMessage: {
+            type: 'App "mobile.capacitor" should be an object.',
+          },
+        },
+        menus: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/menu',
+          },
+          errorMessage: {
+            type: 'App "mobile.menus" should be an array.',
+          },
+        },
+        pages: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/block',
+          },
+          errorMessage: {
+            type: 'App "mobile.pages" should be an array.',
+          },
+        },
+      },
+    },
     pages: {
       type: 'array',
       items: {
