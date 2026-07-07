@@ -21,6 +21,7 @@ import {
   genericOAuthClient,
   magicLinkClient,
   organizationClient,
+  phoneNumberClient,
   twoFactorClient,
 } from 'better-auth/client/plugins';
 import { passkeyClient } from '@better-auth/passkey/client';
@@ -39,6 +40,7 @@ const authClient = createAuthClient({
     magicLinkClient(),
     organizationClient(),
     passkeyClient(),
+    phoneNumberClient(),
     twoFactorClient(),
   ],
 });
@@ -113,6 +115,11 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     changePassword: (params) => authClient.changePassword(params),
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
     impersonateUser: (params) => authClient.admin.impersonateUser(params),
+    phoneNumberRequestPasswordReset: (params) =>
+      authClient.phoneNumber.requestPasswordReset(params),
+    phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
+    phoneNumberSendOtp: (params) => authClient.phoneNumber.sendOtp(params),
+    phoneNumberVerify: (params) => authClient.phoneNumber.verify(params),
     requestPasswordReset: (params) => authClient.requestPasswordReset(params),
     resetPassword: (params) => authClient.resetPassword(params),
     revokeOtherSessions: () => authClient.revokeOtherSessions(),
@@ -121,6 +128,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
     signInOauth2: (params) => authClient.signIn.oauth2(params),
+    signInPhoneNumber: (params) => authClient.signIn.phoneNumber(params),
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),

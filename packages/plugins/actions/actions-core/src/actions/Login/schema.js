@@ -8,6 +8,23 @@ export default {
         type: 'string',
         description: 'The authentication provider ID.',
       },
+      email: {
+        type: 'string',
+        description: 'Email address for email and password or magic-link sign-in.',
+      },
+      password: {
+        type: 'string',
+        description: 'Password for email and password or phone and password sign-in.',
+      },
+      phoneNumber: {
+        type: 'string',
+        description:
+          'Phone number for phone and password sign-in, in E.164 format (e.g. "+27831234567").',
+      },
+      magicLink: {
+        type: 'boolean',
+        description: 'Send a magic sign-in link to the email address instead of using a password.',
+      },
       callbackUrl: {
         type: 'string',
         description: 'URL to redirect to after login.',

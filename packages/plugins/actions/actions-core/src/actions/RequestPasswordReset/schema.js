@@ -2,12 +2,17 @@ export default {
   type: 'object',
   params: {
     type: 'object',
-    description: 'Parameters passed to the request-password-reset method.',
-    required: ['email'],
+    description:
+      'Parameters passed to the request-password-reset method. One of email or phoneNumber is required.',
     properties: {
       email: {
         type: 'string',
         description: 'Email address of the account to send the password reset email to.',
+      },
+      phoneNumber: {
+        type: 'string',
+        description:
+          'Phone number of the account to send the password reset otp to over SMS, in E.164 format.',
       },
       redirectTo: {
         type: 'string',

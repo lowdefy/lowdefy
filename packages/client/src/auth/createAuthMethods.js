@@ -76,11 +76,24 @@ async function unwrap(promise) {
 function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy functions that handle action params;
   // the auth object provides the BetterAuth client methods.
-  async function login({ callbackUrl, email, magicLink, password, providerId, ...rest } = {}) {
+  async function login({
+    callbackUrl,
+    email,
+    magicLink,
+    password,
+    phoneNumber,
+    providerId,
+    ...rest
+  } = {}) {
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const providers = auth.authConfig?.providers ?? [];
 
-    if (type.isNone(providerId) && type.isNone(email) && providers.length === 1) {
+    if (
+      type.isNone(providerId) &&
+      type.isNone(email) &&
+      type.isNone(phoneNumber) &&
+      providers.length === 1
+    ) {
       providerId = providers[0].id;
     }
 
@@ -102,6 +115,20 @@ function createAuthMethods(lowdefy, auth) {
       }
       return unwrap(auth.signInMagicLink({ email, callbackURL, ...rest }));
     }
+    if (!type.isNone(phoneNumber)) {
+      if (!type.isString(password)) {
+        throw new Error('Login with phoneNumber requires a "password" param.');
+      }
+      const data = await unwrap(auth.signInPhoneNumber({ phoneNumber, password, ...rest }));
+      if (data?.twoFactorRedirect) {
+        return data;
+      }
+      const window = lowdefy._internal?.globals?.window;
+      if (callbackURL && window) {
+        window.location.assign(callbackURL);
+      }
+      return data;
+    }
     if (!type.isNone(email) || !type.isNone(password)) {
       const data = await unwrap(auth.signInEmail({ email, password, ...rest }));
       // A 2FA-enrolled user gets a challenge, not a session - do not navigate
@@ -118,7 +145,7 @@ function createAuthMethods(lowdefy, auth) {
       return data;
     }
     throw new Error(
-      'Login requires a "providerId", "email" and "password", or "magicLink: true" param.'
+      'Login requires a "providerId", "email" and "password", "phoneNumber" and "password", or "magicLink: true" param.'
     );
   }
 
@@ -230,16 +257,30 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.addPasskey(params));
   }
 
-  async function requestPasswordReset({ email, redirectTo, ...rest } = {}) {
+  // Dispatches by parameter, matching login: a phoneNumber param requests the
+  // reset code over SMS (the "phone.passwordReset.send" hook), otherwise
+  // email carries the reset link.
+  async function requestPasswordReset({ email, phoneNumber, redirectTo, ...rest } = {}) {
+    if (type.isString(phoneNumber)) {
+      return unwrap(auth.phoneNumberRequestPasswordReset({ phoneNumber, ...rest }));
+    }
     if (!type.isString(email)) {
-      throw new Error('RequestPasswordReset requires an "email" param.');
+      throw new Error('RequestPasswordReset requires an "email" or "phoneNumber" param.');
     }
     return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest }));
   }
 
-  async function resetPassword({ newPassword, token, ...rest } = {}) {
+  // Dispatches by parameter: a phoneNumber param resets with the SMS otp,
+  // otherwise token carries the emailed reset link's token.
+  async function resetPassword({ newPassword, otp, phoneNumber, token, ...rest } = {}) {
     if (!type.isString(newPassword)) {
       throw new Error('ResetPassword requires a "newPassword" param.');
+    }
+    if (type.isString(phoneNumber)) {
+      if (!type.isString(otp)) {
+        throw new Error('ResetPassword with phoneNumber requires an "otp" param.');
+      }
+      return unwrap(auth.phoneNumberResetPassword({ phoneNumber, otp, newPassword, ...rest }));
     }
     return unwrap(auth.resetPassword({ newPassword, token, ...rest }));
   }
@@ -261,6 +302,26 @@ function createAuthMethods(lowdefy, auth) {
     }
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     return unwrap(auth.sendVerificationEmail({ email, callbackURL, ...rest }));
+  }
+
+  // Sends a sign-in/verification OTP over SMS through the app's
+  // "phone.otp.send" hook binding.
+  async function phoneNumberSendOtp({ phoneNumber, ...rest } = {}) {
+    if (!type.isString(phoneNumber)) {
+      throw new Error('PhoneNumberSendOtp requires a "phoneNumber" param.');
+    }
+    return unwrap(auth.phoneNumberSendOtp({ phoneNumber, ...rest }));
+  }
+
+  // The OTP sign-in: on success BetterAuth sets the session cookie (and
+  // creates the account under signUpOnVerification). Like TwoFactorVerify and
+  // unlike login it does not auto-navigate - verify serves sign-in, sign-up
+  // and phone-change confirmation, and only the app knows which page follows.
+  async function phoneNumberVerify({ code, phoneNumber, ...rest } = {}) {
+    if (!type.isString(phoneNumber) || !type.isString(code)) {
+      throw new Error('PhoneNumberVerify requires "phoneNumber" and "code" params.');
+    }
+    return unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
   }
 
   async function twoFactorDisable({ password, ...rest } = {}) {
@@ -302,6 +363,8 @@ function createAuthMethods(lowdefy, auth) {
     logout,
     passkeyDelete,
     passkeyRegister,
+    phoneNumberSendOtp,
+    phoneNumberVerify,
     requestPasswordReset,
     resetPassword,
     revokeOtherSessions,

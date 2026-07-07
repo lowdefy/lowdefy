@@ -30,6 +30,8 @@ export default {
     'Logout',
     'PasskeyDelete',
     'PasskeyRegister',
+    'PhoneNumberSendOtp',
+    'PhoneNumberVerify',
     'Publish',
     'Request',
     'RequestPasswordReset',

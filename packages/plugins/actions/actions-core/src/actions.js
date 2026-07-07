@@ -28,6 +28,8 @@ export { default as Login } from './actions/Login/Login.js';
 export { default as Logout } from './actions/Logout/Logout.js';
 export { default as PasskeyDelete } from './actions/PasskeyDelete/PasskeyDelete.js';
 export { default as PasskeyRegister } from './actions/PasskeyRegister/PasskeyRegister.js';
+export { default as PhoneNumberSendOtp } from './actions/PhoneNumberSendOtp/PhoneNumberSendOtp.js';
+export { default as PhoneNumberVerify } from './actions/PhoneNumberVerify/PhoneNumberVerify.js';
 export { default as Publish } from './actions/Publish/Publish.js';
 export { default as Request } from './actions/Request/Request.js';
 export { default as RequestPasswordReset } from './actions/RequestPasswordReset/RequestPasswordReset.js';

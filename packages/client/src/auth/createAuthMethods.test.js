@@ -33,11 +33,24 @@ function setup({ signInResult, signUpResult } = {}) {
     ),
     deletePasskey: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     impersonateUser: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
+    phoneNumberRequestPasswordReset: jest.fn(() =>
+      Promise.resolve({ data: { status: true }, error: null })
+    ),
+    phoneNumberResetPassword: jest.fn(() =>
+      Promise.resolve({ data: { status: true }, error: null })
+    ),
+    phoneNumberSendOtp: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    phoneNumberVerify: jest.fn(() =>
+      Promise.resolve({ data: { token: 't', user: {} }, error: null })
+    ),
     requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     resetPassword: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     revokeOtherSessions: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     sendVerificationEmail: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     signInEmail: jest.fn(() =>
+      Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
+    ),
+    signInPhoneNumber: jest.fn(() =>
       Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
     ),
     signUpEmail: jest.fn(() =>
@@ -146,7 +159,7 @@ test('login no longer handles signUp - a signUp-only call is rejected', async ()
   const { auth, lowdefy } = setup();
   const { login } = createAuthMethods(lowdefy, auth);
   await expect(login({ signUp: true, name: 'User' })).rejects.toThrow(
-    'Login requires a "providerId", "email" and "password", or "magicLink: true" param.'
+    'Login requires a "providerId", "email" and "password", "phoneNumber" and "password", or "magicLink: true" param.'
   );
   expect(auth.signUpEmail).not.toHaveBeenCalled();
 });
@@ -257,7 +270,7 @@ test('requestPasswordReset throws when email is missing', async () => {
   const { auth, lowdefy } = setup();
   const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
   await expect(requestPasswordReset()).rejects.toThrow(
-    'RequestPasswordReset requires an "email" param.'
+    'RequestPasswordReset requires an "email" or "phoneNumber" param.'
   );
   expect(auth.requestPasswordReset).not.toHaveBeenCalled();
 });
@@ -423,5 +436,153 @@ test('acceptInvitation surfaces the error returned by the endpoint', async () =>
   const { acceptInvitation } = createAuthMethods(lowdefy, auth);
   await expect(acceptInvitation({ invitationId: 'invitation-1' })).rejects.toThrow(
     'Invitation not found.'
+  );
+});
+
+test('login with phoneNumber and password calls signInPhoneNumber and navigates on success', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    phoneNumber: '+27831234567',
+    password: 'password123',
+    callbackUrl: { url: '/home' },
+  });
+  expect(auth.signInPhoneNumber.mock.calls).toEqual([
+    [{ phoneNumber: '+27831234567', password: 'password123' }],
+  ]);
+  expect(auth.signInEmail).not.toHaveBeenCalled();
+  expect(assign.mock.calls).toEqual([['/home']]);
+});
+
+test('login with phoneNumber does not navigate on a twoFactorRedirect response', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { twoFactorRedirect: true } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({
+    phoneNumber: '+27831234567',
+    password: 'password123',
+    callbackUrl: { url: '/home' },
+  });
+  expect(data).toEqual({ twoFactorRedirect: true });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('login with phoneNumber throws when password is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ phoneNumber: '+27831234567' })).rejects.toThrow(
+    'Login with phoneNumber requires a "password" param.'
+  );
+});
+
+test('login with phoneNumber does not auto-pick a sole configured provider', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ phoneNumber: '+27831234567', password: 'password123' });
+  expect(auth.signInSocial).not.toHaveBeenCalled();
+  expect(auth.signInPhoneNumber).toHaveBeenCalledTimes(1);
+});
+
+test('requestPasswordReset with phoneNumber dispatches to the phone reset request', async () => {
+  const { auth, lowdefy } = setup();
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await requestPasswordReset({ phoneNumber: '+27831234567' });
+  expect(auth.phoneNumberRequestPasswordReset.mock.calls).toEqual([
+    [{ phoneNumber: '+27831234567' }],
+  ]);
+  expect(auth.requestPasswordReset).not.toHaveBeenCalled();
+});
+
+test('requestPasswordReset throws when neither email nor phoneNumber is given', async () => {
+  const { auth, lowdefy } = setup();
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await expect(requestPasswordReset({})).rejects.toThrow(
+    'RequestPasswordReset requires an "email" or "phoneNumber" param.'
+  );
+});
+
+test('resetPassword with phoneNumber and otp dispatches to the phone reset', async () => {
+  const { auth, lowdefy } = setup();
+  const { resetPassword } = createAuthMethods(lowdefy, auth);
+  await resetPassword({ phoneNumber: '+27831234567', otp: '123456', newPassword: 'newpass123' });
+  expect(auth.phoneNumberResetPassword.mock.calls).toEqual([
+    [{ phoneNumber: '+27831234567', otp: '123456', newPassword: 'newpass123' }],
+  ]);
+  expect(auth.resetPassword).not.toHaveBeenCalled();
+});
+
+test('resetPassword with phoneNumber throws when otp is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { resetPassword } = createAuthMethods(lowdefy, auth);
+  await expect(
+    resetPassword({ phoneNumber: '+27831234567', newPassword: 'newpass123' })
+  ).rejects.toThrow('ResetPassword with phoneNumber requires an "otp" param.');
+});
+
+test('resetPassword without phoneNumber still resets with the emailed token', async () => {
+  const { auth, lowdefy } = setup();
+  const { resetPassword } = createAuthMethods(lowdefy, auth);
+  await resetPassword({ token: 'reset-token', newPassword: 'newpass123' });
+  expect(auth.resetPassword.mock.calls).toEqual([
+    [{ newPassword: 'newpass123', token: 'reset-token' }],
+  ]);
+});
+
+test('phoneNumberSendOtp calls the client sendOtp with the phone number', async () => {
+  const { auth, lowdefy } = setup();
+  const { phoneNumberSendOtp } = createAuthMethods(lowdefy, auth);
+  await phoneNumberSendOtp({ phoneNumber: '+27831234567' });
+  expect(auth.phoneNumberSendOtp.mock.calls).toEqual([[{ phoneNumber: '+27831234567' }]]);
+});
+
+test('phoneNumberSendOtp throws when phoneNumber is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { phoneNumberSendOtp } = createAuthMethods(lowdefy, auth);
+  await expect(phoneNumberSendOtp({})).rejects.toThrow(
+    'PhoneNumberSendOtp requires a "phoneNumber" param.'
+  );
+});
+
+test('phoneNumberVerify calls the client verify and passes through flow params', async () => {
+  const { auth, lowdefy } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    disableSession: true,
+    updatePhoneNumber: true,
+  });
+  expect(auth.phoneNumberVerify.mock.calls).toEqual([
+    [
+      {
+        phoneNumber: '+27831234567',
+        code: '123456',
+        disableSession: true,
+        updatePhoneNumber: true,
+      },
+    ],
+  ]);
+});
+
+test('phoneNumberVerify throws when phoneNumber or code is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await expect(phoneNumberVerify({ phoneNumber: '+27831234567' })).rejects.toThrow(
+    'PhoneNumberVerify requires "phoneNumber" and "code" params.'
+  );
+  await expect(phoneNumberVerify({ code: '123456' })).rejects.toThrow(
+    'PhoneNumberVerify requires "phoneNumber" and "code" params.'
+  );
+});
+
+test('phoneNumberVerify rethrows the BetterAuth error so onError chains fire', async () => {
+  const { auth, lowdefy } = setup();
+  auth.phoneNumberVerify = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Invalid OTP', code: 'INVALID_OTP' } })
+  );
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await expect(phoneNumberVerify({ phoneNumber: '+27831234567', code: '000000' })).rejects.toThrow(
+    'Invalid OTP'
   );
 });
