@@ -56,7 +56,6 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
         dispatch: () => undefined,
       },
       router,
-      updaters: {},
     };
     lowdefy.apiResponses = {};
     lowdefy.basePath = router.basePath;
@@ -74,8 +73,6 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.translate = (key, values) =>
       translate({ key, values, i18n: lowdefy.i18n });
-    lowdefy._internal.updateBlock = (blockId) =>
-      lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;

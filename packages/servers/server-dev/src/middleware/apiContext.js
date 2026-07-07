@@ -32,6 +32,10 @@ import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
+import notifications, {
+  interpolateProperties,
+  renderEmail,
+} from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
 import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
@@ -60,9 +64,12 @@ function apiContext() {
       fileCache,
       headers: c.req.header(),
       i18n: i18nConfig,
+      interpolateProperties,
       jsMap,
       logger: createLogger({ rid }),
+      notifications,
       operators,
+      renderEmail,
       req: {
         url: c.req.path,
         method: c.req.method,

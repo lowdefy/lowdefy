@@ -24,16 +24,16 @@ jest.unstable_mockModule('@sendgrid/mail', () => {
     default: {
       setApiKey: jest.fn(),
       send: (msg) => {
-        if (msg[0].to === 'response_error') {
+        if (msg.to === 'response_error') {
           const error = new Error('Test error.');
           error.response = { body: ['Test error 1.', 'Test error 2.'] };
           throw error;
         }
-        if (msg[0].to === 'generic_error') {
+        if (msg.to === 'generic_error') {
           throw new Error('Test error.');
         }
         mockSend(msg);
-        return Promise.resolve(msg);
+        return Promise.resolve([{ headers: { 'x-message-id': 'test-message-id' } }]);
       },
     },
   };
@@ -58,16 +58,14 @@ test('send with valid request and connection', async () => {
   const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
-      [
-        {
-          from: { email: 'a.cc@mm.co', name: 'a@b.om' },
-          mailSettings: undefined,
-          subject: 'A',
-          templateId: undefined,
-          text: 'B',
-          to: 'a@b.com',
-        },
-      ],
+      {
+        from: { email: 'a.cc@mm.co', name: 'a@b.om' },
+        mailSettings: undefined,
+        subject: 'A',
+        templateId: undefined,
+        text: 'B',
+        to: 'a@b.com',
+      },
     ],
   ]);
   expect(send).toEqual({
@@ -89,16 +87,14 @@ test('send to list of emails', async () => {
   const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
-      [
-        {
-          from: 'x@y.com',
-          mailSettings: undefined,
-          subject: 'A',
-          templateId: undefined,
-          text: 'B',
-          to: ['a@b.com', 'aaa bbb <aaa@bbb.com>', { email: 'ddd@eee.com', name: 'ccc' }],
-        },
-      ],
+      {
+        from: 'x@y.com',
+        mailSettings: undefined,
+        subject: 'A',
+        templateId: undefined,
+        text: 'B',
+        to: ['a@b.com', 'aaa bbb <aaa@bbb.com>', { email: 'ddd@eee.com', name: 'ccc' }],
+      },
     ],
   ]);
   expect(send).toEqual({
@@ -127,29 +123,59 @@ test('send a list of different emails', async () => {
   const send = await SendGridMailSend({ request, connection });
   expect(mockSend.mock.calls).toEqual([
     [
-      [
-        {
-          from: 'x@y.com',
-          mailSettings: undefined,
-          subject: 'A',
-          templateId: undefined,
-          text: 'A',
-          to: 'a@b.com',
-        },
-        {
-          from: 'x@y.com',
-          mailSettings: undefined,
-          subject: 'B',
-          templateId: undefined,
-          text: 'B',
-          to: 'b@b.com',
-        },
-      ],
+      {
+        from: 'x@y.com',
+        mailSettings: undefined,
+        subject: 'A',
+        templateId: undefined,
+        text: 'A',
+        to: 'a@b.com',
+      },
+    ],
+    [
+      {
+        from: 'x@y.com',
+        mailSettings: undefined,
+        subject: 'B',
+        templateId: undefined,
+        text: 'B',
+        to: 'b@b.com',
+      },
     ],
   ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
+});
+
+test('send preserves a request templateId when the connection has no templateId', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const request = {
+    to: 'a@b.com',
+    templateId: 'request-template',
+    dynamicTemplateData: { name: 'A' },
+  };
+  const connection = {
+    apiKey: 'X',
+    from: 'x@y.com',
+  };
+  await SendGridMailSend({ request, connection });
+  expect(mockSend.mock.calls[0][0].templateId).toEqual('request-template');
+});
+
+test('send uses the connection templateId over a request templateId', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const request = {
+    to: 'a@b.com',
+    templateId: 'request-template',
+  };
+  const connection = {
+    apiKey: 'X',
+    from: 'x@y.com',
+    templateId: 'connection-template',
+  };
+  await SendGridMailSend({ request, connection });
+  expect(mockSend.mock.calls[0][0].templateId).toEqual('connection-template');
 });
 
 test('Error request with no to', async () => {

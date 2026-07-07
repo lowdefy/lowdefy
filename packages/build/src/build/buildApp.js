@@ -59,6 +59,9 @@ function buildApp({ components, context }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
+  if (type.isNone(components.app.email)) {
+    components.app.email = {};
+  }
   components.appMeta = context?.appMeta ?? computeAppMeta(components);
   return components;
 }

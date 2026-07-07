@@ -54,3 +54,65 @@ blocks:
           - label: Bob
             value:
               _id: user_2
+
+  - id: tiptap_mention_groups
+    type: TiptapMentionInput
+    properties:
+      title: Group mentions playground
+      placeholder: 'Type @ — People + Roles sections, group chips, hover members'
+      mentions:
+        limit: 3
+        groupMembers:
+          finance:
+            - name: Jane Doe
+              email: jane@example.com
+            - name: John Smith
+              email: john@example.com
+          devs:
+            - name: Ada Lovelace
+              email: ada@example.com
+            - name: Alan Turing
+              email: alan@example.com
+        # people carry value.href → <a>; groups omit it → nullish → <span>
+        getHref:
+          _function:
+            __args: 0.value.href
+        options:
+          - label: Alice
+            value:
+              name: Alice
+              href: '/contacts?_id=user_1'
+            tag:
+              section: People
+          - label: Amir
+            value:
+              name: Amir
+              href: '/contacts?_id=user_2'
+            tag:
+              section: People
+          - label: Anna
+            value:
+              name: Anna
+              href: '/contacts?_id=user_3'
+            tag:
+              section: People
+          - label: Aaron
+            value:
+              name: Aaron
+              href: '/contacts?_id=user_4'
+            tag:
+              section: People
+          - label: Finance
+            value:
+              role: finance-admin
+            tag:
+              section: Roles
+              group: finance
+              color: '#722ed1'
+          - label: Developers
+            value:
+              role: developer
+            tag:
+              section: Roles
+              group: devs
+              color: '#13c2c2'

@@ -28,6 +28,7 @@ function getDirectories({ configDirectory, options }) {
     build: path.join(server, 'build'),
     server,
     dev: options.devDirectory ? path.resolve(options.devDirectory) : path.join(dotLowdefy, 'dev'),
+    emails: path.join(dotLowdefy, 'emails'),
   };
 }
 

@@ -38,6 +38,7 @@ const testTypesMap = {
     Box: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-basic' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
     Icon: { package: '@lowdefy/blocks-basic' },
     Img: { package: '@lowdefy/blocks-basic' },

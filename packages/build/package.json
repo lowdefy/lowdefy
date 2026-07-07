@@ -39,7 +39,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./dev": "./dist/indexDev.js",
-    "./buildTestPage": "./dist/build/full/buildTestPage.js"
+    "./buildTestPage": "./dist/build/full/buildTestPage.js",
+    "./dynamic": "./dist/dynamic/buildDynamicBlocks.js"
   },
   "files": [
     "dist/*"
@@ -97,8 +98,10 @@
     "@lowdefy/connection-openai": "5.3.0",
     "@lowdefy/connection-redis": "5.3.0",
     "@lowdefy/connection-sendgrid": "5.3.0",
+    "@lowdefy/connection-smtp": "5.3.0",
     "@lowdefy/connection-stripe": "5.3.0",
     "@lowdefy/connection-test": "5.3.0",
+    "@lowdefy/email-templates": "5.3.0",
     "@lowdefy/logger": "5.3.0",
     "@lowdefy/operators-change-case": "5.3.0",
     "@lowdefy/operators-dayjs": "5.3.0",

@@ -58,6 +58,7 @@
     "@lowdefy/blocks-antd": "5.3.0",
     "@lowdefy/helpers": "5.3.0",
     "@tiptap/core": "2.27.2",
+    "@tiptap/extension-bubble-menu": "2.27.2",
     "@tiptap/extension-file-handler": "2.27.2",
     "@tiptap/extension-highlight": "2.27.2",
     "@tiptap/extension-image": "2.27.2",

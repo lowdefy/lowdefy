@@ -36,10 +36,13 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
+import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
+import validateCallAgentSteps from '../validateCallAgentSteps.js';
+import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -52,6 +55,7 @@ import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
+import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
@@ -62,6 +66,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
@@ -143,6 +148,14 @@ async function shallowBuild(options) {
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    // Cross-config validations — need buildApi (stepIds) and the buildAgents/
+    // buildNotifications id sets. Match the full build (index.js).
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
+      components,
+      context,
+    });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
@@ -173,6 +186,7 @@ async function shallowBuild(options) {
     await writeApi({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });
+    await writeNotifications({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
@@ -193,6 +207,10 @@ async function shallowBuild(options) {
       JSON.stringify([...skeletonSourceFiles].sort())
     );
     await writeMenus({ components, context });
+    // The dev client bundle imports every installed type (addInstalledTypes),
+    // so types.json here describes that full bundle — dynamic page content
+    // resolution validates fragment types against it at page get.
+    await writeTypes({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));

@@ -483,6 +483,61 @@ routine:
         _step: load_profile
 ```
 
+## Rendering Notifications As A Routine Step
+
+API routines render a [notification](/notifications) to an email with `RenderNotification` steps. The step renders one notification item against a template defined in the app's `notifications:` section and returns the rendered content — it does **not** store or send anything. Storing a record, sending the email, and tracking delivery are ordinary routine steps you compose around it (or that the [`modules-mongodb` notifications module](https://github.com/lowdefy/modules-mongodb) composes for you).
+
+`RenderNotification` is a built-in step. It requires no `connectionId` and no plugin install.
+
+A `RenderNotification` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: RenderNotification`: **Required** - Identifies this as a render step.
+- `properties.notificationId: string`: **Required** - The id of the notification in the `notifications:` section to render. **Operators are evaluated**.
+- `properties.data: object`: **Required** - The data for **one** notification (the recipient and template data). Must be a single object — to render a batch, iterate with a [`:for`](/for) control and render one item per step. **Operators are evaluated**.
+- `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Required when the item carries page links.
+- `properties.landingPage: string`: A page path to route email links through (for example `/notifications/link`), so a landing page can mark the notification read before redirecting. When unset, links go directly to their target pages.
+- `properties.recordId: string`: The record id embedded in landing-page link URLs. Required when `landingPage` is set and the item has links — usually a `_uuid` minted earlier in the routine.
+
+The step result contains:
+
+- `subject: string`: The interpolated subject line.
+- `title: string`: The interpolated title (falls back to `subject`).
+- `preview: string`: A short preview string for inbox listings (the template's `preview`, else a markdown-stripped excerpt of the message).
+- `html: string`: The rendered email as HTML.
+- `text: string`: The rendered email as plain text.
+- `data: object`: The item with its links resolved to URLs.
+
+```yaml
+api:
+  - id: notify-task-assigned
+    type: Api
+    routine:
+      - id: render
+        type: RenderNotification
+        # Render one item; see /notifications for the notifications: section.
+        properties:
+          notificationId: task-assigned
+          data:
+            _payload: item
+          serverUrl: https://myapp.com
+
+      - id: send
+        type: SMTPMailSend
+        connectionId: smtp
+        properties:
+          to:
+            _payload: item.contact.email
+          subject:
+            _step: render.subject
+          html:
+            _step: render.html
+          text:
+            _step: render.text
+```
+
+See [Notifications](/notifications) for the `notifications:` section, the built-in templates, and how link URLs are composed.
+
 ## Internal API Endpoints
 
 Endpoints with `type: InternalApi` are only callable from other endpoints via `CallApi` steps. They cannot be called from client pages using the `CallAPI` action, and HTTP requests to them return a "does not exist" error.

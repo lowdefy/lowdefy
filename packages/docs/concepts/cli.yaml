@@ -82,6 +82,19 @@ _ref:
             - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
+            ## emails
+
+            The `emails` command previews the [notification](/notifications) emails your app renders, using [React Email](https://react.email/)'s preview server. It builds the app, renders each notification from its `testData`, and opens the preview so you can iterate on templates without sending real mail. It warns when a template renders a data key your `testData` is missing (which would show as an empty section), and errors if the app has no `notifications:` section.
+
+            The preview tooling (`react-email`) is installed just-in-time by this command — it is never a dependency of your app or its production server.
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: Change the port the email preview server is hosted at. The default is `3001`.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
             ## init
 
             The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.

@@ -27,7 +27,9 @@ const basePath = lowdefyConfig.basePath ?? '';
 async function apiPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
-  const result = await getPageConfig(context, { pageId });
+  // The client forwards its current query string on the fetch so Dynamic block
+  // resolution sees the same urlQuery as an initial HTML load.
+  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
   if (result.status === 'unauthenticated') {
     // The client follows this redirect with a full page load, so the login
     // page can return to the requested page after sign-in.
