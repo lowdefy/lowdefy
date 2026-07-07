@@ -17,7 +17,9 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
-async function runDevServer({ context, directory }) {
+// env additions/overrides spread last — the mobile dev command enables the
+// manager's mobile client lane this way.
+async function runDevServer({ context, directory, env = {} }) {
   await spawnProcess({
     args: ['run', 'start'],
     command: context.pnpmCmd,
@@ -35,6 +37,7 @@ async function runDevServer({ context, directory }) {
         LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
         LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
         PORT: context.options.port,
+        ...env,
       },
     },
     silent: false,

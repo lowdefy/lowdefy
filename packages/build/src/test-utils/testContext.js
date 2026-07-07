@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createCounter from '../utils/createCounter.js';
+import createMobileTypeCounters from '../utils/createMobileTypeCounters.js';
 import createTypeCounters from '../utils/createTypeCounters.js';
 
 function testContext({
@@ -49,16 +49,7 @@ function testContext({
     websocketIds: new Set(),
   };
 
-  // Mobile counters share server-side counters with the main set (see createContext).
-  context.typeCountersMobile = {
-    ...context.typeCounters,
-    actions: createCounter(),
-    blocks: createCounter(),
-    operators: {
-      client: createCounter(),
-      server: context.typeCounters.operators.server,
-    },
-  };
+  context.typeCountersMobile = createMobileTypeCounters({ typeCounters: context.typeCounters });
   context.typesMapMobile = typesMapMobile ?? {
     actions: {},
     blocks: {},

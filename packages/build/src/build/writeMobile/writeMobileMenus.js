@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { type, serializer } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 
+// buildMobile normalizes mobile.menus to an array before any write step runs.
 async function writeMobileMenus({ components, context }) {
-  const menus = components.mobile?.menus ?? [];
-  if (!type.isArray(menus)) {
-    throw new Error('Mobile menus is not an array.');
-  }
-  await context.writeBuildArtifact('mobile/menus.json', serializer.serializeToString(menus));
+  await context.writeBuildArtifact(
+    'mobile/menus.json',
+    serializer.serializeToString(components.mobile.menus)
+  );
 }
 
 export default writeMobileMenus;

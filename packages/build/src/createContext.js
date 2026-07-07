@@ -17,8 +17,8 @@
 import { mergeObjects } from '@lowdefy/helpers';
 
 import createBuildHandleError from './utils/createBuildHandleError.js';
-import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
+import createMobileTypeCounters from './utils/createMobileTypeCounters.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
@@ -64,19 +64,7 @@ function createContext({
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
-  // Mobile pages count client-side types (blocks, actions, client operators)
-  // into their own counters; server-side classes (requests, connections,
-  // server operators, ...) share the main counters — the server executes
-  // mobile page requests, so their types must reach the server imports.
-  context.typeCountersMobile = {
-    ...context.typeCounters,
-    actions: createCounter(),
-    blocks: createCounter(),
-    operators: {
-      client: createCounter(),
-      server: context.typeCounters.operators.server,
-    },
-  };
+  context.typeCountersMobile = createMobileTypeCounters({ typeCounters: context.typeCounters });
 
   context.blockMetas = context.typesMap.blockMetas ?? {};
   context.blockMetasMobile = context.typesMapMobile.blockMetas ?? {};

@@ -19,7 +19,8 @@ import { spawnProcess } from '@lowdefy/node-utils';
 function createStdOutLineHandler({ context }) {
   function stdOutLineHandler(line) {
     // Matches vite build output of form: dist/client/assets/main-XXXX.js  5,205.62 kB │ gzip: 1,544.04 kB
-    const match = line.match(/assets\/main-[\w-]+\.js\s+[\d,.]+ kB │ gzip:\s+([\d,.]+ kB)/u);
+    // (the mobile client's entry chunk is index-XXXX.js).
+    const match = line.match(/assets\/(?:main|index)-[\w-]+\.js\s+[\d,.]+ kB │ gzip:\s+([\d,.]+ kB)/u);
     if (match) {
       context.logger.info(`Client bundle size (gzip): ${match[1]}.`);
     }
@@ -28,8 +29,9 @@ function createStdOutLineHandler({ context }) {
   return stdOutLineHandler;
 }
 
-async function runClientBuild({ context, directory }) {
-  context.logger.info({ spin: 'start' }, 'Running client build.');
+// env additions spread last; name labels the log lines (e.g. 'mobile client').
+async function runClientBuild({ context, directory, env = {}, name = 'client' }) {
+  context.logger.info({ spin: 'start' }, `Running ${name} build.`);
   try {
     await spawnProcess({
       command: context.pnpmCmd,
@@ -39,14 +41,14 @@ async function runClientBuild({ context, directory }) {
         // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
         shell: process.platform === 'win32',
         cwd: directory,
-        env: process.env,
+        env: { ...process.env, ...env },
       },
     });
   } catch (error) {
-    context.logger.info({ spin: 'fail' }, 'Running client build.');
-    throw new Error('Client build failed.');
+    context.logger.info({ spin: 'fail' }, `Running ${name} build.`);
+    throw new Error(`${name.charAt(0).toUpperCase()}${name.slice(1)} build failed.`);
   }
-  context.logger.info('Client build successful.');
+  context.logger.info(`${name.charAt(0).toUpperCase()}${name.slice(1)} build successful.`);
 }
 
 export default runClientBuild;

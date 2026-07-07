@@ -16,13 +16,14 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-// Runs the Capacitor CLI installed in the mobile project (pnpm exec cap ...).
-async function runCapacitorCommand({ context, args, message }) {
+// Runs a binary installed in the mobile project (pnpm exec cap ... /
+// pnpm exec capacitor-assets ...).
+async function runCapacitorCommand({ context, exec, message }) {
   context.logger.info({ spin: 'start' }, message);
   try {
     await spawnProcess({
       command: context.pnpmCmd,
-      args: ['exec', 'cap', ...args],
+      args: ['exec', ...exec],
       stdOutLineHandler: (line) => context.logger.debug(line),
       processOptions: {
         cwd: context.directories.mobileProject,
@@ -32,7 +33,7 @@ async function runCapacitorCommand({ context, args, message }) {
     });
   } catch (error) {
     context.logger.info({ spin: 'fail' }, message);
-    throw new Error(`Capacitor command "cap ${args.join(' ')}" failed.`);
+    throw new Error(`Command "${exec.join(' ')}" failed.`);
   }
   context.logger.info(`${message} Done.`);
 }

@@ -44,9 +44,10 @@ function buildImportsMobile({ components, context }) {
   let blocks;
   let operatorsClient;
   if (context.stage === 'dev') {
-    // Dev builds page content JIT, so types are not counted at skeleton time.
-    // The mobile map only contains mobile-capable packages — import all of it
-    // so JIT-resolved pages always find their types in the bundle.
+    // Dev builds page content JIT, so types are not counted at skeleton time —
+    // import the whole mobile map so JIT-resolved pages find their types.
+    // Note this includes custom plugin types (they register into both maps),
+    // so web-only custom blocks land in the dev mobile bundle too.
     actions = buildImportClass(context.typesMapMobile.actions);
     blocks = buildImportClass(context.typesMapMobile.blocks);
     operatorsClient = buildImportClass(context.typesMapMobile.operators.client);
