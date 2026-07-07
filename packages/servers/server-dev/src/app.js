@@ -72,7 +72,9 @@ function createApp() {
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
-  app.all('/api/endpoints/*', endpointsHandler);
+  // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
+  // cap bodies at 10 MiB to match the agent route.
+  app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
   app.get('/api/cron/*', cronHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);

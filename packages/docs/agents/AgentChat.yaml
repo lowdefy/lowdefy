@@ -221,16 +221,19 @@ _ref:
               - `enabled: boolean`: Enable file attachments.
               - `accept: string`: Accepted MIME types (e.g. `'image/*,.pdf'`).
               - `maxSize: number`: Maximum file size in bytes.
-              - `s3PostPolicyRequestId: string`: Request ID for S3 upload policy. When set, files are uploaded to S3 and their URLs are sent to the model instead of base64 data.
+              - `uploadPolicyRequestId: string`: Id of an upload-policy request (e.g. `AwsS3PresignedPostPolicy`, `GcsSignedPostPolicy`, `AzureBlobUploadSas`). When set, files are uploaded to storage and their URLs are sent to the model instead of base64 data.
+              - `downloadPolicyRequestId: string`: Id of a download request used to resolve the URL of an uploaded attachment. The URL is fetched by the model provider, so it must remain reachable — set `public: true` on the request for public buckets, or use a long expiry. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated).
+              - `s3PostPolicyRequestId: string`: __Deprecated__ — use `uploadPolicyRequestId` instead.
 
-            ###### Attachments with S3 upload:
+            ###### Attachments uploaded to storage:
             ```yaml
             sender:
               attachments:
                 enabled: true
                 accept: image/*,.pdf,.docx
                 maxSize: 10485760
-                s3PostPolicyRequestId: get_upload_policy
+                uploadPolicyRequestId: get_upload_policy
+                downloadPolicyRequestId: get_download_url
             ```
 
             #### Sender Switches

@@ -36,14 +36,14 @@ const getFileFromNavigator = async () => {
 };
 
 const getOnPaste =
-  ({ s3UploadRequest, properties }) =>
+  ({ uploadRequest, properties }) =>
   async (event) => {
     event?.preventDefault?.();
     if (properties.disabled) return;
     const file = event ? await getFileFromEvent(event) : await getFileFromNavigator();
     if (!file) return;
     file.uid = `${properties.fileName ?? file.name ?? 'clipboard'}-${Date.now()}`;
-    await s3UploadRequest({ file });
+    await uploadRequest({ file });
   };
 
 export default getOnPaste;

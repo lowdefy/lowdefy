@@ -48,9 +48,10 @@ const useFileList = ({ properties, methods, value = {} }) => {
       throw new Error('File is undefined in useFileList');
     }
     // destruct the file object to avoid the file object being mutated.
-    const { bucket, key, lastModified, name, size, status, type, uid } = file;
+    const { bucket, content, key, lastModified, name, size, status, type, uid } = file;
     const fileObj = {
       bucket,
+      content,
       key,
       lastModified,
       name,
@@ -89,6 +90,7 @@ const useFileList = ({ properties, methods, value = {} }) => {
     await methods.triggerEvent({ name: event, event: nextState });
     setValue(nextState);
     methods.setValue(nextState);
+    return nextState;
   };
   const loadFileList = async (file, nextFiles) => {
     if (

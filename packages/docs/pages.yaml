@@ -98,6 +98,9 @@
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/SegmentedSelector.yaml
 - _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/Upload.yaml
+- _ref: blocks/input/UploadDragger.yaml
+- _ref: blocks/input/UploadPhoto.yaml
 - _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
@@ -140,6 +143,7 @@
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
+- _ref: blocks/display/Download.yaml
 - _ref: blocks/display/Search.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
@@ -202,6 +206,8 @@
 
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
+- _ref: connections/AzureBlobStorage.yaml
+- _ref: connections/GoogleCloudStorage.yaml
 - _ref: connections/AxiosHttp.yaml
 - _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml

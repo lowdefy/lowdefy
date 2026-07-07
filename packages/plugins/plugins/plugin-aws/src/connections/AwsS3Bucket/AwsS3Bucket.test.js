@@ -21,8 +21,10 @@ import AwsS3Bucket from './AwsS3Bucket.js';
 const schema = AwsS3Bucket.schema;
 
 test('All requests are present', () => {
+  expect(AwsS3Bucket.requests.AwsS3GetObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedGetObject).toBeDefined();
   expect(AwsS3Bucket.requests.AwsS3PresignedPostPolicy).toBeDefined();
+  expect(AwsS3Bucket.requests.AwsS3PutObject).toBeDefined();
 });
 
 test('valid connection schema', () => {
@@ -41,6 +43,9 @@ test('valid connection schema, all properties', () => {
     secretAccessKey: 'secretAccessKey',
     region: 'region',
     bucket: 'bucket',
+    endpoint: 'https://account.r2.cloudflarestorage.com',
+    forcePathStyle: true,
+    publicUrlBase: 'https://cdn.example.com',
     read: true,
     write: true,
   };
@@ -162,5 +167,44 @@ test('write is not a boolean', () => {
   };
   expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "write" should be a boolean.'
+  );
+});
+
+test('endpoint is not a string', () => {
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'region',
+    bucket: 'bucket',
+    endpoint: true,
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'AwsS3Bucket connection property "endpoint" should be a string.'
+  );
+});
+
+test('forcePathStyle is not a boolean', () => {
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'region',
+    bucket: 'bucket',
+    forcePathStyle: 'forcePathStyle',
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'AwsS3Bucket connection property "forcePathStyle" should be a boolean.'
+  );
+});
+
+test('publicUrlBase is not a string', () => {
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'region',
+    bucket: 'bucket',
+    publicUrlBase: true,
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'AwsS3Bucket connection property "publicUrlBase" should be a string.'
   );
 });
