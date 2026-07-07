@@ -25,6 +25,7 @@ packages/servers/*/build/**
 packages/servers/*/lowdefy-build/**
 packages/servers/*/public/**
 packages/servers/*/package.original.json
+packages/mobile-client/package.original.json
 
 
 !packages/docs/lowdefy.yaml
