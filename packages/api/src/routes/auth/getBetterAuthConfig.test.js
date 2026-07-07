@@ -167,6 +167,77 @@ test('does not warn about a short secret when the resolved secret is 32 characte
   expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('shorter than 32'));
 });
 
+describe('base URL resolution', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+
+  afterEach(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  test('pins baseURL to BETTER_AUTH_URL when it is set', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBe('https://app.example.com');
+    expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+
+  test('trims surrounding whitespace from BETTER_AUTH_URL', () => {
+    process.env.BETTER_AUTH_URL = '  https://app.example.com  ';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBe('https://app.example.com');
+  });
+
+  test('falls back to per-request host derivation and warns in production when BETTER_AUTH_URL is unset', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'auto' });
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+
+  test('does not warn about an unpinned base URL in dev and uses the http protocol', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      dev: true,
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'http' });
+    expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+});
+
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
   const adapterPlugin = jest.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({

@@ -118,11 +118,30 @@ function getBetterAuthConfig({
     ? undefined
     : createSendEmail({ emailConfig: authConfig.email });
 
+  // BetterAuth builds password-reset, magic-link and email-verification links,
+  // and its CSRF Origin allowlist, from the base URL. When the deployment's
+  // canonical origin is pinned via BETTER_AUTH_URL, both are fixed and cannot
+  // be steered by a spoofed Host / X-Forwarded-Host header (CWE-640
+  // password-reset poisoning). Without it, fall back to per-request host
+  // derivation - the zero-config path that supports arbitrary proxies and
+  // multi-host deployments - and warn in production that the host is then
+  // caller-controlled.
+  const canonicalUrl = process.env.BETTER_AUTH_URL?.trim();
+  let baseURL;
+  if (canonicalUrl) {
+    baseURL = canonicalUrl;
+  } else {
+    if (!dev) {
+      logger.warn(
+        'Auth base URL is not pinned. Set BETTER_AUTH_URL to the app\'s canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header.'
+      );
+    }
+    baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };
+  }
+
   const options = {
     appName: appMeta?.name ?? 'Lowdefy',
-    // Same-origin auth: trust the request-derived host, like today's server
-    // which runs behind arbitrary proxies. Dev servers run plain http.
-    baseURL: { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' },
+    baseURL,
     basePath: `${config.basePath ?? ''}/api/auth`,
     secret: authConfig.secret,
     telemetry: { enabled: false },
