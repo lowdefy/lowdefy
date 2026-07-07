@@ -172,7 +172,8 @@ test('getPageConfig, dynamic page resolves Dynamic blocks and does not mutate th
     return null;
   });
   const res = await getPageConfig(context, { pageId: 'pageId', urlQuery: {} });
-  const dynamicBlock = res.slots.content.blocks[0];
+  expect(res.status).toBe('ok');
+  const dynamicBlock = res.pageConfig.slots.content.blocks[0];
   expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('resolved');
   expect(dynamicBlock.properties.endpointId).toBe(undefined);
   // The fileCache-cached config object is untouched by resolution.
