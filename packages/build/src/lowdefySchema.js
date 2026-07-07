@@ -78,6 +78,114 @@ export default {
         },
       },
     },
+    actionOrControl: {
+      anyOf: [
+        { $ref: '#/definitions/action' },
+        { $ref: '#/definitions/controlIf' },
+        { $ref: '#/definitions/controlSwitch' },
+        { $ref: '#/definitions/controlReturn' },
+      ],
+    },
+    controlIf: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':if', ':then'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':if': {},
+        ':then': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":then" should be an array of actions.',
+          },
+        },
+        ':else': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":else" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":if" should be an object.',
+        required: {
+          ':then': 'Control ":if" should have required property ":then".',
+        },
+      },
+    },
+    controlReturn: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':return'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':return': {},
+      },
+      errorMessage: {
+        type: 'Control ":return" should be an object.',
+      },
+    },
+    controlSwitch: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':switch'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':switch': {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: [':case', ':then'],
+            properties: {
+              '~r': {},
+              '~l': {},
+              ':case': {},
+              ':then': {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+                errorMessage: {
+                  type: 'Control ":then" should be an array of actions.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Control ":switch" cases should be objects.',
+              required: {
+                ':case': 'Control ":switch" case should have required property ":case".',
+                ':then': 'Control ":switch" case should have required property ":then".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Control ":switch" should be an array of case objects.',
+          },
+        },
+        ':default': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":default" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":switch" should be an object.',
+      },
+    },
     agent: {
       type: 'object',
       additionalProperties: false,
@@ -1371,7 +1479,7 @@ export default {
                 {
                   type: 'array',
                   items: {
-                    $ref: '#/definitions/action',
+                    $ref: '#/definitions/actionOrControl',
                   },
                 },
                 {
@@ -1404,13 +1512,13 @@ export default {
                     try: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     catch: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     debounce: {
