@@ -1,0 +1,23 @@
+# Bound to phone.otp.send AND phone.passwordReset.send (one endpoint may
+# bind several points). _payload is { phoneNumber, code }. There is no
+# fallback SMS transport - this routine IS the sender. The walkthrough
+# writes the code to the sms-outbox collection instead of calling a real
+# provider; a real app would hit its SMS provider's HTTP API here (an
+# AxiosHttp request against Twilio, Vonage, a local aggregator) with
+# _secret-resolved credentials. BetterAuth awaits the send inside the
+# request, so a throw here fails the /phone-number/send-otp call - an SMS
+# that did not send is visible, never swallowed.
+id: send-otp-sms
+type: InternalApi
+routine:
+  - id: write_sms
+    type: MongoDBInsertOne
+    connectionId: sms_outbox_db
+    properties:
+      doc:
+        phoneNumber:
+          _payload: phoneNumber
+        code:
+          _payload: code
+        at:
+          _date: now

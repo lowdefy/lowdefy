@@ -52,6 +52,9 @@ Each later phase grows this suite with a scenario.
   LOWDEFY_SECRET_JWT_SIGNING_SECRET=jwt-shared-secret-0123456789abcdef
   # The hook scenarios assert this exact value lands in the audit row:
   LOWDEFY_SECRET_HOOK_AUDIT_KEY=audit-secret-value
+  # Cloudflare Turnstile's documented always-pass TEST secret key - pairs
+  # with the test site key in lowdefy.yaml; no Cloudflare account needed:
+  LOWDEFY_SECRET_TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
   # Only needed to exercise the OAuth scenario:
   LOWDEFY_SECRET_GOOGLE_CLIENT_ID=<from Google Cloud console>
   LOWDEFY_SECRET_GOOGLE_CLIENT_SECRET=<from Google Cloud console>
@@ -891,3 +894,67 @@ Automation note: manual like every phase before - passkey ceremonies,
 authenticator codes, two browsers, restarts and live email loops. The
 console `call` helper keeps the API scenarios copy-paste. Automate with
 the repo's e2e tooling as it grows.
+
+## Walkthrough (phone number and captcha)
+
+Phone-based login (the BetterAuth `phoneNumber` plugin surfaced as
+`auth.phoneNumber`) and bot protection on the spend endpoints (the `captcha`
+plugin surfaced as `auth.captcha`). One new environment variable:
+`LOWDEFY_SECRET_TURNSTILE_SECRET_KEY` set to Cloudflare Turnstile's
+documented always-pass test secret (see Environment above) - the site key in
+`lowdefy.yaml` is the matching test key, so the widget renders and always
+passes without a Cloudflare account. There is no real SMS provider: the
+`send-otp-sms` hook routine writes each code to the `sms-outbox` collection
+in the auth database, this walkthrough's Mailpit-for-SMS. Re-run
+`node scripts/provision-indexes.mjs` first - the phone flows add the
+partial-unique `users { phoneNumber: 1 }` index.
+
+69. **Phone OTP sign-up**: open `/phone-login` (linked from `/login`). Enter
+    `+27831234567`, let the Turnstile test widget pass, and click *Send
+    code*. Read the code from `sms-outbox` (e.g.
+    `db['sms-outbox'].find().sort({at:-1}).limit(1)`), enter it, and click
+    *Verify and sign in* - you land on `/dashboard` with a session. Gates:
+    the account was created on first verify (`signUpOnVerification`) with
+    the synthetic email `27831234567@phone.auth-reference.test` in `users`;
+    open signup auto-joined it to org-a (the membership wall passes); the
+    `phone.verified` hook wrote an `event: phone.verified` row to
+    `hook-audit`.
+
+70. **E.164 is pinned at the wire**: send a code to `083 123 4567` or
+    `+27 83 123 4567` - the call fails with the invalid-phone-number error
+    before any send; no `sms-outbox` row appears. One phone, one identity:
+    the spaced, local and canonical forms cannot mint three accounts.
+
+71. **The captcha gate on the OTP send**: `/phone-number/send-otp` and
+    `/sign-up/email` are in `auth.captcha.endpoints`. In the console, call
+    the send endpoint without a token:
+    `fetch('/api/auth/phone-number/send-otp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ phoneNumber: '+27830000001' }) }).then((r) => r.json()).then(console.log)`
+    - a 400 with the missing-captcha code, and no `sms-outbox` row. The
+    page's send works because `PhoneNumberSendOtp` threads the block's
+    token as the `x-captcha-response` header. Email login (`/login`) stays
+    token-free - the explicit `endpoints` list scopes the gate; delete the
+    list and restart to see the computed default set protect every enabled
+    method's initiate endpoints (each login/signup/reset page then needs
+    its own widget).
+
+72. **Signup carries the same gate**: `/signup` now renders the widget
+    (configured entirely from the `_build.authConfig` projection -
+    `captcha.enabled`, `captcha.provider`, `captcha.siteKey`) and threads
+    `captchaToken` through `SignUp`. Tokens are single-use: on a failed
+    signup the catch chain calls the block's `reset` method, so the retry
+    mints a fresh token instead of failing with a missing-response error.
+
+73. **Password reset over SMS**: with a phone account from scenario 69, run
+    `fetch('/api/auth/phone-number/request-password-reset', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ phoneNumber: '+27831234567' }) }).then((r) => r.json()).then(console.log)`
+    - a reset code lands in `sms-outbox` (the `phone.passwordReset.send`
+    binding shares the `send-otp-sms` endpoint). Comment that binding out
+    and restart: the same request fails loudly naming the missing
+    `phone.passwordReset.send` binding - BetterAuth's silent
+    `{ status: true }`-without-sending is closed by the engine.
+
+74. **Phone + password sign-in**: after scenario 73 sets a password via
+    `ResetPassword` (`phoneNumber` + `otp` + `newPassword` params - or use
+    the reset code with a console call to
+    `/api/auth/phone-number/reset-password`), `Login` with
+    `{ phoneNumber, password }` params signs in through
+    `/sign-in/phone-number`.

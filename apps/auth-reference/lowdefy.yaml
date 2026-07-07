@@ -62,6 +62,37 @@ auth:
     rpId: localhost
     rpName: auth-reference
 
+  # Phone-number login: OTP sign-in/sign-up over SMS (the phone-login page).
+  # SMS dispatch is the send-otp-sms hook binding below - it writes codes to
+  # the sms-outbox collection, this walkthrough's Mailpit-for-SMS. The wire
+  # format is pinned to E.164 (+27831234567); spaced or local forms are
+  # rejected before any send. signUpOnVerification makes first verify create
+  # the account; the derived temp emails land on a reserved test domain that
+  # is never deliverable.
+  phoneNumber:
+    enabled: true
+    signUpOnVerification:
+      tempEmailDomain: phone.auth-reference.test
+
+  # Captcha on the spend endpoints: Cloudflare Turnstile with the documented
+  # always-pass test keys (site key 1x00000000000000000000AA, secret key
+  # 1x0000000000000000000000000000000AA - set as LOWDEFY_SECRET_
+  # TURNSTILE_SECRET_KEY). The explicit endpoints list scopes the gate to
+  # signup and the OTP send so the other walkthrough scenarios stay
+  # token-free; omit the key to protect the computed default set (every
+  # public initiate endpoint of the enabled methods). Pages feed the Captcha
+  # block from the _build.authConfig projection and thread the minted token
+  # through the captchaToken action param.
+  captcha:
+    enabled: true
+    provider: cloudflare-turnstile
+    siteKey: 1x00000000000000000000AA
+    secretKey:
+      _secret: TURNSTILE_SECRET_KEY
+    endpoints:
+      - /sign-up/email
+      - /phone-number/send-otp
+
   # Local dev sending: run Mailpit (see README) and point SMTP at it.
   email:
     from: auth-reference@localhost
@@ -134,6 +165,8 @@ auth:
       - reset-password
       - two-factor-challenge
       - login-methods
+      # Phone OTP sign-in/sign-up - public like login and signup.
+      - phone-login
     roles:
       admin:
         - admin
@@ -189,6 +222,22 @@ auth:
     - id: on-email-verified
       point: email.verified
       endpointId: on-email-verified
+    # SMS dispatch for phone login. phoneNumber.enabled requires the
+    # phone.otp.send binding at build - there is no fallback SMS transport.
+    # One endpoint binds both send points (an app wanting different messages
+    # binds two endpoints); phone.passwordReset.send left unbound would make
+    # the phone reset request fail loudly naming the missing binding.
+    - id: send-otp-sms
+      point: phone.otp.send
+      endpointId: send-otp-sms
+    - id: send-reset-sms
+      point: phone.passwordReset.send
+      endpointId: send-otp-sms
+    # The phone analog of email.verified - a phone-first app runs
+    # merge-on-signup here; the walkthrough writes an audit row.
+    - id: on-phone-verified
+      point: phone.verified
+      endpointId: on-phone-verified
     # Uncomment to hand invitation email dispatch to the invitation-send
     # endpoint - the stock auth.email template then does NOT send; the hook
     # owns dispatch (phase-6 walkthrough). Leave commented to exercise the
@@ -279,6 +328,16 @@ connections:
       databaseUri:
         _secret: AUTH_DATABASE_URI
       collection: user-members
+  # The phone OTP "SMS provider" for the walkthrough - the send-otp-sms hook
+  # routine writes codes here instead of calling a real provider; read the
+  # code from this collection to complete the phone-login flow.
+  - id: sms_outbox_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: sms-outbox
+      write: true
 
 api:
   - _ref: api/normalize-signup.yaml
@@ -317,6 +376,9 @@ api:
   - _ref: api/update-my-profile.yaml
   - _ref: api/admin-update-user-profile.yaml
   - _ref: api/list-members-ungated.yaml
+  # Phone-number hook bodies: SMS dispatch and the phone.verified audit.
+  - _ref: api/send-otp-sms.yaml
+  - _ref: api/on-phone-verified.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -342,3 +404,5 @@ pages:
   - _ref: pages/security.yaml
   - _ref: pages/two-factor-challenge.yaml
   - _ref: pages/login-methods.yaml
+  # Phone OTP sign-in/sign-up with the captcha gate on the send.
+  - _ref: pages/phone-login.yaml

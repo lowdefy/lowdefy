@@ -118,6 +118,18 @@ blocks:
           type: Login
           params:
             providerId: auth0
+  - id: phone_login_link
+    type: Button
+    properties:
+      title: Sign in with a phone number
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_phone_login
+          type: Link
+          params:
+            pageId: phone-login
   - id: forgot_password_link
     type: Button
     properties:
