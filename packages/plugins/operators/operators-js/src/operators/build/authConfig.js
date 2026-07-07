@@ -25,6 +25,9 @@ const readablePaths = [
   'passkey.enabled',
   'phoneNumber.enabled',
   'phoneNumber.signUpOnVerification',
+  'captcha.enabled',
+  'captcha.provider',
+  'captcha.siteKey',
   'providers',
   'organizations.signup',
 ];

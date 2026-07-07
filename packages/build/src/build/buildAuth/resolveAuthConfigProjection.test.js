@@ -49,6 +49,7 @@ test('resolveAuthConfigProjection sets default projection when no auth block', a
     twoFactor: { enabled: false },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
+    captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
     organizations: { signup: 'invite-only' },
   });
@@ -73,6 +74,7 @@ test('resolveAuthConfigProjection computes projection from an inline auth block'
     twoFactor: { enabled: true },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
+    captcha: { enabled: false, provider: null, siteKey: null },
     providers: [{ id: 'google', type: 'Google' }],
     organizations: { signup: 'open' },
   });

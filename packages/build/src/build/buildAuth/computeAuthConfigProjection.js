@@ -38,6 +38,14 @@ function computeAuthConfigProjection(auth = {}) {
       // tempEmailDomain is server wiring the client has no use for.
       signUpOnVerification: !type.isNone(source.phoneNumber?.signUpOnVerification),
     },
+    // siteKey is public by definition - every browser reads it from the page
+    // - so projecting it respects the secret-free contract; secretKey stays
+    // out mechanically (the catalog is allowlist-only).
+    captcha: {
+      enabled: source.captcha?.enabled === true,
+      provider: source.captcha?.provider ?? null,
+      siteKey: source.captcha?.siteKey ?? null,
+    },
     providers: (type.isArray(source.providers) ? source.providers : []).map((provider) => ({
       id: provider?.id ?? null,
       type: provider?.type ?? null,

@@ -740,3 +740,114 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
+
+const validCaptcha = {
+  enabled: true,
+  provider: 'cloudflare-turnstile',
+  siteKey: '0x4AAAAAAA',
+  secretKey: { _secret: 'TURNSTILE_SECRET_KEY' },
+};
+
+test('validateAuthConfig passes a valid captcha block alongside a login method', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: validCaptcha,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not count captcha as an authentication mechanism', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      captcha: validCaptcha,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism.'
+  );
+});
+
+test('validateAuthConfig throws when captcha is missing a required property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { enabled: true, provider: 'cloudflare-turnstile', siteKey: '0x4AAAAAAA' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha" should have required property "secretKey".'
+  );
+});
+
+test('validateAuthConfig throws when captcha.provider is not a supported provider', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, provider: 'google-recaptcha' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.provider" should be "cloudflare-turnstile".'
+  );
+});
+
+test('validateAuthConfig throws the public-key contract error when siteKey is a _secret reference', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, siteKey: { _secret: 'TURNSTILE_SITE_KEY' } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.siteKey" should be a plain string. The site key is public - every browser reads it from the page - and must not be a _secret operator reference, so the build can project it to Captcha blocks.'
+  );
+});
+
+test('validateAuthConfig throws when captcha.secretKey is a plain string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, secretKey: 'literal-secret' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.secretKey" should be a _secret operator reference.'
+  );
+});
+
+test('validateAuthConfig passes an explicit captcha.endpoints array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, endpoints: ['/sign-up/email'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when captcha contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, minScore: 0.5 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});

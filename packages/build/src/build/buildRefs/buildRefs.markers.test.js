@@ -727,7 +727,7 @@ oops:
     expect(context.errors).toHaveLength(1);
     expect(context.errors[0].message).toContain('unreadable path "authPages.signIn"');
     expect(context.errors[0].message).toContain(
-      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", "providers", "organizations.signup"'
+      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", "phoneNumber.enabled", "phoneNumber.signUpOnVerification", "captcha.enabled", "captcha.provider", "captcha.siteKey", "providers", "organizations.signup"'
     );
   });
 

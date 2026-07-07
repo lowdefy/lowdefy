@@ -23,6 +23,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
     twoFactor: { enabled: false },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
+    captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
     organizations: { signup: 'invite-only' },
   });
@@ -120,4 +121,28 @@ test('computeAuthConfigProjection treats phoneNumber enabled false as disabled',
     phoneNumber: { enabled: false },
   });
   expect(projection.phoneNumber.enabled).toBe(false);
+});
+
+test('computeAuthConfigProjection projects captcha enabled, provider and siteKey - never secretKey', () => {
+  const projection = computeAuthConfigProjection({
+    captcha: {
+      enabled: true,
+      provider: 'cloudflare-turnstile',
+      siteKey: '0x4AAAAAAA',
+      secretKey: { _secret: 'TURNSTILE_SECRET_KEY' },
+    },
+  });
+  expect(projection.captcha).toEqual({
+    enabled: true,
+    provider: 'cloudflare-turnstile',
+    siteKey: '0x4AAAAAAA',
+  });
+});
+
+test('computeAuthConfigProjection returns disabled captcha defaults when absent', () => {
+  expect(computeAuthConfigProjection({}).captcha).toEqual({
+    enabled: false,
+    provider: null,
+    siteKey: null,
+  });
 });

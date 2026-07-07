@@ -22,6 +22,7 @@ const authConfig = {
   twoFactor: { enabled: true },
   passkey: { enabled: false },
   phoneNumber: { enabled: true, signUpOnVerification: false },
+  captcha: { enabled: true, provider: 'cloudflare-turnstile', siteKey: '0x4AAAAAAA' },
   providers: [
     { id: 'google', type: 'Google' },
     { id: 'custom-oauth', type: 'GenericOAuth' },
@@ -79,6 +80,7 @@ test('_authConfig throws for unknown path and names all readable paths', () => {
     '_build.authConfig received an unreadable path "authPages.signIn". Readable paths are: ' +
       '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", ' +
       '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
+      '"captcha.enabled", "captcha.provider", "captcha.siteKey", ' +
       '"providers", "organizations.signup".'
   );
 });
@@ -99,5 +101,17 @@ test('_authConfig throws for non-string params', () => {
 test('_authConfig throws self-reference error when projection is not available', () => {
   expect(() => _authConfig({ authConfig: undefined, params: 'providers' })).toThrow(
     '_build.authConfig cannot be used inside the auth block'
+  );
+});
+
+test('_authConfig returns captcha projection paths', () => {
+  expect(_authConfig({ authConfig, params: 'captcha.enabled' })).toBe(true);
+  expect(_authConfig({ authConfig, params: 'captcha.provider' })).toBe('cloudflare-turnstile');
+  expect(_authConfig({ authConfig, params: 'captcha.siteKey' })).toBe('0x4AAAAAAA');
+});
+
+test('_authConfig throws for the un-projected captcha secretKey', () => {
+  expect(() => _authConfig({ authConfig, params: 'captcha.secretKey' })).toThrow(
+    'Readable paths are:'
   );
 });

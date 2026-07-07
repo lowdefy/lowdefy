@@ -973,6 +973,65 @@ export default {
             },
           },
         },
+        captcha: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled', 'provider', 'siteKey', 'secretKey'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "captcha.enabled" should be a boolean.',
+              },
+            },
+            provider: {
+              type: 'string',
+              enum: ['cloudflare-turnstile'],
+              errorMessage: {
+                type: 'Auth "captcha.provider" should be a string.',
+                enum: 'Auth "captcha.provider" should be "cloudflare-turnstile".',
+              },
+            },
+            siteKey: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "captcha.siteKey" should be a plain string. The site key is public - every browser reads it from the page - and must not be a _secret operator reference, so the build can project it to Captcha blocks.',
+              },
+            },
+            secretKey: {
+              type: 'object',
+              errorMessage: {
+                type: 'Auth "captcha.secretKey" should be a _secret operator reference.',
+              },
+            },
+            endpoints: {
+              type: 'array',
+              errorMessage: {
+                type: 'Auth "captcha.endpoints" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "captcha.endpoints.$" should be a string.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "captcha" should be an object.',
+            additionalProperties:
+              'Auth "captcha" contains an unknown property. The known properties are "enabled", "provider", "siteKey", "secretKey" and "endpoints".',
+            required: {
+              enabled: 'Auth "captcha" should have required property "enabled".',
+              provider: 'Auth "captcha" should have required property "provider".',
+              siteKey: 'Auth "captcha" should have required property "siteKey".',
+              secretKey: 'Auth "captcha" should have required property "secretKey".',
+            },
+          },
+        },
         pages: {
           type: 'object',
           additionalProperties: false,
