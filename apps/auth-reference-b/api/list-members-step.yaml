@@ -1,0 +1,16 @@
+# Phase-9 unconfigured-key demo: this deployment does NOT set
+# auth.userAdminRole, so a USER-INITIATED admin step refuses with an error
+# naming the key - the app must declare who administers users before the
+# admin catalog answers callers at all. The endpoint is deliberately
+# ungated (no auth.api.roles entry): the refusal comes from the step's
+# floor, not an endpoint gate. Compare list-members-system.yaml - the same
+# step as a caller-less system routine still works.
+id: list-members-step
+type: Api
+routine:
+  - id: list_members
+    type: ListMembers
+    properties:
+      limit: 10
+  - ':return':
+      _step: list_members

@@ -18,9 +18,12 @@ blocks:
         <ul>
           <li><a href="/dashboard">Dashboard</a> - protected; logged-out visits redirect to the login page.</li>
           <li><a href="/sessions">Sessions</a> - protected; list and revoke your sessions.</li>
+          <li><a href="/security">Security</a> - protected; the phase-9 self-service account surface (password, 2FA, passkeys, profile).</li>
           <li><a href="/admin">Admin</a> - role-gated (admin); wrong roles get an opaque /404.</li>
           <li><a href="/users">Users</a> - role-gated (admin); user administration on the phase-6 admin steps.</li>
           <li><a href="/members">Members</a> - role-gated (admin); member administration on the phase-6 admin steps.</li>
+          <li><a href="/login-methods">Login methods</a> - public; rendered from _build.authConfig at build time.</li>
+          <li><a href="/account-kit/account-help">Account help</a> - public module page contributed by the account-kit manifest.</li>
         </ul>
   # Visible only while impersonating - _user.impersonatedBy carries the
   # impersonating admin's user id (absent otherwise).

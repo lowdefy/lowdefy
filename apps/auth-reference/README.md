@@ -13,7 +13,12 @@ rail. Phase 6
 adds the admin steps: role-gated `Api` endpoints drive user and member
 administration routines from `/users` and `/members`, a `system: true` step
 runs caller-less in the audit-login hook, and impersonation runs through
-client auth actions. Each later phase grows this suite with a scenario.
+client auth actions. Phase 9 adds the account asks: the self-service action
+catalog (`/security`, the password round-trip, 2FA, passkeys), the
+`auth.userAdminRole` floor with the engine-maintained impersonation bridge,
+`user.profile` self-service, the `account-kit` local module contributing
+auth wiring from its manifest, and the `_build.authConfig` build operator.
+Each later phase grows this suite with a scenario.
 
 ## Prerequisites
 
@@ -152,8 +157,11 @@ http://localhost:3000/api/endpoints/audit-login` answers "does not exist"),
     `lowdefy.yaml` fails the build (watch the dev server output):
     - an unknown point, e.g. `point: organization.create.before`;
     - an `endpointId` that does not exist, or one that points at a
-      `type: Api` endpoint;
-    - two entries binding the same `point`.
+      `type: Api` endpoint.
+
+    (Two entries binding the same `point` used to be a third failure; since
+    phase 9 any number of bindings may share a point - they compose in tier
+    order, and scenario 63 exercises exactly that.)
 
 Every scenario above is manual in phases 1-2; automate with the repo's e2e
 tooling as it grows.
@@ -191,29 +199,36 @@ the old one) so pre-phase-3 users do not confuse the wall.
 20. **Promote an admin (dev seed - the phase-6 admin steps land later)**:
     ```sh
     AUTH_DATABASE_URI='mongodb://localhost:27017/auth-reference' \
-      node scripts/set-member.mjs --email <you> --org org-a --roles admin \
+      node scripts/set-member.mjs --email <you> --org org-a \
+      --roles admin,user-admin \
       --user-attributes '{"region":"global","branches":["hq"]}' \
       --member-attributes '{"branches":["a","b"]}'
     ```
     On `/dashboard`, press **Refresh session (UpdateSession)** - roles
-    become `["admin"]` without a reload (the live member read; nothing is
-    stamped on the session), and `attributes` shows the merged bag with the
-    member's `branches` winning over the user's.
+    become `["admin", "user-admin"]` without a reload (the live member
+    read; nothing is stamped on the session), and `attributes` shows the
+    merged bag with the member's `branches` winning over the user's.
+    (`user-admin` is this app's `auth.userAdminRole` - since phase 9 every
+    user-initiated admin step requires it, so the walkthrough admin holds
+    it from the start; `admin` is what gates the pages and endpoints.)
 21. **Multi-role CSV via the plugin's own API**: on `/members` (admin),
-    update your own member row to `admin,auditor` - `updateMemberRole`
-    accepts the array because the build registered the catalog roles
-    (`auditor` comes from `auth.pages.roles`) in the plugin's access
-    control with empty statements. Refresh session: roles are
-    `["admin", "auditor"]` and `/audit-reports` renders.
-    `db["user-members"].find()` shows `role: "admin,auditor"` - one CSV
-    string. (The recorded limitation: a member holding only
+    update your own member row to `admin,auditor,user-admin` (keep
+    `user-admin` - dropping it would revoke your own admin-step capability,
+    the phase-9 floor) - `updateMemberRole` accepts the array because the
+    build registered the catalog roles (`auditor` comes from
+    `auth.pages.roles`; `user-admin` from `auth.userAdminRole`) in the
+    plugin's access control with empty statements. Refresh session: roles
+    are `["admin", "auditor", "user-admin"]` and `/audit-reports` renders.
+    `db["user-members"].find()` shows `role: "admin,auditor,user-admin"` -
+    one CSV string. (The recorded limitation: a member holding only
     empty-statement catalog roles cannot call `inviteMember` itself - the
     AC check needs `invitation: ["create"]`, which owner/admin carry.)
 22. **Member row deleted mid-session loses access on the next request**:
     while logged in, remove your member row:
     `node scripts/set-member.mjs --email <you> --org org-a --remove` -
     the next navigation treats you as logged out (no member row = the hard
-    wall, not "logged in with no roles"). Re-add with `--roles admin`.
+    wall, not "logged in with no roles"). Re-add with
+    `--roles admin,user-admin`.
 23. **Invite → sign-up → accept (org-b, with contact link)**: on
     `auth-reference` `/contacts` create a contact for a fresh email and
     copy its contact id. Promote yourself in org-b
@@ -322,9 +337,13 @@ call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
 ## Walkthrough (phase-6 gate - admin steps)
 
 The admin steps are the sanctioned writers for the auth-owned collections.
-They execute with server authority inside the `admin-*` `Api` endpoints; the
-endpoint role gate (`auth.api.roles` in `lowdefy.yaml`) is the **only**
-authorization - the steps carry none of their own. `/users` drives the user
+They execute with server authority inside the `admin-*` `Api` endpoints
+behind the endpoint role gate (`auth.api.roles` in `lowdefy.yaml`); the
+steps carry no authorization of their own. (Since phase 9 there is one
+engine-enforced layer underneath: every user-initiated admin step also
+requires the caller to hold the `auth.userAdminRole` member role -
+`user-admin` here, which the scenario-20 seed grants - see the phase-9
+walkthrough.) `/users` drives the user
 steps (`ListUsers`, `BanUser`, `UnbanUser`, `RevokeUserSessions`,
 `DeleteUser`, `UpdateUserAttributes`, `CreateOrganization`, and the
 impersonation actions), `/members` the member steps (`ListMembers`,
@@ -392,10 +411,12 @@ of disposable signed-up-and-verified users.
     need it too).
 
 38. **Roles and both attribute kinds through steps**: on `/members`, update
-    your own member's roles to `admin,auditor` and its attributes to
+    your own member's roles to `admin,auditor,user-admin` (keeping
+    `user-admin` keeps the admin steps answering you) and its attributes to
     `{"branches":["a","b"]}`; on `/users`, update your user attributes to
     `{"region":"emea","branches":["hq"]}`. On `/dashboard`, press Refresh
-    session - roles are `["admin", "auditor"]` and attributes show the
+    session - roles are `["admin", "auditor", "user-admin"]` and attributes
+    show the
     merged bag with the member's `branches` winning. The attributes steps
     write through the adapter's CRUD interface and fire **no**
     `user.update` hooks - documented behavior, not an oversight.
@@ -421,10 +442,11 @@ of disposable signed-up-and-verified users.
     (the after-hook contract from scenario 15). Restore the line.
 
 41. **Last-owner protection holds at the rail**: on `/members`, set your
-    member roles to `admin,owner` (keeping `admin` keeps this page
-    reachable) and make sure no other member holds `owner`. Demote
-    yourself to `admin` - the update fails: "You cannot leave the
-    organization without an owner." Remove your own member id - "You
+    member roles to `admin,owner,user-admin` (keeping `admin` keeps this
+    page reachable, `user-admin` keeps the steps answering you) and make
+    sure no other member holds `owner`. Demote
+    yourself to `admin,user-admin` - the update fails: "You cannot leave
+    the organization without an owner." Remove your own member id - "You
     cannot leave the organization as the only owner". Promote a second
     member to `admin,owner` and the same demotion goes through.
 
@@ -454,22 +476,24 @@ of disposable signed-up-and-verified users.
 43. **Impersonation - refused, then the settled presentation**:
     impersonation is a client auth action against BetterAuth's **own**
     admin access control, which checks your `user.role` field - not the
-    member role that gates the page. Before seeding it, impersonate a
-    target user id on `/users` - the page error reads "You are not allowed
-    to impersonate users" (the member role got you to the page; the AC
-    still refused). Seed and retry:
-
-    ```sh
-    AUTH_DATABASE_URI='mongodb://localhost:27017/auth-reference' \
-      node scripts/set-user-role.mjs --email <you> --role admin
-    ```
-
-    Impersonating now lands on `/home` with the warning alert
+    member role that gates the page. Since phase 9 the engine maintains
+    that field itself from your `user-admin` member role (the old
+    `set-user-role.mjs` workaround is gone); it is stamped at the engine's
+    sync points, not by the dev-seed script, so right after the scenario-20
+    seed, impersonating a target user id on `/users` fails with "You are
+    not allowed to impersonate users" (the member role got you to the
+    page; the AC still refused). Trigger a sync: on `/members`, update
+    your own member row to the same `admin,user-admin` roles - the
+    `UpdateMemberRoles` step is a sync point, and
+    `db.users.findOne({email: "<you>"}, {role: 1})` now shows
+    `role: "user-admin"`. Impersonating now lands on `/home` with the
+    warning alert
     `Impersonating <target email> (impersonatedBy: <your user id>)` -
     `_user` presents the impersonated user with `_user.impersonatedBy`
     carrying your admin user id, and `/dashboard` shows the target's
     roles. Press Stop impersonating - the alert clears and `_user` is you
-    again.
+    again. (The phase-9 walkthrough revokes and restores this capability
+    through the same sync points.)
 
 44. **CreateOrganization makes the caller the owner**: on `/users`, create
     an organization with a fresh name and slug - the response shows the
@@ -595,3 +619,275 @@ const call = async (endpoint, payload = {}) =>
 Automation note: these stay manual for the same reasons as phases 1-6
 (restarts, a second app, live email); the console `call` helper keeps each
 scenario a copy-paste. Automate with the repo's e2e tooling as it grows.
+
+## Walkthrough (phase-9 gate - account asks)
+
+Phase 9 lands the self-service action catalog (`/security` plus the
+password round-trip and the 2FA challenge pages), `user.profile`
+self-service on `UpdateUserProfile`, the `auth.userAdminRole` floor with
+the engine-maintained impersonation bridge, module-contributed auth wiring
+(the local `modules/account-kit` module), and the `_build.authConfig` build
+operator. No new environment variables. Scenarios 50-57 run as any
+signed-up-and-verified member; the admin scenarios run as the scenario-20
+admin (now seeded with `admin,user-admin`) and use scenario 33's/48's
+console `call` helper. For passkeys use `http://localhost:<port>` (the
+configured `rpId` is `localhost`; `127.0.0.1` will not work) and a browser
+with a platform authenticator - or Chrome DevTools > WebAuthn > "Enable
+virtual authenticator environment".
+
+50. **ChangePassword, with revokeOtherSessions**: sign in as the same user
+    in a second browser and leave it on `/dashboard`. In the first browser
+    on `/security`, enter a wrong current password - the change fails with
+    an inline error, nothing revoked. Enter the real current password, a
+    new password, switch **Revoke other sessions** on, and change - in the
+    second browser the next navigation lands on the login page (its
+    session died with the change), while your own session survives. Log
+    out and back in: only the new password works.
+
+51. **Password reset round-trip**: log out, `/login` > "Forgot password?"
+    lands on `/forgot-password` (`authPages.forgotPassword`). Submit your
+    email - `RequestPasswordReset` is public (a locked-out user holds no
+    session) and you land on `/check-email`. Mailpit has "Reset your
+    password"; the link goes through BetterAuth's callback endpoint
+    (`/api/auth/reset-password/<token>?callbackURL=/reset-password`),
+    which redirects to `/reset-password?token=<valid token>` - the page
+    reads the token off the query. Set a new password - "Password reset" -
+    then log in with it; the old password now fails. Open the same emailed
+    link again: the used token redirects with `?error=INVALID_TOKEN` and
+    the page shows the invalid-link message instead of the form.
+
+52. **SendVerificationEmail (public resend)**: sign up a fresh email and,
+    on `/check-email`, delete the verification message in Mailpit (the
+    lost-email case). Enter the email in the resend field - a fresh
+    "Verify your email address" message lands in Mailpit; verifying
+    through it logs you in as usual. The action is public: it works
+    logged out, because an unverified user holds no session.
+
+53. **2FA enrolment renders its material once**: on `/security`, enter
+    your password and press **Enable two-factor** - the page renders the
+    `totpURI` and the single-use backup codes read from
+    `_actions.enable_two_factor.response` in the same event chain (the
+    action response is the only carrier - no side-channel state; copy the
+    backup codes now). Add the secret to an authenticator app (the
+    `secret` query param of the totpURI is the manual-entry key), enter
+    the current TOTP code, and press **Verify code** - enrolment is
+    confirmed (`TwoFactorVerify`'s enrolment role).
+    `db.users.findOne({email: "<you>"}, {twoFactorEnabled: 1})` shows
+    `true`, and `db["user-two-factors"]` has the secret row.
+
+54. **The 2FA sign-in challenge**: log out and sign in with email and
+    password. The response is a challenge, not a session - `Login`
+    surfaces `{ twoFactorRedirect: true, twoFactorMethods: ["totp"] }` on
+    its action response instead of navigating, and the login page routes
+    to `/two-factor-challenge` (public - the pending state rides a
+    BetterAuth cookie, so stay in the same browser). Enter a TOTP code -
+    the verify completes the session itself and you land on `/dashboard`.
+    Log out, sign in again, and this time use one of scenario 53's backup
+    codes - it also passes, and it is single-use: the same code a second
+    time fails. Optionally: sign out, sign in, and verify with **Trust
+    this device** on - the next sign-in skips the challenge entirely.
+
+55. **2FA disable restores plain sign-in**: on `/security`, enter your
+    password and press **Disable two-factor** (password-gated, like
+    enable). Log out and sign in - straight to the dashboard, no
+    challenge, and `twoFactorEnabled` is back to `false`.
+
+56. **Passkey lifecycle**: on `/security`, optionally name the passkey and
+    press **Register a passkey** - `PasskeyRegister` runs the whole
+    WebAuthn browser ceremony inside the action, and the list refreshes
+    with the new passkey and its id (the list reads BetterAuth's own
+    session-gated `/api/auth/passkey/list-user-passkeys`; a plain read
+    needs no catalog action). `db["user-passkeys"]` shows the credential.
+    Copy the passkey id into the delete field and press **Delete
+    passkey** - the list empties and the row is gone.
+
+57. **RevokeOtherSessions**: sign in as the same user in a second browser.
+    On `/security` in the first, press **Revoke every session except this
+    one** - the second browser's next navigation is logged out; your own
+    session survives. (Per-session revoke is deliberately not an action -
+    it would put session tokens in config reach; the console flow from
+    scenario 7 remains the way to revoke a specific session.)
+
+58. **AcceptInvitation through the action**: the accept-invitation page
+    now runs the `AcceptInvitation` catalog action (it posted to
+    `/api/auth/organization/accept-invitation` directly before) - one of
+    the four public actions. Re-run scenario 34's invite-accept loop: the
+    behavior is identical, including BetterAuth's own gate that the
+    session email must match the invitation email (accept while signed in
+    as a different user to see it refuse). All three apps share the
+    converted page.
+
+59. **`_user.profile` presentation**: as a fresh user with no profile
+    writes (no contact match, no invitation merge, no display-name save),
+    `/dashboard` shows `profile.contactId:` empty - `_user.profile` is
+    undefined until something writes the bag; nothing invents an empty
+    object. After any profile write it resolves on the next session
+    re-sync: the scenario-25 merge and scenario-23/34 invitation merges
+    show it landing via hooks (with the invitation-carried key winning -
+    the merge hook skips a user whose `profile.contactId` is already
+    set), and scenario 60 shows a direct write surfacing after
+    `UpdateSession`. Re-invite replaces profile like everything else on
+    the invitation (scenario 49's semantics):
+    `call('admin-invite-member', { email: '<fresh>', role: 'member',
+    contactId: 'contact-a' })`, then re-invite with `contactId:
+    'contact-b'` -
+    `db["user-invitations"].findOne({email: "<fresh>", status: "pending"})`
+    carries `profile.contactId: "contact-b"`, and accepting merges **b**
+    onto the user.
+
+60. **Display-name self-service - UpdateUserProfile without the role**: as
+    ANY plain member (no `user-admin`), on `/security` set a display name
+    and press **Save display name**. The `update-my-profile` endpoint is
+    deliberately ungated and fixes `userId` to the caller's own id -
+    UpdateUserProfile self-targeting is exempt from the user-admin floor,
+    so the save succeeds, and after the chained `UpdateSession` the page
+    shows the new `name` and `profile.displayName`. Press **Clear display
+    name** - the endpoint sends `profile: { displayName: null }` and the
+    key is REMOVED from the bag (the per-key merge), not stored as null;
+    `name` keeps its last value (the step writes only what it is given).
+
+61. **Admin profile edit - the role gates other-targeting**: as the
+    scenario-20 admin on `/users`, pick a target user id and update its
+    profile with `{"displayName":"Renamed","flag":true}` - the response
+    shows the merged bag. Update again with `{"flag":null}` - the key is
+    removed, `displayName` survives (merge per top-level key). Now seed a
+    member with `admin` but NOT `user-admin`
+    (`node scripts/set-member.mjs --email <other> --org org-a --roles admin`):
+    signed in as them, the same call passes the `admin-*` endpoint gate
+    (the pages and endpoints answer) but the STEP refuses with the floor
+    error - only self-targeting is exempt, and this endpoint passes an
+    arbitrary `userId`. This is also scenario 65's non-holder caller.
+
+62. **Module manifest contributions - logged, merged, app wins**: restart
+    the dev server and read the build output. The `account-kit` module
+    (see `modules/account-kit/module.lowdefy.yaml`) contributes four
+    entries, each logged with its origin and target key:
+
+    - auth hook `account-kit/account-audit:session.create.after`
+    - auth hook `account-kit/account-audit:email.verified`
+    - `/account-kit/error` to `auth.authPages.error`
+    - public page `account-kit/account-help` to `auth.pages.public`
+
+    There is NO line for `signIn`: the app sets `auth.authPages.signIn`
+    itself and the app wins per key. Inspect the merged result in
+    `_server/dev/build/auth.json`: `authPages.signIn` is still `/login`,
+    `authPages.error` is `/account-kit/error`, and the `hooks` array
+    starts with the two module bindings followed by the app's own entries
+    (array order IS the execution tier order). Behavior, logged out:
+    `/account-kit/error` renders (a page holding an authPages role is
+    public automatically, without being on any public list);
+    `/account-kit/account-help` renders (manifest `public` list);
+    `/account-kit/login` redirects to the login page - the ceded claim
+    left it an ordinary protected module page.
+
+63. **Many hooks, one point - module binding runs before the app's**:
+    `session.create.after` and `email.verified` are each bound twice now
+    (module + app), which phase 2 rejected as duplicates and phase 9
+    composes in tier order. Log in as any verified user:
+    `db["module-audit"].find().sort({at: -1})` gains a row with
+    `payloadKeys: ["session", "user"]` (the module hook saw the same
+    catalog payload), and `/hook-audit` still gains the app's
+    `session.create.after` row - both ran, module first (compare the `at`
+    timestamps; the app's audit-login also runs its ListUsers step before
+    writing). Sign up and verify a fresh email: both `email.verified`
+    bindings fire too - a `module-audit` row with `payloadKeys: ["user"]`
+    next to the app's `hook-audit` row.
+
+64. **`_build.authConfig` - the method-driven page**: open
+    `/login-methods` (public, works logged out). It renders
+    the six curated projection paths - `emailAndPassword.enabled`,
+    `magicLink.enabled`, `twoFactor.enabled`, `passkey.enabled` (all
+    `true` here), `providers` as `[{"id": "auth0", "type":
+    "GenericOAuth"}]`, and `organizations.signup: open` - baked in at
+    build time; none of the auth block ships to the client. Set
+    `auth.twoFactor.enabled: false` in `lowdefy.yaml` and restart - the
+    page shows `false` (a build-time value, not a runtime read); restore
+    it. Then edit the page's operator to an unknown path (e.g.
+    `_build.authConfig: twoFactor.turned-on`) - the build FAILS naming
+    the readable paths; a typo can never silently gate a login method
+    off. Restore the page. (The page is app config on purpose: module
+    content resolves before the projection pre-pass, so a module page
+    cannot read `_build.authConfig` today - using it there fails the
+    build.)
+
+65. **The user-admin floor binds at the step, not the endpoint**:
+    `list-members-ungated` has no `auth.api.roles` entry - any caller
+    reaches its routine. Signed in as any member without `user-admin` (a
+    plain scenario-33 member, or scenario 61's `admin`-only member), run
+    `call('list-members-ungated')` - the
+    step refuses: `Auth step "list_members_ungated" refused - the caller
+    does not hold the user-admin role configured in "auth.userAdminRole".`
+    An app can no longer expose member data by forgetting an endpoint
+    gate. As the scenario-20 admin the same call returns the member list.
+    The endpoint gate is unchanged on top: for the plain member,
+    `call('admin-list-members')` still answers with scenario 33's opaque
+    "does not exist" - the gate rejects before the floor is ever
+    consulted.
+
+66. **The impersonation bridge - granted, exercised, revoked**: scenario
+    43 stamped your `user.role` through the `UpdateMemberRoles` sync
+    point. The curated access control grants that role
+    `user: ["impersonate"]` and nothing else - so as a stamped
+    user-admin, the rest of BetterAuth's admin surface stays unreachable:
+
+    ```js
+    await (
+      await fetch('/api/auth/admin/set-user-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: '<target user id>', newPassword: 'irrelevant-123' }),
+      })
+    ).json();
+    ```
+
+    is refused (the `set-password` statement was never granted; the
+    target's password is untouched). A user-admin also cannot impersonate
+    another user-admin: grant `user-admin` to a second member on
+    `/members` (the update is itself a sync point - their `user.role`
+    stamps too), then impersonate their user id - refused
+    (`impersonate-admins` is deliberately excluded). Now revoke your own
+    capability: update your own member row to `admin` (dropping
+    `user-admin`) - the sync clears your `user.role`
+    (`db.users.findOne({email: "<you>"}, {role: 1})` shows it gone), and
+    with the member role gone the floor refuses your next admin step
+    (`the caller does not hold the user-admin role...`) - which is also
+    why you cannot grant it back to yourself through `/members`. Recover
+    with the dev seed: re-run scenario 20's `set-member.mjs` command
+    (member roles are read live, so the floor passes again immediately;
+    re-stamp `user.role` via a self `UpdateMemberRoles` as in scenario
+    43). `RemoveMember` is the third sync point: removing a user-admin's
+    member row clears their `user.role` the same way.
+
+67. **The invitation-accept sync point mints the bridge**: invite a fresh
+    email with role `user-admin` from `/members`. As the invitee: sign
+    up, verify, and accept on `/accept-invitation?invitationId=<id>` -
+    immediately after the accept,
+    `db.users.findOne({email: "<invitee>"}, {role: 1})` shows
+    `role: "user-admin"`: the accept path synced the denormalization with
+    no admin edit in between. The invitee holds the floor role from their
+    first session - on `/dashboard`, `call('list-members-ungated')`
+    returns the member list (they cannot reach `/users` or `/members`,
+    which gate on the `admin` member role - the floor and the page/
+    endpoint gates stay independent layers).
+
+68. **Unconfigured `auth.userAdminRole` refuses user-initiated admin steps
+    (auth-reference-b)**: app B deliberately does not set the key. Signed
+    in there as an org-b member (scenario 23's invitee), run scenario
+    33's fetch against `list-members-step` (ungated, user-initiated
+    `ListMembers`) - the step refuses naming the key: `Auth step
+    "list_members" refused - "auth.userAdminRole" is not configured. The
+    app must declare which member role administers users; caller-less
+    system routines (system: true) are unaffected.` The same step as a
+    system routine still works: `call('list-members-system')` returns
+    org-b's members (`system: true`, like the hook paths - the floor
+    binds user-initiated calls only). App B's `/members` page is
+    untouched by the floor: it drives the org plugin's own APIs under
+    BetterAuth's owner/admin access control, so scenario 23's invite flow
+    works exactly as before. (Run the refusal logged in - an anonymous
+    caller fails earlier, with the step's authenticated-caller
+    requirement.)
+
+Automation note: manual like every phase before - passkey ceremonies,
+authenticator codes, two browsers, restarts and live email loops. The
+console `call` helper keeps the API scenarios copy-paste. Automate with
+the repo's e2e tooling as it grows.

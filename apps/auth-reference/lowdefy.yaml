@@ -20,6 +20,13 @@ lowdefy: local
 # re-invite-replaces/resend-re-sends semantics, org-scoped steps defaulting
 # organizationId to the pinned org, and the _organization server operator
 # (org-info).
+# Phase 9 adds the account asks: the self-service action catalog (password
+# change/reset, two-factor with TOTP + backup codes, passkeys, session
+# revocation, AcceptInvitation), user.profile self-service through
+# UpdateUserProfile, the auth.userAdminRole floor with the impersonation
+# bridge, the account-kit local module contributing auth wiring from its
+# manifest, and the _build.authConfig build operator (the module's
+# login-methods page).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -41,6 +48,19 @@ auth:
   magicLink:
     enabled: true
     expiresIn: 300
+
+  # Phase-9 self-service methods. Two-factor is TOTP + backup codes only;
+  # TwoFactorEnable returns the totpURI and codes the security page renders
+  # once. Passkeys run the WebAuthn ceremony inside PasskeyRegister - rpId
+  # must match the host the browser sees (localhost for the dev walkthrough;
+  # passkeys do not work on http://127.0.0.1).
+  twoFactor:
+    enabled: true
+
+  passkey:
+    enabled: true
+    rpId: localhost
+    rpName: auth-reference
 
   # Local dev sending: run Mailpit (see README) and point SMTP at it.
   email:
@@ -85,6 +105,18 @@ auth:
     org: org-a
     signup: open
 
+  # The member role that administers users (phase 9). Every user-initiated
+  # admin step and the impersonation client actions require the caller to
+  # hold this role - an engine-enforced floor UNDER the auth.api.roles gate
+  # below, so an endpoint misconfiguration can never expose member mutation.
+  # The engine denormalizes it onto user.role (the field BetterAuth's own
+  # admin plugin checks for impersonation) at its sync points:
+  # UpdateMemberRoles, the invitation-accept path, and RemoveMember.
+  # System routines (system: true steps in hooks) are exempt - they run
+  # caller-less. "admin" and "user" are reserved names; the role is
+  # registered in the role catalog automatically.
+  userAdminRole: user-admin
+
   pages:
     protected: true
     public:
@@ -94,6 +126,14 @@ auth:
       - verify-email
       - accept-invitation
       - home
+      # Phase-9 password reset pages (both also hold authPages roles, which
+      # implies public); the 2FA challenge page must be public - a 2FA-pending
+      # sign-in holds no session yet. login-methods renders the
+      # _build.authConfig projection for anyone.
+      - forgot-password
+      - reset-password
+      - two-factor-challenge
+      - login-methods
     roles:
       admin:
         - admin
@@ -117,17 +157,28 @@ auth:
       partner:
         - partner-data
 
+  # signIn is also claimed by the account-kit module manifest - the app's
+  # entry wins per key (app-wins), so /login stays the sign-in page and the
+  # module's login page remains an ordinary protected module page. The app
+  # does NOT set "error": the module's claim serves it (/account-kit/error),
+  # public automatically because it holds an authPages role.
   authPages:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+    forgotPassword: /forgot-password
+    resetPassword: /reset-password
 
   # Each entry binds an auth lifecycle point to an InternalApi endpoint.
   # The endpoint's routine is the hook body; it runs in a system context
-  # (_user empty, subject in _payload, _secret working). One hook per point,
-  # so normalize-signup also carries the merge-on-signup match for
-  # trusted-provider OAuth (arrives verified), and on-email-verified carries
-  # the email/password merge (verified only at this point).
+  # (_user empty, subject in _payload, _secret working). Any number of
+  # bindings may share a point (phase 9) - they compose in tier order:
+  # engine hooks, then module-contributed bindings (the account-kit module
+  # binds session.create.after and email.verified too, and its bindings are
+  # placed before these), then the app's entries in array order.
+  # normalize-signup carries the merge-on-signup match for trusted-provider
+  # OAuth (arrives verified), and on-email-verified carries the
+  # email/password merge (verified only at this point).
   hooks:
     - id: normalize-signup
       point: user.create.before
@@ -186,6 +237,22 @@ auth:
   #     name: Mock User
   #     roles: []
 
+# Phase-9 module gate: a local module that ships auth artifacts and declares
+# their wiring in its manifest (modules/account-kit/module.lowdefy.yaml) -
+# the build contributes the corresponding auth entries with scoped ids and
+# logs each contribution. account-kit claims two authPages roles (signIn,
+# which the app's own authPages entry overrides - app wins - and error,
+# which the app does not set, so the module page serves it), declares one
+# further public page (account-help), and binds its account-audit
+# InternalApi endpoint to session.create.after and email.verified - both
+# points the app also binds above, so each composed slot runs the module
+# binding first, then the app entry. (The _build.authConfig demo page,
+# login-methods, is app config: module content resolves before the
+# projection pre-pass, so module pages cannot read the projection today.)
+modules:
+  - id: account-kit
+    source: 'file:modules/account-kit'
+
 # The hooks write an audit trail here; the same database as auth so no
 # extra infrastructure is needed for the walkthrough. user-contacts is the
 # app-owned CRM contact collection the merge-on-signup hooks match against.
@@ -241,6 +308,15 @@ api:
   # attribute-filtered aggregation over user-members.
   - _ref: api/org-info.yaml
   - _ref: api/admin-members-by-attribute.yaml
+  # Phase-9 endpoints. update-my-profile is deliberately NOT role-gated -
+  # UpdateUserProfile self-targeting (userId = the caller's own id) is exempt
+  # from the user-admin floor. admin-update-user-profile is role-gated like
+  # the other admin-* endpoints. list-members-ungated is deliberately ungated
+  # too: the floor refuses a caller without the user-admin role at the STEP,
+  # even through an endpoint with no auth.api.roles entry.
+  - _ref: api/update-my-profile.yaml
+  - _ref: api/admin-update-user-profile.yaml
+  - _ref: api/list-members-ungated.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -258,3 +334,11 @@ pages:
   - _ref: pages/contacts.yaml
   - _ref: pages/audit-reports.yaml
   - _ref: pages/hook-audit.yaml
+  # Phase-9 pages: the password round-trip, the account security surface
+  # (2FA, passkeys, session revocation, profile self-service), the 2FA
+  # sign-in challenge, and the _build.authConfig projection demo.
+  - _ref: pages/forgot-password.yaml
+  - _ref: pages/reset-password.yaml
+  - _ref: pages/security.yaml
+  - _ref: pages/two-factor-challenge.yaml
+  - _ref: pages/login-methods.yaml

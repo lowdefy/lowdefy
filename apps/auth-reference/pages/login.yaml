@@ -37,6 +37,19 @@ blocks:
                 _state: email
               password:
                 _state: password
+          # A 2FA-enrolled user gets a challenge instead of a session -
+          # Login surfaces { twoFactorRedirect: true, twoFactorMethods } on
+          # its action response rather than navigating, and the page routes
+          # to the challenge page where TwoFactorVerify completes the
+          # session. Skipped (Login already navigated) for everyone else.
+          - id: to_two_factor_challenge
+            type: Link
+            skip:
+              _ne:
+                - _actions: login.response.twoFactorRedirect
+                - true
+            params:
+              pageId: two-factor-challenge
         catch:
           - id: show_login_error
             type: SetState
@@ -105,6 +118,18 @@ blocks:
           type: Login
           params:
             providerId: auth0
+  - id: forgot_password_link
+    type: Button
+    properties:
+      title: Forgot password?
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_forgot_password
+          type: Link
+          params:
+            pageId: forgot-password
   - id: signup_link
     type: Button
     properties:

@@ -1,0 +1,450 @@
+# The phase-9 self-service account surface (protected - any member). Every
+# call here is a catalog action wrapping a BetterAuth client method, gated by
+# the caller's own session - no admin role involved. Responses that must be
+# rendered once (TwoFactorEnable's totpURI and backup codes) are read via
+# _actions.<id>.response in the same event chain - the stated pattern for
+# the whole catalog; no side-channel state. The profile section is the one
+# server call: UpdateUserProfile self-targeting (userId = the caller's own
+# id) is exempt from the user-admin floor.
+id: security
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_passkeys
+      type: Fetch
+      params:
+        url: /api/auth/passkey/list-user-passkeys
+        responseFunction: json
+    - id: set_passkeys
+      type: SetState
+      params:
+        passkeys:
+          _actions: load_passkeys.response
+blocks:
+  - id: security_title
+    type: Title
+    properties:
+      content: Account security (protected)
+      level: 2
+  # --- Change password ---------------------------------------------------
+  - id: change_password_title
+    type: Title
+    properties:
+      content: Change password (ChangePassword)
+      level: 4
+  - id: current_password
+    type: PasswordInput
+    properties:
+      title: Current password
+  - id: new_password
+    type: PasswordInput
+    properties:
+      title: New password (min 8 characters)
+  - id: revoke_other_sessions_switch
+    type: Switch
+    properties:
+      title: Revoke other sessions
+  - id: change_password_button
+    type: Button
+    properties:
+      title: Change password
+      block: true
+    events:
+      onClick:
+        try:
+          - id: change_password
+            type: ChangePassword
+            params:
+              currentPassword:
+                _state: current_password
+              newPassword:
+                _state: new_password
+              revokeOtherSessions:
+                _state: revoke_other_sessions_switch
+          - id: show_change_password_response
+            type: SetState
+            params:
+              last_response: Password changed.
+              last_error: null
+        catch:
+          - id: show_change_password_error
+            type: SetState
+            params:
+              last_error:
+                _actions: change_password.error.message
+  # --- Two-factor (TOTP + backup codes) ----------------------------------
+  - id: two_factor_title
+    type: Title
+    properties:
+      content: Two-factor authentication (TwoFactorEnable / TwoFactorVerify / TwoFactorDisable)
+      level: 4
+  - id: two_factor_help
+    type: Html
+    properties:
+      html: |
+        <p>Enable returns the <code>totpURI</code> and single-use backup
+        codes rendered below - the action response is the only carrier, so
+        copy them now. Add the secret to an authenticator app, then confirm
+        enrolment with a TOTP code: 2FA is live only after the verify.</p>
+  - id: two_factor_password
+    type: PasswordInput
+    properties:
+      title: Password (enable and disable are password-gated)
+  - id: enable_two_factor_button
+    type: Button
+    properties:
+      title: Enable two-factor
+      block: true
+    events:
+      onClick:
+        try:
+          - id: enable_two_factor
+            type: TwoFactorEnable
+            params:
+              password:
+                _state: two_factor_password
+          # The one render of the enrolment material - read off the action
+          # response in the same event chain.
+          - id: show_two_factor_setup
+            type: SetState
+            params:
+              two_factor_setup:
+                _actions: enable_two_factor.response
+              last_error: null
+        catch:
+          - id: show_enable_error
+            type: SetState
+            params:
+              last_error:
+                _actions: enable_two_factor.error.message
+  - id: two_factor_setup_html
+    type: Html
+    visible:
+      _ne:
+        - _state: two_factor_setup
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>totpURI</b> (add to an authenticator app - the
+            <code>secret</code> query param is the manual-entry key):</p>
+            <pre>{{ setup.totpURI }}</pre>
+            <p><b>Backup codes</b> (single use each - store them now):</p>
+            <pre>{{ setup.backupCodes | dump(2) }}</pre>
+          on:
+            setup:
+              _state: two_factor_setup
+  - id: two_factor_code
+    type: TextInput
+    properties:
+      title: TOTP code (from the authenticator app)
+  - id: verify_two_factor_button
+    type: Button
+    properties:
+      title: Verify code (completes enrolment)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: verify_two_factor
+            type: TwoFactorVerify
+            params:
+              code:
+                _state: two_factor_code
+          - id: show_verify_response
+            type: SetState
+            params:
+              last_response: Two-factor enrolment confirmed.
+              last_error: null
+        catch:
+          - id: show_verify_error
+            type: SetState
+            params:
+              last_error:
+                _actions: verify_two_factor.error.message
+  - id: disable_two_factor_button
+    type: Button
+    properties:
+      title: Disable two-factor (uses the password above)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: disable_two_factor
+            type: TwoFactorDisable
+            params:
+              password:
+                _state: two_factor_password
+          - id: show_disable_response
+            type: SetState
+            params:
+              last_response: Two-factor disabled.
+              last_error: null
+              two_factor_setup: null
+        catch:
+          - id: show_disable_error
+            type: SetState
+            params:
+              last_error:
+                _actions: disable_two_factor.error.message
+  # --- Passkeys ------------------------------------------------------------
+  - id: passkeys_title
+    type: Title
+    properties:
+      content: Passkeys (PasskeyRegister / PasskeyDelete)
+      level: 4
+  - id: passkeys_help
+    type: Html
+    properties:
+      html: |
+        <p>PasskeyRegister runs the whole WebAuthn browser ceremony inside
+        the action. The list below reads BetterAuth's own
+        <code>/api/auth/passkey/list-user-passkeys</code> endpoint - listing
+        is a plain session-gated read, so no catalog action wraps it.</p>
+  - id: passkeys_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for passkey in passkeys %}
+              <li><b>{{ passkey.name or 'unnamed' }}</b> - passkey id:
+              <code>{{ passkey.id }}</code> (created {{ passkey.createdAt }})</li>
+            {% else %}
+              <li>No passkeys registered.</li>
+            {% endfor %}
+            </ul>
+          on:
+            passkeys:
+              _state: passkeys
+  - id: passkey_name
+    type: TextInput
+    properties:
+      title: Passkey name (optional)
+  - id: register_passkey_button
+    type: Button
+    properties:
+      title: Register a passkey
+      block: true
+    events:
+      onClick:
+        try:
+          - id: register_passkey
+            type: PasskeyRegister
+            params:
+              name:
+                _state: passkey_name
+          - id: reload_passkeys
+            type: Fetch
+            params:
+              url: /api/auth/passkey/list-user-passkeys
+              responseFunction: json
+          - id: reset_passkeys
+            type: SetState
+            params:
+              passkeys:
+                _actions: reload_passkeys.response
+              last_response: Passkey registered.
+              last_error: null
+        catch:
+          - id: show_register_error
+            type: SetState
+            params:
+              last_error:
+                _actions: register_passkey.error.message
+  - id: delete_passkey_id
+    type: TextInput
+    properties:
+      title: Passkey id (from the list above)
+  - id: delete_passkey_button
+    type: Button
+    properties:
+      title: Delete passkey
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: delete_passkey
+            type: PasskeyDelete
+            params:
+              passkeyId:
+                _state: delete_passkey_id
+          - id: reload_passkeys_after_delete
+            type: Fetch
+            params:
+              url: /api/auth/passkey/list-user-passkeys
+              responseFunction: json
+          - id: reset_passkeys_after_delete
+            type: SetState
+            params:
+              passkeys:
+                _actions: reload_passkeys_after_delete.response
+              last_response: Passkey deleted.
+              last_error: null
+        catch:
+          - id: show_delete_passkey_error
+            type: SetState
+            params:
+              last_error:
+                _actions: delete_passkey.error.message
+  # --- Sessions ------------------------------------------------------------
+  - id: revoke_sessions_title
+    type: Title
+    properties:
+      content: Other sessions (RevokeOtherSessions)
+      level: 4
+  - id: revoke_other_sessions_button
+    type: Button
+    properties:
+      title: Revoke every session except this one
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: revoke_other_sessions
+            type: RevokeOtherSessions
+          - id: show_revoke_response
+            type: SetState
+            params:
+              last_response: Other sessions revoked.
+              last_error: null
+        catch:
+          - id: show_revoke_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_other_sessions.error.message
+  # --- Profile self-service ------------------------------------------------
+  - id: profile_title
+    type: Title
+    properties:
+      content: Display name (UpdateUserProfile, self-targeted)
+      level: 4
+  - id: profile_help
+    type: Html
+    properties:
+      html: |
+        <p>The update-my-profile endpoint runs UpdateUserProfile with
+        <code>userId</code> fixed to the caller's own id - self-targeting is
+        exempt from the user-admin floor, so any member can save their own
+        display data. Save writes <code>name</code> and
+        <code>profile.displayName</code>; Clear sets
+        <code>profile.displayName: null</code>, which removes the key from
+        the bag (the per-key merge).</p>
+  - id: current_profile
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>name:</b> {{ user.name }}<br/>
+            <b>profile:</b> {{ user.profile | dump }}</p>
+          on:
+            user:
+              _user: true
+  - id: display_name
+    type: TextInput
+    properties:
+      title: Display name
+  - id: save_display_name_button
+    type: Button
+    properties:
+      title: Save display name
+      block: true
+    events:
+      onClick:
+        try:
+          - id: save_display_name
+            type: CallAPI
+            params:
+              endpointId: update-my-profile
+              payload:
+                name:
+                  _state: display_name
+                profile:
+                  displayName:
+                    _state: display_name
+          # Re-resolve the caller so _user.name / _user.profile above update
+          # without a reload.
+          - id: resync_after_save
+            type: UpdateSession
+          - id: show_save_response
+            type: SetState
+            params:
+              last_response:
+                _api: update-my-profile.response
+              last_error: null
+        catch:
+          - id: show_save_error
+            type: SetState
+            params:
+              last_error:
+                _actions: save_display_name.error.message
+  - id: clear_display_name_button
+    type: Button
+    properties:
+      title: Clear display name (null removes the key)
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: clear_display_name
+            type: CallAPI
+            params:
+              endpointId: update-my-profile
+              payload:
+                profile:
+                  displayName: null
+          - id: resync_after_clear
+            type: UpdateSession
+          - id: show_clear_response
+            type: SetState
+            params:
+              last_response:
+                _api: update-my-profile.response
+              last_error: null
+        catch:
+          - id: show_clear_error
+            type: SetState
+            params:
+              last_error:
+                _actions: clear_display_name.error.message
+  # --- Shared response/error panes ------------------------------------------
+  - id: last_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: last_response
+  - id: last_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: last_error

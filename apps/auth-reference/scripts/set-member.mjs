@@ -27,9 +27,18 @@
   vendored MongoDB adapter stores them as native sub-documents, so this
   script stores them the same way the engine writes them - as objects.
 
+  Phase 9: seed the walkthrough admin with the configured user-admin role
+  too (--roles admin,user-admin) - the auth.userAdminRole floor refuses
+  user-initiated admin steps for callers without it. This script writes the
+  member row only; the engine denormalizes user.role (which gates the
+  impersonation client actions) at its own sync points, so after seeding,
+  run one UpdateMemberRoles on your own member row through /members to let
+  the engine stamp it. The old set-user-role.mjs workaround is gone - the
+  engine maintains user.role itself now; never write that field by hand.
+
   Usage:
     AUTH_DATABASE_URI='mongodb://...' node scripts/set-member.mjs \
-      --email user@example.com --org org-a [--roles admin,auditor] \
+      --email user@example.com --org org-a [--roles admin,user-admin] \
       [--member-attributes '{"branches":["a"]}'] \
       [--user-attributes '{"region":"emea"}'] [--remove]
 */

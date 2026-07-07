@@ -7,6 +7,11 @@ lowdefy: local
 # between deployments: a member of org-a signing in here is rejected at
 # session-create with the inline MEMBERSHIP_REQUIRED code, and membership
 # in org-b is granted only by invitation.
+# Phase 9: this app deliberately does NOT set auth.userAdminRole - the
+# list-members-step/list-members-system endpoints demonstrate that a
+# user-initiated admin step refuses with an error naming the key while
+# system contexts still pass. The /members page here drives the org
+# plugin's own APIs (owner/admin AC), which the floor does not touch.
 # See ../auth-reference/README.md for the walkthrough.
 
 auth:
@@ -72,6 +77,14 @@ auth:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+
+# Phase-9 unconfigured-key demos: with no auth.userAdminRole set, a
+# user-initiated admin step refuses naming the key; the same step as
+# system: true still works. Both endpoints are deliberately ungated - the
+# refusal is the step's floor, not an endpoint gate.
+api:
+  - _ref: api/list-members-step.yaml
+  - _ref: api/list-members-system.yaml
 
 pages:
   - _ref: pages/home.yaml
