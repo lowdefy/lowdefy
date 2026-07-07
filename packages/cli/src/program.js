@@ -23,6 +23,9 @@ import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import mobileBuild from './commands/mobile/mobileBuild.js';
+import mobileDev from './commands/mobile/mobileDev.js';
+import mobileInit from './commands/mobile/mobileInit.js';
 import start from './commands/start/start.js';
 import upgrade from './commands/upgrade/upgrade.js';
 import vercelOutput from './commands/vercelOutput/vercelOutput.js';
@@ -154,6 +157,65 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: initVercel }));
+
+const mobile = program
+  .command('mobile')
+  .description('Build and develop a Lowdefy mobile app (Capacitor).');
+
+const mobileProjectDirectory = new Option(
+  '--mobile-project-directory <mobile-project-directory>',
+  'Change the Capacitor project directory. Default is "<config-directory>/mobile".'
+).env('LOWDEFY_DIRECTORY_MOBILE_PROJECT');
+
+mobile
+  .command('init')
+  .description('Scaffold the Capacitor project and add native platforms.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(mobileProjectDirectory)
+  .option('--no-ios', 'Do not add the iOS platform.')
+  .option('--no-android', 'Do not add the Android platform.')
+  .addOption(options.refResolver)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: mobileInit }));
+
+mobile
+  .command('build')
+  .description('Build the mobile app bundle and sync the Capacitor project.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(mobileProjectDirectory)
+  .option('--no-server-build', 'Do not run the full Lowdefy build first.')
+  .addOption(options.refResolver)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: mobileBuild }));
+
+mobile
+  .command('dev')
+  .description('Start the development server with the mobile client dev server.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--mobile-port <mobile-port>',
+      'Change the port the mobile client dev server is hosted at. Default is 3001.'
+    ).env('LOWDEFY_MOBILE_PORT')
+  )
+  .addOption(mobileProjectDirectory)
+  .option('--ios', 'Run the app on an iOS device or simulator with live reload.')
+  .option('--android', 'Run the app on an Android device or emulator with live reload.')
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(options.watch)
+  .addOption(options.watchIgnore)
+  .action(runCommand({ cliVersion, handler: mobileDev }));
 
 program
   .command('vercel-output')

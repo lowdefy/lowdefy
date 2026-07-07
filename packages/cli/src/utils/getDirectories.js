@@ -29,6 +29,12 @@ function getDirectories({ configDirectory, options }) {
     server,
     dev: options.devDirectory ? path.resolve(options.devDirectory) : path.join(dotLowdefy, 'dev'),
     emails: path.join(dotLowdefy, 'emails'),
+    // Ephemeral mobile client build tooling (@lowdefy/mobile-client).
+    mobile: path.join(dotLowdefy, 'mobile'),
+    // Committed Capacitor project (ios/, android/, www/) — user-owned state.
+    mobileProject: options.mobileProjectDirectory
+      ? path.resolve(options.mobileProjectDirectory)
+      : path.join(configDirectory, 'mobile'),
   };
 }
 

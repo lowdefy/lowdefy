@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
+import startMobileClient from './processes/startMobileClient.mjs';
 import startServer from './processes/startServer.mjs';
 
 /*
@@ -108,6 +109,7 @@ try {
   }
 
   startServer(context);
+  startMobileClient(context);
   await wait(800);
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
