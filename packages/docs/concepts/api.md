@@ -150,7 +150,7 @@ An endpoint with `webhook: true` is a receiver for third-party webhooks (AWS SNS
 
 - The routine's `payload` is `{ body, query, headers }` — the caller's own body format (parsed as JSON when possible, the raw string otherwise; content-type is ignored since services like SNS post JSON as `text/plain`), plus the URL query parameters and request headers.
 - The routine's `:return` value is sent back **verbatim** as the response body — webhook handshakes like Event Grid's `{ validationResponse }` require exact response shapes, so no `{ error, response, status }` envelope is applied.
-- The routine runs as a system context (no user session; `_user` resolves to undefined), and the endpoint's `auth` config is not applied — **authenticating the caller is the routine's own first step**, typically a shared-secret query parameter (`?t=<token>`) compared against a stored value, or a signature header.
+- The routine runs as a system context (no user session; `_user` resolves to undefined), and the endpoint's `auth` config is not applied — **authenticating the caller is the routine's own first step**, typically a shared-secret query parameter (`?t=<token>`) compared against a stored value, or a signature header. Because the session check never applies, a webhook endpoint must resolve to public under `auth.api` — the build fails if it is protected by `auth.api.protected` or roles; list it in `auth.api.public` (or remove the flag) to make the intent explicit.
 
 ```yaml
 id: stripe-webhook
