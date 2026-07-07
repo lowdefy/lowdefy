@@ -20,6 +20,11 @@ export default {
         type: 'string',
         description: 'URL to redirect to after email verification.',
       },
+      captchaToken: {
+        type: 'string',
+        description:
+          'Captcha token minted by a Captcha block, sent as the x-captcha-response header when auth.captcha is enabled. Tokens are single-use - reset the Captcha block in onError for retries.',
+      },
     },
   },
 };

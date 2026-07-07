@@ -60,6 +60,19 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
   return undefined;
 }
 
+// Maps the captchaToken action param onto the BetterAuth client's per-call
+// fetch options as the x-captcha-response header - the header the captcha
+// middleware reads. One helper so no auth method implements its own header
+// plumbing; the token never rides in the request body. Tokens are single-use
+// and short-lived: a failed submit consumes the token, so retry chains reset
+// the Captcha block for a fresh one.
+function captchaFetchOptions(captchaToken) {
+  if (type.isNone(captchaToken)) {
+    return {};
+  }
+  return { fetchOptions: { headers: { 'x-captcha-response': captchaToken } } };
+}
+
 // BetterAuth client calls resolve with { data, error } instead of throwing -
 // rethrow so action onError chains fire on failed sign-in attempts.
 async function unwrap(promise) {
@@ -78,6 +91,7 @@ function createAuthMethods(lowdefy, auth) {
   // the auth object provides the BetterAuth client methods.
   async function login({
     callbackUrl,
+    captchaToken,
     email,
     magicLink,
     password,
@@ -86,6 +100,7 @@ function createAuthMethods(lowdefy, auth) {
     ...rest
   } = {}) {
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const captchaOptions = captchaFetchOptions(captchaToken);
     const providers = auth.authConfig?.providers ?? [];
 
     if (
@@ -103,23 +118,30 @@ function createAuthMethods(lowdefy, auth) {
         throw new Error(`Login provider "${providerId}" is not a configured auth provider.`);
       }
       if (provider.type === 'GenericOAuth') {
-        return unwrap(auth.signInOauth2({ providerId, callbackURL, ...rest }));
+        return unwrap(auth.signInOauth2({ providerId, callbackURL, ...rest, ...captchaOptions }));
       }
       return unwrap(
-        auth.signInSocial({ provider: provider.type.toLowerCase(), callbackURL, ...rest })
+        auth.signInSocial({
+          provider: provider.type.toLowerCase(),
+          callbackURL,
+          ...rest,
+          ...captchaOptions,
+        })
       );
     }
     if (magicLink === true) {
       if (!type.isString(email)) {
         throw new Error('Login with magicLink requires an "email" param.');
       }
-      return unwrap(auth.signInMagicLink({ email, callbackURL, ...rest }));
+      return unwrap(auth.signInMagicLink({ email, callbackURL, ...rest, ...captchaOptions }));
     }
     if (!type.isNone(phoneNumber)) {
       if (!type.isString(password)) {
         throw new Error('Login with phoneNumber requires a "password" param.');
       }
-      const data = await unwrap(auth.signInPhoneNumber({ phoneNumber, password, ...rest }));
+      const data = await unwrap(
+        auth.signInPhoneNumber({ phoneNumber, password, ...rest, ...captchaOptions })
+      );
       if (data?.twoFactorRedirect) {
         return data;
       }
@@ -130,7 +152,7 @@ function createAuthMethods(lowdefy, auth) {
       return data;
     }
     if (!type.isNone(email) || !type.isNone(password)) {
-      const data = await unwrap(auth.signInEmail({ email, password, ...rest }));
+      const data = await unwrap(auth.signInEmail({ email, password, ...rest, ...captchaOptions }));
       // A 2FA-enrolled user gets a challenge, not a session - do not navigate
       // as if signed in. The login page reads the outcome via _actions and
       // routes to the app's challenge page, where TwoFactorVerify completes
@@ -152,9 +174,18 @@ function createAuthMethods(lowdefy, auth) {
   // Creates an email/password account (BetterAuth's one signup endpoint).
   // Social, magic-link and passkey have no separate signup - the account is
   // created on first sign-in via login - so SignUp is email/password only.
-  async function signUp({ callbackUrl, email, name, password, ...rest } = {}) {
+  async function signUp({ callbackUrl, captchaToken, email, name, password, ...rest } = {}) {
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
-    const data = await unwrap(auth.signUpEmail({ email, password, name, callbackURL, ...rest }));
+    const data = await unwrap(
+      auth.signUpEmail({
+        email,
+        password,
+        name,
+        callbackURL,
+        ...rest,
+        ...captchaFetchOptions(captchaToken),
+      })
+    );
     // With requireEmailVerification the response carries no session - do not
     // navigate; the page shows a "verify your email" message instead.
     const window = lowdefy._internal?.globals?.window;
@@ -260,14 +291,21 @@ function createAuthMethods(lowdefy, auth) {
   // Dispatches by parameter, matching login: a phoneNumber param requests the
   // reset code over SMS (the "phone.passwordReset.send" hook), otherwise
   // email carries the reset link.
-  async function requestPasswordReset({ email, phoneNumber, redirectTo, ...rest } = {}) {
+  async function requestPasswordReset({
+    captchaToken,
+    email,
+    phoneNumber,
+    redirectTo,
+    ...rest
+  } = {}) {
+    const captchaOptions = captchaFetchOptions(captchaToken);
     if (type.isString(phoneNumber)) {
-      return unwrap(auth.phoneNumberRequestPasswordReset({ phoneNumber, ...rest }));
+      return unwrap(auth.phoneNumberRequestPasswordReset({ phoneNumber, ...rest, ...captchaOptions }));
     }
     if (!type.isString(email)) {
       throw new Error('RequestPasswordReset requires an "email" or "phoneNumber" param.');
     }
-    return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest }));
+    return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest, ...captchaOptions }));
   }
 
   // Dispatches by parameter: a phoneNumber param resets with the SMS otp,
@@ -296,21 +334,30 @@ function createAuthMethods(lowdefy, auth) {
   // user holds no session, so this is a public call. The callbackUrl is
   // where the emailed verification link lands after verifying, matching the
   // signUp param of the same name.
-  async function sendVerificationEmail({ callbackUrl, email, ...rest } = {}) {
+  async function sendVerificationEmail({ callbackUrl, captchaToken, email, ...rest } = {}) {
     if (!type.isString(email)) {
       throw new Error('SendVerificationEmail requires an "email" param.');
     }
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
-    return unwrap(auth.sendVerificationEmail({ email, callbackURL, ...rest }));
+    return unwrap(
+      auth.sendVerificationEmail({
+        email,
+        callbackURL,
+        ...rest,
+        ...captchaFetchOptions(captchaToken),
+      })
+    );
   }
 
   // Sends a sign-in/verification OTP over SMS through the app's
   // "phone.otp.send" hook binding.
-  async function phoneNumberSendOtp({ phoneNumber, ...rest } = {}) {
+  async function phoneNumberSendOtp({ captchaToken, phoneNumber, ...rest } = {}) {
     if (!type.isString(phoneNumber)) {
       throw new Error('PhoneNumberSendOtp requires a "phoneNumber" param.');
     }
-    return unwrap(auth.phoneNumberSendOtp({ phoneNumber, ...rest }));
+    return unwrap(
+      auth.phoneNumberSendOtp({ phoneNumber, ...rest, ...captchaFetchOptions(captchaToken) })
+    );
   }
 
   // The OTP sign-in: on success BetterAuth sets the session cookie (and

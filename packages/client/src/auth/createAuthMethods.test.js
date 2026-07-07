@@ -586,3 +586,91 @@ test('phoneNumberVerify rethrows the BetterAuth error so onError chains fire', a
     'Invalid OTP'
   );
 });
+
+test('login threads captchaToken as the x-captcha-response header, never the body', async () => {
+  const { auth, lowdefy } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', captchaToken: 'tok-1' });
+  expect(auth.signInEmail.mock.calls).toEqual([
+    [
+      {
+        email: 'user@example.com',
+        password: 'password123',
+        fetchOptions: { headers: { 'x-captcha-response': 'tok-1' } },
+      },
+    ],
+  ]);
+});
+
+test('login with magicLink threads captchaToken into the magic-link call', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true, captchaToken: 'tok-2' });
+  expect(auth.signInMagicLink.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-2' },
+  });
+  expect(auth.signInMagicLink.mock.calls[0][0].captchaToken).toBeUndefined();
+});
+
+test('login with phoneNumber threads captchaToken into the phone sign-in call', async () => {
+  const { auth, lowdefy } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ phoneNumber: '+27831234567', password: 'password123', captchaToken: 'tok-3' });
+  expect(auth.signInPhoneNumber.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-3' },
+  });
+});
+
+test('login without captchaToken sends no fetchOptions', async () => {
+  const { auth, lowdefy } = setup();
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(auth.signInEmail.mock.calls[0][0].fetchOptions).toBeUndefined();
+});
+
+test('signUp threads captchaToken as the x-captcha-response header', async () => {
+  const { auth, lowdefy } = setup();
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({ email: 'user@example.com', password: 'password123', captchaToken: 'tok-4' });
+  expect(auth.signUpEmail.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-4' },
+  });
+  expect(auth.signUpEmail.mock.calls[0][0].captchaToken).toBeUndefined();
+});
+
+test('requestPasswordReset threads captchaToken on both the email and phone paths', async () => {
+  const { auth, lowdefy } = setup();
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await requestPasswordReset({ email: 'user@example.com', captchaToken: 'tok-5' });
+  expect(auth.requestPasswordReset.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-5' },
+  });
+  await requestPasswordReset({ phoneNumber: '+27831234567', captchaToken: 'tok-6' });
+  expect(auth.phoneNumberRequestPasswordReset.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-6' },
+  });
+});
+
+test('sendVerificationEmail threads captchaToken as the x-captcha-response header', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await sendVerificationEmail({ email: 'user@example.com', captchaToken: 'tok-7' });
+  expect(auth.sendVerificationEmail.mock.calls[0][0].fetchOptions).toEqual({
+    headers: { 'x-captcha-response': 'tok-7' },
+  });
+});
+
+test('phoneNumberSendOtp threads captchaToken as the x-captcha-response header', async () => {
+  const { auth, lowdefy } = setup();
+  const { phoneNumberSendOtp } = createAuthMethods(lowdefy, auth);
+  await phoneNumberSendOtp({ phoneNumber: '+27831234567', captchaToken: 'tok-8' });
+  expect(auth.phoneNumberSendOtp.mock.calls).toEqual([
+    [
+      {
+        phoneNumber: '+27831234567',
+        fetchOptions: { headers: { 'x-captcha-response': 'tok-8' } },
+      },
+    ],
+  ]);
+});
