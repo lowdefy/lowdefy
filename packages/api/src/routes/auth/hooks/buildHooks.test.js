@@ -487,3 +487,79 @@ test('multiple hooks assemble slots at their own points', async () => {
   expect(databaseHooks.session.create.after).toBeInstanceOf(Function);
   expect(databaseHooks.user.create.after).toBeUndefined();
 });
+
+test('phone slots are undefined when no phone points are bound', () => {
+  const { phoneVerified, sendPhoneOtp, sendPhonePasswordResetOtp } = buildTestHooks({
+    hooks: [],
+  });
+  expect(phoneVerified).toBeUndefined();
+  expect(sendPhoneOtp).toBeUndefined();
+  expect(sendPhonePasswordResetOtp).toBeUndefined();
+});
+
+test('phone.otp.send builds the sendPhoneOtp callback with the catalog payload', async () => {
+  const { databaseHooks, sendPhoneOtp } = buildTestHooks({
+    hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    endpointConfigs: {
+      'auth/send-otp-sms': {
+        endpointId: 'auth/send-otp-sms',
+        type: 'InternalApi',
+        routine: {
+          ':reject': {
+            '_string.concat': ['otp:', { _payload: 'phoneNumber' }, ':', { _payload: 'code' }],
+          },
+        },
+      },
+    },
+  });
+  expect(databaseHooks.user).toBeUndefined();
+  await expect(sendPhoneOtp({ phoneNumber: '+27831234567', code: '123456' })).rejects.toThrow(
+    'otp:+27831234567:123456'
+  );
+});
+
+test('phone.passwordReset.send builds the sendPhonePasswordResetOtp callback', async () => {
+  const { sendPhoneOtp, sendPhonePasswordResetOtp } = buildTestHooks({
+    hooks: [
+      { id: 'send-reset-sms', point: 'phone.passwordReset.send', endpointId: 'auth/send-reset' },
+    ],
+    endpointConfigs: {
+      'auth/send-reset': {
+        endpointId: 'auth/send-reset',
+        type: 'InternalApi',
+        routine: {
+          ':reject': { '_string.concat': ['reset:', { _payload: 'code' }] },
+        },
+      },
+    },
+  });
+  expect(sendPhoneOtp).toBeUndefined();
+  await expect(
+    sendPhonePasswordResetOtp({ phoneNumber: '+27831234567', code: '654321' })
+  ).rejects.toThrow('reset:654321');
+});
+
+test('phone.verified builds the phoneVerified callback with user and phoneNumber payload', async () => {
+  const { phoneVerified } = buildTestHooks({
+    hooks: [{ id: 'on-phone-verified', point: 'phone.verified', endpointId: 'auth/on-verified' }],
+    endpointConfigs: {
+      'auth/on-verified': {
+        endpointId: 'auth/on-verified',
+        type: 'InternalApi',
+        routine: {
+          ':reject': {
+            '_string.concat': [
+              'verified:',
+              { _payload: 'user.id' },
+              ':',
+              { _payload: 'phoneNumber' },
+            ],
+          },
+        },
+      },
+    },
+  });
+  await expect(
+    phoneVerified({ phoneNumber: '+27831234567', user: { id: 'user_1' } })
+  ).rejects.toThrow('verified:user_1:+27831234567');
+});

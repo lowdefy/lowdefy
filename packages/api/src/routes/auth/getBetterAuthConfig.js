@@ -24,6 +24,7 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import buildAdminPlugin from './buildAdminPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
+import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
 import createSendEmail from './createSendEmail.js';
@@ -281,7 +282,14 @@ function getBetterAuthConfig({
   // access control (see buildAdminPlugin).
   options.plugins.push(buildAdminPlugin({ authConfig }));
 
-  const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildHooks({
+  const {
+    afterEmailVerification,
+    databaseHooks,
+    phoneVerified,
+    sendInvitationEmail,
+    sendPhoneOtp,
+    sendPhonePasswordResetOtp,
+  } = buildHooks({
     authConfig,
     createSystemContext,
     getAuth,
@@ -294,6 +302,20 @@ function getBetterAuthConfig({
       ...options.emailVerification,
       afterEmailVerification,
     };
+  }
+
+  // Phone login sends SMS through the "phone.otp.send" hook binding - there
+  // is no built-in SMS transport, so build validation requires the binding
+  // when the plugin is enabled.
+  if (authConfig.phoneNumber?.enabled === true) {
+    options.plugins.push(
+      buildPhoneNumberPlugin({
+        authConfig,
+        phoneVerified,
+        sendPhoneOtp,
+        sendPhonePasswordResetOtp,
+      })
+    );
   }
 
   // Organizations are always on. A bound "invitation.send" hook owns the

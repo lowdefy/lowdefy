@@ -794,3 +794,44 @@ test('throws when no getAuth accessor is provided', () => {
     })
   ).toThrow('No getAuth accessor was provided to getBetterAuthConfig');
 });
+
+test('pushes the phone-number plugin when phoneNumber is enabled, wiring the phone.otp.send slot', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      phoneNumber: {
+        enabled: true,
+        otpLength: 6,
+        expiresIn: 300,
+        allowedAttempts: 3,
+        requireVerification: false,
+      },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    }),
+    createSystemContext: () => ({}),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const phonePlugin = options.plugins.find((p) => p.id === 'phone-number');
+  expect(phonePlugin).toBeDefined();
+  expect(typeof phonePlugin.options.sendOTP).toBe('function');
+  // Unbound phone.passwordReset.send resolves to the naming thrower, never
+  // BetterAuth's silent 200.
+  expect(() =>
+    phonePlugin.options.sendPasswordResetOTP({ phoneNumber: '+27831234567', code: '123456' })
+  ).toThrow('phone.passwordReset.send');
+});
+
+test('does not push the phone-number plugin when phoneNumber is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'phone-number')).toBe(false);
+});

@@ -34,6 +34,9 @@ test('the catalog covers the frozen launch point set', () => {
       'verification.create.after',
       'email.verified',
       'invitation.send',
+      'phone.otp.send',
+      'phone.passwordReset.send',
+      'phone.verified',
     ].sort()
   );
 });
@@ -82,4 +85,20 @@ test('verification points hand { verification } and email.verified hands { user 
   });
   const user = { id: 'u1' };
   expect(authHookPoints['email.verified'].buildPayload(user)).toEqual({ user });
+});
+
+test('phone send points hand { phoneNumber, code } and phone.verified hands { user, phoneNumber }', () => {
+  const data = { phoneNumber: '+27831234567', code: '123456' };
+  expect(authHookPoints['phone.otp.send'].buildPayload(data)).toEqual({
+    phoneNumber: '+27831234567',
+    code: '123456',
+  });
+  expect(authHookPoints['phone.passwordReset.send'].buildPayload(data)).toEqual({
+    phoneNumber: '+27831234567',
+    code: '123456',
+  });
+  const user = { id: 'u1', phoneNumber: '+27831234567', phoneNumberVerified: true };
+  expect(
+    authHookPoints['phone.verified'].buildPayload({ phoneNumber: '+27831234567', user })
+  ).toEqual({ user, phoneNumber: '+27831234567' });
 });

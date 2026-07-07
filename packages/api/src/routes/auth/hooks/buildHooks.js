@@ -52,7 +52,10 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
 
   const databaseHooks = {};
   let afterEmailVerification;
+  let phoneVerified;
   let sendInvitationEmail;
+  let sendPhoneOtp;
+  let sendPhonePasswordResetOtp;
 
   const points = new Set([...Object.keys(engineHooks), ...Object.keys(userHooks)]);
   points.forEach((point) => {
@@ -79,9 +82,25 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
     if (point === 'invitation.send') {
       sendInvitationEmail = composeAfterSlot({ hooks });
     }
+    if (point === 'phone.otp.send') {
+      sendPhoneOtp = composeAfterSlot({ hooks });
+    }
+    if (point === 'phone.passwordReset.send') {
+      sendPhonePasswordResetOtp = composeAfterSlot({ hooks });
+    }
+    if (point === 'phone.verified') {
+      phoneVerified = composeAfterSlot({ hooks });
+    }
   });
 
-  return { afterEmailVerification, databaseHooks, sendInvitationEmail };
+  return {
+    afterEmailVerification,
+    databaseHooks,
+    phoneVerified,
+    sendInvitationEmail,
+    sendPhoneOtp,
+    sendPhonePasswordResetOtp,
+  };
 }
 
 export default buildHooks;
