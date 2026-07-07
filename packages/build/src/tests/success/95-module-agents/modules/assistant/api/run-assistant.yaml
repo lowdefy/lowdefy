@@ -1,0 +1,13 @@
+id: run-assistant
+type: Api
+routine:
+  - id: run
+    type: CallAgent
+    properties:
+      agentId:
+        _module.agentId: assistant
+      prompt:
+        _payload: instruction
+  - ':return':
+      summary:
+        _step: run.text
