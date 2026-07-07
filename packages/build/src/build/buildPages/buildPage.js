@@ -86,6 +86,16 @@ function buildPage({ page, index, context, checkDuplicatePageId, target = 'web' 
   // (and the deep copy it requires) for static pages with one property read.
   if (pageContext.hasDynamicBlocks === true) {
     page.dynamic = true;
+    // Dynamic fragments resolve against the web bundle's types — not yet
+    // target-aware, so mobile fragments would validate against web types.
+    if (target === 'mobile') {
+      context.handleWarning(
+        new ConfigWarning(
+          `Dynamic blocks on mobile page "${page.pageId}" are not supported in this version — dynamic content resolves against the web client bundle.`,
+          { configKey }
+        )
+      );
+    }
   }
 
   page.subscriptions = subscriptions;

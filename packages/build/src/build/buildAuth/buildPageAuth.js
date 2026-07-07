@@ -32,7 +32,7 @@ function buildPageAuth({ components, context }) {
 
   // Mobile pages share the pageId namespace, so the same auth.pages rules
   // (public/protected/roles patterns) apply across both targets.
-  const pages = [...(components.pages || []), ...(components.mobile?.pages || [])];
+  const pages = [...(components.pages ?? []), ...(components.mobile?.pages ?? [])];
 
   pages.forEach((page) => {
     // The 404 page must always be public so unauthenticated users can see it.

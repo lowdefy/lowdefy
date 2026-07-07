@@ -18,7 +18,11 @@ import { matchesPattern } from './matchPattern.js';
 
 function getPageRoles({ components }) {
   const roles = components.auth.pages.roles;
-  const pageIds = (components.pages ?? []).map((p) => p.id);
+  // Web and mobile pages share the pageId namespace — auth.pages rules apply
+  // across both targets.
+  const pageIds = [...(components.pages ?? []), ...(components.mobile?.pages ?? [])].map(
+    (p) => p.id
+  );
   const pageRoles = {};
   Object.keys(roles).forEach((roleName) => {
     roles[roleName].forEach((pattern) => {
