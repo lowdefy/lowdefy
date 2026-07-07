@@ -1,0 +1,69 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: button
+type: Box
+
+blocks:
+  - id: button_basic
+    type: Button
+    properties:
+      title: Basic Button
+
+  - id: button_success
+    type: Button
+    properties:
+      title: Success
+      color: success
+
+  - id: button_danger
+    type: Button
+    properties:
+      title: Danger
+      color: danger
+
+  - id: button_disabled
+    type: Button
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: button_block
+    type: Button
+    properties:
+      title: Block Button
+      block: true
+
+  - id: button_click
+    type: Button
+    properties:
+      title: Click Me
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            clicked: true
+
+  - id: clicked_result
+    type: Html
+    properties:
+      html:
+        _if:
+          test:
+            _eq:
+              - _state: clicked
+              - true
+          then: 'clicked'
+          else: 'not clicked'

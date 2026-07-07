@@ -17,7 +17,7 @@
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
-function createPlaywrightConfig({ packageDir, port = 3001 }) {
+function createPlaywrightConfig({ packageDir, port = 3001, use = {} }) {
   const e2eDir = path.join(packageDir, 'e2e');
   const appDir = path.join(e2eDir, 'app');
 
@@ -40,7 +40,15 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
     projects: [
       {
         name: 'chromium',
-        use: { ...devices['Desktop Chrome'] },
+        // use overrides let block packages test in a mobile device profile,
+        // e.g. { ...devices['Pixel 5'] } for blocks-antd-mobile.
+        // PLAYWRIGHT_CHANNEL runs against an installed browser (e.g. chrome)
+        // when the Playwright browser download is unavailable.
+        use: {
+          ...devices['Desktop Chrome'],
+          ...use,
+          ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
+        },
       },
     ],
     webServer: {
