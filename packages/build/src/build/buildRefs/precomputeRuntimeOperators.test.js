@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import evaluateStaticOperators from './evaluateStaticOperators.js';
+import precomputeRuntimeOperators from './precomputeRuntimeOperators.js';
 
 const mockContext = {
   typesMap: {
@@ -45,12 +45,12 @@ beforeEach(() => {
   mockContext.errors = [];
 });
 
-describe('evaluateStaticOperators', () => {
+describe('precomputeRuntimeOperators', () => {
   test('evaluates static _sum operator', () => {
     const input = {
       result: { _sum: [1, 2, 3, 4, 5] },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -62,7 +62,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _if: { test: true, then: 'yes', else: 'no' } },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -74,7 +74,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _if: { test: false, then: 'yes', else: 'no' } },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -92,7 +92,7 @@ describe('evaluateStaticOperators', () => {
         },
       },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -104,7 +104,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { '_string.concat': ['Hello', ' ', 'World'] },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -116,7 +116,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { '_math.abs': -42 },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -128,7 +128,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _state: 'someField' },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -141,7 +141,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _user: 'sub' },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -155,7 +155,7 @@ describe('evaluateStaticOperators', () => {
         _sum: [5, { _state: 'value' }],
       },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -176,7 +176,7 @@ describe('evaluateStaticOperators', () => {
         },
       },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -203,7 +203,7 @@ describe('evaluateStaticOperators', () => {
         },
       ],
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -225,7 +225,7 @@ describe('evaluateStaticOperators', () => {
         },
       ],
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -234,7 +234,7 @@ describe('evaluateStaticOperators', () => {
   });
 
   test('handles empty input', () => {
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input: {},
       refDef: { path: 'test.yaml' },
@@ -243,7 +243,7 @@ describe('evaluateStaticOperators', () => {
   });
 
   test('handles null input', () => {
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input: null,
       refDef: { path: 'test.yaml' },
@@ -259,7 +259,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _sum: [1, 2, 3] },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: contextWithoutTypesMap,
       input,
       refDef: { path: 'test.yaml' },
@@ -271,7 +271,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { '_math.random': [] },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -285,7 +285,7 @@ describe('evaluateStaticOperators', () => {
       staticMath: { '_math.abs': -100 },
       dynamicMath: { '_math.random': [] },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -312,7 +312,7 @@ describe('evaluateStaticOperators', () => {
         },
       ],
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },
@@ -325,7 +325,7 @@ describe('evaluateStaticOperators', () => {
     const input = {
       result: { _sum: 'not-an-array' },
     };
-    const output = evaluateStaticOperators({
+    const output = precomputeRuntimeOperators({
       context: mockContext,
       input,
       refDef: { path: 'test.yaml' },

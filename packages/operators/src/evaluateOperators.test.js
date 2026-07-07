@@ -23,6 +23,7 @@ const mockOperators = {
   _sum: jest.fn(({ params }) => params.reduce((a, b) => a + b, 0)),
   _if: jest.fn(({ params }) => (params.test ? params.then : params.else)),
   _env: jest.fn(({ env, params }) => env[params.key] ?? null),
+  _app: jest.fn(({ lowdefyApp, params }) => lowdefyApp?.[params] ?? null),
   _echo: jest.fn(({ params }) => params),
   _error: jest.fn(() => {
     throw new Error('Test error.');
@@ -271,6 +272,37 @@ test('env is passed to operators', () => {
     input,
     operators: mockOperators,
     env: { MY_VAR: 'hello' },
+  });
+  expect(res.output).toEqual({ result: 'hello' });
+});
+
+test('lowdefyApp is passed to operators', () => {
+  const input = { result: { _app: 'slug' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    lowdefyApp: { slug: 'my-app' },
+  });
+  expect(res.output).toEqual({ result: 'my-app' });
+});
+
+test('lowdefyApp is forwarded to nested parser.parse calls', () => {
+  const _passthrough = jest.fn(({ params, parser }) =>
+    parser.parse({ input: params }).output
+  );
+  const ops = { ...mockOperators, _passthrough };
+  const input = { result: { _passthrough: { nested: { _app: 'slug' } } } };
+  const res = evaluateOperators({ input, operators: ops, lowdefyApp: { slug: 'my-app' } });
+  expect(res.output).toEqual({ result: { nested: 'my-app' } });
+});
+
+test('_env resolution is unaffected when lowdefyApp is also supplied', () => {
+  const input = { result: { _env: { key: 'MY_VAR' } } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    env: { MY_VAR: 'hello' },
+    lowdefyApp: { slug: 'my-app' },
   });
   expect(res.output).toEqual({ result: 'hello' });
 });

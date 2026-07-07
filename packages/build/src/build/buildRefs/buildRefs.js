@@ -19,7 +19,6 @@ import operators from '@lowdefy/operators-js/operators/build';
 import { resolve, WalkContext } from './walker.js';
 import getRefContent from './getRefContent.js';
 import makeRefDefinition from './makeRefDefinition.js';
-import evaluateStaticOperators from './evaluateStaticOperators.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import isPageContentPath from '../jit/isPageContentPath.js';
@@ -31,6 +30,9 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 async function buildRefs({ context, shallowOptions }) {
   context.unresolvedRefVars = context.unresolvedRefVars ?? {};
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
+  // Stash for Phase 3.5 (precomputeRuntimeOperators) so it can resolve error
+  // source file paths without creating a new makeId entry.
+  context.rootRefDef = refDef;
 
   const ctx = new WalkContext({
     buildContext: context,
@@ -45,13 +47,22 @@ async function buildRefs({ context, shallowOptions }) {
     lowdefyApp: context.appMeta,
     authConfig: context.authConfigProjection,
     dynamicIdentifiers,
-    shouldStop: shallowOptions
-      ? // Strip page content (blocks, events, etc.) from ref-backed pages so
+    shouldStop: (path, refId) => {
+      // Module entry vars/connections were already resolved by parseLowdefyYaml
+      // (same predicate) and live on context.modules — preserve the raw blobs so
+      // the app pass doesn't pull and walk their refs a second time. buildModules
+      // reads entry ids only and deletes components.modules before testSchema.
+      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
+      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      if (shallowOptions) {
+        // Strip page content (blocks, events, etc.) from ref-backed pages so
         // JIT can re-resolve them from source files. Inline pages (defined
         // directly in lowdefy.yaml) live in the root ref and have no separate
         // source file — their content must be preserved for buildShallowPages.
-        (path, refId) => isPageContentPath(path) && refId !== refDef.id
-      : null,
+        return isPageContentPath(path) && refId !== refDef.id;
+      }
+      return null;
+    },
   });
 
   const content = await getRefContent({
@@ -60,14 +71,7 @@ async function buildRefs({ context, shallowOptions }) {
     referencedFrom: null,
   });
 
-  let components = await resolve(content, ctx);
-
-  // Evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
-  components = evaluateStaticOperators({
-    context,
-    input: components,
-    refDef,
-  });
+  const components = await resolve(content, ctx);
   return components ?? {};
 }
 

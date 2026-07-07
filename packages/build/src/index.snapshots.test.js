@@ -23,38 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/success');
 
-// Mock buildApp to return constant gitSha
-const mockComputeAppMeta = (source = {}) => ({
-  slug: source.slug ?? null,
-  name: source.name ?? null,
-  version: source.version ?? null,
-  description: source.description ?? null,
-  license: source.license ?? null,
-  lowdefyVersion: source.lowdefy ?? null,
-  gitSha: 'test-git-sha-for-snapshots',
-});
-jest.unstable_mockModule('./build/buildApp.js', () => ({
-  computeAppMeta: mockComputeAppMeta,
-  default: ({ components, context }) => {
-    if (!components.app) {
-      components.app = {};
-    }
-    if (!components.app.html) {
-      components.app.html = {};
-    }
-    if (!components.app.html.appendBody) {
-      components.app.html.appendBody = '';
-    }
-    if (!components.app.html.appendHead) {
-      components.app.html.appendHead = '';
-    }
-    if (!components.app.email) {
-      components.app.email = {};
-    }
-    components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
-    return components;
-  },
-}));
+// Pin gitSha so buildAppMeta produces a deterministic appMeta in snapshots.
+process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';
 
 // Mock writeBuildArtifact to capture artifacts instead of writing to disk
 const mockWriteBuildArtifact = jest.fn();

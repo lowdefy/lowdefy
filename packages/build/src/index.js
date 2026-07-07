@@ -27,7 +27,8 @@ import tryBuildStep from './utils/tryBuildStep.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildAgents from './build/buildAgents.js';
-import buildApp, { computeAppMeta } from './build/buildApp.js';
+import buildApp from './build/buildApp.js';
+import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
@@ -38,6 +39,7 @@ import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
+import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
@@ -82,17 +84,22 @@ async function build(options) {
   try {
     context = createContext(options);
 
+    // Phase 0: Resolve root app metadata into context.appMeta before any
+    // operator evaluation. _app / _build.app read this, and buildModuleDefs
+    // (next) evaluates operators on root config, consumer vars, and connections.
+    await buildAppMeta({ context });
+    // Surface bad root metadata (unsupported operators, failed _build.*) now,
+    // before module operators evaluate against it — avoids cascade errors.
+    logCollectedErrors(context);
+
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
     await buildModuleDefs({ context });
 
-    // Compute app metadata from the parsed root lowdefy.yaml before ref
-    // resolution so the _build.app operator can resolve it during buildRefs.
-    context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
-
     // Scoped pre-pass: resolve the auth: subtree and compute the
     // _build.authConfig projection so the operator can resolve during buildRefs.
     await resolveAuthConfigProjection({ context });
+
 
     let components;
     try {
@@ -112,6 +119,19 @@ async function build(options) {
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
 
+    // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
+    // whose arguments are fully static. This single fold covers components after
+    // module manifests are merged (replacing the old per-region folds in buildRefs,
+    // buildModuleDefs, and registerModules). Must run before addKeys so that ~k
+    // markers are added to the already-folded tree.
+    // context.rootRefDef is the lowdefy.yaml refDef stashed by buildRefs (Phase 2)
+    // so we can resolve error source file paths without allocating a new makeId entry.
+    components = precomputeRuntimeOperators({
+      context,
+      input: components,
+      refDef: context.rootRefDef,
+    });
+
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -123,6 +143,9 @@ async function build(options) {
     logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    // appMeta is computed in Phase 0; attach it here (where buildApp used to
+    // create it) so the following addKeys pass keys it identically.
+    components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });

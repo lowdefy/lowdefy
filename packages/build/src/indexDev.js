@@ -21,3 +21,4 @@ export { default as buildPageJit } from './build/jit/buildPageJit.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as createContext } from './createContext.js';
 export { default as makeId } from './utils/makeId.js';
+export { hydrateDeferredRecords } from './build/buildRefs/deferredRegistry.js';

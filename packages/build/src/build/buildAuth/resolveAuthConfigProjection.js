@@ -31,7 +31,7 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 // Scoped pre-pass: resolve the auth: subtree of the parsed root lowdefy.yaml —
 // its refs and operators, including module content the block refs in — and
 // compute the _build.authConfig projection onto the build context. Runs after
-// buildModuleDefs and before the main buildRefs walk (the computeAppMeta
+// buildModuleDefs and before the main buildRefs walk (the buildAppMeta
 // precedent) so the operator can resolve everywhere downstream: the main walk
 // and the dev server's JIT page walks. The walk operates on a clone, so the
 // main walk still resolves the auth: block from source exactly as before.

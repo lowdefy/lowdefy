@@ -17,14 +17,15 @@
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import { assertNoPlaceholderLeaks } from './buildRefs/deferredRegistry.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
-import evaluateStaticOperators from './buildRefs/evaluateStaticOperators.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import fetchModules from './fetchModules.js';
 import {
   resolveLocalManifest,
+  recordifyExportables,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
@@ -55,58 +56,90 @@ async function parseLowdefyYaml({ context }) {
     refChain: new Set(refDef.path ? [refDef.path] : []),
     operators,
     env: process.env,
+    lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     shouldStop: (path) => {
       // Defer entry vars and connections: they may contain cross-module
-      // refs that require modules to be registered first.
-      if (/^modules\.\d+\.vars$/.test(path)) return 'preserve';
-      if (/^modules\.\d+\.connections$/.test(path)) return 'preserve';
+      // refs that require modules to be registered first. Non-modules keys
+      // stay raw for the app buildRefs pass.
+      if (/^modules\.\d+\.vars$/.test(path)) return 'skip';
+      if (/^modules\.\d+\.connections$/.test(path)) return 'skip';
       if (path.startsWith('modules')) return false;
-      return 'preserve';
+      return 'skip';
     },
   });
 
-  let config = await resolve(content, ctx);
-
-  config = evaluateStaticOperators({ context, input: config, refDef });
-
+  const config = await resolve(content, ctx);
   return config ?? {};
 }
 
-async function resolveEntryConfig({ entry, context }) {
-  const moduleEntry = context.modules[entry.id];
+function makeAppLevelCtx({ context, deferModuleRefs = false, entryId, entrySection }) {
   const lowdefyYamlRefDef = context.lowdefyYamlRefDef;
-
-  function makeAppLevelCtx() {
-    return new WalkContext({
-      buildContext: context,
-      refId: lowdefyYamlRefDef.id,
-      sourceRefId: null,
-      vars: {},
-      path: '',
-      currentFile: lowdefyYamlRefDef.path,
-      refChain: new Set(lowdefyYamlRefDef.path ? [lowdefyYamlRefDef.path] : []),
-      operators,
-      env: process.env,
-      dynamicIdentifiers,
-    });
-  }
-
-  const refDef = lowdefyYamlRefDef;
-
-  let resolvedVars = await resolve(moduleEntry.consumerVars, makeAppLevelCtx());
-  resolvedVars = evaluateStaticOperators({ context, input: resolvedVars, refDef });
-  moduleEntry.consumerVars = resolvedVars ?? {};
-
-  let resolvedConnections = await resolve(moduleEntry.connections, makeAppLevelCtx());
-  resolvedConnections = evaluateStaticOperators({
-    context,
-    input: resolvedConnections,
-    refDef,
+  return new WalkContext({
+    buildContext: context,
+    refId: lowdefyYamlRefDef.id,
+    sourceRefId: null,
+    vars: {},
+    path: '',
+    currentFile: lowdefyYamlRefDef.path,
+    refChain: new Set(lowdefyYamlRefDef.path ? [lowdefyYamlRefDef.path] : []),
+    operators,
+    env: process.env,
+    lowdefyApp: context.appMeta,
+    dynamicIdentifiers,
+    deferModuleRefs,
+    entryId,
+    entrySection,
   });
-  moduleEntry.connections = resolvedConnections ?? {};
+}
 
-  validateRequiredVars(moduleEntry.varDefs, moduleEntry.consumerVars, entry.id, entry.source);
+// Stage 1 — prepare: resolve entry vars/connections in the enclosing (app)
+// scope; cross-module refs become entryRef records with the prepared refDef as
+// body (their dynamic parts already resolved), leaving placeholders in the
+// blobs. Order-free: nothing is consumed here.
+async function prepareEntryConfig({ moduleEntry, context }) {
+  const varsResult = await resolve(
+    moduleEntry.consumerVars,
+    makeAppLevelCtx({
+      context,
+      deferModuleRefs: true,
+      entryId: moduleEntry.id,
+      entrySection: 'consumerVars',
+    })
+  );
+  moduleEntry.consumerVars = varsResult ?? {};
+
+  const connectionsResult = await resolve(
+    moduleEntry.connections,
+    makeAppLevelCtx({
+      context,
+      deferModuleRefs: true,
+      entryId: moduleEntry.id,
+      entrySection: 'connections',
+    })
+  );
+  moduleEntry.connections = connectionsResult ?? {};
+}
+
+// Final sweep: re-walk each entry's blobs with deferral off. Placeholders
+// dispatch into resolveDeferred (value-granular demand, wait-graph cycle
+// detection — order immaterial, memo skips already-demanded records), and the
+// _module.connectionId object form (deferred during prepare) resolves against
+// now-prepared targets. In-place walk mutation is the write-back, so resolved
+// values land in consumerVars/connections with consumption provenance.
+async function sweepEntryConfig({ moduleEntry, context }) {
+  const varsResult = await resolve(moduleEntry.consumerVars, makeAppLevelCtx({ context }));
+  moduleEntry.consumerVars = varsResult ?? {};
+
+  const connectionsResult = await resolve(moduleEntry.connections, makeAppLevelCtx({ context }));
+  moduleEntry.connections = connectionsResult ?? {};
+
+  validateRequiredVars(
+    moduleEntry.varDefs,
+    moduleEntry.consumerVars,
+    moduleEntry.id,
+    moduleEntry.source
+  );
 }
 
 async function buildModuleDefs({ context }) {
@@ -135,16 +168,31 @@ async function buildModuleDefs({ context }) {
   // Step 2: Auto-wire and validate dependency wiring
   resolveModuleDependencies({ context });
 
-  // Step 2.5: Resolve deferred entry vars and connections at app level,
-  // then validate required vars against the resolved values.
+  // Step 2.5a — prepare all entries. No cross-entry work; order-free.
   for (const entry of moduleEntries) {
-    await resolveEntryConfig({ entry, context });
+    await prepareEntryConfig({ moduleEntry: context.modules[entry.id], context });
+  }
+  // Phase C.5 — record-ify exportables (components, menu links) for every
+  // entry BEFORE anything can consume them: record creation must precede all
+  // consumption, or cross-entry refs would race manifest resolve order.
+  for (const entry of moduleEntries) {
+    await recordifyExportables({ entryId: entry.id, context });
+  }
+  // Step 2.5b — final sweep. Per-record demand through the wait-graph makes
+  // the order immaterial; required-var validation runs per entry after its
+  // blobs are concrete.
+  for (const entry of moduleEntries) {
+    await sweepEntryConfig({ moduleEntry: context.modules[entry.id], context });
   }
 
   // Step 3: Full resolve — cross-module refs, preserved content
   for (const entryId of Object.keys(context.modules)) {
     await resolveFullManifest({ entryId, context });
   }
+
+  // Post-sweep invariant: no deferred placeholder survives outside the
+  // per-consumer slots (manifest component/menu bodies, varDefs defaults).
+  assertNoPlaceholderLeaks(context);
 }
 
 export default buildModuleDefs;

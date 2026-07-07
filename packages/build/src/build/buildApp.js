@@ -16,34 +16,9 @@
   limitations under the License.
 */
 
-import { execSync } from 'child_process';
 import { type } from '@lowdefy/helpers';
 
-function computeGitSha() {
-  const fromEnv = process.env.LOWDEFY_GIT_SHA?.trim();
-  if (fromEnv) return fromEnv;
-  try {
-    return execSync('git rev-parse HEAD').toString().trim();
-  } catch (_) {
-    return null;
-  }
-}
-
-// App metadata resolved from the root lowdefy.yaml. Computed before buildRefs
-// so it can back the _build.app operator, and reused by the buildApp step.
-function computeAppMeta(source = {}) {
-  return {
-    slug: source.slug ?? null,
-    name: source.name ?? null,
-    version: source.version ?? null,
-    description: source.description ?? null,
-    license: source.license ?? null,
-    lowdefyVersion: source.lowdefy ?? null,
-    gitSha: computeGitSha(),
-  };
-}
-
-function buildApp({ components, context }) {
+function buildApp({ components }) {
   if (type.isNone(components.app)) {
     components.app = {};
   }
@@ -62,9 +37,7 @@ function buildApp({ components, context }) {
   if (type.isNone(components.app.email)) {
     components.app.email = {};
   }
-  components.appMeta = context?.appMeta ?? computeAppMeta(components);
   return components;
 }
 
-export { computeAppMeta };
 export default buildApp;

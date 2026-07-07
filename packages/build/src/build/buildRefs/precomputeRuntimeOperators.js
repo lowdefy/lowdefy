@@ -24,7 +24,7 @@ import collectExceptions from '../../utils/collectExceptions.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-function evaluateStaticOperators({ context, input, refDef }) {
+function precomputeRuntimeOperators({ context, input, refDef }) {
   const typeNames = collectTypeNames({ typesMap: context.typesMap });
 
   const { output, errors } = evaluateOperators({
@@ -41,10 +41,10 @@ function evaluateStaticOperators({ context, input, refDef }) {
   if (errors.length > 0) {
     errors.forEach((error) => {
       // Resolve source file path for error location.
-      // Only called from buildRefs top-level where refDef is root lowdefy.yaml,
-      // but ~r on each operator object identifies the real source file via refMap.
-      // Falls back to refDef.path if ~r is missing (shouldn't happen at this stage
-      // since all objects have ~r after recursiveBuild completes).
+      // Called from index.js Phase 3.5 (refDef = lowdefy.yaml) and buildPageJit
+      // (refDef = page); ~r on each operator object identifies the real source
+      // file via refMap. Falls back to refDef.path if ~r is missing (shouldn't
+      // happen at this stage since all objects have ~r after recursiveBuild completes).
       error.filePath = error.refId ? context.refMap[error.refId]?.path : refDef.path;
       collectExceptions(context, error);
     });
@@ -53,4 +53,4 @@ function evaluateStaticOperators({ context, input, refDef }) {
   return output;
 }
 
-export default evaluateStaticOperators;
+export default precomputeRuntimeOperators;
