@@ -442,6 +442,9 @@
         - id: ButtonSelector
           type: MenuLink
           pageId: ButtonSelector
+        - id: Captcha
+          type: MenuLink
+          pageId: Captcha
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector

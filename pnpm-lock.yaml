@@ -185,6 +185,9 @@ importers:
       '@lowdefy/blocks-antd-x':
         specifier: 5.3.0
         version: link:../plugins/blocks/blocks-antd-x
+      '@lowdefy/blocks-captcha':
+        specifier: 5.3.0
+        version: link:../plugins/blocks/blocks-captcha
       '@lowdefy/blocks-diff':
         specifier: 5.3.0
         version: link:../plugins/blocks/blocks-diff
@@ -896,6 +899,28 @@ importers:
       '@playwright/test':
         specifier: 1.59.1
         version: 1.59.1
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32)
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32
+      copyfiles:
+        specifier: 2.4.1
+        version: 2.4.1
+
+  packages/plugins/blocks/blocks-captcha:
+    dependencies:
+      '@lowdefy/block-utils':
+        specifier: 5.3.0
+        version: link:../../../utils/block-utils
+      react:
+        specifier: '>=18'
+        version: 18.2.0
+      react-dom:
+        specifier: '>=18'
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -2156,6 +2181,9 @@ importers:
       '@lowdefy/blocks-basic':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-captcha':
+        specifier: 5.3.0
+        version: link:../../plugins/blocks/blocks-captcha
       '@lowdefy/blocks-echarts':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-echarts
@@ -2298,6 +2326,9 @@ importers:
       '@lowdefy/blocks-basic':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-captcha':
+        specifier: 5.3.0
+        version: link:../../plugins/blocks/blocks-captcha
       '@lowdefy/blocks-echarts':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-echarts
@@ -2476,6 +2507,9 @@ importers:
       '@lowdefy/blocks-basic':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-captcha':
+        specifier: 5.3.0
+        version: link:../../plugins/blocks/blocks-captcha
       '@lowdefy/blocks-echarts':
         specifier: 5.3.0
         version: link:../../plugins/blocks/blocks-echarts
