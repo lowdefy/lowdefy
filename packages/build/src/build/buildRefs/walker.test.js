@@ -430,6 +430,39 @@ describe('_module.endpointId resolution', () => {
   });
 });
 
+describe('_module.notificationId resolution', () => {
+  test('string form resolves to scoped notification id', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.notificationId': 'invite-user' }, ctx);
+    expect(result).toBe('entry-id/invite-user');
+  });
+
+  test('object form resolves cross-module notification', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.notificationId': { id: 'event-digest', module: 'events' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-digest');
+  });
+
+  test('throws for invalid argument type', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 7 }, ctx)).rejects.toThrow(
+      '_module.notificationId requires a string or object { id, module }.'
+    );
+  });
+});
+
 describe('_module.id resolution', () => {
   test('non-object form returns own module id', async () => {
     const ctx = createWalkContext({
@@ -491,6 +524,16 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     );
   });
 
+  test('_module.notificationId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 'invite-user' }, ctx)).rejects.toThrow(
+      '_module.notificationId string form is ambiguous at the app level'
+    );
+  });
+
   test('_module.id non-object form throws at app level', async () => {
     const ctx = createWalkContext({
       moduleEntry: null,
@@ -549,6 +592,18 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       ctx
     );
     expect(result).toBe('events-entry/send-event');
+  });
+
+  test('_module.notificationId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.notificationId': { id: 'invite-user', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/invite-user');
   });
 
   test('_module.id object form resolves at app level', async () => {
