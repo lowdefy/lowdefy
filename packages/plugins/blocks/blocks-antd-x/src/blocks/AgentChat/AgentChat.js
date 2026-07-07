@@ -211,7 +211,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       if (args?.text) {
         sendMessage({
           text: args.text,
-          ...(args.files ? { experimental_attachments: args.files } : {}),
+          ...(args.files ? { files: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
         });
       }
