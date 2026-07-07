@@ -64,13 +64,16 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   const tools = {};
   const mcpClients = [];
 
-  // Build endpoint tools
+  // Build endpoint tools. The model-facing tool name is toolConfig.name
+  // (assigned by buildAgents — endpoint id with '/' → '__' unless overridden);
+  // execution still targets the endpointId.
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
-    assertNotReserved(endpointId, 'Endpoint tool', context.i18n);
+    const toolName = toolConfig.name ?? endpointId;
+    assertNotReserved(toolName, 'Endpoint tool', context.i18n);
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
-    tools[endpointId] = tool({
+    tools[toolName] = tool({
       description: endpointConfig.description,
       inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
       ...(confirm && !autoApprove ? { needsApproval: true } : {}),
@@ -150,9 +153,11 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     }
   }
 
-  // Build sub-agent tools
+  // Build sub-agent tools — keyed by name for the same provider-rule reason
+  // as endpoint tools (scoped agent ids contain '/').
   for (const subAgentRef of agent.agents ?? []) {
-    assertNotReserved(subAgentRef.agentId, 'Sub-agent', context.i18n);
+    const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
+    assertNotReserved(subAgentToolName, 'Sub-agent', context.i18n);
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
@@ -189,7 +194,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
           required: ['task'],
         });
 
-    tools[subAgentRef.agentId] = tool({
+    tools[subAgentToolName] = tool({
       description,
       inputSchema,
       execute: async (input, { abortSignal }) => {

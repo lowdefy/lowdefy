@@ -1,0 +1,9 @@
+id: count-users
+type: InternalApi
+description: Count registered users.
+payloadSchema:
+  type: object
+  properties: {}
+routine:
+  - ':return':
+      users: 7

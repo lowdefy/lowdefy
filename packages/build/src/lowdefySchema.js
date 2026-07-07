@@ -248,6 +248,7 @@ export default {
                 required: ['endpointId'],
                 properties: {
                   endpointId: { type: 'string' },
+                  name: { type: 'string' },
                   confirm: {
                     const: true,
                   },
@@ -313,6 +314,7 @@ export default {
                 required: ['agentId'],
                 properties: {
                   agentId: { type: 'string' },
+                  name: { type: 'string' },
                   description: { type: 'string' },
                   inputSchema: { type: 'object' },
                 },
