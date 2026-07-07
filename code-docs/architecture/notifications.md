@@ -29,6 +29,8 @@ This split is the load-bearing design decision. It keeps the framework surface t
 
 `buildNotifications` validates each entry: `id`/`type` required, `properties.subject` required (a framework contract independent of the template's own schema), `theme`/`testData` are objects. It renames `id` → `notificationId`, namespaces the id to `notification:<id>`, and increments the `notifications` type counter. `writeNotifications` writes each to a `notifications/<id>.json` build artifact.
 
+Modules can ship notifications: `buildModules` scopes each manifest `notifications:` entry to `{entryId}/{id}` and merges it into `components.notifications` **before** `buildNotifications` runs, so duplicate detection and the `notification:` prefixing operate on scoped ids, and the artifact writes to a nested path (`notifications/<entry>/<id>.json` — the write chain auto-mkdirs, same as scoped api artifacts). The section is deferred in module manifests (`deferredRegions.js` CONTENT_SECTIONS) so `_module.var`/`_module.*Id` inside templates resolve in the manifest phase with the entry in scope, and it is non-exportable (no cross-module `_ref`); scoped ids are produced by the `_module.notificationId` walker operator (string and `{ id, module }` forms, mirror of `_module.endpointId`).
+
 Template properties are **not** operator config — no `countOperators` runs over them. They are Nunjucks data templates evaluated at render time.
 
 **Inputs:** the `notifications:` array from config.

@@ -56,6 +56,7 @@ modules:
 - `connections: object[]` — Connection definitions
 - `pages: object[]` — Page definitions
 - `api: object[]` — API endpoint definitions
+- `notifications: object[]` — Notification email template definitions
 - `components: object[]` — Named reusable config fragments
 - `menus: object[]` — Menu definitions
 - `plugins: object[]` — Required plugin dependencies with semver ranges
@@ -122,13 +123,14 @@ The walker's `_module.var` branch examines two `WalkContext` fields:
 
 ## ID Operator Resolution (Walker-Based)
 
-The `_module.*Id` operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.id`) resolve during the walker pass in `walker.js`, alongside `_module.var`. They are detected **after** child walking (bottom-up) — after `_module.var` but before `_build.*`.
+The `_module.*Id` operators (`_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.notificationId`, `_module.id`) resolve during the walker pass in `walker.js`, alongside `_module.var`. They are detected **after** child walking (bottom-up) — after `_module.var` but before `_build.*`.
 
 ```javascript
 const MODULE_ID_OPERATOR_KEYS = [
   '_module.pageId',
   '_module.connectionId',
   '_module.endpointId',
+  '_module.notificationId',
   '_module.id',
 ];
 ```
@@ -140,6 +142,7 @@ Each operator supports both string form (same-module) and object form (cross-mod
 - `_module.connectionId: users-db` → `team-users/users-db` (or remapped ID)
 - `_module.connectionId: { id: contacts-db, module: contacts }` → scoped via target entry
 - `_module.endpointId: invite-user` → `team-users/invite-user`
+- `_module.notificationId: invite-user` → `team-users/invite-user` (notification template)
 - `_module.id: true` → `team-users`
 - `_module.id: { module: contacts }` → target entry's ID
 
@@ -156,6 +159,7 @@ Phase 3 (`buildModules`) scopes IDs by prefixing with `{entryId}/`:
 | Page ID         | Yes     | `{entryId}/{pageId}`       |
 | Connection ID   | Yes     | `{entryId}/{connectionId}` |
 | API endpoint ID | Yes     | `{entryId}/{endpointId}`   |
+| Notification ID | Yes     | `{entryId}/{notificationId}` |
 | Menu item ID    | Yes     | `{entryId}/{menuItemId}`   |
 | Block ID        | No      | Unchanged                  |
 | Request ID      | No      | Inherited from parent page |
@@ -266,6 +270,7 @@ _module.pageId:
 | `_module.pageId`       | `"pageId"` → `"{entryId}/pageId"` | `{ id, module }` → `"{targetEntryId}/pageId"` |
 | `_module.connectionId` | `"connId"` → scoped or remapped   | `{ id, module }` → scoped via target entry    |
 | `_module.endpointId`   | `"apiId"` → `"{entryId}/apiId"`   | `{ id, module }` → `"{targetEntryId}/apiId"`  |
+| `_module.notificationId` | `"notifId"` → `"{entryId}/notifId"` | `{ id, module }` → `"{targetEntryId}/notifId"` |
 | `_module.id`           | `true` → `"{entryId}"`            | `{ module }` → `"{targetEntryId}"`            |
 
 **`_ref: { module }` refs** — for embedding components and menus:
