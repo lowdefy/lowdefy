@@ -18,6 +18,7 @@ import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError } from '@lowdefy/errors';
 
+import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -145,6 +146,46 @@ test('throws ConfigError on authorization failure', async () => {
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
   ).rejects.toBeInstanceOf(ConfigError);
+});
+
+test('system context authorizes nested call to a protected endpoint', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        routine: { ':return': 'ran' },
+        auth: { public: false, roles: ['admin'] },
+      },
+    },
+  });
+  context.session = undefined;
+  context.user = undefined;
+  context.authorize = createAuthorize({ session: undefined, system: true });
+  const result = await invokeEndpoint(context, {
+    endpointId: 'target',
+    payload: {},
+    endpointDepth: 0,
+  });
+  expect(result.status).toBe('return');
+  expect(result.response).toBe('ran');
+});
+
+test('user session with insufficient roles gets masked does-not-exist error on nested call', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        routine: { ':return': true },
+        auth: { public: false, roles: ['admin'] },
+      },
+    },
+    session: { user: { id: 'user_1', roles: ['viewer'] } },
+  });
+  await expect(
+    invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
+  ).rejects.toThrow('API Endpoint "target" does not exist.');
 });
 
 test('propagates :throw status envelope from runRoutine', async () => {

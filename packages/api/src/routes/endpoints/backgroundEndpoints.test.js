@@ -16,8 +16,12 @@
 
 import { jest } from '@jest/globals';
 import { ConfigError } from '@lowdefy/errors';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 import callEndpoint from './callEndpoint.js';
+import runDetachedEndpoint from './runDetachedEndpoint.js';
+import runScheduledEndpoint from './runScheduledEndpoint.js';
+import runWebhookEndpoint from './runWebhookEndpoint.js';
 import scheduleBackground from './scheduleBackground.js';
 import testContext from '../../test/testContext.js';
 
@@ -200,4 +204,113 @@ test('webhook endpoints: gated on webhook: true, payload is { body, query, heade
   await expect(
     runWebhookEndpoint(context2, { endpointId: 'plain_ep', body: {}, query: {}, headers: {} })
   ).rejects.toThrow('does not exist');
+});
+
+// Nested CallApi authorization in system contexts — a routine already running was
+// authorized at its entry point (CRON_SECRET / webhook token), so CallApi steps to
+// protected endpoints must not be re-gated on a (missing) user session.
+
+function createNestedCallReadConfigFile({ parent, childType = 'Api' }) {
+  return jest.fn((path) => {
+    if (path === `api/${parent.endpointId}.json`) {
+      return parent;
+    }
+    if (path === 'api/child_ep.json') {
+      return {
+        endpointId: 'child_ep',
+        type: childType,
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+}
+
+const nestedCallRoutine = (parentId) => [
+  {
+    id: `endpoint:${parentId}:call_child`,
+    stepId: 'call_child',
+    type: 'CallApi',
+    properties: { endpointId: 'child_ep', payload: {} },
+  },
+  { ':return': { child: { _step: 'call_child' } } },
+];
+
+test('scheduled endpoint CallApi to a protected Api endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_cron',
+      type: 'Api',
+      auth: { public: false },
+      schedules: [{ cron: '0 6 * * *' }],
+      routine: nestedCallRoutine('parent_cron'),
+    },
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runScheduledEndpoint(context, {
+    endpointId: 'parent_cron',
+    cron: '0 6 * * *',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('scheduled endpoint CallApi to a protected InternalApi endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_cron',
+      type: 'Api',
+      auth: { public: false },
+      schedules: [{ cron: '0 6 * * *' }],
+      routine: nestedCallRoutine('parent_cron'),
+    },
+    childType: 'InternalApi',
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runScheduledEndpoint(context, {
+    endpointId: 'parent_cron',
+    cron: '0 6 * * *',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('webhook endpoint CallApi to a protected Api endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: false },
+      webhook: true,
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    body: {},
+    query: {},
+    headers: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+test('detached endpoint CallApi to a protected Api endpoint runs the child routine', async () => {
+  const readConfigFile = createNestedCallReadConfigFile({
+    parent: {
+      endpointId: 'parent_detached',
+      type: 'Api',
+      auth: { public: false },
+      routine: nestedCallRoutine('parent_detached'),
+    },
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'parent_detached',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
 });
