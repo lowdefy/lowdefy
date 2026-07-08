@@ -386,6 +386,7 @@ const MODULE_ID_OPERATOR_KEYS = [
   '_module.pageId',
   '_module.connectionId',
   '_module.endpointId',
+  '_module.agentId',
   '_module.notificationId',
   '_module.id',
 ];
@@ -500,6 +501,34 @@ function resolveModuleEndpointId(arg, moduleEntry, context, configKey) {
   });
 }
 
+// Resolve _module.agentId
+function resolveModuleAgentId(arg, moduleEntry, context, configKey) {
+  if (type.isString(arg)) {
+    if (!moduleEntry) {
+      throw new ConfigError(
+        '_module.agentId string form is ambiguous at the app level — no module to scope against. Use { id, module } to specify the target module.',
+        { configKey }
+      );
+    }
+    return `${moduleEntry.id}/${arg}`;
+  }
+
+  if (type.isObject(arg) && type.isString(arg.id) && type.isString(arg.module)) {
+    const targetEntry = resolveDepTarget({
+      moduleEntry,
+      depName: arg.module,
+      context,
+      configKey,
+      usage: `_module.agentId { id: "${arg.id}", module: "${arg.module}" }`,
+    });
+    return `${targetEntry.id}/${arg.id}`;
+  }
+
+  throw new ConfigError('_module.agentId requires a string or object { id, module }.', {
+    configKey,
+  });
+}
+
 // Resolve _module.notificationId
 function resolveModuleNotificationId(arg, moduleEntry, context, configKey) {
   if (type.isString(arg)) {
@@ -600,6 +629,9 @@ async function resolveModuleIdOperator(node, ctx) {
   }
   if (!type.isUndefined(node['_module.endpointId'])) {
     return resolveModuleEndpointId(node['_module.endpointId'], moduleEntry, context, configKey);
+  }
+  if (!type.isUndefined(node['_module.agentId'])) {
+    return resolveModuleAgentId(node['_module.agentId'], moduleEntry, context, configKey);
   }
   if (!type.isUndefined(node['_module.notificationId'])) {
     return resolveModuleNotificationId(

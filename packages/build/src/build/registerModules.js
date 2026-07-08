@@ -370,7 +370,7 @@ async function resolveFullManifest({ entryId, context }) {
   const resolved = await resolve(manifest, ctx);
 
   // Filter null entries produced by _ref resolution failures
-  for (const key of ['pages', 'connections', 'api', 'notifications']) {
+  for (const key of ['pages', 'connections', 'api', 'agents', 'notifications']) {
     if (type.isArray(resolved[key])) {
       resolved[key] = resolved[key].filter((item) => !type.isNone(item));
     }

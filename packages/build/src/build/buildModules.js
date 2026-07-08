@@ -90,6 +90,9 @@ function buildModules({ components, context }) {
     for (const endpoint of manifest.api ?? []) {
       validateModuleSecrets({ content: endpoint, manifest, entryId: entry.id });
     }
+    for (const agent of manifest.agents ?? []) {
+      validateModuleSecrets({ content: agent, manifest, entryId: entry.id });
+    }
     for (const notification of manifest.notifications ?? []) {
       validateModuleSecrets({ content: notification, manifest, entryId: entry.id });
     }
@@ -114,6 +117,13 @@ function buildModules({ components, context }) {
       endpoint.id = `${entry.id}/${endpoint.id}`;
       components.api = components.api ?? [];
       components.api.push(endpoint);
+    }
+
+    // Process agents
+    for (const agent of manifest.agents ?? []) {
+      agent.id = `${entry.id}/${agent.id}`;
+      components.agents = components.agents ?? [];
+      components.agents.push(agent);
     }
 
     // Process notifications
