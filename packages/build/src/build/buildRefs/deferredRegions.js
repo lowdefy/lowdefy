@@ -37,8 +37,9 @@
 // preserve and is not a manifest phase).
 
 const VAR_DEFAULT = /^vars(\.[^.]+\.properties)*\.[^.]+\.default(\..*)?$/;
-const CONTENT_SECTIONS = /^(pages|api|connections|agents|menus|components)(\..*)?$/;
-const NON_EXPORTABLE_SECTIONS = /^(pages|api|connections|agents|vars|dependencies|plugins|secrets)(\..*)?$/;
+const CONTENT_SECTIONS = /^(pages|api|connections|agents|notifications|menus|components)(\..*)?$/;
+const NON_EXPORTABLE_SECTIONS =
+  /^(pages|api|connections|agents|notifications|vars|dependencies|plugins|secrets)(\..*)?$/;
 
 const DEFERRED_REGIONS = [
   { phase: 'header', match: VAR_DEFAULT, action: 'record:varDefault' },

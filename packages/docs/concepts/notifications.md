@@ -43,6 +43,10 @@ The definition fields are:
 - `theme: object`: Per-notification overrides of the `app.email` theme (see [Theming](#theming)).
 - `testData: object`: Sample data used to render the notification in the [email preview](#previewing-emails). Not used at runtime.
 
+### Module notifications
+
+Modules can ship notification templates: `module.lowdefy.yaml` accepts a `notifications:` section, and each template's id scopes to `{entry}/{id}` (installing `user-admin` gives `user-admin/invite-user`), so the same module installed twice never collides. Module content references its own templates with [`_module.notificationId`](/_module) — in a `RenderNotification` step or a dispatch payload — and app-level config reaches a module's template with the object form (`_module.notificationId: { id: invite-user, module: user-admin }`) or the literal scoped string. This lets a module that drives a notification flow (like user invites) ship its default email instead of every app hand-writing it. Module notifications resolve `_module.var` in their properties, so template copy can be configured through the module's vars.
+
 ### Interpolation
 
 Template property strings interpolate against the render data with [Nunjucks](https://mozilla.github.io/nunjucks/) — `{{ task.title }}` just works, including `{% if %}` conditionals. This applies inside `notifications:` properties only.

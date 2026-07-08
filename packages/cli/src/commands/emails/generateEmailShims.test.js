@@ -152,6 +152,32 @@ test('generateEmailShims keeps absolute and protocol-relative logos in the previ
   expect(protocolRelative.theme).toEqual({ logo: '//cdn/other.png' });
 });
 
+test('generateEmailShims creates the parent directory for scoped notification ids', async () => {
+  const fs = (await import('fs')).default;
+  const { default: generateEmailShims } = await import('./generateEmailShims.js');
+
+  await generateEmailShims({
+    context,
+    notifications: [
+      {
+        notificationId: 'invites/invite-user',
+        type: 'NotificationEmail',
+        properties: { subject: 'Invite' },
+      },
+    ],
+    appEmail: {},
+    notificationTypes,
+  });
+
+  expect(fs.promises.mkdir).toHaveBeenCalledWith(expect.stringContaining('invites'), {
+    recursive: true,
+  });
+  const [filePath, content] = fs.promises.writeFile.mock.calls[0];
+  expect(filePath).toContain('invites');
+  expect(filePath).toContain('invite-user.jsx');
+  expect(content).toContain('function InvitesInviteUserPreview(props)');
+});
+
 test('generateEmailShims warns and skips notifications with unknown template types', async () => {
   const fs = (await import('fs')).default;
   const { default: generateEmailShims } = await import('./generateEmailShims.js');
