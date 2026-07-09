@@ -29,6 +29,15 @@ import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devToolsHandler from './routes/devTools.js';
+import docsContentHandler from './routes/docs/content.js';
+import docsExamplesHandler from './routes/docs/examples.js';
+import docsIndexHandler from './routes/docs/index.js';
+import docsMcpHandler from './routes/docs/mcp.js';
+import docsPluginDocHandler from './routes/docs/pluginDoc.js';
+import docsPluginsHandler from './routes/docs/plugins.js';
+import docsSchemaHandler from './routes/docs/schema.js';
+import docsSearchHandler from './routes/docs/search.js';
+import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import iconsDynamicHandler from './routes/iconsDynamic.js';
@@ -59,6 +68,22 @@ function createApp() {
   app.get('/api/js/:env', jsEnvHandler);
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
+
+  // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
+  // schemas/examples/docs for every installed plugin (core and local) plus
+  // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
+  // so it can't clash with user API endpoints; /docs is a reserved page
+  // prefix in dev. Registered before the auth middleware — the handlers read
+  // build artifacts and node_modules directly and need no auth or api context.
+  app.all('/docs/mcp', docsMcpHandler);
+  app.get('/docs', docsIndexHandler);
+  app.get('/docs/plugins', docsPluginsHandler);
+  app.get('/docs/schema/:kind/:type', docsSchemaHandler);
+  app.get('/docs/examples/:type', docsExamplesHandler);
+  app.get('/docs/search', docsSearchHandler);
+  app.get('/docs/plugin-doc/:package{.+}', docsPluginDocHandler);
+  app.get('/docs/content/:slug{.+}', docsContentHandler);
+  app.get('/docs/:kind', docsTypesHandler);
 
   if (authJson.configured === true) {
     app.use(
