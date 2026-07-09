@@ -14,17 +14,23 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
+// Module-level ring buffer of recent client-reported errors — feeds the
+// getBuildStatus feedback endpoint so agents can see browser errors without
+// tailing server logs. Deliberately in-memory only: entries are lost on
+// server restart, which is fine since this is a live-session debugging aid.
+const MAX_ENTRIES = 50;
 
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
+const entries = [];
 
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+function push(entry) {
+  entries.push(entry);
+  if (entries.length > MAX_ENTRIES) {
+    entries.shift();
+  }
 }
 
-export default mcpHandler;
+function list() {
+  return [...entries];
+}
+
+export default { push, list };

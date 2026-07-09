@@ -92,6 +92,7 @@
     "hono": "4.12.25",
     "opener": "1.5.2",
     "pino": "8.16.2",
+    "playwright-core": "1.59.1",
     "postcss": "8.5.6",
     "process": "0.11.10",
     "react": "18.2.0",

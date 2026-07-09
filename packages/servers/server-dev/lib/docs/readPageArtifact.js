@@ -14,17 +14,13 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
+import readBuildArtifact from './readBuildArtifact.js';
 
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
-
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+// Factored out of getPageConfig so the artifact-read side (deserializing
+// build/pages/<pageId>.json) is testable without exercising the JIT build
+// pipeline (buildPageIfNeeded) that getPageConfig also drives.
+function readPageArtifact({ pageId }) {
+  return readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
 }
 
-export default mcpHandler;
+export default readPageArtifact;

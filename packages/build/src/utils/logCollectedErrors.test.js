@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { BuildError, ConfigError, OperatorError } from '@lowdefy/errors';
+import { BuildError, ConfigError, ConfigWarning, OperatorError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
   const context = { errors: [], handleError: jest.fn() };
@@ -70,5 +70,66 @@ test('logCollectedErrors throws BuildError', () => {
   } catch (err) {
     expect(err).toBeInstanceOf(BuildError);
     expect(err.message).toBe('Build failed with 2 error(s). See above for details.');
+  }
+});
+
+test('logCollectedErrors attaches serialized errors array to the thrown BuildError', () => {
+  const configErr = new ConfigError('Bad config', { configKey: 'abc123' });
+  const context = {
+    errors: [configErr],
+    handleError: jest.fn((err) => {
+      err.source = '/app/pages/home.yaml:5';
+      err.config = 'root.pages[0:home]';
+    }),
+  };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.errors).toEqual([
+      {
+        message: 'Bad config',
+        name: 'ConfigError',
+        source: '/app/pages/home.yaml:5',
+        config: 'root.pages[0:home]',
+        configKey: 'abc123',
+        checkSlug: null,
+      },
+    ]);
+  }
+});
+
+test('logCollectedErrors attaches serialized warnings array to the thrown BuildError', () => {
+  const configErr = new ConfigError('Bad config');
+  const warning = new ConfigWarning('Deprecated feature used');
+  warning.source = '/app/pages/home.yaml:12';
+  const context = { errors: [configErr], warnings: [warning], handleError: jest.fn() };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.warnings).toEqual([
+      {
+        message: 'Deprecated feature used',
+        name: 'ConfigWarning',
+        source: '/app/pages/home.yaml:12',
+        config: null,
+        configKey: null,
+        checkSlug: null,
+      },
+    ]);
+  }
+});
+
+test('logCollectedErrors attaches an empty warnings array when context has no warnings', () => {
+  const context = { errors: [new ConfigError('Bad config')], handleError: jest.fn() };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.warnings).toEqual([]);
   }
 });

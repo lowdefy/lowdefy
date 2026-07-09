@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
+import fs from 'fs';
+import path from 'path';
 
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
-
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+// doc.slug already encodes the <section>/<page-id> path, and doc.path is
+// content/<slug>.md, so the public copy mirrors the docs-content layout exactly.
+function copyMarkdownFiles({ manifest, contentDir, mdDir }) {
+  fs.rmSync(mdDir, { recursive: true, force: true });
+  manifest.docs.forEach((doc) => {
+    const src = path.join(contentDir, doc.path);
+    const dest = path.join(mdDir, `${doc.slug}.md`);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(src, dest);
+  });
 }
 
-export default mcpHandler;
+export default copyMarkdownFiles;

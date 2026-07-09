@@ -14,17 +14,16 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
+import fs from 'fs';
+import path from 'path';
 
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
-
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+function buildLlmsFullTxt({ manifest, contentDir }) {
+  return manifest.docs
+    .map((doc) => {
+      const content = fs.readFileSync(path.join(contentDir, doc.path), 'utf8');
+      return `\n\n---\nurl: https://docs.lowdefy.com/md/${doc.slug}.md\n---\n\n${content}`;
+    })
+    .join('');
 }
 
-export default mcpHandler;
+export default buildLlmsFullTxt;

@@ -24,8 +24,30 @@ It provides these tools:
 | `lowdefy_get_doc`        | A Lowdefy docs page as markdown, by slug or by type name                 |
 | `lowdefy_search_docs`    | Keyword search over the Lowdefy docs                                     |
 | `lowdefy_get_plugin_doc` | Markdown (READMEs, guides) shipped inside an installed plugin package    |
+| `lowdefy_build_status`   | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit |
+| `lowdefy_get_page_config`| The fully built config for a page, or its structured build errors        |
+| `lowdefy_screenshot_page`| PNG screenshot of a rendered page (headless Chromium) for visual verification |
+| `lowdefy_find_config`    | Which yaml file (and line) defines a given page, block, or request id    |
+| `lowdefy_scaffold_page`  | Create a new page yaml file with a canonical minimal structure           |
 
-## Using it with Claude Code
+## The feedback loop
+
+The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
+
+1. Discover types and schemas, write or edit YAML.
+2. Call `lowdefy_build_status` — did the build succeed? Errors come back with the exact source file and location.
+3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
+4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status`, so problems that only show at runtime still reach the agent.
+
+## Setting up a project — one command
+
+```bash
+npx lowdefy agent-setup
+```
+
+This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server, `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Use `--port` if your dev server doesn't run on 3000.
+
+## Using it with Claude Code manually
 
 Add the MCP server to your project so Claude Code can use it. In your project directory run:
 
@@ -90,6 +112,10 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/content/{slug}`  | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`    |
 | `GET /lowdefy-docs/search?q={query}`| Search the docs                                                 |
 | `GET /lowdefy-docs/plugin-doc/{package}` | Markdown shipped inside a plugin package                   |
+| `GET /lowdefy-docs/build-status`    | Current build errors/warnings + recent browser runtime errors   |
+| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
+| `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
+| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
 
 ## Local plugins
 
@@ -99,3 +125,7 @@ Your project's own plugins (declared under `plugins:` in `lowdefy.yaml`) are inc
 - Block schemas are derived from each block's `meta`, and connection/request schemas from the `schema` property on your connection and request definitions.
 - Ship a `gallery.yaml` or `examples.yaml` next to a block in your plugin's `dist/blocks/{BlockName}/` and it is served by `lowdefy_get_examples`.
 - A `README.md` or `docs/*.md` files in your plugin package are served by `lowdefy_get_plugin_doc`.
+
+## Docs for crawling agents
+
+The docs site itself serves agent-friendly formats: every page as raw markdown at `https://docs.lowdefy.com/md/{section}/{slug}.md`, an [llms.txt](https://llmstxt.org) index at `https://docs.lowdefy.com/llms.txt`, and the full documentation as one file at `https://docs.lowdefy.com/llms-full.txt`. Generic browser tools like Playwright MCP and Chrome DevTools MCP also work well against a running Lowdefy app — blocks render stable DOM ids matching their `blockId`.

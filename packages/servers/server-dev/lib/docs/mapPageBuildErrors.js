@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
-
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
-
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+// Mirrors the error mapping in src/routes/jitPage.js so agent-facing page
+// config responses carry the same shape as the dev client's JIT build errors.
+function mapPageBuildErrors(error) {
+  const rawErrors = error.buildErrors ?? [error];
+  return rawErrors.map((err) => ({
+    type: err.name ?? 'Error',
+    message: err.message,
+    source: err.source ?? null,
+  }));
 }
 
-export default mcpHandler;
+export default mapPageBuildErrors;
