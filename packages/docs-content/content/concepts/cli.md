@@ -1,0 +1,204 @@
+# The CLI
+
+The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.
+
+We recommend running the CLI using `pnpx`, to always use the latest version:
+
+```
+pnpx lowdefy@5 <command>
+```
+
+or, to use a specific version:
+
+```
+pnpx lowdefy@version <command>
+```
+
+Alternative, you can install the CLI globally or to a Javascript project (with a `package.json` file) via pnpm.
+
+To install the CLI globally run:
+
+```
+pnpm add -g lowdefy
+```
+
+The CLI can then be run using `lowdefy` as the executable name:
+
+```
+lowdefy <command>
+```
+
+# CLI commands
+
+## build
+
+The `build` command runs a Lowdefy build. This builds a production Lowdefy app in the server directory, which can then be started using the `lowdefy start` command. The options are:
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--no-client-build`: Do not run the Vite client build, and only build the Lowdefy config. Used in some deployment scripts where the client build is done as a separate step. The previous `--no-next-build` flag still works as a deprecated alias.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+- `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+
+
+## dev
+
+The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory. The `dev` command should not be used to serve a production app, the `build` and `start` commands should be used instead.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--no-open`: Do not open a new tab in the default browser.
+- `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
+- `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
+- `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+
+## emails
+
+The `emails` command previews the [notification](/notifications) emails your app renders, using [React Email](https://react.email/)'s preview server. It builds the app, renders each notification from its `testData`, and opens the preview so you can iterate on templates without sending real mail. It warns when a template renders a data key your `testData` is missing (which would show as an empty section), and errors if the app has no `notifications:` section.
+
+The preview tooling (`react-email`) is installed just-in-time by this command — it is never a dependency of your app or its production server.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: Change the port the email preview server is hosted at. The default is `3001`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+## init
+
+The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.
+
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## init-docker
+
+The `init-docker` command initializes a Dockerfile in the config directory that can be used to build a Docker image of the Lowdefy app.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## init-vercel
+
+The `init-vercel` command initializes the installation scripts needed to deploy an app on [Vercel](https://vercel.com). It creates a directory called deploy, and a script called vercel.install.sh. It also creates a README file with instructions on how to configure Vercel.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## upgrade
+
+The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.
+
+It fetches the latest `@lowdefy/codemods` package, resolves the version chain from your current version to the target, and presents migration prompts phase by phase.
+
+```
+pnpx lowdefy@5 upgrade
+pnpx lowdefy@5 upgrade --to 6.0.0
+```
+
+- `--to <version>`: Target version to upgrade to. Defaults to the latest stable release.
+- `--plan`: Show the upgrade plan without executing.
+- `--resume`: Resume a previously interrupted upgrade.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+### How it works
+
+1. Reads your current version from `lowdefy.yaml`.
+2. Queries npm for the latest stable Lowdefy version (or uses `--to`).
+3. Fetches `@lowdefy/codemods@latest` — the codemods package containing all migration prompts.
+4. Resolves the upgrade chain — which intermediate versions need codemods.
+5. Presents migration prompts phase by phase. Each prompt can be copied to clipboard for use with any AI coding tool, viewed as a manual guide, or skipped for later.
+6. Updates `lowdefy.yaml` after each phase and suggests a git commit.
+
+See the [Upgrade Guide](/upgrade-guide) for more detail on how the upgrade system works.
+
+## start
+
+The `start` command starts a Lowdefy production server. To start a Lowdefy server, tha app should first be built using the `build` command.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+
+#### Examples
+
+
+Run the dev server, watching a relative directory for file changes:
+```txt
+pnpx lowdefy@5 dev --watch ../other-project
+```
+
+Run the dev server, ignoring the public directory:
+```txt
+pnpx lowdefy@5 dev --watch-ignore public/**
+```
+
+
+
+# Module Fetching
+
+When your app uses [modules](/modules), the build automatically fetches module sources during the build phase. GitHub modules are downloaded as tarballs and cached in `.lowdefy/modules/`. Multiple module entries from the same monorepo share a single cache entry. Local `file:` sources are read directly from disk.
+
+For private GitHub repositories, set the `GITHUB_TOKEN` environment variable:
+
+```
+GITHUB_TOKEN=ghp_your_token_here
+```
+
+The CLI also checks for `gh` CLI credentials and git credential helpers as fallbacks.
+
+In development mode (`lowdefy dev`), local module sources (`file:` paths) are watched for changes and trigger rebuilds automatically.
+
+# Configuration
+
+All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
+
+Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
+- `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `disableTelemetry: boolean`: Disable telemetry.
+- `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `noOpen`: Do not open a new tab in the default browser.
+- `port: number`: Change the port the server is hosted at. The default is `3000`.
+- `refResolver: string`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `serverDirectory: string`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+- `watch: string[]`: A list of paths to files or directories that should be watched for changes.
+- `watchIgnore: string[]`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
+- `skipCodemodCheck: boolean`: Suppress warnings about pending codemod upgrades during build and dev.
+
+The `--config-directory` option cannot be set from the `lowdefy.yaml` file.
+
+# Telemetry
+
+The CLI collects usage and error information to help us fix bugs, prioritize features, and understand how Lowdefy is being used.
+
+All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file), or by using the `--disable-telemetry` command line flag.:
+
+###### `lowdefy.yaml`
+```yaml
+lowdefy: LOWDEFY_VERSION
+
+cli:
+  disableTelemetry: true
+```
+
+We collect the following information:
+
+- The CLI version.
+- The Lowdefy version of your app.
+- A random local app id (stored locally in your project folder at `.lowdefy/cli.json`).
+- The CLI command used.
+- Your IP address.
+- Error messages and stack traces for any errors.

@@ -14,12 +14,24 @@
   limitations under the License.
 */
 
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import extractAgentDocs from '@lowdefy/docs-content/scripts/extractAgentDocs.js';
+
 import generateSitemap from './generateSitemap.js';
 import buildSearchIndex from './buildSearchIndex.js';
 
 function transformer(pages, vars) {
   generateSitemap(pages);
   buildSearchIndex(pages, vars);
+  if (process.env.LOWDEFY_EXTRACT_AGENT_DOCS === 'true') {
+    extractAgentDocs({
+      pages,
+      menus: vars.menus,
+      outputDir: path.resolve(dirname(fileURLToPath(import.meta.url)), '../../docs-content'),
+    });
+  }
   return pages;
 }
 
