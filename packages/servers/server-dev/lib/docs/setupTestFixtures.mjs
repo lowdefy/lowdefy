@@ -31,6 +31,9 @@ function setupTestFixtures() {
 
   write('package.json', { name: 'test-fixture-server', version: '1.0.0', type: 'module' });
 
+  // lib/build/config.js reads this at import time (screenshotPage → basePath).
+  write('build/config.json', {});
+
   write('build/plugins/availableTypes.json', {
     actions: {
       SetState: { package: '@lowdefy/actions-core', originalTypeName: 'SetState', version: '5.0.0' },
