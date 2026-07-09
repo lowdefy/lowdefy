@@ -19,6 +19,7 @@ import { fileURLToPath } from 'url';
 
 import extractAgentDocs from '@lowdefy/docs-content/scripts/extractAgentDocs.js';
 
+import generateLlmsTxt from './generateLlmsTxt.js';
 import generateSitemap from './generateSitemap.js';
 import buildSearchIndex from './buildSearchIndex.js';
 
@@ -32,6 +33,9 @@ function transformer(pages, vars) {
       outputDir: path.resolve(dirname(fileURLToPath(import.meta.url)), '../../docs-content'),
     });
   }
+  // Runs after extractAgentDocs so a `docs:content` run picks up the freshly
+  // extracted markdown; otherwise it reads the installed docs-content package.
+  generateLlmsTxt();
   return pages;
 }
 
