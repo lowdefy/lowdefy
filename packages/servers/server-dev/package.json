@@ -48,6 +48,7 @@
     "@ant-design/x": "2.7.0",
     "@auth/core": "0.41.2",
     "@hono/auth-js": "1.1.1",
+    "@hono/mcp": "0.3.0",
     "@hono/node-server": "2.0.4",
     "@hono/vite-dev-server": "0.26.0",
     "@lowdefy/actions-core": "5.3.0",
@@ -64,6 +65,7 @@
     "@lowdefy/build": "5.3.0",
     "@lowdefy/client": "5.3.0",
     "@lowdefy/connection-axios-http": "5.3.0",
+    "@lowdefy/docs-content": "5.3.0",
     "@lowdefy/engine": "5.3.0",
     "@lowdefy/errors": "5.3.0",
     "@lowdefy/helpers": "5.3.0",
@@ -80,6 +82,7 @@
     "@lowdefy/operators-yaml": "5.3.0",
     "@lowdefy/plugin-next-auth": "5.3.0",
     "@lowdefy/websockets-core": "5.3.0",
+    "@modelcontextprotocol/sdk": "1.29.0",
     "@tailwindcss/postcss": "4.3.1",
     "@vitejs/plugin-react": "6.0.2",
     "antd": "6.3.1",
@@ -89,6 +92,7 @@
     "hono": "4.12.25",
     "opener": "1.5.2",
     "pino": "8.16.2",
+    "playwright-core": "1.59.1",
     "postcss": "8.5.6",
     "process": "0.11.10",
     "react": "18.2.0",
@@ -100,7 +104,8 @@
     "vite": "8.0.16",
     "ws": "8.18.0",
     "yaml": "2.9.0",
-    "yargs": "18.0.0"
+    "yargs": "18.0.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "jest": "28.1.3",

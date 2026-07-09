@@ -17,6 +17,7 @@
 import { createRequire } from 'module';
 import { Command, Option } from 'commander';
 
+import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import emails from './commands/emails/emails.js';
@@ -77,6 +78,18 @@ const options = {
     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   ),
 };
+
+program
+  .command('agent-setup')
+  .description(
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skill).'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program
   .command('build')

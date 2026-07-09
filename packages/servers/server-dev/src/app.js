@@ -29,6 +29,19 @@ import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devToolsHandler from './routes/devTools.js';
+import docsBuildStatusHandler from './routes/docs/buildStatus.js';
+import docsContentHandler from './routes/docs/content.js';
+import docsExamplesHandler from './routes/docs/examples.js';
+import docsFindHandler from './routes/docs/find.js';
+import docsIndexHandler from './routes/docs/index.js';
+import docsMcpHandler from './routes/docs/mcp.js';
+import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsPluginDocHandler from './routes/docs/pluginDoc.js';
+import docsPluginsHandler from './routes/docs/plugins.js';
+import docsSchemaHandler from './routes/docs/schema.js';
+import docsScreenshotHandler from './routes/docs/screenshot.js';
+import docsSearchHandler from './routes/docs/search.js';
+import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import iconsDynamicHandler from './routes/iconsDynamic.js';
@@ -59,6 +72,26 @@ function createApp() {
   app.get('/api/js/:env', jsEnvHandler);
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
+
+  // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
+  // schemas/examples/docs for every installed plugin (core and local) plus
+  // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
+  // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
+  // prefix in dev. Registered before the auth middleware — the handlers read
+  // build artifacts and node_modules directly and need no auth or api context.
+  app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  app.get('/lowdefy-docs', docsIndexHandler);
+  app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
+  app.get('/lowdefy-docs/find/:id', docsFindHandler);
+  app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.get('/lowdefy-docs/plugins', docsPluginsHandler);
+  app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
+  app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);
+  app.get('/lowdefy-docs/search', docsSearchHandler);
+  app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
+  app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
+  app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
   if (authJson.configured === true) {
     app.use(

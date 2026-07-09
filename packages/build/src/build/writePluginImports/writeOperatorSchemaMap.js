@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import importPluginModule from './importPluginModule.js';
+
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
 
@@ -36,12 +38,10 @@ async function writeOperatorSchemaMap({ components, context }) {
   }
 
   for (const [packageName, operators] of Object.entries(operatorsByPackage)) {
-    let packageSchemas;
-    try {
-      packageSchemas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
-    } catch {
-      // Package not resolvable from build context (custom plugins) — skip
-    }
+    const packageSchemas = await importPluginModule({
+      context,
+      specifier: `${packageName}/schemas`,
+    });
     for (const op of operators) {
       if (typesMapSchemas[op.typeName]) {
         schemas[op.typeName] = typesMapSchemas[op.typeName];

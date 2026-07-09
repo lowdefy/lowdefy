@@ -233,7 +233,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Dynamic Page Content
-            previous_page_id: dynamic-page-content
+            previous_page_title: Docs for AI Agents
+            previous_page_id: ai-agent-docs
             next_page_title: Modules
             next_page_id: modules

@@ -48,6 +48,9 @@ modules/**
 
 packages/docs/public/sitemap.xml
 packages/docs/public/search-index.json
+packages/docs/public/llms.txt
+packages/docs/public/llms-full.txt
+packages/docs/public/md/**
 packages/website/public/sitemap.xml
 
 lerna-debug.log

@@ -1,0 +1,29 @@
+# Plugins
+
+Lowdefy plugins provides an interface to extend the platform functionality with custom javascript code. Plugins are installed into the Lowdefy app during the Lowdefy build process, and as a result are included as part of the Vite client build output. This enables plugin developers to use any npm packages when building Lowdefy plugins.
+
+Lowdefy plugins can be used to create custom blocks, connections, requests, action, operators and auth providers, adapters, callbacks and events. These plugins are written as standard [npm modules](https://docs.npmjs.com/about-packages-and-modules#about-modules), so community plugins can be published to npm, and the workspace and git protocols can be used for project specific or private plugins. Since plugins are npm packages most Javascript features and third-party npm packages can be used in plugins.
+
+## Using a plugin
+
+To use a plugin in an app, the plugin name and version should be specified in the `plugins` section of the Lowdefy config. Once the plugin is included, the types (blocks, connections, etc) defined in the plugin can be used anywhere in the app.
+
+If two plugins export types with the same type name, user defined plugins will override the default Lowdefy types, and user defined plugins will overwrite other plugins defined before them in the plugins array.
+
+The `typePrefix` property can be used to prevent plugins with the same name overwriting each other. If specified, the type names of all plugins in that package will have the prefix appended. For example, if a package contains a block with type `Button` and the typePrefix is set to `Other`, that block can be used with type name `OtherButton`, and the default Lowdefy `Button` block will still be available.
+
+###### Example
+
+```yaml
+plugins:
+  # plugins installed remotely from npm
+  - name: npm-plugin
+    version: 1.0.0
+    # local plugins in pnpm monorepo
+  - name: local-plugin
+    version: workspace:*
+  # Add a prefix to type names
+  - name: other-plugin
+    version: 1.0.0
+    typePrefix: Other
+```

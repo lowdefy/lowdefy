@@ -1,0 +1,314 @@
+# DangerousHtml
+
+Render raw HTML content without sanitization.
+
+```yaml
+- id: basic_paragraph
+  type: DangerousHtml
+  properties:
+    html: <p>This is a basic paragraph rendered as HTML.</p>
+- id: basic_heading
+  type: DangerousHtml
+  properties:
+    html: <h3>Heading rendered with DangerousHtml</h3>
+- id: basic_link
+  type: DangerousHtml
+  properties:
+    html: <p>Visit <a href="https://lowdefy.com" target="_blank" rel="noopener
+      noreferrer">Lowdefy</a> for more info.</p>
+- id: basic_multiple_headings
+  type: DangerousHtml
+  properties:
+    html: <h4>Section Title</h4><p>Some paragraph text below the
+      heading.</p><h5>Sub-section</h5><p>More text in the sub-section.</p>
+```
+
+```yaml
+- id: styled_colored
+  type: DangerousHtml
+  properties:
+    html: '<p style="color: var(--ant-color-primary); font-weight: bold; font-size:
+      18px;">Blue bold text with inline styles</p>'
+- id: styled_box_success
+  type: DangerousHtml
+  properties:
+    html: '<div style="padding: 16px; background-color: var(--ant-color-success-bg);
+      border: 1px solid var(--ant-color-success-border); border-radius:
+      6px;"><strong>Success:</strong> Your changes have been saved.</div>'
+- id: styled_box_warning
+  type: DangerousHtml
+  properties:
+    html: '<div style="padding: 16px; background-color: var(--ant-color-warning-bg);
+      border: 1px solid var(--ant-color-warning-border); border-radius:
+      6px;"><strong>Warning:</strong> Please review your settings before
+      proceeding.</div>'
+- id: styled_box_error
+  type: DangerousHtml
+  properties:
+    html: '<div style="padding: 16px; background-color: var(--ant-color-error-bg);
+      border: 1px solid var(--ant-color-error-border); border-radius:
+      6px;"><strong>Error:</strong> Unable to complete the operation.</div>'
+- id: styled_box_info
+  type: DangerousHtml
+  properties:
+    html: '<div style="padding: 16px; background-color: var(--ant-color-info-bg);
+      border: 1px solid var(--ant-color-info-border); border-radius:
+      6px;"><strong>Info:</strong> The system will undergo maintenance at
+      midnight.</div>'
+```
+
+```yaml
+- id: list_unordered
+  type: DangerousHtml
+  properties:
+    html: '<ul style="list-style-type: disc; padding-left: 20px;"><li>First
+      item</li><li>Second item</li><li>Third item</li></ul>'
+- id: list_ordered
+  type: DangerousHtml
+  properties:
+    html: '<ol style="padding-left: 20px;"><li>Step one</li><li>Step
+      two</li><li>Step three</li></ol>'
+- id: list_colored
+  type: DangerousHtml
+  properties:
+    html: '<ul style="list-style-type: disc; padding-left: 20px;"><li style="color:
+      var(--ant-color-success);">Completed</li><li style="color:
+      var(--ant-color-warning);">In Progress</li><li style="color:
+      var(--ant-color-error);">Overdue</li></ul>'
+- id: list_nested
+  type: DangerousHtml
+  properties:
+    html: '<ul style="padding-left: 20px;"><li>Parent item<ul style="padding-left:
+      20px;"><li>Child item 1</li><li>Child item 2</li></ul></li><li>Another
+      parent item</li></ul>'
+- id: list_definition
+  type: DangerousHtml
+  properties:
+    html: '<dl><dt style="font-weight: bold;">Term 1</dt><dd style="margin-left:
+      20px; color: var(--ant-color-text-secondary);">Definition of the first
+      term.</dd><dt style="font-weight: bold;">Term 2</dt><dd
+      style="margin-left: 20px; color:
+      var(--ant-color-text-secondary);">Definition of the second
+      term.</dd></dl>'
+```
+
+```yaml
+- id: table_simple
+  type: DangerousHtml
+  properties:
+    html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th
+      style="border: 1px solid var(--ant-color-border); padding: 8px;
+      background: var(--ant-color-fill-quaternary); text-align:
+      left;">Name</th><th style="border: 1px solid var(--ant-color-border);
+      padding: 8px; background: var(--ant-color-fill-quaternary); text-align:
+      left;">Role</th><th style="border: 1px solid var(--ant-color-border);
+      padding: 8px; background: var(--ant-color-fill-quaternary); text-align:
+      left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 8px;">Alice</td><td style="border: 1px
+      solid var(--ant-color-border); padding: 8px;">Developer</td><td
+      style="border: 1px solid var(--ant-color-border); padding:
+      8px;">Active</td></tr><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 8px;">Bob</td><td style="border: 1px
+      solid var(--ant-color-border); padding: 8px;">Designer</td><td
+      style="border: 1px solid var(--ant-color-border); padding:
+      8px;">Active</td></tr><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 8px;">Charlie</td><td style="border: 1px
+      solid var(--ant-color-border); padding: 8px;">Manager</td><td
+      style="border: 1px solid var(--ant-color-border); padding:
+      8px;">Away</td></tr></tbody></table>'
+- id: table_striped
+  type: DangerousHtml
+  properties:
+    html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th
+      style="border: 1px solid var(--ant-color-border); padding: 10px;
+      background: var(--ant-color-primary); color: white; text-align:
+      left;">Product</th><th style="border: 1px solid var(--ant-color-border);
+      padding: 10px; background: var(--ant-color-primary); color: white;
+      text-align: right;">Price</th><th style="border: 1px solid
+      var(--ant-color-border); padding: 10px; background:
+      var(--ant-color-primary); color: white; text-align:
+      center;">Stock</th></tr></thead><tbody><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 10px;">Widget A</td><td style="border:
+      1px solid var(--ant-color-border); padding: 10px; text-align:
+      right;">$29.99</td><td style="border: 1px solid var(--ant-color-border);
+      padding: 10px; text-align: center;">150</td></tr><tr style="background:
+      var(--ant-color-fill-quaternary);"><td style="border: 1px solid
+      var(--ant-color-border); padding: 10px;">Widget B</td><td style="border:
+      1px solid var(--ant-color-border); padding: 10px; text-align:
+      right;">$49.99</td><td style="border: 1px solid var(--ant-color-border);
+      padding: 10px; text-align: center;">85</td></tr><tr><td style="border: 1px
+      solid var(--ant-color-border); padding: 10px;">Widget C</td><td
+      style="border: 1px solid var(--ant-color-border); padding: 10px;
+      text-align: right;">$19.99</td><td style="border: 1px solid
+      var(--ant-color-border); padding: 10px; text-align:
+      center;">320</td></tr></tbody></table>'
+```
+
+```yaml
+- id: media_video_placeholder
+  type: DangerousHtml
+  properties:
+    html: '<div style="width: 100%; max-width: 560px; aspect-ratio: 16/9;
+      background: var(--ant-color-fill-tertiary); border: 2px dashed
+      var(--ant-color-border); border-radius: 8px; display: flex; align-items:
+      center; justify-content: center; color: var(--ant-color-text-tertiary);
+      font-size: 16px;">Video Placeholder (16:9)</div>'
+- id: media_iframe_placeholder
+  type: DangerousHtml
+  properties:
+    html: '<div style="width: 100%; max-width: 400px; height: 300px; background:
+      var(--ant-color-fill-quaternary); border: 2px dashed
+      var(--ant-color-border); border-radius: 8px; display: flex; align-items:
+      center; justify-content: center; color:
+      var(--ant-color-text-tertiary);">Embedded Content Area</div>'
+```
+
+```yaml
+- id: layout_card
+  type: DangerousHtml
+  properties:
+    html: '<div style="max-width: 400px; border: 1px solid var(--ant-color-border);
+      border-radius: 8px; overflow: hidden;"><div style="padding: 16px;
+      background: var(--ant-color-fill-quaternary); border-bottom: 1px solid
+      var(--ant-color-border);"><h4 style="margin: 0;">Card Title</h4></div><div
+      style="padding: 16px;"><p style="margin: 0 0 12px 0; color:
+      var(--ant-color-text-secondary);">This is a card-like layout created
+      purely with HTML and inline styles.</p><div style="display: flex; gap:
+      8px;"><span style="background: var(--ant-color-primary-bg); color:
+      var(--ant-color-primary); padding: 2px 8px; border-radius: 4px; font-size:
+      12px;">Tag 1</span><span style="background: var(--ant-color-success-bg);
+      color: var(--ant-color-success); padding: 2px 8px; border-radius: 4px;
+      font-size: 12px;">Tag 2</span></div></div></div>'
+- id: layout_flex_row
+  type: DangerousHtml
+  properties:
+    html: '<div style="display: flex; gap: 16px; flex-wrap: wrap;"><div style="flex:
+      1; min-width: 150px; padding: 16px; background:
+      var(--ant-color-primary-bg); border-radius: 8px; text-align: center;"><div
+      style="font-size: 24px; font-weight: bold; color:
+      var(--ant-color-primary);">42</div><div style="color:
+      var(--ant-color-text-secondary); font-size: 12px;">Active
+      Users</div></div><div style="flex: 1; min-width: 150px; padding: 16px;
+      background: var(--ant-color-success-bg); border-radius: 8px; text-align:
+      center;"><div style="font-size: 24px; font-weight: bold; color:
+      var(--ant-color-success);">128</div><div style="color:
+      var(--ant-color-text-secondary); font-size:
+      12px;">Completed</div></div><div style="flex: 1; min-width: 150px;
+      padding: 16px; background: var(--ant-color-warning-bg); border-radius:
+      8px; text-align: center;"><div style="font-size: 24px; font-weight: bold;
+      color: var(--ant-color-warning);">7</div><div style="color:
+      var(--ant-color-text-secondary); font-size:
+      12px;">Pending</div></div></div>'
+- id: layout_timeline
+  type: DangerousHtml
+  properties:
+    html: '<div style="padding-left: 20px; border-left: 2px solid
+      var(--ant-color-primary);"><div style="position: relative; padding-bottom:
+      16px;"><div style="position: absolute; left: -26px; top: 4px; width: 10px;
+      height: 10px; border-radius: 50%; background:
+      var(--ant-color-primary);"></div><div style="font-weight: bold;">Step 1:
+      Setup</div><div style="color: var(--ant-color-text-secondary); font-size:
+      13px;">Configure your project settings.</div></div><div style="position:
+      relative; padding-bottom: 16px;"><div style="position: absolute; left:
+      -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--ant-color-primary);"></div><div style="font-weight:
+      bold;">Step 2: Build</div><div style="color:
+      var(--ant-color-text-secondary); font-size: 13px;">Run the build
+      pipeline.</div></div><div style="position: relative;"><div
+      style="position: absolute; left: -26px; top: 4px; width: 10px; height:
+      10px; border-radius: 50%; background: var(--ant-color-border);"></div><div
+      style="font-weight: bold; color: var(--ant-color-text-tertiary);">Step 3:
+      Deploy</div><div style="color: var(--ant-color-text-quaternary);
+      font-size: 13px;">Deploy to production.</div></div></div>'
+```
+
+**Default (scripts and event handlers stripped):**
+
+**With ADD_ATTR to allow target attribute:**
+
+```yaml
+- id: purify_default_label
+  type: Markdown
+  properties:
+    content: "**Default (scripts and event handlers stripped):**"
+- id: purify_default
+  type: DangerousHtml
+  properties:
+    html: <p>Safe content rendered. <script>alert("removed")</script></p>
+- id: purify_allow_target_label
+  type: Markdown
+  properties:
+    content: "**With ADD_ATTR to allow target attribute:**"
+- id: purify_allow_target
+  type: DangerousHtml
+  properties:
+    html: <a href="https://lowdefy.com" target="_blank">Link with target=_blank
+      allowed</a>
+    DOMPurifyOptions:
+      ADD_ATTR:
+        - target
+```
+
+```yaml
+- id: style_padded
+  type: DangerousHtml
+  style:
+    .element:
+      padding: 20
+      background: var(--ant-color-fill-quaternary)
+      borderRadius: 8
+      border: 1px solid var(--ant-color-border)
+  properties:
+    html: '<p style="margin: 0;">Content inside a styled DangerousHtml container
+      with padding and background.</p>'
+- id: style_max_width
+  type: DangerousHtml
+  style:
+    .element:
+      maxWidth: 400
+      margin: 0 auto
+      padding: 16
+      background: var(--ant-color-primary-bg)
+      borderRadius: 8
+      textAlign: center
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-primary); font-weight:
+      bold;">Centered container with max-width constraint.</p>'
+- id: style_shadow
+  type: DangerousHtml
+  style:
+    .element:
+      padding: 20
+      borderRadius: 12
+      boxShadow: var(--ant-box-shadow)
+      background: var(--ant-color-bg-container)
+  properties:
+    html: '<h4 style="margin: 0 0 8px 0;">Elevated Card</h4><p style="margin: 0;
+      color: var(--ant-color-text-secondary);">A DangerousHtml block styled with
+      a box shadow for an elevated card appearance.</p>'
+- id: style_border_left
+  type: DangerousHtml
+  style:
+    .element:
+      borderLeft: 4px solid var(--ant-color-primary)
+      paddingLeft: 16
+      paddingTop: 8
+      paddingBottom: 8
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-primary); font-weight:
+      500;">Highlighted with a primary color left border accent.</p>'
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `html` | string | - | Content to be rendered as Html. |
+| `DOMPurifyOptions` | object | - | Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render. |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The DangerousHtml element. |
+
+No slots defined.

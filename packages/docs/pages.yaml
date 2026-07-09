@@ -34,6 +34,7 @@
 - _ref: concepts/api.yaml
 - _ref: concepts/notifications.yaml
 - _ref: concepts/dynamic-page-content.yaml
+- _ref: concepts/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
