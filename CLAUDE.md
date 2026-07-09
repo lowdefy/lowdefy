@@ -44,7 +44,7 @@ packages/
 
 **server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
-**Docs/MCP endpoint for AI agents**: the dev server always serves `/docs` (REST) and `/docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins. When a Lowdefy dev server is running, prefer these routes over guessing type names or properties (`GET /docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`). The `/docs` page-path prefix is reserved in dev.
+**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins. When a Lowdefy dev server is running, prefer these routes over guessing type names or properties (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`). The `/lowdefy-docs` page-path prefix is reserved in dev.
 
 ## Code Principles
 

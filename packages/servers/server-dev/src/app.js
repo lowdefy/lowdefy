@@ -72,18 +72,18 @@ function createApp() {
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
-  // so it can't clash with user API endpoints; /docs is a reserved page
+  // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. Registered before the auth middleware — the handlers read
   // build artifacts and node_modules directly and need no auth or api context.
-  app.all('/docs/mcp', docsMcpHandler);
-  app.get('/docs', docsIndexHandler);
-  app.get('/docs/plugins', docsPluginsHandler);
-  app.get('/docs/schema/:kind/:type', docsSchemaHandler);
-  app.get('/docs/examples/:type', docsExamplesHandler);
-  app.get('/docs/search', docsSearchHandler);
-  app.get('/docs/plugin-doc/:package{.+}', docsPluginDocHandler);
-  app.get('/docs/content/:slug{.+}', docsContentHandler);
-  app.get('/docs/:kind', docsTypesHandler);
+  app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  app.get('/lowdefy-docs', docsIndexHandler);
+  app.get('/lowdefy-docs/plugins', docsPluginsHandler);
+  app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
+  app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);
+  app.get('/lowdefy-docs/search', docsSearchHandler);
+  app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
+  app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
+  app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
   if (authJson.configured === true) {
     app.use(

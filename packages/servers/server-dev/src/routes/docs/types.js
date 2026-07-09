@@ -22,7 +22,7 @@ function docsTypesHandler(c) {
   if (normalizeTypeKind({ kind }) === null) {
     return c.json(
       {
-        error: `Unknown docs kind "${kind}". Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets. See GET /docs for all routes.`,
+        error: `Unknown docs kind "${kind}". Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets. See GET /lowdefy-docs for all routes.`,
       },
       404
     );

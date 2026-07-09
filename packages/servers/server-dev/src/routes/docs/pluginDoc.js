@@ -22,7 +22,7 @@ function docsPluginDocHandler(c) {
   if (doc === null) {
     return c.json(
       {
-        error: `Package "${packageName}" ships no markdown docs. See GET /docs/plugins for its types.`,
+        error: `Package "${packageName}" ships no markdown docs. See GET /lowdefy-docs/plugins for its types.`,
       },
       404
     );

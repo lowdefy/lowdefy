@@ -21,7 +21,7 @@ function docsContentHandler(c) {
   const doc = getCoreDoc({ slug });
   if (doc === null) {
     return c.json(
-      { error: `No doc found for slug "${slug}". Use GET /docs/search?q=... to find the right slug.` },
+      { error: `No doc found for slug "${slug}". Use GET /lowdefy-docs/search?q=... to find the right slug.` },
       404
     );
   }

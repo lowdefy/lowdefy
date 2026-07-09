@@ -22,9 +22,9 @@ The dev server now always serves documentation for everything installed in your 
 
 **Docs API and MCP endpoint (`@lowdefy/server-dev`)**
 
-- Plain GET routes under `/docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
-- An MCP endpoint (streamable HTTP) at `/docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
-- The `/docs` page path prefix is now reserved in dev.
+- Plain GET routes under `/lowdefy-docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
+- An MCP endpoint (streamable HTTP) at `/lowdefy-docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
+- The `/lowdefy-docs` page path prefix is now reserved in dev.
 
 **Discovery build artifacts (`@lowdefy/build`)**
 

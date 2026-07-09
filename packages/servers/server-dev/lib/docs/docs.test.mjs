@@ -145,7 +145,7 @@ test('searchDocs throws on empty query', () => {
 test('getOverview includes counts and route guidance', () => {
   const overview = getOverview();
   expect(overview).toContain('2 block types');
-  expect(overview).toContain('/docs/schema/{kind}/{type}');
+  expect(overview).toContain('/lowdefy-docs/schema/{kind}/{type}');
   expect(overview).toContain('lowdefy_list_types');
 });
 

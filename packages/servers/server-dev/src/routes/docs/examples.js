@@ -22,7 +22,7 @@ function docsExamplesHandler(c) {
   if (examples === null) {
     return c.json(
       {
-        error: `No examples shipped for block type "${type}". Use GET /docs/schema/blocks/${type} for its schema.`,
+        error: `No examples shipped for block type "${type}". Use GET /lowdefy-docs/schema/blocks/${type} for its schema.`,
       },
       404
     );
