@@ -131,6 +131,46 @@ function setupTestFixtures() {
     '- id: example\n  type: TestBlock\n  properties:\n    title: Hello\n'
   );
 
+  // Feedback-loop fixtures — build status, and a JIT-built page's registry,
+  // keyMap and refMap entries (see packages/build/src/build/addKeys.js for
+  // the key path format: `[index:id]` / `[index:id:Type]`).
+  write('build/buildStatus.json', {
+    status: 'ok',
+    timestamp: '2026-01-01T00:00:00.000Z',
+    errors: [],
+    warnings: [],
+  });
+
+  write('build/pageRegistry.json', {
+    home: { pageId: 'home', auth: null, refId: 'ref-home', refPath: 'pages/home.yaml' },
+  });
+
+  write('build/keyMap.json', {
+    'key-root': { key: 'root', '~k_parent': null },
+    'key-pages': { key: 'root.pages', '~k_parent': 'key-root', '~r': 'ref-home' },
+    'key-home': {
+      key: 'root.pages[0:home]',
+      '~k_parent': 'key-pages',
+      '~r': 'ref-home',
+      '~l': 1,
+    },
+    'key-button': {
+      key: 'root.pages[0:home].blocks[2:my_button:Button]',
+      '~k_parent': 'key-home',
+      '~r': 'ref-home',
+      '~l': 5,
+    },
+  });
+
+  write('build/refMap.json', {
+    'ref-home': { parent: null, path: 'pages/home.yaml' },
+  });
+
+  write(
+    'build/pages/home.json',
+    { pageId: 'home', blocks: [{ id: 'my_button', type: 'Button', '~k': 'key-button' }] }
+  );
+
   return fixtureDir;
 }
 

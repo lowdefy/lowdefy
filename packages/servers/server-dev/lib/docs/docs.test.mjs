@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
+
 import setupTestFixtures from './setupTestFixtures.mjs';
 
 // The docs service reads build artifacts and node_modules from process.cwd()
@@ -31,6 +34,11 @@ const { default: getPluginDoc } = await import('./getPluginDoc.js');
 const { default: getOverview } = await import('./getOverview.js');
 const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
+const { default: clientErrorStore } = await import('./clientErrorStore.js');
+const { default: getBuildStatus } = await import('./getBuildStatus.js');
+const { default: getPageConfig } = await import('./getPageConfig.js');
+const { default: readPageArtifact } = await import('./readPageArtifact.js');
+const { default: findConfig } = await import('./findConfig.js');
 
 test('listTypes returns all available blocks with used flag and category', () => {
   const blocks = listTypes({ kind: 'blocks' });
@@ -153,4 +161,64 @@ test('normalizeTypeKind maps singular and plural, rejects unknown', () => {
   expect(normalizeTypeKind({ kind: 'block' })).toEqual('blocks');
   expect(normalizeTypeKind({ kind: 'REQUESTS' })).toEqual('requests');
   expect(normalizeTypeKind({ kind: 'nope' })).toBeNull();
+});
+
+test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
+  for (let i = 0; i < 60; i += 1) {
+    clientErrorStore.push({ index: i });
+  }
+  const entries = clientErrorStore.list();
+  expect(entries.length).toEqual(50);
+  expect(entries[0].index).toEqual(10);
+  expect(entries[49].index).toEqual(59);
+});
+
+test('getBuildStatus returns the build artifact plus reported client errors', () => {
+  const result = getBuildStatus();
+  expect(result.build.status).toEqual('ok');
+  expect(result.clientErrors.length).toEqual(50);
+});
+
+test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
+  fs.rmSync(path.join(fixtureDir, 'build', 'buildStatus.json'));
+  const result = getBuildStatus();
+  expect(result.build.status).toEqual('unknown');
+  expect(result.build.message).toContain('No build status yet');
+});
+
+test('readPageArtifact reads a built page json artifact', () => {
+  const result = readPageArtifact({ pageId: 'home' });
+  expect(result.pageId).toEqual('home');
+});
+
+test('readPageArtifact returns null when no artifact exists for the pageId', () => {
+  expect(readPageArtifact({ pageId: 'no-such-page' })).toBeNull();
+});
+
+test('getPageConfig returns null for a pageId not in the page registry', async () => {
+  const result = await getPageConfig({ pageId: 'no-such-page' });
+  expect(result).toBeNull();
+});
+
+test('findConfig resolves a known pageId to its source file', async () => {
+  const result = await findConfig({ id: 'home' });
+  expect(result).toEqual({ kind: 'page', pageId: 'home', file: 'pages/home.yaml' });
+});
+
+test('findConfig scans keyMap for a matching id when no pageId is given', async () => {
+  const result = await findConfig({ id: 'my_button' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toEqual('root.pages[0:home].blocks[2:my_button:Button]');
+  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.note).toContain('Pass ?pageId=');
+});
+
+test('findConfig returns empty matches with a note when nothing matches', async () => {
+  const result = await findConfig({ id: 'no-such-id' });
+  expect(result.matches).toEqual([]);
+  expect(result.note).toBeDefined();
+});
+
+test('findConfig throws when id is missing', async () => {
+  await expect(findConfig({ id: undefined })).rejects.toThrow('requires an "id" string');
 });

@@ -16,6 +16,8 @@
 
 import { logClientError } from '@lowdefy/api';
 
+import clientErrorStore from '../../lib/docs/clientErrorStore.js';
+
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
@@ -37,6 +39,18 @@ async function clientErrorHandler(c) {
   // Dev keeps `received` in the payload — it powers error tracing in dev tools.
   const body = await c.req.json();
   const { error, ...response } = await logClientError(context, body);
+
+  // Feed the agent-facing feedback loop (GET /lowdefy-docs/build-status) with a
+  // serializable summary — not the full error object, which may carry
+  // non-serializable `received` values.
+  clientErrorStore.push({
+    timestamp: new Date().toISOString(),
+    name: error?.name ?? 'Error',
+    message: error?.message ?? null,
+    source: response.source ?? null,
+    config: response.config ?? null,
+  });
+
   return c.json(response);
 }
 

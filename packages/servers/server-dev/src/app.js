@@ -29,13 +29,17 @@ import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devToolsHandler from './routes/devTools.js';
+import docsBuildStatusHandler from './routes/docs/buildStatus.js';
 import docsContentHandler from './routes/docs/content.js';
 import docsExamplesHandler from './routes/docs/examples.js';
+import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
 import docsMcpHandler from './routes/docs/mcp.js';
+import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsPluginDocHandler from './routes/docs/pluginDoc.js';
 import docsPluginsHandler from './routes/docs/plugins.js';
 import docsSchemaHandler from './routes/docs/schema.js';
+import docsScreenshotHandler from './routes/docs/screenshot.js';
 import docsSearchHandler from './routes/docs/search.js';
 import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
@@ -77,6 +81,10 @@ function createApp() {
   // build artifacts and node_modules directly and need no auth or api context.
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
   app.get('/lowdefy-docs', docsIndexHandler);
+  app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
+  app.get('/lowdefy-docs/find/:id', docsFindHandler);
+  app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);

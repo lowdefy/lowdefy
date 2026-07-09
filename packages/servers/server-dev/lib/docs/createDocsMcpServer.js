@@ -17,18 +17,25 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
+import findConfig from './findConfig.js';
+import getBuildStatus from './getBuildStatus.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
 import getOverview from './getOverview.js';
+import getPageConfig from './getPageConfig.js';
 import getPluginDoc from './getPluginDoc.js';
 import getSchema from './getSchema.js';
 import listPlugins from './listPlugins.js';
 import listTypes from './listTypes.js';
+import scaffoldPage from './scaffoldPage.js';
+import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 
-const INSTRUCTIONS = `Lowdefy documentation server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
+const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
-Workflow: start with lowdefy_overview to see what is available. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.`;
+Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
+
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations) plus recent browser runtime errors. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -39,10 +46,97 @@ function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
-function createDocsMcpServer() {
+function createDocsMcpServer({ origin } = {}) {
   const server = new McpServer(
     { name: 'lowdefy-docs', version: '1.0.0' },
     { instructions: INSTRUCTIONS }
+  );
+
+  server.registerTool(
+    'lowdefy_build_status',
+    {
+      description:
+        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), plus recent browser runtime errors. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
+      inputSchema: {},
+    },
+    () => textResult(getBuildStatus())
+  );
+
+  server.registerTool(
+    'lowdefy_get_page_config',
+    {
+      description:
+        'Get the fully built config for a page, or its structured build errors if the page fails to build. Use to verify a page after editing it.',
+      inputSchema: {
+        pageId: z.string().describe('The page id.'),
+      },
+    },
+    async ({ pageId }) => {
+      const result = await getPageConfig({ pageId });
+      if (result === null) {
+        return notFoundResult(
+          `Page "${pageId}" not found. Use lowdefy_overview or check pageRegistry for valid page ids.`
+        );
+      }
+      return textResult(result);
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_find_config',
+    {
+      description:
+        'Find where a config entity is defined: pass a page, block, or request id and get the source yaml file (and line where available). For block/request ids also pass the owning pageId so the page is built first.',
+      inputSchema: {
+        id: z.string().describe('The id to find, e.g. a pageId, blockId, or requestId.'),
+        pageId: z
+          .string()
+          .optional()
+          .describe('The page the id belongs to — required for block/request ids on pages not yet built.'),
+      },
+    },
+    async ({ id, pageId }) => textResult(await findConfig({ id, pageId }))
+  );
+
+  server.registerTool(
+    'lowdefy_screenshot_page',
+    {
+      description:
+        'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image.',
+      inputSchema: {
+        pageId: z.string().describe('The page id to screenshot.'),
+        fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
+      },
+    },
+    async ({ pageId, fullPage }) => {
+      if (!origin) {
+        return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
+      }
+      const result = await screenshotPage({ origin, pageId, fullPage });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return { content: [{ type: 'image', data: result.data, mimeType: result.mimeType }] };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_scaffold_page',
+    {
+      description:
+        'Create a new page yaml file with a canonical minimal structure. Refuses if the page already exists. Returns the created file path and the lowdefy.yaml registration step you must do next.',
+      inputSchema: {
+        pageId: z.string().describe('The new page id (letters, numbers, - and _).'),
+        title: z.string().optional().describe('Page title. Defaults to the pageId.'),
+      },
+    },
+    ({ pageId, title }) => {
+      const result = scaffoldPage({ pageId, title });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return textResult(result);
+    }
   );
 
   server.registerTool(

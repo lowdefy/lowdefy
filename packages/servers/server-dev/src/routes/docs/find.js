@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { StreamableHTTPTransport } from '@hono/mcp';
+import findConfig from '../../../lib/docs/findConfig.js';
 
-import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
-
-// Stateless per-request server: docs tools read build artifacts fresh on
-// every call, so there is no session state worth keeping between requests.
-async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
-  const transport = new StreamableHTTPTransport();
-  await server.connect(transport);
-  return transport.handleRequest(c);
+async function docsFindHandler(c) {
+  const id = c.req.param('id');
+  const pageId = c.req.query('pageId');
+  try {
+    const result = await findConfig({ id, pageId });
+    return c.json(result);
+  } catch (error) {
+    return c.json({ error: error.message }, 400);
+  }
 }
 
-export default mcpHandler;
+export default docsFindHandler;
