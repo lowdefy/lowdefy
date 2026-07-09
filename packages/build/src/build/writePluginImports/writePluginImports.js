@@ -18,9 +18,11 @@ import writeActionImports from './writeActionImports.js';
 import writeActionSchemaMap from './writeActionSchemaMap.js';
 import writeAgentImports from './writeAgentImports.js';
 import writeAuthImports from './writeAuthImports.js';
+import writeAvailableTypes from './writeAvailableTypes.js';
 import writeBlockImports from './writeBlockImports.js';
 import writeBlockSchemaMap from './writeBlockSchemaMap.js';
 import writeConnectionImports from './writeConnectionImports.js';
+import writeConnectionSchemaMap from './writeConnectionSchemaMap.js';
 import writeIconImports from './writeIconImports.js';
 import writeNotificationImports from './writeNotificationImports.js';
 import writeOperatorImports from './writeOperatorImports.js';
@@ -36,11 +38,13 @@ async function writePluginImports({ components, context }) {
   await writeBlockImports({ components, context });
   await writeBlockSchemaMap({ components, context });
   await writeConnectionImports({ components, context });
+  await writeConnectionSchemaMap({ context });
   await writeIconImports({ components, context });
   await writeNotificationImports({ components, context });
   await writeOperatorImports({ components, context });
   await writeOperatorSchemaMap({ components, context });
   await writeWebsocketImports({ components, context });
+  await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
 
   // Write block package names — available as a vite.config.js escape hatch
