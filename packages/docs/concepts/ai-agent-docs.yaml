@@ -15,10 +15,10 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: dynamic-page-content
-    pageTitle: Dynamic Page Content
+    pageId: ai-agent-docs
+    pageTitle: Docs for AI Agents
     section: Concepts
-    filePath: concepts/dynamic-page-content.yaml
+    filePath: concepts/ai-agent-docs.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -26,17 +26,12 @@ _ref:
           maxWidth: 800
         properties:
           content:
-            _nunjucks:
-              on:
-                version:
-                  _ref: version.yaml
-              template:
-                _ref: concepts/dynamic-page-content.md
+            _ref: concepts/ai-agent-docs.md
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Notifications
-            previous_page_id: notifications
-            next_page_title: Docs for AI Agents
-            next_page_id: ai-agent-docs
+            previous_page_title: Dynamic Page Content
+            previous_page_id: dynamic-page-content
+            next_page_title: References and Templates
+            next_page_id: references-and-templates
