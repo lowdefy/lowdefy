@@ -84,12 +84,25 @@ function createApp() {
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
 
+  // Auth config must be registered before the /lowdefy-docs routes: Hono
+  // middleware only applies to routes registered after it, and run-request/
+  // eval-operator build a full Lowdefy context whose getSession(c) reads the
+  // authConfig this middleware sets. It does not protect any route — it only
+  // makes the auth config available on the Hono context.
+  if (authJson.configured === true) {
+    app.use(
+      '*',
+      initAuthConfig(() => getAuthConfig({ logger }))
+    );
+  }
+
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
-  // prefix in dev. Registered before the auth middleware — the handlers read
-  // build artifacts and node_modules directly and need no auth or api context.
+  // prefix in dev. The handlers need no auth protection or api context —
+  // they read build artifacts and node_modules directly — but run-request
+  // and eval-operator read the caller's session, hence initAuthConfig above.
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
@@ -118,13 +131,6 @@ function createApp() {
   app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
-
-  if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
-  }
 
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
