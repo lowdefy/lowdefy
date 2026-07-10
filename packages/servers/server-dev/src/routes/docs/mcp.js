@@ -21,7 +21,7 @@ import createDocsMcpServer from '../../../lib/docs/createDocsMcpServer.js';
 // Stateless per-request server: docs tools read build artifacts fresh on
 // every call, so there is no session state worth keeping between requests.
 async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin });
+  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin, honoContext: c });
   const transport = new StreamableHTTPTransport();
   await server.connect(transport);
   return transport.handleRequest(c);

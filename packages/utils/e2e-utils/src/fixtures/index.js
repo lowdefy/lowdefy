@@ -24,6 +24,15 @@ import createPageManager from '../proxy/createPageManager.js';
 import { generateManifest, loadManifest } from '../testPrep/generateManifest.js';
 import { createMockManager, loadStaticMocks } from '../mocking/index.js';
 import { setUserCookie } from '../core/userCookie.js';
+import { expectState } from '../assertions/state.js';
+import { expectRequest } from '../assertions/requests.js';
+import { expectApi } from '../assertions/api.js';
+import { expectUrl, expectUrlQuery } from '../assertions/url.js';
+
+// The Playwright `expect` implementations createPageManager needs for its
+// `.expect.*` methods - injected here so createPageManager itself (exported from
+// the "./runtime" subpath too) never has to import @playwright/test.
+const assertions = { expectState, expectRequest, expectApi, expectUrl, expectUrlQuery };
 
 const DEFAULT_BUILD_DIR = '.lowdefy/server/build';
 
@@ -139,7 +148,13 @@ export const test = base.extend({
       await setUserCookie(page, staticMocks.user);
     }
 
-    const pageManager = createPageManager({ page, manifest, helperRegistry, mockManager });
+    const pageManager = createPageManager({
+      page,
+      manifest,
+      helperRegistry,
+      mockManager,
+      assertions,
+    });
     await use(pageManager);
     await mockManager.cleanup();
   },

@@ -40,6 +40,16 @@ const EXPECTED_TOOLS = [
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
   'lowdefy_scaffold_page',
+  'lowdefy_inspect_state',
+  'lowdefy_eval_operator',
+  'lowdefy_run_request',
+  'lowdefy_app_map',
+  'lowdefy_checkpoint',
+  'lowdefy_revert_checkpoint',
+  'lowdefy_snapshot_state',
+  'lowdefy_load_state',
+  'lowdefy_list_state_checkpoints',
+  'lowdefy_checkpoint_to_mocks',
 ];
 
 async function connectClient() {

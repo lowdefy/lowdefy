@@ -17,6 +17,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import { jest } from '@jest/globals';
+
 import setupTestFixtures from './setupTestFixtures.mjs';
 
 // The docs service reads build artifacts and node_modules from process.cwd()
@@ -24,6 +26,22 @@ import setupTestFixtures from './setupTestFixtures.mjs';
 // modules are imported, since resolvePluginDir captures cwd at import time.
 const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
+
+// runRequest.js calls callRequest (@lowdefy/api) and createLowdefyContext
+// (../server/createLowdefyContext.js, which statically imports the running
+// server's own build/plugins/*.js — not the app fixture built above, and not
+// present in this checkout) — mock both so runRequest can be unit tested
+// without a real server build.
+const mockCallRequest = jest.fn();
+jest.unstable_mockModule('@lowdefy/api', () => ({
+  callRequest: mockCallRequest,
+}));
+const mockCreateLowdefyContext = jest.fn(async () => ({
+  logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
+}));
+jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
+  default: mockCreateLowdefyContext,
+}));
 
 const { default: listTypes } = await import('./listTypes.js');
 const { default: listPlugins } = await import('./listPlugins.js');
@@ -39,6 +57,8 @@ const { default: getBuildStatus } = await import('./getBuildStatus.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
+const { default: runRequest } = await import('./runRequest.js');
+const { default: getAppMap } = await import('./getAppMap.js');
 
 test('listTypes returns all available blocks with used flag and category', () => {
   const blocks = listTypes({ kind: 'blocks' });
@@ -221,4 +241,126 @@ test('findConfig returns empty matches with a note when nothing matches', async 
 
 test('findConfig throws when id is missing', async () => {
   await expect(findConfig({ id: undefined })).rejects.toThrow('requires an "id" string');
+});
+
+test('runRequest throws when pageId is missing', async () => {
+  await expect(runRequest({ requestId: 'req-read' })).rejects.toThrow('requires a "pageId"');
+});
+
+test('runRequest throws when requestId is missing', async () => {
+  await expect(runRequest({ pageId: 'home' })).rejects.toThrow('requires a "requestId"');
+});
+
+test('runRequest refuses when the requestId does not exist on the page', async () => {
+  const result = await runRequest({
+    pageId: 'home',
+    requestId: 'no-such-request',
+    honoContext: {},
+  });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toContain('was not found');
+  expect(mockCallRequest).not.toHaveBeenCalled();
+});
+
+test('runRequest allows a request type with checkWrite: false without the write opt-in', async () => {
+  mockCallRequest.mockResolvedValueOnce({
+    id: 'req-read',
+    success: true,
+    type: 'ReadOnlyRequest',
+    response: { ok: true },
+  });
+  const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(result.refused).toBe(false);
+  expect(result.response).toEqual({ ok: true });
+  expect(mockCallRequest).toHaveBeenCalledTimes(1);
+});
+
+test('runRequest refuses a checkWrite: true request type when the opt-in is not set', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'req-write', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toContain('checkWrite: true');
+  expect(result.howToEnable).toContain('cli.agentTools.allowWriteRequests');
+  expect(mockCallRequest).not.toHaveBeenCalled();
+});
+
+test('runRequest refuses a request type with no declared meta', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'req-unknown', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toContain('no declared read/write meta');
+  expect(mockCallRequest).not.toHaveBeenCalled();
+});
+
+test('runRequest allows a checkWrite: true request type once cli.agentTools.allowWriteRequests is set', async () => {
+  fs.writeFileSync(
+    path.join(fixtureDir, 'lowdefy.yaml'),
+    'lowdefy: 5.0.0\ncli:\n  agentTools:\n    allowWriteRequests: true\n'
+  );
+  mockCallRequest.mockResolvedValueOnce({
+    id: 'req-write',
+    success: true,
+    type: 'WriteRequest',
+    response: { updated: true },
+  });
+  try {
+    const result = await runRequest({ pageId: 'home', requestId: 'req-write', honoContext: {} });
+    expect(result.refused).toBe(false);
+    expect(result.response).toEqual({ updated: true });
+    expect(mockCallRequest).toHaveBeenCalledTimes(1);
+  } finally {
+    fs.writeFileSync(path.join(fixtureDir, 'lowdefy.yaml'), 'lowdefy: 5.0.0\n');
+  }
+});
+
+test('runRequest returns a structured error instead of throwing when callRequest fails', async () => {
+  mockCallRequest.mockRejectedValueOnce(new Error('boom'));
+  const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(result.refused).toBe(false);
+  expect(result.error).toEqual({ name: 'Error', message: 'boom' });
+});
+
+test('runRequest truncates responses larger than the size cap', async () => {
+  mockCallRequest.mockResolvedValueOnce({
+    id: 'req-read',
+    success: true,
+    type: 'ReadOnlyRequest',
+    response: 'x'.repeat(200_000),
+  });
+  const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(result.truncated).toBe(true);
+  expect(result.note).toContain('truncated');
+  expect(result.response.length).toEqual(100_000);
+});
+
+test('getAppMap includes built page detail and a note for unbuilt pages', () => {
+  const map = getAppMap();
+
+  const home = map.pages.find((page) => page.pageId === 'home');
+  expect(home.built).toBe(true);
+  expect(home.file).toEqual('pages/home.yaml');
+  expect(home.blockCount).toEqual(3);
+  expect(home.blockTypes).toEqual(['Button', 'Card']);
+  expect(home.requests).toEqual([
+    { id: 'req-read', type: 'ReadOnlyRequest' },
+    { id: 'req-write', type: 'WriteRequest' },
+    { id: 'req-unknown', type: 'UnknownMetaRequest' },
+  ]);
+
+  const unbuilt = map.pages.find((page) => page.pageId === 'unbuilt');
+  expect(unbuilt.built).toBe(false);
+  expect(unbuilt.blockCount).toBeUndefined();
+  expect(map.note).toContain('1 page(s) have not been built');
+});
+
+test('getAppMap includes connections, endpoints, agents, menus and websockets', () => {
+  const map = getAppMap();
+  expect(map.connections).toEqual([{ id: 'axios', type: 'AxiosHttp' }]);
+  expect(map.endpoints).toEqual([{ id: 'resolve_greeting', type: 'InternalApi' }]);
+  expect(map.agents).toEqual([{ id: 'assistant', type: 'OpenAiAgent' }]);
+  expect(map.websockets).toEqual([]);
+  expect(map.menus).toEqual([
+    {
+      menuId: 'default',
+      links: [{ menuItemId: 'home', type: 'MenuLink', pageId: 'home', title: 'Home' }],
+    },
+  ]);
 });
