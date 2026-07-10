@@ -72,3 +72,29 @@ test('getDevCommand falls back to npx when package.json is invalid JSON', () => 
   fs.writeFileSync(path.join(configDirectory, 'package.json'), '{ not json');
   expect(getDevCommand({ configDirectory })).toEqual('npx lowdefy dev');
 });
+
+test('getDevCommand uses a pnpm-lock.yaml at the project directory when the app has none', () => {
+  const appDirectory = path.join(configDirectory, 'apps', 'myapp');
+  fs.mkdirSync(appDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(appDirectory, 'package.json'),
+    JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
+  );
+  fs.writeFileSync(path.join(configDirectory, 'pnpm-lock.yaml'), '');
+  expect(
+    getDevCommand({ configDirectory: appDirectory, projectDirectory: configDirectory })
+  ).toEqual('pnpm dev');
+});
+
+test('getDevCommand uses a yarn.lock at the project directory when the app has none', () => {
+  const appDirectory = path.join(configDirectory, 'apps', 'myapp');
+  fs.mkdirSync(appDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(appDirectory, 'package.json'),
+    JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
+  );
+  fs.writeFileSync(path.join(configDirectory, 'yarn.lock'), '');
+  expect(
+    getDevCommand({ configDirectory: appDirectory, projectDirectory: configDirectory })
+  ).toEqual('yarn dev');
+});

@@ -26,6 +26,9 @@ let context;
 
 beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-agent-setup-test-'));
+  // A .git directory pins project-root detection to the temp directory, so
+  // tests never depend on whether os.tmpdir() has a .git ancestor.
+  fs.mkdirSync(path.join(configDirectory, '.git'));
   context = {
     directories: { config: configDirectory },
     options: { port: 3000 },
@@ -91,7 +94,26 @@ test('agentSetup merges the lowdefy-docs server into an existing .mcp.json', asy
   });
 });
 
-test('agentSetup leaves an existing lowdefy-docs entry in .mcp.json unchanged and notes it', async () => {
+test('agentSetup leaves a matching lowdefy-docs entry in .mcp.json unchanged and notes it', async () => {
+  fs.writeFileSync(
+    path.join(configDirectory, '.mcp.json'),
+    JSON.stringify({
+      mcpServers: {
+        'lowdefy-docs': { type: 'http', url: 'http://localhost:3000/lowdefy-docs/mcp' },
+      },
+    })
+  );
+
+  await agentSetup({ context });
+
+  const mcpJson = JSON.parse(read('.mcp.json'));
+  expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual('http://localhost:3000/lowdefy-docs/mcp');
+  expect(context.logger.info).toHaveBeenCalledWith(
+    expect.stringContaining("already has a 'lowdefy-docs' MCP server")
+  );
+});
+
+test('agentSetup warns when an existing lowdefy-docs entry points at a different URL', async () => {
   fs.writeFileSync(
     path.join(configDirectory, '.mcp.json'),
     JSON.stringify({
@@ -105,8 +127,8 @@ test('agentSetup leaves an existing lowdefy-docs entry in .mcp.json unchanged an
 
   const mcpJson = JSON.parse(read('.mcp.json'));
   expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual('http://localhost:9999/lowdefy-docs/mcp');
-  expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining("already has a 'lowdefy-docs' MCP server")
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    expect.stringContaining("pointing at 'http://localhost:9999/lowdefy-docs/mcp'")
   );
 });
 
@@ -169,4 +191,126 @@ test('agentSetup prefers a package.json dev script that runs lowdefy dev', async
   await agentSetup({ context });
 
   expect(read('AGENTS.md')).toContain('pnpm dev');
+});
+
+describe('monorepo layout (app in a subdirectory of the git root)', () => {
+  let projectDirectory;
+
+  beforeEach(() => {
+    // Rearrange: the git root is the temp dir, the app lives in apps/myapp.
+    projectDirectory = configDirectory;
+    configDirectory = path.join(projectDirectory, 'apps', 'myapp');
+    fs.mkdirSync(configDirectory, { recursive: true });
+    context.directories.config = configDirectory;
+  });
+
+  afterEach(() => {
+    // Restore so the outer afterEach removes the right directory.
+    configDirectory = projectDirectory;
+  });
+
+  function readRoot(relativePath) {
+    return fs.readFileSync(path.join(projectDirectory, relativePath), 'utf8');
+  }
+
+  test('agentSetup writes .mcp.json, the skill, and AGENTS.md at the project root, not the app directory', async () => {
+    await agentSetup({ context });
+
+    const mcpJson = JSON.parse(readRoot('.mcp.json'));
+    expect(mcpJson.mcpServers['lowdefy-docs'].url).toEqual(
+      'http://localhost:3000/lowdefy-docs/mcp'
+    );
+    expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toContain(
+      'lives in `apps/myapp/`'
+    );
+    const agentsMd = readRoot('AGENTS.md');
+    expect(agentsMd).toContain('Lowdefy](https://lowdefy.com) app in `apps/myapp/`');
+    expect(agentsMd).toContain('cd apps/myapp && npx lowdefy dev');
+
+    expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(false);
+    expect(fs.existsSync(path.join(configDirectory, 'AGENTS.md'))).toBe(false);
+    expect(fs.existsSync(path.join(configDirectory, '.claude'))).toBe(false);
+  });
+
+  test('agentSetup appends the Lowdefy section to an existing root AGENTS.md', async () => {
+    fs.writeFileSync(path.join(projectDirectory, 'AGENTS.md'), '# Monorepo\n\nRoot docs.\n');
+
+    await agentSetup({ context });
+
+    const agentsMd = readRoot('AGENTS.md');
+    expect(agentsMd).toContain('# Monorepo');
+    expect(agentsMd).toContain('## Lowdefy');
+    expect(fs.existsSync(path.join(projectDirectory, 'CLAUDE.md'))).toBe(false);
+  });
+
+  test('agentSetup appends the Lowdefy section to a root CLAUDE.md instead of creating AGENTS.md', async () => {
+    fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '# Monorepo\n\nClaude docs.\n');
+
+    await agentSetup({ context });
+
+    const claudeMd = readRoot('CLAUDE.md');
+    expect(claudeMd).toContain('# Monorepo');
+    expect(claudeMd).toContain('## Lowdefy');
+    expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
+    expect(context.logger.info).toHaveBeenCalledWith(
+      expect.stringContaining("Added a 'Lowdefy' section to 'CLAUDE.md'")
+    );
+  });
+
+  test('agentSetup skips the instructions file when CLAUDE.md already has a Lowdefy section', async () => {
+    fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '## Lowdefy\n\nCustom notes.\n');
+
+    await agentSetup({ context });
+
+    expect(readRoot('CLAUDE.md')).toEqual('## Lowdefy\n\nCustom notes.\n');
+    expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
+    expect(context.logger.info).toHaveBeenCalledWith(
+      expect.stringContaining("'CLAUDE.md' already has a 'Lowdefy' section")
+    );
+  });
+
+  test('agentSetup uses a root lockfile for the dev command', async () => {
+    fs.writeFileSync(
+      path.join(configDirectory, 'package.json'),
+      JSON.stringify({ scripts: { dev: 'lowdefy dev' } })
+    );
+    fs.writeFileSync(path.join(projectDirectory, 'pnpm-lock.yaml'), '');
+
+    await agentSetup({ context });
+
+    expect(readRoot('AGENTS.md')).toContain('cd apps/myapp && pnpm dev');
+  });
+
+  test('agentSetup warns about a stale .mcp.json left in the app directory', async () => {
+    fs.writeFileSync(path.join(configDirectory, '.mcp.json'), JSON.stringify({ mcpServers: {} }));
+
+    await agentSetup({ context });
+
+    expect(JSON.parse(readRoot('.mcp.json')).mcpServers['lowdefy-docs']).toBeDefined();
+    expect(context.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('agents launched from the project root will not discover it')
+    );
+  });
+
+  test('agentSetup honors the project-directory option over git root detection', async () => {
+    context.options.projectDirectory = configDirectory;
+
+    await agentSetup({ context });
+
+    expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(true);
+    expect(fs.existsSync(path.join(projectDirectory, '.mcp.json'))).toBe(false);
+    // App is the project root, so no cd prefix and no app path mention.
+    expect(fs.readFileSync(path.join(configDirectory, 'AGENTS.md'), 'utf8')).not.toContain('cd ');
+  });
+
+  test('agentSetup falls back to the config directory when project-directory does not contain it', async () => {
+    context.options.projectDirectory = path.join(projectDirectory, 'apps', 'other');
+
+    await agentSetup({ context });
+
+    expect(context.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('does not contain the config directory')
+    );
+    expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(true);
+  });
 });

@@ -21,8 +21,10 @@ import { type } from '@lowdefy/helpers';
 const defaultCommand = 'npx lowdefy dev';
 
 // Prefer a package.json script that already runs "lowdefy dev" over the npx fallback,
-// using the package manager implied by the project's lockfile.
-function getDevCommand({ configDirectory }) {
+// using the package manager implied by the project's lockfile. Scripts come
+// from the app's own package.json; the lockfile may live at the workspace
+// root in a monorepo, so both directories are checked.
+function getDevCommand({ configDirectory, projectDirectory = configDirectory }) {
   const packageJsonPath = path.join(configDirectory, 'package.json');
   if (!fs.existsSync(packageJsonPath)) {
     return defaultCommand;
@@ -41,10 +43,17 @@ function getDevCommand({ configDirectory }) {
     return defaultCommand;
   }
 
-  if (fs.existsSync(path.join(configDirectory, 'pnpm-lock.yaml'))) {
+  function lockfileExists(lockfileName) {
+    return (
+      fs.existsSync(path.join(configDirectory, lockfileName)) ||
+      fs.existsSync(path.join(projectDirectory, lockfileName))
+    );
+  }
+
+  if (lockfileExists('pnpm-lock.yaml')) {
     return `pnpm ${scriptName}`;
   }
-  if (fs.existsSync(path.join(configDirectory, 'yarn.lock'))) {
+  if (lockfileExists('yarn.lock')) {
     return `yarn ${scriptName}`;
   }
   return `npm run ${scriptName}`;

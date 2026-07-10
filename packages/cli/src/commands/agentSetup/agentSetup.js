@@ -14,20 +14,52 @@
   limitations under the License.
 */
 
+import path from 'path';
+
+import findProjectRoot from './findProjectRoot.js';
 import getDevCommand from './getDevCommand.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import upsertMcpServer from './upsertMcpServer.js';
 import writeSkillFile from './writeSkillFile.js';
 
+// Resolves where agent files should be written (the project root an agent is
+// launched from, not the app config directory) and the app's path relative
+// to it, so generated instructions work from that root.
+function resolveDirectories({ context }) {
+  const configDirectory = context.directories.config;
+  const projectDirectory = context.options.projectDirectory
+    ? path.resolve(context.options.projectDirectory)
+    : findProjectRoot({ configDirectory });
+
+  const relative = path.relative(projectDirectory, configDirectory);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    context.logger.warn(
+      `Project directory '${projectDirectory}' does not contain the config directory '${configDirectory}' - writing agent files into the config directory instead.`
+    );
+    return { projectDirectory: configDirectory, appPath: '' };
+  }
+  return { projectDirectory, appPath: relative.split(path.sep).join('/') };
+}
+
 async function agentSetup({ context }) {
   context.logger.info('Setting up this project for AI coding agents.');
 
   const port = context.options.port;
-  const devCommand = getDevCommand({ configDirectory: context.directories.config });
+  const { projectDirectory, appPath } = resolveDirectories({ context });
+  if (appPath !== '') {
+    context.logger.info(
+      `Project root detected at '${projectDirectory}' - writing agent files there. The Lowdefy config is in '${appPath}/'.`
+    );
+  }
+  const devCommand = getDevCommand({
+    configDirectory: context.directories.config,
+    projectDirectory,
+  });
+  const runCommand = appPath === '' ? devCommand : `cd ${appPath} && ${devCommand}`;
 
-  await upsertMcpServer({ context, port });
-  await writeSkillFile({ context, port });
-  await upsertAgentsMdSection({ context, port, devCommand });
+  await upsertMcpServer({ context, projectDirectory, port });
+  await writeSkillFile({ context, projectDirectory, appPath, port });
+  await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 
   await context.sendTelemetry();
   context.logger.info({ spin: 'succeed' }, 'Project set up for AI coding agents.');
