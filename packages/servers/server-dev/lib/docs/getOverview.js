@@ -82,7 +82,7 @@ function getOverview() {
     '',
     '## Visual feedback (Feedback Mode)',
     '',
-    'The developer can press Cmd/Ctrl+L in the running app to point at elements, draw, and send annotated feedback. Call `lowdefy_wait_for_feedback` (blocks up to 55s) when you ask them to show you something, or `lowdefy_get_feedback` to check instantly. Each annotation carries the blockId, resolved config file:line, drawn shapes (usable as screenshot clip), and recent console entries. Idle Claude Code sessions are woken automatically via the Stop hook installed by `lowdefy agent-setup`.',
+    'The developer can press Cmd/Ctrl+/ in the running app to point at elements, draw, and send annotated feedback. Call `lowdefy_wait_for_feedback` (blocks up to 55s) when you ask them to show you something, or `lowdefy_get_feedback` to check instantly. Each annotation carries the blockId, resolved config file:line, drawn shapes (usable as screenshot clip), and recent console entries. Idle Claude Code sessions are woken automatically via the Stop hook installed by `lowdefy agent-setup`.',
     '',
     '## Routes',
     '',

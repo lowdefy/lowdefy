@@ -85,7 +85,7 @@ function createApp() {
   app.get('/api/js/:env', jsEnvHandler);
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
-  // Feedback Mode: the in-page overlay (Cmd/Ctrl+L) POSTs annotation batches
+  // Feedback Mode: the in-page overlay (Cmd/Ctrl+/) POSTs annotation batches
   // here; the Stop hook and MCP tools drain them. No api context needed.
   // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
   app.post('/lowdefy-feedback', feedbackHandler);

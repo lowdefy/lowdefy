@@ -65,7 +65,7 @@ async function agentSetup({ context }) {
 
   await context.sendTelemetry();
   context.logger.info(
-    'Stop hook: feedback from the app (Cmd/Ctrl+L in the browser) will wake idle Claude Code sessions.'
+    'Stop hook: feedback from the app (Cmd/Ctrl+/ in the browser) will wake idle Claude Code sessions.'
   );
   context.logger.info({ spin: 'succeed' }, 'Project set up for AI coding agents.');
 }

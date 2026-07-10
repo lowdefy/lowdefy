@@ -43,7 +43,7 @@ Never guess type names or properties. Before writing config:
 
 ## Visual feedback
 
-Developers can press \`Cmd/Ctrl+L\` in the running app to point at, draw on, or comment on
+Developers can press \`Cmd/Ctrl+/\` in the running app to point at, draw on, or comment on
 what's on screen. That feedback arrives via the \`lowdefy_wait_for_feedback\` and
 \`lowdefy_get_feedback\` MCP tools, and automatically wakes an idle Claude Code session through
 a Stop hook. Each annotation includes the config file and line it refers to.

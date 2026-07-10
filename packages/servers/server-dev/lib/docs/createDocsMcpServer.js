@@ -54,7 +54,7 @@ Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and e
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
-Visual feedback: developers can press Cmd/Ctrl+L in the running app to point at elements, draw, and send annotated feedback. Call lowdefy_wait_for_feedback to block (up to 55s) until they send something — do this when you ask the developer to show you a problem. Feedback also wakes idle sessions automatically via the Stop hook installed by \`lowdefy agent-setup\`. Each annotation carries the blockId, the resolved config file:line, drawn shapes, viewport/scroll geometry (usable as lowdefy_screenshot_page clip), and recent console entries.
+Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and send annotated feedback. Call lowdefy_wait_for_feedback to block (up to 55s) until they send something — do this when you ask the developer to show you a problem. Feedback also wakes idle sessions automatically via the Stop hook installed by \`lowdefy agent-setup\`. Each annotation carries the blockId, the resolved config file:line, drawn shapes, viewport/scroll geometry (usable as lowdefy_screenshot_page clip), and recent console entries.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
@@ -326,7 +326,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_wait_for_feedback',
     {
       description:
-        'Block until the developer sends visual feedback from the running app (they press Cmd/Ctrl+L, point at elements, draw, and comment). Use this when you ask the developer to show you something — call it, tell them to annotate, and it returns their annotations with resolved config file:line locations. Returns "no pending feedback" after the timeout.',
+        'Block until the developer sends visual feedback from the running app (they press Cmd/Ctrl+/, point at elements, draw, and comment). Use this when you ask the developer to show you something — call it, tell them to annotate, and it returns their annotations with resolved config file:line locations. Returns "no pending feedback" after the timeout.',
       inputSchema: {
         timeoutSeconds: z
           .number()
@@ -353,7 +353,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_feedback',
     {
       description:
-        'Instantly return any pending visual feedback annotations from the developer (sent via Cmd/Ctrl+L in the running app), without blocking. Each annotation carries the blockId, resolved config file:line, drawn shapes, and console entries.',
+        'Instantly return any pending visual feedback annotations from the developer (sent via Cmd/Ctrl+/ in the running app), without blocking. Each annotation carries the blockId, resolved config file:line, drawn shapes, and console entries.',
       inputSchema: {
         consume: z
           .boolean()

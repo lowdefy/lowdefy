@@ -39,12 +39,12 @@ It provides these tools:
 | `lowdefy_checkpoint_to_mocks` | Convert a state checkpoint into e2e `mocks.yaml` fixtures |
 | `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
 | `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
-| `lowdefy_wait_for_feedback` | Block until you send visual feedback from the app (Cmd/Ctrl+L)        |
+| `lowdefy_wait_for_feedback` | Block until you send visual feedback from the app (Cmd/Ctrl+/)        |
 | `lowdefy_get_feedback`   | Instantly fetch pending visual feedback annotations                      |
 
 ## Feedback Mode — draw on your app, it lands in Claude Code
 
-Press **Cmd+L** (macOS) or **Ctrl+L** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, batch several annotations, and hit send. The annotations land in your Claude Code session — each one enriched with the **blockId and the exact yaml file and line** that defines it, the drawn geometry, and recent console errors.
+Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, batch several annotations, and hit send. The annotations land in your Claude Code session — each one enriched with the **blockId and the exact yaml file and line** that defines it, the drawn geometry, and recent console errors.
 
 Two ways feedback reaches the agent:
 

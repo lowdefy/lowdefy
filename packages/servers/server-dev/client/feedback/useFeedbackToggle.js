@@ -18,7 +18,7 @@ import { useEffect, useRef } from 'react';
 
 import { tinykeys } from 'tinykeys';
 
-// Binds the global Cmd/Ctrl+L feedback toggle, matching the app's own
+// Binds the global Cmd/Ctrl+/ feedback toggle, matching the app's own
 // shortcut convention (see createShortcutManager.js): tinykeys on window,
 // "$mod" for the platform modifier. Registered at capture phase with
 // stopImmediatePropagation so the app's own shortcut manager (or any block
@@ -37,7 +37,7 @@ function useFeedbackToggle({ onToggle }) {
       unsubscribe = tinykeys(
         window,
         {
-          '$mod+KeyL': (event) => {
+          '$mod+Slash': (event) => {
             try {
               event.preventDefault();
               event.stopImmediatePropagation();

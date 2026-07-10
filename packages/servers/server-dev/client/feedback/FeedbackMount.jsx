@@ -45,7 +45,7 @@ function logBannerOnce() {
   try {
     // eslint-disable-next-line no-console
     console.info(
-      '%cLowdefy Feedback%c — press Cmd/Ctrl+L to point, draw, and send feedback to your Claude Code session.',
+      '%cLowdefy Feedback%c — press Cmd/Ctrl+/ to point, draw, and send feedback to your Claude Code session.',
       'color: #4f9cf9; font-weight: bold;',
       'color: inherit;'
     );
@@ -77,7 +77,7 @@ const LazyOverlay = React.lazy(() => import('./FeedbackOverlay.jsx'));
 // Dev-only, always mounted alongside Inspector.jsx. Mirrors its resilience
 // contract — nothing here may ever throw into the app it's riding along
 // with. Stays inert (renders only a one-time hint toast) until the developer
-// presses Cmd/Ctrl+L, at which point the overlay mounts.
+// presses Cmd/Ctrl+/, at which point the overlay mounts.
 function FeedbackMount({ basePath, lowdefy, pageId }) {
   const [active, setActive] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -105,7 +105,7 @@ function FeedbackMount({ basePath, lowdefy, pageId }) {
     <>
       {showHint && (
         <div data-lowdefy-feedback-toast style={toast}>
-          Tip: Press {isMac() ? '⌘L' : 'Ctrl+L'} to point at your app and send feedback to Claude
+          Tip: Press {isMac() ? '⌘/' : 'Ctrl+/'} to point at your app and send feedback to Claude
           Code
           <button onClick={dismissHint} aria-label="Dismiss" style={toastClose} type="button">
             ✕

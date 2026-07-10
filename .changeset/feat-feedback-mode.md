@@ -5,7 +5,7 @@
 
 feat: Feedback Mode — draw on your app, it lands in Claude Code
 
-Press **Cmd+L** (macOS) / **Ctrl+L** (Windows/Linux) on any page of your running dev app: an overlay appears where you hover-highlight blocks, click to select, draw rectangles/arrows/freehand, comment, batch several annotations, and send. No browser extension — it's injected by the dev server.
+Press **Cmd+/** (macOS) / **Ctrl+/** (Windows/Linux) on any page of your running dev app: an overlay appears where you hover-highlight blocks, click to select, draw rectangles/arrows/freehand, comment, batch several annotations, and send. No browser extension — it's injected by the dev server.
 
 **Each annotation reaches your Claude Code session enriched with the blockId and the exact yaml file and line that defines it**, plus drawn geometry (usable as a screenshot crop), viewport/scroll info, and recent console errors.
 
