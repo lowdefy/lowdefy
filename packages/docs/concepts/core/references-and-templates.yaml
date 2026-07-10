@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: references-and-templates
     pageTitle: References and Templates
-    section: Concepts
-    filePath: concepts/references-and-templates.yaml
+    filePath: concepts/core/references-and-templates.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -230,10 +229,3 @@ _ref:
                   transformer: transformers/addFooter.js
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: APIs
-            previous_page_id: lowdefy-api
-            next_page_title: Modules
-            next_page_id: modules

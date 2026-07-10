@@ -18,77 +18,537 @@ _ref:
     pageId: introduction
     pageTitle: Introduction
     filePath: introduction.yaml
+    fullWidth: true
     prefetchPages:
+      - quickstart
       - tutorial-start
     content:
-      - id: body_intro
-        type: Markdown
-        properties:
-          content: |
-            Lowdefy makes it really easy to build web apps. With Lowdefy you can build CRUD apps, admin panels, internal tools, BI dashboards, workflow apps, websites, blogs, webforms or even documentation pages such as this one.
-
-            Lowdefy apps are defined in YAML config that follows a structured schema - this makes Lowdefy apps easy to read, write and understand.
-
-            ## Quickstart
-
-            Run the following command to initialize a new Lowdefy app in your current working directory.
-
-      - _ref:
-          path: templates/cli_command.yaml.njk
-          vars:
-            id: quickstart
-            command: 'pnpx lowdefy@5 init && pnpx lowdefy@5 dev'
-
-      - id: body_features
-        type: Markdown
-        properties:
-          content: |
-            This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
-
-            > You need Node v18 or newer and pnpm installed to run Lowdefy. For more details see [the tutorial](/tutorial-start).
-
-            ## Why create web apps using a YAML schema?
-
-            The Lowdefy schema is a simple definition of a web app which primarily makes use of block, action, operator and request definitions.
-
-            Some advantages of writing web apps in YAML are:
-              - All apps use the same schema. This makes it easy to debug large apps or pick up where others left off.
-              - Nothing is hidden in a GUI. This allows you to do basic stuff, like copy, paste, find, replace etc. which makes developing apps more productive.
-              - App config is just data, thus you can develop scripts to create and manage your apps.
-              - YAML files work with your favorite developer and source control tools.
-
-            > If you aren't a fan of YAML, you can also build your app using JSON files.
-
-            ## Build future proof web apps on an source available platform
-
-            To date, more than 25 000 apps have been built by the Lowdefy community. We hope to see many community Lowdefy apps and plugins in the future and actively nurture the Lowdefy community on [Github](https://github.com/lowdefy/lowdefy/discussions) and [Discord](https://discord.gg/QQY9eJ7A2D) to help other developers to get started with Lowdefy and grow the ecosystem.
-
-            We've built Lowdefy to scale our own ability to develop and maintain web apps and internal tools for customers. Currently, we also provide Custom Software as a Service for larger customers, as well as support plans for those who need some extra help. Using Lowdefy we've built ticketing systems, call center solutions, advanced CRMs, custom MRPs, surveys and BI dashboard solutions and more for startup to enterprise customers. If you are looking for a Custom Software as a Service partner, please [reach out to us](http://lowdefy.com/contact-us).
-
-            ## Tutorial
-
-            The easiest way to get started with Lowdefy is to follow the tutorial. In this tutorial we will be building a simple Lowdefy app to get you started.
-
-      - id: start_tutorial_button
-        type: Button
+      # --- 1. Hero ---
+      - id: hero
+        type: Box
         style:
-          marginTop: 40px
-          marginBottom: 80px
-        properties:
-          block: true
-          hideActionLoading: true
-          icon: AiOutlineRocket
-          size: large
-          title: Start the tutorial
-          color: primary
-          variant: solid
-        events:
-          onClick:
-            - id: link_forward
-              type: Link
-              params:
-                pageId: tutorial-start
-            - id: scroll_to_top
-              type: ScrollTo
-              params:
-                top: 0
+          maxWidth: 880px
+          margin: 0 auto
+          padding: 48px 16px 24px 16px
+          textAlign: center
+        blocks:
+          - id: hero_title
+            type: Html
+            properties:
+              html: |
+                <h1 style="font-size: 2.6em; margin-bottom: 0.3em;">
+                  Build web apps with <span class="text-gradient">YAML config</span>
+                </h1>
+          - id: hero_tagline
+            type: Html
+            properties:
+              html: |
+                <p style="font-size: 1.15em; color: var(--ant-color-text-secondary); max-width: 620px; margin: 0 auto 1.5em auto;">
+                  Lowdefy is the config-first framework for internal tools, admin panels,
+                  dashboards, and workflow apps — easy for humans to read and review,
+                  natural for AI to generate.
+                </p>
+          - id: hero_buttons
+            type: Flex
+            layout:
+              justify: center
+              gap: 12
+            blocks:
+              - id: hero_quickstart_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: 5-minute Quickstart
+                  icon: AiOutlineThunderbolt
+                  size: large
+                  color: primary
+                  variant: solid
+                events:
+                  onClick:
+                    - id: hero_link_quickstart
+                      type: Link
+                      params:
+                        pageId: quickstart
+              - id: hero_tutorial_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Full tutorial
+                  icon: AiOutlineRocket
+                  size: large
+                events:
+                  onClick:
+                    - id: hero_link_tutorial
+                      type: Link
+                      params:
+                        pageId: tutorial-start
+          - id: hero_command
+            type: Box
+            style:
+              maxWidth: 560px
+              margin: 24px auto 0 auto
+            blocks:
+              - _ref:
+                  path: templates/cli_command.yaml.njk
+                  vars:
+                    id: hero_init
+                    command: 'pnpx lowdefy@5 init && pnpx lowdefy@5 dev'
+
+      # --- 2. Built with four primitives ---
+      - id: primitives_section
+        type: Box
+        style:
+          maxWidth: 1100px
+          margin: 32px auto 0 auto
+          padding: 0 16px
+        blocks:
+          - id: primitives_heading
+            type: Title
+            style:
+              textAlign: center
+            properties:
+              content: Built with four primitives
+              level: 2
+          - id: primitives_grid
+            type: Flex
+            layout:
+              gap: 16
+            properties:
+              wrap: wrap
+            blocks:
+              - id: intro_prim_blocks
+                type: Card
+                layout:
+                  flex: 1 1 240px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Blocks
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: intro_prim_blocks_link
+                      type: Link
+                      params:
+                        pageId: blocks-reference
+                blocks:
+                  - id: intro_prim_blocks_text
+                    type: Paragraph
+                    properties:
+                      content: The UI. 114 components you compose into pages.
+              - id: intro_prim_operators
+                type: Card
+                layout:
+                  flex: 1 1 240px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Operators
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: intro_prim_operators_link
+                      type: Link
+                      params:
+                        pageId: operators-reference
+                blocks:
+                  - id: intro_prim_operators_text
+                    type: Paragraph
+                    properties:
+                      content: The logic. 70 functions evaluated live in config.
+              - id: intro_prim_actions
+                type: Card
+                layout:
+                  flex: 1 1 240px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Actions
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: intro_prim_actions_link
+                      type: Link
+                      params:
+                        pageId: actions-reference
+                blocks:
+                  - id: intro_prim_actions_text
+                    type: Paragraph
+                    properties:
+                      content: The behavior. Respond to clicks, loads, and changes.
+              - id: intro_prim_connections
+                type: Card
+                layout:
+                  flex: 1 1 240px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Connections
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: intro_prim_connections_link
+                      type: Link
+                      params:
+                        pageId: connections-reference
+                blocks:
+                  - id: intro_prim_connections_text
+                    type: Paragraph
+                    properties:
+                      content: The data. Databases, APIs, and AI, server-side.
+
+      # --- 3. What you can build ---
+      - id: build_section
+        type: Box
+        style:
+          maxWidth: 1100px
+          margin: 32px auto 0 auto
+          padding: 0 16px
+        blocks:
+          - id: build_heading
+            type: Title
+            style:
+              textAlign: center
+            properties:
+              content: What you can build
+              level: 2
+          - id: build_grid
+            type: Flex
+            layout:
+              gap: 12
+            properties:
+              wrap: wrap
+            blocks:
+              - id: build_card_admin
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_admin_text
+                    type: Html
+                    properties:
+                      html: '<b>Admin panels</b>'
+              - id: build_card_crud
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_crud_text
+                    type: Html
+                    properties:
+                      html: '<b>CRUD apps</b>'
+              - id: build_card_dashboards
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_dashboards_text
+                    type: Html
+                    properties:
+                      html: '<b>BI dashboards</b>'
+              - id: build_card_workflows
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_workflows_text
+                    type: Html
+                    properties:
+                      html: '<b>Workflow tools</b>'
+              - id: build_card_webforms
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_webforms_text
+                    type: Html
+                    properties:
+                      html: '<b>Webforms</b>'
+              - id: build_card_agents
+                type: Card
+                layout:
+                  flex: 1 1 160px
+                properties:
+                  size: small
+                blocks:
+                  - id: build_card_agents_text
+                    type: Html
+                    properties:
+                      html: '<b>AI agent apps</b>'
+
+      # --- 4. Start here tracks ---
+      - id: tracks_section
+        type: Box
+        style:
+          maxWidth: 1100px
+          margin: 32px auto 0 auto
+          padding: 0 16px
+        blocks:
+          - id: tracks_heading
+            type: Title
+            style:
+              textAlign: center
+            properties:
+              content: Start here
+              level: 2
+          - id: tracks_grid
+            type: Flex
+            layout:
+              gap: 16
+            properties:
+              wrap: wrap
+            blocks:
+              - id: track_quickstart
+                type: Card
+                layout:
+                  flex: 1 1 280px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Quickstart · 5 min
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: track_link_quickstart
+                      type: Link
+                      params:
+                        pageId: quickstart
+                blocks:
+                  - id: track_quickstart_text
+                    type: Paragraph
+                    properties:
+                      content: One command to a running app, one edit to make it yours.
+              - id: track_tutorial
+                type: Card
+                layout:
+                  flex: 1 1 280px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Full tutorial · 1 hr
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: track_link_tutorial
+                      type: Link
+                      params:
+                        pageId: tutorial-start
+                blocks:
+                  - id: track_tutorial_text
+                    type: Paragraph
+                    properties:
+                      content: Build a complete app — pages, requests, data, and deployment.
+              - id: track_concepts
+                type: Card
+                layout:
+                  flex: 1 1 280px
+                style:
+                  cursor: pointer
+                properties:
+                  title: Core concepts
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: track_link_concepts
+                      type: Link
+                      params:
+                        pageId: four-primitives
+                blocks:
+                  - id: track_concepts_text
+                    type: Paragraph
+                    properties:
+                      content: The mental model — four primitives and one state loop.
+
+      # --- 5. Ecosystem strip ---
+      - id: ecosystem_section
+        type: Box
+        style:
+          maxWidth: 1100px
+          margin: 32px auto 0 auto
+          padding: 0 16px
+        blocks:
+          - id: ecosystem_heading
+            type: Title
+            style:
+              textAlign: center
+            properties:
+              content: Batteries included, ecosystem attached
+              level: 2
+          - id: ecosystem_grid
+            type: Flex
+            layout:
+              gap: 12
+            properties:
+              wrap: wrap
+            blocks:
+              - id: eco_card_aggrid
+                type: Card
+                layout:
+                  flex: 1 1 200px
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_aggrid
+                      type: Link
+                      params:
+                        pageId: AgGrid
+                blocks:
+                  - id: eco_card_aggrid_text
+                    type: Html
+                    properties:
+                      html: '<b>AG Grid</b><br/><span style="color: var(--ant-color-text-secondary)">Enterprise data tables</span>'
+              - id: eco_card_echart
+                type: Card
+                layout:
+                  flex: 1 1 200px
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_echart
+                      type: Link
+                      params:
+                        pageId: EChart
+                blocks:
+                  - id: eco_card_echart_text
+                    type: Html
+                    properties:
+                      html: '<b>ECharts</b><br/><span style="color: var(--ant-color-text-secondary)">Interactive charts</span>'
+              - id: eco_card_agentchat
+                type: Card
+                layout:
+                  flex: 1 1 200px
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_agentchat
+                      type: Link
+                      params:
+                        pageId: AgentChat
+                blocks:
+                  - id: eco_card_agentchat_text
+                    type: Html
+                    properties:
+                      html: '<b>AgentChat</b><br/><span style="color: var(--ant-color-text-secondary)">AI agents in your app</span>'
+              - id: eco_card_mongodb
+                type: Card
+                layout:
+                  flex: 1 1 200px
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_mongodb
+                      type: Link
+                      params:
+                        pageId: MongoDB
+                blocks:
+                  - id: eco_card_mongodb_text
+                    type: Html
+                    properties:
+                      html: '<b>MongoDB</b><br/><span style="color: var(--ant-color-text-secondary)">And 18 more connections</span>'
+              - id: eco_card_plugins
+                type: Card
+                layout:
+                  flex: 1 1 200px
+                style:
+                  cursor: pointer
+                properties:
+                  size: small
+                  hoverable: true
+                events:
+                  onClick:
+                    - id: eco_link_plugins
+                      type: Link
+                      params:
+                        pageId: plugins
+                blocks:
+                  - id: eco_card_plugins_text
+                    type: Html
+                    properties:
+                      html: '<b>Plugins</b><br/><span style="color: var(--ant-color-text-secondary)">Extend with any npm package</span>'
+
+      # --- 6. Social proof ---
+      - id: social_section
+        type: Box
+        style:
+          maxWidth: 880px
+          margin: 40px auto 24px auto
+          padding: 0 16px
+          textAlign: center
+        blocks:
+          - id: social_text
+            type: Html
+            properties:
+              html: |
+                <p style="font-size: 1.05em; color: var(--ant-color-text-secondary);">
+                  More than <b>25 000 apps</b> built by the Lowdefy community.
+                </p>
+          - id: social_buttons
+            type: Flex
+            layout:
+              justify: center
+              gap: 12
+            blocks:
+              - id: social_github_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Star on GitHub
+                  icon: AiFillGithub
+                  href: https://github.com/lowdefy/lowdefy
+              - id: social_discord_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Join our Discord
+                  icon: FaDiscord
+                  href: https://discord.gg/WmcJgXt
+              - id: social_showcase_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: See the showcase
+                  icon: AiOutlineAppstore
+                events:
+                  onClick:
+                    - id: social_link_showcase
+                      type: Link
+                      params:
+                        pageId: showcase

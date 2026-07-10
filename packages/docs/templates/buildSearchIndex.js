@@ -20,22 +20,31 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import extractPageContent from './search/extractPageContent.js';
-import resolveSections from './search/resolveSections.js';
 import stripMarkdown from './search/stripMarkdown.js';
 
-function buildSearchIndex(pages, vars) {
-  const sectionMap = resolveSections(pages, vars.menus);
+const groupIcons = {
+  Learn: 'AiOutlineRocket',
+  Reference: 'AiOutlineBook',
+  Recipes: 'AiOutlineExperiment',
+  Plugins: 'AiOutlineAppstore',
+};
 
+// records: pageId -> { tab, tabTitle, title, trail } — computed by the menu
+// transformer in generateSiteAssets.js (one walk shared by sidebar,
+// breadcrumbs, prev/next, and this index).
+function buildSearchIndex(pages, records) {
   const documents = pages.filter(Boolean).map((page) => {
     const text = extractPageContent(page);
-    const section = sectionMap.get(page.id);
+    const record = records.get(page.id);
     const plainText = stripMarkdown(text);
+    const section = record?.tabTitle ?? 'Other';
     return {
       id: page.id,
       pageId: page.id,
       title: page.properties?.title ?? page.id,
-      section: section?.label ?? 'Other',
-      icon: section?.icon,
+      section,
+      sectionTrail: record ? [...record.trail, page.properties?.title ?? record.title] : [],
+      icon: groupIcons[section],
       description: plainText.slice(0, 200),
       content: plainText,
       snippet: plainText.slice(0, 200),
@@ -44,7 +53,7 @@ function buildSearchIndex(pages, vars) {
 
   const miniSearch = new MiniSearch({
     fields: ['title', 'content', 'description'],
-    storeFields: ['title', 'pageId', 'section', 'snippet', 'icon'],
+    storeFields: ['title', 'pageId', 'section', 'sectionTrail', 'snippet', 'icon'],
   });
   miniSearch.addAll(documents);
 
@@ -53,7 +62,7 @@ function buildSearchIndex(pages, vars) {
     version: 1,
     options: {
       fields: ['title', 'content', 'description'],
-      storeFields: ['title', 'pageId', 'section', 'snippet', 'icon'],
+      storeFields: ['title', 'pageId', 'section', 'sectionTrail', 'snippet', 'icon'],
       idField: 'id',
     },
     searchDefaults: {
@@ -65,16 +74,14 @@ function buildSearchIndex(pages, vars) {
       title: 'title',
       description: 'snippet',
       category: 'section',
+      breadcrumb: 'sectionTrail',
       pageId: 'pageId',
     },
     groups: [
-      { label: 'Tutorial', match: { section: 'Tutorial' }, icon: 'AiOutlineRocket' },
-      { label: 'Concepts', match: { section: 'Concepts' }, icon: 'AiOutlineBulb' },
-      { label: 'Blocks', match: { section: 'Blocks' }, icon: 'AiOutlineLayout' },
-      { label: 'Connections', match: { section: 'Connections' }, icon: 'AiOutlineApi' },
-      { label: 'Actions', match: { section: 'Actions' }, icon: 'AiOutlineThunderbolt' },
-      { label: 'Operators', match: { section: 'Operators' }, icon: 'AiOutlineFunction' },
-      { label: 'Controls', match: { section: 'Controls' }, icon: 'AiOutlineBranches' },
+      { label: 'Learn', match: { section: 'Learn' }, icon: groupIcons.Learn },
+      { label: 'Reference', match: { section: 'Reference' }, icon: groupIcons.Reference },
+      { label: 'Recipes', match: { section: 'Recipes' }, icon: groupIcons.Recipes },
+      { label: 'Plugins', match: { section: 'Plugins' }, icon: groupIcons.Plugins },
     ],
     data: JSON.parse(JSON.stringify(miniSearch)),
   };

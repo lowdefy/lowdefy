@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: login-and-logout
     pageTitle: Login and Logout
-    section: User Authentication
     filePath: users/login-and-logout.yaml
     content:
       - id: content
@@ -145,10 +144,3 @@ _ref:
                       pageId: logged-out
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Configuration
-            previous_page_id: auth-configuration
-            next_page_title: Providers
-            next_page_id: auth-providers

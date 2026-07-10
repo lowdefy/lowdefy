@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: v3-to-v4
     pageTitle: Version 3 to Version 4
-    section: Migration
-    filePath: migration/v3-to-v4.yaml
+    filePath: upgrading/v3-to-v4.yaml
     content:
       - id: md1
         type: MarkdownWithCode

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-writing-tests
     pageTitle: Writing Tests
-    section: Testing
     filePath: testing/e2e-writing-tests.yaml
     content:
       - id: md1
@@ -246,10 +245,3 @@ _ref:
             - Request assertions: 30 seconds
             - State, URL, and validation assertions: 5 seconds
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Getting Started
-            previous_page_id: e2e-getting-started
-            next_page_title: Mocking Requests
-            next_page_id: e2e-mocking

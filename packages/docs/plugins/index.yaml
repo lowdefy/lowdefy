@@ -1,0 +1,145 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: plugins
+    pageTitle: Plugins
+    filePath: plugins/index.yaml
+    content:
+      - id: plugins_intro
+        type: Markdown
+        properties:
+          content: |
+            Everything in Lowdefy is a plugin — every block, operator, action, and connection
+            is an npm package, and your app can install more. A browsable catalog of official
+            and community plugins is coming; until then, the
+            [community plugins repository](https://github.com/lowdefy/community-plugins) lists
+            what the community has published.
+
+            ## Build a plugin
+
+      - id: plugins_cards
+        type: Flex
+        layout:
+          gap: 16
+        properties:
+          wrap: wrap
+        blocks:
+          - id: plugins_card_intro
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Introduction
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: plugins_link_intro
+                  type: Link
+                  params:
+                    pageId: plugins-introduction
+            blocks:
+              - id: plugins_card_intro_text
+                type: Paragraph
+                properties:
+                  content: How the plugin system works and what a plugin package contains.
+          - id: plugins_card_dev
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Developing plugins
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: plugins_link_dev
+                  type: Link
+                  params:
+                    pageId: plugins-dev
+            blocks:
+              - id: plugins_card_dev_text
+                type: Paragraph
+                properties:
+                  content: Set up a workspace and develop plugins against a local app.
+          - id: plugins_card_actions
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Actions
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: plugins_link_actions
+                  type: Link
+                  params:
+                    pageId: plugins-actions
+            blocks:
+              - id: plugins_card_actions_text
+                type: Paragraph
+                properties:
+                  content: Write a custom action.
+          - id: plugins_card_connections
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Connections
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: plugins_link_connections
+                  type: Link
+                  params:
+                    pageId: plugins-connections
+            blocks:
+              - id: plugins_card_connections_text
+                type: Paragraph
+                properties:
+                  content: Write a custom connection and requests.
+          - id: plugins_card_operators
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Operators
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: plugins_link_operators
+                  type: Link
+                  params:
+                    pageId: plugins-operators
+            blocks:
+              - id: plugins_card_operators_text
+                type: Paragraph
+                properties:
+                  content: Write a custom operator.

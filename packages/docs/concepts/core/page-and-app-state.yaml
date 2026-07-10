@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: page-and-app-state
     pageTitle: Page and App State
-    section: Concepts
-    filePath: concepts/page-and-app-state.yaml
+    filePath: concepts/core/page-and-app-state.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -272,10 +271,3 @@ _ref:
                   - Input blocks which are not visible are removed from `state`.
                   - The `SetState` action can also modify the `state` object.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Connections and Requests
-            previous_page_id: connections-and-requests
-            next_page_title: APIs
-            next_page_id: lowdefy-api

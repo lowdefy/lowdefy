@@ -1,0 +1,478 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: connections-reference
+    pageTitle: Connections
+    filePath: connections/index.yaml
+    content:
+      - id: intro
+        type: Markdown
+        properties:
+          content: |
+            Connections integrate your app with databases, APIs, and services; requests execute against them server-side. All 19 connections, grouped by type. See [Connections and Requests](/connections-and-requests) for the model.
+      - id: section_sql_title
+        type: Title
+        properties:
+          content: SQL
+          level: 3
+      - id: section_sql_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Relational databases.
+      - id: section_sql_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_mysql
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mysql
+                  type: Link
+                  params:
+                    pageId: MySQL
+            blocks:
+              - id: card_mysql_label
+                type: Html
+                properties:
+                  html: '<b>MySQL</b>'
+          - id: card_mariadb
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mariadb
+                  type: Link
+                  params:
+                    pageId: MariaDB
+            blocks:
+              - id: card_mariadb_label
+                type: Html
+                properties:
+                  html: '<b>MariaDB</b>'
+          - id: card_postgresql
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_postgresql
+                  type: Link
+                  params:
+                    pageId: PostgreSQL
+            blocks:
+              - id: card_postgresql_label
+                type: Html
+                properties:
+                  html: '<b>PostgreSQL</b>'
+          - id: card_mssql
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mssql
+                  type: Link
+                  params:
+                    pageId: MSSQL
+            blocks:
+              - id: card_mssql_label
+                type: Html
+                properties:
+                  html: '<b>MSSQL</b>'
+          - id: card_sqlite
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_sqlite
+                  type: Link
+                  params:
+                    pageId: SQLite
+            blocks:
+              - id: card_sqlite_label
+                type: Html
+                properties:
+                  html: '<b>SQLite</b>'
+          - id: card_amazonredshift
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_amazonredshift
+                  type: Link
+                  params:
+                    pageId: AmazonRedshift
+            blocks:
+              - id: card_amazonredshift_label
+                type: Html
+                properties:
+                  html: '<b>AmazonRedshift</b>'
+          - id: card_knex
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_knex
+                  type: Link
+                  params:
+                    pageId: Knex
+            blocks:
+              - id: card_knex_label
+                type: Html
+                properties:
+                  html: '<b>Knex</b>'
+      - id: section_nosql_search_title
+        type: Title
+        properties:
+          content: NoSQL & search
+          level: 3
+      - id: section_nosql_search_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Document stores, search, and caching.
+      - id: section_nosql_search_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_mongodb
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mongodb
+                  type: Link
+                  params:
+                    pageId: MongoDB
+            blocks:
+              - id: card_mongodb_label
+                type: Html
+                properties:
+                  html: '<b>MongoDB</b>'
+          - id: card_elasticsearch
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_elasticsearch
+                  type: Link
+                  params:
+                    pageId: Elasticsearch
+            blocks:
+              - id: card_elasticsearch_label
+                type: Html
+                properties:
+                  html: '<b>Elasticsearch</b>'
+          - id: card_redis
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_redis
+                  type: Link
+                  params:
+                    pageId: Redis
+            blocks:
+              - id: card_redis_label
+                type: Html
+                properties:
+                  html: '<b>Redis</b>'
+      - id: section_ai_title
+        type: Title
+        properties:
+          content: AI
+          level: 3
+      - id: section_ai_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: LLM providers and MCP tools.
+      - id: section_ai_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_anthropic
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_anthropic
+                  type: Link
+                  params:
+                    pageId: Anthropic
+            blocks:
+              - id: card_anthropic_label
+                type: Html
+                properties:
+                  html: '<b>Anthropic</b>'
+          - id: card_openai_connection
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_openai_connection
+                  type: Link
+                  params:
+                    pageId: OpenAI-connection
+            blocks:
+              - id: card_openai_connection_label
+                type: Html
+                properties:
+                  html: '<b>OpenAI</b>'
+          - id: card_google
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_google
+                  type: Link
+                  params:
+                    pageId: Google
+            blocks:
+              - id: card_google_label
+                type: Html
+                properties:
+                  html: '<b>Google</b>'
+          - id: card_mcp
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mcp
+                  type: Link
+                  params:
+                    pageId: Mcp
+            blocks:
+              - id: card_mcp_label
+                type: Html
+                properties:
+                  html: '<b>MCP</b>'
+      - id: section_storage_sheets_title
+        type: Title
+        properties:
+          content: Storage & sheets
+          level: 3
+      - id: section_storage_sheets_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Object storage and spreadsheets.
+      - id: section_storage_sheets_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_awss3
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_awss3
+                  type: Link
+                  params:
+                    pageId: AWSS3
+            blocks:
+              - id: card_awss3_label
+                type: Html
+                properties:
+                  html: '<b>AWS S3</b>'
+          - id: card_googlesheet
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_googlesheet
+                  type: Link
+                  params:
+                    pageId: GoogleSheet
+            blocks:
+              - id: card_googlesheet_label
+                type: Html
+                properties:
+                  html: '<b>Google Sheets</b>'
+      - id: section_http_services_title
+        type: Title
+        properties:
+          content: HTTP & services
+          level: 3
+      - id: section_http_services_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: HTTP APIs and hosted services.
+      - id: section_http_services_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_axioshttp
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_axioshttp
+                  type: Link
+                  params:
+                    pageId: AxiosHttp
+            blocks:
+              - id: card_axioshttp_label
+                type: Html
+                properties:
+                  html: '<b>Axios HTTP</b>'
+          - id: card_sendgridmail
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_sendgridmail
+                  type: Link
+                  params:
+                    pageId: SendGridMail
+            blocks:
+              - id: card_sendgridmail_label
+                type: Html
+                properties:
+                  html: '<b>SendGrid Mail</b>'
+          - id: card_stripe
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_stripe
+                  type: Link
+                  params:
+                    pageId: Stripe
+            blocks:
+              - id: card_stripe_label
+                type: Html
+                properties:
+                  html: '<b>Stripe</b>'
+

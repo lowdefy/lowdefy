@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: upgrade-guide
     pageTitle: Upgrade Guide
-    section: Migration
-    filePath: migration/upgrade-guide.yaml
+    filePath: upgrading/upgrade-guide.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -130,8 +129,3 @@ _ref:
 
             The upgrade command automates this process, but every change is documented in the migration guides for manual reference.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            next_page_title: V4 to V5
-            next_page_id: v4-to-v5

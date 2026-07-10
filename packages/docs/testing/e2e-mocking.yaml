@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-mocking
     pageTitle: Mocking Requests
-    section: Testing
     filePath: testing/e2e-mocking.yaml
     content:
       - id: md1
@@ -178,10 +177,3 @@ _ref:
 
             This means you can set sensible defaults in `mocks.yaml` and override them in specific tests.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Writing Tests
-            previous_page_id: e2e-writing-tests
-            next_page_title: Testing Authentication
-            next_page_id: e2e-auth

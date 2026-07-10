@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DiffList
     pageTitle: DiffList
-    section: Display Blocks
     filePath: blocks/display/DiffList.yaml
     block_type: DiffList
     github_path: packages/plugins/blocks/blocks-diff/src/blocks/DiffList

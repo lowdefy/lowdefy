@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MSSQL
     pageTitle: Microsoft SQL Server
-    section: Connections
     filePath: connections/MSSQL.yaml
     content:
       - id: markdown_intro

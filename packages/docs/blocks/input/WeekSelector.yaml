@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: WeekSelector
     pageTitle: WeekSelector
-    section: Input Blocks
     filePath: blocks/input/WeekSelector.yaml
     block_type: WeekSelector
     antd_component: DatePicker

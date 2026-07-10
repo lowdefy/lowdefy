@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Anthropic
     pageTitle: Anthropic
-    section: Connections
     filePath: connections/Anthropic.yaml
     content:
       - id: md1

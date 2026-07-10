@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AgentConversations
     pageTitle: AgentConversations
-    section: Agents
     filePath: agents/AgentConversations.yaml
     content:
       - id: md1
@@ -171,10 +170,3 @@ _ref:
 
             See the [AgentChat conversation management](/AgentChat) section for a complete example showing `AgentConversations` and `AgentChat` wired together with database persistence.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: AgentChat
-            previous_page_id: AgentChat
-            next_page_title: Docker
-            next_page_id: docker

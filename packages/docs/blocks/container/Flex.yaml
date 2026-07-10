@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Flex
     pageTitle: Flex
-    section: Container Blocks
     filePath: blocks/container/Flex.yaml
     block_type: Flex
     antd_component: Flex

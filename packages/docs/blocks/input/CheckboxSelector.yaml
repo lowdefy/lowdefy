@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: CheckboxSelector
     pageTitle: CheckboxSelector
-    section: Input Blocks
     filePath: blocks/input/CheckboxSelector.yaml
     block_type: CheckboxSelector
     antd_component: Checkbox

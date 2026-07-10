@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: i18n
     pageTitle: Internationalization
-    section: Concepts
-    filePath: concepts/i18n.yaml
+    filePath: concepts/advanced/i18n.yaml
     content:
       - id: md1
         type: MarkdownWithCode

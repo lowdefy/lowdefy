@@ -1,0 +1,609 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: actions-reference
+    pageTitle: Actions
+    filePath: actions/index.yaml
+    content:
+      - id: intro
+        type: Markdown
+        properties:
+          content: |
+            Actions run in response to events — a button click, a page load, an input change. All 24 actions, grouped by purpose. See [Events and Actions](/events-and-actions) for how event chains work.
+      - id: section_state_validation_title
+        type: Title
+        properties:
+          content: State & validation
+          level: 3
+      - id: section_state_validation_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Write state and validate user input.
+      - id: section_state_validation_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_setstate
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_setstate
+                  type: Link
+                  params:
+                    pageId: SetState
+            blocks:
+              - id: card_setstate_label
+                type: Html
+                properties:
+                  html: '<b>SetState</b>'
+          - id: card_setglobal
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_setglobal
+                  type: Link
+                  params:
+                    pageId: SetGlobal
+            blocks:
+              - id: card_setglobal_label
+                type: Html
+                properties:
+                  html: '<b>SetGlobal</b>'
+          - id: card_reset
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_reset
+                  type: Link
+                  params:
+                    pageId: Reset
+            blocks:
+              - id: card_reset_label
+                type: Html
+                properties:
+                  html: '<b>Reset</b>'
+          - id: card_resetvalidation
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_resetvalidation
+                  type: Link
+                  params:
+                    pageId: ResetValidation
+            blocks:
+              - id: card_resetvalidation_label
+                type: Html
+                properties:
+                  html: '<b>ResetValidation</b>'
+          - id: card_validate
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_validate
+                  type: Link
+                  params:
+                    pageId: Validate
+            blocks:
+              - id: card_validate_label
+                type: Html
+                properties:
+                  html: '<b>Validate</b>'
+      - id: section_navigation_focus_title
+        type: Title
+        properties:
+          content: Navigation & focus
+          level: 3
+      - id: section_navigation_focus_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Move users around the app.
+      - id: section_navigation_focus_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_link
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_link
+                  type: Link
+                  params:
+                    pageId: Link
+            blocks:
+              - id: card_link_label
+                type: Html
+                properties:
+                  html: '<b>Link</b>'
+          - id: card_scrollto
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_scrollto
+                  type: Link
+                  params:
+                    pageId: ScrollTo
+            blocks:
+              - id: card_scrollto_label
+                type: Html
+                properties:
+                  html: '<b>ScrollTo</b>'
+          - id: card_setfocus
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_setfocus
+                  type: Link
+                  params:
+                    pageId: SetFocus
+            blocks:
+              - id: card_setfocus_label
+                type: Html
+                properties:
+                  html: '<b>SetFocus</b>'
+      - id: section_data_title
+        type: Title
+        properties:
+          content: Data
+          level: 3
+      - id: section_data_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Call requests and APIs.
+      - id: section_data_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_request
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_request
+                  type: Link
+                  params:
+                    pageId: Request
+            blocks:
+              - id: card_request_label
+                type: Html
+                properties:
+                  html: '<b>Request</b>'
+          - id: card_fetch
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_fetch
+                  type: Link
+                  params:
+                    pageId: Fetch
+            blocks:
+              - id: card_fetch_label
+                type: Html
+                properties:
+                  html: '<b>Fetch</b>'
+          - id: card_callapi
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_callapi
+                  type: Link
+                  params:
+                    pageId: CallAPI
+            blocks:
+              - id: card_callapi_label
+                type: Html
+                properties:
+                  html: '<b>CallAPI</b>'
+      - id: section_ui_preferences_title
+        type: Title
+        properties:
+          content: UI & preferences
+          level: 3
+      - id: section_ui_preferences_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Messages and user preferences.
+      - id: section_ui_preferences_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_displaymessage
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_displaymessage
+                  type: Link
+                  params:
+                    pageId: DisplayMessage
+            blocks:
+              - id: card_displaymessage_label
+                type: Html
+                properties:
+                  html: '<b>DisplayMessage</b>'
+          - id: card_setdarkmode
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_setdarkmode
+                  type: Link
+                  params:
+                    pageId: SetDarkMode
+            blocks:
+              - id: card_setdarkmode_label
+                type: Html
+                properties:
+                  html: '<b>SetDarkMode</b>'
+          - id: card_setlocale
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_setlocale
+                  type: Link
+                  params:
+                    pageId: SetLocale
+            blocks:
+              - id: card_setlocale_label
+                type: Html
+                properties:
+                  html: '<b>SetLocale</b>'
+      - id: section_files_device_title
+        type: Title
+        properties:
+          content: Files & device
+          level: 3
+      - id: section_files_device_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Files, clipboard, and device APIs.
+      - id: section_files_device_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_copytoclipboard
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_copytoclipboard
+                  type: Link
+                  params:
+                    pageId: CopyToClipboard
+            blocks:
+              - id: card_copytoclipboard_label
+                type: Html
+                properties:
+                  html: '<b>CopyToClipboard</b>'
+          - id: card_downloadcsv
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_downloadcsv
+                  type: Link
+                  params:
+                    pageId: DownloadCsv
+            blocks:
+              - id: card_downloadcsv_label
+                type: Html
+                properties:
+                  html: '<b>DownloadCsv</b>'
+          - id: card_pdfmake
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_pdfmake
+                  type: Link
+                  params:
+                    pageId: PdfMake
+            blocks:
+              - id: card_pdfmake_label
+                type: Html
+                properties:
+                  html: '<b>PdfMake</b>'
+          - id: card_geolocationcurrentposition
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_geolocationcurrentposition
+                  type: Link
+                  params:
+                    pageId: GeolocationCurrentPosition
+            blocks:
+              - id: card_geolocationcurrentposition_label
+                type: Html
+                properties:
+                  html: '<b>GeolocationCurrentPosition</b>'
+      - id: section_flow_title
+        type: Title
+        properties:
+          content: Flow
+          level: 3
+      - id: section_flow_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Control the action chain.
+      - id: section_flow_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_wait
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_wait
+                  type: Link
+                  params:
+                    pageId: Wait
+            blocks:
+              - id: card_wait_label
+                type: Html
+                properties:
+                  html: '<b>Wait</b>'
+          - id: card_throw
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_throw
+                  type: Link
+                  params:
+                    pageId: Throw
+            blocks:
+              - id: card_throw_label
+                type: Html
+                properties:
+                  html: '<b>Throw</b>'
+          - id: card_callmethod
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_callmethod
+                  type: Link
+                  params:
+                    pageId: CallMethod
+            blocks:
+              - id: card_callmethod_label
+                type: Html
+                properties:
+                  html: '<b>CallMethod</b>'
+      - id: section_auth_session_title
+        type: Title
+        properties:
+          content: Auth & session
+          level: 3
+      - id: section_auth_session_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Sign users in and out.
+      - id: section_auth_session_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card_login
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_login
+                  type: Link
+                  params:
+                    pageId: Login
+            blocks:
+              - id: card_login_label
+                type: Html
+                properties:
+                  html: '<b>Login</b>'
+          - id: card_logout
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_logout
+                  type: Link
+                  params:
+                    pageId: Logout
+            blocks:
+              - id: card_logout_label
+                type: Html
+                properties:
+                  html: '<b>Logout</b>'
+          - id: card_updatesession
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_updatesession
+                  type: Link
+                  params:
+                    pageId: UpdateSession
+            blocks:
+              - id: card_updatesession_label
+                type: Html
+                properties:
+                  html: '<b>UpdateSession</b>'
+

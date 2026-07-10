@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: theming
     pageTitle: Theming
-    section: Concepts
-    filePath: concepts/theming.yaml
+    filePath: concepts/core/theming.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -472,10 +471,3 @@ _ref:
                   - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.
                   - Add custom Tailwind tokens via `theme.tailwind` in `lowdefy.yaml`.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Custom Styling
-            previous_page_id: custom-styling
-            next_page_title: Custom HTML
-            next_page_id: custom-html

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: NumberInput
     pageTitle: NumberInput
-    section: Input Blocks
     filePath: blocks/input/NumberInput.yaml
     block_type: NumberInput
     antd_component: InputNumber

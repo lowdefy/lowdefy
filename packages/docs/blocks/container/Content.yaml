@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Content
     pageTitle: Content
-    section: Container Blocks
     filePath: blocks/container/Content.yaml
     block_type: Content
     antd_component: Content

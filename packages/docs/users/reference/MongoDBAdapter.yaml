@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MongoDBAdapter
     pageTitle: MongoDBAdapter
-    section: User Authentication
     filePath: users/reference/MongoDBAdapter.yaml
     content:
       - id: content

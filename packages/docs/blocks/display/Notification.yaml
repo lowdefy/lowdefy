@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Notification
     pageTitle: Notification
-    section: Display Blocks
     filePath: blocks/display/Notification.yaml
     block_type: Notification
     antd_component: Notification

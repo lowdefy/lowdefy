@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-auth
     pageTitle: Testing Authentication
-    section: Testing
     filePath: testing/e2e-auth.yaml
     content:
       - id: md1
@@ -140,10 +139,3 @@ _ref:
             - **Sign-in and sign-out are not supported.** If your app uses the Login or Logout actions, the e2e server will throw an error. Test login flows by setting the user directly with `ldf.user()` instead.
             - **No session callbacks.** The user object is passed through as-is. If your production app transforms the session via callbacks (for example, mapping `userFields`), those transforms do not run in e2e tests.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Mocking Requests
-            previous_page_id: e2e-mocking
-            next_page_title: Configuration
-            next_page_id: e2e-configuration

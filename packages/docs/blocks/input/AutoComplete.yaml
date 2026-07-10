@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AutoComplete
     pageTitle: AutoComplete
-    section: Input Blocks
     filePath: blocks/input/AutoComplete.yaml
     block_type: AutoComplete
     antd_component: AutoComplete

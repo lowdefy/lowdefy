@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-actions-operators
     pageTitle: 4. Interactive pages with actions and operators
-    section: Tutorial
     filePath: tutorial/tutorial-actions-operators.yaml
     content:
       - id: body_reset
@@ -410,10 +409,3 @@ _ref:
 
             Our app doesn't save the form data anywhere when the submit button is clicked. In the next section we will set up a connection and a request to save the data in a local SQLite database.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Adding blocks
-            previous_page_id: tutorial-add-blocks
-            next_page_title: API / HTTP Requests
-            next_page_id: tutorial-requests-api

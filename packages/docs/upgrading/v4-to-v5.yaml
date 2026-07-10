@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: v4-to-v5
     pageTitle: Version 4 to Version 5
-    section: Migration
-    filePath: migration/v4-to-v5.yaml
+    filePath: upgrading/v4-to-v5.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -614,8 +613,3 @@ _ref:
             5. **Button looks different** — Update `type` to `color`/`variant`. See the mapping table above.
             6. **`areas` deprecated warning** — Rename `areas` to `slots` in your config.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Upgrade Guide
-            previous_page_id: upgrade-guide

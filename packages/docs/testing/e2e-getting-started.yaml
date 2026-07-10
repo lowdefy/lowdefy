@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-getting-started
     pageTitle: Getting Started
-    section: Testing
     filePath: testing/e2e-getting-started.yaml
     content:
       - id: md1
@@ -128,10 +127,3 @@ _ref:
             4. For each test, a fresh `ldf` object is created with a new browser page, and any static mocks from `mocks.yaml` are applied
             5. Your test code runs against the live app
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Introduction
-            previous_page_id: e2e-introduction
-            next_page_title: Writing Tests
-            next_page_id: e2e-writing-tests

@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: menus
     pageTitle: Menus
-    section: Concepts
-    filePath: concepts/menus.yaml
+    filePath: concepts/advanced/menus.yaml
     content:
       - id: menu_filter_alert
         type: Alert
@@ -171,10 +170,3 @@ _ref:
               ```
 
               In the example above, public users can only view the `login` and `404` pages, all other pages require the user to be logged in. If the authorized user had been given only the `user` role, they will only be able to see `page1`. In order to see `page2` and `page3`, the authorized user will need to have the `admin` role assigned to them. The menu will be filtered accordingly and will only contain the menu items that the user has access to.
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Writing Modules
-            previous_page_id: module-authoring
-            next_page_title: Layout
-            next_page_id: layout-overview

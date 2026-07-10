@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DateTimeSelector
     pageTitle: DateTimeSelector
-    section: Input Blocks
     filePath: blocks/input/DateTimeSelector.yaml
     block_type: DateTimeSelector
     antd_component: DatePicker

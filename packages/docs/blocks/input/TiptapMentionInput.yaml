@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TiptapMentionInput
     pageTitle: TiptapMentionInput
-    section: Input Blocks
     filePath: blocks/input/TiptapMentionInput.yaml
     block_type: TiptapMentionInput
     github_path: packages/plugins/blocks/blocks-tiptap/src/blocks/TiptapMentionInput

@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: events-and-actions
     pageTitle: Events and Actions
-    section: Concepts
-    filePath: concepts/events-and-actions.yaml
+    filePath: concepts/core/events-and-actions.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -230,10 +229,3 @@ _ref:
             - The `onMount` events is triggered the every time a block is mounted and keeps the block in loading until all actions have finished.
             - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Blocks
-            previous_page_id: blocks
-            next_page_title: Operators
-            next_page_id: operators

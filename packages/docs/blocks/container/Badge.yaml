@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Badge
     pageTitle: Badge
-    section: Container Blocks
     filePath: blocks/container/Badge.yaml
     block_type: Badge
     antd_component: Badge

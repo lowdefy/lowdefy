@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: roles
     pageTitle: Roles
-    section: User Authentication
     filePath: users/roles.yaml
     content:
       - id: content
@@ -70,10 +69,3 @@ _ref:
                           - create-user
                           - update-user
                 ````
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Protected Pages and APIs
-            previous_page_id: protected-pages-apis
-            next_page_title: User Object
-            next_page_id: user-object

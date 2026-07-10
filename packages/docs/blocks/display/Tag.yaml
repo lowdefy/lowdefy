@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Tag
     pageTitle: Tag
-    section: Display Blocks
     filePath: blocks/display/Tag.yaml
     block_type: Tag
     antd_component: Tag

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: GoogleMapsScript
     pageTitle: GoogleMapsScript
-    section: Container Blocks
     filePath: blocks/container/GoogleMapsScript.yaml
     block_type: GoogleMapsScript
     github_path: packages/plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript

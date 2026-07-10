@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: blocks
     pageTitle: Blocks
-    section: Concepts
-    filePath: concepts/blocks.yaml
+    filePath: concepts/core/blocks.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -180,10 +179,3 @@ _ref:
                   - Some blocks gracefully handle a loading state while `onMount` events are being executed.
                   - A block's default loading can be overwritten by defining custom `skeleton` settings on a block.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Lowdefy App Schema
-            previous_page_id: lowdefy-schema
-            next_page_title: Events and Actions
-            next_page_id: events-and-actions

@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: custom-styling
     pageTitle: Custom Styling
-    section: Concepts
-    filePath: concepts/custom-styling.yaml
+    filePath: concepts/advanced/custom-styling.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -184,10 +183,3 @@ _ref:
 
             See the [Migration Guide](/v4-to-v5) for full details.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Hosting Files
-            previous_page_id: hosting-files
-            next_page_title: Theming
-            next_page_id: theming

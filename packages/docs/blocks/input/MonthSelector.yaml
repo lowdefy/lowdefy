@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MonthSelector
     pageTitle: MonthSelector
-    section: Input Blocks
     filePath: blocks/input/MonthSelector.yaml
     block_type: MonthSelector
     antd_component: DatePicker

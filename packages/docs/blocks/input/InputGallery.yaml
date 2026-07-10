@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: InputGallery
     pageTitle: Input Gallery
-    section: Input Blocks
     filePath: blocks/input/InputGallery.yaml
     fullWidth: true
     content:

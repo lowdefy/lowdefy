@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TitleInput
     pageTitle: TitleInput
-    section: Input Blocks
     filePath: blocks/input/TitleInput.yaml
     block_type: TitleInput
     antd_component: Typography

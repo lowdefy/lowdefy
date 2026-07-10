@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-start
     pageTitle: 1. Getting started
-    section: Tutorial
     filePath: tutorial/tutorial-start.yaml
     content:
       # TODO: Create new tutorial videos
@@ -265,10 +264,3 @@ _ref:
 
             Let's see how easy it is to create a new page.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Introduction
-            previous_page_id: introduction
-            next_page_title: Creating a page
-            next_page_id: tutorial-create-page

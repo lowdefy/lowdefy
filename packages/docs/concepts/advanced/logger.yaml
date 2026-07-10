@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: logger
     pageTitle: Logger
-    section: Concepts
-    filePath: concepts/logger.yaml
+    filePath: concepts/advanced/logger.yaml
     content:
       - id: md1
         type: Markdown
@@ -166,10 +165,3 @@ _ref:
             - **Config Location:** The source file and line number in your YAML config
             - **User Context:** Configured user fields for authenticated sessions
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Secrets
-            previous_page_id: secrets
-            next_page_title: Lists
-            next_page_id: lists

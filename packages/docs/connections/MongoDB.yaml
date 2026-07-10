@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MongoDB
     pageTitle: MongoDB
-    section: Connections
     filePath: connections/MongoDB.yaml
     content:
       - id: markdown

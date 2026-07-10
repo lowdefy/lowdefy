@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Message
     pageTitle: Message
-    section: Display Blocks
     filePath: blocks/display/Message.yaml
     block_type: Message
     antd_component: Message

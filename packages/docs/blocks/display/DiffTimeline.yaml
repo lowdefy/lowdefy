@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: DiffTimeline
     pageTitle: DiffTimeline
-    section: Display Blocks
     filePath: blocks/display/DiffTimeline.yaml
     block_type: DiffTimeline
     github_path: packages/plugins/blocks/blocks-diff/src/blocks/DiffTimeline

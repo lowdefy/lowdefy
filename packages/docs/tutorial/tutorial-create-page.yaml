@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-create-page
     pageTitle: 2. Creating a page
-    section: Tutorial
     filePath: tutorial/tutorial-create-page.yaml
     content:
       - id: body_create_page
@@ -174,10 +173,3 @@ _ref:
 
             In the next section we will add some more blocks to our page to create a form to capture the ticket data.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Getting started
-            previous_page_id: tutorial-start
-            next_page_title: Adding blocks
-            next_page_id: tutorial-add-blocks

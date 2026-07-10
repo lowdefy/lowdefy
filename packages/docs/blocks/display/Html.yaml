@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Html
     pageTitle: Html
-    section: Display Blocks
     filePath: blocks/display/Html.yaml
     block_type: Html
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Html

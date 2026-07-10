@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: cli
     pageTitle: The CLI
-    section: Concepts
-    filePath: concepts/cli.yaml
+    filePath: concepts/advanced/cli.yaml
     content:
       - id: md1
         type: MarkdownWithCode

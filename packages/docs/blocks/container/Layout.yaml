@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Layout
     pageTitle: Layout
-    section: Container Blocks
     filePath: blocks/container/Layout.yaml
     block_type: Layout
     antd_component: Layout

@@ -42,14 +42,13 @@
             params:
               pageId:
                 _event: pageId
-- id: why_button
-  type: Button
+# The active tab value (state.tab_selector) is seeded per page by an onInit
+# SetState injected by the build-time menu transformer in generateSiteAssets.js.
+- id: tab_selector
+  type: SegmentedSelector
   visible:
     _not:
       _or:
-        - _eq:
-            - _media: size
-            - md
         - _eq:
             - _media: size
             - sm
@@ -57,41 +56,82 @@
             - _media: size
             - xs
   layout:
-    flex: 1 0 auto
+    flex: 0 1 auto
+    selfAlign: middle
   properties:
-    title: Why Lowdefy
-    color: default
-    variant: text
     size: small
-    href: https://lowdefy.com
-- id: tutorial_button
-  type: Button
-  visible:
-    _not:
-      _or:
-        - _eq:
-            - _media: size
-            - md
-        - _eq:
-            - _media: size
-            - sm
-        - _eq:
-            - _media: size
-            - xs
-  layout:
-    flex: 1 0 auto
-  properties:
-    title: Getting Started
-    color: default
-    variant: text
-    size: small
+    options:
+      - label: Learn
+        value: learn
+      - label: Reference
+        value: reference
+      - label: Recipes
+        value: recipes
+      - label: Plugins
+        value: plugins
   events:
-    onClick:
-      - id: tutorial_link
+    onChange:
+      - id: tab_link
         type: Link
         params:
-          pageId: tutorial-start
-- id: community_button
+          pageId:
+            _get:
+              from:
+                learn: introduction
+                reference: reference
+                recipes: recipes
+                plugins: plugins
+              key:
+                _state: tab_selector
+- id: mobile_tab_menu
+  type: DropdownMenu
+  visible:
+    _or:
+      - _eq:
+          - _media: size
+          - sm
+      - _eq:
+          - _media: size
+          - xs
+  layout:
+    flex: 0 1 auto
+    selfAlign: middle
+  properties:
+    title:
+      _get:
+        from:
+          learn: Learn
+          reference: Reference
+          recipes: Recipes
+          plugins: Plugins
+        key:
+          _state: tab_selector
+    links:
+      - id: mobile_tab_learn
+        type: MenuLink
+        pageId: introduction
+        properties:
+          title: Learn
+      - id: mobile_tab_reference
+        type: MenuLink
+        pageId: reference
+        properties:
+          title: Reference
+      - id: mobile_tab_recipes
+        type: MenuLink
+        pageId: recipes
+        properties:
+          title: Recipes
+      - id: mobile_tab_plugins
+        type: MenuLink
+        pageId: plugins
+        properties:
+          title: Plugins
+- id: header_spacer
+  type: Box
+  layout:
+    flex: 1 0 auto
+- id: discord_button
   type: Button
   visible:
     _not:
@@ -103,11 +143,12 @@
             - _media: size
             - xs
   layout:
-    flex: 1 0 auto
+    flex: 0 1 auto
+    selfAlign: middle
   properties:
-    title: Join our Discord
     color: default
     variant: text
+    icon: FaDiscord
     size: small
     href: https://discord.gg/WmcJgXt
 - id: github_button
@@ -122,9 +163,9 @@
             - _media: size
             - xs
   layout:
-    flex: 1 0 auto
+    flex: 0 1 auto
+    selfAlign: middle
   properties:
-    title: Star on Github
     color: default
     variant: text
     icon: AiFillGithub

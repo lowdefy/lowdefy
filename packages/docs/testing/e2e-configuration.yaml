@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-configuration
     pageTitle: Configuration
-    section: Testing
     filePath: testing/e2e-configuration.yaml
     content:
       - id: md1
@@ -142,10 +141,3 @@ _ref:
             await ldf.request('generate_report').expect.toFinish({ timeout: 60000 });
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Testing Authentication
-            previous_page_id: e2e-auth
-            next_page_title: AutoComplete
-            next_page_id: AutoComplete

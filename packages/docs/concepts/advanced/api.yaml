@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: lowdefy-api
     pageTitle: Lowdefy APIs
-    section: Concepts
-    filePath: concepts/api.yaml
+    filePath: concepts/advanced/api.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -31,12 +30,5 @@ _ref:
                 version:
                   _ref: version.yaml
               template:
-                _ref: concepts/api.md
+                _ref: concepts/advanced/api.md
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Page and App State
-            previous_page_id: page-and-app-state
-            next_page_title: References and Templates
-            next_page_id: references-and-templates

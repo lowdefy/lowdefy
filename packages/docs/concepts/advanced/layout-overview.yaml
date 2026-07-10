@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: layout-overview
     pageTitle: Layout
-    section: Concepts
     filePath: concepts/layout.yaml
     content:
       - id: markdown_intro
@@ -1453,10 +1452,3 @@ _ref:
                               html: |
                                 <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 15</div>
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Menus
-            previous_page_id: menus
-            next_page_title: Secrets
-            next_page_id: secrets

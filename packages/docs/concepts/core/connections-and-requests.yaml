@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: connections-and-requests
     pageTitle: Connections and Requests
-    section: Concepts
-    filePath: concepts/connections-and-requests.yaml
+    filePath: concepts/core/connections-and-requests.yaml
     content:
       - id: md1
         type: Markdown
@@ -460,10 +459,3 @@ _ref:
                   - Use the `payload` object on a request to pass data such as state values from the app client to the server as required.
                   - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Operators
-            previous_page_id: operators
-            next_page_title: Page and App State
-            next_page_id: page-and-app-state

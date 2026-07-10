@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Splitter
     pageTitle: Splitter
-    section: Container Blocks
     filePath: blocks/container/Splitter.yaml
     block_type: Splitter
     antd_component: Splitter

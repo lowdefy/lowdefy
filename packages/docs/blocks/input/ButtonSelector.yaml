@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ButtonSelector
     pageTitle: ButtonSelector
-    section: Input Blocks
     filePath: blocks/input/ButtonSelector.yaml
     block_type: ButtonSelector
     antd_component: Radio

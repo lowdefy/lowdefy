@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: custom-html
     pageTitle: Custom HTML
-    section: Concepts
-    filePath: concepts/custom-html.yaml
+    filePath: concepts/advanced/custom-html.yaml
     content:
       - id: warning
         type: Alert
@@ -74,10 +73,3 @@ _ref:
                       <!-- End Google Analytics -->
                 # ...
                 ```
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Custom Styling
-            previous_page_id: custom-styling
-            next_page_title: The CLI
-            next_page_id: cli

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Affix
     pageTitle: Affix
-    section: Container Blocks
     filePath: blocks/container/Affix.yaml
     block_type: Affix
     antd_component: Affix

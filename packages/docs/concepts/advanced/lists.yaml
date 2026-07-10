@@ -3,8 +3,7 @@ _ref:
   vars:
     pageId: lists
     pageTitle: Lists
-    section: Concepts
-    filePath: concepts/lists.yaml
+    filePath: concepts/advanced/lists.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -153,10 +152,3 @@ _ref:
 
             List blocks create a content area for each item in `state`. If `state` is updated, the list block will also update, creating or destroying content areas as necessary. Thus list blocks can also be manipulated by setting `state` directly using the [`SetState`](/SetState) operator.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Secrets
-            previous_page_id: secrets
-            next_page_title: Hosting Files
-            next_page_id: hosting-files

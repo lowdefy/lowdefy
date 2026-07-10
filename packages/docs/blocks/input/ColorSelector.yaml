@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ColorSelector
     pageTitle: ColorSelector
-    section: Input Blocks
     filePath: blocks/input/ColorSelector.yaml
     block_type: ColorSelector
     antd_component: ColorPicker

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PageHeaderMenu
     pageTitle: PageHeaderMenu
-    section: Container Blocks
     filePath: blocks/container/PageHeaderMenu.yaml
     block_type: PageHeaderMenu
     antd_component: Layout

@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: modules
     pageTitle: Modules
-    section: Concepts
-    filePath: concepts/modules.yaml
+    filePath: concepts/advanced/modules.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -361,10 +360,3 @@ _ref:
 
             **"dependencies.contacts references 'my-contacts' but no module entry 'my-contacts' exists"** — The entry ID in your `dependencies` mapping doesn't match any `id` in the `modules` array. Check the entry ID spelling.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: References and Templates
-            previous_page_id: references-and-templates
-            next_page_title: Writing Modules
-            next_page_id: module-authoring

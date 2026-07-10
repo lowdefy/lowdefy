@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Google
     pageTitle: Google
-    section: Connections
     filePath: connections/Google.yaml
     content:
       - id: md1

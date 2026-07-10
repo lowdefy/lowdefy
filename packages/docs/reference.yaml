@@ -1,0 +1,161 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: reference
+    pageTitle: Reference
+    filePath: reference.yaml
+    content:
+      - id: reference_intro
+        type: Markdown
+        properties:
+          content: |
+            Every Lowdefy primitive, by the book. New to Lowdefy? Start with
+            [The Four Primitives](/four-primitives) under Learn.
+
+      - id: reference_cards
+        type: Flex
+        layout:
+          gap: 16
+        properties:
+          wrap: wrap
+        blocks:
+          - id: ref_card_blocks
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Blocks
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_blocks
+                  type: Link
+                  params:
+                    pageId: blocks-reference
+            blocks:
+              - id: ref_card_blocks_text
+                type: Paragraph
+                properties:
+                  content: 114 UI components — inputs, tables, charts, containers, and lists.
+          - id: ref_card_operators
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Operators
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_operators
+                  type: Link
+                  params:
+                    pageId: operators-reference
+            blocks:
+              - id: ref_card_operators_text
+                type: Paragraph
+                properties:
+                  content: 70 functions that express logic and shape data anywhere in config.
+          - id: ref_card_actions
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Actions
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_actions
+                  type: Link
+                  params:
+                    pageId: actions-reference
+            blocks:
+              - id: ref_card_actions_text
+                type: Paragraph
+                properties:
+                  content: 24 event handlers that make pages interactive.
+          - id: ref_card_connections
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Connections
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_connections
+                  type: Link
+                  params:
+                    pageId: connections-reference
+            blocks:
+              - id: ref_card_connections_text
+                type: Paragraph
+                properties:
+                  content: 19 integrations — databases, storage, HTTP services, and AI providers.
+          - id: ref_card_controls
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Controls
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_controls
+                  type: Link
+                  params:
+                    pageId: ':for'
+            blocks:
+              - id: ref_card_controls_text
+                type: Paragraph
+                properties:
+                  content: Flow control for API routines — loops, branches, and error handling.
+          - id: ref_card_schema
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Schema
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: ref_link_schema
+                  type: Link
+                  params:
+                    pageId: schema-reference
+            blocks:
+              - id: ref_card_schema_text
+                type: Paragraph
+                properties:
+                  content: The shape of app, page, block, request, and auth config.

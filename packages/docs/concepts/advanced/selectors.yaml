@@ -3,8 +3,7 @@ _ref:
   vars:
     pageId: selectors
     pageTitle: Driving Selectors
-    section: Concepts
-    filePath: concepts/selectors.yaml
+    filePath: concepts/advanced/selectors.yaml
     content:
       - id: md1
         type: MarkdownWithCode

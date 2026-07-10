@@ -1,0 +1,1555 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: operators-reference
+    pageTitle: Operators
+    filePath: operators/index.yaml
+    content:
+      - id: intro
+        type: Markdown
+        properties:
+          content: |
+            Operators are functions written directly in config — they evaluate wherever they appear. All 70 operators, grouped by what they do. See [Operators](/operators) for how evaluation works.
+      - id: section_logic_control_title
+        type: Title
+        properties:
+          content: Logic & control
+          level: 3
+      - id: section_logic_control_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Branch, compare, and combine conditions.
+      - id: section_logic_control_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__and
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__and
+                  type: Link
+                  params:
+                    pageId: _and
+            blocks:
+              - id: card__and_label
+                type: Html
+                properties:
+                  html: '<code>_and</code>'
+          - id: card__or
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__or
+                  type: Link
+                  params:
+                    pageId: _or
+            blocks:
+              - id: card__or_label
+                type: Html
+                properties:
+                  html: '<code>_or</code>'
+          - id: card__not
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__not
+                  type: Link
+                  params:
+                    pageId: _not
+            blocks:
+              - id: card__not_label
+                type: Html
+                properties:
+                  html: '<code>_not</code>'
+          - id: card__if
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__if
+                  type: Link
+                  params:
+                    pageId: _if
+            blocks:
+              - id: card__if_label
+                type: Html
+                properties:
+                  html: '<code>_if</code>'
+          - id: card__if_none
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__if_none
+                  type: Link
+                  params:
+                    pageId: _if_none
+            blocks:
+              - id: card__if_none_label
+                type: Html
+                properties:
+                  html: '<code>_if_none</code>'
+          - id: card__switch
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__switch
+                  type: Link
+                  params:
+                    pageId: _switch
+            blocks:
+              - id: card__switch_label
+                type: Html
+                properties:
+                  html: '<code>_switch</code>'
+          - id: card__eq
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__eq
+                  type: Link
+                  params:
+                    pageId: _eq
+            blocks:
+              - id: card__eq_label
+                type: Html
+                properties:
+                  html: '<code>_eq</code>'
+          - id: card__ne
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__ne
+                  type: Link
+                  params:
+                    pageId: _ne
+            blocks:
+              - id: card__ne_label
+                type: Html
+                properties:
+                  html: '<code>_ne</code>'
+          - id: card__gt
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__gt
+                  type: Link
+                  params:
+                    pageId: _gt
+            blocks:
+              - id: card__gt_label
+                type: Html
+                properties:
+                  html: '<code>_gt</code>'
+          - id: card__gte
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__gte
+                  type: Link
+                  params:
+                    pageId: _gte
+            blocks:
+              - id: card__gte_label
+                type: Html
+                properties:
+                  html: '<code>_gte</code>'
+          - id: card__lt
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__lt
+                  type: Link
+                  params:
+                    pageId: _lt
+            blocks:
+              - id: card__lt_label
+                type: Html
+                properties:
+                  html: '<code>_lt</code>'
+          - id: card__lte
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__lte
+                  type: Link
+                  params:
+                    pageId: _lte
+            blocks:
+              - id: card__lte_label
+                type: Html
+                properties:
+                  html: '<code>_lte</code>'
+          - id: card__type
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__type
+                  type: Link
+                  params:
+                    pageId: _type
+            blocks:
+              - id: card__type_label
+                type: Html
+                properties:
+                  html: '<code>_type</code>'
+          - id: card__boolean
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__boolean
+                  type: Link
+                  params:
+                    pageId: _boolean
+            blocks:
+              - id: card__boolean_label
+                type: Html
+                properties:
+                  html: '<code>_boolean</code>'
+      - id: section_state_context_title
+        type: Title
+        properties:
+          content: State & context
+          level: 3
+      - id: section_state_context_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Read page, user, and app context.
+      - id: section_state_context_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__state
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__state
+                  type: Link
+                  params:
+                    pageId: _state
+            blocks:
+              - id: card__state_label
+                type: Html
+                properties:
+                  html: '<code>_state</code>'
+          - id: card__global
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__global
+                  type: Link
+                  params:
+                    pageId: _global
+            blocks:
+              - id: card__global_label
+                type: Html
+                properties:
+                  html: '<code>_global</code>'
+          - id: card__input
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__input
+                  type: Link
+                  params:
+                    pageId: _input
+            blocks:
+              - id: card__input_label
+                type: Html
+                properties:
+                  html: '<code>_input</code>'
+          - id: card__event
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__event
+                  type: Link
+                  params:
+                    pageId: _event
+            blocks:
+              - id: card__event_label
+                type: Html
+                properties:
+                  html: '<code>_event</code>'
+          - id: card__user
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__user
+                  type: Link
+                  params:
+                    pageId: _user
+            blocks:
+              - id: card__user_label
+                type: Html
+                properties:
+                  html: '<code>_user</code>'
+          - id: card__media
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__media
+                  type: Link
+                  params:
+                    pageId: _media
+            blocks:
+              - id: card__media_label
+                type: Html
+                properties:
+                  html: '<code>_media</code>'
+          - id: card__location
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__location
+                  type: Link
+                  params:
+                    pageId: _location
+            blocks:
+              - id: card__location_label
+                type: Html
+                properties:
+                  html: '<code>_location</code>'
+          - id: card__url_query
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__url_query
+                  type: Link
+                  params:
+                    pageId: _url_query
+            blocks:
+              - id: card__url_query_label
+                type: Html
+                properties:
+                  html: '<code>_url_query</code>'
+          - id: card__index
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__index
+                  type: Link
+                  params:
+                    pageId: _index
+            blocks:
+              - id: card__index_label
+                type: Html
+                properties:
+                  html: '<code>_index</code>'
+          - id: card__item
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__item
+                  type: Link
+                  params:
+                    pageId: _item
+            blocks:
+              - id: card__item_label
+                type: Html
+                properties:
+                  html: '<code>_item</code>'
+          - id: card__step
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__step
+                  type: Link
+                  params:
+                    pageId: _step
+            blocks:
+              - id: card__step_label
+                type: Html
+                properties:
+                  html: '<code>_step</code>'
+          - id: card__actions
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__actions
+                  type: Link
+                  params:
+                    pageId: _actions
+            blocks:
+              - id: card__actions_label
+                type: Html
+                properties:
+                  html: '<code>_actions</code>'
+          - id: card__args
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__args
+                  type: Link
+                  params:
+                    pageId: _args
+            blocks:
+              - id: card__args_label
+                type: Html
+                properties:
+                  html: '<code>_args</code>'
+      - id: section_requests_apis_title
+        type: Title
+        properties:
+          content: Requests & APIs
+          level: 3
+      - id: section_requests_apis_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Read request responses and API results.
+      - id: section_requests_apis_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__request
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__request
+                  type: Link
+                  params:
+                    pageId: _request
+            blocks:
+              - id: card__request_label
+                type: Html
+                properties:
+                  html: '<code>_request</code>'
+          - id: card__request_details
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__request_details
+                  type: Link
+                  params:
+                    pageId: _request_details
+            blocks:
+              - id: card__request_details_label
+                type: Html
+                properties:
+                  html: '<code>_request_details</code>'
+          - id: card__api
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__api
+                  type: Link
+                  params:
+                    pageId: _api
+            blocks:
+              - id: card__api_label
+                type: Html
+                properties:
+                  html: '<code>_api</code>'
+      - id: section_build_config_title
+        type: Title
+        properties:
+          content: Build & config
+          level: 3
+      - id: section_build_config_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Compose config at build time.
+      - id: section_build_config_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__ref
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__ref
+                  type: Link
+                  params:
+                    pageId: _ref
+            blocks:
+              - id: card__ref_label
+                type: Html
+                properties:
+                  html: '<code>_ref</code>'
+          - id: card__var
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__var
+                  type: Link
+                  params:
+                    pageId: _var
+            blocks:
+              - id: card__var_label
+                type: Html
+                properties:
+                  html: '<code>_var</code>'
+          - id: card__module
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__module
+                  type: Link
+                  params:
+                    pageId: _module
+            blocks:
+              - id: card__module_label
+                type: Html
+                properties:
+                  html: '<code>_module</code>'
+          - id: card__build
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__build
+                  type: Link
+                  params:
+                    pageId: _build
+            blocks:
+              - id: card__build_label
+                type: Html
+                properties:
+                  html: '<code>_build</code>'
+          - id: card__secret
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__secret
+                  type: Link
+                  params:
+                    pageId: _secret
+            blocks:
+              - id: card__secret_label
+                type: Html
+                properties:
+                  html: '<code>_secret</code>'
+      - id: section_app_i18n_title
+        type: Title
+        properties:
+          content: App & i18n
+          level: 3
+      - id: section_app_i18n_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: App metadata, menus, theme, and translations.
+      - id: section_app_i18n_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__app
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__app
+                  type: Link
+                  params:
+                    pageId: _app
+            blocks:
+              - id: card__app_label
+                type: Html
+                properties:
+                  html: '<code>_app</code>'
+          - id: card__menu
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__menu
+                  type: Link
+                  params:
+                    pageId: _menu
+            blocks:
+              - id: card__menu_label
+                type: Html
+                properties:
+                  html: '<code>_menu</code>'
+          - id: card__theme
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__theme
+                  type: Link
+                  params:
+                    pageId: _theme
+            blocks:
+              - id: card__theme_label
+                type: Html
+                properties:
+                  html: '<code>_theme</code>'
+          - id: card__t
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__t
+                  type: Link
+                  params:
+                    pageId: _t
+            blocks:
+              - id: card__t_label
+                type: Html
+                properties:
+                  html: '<code>_t</code>'
+          - id: card__locale
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__locale
+                  type: Link
+                  params:
+                    pageId: _locale
+            blocks:
+              - id: card__locale_label
+                type: Html
+                properties:
+                  html: '<code>_locale</code>'
+      - id: section_data_manipulation_title
+        type: Title
+        properties:
+          content: Data manipulation
+          level: 3
+      - id: section_data_manipulation_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Get, shape, and query data structures.
+      - id: section_data_manipulation_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__get
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__get
+                  type: Link
+                  params:
+                    pageId: _get
+            blocks:
+              - id: card__get_label
+                type: Html
+                properties:
+                  html: '<code>_get</code>'
+          - id: card__array
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__array
+                  type: Link
+                  params:
+                    pageId: _array
+            blocks:
+              - id: card__array_label
+                type: Html
+                properties:
+                  html: '<code>_array</code>'
+          - id: card__object
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__object
+                  type: Link
+                  params:
+                    pageId: _object
+            blocks:
+              - id: card__object_label
+                type: Html
+                properties:
+                  html: '<code>_object</code>'
+          - id: card__diff
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__diff
+                  type: Link
+                  params:
+                    pageId: _diff
+            blocks:
+              - id: card__diff_label
+                type: Html
+                properties:
+                  html: '<code>_diff</code>'
+          - id: card__mql
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__mql
+                  type: Link
+                  params:
+                    pageId: _mql
+            blocks:
+              - id: card__mql_label
+                type: Html
+                properties:
+                  html: '<code>_mql</code>'
+      - id: section_math_title
+        type: Title
+        properties:
+          content: Math
+          level: 3
+      - id: section_math_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Arithmetic and number utilities.
+      - id: section_math_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__sum
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__sum
+                  type: Link
+                  params:
+                    pageId: _sum
+            blocks:
+              - id: card__sum_label
+                type: Html
+                properties:
+                  html: '<code>_sum</code>'
+          - id: card__subtract
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__subtract
+                  type: Link
+                  params:
+                    pageId: _subtract
+            blocks:
+              - id: card__subtract_label
+                type: Html
+                properties:
+                  html: '<code>_subtract</code>'
+          - id: card__product
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__product
+                  type: Link
+                  params:
+                    pageId: _product
+            blocks:
+              - id: card__product_label
+                type: Html
+                properties:
+                  html: '<code>_product</code>'
+          - id: card__divide
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__divide
+                  type: Link
+                  params:
+                    pageId: _divide
+            blocks:
+              - id: card__divide_label
+                type: Html
+                properties:
+                  html: '<code>_divide</code>'
+          - id: card__math
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__math
+                  type: Link
+                  params:
+                    pageId: _math
+            blocks:
+              - id: card__math_label
+                type: Html
+                properties:
+                  html: '<code>_math</code>'
+          - id: card__number
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__number
+                  type: Link
+                  params:
+                    pageId: _number
+            blocks:
+              - id: card__number_label
+                type: Html
+                properties:
+                  html: '<code>_number</code>'
+          - id: card__random
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__random
+                  type: Link
+                  params:
+                    pageId: _random
+            blocks:
+              - id: card__random_label
+                type: Html
+                properties:
+                  html: '<code>_random</code>'
+      - id: section_string_title
+        type: Title
+        properties:
+          content: String
+          level: 3
+      - id: section_string_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Transform and match strings.
+      - id: section_string_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__string
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__string
+                  type: Link
+                  params:
+                    pageId: _string
+            blocks:
+              - id: card__string_label
+                type: Html
+                properties:
+                  html: '<code>_string</code>'
+          - id: card__regex
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__regex
+                  type: Link
+                  params:
+                    pageId: _regex
+            blocks:
+              - id: card__regex_label
+                type: Html
+                properties:
+                  html: '<code>_regex</code>'
+          - id: card__change_case
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__change_case
+                  type: Link
+                  params:
+                    pageId: _change_case
+            blocks:
+              - id: card__change_case_label
+                type: Html
+                properties:
+                  html: '<code>_change_case</code>'
+      - id: section_date_time_title
+        type: Title
+        properties:
+          content: Date & time
+          level: 3
+      - id: section_date_time_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Create and format dates.
+      - id: section_date_time_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__date
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__date
+                  type: Link
+                  params:
+                    pageId: _date
+            blocks:
+              - id: card__date_label
+                type: Html
+                properties:
+                  html: '<code>_date</code>'
+          - id: card__dayjs
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__dayjs
+                  type: Link
+                  params:
+                    pageId: _dayjs
+            blocks:
+              - id: card__dayjs_label
+                type: Html
+                properties:
+                  html: '<code>_dayjs</code>'
+          - id: card__intl
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__intl
+                  type: Link
+                  params:
+                    pageId: _intl
+            blocks:
+              - id: card__intl_label
+                type: Html
+                properties:
+                  html: '<code>_intl</code>'
+      - id: section_programming_title
+        type: Title
+        properties:
+          content: Programming
+          level: 3
+      - id: section_programming_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Escape hatches into JavaScript and expressions.
+      - id: section_programming_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__js
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__js
+                  type: Link
+                  params:
+                    pageId: _js
+            blocks:
+              - id: card__js_label
+                type: Html
+                properties:
+                  html: '<code>_js</code>'
+          - id: card__function
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__function
+                  type: Link
+                  params:
+                    pageId: _function
+            blocks:
+              - id: card__function_label
+                type: Html
+                properties:
+                  html: '<code>_function</code>'
+          - id: card__jsonata
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__jsonata
+                  type: Link
+                  params:
+                    pageId: _jsonata
+            blocks:
+              - id: card__jsonata_label
+                type: Html
+                properties:
+                  html: '<code>_jsonata</code>'
+          - id: card__nunjucks
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__nunjucks
+                  type: Link
+                  params:
+                    pageId: _nunjucks
+            blocks:
+              - id: card__nunjucks_label
+                type: Html
+                properties:
+                  html: '<code>_nunjucks</code>'
+          - id: card__operator
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__operator
+                  type: Link
+                  params:
+                    pageId: _operator
+            blocks:
+              - id: card__operator_label
+                type: Html
+                properties:
+                  html: '<code>_operator</code>'
+          - id: card__log
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__log
+                  type: Link
+                  params:
+                    pageId: _log
+            blocks:
+              - id: card__log_label
+                type: Html
+                properties:
+                  html: '<code>_log</code>'
+      - id: section_format_encode_title
+        type: Title
+        properties:
+          content: Format & encode
+          level: 3
+      - id: section_format_encode_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Serialize, encode, and hash values.
+      - id: section_format_encode_grid
+        type: Flex
+        layout:
+          gap: 12
+        properties:
+          wrap: wrap
+        blocks:
+          - id: card__json
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__json
+                  type: Link
+                  params:
+                    pageId: _json
+            blocks:
+              - id: card__json_label
+                type: Html
+                properties:
+                  html: '<code>_json</code>'
+          - id: card__yaml
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__yaml
+                  type: Link
+                  params:
+                    pageId: _yaml
+            blocks:
+              - id: card__yaml_label
+                type: Html
+                properties:
+                  html: '<code>_yaml</code>'
+          - id: card__base64
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__base64
+                  type: Link
+                  params:
+                    pageId: _base64
+            blocks:
+              - id: card__base64_label
+                type: Html
+                properties:
+                  html: '<code>_base64</code>'
+          - id: card__uuid
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__uuid
+                  type: Link
+                  params:
+                    pageId: _uuid
+            blocks:
+              - id: card__uuid_label
+                type: Html
+                properties:
+                  html: '<code>_uuid</code>'
+          - id: card__uri
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__uri
+                  type: Link
+                  params:
+                    pageId: _uri
+            blocks:
+              - id: card__uri_label
+                type: Html
+                properties:
+                  html: '<code>_uri</code>'
+          - id: card__hash
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__hash
+                  type: Link
+                  params:
+                    pageId: _hash
+            blocks:
+              - id: card__hash_label
+                type: Html
+                properties:
+                  html: '<code>_hash</code>'
+

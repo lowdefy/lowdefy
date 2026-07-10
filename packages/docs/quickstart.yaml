@@ -1,0 +1,107 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: quickstart
+    pageTitle: Quickstart
+    filePath: quickstart.yaml
+    prefetchPages:
+      - tutorial-start
+    content:
+      - id: quickstart_intro
+        type: Markdown
+        properties:
+          content: |
+            A running Lowdefy app in five minutes. You need [Node.js](https://nodejs.org) v18 or newer and [pnpm](https://pnpm.io) installed.
+
+            ## 1. Create an app
+
+            Initialize a new app and start the dev server:
+
+      - _ref:
+          path: templates/cli_command.yaml.njk
+          vars:
+            id: quickstart_init
+            command: 'pnpx lowdefy@5 init && pnpx lowdefy@5 dev'
+
+      - id: quickstart_edit
+        type: Markdown
+        properties:
+          content: |
+            This creates a `lowdefy.yaml` in the current directory and opens your app at
+            [http://localhost:3000](http://localhost:3000). The dev server reloads on every save.
+
+            ## 2. Add a block
+
+            Pages are lists of blocks. Open `lowdefy.yaml` and add a `TextInput` and a `Title` to the first page's `blocks`:
+
+            ```yaml
+            blocks:
+              - id: name
+                type: TextInput
+                properties:
+                  title: What is your name?
+              - id: greeting
+                type: Title
+                properties:
+                  content:
+                    _nunjucks:
+                      template: 'Hello {{ name }}!'
+                      on:
+                        name:
+                          _state: name
+            ```
+
+            Save, and type into the input — the title updates as you type.
+
+            ## 3. What just happened
+
+            You used three of the four primitives:
+
+            - The **blocks** `TextInput` and `Title` render the UI.
+            - The **operators** `_state` and `_nunjucks` read the input's value from page state and template the greeting. Operators re-evaluate whenever state changes.
+            - Behind the scenes, typing fires **events** — the fourth primitive, **actions**, lets you respond to them (navigate, call APIs, set state).
+
+            Add a **connection** and a request when you're ready to talk to a database or API.
+
+            ## Next steps
+
+            - Take the [full tutorial](/tutorial-start) — build a complete app with requests and data, in about an hour.
+            - Read [The Four Primitives](/four-primitives) for the mental model.
+            - Browse the [Reference](/reference) to see everything Lowdefy ships.
+
+      - id: quickstart_tutorial_button
+        type: Button
+        style:
+          marginTop: 24px
+        properties:
+          block: true
+          hideActionLoading: true
+          icon: AiOutlineRocket
+          size: large
+          title: Start the tutorial
+          color: primary
+          variant: solid
+        events:
+          onClick:
+            - id: quickstart_link_tutorial
+              type: Link
+              params:
+                pageId: tutorial-start
+            - id: quickstart_scroll_top
+              type: ScrollTo
+              params:
+                top: 0

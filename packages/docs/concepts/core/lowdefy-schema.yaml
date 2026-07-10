@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: lowdefy-schema
     pageTitle: Lowdefy App Schema
-    section: Concepts
-    filePath: concepts/lowdefy-schema.yaml
+    filePath: concepts/core/lowdefy-schema.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -427,10 +426,3 @@ _ref:
 
             Major version updates may include major breaking changes or architecture changes. You might need to make more changes to your configuration to be compatible with the new version. We don't intend to release major versions regularly, and try to minimize breaking changes.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: The CLI
-            previous_page_id: cli
-            next_page_title: Blocks
-            next_page_id: blocks

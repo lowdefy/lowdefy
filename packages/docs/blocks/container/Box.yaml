@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Box
     pageTitle: Box
-    section: Container Blocks
     filePath: blocks/container/Box.yaml
     block_type: Box
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Box

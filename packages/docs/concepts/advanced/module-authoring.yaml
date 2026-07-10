@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: module-authoring
     pageTitle: Writing Modules
-    section: Concepts
-    filePath: concepts/module-authoring.yaml
+    filePath: concepts/advanced/module-authoring.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -584,10 +583,3 @@ _ref:
 
             Follow [semantic versioning](https://semver.org/): increment the major version for breaking changes to the vars interface, minor for new features, patch for fixes.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Modules
-            previous_page_id: modules
-            next_page_title: Menus
-            next_page_id: menus

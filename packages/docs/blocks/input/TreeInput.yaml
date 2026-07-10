@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TreeInput
     pageTitle: TreeInput
-    section: Input Blocks
     filePath: blocks/input/TreeInput.yaml
     block_type: TreeInput
     antd_component: Tree

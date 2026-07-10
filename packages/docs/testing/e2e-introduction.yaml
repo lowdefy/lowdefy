@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: e2e-introduction
     pageTitle: E2E Testing
-    section: Testing
     filePath: testing/e2e-introduction.yaml
     content:
       - id: md1
@@ -85,10 +84,3 @@ _ref:
 
             The `ldf` object is your main testing helper. It is provided automatically by the test fixtures and gives you access to blocks, requests, state, and URL assertions.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Auth0LogoutCallback
-            previous_page_id: Auth0LogoutCallback
-            next_page_title: Getting Started
-            next_page_id: e2e-getting-started

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: tutorial-display-data-page
     pageTitle: 7. Display ticket data
-    section: Tutorial
     filePath: tutorial/tutorial-display-data-page.yaml
     content:
       - id: add_page
@@ -204,10 +203,3 @@ _ref:
 
             Lastly, we linked this new page to our app.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: SQL Requests
-            previous_page_id: tutorial-requests-sql
-            next_page_title: Next Steps
-            next_page_id: tutorial-next-steps

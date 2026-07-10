@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ConfirmModal
     pageTitle: ConfirmModal
-    section: Container Blocks
     filePath: blocks/container/ConfirmModal.yaml
     block_type: ConfirmModal
     antd_component: Modal

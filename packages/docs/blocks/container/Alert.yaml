@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Alert
     pageTitle: Alert
-    section: Container Blocks
     filePath: blocks/container/Alert.yaml
     block_type: Alert
     antd_component: Alert

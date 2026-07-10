@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: overview
     pageTitle: Overview
-    section: Concepts
-    filePath: concepts/overview.yaml
+    filePath: concepts/core/overview.yaml
     content:
       - id: md1
         type: Markdown
@@ -42,10 +41,3 @@ _ref:
 
             Since Lowdefy apps are self-hosted Next.js applications, they do not ship with a built in data store and typically connect to one or more APIs or databases. Server instances are also stateless, which simplifies deployment. We recommend using [Vercel](https://vercel.com) since it is the hosting platform provided by the team behind Next.js. Alternatively, you can deploy your app using Docker or use another hosting provider that supports hosting Next.js applications.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Tutorial
-            previous_page_id: tutorial-start
-            next_page_title: Lowdefy App Schema
-            next_page_id: lowdefy-schema

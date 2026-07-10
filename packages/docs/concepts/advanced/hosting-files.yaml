@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: hosting-files
     pageTitle: Hosting Files
-    section: Concepts
-    filePath: concepts/hosting-files.yaml
+    filePath: concepts/advanced/hosting-files.yaml
     content:
       - id: md1
         type: Markdown
@@ -41,10 +40,3 @@ _ref:
 
             Any of these files can be overwritten by replacing the file with a modified version. For example, to replace the logo inside the header of `PageSiderMenu` on all pages, add a ~250x72px logo inside the project folder at `/logo-light-theme.png`.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Lists
-            previous_page_id: lists
-            next_page_title: Custom Styling
-            next_page_id: custom-styling

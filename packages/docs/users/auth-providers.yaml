@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-providers
     pageTitle: Authentication Providers
-    section: User Authentication
     filePath: users/auth-providers.yaml
     content:
       - id: providers_content
@@ -38,10 +37,3 @@ _ref:
 
             Auth.js provides a credentials provider, which can be used to sign in using any other credentials, such as username and password or Web3. Lowdefy does not provide any credential providers, but a credentials provider can be written as a [plugin](/plugins-dev).
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Login and Logout
-            previous_page_id: login-and-logout
-            next_page_title: Next Auth Providers
-            next_page_id: next-auth-providers

@@ -17,8 +17,7 @@ _ref:
   vars:
     pageId: keyboard-shortcuts
     pageTitle: Keyboard Shortcuts
-    section: Concepts
-    filePath: concepts/keyboard-shortcuts.yaml
+    filePath: concepts/advanced/keyboard-shortcuts.yaml
     content:
       - id: md1
         type: MarkdownWithCode
