@@ -51,6 +51,13 @@ connection, and request type installed in this project (including local plugins)
 3. See real usage: call \`lowdefy_get_examples\` (or \`GET /lowdefy-docs/examples/{type}\`).
 4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\` (or
    \`GET /lowdefy-docs/content/{slug}\`, \`GET /lowdefy-docs/search?q=...\`).
+
+### Visual feedback
+
+While the dev server is running, developers can press \`Cmd/Ctrl+L\` in the browser to point at,
+draw on, or comment on the running app. That feedback arrives via the \`lowdefy_wait_for_feedback\`
+and \`lowdefy_get_feedback\` MCP tools, and automatically wakes an idle Claude Code session through
+a Stop hook. Each annotation includes the config file and line it refers to.
 `;
 }
 

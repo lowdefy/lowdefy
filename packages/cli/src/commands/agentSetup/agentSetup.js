@@ -18,6 +18,7 @@ import path from 'path';
 
 import findProjectRoot from './findProjectRoot.js';
 import getDevCommand from './getDevCommand.js';
+import installStopHook from './installStopHook.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import upsertMcpServer from './upsertMcpServer.js';
 import writeSkillFile from './writeSkillFile.js';
@@ -59,9 +60,13 @@ async function agentSetup({ context }) {
 
   await upsertMcpServer({ context, projectDirectory, port });
   await writeSkillFile({ context, projectDirectory, appPath, port });
+  await installStopHook({ context, projectDirectory, port });
   await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 
   await context.sendTelemetry();
+  context.logger.info(
+    'Stop hook: feedback from the app (Cmd/Ctrl+L in the browser) will wake idle Claude Code sessions.'
+  );
   context.logger.info({ spin: 'succeed' }, 'Project set up for AI coding agents.');
 }
 

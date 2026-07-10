@@ -40,6 +40,13 @@ Never guess type names or properties. Before writing config:
    usage YAML for blocks.
 4. For concepts (state, operators, events, requests), call \`lowdefy_get_doc\`
    or \`lowdefy_search_docs\`.
+
+## Visual feedback
+
+Developers can press \`Cmd/Ctrl+L\` in the running app to point at, draw on, or comment on
+what's on screen. That feedback arrives via the \`lowdefy_wait_for_feedback\` and
+\`lowdefy_get_feedback\` MCP tools, and automatically wakes an idle Claude Code session through
+a Stop hook. Each annotation includes the config file and line it refers to.
 `;
 }
 
