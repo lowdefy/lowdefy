@@ -14,11 +14,25 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
+
 import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
+import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
+
 // SSE endpoint — notifies the client when build/reload is written so it can
-// mutate the SWR cache and refetch config.
+// mutate the SWR cache and refetch config. Also doubles as the transport for
+// the agent-state-xray tab channel (lib/docs/tabChannel.js): a connection
+// that includes ?pageId=<id> is registered as an inspectable dev tab so an
+// agent can push it inspect-request/eval-request SSE events.
+//
+// pageId tracking design: Inspector.jsx (not Reload.jsx) owns this query
+// param, and re-opens its EventSource — new connection, new tab id — every
+// time the developer navigates to a different page. That keeps tabChannel's
+// view of "what page is this tab on" always correct without a separate
+// ping route: Reload.jsx's own connection never sends pageId, so it is never
+// registered as a tab and can't be mistaken for one by requestFromTab.
 async function reloadHandler(c) {
   return streamSSE(c, async (stream) => {
     const watcher = chokidar.watch(['./build/reload'], {
@@ -26,10 +40,23 @@ async function reloadHandler(c) {
       ignoreInitial: true,
     });
 
+    const pageId = c.req.query('pageId');
+    const tabId = pageId === undefined ? undefined : randomUUID();
+    if (tabId) {
+      registerTab({
+        id: tabId,
+        pageId,
+        send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
+      });
+    }
+
     let open = true;
     stream.onAbort(() => {
       open = false;
       watcher.close();
+      if (tabId) {
+        unregisterTab({ id: tabId });
+      }
     });
 
     const reload = () => {
