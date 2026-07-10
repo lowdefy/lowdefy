@@ -22,27 +22,42 @@ import agentsMd from './agentsMd.js';
 
 const lowdefyHeadingPattern = /^##\s+Lowdefy\b/m;
 
-// Appends a "## Lowdefy" section instead of overwriting an existing AGENTS.md, since the file
-// may already document the rest of the project.
-async function upsertAgentsMdSection({ context, port, devCommand }) {
-  const agentsMdPath = path.join(context.directories.config, 'AGENTS.md');
-  const existing = await readFile(agentsMdPath);
-  const section = agentsMd({ port, devCommand });
+// Appends a "## Lowdefy" section to the project's existing agent instructions
+// file instead of creating a competing one: an existing AGENTS.md wins, then
+// an existing CLAUDE.md, and only when neither exists is an AGENTS.md
+// created. Never overwrites — the file may already document the rest of the
+// project.
+async function upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand }) {
+  const candidates = ['AGENTS.md', 'CLAUDE.md'].map((fileName) => ({
+    fileName,
+    filePath: path.join(projectDirectory, fileName),
+  }));
+  const existingFiles = [];
+  for (const candidate of candidates) {
+    const content = await readFile(candidate.filePath);
+    if (!type.isNone(content)) {
+      existingFiles.push({ ...candidate, content });
+    }
+  }
 
-  if (type.isNone(existing)) {
-    await writeFile(agentsMdPath, `${section}`);
+  const withSection = existingFiles.find((file) => lowdefyHeadingPattern.test(file.content));
+  if (withSection) {
+    context.logger.info(`'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`);
+    return;
+  }
+
+  const section = agentsMd({ port, devCommand, appPath });
+
+  if (existingFiles.length === 0) {
+    await writeFile(path.join(projectDirectory, 'AGENTS.md'), `${section}`);
     context.logger.info("Created 'AGENTS.md'.");
     return;
   }
 
-  if (lowdefyHeadingPattern.test(existing)) {
-    context.logger.info("'AGENTS.md' already has a 'Lowdefy' section - skipping.");
-    return;
-  }
-
-  const updated = `${existing.replace(/\s+$/, '')}\n\n${section}`;
-  await writeFile(agentsMdPath, updated);
-  context.logger.info("Added a 'Lowdefy' section to 'AGENTS.md'.");
+  const target = existingFiles[0];
+  const updated = `${target.content.replace(/\s+$/, '')}\n\n${section}`;
+  await writeFile(target.filePath, updated);
+  context.logger.info(`Added a 'Lowdefy' section to '${target.fileName}'.`);
 }
 
 export default upsertAgentsMdSection;

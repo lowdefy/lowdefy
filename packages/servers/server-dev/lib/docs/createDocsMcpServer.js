@@ -52,7 +52,7 @@ Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and e
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
-State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into a committable checkpoints/<name>/ folder (one file per part — reviewable in git). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
+State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -95,7 +95,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_eval_operator',
     {
       description:
-        'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass any operator object, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
+        'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
       inputSchema: {
         pageId: z.string().describe('The page id whose context to evaluate against.'),
         expression: z
@@ -125,7 +125,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       },
     },
     async ({ pageId, requestId, payload }) =>
-      textResult(await runRequest({ pageId, requestId, payload, honoContext })),
+      textResult(await runRequest({ pageId, requestId, payload, honoContext }))
   );
 
   server.registerTool(
@@ -142,7 +142,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_snapshot_state',
     {
       description:
-        "Capture the live state AND recorded request/api responses of a running page into a committable checkpoint folder (checkpoints/<name>/, one file per part). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
+        "Capture the live state AND recorded request/api responses of a running page into a checkpoint folder (.lowdefy/state-checkpoints/<name>/, one file per part; gitignored — checkpoints contain user/session data). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
       inputSchema: {
         pageId: z.string().describe('The page to snapshot.'),
         name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
@@ -275,7 +275,9 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         pageId: z
           .string()
           .optional()
-          .describe('The page the id belongs to — required for block/request ids on pages not yet built.'),
+          .describe(
+            'The page the id belongs to — required for block/request ids on pages not yet built.'
+          ),
       },
     },
     async ({ id, pageId }) => textResult(await findConfig({ id, pageId }))
@@ -359,7 +361,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_list_plugins',
     {
       description:
-        'List installed plugin packages (including this project\'s local custom plugins) and the type names each provides.',
+        "List installed plugin packages (including this project's local custom plugins) and the type names each provides.",
       inputSchema: {},
     },
     () => textResult(listPlugins())
@@ -426,7 +428,9 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       const doc = getCoreDoc({ slug, kind, type });
       if (doc === null) {
         return notFoundResult(
-          `No doc found${slug ? ` for slug "${slug}"` : ''}${type ? ` for type "${type}"` : ''}. Use lowdefy_search_docs to find the right slug.`
+          `No doc found${slug ? ` for slug "${slug}"` : ''}${
+            type ? ` for type "${type}"` : ''
+          }. Use lowdefy_search_docs to find the right slug.`
         );
       }
       return textResult(doc.markdown);
@@ -448,7 +452,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_plugin_doc',
     {
       description:
-        'Get markdown documentation shipped inside an installed plugin package (README, guides). Useful for this project\'s local custom plugins.',
+        "Get markdown documentation shipped inside an installed plugin package (README, guides). Useful for this project's local custom plugins.",
       inputSchema: {
         package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
       },

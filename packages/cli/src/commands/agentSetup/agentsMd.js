@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-function agentsMd({ port, devCommand }) {
+function agentsMd({ port, devCommand, appPath }) {
+  const appDescription =
+    appPath === ''
+      ? 'This project is a [Lowdefy](https://lowdefy.com) app'
+      : `This project contains a [Lowdefy](https://lowdefy.com) app in \`${appPath}/\``;
   return `## Lowdefy
 
-This project is a [Lowdefy](https://lowdefy.com) app: a web app defined in YAML config files
+${appDescription}: a web app defined in YAML config files
 rather than hand-written code. Pages compose **blocks** (UI components), **operators** (logic
 like \`_if\`, \`_get\`, \`_state\`), **actions** (event handlers), and **connections/requests**
 (databases and APIs).

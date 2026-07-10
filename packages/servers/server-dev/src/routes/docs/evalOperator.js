@@ -18,7 +18,19 @@ import evalOperator from '../../../lib/docs/evalOperator.js';
 
 async function docsEvalOperatorHandler(c) {
   const body = await c.req.json().catch(() => ({}));
-  const { pageId, expression, source } = body;
+  const { pageId, source } = body;
+  // "operator" is accepted as an alias for "expression" — agents commonly
+  // guess it as the body key for this endpoint.
+  const expression = body.expression ?? body.operator;
+  if (expression === undefined) {
+    return c.json(
+      {
+        error:
+          'POST /lowdefy-docs/eval-operator requires an "expression" in the JSON body — the operator expression to evaluate, e.g. {"pageId": "home", "expression": {"_state": "key"}}.',
+      },
+      400
+    );
+  }
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it
   // just connected to), regardless of how the server is bound.

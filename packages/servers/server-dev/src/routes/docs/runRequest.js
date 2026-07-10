@@ -19,7 +19,12 @@ import runRequest from '../../../lib/docs/runRequest.js';
 // Refusals and request errors are returned as 200 data (see runRequest.js) —
 // only malformed input (missing pageId/requestId) is a 400.
 async function docsRunRequestHandler(c) {
-  const { pageId, requestId, payload } = await c.req.json();
+  // Parse the body from a clone: runRequest builds a Lowdefy context whose
+  // getSession(c) → getAuthUser(c) reconstructs a Request from c.req.raw,
+  // which throws ("body ... disturbed or locked") if the body was already
+  // consumed. The normal /api/request path never hits this because its
+  // session is read in middleware before the handler touches the body.
+  const { pageId, requestId, payload } = await c.req.raw.clone().json();
   try {
     const result = await runRequest({ pageId, requestId, payload, honoContext: c });
     return c.json(result);

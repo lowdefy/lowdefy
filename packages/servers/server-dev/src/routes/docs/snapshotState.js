@@ -17,8 +17,8 @@
 import snapshotState from '../../../lib/docs/snapshotState.js';
 
 // Lets an agent (or a developer) snapshot the running app's page state and
-// recorded request/api responses into a committable checkpoint folder, for
-// later replay via POST /lowdefy-docs/state/load.
+// recorded request/api responses into a checkpoint folder under .lowdefy,
+// for later replay via POST /lowdefy-docs/state/load.
 async function docsSnapshotStateHandler(c) {
   const { pageId, name, notes, source, overwrite } = await c.req.json();
   // Derived from the incoming request rather than a config value — this is

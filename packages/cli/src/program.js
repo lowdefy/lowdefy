@@ -61,6 +61,10 @@ const options = {
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
   ).env('PORT'),
+  projectDirectory: new Option(
+    '--project-directory <project-directory>',
+    'Change the directory where agent files (.mcp.json, AGENTS.md, Claude Code skill) are written. Default is the nearest ancestor directory containing .git, falling back to the config directory.'
+  ).env('LOWDEFY_DIRECTORY_PROJECT'),
   refResolver: new Option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
@@ -89,6 +93,7 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(options.port)
+  .addOption(options.projectDirectory)
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program

@@ -22,14 +22,14 @@ import skillMd from './skillMd.js';
 
 const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
 
-async function writeSkillFile({ context, port }) {
-  const skillPath = path.join(context.directories.config, skillRelativePath);
+async function writeSkillFile({ context, projectDirectory, appPath, port }) {
+  const skillPath = path.join(projectDirectory, skillRelativePath);
   if (fs.existsSync(skillPath)) {
     context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
     return;
   }
 
-  await writeFile(skillPath, skillMd({ port }));
+  await writeFile(skillPath, skillMd({ port, appPath }));
   context.logger.info(`Created '${skillRelativePath}'.`);
 }
 

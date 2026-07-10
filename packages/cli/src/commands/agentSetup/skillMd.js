@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-function skillMd({ port }) {
+function skillMd({ port, appPath }) {
+  const appPathLine =
+    appPath === ''
+      ? ''
+      : `\nThe Lowdefy app config (lowdefy.yaml, pages, requests) lives in \`${appPath}/\`.\n`;
   return `---
 name: lowdefy-config
 description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
@@ -24,7 +28,7 @@ description: Use when writing or editing Lowdefy YAML config — pages, blocks, 
 
 The dev server serves docs for everything installed in this project at
 \`http://localhost:${port}/lowdefy-docs\` (also as MCP tools via the \`lowdefy-docs\` server).
-
+${appPathLine}
 Never guess type names or properties. Before writing config:
 
 1. Call \`lowdefy_list_types\` (or \`GET /lowdefy-docs/blocks\`, \`/lowdefy-docs/operators\`,

@@ -16,7 +16,7 @@
 
 import { listStateCheckpoints } from '../../../lib/docs/checkpointStore.js';
 
-// Lists committable state checkpoints (page state + recorded request/api
+// Lists state checkpoints (page state + recorded request/api
 // responses) — distinct from GET /lowdefy-docs/checkpoints, which lists
 // config-directory-snapshot checkpoints (see checkpointStore.js).
 function docsStateCheckpointsListHandler(c) {
