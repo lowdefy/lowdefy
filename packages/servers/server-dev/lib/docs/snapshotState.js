@@ -21,7 +21,7 @@ import inspectState from './inspectState.js';
 import { writeCheckpoint } from './checkpointStore.js';
 
 // Snapshots the running app (page state + recorded request/api responses)
-// into a committable checkpoint folder — see checkpointStore.js for the
+// into a checkpoint folder under .lowdefy — see checkpointStore.js for the
 // on-disk layout. Reuses inspectState.js's tab-first/headless-fallback
 // snapshot rather than driving a browser directly, so a snapshot always
 // reflects whatever a developer is actually looking at when one is

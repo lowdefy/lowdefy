@@ -20,18 +20,21 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import { getConfigDirectory } from './checkpointPaths.js';
 
-// State checkpoints (page state + recorded request/api responses) live in a
-// committable, human-diffable folder per checkpoint — <configDir>/checkpoints/
-// <name>/ — separate from the config-directory-snapshot checkpoints in
-// checkpointPaths.js/createConfigCheckpoint.js (those live under
-// .lowdefy/checkpoints and exist to let an agent revert an experimental
-// config edit). These two "checkpoint" concepts are unrelated: this one is
-// for putting the *running app* into a specific state (agent verification,
-// human testing, e2e test generation), not for reverting config files.
+// State checkpoints (page state + recorded request/api responses) live under
+// <configDir>/.lowdefy/state-checkpoints/<name>/ — inside .lowdefy because a
+// checkpoint captures the signed-in user's data and live backend responses,
+// which must not sit in a committable spot by default (.lowdefy is gitignored
+// by convention and ignored by the dev file watcher). A sibling of
+// .lowdefy/checkpoints (the config-directory-snapshot checkpoints in
+// checkpointPaths.js/createConfigCheckpoint.js) rather than a subdirectory,
+// because that store prunes its oldest directories beyond a cap. These two
+// "checkpoint" concepts are unrelated: this one is for putting the *running
+// app* into a specific state (agent verification, human testing, e2e test
+// generation), not for reverting config files.
 const NAME_PATTERN = /^[a-z0-9-_]+$/i;
 
 function getStateCheckpointsRoot() {
-  return path.join(getConfigDirectory(), 'checkpoints');
+  return path.join(getConfigDirectory(), '.lowdefy', 'state-checkpoints');
 }
 
 function validateName(name) {
@@ -93,7 +96,7 @@ function readEntries({ dir, subdir }) {
 }
 
 // Snapshots a running page's state + recorded request/api responses into a
-// committable folder. Refuses to clobber an existing checkpoint unless
+// checkpoint folder. Refuses to clobber an existing checkpoint unless
 // `overwrite: true` — when overwriting, the old folder is removed first so a
 // checkpoint written with fewer requests than a previous one doesn't leave
 // stale per-request files behind.
@@ -184,7 +187,7 @@ function checkpointExists({ name }) {
 // Lists stored state checkpoints, most recent first. Corrupted/hand-edited
 // checkpoints without a manifest still show up (with null fields) rather
 // than being silently hidden, since these folders are meant to be
-// human-editable and committable.
+// human-editable.
 function listStateCheckpoints() {
   const root = getStateCheckpointsRoot();
   if (!fs.existsSync(root)) {
