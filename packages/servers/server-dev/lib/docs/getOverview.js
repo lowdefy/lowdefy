@@ -80,6 +80,10 @@ function getOverview() {
     '5. **Config checkpoints**: `POST /lowdefy-docs/checkpoints` `{label}` / `POST /lowdefy-docs/checkpoints/revert` `{id}` — or `lowdefy_checkpoint` / `lowdefy_revert_checkpoint`. Snapshot config files before risky changes; revert instantly.',
     "6. **State checkpoints**: `POST /lowdefy-docs/state-checkpoints/snapshot` `{pageId, name}` captures live page state + request responses into .lowdefy/state-checkpoints/<name>/ (gitignored — checkpoints contain user/session data); `POST /lowdefy-docs/state-checkpoints/load` `{name, mode}` restores it — 'registry-only' mode returns a ?_checkpoint URL a human can open to test the app in that exact state. `lowdefy_checkpoint_to_mocks` converts one into e2e mocks.yaml fixtures.",
     '',
+    '## Visual feedback (Feedback Mode)',
+    '',
+    'The developer can press Cmd/Ctrl+L in the running app to point at elements, draw, and send annotated feedback. Call `lowdefy_wait_for_feedback` (blocks up to 55s) when you ask them to show you something, or `lowdefy_get_feedback` to check instantly. Each annotation carries the blockId, resolved config file:line, drawn shapes (usable as screenshot clip), and recent console entries. Idle Claude Code sessions are woken automatically via the Stop hook installed by `lowdefy agent-setup`.',
+    '',
     '## Routes',
     '',
     '| Route | Purpose |',
@@ -102,6 +106,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/app-map` | Whole-app graph: pages, menus, connections, endpoints, agents |',
     '| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints: list, create, revert |',
     '| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints: capture/restore live app state |',
+    '| `POST /lowdefy-feedback` + `GET /lowdefy-feedback/pending` | Visual feedback queue (in-page overlay → agent) |',
     '| `ALL /lowdefy-docs/mcp` | MCP endpoint (streamable HTTP) exposing all of the above as tools |',
   ];
   return lines.join('\n');

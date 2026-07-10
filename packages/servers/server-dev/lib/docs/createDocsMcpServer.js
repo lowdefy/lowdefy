@@ -20,7 +20,9 @@ import { z } from 'zod';
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
 import evalOperator from './evalOperator.js';
+import feedbackStore from './feedbackStore.js';
 import findConfig from './findConfig.js';
+import formatFeedback from './formatFeedback.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
 import getCoreDoc from './getCoreDoc.js';
@@ -51,6 +53,8 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes).
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
+
+Visual feedback: developers can press Cmd/Ctrl+L in the running app to point at elements, draw, and send annotated feedback. Call lowdefy_wait_for_feedback to block (up to 55s) until they send something — do this when you ask the developer to show you a problem. Feedback also wakes idle sessions automatically via the Stop hook installed by \`lowdefy agent-setup\`. Each annotation carries the blockId, the resolved config file:line, drawn shapes, viewport/scroll geometry (usable as lowdefy_screenshot_page clip), and recent console entries.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
@@ -291,17 +295,75 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {
         pageId: z.string().describe('The page id to screenshot.'),
         fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
+        clip: z
+          .object({
+            x: z.number(),
+            y: z.number(),
+            width: z.number(),
+            height: z.number(),
+          })
+          .optional()
+          .describe(
+            'Crop to a viewport-relative region — pass an annotation\'s geometry from feedback.'
+          ),
+        scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
+        scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       },
     },
-    async ({ pageId, fullPage }) => {
+    async ({ pageId, fullPage, clip, scrollX, scrollY }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
-      const result = await screenshotPage({ origin, pageId, fullPage });
+      const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY });
       if (result.error) {
         return notFoundResult(result.error);
       }
       return { content: [{ type: 'image', data: result.data, mimeType: result.mimeType }] };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_wait_for_feedback',
+    {
+      description:
+        'Block until the developer sends visual feedback from the running app (they press Cmd/Ctrl+L, point at elements, draw, and comment). Use this when you ask the developer to show you something — call it, tell them to annotate, and it returns their annotations with resolved config file:line locations. Returns "no pending feedback" after the timeout.',
+      inputSchema: {
+        timeoutSeconds: z
+          .number()
+          .max(55)
+          .optional()
+          .describe('How long to block waiting for new feedback (max 55s). Default 30.'),
+        consume: z
+          .boolean()
+          .optional()
+          .describe('Remove returned items from the queue (default true). Set false to peek.'),
+      },
+    },
+    async ({ timeoutSeconds = 30, consume }) => {
+      if (consume === false) {
+        return textResult(formatFeedback({ items: feedbackStore.peek() }));
+      }
+      const timeoutMs = Math.min(timeoutSeconds, 55) * 1000;
+      const items = await feedbackStore.waitForNext({ timeoutMs });
+      return textResult(formatFeedback({ items }));
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_get_feedback',
+    {
+      description:
+        'Instantly return any pending visual feedback annotations from the developer (sent via Cmd/Ctrl+L in the running app), without blocking. Each annotation carries the blockId, resolved config file:line, drawn shapes, and console entries.',
+      inputSchema: {
+        consume: z
+          .boolean()
+          .optional()
+          .describe('Remove returned items from the queue (default true). Set false to peek.'),
+      },
+    },
+    ({ consume }) => {
+      const items = consume === false ? feedbackStore.peek() : feedbackStore.consumeAll();
+      return textResult(formatFeedback({ items }));
     }
   );
 
