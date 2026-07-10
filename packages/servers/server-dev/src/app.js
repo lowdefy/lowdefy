@@ -28,14 +28,25 @@ import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
+import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
+import docsAppMapHandler from './routes/docs/appMap.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
+import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
+import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
+import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
 import docsContentHandler from './routes/docs/content.js';
+import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
 import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
+import docsInspectStateHandler from './routes/docs/inspectState.js';
+import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsRunRequestHandler from './routes/docs/runRequest.js';
+import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
+import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
 import docsPluginDocHandler from './routes/docs/pluginDoc.js';
 import docsPluginsHandler from './routes/docs/plugins.js';
 import docsSchemaHandler from './routes/docs/schema.js';
@@ -85,6 +96,21 @@ function createApp() {
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
+  app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
+  app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
+  app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
+  app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
+  app.post('/lowdefy-docs/checkpoints/revert', docsCheckpointsRevertHandler);
+  app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
+  app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
+  app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
+  // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
+  // targeted SSE events by posting results here; GET lists connected tabs
+  // and serves checkpoint parts for the ?_checkpoint bootstrap.
+  app.all('/api/dev-inspect', devInspectHandler);
+  app.all('/api/dev-inspect/*', devInspectHandler);
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);

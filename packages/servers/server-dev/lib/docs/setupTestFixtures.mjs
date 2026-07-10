@@ -115,6 +115,10 @@ function setupTestFixtures() {
   });
   write('build/plugins/requestSchemas.json', {
     AxiosHttp: { schema: { type: 'object' }, meta: { checkRead: false, checkWrite: false } },
+    ReadOnlyRequest: { schema: { type: 'object' }, meta: { checkRead: true, checkWrite: false } },
+    WriteRequest: { schema: { type: 'object' }, meta: { checkRead: true, checkWrite: true } },
+    // No "meta" at all — some custom plugins don't declare it; treated as unknown.
+    UnknownMetaRequest: { schema: { type: 'object' } },
   });
   write('build/customTypesMap.json', {
     blocks: { TestBlock: { package: 'test-plugin', originalTypeName: 'TestBlock', version: '1.0.0' } },
@@ -146,6 +150,7 @@ function setupTestFixtures() {
 
   write('build/pageRegistry.json', {
     home: { pageId: 'home', auth: null, refId: 'ref-home', refPath: 'pages/home.yaml' },
+    unbuilt: { pageId: 'unbuilt', auth: null, refId: 'ref-unbuilt', refPath: 'pages/unbuilt.yaml' },
   });
 
   write('build/keyMap.json', {
@@ -169,10 +174,97 @@ function setupTestFixtures() {
     'ref-home': { parent: null, path: 'pages/home.yaml' },
   });
 
-  write(
-    'build/pages/home.json',
-    { pageId: 'home', blocks: [{ id: 'my_button', type: 'Button', '~k': 'key-button' }] }
-  );
+  write('build/pages/home.json', {
+    pageId: 'home',
+    blocks: [
+      { id: 'my_button', type: 'Button', '~k': 'key-button' },
+      {
+        id: 'card',
+        type: 'Card',
+        slots: { content: { blocks: [{ id: 'nested_button', type: 'Button' }] } },
+      },
+    ],
+    requests: [
+      { id: 'request:home:req-read', requestId: 'req-read', payload: {} },
+      { id: 'request:home:req-write', requestId: 'req-write', payload: {} },
+      { id: 'request:home:req-unknown', requestId: 'req-unknown', payload: {} },
+    ],
+  });
+
+  // Per-request artifacts (packages/build/src/build/full/writeRequests.js
+  // strips type/connectionId/properties/auth off the page's `requests` array
+  // after writing these, so a request's type is only readable here).
+  write('build/pages/home/requests/req-read.json', {
+    id: 'request:home:req-read',
+    requestId: 'req-read',
+    pageId: 'home',
+    connectionId: 'axios',
+    type: 'ReadOnlyRequest',
+    payload: {},
+    properties: {},
+  });
+  write('build/pages/home/requests/req-write.json', {
+    id: 'request:home:req-write',
+    requestId: 'req-write',
+    pageId: 'home',
+    connectionId: 'axios',
+    type: 'WriteRequest',
+    payload: {},
+    properties: {},
+  });
+  write('build/pages/home/requests/req-unknown.json', {
+    id: 'request:home:req-unknown',
+    requestId: 'req-unknown',
+    pageId: 'home',
+    connectionId: 'axios',
+    type: 'UnknownMetaRequest',
+    payload: {},
+    properties: {},
+  });
+
+  write('build/connectionIds.json', ['axios']);
+  write('build/connections/axios.json', {
+    id: 'connection:axios',
+    connectionId: 'axios',
+    type: 'AxiosHttp',
+    properties: {},
+  });
+
+  write('build/menus.json', [
+    {
+      id: 'menu:default',
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:home',
+          menuItemId: 'home',
+          type: 'MenuLink',
+          pageId: 'home',
+          properties: { title: 'Home' },
+        },
+      ],
+    },
+  ]);
+
+  write('build/api/resolve_greeting.json', {
+    id: 'endpoint:resolve_greeting',
+    type: 'InternalApi',
+    routine: [],
+  });
+
+  write('build/agents/assistant.json', {
+    id: 'agent:assistant',
+    agentId: 'assistant',
+    type: 'OpenAiAgent',
+    connectionId: 'axios',
+  });
+
+  write('build/websocketIds.json', []);
+
+  // No cli.agentTools.allowWriteRequests — tests toggle this file directly
+  // (isWriteRequestsAllowed reads it fresh, no caching) to exercise the
+  // opt-in gate.
+  write('lowdefy.yaml', 'lowdefy: 5.0.0\n');
 
   return fixtureDir;
 }

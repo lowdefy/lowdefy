@@ -29,6 +29,16 @@ It provides these tools:
 | `lowdefy_screenshot_page`| PNG screenshot of a rendered page (headless Chromium) for visual verification |
 | `lowdefy_find_config`    | Which yaml file (and line) defines a given page, block, or request id    |
 | `lowdefy_scaffold_page`  | Create a new page yaml file with a canonical minimal structure           |
+| `lowdefy_app_map`        | The whole-app graph: every page, menu, connection, endpoint, and agent in one call |
+| `lowdefy_inspect_state`  | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless |
+| `lowdefy_eval_operator`  | Evaluate any operator expression against live page state — a REPL for config |
+| `lowdefy_run_request`    | Execute a request with a test payload to verify data shape (read-only unless opted in) |
+| `lowdefy_snapshot_state` | Capture live page state + request responses into a committable checkpoint folder |
+| `lowdefy_load_state`     | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing |
+| `lowdefy_list_state_checkpoints` | List saved state checkpoints |
+| `lowdefy_checkpoint_to_mocks` | Convert a state checkpoint into e2e `mocks.yaml` fixtures |
+| `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
+| `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
 
 ## The feedback loop
 
@@ -38,6 +48,41 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 2. Call `lowdefy_build_status` — did the build succeed? Errors come back with the exact source file and location.
 3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status`, so problems that only show at runtime still reach the agent.
+
+## Live state — the agent sees what you see
+
+When you have a page open in your browser, the agent can read its **actual live state** — page state, request results, and the event log of recent actions — via `lowdefy_inspect_state`. Reproduce a problem by clicking through the app, then ask the agent to look: it inspects your exact tab, not a guess. `lowdefy_eval_operator` then evaluates any operator expression (like `{"_state": "customer.name"}`) against that same live context, so `_state`/`_request` binding bugs get debugged against real data. With no tab open, both tools run the page headless instead.
+
+## State checkpoints — put the app in a known state
+
+`lowdefy_snapshot_state` captures a moment — page state plus every request's recorded response — into a folder you can commit:
+
+```
+checkpoints/broken-refund-flow/
+  checkpoint.json        # manifest
+  state.json
+  urlQuery.json
+  requests/
+    get_order.json       # one file per request — easy to review and edit
+```
+
+Loading it back (`lowdefy_load_state`) serves the recorded request data from the dev server and re-injects the page state. Three ways to use it:
+
+- **Agent verification**: the agent restores a scenario headless and confirms its fix works against the exact data that caused the bug.
+- **Manual testing**: `mode: registry-only` returns a URL like `http://localhost:3000/orders?_checkpoint=broken-refund-flow` — open it and the app is in that state, no clicking required.
+- **e2e fixtures**: `lowdefy_checkpoint_to_mocks` converts a checkpoint into `mocks.yaml` entries for [e2e tests](/e2e-introduction), so "write an e2e test for this flow" starts from captured reality.
+
+## Running requests safely
+
+`lowdefy_run_request` executes a request with a test payload so the agent can verify the data shape a page will receive. Read-only request types (like `MongoDBFind`) always run. Write requests are refused unless you opt in:
+
+```yaml
+cli:
+  agentTools:
+    allowWriteRequests: true
+```
+
+This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
 ## Setting up a project — one command
 
@@ -96,6 +141,12 @@ Never guess type names or properties. Before writing config:
    usage YAML for blocks.
 4. For concepts (state, operators, events, requests), call `lowdefy_get_doc`
    or `lowdefy_search_docs`.
+
+After every edit, call `lowdefy_build_status` and fix what it reports. Use
+`lowdefy_inspect_state` to read the live state of the page (ask the developer
+to interact with it first when debugging), `lowdefy_eval_operator` to test
+operator expressions against real state, and `lowdefy_snapshot_state` /
+`lowdefy_load_state` to capture and restore app states for testing.
 ```
 
 ## Plain HTTP routes
@@ -116,6 +167,12 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
 | `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
 | `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
+| `GET /lowdefy-docs/app-map`         | Whole-app graph: pages, menus, connections, endpoints, agents   |
+| `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
+| `POST /lowdefy-docs/eval-operator`  | Evaluate an operator expression against live page state         |
+| `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |
+| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
+| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
 
 ## Local plugins
 
