@@ -28,6 +28,18 @@ events:
           _random:
             type: string
             length: 16
+    # Seed the header SegmentedSelector's active tab. Resolved at build time
+    # by the navFromMenus transformer from this page's menu membership.
+    - id: set_active_tab
+      type: SetState
+      params:
+        tab_selector:
+          _ref:
+            path: menus.yaml
+            transformer: templates/navFromMenus.js
+            vars:
+              pageId: {{ pageId }}
+              field: tab
 properties:
   title: {{ pageTitle }}
 blocks:
@@ -38,6 +50,14 @@ blocks:
       darkModeToggle: true
       menu:
         forceSubMenuRender: true
+        nestedGroupAsGroup: false
+        menuId:
+          _ref:
+            path: menus.yaml
+            transformer: templates/navFromMenus.js
+            vars:
+              pageId: {{ pageId }}
+              field: menuId
       sider:
         width: 256px
         initialCollapsed:
@@ -50,7 +70,13 @@ blocks:
                 - lg
       breadcrumb:
         list:
-          - _ref: version.yaml
+          _ref:
+            path: menus.yaml
+            transformer: templates/navFromMenus.js
+            vars:
+              pageId: {{ pageId }}
+              pageTitle: {{ pageTitle }}
+              field: breadcrumb
 
     style:
       .layout:
@@ -90,7 +116,7 @@ blocks:
               minWidth: 0
               overflow: hidden
             blocks:
-              {% if pageTitle %}
+              {% if pageTitle and not hidePageTitle %}
               - id: page_title
                 type: Title
                 properties:
@@ -103,3 +129,11 @@ blocks:
                   gap: 16
                 blocks:
                   _var: content
+              # Previous/Next footer strip, computed from this page's position
+              # in its menu by the navFromMenus transformer.
+              - _ref:
+                  path: menus.yaml
+                  transformer: templates/navFromMenus.js
+                  vars:
+                    pageId: {{ pageId }}
+                    field: prevNextNav
