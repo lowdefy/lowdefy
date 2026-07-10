@@ -60,6 +60,8 @@
     selfAlign: middle
   properties:
     size: small
+    label:
+      disabled: true
     options:
       - label: Learn
         value: learn
@@ -148,8 +150,8 @@
   properties:
     color: default
     variant: text
+    shape: circle
     icon: FaDiscord
-    size: small
     href: https://discord.gg/WmcJgXt
 - id: github_button
   type: Button
@@ -168,6 +170,6 @@
   properties:
     color: default
     variant: text
+    shape: circle
     icon: AiFillGithub
-    size: small
     href: https://github.com/lowdefy/lowdefy

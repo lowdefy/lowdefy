@@ -36,11 +36,9 @@ _ref:
         properties:
           content: Capture input with validated form controls.
       - id: section_forms_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_textinput
             type: Card
@@ -244,11 +242,9 @@ _ref:
         properties:
           content: Tables, charts, and stats.
       - id: section_data_display_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_aggrid
             type: Card
@@ -414,11 +410,9 @@ _ref:
         properties:
           content: Arrange content on the page.
       - id: section_layout_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_box
             type: Card
@@ -584,11 +578,9 @@ _ref:
         properties:
           content: Alerts, modals, and loading states.
       - id: section_feedback_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_alert
             type: Card
@@ -754,11 +746,9 @@ _ref:
         properties:
           content: Menus, steps, and wayfinding.
       - id: section_navigation_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_menu
             type: Card
@@ -905,11 +895,9 @@ _ref:
         properties:
           content: Images, maps, and files.
       - id: section_media_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_img
             type: Card
@@ -1018,11 +1006,9 @@ _ref:
         properties:
           content: Titles, prose, and rich content.
       - id: section_text_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_title
             type: Card
@@ -1150,11 +1136,9 @@ _ref:
         properties:
           content: Agent chat interfaces, documented under Learn › AI Agents.
       - id: section_ai_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_agentchat
             type: Card

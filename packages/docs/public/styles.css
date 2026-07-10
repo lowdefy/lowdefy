@@ -1,6 +1,27 @@
+/* clip, not hidden: overflow-x hidden turns the body into a scroll container,
+   which silently disables position: sticky for the header and sidebar. */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip !important;
+}
+
+/* Sticky header, and a sidebar that scrolls independently beneath it —
+   without this the sider stretches to the menu's full height (4000px+ with
+   a reference group open) and menu navigation scrolls the whole page. */
+.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@media (min-width: 992px) {
+  .ant-layout-sider {
+    position: sticky;
+    top: 64px;
+    align-self: flex-start;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
 }
 
 /* Self-hosted brand fonts — same faces the website loads via next/font. */

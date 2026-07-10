@@ -36,11 +36,9 @@ _ref:
         properties:
           content: Relational databases.
       - id: section_sql_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_mysql
             type: Card
@@ -187,11 +185,9 @@ _ref:
         properties:
           content: Document stores, search, and caching.
       - id: section_nosql_search_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_mongodb
             type: Card
@@ -262,11 +258,9 @@ _ref:
         properties:
           content: LLM providers and MCP tools.
       - id: section_ai_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_anthropic
             type: Card
@@ -356,11 +350,9 @@ _ref:
         properties:
           content: Object storage and spreadsheets.
       - id: section_storage_sheets_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_awss3
             type: Card
@@ -412,11 +404,9 @@ _ref:
         properties:
           content: HTTP APIs and hosted services.
       - id: section_http_services_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_axioshttp
             type: Card

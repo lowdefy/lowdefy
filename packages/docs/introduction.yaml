@@ -19,6 +19,7 @@ _ref:
     pageTitle: Introduction
     filePath: introduction.yaml
     fullWidth: true
+    hidePageTitle: true
     prefetchPages:
       - quickstart
       - tutorial-start
@@ -27,7 +28,7 @@ _ref:
       - id: hero
         type: Box
         style:
-          maxWidth: 880px
+          maxWidth: 1040px
           margin: 0 auto
           padding: 48px 16px 24px 16px
           textAlign: center
@@ -49,7 +50,7 @@ _ref:
                   natural for AI to generate.
                 </p>
           - id: hero_buttons
-            type: Flex
+            type: Box
             layout:
               justify: center
               gap: 12
@@ -100,7 +101,7 @@ _ref:
       - id: primitives_section
         type: Box
         style:
-          maxWidth: 1100px
+          maxWidth: 1040px
           margin: 32px auto 0 auto
           padding: 0 16px
         blocks:
@@ -112,11 +113,9 @@ _ref:
               content: Built with four primitives
               level: 2
           - id: primitives_grid
-            type: Flex
+            type: Box
             layout:
               gap: 16
-            properties:
-              wrap: wrap
             blocks:
               - id: intro_prim_blocks
                 type: Card
@@ -207,7 +206,7 @@ _ref:
       - id: build_section
         type: Box
         style:
-          maxWidth: 1100px
+          maxWidth: 1040px
           margin: 32px auto 0 auto
           padding: 0 16px
         blocks:
@@ -219,11 +218,9 @@ _ref:
               content: What you can build
               level: 2
           - id: build_grid
-            type: Flex
+            type: Box
             layout:
               gap: 12
-            properties:
-              wrap: wrap
             blocks:
               - id: build_card_admin
                 type: Card
@@ -296,7 +293,7 @@ _ref:
       - id: tracks_section
         type: Box
         style:
-          maxWidth: 1100px
+          maxWidth: 1040px
           margin: 32px auto 0 auto
           padding: 0 16px
         blocks:
@@ -308,11 +305,9 @@ _ref:
               content: Start here
               level: 2
           - id: tracks_grid
-            type: Flex
+            type: Box
             layout:
               gap: 16
-            properties:
-              wrap: wrap
             blocks:
               - id: track_quickstart
                 type: Card
@@ -382,7 +377,7 @@ _ref:
       - id: ecosystem_section
         type: Box
         style:
-          maxWidth: 1100px
+          maxWidth: 1040px
           margin: 32px auto 0 auto
           padding: 0 16px
         blocks:
@@ -394,11 +389,9 @@ _ref:
               content: Batteries included, ecosystem attached
               level: 2
           - id: ecosystem_grid
-            type: Flex
+            type: Box
             layout:
               gap: 12
-            properties:
-              wrap: wrap
             blocks:
               - id: eco_card_aggrid
                 type: Card
@@ -505,7 +498,7 @@ _ref:
       - id: social_section
         type: Box
         style:
-          maxWidth: 880px
+          maxWidth: 1040px
           margin: 40px auto 24px auto
           padding: 0 16px
           textAlign: center
@@ -518,7 +511,7 @@ _ref:
                   More than <b>25 000 apps</b> built by the Lowdefy community.
                 </p>
           - id: social_buttons
-            type: Flex
+            type: Box
             layout:
               justify: center
               gap: 12

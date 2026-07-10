@@ -36,11 +36,9 @@ _ref:
         properties:
           content: Write state and validate user input.
       - id: section_state_validation_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_setstate
             type: Card
@@ -149,11 +147,9 @@ _ref:
         properties:
           content: Move users around the app.
       - id: section_navigation_focus_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_link
             type: Card
@@ -224,11 +220,9 @@ _ref:
         properties:
           content: Call requests and APIs.
       - id: section_data_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_request
             type: Card
@@ -299,11 +293,9 @@ _ref:
         properties:
           content: Messages and user preferences.
       - id: section_ui_preferences_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_displaymessage
             type: Card
@@ -374,11 +366,9 @@ _ref:
         properties:
           content: Files, clipboard, and device APIs.
       - id: section_files_device_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_copytoclipboard
             type: Card
@@ -468,11 +458,9 @@ _ref:
         properties:
           content: Control the action chain.
       - id: section_flow_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_wait
             type: Card
@@ -543,11 +531,9 @@ _ref:
         properties:
           content: Sign users in and out.
       - id: section_auth_session_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card_login
             type: Card

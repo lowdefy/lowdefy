@@ -20,6 +20,7 @@
       type: MenuGroup
       properties:
         title: Welcome
+        icon: AiOutlineHome
       links:
         - id: introduction
           type: MenuLink
@@ -41,6 +42,7 @@
       type: MenuGroup
       properties:
         title: Start here
+        icon: AiOutlineRocket
       links:
         - id: quickstart
           type: MenuLink
@@ -97,6 +99,7 @@
       type: MenuGroup
       properties:
         title: Core concepts
+        icon: AiOutlineBulb
       links:
         - id: four-primitives
           type: MenuLink
@@ -198,6 +201,7 @@
       type: MenuGroup
       properties:
         title: Advanced topics
+        icon: AiOutlineControl
       links:
         - id: lowdefy-api
           type: MenuLink
@@ -426,10 +430,12 @@
       pageId: reference
       properties:
         title: Overview
+        icon: AiOutlineBook
     - id: blocks-group
       type: MenuGroup
       properties:
         title: Blocks
+        icon: AiOutlineAppstore
       links:
         - id: blocks-reference
           type: MenuLink
@@ -802,6 +808,7 @@
       type: MenuGroup
       properties:
         title: Operators
+        icon: AiOutlineFunction
       links:
         - id: operators-reference
           type: MenuLink
@@ -1079,6 +1086,7 @@
       type: MenuGroup
       properties:
         title: Actions
+        icon: AiOutlineThunderbolt
       links:
         - id: actions-reference
           type: MenuLink
@@ -1198,6 +1206,7 @@
       type: MenuGroup
       properties:
         title: Connections
+        icon: AiOutlineApi
       links:
         - id: connections-reference
           type: MenuLink
@@ -1350,11 +1359,13 @@
       pageId: schema-reference
       properties:
         title: Schema Reference
+        icon: AiOutlineFileText
     - id: cli
       type: MenuLink
       pageId: cli
       properties:
         title: CLI Reference
+        icon: AiOutlineCode
 - id: menu-recipes
   properties:
     title: Recipes
@@ -1364,6 +1375,7 @@
       pageId: recipes
       properties:
         title: Overview
+        icon: AiOutlineExperiment
 - id: menu-plugins
   properties:
     title: Plugins
@@ -1373,10 +1385,12 @@
       pageId: plugins
       properties:
         title: Overview
+        icon: AiOutlineAppstoreAdd
     - id: build-a-plugin
       type: MenuGroup
       properties:
         title: Build a plugin
+        icon: AiOutlineTool
       links:
         - id: plugins-introduction
           type: MenuLink

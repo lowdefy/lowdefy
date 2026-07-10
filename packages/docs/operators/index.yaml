@@ -36,11 +36,9 @@ _ref:
         properties:
           content: Branch, compare, and combine conditions.
       - id: section_logic_control_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__and
             type: Card
@@ -320,11 +318,9 @@ _ref:
         properties:
           content: Read page, user, and app context.
       - id: section_state_context_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__state
             type: Card
@@ -585,11 +581,9 @@ _ref:
         properties:
           content: Read request responses and API results.
       - id: section_requests_apis_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__request
             type: Card
@@ -660,11 +654,9 @@ _ref:
         properties:
           content: Compose config at build time.
       - id: section_build_config_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__ref
             type: Card
@@ -773,11 +765,9 @@ _ref:
         properties:
           content: App metadata, menus, theme, and translations.
       - id: section_app_i18n_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__app
             type: Card
@@ -886,11 +876,9 @@ _ref:
         properties:
           content: Get, shape, and query data structures.
       - id: section_data_manipulation_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__get
             type: Card
@@ -999,11 +987,9 @@ _ref:
         properties:
           content: Arithmetic and number utilities.
       - id: section_math_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__sum
             type: Card
@@ -1150,11 +1136,9 @@ _ref:
         properties:
           content: Transform and match strings.
       - id: section_string_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__string
             type: Card
@@ -1225,11 +1209,9 @@ _ref:
         properties:
           content: Create and format dates.
       - id: section_date_time_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__date
             type: Card
@@ -1300,11 +1282,9 @@ _ref:
         properties:
           content: Escape hatches into JavaScript and expressions.
       - id: section_programming_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__js
             type: Card
@@ -1432,11 +1412,9 @@ _ref:
         properties:
           content: Serialize, encode, and hash values.
       - id: section_format_encode_grid
-        type: Flex
+        type: Box
         layout:
           gap: 12
-        properties:
-          wrap: wrap
         blocks:
           - id: card__json
             type: Card

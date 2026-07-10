@@ -27,11 +27,9 @@ _ref:
             [The Four Primitives](/four-primitives) under Learn.
 
       - id: reference_cards
-        type: Flex
+        type: Box
         layout:
           gap: 16
-        properties:
-          wrap: wrap
         blocks:
           - id: ref_card_blocks
             type: Card
