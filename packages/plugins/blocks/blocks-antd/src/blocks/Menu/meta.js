@@ -91,6 +91,12 @@ export default {
         description: 'Render submenu into DOM before it becomes visible.',
         default: false,
       },
+      nestedGroupAsGroup: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Render nested MenuGroups as always-visible headed sections (antd item groups). Set false to render them as collapsible submenus at every depth.',
+      },
       subMenuCloseDelay: {
         type: 'number',
         description: 'Delay time to hide submenu when mouse leaves (in seconds).',

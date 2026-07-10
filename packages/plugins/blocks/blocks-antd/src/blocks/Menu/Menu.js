@@ -47,6 +47,24 @@ function collectLinkShortcuts(links) {
   return result;
 }
 
+// Ancestor MenuGroup keys of the current page, at any nesting depth — these
+// groups must be open on load or the selected item sits inside a collapsed
+// submenu. Returns null when the page is in no group.
+function findAncestorGroupKeys(links, targetKeys, trail = []) {
+  for (const link of links ?? []) {
+    if (link.type === 'MenuGroup') {
+      const found = findAncestorGroupKeys(link.links, targetKeys, [
+        ...trail,
+        link.pageId ?? link.id,
+      ]);
+      if (found) return found;
+    } else if (targetKeys.includes(link.pageId)) {
+      return trail;
+    }
+  }
+  return null;
+}
+
 function makeWrapGroupLabel(Link) {
   return function wrapGroupLabel({ link, labelText, classNames: labelClass, styles: labelStyle }) {
     const { class: _omitClass, style: _omitStyle, ...linkRest } = link;
@@ -101,7 +119,7 @@ function MenuComp({
     classNames: itemsClassNames,
     styles: itemsStyles,
     wrapGroupLabel: makeWrapGroupLabel(Link),
-    nestedGroupAsGroup: true,
+    nestedGroupAsGroup: properties.nestedGroupAsGroup ?? true,
     getKey: (link) => link.pageId ?? link.id,
   });
 
@@ -140,22 +158,10 @@ function MenuComp({
       theme={theme}
       defaultOpenKeys={
         properties.defaultOpenKeys ??
-        (properties.mode === 'inline' &&
-          !isCollapsed && [
-            (
-              menu.find((link) =>
-                (link.links || [])
-                  .map((subLink) =>
-                    subLink.links
-                      ? subLink.links.map((subSubLink) => subSubLink.pageId)
-                      : [subLink.pageId]
-                  )
-                  .flat()
-                  .some((link) => (properties.selectedKeys ?? [pageId]).indexOf(link) !== -1)
-              ) ?? {}
-            ).id,
-          ]) ??
-        []
+        ((properties.mode === 'inline' &&
+          !isCollapsed &&
+          findAncestorGroupKeys(menu, properties.selectedKeys ?? [pageId])) ||
+          [])
       }
       selectedKeys={properties.selectedKeys ?? [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
