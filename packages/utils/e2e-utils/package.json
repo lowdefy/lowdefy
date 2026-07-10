@@ -30,7 +30,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./config": "./dist/config.js",
-    "./fixtures": "./dist/fixtures/index.js"
+    "./fixtures": "./dist/fixtures/index.js",
+    "./runtime": "./dist/runtime.js"
   },
   "files": [
     "dist/*"

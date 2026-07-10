@@ -14,16 +14,25 @@
   limitations under the License.
 */
 
-async function getApiState(page, endpointId) {
-  return page.evaluate((id) => {
-    const lowdefy = window.lowdefy;
-    return lowdefy?.apiResponses?.[id]?.[0];
-  }, endpointId);
+import { expect } from '@playwright/test';
+
+async function expectUrl(page, { url, timeout = 5000 }) {
+  if (!url) {
+    throw new Error('expectUrl requires a "url" parameter (string or RegExp).');
+  }
+  await expect(page).toHaveURL(url, { timeout });
 }
 
-async function getApiResponse(page, { endpointId }) {
-  const state = await getApiState(page, endpointId);
-  return state?.response;
+async function expectUrlQuery(page, { key, value, timeout = 5000 }) {
+  await expect
+    .poll(
+      async () => {
+        const url = new URL(page.url());
+        return url.searchParams.get(key);
+      },
+      { timeout }
+    )
+    .toBe(value);
 }
 
-export { getApiState, getApiResponse };
+export { expectUrl, expectUrlQuery };

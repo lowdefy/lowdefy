@@ -14,16 +14,21 @@
   limitations under the License.
 */
 
-async function getApiState(page, endpointId) {
-  return page.evaluate((id) => {
-    const lowdefy = window.lowdefy;
-    return lowdefy?.apiResponses?.[id]?.[0];
-  }, endpointId);
+import { expect } from '@playwright/test';
+import { get } from '@lowdefy/helpers';
+
+import { getState } from '../core/state.js';
+
+async function expectState(page, { key, value, timeout = 5000 }) {
+  await expect
+    .poll(
+      async () => {
+        const state = await getState(page);
+        return get(state, key);
+      },
+      { timeout }
+    )
+    .toEqual(value);
 }
 
-async function getApiResponse(page, { endpointId }) {
-  const state = await getApiState(page, endpointId);
-  return state?.response;
-}
-
-export { getApiState, getApiResponse };
+export { expectState };
