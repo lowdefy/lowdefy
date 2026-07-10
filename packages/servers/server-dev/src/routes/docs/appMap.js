@@ -14,19 +14,10 @@
   limitations under the License.
 */
 
-import createLowdefyContext from '../../lib/server/createLowdefyContext.js';
+import getAppMap from '../../../lib/docs/getAppMap.js';
 
-// Replaces lib/server/apiWrapper.js. Errors thrown by handlers are routed by
-// Hono to the app-level error handler (src/middleware/errorHandler.js).
-function apiContext() {
-  return async function apiContextMiddleware(c, next) {
-    if (c.get('lowdefyContext')) {
-      return next();
-    }
-    const context = await createLowdefyContext({ c });
-    c.set('lowdefyContext', context);
-    return next();
-  };
+function docsAppMapHandler(c) {
+  return c.json(getAppMap());
 }
 
-export default apiContext;
+export default docsAppMapHandler;

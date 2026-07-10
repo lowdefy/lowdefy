@@ -14,19 +14,18 @@
   limitations under the License.
 */
 
-import createLowdefyContext from '../../lib/server/createLowdefyContext.js';
+import runRequest from '../../../lib/docs/runRequest.js';
 
-// Replaces lib/server/apiWrapper.js. Errors thrown by handlers are routed by
-// Hono to the app-level error handler (src/middleware/errorHandler.js).
-function apiContext() {
-  return async function apiContextMiddleware(c, next) {
-    if (c.get('lowdefyContext')) {
-      return next();
-    }
-    const context = await createLowdefyContext({ c });
-    c.set('lowdefyContext', context);
-    return next();
-  };
+// Refusals and request errors are returned as 200 data (see runRequest.js) —
+// only malformed input (missing pageId/requestId) is a 400.
+async function docsRunRequestHandler(c) {
+  const { pageId, requestId, payload } = await c.req.json();
+  try {
+    const result = await runRequest({ pageId, requestId, payload, honoContext: c });
+    return c.json(result);
+  } catch (error) {
+    return c.json({ error: error.message }, 400);
+  }
 }
 
-export default apiContext;
+export default docsRunRequestHandler;
