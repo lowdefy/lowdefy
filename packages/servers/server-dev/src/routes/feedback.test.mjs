@@ -25,6 +25,9 @@ const mockEnrichFeedback = jest.fn(async ({ batch }) => batch);
 jest.unstable_mockModule('../../lib/docs/enrichFeedback.js', () => ({
   default: mockEnrichFeedback,
 }));
+jest.unstable_mockModule('../../lib/docs/captureAnnotatedScreenshot.js', () => ({
+  default: jest.fn(async () => ({ path: '.lowdefy/annotations/test.png' })),
+}));
 
 const { default: feedbackHandler } = await import('./feedback.js');
 

@@ -37,11 +37,30 @@ async function enrichAnnotation({ annotation, batch }) {
     return annotation;
   }
   try {
-    const result = await findConfig({ id: blockId, pageId: batch.pageId });
-    const location = result.matches?.[0]?.location ?? {
-      note: result.note ?? `No config found with id "${blockId}" on page "${batch.pageId}".`,
+    // Dynamically generated blocks (Dynamic endpoints, list items) have ids
+    // that exist only at runtime — walk up the ancestor chain until an id
+    // resolves in config, so the annotation still points at the yaml that
+    // produces the block.
+    const candidates = [blockId, ...(annotation.target?.ancestorBlockIds ?? []).slice(1)];
+    for (const candidateId of candidates) {
+      const result = await findConfig({ id: candidateId, pageId: batch.pageId });
+      const location = result.matches?.[0]?.location;
+      if (location) {
+        if (candidateId !== blockId) {
+          return {
+            ...annotation,
+            location: { ...location, resolvedVia: candidateId },
+          };
+        }
+        return { ...annotation, location };
+      }
+    }
+    return {
+      ...annotation,
+      location: {
+        note: `Block is generated at runtime — no configured ancestor found on page "${batch.pageId}".`,
+      },
     };
-    return { ...annotation, location };
   } catch (error) {
     // Never drop feedback because location resolution failed — the
     // developer's annotation is still useful without a file:line pointer.

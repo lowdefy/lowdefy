@@ -16,8 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-const MAX_CONSOLE_ENTRIES = 10;
-
 // Turns one or more enriched feedback batches (after enrichFeedback.js has
 // attached `annotation.location`) into a single agent-readable text block.
 // The overlay copies this text to the developer's clipboard — they paste it
@@ -43,19 +41,14 @@ function formatBatch(batch) {
     lines.push(formatAnnotation({ annotation, index }));
   });
 
-  if (batch.console?.length > 0) {
+  if (batch.screenshotPath) {
     lines.push('');
-    lines.push(`Console (${Math.min(batch.console.length, MAX_CONSOLE_ENTRIES)} shown):`);
-    batch.console.slice(0, MAX_CONSOLE_ENTRIES).forEach((entry) => {
-      lines.push(`  ${entry.level.toUpperCase()}: ${entry.text}`);
-    });
+    lines.push(`Annotated screenshot: ${batch.screenshotPath} (read this image to see the drawings)`);
   }
 
   lines.push('');
   lines.push(
-    `The developer drew this on their LIVE tab. Call lowdefy_inspect_state({ pageId: "${batch.pageId}" }) ` +
-      'for its current state. For a visual, call lowdefy_screenshot_page({ pageId, clip: {…}, scrollX, ' +
-      "scrollY }) using an annotation's geometry — note headless recapture may not reproduce live tab state."
+    `For the page's live state call lowdefy_inspect_state({ pageId: "${batch.pageId}" }).`
   );
 
   return lines.join('\n');
@@ -98,6 +91,9 @@ function formatAnnotation({ annotation, index }) {
 function formatLocation(location) {
   if (type.isNone(location)) {
     return null;
+  }
+  if (location.source && location.resolvedVia) {
+    return `generated at runtime — defined via ancestor "${location.resolvedVia}": ${location.source}`;
   }
   return location.source ?? location.note ?? null;
 }

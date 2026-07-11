@@ -16,7 +16,6 @@
 
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 
-import { getConsoleEntries } from './consoleBuffer.js';
 import { blockAncestorChain, describeElement, nearestBlock } from './elementInspect.js';
 import {
   annotatingPanel,
@@ -82,12 +81,15 @@ const initialState = {
   draftTool: null, // rect | arrow | freehand
   draftShapes: [],
   batch: [],
+  includeScreenshot: true,
   sending: false,
   sendError: null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'TOGGLE_SCREENSHOT':
+      return { ...state, includeScreenshot: !state.includeScreenshot };
     case 'HOVER_BLOCK':
       return { ...state, hoverBlock: action.hoverBlock };
     case 'LOCK_SELECTION':
@@ -201,7 +203,7 @@ function buildBatch({ state, pageId }) {
       dpr: window.devicePixelRatio,
     },
     annotations: state.batch,
-    console: getConsoleEntries(),
+    includeScreenshot: state.includeScreenshot,
     stateRef: { captured: true, pageId },
   };
 }
@@ -292,6 +294,7 @@ function renderShape(shape, key) {
 // throwing into the app's React tree.
 function FeedbackOverlay({ basePath, pageId, onClose }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const primarySendRef = useRef(null);
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -325,12 +328,23 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
           return;
         }
 
-        const isModEnter = event.key === 'Enter' && (event.metaKey || event.ctrlKey);
-        if (isModEnter && stateRef.current.phase === 'annotating' && stateRef.current.selection) {
-          event.preventDefault();
-          dispatch({ type: 'SAVE_ANNOTATION', annotation: buildAnnotation(stateRef.current) });
-          event.stopImmediatePropagation();
-          return;
+        // Enter drives the primary (blue) action for the current phase;
+        // Shift+Enter still inserts a newline in the comment textarea.
+        const isPlainEnter = event.key === 'Enter' && !event.shiftKey;
+        if (isPlainEnter) {
+          const current = stateRef.current;
+          if (current.phase === 'annotating' && current.selection) {
+            event.preventDefault();
+            dispatch({ type: 'SAVE_ANNOTATION', annotation: buildAnnotation(current) });
+            event.stopImmediatePropagation();
+            return;
+          }
+          if (current.phase === 'review' && !current.sending && current.batch.length > 0) {
+            event.preventDefault();
+            primarySendRef.current?.();
+            event.stopImmediatePropagation();
+            return;
+          }
         }
 
         if (!insideOverlay) {
@@ -629,6 +643,9 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
       });
     }
   }
+  // Enter in the review tray triggers the primary action via the capture
+  // handler above — a ref keeps the freshest closure without re-binding.
+  primarySendRef.current = handleSend;
 
   let content = null;
   try {
@@ -795,7 +812,15 @@ function renderOverlayContent({
               </button>
             </div>
           ))}
-          <div style={consoleCountRow}>{getConsoleEntries().length} console entries attached</div>
+          <label style={consoleCountRow}>
+            <input
+              checked={state.includeScreenshot}
+              onChange={() => dispatch({ type: 'TOGGLE_SCREENSHOT' })}
+              style={{ marginRight: 6, verticalAlign: 'middle' }}
+              type="checkbox"
+            />
+            Include annotated screenshot
+          </label>
           {state.sendError && <div style={errorRow}>{state.sendError}</div>}
           <div style={buttonRow}>
             <button type="button" style={dangerButton} onClick={() => dispatch({ type: 'DISCARD_ALL' })}>

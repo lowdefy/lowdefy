@@ -16,9 +16,6 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 
-// Side effect only: installs the console ring-buffer patch as soon as this
-// module is imported, regardless of whether the overlay ever activates.
-import './consoleBuffer.js';
 import useFeedbackToggle from './useFeedbackToggle.js';
 
 // Logged once per page load, not once per mount — React StrictMode / HMR can

@@ -72,7 +72,7 @@ test('enrichFeedback attaches a location to annotations with a target blockId', 
 test('enrichFeedback attaches a note when findConfig finds no matches', async () => {
   mockFindConfig.mockResolvedValue({
     matches: [],
-    note: 'No config found with id "missing" on page "login".',
+    note: 'Block is generated at runtime — no configured ancestor found on page "login".',
   });
   const batch = {
     pageId: 'login',
@@ -82,7 +82,7 @@ test('enrichFeedback attaches a note when findConfig finds no matches', async ()
   const enriched = await enrichFeedback({ batch });
 
   expect(enriched.annotations[0].location).toEqual({
-    note: 'No config found with id "missing" on page "login".',
+    note: 'Block is generated at runtime — no configured ancestor found on page "login".',
   });
 });
 
@@ -117,7 +117,7 @@ test('formatFeedback returns a message when there is no pending feedback', () =>
   expect(formatFeedback({ items: [] })).toMatch(/No pending feedback/);
 });
 
-test('formatFeedback formats an element annotation with location, ancestors, comment, shapes, and console', () => {
+test('formatFeedback formats an element annotation with location, ancestors, comment, shapes, and screenshot', () => {
   const items = [
     {
       pageId: 'login',
@@ -147,13 +147,7 @@ test('formatFeedback formats an element annotation with location, ancestors, com
           },
         },
       ],
-      console: [
-        {
-          level: 'error',
-          text: 'TypeError: x is not a function',
-          timestamp: '2026-01-01T00:00:00.000Z',
-        },
-      ],
+      screenshotPath: '.lowdefy/annotations/login-test.png',
     },
   ];
 
@@ -165,9 +159,9 @@ test('formatFeedback formats an element annotation with location, ancestors, com
   expect(text).toContain('Ancestors: submit_button > login_form');
   expect(text).toContain('Comment: Button is too small on mobile');
   expect(text).toContain('1 rect around the element, 1 arrow');
-  expect(text).toContain('ERROR: TypeError: x is not a function');
+  expect(text).toContain('Annotated screenshot: .lowdefy/annotations/login-test.png');
   expect(text).toContain('lowdefy_inspect_state({ pageId: "login" })');
-  expect(text).toContain('lowdefy_screenshot_page');
+  expect(text).not.toContain('Console');
 });
 
 test('formatFeedback formats a region annotation without a target', () => {

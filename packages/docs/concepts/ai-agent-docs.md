@@ -42,7 +42,7 @@ It provides these tools:
 
 ## Annotate your app — point, draw, copy, paste
 
-Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, the drawn geometry, and recent console errors.
+Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** (or just pressing Enter) puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, plus **an annotated PNG screenshot of the page with your drawings on it** (saved under `.lowdefy/annotations/`, its path included in the block so the agent can view it; untick "Include annotated screenshot" to skip).
 
 Paste it into whichever agent session you want — that explicit paste is also what keeps feedback unambiguous when you run several Claude Code sessions against one dev server. A pasted block looks like:
 

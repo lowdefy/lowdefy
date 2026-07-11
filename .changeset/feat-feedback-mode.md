@@ -6,7 +6,7 @@ feat: Annotation helper — point, draw, copy, and paste feedback to your agent
 
 Press **Cmd+/** (macOS) / **Ctrl+/** (Windows/Linux) on any page of your running dev app: an overlay appears where you hover-highlight blocks, click to select, draw rectangles/arrows/freehand, comment, and batch several annotations. No browser extension — it's injected by the dev server.
 
-Hitting **Copy** puts an agent-readable feedback block on your clipboard, **each annotation enriched with the blockId and the exact yaml file and line that defines it**, plus drawn geometry (usable as a screenshot crop), viewport/scroll info, and recent console errors. Paste it into whichever agent session you want.
+Hitting **Copy** puts an agent-readable feedback block on your clipboard, **each annotation enriched with the blockId and the exact yaml file and line that defines it**, plus drawn geometry and, by default, **an annotated PNG screenshot of the page with your drawings on it** (saved under `.lowdefy/annotations/`, path included in the block — untick "Include annotated screenshot" to skip). Paste it into whichever agent session you want. Press Enter to drive the primary action (save annotation, then copy).
 
 Also:
 
