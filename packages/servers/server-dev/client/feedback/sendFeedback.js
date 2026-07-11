@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-// Best-effort POST, matching Inspector.jsx's postResult style — a dev-only
-// feature must never throw into the app it rides along with. Callers get a
-// plain boolean back and decide how to surface failure (e.g. keep the batch
-// and offer a retry).
+// Sends the batch to the dev server for enrichment (blockId → yaml file:line
+// via the build's keyMap) and gets back the formatted, agent-readable text.
+// Best-effort, matching Inspector.jsx's postResult style — a dev-only feature
+// must never throw into the app it rides along with. Returns the formatted
+// string, or null on any failure.
 async function sendFeedback({ basePath, batch }) {
   try {
     const response = await fetch(`${basePath}/lowdefy-feedback`, {
@@ -25,9 +26,13 @@ async function sendFeedback({ basePath, batch }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(batch),
     });
-    return response.ok;
+    if (!response.ok) {
+      return null;
+    }
+    const data = await response.json();
+    return typeof data.formatted === 'string' ? data.formatted : null;
   } catch {
-    return false;
+    return null;
   }
 }
 

@@ -18,11 +18,11 @@ import { type } from '@lowdefy/helpers';
 
 const MAX_CONSOLE_ENTRIES = 10;
 
-// Turns one or more enriched feedback batches (feedbackStore.consumeAll /
-// peek, after enrichFeedback.js has attached `annotation.location`) into a
-// single agent-readable text block. Kept as a pure string formatter — no
-// build-artifact or store access — so both the Stop hook GET route and any
-// future MCP tool can call it on whatever items they already have in hand.
+// Turns one or more enriched feedback batches (after enrichFeedback.js has
+// attached `annotation.location`) into a single agent-readable text block.
+// The overlay copies this text to the developer's clipboard — they paste it
+// into their agent session. Kept as a pure string formatter — no
+// build-artifact access.
 function formatFeedback({ items }) {
   if (type.isNone(items) || items.length === 0) {
     return 'No pending feedback. The developer has not submitted any annotations yet.';

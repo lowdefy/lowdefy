@@ -27,7 +27,7 @@ jest.unstable_mockModule('../../lib/docs/enrichFeedback.js', () => ({
 }));
 
 const { default: feedbackHandler } = await import('./feedback.js');
-const { default: feedbackStore } = await import('../../lib/docs/feedbackStore.js');
+
 
 function createApp() {
   const app = new Hono();
@@ -36,7 +36,6 @@ function createApp() {
 }
 
 afterEach(() => {
-  feedbackStore.clear();
   mockEnrichFeedback.mockClear();
 });
 
@@ -78,7 +77,7 @@ test('feedbackHandler returns 400 with a helpful message when annotations is mis
   expect(body.error).toMatch(/\/lowdefy-docs/);
 });
 
-test('feedbackHandler enriches and queues a valid batch, returning ok and the queue count', async () => {
+test('feedbackHandler enriches a valid batch and returns the formatted text', async () => {
   const batch = { pageId: 'login', annotations: [{ id: '1', kind: 'region', comment: 'x' }] };
   const res = await createApp().request('/api/feedback', {
     method: 'POST',
@@ -92,7 +91,8 @@ test('feedbackHandler enriches and queues a valid batch, returning ok and the qu
 
   expect(res.status).toEqual(200);
   const body = await res.json();
-  expect(body).toEqual({ ok: true, queued: 1 });
+  expect(body.ok).toBe(true);
+  expect(typeof body.formatted).toBe('string');
+  expect(body.formatted).toContain('login');
   expect(mockEnrichFeedback).toHaveBeenCalledWith({ batch });
-  expect(feedbackStore.count()).toEqual(1);
 });

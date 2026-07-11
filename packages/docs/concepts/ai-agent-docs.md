@@ -39,17 +39,21 @@ It provides these tools:
 | `lowdefy_checkpoint_to_mocks` | Convert a state checkpoint into e2e `mocks.yaml` fixtures |
 | `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
 | `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
-| `lowdefy_wait_for_feedback` | Block until you send visual feedback from the app (Cmd/Ctrl+/)        |
-| `lowdefy_get_feedback`   | Instantly fetch pending visual feedback annotations                      |
 
-## Feedback Mode — draw on your app, it lands in Claude Code
+## Annotate your app — point, draw, copy, paste
 
-Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, batch several annotations, and hit send. The annotations land in your Claude Code session — each one enriched with the **blockId and the exact yaml file and line** that defines it, the drawn geometry, and recent console errors.
+Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, the drawn geometry, and recent console errors.
 
-Two ways feedback reaches the agent:
+Paste it into whichever agent session you want — that explicit paste is also what keeps feedback unambiguous when you run several Claude Code sessions against one dev server. A pasted block looks like:
 
-- **While the agent is working**: it calls `lowdefy_wait_for_feedback` and blocks — tell it "let me show you" and annotate; the tool returns your annotations the moment you send.
-- **While the agent is idle**: the Stop hook installed by `lowdefy agent-setup` checks for pending feedback whenever the session goes quiet and wakes it automatically with your annotations — alt-tab to the browser, draw, and the terminal picks it up.
+```
+Feedback: 1 annotation(s) on page "orders" (/orders) — viewport 1280x800 @2x, scrollY 340
+
+1. Element "submit_button" (pages/orders.yaml:42)
+   Ancestors: submit_button > order_form
+   Comment: Disable this while the form is submitting
+   Shapes: 1 rect around the element
+```
 
 Esc cancels; the overlay never ships to production servers. The `/lowdefy-feedback` route prefix is reserved in dev.
 

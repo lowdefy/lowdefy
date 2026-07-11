@@ -50,8 +50,6 @@ const EXPECTED_TOOLS = [
   'lowdefy_load_state',
   'lowdefy_list_state_checkpoints',
   'lowdefy_checkpoint_to_mocks',
-  'lowdefy_wait_for_feedback',
-  'lowdefy_get_feedback',
 ];
 
 async function connectClient() {

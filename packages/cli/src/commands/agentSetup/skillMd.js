@@ -43,10 +43,11 @@ Never guess type names or properties. Before writing config:
 
 ## Visual feedback
 
-Developers can press \`Cmd/Ctrl+/\` in the running app to point at, draw on, or comment on
-what's on screen. That feedback arrives via the \`lowdefy_wait_for_feedback\` and
-\`lowdefy_get_feedback\` MCP tools, and automatically wakes an idle Claude Code session through
-a Stop hook. Each annotation includes the config file and line it refers to.
+Developers can press \`Cmd/Ctrl+/\` in the running app to point at, draw on, and comment on
+what's on screen; the annotation helper copies an agent-readable feedback block to their
+clipboard, which they paste to you. Pasted blocks start with "Feedback:" and include the
+config file and line each annotation refers to — treat them as precise UI feedback and use
+\`lowdefy_inspect_state\` for the page's live state.
 `;
 }
 

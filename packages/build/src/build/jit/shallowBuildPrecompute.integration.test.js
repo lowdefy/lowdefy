@@ -28,7 +28,7 @@ import os from 'os';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
-process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
+process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
 jest.unstable_mockModule('../buildApp.js', () => ({
   default: ({ components }) => {

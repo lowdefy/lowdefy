@@ -31,7 +31,6 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
-import feedbackPendingHandler from './routes/feedbackPending.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
 import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
@@ -85,11 +84,11 @@ function createApp() {
   app.get('/api/js/:env', jsEnvHandler);
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
-  // Feedback Mode: the in-page overlay (Cmd/Ctrl+/) POSTs annotation batches
-  // here; the Stop hook and MCP tools drain them. No api context needed.
+  // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
+  // batches here and gets back the enriched agent-readable text, which the
+  // overlay copies to the clipboard. No api context needed.
   // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
   app.post('/lowdefy-feedback', feedbackHandler);
-  app.get('/lowdefy-feedback/pending', feedbackPendingHandler);
 
   // Auth config must be registered before the /lowdefy-docs routes: Hono
   // middleware only applies to routes registered after it, and run-request/

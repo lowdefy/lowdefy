@@ -57,9 +57,9 @@ function getAuthConfig({ appMeta, authJson, dev, logger, plugins, secrets }) {
   authConfigCache.session = authConfig.session;
   authConfigCache.theme = authConfig.theme;
   authConfigCache.cookies = resolveCookies({ appMeta, authConfig, dev });
-  // Auth.js v5 reads AUTH_SECRET from env but not NEXTAUTH_SECRET — map the
-  // v4 variable here so existing deployments keep working without env changes.
-  authConfigCache.secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+  // Auth.js v5 reads AUTH_SECRET; the v4 NEXTAUTH_SECRET variable is not
+  // supported — deployments must rename it (see the v5-to-v6 migration doc).
+  authConfigCache.secret = process.env.AUTH_SECRET;
   // Self-hosted servers run behind arbitrary proxies; derive URLs from request
   // headers (v4 derived them from NEXTAUTH_URL, aliased to AUTH_URL at startup).
   authConfigCache.trustHost = true;

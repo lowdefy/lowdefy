@@ -19,23 +19,11 @@ import React, { Suspense, useEffect, useState } from 'react';
 // Side effect only: installs the console ring-buffer patch as soon as this
 // module is imported, regardless of whether the overlay ever activates.
 import './consoleBuffer.js';
-import { toast, toastClose } from './feedbackStyles.js';
 import useFeedbackToggle from './useFeedbackToggle.js';
-
-const HINT_SEEN_KEY = 'lowdefy-feedback-hint-seen';
-const HINT_AUTO_HIDE_MS = 8000;
 
 // Logged once per page load, not once per mount — React StrictMode / HMR can
 // remount this component without a real reload.
 let bannerLogged = false;
-
-function isMac() {
-  try {
-    return /Mac|iPhone|iPod|iPad/.test(window.navigator?.platform ?? '');
-  } catch {
-    return false;
-  }
-}
 
 function logBannerOnce() {
   if (bannerLogged) {
@@ -45,28 +33,12 @@ function logBannerOnce() {
   try {
     // eslint-disable-next-line no-console
     console.info(
-      '%cLowdefy Feedback%c — press Cmd/Ctrl+/ to point, draw, and send feedback to your Claude Code session.',
+      '%cLowdefy Annotate%c — press Cmd/Ctrl+/ to point, draw, and copy annotations for your coding agent.',
       'color: #4f9cf9; font-weight: bold;',
       'color: inherit;'
     );
   } catch {
     // Never let a console-styling quirk break the app.
-  }
-}
-
-function shouldShowHint() {
-  try {
-    return window.localStorage.getItem(HINT_SEEN_KEY) !== 'true';
-  } catch {
-    return false;
-  }
-}
-
-function markHintSeen() {
-  try {
-    window.localStorage.setItem(HINT_SEEN_KEY, 'true');
-  } catch {
-    // Best-effort — a private-browsing tab just sees the hint again next time.
   }
 }
 
@@ -76,11 +48,10 @@ const LazyOverlay = React.lazy(() => import('./FeedbackOverlay.jsx'));
 
 // Dev-only, always mounted alongside Inspector.jsx. Mirrors its resilience
 // contract — nothing here may ever throw into the app it's riding along
-// with. Stays inert (renders only a one-time hint toast) until the developer
-// presses Cmd/Ctrl+/, at which point the overlay mounts.
+// with. Stays inert until the developer presses Cmd/Ctrl+/, at which point
+// the overlay mounts.
 function FeedbackMount({ basePath, lowdefy, pageId }) {
   const [active, setActive] = useState(false);
-  const [showHint, setShowHint] = useState(false);
 
   useFeedbackToggle({
     onToggle: () => setActive((current) => !current),
@@ -88,30 +59,10 @@ function FeedbackMount({ basePath, lowdefy, pageId }) {
 
   useEffect(() => {
     logBannerOnce();
-    if (!shouldShowHint()) {
-      return undefined;
-    }
-    setShowHint(true);
-    const timer = setTimeout(() => setShowHint(false), HINT_AUTO_HIDE_MS);
-    return () => clearTimeout(timer);
   }, []);
-
-  const dismissHint = () => {
-    setShowHint(false);
-    markHintSeen();
-  };
 
   return (
     <>
-      {showHint && (
-        <div data-lowdefy-feedback-toast style={toast}>
-          Tip: Press {isMac() ? '⌘/' : 'Ctrl+/'} to point at your app and send feedback to Claude
-          Code
-          <button onClick={dismissHint} aria-label="Dismiss" style={toastClose} type="button">
-            ✕
-          </button>
-        </div>
-      )}
       {active && (
         <Suspense fallback={null}>
           <LazyOverlay

@@ -15,14 +15,16 @@
 */
 
 import enrichFeedback from '../../lib/docs/enrichFeedback.js';
-import feedbackStore from '../../lib/docs/feedbackStore.js';
+import formatFeedback from '../../lib/docs/formatFeedback.js';
 
 // Receives annotation batches from the dev browser overlay (a developer
-// draws on a live page and comments — see the batch shape this validates
-// below) and queues them for Claude Code to pick up via
-// GET /lowdefy-docs/feedback-pending. Same-origin check cloned from
-// routes/clientError.js: only a page served by this dev server (not an
-// arbitrary site) should be able to post feedback into the agent loop.
+// draws on a live page and comments), enriches each annotation with its
+// yaml file:line via findConfig, and returns the formatted agent-readable
+// text. The overlay copies that text to the clipboard — the developer
+// pastes it into whichever agent session they choose, which is also what
+// makes delivery unambiguous when several sessions share one dev server.
+// Same-origin check cloned from routes/clientError.js: only a page served
+// by this dev server (not an arbitrary site) should be able to use it.
 async function feedbackHandler(c) {
   if (c.req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
@@ -53,9 +55,8 @@ async function feedbackHandler(c) {
   }
 
   const enriched = await enrichFeedback({ batch });
-  feedbackStore.push(enriched);
 
-  return c.json({ ok: true, queued: feedbackStore.count() });
+  return c.json({ ok: true, formatted: formatFeedback({ items: [enriched] }) });
 }
 
 export default feedbackHandler;

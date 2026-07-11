@@ -231,34 +231,6 @@ const errorRow = {
   marginBottom: 8,
 };
 
-const toast = {
-  position: 'fixed',
-  top: 16,
-  right: 16,
-  maxWidth: 320,
-  backgroundColor: colors.panelBg,
-  border: `1px solid ${colors.panelBorder}`,
-  borderRadius: 8,
-  color: colors.text,
-  fontFamily,
-  fontSize: 13,
-  padding: '12px 32px 12px 14px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-  zIndex: 2147483000,
-};
-
-const toastClose = {
-  position: 'absolute',
-  top: 8,
-  right: 10,
-  background: 'none',
-  border: 'none',
-  color: colors.textMuted,
-  cursor: 'pointer',
-  fontSize: 14,
-  lineHeight: 1,
-};
-
 const svgLayer = {
   position: 'fixed',
   inset: 0,
@@ -267,9 +239,9 @@ const svgLayer = {
 };
 
 // A few rules inline styles can't express: forcing cursor over arbitrary app
-// descendants during pick/draw modes, a placeholder color, and a subtle toast
-// entrance animation. The arrowhead SVG marker is defined inline in the
-// overlay's <defs> instead — no stylesheet needed for that.
+// descendants during pick/draw modes and a placeholder color. The arrowhead
+// SVG marker is defined inline in the overlay's <defs> instead — no
+// stylesheet needed for that.
 function injectFeedbackStyleTag() {
   if (typeof document === 'undefined' || document.getElementById(STYLE_TAG_ID)) {
     return;
@@ -285,13 +257,6 @@ function injectFeedbackStyleTag() {
     }
     [data-lowdefy-feedback] textarea::placeholder {
       color: rgba(255,255,255,0.4);
-    }
-    @keyframes lowdefy-feedback-toast-in {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    [data-lowdefy-feedback-toast] {
-      animation: lowdefy-feedback-toast-in 160ms ease;
     }
   `;
   document.head.appendChild(style);
@@ -330,8 +295,6 @@ export {
   reviewItemRemove,
   consoleCountRow,
   errorRow,
-  toast,
-  toastClose,
   svgLayer,
   injectFeedbackStyleTag,
   removeFeedbackStyleTag,

@@ -1,9 +1,9 @@
-# B4: Missing NEXTAUTH_SECRET Environment Variable
+# B4: Missing AUTH_SECRET Environment Variable
 # ================================================
-# Tests that NEXTAUTH_SECRET must be set when auth providers are configured.
+# Tests that AUTH_SECRET must be set when auth providers are configured.
 #
 # Expected error:
-#   [Config Error] Auth providers are configured but NEXTAUTH_SECRET environment
+#   [Config Error] Auth providers are configured but AUTH_SECRET environment
 #   variable is not set.
 #
 # The error points to line 14 where the providers array key is defined.

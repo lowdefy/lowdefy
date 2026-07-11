@@ -45,6 +45,7 @@ import {
   injectFeedbackStyleTag,
   removeFeedbackStyleTag,
 } from './feedbackStyles.js';
+import copyToClipboard from './copyToClipboard.js';
 import sendFeedback from './sendFeedback.js';
 
 const FEEDBACK_ROOT_SELECTOR = '[data-lowdefy-feedback]';
@@ -600,19 +601,31 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
     try {
       dispatch({ type: 'SEND_START' });
       const batch = buildBatch({ state, pageId });
-      const ok = await sendFeedback({ basePath, batch });
-      if (ok) {
+      // The server enriches annotations with yaml file:line locations and
+      // returns the agent-readable text; the clipboard is the delivery
+      // channel — the developer pastes it into whichever agent session
+      // they choose.
+      const formatted = await sendFeedback({ basePath, batch });
+      if (formatted === null) {
+        dispatch({
+          type: 'SEND_ERROR',
+          error: 'Could not format annotations. Check the dev server and try again.',
+        });
+        return;
+      }
+      const copied = await copyToClipboard({ text: formatted });
+      if (copied) {
         dispatch({ type: 'SEND_SUCCESS' });
       } else {
         dispatch({
           type: 'SEND_ERROR',
-          error: 'Failed to send feedback. Check the dev server and try again.',
+          error: 'Could not copy to clipboard. Click the page once, then try again.',
         });
       }
     } catch {
       dispatch({
         type: 'SEND_ERROR',
-        error: 'Failed to send feedback. Check the dev server and try again.',
+        error: 'Could not copy annotations. Check the dev server and try again.',
       });
     }
   }
@@ -797,13 +810,13 @@ function renderOverlayContent({
               disabled={state.sending || state.batch.length === 0}
               onClick={handleSend}
             >
-              {state.sending ? 'Sending…' : `Send ${state.batch.length}`}
+              {state.sending ? 'Copying…' : `Copy ${state.batch.length} for agent`}
             </button>
           </div>
         </div>
       )}
 
-      {showSent && <div style={sentBanner}>Sent to Claude Code ✓</div>}
+      {showSent && <div style={sentBanner}>Copied to clipboard ✓ — paste into your agent</div>}
     </div>
   );
 }
