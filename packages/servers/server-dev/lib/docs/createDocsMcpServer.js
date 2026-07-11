@@ -38,9 +38,12 @@ import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
+import createLogger from '../server/log/createLogger.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
+
+const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
@@ -70,6 +73,20 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     { name: 'lowdefy-docs', version: '1.0.0' },
     { instructions: INSTRUCTIONS }
   );
+
+  // Debug-log every tool call (name + args, never the response) so agent
+  // activity is visible in the dev terminal with --log-level=debug. Wrapping
+  // registerTool here covers all tools without touching each registration.
+  const registerTool = server.registerTool.bind(server);
+  server.registerTool = (name, definition, handler) =>
+    registerTool(name, definition, async (args, extra) => {
+      try {
+        logger.debug({ event: 'mcp_tool_call', tool: name, args }, `MCP tool call: ${name}`);
+      } catch {
+        // Logging must never break a tool call.
+      }
+      return handler(args, extra);
+    });
 
   server.registerTool(
     'lowdefy_inspect_state',
