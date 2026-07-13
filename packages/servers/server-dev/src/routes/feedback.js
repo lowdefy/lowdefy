@@ -16,6 +16,9 @@
 
 import enrichFeedback from '../../lib/docs/enrichFeedback.js';
 import formatFeedback from '../../lib/docs/formatFeedback.js';
+import createLogger from '../../lib/server/log/createLogger.js';
+
+const logger = createLogger({ server: 'lowdefy-dev-feedback' });
 
 // Receives annotation batches from the dev browser overlay (a developer
 // draws on a live page and comments), enriches each annotation with its
@@ -26,10 +29,6 @@ import formatFeedback from '../../lib/docs/formatFeedback.js';
 // Same-origin check cloned from routes/clientError.js: only a page served
 // by this dev server (not an arbitrary site) should be able to use it.
 async function feedbackHandler(c) {
-  if (c.req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
-  }
-
   const origin = c.req.header('origin');
   if (!origin) {
     return c.json({ error: 'Forbidden' }, 403);
@@ -71,13 +70,15 @@ async function feedbackHandler(c) {
       '../../lib/docs/captureAnnotatedScreenshot.js'
     );
     const fileName = `${batch.pageId}-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-    const origin = new URL(c.req.url).origin;
+    const serverOrigin = new URL(c.req.url).origin;
     enriched = { ...enriched, screenshotPath: `.lowdefy/annotations/${fileName}` };
-    captureAnnotatedScreenshot({ origin, batch: enriched, fileName }).then((result) => {
-      if (result.error) {
-        c.get('logger')?.warn?.(result.error);
+    captureAnnotatedScreenshot({ origin: serverOrigin, batch: enriched, fileName }).then(
+      (result) => {
+        if (result.error) {
+          logger.warn(result.error);
+        }
       }
-    });
+    );
   }
 
   return c.json({ ok: true, formatted: formatFeedback({ items: [enriched] }) });

@@ -19,8 +19,8 @@ import { jest } from '@jest/globals';
 
 // enrichFeedback (findConfig → force-builds a page) is covered on its own in
 // lib/docs/formatFeedback.test.mjs — here it's stubbed as a pass-through so
-// this file only exercises the route: origin check, validation, and store
-// wiring.
+// this file only exercises the route: origin check, validation, and enrich +
+// format wiring.
 const mockEnrichFeedback = jest.fn(async ({ batch }) => batch);
 jest.unstable_mockModule('../../lib/docs/enrichFeedback.js', () => ({
   default: mockEnrichFeedback,
@@ -30,7 +30,6 @@ jest.unstable_mockModule('../../lib/docs/captureAnnotatedScreenshot.js', () => (
 }));
 
 const { default: feedbackHandler } = await import('./feedback.js');
-
 
 function createApp() {
   const app = new Hono();
