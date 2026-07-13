@@ -1,5 +1,6 @@
 ---
 '@lowdefy/server-dev': minor
+'lowdefy': patch
 ---
 
 feat: Annotation helper — point, draw, copy, and paste feedback to your agent
