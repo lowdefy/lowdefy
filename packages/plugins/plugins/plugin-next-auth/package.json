@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-next-auth",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@auth/core": "0.41.2",
-    "@lowdefy/node-utils": "5.3.0",
+    "@lowdefy/node-utils": "5.4.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",

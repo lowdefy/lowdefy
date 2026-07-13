@@ -1,5 +1,12 @@
 # @lowdefy/connection-test
 
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [302e330]
+  - @lowdefy/errors@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes
