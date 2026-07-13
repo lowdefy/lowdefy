@@ -30,17 +30,16 @@ ENV PATH="$PNPM_HOME/bin:$PATH"
 
 COPY . .
 
-# Build the Lowdefy app (config build + Vite client build), pinning the CLI to the
-# `lowdefy:` version in lowdefy.yaml so builds are reproducible.
+# Build the app then assemble a minimal runtime at .lowdefy/docker. docker-output
+# traces the server's actual dependency graph (via @vercel/nft), so the runtime
+# ships only the files the server imports — not the full node_modules, which
+# includes the client block packages already compiled into dist/client. The CLI
+# is pinned to the `lowdefy:` version in lowdefy.yaml so builds are reproducible.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   LOWDEFY_VERSION=$(sed -nE "s/^lowdefy:(.*)/\1/p" lowdefy.yaml lowdefy.yml 2>/dev/null | tr -d '[:space:]') \
   && test -n "$LOWDEFY_VERSION" || { echo "Could not read the lowdefy version from lowdefy.yaml"; exit 1; } \
-  && npx lowdefy@"$LOWDEFY_VERSION" build
-
-# The build installs devDependencies (the build itself needs them) — remove them so
-# only runtime dependencies are copied into the final image.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-  cd .lowdefy/server && pnpm prune --prod
+  && npx lowdefy@"$LOWDEFY_VERSION" build \
+  && npx lowdefy@"$LOWDEFY_VERSION" docker-output
 
 FROM node:22-slim AS runner
 
@@ -50,7 +49,7 @@ ENV PORT=3000
 WORKDIR /lowdefy
 
 # The node user (uid 1000) ships with the official Node.js images.
-COPY --from=builder --chown=node:node /lowdefy/.lowdefy/server ./
+COPY --from=builder --chown=node:node /lowdefy/.lowdefy/docker ./
 
 USER node
 
@@ -62,9 +61,10 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD ["node", "-e", "fetch('http://localhost:'+(process.env.PORT||3000)+'/api/lowdefy-health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
 
-# Exec form keeps node as PID 1 — src/index.js handles SIGTERM/SIGINT for
+# start.mjs (written by docker-output) chdirs into the server directory and boots
+# it. Exec form keeps node as PID 1 — the server handles SIGTERM/SIGINT for
 # graceful shutdown, so no init wrapper is needed.
-CMD ["node", "src/index.js"]
+CMD ["node", "start.mjs"]
 ```
 
 with a `.dockerignore` file:
@@ -91,7 +91,7 @@ Key properties of this setup:
 
 - **Reproducible builds**: the CLI version is read from the `lowdefy:` field in `lowdefy.yaml`, so the image always builds with the same Lowdefy version as your app config, and rebuilding an old commit produces the same server.
 - **Fast rebuilds**: the pnpm store is kept in a BuildKit cache mount, so changing app config only re-downloads dependencies that actually changed.
-- **Small runtime image**: build-only dependencies (Vite, the Lowdefy build package, and other devDependencies) are pruned before the server is copied into the `node:22-slim` runtime stage.
+- **Small runtime image**: `docker-output` traces the server's real import graph and copies only what the server loads at runtime — a fraction of the installed `node_modules`, since the client-side block packages are already compiled into `dist/client` and never imported by the server.
 - **Non-root**: the server runs as the `node` user built into the official Node.js images.
 - For stronger supply-chain guarantees, pin the base images by digest (`node:22-slim@sha256:...`) and let a bot like Renovate or Dependabot keep the digest updated.
 
@@ -213,10 +213,8 @@ COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   LOWDEFY_VERSION=$(sed -nE "s/^lowdefy:(.*)/\1/p" app/lowdefy.yaml app/lowdefy.yml 2>/dev/null | tr -d '[:space:]') \
   && test -n "$LOWDEFY_VERSION" || { echo "Could not read the lowdefy version from lowdefy.yaml"; exit 1; } \
-  && npx lowdefy@"$LOWDEFY_VERSION" build --config-directory ./app
-
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-  cd app/.lowdefy/server && pnpm prune --prod
+  && npx lowdefy@"$LOWDEFY_VERSION" build --config-directory ./app \
+  && npx lowdefy@"$LOWDEFY_VERSION" docker-output --config-directory ./app
 
 FROM node:22-slim AS runner
 
@@ -225,8 +223,8 @@ ENV PORT=3000
 
 WORKDIR /lowdefy
 
-# TODO: Change the from directory (/lowdefy/app/.lowdefy/server) as appropriate here
-COPY --from=builder --chown=node:node /lowdefy/app/.lowdefy/server ./
+# TODO: Change the from directory (/lowdefy/app/.lowdefy/docker) as appropriate here
+COPY --from=builder --chown=node:node /lowdefy/app/.lowdefy/docker ./
 
 USER node
 
@@ -235,7 +233,7 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD ["node", "-e", "fetch('http://localhost:'+(process.env.PORT||3000)+'/api/lowdefy-health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
 
-CMD ["node", "src/index.js"]
+CMD ["node", "start.mjs"]
 ```
 
-Note that local workspace plugins referenced with relative `file:` or `link:` paths must resolve from inside `.lowdefy/server` within the build context — paths that reach outside the context will fail to install.
+When the app is part of a pnpm workspace, `docker-output` preserves the paths of any linked local plugin packages relative to the workspace root, so `start.mjs` boots the server with those links intact — no separate install step is needed in the runner stage.

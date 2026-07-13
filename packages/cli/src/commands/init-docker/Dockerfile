@@ -15,17 +15,16 @@ ENV PATH="$PNPM_HOME/bin:$PATH"
 
 COPY . .
 
-# Build the Lowdefy app (config build + Vite client build), pinning the CLI to the
-# `lowdefy:` version in lowdefy.yaml so builds are reproducible.
+# Build the app then assemble a minimal runtime at .lowdefy/docker. docker-output
+# traces the server's actual dependency graph (via @vercel/nft), so the runtime
+# ships only the files the server imports — not the full node_modules, which
+# includes the client block packages already compiled into dist/client. The CLI
+# is pinned to the `lowdefy:` version in lowdefy.yaml so builds are reproducible.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   LOWDEFY_VERSION=$(sed -nE "s/^lowdefy:(.*)/\1/p" lowdefy.yaml lowdefy.yml 2>/dev/null | tr -d '[:space:]') \
   && test -n "$LOWDEFY_VERSION" || { echo "Could not read the lowdefy version from lowdefy.yaml"; exit 1; } \
-  && npx lowdefy@"$LOWDEFY_VERSION" build
-
-# The build installs devDependencies (the build itself needs them) — remove them so
-# only runtime dependencies are copied into the final image.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-  cd .lowdefy/server && pnpm prune --prod
+  && npx lowdefy@"$LOWDEFY_VERSION" build \
+  && npx lowdefy@"$LOWDEFY_VERSION" docker-output
 
 FROM node:22-slim AS runner
 
@@ -35,7 +34,7 @@ ENV PORT=3000
 WORKDIR /lowdefy
 
 # The node user (uid 1000) ships with the official Node.js images.
-COPY --from=builder --chown=node:node /lowdefy/.lowdefy/server ./
+COPY --from=builder --chown=node:node /lowdefy/.lowdefy/docker ./
 
 USER node
 
@@ -47,6 +46,7 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD ["node", "-e", "fetch('http://localhost:'+(process.env.PORT||3000)+'/api/lowdefy-health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
 
-# Exec form keeps node as PID 1 — src/index.js handles SIGTERM/SIGINT for
+# start.mjs (written by docker-output) chdirs into the server directory and boots
+# it. Exec form keeps node as PID 1 — the server handles SIGTERM/SIGINT for
 # graceful shutdown, so no init wrapper is needed.
-CMD ["node", "src/index.js"]
+CMD ["node", "start.mjs"]
