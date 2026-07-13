@@ -99,11 +99,12 @@ function validateAuthConfig({ components, context }) {
   validateMutualExclusivity({ components, context, entity: 'pages' });
   validateMutualExclusivity({ components, context, entity: 'websockets' });
 
-  // Validate NEXTAUTH_SECRET is set when auth providers are configured
-  if (components.auth.providers.length > 0 && type.isNone(process.env.NEXTAUTH_SECRET)) {
+  // Validate AUTH_SECRET is set when auth providers are configured. Auth.js v5
+  // reads AUTH_SECRET; the v4 NEXTAUTH_SECRET variable is not supported.
+  if (components.auth.providers.length > 0 && type.isNone(process.env.AUTH_SECRET)) {
     throw new ConfigError(
-      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set. ' +
-        'Set NEXTAUTH_SECRET to a secure random string (e.g., generate with `openssl rand -base64 32`).',
+      'Auth providers are configured but AUTH_SECRET environment variable is not set. ' +
+        'Set AUTH_SECRET to a secure random string (e.g., generate with `openssl rand -base64 32`).',
       { configKey: components.auth.providers['~k'] ?? components.auth['~k'] }
     );
   }

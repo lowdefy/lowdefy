@@ -51,6 +51,14 @@ connection, and request type installed in this project (including local plugins)
 3. See real usage: call \`lowdefy_get_examples\` (or \`GET /lowdefy-docs/examples/{type}\`).
 4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\` (or
    \`GET /lowdefy-docs/content/{slug}\`, \`GET /lowdefy-docs/search?q=...\`).
+
+### Visual feedback
+
+While the dev server is running, developers can press \`Cmd/Ctrl+/\` in the browser to point at,
+draw on, and comment on the running app; the annotation helper copies an agent-readable feedback
+block to their clipboard, which they paste into the agent session. Pasted blocks start with
+"Feedback:" and include the config file and line each annotation refers to — treat them as
+precise UI feedback.
 `;
 }
 

@@ -29,8 +29,10 @@ Breaking changes:
 - **Auth sessions invalidate once on upgrade.** The session cookie prefix
   changes from `next-auth.*` to `authjs.*` — users sign in again after the
   upgrade. Provider, adapter, callback and event configuration is unchanged.
-- **`NEXTAUTH_SECRET` and `NEXTAUTH_URL` still work**, but `AUTH_SECRET` and
-  `AUTH_URL` are now the preferred names.
+- **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+  fails with a config error when auth providers are configured and
+  `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+  fallback, but `AUTH_URL` is the preferred name.
 - **Custom `next.config.js` files no longer apply.** Customize the client
   build with a `vite.config.js` in the server directory instead.
 - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a

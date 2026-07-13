@@ -126,63 +126,50 @@ test('validateAuthConfig config error when protected or public are false.', () =
   );
 });
 
-test('validateAuthConfig throws when auth providers configured but NEXTAUTH_SECRET not set', () => {
-  const originalEnv = process.env.NEXTAUTH_SECRET;
-  delete process.env.NEXTAUTH_SECRET;
-
-  const components = {
-    auth: {
-      providers: [
-        {
-          id: 'google',
-          type: 'GoogleProvider',
-          properties: {
-            clientId: 'test-id',
-            clientSecret: 'test-secret',
-          },
-        },
-      ],
-    },
-  };
-
+function withAuthSecretEnv(value, fn) {
+  const original = process.env.AUTH_SECRET;
+  if (value === undefined) {
+    delete process.env.AUTH_SECRET;
+  } else {
+    process.env.AUTH_SECRET = value;
+  }
   try {
-    expect(() => validateAuthConfig({ components, context })).toThrow(
-      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
-    );
+    fn();
   } finally {
-    if (originalEnv !== undefined) {
-      process.env.NEXTAUTH_SECRET = originalEnv;
+    if (original === undefined) {
+      delete process.env.AUTH_SECRET;
+    } else {
+      process.env.AUTH_SECRET = original;
     }
   }
+}
+
+const authProviderComponents = () => ({
+  auth: {
+    providers: [
+      {
+        id: 'google',
+        type: 'GoogleProvider',
+        properties: {
+          clientId: 'test-id',
+          clientSecret: 'test-secret',
+        },
+      },
+    ],
+  },
 });
 
-test('validateAuthConfig passes when auth providers configured and NEXTAUTH_SECRET is set', () => {
-  const originalEnv = process.env.NEXTAUTH_SECRET;
-  process.env.NEXTAUTH_SECRET = 'test-secret-value';
+test('validateAuthConfig throws when auth providers configured but AUTH_SECRET not set', () => {
+  withAuthSecretEnv(undefined, () => {
+    expect(() => validateAuthConfig({ components: authProviderComponents(), context })).toThrow(
+      'Auth providers are configured but AUTH_SECRET environment variable is not set.'
+    );
+  });
+});
 
-  const components = {
-    auth: {
-      providers: [
-        {
-          id: 'google',
-          type: 'GoogleProvider',
-          properties: {
-            clientId: 'test-id',
-            clientSecret: 'test-secret',
-          },
-        },
-      ],
-    },
-  };
-
-  try {
-    const result = validateAuthConfig({ components, context });
+test('validateAuthConfig passes when auth providers configured and AUTH_SECRET is set', () => {
+  withAuthSecretEnv('test-secret-value', () => {
+    const result = validateAuthConfig({ components: authProviderComponents(), context });
     expect(result.auth.providers).toHaveLength(1);
-  } finally {
-    if (originalEnv !== undefined) {
-      process.env.NEXTAUTH_SECRET = originalEnv;
-    } else {
-      delete process.env.NEXTAUTH_SECRET;
-    }
-  }
+  });
 });

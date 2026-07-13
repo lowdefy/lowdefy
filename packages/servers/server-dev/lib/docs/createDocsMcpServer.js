@@ -38,9 +38,12 @@ import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
+import createLogger from '../server/log/createLogger.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
+
+const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
@@ -51,6 +54,8 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes).
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
+
+Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
 
@@ -68,6 +73,20 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     { name: 'lowdefy-docs', version: '1.0.0' },
     { instructions: INSTRUCTIONS }
   );
+
+  // Debug-log every tool call (name + args, never the response) so agent
+  // activity is visible in the dev terminal with --log-level=debug. Wrapping
+  // registerTool here covers all tools without touching each registration.
+  const registerTool = server.registerTool.bind(server);
+  server.registerTool = (name, definition, handler) =>
+    registerTool(name, definition, async (args, extra) => {
+      try {
+        logger.debug({ event: 'mcp_tool_call', tool: name, args }, `MCP tool call: ${name}`);
+      } catch {
+        // Logging must never break a tool call.
+      }
+      return handler(args, extra);
+    });
 
   server.registerTool(
     'lowdefy_inspect_state',
@@ -291,13 +310,26 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {
         pageId: z.string().describe('The page id to screenshot.'),
         fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
+        clip: z
+          .object({
+            x: z.number(),
+            y: z.number(),
+            width: z.number(),
+            height: z.number(),
+          })
+          .optional()
+          .describe(
+            'Crop to a viewport-relative region — pass an annotation\'s geometry from feedback.'
+          ),
+        scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
+        scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       },
     },
-    async ({ pageId, fullPage }) => {
+    async ({ pageId, fullPage, clip, scrollX, scrollY }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
-      const result = await screenshotPage({ origin, pageId, fullPage });
+      const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY });
       if (result.error) {
         return notFoundResult(result.error);
       }

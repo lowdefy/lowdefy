@@ -18,21 +18,61 @@ import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 
+// A feedback annotation's elementRect/shapes are captured in the developer's
+// live tab, viewport-relative at whatever scroll position they were at
+// (batch.viewport.scrollX/scrollY) — so to recapture the same region
+// headless, this scrolls to that same offset first, then converts the
+// viewport-relative clip to document coordinates by adding the scroll
+// offset back in. Mutually exclusive with fullPage: an explicit clip always
+// wins, since it targets a specific annotated region rather than the page.
+async function resolveClip({ page, clip, scrollX, scrollY }) {
+  if (type.isNone(clip)) {
+    return undefined;
+  }
+  const hasValidPosition = type.isNumber(clip.x) && type.isNumber(clip.y);
+  const hasPositiveDims =
+    type.isNumber(clip.width) && type.isNumber(clip.height) && clip.width > 0 && clip.height > 0;
+  if (!hasValidPosition || !hasPositiveDims) {
+    // Invalid clip — fall back to a normal viewport screenshot rather than
+    // failing the whole request over a bad clip rect.
+    return undefined;
+  }
+
+  await page.evaluate(({ x, y }) => window.scrollTo(x, y), { x: scrollX, y: scrollY });
+  // Let scroll-triggered rendering (sticky headers, lazy content) settle
+  // before clipping, mirroring the load-settle wait below.
+  await page.waitForTimeout(200);
+
+  return {
+    x: clip.x + scrollX,
+    y: clip.y + scrollY,
+    width: clip.width,
+    height: clip.height,
+  };
+}
+
 // screenshotPage lets an agent visually verify a page rendered by the
 // running dev server.
 async function screenshotPage({
   origin,
   pageId,
   fullPage = false,
+  clip,
+  scrollX = 0,
+  scrollY = 0,
   width = 1280,
   height = 800,
   timeout = 15000,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
-    return { error: `screenshotPage requires an "origin" string. Received ${JSON.stringify(origin)}.` };
+    return {
+      error: `screenshotPage requires an "origin" string. Received ${JSON.stringify(origin)}.`,
+    };
   }
   if (type.isNone(pageId) || !type.isString(pageId)) {
-    return { error: `screenshotPage requires a "pageId" string. Received ${JSON.stringify(pageId)}.` };
+    return {
+      error: `screenshotPage requires a "pageId" string. Received ${JSON.stringify(pageId)}.`,
+    };
   }
 
   let browser;
@@ -52,7 +92,10 @@ async function screenshotPage({
     context = opened.context;
     // Let post-load rendering (fonts, transitions, client-side state) settle.
     await opened.page.waitForTimeout(300);
-    const buffer = await opened.page.screenshot({ type: 'png', fullPage });
+
+    const docClip = await resolveClip({ page: opened.page, clip, scrollX, scrollY });
+    const screenshotOptions = docClip ? { type: 'png', clip: docClip } : { type: 'png', fullPage };
+    const buffer = await opened.page.screenshot(screenshotOptions);
     return { data: buffer.toString('base64'), mimeType: 'image/png' };
   } catch (error) {
     return { error: `Failed to screenshot "${url}": ${error.message}` };

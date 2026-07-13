@@ -40,6 +40,23 @@ It provides these tools:
 | `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
 | `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
 
+## Annotate your app — point, draw, copy, paste
+
+Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** (or just pressing Enter) puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, plus **an annotated PNG screenshot of the page with your drawings on it** (saved under `.lowdefy/annotations/`, its path included in the block so the agent can view it; untick "Include annotated screenshot" to skip).
+
+Paste it into whichever agent session you want — that explicit paste is also what keeps feedback unambiguous when you run several Claude Code sessions against one dev server. A pasted block looks like:
+
+```
+Feedback: 1 annotation(s) on page "orders" (/orders) — viewport 1280x800 @2x, scrollY 340
+
+1. Element "submit_button" (pages/orders.yaml:42)
+   Ancestors: submit_button > order_form
+   Comment: Disable this while the form is submitting
+   Shapes: 1 rect around the element
+```
+
+Esc cancels; the overlay never ships to production servers. The `/lowdefy-feedback` route prefix is reserved in dev.
+
 ## The feedback loop
 
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
