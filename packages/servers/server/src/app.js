@@ -55,6 +55,10 @@ function createApp({ serveStaticAssets = true } = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
+  // Liveness endpoint for container health checks and orchestrator probes. Registered
+  // before all middleware so probes skip auth, session, request logging, and Sentry.
+  app.get('/api/lowdefy-health', (c) => c.json({ status: 'ok' }));
+
   app.use('*', sentryMiddleware());
 
   // Bound request duration so a hung upstream returns an error instead of running to the platform's

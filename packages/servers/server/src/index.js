@@ -15,6 +15,7 @@
 */
 
 import { serve } from '@hono/node-server';
+import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
@@ -25,26 +26,49 @@ if (process.env.NEXTAUTH_URL && !process.env.AUTH_URL) {
   process.env.AUTH_URL = process.env.NEXTAUTH_URL;
 }
 
-initSentryServer();
+const sentryEnabled = initSentryServer();
 
 // Import after Sentry init so instrumentation observes the module graph.
 const { default: createApp } = await import('./app.js');
+const { default: createLogger } = await import('../lib/server/log/createLogger.js');
 
 const app = createApp();
+const logger = createLogger({ server: 'lowdefy' });
 const port = Number(process.env.PORT ?? 3000);
+
+if (sentryEnabled) {
+  logger.info('Sentry enabled: server');
+}
 
 // Handles /api/websocket upgrades via serve({ websocket }). 256 KiB max frame,
 // aligned with Vercel's documented default for WebSocket functions.
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
-  console.log(`Lowdefy server listening on http://localhost:${info.port}`);
+  logger.info({ port: info.port }, `Lowdefy server listening on http://localhost:${info.port}`);
 });
 
+// Container runtimes send SIGTERM and escalate to SIGKILL after a grace period
+// (Docker defaults to 10s) — finish in-flight work and exit before that deadline.
+let shuttingDown = false;
 function shutdown() {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
+  // 1001 "going away" — clients reconnect and resubscribe on their own.
+  for (const client of wss.clients) {
+    client.close(1001, 'Server shutting down');
+  }
+  // Drop idle keep-alive connections so close() only waits on in-flight requests.
+  server.closeIdleConnections?.();
   server.close(() => {
-    process.exit(0);
+    // Flush queued Sentry events; resolves immediately when Sentry is not enabled.
+    Sentry.close(2000).finally(() => process.exit(0));
   });
+  // In-flight requests that outlive the grace period would otherwise hold the
+  // process open until SIGKILL — exit first so shutdown stays clean.
+  setTimeout(() => process.exit(1), 8000).unref();
 }
 
 process.on('SIGINT', shutdown);

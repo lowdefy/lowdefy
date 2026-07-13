@@ -67,10 +67,6 @@ function apiContext() {
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
       notifications,
       operators,
       renderEmail,
