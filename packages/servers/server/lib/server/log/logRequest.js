@@ -38,7 +38,7 @@ function logRequest({ context, status, durationMs }) {
         'user-agent': headers['user-agent'],
         host: headers.host,
         referer: headers.referer,
-        'x-forward-for': headers['x-forward-for'],
+        'x-forwarded-for': headers['x-forwarded-for'],
         // Vercel headers
         'x-vercel-id': headers['x-vercel-id'],
         'x-real-ip': headers['x-real-ip'],
