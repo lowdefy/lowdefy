@@ -21,15 +21,8 @@ import schema from './schema.js';
 async function MongodbUpdateOne({ connection, request }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let response;
-  try {
-    response = await collection.updateOne(filter, update, options);
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
-  await client.close();
+  const collection = await getCollection({ connection });
+  const response = await collection.updateOne(filter, update, options);
   return serialize(response);
 }
 
