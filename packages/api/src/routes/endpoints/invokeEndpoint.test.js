@@ -159,9 +159,8 @@ test('system context authorizes nested call to a protected endpoint', async () =
       },
     },
   });
-  context.session = undefined;
   context.user = undefined;
-  context.authorize = createAuthorize({ session: undefined, system: true });
+  context.authorize = createAuthorize({ user: null, system: true });
   const result = await invokeEndpoint(context, {
     endpointId: 'target',
     payload: {},
@@ -181,7 +180,7 @@ test('user session with insufficient roles gets masked does-not-exist error on n
         auth: { public: false, roles: ['admin'] },
       },
     },
-    session: { user: { id: 'user_1', roles: ['viewer'] } },
+    user: { id: 'user_1', roles: ['viewer'] },
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
