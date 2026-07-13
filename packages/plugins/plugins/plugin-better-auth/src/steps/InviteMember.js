@@ -20,10 +20,11 @@ import callPluginEndpoint from './support/callPluginEndpoint.js';
 import resolveOrganizationId from './support/resolveOrganizationId.js';
 
 async function InviteMember({ acting, auth, organization, properties }) {
-  // contactId and attributes are registered invitation additionalFields in
-  // the engine config; accepting the invitation stamps contactId onto the
-  // user and copies attributes onto the minted member row.
-  const { attributes, contactId, email, resend, role } = properties;
+  // profile and attributes are registered invitation additionalFields in the
+  // engine config; accepting the invitation shallow-merges profile onto the
+  // user's profile bag (invitation wins per key) and copies attributes onto
+  // the minted member row.
+  const { attributes, email, profile, resend, role } = properties;
   if (type.isNone(email)) {
     throw new Error('InviteMember requires an "email" property.');
   }
@@ -35,6 +36,11 @@ async function InviteMember({ acting, auth, organization, properties }) {
       `InviteMember "attributes" is not an object. Received ${JSON.stringify(attributes)}.`
     );
   }
+  if (!type.isNone(profile) && !type.isObject(profile)) {
+    throw new Error(
+      `InviteMember "profile" is not an object. Received ${JSON.stringify(profile)}.`
+    );
+  }
   const organizationId = resolveOrganizationId({
     organization,
     organizationId: properties.organizationId,
@@ -43,7 +49,7 @@ async function InviteMember({ acting, auth, organization, properties }) {
   return callPluginEndpoint({
     acting,
     auth,
-    body: { attributes, contactId, email, organizationId, resend, role },
+    body: { attributes, email, organizationId, profile, resend, role },
     endpointKey: 'createInvitation',
     pluginId: 'organization',
   });

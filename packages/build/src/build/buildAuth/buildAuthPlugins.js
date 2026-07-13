@@ -31,6 +31,7 @@ function buildAuthPlugins({ components, context }) {
   (strategies ?? []).forEach((strategy) => {
     counters.strategies.increment(strategy.type, strategy['~k']);
   });
+  return components;
 }
 
 export default buildAuthPlugins;

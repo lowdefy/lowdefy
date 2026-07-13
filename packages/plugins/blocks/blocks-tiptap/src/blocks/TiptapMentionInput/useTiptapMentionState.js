@@ -61,6 +61,10 @@ function useTiptapMentionState({ value, methods }) {
 
   const insertImage = async (editor, file, pos) => {
     const url = await s3FileUpload({ file, methods });
+    // The upload is async: bail if the editor was torn down meanwhile (e.g. the
+    // surrounding page navigated away before the upload resolved), otherwise the
+    // chained commands run against a destroyed editor and throw.
+    if (editor.isDestroyed) return;
     editor
       .chain()
       .insertContentAt(pos, [

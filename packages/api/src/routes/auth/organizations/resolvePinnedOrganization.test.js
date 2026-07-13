@@ -91,14 +91,19 @@ test('resolvePinnedOrganization does nothing for null or unregistered auth', asy
   await expect(resolvePinnedOrganization({ auth })).resolves.toBeUndefined();
 });
 
-test('resolvePinnedOrganization swallows an ensure failure and leaves the binding unresolved', async () => {
+test('resolvePinnedOrganization logs an ensure failure and leaves the binding unresolved', async () => {
   const findOne = jest.fn().mockRejectedValue(new Error('db down'));
   const auth = createMockAuth({ findOne });
+  const logger = { warn: jest.fn() };
   registerOrganizationBinding({
     auth,
     database: true,
     organizations: { policy: 'pinned', org: 'org-a' },
   });
-  await expect(resolvePinnedOrganization({ auth })).resolves.toBeUndefined();
+  await expect(resolvePinnedOrganization({ auth, logger })).resolves.toBeUndefined();
   expect(getOrganizationBinding({ auth })).toEqual({ policy: 'pinned', pinned: null });
+  expect(logger.warn).toHaveBeenCalledWith(
+    { err: new Error('db down') },
+    'Failed to ensure the pinned organization "org-a" for the request.'
+  );
 });

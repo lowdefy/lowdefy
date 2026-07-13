@@ -26,9 +26,11 @@ import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
+import detachedHandler from './routes/detached.js';
 import devToolsHandler from './routes/devTools.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
+import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
 import iconsDynamicHandler from './routes/iconsDynamic.js';
 import jitPageHandler from './routes/jitPage.js';
@@ -62,9 +64,12 @@ function createApp() {
 
   const mockUser = getMockUser();
   if (authJson.configured === true && !mockUser) {
-    // Construct the BetterAuth instance at startup so config errors fail
-    // boot instead of the first request.
+    // Construct the BetterAuth instance and strategy verifiers at startup so
+    // config errors fail boot instead of the first request, and so the
+    // process-memoized singletons capture the base logger rather than the
+    // first request's rid-scoped child.
     getAuth({ logger });
+    getStrategies({ logger });
   }
   if (mockUser) {
     // With a mock user active, no auth engine runs - the BetterAuth client
@@ -79,6 +84,7 @@ function createApp() {
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
   app.get('/api/cron/*', cronHandler);
+  app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);

@@ -1,0 +1,16 @@
+# Phase-9 floor demo: this endpoint has NO auth.api.roles entry (the id
+# deliberately does not match admin-*), so any caller reaches the routine -
+# and the user-admin floor still holds: a user-initiated ListMembers refuses
+# a caller whose member roles do not include auth.userAdminRole, naming the
+# role. An app can no longer expose member data by forgetting an endpoint
+# gate. A user-admin holder gets the member list; an anonymous caller is
+# refused for having no caller at all (the step is not system: true).
+id: list-members-ungated
+type: Api
+routine:
+  - id: list_members_ungated
+    type: ListMembers
+    properties:
+      limit: 100
+  - ':return':
+      _step: list_members_ungated

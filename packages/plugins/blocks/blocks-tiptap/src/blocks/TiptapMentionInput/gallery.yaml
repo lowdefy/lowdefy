@@ -177,6 +177,101 @@
         title: Read only
         disabled: true
 
+- title: Sectioned menu
+  fullWidth: true
+  blocks:
+    - id: tiptap_mention_sectioned
+      type: TiptapMentionInput
+      properties:
+        title: Mention people or roles
+        placeholder: 'Type @ — options are grouped, each section capped at 3.'
+        mentions:
+          limit: 3
+          options:
+            - label: Alice
+              value:
+                _id: user_1
+              tag:
+                section: People
+            - label: Bob
+              value:
+                _id: user_2
+              tag:
+                section: People
+            - label: Carol
+              value:
+                _id: user_3
+              tag:
+                section: People
+            - label: Dave
+              value:
+                _id: user_4
+              tag:
+                section: People
+            - label: Finance
+              value:
+                _id: role_finance
+              tag:
+                section: Roles
+            - label: Developers
+              value:
+                _id: role_devs
+              tag:
+                section: Roles
+
+- title: Group mentions
+  fullWidth: true
+  blocks:
+    - id: tiptap_mention_groups
+      type: TiptapMentionInput
+      properties:
+        title: Mention people or groups
+        placeholder: 'Type @ — groups render as coloured chips, people as links.'
+        mentions:
+          # shown on hover of a group chip, keyed by tag.group; may load from a request
+          groupMembers:
+            finance:
+              - name: Jane Doe
+                email: jane@example.com
+              - name: John Smith
+                email: john@example.com
+            devs:
+              - name: Ada Lovelace
+                email: ada@example.com
+              - name: Alan Turing
+                email: alan@example.com
+          # people carry value.href → <a>; groups omit it → nullish → <span>
+          getHref:
+            _function:
+              __args: 0.value.href
+          options:
+            - label: Alice
+              value:
+                name: Alice
+                href: '/contacts?_id=user_1'
+              tag:
+                section: People
+            - label: Bob
+              value:
+                name: Bob
+                href: '/contacts?_id=user_2'
+              tag:
+                section: People
+            - label: Finance
+              value:
+                role: finance-admin
+              tag:
+                section: Roles
+                group: finance
+                color: '#722ed1'
+            - label: Developers
+              value:
+                role: developer
+              tag:
+                section: Roles
+                group: devs
+                color: '#13c2c2'
+
 - title: Minimal — tables and images disabled
   fullWidth: true
   blocks:

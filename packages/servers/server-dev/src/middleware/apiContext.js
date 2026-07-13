@@ -32,6 +32,10 @@ import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
+import notifications, {
+  interpolateProperties,
+  renderEmail,
+} from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
 import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
@@ -48,8 +52,9 @@ function apiContext() {
     const buildDirectory = path.join(process.cwd(), 'build');
     const jsMap = loadDynamicJsMap(buildDirectory);
 
+    const rid = uuid();
     const context = {
-      rid: uuid(),
+      rid,
       agents,
       appMeta,
       buildDirectory,
@@ -58,13 +63,16 @@ function apiContext() {
       connections,
       fileCache,
       headers: c.req.header(),
+      // The deployment's own origin — detached endpoint calls loop back
+      // through it so the target runs in its own function invocation.
+      origin: new URL(c.req.url).origin,
       i18n: i18nConfig,
+      interpolateProperties,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
+      logger: createLogger({ rid }),
+      notifications,
       operators,
+      renderEmail,
       req: {
         url: c.req.path,
         method: c.req.method,
@@ -74,23 +82,25 @@ function apiContext() {
       steps,
       websockets,
     };
-    context.logger = createLogger();
     context.handleError = createHandleError({ context });
-    // Hoisted once per request - resolveAuthentication also needs it, and
-    // getBetterAuth memoizes the instance, but this keeps the auth engine
-    // construction to a single call site per request.
-    context.auth = getAuth({ logger: context.logger });
-    // The engine is constructed lazily on the first request, which would
-    // otherwise race the startup pinned-org ensure - await the memoized
-    // resolve so createApiContext reads a retained binding.
-    await resolvePinnedOrganization({ auth: context.auth });
-    if (!c.req.path.includes('/api/auth')) {
-      const mockUser = getMockUser();
-      if (mockUser) {
-        // The mock user is a pre-resolved caller - it substitutes for the
-        // whole resolveAuthentication step and its roles are authoritative.
-        context.user = mockUser;
-      } else {
+    const mockUser = getMockUser();
+    if (mockUser) {
+      // The mock user is a pre-resolved caller - it substitutes for the
+      // whole resolveAuthentication step and its roles are authoritative.
+      // No auth engine runs while dev.mockUser is active (see src/app.js),
+      // so mock mode never touches the auth database.
+      context.auth = null;
+      context.user = mockUser;
+    } else {
+      // Hoisted once per request - resolveAuthentication also needs it, and
+      // getBetterAuth memoizes the instance, but this keeps the auth engine
+      // construction to a single call site per request.
+      context.auth = getAuth({ logger: context.logger });
+      // The engine is constructed lazily on the first request, which would
+      // otherwise race the startup pinned-org ensure - await the memoized
+      // resolve so createApiContext reads a retained binding.
+      await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
+      if (!c.req.path.includes('/api/auth')) {
         // resolveAuthentication is the single writer of context.user.
         await resolveAuthentication(context, {
           auth: context.auth,

@@ -154,7 +154,7 @@ test('tenant: a pending invitation admits the session and mints nothing', async 
 });
 
 test('tenant: a fresh signup lazily mints its own organization as owner and sets it active', async () => {
-  const { auth, adapter } = createMockAuth({ members: [], invitations: [] });
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
   const result = await hook({ userId: 'user_1' });
   expect(adapter.create).toHaveBeenCalledWith({
@@ -172,6 +172,55 @@ test('tenant: a fresh signup lazily mints its own organization as owner and sets
   });
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
+  });
+});
+
+test('tenant: a retried mint reuses an orphan org row left by a failed member write', async () => {
+  const orphan = { id: 'org_orphan', slug: 'org-user_1' };
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: orphan });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(adapter.create).not.toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'organization' })
+  );
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'member',
+    data: expect.objectContaining({
+      userId: 'user_1',
+      organizationId: 'org_orphan',
+      role: 'owner',
+    }),
+  });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_orphan' },
+  });
+});
+
+test('tenant: a mint losing the unique slug race reads and uses the winning org row', async () => {
+  const winner = { id: 'org_winner', slug: 'org-user_1' };
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
+  let organizationLookups = 0;
+  adapter.findOne.mockImplementation(async ({ model }) => {
+    if (model === 'organization') {
+      organizationLookups += 1;
+      return organizationLookups === 1 ? null : winner;
+    }
+    return null;
+  });
+  adapter.create.mockImplementation(async ({ model, data }) => {
+    if (model === 'organization') {
+      throw new Error('E11000 duplicate key error: slug');
+    }
+    return { id: `${model}_new`, ...data };
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_winner' },
+  });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'member',
+    data: expect.objectContaining({ organizationId: 'org_winner', role: 'owner' }),
   });
 });
 

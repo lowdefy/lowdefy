@@ -18,8 +18,9 @@ import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 import resolveOrganizationId from './support/resolveOrganizationId.js';
+import syncUserAdminRole from './support/syncUserAdminRole.js';
 
-async function RemoveMember({ acting, auth, organization, properties }) {
+async function RemoveMember({ acting, auth, organization, properties, userAdminRole }) {
   const { memberIdOrEmail } = properties;
   if (type.isNone(memberIdOrEmail)) {
     throw new Error('RemoveMember requires a "memberIdOrEmail" property.');
@@ -29,13 +30,24 @@ async function RemoveMember({ acting, auth, organization, properties }) {
     organizationId: properties.organizationId,
     step: 'RemoveMember',
   });
-  return callPluginEndpoint({
+  const result = await callPluginEndpoint({
     acting,
     auth,
     body: { memberIdOrEmail, organizationId },
     endpointKey: 'removeMember',
     pluginId: 'organization',
   });
+
+  // Membership removal is followed in-band by the engine's user.role
+  // denormalization - losing the pinned membership clears the role.
+  await syncUserAdminRole({
+    auth,
+    organization,
+    userAdminRole,
+    userId: result?.member?.userId,
+  });
+
+  return result;
 }
 
 export default RemoveMember;

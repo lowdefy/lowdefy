@@ -20,7 +20,10 @@ import UpdateMemberRoles from './UpdateMemberRoles.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 const acting = { system: true, user: null };
-const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
+const organization = {
+  policy: 'pinned',
+  pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' },
+};
 
 function createAdapter({ member, members }) {
   return {
@@ -171,6 +174,30 @@ test('UpdateMemberRoles passes through when the member row is not found so the e
   ).rejects.toThrow('Member not found');
 });
 
+test('UpdateMemberRoles scopes the last-owner guard lookup to the resolved organization', async () => {
+  const adapter = createAdapter({
+    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
+    members: [{ id: 'member-1', organizationId: 'org-1', role: 'owner' }],
+  });
+  const updateMemberRole = jest.fn();
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+  await expect(
+    UpdateMemberRoles({
+      acting,
+      auth,
+      organization,
+      properties: { memberId: 'member-1', role: 'member' },
+    })
+  ).rejects.toThrow('You cannot leave the organization without an owner.');
+  expect(adapter.findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'id', value: 'member-1' },
+      { field: 'organizationId', value: 'org_pinned' },
+    ],
+  });
+});
+
 test('UpdateMemberRoles throws when memberId property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
@@ -183,4 +210,106 @@ test('UpdateMemberRoles throws when role property is missing', async () => {
   await expect(
     UpdateMemberRoles({ acting, auth, organization, properties: { memberId: 'member-1' } })
   ).rejects.toThrow('UpdateMemberRoles requires a "role" property.');
+});
+
+// user.role denormalization sync - findOne dispatches on model and where
+// shape: the step's member prefetch queries by id, the sync queries the
+// pinned membership by userId, then the user row.
+function createSyncAdapter({ memberById, memberByUserId, userRow }) {
+  const findOne = jest.fn(async ({ model, where }) => {
+    if (model === 'member' && where.some((w) => w.field === 'id')) return memberById;
+    if (model === 'member' && where.some((w) => w.field === 'userId')) return memberByUserId;
+    if (model === 'user') return userRow;
+    return null;
+  });
+  const update = jest.fn(async () => ({}));
+  return { findOne, findMany: jest.fn().mockResolvedValue([]), update };
+}
+
+test('UpdateMemberRoles writes user.role when the granted roles include the user-admin role', async () => {
+  const adapter = createSyncAdapter({
+    memberById: { id: 'member-2', organizationId: 'org_pinned', role: 'member', userId: 'user_9' },
+    memberByUserId: {
+      id: 'member-2',
+      organizationId: 'org_pinned',
+      role: 'user-admin',
+      userId: 'user_9',
+    },
+    userRow: { id: 'user_9', role: null },
+  });
+  const updateMemberRole = jest
+    .fn()
+    .mockResolvedValue({ id: 'member-2', role: 'user-admin', userId: 'user_9' });
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+
+  await UpdateMemberRoles({
+    acting,
+    auth,
+    organization,
+    properties: { memberId: 'member-2', role: 'user-admin' },
+    userAdminRole: 'user-admin',
+  });
+
+  expect(adapter.update).toHaveBeenCalledWith({
+    model: 'user',
+    where: [{ field: 'id', value: 'user_9' }],
+    update: { role: 'user-admin' },
+  });
+});
+
+test('UpdateMemberRoles clears user.role when the new roles drop the user-admin role', async () => {
+  const adapter = createSyncAdapter({
+    memberById: {
+      id: 'member-2',
+      organizationId: 'org_pinned',
+      role: 'user-admin',
+      userId: 'user_9',
+    },
+    memberByUserId: {
+      id: 'member-2',
+      organizationId: 'org_pinned',
+      role: 'member',
+      userId: 'user_9',
+    },
+    userRow: { id: 'user_9', role: 'user-admin' },
+  });
+  const updateMemberRole = jest
+    .fn()
+    .mockResolvedValue({ id: 'member-2', role: 'member', userId: 'user_9' });
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+
+  await UpdateMemberRoles({
+    acting,
+    auth,
+    organization,
+    properties: { memberId: 'member-2', role: 'member' },
+    userAdminRole: 'user-admin',
+  });
+
+  expect(adapter.update).toHaveBeenCalledWith({
+    model: 'user',
+    where: [{ field: 'id', value: 'user_9' }],
+    update: { role: null },
+  });
+});
+
+test('UpdateMemberRoles does not touch user.role when no user-admin role is configured', async () => {
+  const adapter = createSyncAdapter({
+    memberById: { id: 'member-2', organizationId: 'org_pinned', role: 'member', userId: 'user_9' },
+    memberByUserId: null,
+    userRow: null,
+  });
+  const updateMemberRole = jest
+    .fn()
+    .mockResolvedValue({ id: 'member-2', role: 'admin', userId: 'user_9' });
+  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
+
+  await UpdateMemberRoles({
+    acting,
+    auth,
+    organization,
+    properties: { memberId: 'member-2', role: 'admin' },
+  });
+
+  expect(adapter.update).not.toHaveBeenCalled();
 });

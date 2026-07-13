@@ -32,6 +32,10 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
+import notifications, {
+  interpolateProperties,
+  renderEmail,
+} from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
 import steps from '../../build/plugins/steps.js';
@@ -50,8 +54,9 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
+    const rid = uuid();
     const context = {
-      rid: uuid(),
+      rid,
       agents,
       appMeta,
       buildDirectory: path.join(process.cwd(), 'build'),
@@ -59,13 +64,16 @@ function apiContext() {
       connections,
       fileCache,
       headers: c.req.header(),
+      // The deployment's own origin — detached endpoint calls loop back
+      // through it so the target runs in its own function invocation.
+      origin: new URL(c.req.url).origin,
       i18n: i18nConfig,
+      interpolateProperties,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
+      logger: createLogger({ rid }),
+      notifications,
       operators,
+      renderEmail,
       req: {
         url: c.req.path,
         method: c.req.method,
@@ -73,9 +81,13 @@ function apiContext() {
       },
       secrets,
       steps,
+      // On Vercel (fluid compute) the platform request context keeps the
+      // invocation alive until waitUntil promises settle; on long-lived hosts
+      // the lookup resolves to nothing and background promises just run.
+      waitUntil: (promise) =>
+        globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(promise),
       websockets,
     };
-    context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
     // Hoisted once per request - resolveAuthentication also needs it, and
     // getBetterAuth memoizes the instance, but this keeps the auth engine
@@ -84,7 +96,7 @@ function apiContext() {
     // The engine is constructed lazily on the first request, which would
     // otherwise race the startup pinned-org ensure - await the memoized
     // resolve so createApiContext reads a retained binding.
-    await resolvePinnedOrganization({ auth: context.auth });
+    await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
       // resolveAuthentication is the single writer of context.user.
       await resolveAuthentication(context, {

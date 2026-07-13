@@ -43,7 +43,10 @@ async function renderPage(c, { pageId, status = 200 }) {
     resolvedPageId = home.pageId;
   }
 
-  const result = await getPageConfig(context, { pageId: resolvedPageId });
+  const result = await getPageConfig(context, {
+    pageId: resolvedPageId,
+    urlQuery: c.req.query(),
+  });
 
   // A logged-out human gets a login screen with a callbackUrl back to the
   // requested page; not-found and wrong-roles both stay opaque (/404), so

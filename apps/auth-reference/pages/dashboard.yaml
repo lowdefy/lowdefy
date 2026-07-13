@@ -25,7 +25,7 @@ blocks:
               <li><b>emailVerified:</b> {{ user.emailVerified }}</li>
               <li><b>roles:</b> {{ user.roles | dump }} (split from the active member.role CSV)</li>
               <li><b>attributes:</b> {{ user.attributes | dump }} (user.attributes merged with the active member's, member wins)</li>
-              <li><b>contactId:</b> {{ user.contactId }} (merge-on-signup or invitation stamp)</li>
+              <li><b>profile.contactId:</b> {{ user.profile.contactId }} (merge-on-signup or invitation profile merge)</li>
             </ul>
           on:
             user:

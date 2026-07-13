@@ -20,6 +20,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import runRoutine from './runRoutine.js';
 import testContext from '../../test/testContext.js';
+import { registerUserAdminRole } from '../auth/getUserAdminRole.js';
 
 const operators = { ...operatorsServer };
 
@@ -32,18 +33,27 @@ const logger = {
 
 const mockStepFn = jest.fn();
 
-function createTestContext({ auth = {}, organization, steps, user } = {}) {
+// The default context configures a user-admin role held by the default
+// caller - the user-administration floor refuses user-initiated steps
+// otherwise. Pass userAdminRole: null for the unconfigured state.
+function createTestContext({ auth = {}, organization, steps, user, userAdminRole } = {}) {
   const context = testContext({
     auth,
     logger,
     operators,
     steps: steps === undefined ? { TestAuthStep: mockStepFn } : steps,
-    user: user === undefined ? { id: 'user_1', roles: ['member'] } : user,
+    user: user === undefined ? { id: 'user_1', roles: ['member', 'user-admin'] } : user,
   });
   // testContext has no organization field of its own - set it directly so
   // tests can opt into a retained organization binding.
   context.organization = organization;
   context.evaluateOperators = createEvaluateOperators(context);
+  if (context.auth !== null) {
+    registerUserAdminRole({
+      auth: context.auth,
+      userAdminRole: userAdminRole === undefined ? 'user-admin' : userAdminRole,
+    });
+  }
   return context;
 }
 
@@ -87,10 +97,11 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
   expect(routineContext.steps.run_step).toEqual({ apiKey: 'key_1' });
   expect(mockStepFn).toHaveBeenCalledTimes(1);
   expect(mockStepFn).toHaveBeenCalledWith({
-    acting: { system: false, user: { id: 'user_1', roles: ['member'] } },
+    acting: { system: false, user: { id: 'user_1', roles: ['member', 'user-admin'] } },
     auth: context.auth,
     organization: null,
     properties: { name: 'ci key' },
+    userAdminRole: 'user-admin',
   });
 });
 
@@ -191,7 +202,7 @@ test('AuthStep step allows step.system true to run caller-less with no caller at
 
 test('AuthStep step passes the session caller through to acting.user', async () => {
   mockStepFn.mockResolvedValue({ ok: true });
-  const sessionUser = { id: 'user_2', roles: ['admin'], activeOrganizationId: 'org_1' };
+  const sessionUser = { id: 'user_2', roles: ['user-admin'], activeOrganizationId: 'org_1' };
   const context = createTestContext({ user: sessionUser });
   const routineContext = createRoutineContext();
 
@@ -222,7 +233,9 @@ test('AuthStep step returns error status when auth is not configured on the cont
   });
 
   expect(res.status).toBe('error');
-  expect(res.error.message).toBe('Auth step "run_step" requires auth to be configured.');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" requires the auth engine - auth is not configured (or dev.mockUser is active).'
+  );
   expect(mockStepFn).not.toHaveBeenCalled();
 });
 
@@ -250,4 +263,133 @@ test('AuthStep step stores the resolved result under the step id in routineConte
   });
 
   expect(routineContext.steps).toEqual({ create_org: { organizationId: 'org_1' } });
+});
+
+test('AuthStep step refuses a user-initiated step when auth.userAdminRole is not configured', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ userAdminRole: null });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - "auth.userAdminRole" is not configured. The app must declare which member role administers users; caller-less system routines (system: true) are unaffected.'
+  );
+  expect(mockStepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step refuses a user-initiated step when the caller does not hold the user-admin role', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ user: { id: 'user_1', roles: ['member'] } });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - the caller does not hold the user-admin role configured in "auth.userAdminRole".'
+  );
+  expect(mockStepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step runs a user-initiated step when the caller holds the user-admin role', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ user: { id: 'user_1', roles: ['user-admin'] } });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(mockStepFn).toHaveBeenCalledTimes(1);
+});
+
+test('AuthStep step refuses a caller with no roles array when a user-admin role is configured', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ user: { id: 'user_1' } });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('does not hold the user-admin role');
+  expect(mockStepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step runs a system step when auth.userAdminRole is not configured', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ user: {}, userAdminRole: null });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ system: true }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(mockStepFn.mock.calls[0][0].acting).toEqual({ system: true, user: null });
+  expect(mockStepFn.mock.calls[0][0].userAdminRole).toBeNull();
+});
+
+test('AuthStep step allows a self-target-exempt step to target the caller without the role', async () => {
+  const selfExemptStepFn = jest.fn().mockResolvedValue({ ok: true });
+  selfExemptStepFn.meta = { selfTargetExempt: 'userId' };
+  const context = createTestContext({
+    steps: { SelfExemptStep: selfExemptStepFn },
+    user: { id: 'user_1', roles: ['member'] },
+    userAdminRole: null,
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ type: 'SelfExemptStep', properties: { userId: 'user_1' } }),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(selfExemptStepFn).toHaveBeenCalledTimes(1);
+});
+
+test('AuthStep step refuses a self-target-exempt step targeting another user without the role', async () => {
+  const selfExemptStepFn = jest.fn().mockResolvedValue({ ok: true });
+  selfExemptStepFn.meta = { selfTargetExempt: 'userId' };
+  const context = createTestContext({
+    steps: { SelfExemptStep: selfExemptStepFn },
+    user: { id: 'user_1', roles: ['member'] },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ type: 'SelfExemptStep', properties: { userId: 'user_2' } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('does not hold the user-admin role');
+  expect(selfExemptStepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step refuses a self-target-exempt step with no target property without the role', async () => {
+  const selfExemptStepFn = jest.fn().mockResolvedValue({ ok: true });
+  selfExemptStepFn.meta = { selfTargetExempt: 'userId' };
+  const context = createTestContext({
+    steps: { SelfExemptStep: selfExemptStepFn },
+    user: { id: 'user_1', roles: ['member'] },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine({ type: 'SelfExemptStep', properties: {} }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toContain('does not hold the user-admin role');
+  expect(selfExemptStepFn).not.toHaveBeenCalled();
+});
+
+test('AuthStep step passes the configured user-admin role through to the step function', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext();
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(mockStepFn.mock.calls[0][0].userAdminRole).toBe('user-admin');
 });

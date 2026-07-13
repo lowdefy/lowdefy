@@ -22,7 +22,7 @@ function validateMutualExclusivity({ components, entity }) {
   if (type.isNone(entityConfig)) {
     return;
   }
-  const configKey = entityConfig['~k'] || components.auth?.['~k'];
+  const configKey = entityConfig['~k'] ?? components.auth?.['~k'];
   if (
     (entityConfig.protected === true && entityConfig.public === true) ||
     (type.isArray(entityConfig.protected) && type.isArray(entityConfig.public))

@@ -1,8 +1,9 @@
 # Public page (like login): the pending-invitation carve-out admits an
 # invitee's session, but with no member row every protected page treats them
-# as logged out - this page is where they land to accept. The accept call
-# goes through the mounted /api/auth endpoints, which BetterAuth gates
-# itself (the session email must match the invitation).
+# as logged out - this page is where they land to accept. The accept runs
+# through the AcceptInvitation catalog action (phase 9; this page posted to
+# the endpoint directly before) - BetterAuth still gates it itself: the
+# session email must match the invitation.
 id: accept-invitation
 type: Box
 properties:
@@ -43,18 +44,10 @@ blocks:
       onClick:
         try:
           - id: accept
-            type: Fetch
+            type: AcceptInvitation
             params:
-              url: /api/auth/organization/accept-invitation
-              responseFunction: json
-              options:
-                method: POST
-                headers:
-                  Content-Type: application/json
-                body:
-                  _json.stringify:
-                    - invitationId:
-                        _state: invitation_id_input
+              invitationId:
+                _state: invitation_id_input
           - id: refresh_after_accept
             type: UpdateSession
           - id: accept_result

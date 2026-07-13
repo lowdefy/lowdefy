@@ -26,7 +26,8 @@ import tryBuildStep from '../../utils/tryBuildStep.js';
 
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
-import buildApp, { computeAppMeta } from '../buildApp.js';
+import buildApp from '../buildApp.js';
+import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
@@ -36,9 +37,15 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
+import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
+import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
+import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
+import validateCallAgentSteps from '../validateCallAgentSteps.js';
+import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -51,6 +58,7 @@ import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
+import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
@@ -61,6 +69,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeTypes from '../full/writeTypes.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
@@ -78,12 +87,19 @@ async function shallowBuild(options) {
   try {
     context = createContext(options);
 
+    // Phase 0: Resolve root app metadata before any operator evaluation.
+    await buildAppMeta({ context });
+    // Surface bad root metadata before module operators evaluate against it.
+    logCollectedErrors(context);
+
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
 
-    // Compute app metadata before ref resolution so the _build.app operator can
-    // resolve it during buildRefs (matches the full build in index.js).
-    context.appMeta = computeAppMeta(context.lowdefyConfig ?? {});
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs
+    // and the dev server's JIT page walks (matches the full build in index.js).
+    await resolveAuthConfigProjection({ context });
+
 
     let components;
     try {
@@ -110,6 +126,19 @@ async function shallowBuild(options) {
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 
+    // Phase 3.5: Constant-fold static runtime operators, mirroring the full
+    // build (index.js). Without this, content preserved at skeleton — inline
+    // pages, slot content, module components consumed into them — reaches
+    // testSchema (spurious warnings) and the served dev artifacts (broken
+    // block ids: the client never operator-evaluates id positions) with raw
+    // runtime operators. Ref-backed page content is already stripped here and
+    // folds per page in buildPageJit.
+    components = precomputeRuntimeOperators({
+      context,
+      input: components,
+      refDef: context.rootRefDef,
+    });
+
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
     tryBuildStep(testSchema, 'testSchema', { components, context });
@@ -128,6 +157,9 @@ async function shallowBuild(options) {
 
     // Build skeleton steps (everything except page content)
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    // appMeta is computed in Phase 0; attach it here (where buildApp used to
+    // create it) so the following addKeys pass keys it identically.
+    components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
@@ -137,6 +169,14 @@ async function shallowBuild(options) {
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    // Cross-config validations — need buildApi (stepIds) and the buildAgents/
+    // buildNotifications id sets. Match the full build (index.js).
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
+      components,
+      context,
+    });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
@@ -167,6 +207,7 @@ async function shallowBuild(options) {
     await writeApi({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });
+    await writeNotifications({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
@@ -187,6 +228,10 @@ async function shallowBuild(options) {
       JSON.stringify([...skeletonSourceFiles].sort())
     );
     await writeMenus({ components, context });
+    // The dev client bundle imports every installed type (addInstalledTypes),
+    // so types.json here describes that full bundle — dynamic page content
+    // resolution validates fragment types against it at page get.
+    await writeTypes({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
@@ -209,6 +254,15 @@ async function shallowBuild(options) {
       'modules.json',
       serializer.serializeToString(context.modules ?? {})
     );
+    // Persist the auth config projection so JIT page builds (separate process)
+    // resolve _build.authConfig identically to the skeleton build.
+    await context.writeBuildArtifact(
+      'authConfigProjection.json',
+      JSON.stringify(context.authConfigProjection)
+    );
+    // Deferred-record bodies referenced by placeholders in modules.json.
+    // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
+    await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
     await writePluginImports({ components, context });
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against

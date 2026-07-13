@@ -1,9 +1,12 @@
 # Phase-6 user administration on the admin steps, driven through role-gated
-# admin-* Api endpoints (auth.api.roles). The endpoint gate is the only
-# authorization for the steps. Impersonation is the exception: it is a client
-# auth action against BetterAuth's own admin access control, which checks the
-# CALLER's user.role field (the admin plugin's user field, NOT the Lowdefy
-# member role) - see scripts/set-user-role.mjs.
+# admin-* Api endpoints (auth.api.roles). Since phase 9 the endpoint gate is
+# no longer the only authorization: every user-initiated admin step also
+# requires the caller to hold the auth.userAdminRole member role (user-admin
+# here) - the engine-enforced floor. Impersonation is a client auth action
+# against BetterAuth's own admin access control, which checks the CALLER's
+# user.role field - a field the engine now maintains itself, stamping the
+# user-admin role name when the pinned-org member roles include it (synced
+# at UpdateMemberRoles, invitation accept, and RemoveMember).
 id: users
 type: Box
 properties:
@@ -234,6 +237,49 @@ blocks:
             params:
               last_error:
                 _actions: update_user_attributes.error.message
+  # Phase-9 admin profile edit: UpdateUserProfile targeting ANOTHER user
+  # requires the user-admin role (only self-targeting is exempt - the
+  # security page's display-name save). The profile update is a shallow
+  # merge per top-level key; a key set to null is removed.
+  - id: user_profile_title
+    type: Title
+    properties:
+      content: Update a user's profile (UpdateUserProfile)
+      level: 4
+  - id: user_profile_json
+    type: TextInput
+    properties:
+      title: Profile as JSON, e.g. {"displayName":"Sam","theme":null} (uses the user id above; null removes a key)
+  - id: update_user_profile_button
+    type: Button
+    properties:
+      title: Update user profile
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_user_profile
+            type: CallAPI
+            params:
+              endpointId: admin-update-user-profile
+              payload:
+                userId:
+                  _state: target_user_id
+                profile:
+                  _json.parse:
+                    _state: user_profile_json
+          - id: show_user_profile_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-user-profile.response
+              last_error: null
+        catch:
+          - id: show_user_profile_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_user_profile.error.message
   - id: impersonate_title
     type: Title
     properties:
@@ -244,10 +290,13 @@ blocks:
     properties:
       html: |
         <p>Gated by BetterAuth's own admin access control against YOUR
-        user.role field (not the member role that gates this page) - set it
-        with <code>scripts/set-user-role.mjs</code> first. While
-        impersonating, <code>_user.impersonatedBy</code> carries your admin
-        user id; the home page shows a stop affordance.</p>
+        user.role field - which the engine maintains from your member roles:
+        holding the configured <code>user-admin</code> member role in the
+        pinned org stamps it at a sync point (run UpdateMemberRoles on your
+        own member row after a dev seed; see the README). The curated access
+        control grants that role <code>user: ['impersonate']</code> only.
+        While impersonating, <code>_user.impersonatedBy</code> carries your
+        admin user id; the home page shows a stop affordance.</p>
   - id: impersonate_button
     type: Button
     properties:

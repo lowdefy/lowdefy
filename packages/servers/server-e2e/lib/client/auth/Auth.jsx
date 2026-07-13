@@ -43,6 +43,14 @@ function Auth({ children, user }) {
       }
       return { user: null };
     },
+    acceptInvitation: e2eNotSupported,
+    addPasskey: e2eNotSupported,
+    changePassword: e2eNotSupported,
+    deletePasskey: e2eNotSupported,
+    requestPasswordReset: e2eNotSupported,
+    resetPassword: e2eNotSupported,
+    revokeOtherSessions: e2eNotSupported,
+    sendVerificationEmail: e2eNotSupported,
     setActiveOrganization: e2eNotSupported,
     signInEmail: e2eNotSupported,
     signInMagicLink: e2eNotSupported,
@@ -50,6 +58,10 @@ function Auth({ children, user }) {
     signInSocial: e2eNotSupported,
     signOut: e2eNotSupported,
     signUpEmail: e2eNotSupported,
+    twoFactorDisable: e2eNotSupported,
+    twoFactorEnable: e2eNotSupported,
+    twoFactorVerifyBackupCode: e2eNotSupported,
+    twoFactorVerifyTotp: e2eNotSupported,
   };
   return children(auth);
 }

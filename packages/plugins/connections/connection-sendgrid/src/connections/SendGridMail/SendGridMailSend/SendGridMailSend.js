@@ -14,29 +14,16 @@
   limitations under the License.
 */
 
-import sendgrid from '@sendgrid/mail';
 import { type } from '@lowdefy/helpers';
+
+import send from '../send.js';
 import schema from './schema.js';
 
-// https://sendgrid.api-docs.io/v3.0/how-to-use-the-sendgrid-v3-api/api-authentication
-// https://github.com/sendgrid/sendgrid-nodejs/blob/master/docs/use-cases/README.md#email-use-cases
-
 async function SendGridMailSend({ request, connection }) {
-  const { apiKey, from, templateId, mailSettings } = connection;
-  sendgrid.setApiKey(apiKey);
-  const messages = (type.isArray(request) ? request : [request]).map((msg) => ({
-    ...msg,
-    from,
-    templateId,
-    mailSettings,
-  }));
-  try {
-    await sendgrid.send(messages);
-  } catch (error) {
-    if (error.response) {
-      throw new Error('SendGrid request failed.', { cause: error });
-    }
-    throw error;
+  const messages = type.isArray(request) ? request : [request];
+  // Send per message so the connection mail filter is enforced in one place.
+  for (const mail of messages) {
+    await send({ connection, mail });
   }
   return { response: 'Mail sent successfully' };
 }

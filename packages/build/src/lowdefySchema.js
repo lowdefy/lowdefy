@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -60,6 +76,114 @@ export default {
           id: 'Action should have required property "id".',
           type: 'Action should have required property "type".',
         },
+      },
+    },
+    actionOrControl: {
+      anyOf: [
+        { $ref: '#/definitions/action' },
+        { $ref: '#/definitions/controlIf' },
+        { $ref: '#/definitions/controlSwitch' },
+        { $ref: '#/definitions/controlReturn' },
+      ],
+    },
+    controlIf: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':if', ':then'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':if': {},
+        ':then': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":then" should be an array of actions.',
+          },
+        },
+        ':else': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":else" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":if" should be an object.',
+        required: {
+          ':then': 'Control ":if" should have required property ":then".',
+        },
+      },
+    },
+    controlReturn: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':return'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':return': {},
+      },
+      errorMessage: {
+        type: 'Control ":return" should be an object.',
+      },
+    },
+    controlSwitch: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':switch'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':switch': {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: [':case', ':then'],
+            properties: {
+              '~r': {},
+              '~l': {},
+              ':case': {},
+              ':then': {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+                errorMessage: {
+                  type: 'Control ":then" should be an array of actions.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Control ":switch" cases should be objects.',
+              required: {
+                ':case': 'Control ":switch" case should have required property ":case".',
+                ':then': 'Control ":switch" case should have required property ":then".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Control ":switch" should be an array of case objects.',
+          },
+        },
+        ':default': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":default" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":switch" should be an object.',
       },
     },
     agent: {
@@ -237,6 +361,44 @@ export default {
         },
         '~r': {},
         '~l': {},
+        email: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "app.email" should be an object.',
+          },
+          properties: {
+            logo: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.logo" should be a string.',
+              },
+            },
+            companyName: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.companyName" should be a string.',
+              },
+            },
+            primaryColor: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.primaryColor" should be a string.',
+              },
+            },
+            signature: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.signature" should be a string.',
+              },
+            },
+            footer: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.footer" should be a string.',
+              },
+            },
+          },
+        },
         html: {
           type: 'object',
           errorMessage: {
@@ -705,24 +867,6 @@ export default {
                 type: 'Auth "twoFactor.enabled" should be a boolean.',
               },
             },
-            totp: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.totp" should be a boolean.',
-              },
-            },
-            otp: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.otp" should be a boolean.',
-              },
-            },
-            backupCodes: {
-              type: 'boolean',
-              errorMessage: {
-                type: 'Auth "twoFactor.backupCodes" should be a boolean.',
-              },
-            },
           },
           errorMessage: {
             type: 'Auth "twoFactor" should be an object.',
@@ -756,6 +900,142 @@ export default {
           },
           errorMessage: {
             type: 'Auth "passkey" should be an object.',
+          },
+        },
+        phoneNumber: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.enabled" should be a boolean.',
+              },
+            },
+            otpLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.otpLength" should be an integer.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.expiresIn" should be an integer (seconds).',
+              },
+            },
+            allowedAttempts: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.allowedAttempts" should be an integer.',
+              },
+            },
+            requireVerification: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.requireVerification" should be a boolean.',
+              },
+            },
+            signUpOnVerification: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['tempEmailDomain'],
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                tempEmailDomain: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "phoneNumber.signUpOnVerification.tempEmailDomain" should be a string.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "phoneNumber.signUpOnVerification" should be an object.',
+                required: {
+                  tempEmailDomain:
+                    'Auth "phoneNumber.signUpOnVerification" should have required property "tempEmailDomain". Temp emails land in "user.email", so name a domain the app controls (or a reserved non-routable one) - there is no default.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "phoneNumber" should be an object.',
+            additionalProperties:
+              'Auth "phoneNumber" contains an unknown property. The known properties are "enabled", "otpLength", "expiresIn", "allowedAttempts", "requireVerification" and "signUpOnVerification".',
+            required: {
+              enabled: 'Auth "phoneNumber" should have required property "enabled".',
+            },
+          },
+        },
+        captcha: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled', 'provider', 'siteKey', 'secretKey'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "captcha.enabled" should be a boolean.',
+              },
+            },
+            provider: {
+              type: 'string',
+              enum: ['cloudflare-turnstile'],
+              errorMessage: {
+                type: 'Auth "captcha.provider" should be a string.',
+                enum: 'Auth "captcha.provider" should be "cloudflare-turnstile".',
+              },
+            },
+            siteKey: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "captcha.siteKey" should be a plain string. The site key is public - every browser reads it from the page - and must not be a _secret operator reference, so the build can project it to Captcha blocks.',
+              },
+            },
+            secretKey: {
+              type: 'object',
+              errorMessage: {
+                type: 'Auth "captcha.secretKey" should be a _secret operator reference.',
+              },
+            },
+            endpoints: {
+              type: 'array',
+              // An empty array would silently fall back to BetterAuth's
+              // static default set inside the plugin - refuse the middle:
+              // name the endpoints or omit the key for the computed set.
+              minItems: 1,
+              errorMessage: {
+                type: 'Auth "captcha.endpoints" should be an array of strings.',
+                minItems:
+                  'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.',
+              },
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "captcha.endpoints.$" should be a string.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "captcha" should be an object.',
+            additionalProperties:
+              'Auth "captcha" contains an unknown property. The known properties are "enabled", "provider", "siteKey", "secretKey" and "endpoints".',
+            required: {
+              enabled: 'Auth "captcha" should have required property "enabled".',
+              provider: 'Auth "captcha" should have required property "provider".',
+              siteKey: 'Auth "captcha" should have required property "siteKey".',
+              secretKey: 'Auth "captcha" should have required property "secretKey".',
+            },
           },
         },
         pages: {
@@ -998,14 +1278,12 @@ export default {
             '~l': {},
             signIn: {
               type: 'string',
-              default: '/login',
               errorMessage: {
                 type: 'Auth "authPages.signIn" should be a string.',
               },
             },
             signUp: {
               type: 'string',
-              default: '/signup',
               errorMessage: {
                 type: 'Auth "authPages.signUp" should be a string.',
               },
@@ -1013,28 +1291,24 @@ export default {
             error: {
               type: 'string',
               description: 'Error code passed in query string as ?error=',
-              default: '/auth/error',
               errorMessage: {
                 type: 'Auth "authPages.error" should be a string.',
               },
             },
             forgotPassword: {
               type: 'string',
-              default: '/forgot-password',
               errorMessage: {
                 type: 'Auth "authPages.forgotPassword" should be a string.',
               },
             },
             resetPassword: {
               type: 'string',
-              default: '/reset-password',
               errorMessage: {
                 type: 'Auth "authPages.resetPassword" should be a string.',
               },
             },
             verifyEmail: {
               type: 'string',
-              default: '/verify-email',
               errorMessage: {
                 type: 'Auth "authPages.verifyEmail" should be a string.',
               },
@@ -1180,6 +1454,14 @@ export default {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
               'Auth "organizations" contains an unknown property. The known properties are "policy", "org" and "signup".',
+          },
+        },
+        userAdminRole: {
+          type: 'string',
+          description:
+            'Member role that administers users - gates every auth admin step and the impersonation client actions. Applies to the "pinned" organizations policy only.',
+          errorMessage: {
+            type: 'Auth "userAdminRole" should be a string.',
           },
         },
         dev: {
@@ -1333,7 +1615,7 @@ export default {
                 {
                   type: 'array',
                   items: {
-                    $ref: '#/definitions/action',
+                    $ref: '#/definitions/actionOrControl',
                   },
                 },
                 {
@@ -1366,13 +1648,13 @@ export default {
                     try: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     catch: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     debounce: {
@@ -1569,6 +1851,22 @@ export default {
             },
           ],
         },
+        async: {
+          type: 'boolean',
+          description:
+            'Run the endpoint routine in the background. The endpoint returns { accepted: true } immediately and the routine runs after the response (kept alive via the platform request context on Vercel fluid compute, still bounded by the function maxDuration); the outcome is observable only through logs and whatever the routine writes.',
+          errorMessage: {
+            type: 'Api endpoint "async" should be a boolean.',
+          },
+        },
+        webhook: {
+          type: 'boolean',
+          description:
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
+          errorMessage: {
+            type: 'Api endpoint "webhook" should be a boolean.',
+          },
+        },
         schedules: {
           type: 'array',
           items: {
@@ -1660,6 +1958,73 @@ export default {
         required: {
           id: 'Websocket should have required property "id".',
           type: 'Websocket should have required property "type".',
+        },
+      },
+    },
+    notification: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "type" should be a string.',
+          },
+        },
+        theme: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "theme" should be an object.',
+          },
+        },
+        testData: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "testData" should be an object.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Notification should be an object.',
+        required: {
+          id: 'Notification should have required property "id".',
+          type: 'Notification should have required property "type".',
         },
       },
     },
@@ -2332,6 +2697,33 @@ export default {
             type: 'App "config.basePath" should be a string.',
           },
         },
+        vercel: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Vercel deployment function settings, applied by the CLI vercelOutput assembly.',
+          errorMessage: {
+            type: 'App "config.vercel" should be an object.',
+          },
+          properties: {
+            maxDuration: {
+              type: 'number',
+              minimum: 1,
+              description:
+                'Maximum function execution time in seconds for the deployed serverless function. Defaults to 60. Plan limits apply (Vercel rejects over-limit values at deploy).',
+              errorMessage: {
+                type: 'App "config.vercel.maxDuration" should be a number.',
+              },
+            },
+            memory: {
+              type: 'number',
+              description: 'Function memory in MB. Omit to use the Vercel default.',
+              errorMessage: {
+                type: 'App "config.vercel.memory" should be a number.',
+              },
+            },
+          },
+        },
         requestTimeout: {
           type: 'number',
           minimum: 0,
@@ -2478,6 +2870,15 @@ export default {
       },
       errorMessage: {
         type: 'App "websockets" should be an array.',
+      },
+    },
+    notifications: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/notification',
+      },
+      errorMessage: {
+        type: 'App "notifications" should be an array.',
       },
     },
     menus: {

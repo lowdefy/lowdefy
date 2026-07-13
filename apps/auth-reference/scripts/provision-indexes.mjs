@@ -35,10 +35,13 @@ if (!uri) {
 // front is harmless and keeps this script the single list.
 const indexes = [
   { collection: 'users', keys: { email: 1 }, options: { unique: true } },
+  // Partial unique: one account per phone where a phone exists - a plain
+  // unique index would reject the second phone-less user. Also load-bearing
+  // for the per-sign-in phoneNumber lookup.
   {
     collection: 'users',
-    keys: { contactId: 1 },
-    options: { unique: true, partialFilterExpression: { contactId: { $exists: true } } },
+    keys: { phoneNumber: 1 },
+    options: { unique: true, partialFilterExpression: { phoneNumber: { $exists: true } } },
   },
   { collection: 'user-sessions', keys: { token: 1 }, options: { unique: true } },
   { collection: 'user-sessions', keys: { userId: 1 }, options: {} },

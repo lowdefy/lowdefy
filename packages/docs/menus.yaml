@@ -113,6 +113,16 @@
           pageId: lowdefy-api
           properties:
             title: APIs
+        - id: notifications
+          type: MenuLink
+          pageId: notifications
+          properties:
+            title: Notifications
+        - id: dynamic-page-content
+          type: MenuLink
+          pageId: dynamic-page-content
+          properties:
+            title: Dynamic Page Content
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -366,9 +376,9 @@
           properties:
             title: Adapter Reference
           links:
-            - id: MongoDBAdapter
+            - id: MongoDBAuthAdapter
               type: MenuLink
-              pageId: MongoDBAdapter
+              pageId: MongoDBAuthAdapter
         - id: auth_callback_reference
           type: MenuGroup
           properties:
@@ -432,6 +442,9 @@
         - id: ButtonSelector
           type: MenuLink
           pageId: ButtonSelector
+        - id: Captcha
+          type: MenuLink
+          pageId: Captcha
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector
@@ -859,6 +872,11 @@
           pageId: SendGridMail
           properties:
             title: SendGrid Email
+        - id: SMTP
+          type: MenuLink
+          pageId: SMTP
+          properties:
+            title: SMTP Email
         - id: SQLite
           type: MenuLink
           pageId: SQLite
@@ -952,6 +970,9 @@
         - id: _and
           type: MenuLink
           pageId: _and
+        - id: _app
+          type: MenuLink
+          pageId: _app
         - id: _api
           type: MenuLink
           pageId: _api

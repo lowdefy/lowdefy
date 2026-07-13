@@ -47,7 +47,11 @@ function Page({ auth, config, lowdefy }) {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
-        const res = await fetch(`${router.basePath}/api/page/${targetPageId}`);
+        // Forward the current query string so server-side Dynamic block
+        // resolution sees the same urlQuery as an initial HTML load.
+        const res = await fetch(
+          `${router.basePath}/api/page/${targetPageId}${window.location.search}`
+        );
         if (res.status === 401) {
           // Logged-out navigation to a protected page - full load to the
           // login page so it can return here after sign-in.

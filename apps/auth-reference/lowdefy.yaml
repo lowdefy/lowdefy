@@ -20,6 +20,13 @@ lowdefy: local
 # re-invite-replaces/resend-re-sends semantics, org-scoped steps defaulting
 # organizationId to the pinned org, and the _organization server operator
 # (org-info).
+# Phase 9 adds the account asks: the self-service action catalog (password
+# change/reset, two-factor with TOTP + backup codes, passkeys, session
+# revocation, AcceptInvitation), user.profile self-service through
+# UpdateUserProfile, the auth.userAdminRole floor with the impersonation
+# bridge, the account-kit local module contributing auth wiring from its
+# manifest, and the _build.authConfig build operator (the module's
+# login-methods page).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -42,6 +49,50 @@ auth:
     enabled: true
     expiresIn: 300
 
+  # Phase-9 self-service methods. Two-factor is TOTP + backup codes only;
+  # TwoFactorEnable returns the totpURI and codes the security page renders
+  # once. Passkeys run the WebAuthn ceremony inside PasskeyRegister - rpId
+  # must match the host the browser sees (localhost for the dev walkthrough;
+  # passkeys do not work on http://127.0.0.1).
+  twoFactor:
+    enabled: true
+
+  passkey:
+    enabled: true
+    rpId: localhost
+    rpName: auth-reference
+
+  # Phone-number login: OTP sign-in/sign-up over SMS (the phone-login page).
+  # SMS dispatch is the send-otp-sms hook binding below - it writes codes to
+  # the sms-outbox collection, this walkthrough's Mailpit-for-SMS. The wire
+  # format is pinned to E.164 (+27831234567); spaced or local forms are
+  # rejected before any send. signUpOnVerification makes first verify create
+  # the account; the derived temp emails land on a reserved test domain that
+  # is never deliverable.
+  phoneNumber:
+    enabled: true
+    signUpOnVerification:
+      tempEmailDomain: phone.auth-reference.test
+
+  # Captcha on the spend endpoints: Cloudflare Turnstile with the documented
+  # always-pass test keys (site key 1x00000000000000000000AA, secret key
+  # 1x0000000000000000000000000000000AA - set as LOWDEFY_SECRET_
+  # TURNSTILE_SECRET_KEY). The explicit endpoints list scopes the gate to
+  # signup and the OTP send so the other walkthrough scenarios stay
+  # token-free; omit the key to protect the computed default set (every
+  # public initiate endpoint of the enabled methods). Pages feed the Captcha
+  # block from the _build.authConfig projection and thread the minted token
+  # through the captchaToken action param.
+  captcha:
+    enabled: true
+    provider: cloudflare-turnstile
+    siteKey: 1x00000000000000000000AA
+    secretKey:
+      _secret: TURNSTILE_SECRET_KEY
+    endpoints:
+      - /sign-up/email
+      - /phone-number/send-otp
+
   # Local dev sending: run Mailpit (see README) and point SMTP at it.
   email:
     from: auth-reference@localhost
@@ -54,18 +105,24 @@ auth:
         secure: false
 
   providers:
-    - id: google
-      type: Google
+    - id: auth0
+      type: GenericOAuth
       properties:
         clientId:
-          _secret: GOOGLE_CLIENT_ID
+          _secret: AUTH0_CLIENT_ID
         clientSecret:
-          _secret: GOOGLE_CLIENT_SECRET
+          _secret: AUTH0_CLIENT_SECRET
+        discoveryUrl:
+          _secret: AUTH0_DISCOVERY_URL
+        scopes:
+          - openid
+          - profile
+          - email
 
   account:
     accountLinking:
       enabled: true
-      trustedProviders: [google, emailAndPassword]
+      trustedProviders: [auth0, emailAndPassword]
 
   session:
     expiresIn: 604800
@@ -79,6 +136,18 @@ auth:
     org: org-a
     signup: open
 
+  # The member role that administers users (phase 9). Every user-initiated
+  # admin step and the impersonation client actions require the caller to
+  # hold this role - an engine-enforced floor UNDER the auth.api.roles gate
+  # below, so an endpoint misconfiguration can never expose member mutation.
+  # The engine denormalizes it onto user.role (the field BetterAuth's own
+  # admin plugin checks for impersonation) at its sync points:
+  # UpdateMemberRoles, the invitation-accept path, and RemoveMember.
+  # System routines (system: true steps in hooks) are exempt - they run
+  # caller-less. "admin" and "user" are reserved names; the role is
+  # registered in the role catalog automatically.
+  userAdminRole: user-admin
+
   pages:
     protected: true
     public:
@@ -88,6 +157,16 @@ auth:
       - verify-email
       - accept-invitation
       - home
+      # Phase-9 password reset pages (both also hold authPages roles, which
+      # implies public); the 2FA challenge page must be public - a 2FA-pending
+      # sign-in holds no session yet. login-methods renders the
+      # _build.authConfig projection for anyone.
+      - forgot-password
+      - reset-password
+      - two-factor-challenge
+      - login-methods
+      # Phone OTP sign-in/sign-up - public like login and signup.
+      - phone-login
     roles:
       admin:
         - admin
@@ -111,17 +190,28 @@ auth:
       partner:
         - partner-data
 
+  # signIn is also claimed by the account-kit module manifest - the app's
+  # entry wins per key (app-wins), so /login stays the sign-in page and the
+  # module's login page remains an ordinary protected module page. The app
+  # does NOT set "error": the module's claim serves it (/account-kit/error),
+  # public automatically because it holds an authPages role.
   authPages:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+    forgotPassword: /forgot-password
+    resetPassword: /reset-password
 
   # Each entry binds an auth lifecycle point to an InternalApi endpoint.
   # The endpoint's routine is the hook body; it runs in a system context
-  # (_user empty, subject in _payload, _secret working). One hook per point,
-  # so normalize-signup also carries the merge-on-signup match for
-  # trusted-provider OAuth (arrives verified), and on-email-verified carries
-  # the email/password merge (verified only at this point).
+  # (_user empty, subject in _payload, _secret working). Any number of
+  # bindings may share a point (phase 9) - they compose in tier order:
+  # engine hooks, then module-contributed bindings (the account-kit module
+  # binds session.create.after and email.verified too, and its bindings are
+  # placed before these), then the app's entries in array order.
+  # normalize-signup carries the merge-on-signup match for trusted-provider
+  # OAuth (arrives verified), and on-email-verified carries the
+  # email/password merge (verified only at this point).
   hooks:
     - id: normalize-signup
       point: user.create.before
@@ -132,6 +222,22 @@ auth:
     - id: on-email-verified
       point: email.verified
       endpointId: on-email-verified
+    # SMS dispatch for phone login. phoneNumber.enabled requires the
+    # phone.otp.send binding at build - there is no fallback SMS transport.
+    # One endpoint binds both send points (an app wanting different messages
+    # binds two endpoints); phone.passwordReset.send left unbound would make
+    # the phone reset request fail loudly naming the missing binding.
+    - id: send-otp-sms
+      point: phone.otp.send
+      endpointId: send-otp-sms
+    - id: send-reset-sms
+      point: phone.passwordReset.send
+      endpointId: send-otp-sms
+    # The phone analog of email.verified - a phone-first app runs
+    # merge-on-signup here; the walkthrough writes an audit row.
+    - id: on-phone-verified
+      point: phone.verified
+      endpointId: on-phone-verified
     # Uncomment to hand invitation email dispatch to the invitation-send
     # endpoint - the stock auth.email template then does NOT send; the hook
     # owns dispatch (phase-6 walkthrough). Leave commented to exercise the
@@ -180,6 +286,22 @@ auth:
   #     name: Mock User
   #     roles: []
 
+# Phase-9 module gate: a local module that ships auth artifacts and declares
+# their wiring in its manifest (modules/account-kit/module.lowdefy.yaml) -
+# the build contributes the corresponding auth entries with scoped ids and
+# logs each contribution. account-kit claims two authPages roles (signIn,
+# which the app's own authPages entry overrides - app wins - and error,
+# which the app does not set, so the module page serves it), declares one
+# further public page (account-help), and binds its account-audit
+# InternalApi endpoint to session.create.after and email.verified - both
+# points the app also binds above, so each composed slot runs the module
+# binding first, then the app entry. (The _build.authConfig demo page,
+# login-methods, is app config: module content resolves before the
+# projection pre-pass, so module pages cannot read the projection today.)
+modules:
+  - id: account-kit
+    source: 'file:modules/account-kit'
+
 # The hooks write an audit trail here; the same database as auth so no
 # extra infrastructure is needed for the walkthrough. user-contacts is the
 # app-owned CRM contact collection the merge-on-signup hooks match against.
@@ -198,17 +320,6 @@ connections:
         _secret: AUTH_DATABASE_URI
       collection: user-contacts
       write: true
-  # The email.verified merge writes user.contactId with an explicit update.
-  # The sanctioned write pathway for this one field is an open design
-  # question (hooks/design.md); the reference app writes it directly over a
-  # connection until the auth module settles the mechanism.
-  - id: users_db
-    type: MongoDBCollection
-    properties:
-      databaseUri:
-        _secret: AUTH_DATABASE_URI
-      collection: users
-      write: true
   # Phase-8 native-read demo: reads of auth-owned collections may go native
   # (steps for writes, connections for reads). Read-only - no write: true.
   - id: members_read_db
@@ -217,6 +328,16 @@ connections:
       databaseUri:
         _secret: AUTH_DATABASE_URI
       collection: user-members
+  # The phone OTP "SMS provider" for the walkthrough - the send-otp-sms hook
+  # routine writes codes here instead of calling a real provider; read the
+  # code from this collection to complete the phone-login flow.
+  - id: sms_outbox_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: sms-outbox
+      write: true
 
 api:
   - _ref: api/normalize-signup.yaml
@@ -246,6 +367,18 @@ api:
   # attribute-filtered aggregation over user-members.
   - _ref: api/org-info.yaml
   - _ref: api/admin-members-by-attribute.yaml
+  # Phase-9 endpoints. update-my-profile is deliberately NOT role-gated -
+  # UpdateUserProfile self-targeting (userId = the caller's own id) is exempt
+  # from the user-admin floor. admin-update-user-profile is role-gated like
+  # the other admin-* endpoints. list-members-ungated is deliberately ungated
+  # too: the floor refuses a caller without the user-admin role at the STEP,
+  # even through an endpoint with no auth.api.roles entry.
+  - _ref: api/update-my-profile.yaml
+  - _ref: api/admin-update-user-profile.yaml
+  - _ref: api/list-members-ungated.yaml
+  # Phone-number hook bodies: SMS dispatch and the phone.verified audit.
+  - _ref: api/send-otp-sms.yaml
+  - _ref: api/on-phone-verified.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -263,3 +396,13 @@ pages:
   - _ref: pages/contacts.yaml
   - _ref: pages/audit-reports.yaml
   - _ref: pages/hook-audit.yaml
+  # Phase-9 pages: the password round-trip, the account security surface
+  # (2FA, passkeys, session revocation, profile self-service), the 2FA
+  # sign-in challenge, and the _build.authConfig projection demo.
+  - _ref: pages/forgot-password.yaml
+  - _ref: pages/reset-password.yaml
+  - _ref: pages/security.yaml
+  - _ref: pages/two-factor-challenge.yaml
+  - _ref: pages/login-methods.yaml
+  # Phone OTP sign-in/sign-up with the captcha gate on the send.
+  - _ref: pages/phone-login.yaml

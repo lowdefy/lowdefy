@@ -24,6 +24,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
@@ -32,12 +33,13 @@ import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
-import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
+import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
+import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -71,6 +73,23 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       logger: logger ?? console,
       stage: 'dev',
     });
+
+  // Restore the skeleton-computed auth config projection so _build.authConfig
+  // resolves in JIT page builds identically to a full build. The dev server's
+  // JIT context is rebuilt from build artifacts in a separate process, so the
+  // projection is read from the artifact shallowBuild writes.
+  if (
+    type.isUndefined(buildContext.authConfigProjection) &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const projectionPath = path.join(buildContext.directories.build, 'authConfigProjection.json');
+    try {
+      const content = await fs.promises.readFile(projectionPath, 'utf8');
+      buildContext.authConfigProjection = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+    }
+  }
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -144,10 +163,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         operators,
         env: process.env,
         lowdefyApp: buildContext.appMeta,
+        authConfig: buildContext.authConfigProjection,
         dynamicIdentifiers,
         shouldStop: null,
       });
-      resolvedVars = await resolve(cloneForResolve(unresolvedVars), varCtx);
+      resolvedVars = await resolve(cloneWithMarkers(unresolvedVars), varCtx);
     }
 
     let refDef;
@@ -200,11 +220,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       operators,
       env: process.env,
       lowdefyApp: buildContext.appMeta,
+      authConfig: buildContext.authConfigProjection,
       dynamicIdentifiers,
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
-    processed = evaluateStaticOperators({
+    processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
       refDef,
@@ -248,6 +269,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
     if (!buildContext.websocketActionRefs) {
       buildContext.websocketActionRefs = [];
+    }
+    if (!buildContext.dynamicBlockRefs) {
+      buildContext.dynamicBlockRefs = [];
     }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
@@ -300,6 +324,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       : [];
     validateCallApiRefs({
       callApiActionRefs: buildContext.callApiActionRefs,
+      endpointConfigs,
+      context: buildContext,
+    });
+    validateDynamicBlockRefs({
+      dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
       context: buildContext,
     });

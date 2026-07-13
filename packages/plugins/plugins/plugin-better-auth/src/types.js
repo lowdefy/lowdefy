@@ -70,5 +70,6 @@ export default {
     'UpdateMemberAttributes',
     'UpdateMemberRoles',
     'UpdateUserAttributes',
+    'UpdateUserProfile',
   ],
 };

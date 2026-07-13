@@ -76,7 +76,11 @@ _ref:
 
             Set `LOWDEFY_SECRET_BETTER_AUTH_SECRET` to a secure random string (`openssl rand -base64 32`). Reusing your old secret value is fine — sessions are invalidated by the upgrade anyway.
 
-            ### 3. Add `auth.database`
+            ### 3. Pin the canonical URL with `BETTER_AUTH_URL`
+
+            Set the `BETTER_AUTH_URL` environment variable to your app's canonical origin (e.g. `https://app.example.com`). Auth builds password-reset, magic-link and email-verification links — and its CSRF origin allowlist — from this value. When it is pinned, those links and origins are fixed. When it is unset, the host is derived from each incoming request, so a spoofed `Host` / `X-Forwarded-Host` header can steer a reset email to an attacker-controlled link. Pinning it is strongly recommended for any production deployment. This replaces the old `NEXTAUTH_URL` variable.
+
+            ### 4. Add `auth.database`
 
             Sessions are database-backed, so every app with a login method needs an adapter — including apps that previously ran JWT-only with no adapter:
 
@@ -92,7 +96,7 @@ _ref:
 
             If you used the old `MongoDBAdapter`: the type is renamed, `databaseUri` becomes `uri`, and `options.databaseName` folds into the URI path. There is no `options.collections` mapping — collection names are fixed by the adapter.
 
-            ### 4. Migrate MongoDB collections
+            ### 5. Migrate MongoDB collections
 
             The adapter uses the `user-*` naming convention, and the names are fixed — there is no rename escape hatch:
 
@@ -102,7 +106,7 @@ _ref:
 
             If you configured custom collection names via the old `options.collections`, rename those collections to the fixed names instead.
 
-            ### 5. Migrate `EmailProvider` to `magicLink`
+            ### 6. Migrate `EmailProvider` to `magicLink`
 
             Magic-link login is a plugin with its own key, not a provider entry. Move the SMTP transport into `auth.email`, which is shared by all email flows (magic links, verification, password reset):
 
@@ -128,7 +132,7 @@ _ref:
 
             The client signs in with the `Login` action: `params: { magicLink: true, email: ... }`.
 
-            ### 6. Rewrite callbacks and events as hooks
+            ### 7. Rewrite callbacks and events as hooks
 
             `auth.callbacks` and `auth.events` are replaced by `auth.hooks`. A hook is not a plugin — it binds an auth lifecycle point to an `InternalApi` endpoint, and the endpoint's routine does the work, reading the hook payload with the `_payload` operator:
 
@@ -156,7 +160,7 @@ _ref:
 
             Custom callback/event plugin logic moves into the endpoint's routine; anything a routine can't express goes in a custom request plugin called from the routine.
 
-            ### 7. Build your auth pages
+            ### 8. Build your auth pages
 
             BetterAuth ships no UI. The app owns its sign-in, sign-up, and error pages, and `auth.authPages` points at them:
 
@@ -172,11 +176,11 @@ _ref:
 
             Sign-in uses the `Login` action, which dispatches by parameter — `providerId` for OAuth, `magicLink: true`, or `email` + `password`. Email/password sign-up pages use the new `SignUp` action; social and magic-link "sign-up" pages use `Login`, since those methods create the account on first sign-in. Sign-in errors now surface inline (the `Login` action returns `error.code`) rather than as a `?error=` query parameter on the error page.
 
-            ### 8. Run the user-model data migration
+            ### 9. Run the user-model data migration
 
             Roles move off the user record onto organization memberships, and fused user-contact records split into `contact` / `user` / `member` records. If your app is built on the `modules-mongodb` `user_contacts` convention, this migration ships from that module — not from the core upgrade. Apps not using that convention only need the collection renames from step 4.
 
-            ### 9. Sign in again
+            ### 10. Sign in again
 
             Existing sessions are invalidated — the session format changed. There is nothing to migrate; users log in once after the upgrade.
 

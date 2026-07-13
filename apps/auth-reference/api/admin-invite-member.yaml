@@ -1,13 +1,14 @@
 # Role-gated admin step endpoint (see admin-list-users.yaml for the model).
 # No invitation.send hook is bound in this app, so InviteMember dispatches
-# the stock template through auth.email (Mailpit). contactId and attributes
+# the stock template through auth.email (Mailpit). profile and attributes
 # are only forwarded when the payload carries them - accepting the
-# invitation stamps contactId onto the user and copies attributes onto the
-# minted member row. organizationId is omitted: it defaults to the pinned
-# org (org-a here); pass one explicitly to invite into another org.
+# invitation shallow-merges profile onto the user's profile bag (invitation
+# wins per key) and copies attributes onto the minted member row.
+# organizationId is omitted: it defaults to the pinned org (org-a here);
+# pass one explicitly to invite into another org.
 # Correction semantics (cancelPendingInvitationsOnReInvite): inviting a
 # pending email again REPLACES the invitation (new role/attributes/
-# contactId; the old accept link dies), so repeat invites stay repeatable.
+# profile; the old accept link dies), so repeat invites stay repeatable.
 # resend: true instead re-sends the existing invitation unchanged with a
 # refreshed expiry - it never rewrites what was invited.
 id: admin-invite-member
@@ -23,6 +24,9 @@ routine:
             _payload: role
           resend:
             _payload: resend
+        # contactId is a module-defined key inside the opaque profile bag,
+        # not a platform field - the invitation carries it as
+        # profile.contactId and the accept merge writes it onto the user.
         - _if:
             test:
               _type:
@@ -30,8 +34,9 @@ routine:
                 on:
                   _payload: contactId
             then:
-              contactId:
-                _payload: contactId
+              profile:
+                contactId:
+                  _payload: contactId
             else: {}
         - _if:
             test:

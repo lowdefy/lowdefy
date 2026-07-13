@@ -23,7 +23,7 @@ async function invokeEndpoint({ endpoint, input }) {
     // Surface BetterAuth APIError rail messages (validation, ROLE_NOT_FOUND, etc.)
     // verbatim - the step interface layer wraps further.
     if (!type.isNone(error.status) && !type.isNone(error.body)) {
-      throw new Error(error.body?.message ?? error.body?.code ?? error.message);
+      throw new Error(error.body?.message ?? error.body?.code ?? error.message, { cause: error });
     }
     throw error;
   }

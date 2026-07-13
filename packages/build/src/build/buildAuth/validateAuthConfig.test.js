@@ -60,7 +60,7 @@ test('validateAuthConfig throws when configured without an authentication mechan
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
+    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
   );
 });
 
@@ -104,8 +104,10 @@ test('validateAuthConfig throws when a strategy entry is missing a required prop
       strategies: [{ id: 'partner-access' }],
     },
   };
+  // Anchored - the schema errorMessage is thrown verbatim, with no extra
+  // "Auth " prefix or trailing period added around it.
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth strategy should have required property "type".'
+    /^Auth strategy should have required property "type"\.$/
   );
 });
 
@@ -217,6 +219,52 @@ test('validateAuthConfig passes with a magicLink mechanism when email is configu
         from: 'noreply@example.com',
         provider: { type: 'smtp', properties: {} },
       },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws on duplicate provider ids', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Duplicate auth provider id "okta".'
+  );
+});
+
+test('validateAuthConfig throws when a built-in provider type is configured twice', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'google-a', type: 'Google', properties: {} },
+        { id: 'google-b', type: 'Google', properties: {} },
+      ],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider type "Google" is configured more than once. BetterAuth supports one configuration per built-in provider; use GenericOAuth for additional configurations.'
+  );
+});
+
+test('validateAuthConfig passes with multiple GenericOAuth providers with distinct ids', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [
+        { id: 'okta', type: 'GenericOAuth', properties: {} },
+        { id: 'auth0', type: 'GenericOAuth', properties: {} },
+      ],
     },
   };
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
@@ -520,4 +568,300 @@ test('validateAuthConfig throws when organizations contains an unknown property'
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
+test('validateAuthConfig passes a userAdminRole string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: 'user-admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig passes userAdminRole with an explicit pinned organizations block', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'pinned', org: 'team-portal' },
+      userAdminRole: 'user-admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when userAdminRole is not a string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: ['user-admin'],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "userAdminRole" should be a string.'
+  );
+});
+
+test('validateAuthConfig throws when userAdminRole is set under the tenant policy', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant' },
+      userAdminRole: 'user-admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "userAdminRole" applies only to the "pinned" organizations policy - user administration under "tenant" waits for a multi-tenant admin design.'
+  );
+});
+
+test('validateAuthConfig throws when userAdminRole is the reserved "admin" role', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: 'admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "userAdminRole" cannot be "admin" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
+  );
+});
+
+test('validateAuthConfig throws when userAdminRole is the reserved "user" role', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: 'user',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "userAdminRole" cannot be "user" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
+  );
+});
+
+test('validateAuthConfig passes an enabled phoneNumber block with a phone.otp.send binding', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig counts phoneNumber as a login method for the mechanism check', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      phoneNumber: { enabled: true },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "database" is required when a login method or provider is configured.'
+  );
+});
+
+test('validateAuthConfig throws when phoneNumber is enabled without a phone.otp.send binding', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber" is enabled but no hook binds the "phone.otp.send" point. Bind an InternalApi endpoint in "auth.hooks" to send the OTP SMS.'
+  );
+});
+
+test('validateAuthConfig does not require a phone.otp.send binding when phoneNumber is disabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      phoneNumber: { enabled: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when phoneNumber is missing the enabled property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber" should have required property "enabled".'
+  );
+});
+
+test('validateAuthConfig throws when signUpOnVerification is missing tempEmailDomain', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true, signUpOnVerification: {} },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "phoneNumber.signUpOnVerification" should have required property "tempEmailDomain".'
+  );
+});
+
+test('validateAuthConfig throws when phoneNumber contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      phoneNumber: { enabled: true, getTempEmail: 'nope' },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
+const validCaptcha = {
+  enabled: true,
+  provider: 'cloudflare-turnstile',
+  siteKey: '0x4AAAAAAA',
+  secretKey: { _secret: 'TURNSTILE_SECRET_KEY' },
+};
+
+test('validateAuthConfig passes a valid captcha block alongside a login method', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: validCaptcha,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not count captcha as an authentication mechanism', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      captcha: validCaptcha,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism.'
+  );
+});
+
+test('validateAuthConfig throws when captcha is missing a required property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { enabled: true, provider: 'cloudflare-turnstile', siteKey: '0x4AAAAAAA' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha" should have required property "secretKey".'
+  );
+});
+
+test('validateAuthConfig throws when captcha.provider is not a supported provider', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, provider: 'google-recaptcha' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.provider" should be "cloudflare-turnstile".'
+  );
+});
+
+test('validateAuthConfig throws the public-key contract error when siteKey is a _secret reference', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, siteKey: { _secret: 'TURNSTILE_SITE_KEY' } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.siteKey" should be a plain string. The site key is public - every browser reads it from the page - and must not be a _secret operator reference, so the build can project it to Captcha blocks.'
+  );
+});
+
+test('validateAuthConfig throws when captcha.secretKey is a plain string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, secretKey: 'literal-secret' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.secretKey" should be a _secret operator reference.'
+  );
+});
+
+test('validateAuthConfig passes an explicit captcha.endpoints array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, endpoints: ['/sign-up/email'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when captcha contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, minScore: 0.5 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
+test('validateAuthConfig throws when captcha.endpoints is an empty array', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      captcha: { ...validCaptcha, endpoints: [] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.'
+  );
 });

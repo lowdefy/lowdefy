@@ -1,10 +1,12 @@
 # Admin surface on the phase-6 admin steps: every call below is a CallAPI to
 # a role-gated admin-* Api endpoint (auth.api.roles) whose routine runs the
-# step. The hosting endpoint's admin gate is the ONLY authorization - the
-# steps execute with server authority, so the recorded phase-3 limitation
-# (a catalog-role member could not call inviteMember through the plugin's own
-# AC) no longer applies. The direct /api/auth/organization/* fetches this
-# page used before phase 6 are gone.
+# step. The steps execute with server authority, so the recorded phase-3
+# limitation (a catalog-role member could not call inviteMember through the
+# plugin's own AC) no longer applies. Since phase 9 the endpoint gate is no
+# longer the only authorization: every user-initiated admin step also
+# requires the caller to hold the auth.userAdminRole member role (user-admin
+# here) - the engine-enforced floor. The direct /api/auth/organization/*
+# fetches this page used before phase 6 are gone.
 id: members
 type: Box
 properties:
@@ -60,8 +62,9 @@ blocks:
     properties:
       title: Email
   # The catalog roles (owner, admin, member built-ins plus the app's declared
-  # roles) are the registered set; "not-a-role" is deliberately unregistered
-  # to exercise BetterAuth's ROLE_NOT_FOUND failure.
+  # roles - auth.pages/api roles and auth.userAdminRole, so user-admin is
+  # registered too) are the registered set; "not-a-role" is deliberately
+  # unregistered to exercise BetterAuth's ROLE_NOT_FOUND failure.
   - id: invite_role
     type: Selector
     properties:
@@ -70,12 +73,13 @@ blocks:
         - member
         - admin
         - auditor
+        - user-admin
         - owner
         - not-a-role
   - id: invite_contact_id
     type: TextInput
     properties:
-      title: Contact id (optional - stamped onto the user on accept)
+      title: Contact id (optional - merged into user.profile on accept)
   - id: invite_button
     type: Button
     properties:

@@ -24,7 +24,7 @@ import callPluginEndpoint from './support/callPluginEndpoint.js';
 // the same layer the engine already uses for org seeding and tenant minting.
 // The admin removeUser endpoint hard-deletes the user row and (confirmed by the
 // phase-0 probe at 1.6.23) also clears the user's session and account rows, so
-// those are not cleared here. The app-owned contact is left untouched.
+// those are not cleared here. App-owned data is left untouched.
 async function DeleteUser({ acting, auth, properties }) {
   const { userId } = properties;
   if (type.isNone(userId)) {

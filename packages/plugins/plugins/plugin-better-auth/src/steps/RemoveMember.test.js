@@ -20,7 +20,10 @@ import RemoveMember from './RemoveMember.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
 const acting = { system: true, user: null };
-const organization = { policy: 'pinned', pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' } };
+const organization = {
+  policy: 'pinned',
+  pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' },
+};
 
 test('RemoveMember passes properties through as body to the org removeMember endpoint', async () => {
   const removeMember = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
@@ -69,4 +72,58 @@ test('RemoveMember throws when memberIdOrEmail property is missing', async () =>
   await expect(RemoveMember({ acting, auth, organization, properties: {} })).rejects.toThrow(
     'RemoveMember requires a "memberIdOrEmail" property.'
   );
+});
+
+test('RemoveMember clears user.role when the removed member held the user-admin role', async () => {
+  const removeMember = jest
+    .fn()
+    .mockResolvedValue({ member: { id: 'member-1', userId: 'user_9' } });
+  const findOne = jest.fn(async ({ model }) => {
+    // The pinned membership is gone after removal; the user row still holds
+    // the denormalized role.
+    if (model === 'member') return null;
+    if (model === 'user') return { id: 'user_9', role: 'user-admin' };
+    return null;
+  });
+  const update = jest.fn(async () => ({}));
+  const { auth } = createMockAuth({
+    adapter: { findOne, update },
+    organizationEndpoints: { removeMember },
+  });
+
+  await RemoveMember({
+    acting,
+    auth,
+    organization,
+    properties: { memberIdOrEmail: 'member-1' },
+    userAdminRole: 'user-admin',
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'user',
+    where: [{ field: 'id', value: 'user_9' }],
+    update: { role: null },
+  });
+});
+
+test('RemoveMember does not touch user.role when no user-admin role is configured', async () => {
+  const removeMember = jest
+    .fn()
+    .mockResolvedValue({ member: { id: 'member-1', userId: 'user_9' } });
+  const findOne = jest.fn(async () => null);
+  const update = jest.fn(async () => ({}));
+  const { auth } = createMockAuth({
+    adapter: { findOne, update },
+    organizationEndpoints: { removeMember },
+  });
+
+  await RemoveMember({
+    acting,
+    auth,
+    organization,
+    properties: { memberIdOrEmail: 'member-1' },
+  });
+
+  expect(findOne).not.toHaveBeenCalled();
+  expect(update).not.toHaveBeenCalled();
 });

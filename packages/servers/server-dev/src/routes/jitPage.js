@@ -72,7 +72,7 @@ async function jitPageHandler(c) {
     });
   }
 
-  const result = await getPageConfig(context, { pageId });
+  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
   if (result.status === 'unauthenticated') {
     // The client follows this redirect with a full page load, so the login
     // page can return to the requested page after sign-in.

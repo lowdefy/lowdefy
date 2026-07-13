@@ -23,7 +23,7 @@ import BuildingPage from '../lib/client/BuildingPage.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
 import setPageId from '../lib/client/setPageId.js';
-import { getReloadVersion } from '../lib/client/utils/useMutateCache.js';
+import { bumpNavVersion, getReloadVersion } from '../lib/client/utils/useMutateCache.js';
 import useRootConfig from '../lib/client/utils/useRootConfig.js';
 
 import actions from '../build/plugins/actions.js';
@@ -40,7 +40,14 @@ function Routing({ auth, lowdefy, router }) {
   const [location, setLocation] = useState(() => router.getLocation());
 
   useEffect(() => {
-    return router.subscribe(setLocation);
+    return router.subscribe((location) => {
+      // Dynamic pages re-resolve per navigation — bump before setLocation so
+      // the page config SWR key changes with the navigation. The router
+      // notifies with a fresh location object per event, so same-URL
+      // navigations already produce a state change.
+      bumpNavVersion();
+      setLocation(location);
+    });
   }, [router]);
 
   const [Link] = useState(() => createLinkComponent({ router }));

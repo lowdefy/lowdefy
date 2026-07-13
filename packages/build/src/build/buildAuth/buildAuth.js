@@ -16,14 +16,12 @@
   limitations under the License.
 */
 
-import buildApiAuth from './buildApiAuth.js';
 import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAuthStrategies from './buildAuthStrategies.js';
-import buildPageAuth from './buildPageAuth.js';
+import buildEntityAuth from './buildEntityAuth.js';
 import buildRoleCatalog from './buildRoleCatalog.js';
 import buildTrustedProviders from './buildTrustedProviders.js';
-import buildWebsocketAuth from './buildWebsocketAuth.js';
 import setAuthConfigured from './setAuthConfigured.js';
 import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
@@ -36,9 +34,9 @@ function buildAuth({ components, context }) {
   buildTrustedProviders({ components, context });
   buildAuthHooks({ components, context });
   buildAuthStrategies({ components, context });
-  buildApiAuth({ components, context });
-  buildWebsocketAuth({ components, context });
-  buildPageAuth({ components, context });
+  buildEntityAuth({ components, context, entity: 'api' });
+  buildEntityAuth({ components, context, entity: 'websockets' });
+  buildEntityAuth({ components, context, entity: 'pages' });
   buildAuthPlugins({ components, context });
 
   return components;

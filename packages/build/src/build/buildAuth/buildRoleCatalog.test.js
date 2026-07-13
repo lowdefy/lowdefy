@@ -53,3 +53,44 @@ test('buildRoleCatalog throws when a role name contains a comma', () => {
     'Auth role name "admin,auditor" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.'
   );
 });
+
+test('buildRoleCatalog includes the configured userAdminRole in the catalog', () => {
+  const components = {
+    auth: {
+      pages: { roles: { auditor: ['reports'] } },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      userAdminRole: 'user-admin',
+    },
+  };
+  const res = buildRoleCatalog({ components });
+  expect(res.auth.roles).toEqual(['auditor', 'user-admin']);
+});
+
+test('buildRoleCatalog does not duplicate the userAdminRole when an entity roles map also names it', () => {
+  const components = {
+    auth: {
+      pages: { roles: { 'user-admin': ['admin-*'] } },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      userAdminRole: 'user-admin',
+    },
+  };
+  const res = buildRoleCatalog({ components });
+  expect(res.auth.roles).toEqual(['user-admin']);
+});
+
+test('buildRoleCatalog throws when the userAdminRole contains a comma', () => {
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+      userAdminRole: 'user,admin',
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth role name "user,admin" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.'
+  );
+});

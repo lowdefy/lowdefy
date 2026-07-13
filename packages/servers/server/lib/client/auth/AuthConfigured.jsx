@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useRef } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
@@ -23,7 +21,10 @@ import {
   genericOAuthClient,
   magicLinkClient,
   organizationClient,
+  phoneNumberClient,
+  twoFactorClient,
 } from 'better-auth/client/plugins';
+import { passkeyClient } from '@better-auth/passkey/client';
 
 import { serializer } from '@lowdefy/helpers';
 
@@ -33,7 +34,15 @@ const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
-  plugins: [adminClient(), genericOAuthClient(), magicLinkClient(), organizationClient()],
+  plugins: [
+    adminClient(),
+    genericOAuthClient(),
+    magicLinkClient(),
+    organizationClient(),
+    passkeyClient(),
+    phoneNumberClient(),
+    twoFactorClient(),
+  ],
 });
 
 // The server resolves the caller per request and embeds it in the page
@@ -45,7 +54,7 @@ const authClient = createAuthClient({
 // kept in a ref: while the session user is unchanged its roles and
 // attributes stay authoritative, and UpdateSession refreshes the ref from
 // /api/user after a change (e.g. SetActiveOrganization).
-function Session({ children, serverUser }) {
+function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const resolvedUserRef = useRef(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
@@ -56,7 +65,9 @@ function Session({ children, serverUser }) {
     }
     // Reload after sign-out (or session revocation) so the server can apply
     // the page auth fork - a protected page redirects to the login page.
-    if (wasAuthenticated.current && !isPending && !session) {
+    // A logout with a callbackUrl suppresses the reload - its own navigation
+    // would otherwise race this one.
+    if (wasAuthenticated.current && !isPending && !session && !reloadSuppressedRef.current) {
       window.location.reload();
     }
   }, [session, isPending]);
@@ -76,6 +87,7 @@ function Session({ children, serverUser }) {
 }
 
 function AuthConfigured({ authConfig, children, serverUser }) {
+  const reloadSuppressedRef = useRef(false);
   const auth = {
     authConfig,
     getSession: ({ disableCookieCache } = {}) =>
@@ -86,20 +98,48 @@ function AuthConfigured({ authConfig, children, serverUser }) {
       const response = await fetch(`${lowdefyConfig.basePath ?? ''}/api/user`, {
         credentials: 'same-origin',
       });
+      if (!response.ok) {
+        // Throw instead of parsing an error page - a silent { user: undefined }
+        // would read as a client-side logout in updateSession.
+        throw new Error(`Failed to fetch the resolved user (HTTP ${response.status}).`);
+      }
       return response.json();
     },
+    suppressSignOutReload: () => {
+      reloadSuppressedRef.current = true;
+    },
+    acceptInvitation: (params) => authClient.organization.acceptInvitation(params),
+    // addPasskey runs the WebAuthn browser ceremony itself - options fetch,
+    // authenticator prompt, verification.
+    addPasskey: (params) => authClient.passkey.addPasskey(params),
+    changePassword: (params) => authClient.changePassword(params),
+    deletePasskey: (params) => authClient.passkey.deletePasskey(params),
     impersonateUser: (params) => authClient.admin.impersonateUser(params),
+    phoneNumberRequestPasswordReset: (params) =>
+      authClient.phoneNumber.requestPasswordReset(params),
+    phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
+    phoneNumberSendOtp: (params) => authClient.phoneNumber.sendOtp(params),
+    phoneNumberVerify: (params) => authClient.phoneNumber.verify(params),
+    requestPasswordReset: (params) => authClient.requestPasswordReset(params),
+    resetPassword: (params) => authClient.resetPassword(params),
+    revokeOtherSessions: () => authClient.revokeOtherSessions(),
+    sendVerificationEmail: (params) => authClient.sendVerificationEmail(params),
     setActiveOrganization: (params) => authClient.organization.setActive(params),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
     signInOauth2: (params) => authClient.signIn.oauth2(params),
+    signInPhoneNumber: (params) => authClient.signIn.phoneNumber(params),
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
     stopImpersonating: () => authClient.admin.stopImpersonating(),
+    twoFactorDisable: (params) => authClient.twoFactor.disable(params),
+    twoFactorEnable: (params) => authClient.twoFactor.enable(params),
+    twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
+    twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
   };
   return (
-    <Session serverUser={serverUser}>
+    <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>
       {(user, resolvedUserRef) => {
         auth.user = user;
         auth.updateResolvedUser = (resolved) => {

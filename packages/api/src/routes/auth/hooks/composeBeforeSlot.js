@@ -17,9 +17,10 @@
 import { type } from '@lowdefy/helpers';
 
 // BetterAuth exposes one callback per database point, so each point resolves
-// to a single composed slot - engine hooks first, then the user hook. The
-// slot threads the record: what one hook returns is passed to the next, and
-// the final record is handed back to BetterAuth as { data }. The first hook
+// to a single composed slot - engine hooks first, then the user hooks in
+// array order. The slot threads the record: what one hook returns is passed
+// to the next, and the final record is handed back to BetterAuth as
+// { data }. The first hook
 // to veto short-circuits - a returned false aborts the write, and a thrown
 // error propagates; there is no cross-hook transaction, so external
 // side-effects of earlier hooks are not rolled back.

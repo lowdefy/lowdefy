@@ -20,12 +20,19 @@ import { ConfigError } from '@lowdefy/errors';
 import authHookPoints from './authHookPoints.js';
 
 // Validates the auth.hooks bindings. Each entry binds an auth lifecycle point
-// to an InternalApi endpoint's routine. Runs before buildApi, so endpoints
+// to an InternalApi endpoint's routine. Any number of hooks may bind one
+// point, and one endpoint may bind several points - the runtime composes all
+// bindings for a point in array order. Runs over the merged array (module
+// contributions first, then app entries) and before buildApi, so endpoints
 // still carry their raw id and declared type.
 function buildAuthHooks({ components }) {
-  const boundPoints = {};
+  const seenIds = {};
   (components.auth.hooks ?? []).forEach((hook) => {
     const configKey = hook['~k'];
+    if (seenIds[hook.id] === true) {
+      throw new ConfigError(`Duplicate auth hook id "${hook.id}".`, { configKey });
+    }
+    seenIds[hook.id] = true;
     if (!authHookPoints.includes(hook.point)) {
       throw new ConfigError(
         `Auth hook "${hook.id}" binds unknown point "${
@@ -34,15 +41,6 @@ function buildAuthHooks({ components }) {
         { received: hook.point, configKey }
       );
     }
-    if (!type.isNone(boundPoints[hook.point])) {
-      throw new ConfigError(
-        `Auth hooks "${boundPoints[hook.point]}" and "${hook.id}" both bind point "${
-          hook.point
-        }". At most one hook may bind a point.`,
-        { configKey }
-      );
-    }
-    boundPoints[hook.point] = hook.id;
 
     const endpoint = (components.api ?? []).find((e) => e.id === hook.endpointId);
     if (type.isNone(endpoint)) {

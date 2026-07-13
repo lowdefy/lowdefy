@@ -58,7 +58,7 @@ blocks:
   - id: invite_contact_id
     type: TextInput
     properties:
-      title: Contact id (optional - stamped onto the user on accept)
+      title: Contact id (optional - merged into user.profile on accept)
   - id: invite_button
     type: Button
     properties:
@@ -89,8 +89,9 @@ blocks:
                               on:
                                 _state: invite_contact_id
                           then:
-                            contactId:
-                              _state: invite_contact_id
+                            profile:
+                              contactId:
+                                _state: invite_contact_id
                           else: {}
         - id: show_invite_response
           type: SetState

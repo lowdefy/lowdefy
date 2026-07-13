@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { findAvailablePort } from '@lowdefy/node-utils';
+
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
-import findAvailablePort from '../../utils/findAvailablePort.js';
 import installServer from '../../utils/installServer.js';
 import runDevServer from './runDevServer.js';
 import getServer from '../../utils/getServer.js';

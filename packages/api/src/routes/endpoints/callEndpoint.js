@@ -21,6 +21,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import scheduleBackground from './scheduleBackground.js';
 
 async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   const { logger } = context;
@@ -50,6 +51,21 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     state: {},
     endpointDepth: 0,
   };
+
+  // async: true — acknowledge now, run the routine in the background.
+  // Auth was already checked above; the outcome lands in logs (scheduleBackground)
+  // and in whatever the routine itself records.
+  if (endpointConfig.async === true) {
+    scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
+      runRoutine(context, routineContext, { routine: endpointConfig.routine })
+    );
+    return {
+      error: null,
+      response: serializer.serialize({ accepted: true }),
+      status: 'accepted',
+      success: true,
+    };
+  }
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,

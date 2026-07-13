@@ -31,26 +31,30 @@ function validateSchema({ components }) {
   });
 
   if (!valid) {
-    errors.forEach((error) => {
-      // Try to get configKey from the item in the error path
-      const instancePath = error.instancePath.split('/').filter(Boolean);
-      let configKey = components.auth['~k'];
-      let currentData = components.auth;
+    // Only the first collected error is reported - one schema fault often
+    // cascades into many ajv errors, and the first is the actionable one.
+    const error = errors[0];
+    // Try to get configKey from the item in the error path
+    const instancePath = error.instancePath.split('/').filter(Boolean);
+    let configKey = components.auth['~k'];
+    let currentData = components.auth;
 
-      for (const part of instancePath) {
-        if (type.isArray(currentData)) {
-          const index = parseInt(part, 10);
-          currentData = currentData[index];
-        } else {
-          currentData = currentData?.[part];
-        }
-        if (currentData?.['~k']) {
-          configKey = currentData['~k'];
-        }
+    for (const part of instancePath) {
+      if (type.isArray(currentData)) {
+        const index = parseInt(part, 10);
+        currentData = currentData[index];
+      } else {
+        currentData = currentData?.[part];
       }
+      if (currentData?.['~k']) {
+        configKey = currentData['~k'];
+      }
+    }
 
-      throw new ConfigError(`Auth ${error.message}.`, { configKey });
-    });
+    // Custom errorMessage strings in the schema are already complete
+    // sentences - only raw ajv fallback messages need the Auth prefix.
+    const message = error.keyword === 'errorMessage' ? error.message : `Auth ${error.message}.`;
+    throw new ConfigError(message, { configKey });
   }
 }
 
@@ -77,15 +81,17 @@ function validateAuthConfig({ components }) {
 
   const emailAndPasswordEnabled = auth.emailAndPassword?.enabled === true;
   const magicLinkEnabled = auth.magicLink?.enabled === true;
+  const phoneNumberEnabled = auth.phoneNumber?.enabled === true;
   const hasProviders = type.isArray(auth.providers) && auth.providers.length > 0;
-  const hasLoginMethod = emailAndPasswordEnabled || magicLinkEnabled || hasProviders;
+  const hasLoginMethod =
+    emailAndPasswordEnabled || magicLinkEnabled || phoneNumberEnabled || hasProviders;
   const hasStrategies = type.isArray(auth.strategies) && auth.strategies.length > 0;
 
   // dev.mockUser is a server-dev-only bypass, not a mechanism - a block whose
   // only substance is dev.mockUser still fails this check.
   if (!hasLoginMethod && !hasStrategies) {
     throw new ConfigError(
-      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true" or "magicLink.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
+      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
       { configKey }
     );
   }
@@ -104,6 +110,45 @@ function validateAuthConfig({ components }) {
       'Auth "database" is required when a login method or provider is configured.',
       { configKey }
     );
+  }
+
+  // Duplicate ids silently last-win in downstream maps (trustedProviders,
+  // runtime provider construction) - fail at build instead. Built-in
+  // provider types allow one configuration each in BetterAuth; GenericOAuth
+  // entries are keyed by id, so several may coexist.
+  const seenProviderIds = {};
+  const seenProviderTypes = {};
+  (auth.providers ?? []).forEach((provider) => {
+    const providerKey = provider['~k'] ?? configKey;
+    if (seenProviderIds[provider.id] === true) {
+      throw new ConfigError(`Duplicate auth provider id "${provider.id}".`, {
+        configKey: providerKey,
+      });
+    }
+    seenProviderIds[provider.id] = true;
+    if (provider.type !== 'GenericOAuth') {
+      if (seenProviderTypes[provider.type] === true) {
+        throw new ConfigError(
+          `Auth provider type "${provider.type}" is configured more than once. BetterAuth supports one configuration per built-in provider; use GenericOAuth for additional configurations.`,
+          { configKey: providerKey }
+        );
+      }
+      seenProviderTypes[provider.type] = true;
+    }
+  });
+
+  // An enabled phone login with no way to send codes is dead config - there
+  // is no fallback SMS transport, so a "phone.otp.send" binding is required.
+  // This runs on the merged hooks array (module contributions + app entries),
+  // so a module-shipped binding satisfies it.
+  if (phoneNumberEnabled) {
+    const hasSendOtpBinding = (auth.hooks ?? []).some((hook) => hook.point === 'phone.otp.send');
+    if (!hasSendOtpBinding) {
+      throw new ConfigError(
+        'Auth "phoneNumber" is enabled but no hook binds the "phone.otp.send" point. Bind an InternalApi endpoint in "auth.hooks" to send the OTP SMS.',
+        { configKey: auth.phoneNumber['~k'] ?? configKey }
+      );
+    }
   }
 
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
@@ -129,6 +174,29 @@ function validateAuthConfig({ components }) {
       'Auth "organizations.org" applies only to the "pinned" policy - under "tenant" organizations are created per user at first session.',
       { configKey: auth.organizations['~k'] ?? configKey }
     );
+  }
+
+  // auth.userAdminRole is defined for the pinned policy alone - user.role is
+  // global while member roles are per-org, so under "tenant" a role held in
+  // one org would confer a global capability. Tenant semantics wait for a
+  // multi-tenant admin design.
+  if (!type.isNone(auth.userAdminRole)) {
+    if (auth.organizations?.policy === 'tenant') {
+      throw new ConfigError(
+        'Auth "userAdminRole" applies only to the "pinned" organizations policy - user administration under "tenant" waits for a multi-tenant admin design.',
+        { configKey: auth.organizations['~k'] ?? configKey }
+      );
+    }
+    // BetterAuth's admin plugin reserves "admin" (the engine's acting-session
+    // authority) and "user" (the default role stamped on every created user) -
+    // registering either with the curated impersonate-only statements would
+    // strip the acting sessions or grant impersonation to everyone.
+    if (auth.userAdminRole === 'admin' || auth.userAdminRole === 'user') {
+      throw new ConfigError(
+        `Auth "userAdminRole" cannot be "${auth.userAdminRole}" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.`,
+        { configKey }
+      );
+    }
   }
 
   validateMutualExclusivity({ components, entity: 'api' });

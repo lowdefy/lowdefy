@@ -34,8 +34,8 @@ import getHookRequestHeaders from './getHookRequestHeaders.js';
 // tenant: the active org is the user's business - the oldest membership when
 // they hold several; a user with a pending invitation gets a session but no
 // org (they proceed to accept); a fresh signup mints its own organization
-// lazily, as owner, through the plugin's createOrganization so its
-// invariants and hooks run.
+// lazily, as owner, through the org plugin's adapter layer (the endpoint
+// cannot serve the mint - see applyTenantPolicy).
 function createActiveOrgPolicyHook({ getAuth, organizations }) {
   async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
     const organization = await ensureOrganization({ auth, slug: organizations.org });
@@ -111,13 +111,35 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
     // headers makes the endpoint demand a session that does not exist yet.
     const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
     const orgAdapter = getOrgAdapter(await auth.$context, orgPlugin.options);
-    const organization = await orgAdapter.createOrganization({
-      organization: {
-        name: user?.name || user?.email || session.userId,
-        slug: `org-${session.userId}`,
-        createdAt: new Date(),
-      },
+    const slug = `org-${session.userId}`;
+    // The mint is not atomic - an earlier attempt may have written the org
+    // row and failed before the member row. Reuse the orphan so the retry
+    // does not trip the unique slug index and lock the user out of login.
+    let organization = await adapter.findOne({
+      model: 'organization',
+      where: [{ field: 'slug', value: slug }],
     });
+    if (!organization) {
+      try {
+        organization = await orgAdapter.createOrganization({
+          organization: {
+            name: user?.name || user?.email || session.userId,
+            slug,
+            createdAt: new Date(),
+          },
+        });
+      } catch (error) {
+        // A racing login minted the org between the find and the create -
+        // the unique slug index rejected this write, so read the winner's row.
+        organization = await adapter.findOne({
+          model: 'organization',
+          where: [{ field: 'slug', value: slug }],
+        });
+        if (!organization) {
+          throw error;
+        }
+      }
+    }
     await orgAdapter.createMember({
       userId: session.userId,
       organizationId: organization.id,

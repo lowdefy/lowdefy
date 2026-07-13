@@ -155,11 +155,14 @@ describe('getModuleRefContent', () => {
     );
   });
 
-  test('throws ConfigError when export is not found in manifest', async () => {
+  test('throws ConfigError listing available ids when component is not found', async () => {
     const context = createContext({
       modules: {
         'team-users': createModuleEntry({
-          components: [{ id: 'existing', component: { type: 'Box' } }],
+          components: [
+            { id: 'existing', component: { type: 'Box' } },
+            { id: 'badge', component: { type: 'Tag' } },
+          ],
         }),
       },
     });
@@ -169,7 +172,60 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users', component: 'nonexistent' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow('Module "team-users" does not export component "nonexistent".');
+    ).rejects.toThrow(
+      'Module "team-users" has no component "nonexistent". Available components: existing, badge.'
+    );
+  });
+
+  test('throws ConfigError listing available menus when menu is not found', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({
+          menus: [{ id: 'sidebar', links: [{ id: 'home', type: 'MenuLink' }] }],
+        }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', menu: 'default' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('Module "team-users" has no menu "default". Available menus: sidebar.');
+  });
+
+  test('throws ConfigError when component exists but its body is empty', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({
+          components: [{ id: 'empty-one', component: null }],
+        }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', component: 'empty-one' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('The component "empty-one" in module "team-users" is empty.');
+  });
+
+  test('throws ConfigError when menu exists but its links are empty', async () => {
+    const context = createContext({
+      modules: {
+        'team-users': createModuleEntry({
+          menus: [{ id: 'sidebar' }],
+        }),
+      },
+    });
+    await expect(
+      getModuleRefContent({
+        context,
+        refDef: { module: 'team-users', menu: 'sidebar' },
+        referencedFrom: 'lowdefy.yaml',
+      })
+    ).rejects.toThrow('The menu "sidebar" in module "team-users" is empty.');
   });
 
   test('handles empty manifest arrays gracefully', async () => {
@@ -184,7 +240,9 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users', menu: 'default' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow('Module "team-users" does not export menu "default".');
+    ).rejects.toThrow(
+      'Module "team-users" has no menu "default". The module defines no menus.'
+    );
   });
 
   test('handles undefined manifest arrays with nullish coalescing', async () => {
@@ -203,7 +261,9 @@ describe('getModuleRefContent', () => {
         refDef: { module: 'team-users', component: 'x' },
         referencedFrom: 'lowdefy.yaml',
       })
-    ).rejects.toThrow('Module "team-users" does not export component "x".');
+    ).rejects.toThrow(
+      'Module "team-users" has no component "x". The module defines no components.'
+    );
   });
 
   test('component export type takes priority over menu', async () => {

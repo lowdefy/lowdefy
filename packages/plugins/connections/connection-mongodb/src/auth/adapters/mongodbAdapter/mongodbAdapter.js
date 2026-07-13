@@ -80,7 +80,11 @@ function mongodbAdapter({ db }) {
             return data;
           }
         }
-        if (fieldAttributes?.references?.field === 'id' && !fieldAttributes?.required && data === null) {
+        if (
+          fieldAttributes?.references?.field === 'id' &&
+          !fieldAttributes?.required &&
+          data === null
+        ) {
           return null;
         }
         if (action === 'update') {
@@ -111,7 +115,9 @@ function mongodbAdapter({ db }) {
         }
         // supportsJSON disables the factory's parse-on-read, so json fields
         // written as JSON strings before native sub-document storage shipped
-        // are parsed here instead.
+        // are parsed here instead. Migration-window caveat: a json field
+        // legitimately holding a JSON-parseable plain string (e.g. "123")
+        // is coerced on read until the row is rewritten natively.
         if (fieldAttributes.type === 'json' && typeof data === 'string') {
           try {
             return JSON.parse(data);

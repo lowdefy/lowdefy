@@ -130,6 +130,27 @@ test('jwt verify skips claim-mapped fields whose claims are missing', async () =
   expect(match).toEqual({ attributes: {}, roles: [], user: { id: 's' } });
 });
 
+test('jwt verify rejects a valid token whose mapped id claim is missing', async () => {
+  const logger = mockLogger();
+  const verify = jwt({
+    logger,
+    properties: { secret: hmacSecret, algorithms: ['HS256'] },
+    strategyId: 'service-jwt',
+  });
+  const noSub = await verify({ headers: bearer(await signHmac({ email: 's@x.com' })), logger });
+  expect(noSub).toBe(null);
+  expect(logger.debug).toHaveBeenCalledWith(
+    { event: 'auth_strategy_token_rejected', strategyId: 'service-jwt' },
+    'Auth strategy "service-jwt" rejected a Bearer token: the "sub" id claim is missing.'
+  );
+  const mapped = jwt({
+    logger,
+    properties: { secret: hmacSecret, algorithms: ['HS256'], claimMapping: { id: 'uid' } },
+    strategyId: 'service-jwt',
+  });
+  expect(await mapped({ headers: bearer(await signHmac({ sub: 's' })), logger })).toBe(null);
+});
+
 test('jwt verify rejects an expired token', async () => {
   const logger = mockLogger();
   const verify = jwt({

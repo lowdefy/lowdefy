@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { BubbleMenu } from '@tiptap/react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu';
 import {
   AiOutlineBold,
   AiOutlineItalic,
@@ -35,33 +36,68 @@ function hasExt(editor, name) {
   return editor.extensionManager.extensions.some((ext) => ext.name === name);
 }
 
+// Custom bubble menu built on tiptap's BubbleMenuPlugin instead of the
+// `<BubbleMenu>` React wrapper. The wrapper renders its menu element with
+// React and then the plugin calls `element.remove()` on it (bubble-menu-plugin
+// detaches the menu from the DOM on construction). When the editor block later
+// unmounts — e.g. the surrounding page navigates away, or `disabled` flips and
+// unmounts this menu — React tries to removeChild an element that is no longer
+// where it rendered it, throwing "NotFoundError: Failed to execute
+// 'removeChild' on 'Node'".
+//
+// Here we own the container element ourselves and render the buttons into it
+// with a portal. React only ever removes the buttons from our container (always
+// their parent), never the plugin-detached element, so the teardown race is
+// gone.
 const PopoverMenu = ({ editor }) => {
+  const [container] = useState(() =>
+    typeof document === 'undefined' ? null : document.createElement('div')
+  );
+
   const showBold = hasExt(editor, 'bold');
   const showItalic = hasExt(editor, 'italic');
   const showStrike = hasExt(editor, 'strike');
   const showHighlight = hasExt(editor, 'highlight');
+  const hasTools = showBold || showItalic || showStrike || showHighlight;
 
-  if (!showBold && !showItalic && !showStrike && !showHighlight) {
-    return null;
-  }
+  useEffect(() => {
+    if (!container || !editor || editor.isDestroyed || !hasTools) return undefined;
 
-  return (
-    <BubbleMenu
-      className="tiptap-popover"
-      editor={editor}
-      shouldShow={({ editor, view, state, from, to }) => {
-        if (editor.isActive('image')) return false;
-        const { doc, selection } = state;
+    container.className = 'tiptap-popover';
+
+    const plugin = BubbleMenuPlugin({
+      pluginKey: 'bubbleMenu',
+      editor,
+      element: container,
+      shouldShow: ({ editor: menuEditor, view, state, from, to }) => {
+        if (menuEditor.isActive('image')) return false;
+        const { selection } = state;
         const { empty } = selection;
         const isEmptyTextBlock =
-          !doc.textBetween(from, to).length && isTextSelection(state.selection);
+          !state.doc.textBetween(from, to).length && isTextSelection(state.selection);
         const hasEditorFocus = view.hasFocus();
-        if (!hasEditorFocus || empty || isEmptyTextBlock || !editor.isEditable) {
+        if (!hasEditorFocus || empty || isEmptyTextBlock || !menuEditor.isEditable) {
           return false;
         }
         return true;
-      }}
-    >
+      },
+    });
+
+    editor.registerPlugin(plugin);
+    return () => {
+      // Tear the plugin (and its tippy instance) down first. React then
+      // unmounts the portal, removing the buttons from our still-intact
+      // container.
+      if (!editor.isDestroyed) {
+        editor.unregisterPlugin('bubbleMenu');
+      }
+    };
+  }, [editor, container, hasTools]);
+
+  if (!container || !hasTools) return null;
+
+  return createPortal(
+    <>
       {showBold && (
         <AiOutlineBold
           className="tiptap-icon"
@@ -89,7 +125,8 @@ const PopoverMenu = ({ editor }) => {
             onClick={() => editor.chain().focus().toggleHighlight({ color: fill }).run()}
           />
         ))}
-    </BubbleMenu>
+    </>,
+    container
   );
 };
 

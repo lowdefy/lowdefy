@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "_build.authConfig received an unreadable path \"authPages.signIn\"."
+      ],
+      "errorContains": [
+        "Readable paths are: \"emailAndPassword.enabled\", \"magicLink.enabled\", \"twoFactor.enabled\", \"passkey.enabled\", \"phoneNumber.enabled\", \"phoneNumber.signUpOnVerification\", \"captcha.enabled\", \"captcha.provider\", \"captcha.siteKey\", \"providers\", \"organizations.signup\"."
+      ]
+    }
+  ]
+}

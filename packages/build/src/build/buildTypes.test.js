@@ -39,6 +39,7 @@ function createTypesMapContext(overrides = {}) {
     auth: { adapters: {}, providers: {}, strategies: {} },
     blocks: createDefinitions([...basicTypes.blocks, ...loaderTypes.blocks, 'Message']),
     connections: {},
+    notifications: {},
     requests: {},
     steps: {},
     websockets: {},

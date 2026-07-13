@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import { admin, genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
+import { genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
 import { _app, _secret } from '@lowdefy/operators-js/operators/server';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
+import buildAdminPlugin from './buildAdminPlugin.js';
+import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
+import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
 import createSendEmail from './createSendEmail.js';
@@ -68,6 +71,9 @@ function getBetterAuthConfig({
   });
 
   if (operatorErrors.length > 0) {
+    // Startup fails on the first error; log the rest so they can all be
+    // fixed in one pass instead of one boot per error.
+    operatorErrors.slice(1).forEach((error) => logger.error(error));
     throw operatorErrors[0];
   }
 
@@ -96,7 +102,16 @@ function getBetterAuthConfig({
         { configKey: authConfig.database['~k'] }
       );
     }
-    database = adapterPlugin({ properties: authConfig.database.properties ?? {} });
+    try {
+      database = adapterPlugin({ properties: authConfig.database.properties ?? {} });
+    } catch (error) {
+      // Adapter plugins throw plain errors (missing uri, malformed
+      // connection string) - attach the database block's config location.
+      throw new ConfigError(
+        `Auth database "${authConfig.database.id}" failed to construct: ${error.message}`,
+        { cause: error, configKey: authConfig.database['~k'] }
+      );
+    }
   }
 
   const { socialProviders, genericOAuthConfigs } = buildProviders({ authConfig, plugins });
@@ -105,11 +120,30 @@ function getBetterAuthConfig({
     ? undefined
     : createSendEmail({ emailConfig: authConfig.email });
 
+  // BetterAuth builds password-reset, magic-link and email-verification links,
+  // and its CSRF Origin allowlist, from the base URL. When the deployment's
+  // canonical origin is pinned via BETTER_AUTH_URL, both are fixed and cannot
+  // be steered by a spoofed Host / X-Forwarded-Host header (CWE-640
+  // password-reset poisoning). Without it, fall back to per-request host
+  // derivation - the zero-config path that supports arbitrary proxies and
+  // multi-host deployments - and warn in production that the host is then
+  // caller-controlled.
+  const canonicalUrl = process.env.BETTER_AUTH_URL?.trim();
+  let baseURL;
+  if (canonicalUrl) {
+    baseURL = canonicalUrl;
+  } else {
+    if (!dev) {
+      logger.warn(
+        'Auth base URL is not pinned. Set BETTER_AUTH_URL to the app\'s canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header.'
+      );
+    }
+    baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };
+  }
+
   const options = {
     appName: appMeta?.name ?? 'Lowdefy',
-    // Same-origin auth: trust the request-derived host, like today's server
-    // which runs behind arbitrary proxies. Dev servers run plain http.
-    baseURL: { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' },
+    baseURL,
     basePath: `${config.basePath ?? ''}/api/auth`,
     secret: authConfig.secret,
     telemetry: { enabled: false },
@@ -117,11 +151,13 @@ function getBetterAuthConfig({
     user: {
       modelName: modelNames.user,
       // Internal additionalFields, deliberately not an app-facing surface:
-      // contactId links the user to the app-owned contact record;
-      // attributes holds admin-set, cross-app authorization inputs.
+      // attributes holds admin-set, cross-app authorization inputs;
+      // profile is the opaque display-and-app-data bag written by module or
+      // app logic (UpdateUserProfile) - the platform never validates,
+      // indexes, or reads inside it.
       additionalFields: {
-        contactId: { type: 'string', required: false, input: false },
         attributes: { type: 'json', required: false, input: false },
+        profile: { type: 'json', required: false, input: false },
       },
     },
     verification: { modelName: modelNames.verification },
@@ -242,12 +278,25 @@ function getBetterAuthConfig({
     );
   }
 
-  // The admin plugin is framework-controlled - it backs the admin steps and
-  // impersonation (phase 6); its banned/banReason/banExpires fields land on
-  // the user record.
-  options.plugins.push(admin());
+  // Captcha is server middleware only - the client half is the Captcha block
+  // and the captchaToken action param carrying the x-captcha-response header.
+  if (authConfig.captcha?.enabled === true) {
+    options.plugins.push(buildCaptchaPlugin({ authConfig }));
+  }
 
-  const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildHooks({
+  // The admin plugin is framework-controlled - it backs the admin steps and
+  // impersonation. A configured auth.userAdminRole registers a curated
+  // access control (see buildAdminPlugin).
+  options.plugins.push(buildAdminPlugin({ authConfig }));
+
+  const {
+    afterEmailVerification,
+    databaseHooks,
+    phoneVerified,
+    sendInvitationEmail,
+    sendPhoneOtp,
+    sendPhonePasswordResetOtp,
+  } = buildHooks({
     authConfig,
     createSystemContext,
     getAuth,
@@ -260,6 +309,20 @@ function getBetterAuthConfig({
       ...options.emailVerification,
       afterEmailVerification,
     };
+  }
+
+  // Phone login sends SMS through the "phone.otp.send" hook binding - there
+  // is no built-in SMS transport, so build validation requires the binding
+  // when the plugin is enabled.
+  if (authConfig.phoneNumber?.enabled === true) {
+    options.plugins.push(
+      buildPhoneNumberPlugin({
+        authConfig,
+        phoneVerified,
+        sendPhoneOtp,
+        sendPhonePasswordResetOtp,
+      })
+    );
   }
 
   // Organizations are always on. A bound "invitation.send" hook owns the

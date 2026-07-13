@@ -541,7 +541,10 @@ class Block {
       value: type.isNone(this.value) ? null : this.value,
       visible: this.visibleEval.output,
     };
-    this.context._internal.lowdefy._internal.updateBlock(this.id);
+    // Updaters register per context — a context under construction has none,
+    // so construction-time evals never setState mounted components from a
+    // previous context.
+    this.context._internal.updaters[this.id]?.();
   };
 }
 

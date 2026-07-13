@@ -102,6 +102,14 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
+    typeNames: packageTypes.notifications,
+    store: typesMap.notifications,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
     typeNames: packageTypes.requests,
     store: typesMap.requests,
     packageName,

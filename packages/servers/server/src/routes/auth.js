@@ -18,9 +18,10 @@ import authJson from '../../lib/build/auth.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
 
 // Mounts BetterAuth's Web Standard handler on /api/auth/*. Hono routes HEAD
-// requests through GET handlers, so the corporate-email link-checker
-// pre-check must short-circuit before delegating to the handler. See:
-// https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
+// requests through GET handlers, so HEAD short-circuits before the handler -
+// corporate email link-checkers pre-fetch magic-link and verification URLs
+// with HEAD, and letting those reach the handler would consume the one-time
+// token before the user clicks.
 function authMiddleware({ logger }) {
   return async function auth(c) {
     if (authJson.configured !== true) {

@@ -16,6 +16,8 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import { getPlaceholderId } from './deferredRegistry.js';
+
 function describeRef(refDef) {
   const parts = [];
   if (refDef.module) parts.push(`module: "${refDef.module}"`);
@@ -81,18 +83,35 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, c
       menu: manifest.menus,
     }[exportType] ?? [];
 
-  let content;
-  if (exportType === 'component') {
-    content = manifestArray.find((item) => item.id === exportName)?.component;
-  } else if (exportType === 'menu') {
-    content = manifestArray.find((item) => item.id === exportName)?.links;
+  const entry = manifestArray.find((item) => item.id === exportName);
+
+  if (!entry) {
+    const availableIds = manifestArray.map((item) => item.id);
+    const available =
+      availableIds.length > 0
+        ? ` Available ${exportType}s: ${availableIds.join(', ')}.`
+        : ` The module defines no ${exportType}s.`;
+    throw new ConfigError(`Module "${entryId}" has no ${exportType} "${exportName}".${available}`, {
+      configKey,
+    });
   }
+
+  const content = exportType === 'component' ? entry.component : entry.links;
 
   if (!content) {
     throw new ConfigError(
-      `Module "${entryId}" does not export ${exportType} "${exportName}".`,
+      `The ${exportType} "${exportName}" in module "${entryId}" is empty.`,
       { configKey }
     );
+  }
+
+  // Component bodies live in the deferred-record registry — the manifest holds
+  // a placeholder. Return the record id; consumption dereferences it and walks
+  // a clone under the record's env. (Menus still return live links until they
+  // become records; scalar legacy bodies fall through as live content.)
+  const recordId = getPlaceholderId(content);
+  if (recordId !== undefined) {
+    return { recordId, entryId };
   }
 
   return { content, entryId };

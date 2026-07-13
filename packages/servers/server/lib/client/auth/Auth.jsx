@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
 import AuthConfigured from './AuthConfigured.jsx';
 import AuthNotConfigured from './AuthNotConfigured.js';

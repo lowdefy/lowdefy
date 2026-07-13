@@ -207,6 +207,37 @@ test('merges user and member attributes shallowly with member winning', async ()
   });
 });
 
+test('carries the user profile bag from the session user row onto the resolved caller', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', profile: { contactId: 'contact_9', locale: 'en' } },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.profile).toEqual({ contactId: 'contact_9', locale: 'en' });
+});
+
+test('leaves profile undefined for a user with no profile writes', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.profile).toBe(undefined);
+  expect('profile' in context.user).toBe(false);
+});
+
 test('does not mutate the original session user object', async () => {
   const sessionUser = { id: 'user_1' };
   const { auth } = mockAuth({

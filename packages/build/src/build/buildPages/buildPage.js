@@ -55,11 +55,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
-  buildBlock(page, {
+  const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
     callApiActionRefs: context.callApiActionRefs ?? [],
     websocketActionRefs: context.websocketActionRefs ?? [],
+    dynamicBlockRefs: context.dynamicBlockRefs ?? [],
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
@@ -70,9 +71,16 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     shortcutRefs,
     linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
-  });
+  };
+  buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+
+  // Flag pages with Dynamic blocks so the server can skip resolution
+  // (and the deep copy it requires) for static pages with one property read.
+  if (pageContext.hasDynamicBlocks === true) {
+    page.dynamic = true;
+  }
 
   page.subscriptions = subscriptions;
   buildSubscriptions(page, {

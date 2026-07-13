@@ -1,0 +1,118 @@
+# Public page - a 2FA-pending sign-in holds no session yet; the pending
+# state rides a BetterAuth cookie set by the sign-in call, so this page must
+# be opened in the same browser straight after the login page routed here.
+# TwoFactorVerify serves the sign-in challenge (as well as enrolment
+# confirmation on /security): a TOTP code or a single-use backup code
+# completes the session itself - navigation after is the app's business,
+# so UpdateSession re-syncs the client and Link lands on the dashboard.
+id: two-factor-challenge
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: challenge_title
+    type: Title
+    properties:
+      content: Two-factor challenge
+      level: 2
+  - id: challenge_help
+    type: Html
+    properties:
+      html: |
+        <p>Your sign-in needs a second factor. Enter a TOTP code from your
+        authenticator app, or use one of your single-use backup codes.</p>
+  - id: trust_device_switch
+    type: Switch
+    properties:
+      title: Trust this device (skips the challenge on later sign-ins)
+  - id: totp_code
+    type: TextInput
+    properties:
+      title: TOTP code
+  - id: verify_totp_button
+    type: Button
+    properties:
+      title: Verify TOTP code
+      block: true
+    events:
+      onClick:
+        try:
+          - id: verify_totp
+            type: TwoFactorVerify
+            params:
+              code:
+                _state: totp_code
+              trustDevice:
+                _state: trust_device_switch
+          - id: resync_after_totp
+            type: UpdateSession
+          - id: to_dashboard_totp
+            type: Link
+            params:
+              pageId: dashboard
+        catch:
+          - id: show_totp_error
+            type: SetState
+            params:
+              challenge_error:
+                _actions: verify_totp.error.message
+  - id: backup_code
+    type: TextInput
+    properties:
+      title: Backup code (single use)
+  - id: verify_backup_button
+    type: Button
+    properties:
+      title: Verify backup code
+      type: default
+      block: true
+    events:
+      onClick:
+        try:
+          - id: verify_backup
+            type: TwoFactorVerify
+            params:
+              backupCode:
+                _state: backup_code
+              trustDevice:
+                _state: trust_device_switch
+          - id: resync_after_backup
+            type: UpdateSession
+          - id: to_dashboard_backup
+            type: Link
+            params:
+              pageId: dashboard
+        catch:
+          - id: show_backup_error
+            type: SetState
+            params:
+              challenge_error:
+                _actions: verify_backup.error.message
+  - id: challenge_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: challenge_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: challenge_error
+  - id: back_to_login_button
+    type: Button
+    properties:
+      title: Back to log in
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_login
+          type: Link
+          params:
+            pageId: login

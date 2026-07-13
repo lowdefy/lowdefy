@@ -16,25 +16,36 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
+import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
+
 // Returns a status object so the page route can fork on the auth outcome:
 // - ok: render the page.
 // - not_found and unauthorized both collapse to the opaque /404 redirect -
 //   wrong roles never reveal that the page exists.
 // - unauthenticated: a logged-out human gets the authPages.signIn redirect
 //   with a callbackUrl back to the requested page.
-async function getPageConfig({ authorize, readConfigFile, user }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
+async function getPageConfig(context, { pageId, urlQuery }) {
+  const pageConfig = await context.readConfigFile(`pages/${pageId}.json`);
   if (!pageConfig) {
     return { status: 'not_found' };
   }
-  if (authorize(pageConfig)) {
+  if (context.authorize(pageConfig)) {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
-    // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
-    // are made enumerable again for JSON transfer to client
-    return { status: 'ok', pageConfig: serializer.serialize(rest) };
+    if (rest.dynamic !== true) {
+      // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
+      // are made enumerable again for JSON transfer to client
+      return { status: 'ok', pageConfig: serializer.serialize(rest) };
+    }
+    // readConfigFile caches parsed artifacts — deep copy before resolution so
+    // one request's resolved content never reaches another via the cache.
+    const resolved = await resolveDynamicContent(context, {
+      pageConfig: serializer.copy(rest),
+      urlQuery,
+    });
+    return { status: 'ok', pageConfig: serializer.serialize(resolved) };
   }
-  if (type.isNone(user)) {
+  if (type.isNone(context.user)) {
     return { status: 'unauthenticated' };
   }
   return { status: 'unauthorized' };

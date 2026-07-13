@@ -76,10 +76,7 @@ test('findOne matches on the converted where clause and limits to one document',
     model: 'member',
     where: [{ field: 'role', value: 'admin' }],
   });
-  expect(collection.aggregate).toHaveBeenCalledWith([
-    { $match: { role: 'admin' } },
-    { $limit: 1 },
-  ]);
+  expect(collection.aggregate).toHaveBeenCalledWith([{ $match: { role: 'admin' } }, { $limit: 1 }]);
   expect(result).toEqual({ role: 'admin' });
 });
 
@@ -121,6 +118,15 @@ test('findMany applies sort, offset, and limit stages in order', async () => {
     { $skip: 10 },
     { $limit: 5 },
   ]);
+});
+
+test('findMany sorts by _id when sortBy targets the id field', async () => {
+  const { customAdapter, collection } = setup();
+  await customAdapter.findMany({
+    model: 'member',
+    sortBy: { field: 'id', direction: 'asc' },
+  });
+  expect(collection.aggregate).toHaveBeenCalledWith([{ $match: {} }, { $sort: { _id: 1 } }]);
 });
 
 test('findMany matches everything when where is omitted', async () => {

@@ -33,6 +33,9 @@ function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
     throw new Error('MongoDBAuthAdapter requires "uri" property.');
   }
+  // Process-lifetime singleton by design: getBetterAuth memoizes the engine
+  // (and this adapter with it), the driver connects lazily and pools, and
+  // the client is intentionally never closed.
   const client = new MongoClient(properties.uri, properties.mongoDBClientOptions);
   const db = client.db(properties.database);
   return mongodbAdapter({ db });

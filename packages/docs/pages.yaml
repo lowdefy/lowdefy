@@ -32,6 +32,8 @@
 - _ref: concepts/theming.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
+- _ref: concepts/notifications.yaml
+- _ref: concepts/dynamic-page-content.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
@@ -66,6 +68,7 @@
 - _ref: users/reference/auth-js-providers.yaml
 - _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
+- _ref: users/reference/MongoDBAuthAdapter.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
@@ -79,6 +82,7 @@
 - _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
+- _ref: blocks/input/Captcha.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
 - _ref: blocks/input/CheckboxSwitch.yaml
 - _ref: blocks/input/ColorSelector.yaml
@@ -211,6 +215,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/Redis.yaml
 - _ref: connections/SendGridMail.yaml
+- _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 

@@ -71,7 +71,18 @@ function jwt({ logger, properties, strategyId }) {
       );
       return null;
     }
-    const user = { id: get(payload, claimMapping.id ?? 'sub') };
+    const idClaim = claimMapping.id ?? 'sub';
+    const id = get(payload, idClaim);
+    if (type.isNone(id)) {
+      // A caller without an identity cannot be authenticated - a signed token
+      // missing the id claim is rejected, not promoted to an id-less caller.
+      (requestLogger ?? logger).debug(
+        { event: 'auth_strategy_token_rejected', strategyId },
+        `Auth strategy "${strategyId}" rejected a Bearer token: the "${idClaim}" id claim is missing.`
+      );
+      return null;
+    }
+    const user = { id };
     const attributes = {};
     let roles = [];
     Object.entries(claimMapping).forEach(([field, claimPath]) => {

@@ -101,13 +101,17 @@ function setAuthDefaults({ components }) {
   // Presence of the twoFactor/passkey block implies intent to enable.
   if (!type.isNone(auth.twoFactor)) {
     setDefault(auth.twoFactor, 'enabled', true);
-    setDefault(auth.twoFactor, 'totp', true);
-    setDefault(auth.twoFactor, 'otp', true);
-    setDefault(auth.twoFactor, 'backupCodes', true);
   }
 
   if (!type.isNone(auth.passkey)) {
     setDefault(auth.passkey, 'enabled', true);
+  }
+
+  if (!type.isNone(auth.phoneNumber)) {
+    setDefault(auth.phoneNumber, 'otpLength', 6);
+    setDefault(auth.phoneNumber, 'expiresIn', 300);
+    setDefault(auth.phoneNumber, 'allowedAttempts', 3);
+    setDefault(auth.phoneNumber, 'requireVerification', false);
   }
 
   return components;

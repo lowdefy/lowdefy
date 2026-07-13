@@ -167,6 +167,77 @@ test('does not warn about a short secret when the resolved secret is 32 characte
   expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('shorter than 32'));
 });
 
+describe('base URL resolution', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+
+  afterEach(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  test('pins baseURL to BETTER_AUTH_URL when it is set', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBe('https://app.example.com');
+    expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+
+  test('trims surrounding whitespace from BETTER_AUTH_URL', () => {
+    process.env.BETTER_AUTH_URL = '  https://app.example.com  ';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBe('https://app.example.com');
+  });
+
+  test('falls back to per-request host derivation and warns in production when BETTER_AUTH_URL is unset', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'auto' });
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+
+  test('does not warn about an unpinned base URL in dev and uses the http protocol', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      dev: true,
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'http' });
+    expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
+  });
+});
+
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
   const adapterPlugin = jest.fn(() => 'adapter-instance');
   const options = getBetterAuthConfig({
@@ -566,7 +637,7 @@ test('does not push the passkey plugin when passkey is not enabled', () => {
   expect(options.plugins.some((p) => p.id === 'passkey')).toBe(false);
 });
 
-test('always pushes the admin plugin', () => {
+test('always pushes the admin plugin, without a custom access control when userAdminRole is not configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -575,7 +646,33 @@ test('always pushes the admin plugin', () => {
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(options.plugins.some((p) => p.id === 'admin')).toBe(true);
+  const adminPlugin = options.plugins.find((p) => p.id === 'admin');
+  expect(adminPlugin).toBeDefined();
+  // admin() called with no options - BetterAuth's default roles apply.
+  expect(adminPlugin.options).toBeUndefined();
+});
+
+test('registers the curated admin access control when userAdminRole is configured', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ userAdminRole: 'user-admin', roles: ['user-admin'] }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const adminPlugin = options.plugins.find((p) => p.id === 'admin');
+  // The user-admin role holds exactly user: ['impersonate'] - no
+  // impersonate-admins, set-password, set-email, ban or delete.
+  expect(adminPlugin.options.roles['user-admin'].statements).toEqual({ user: ['impersonate'] });
+  // Impersonating a user-admin demands the excluded impersonate-admins.
+  expect(adminPlugin.options.adminRoles).toEqual(['admin', 'user-admin']);
+  // The built-in admin role keeps its default statements so the steps'
+  // injected acting sessions (role "admin") retain their authority.
+  expect(adminPlugin.options.roles.admin.statements.user).toEqual(
+    expect.arrayContaining(['ban', 'delete', 'impersonate', 'list', 'set-password'])
+  );
+  expect(adminPlugin.options.roles.user.statements).toEqual({ user: [], session: [] });
 });
 
 test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', () => {
@@ -671,7 +768,7 @@ test('always pushes the organization plugin', () => {
   expect(options.plugins.some((p) => p.id === 'organization')).toBe(true);
 });
 
-test('registers the internal user additionalFields (contactId, attributes)', () => {
+test('registers the internal user additionalFields (attributes, profile)', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -681,8 +778,8 @@ test('registers the internal user additionalFields (contactId, attributes)', () 
     secrets: baseSecrets,
   });
   expect(options.user.additionalFields).toEqual({
-    contactId: { type: 'string', required: false, input: false },
     attributes: { type: 'json', required: false, input: false },
+    profile: { type: 'json', required: false, input: false },
   });
 });
 
@@ -696,4 +793,104 @@ test('throws when no getAuth accessor is provided', () => {
       secrets: baseSecrets,
     })
   ).toThrow('No getAuth accessor was provided to getBetterAuthConfig');
+});
+
+test('pushes the phone-number plugin when phoneNumber is enabled, wiring the phone.otp.send slot', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      phoneNumber: {
+        enabled: true,
+        otpLength: 6,
+        expiresIn: 300,
+        allowedAttempts: 3,
+        requireVerification: false,
+      },
+      hooks: [{ id: 'send-otp-sms', point: 'phone.otp.send', endpointId: 'auth/send-otp-sms' }],
+    }),
+    createSystemContext: () => ({}),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const phonePlugin = options.plugins.find((p) => p.id === 'phone-number');
+  expect(phonePlugin).toBeDefined();
+  expect(typeof phonePlugin.options.sendOTP).toBe('function');
+  // Unbound phone.passwordReset.send resolves to the naming thrower, never
+  // BetterAuth's silent 200.
+  expect(() =>
+    phonePlugin.options.sendPasswordResetOTP({ phoneNumber: '+27831234567', code: '123456' })
+  ).toThrow('phone.passwordReset.send');
+});
+
+test('does not push the phone-number plugin when phoneNumber is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'phone-number')).toBe(false);
+});
+
+test('pushes the captcha plugin when captcha is enabled, resolving secretKey via _secret', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      captcha: {
+        enabled: true,
+        provider: 'cloudflare-turnstile',
+        siteKey: '0x4AAAAAAA',
+        secretKey: { _secret: 'TURNSTILE_SECRET_KEY' },
+      },
+    }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: { ...baseSecrets, TURNSTILE_SECRET_KEY: 'turnstile-secret-value' },
+  });
+  const captchaPlugin = options.plugins.find((p) => p.id === 'captcha');
+  expect(captchaPlugin).toBeDefined();
+  expect(captchaPlugin.options.secretKey).toBe('turnstile-secret-value');
+  expect(captchaPlugin.options.endpoints).toEqual([
+    '/sign-up/email',
+    '/sign-in/email',
+    '/request-password-reset',
+    '/send-verification-email',
+  ]);
+});
+
+test('throws ConfigError when captcha.secretKey does not resolve to a string', () => {
+  expect(() =>
+    getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        captcha: {
+          enabled: true,
+          provider: 'cloudflare-turnstile',
+          siteKey: '0x4AAAAAAA',
+          secretKey: null,
+        },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    })
+  ).toThrow('Auth "captcha.secretKey" did not resolve to a string.');
+});
+
+test('does not push the captcha plugin when captcha is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'captcha')).toBe(false);
 });

@@ -27,3 +27,4 @@ export { default as UnbanUser } from './steps/UnbanUser.js';
 export { default as UpdateMemberAttributes } from './steps/UpdateMemberAttributes.js';
 export { default as UpdateMemberRoles } from './steps/UpdateMemberRoles.js';
 export { default as UpdateUserAttributes } from './steps/UpdateUserAttributes.js';
+export { default as UpdateUserProfile } from './steps/UpdateUserProfile.js';

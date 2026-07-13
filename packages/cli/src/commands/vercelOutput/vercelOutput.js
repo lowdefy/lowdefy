@@ -22,6 +22,18 @@ import apiHandler from './apiHandler.js';
 import copyTracedFiles from './copyTracedFiles.js';
 import findTraceBase from './findTraceBase.js';
 
+// Function settings come from lowdefy.yaml `config.vercel` (written to build/config.json by
+// @lowdefy/build). maxDuration defaults to 60; plan limits are enforced by Vercel at deploy time.
+async function readFunctionConfig({ buildDirectory }) {
+  const raw = await readFile(path.join(buildDirectory, 'config.json'));
+  const config = raw ? JSON.parse(raw) : {};
+  const vercel = config.vercel ?? {};
+  return {
+    maxDuration: vercel.maxDuration ?? 60,
+    ...(vercel.memory ? { memory: vercel.memory } : {}),
+  };
+}
+
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
 // that declare `schedules`). A missing file means no schedules → no crons.
 async function readCrons({ buildDirectory }) {
@@ -106,6 +118,7 @@ async function vercelOutput({ context }) {
 
   // 4. The function entry and its config. The handler path is relative to the api.func root.
   const handler = path.posix.join(...relServer.split(path.sep), 'api', 'index.js');
+  const functionConfig = await readFunctionConfig({ buildDirectory });
   await writeFile(path.join(functionServerDirectory, 'api', 'index.js'), apiHandler);
   await writeFile(
     path.join(functionDirectory, '.vc-config.json'),
@@ -114,7 +127,7 @@ async function vercelOutput({ context }) {
         runtime: 'nodejs22.x',
         handler,
         launcherType: 'Nodejs',
-        maxDuration: 60,
+        ...functionConfig,
       },
       null,
       2

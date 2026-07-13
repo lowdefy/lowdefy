@@ -51,6 +51,7 @@ function evaluateOperators({
   input,
   operators,
   operatorPrefix = '_',
+  authConfig,
   env,
   lowdefyApp,
   dynamicIdentifiers,
@@ -74,6 +75,7 @@ function evaluateOperators({
         input: callInput,
         operators,
         operatorPrefix: callPrefix ?? operatorPrefix,
+        authConfig,
         env,
         lowdefyApp,
         dynamicIdentifiers: resolvedDynamicIdentifiers,
@@ -174,6 +176,7 @@ function evaluateOperators({
       const result = operators[op]({
         args,
         arrayIndices: [],
+        authConfig,
         env,
         lowdefyApp,
         methodName,

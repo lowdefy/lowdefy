@@ -42,6 +42,12 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // the one merged bag of authorization inputs: user.attributes (global) and
 // the active member's attributes (per-org), shallow per-key merge where the
 // member value wins - nested objects replace, never deep-merge.
+//
+// user.profile - the opaque display-and-app-data bag - rides the
+// session.user spread onto the resolved caller (denormalization, not a join:
+// no extra lookup). A user with no profile writes carries no profile key, so
+// _user.profile is undefined - never a synthesized {}. Strategy callers lack
+// profile exactly as they lack name and image.
 async function resolveAuthentication(context, { auth, headers, strategies }) {
   if (type.isNone(auth)) {
     context.user = null;

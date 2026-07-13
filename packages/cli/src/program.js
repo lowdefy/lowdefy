@@ -19,6 +19,7 @@ import { Command, Option } from 'commander';
 
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
+import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
@@ -110,6 +111,23 @@ program
   .addOption(options.watch)
   .addOption(options.watchIgnore)
   .action(runCommand({ cliVersion, handler: dev }));
+
+program
+  .command('emails')
+  .description('Preview notification emails with the React Email preview server.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--port <port>',
+      'Change the port the email preview server is hosted at. Default is 3001.'
+    ).env('PORT')
+  )
+  .addOption(options.refResolver)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: emails }));
 
 program
   .command('init')

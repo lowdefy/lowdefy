@@ -15,8 +15,9 @@
 */
 
 // The composed slot for after and synthetic points - engine hooks first,
-// then the user hook, sequentially. Return values are ignored; a thrown
-// error propagates as an operational error on the underlying operation.
+// then the user hooks in array order, sequentially. Return values are
+// ignored; a thrown error propagates as an operational error on the
+// underlying operation.
 function composeAfterSlot({ hooks }) {
   return async function afterSlot(data, ctx) {
     for (const hook of hooks) {

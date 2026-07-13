@@ -18,12 +18,19 @@ import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 
+const CONTROL_KEYS = [':if', ':switch', ':return'];
+
+function isControl(item) {
+  return type.isObject(item) && CONTROL_KEYS.some((key) => key in item);
+}
+
 class Actions {
   constructor(context) {
     this.context = context;
     this.callAction = this.callAction.bind(this);
     this.callActionLoop = this.callActionLoop.bind(this);
     this.callActions = this.callActions.bind(this);
+    this.callControl = this.callControl.bind(this);
     this.displayMessage = this.displayMessage.bind(this);
     this.logActionError = this.logActionError.bind(this);
     this.actions = context._internal.lowdefy._internal.actions;
@@ -71,8 +78,37 @@ class Actions {
     }
   }
 
-  async callActionLoop({ actions, arrayIndices, block, event, progress, responses }) {
-    for (const [index, action] of actions.entries()) {
+  // Returns true when a ':return' control ended the list, so callers can end the event.
+  async callActionLoop({
+    actions,
+    arrayIndices,
+    block,
+    controls,
+    counters,
+    event,
+    progress,
+    responses,
+  }) {
+    for (const [position, action] of actions.entries()) {
+      if (isControl(action)) {
+        const returned = await this.callControl({
+          arrayIndices,
+          block,
+          control: action,
+          controls,
+          counters,
+          event,
+          progress,
+          responses,
+        });
+        if (returned === true) {
+          this.recordSkippedActions({ actions: actions.slice(position + 1), counters, responses });
+          return true;
+        }
+        continue;
+      }
+      const index = counters.action;
+      counters.action += 1;
       try {
         if (action.async === true) {
           this.callAsyncAction({
@@ -102,20 +138,194 @@ class Actions {
         throw err;
       }
     }
+    return false;
+  }
+
+  async callControl({
+    arrayIndices,
+    block,
+    control,
+    controls,
+    counters,
+    event,
+    progress,
+    responses,
+  }) {
+    const index = counters.control;
+    counters.control += 1;
+    if (':return' in control) {
+      const value = this.evaluateControlValue({
+        arrayIndices,
+        block,
+        event,
+        input: control[':return'],
+        node: control,
+        responses,
+      });
+      controls.push({ index, type: ':return', taken: value });
+      return true;
+    }
+    if (':if' in control) {
+      const condition = this.evaluateControlValue({
+        arrayIndices,
+        block,
+        event,
+        input: control[':if'],
+        node: control,
+        responses,
+      });
+      // JS truthiness, matching the routine ':if' - not skip's strict === true.
+      if (condition) {
+        controls.push({ index, type: ':if', taken: 'then' });
+        const returned = await this.callActionLoop({
+          actions: control[':then'],
+          arrayIndices,
+          block,
+          controls,
+          counters,
+          event,
+          progress,
+          responses,
+        });
+        this.recordSkippedActions({ actions: control[':else'] ?? [], counters, responses });
+        return returned;
+      }
+      controls.push({ index, type: ':if', taken: 'else' });
+      this.recordSkippedActions({ actions: control[':then'], counters, responses });
+      return this.callActionLoop({
+        actions: control[':else'] ?? [],
+        arrayIndices,
+        block,
+        controls,
+        counters,
+        event,
+        progress,
+        responses,
+      });
+    }
+    // ':switch' - cases are evaluated in order and lazily: the first truthy ':case' wins,
+    // later cases are never evaluated, matching the routine ':switch'.
+    let matched = false;
+    let returned = false;
+    for (const [casePosition, caseObject] of control[':switch'].entries()) {
+      if (!matched) {
+        const condition = this.evaluateControlValue({
+          arrayIndices,
+          block,
+          event,
+          input: caseObject[':case'],
+          node: caseObject,
+          responses,
+        });
+        if (condition) {
+          matched = true;
+          controls.push({ index, type: ':switch', taken: casePosition });
+          returned = await this.callActionLoop({
+            actions: caseObject[':then'],
+            arrayIndices,
+            block,
+            controls,
+            counters,
+            event,
+            progress,
+            responses,
+          });
+          continue;
+        }
+      }
+      this.recordSkippedActions({ actions: caseObject[':then'], counters, responses });
+    }
+    if (matched) {
+      this.recordSkippedActions({ actions: control[':default'] ?? [], counters, responses });
+      return returned;
+    }
+    controls.push({ index, type: ':switch', taken: 'default' });
+    return this.callActionLoop({
+      actions: control[':default'] ?? [],
+      arrayIndices,
+      block,
+      controls,
+      counters,
+      event,
+      progress,
+      responses,
+    });
+  }
+
+  evaluateControlValue({ arrayIndices, block, event, input, node, responses }) {
+    const { output, errors: parserErrors } = this.context._internal.parser.parse({
+      actions: responses,
+      event,
+      arrayIndices,
+      input,
+      location: block.blockId,
+    });
+    if (parserErrors.length > 0) {
+      const error = parserErrors[0];
+      // Report against the nearest node's '~k' when the operator carries none.
+      if (type.isNone(error.configKey)) {
+        error.configKey = node['~k'];
+      }
+      // Controls are anonymous - no responses entry, so only {error} is thrown.
+      throw { error };
+    }
+    return output;
+  }
+
+  // Records actions the chain does not execute for a control-flow reason as skipped,
+  // without parsing their operators. Controls record no responses entry, but still
+  // consume a control index so reached controls keep their depth-first numbering.
+  recordSkippedActions({ actions, counters, responses }) {
+    for (const action of actions) {
+      if (isControl(action)) {
+        counters.control += 1;
+        if (':if' in action) {
+          this.recordSkippedActions({ actions: action[':then'], counters, responses });
+          this.recordSkippedActions({ actions: action[':else'] ?? [], counters, responses });
+        }
+        if (':switch' in action) {
+          action[':switch'].forEach((caseObject) => {
+            this.recordSkippedActions({ actions: caseObject[':then'], counters, responses });
+          });
+          this.recordSkippedActions({ actions: action[':default'] ?? [], counters, responses });
+        }
+        continue;
+      }
+      responses[action.id] = { type: action.type, skipped: true, index: counters.action };
+      counters.action += 1;
+    }
   }
 
   async callActions({ actions, arrayIndices, block, catchActions, event, eventName, progress }) {
     const startTimestamp = new Date();
     const responses = {};
+    // Only events with controls gain a 'controls' array - flat chains keep their result shape.
+    const hasControls = actions.some(isControl) || catchActions.some(isControl);
+    const controls = hasControls ? [] : undefined;
+    const counters = { action: 0, control: 0 };
     try {
-      await this.callActionLoop({ actions, arrayIndices, block, event, responses, progress });
+      await this.callActionLoop({
+        actions,
+        arrayIndices,
+        block,
+        controls,
+        counters,
+        event,
+        responses,
+        progress,
+      });
     } catch (error) {
       this.logActionError(error);
+      // Catch actions restart action numbering, matching flat-chain history; the control
+      // counter continues so every control entry keeps a unique index within the event.
+      counters.action = 0;
       try {
         await this.callActionLoop({
           actions: catchActions,
           arrayIndices,
           block,
+          controls,
+          counters,
           event,
           responses,
           progress,
@@ -125,6 +335,7 @@ class Actions {
         return {
           blockId: block.blockId,
           bounced: false,
+          ...(controls && { controls }),
           endTimestamp: new Date(),
           error,
           errorCatch,
@@ -138,6 +349,7 @@ class Actions {
       return {
         blockId: block.blockId,
         bounced: false,
+        ...(controls && { controls }),
         endTimestamp: new Date(),
         error,
         event,
@@ -150,6 +362,7 @@ class Actions {
     return {
       blockId: block.blockId,
       bounced: false,
+      ...(controls && { controls }),
       endTimestamp: new Date(),
       event,
       eventName,
