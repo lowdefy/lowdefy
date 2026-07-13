@@ -1,5 +1,62 @@
 # @lowdefy/blocks-tiptap
 
+## 5.4.0
+
+### Patch Changes
+
+- d1fb1d7: feat: Plugin-driven `serverExternalPackages` for Next.js.
+
+  Plugins can now declare which of their dependencies need to be passed
+  through to Next.js's `serverExternalPackages` config — used for CJS
+  packages whose runtime `require()` chains Turbopack can't resolve
+  through pnpm's isolated symlink layout (e.g. `turndown` →
+  `@mixmark-io/domino`, `@aws-sdk/client-s3` → `fast-xml-parser` →
+  `strnum`).
+
+  Declare in the plugin's `package.json`:
+
+  ```json
+  {
+    "lowdefy": {
+      "serverExternalPackages": ["turndown"]
+    }
+  }
+  ```
+
+  Build aggregates declarations from every plugin the app actually uses
+  (across blocks, connections, operators, actions, agents, auth, icons,
+  requests) and writes a per-app `serverExternalPackages.json` artifact,
+  read by `server`, `server-dev`, and `server-e2e` Next.js configs.
+
+  Replaces a hardcoded list in the three server configs. Apps not using
+  `blocks-tiptap` or `plugin-aws` no longer carry their externals.
+
+  Initial declarations:
+
+  - `@lowdefy/blocks-tiptap` → `turndown`
+  - `@lowdefy/plugin-aws` → `@aws-sdk/client-s3`
+
+- 86919df: fix(blocks-tiptap): Fix broken image URLs when pasting or dropping images into the editor.
+
+  Images pasted or dropped into `TiptapInput` and `TiptapMentionInput` produced a broken `src` containing a double slash between the S3 bucket host and the object key, so the image failed to load. The uploaded image URL is now constructed correctly.
+
+- Updated dependencies [c2c3a7f]
+- Updated dependencies [25225ab]
+- Updated dependencies [2aaf365]
+- Updated dependencies [f11addd]
+- Updated dependencies [0108f38]
+- Updated dependencies [5f00be7]
+- Updated dependencies [27659ef]
+- Updated dependencies [4e189a0]
+- Updated dependencies [0027a41]
+- Updated dependencies [27659ef]
+- Updated dependencies [e324c72]
+- Updated dependencies [f8a5d80]
+- Updated dependencies [60c193c]
+  - @lowdefy/blocks-antd@5.4.0
+  - @lowdefy/helpers@5.4.0
+  - @lowdefy/block-utils@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes
