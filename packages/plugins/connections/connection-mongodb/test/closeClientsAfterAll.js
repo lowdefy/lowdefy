@@ -14,22 +14,10 @@
   limitations under the License.
 */
 
-import getCollection from '../getCollection.js';
-import { serialize, deserialize } from '../serialize.js';
-import schema from './schema.js';
+import { closeClients } from '../src/connections/MongoDBCollection/getClient.js';
 
-async function MongodbFindOne({ request, connection }) {
-  const deserializedRequest = deserialize(request);
-  const { query, options } = deserializedRequest;
-  const collection = await getCollection({ connection });
-  const res = await collection.findOne(query, options);
-  return serialize(res);
-}
-
-MongodbFindOne.schema = schema;
-MongodbFindOne.meta = {
-  checkRead: true,
-  checkWrite: false,
-};
-
-export default MongodbFindOne;
+// Cached clients are kept open for the process lifetime, so close them after each
+// test file to let Jest workers exit cleanly.
+afterAll(async () => {
+  await closeClients();
+});

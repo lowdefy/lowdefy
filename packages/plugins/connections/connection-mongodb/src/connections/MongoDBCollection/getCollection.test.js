@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { MongoClient, Collection } from 'mongodb';
+import { Collection } from 'mongodb';
 
 import getCollection from './getCollection.js';
 
@@ -26,9 +26,7 @@ test('get collection', async () => {
     collection: 'getCollection',
   };
   const res = await getCollection({ connection });
-  expect(res.client).toBeInstanceOf(MongoClient);
-  expect(res.collection).toBeInstanceOf(Collection);
-  await res.client.close();
+  expect(res).toBeInstanceOf(Collection);
 });
 
 test('get collection, no databaseName, uses databaseUri', async () => {
@@ -37,12 +35,10 @@ test('get collection, no databaseName, uses databaseUri', async () => {
     collection: 'getCollection',
   };
   const res = await getCollection({ connection });
-  expect(res.client).toBeInstanceOf(MongoClient);
-  expect(res.collection).toBeInstanceOf(Collection);
-  await res.client.close();
+  expect(res).toBeInstanceOf(Collection);
 });
 
-test('invalid databaseUri', async () => {
+test('invalid databaseUri scheme', async () => {
   const connection = {
     databaseUri: 'databaseUri',
     databaseName: 'test',

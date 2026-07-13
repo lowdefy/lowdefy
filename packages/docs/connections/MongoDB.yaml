@@ -68,6 +68,24 @@ _ref:
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
             - `options: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
 
+            #### Connection pooling
+
+            The MongoDB client is created once per unique `databaseUri` and `options` combination and reused for all requests, so requests share the driver's connection pool instead of opening a new connection for every request. The pool can be tuned with the standard driver options, for example:
+
+            ```yaml
+            connections:
+              - id: my_collection
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: MONGODB_URI
+                  collection: my_collection_name
+                  options:
+                    maxPoolSize: 20
+                    minPoolSize: 0
+                    maxIdleTimeMS: 60000
+            ```
+
             #### Examples
 
             ###### MongoDB collection with reads and writes:

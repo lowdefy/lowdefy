@@ -34,16 +34,9 @@ async function MongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
-  const { collection, client } = await getCollection({ connection });
-  let res;
-  try {
-    const cursor = await collection.aggregate(pipeline, options);
-    res = await cursor.toArray();
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
-  await client.close();
+  const collection = await getCollection({ connection });
+  const cursor = await collection.aggregate(pipeline, options);
+  const res = await cursor.toArray();
   return serialize(res);
 }
 

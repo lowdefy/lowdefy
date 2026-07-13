@@ -21,15 +21,8 @@ import schema from './schema.js';
 async function MongodbBulkWrite({ connection, request }) {
   const deserializedRequest = deserialize(request);
   const { operations, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let response;
-  try {
-    response = await collection.bulkWrite(operations, options);
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
-  await client.close();
+  const collection = await getCollection({ connection });
+  const response = await collection.bulkWrite(operations, options);
   return serialize(response);
 }
 
