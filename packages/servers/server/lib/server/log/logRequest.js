@@ -19,12 +19,6 @@ function logRequest({ context, status, durationMs }) {
   const { headers = {}, user = {} } = context;
   context.logger.info(
     {
-      // TODO:
-      // app_name
-      // app_version
-      // lowdefy_version
-      // build_hash
-      // config_hash
       user: {
         id: user.id,
         roles: user.roles,

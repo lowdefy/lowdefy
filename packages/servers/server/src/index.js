@@ -31,6 +31,7 @@ const sentryEnabled = initSentryServer();
 // Import after Sentry init so instrumentation observes the module graph.
 const { default: createApp } = await import('./app.js');
 const { default: createLogger } = await import('../lib/server/log/createLogger.js');
+const { default: appMeta } = await import('../lib/build/appMeta.js');
 
 const app = createApp();
 const logger = createLogger({ server: 'lowdefy' });
@@ -45,7 +46,12 @@ if (sentryEnabled) {
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
-  logger.info({ port: info.port }, `Lowdefy server listening on http://localhost:${info.port}`);
+  // lowdefy_version logs once here rather than on every line — it is implied
+  // by the build, unlike the per-line deploy identity fields on the logger.
+  logger.info(
+    { port: info.port, lowdefy_version: appMeta.lowdefyVersion },
+    `Lowdefy server listening on http://localhost:${info.port}`
+  );
 });
 
 // Container runtimes send SIGTERM and escalate to SIGKILL after a grace period
