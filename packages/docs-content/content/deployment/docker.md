@@ -1,0 +1,149 @@
+# Deploy with Docker
+
+### Building a Lowdefy app image
+
+A Lowdefy app can be self-hosted or deployed to many hosting providers using Docker containers. The app needs to build into a Docker image, containing all the app configuration and the [Hono](https://hono.dev) server with its built client assets.
+
+The `init-docker` CLI command can be used to create a Dockerfile, or the following Dockerfile can be used:
+
+```text
+FROM node:22-bookworm AS builder
+
+WORKDIR /lowdefy
+
+COPY . .
+
+# Enable pnpm using corepack
+RUN corepack enable
+
+# Build lowdefy app (Lowdefy config build + Vite client build)
+RUN pnpx lowdefy@6 build --log-level=debug
+
+FROM node:22-bookworm-slim AS runner
+
+ENV NODE_ENV=production
+
+WORKDIR /lowdefy
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 lowdefy
+
+COPY --from=builder --chown=lowdefy:nodejs /lowdefy/.lowdefy/server ./
+
+USER lowdefy
+
+EXPOSE 3000
+
+ENV PORT=3000
+
+CMD ["node", "src/index.js"]
+```
+
+with a `.dockerignore` file:
+
+```
+Dockerfile
+.dockerignore
+.env
+node_modules
+README.md
+.lowdefy
+dist
+.git
+```
+
+An image can be built by running:
+
+```
+docker build -t <tag> .
+```
+
+The container can be run by:
+
+```
+docker run -p 3000:3000 <tag>
+```
+
+Docker compose can also be used. Add a `docker-compose.yaml` file:
+
+```yaml
+version: "3.9"
+services:
+  lowdefy:
+    build: .
+    ports:
+      - "3000:3000"
+```
+
+To build the image, run:
+
+```
+docker compose build
+```
+
+To run the app, run:
+
+```
+docker compose up
+```
+
+### Secrets and Environment Variables
+
+When running you app in production we recommend using your hosting provider's preferred method for setting environment variables and secrets. This can often be configured using their admin interface, and secrets are usually encrypted.
+
+When running locally, you can use the `--env-file` Docker CLI option to load a `.env` file into your container:
+```
+docker run -p 3000:3000 --env-file ./.env <tag>
+```
+
+If using Docker compose:
+
+```yaml
+version: "3.9"
+services:
+  lowdefy:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: ./.env # Path to env file
+```
+
+### Config files or plugins outside the config directory
+
+For security reasons, only files inside the directory of the Dockerfile can be accessed by the Dockerfile during the build process.
+
+Sometimes files outside of the config directory need to be accessed by the Lowdefy app during build - for example using the `_ref` operator on shared config files, or when using pnpm local workspace plugins. In this case, the Dockerfile needs to be moved to a directory that includes all the files that need to be accessed and the Dockerfile needs to be modified to take this into account.
+
+###### In pnpm monorepo with plugins
+
+```text
+FROM node:22-bookworm AS builder
+
+WORKDIR /lowdefy
+
+COPY . .
+
+# Enable pnpm using corepack
+RUN corepack enable
+
+# TODO: Change config-directory (./app) as appropriate here
+RUN pnpx lowdefy@6 build --config-directory ./app --log-level=debug
+
+FROM node:22-bookworm-slim AS runner
+
+ENV NODE_ENV=production
+
+WORKDIR /lowdefy
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 lowdefy
+
+# TODO: Change from-directory (/lowdefy/app/.lowdefy/server) as appropriate here
+COPY --from=builder --chown=lowdefy:nodejs /lowdefy/app/.lowdefy/server ./
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["node", "server.js"]
+```

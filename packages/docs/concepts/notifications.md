@@ -37,11 +37,15 @@ notifications:
 
 The definition fields are:
 
-- `id: string`: __Required__ - A unique notification id, referenced by the `RenderNotification` step.
-- `type: string`: __Required__ - The template type — a built-in template (`NotificationEmail`, `DigestEmail`, `AlertEmail`) or a custom template plugin.
-- `properties: object`: __Required__ - The template's content. `properties.subject` is always required; the rest depend on the template type.
+- `id: string`: **Required** - A unique notification id, referenced by the `RenderNotification` step.
+- `type: string`: **Required** - The template type — a built-in template (`NotificationEmail`, `DigestEmail`, `AlertEmail`) or a custom template plugin.
+- `properties: object`: **Required** - The template's content. `properties.subject` is always required; the rest depend on the template type.
 - `theme: object`: Per-notification overrides of the `app.email` theme (see [Theming](#theming)).
 - `testData: object`: Sample data used to render the notification in the [email preview](#previewing-emails). Not used at runtime.
+
+### Module notifications
+
+Modules can ship notification templates: `module.lowdefy.yaml` accepts a `notifications:` section, and each template's id scopes to `{entry}/{id}` (installing `user-admin` gives `user-admin/invite-user`), so the same module installed twice never collides. Module content references its own templates with [`_module.notificationId`](/_module) — in a `RenderNotification` step or a dispatch payload — and app-level config reaches a module's template with the object form (`_module.notificationId: { id: invite-user, module: user-admin }`) or the literal scoped string. This lets a module that drives a notification flow (like user invites) ship its default email instead of every app hand-writing it. Module notifications resolve `_module.var` in their properties, so template copy can be configured through the module's vars.
 
 ### Interpolation
 
@@ -63,7 +67,7 @@ Three templates cover most needs. Each renders only the sections you provide —
 
 The general-purpose template.
 
-- `subject: string`: __Required__ - Email subject line.
+- `subject: string`: **Required** - Email subject line.
 - `title: string`: Heading shown at the top of the email.
 - `message: string`: Main message, rendered as markdown.
 - `preview: string`: Preview text shown in email client inbox listings.
@@ -77,7 +81,7 @@ Renders one data key: `data.actions` — an array of `{ title, message, link }` 
 
 For roundups of many items.
 
-- `subject: string`: __Required__ - Email subject line.
+- `subject: string`: **Required** - Email subject line.
 - `title: string`: Heading shown at the top of the email.
 - `intro: string`: Introductory text, rendered as markdown.
 - `button: object`: A call-to-action button, `{ label }`, linked from `data.links.button`.
@@ -88,7 +92,7 @@ Renders one data key: `data.items` — an array of `{ title, message, link, meta
 
 For status-toned notices.
 
-- `subject: string`: __Required__ - Email subject line.
+- `subject: string`: **Required** - Email subject line.
 - `tone: string`: One of `info`, `success`, `warning`, or `error`. Sets the accent color.
 - `title: string`: Heading shown at the top of the email.
 - `message: string`: Main message, rendered as markdown.
@@ -117,6 +121,18 @@ app:
 
 The layout — logo header, greeting, content, signature, footer — is fixed; the theme parameterizes it. A notification can override any theme field (for example a sub-brand logo) with a `theme:` object; overrides shallow-merge over `app.email`.
 
+Two fields default from your existing app config when you don't set them: `companyName` from the app's root `name:`, and `primaryColor` from `theme.antd.token.colorPrimary` — so a branded app gets branded emails without repeating itself. Set a field explicitly (an empty string works as an opt-out for `companyName`) to override the derived value.
+
+The `logo` can be an app-relative path to a `public/` asset:
+
+```yaml
+app:
+  email:
+    logo: /logo-light-theme.png
+```
+
+A relative logo resolves against the `serverUrl` passed to the `RenderNotification` step, so one config works across environments. Email clients can only load absolute URLs — when no `serverUrl` is available the logo is omitted and the header falls back to the `companyName` text.
+
 ## Custom templates
 
 Rich emails beyond the built-in templates are plugins — plain [React Email](https://react.email/) components. A custom template exports a component receiving `{ properties, data, theme, links }` and a properties schema, and declares its type under a new `notifications` type category — the same registration pattern as other [plugins](/plugins-introduction). Once installed, use it as a `type` in the `notifications:` section like any built-in template.
@@ -134,4 +150,4 @@ That pipeline is about sixty lines of routine YAML, and you own every choice in 
 
 ## Previewing emails
 
-The [`lowdefy emails`](/cli#emails) CLI command renders every notification from its `testData` and opens [React Email](https://react.email/)'s preview server, so you can iterate on templates without sending real mail. It warns when a template renders a data key that your `testData` is missing.
+The [`lowdefy emails`](/cli#emails) CLI command renders every notification from its `testData` and opens [React Email](https://react.email/)'s preview server, so you can iterate on templates without sending real mail. It warns when a template renders a data key that your `testData` is missing. The preview has no server URL, so a relative `logo` falls back to the `companyName` text header there.

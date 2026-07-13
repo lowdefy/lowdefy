@@ -1,0 +1,96 @@
+# Getting Started
+
+## Setup
+
+The fastest way to set up e2e testing is with the scaffold command. Run this in your project root:
+
+```
+npx @lowdefy/e2e-utils
+```
+
+The command will:
+- Detect your Lowdefy app (single-app or multi-app)
+- Ask if you want MongoDB testing support
+- Create test files in an `e2e/` directory
+- Update your `package.json` with test scripts
+- Update `.gitignore` with test artifacts
+- Optionally install dependencies and Playwright browsers
+
+## Generated files
+
+After running the scaffold command, your project will have:
+
+```
+e2e/
+  playwright.config.js    # Playwright configuration
+  fixtures.js             # Test fixtures (provides the ldf helper)
+  mocks.yaml              # Static request mocks
+  example.spec.js         # Example test to get you started
+```
+
+## Running tests
+
+Run all tests:
+```
+pnpm e2e
+```
+
+Run tests with the Playwright UI (useful for debugging):
+```
+pnpm e2e:ui
+```
+
+> The first run will take longer because Playwright needs to build and start your Lowdefy app. Subsequent runs reuse the server if it is still running.
+
+## Your first test
+
+The generated `example.spec.js` looks like this:
+
+```javascript
+import { test, expect } from './fixtures.js';
+
+test('homepage loads', async ({ ldf }) => {
+  await ldf.goto('/');
+  await expect(ldf.page).toHaveTitle(/./);
+});
+```
+
+Let's break this down:
+
+- `import { test, expect } from './fixtures.js'` — imports the enhanced test function that provides the `ldf` helper
+- `test('...', async ({ ldf }) => { ... })` — the `ldf` object is automatically created for each test with a fresh browser page
+- `await ldf.goto('/')` — navigates to the homepage and waits for the Lowdefy client to initialize
+- `await expect(ldf.page).toHaveTitle(/./)` — uses the raw Playwright page to assert the page has a title
+
+## Writing a real test
+
+Here is a more practical example. Suppose you have a page with a search form:
+
+```javascript
+import { test } from './fixtures.js';
+
+test('search returns results', async ({ ldf }) => {
+  await ldf.goto('/search');
+
+  // Fill in the search input and click search
+  await ldf.block('search_input').do.fill('widget');
+  await ldf.block('search_btn').do.click();
+
+  // Wait for the request to complete
+  await ldf.request('search_products').expect.toFinish();
+
+  // Check that results appeared in state
+  const results = await ldf.state('search_results').value();
+  expect(results.length).toBeGreaterThan(0);
+});
+```
+
+## What happens behind the scenes
+
+When you run `pnpm e2e`:
+
+1. Playwright reads `playwright.config.js`, which uses `createConfig()` from `@lowdefy/e2e-utils/config`
+2. The config starts a web server that builds your app with the e2e server variant and starts it
+3. A manifest is generated from your build artifacts, mapping block IDs to their types and e2e helpers
+4. For each test, a fresh `ldf` object is created with a new browser page, and any static mocks from `mocks.yaml` are applied
+5. Your test code runs against the live app

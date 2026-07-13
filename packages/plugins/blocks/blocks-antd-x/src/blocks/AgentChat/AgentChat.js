@@ -25,13 +25,16 @@ import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
 import { type } from '@lowdefy/helpers';
+import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
+import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
+import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
 
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
 import DrawerWrapper from './DrawerWrapper.js';
 import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
-import useAgentEvents from './useAgentEvents.js';
+import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
 function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
@@ -58,6 +61,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   sharedStateRef.current =
     type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const attachmentsConfig = sender?.attachments;
+  const uploadPolicyRequestId =
+    attachmentsConfig?.uploadPolicyRequestId ?? attachmentsConfig?.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = attachmentsConfig?.downloadPolicyRequestId;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
   const [switchState, setSwitchState] = useState(() => {
@@ -182,6 +188,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   // Compare by count + last ID to avoid re-syncing on every Lowdefy re-render
   // (operators like _state create new array references even when data hasn't changed).
   const prevExternalRef = useRef({ count: 0, lastId: null });
+  // Event-dedup ids of externally loaded messages. Restored history must not
+  // replay onToolCall / onToolResult / onUserMessage / onTitleGenerated side
+  // effects — useAgentEvents suppresses ids in this ref.
+  const externalIdsRef = useRef(null);
   useEffect(() => {
     if (type.isUndefined(externalMessages)) return;
     const msgs = externalMessages ?? [];
@@ -189,6 +199,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     const lastId = count > 0 ? msgs[count - 1]?.id : null;
     if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
       prevExternalRef.current = { count, lastId };
+      externalIdsRef.current = collectExternalEventIds(msgs);
       setMessages(msgs);
     }
   }, [externalMessages, setMessages]);
@@ -199,13 +210,15 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
     });
     methods.registerMethod('setMessages', (args) => {
-      setMessages(args?.messages ?? []);
+      const msgs = args?.messages ?? [];
+      externalIdsRef.current = collectExternalEventIds(msgs);
+      setMessages(msgs);
     });
     methods.registerMethod('sendMessage', (args) => {
       if (args?.text) {
         sendMessage({
           text: args.text,
-          ...(args.files ? { experimental_attachments: args.files } : {}),
+          ...(args.files ? { files: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
         });
       }
@@ -231,17 +244,34 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       name: '__updatePageState',
       actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
     });
-    if (attachmentsConfig?.s3PostPolicyRequestId) {
+    if (uploadPolicyRequestId) {
+      if (attachmentsConfig?.s3PostPolicyRequestId) {
+        console.warn(
+          'AgentChat attachments property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+        );
+      }
       methods.registerEvent({
-        name: '__getS3PostPolicy',
+        name: '__getUploadPolicy',
         actions: [
           {
-            id: '__getS3PostPolicy',
+            id: '__getUploadPolicy',
             type: 'Request',
-            params: [attachmentsConfig.s3PostPolicyRequestId],
+            params: [uploadPolicyRequestId],
           },
         ],
       });
+      if (downloadPolicyRequestId) {
+        methods.registerEvent({
+          name: '__getDownloadPolicy',
+          actions: [
+            {
+              id: '__getDownloadPolicy',
+              type: 'Request',
+              params: [downloadPolicyRequestId],
+            },
+          ],
+        });
+      }
     }
   }, []);
 
@@ -251,6 +281,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     methods,
     finishMetaRef,
     conversationId: effectiveConversationId,
+    externalIdsRef,
   });
 
   const isEmpty = messages.length === 0;
@@ -266,41 +297,30 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     });
   }
 
-  async function uploadFileToS3(file) {
-    const { name, size, type: fileType } = file;
-    const s3PostPolicyResponse = await methods.triggerEvent({
-      name: '__getS3PostPolicy',
-      event: { file: { name, size, type: fileType } },
-    });
+  async function uploadFileToStorage(file) {
+    const { name, type: fileType } = file;
+    const descriptor = await getUploadPolicy({ methods, file });
 
-    if (s3PostPolicyResponse.success !== true) {
-      throw new Error('S3 post policy request failed.');
-    }
+    await uploadFile({ descriptor, file });
 
-    const { url, fields = {} } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
-    const { key } = fields;
-
-    const formData = new FormData();
-    Object.keys(fields).forEach((field) => {
-      formData.append(field, fields[field]);
-    });
-    formData.append('file', file);
-
-    await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve();
-        } else {
-          reject(new Error(`S3 upload failed with status ${xhr.status}`));
-        }
+    // The model provider fetches this URL, so resolve it through the download
+    // request when configured (stable public URL or signed URL). Otherwise
+    // fall back to the legacy unsigned object URL from the descriptor.
+    let objectUrl;
+    if (downloadPolicyRequestId) {
+      const response = await methods.triggerEvent({
+        name: '__getDownloadPolicy',
+        event: {
+          file: { bucket: descriptor.bucket, key: descriptor.key, name, type: fileType },
+        },
       });
-      xhr.addEventListener('error', () => reject(new Error('S3 upload network error')));
-      xhr.open('POST', url);
-      xhr.send(formData);
-    });
-
-    const objectUrl = url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
+      if (response.success !== true) {
+        throw new Error('Download policy request failed.');
+      }
+      objectUrl = response.responses.__getDownloadPolicy.response[0];
+    } else {
+      objectUrl = getLegacyObjectUrl({ descriptor });
+    }
     return { url: objectUrl, mediaType: fileType, filename: name };
   }
 
@@ -323,10 +343,10 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
 
-      if (attachmentsConfig?.s3PostPolicyRequestId) {
+      if (uploadPolicyRequestId) {
         try {
           const uploadResults = await Promise.all(
-            attachedFiles.map((file) => uploadFileToS3(file))
+            attachedFiles.map((file) => uploadFileToStorage(file))
           );
           for (const result of uploadResults) {
             parts.push({
@@ -339,7 +359,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         } catch (error) {
           methods.triggerEvent({
             name: 'onError',
-            event: { message: error.message ?? 'File upload to S3 failed.' },
+            event: { message: error.message ?? 'File upload failed.' },
           });
           return;
         }

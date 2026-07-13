@@ -105,6 +105,79 @@ test('generateEmailShims writes a wrapper shim with merged theme and testData', 
   expect(config.testData).toEqual({ contact: { _id: 'UC-1' } });
 });
 
+test('generateEmailShims drops a relative logo from the preview theme', async () => {
+  const fs = (await import('fs')).default;
+  const { default: generateEmailShims } = await import('./generateEmailShims.js');
+
+  await generateEmailShims({
+    context,
+    notifications: [
+      { notificationId: 'task-assigned', type: 'NotificationEmail', properties: { subject: 'x' } },
+    ],
+    appEmail: { companyName: 'MyApp', logo: '/logo-light.png' },
+    notificationTypes,
+  });
+
+  const content = fs.promises.writeFile.mock.calls[0][1];
+  const config = JSON.parse(content.match(/const config = ([\s\S]*?);\n\nfunction/)[1]);
+  expect(config.theme).toEqual({ companyName: 'MyApp' });
+});
+
+test('generateEmailShims keeps absolute and protocol-relative logos in the preview theme', async () => {
+  const fs = (await import('fs')).default;
+  const { default: generateEmailShims } = await import('./generateEmailShims.js');
+
+  await generateEmailShims({
+    context,
+    notifications: [
+      { notificationId: 'task-assigned', type: 'NotificationEmail', properties: { subject: 'x' } },
+      {
+        notificationId: 'task-done',
+        type: 'NotificationEmail',
+        properties: { subject: 'y' },
+        theme: { logo: '//cdn/other.png' },
+      },
+    ],
+    appEmail: { logo: 'https://cdn/logo.png' },
+    notificationTypes,
+  });
+
+  const absolute = JSON.parse(
+    fs.promises.writeFile.mock.calls[0][1].match(/const config = ([\s\S]*?);\n\nfunction/)[1]
+  );
+  expect(absolute.theme).toEqual({ logo: 'https://cdn/logo.png' });
+  const protocolRelative = JSON.parse(
+    fs.promises.writeFile.mock.calls[1][1].match(/const config = ([\s\S]*?);\n\nfunction/)[1]
+  );
+  expect(protocolRelative.theme).toEqual({ logo: '//cdn/other.png' });
+});
+
+test('generateEmailShims creates the parent directory for scoped notification ids', async () => {
+  const fs = (await import('fs')).default;
+  const { default: generateEmailShims } = await import('./generateEmailShims.js');
+
+  await generateEmailShims({
+    context,
+    notifications: [
+      {
+        notificationId: 'invites/invite-user',
+        type: 'NotificationEmail',
+        properties: { subject: 'Invite' },
+      },
+    ],
+    appEmail: {},
+    notificationTypes,
+  });
+
+  expect(fs.promises.mkdir).toHaveBeenCalledWith(expect.stringContaining('invites'), {
+    recursive: true,
+  });
+  const [filePath, content] = fs.promises.writeFile.mock.calls[0];
+  expect(filePath).toContain('invites');
+  expect(filePath).toContain('invite-user.jsx');
+  expect(content).toContain('function InvitesInviteUserPreview(props)');
+});
+
 test('generateEmailShims warns and skips notifications with unknown template types', async () => {
   const fs = (await import('fs')).default;
   const { default: generateEmailShims } = await import('./generateEmailShims.js');

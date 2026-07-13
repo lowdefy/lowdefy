@@ -44,6 +44,8 @@ packages/
 
 **server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
+**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `GET /lowdefy-docs/build-status` (current build errors/warnings + browser runtime errors with file locations), `/page-config/{pageId}`, `/screenshot/{pageId}`, `/find/{id}`. When a Lowdefy dev server is running, prefer these routes over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project.
+
 ## Code Principles
 
 ### CRITICAL: Fix at the Source, Not the Symptom

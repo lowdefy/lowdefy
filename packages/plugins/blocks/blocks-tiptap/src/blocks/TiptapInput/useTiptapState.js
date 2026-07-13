@@ -17,13 +17,13 @@
 import { useRef } from 'react';
 import TurndownService from 'turndown';
 
-import s3FileUpload from '../utils/s3FileUpload.js';
+import fileUpload from '../utils/fileUpload.js';
 
 // Ref-tracked controller for the editor's value. No useState — the only
 // source of truth for `fileList` is the `value` prop from Lowdefy. We mirror
 // it into a ref each render so callbacks (onUpdate, insertImage) captured in
 // closures always read the current value instead of a stale render snapshot.
-function useTiptapState({ value, methods }) {
+function useTiptapState({ value, methods, hasDownloadRequest }) {
   const valueRef = useRef(value);
   valueRef.current = value;
 
@@ -37,7 +37,7 @@ function useTiptapState({ value, methods }) {
   });
 
   // Emit a full `{fileList, html, text, markdown}` value to Lowdefy based on
-  // the editor's current document. When appendFile is supplied (an S3 upload
+  // the editor's current document. When appendFile is supplied (an upload
   // result), it is added to the current fileList before filtering by
   // in-document image urls.
   const emit = (editor, appendFile) => {
@@ -53,7 +53,7 @@ function useTiptapState({ value, methods }) {
   };
 
   const insertImage = async (editor, file, pos) => {
-    const url = await s3FileUpload({ file, methods });
+    const url = await fileUpload({ file, methods, hasDownloadRequest });
     // The upload is async: bail if the editor was torn down meanwhile (e.g. the
     // surrounding page navigated away before the upload resolved), otherwise the
     // chained commands run against a destroyed editor and throw.

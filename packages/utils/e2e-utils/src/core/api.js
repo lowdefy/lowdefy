@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-
 async function getApiState(page, endpointId) {
   return page.evaluate((id) => {
     const lowdefy = window.lowdefy;
@@ -28,42 +26,4 @@ async function getApiResponse(page, { endpointId }) {
   return state?.response;
 }
 
-async function expectApi(page, { endpointId, loading, response, payload, timeout = 30000 }) {
-  if (loading !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getApiState(page, endpointId);
-          return state?.loading;
-        },
-        { timeout }
-      )
-      .toBe(loading);
-  }
-
-  if (response !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getApiState(page, endpointId);
-          return state?.response;
-        },
-        { timeout }
-      )
-      .toEqual(expect.objectContaining(response));
-  }
-
-  if (payload !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getApiState(page, endpointId);
-          return state?.payload;
-        },
-        { timeout }
-      )
-      .toEqual(expect.objectContaining(payload));
-  }
-}
-
-export { getApiState, getApiResponse, expectApi };
+export { getApiState, getApiResponse };

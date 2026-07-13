@@ -24,6 +24,7 @@ const defaultPackages = [
   '@lowdefy/blocks-captcha',
   '@lowdefy/blocks-diff',
   '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-files',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
@@ -56,8 +57,10 @@ const defaultPackages = [
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
   '@lowdefy/plugin-aws',
-  '@lowdefy/plugin-csv',
+  '@lowdefy/plugin-azure',
   '@lowdefy/plugin-better-auth',
+  '@lowdefy/plugin-csv',
+  '@lowdefy/plugin-gcp',
   '@lowdefy/websockets-core',
 ];
 

@@ -95,6 +95,15 @@ _ref:
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 
+            ## agent-setup
+
+            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten.
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: The port your dev server runs on, used in the generated URLs. The default is `3000`.
+
             ## init
 
             The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.

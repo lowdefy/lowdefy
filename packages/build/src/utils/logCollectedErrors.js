@@ -16,20 +16,27 @@
 
 import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
 
+import serializeBuildException from './serializeBuildException.js';
+
 function logCollectedErrors(context) {
   if (context.errors.length === 0) return;
 
-  context.errors.forEach((err) => {
-    if (err.isLowdefyError) {
-      context.handleError(err);
-    } else {
-      const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
-      context.handleError(lowdefyErr);
-    }
+  // handleError mutates each error in place (resolves source/config), so
+  // capture the handled instance (not the original) for serialization below.
+  const handledErrors = context.errors.map((err) => {
+    const lowdefyErr = err.isLowdefyError
+      ? err
+      : new LowdefyInternalError(err.message, { cause: err });
+    context.handleError(lowdefyErr);
+    return lowdefyErr;
   });
-  throw new BuildError(
+
+  const buildError = new BuildError(
     `Build failed with ${context.errors.length} error(s). See above for details.`
   );
+  buildError.errors = handledErrors.map(serializeBuildException);
+  buildError.warnings = (context.warnings ?? []).map(serializeBuildException);
+  throw buildError;
 }
 
 export default logCollectedErrors;

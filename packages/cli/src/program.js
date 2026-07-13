@@ -17,6 +17,7 @@
 import { createRequire } from 'module';
 import { Command, Option } from 'commander';
 
+import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import emails from './commands/emails/emails.js';
@@ -60,6 +61,10 @@ const options = {
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
   ).env('PORT'),
+  projectDirectory: new Option(
+    '--project-directory <project-directory>',
+    'Change the directory where agent files (.mcp.json, AGENTS.md, Claude Code skill) are written. Default is the nearest ancestor directory containing .git, falling back to the config directory.'
+  ).env('LOWDEFY_DIRECTORY_PROJECT'),
   refResolver: new Option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
@@ -77,6 +82,19 @@ const options = {
     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   ),
 };
+
+program
+  .command('agent-setup')
+  .description(
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skill).'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.projectDirectory)
+  .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program
   .command('build')

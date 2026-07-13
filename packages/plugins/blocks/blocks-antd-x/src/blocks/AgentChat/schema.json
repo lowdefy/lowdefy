@@ -190,9 +190,17 @@
             "enabled": { "type": "boolean" },
             "accept": { "type": "string" },
             "maxSize": { "type": "number" },
+            "uploadPolicyRequestId": {
+              "type": "string",
+              "description": "Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, files are uploaded to storage and their URLs are sent to the LLM instead of base64 data."
+            },
+            "downloadPolicyRequestId": {
+              "type": "string",
+              "description": "Id of a download request used to resolve the URL of an uploaded attachment. The URL is fetched by the model provider, so it should remain reachable — use public: true on the request for public buckets, or a long expiry. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated)."
+            },
             "s3PostPolicyRequestId": {
               "type": "string",
-              "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."
+              "description": "Deprecated — use uploadPolicyRequestId instead."
             }
           }
         },

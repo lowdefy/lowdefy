@@ -27,7 +27,32 @@ import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
+import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
+import feedbackHandler from './routes/feedback.js';
+import docsAppMapHandler from './routes/docs/appMap.js';
+import docsBuildStatusHandler from './routes/docs/buildStatus.js';
+import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
+import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
+import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
+import docsContentHandler from './routes/docs/content.js';
+import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
+import docsExamplesHandler from './routes/docs/examples.js';
+import docsFindHandler from './routes/docs/find.js';
+import docsIndexHandler from './routes/docs/index.js';
+import docsInspectStateHandler from './routes/docs/inspectState.js';
+import docsLoadStateHandler from './routes/docs/loadState.js';
+import docsMcpHandler from './routes/docs/mcp.js';
+import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsRunRequestHandler from './routes/docs/runRequest.js';
+import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
+import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
+import docsPluginDocHandler from './routes/docs/pluginDoc.js';
+import docsPluginsHandler from './routes/docs/plugins.js';
+import docsSchemaHandler from './routes/docs/schema.js';
+import docsScreenshotHandler from './routes/docs/screenshot.js';
+import docsSearchHandler from './routes/docs/search.js';
+import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
@@ -61,6 +86,11 @@ function createApp() {
   app.get('/api/js/:env', jsEnvHandler);
   app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
+  // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
+  // batches here and gets back the enriched agent-readable text, which the
+  // overlay copies to the clipboard. No api context needed.
+  // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
+  app.post('/lowdefy-feedback', feedbackHandler);
 
   const mockUser = getMockUser();
   if (authJson.configured === true && !mockUser) {
@@ -77,12 +107,51 @@ function createApp() {
     app.get('/api/auth/get-session', (c) => c.json({ session: { id: 'mock' }, user: mockUser }));
   }
 
+  // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
+  // schemas/examples/docs for every installed plugin (core and local) plus
+  // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
+  // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
+  // prefix in dev. The handlers need no auth protection or api context —
+  // they read build artifacts and node_modules directly — but run-request
+  // and eval-operator build a full Lowdefy context (createLowdefyContext),
+  // which resolves the caller from the request headers via resolveAuthentication.
+  app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  app.get('/lowdefy-docs', docsIndexHandler);
+  app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
+  app.get('/lowdefy-docs/find/:id', docsFindHandler);
+  app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
+  app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
+  app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
+  app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
+  app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
+  app.post('/lowdefy-docs/checkpoints/revert', docsCheckpointsRevertHandler);
+  app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
+  app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
+  app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
+  // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
+  // targeted SSE events by posting results here; GET lists connected tabs
+  // and serves checkpoint parts for the ?_checkpoint bootstrap.
+  app.all('/api/dev-inspect', devInspectHandler);
+  app.all('/api/dev-inspect/*', devInspectHandler);
+  app.get('/lowdefy-docs/plugins', docsPluginsHandler);
+  app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
+  app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);
+  app.get('/lowdefy-docs/search', docsSearchHandler);
+  app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
+  app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
+  app.get('/lowdefy-docs/:kind', docsTypesHandler);
+
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
-  app.all('/api/endpoints/*', endpointsHandler);
+  // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
+  // cap bodies at 10 MiB to match the agent route.
+  app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
   app.get('/api/cron/*', cronHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);

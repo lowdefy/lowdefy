@@ -58,6 +58,7 @@
     "@lowdefy/blocks-basic": "5.3.0",
     "@lowdefy/blocks-captcha": "5.3.0",
     "@lowdefy/blocks-echarts": "5.3.0",
+    "@lowdefy/blocks-files": "5.3.0",
     "@lowdefy/blocks-loaders": "5.3.0",
     "@lowdefy/blocks-markdown": "5.3.0",
     "@lowdefy/blocks-tiptap": "5.3.0",

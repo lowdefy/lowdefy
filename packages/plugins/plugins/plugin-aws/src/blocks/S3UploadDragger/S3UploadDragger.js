@@ -15,95 +15,34 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload, theme as antdTheme } from 'antd';
-import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { cn } from '@lowdefy/block-utils';
+import { UploadDragger } from '@lowdefy/blocks-files/blocks';
 
-import useFileList from '../utils/useFileList.js';
-import getS3Upload from '../utils/getS3Upload.js';
-import getOnPaste from '../utils/getOnPaste.js';
-import withTheme from '../withTheme.js';
-
-import './style.module.css';
-
-const { Dragger } = Upload;
-
-const S3UploadDragger = ({ blockId, classNames = {}, methods, properties, styles = {}, value }) => {
-  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
-    properties,
-    methods,
-    value,
-  });
-  const s3UploadRequest = getS3Upload({ methods, setFileList });
-  const onPaste = getOnPaste({ s3UploadRequest, properties });
+// Deprecated alias for the generic UploadDragger block in @lowdefy/blocks-files.
+// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId
+// and keeps the legacy element class so existing app CSS targeting the S3
+// block name keeps matching.
+const S3UploadDragger = (props) => {
   useEffect(() => {
-    methods.registerEvent({
-      name: '__getS3PostPolicy',
-      actions: [
-        {
-          id: '__getS3PostPolicy',
-          type: 'Request',
-          params: [properties.s3PostPolicyRequestId],
-        },
-      ],
-    });
+    console.warn(
+      'The S3UploadDragger block is deprecated. Use the UploadDragger block with "uploadPolicyRequestId" instead.'
+    );
   }, []);
-  useEffect(() => {
-    if (JSON.stringify(value) !== JSON.stringify(state)) {
-      setValue(value);
-    }
-  }, [value]);
-  useEffect(() => {
-    methods.registerMethod('uploadFromPaste', async () => {
-      await onPaste();
-    });
-  }, [onPaste]);
-  const { token } = antdTheme.useToken();
-  const height = type.isNone(properties.height) ? token.controlHeight : properties.height;
+  const { s3PostPolicyRequestId, ...properties } = props.properties ?? {};
+  const classNames = props.classNames ?? {};
   return (
-    <div
-      id={blockId}
-      className={cn('lf-s3-upload-dragger', classNames.element)}
-      onPaste={onPaste}
-      style={{
-        '--lf-s3-dragger-height': type.isNumber(height) ? `${height}px` : height,
-        ...styles.element,
+    <UploadDragger
+      {...props}
+      classNames={{
+        ...classNames,
+        element: cn('lf-s3-upload-dragger', classNames.element),
       }}
-    >
-      <Dragger
-        accept={properties.accept ?? '*'}
-        beforeUpload={loadFileList}
-        classNames={{
-          trigger: classNames.trigger,
-          list: classNames.list,
-          item: classNames.item,
-        }}
-        styles={{
-          root: { display: 'block' },
-          trigger: styles.trigger,
-          list: styles.list,
-          item: styles.item,
-        }}
-        customRequest={s3UploadRequest}
-        disabled={properties.disabled}
-        fileList={state.fileList}
-        maxCount={properties.maxCount}
-        multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
-        onRemove={removeFile}
-        showUploadList={properties.showUploadList}
-        onChange={() => {
-          methods.triggerEvent({ name: 'onChange' });
-        }}
-      >
-        <div className={cn(classNames.hint)} style={styles.hint}>
-          {renderHtml({
-            html: properties.title ?? 'Click or drag to add a file.',
-            methods,
-          })}
-        </div>
-      </Dragger>
-    </div>
+      properties={{
+        uploadPolicyRequestId: s3PostPolicyRequestId,
+        ...properties,
+      }}
+    />
   );
 };
 
-export default withBlockDefaults(withTheme('Upload', S3UploadDragger));
+export default S3UploadDragger;

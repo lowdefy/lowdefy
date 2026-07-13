@@ -84,7 +84,7 @@ test('buildAgents valid agent renames id and adds to agentIds', () => {
       agentId: 'agent1',
       type: 'AnthropicAgent',
       connectionId: 'conn1',
-      tools: [{ endpointId: 'tool1' }],
+      tools: [{ endpointId: 'tool1', name: 'tool1' }],
       mcp: [],
       agents: [],
       properties: {
@@ -519,7 +519,10 @@ test('buildAgents validates multiple tools all referencing existing endpoints', 
     ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1' }, { endpointId: 'tool2' }]);
+  expect(res.agents[0].tools).toEqual([
+    { endpointId: 'tool1', name: 'tool1' },
+    { endpointId: 'tool2', name: 'tool2' },
+  ]);
 });
 
 test('buildAgents throws when model is not defined', () => {
@@ -746,7 +749,7 @@ test('buildAgents normalizes string tools to objects', () => {
     ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1' }]);
+  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1', name: 'tool1' }]);
 });
 
 test('buildAgents passes through object tools with confirm', () => {
@@ -780,7 +783,7 @@ test('buildAgents passes through object tools with confirm', () => {
     ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1', confirm: true }]);
+  expect(res.agents[0].tools).toEqual([{ endpointId: 'tool1', name: 'tool1', confirm: true }]);
 });
 
 test('buildAgents normalizes mixed tool array', () => {
@@ -823,8 +826,8 @@ test('buildAgents normalizes mixed tool array', () => {
   };
   const res = buildAgents({ components, context });
   expect(res.agents[0].tools).toEqual([
-    { endpointId: 'tool1' },
-    { endpointId: 'tool2', confirm: true },
+    { endpointId: 'tool1', name: 'tool1' },
+    { endpointId: 'tool2', name: 'tool2', confirm: true },
   ]);
 });
 
@@ -1082,7 +1085,7 @@ test('buildAgents normalizes string agents to objects with agentId', () => {
     ],
   };
   const res = buildAgents({ components, context });
-  expect(res.agents[1].agents).toEqual([{ agentId: 'researcher' }]);
+  expect(res.agents[1].agents).toEqual([{ agentId: 'researcher', name: 'researcher' }]);
 });
 
 test('buildAgents passes through object agents with agentId', () => {
@@ -1109,7 +1112,7 @@ test('buildAgents passes through object agents with agentId', () => {
   };
   const res = buildAgents({ components, context });
   expect(res.agents[1].agents).toEqual([
-    { agentId: 'researcher', description: 'Research topics' },
+    { agentId: 'researcher', name: 'researcher', description: 'Research topics' },
   ]);
 });
 
@@ -1143,8 +1146,8 @@ test('buildAgents normalizes mixed agents array', () => {
   };
   const res = buildAgents({ components, context });
   expect(res.agents[2].agents).toEqual([
-    { agentId: 'researcher' },
-    { agentId: 'analyzer', description: 'Analyze data' },
+    { agentId: 'researcher', name: 'researcher' },
+    { agentId: 'analyzer', name: 'analyzer', description: 'Analyze data' },
   ]);
 });
 
@@ -1598,5 +1601,226 @@ test('buildAgents throws when sub-agent agentId uses a reserved platform tool na
   };
   expect(() => buildAgents({ components, context })).toThrow(
     /sub-agent "read-file" uses a reserved platform tool name/
+  );
+});
+
+test('buildAgents defaults tool name from module-scoped endpoint id', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:reporting/query-data',
+        endpointId: 'reporting/query-data',
+        type: 'Api',
+        description: 'Query data',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'reporting/assistant',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['reporting/query-data'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual([
+    { endpointId: 'reporting/query-data', name: 'reporting__query-data' },
+  ]);
+  expect(context.agentIds).toEqual(new Set(['reporting/assistant']));
+});
+
+test('buildAgents keeps explicit tool name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:reporting/query-data',
+        endpointId: 'reporting/query-data',
+        type: 'Api',
+        description: 'Query data',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'reporting/query-data', name: 'query_data' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[0].tools).toEqual([
+    { endpointId: 'reporting/query-data', name: 'query_data' },
+  ]);
+});
+
+test('buildAgents throws on invalid explicit tool name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'tool1', name: 'has space' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /tool name "has space" is invalid/
+  );
+});
+
+test('buildAgents throws when explicit tool name is reserved', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'tool1', name: 'update-page-state' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /tool "update-page-state" uses a reserved platform tool name/
+  );
+});
+
+test('buildAgents throws on duplicate tool names', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'Tool 1',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+      {
+        id: 'endpoint:tool2',
+        endpointId: 'tool2',
+        type: 'Api',
+        description: 'Tool 2',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [
+          { endpointId: 'tool1', name: 'the_tool' },
+          { endpointId: 'tool2', name: 'the_tool' },
+        ],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /duplicate tool name "the_tool"/
+  );
+});
+
+test('buildAgents defaults sub-agent tool name from scoped agent id', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: 'reporting/researcher',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'reporting/orchestrator',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        agents: ['reporting/researcher'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  expect(res.agents[1].agents).toEqual([
+    { agentId: 'reporting/researcher', name: 'reporting__researcher' },
+  ]);
+});
+
+test('buildAgents throws when sub-agent name collides with a tool name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:helper',
+        endpointId: 'helper',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'helper-agent',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'parent',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['helper'],
+        agents: [{ agentId: 'helper-agent', name: 'helper' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    /sub-agent "helper-agent" conflicts with an endpoint tool of the same name/
   );
 });

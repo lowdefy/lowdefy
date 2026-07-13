@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function createAuthorize({ user }) {
+function createAuthorize({ user, system = false }) {
   // resolveAuthentication is the single writer of context.user - a resolved
   // caller object when authenticated, else null.
   const authenticated = !type.isNone(user);
@@ -29,6 +29,9 @@ function createAuthorize({ user }) {
   }
 
   function authorize(config) {
+    // A system context (scheduled, webhook, detached runs) was authorized at the
+    // transport layer, so nested endpoint calls are never gated on a user session.
+    if (system === true) return true;
     const { auth } = config;
     if (auth.public === true) return true;
     if (auth.public === false) {

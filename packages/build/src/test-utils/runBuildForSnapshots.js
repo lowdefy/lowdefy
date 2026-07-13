@@ -153,6 +153,9 @@ const snapshotTypesMap = {
   agents: {
     ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
   },
+  notifications: {
+    NotificationEmail: { package: '@lowdefy/email-templates' },
+  },
   auth: {
     adapters: {
       MongoDBAuthAdapter: { package: '@lowdefy/connection-mongodb' },
