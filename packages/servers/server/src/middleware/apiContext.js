@@ -94,9 +94,17 @@ function apiContext() {
       });
     }
     createApiContext(context);
-    logRequest({ context });
     c.set('lowdefyContext', context);
-    return next();
+    const startTime = performance.now();
+    // Handler errors never reject next() — Hono's compose routes them to the
+    // app-level error handler at the throwing dispatch level, so by the time
+    // next() resolves c.res holds the final response, error or not.
+    await next();
+    logRequest({
+      context,
+      status: c.res.status,
+      durationMs: Math.round(performance.now() - startTime),
+    });
   };
 }
 
