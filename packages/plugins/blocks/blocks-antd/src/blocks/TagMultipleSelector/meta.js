@@ -20,19 +20,19 @@ import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/input
 
 export default {
   category: 'input',
-  valueType: 'any',
+  valueType: 'array',
   icons: [...LabelMeta.icons],
   cssKeys: {
-    element: 'The TagSelector tag row.',
+    element: 'The TagMultipleSelector tag row.',
     tag: 'Each tag pill.',
-    label: 'The TagSelector label.',
-    extra: 'The TagSelector extra content.',
-    feedback: 'The TagSelector validation feedback.',
+    label: 'The TagMultipleSelector label.',
+    extra: 'The TagMultipleSelector extra content.',
+    feedback: 'The TagMultipleSelector validation feedback.',
   },
   events: {
     onChange: {
       description: 'Trigger actions when the selection is changed.',
-      event: { value: 'The selected value.' },
+      event: { value: 'The array of selected values.' },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
@@ -52,7 +52,7 @@ export default {
               description: 'Tag label. Defaults to the value.',
             },
             value: {
-              description: 'Option value set as the selection when the tag is selected.',
+              description: 'Option value written into the selection array.',
               docs: {
                 displayType: 'yaml',
               },

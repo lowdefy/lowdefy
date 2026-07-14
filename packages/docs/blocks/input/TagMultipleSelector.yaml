@@ -15,15 +15,15 @@
 _ref:
   path: templates/blocks/gallery.yaml.njk
   vars:
-    pageId: TagSelector
-    pageTitle: TagSelector
+    pageId: TagMultipleSelector
+    pageTitle: TagMultipleSelector
     section: Input Blocks
-    filePath: blocks/input/TagSelector.yaml
-    block_type: TagSelector
+    filePath: blocks/input/TagMultipleSelector.yaml
+    block_type: TagMultipleSelector
     antd_component: Tag
     antd_url: tag
-    github_path: packages/plugins/blocks/blocks-antd/src/blocks/TagSelector
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TagSelector/meta.js
-    gallery: ../plugins/blocks/blocks-antd/src/blocks/TagSelector/gallery.yaml
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/gallery.yaml
     description: >
-      Single-select input rendered as a row of toggleable, colored tag pills.
+      Multi-select input rendered as a row of toggleable, colored tag pills.

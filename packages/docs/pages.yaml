@@ -106,6 +106,7 @@
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
+- _ref: blocks/input/TagMultipleSelector.yaml
 - _ref: blocks/input/TagSelector.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml

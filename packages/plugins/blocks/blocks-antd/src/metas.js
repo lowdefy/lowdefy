@@ -83,6 +83,7 @@ export { default as Steps } from './blocks/Steps/meta.js';
 export { default as Switch } from './blocks/Switch/meta.js';
 export { default as Tabs } from './blocks/Tabs/meta.js';
 export { default as Tag } from './blocks/Tag/meta.js';
+export { default as TagMultipleSelector } from './blocks/TagMultipleSelector/meta.js';
 export { default as TagSelector } from './blocks/TagSelector/meta.js';
 export { default as TextArea } from './blocks/TextArea/meta.js';
 export { default as TextInput } from './blocks/TextInput/meta.js';

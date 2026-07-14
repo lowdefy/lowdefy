@@ -21,22 +21,25 @@ import { type } from '@lowdefy/helpers';
 import TagPillRow from '../../TagPillRow.js';
 import getTagSelectorOptions from '../../getTagSelectorOptions.js';
 
-// Single-select tag input: `value` is one option value (or null). Clicking a
-// pill selects it; clicking the already-selected pill clears the value. Purely
-// controlled — the value is read from props each render. See TagPillRow for the
-// shared rendering/color logic and TagMultipleSelector for the multi-select
-// variant whose value is the array of selected values.
-const TagSelector = (props) => {
+// Multi-select tag input: `value` is the array of selected option values.
+// Clicking a pill toggles it in or out of the selection. Purely controlled —
+// the selection is read from props each render. See TagPillRow for the shared
+// rendering/color logic and TagSelector for the single-select variant whose
+// value is one option value.
+const TagMultipleSelector = (props) => {
   const { loading, methods, properties, value } = props;
   const options = getTagSelectorOptions({ options: properties.options });
-  const isSelected = (optionValue) => !type.isNone(value) && value === optionValue;
+  const selected = type.isArray(value) ? value : [];
+  const isSelected = (optionValue) => selected.includes(optionValue);
   const onToggle = (option) => {
     if (option.disabled || properties.disabled || loading) return;
-    const next = value === option.value ? null : option.value;
+    const next = selected.includes(option.value)
+      ? selected.filter((v) => v !== option.value)
+      : [...selected, option.value];
     methods.setValue(next);
     methods.triggerEvent({ name: 'onChange', event: { value: next } });
   };
   return <TagPillRow {...props} options={options} isSelected={isSelected} onToggle={onToggle} />;
 };
 
-export default withBlockDefaults(TagSelector);
+export default withBlockDefaults(TagMultipleSelector);

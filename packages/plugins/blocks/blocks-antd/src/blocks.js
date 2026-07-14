@@ -83,6 +83,7 @@ export { default as Steps } from './blocks/Steps/Steps.js';
 export { default as Switch } from './blocks/Switch/Switch.js';
 export { default as Tabs } from './blocks/Tabs/Tabs.js';
 export { default as Tag } from './blocks/Tag/Tag.js';
+export { default as TagMultipleSelector } from './blocks/TagMultipleSelector/TagMultipleSelector.js';
 export { default as TagSelector } from './blocks/TagSelector/TagSelector.js';
 export { default as TimelineList } from './blocks/TimelineList/TimelineList.js';
 export { default as TextArea } from './blocks/TextArea/TextArea.js';

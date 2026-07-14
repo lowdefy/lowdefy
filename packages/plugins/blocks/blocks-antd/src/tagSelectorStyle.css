@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-/* The tag row. Per-option colors are inline (computed in JS from the stable
-   palette); everything structural and theme-token-driven lives here. */
+/* Shared tag row for TagSelector (single) and TagMultipleSelector (multi).
+   Per-option colors are inline (computed in JS from the stable palette);
+   everything structural and theme-token-driven lives here. */
 @layer components {
   .lf-tag-selector {
     display: flex;
@@ -27,7 +28,7 @@
   .lf-tag-selector-tag {
     appearance: none;
     font: inherit;
-    font-size: 12px;
+    font-size: var(--ant-font-size-sm, 12px);
     line-height: 1.4;
     padding: 2px 12px;
     border-radius: 999px;
@@ -62,6 +63,6 @@
     font-weight: 600;
     background: var(--ant-color-primary);
     border-color: var(--ant-color-primary);
-    color: #fff;
+    color: var(--ant-color-text-light-solid, #fff);
   }
 }

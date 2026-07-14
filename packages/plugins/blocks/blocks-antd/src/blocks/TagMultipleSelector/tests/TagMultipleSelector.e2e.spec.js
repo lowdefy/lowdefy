@@ -18,14 +18,14 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
-// TagSelector renders its tag row with an _input suffix.
+// TagMultipleSelector renders its tag row with an _input suffix.
 const getTags = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 const tag = (page, blockId, text) =>
   getTags(page, blockId).locator('.lf-tag-selector-tag').filter({ hasText: text });
 
-test.describe('TagSelector Block', () => {
+test.describe('TagMultipleSelector Block', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'tag_selector');
+    await navigateToTestPage(page, 'tag_multiple_selector');
   });
 
   // ============================================
@@ -33,7 +33,7 @@ test.describe('TagSelector Block', () => {
   // ============================================
 
   test('renders tag pills with options', async ({ page }) => {
-    const tags = getTags(page, 'tag_basic');
+    const tags = getTags(page, 'tms_basic');
     await expect(tags).toBeVisible();
     await expect(tags).toContainText('Ethics');
     await expect(tags).toContainText('Environment');
@@ -44,33 +44,26 @@ test.describe('TagSelector Block', () => {
   // SELECTION / EVENT TESTS
   // ============================================
 
-  test('selects a single value, fires onChange and updates state', async ({ page }) => {
-    await tag(page, 'tag_change', 'Option A').click();
-    await expect(tag(page, 'tag_change', 'Option A')).toHaveClass(/lf-tag-selector-tag-selected/);
+  test('toggles selection, fires onChange and updates state', async ({ page }) => {
+    await tag(page, 'tms_change', 'Option A').click();
+    await expect(tag(page, 'tms_change', 'Option A')).toHaveClass(/lf-tag-selector-tag-selected/);
 
-    const display = getBlock(page, 'tag_change_display');
+    const display = getBlock(page, 'tms_change_display');
     await expect(display).toContainText('a');
 
-    // Single-select: selecting another option replaces the selection.
-    await tag(page, 'tag_change', 'Option B').click();
-    await expect(tag(page, 'tag_change', 'Option B')).toHaveClass(/lf-tag-selector-tag-selected/);
-    await expect(tag(page, 'tag_change', 'Option A')).not.toHaveClass(
-      /lf-tag-selector-tag-selected/
-    );
+    // Multi-select: a second toggle adds to the array.
+    await tag(page, 'tms_change', 'Option B').click();
+    await expect(tag(page, 'tms_change', 'Option B')).toHaveClass(/lf-tag-selector-tag-selected/);
+    await expect(tag(page, 'tms_change', 'Option A')).toHaveClass(/lf-tag-selector-tag-selected/);
+    await expect(display).toContainText('a');
     await expect(display).toContainText('b');
-  });
 
-  test('deselects when the selected pill is clicked again', async ({ page }) => {
-    await tag(page, 'tag_change', 'Option A').click();
-    await expect(tag(page, 'tag_change', 'Option A')).toHaveClass(/lf-tag-selector-tag-selected/);
-
-    // Clicking the selected pill clears the value.
-    await tag(page, 'tag_change', 'Option A').click();
-    await expect(tag(page, 'tag_change', 'Option A')).not.toHaveClass(
+    // Toggling off removes it and keeps the selection controlled.
+    await tag(page, 'tms_change', 'Option A').click();
+    await expect(tag(page, 'tms_change', 'Option A')).not.toHaveClass(
       /lf-tag-selector-tag-selected/
     );
-    const display = getBlock(page, 'tag_change_display');
-    await expect(display).toHaveText('');
+    await expect(tag(page, 'tms_change', 'Option B')).toHaveClass(/lf-tag-selector-tag-selected/);
   });
 
   // ============================================
@@ -78,12 +71,12 @@ test.describe('TagSelector Block', () => {
   // ============================================
 
   test('disables the whole selector', async ({ page }) => {
-    await expect(tag(page, 'tag_disabled', 'X')).toBeDisabled();
-    await expect(tag(page, 'tag_disabled', 'Y')).toBeDisabled();
+    await expect(tag(page, 'tms_disabled', 'X')).toBeDisabled();
+    await expect(tag(page, 'tms_disabled', 'Y')).toBeDisabled();
   });
 
   test('disables a single option while others stay enabled', async ({ page }) => {
-    await expect(tag(page, 'tag_disabled_option', 'Enabled')).toBeEnabled();
-    await expect(tag(page, 'tag_disabled_option', 'Locked')).toBeDisabled();
+    await expect(tag(page, 'tms_disabled_option', 'Enabled')).toBeEnabled();
+    await expect(tag(page, 'tms_disabled_option', 'Locked')).toBeDisabled();
   });
 });

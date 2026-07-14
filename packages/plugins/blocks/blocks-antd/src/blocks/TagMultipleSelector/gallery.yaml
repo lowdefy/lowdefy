@@ -15,9 +15,9 @@
 - title: Basic String Options
   blocks:
     - id: basic_strings
-      type: TagSelector
+      type: TagMultipleSelector
       properties:
-        title: Domain
+        title: Domains
         options:
           - Ethics
           - Environment
@@ -28,9 +28,9 @@
 - title: Label-Value Options
   blocks:
     - id: label_value
-      type: TagSelector
+      type: TagMultipleSelector
       properties:
-        title: Status
+        title: Status Filter
         options:
           - label: Draft
             value: draft
@@ -45,9 +45,9 @@
 - title: Explicit Colors and Single Accent
   blocks:
     - id: explicit_colors
-      type: TagSelector
+      type: TagMultipleSelector
       properties:
-        title: Priority
+        title: Priorities
         options:
           - label: Low
             value: low
@@ -59,9 +59,9 @@
             value: high
             color: '#E15759'
     - id: single_accent
-      type: TagSelector
+      type: TagMultipleSelector
       properties:
-        title: Interest
+        title: Interests
         colored: false
         options:
           - Design
