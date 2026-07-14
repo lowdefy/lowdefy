@@ -6,7 +6,6 @@
 '@lowdefy/api': major
 '@lowdefy/client': major
 '@lowdefy/build': major
-'@lowdefy/plugin-next-auth': major
 '@lowdefy/connection-mongodb': major
 '@lowdefy/e2e-utils': major
 ---
