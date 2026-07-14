@@ -17,20 +17,17 @@
 import { getAuthUser } from '@hono/auth-js';
 
 import authJson from '../../build/auth.js';
-import getHeadlessSession from './getHeadlessSession.js';
-import getMockSession from './getMockSession.js';
+import getDevSession from './getDevSession.js';
 
-// Replaces getServerSession.js — mock user first (dev only), then the headless
-// renderer's injected user cookie, then the session from the Hono context
-// populated by initAuthConfig.
+// Replaces getServerSession.js — dev sessions (mock user, headless renderer)
+// first, then the session from the Hono context populated by initAuthConfig.
+// getDevSession is the same function the client's GET /api/auth/session is
+// answered from (routes/auth.js), so server and client sessions match by
+// construction.
 async function getSession(c) {
-  const mockSession = await getMockSession();
-  if (mockSession) {
-    return mockSession;
-  }
-  const headlessSession = getHeadlessSession(c);
-  if (headlessSession) {
-    return headlessSession;
+  const devSession = await getDevSession(c);
+  if (devSession) {
+    return devSession;
   }
   if (authJson.configured !== true) {
     return undefined;

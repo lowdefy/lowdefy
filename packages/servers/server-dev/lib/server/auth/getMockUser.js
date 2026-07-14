@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import { createSessionCallback } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
 import authJson from '../../build/auth.js';
-import callbacks from '../../../build/plugins/auth/callbacks.js';
 
-async function getMockSession() {
+// Resolves the raw mock user object — LOWDEFY_DEV_USER env var first (the
+// `lowdefy dev --mock-user` flag sets it), then auth.dev.mockUser from the
+// build config. Returns just the user object; getDevSession.js turns it into
+// a session through the same pipeline a real sign-in uses.
+function getMockUser() {
   const mockUserJson = process.env.LOWDEFY_DEV_USER;
   let mockUser;
 
@@ -38,9 +40,6 @@ async function getMockSession() {
     return undefined;
   }
 
-  // Deserialize to restore arrays from ~arr markers and remove other build markers
-  mockUser = serializer.deserialize(mockUser);
-
   if (authJson.configured !== true) {
     throw new Error(
       'Mock user configured but auth is not configured in lowdefy.yaml. ' +
@@ -48,20 +47,8 @@ async function getMockSession() {
     );
   }
 
-  // Create session callback to transform mock user
-  const sessionCallback = createSessionCallback({
-    authConfig: authJson,
-    plugins: { callbacks },
-  });
-
-  // Transform mock user through session callback (mock user acts as token)
-  const session = await sessionCallback({
-    session: { user: {} },
-    token: mockUser,
-    user: mockUser,
-  });
-
-  return session;
+  // Deserialize to restore arrays from ~arr markers and remove other build markers
+  return serializer.deserialize(mockUser);
 }
 
-export default getMockSession;
+export default getMockUser;
