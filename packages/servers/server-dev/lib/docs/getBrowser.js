@@ -18,6 +18,7 @@ import { chromium } from 'playwright-core';
 import { type } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
+import { HEADLESS_USER_COOKIE, headlessUser } from '../server/auth/headlessUser.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
 // only drives one that is already installed. `channel: 'chrome'` picks up a
@@ -73,6 +74,16 @@ function buildPageUrl({ origin, pageId }) {
 async function openPage({ browser, origin, pageId, width = 1280, height = 800, timeout = 15000 }) {
   const url = buildPageUrl({ origin, pageId });
   const context = await browser.newContext({ viewport: { width, height } });
+  // Inject an authenticated user so auth-protected pages don't 404 for the
+  // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
+  // `origin` so it rides along on the same-origin /api/* fetches.
+  await context.addCookies([
+    {
+      name: HEADLESS_USER_COOKIE,
+      value: Buffer.from(JSON.stringify(headlessUser)).toString('base64'),
+      url: origin,
+    },
+  ]);
   const page = await context.newPage();
   try {
     await page.goto(url, { waitUntil: 'networkidle', timeout });

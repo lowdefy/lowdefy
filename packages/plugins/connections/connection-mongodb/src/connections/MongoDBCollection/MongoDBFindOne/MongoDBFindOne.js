@@ -21,15 +21,8 @@ import schema from './schema.js';
 async function MongodbFindOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let res;
-  try {
-    res = await collection.findOne(query, options);
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
-  await client.close();
+  const collection = await getCollection({ connection });
+  const res = await collection.findOne(query, options);
   return serialize(res);
 }
 

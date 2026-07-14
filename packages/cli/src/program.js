@@ -20,6 +20,7 @@ import { Command, Option } from 'commander';
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
+import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
@@ -57,6 +58,10 @@ const options = {
     .choices(['error', 'warn', 'info', 'debug'])
     .default('info')
     .env('LOWDEFY_LOG_LEVEL'),
+  mockUser: new Option(
+    '--mock-user [user]',
+    'Start the dev server authenticated as a mock user (auth.dev.mockUser). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
+  ).env('LOWDEFY_DEV_USER'),
   port: new Option(
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
@@ -123,6 +128,7 @@ program
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
+  .addOption(options.mockUser)
   .option('--no-open', 'Do not open a new tab in the default browser.')
   .addOption(options.port)
   .addOption(options.refResolver)
@@ -146,6 +152,16 @@ program
   .addOption(options.refResolver)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: emails }));
+
+program
+  .command('docker-output')
+  .description('Assemble a minimal Docker runtime (.lowdefy/docker) from a built app.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: dockerOutput }));
 
 program
   .command('init')

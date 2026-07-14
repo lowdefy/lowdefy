@@ -19,6 +19,7 @@ import path from 'path';
 import findProjectRoot from './findProjectRoot.js';
 import getDevCommand from './getDevCommand.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
+import upsertClaudeSettings from './upsertClaudeSettings.js';
 import upsertMcpServer from './upsertMcpServer.js';
 import writeSkillFile from './writeSkillFile.js';
 
@@ -58,6 +59,7 @@ async function agentSetup({ context }) {
   const runCommand = appPath === '' ? devCommand : `cd ${appPath} && ${devCommand}`;
 
   await upsertMcpServer({ context, projectDirectory, port });
+  await upsertClaudeSettings({ context, projectDirectory });
   await writeSkillFile({ context, projectDirectory, appPath, port });
   await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 

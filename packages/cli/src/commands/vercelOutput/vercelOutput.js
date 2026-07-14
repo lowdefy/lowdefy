@@ -19,8 +19,8 @@ import path from 'path';
 import { cleanDirectory, copyFileOrDirectory, readFile, writeFile } from '@lowdefy/node-utils';
 
 import apiHandler from './apiHandler.js';
-import copyTracedFiles from './copyTracedFiles.js';
-import findTraceBase from './findTraceBase.js';
+import copyTracedFiles from '../../utils/copyTracedFiles.js';
+import findTraceBase from '../../utils/findTraceBase.js';
 
 // Function settings come from lowdefy.yaml `config.vercel` (written to build/config.json by
 // @lowdefy/build). maxDuration defaults to 60; plan limits are enforced by Vercel at deploy time.
