@@ -90,6 +90,7 @@
     "dayjs": "1.11.20",
     "dotenv": "16.3.1",
     "hono": "4.12.25",
+    "html-to-image": "1.11.13",
     "opener": "1.5.2",
     "pino": "10.3.1",
     "playwright-core": "1.59.1",

@@ -45,6 +45,7 @@ import {
   injectFeedbackStyleTag,
   removeFeedbackStyleTag,
 } from './feedbackStyles.js';
+import captureTabScreenshot from './captureTabScreenshot.js';
 import copyToClipboard from './copyToClipboard.js';
 import sendFeedback from './sendFeedback.js';
 
@@ -616,6 +617,16 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
     try {
       dispatch({ type: 'SEND_START' });
       const batch = buildBatch({ state, pageId });
+      // Capture the annotated screenshot in THIS tab — the pixels the
+      // developer is actually looking at (theme, loaded data) — and ship it
+      // with the batch for the server to save. On failure the field is
+      // absent and the server falls back to its headless capture.
+      if (state.includeScreenshot) {
+        const screenshot = await captureTabScreenshot({ annotations: state.batch });
+        if (screenshot) {
+          batch.screenshot = screenshot;
+        }
+      }
       // The server enriches annotations with yaml file:line locations and
       // returns the agent-readable text; the clipboard is the delivery
       // channel — the developer pastes it into whichever agent session

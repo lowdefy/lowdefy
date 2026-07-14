@@ -53,32 +53,55 @@ async function feedbackHandler(c) {
     );
   }
 
+  // The tab screenshot rides in as a multi-MB data URL — lift it off the
+  // batch before enrichment so it never reaches the formatted text or the
+  // headless capture path.
+  const tabScreenshot = batch.screenshot;
+  delete batch.screenshot;
   let enriched = await enrichFeedback({ batch });
+  delete enriched.screenshot;
 
   // Default on — the overlay sends includeScreenshot: false when the
-  // developer unticks it. The response must NOT wait for the capture: the
-  // overlay writes the clipboard when this returns, and Chrome's transient
-  // user-activation (required for clipboard writes) expires within ~5s — a
-  // headless browser launch can take longer. So the path is pre-assigned,
-  // the formatted text returns immediately, and the PNG lands on disk a
-  // moment later — well before a human pastes it anywhere.
+  // developer unticks it.
   if (batch.includeScreenshot !== false) {
-    // Deferred import: the capture module pulls in the browser singleton,
-    // which reads build artifacts at import time — only load it when a
-    // screenshot is actually wanted.
-    const { default: captureAnnotatedScreenshot } = await import(
-      '../../lib/docs/captureAnnotatedScreenshot.js'
-    );
     const fileName = `${batch.pageId}-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-    const serverOrigin = new URL(c.req.url).origin;
-    enriched = { ...enriched, screenshotPath: `.lowdefy/annotations/${fileName}` };
-    captureAnnotatedScreenshot({ origin: serverOrigin, batch: enriched, fileName }).then(
-      (result) => {
-        if (result.error) {
-          logger.warn(result.error);
-        }
+    if (typeof tabScreenshot === 'string') {
+      // Preferred path: the overlay captured the developer's actual tab —
+      // theme, loaded data, exact pixels — with annotations already drawn.
+      const { default: saveAnnotatedScreenshot } = await import(
+        '../../lib/docs/saveAnnotatedScreenshot.js'
+      );
+      const result = saveAnnotatedScreenshot({ dataUrl: tabScreenshot, fileName });
+      if (result.path) {
+        enriched = { ...enriched, screenshotPath: result.path };
+      } else {
+        logger.warn(result.error);
       }
-    );
+    } else {
+      // Fallback: re-render the page headless (batches from agents or older
+      // clients, or when the in-tab capture failed). The response must NOT
+      // wait for this capture: the overlay writes the clipboard when this
+      // returns, and Chrome's transient user-activation (required for
+      // clipboard writes) expires within ~5s — a headless browser launch can
+      // take longer. So the path is pre-assigned, the formatted text returns
+      // immediately, and the PNG lands on disk a moment later — well before
+      // a human pastes it anywhere.
+      // Deferred import: the capture module pulls in the browser singleton,
+      // which reads build artifacts at import time — only load it when a
+      // screenshot is actually wanted.
+      const { default: captureAnnotatedScreenshot } = await import(
+        '../../lib/docs/captureAnnotatedScreenshot.js'
+      );
+      const serverOrigin = new URL(c.req.url).origin;
+      enriched = { ...enriched, screenshotPath: `.lowdefy/annotations/${fileName}` };
+      captureAnnotatedScreenshot({ origin: serverOrigin, batch: enriched, fileName }).then(
+        (result) => {
+          if (result.error) {
+            logger.warn(result.error);
+          }
+        }
+      );
+    }
   }
 
   return c.json({ ok: true, formatted: formatFeedback({ items: [enriched] }) });

@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
@@ -25,8 +29,11 @@ const mockEnrichFeedback = jest.fn(async ({ batch }) => batch);
 jest.unstable_mockModule('../../lib/docs/enrichFeedback.js', () => ({
   default: mockEnrichFeedback,
 }));
+const mockCaptureAnnotatedScreenshot = jest.fn(async () => ({
+  path: '.lowdefy/annotations/test.png',
+}));
 jest.unstable_mockModule('../../lib/docs/captureAnnotatedScreenshot.js', () => ({
-  default: jest.fn(async () => ({ path: '.lowdefy/annotations/test.png' })),
+  default: mockCaptureAnnotatedScreenshot,
 }));
 
 const { default: feedbackHandler } = await import('./feedback.js');
@@ -37,8 +44,23 @@ function createApp() {
   return app;
 }
 
+let configDirectory;
+const originalConfigDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG;
+
+beforeEach(() => {
+  configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-feedback-test-'));
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+});
+
 afterEach(() => {
   mockEnrichFeedback.mockClear();
+  mockCaptureAnnotatedScreenshot.mockClear();
+  fs.rmSync(configDirectory, { recursive: true, force: true });
+  if (originalConfigDirectory === undefined) {
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  } else {
+    process.env.LOWDEFY_DIRECTORY_CONFIG = originalConfigDirectory;
+  }
 });
 
 test('feedbackHandler returns 403 when the Origin header is missing', async () => {
@@ -97,4 +119,86 @@ test('feedbackHandler enriches a valid batch and returns the formatted text', as
   expect(typeof body.formatted).toBe('string');
   expect(body.formatted).toContain('login');
   expect(mockEnrichFeedback).toHaveBeenCalledWith({ batch });
+});
+
+// A real 1x1 red PNG so the saved file is a valid image, not just bytes.
+const PNG_1X1_BASE64 =
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+
+test('feedbackHandler saves a tab-captured screenshot and skips the headless capture', async () => {
+  const batch = {
+    pageId: 'dashboard',
+    annotations: [{ id: '1', kind: 'region', comment: 'x' }],
+    screenshot: `data:image/png;base64,${PNG_1X1_BASE64}`,
+  };
+  const res = await createApp().request('/api/feedback', {
+    method: 'POST',
+    headers: {
+      host: 'localhost:3001',
+      origin: 'http://localhost:3001',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(batch),
+  });
+
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body.ok).toBe(true);
+  expect(body.formatted).toContain('.lowdefy/annotations/dashboard-');
+  // The data URL must never leak into the agent-readable text.
+  expect(body.formatted).not.toContain(PNG_1X1_BASE64);
+  expect(mockCaptureAnnotatedScreenshot).not.toHaveBeenCalled();
+
+  const dir = path.join(configDirectory, '.lowdefy', 'annotations');
+  const files = fs.readdirSync(dir);
+  expect(files).toHaveLength(1);
+  expect(files[0]).toMatch(/^dashboard-.*\.png$/);
+  expect(fs.readFileSync(path.join(dir, files[0]))).toEqual(
+    Buffer.from(PNG_1X1_BASE64, 'base64')
+  );
+});
+
+test('feedbackHandler falls back to the headless capture when the screenshot is not a PNG data URL', async () => {
+  const batch = {
+    pageId: 'dashboard',
+    annotations: [{ id: '1', kind: 'region', comment: 'x' }],
+    screenshot: 'data:image/jpeg;base64,notpng',
+  };
+  const res = await createApp().request('/api/feedback', {
+    method: 'POST',
+    headers: {
+      host: 'localhost:3001',
+      origin: 'http://localhost:3001',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(batch),
+  });
+
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body.ok).toBe(true);
+  // Not a valid tab capture — no file saved, and no screenshotPath claimed
+  // for it (the invalid-string branch logs a warning instead).
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'annotations'))).toBe(false);
+});
+
+test('feedbackHandler uses the headless capture when the batch has no screenshot', async () => {
+  const batch = {
+    pageId: 'dashboard',
+    annotations: [{ id: '1', kind: 'region', comment: 'x' }],
+  };
+  const res = await createApp().request('/api/feedback', {
+    method: 'POST',
+    headers: {
+      host: 'localhost:3001',
+      origin: 'http://localhost:3001',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(batch),
+  });
+
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body.formatted).toContain('.lowdefy/annotations/dashboard-');
+  expect(mockCaptureAnnotatedScreenshot).toHaveBeenCalledTimes(1);
 });
