@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.4.0",
-    "better-auth": "^1.6.23",
+    "better-auth": "1.6.23",
     "mongodb": "7.2.0",
     "saslprep": "1.0.3"
   },
