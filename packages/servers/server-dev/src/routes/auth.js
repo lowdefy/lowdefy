@@ -17,6 +17,7 @@
 import { authHandler } from '@hono/auth-js';
 
 import authJson from '../../lib/build/auth.js';
+import getDevSession from '../../lib/server/auth/getDevSession.js';
 
 // Replaces pages/api/auth/[...nextauth].js. Hono routes HEAD requests through
 // GET handlers, so the corporate-email pre-check branch must live inside the
@@ -30,6 +31,16 @@ function authMiddleware() {
     }
     if (c.req.method === 'HEAD') {
       return c.body(null, 200);
+    }
+    // Dev sessions (mock user, headless renderer cookie) exist outside
+    // Auth.js. getDevSession is the same function the server request
+    // context uses (lib/server/auth/session.js), so the session the browser
+    // client sees here is identical to the one requests authenticate with.
+    if (c.req.method === 'GET' && c.req.path.endsWith('/api/auth/session')) {
+      const devSession = await getDevSession(c);
+      if (devSession) {
+        return c.json(devSession);
+      }
     }
     return handler(c, next);
   };

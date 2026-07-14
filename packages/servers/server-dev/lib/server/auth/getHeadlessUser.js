@@ -16,11 +16,13 @@
 
 import { HEADLESS_USER_COOKIE } from './headlessUser.js';
 
-// Mirrors the e2e user-injection pattern (server-e2e/lib/server/auth/session.js):
-// the headless renderer sets a base64-JSON user cookie on its own browser
-// context, so its /api/* fetches carry a session while the developer's real
-// browser (no cookie) is unaffected.
-function getHeadlessSession(c) {
+// Decodes the headless renderer's user cookie (set by getBrowser.js openPage
+// on its own browser context, base64-encoded JSON) into the raw user object.
+// Returns just the user; getDevSession.js turns it into a session through
+// the same pipeline a real sign-in uses, so headless requests carry a
+// prod-shaped session while the developer's real browser (no cookie) is
+// unaffected.
+function getHeadlessUser(c) {
   const cookieHeader = c.req.header('cookie') ?? '';
   const match = cookieHeader.match(new RegExp(`${HEADLESS_USER_COOKIE}=([^;]+)`));
   if (!match) {
@@ -29,11 +31,10 @@ function getHeadlessSession(c) {
 
   try {
     const decoded = Buffer.from(decodeURIComponent(match[1]), 'base64').toString();
-    const user = JSON.parse(decoded);
-    return { user };
+    return JSON.parse(decoded);
   } catch {
     return undefined;
   }
 }
 
-export default getHeadlessSession;
+export default getHeadlessUser;

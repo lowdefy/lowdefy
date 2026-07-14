@@ -15,7 +15,7 @@
 */
 
 // Shared between the headless renderer (getBrowser.js, which sets the cookie on
-// its browser context) and the dev getSession (getHeadlessSession.js, which
+// its browser context) and the dev session resolution (getHeadlessUser.js, which
 // decodes it) so the cookie name and injected user shape live in one place.
 const HEADLESS_USER_COOKIE = 'lowdefy_headless_user';
 
