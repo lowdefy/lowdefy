@@ -110,19 +110,18 @@ try {
 
   startServer(context);
   await wait(800);
-  const appUrl = `http://localhost:${context.options.port}`;
-  context.logger.info(
-    { color: 'blue' },
-    `Agent docs & MCP live at ${appUrl}/lowdefy-docs — run \`lowdefy agent-setup\` to connect your coding agent.`
-  );
+  const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },
     formatNoticeBox({
-      title: 'Annotate for your agent',
+      title: 'Lowdefy coding agent tools',
       lines: [
-        'Press Cmd/Ctrl+/ in the browser to point, draw, and comment',
-        'on the running app, then paste the copied feedback into your',
-        'coding agent session.',
+        `Docs & MCP  ${docsUrl}`,
+        '            run `lowdefy agent-setup` to connect your agent',
+        '',
+        'Annotate    Press Cmd/Ctrl+/ in the browser to point, draw,',
+        '            and comment on the running app, then paste the',
+        '            copied feedback into your coding agent session.',
       ],
     })
   );
