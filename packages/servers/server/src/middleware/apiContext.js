@@ -41,6 +41,19 @@ import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
 
+// Charset/length guard so a hostile x-request-id can't inject into logs.
+const REQUEST_ID_REGEX = /^[\w.:-]{1,128}$/;
+
+// Honor the request id assigned by an upstream proxy or load balancer so one
+// id correlates client, proxy, and server logs; generate one otherwise.
+function getRequestId(c) {
+  const incoming = c.req.header('x-request-id');
+  if (incoming && REQUEST_ID_REGEX.test(incoming)) {
+    return incoming;
+  }
+  return uuid();
+}
+
 // Replaces lib/server/apiWrapper.js. Builds the request context consumed by
 // @lowdefy/api functions. Errors thrown by handlers are routed by Hono to the
 // app-level error handler (src/middleware/errorHandler.js), which reads this
@@ -53,7 +66,7 @@ function apiContext() {
       return next();
     }
     const context = {
-      rid: uuid(),
+      rid: getRequestId(c),
       agents,
       appMeta,
       buildDirectory: path.join(process.cwd(), 'build'),
@@ -67,10 +80,6 @@ function apiContext() {
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
       notifications,
       operators,
       renderEmail,
@@ -98,9 +107,20 @@ function apiContext() {
       });
     }
     createApiContext(context);
-    logRequest({ context });
     c.set('lowdefyContext', context);
-    return next();
+    // Echo the request id so clients and proxies can quote it when reporting
+    // a failure, and it can be matched to the rid on the server log lines.
+    c.header('x-request-id', context.rid);
+    const startTime = performance.now();
+    // Handler errors never reject next() — Hono's compose routes them to the
+    // app-level error handler at the throwing dispatch level, so by the time
+    // next() resolves c.res holds the final response, error or not.
+    await next();
+    logRequest({
+      context,
+      status: c.res.status,
+      durationMs: Math.round(performance.now() - startTime),
+    });
   };
 }
 

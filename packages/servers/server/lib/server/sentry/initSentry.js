@@ -18,17 +18,19 @@ import * as Sentry from '@sentry/node';
 
 import loggerConfig from '../../build/logger.js';
 
+// Returns true when Sentry was initialized, so the caller can log it through
+// the structured logger — this module runs before the logger exists.
 function initSentryServer() {
   // No-op if SENTRY_DSN not set
   if (!process.env.SENTRY_DSN) {
-    return;
+    return false;
   }
 
   const sentryConfig = loggerConfig.sentry || {};
 
   // No-op if server logging is explicitly disabled
   if (sentryConfig.server === false) {
-    return;
+    return false;
   }
 
   Sentry.init({
@@ -37,7 +39,7 @@ function initSentryServer() {
     tracesSampleRate: sentryConfig.tracesSampleRate ?? 0.1,
   });
 
-  console.log('Sentry enabled: server');
+  return true;
 }
 
 export default initSentryServer;

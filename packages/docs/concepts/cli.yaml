@@ -119,6 +119,15 @@ _ref:
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+            ## docker-output
+
+            The `docker-output` command assembles a minimal production runtime at `.lowdefy/docker` from an already-built app. It traces the server's runtime dependency graph and copies only the files the server actually imports, keeping the Docker image small. Run it after `lowdefy build`; the Dockerfile created by `init-docker` runs it for you.
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--server-directory <server-directory>`: Change the server directory. The default is `.lowdefy/server` in the config directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
             ## init-vercel
 
             The `init-vercel` command initializes the installation scripts needed to deploy an app on [Vercel](https://vercel.com). It creates a directory called deploy, and a script called vercel.install.sh. It also creates a README file with instructions on how to configure Vercel.

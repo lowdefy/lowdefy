@@ -20,6 +20,7 @@ import { Command, Option } from 'commander';
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
+import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
@@ -146,6 +147,16 @@ program
   .addOption(options.refResolver)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: emails }));
+
+program
+  .command('docker-output')
+  .description('Assemble a minimal Docker runtime (.lowdefy/docker) from a built app.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: dockerOutput }));
 
 program
   .command('init')
