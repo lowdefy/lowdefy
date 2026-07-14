@@ -109,6 +109,9 @@ try {
 
   startServer(context);
   await wait(800);
+  context.logger.info(
+    `Dev server ready at http://localhost:${context.options.port} — press Cmd/Ctrl+/ in the browser to annotate the page and copy feedback for your coding agent.`
+  );
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
     opener(`http://localhost:${context.options.port}`);

@@ -15,6 +15,7 @@
 */
 
 import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { blockAncestorChain, describeElement, nearestBlock } from './elementInspect.js';
 import {
@@ -663,7 +664,16 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
   } catch {
     content = null;
   }
-  return content;
+  // Portal to document.body so the overlay is a top-level sibling of the app
+  // root. Rendered inline it inherits the app root's stacking context, and an
+  // open antd modal (portalled to body, zIndex ~1000) then paints above the
+  // overlay regardless of its own zIndex — making the comment textarea
+  // unclickable. As a body sibling its zIndex competes in the root stacking
+  // context and wins.
+  if (typeof document === 'undefined' || !document.body) {
+    return content;
+  }
+  return createPortal(content, document.body);
 }
 
 // Pure render function kept outside the hook-bearing component body so a
@@ -776,7 +786,11 @@ function renderOverlayContent({
             <div style={descriptorRow}>{state.draftShapes.length} shape(s) drawn</div>
           )}
           <div style={buttonRow}>
-            <button type="button" style={secondaryButton} onClick={() => dispatch({ type: 'DISCARD_DRAFT' })}>
+            <button
+              type="button"
+              style={secondaryButton}
+              onClick={() => dispatch({ type: 'DISCARD_DRAFT' })}
+            >
               Cancel
             </button>
             <button type="button" style={primaryButton} onClick={handleSave}>
@@ -823,10 +837,18 @@ function renderOverlayContent({
           </label>
           {state.sendError && <div style={errorRow}>{state.sendError}</div>}
           <div style={buttonRow}>
-            <button type="button" style={dangerButton} onClick={() => dispatch({ type: 'DISCARD_ALL' })}>
+            <button
+              type="button"
+              style={dangerButton}
+              onClick={() => dispatch({ type: 'DISCARD_ALL' })}
+            >
               Discard all
             </button>
-            <button type="button" style={secondaryButton} onClick={() => dispatch({ type: 'ADD_ANOTHER' })}>
+            <button
+              type="button"
+              style={secondaryButton}
+              onClick={() => dispatch({ type: 'ADD_ANOTHER' })}
+            >
               Add another
             </button>
             <button
