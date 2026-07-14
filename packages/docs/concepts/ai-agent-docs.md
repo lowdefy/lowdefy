@@ -70,6 +70,10 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 
 When you have a page open in your browser, the agent can read its **actual live state** — page state, request results, and the event log of recent actions — via `lowdefy_inspect_state`. Reproduce a problem by clicking through the app, then ask the agent to look: it inspects your exact tab, not a guess. `lowdefy_eval_operator` then evaluates any operator expression (like `{"_state": "customer.name"}`) against that same live context, so `_state`/`_request` binding bugs get debugged against real data. With no tab open, both tools run the page headless instead.
 
+## Auth-protected pages
+
+The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of returning a 404. To render pages that require specific roles, start the dev server with a mock user carrying those roles — `lowdefy dev --mock-user '{"sub":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
+
 ## State checkpoints — put the app in a known state
 
 `lowdefy_snapshot_state` captures a moment — page state plus every request's recorded response — into a folder you can commit:

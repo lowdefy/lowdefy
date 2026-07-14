@@ -17,14 +17,20 @@
 import { getAuthUser } from '@hono/auth-js';
 
 import authJson from '../../build/auth.js';
+import getHeadlessSession from './getHeadlessSession.js';
 import getMockSession from './getMockSession.js';
 
-// Replaces getServerSession.js — mock user first (dev only), then the
-// session from the Hono context populated by initAuthConfig.
+// Replaces getServerSession.js — mock user first (dev only), then the headless
+// renderer's injected user cookie, then the session from the Hono context
+// populated by initAuthConfig.
 async function getSession(c) {
   const mockSession = await getMockSession();
   if (mockSession) {
     return mockSession;
+  }
+  const headlessSession = getHeadlessSession(c);
+  if (headlessSession) {
+    return headlessSession;
   }
   if (authJson.configured !== true) {
     return undefined;
