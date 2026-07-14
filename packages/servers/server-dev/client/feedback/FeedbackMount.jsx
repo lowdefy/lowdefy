@@ -34,6 +34,12 @@ function logBannerOnce() {
       'color: #4f9cf9; font-weight: bold;',
       'color: inherit;'
     );
+    // eslint-disable-next-line no-console
+    console.info(
+      '%cLowdefy Open Code%c — Cmd/Ctrl+click any element to open its yaml in VS Code.',
+      'color: #4f9cf9; font-weight: bold;',
+      'color: inherit;'
+    );
   } catch {
     // Never let a console-styling quirk break the app.
   }
