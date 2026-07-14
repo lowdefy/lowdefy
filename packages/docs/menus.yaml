@@ -510,6 +510,12 @@
         - id: Switch
           type: MenuLink
           pageId: Switch
+        - id: TagMultipleSelector
+          type: MenuLink
+          pageId: TagMultipleSelector
+        - id: TagSelector
+          type: MenuLink
+          pageId: TagSelector
         - id: TextArea
           type: MenuLink
           pageId: TextArea
