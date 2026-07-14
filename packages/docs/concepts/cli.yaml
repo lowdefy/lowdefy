@@ -75,6 +75,7 @@ _ref:
             - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
             - `--no-open`: Do not open a new tab in the default browser.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
