@@ -65,7 +65,53 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain('npx lowdefy dev');
   expect(agentsMd).toContain('http://localhost:3000/lowdefy-docs');
 
+  const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
+  expect(settings).toEqual({ enabledMcpjsonServers: ['lowdefy-docs'] });
+
   expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('agentSetup enables lowdefy-docs in an existing .claude/settings.json without dropping other keys', async () => {
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(claudeDir, 'settings.json'),
+    JSON.stringify({ enabledMcpjsonServers: ['other-server'], model: 'sonnet' }, null, 2)
+  );
+
+  await agentSetup({ context });
+
+  const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
+  expect(settings.enabledMcpjsonServers).toEqual(['other-server', 'lowdefy-docs']);
+  expect(settings.model).toEqual('sonnet');
+});
+
+test('agentSetup leaves .claude/settings.json unchanged when lowdefy-docs is already enabled', async () => {
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(claudeDir, 'settings.json'),
+    JSON.stringify({ enabledMcpjsonServers: ['lowdefy-docs'] })
+  );
+
+  await agentSetup({ context });
+
+  const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
+  expect(settings.enabledMcpjsonServers).toEqual(['lowdefy-docs']);
+  expect(context.logger.info).toHaveBeenCalledWith(expect.stringContaining('already enables'));
+});
+
+test('agentSetup warns and leaves .claude/settings.json unchanged when it is not valid JSON', async () => {
+  const claudeDir = path.join(configDirectory, '.claude');
+  fs.mkdirSync(claudeDir, { recursive: true });
+  fs.writeFileSync(path.join(claudeDir, 'settings.json'), '{ not json');
+
+  await agentSetup({ context });
+
+  expect(read(path.join('.claude', 'settings.json'))).toEqual('{ not json');
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    expect.stringContaining("Could not parse existing '.claude/settings.json'")
+  );
 });
 
 test('agentSetup uses the port option to parameterize the generated URLs', async () => {
