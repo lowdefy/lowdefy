@@ -17,6 +17,7 @@
 import { toPng } from 'html-to-image';
 
 import drawAnnotationsSvg from './drawAnnotationsSvg.js';
+import pinResponsiveImages from './pinResponsiveImages.js';
 
 // Chrome caps canvas dimensions well above this, but rasterizing a very long
 // page at retina density burns memory for no feedback value — drop to 1x
@@ -46,7 +47,9 @@ function resolveBackgroundColor() {
 // theme, un-settled requests, no client-only state). Returns null on any
 // failure so the server can fall back to the headless capture.
 async function captureTabScreenshot({ annotations }) {
+  let restoreImages = () => {};
   try {
+    restoreImages = pinResponsiveImages();
     drawAnnotationsSvg(annotations ?? []);
     const pixelRatio =
       Math.max(document.documentElement.scrollWidth, document.documentElement.scrollHeight) *
@@ -70,6 +73,7 @@ async function captureTabScreenshot({ annotations }) {
     return null;
   } finally {
     try {
+      restoreImages();
       document.getElementById('lowdefy-feedback-annotations-svg')?.remove();
     } catch {
       // Never let cleanup break the send flow.
