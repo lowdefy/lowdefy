@@ -79,6 +79,13 @@
     gap: var(--ant-margin-xs);
   }
 
+  /* Grow the label so the shortcut badge sits at the end of the trigger when
+     it is wider than its content (e.g. a min-width styled trigger). */
+  .lf-search-trigger-label {
+    flex: 1 1 auto;
+    text-align: left;
+  }
+
   .lf-search-recent-header {
     display: flex;
     align-items: center;
