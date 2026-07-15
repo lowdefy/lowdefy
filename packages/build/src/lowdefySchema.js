@@ -579,9 +579,9 @@ export default {
             '~r': {},
             '~l': {},
             from: {
-              type: 'string',
+              type: ['string', 'object'],
               errorMessage: {
-                type: 'Auth "email.from" should be a string.',
+                type: 'Auth "email.from" should be a string or _secret operator reference.',
               },
             },
             provider: {
