@@ -403,7 +403,18 @@ const PageSidebarLayout = ({
                                 properties.header?.contentStyle,
                               ])}
                             >
-                              {content.header()}
+                              {content.header(
+                                mergeObjects([
+                                  {
+                                    display: 'flex',
+                                    flex: '1 1 auto',
+                                    width: '100%',
+                                    minWidth: 0,
+                                    alignItems: 'center',
+                                  },
+                                  styles.headerContent,
+                                ])
+                              )}
                             </div>
                           ),
                         }}
