@@ -150,20 +150,36 @@ function setupTestFixtures() {
 
   write('build/pageRegistry.json', {
     home: { pageId: 'home', auth: null, refId: 'ref-home', refPath: 'pages/home.yaml' },
+    other: { pageId: 'other', auth: null, refId: 'ref-other', refPath: 'pages/other.yaml' },
+    legal: { pageId: 'legal', auth: null, refId: 'ref-legal', refPath: 'pages/legal.yaml' },
     unbuilt: { pageId: 'unbuilt', auth: null, refId: 'ref-unbuilt', refPath: 'pages/unbuilt.yaml' },
   });
 
+  // Mirrors the real dev keyMap shape: the skeleton build keys the whole
+  // config (`root.pages[N:id]` page stubs only), while each JIT page build
+  // runs addKeys on the page object itself — so page CONTENT keys are
+  // `root.blocks[...]` with no page segment, one `root`-keyed subtree per
+  // built page, distinguishable only via the ~k_parent chain. Tree roots
+  // reference a parent id that is never written to keyMap.
   write('build/keyMap.json', {
-    'key-root': { key: 'root', '~k_parent': null },
+    'key-root': { key: 'root', '~k_parent': 'key-root-parent' },
     'key-pages': { key: 'root.pages', '~k_parent': 'key-root', '~r': 'ref-home' },
-    'key-home': {
+    'key-home-stub': {
       key: 'root.pages[0:home]',
       '~k_parent': 'key-pages',
       '~r': 'ref-home',
       '~l': 1,
     },
+    'key-other-stub': {
+      key: 'root.pages[1:other]',
+      '~k_parent': 'key-pages',
+      '~r': 'ref-other',
+      '~l': 1,
+    },
+    // JIT subtree for page "home".
+    'key-home': { key: 'root', '~k_parent': 'key-home-jit-parent', '~r': 'ref-home', '~l': 1 },
     'key-button': {
-      key: 'root.pages[0:home].blocks[2:my_button:Button]',
+      key: 'root.blocks[2:my_button:Button]',
       '~k_parent': 'key-home',
       '~r': 'ref-home',
       '~l': 5,
@@ -171,15 +187,42 @@ function setupTestFixtures() {
     // List item block — config ids inside lists carry the `$` placeholder;
     // runtime block ids have array indices applied (`my_list.0.item_title`).
     'key-list-item': {
-      key: 'root.pages[0:home].blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
+      key: 'root.blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
       '~k_parent': 'key-home',
       '~r': 'ref-home',
       '~l': 9,
+    },
+    // JIT subtree for page "other" — holds a block id that also exists on
+    // home, with an IDENTICAL key shape. findConfig must scope pageId scans
+    // via the ~k_parent chain, not the key path.
+    'key-other': { key: 'root', '~k_parent': 'key-other-jit-parent', '~r': 'ref-other', '~l': 1 },
+    'key-other-button': {
+      key: 'root.blocks[0:my_button:Button]',
+      '~k_parent': 'key-other',
+      '~r': 'ref-other',
+      '~l': 4,
+    },
+    // Skeleton-built page (like the default 404) — content is keyed inside
+    // the global config tree with the page segment inline, and chains to the
+    // shared config root rather than a page-specific one.
+    'key-legal': {
+      key: 'root.pages[2:legal]',
+      '~k_parent': 'key-pages',
+      '~r': 'ref-legal',
+      '~l': 1,
+    },
+    'key-legal-button': {
+      key: 'root.pages[2:legal].blocks[0:legal_button:Button]',
+      '~k_parent': 'key-legal',
+      '~r': 'ref-legal',
+      '~l': 3,
     },
   });
 
   write('build/refMap.json', {
     'ref-home': { parent: null, path: 'pages/home.yaml' },
+    'ref-other': { parent: null, path: 'pages/other.yaml' },
+    'ref-legal': { parent: null, path: 'pages/legal.yaml' },
   });
 
   write('build/pages/home.json', {
@@ -197,6 +240,18 @@ function setupTestFixtures() {
       { id: 'request:home:req-write', requestId: 'req-write', payload: {} },
       { id: 'request:home:req-unknown', requestId: 'req-unknown', payload: {} },
     ],
+  });
+
+  write('build/pages/other.json', {
+    pageId: 'other',
+    blocks: [{ id: 'my_button', type: 'Button', '~k': 'key-other-button' }],
+    requests: [],
+  });
+
+  write('build/pages/legal.json', {
+    pageId: 'legal',
+    blocks: [{ id: 'legal_button', type: 'Button', '~k': 'key-legal-button' }],
+    requests: [],
   });
 
   // Per-request artifacts (packages/build/src/build/full/writeRequests.js

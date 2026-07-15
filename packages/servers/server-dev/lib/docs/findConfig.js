@@ -34,19 +34,121 @@ function buildIdPattern(id) {
   return new RegExp(`\\[\\d+:${escapeRegExp(id)}(:[^\\]]*)?\\]`);
 }
 
-function scanKeyMap({ id, keyMap, refMap, configDirectory }) {
+// The JIT page build runs addKeys on the page object itself (see
+// packages/build/src/build/jit/buildPageJit.js), so a built page's keyMap
+// subtree is keyed `root`, `root.blocks[...]` — the key path carries NO page
+// segment, and every built page looks identical by prefix. The page a keyMap
+// entry belongs to is only recoverable structurally: walk ~k_parent up to the
+// subtree root and compare against the page's own root. The page's root is
+// found from its build artifact — block objects in pages/<pageId>.json keep
+// their ~k, and any of them chains up to the page root. Skeleton-style keys
+// (`root.pages[N:pageId]...`) carry the page segment inline, so a containment
+// pattern covers those.
+function buildPageScope({ pageId, keyMap }) {
+  let rootKeyId = findPageRootKeyId({ pageId, keyMap });
+  // A page built during the skeleton build (e.g. the default 404 page) chains
+  // to the global config root, which every skeleton entry shares — useless as
+  // a page discriminator. Those pages' keys carry the page segment inline, so
+  // the pattern branch identifies them instead.
+  if (!type.isNone(rootKeyId) && rootKeyId === findGlobalRootId(keyMap)) {
+    rootKeyId = null;
+  }
+  return {
+    rootKeyId,
+    pagePattern: new RegExp(`\\bpages\\[\\d+:${escapeRegExp(pageId)}(:[^\\]]*)?\\]`),
+  };
+}
+
+function findGlobalRootId(keyMap) {
+  for (const [keyId, entry] of Object.entries(keyMap)) {
+    if (entry?.key === 'root.pages') {
+      return resolveChainRootId({ keyId, keyMap });
+    }
+  }
+  return null;
+}
+
+function findPageRootKeyId({ pageId, keyMap }) {
+  const artifact = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
+  const keyId = findFirstKeyId(artifact);
+  if (type.isNone(keyId)) {
+    return null;
+  }
+  return resolveChainRootId({ keyId, keyMap });
+}
+
+function findFirstKeyId(node) {
+  if (type.isString(node?.['~k'])) {
+    return node['~k'];
+  }
+  if (type.isArray(node)) {
+    for (const item of node) {
+      const keyId = findFirstKeyId(item);
+      if (keyId) {
+        return keyId;
+      }
+    }
+    return null;
+  }
+  if (!type.isObject(node)) {
+    return null;
+  }
+  for (const key of Object.keys(node)) {
+    const keyId = findFirstKeyId(node[key]);
+    if (keyId) {
+      return keyId;
+    }
+  }
+  return null;
+}
+
+// Walk ~k_parent to the top of the entry's subtree. addKeys assigns the tree
+// root a parent id that is never written to keyMap, so "parent not in keyMap"
+// is the root. The seen-set guards against a corrupt artifact cycling forever.
+function resolveChainRootId({ keyId, keyMap }) {
+  let currentId = keyId;
+  const seen = new Set();
+  while (!seen.has(currentId)) {
+    seen.add(currentId);
+    const parentId = keyMap[currentId]?.['~k_parent'];
+    if (type.isNone(parentId) || type.isUndefined(keyMap[parentId])) {
+      return currentId;
+    }
+    currentId = parentId;
+  }
+  return currentId;
+}
+
+function belongsToPage({ keyId, entry, keyMap, pageScope }) {
+  if (pageScope.pagePattern.test(entry.key)) {
+    return true;
+  }
+  if (type.isNone(pageScope.rootKeyId)) {
+    return false;
+  }
+  return resolveChainRootId({ keyId, keyMap }) === pageScope.rootKeyId;
+}
+
+function scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope }) {
   const pattern = buildIdPattern(id);
   const matches = [];
   for (const [keyId, entry] of Object.entries(keyMap)) {
     if (matches.length >= MAX_MATCHES) {
       break;
     }
-    if (type.isString(entry?.key) && pattern.test(entry.key)) {
-      matches.push({
-        keyPath: entry.key,
-        location: resolveConfigLocation({ configKey: keyId, keyMap, refMap, configDirectory }),
-      });
+    if (!type.isString(entry?.key)) {
+      continue;
     }
+    if (!pattern.test(entry.key)) {
+      continue;
+    }
+    if (pageScope && !belongsToPage({ keyId, entry, keyMap, pageScope })) {
+      continue;
+    }
+    matches.push({
+      keyPath: entry.key,
+      location: resolveConfigLocation({ configKey: keyId, keyMap, refMap, configDirectory }),
+    });
   }
   return matches;
 }
@@ -61,8 +163,8 @@ function deIndexId(id) {
   return id.replace(/\.\d+(?=\.|$)/g, () => '.$');
 }
 
-function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory }) {
-  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory });
+function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope }) {
+  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope });
   if (matches.length > 0) {
     return matches;
   }
@@ -70,7 +172,7 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory }) {
   if (deIndexedId === id) {
     return matches;
   }
-  return scanKeyMap({ id: deIndexedId, keyMap, refMap, configDirectory });
+  return scanKeyMap({ id: deIndexedId, keyMap, refMap, configDirectory, pageScope });
 }
 
 // Locates a block/request/connection/etc by id, or a page by pageId. Block
@@ -115,10 +217,21 @@ async function findConfig({ id, pageId }) {
 
     const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
     const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
-    const matches = scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory });
+    const matches = scanKeyMapWithDeIndex({
+      id,
+      keyMap,
+      refMap,
+      configDirectory,
+      pageScope: buildPageScope({ pageId, keyMap }),
+    });
     return matches.length > 0
       ? { matches }
-      : { matches, note: `No config found with id "${id}" on page "${pageId}".` };
+      : {
+          matches,
+          note:
+            `No config found with id "${id}" on page "${pageId}". Retry without ?pageId= to ` +
+            'scan all built pages and app-level config (connections, menus, api).',
+        };
   }
 
   const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
