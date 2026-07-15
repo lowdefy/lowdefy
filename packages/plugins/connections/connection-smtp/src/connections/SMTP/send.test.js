@@ -133,7 +133,7 @@ test('send mail replyTo overrides connection replyTo', async () => {
   expect(mockSendMail.mock.calls[0][0].replyTo).toEqual('mail-reply@example.com');
 });
 
-test('send returns messageId, accepted and rejected from transport info', async () => {
+test('send returns messageId, to, accepted and rejected from transport info', async () => {
   const send = (await import('./send.js')).default;
   mockSendMail.mockResolvedValue({
     messageId: '<id@example.com>',
@@ -152,9 +152,26 @@ test('send returns messageId, accepted and rejected from transport info', async 
   const result = await send({ connection, mail });
   expect(result).toEqual({
     messageId: '<id@example.com>',
+    to: 'someone@example.com',
     accepted: ['someone@example.com'],
     rejected: ['rejected@example.com'],
   });
+});
+
+test('send returns the replaced address when the filter redirects mail', async () => {
+  const send = (await import('./send.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: { replaceAddress: 'dev@test.com' },
+  };
+  const mail = {
+    to: 'someone@example.com',
+    subject: 'A',
+  };
+  const result = await send({ connection, mail });
+  expect(mockSendMail.mock.calls[0][0].to).toEqual('dev@test.com');
+  expect(result.to).toEqual('dev@test.com');
 });
 
 test('send returns filtered result without creating a transport when mail is filtered out', async () => {
@@ -169,7 +186,7 @@ test('send returns filtered result without creating a transport when mail is fil
     subject: 'A',
   };
   const result = await send({ connection, mail });
-  expect(result).toEqual({ messageId: null, filtered: true });
+  expect(result).toEqual({ messageId: null, to: null, filtered: true });
   expect(mockCreateTransport).not.toHaveBeenCalled();
   expect(mockSendMail).not.toHaveBeenCalled();
 });
@@ -185,8 +202,9 @@ test('send applies the connection filter to mail recipients', async () => {
     to: ['someone@example.com', 'blocked@blocked.org'],
     subject: 'A',
   };
-  await send({ connection, mail });
+  const result = await send({ connection, mail });
   expect(mockSendMail.mock.calls[0][0].to).toEqual(['someone@example.com']);
+  expect(result.to).toEqual(['someone@example.com']);
 });
 
 test('send closes the transport after a successful send', async () => {

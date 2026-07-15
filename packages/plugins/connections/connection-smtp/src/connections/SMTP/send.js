@@ -22,7 +22,7 @@ async function send({ connection, mail }) {
   const { from, replyTo, filter, ...transportOptions } = connection;
   const filtered = applyMailFilter({ filter, mail });
   if (filtered === null) {
-    return { messageId: null, filtered: true };
+    return { messageId: null, to: null, filtered: true };
   }
   const transport = nodemailer.createTransport(transportOptions);
   try {
@@ -37,7 +37,14 @@ async function send({ connection, mail }) {
       html: filtered.html,
       attachments: filtered.attachments,
     });
-    return { messageId: info.messageId, accepted: info.accepted, rejected: info.rejected };
+    // Return the post-filter to so callers can record where mail actually went
+    // when a connection filter (replaceAddress/allowlist/regex) rewrites it.
+    return {
+      messageId: info.messageId,
+      to: filtered.to,
+      accepted: info.accepted,
+      rejected: info.rejected,
+    };
   } finally {
     // close matters when pool: true is passed through in transport options
     transport.close();
