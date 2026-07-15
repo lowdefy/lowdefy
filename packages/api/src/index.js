@@ -28,6 +28,7 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
 import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
@@ -49,6 +50,7 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  normalizeInjectedCaller,
   resolveAuthentication,
   resolvePinnedOrganization,
   runDetachedEndpoint,

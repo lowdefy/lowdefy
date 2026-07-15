@@ -101,11 +101,6 @@ function createApp() {
     getAuth({ logger });
     getStrategies({ logger });
   }
-  if (mockUser) {
-    // With a mock user active, no auth engine runs - the BetterAuth client
-    // still polls the session endpoint, so answer with the mock caller.
-    app.get('/api/auth/get-session', (c) => c.json({ session: { id: 'mock' }, user: mockUser }));
-  }
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus
@@ -145,6 +140,17 @@ function createApp() {
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
   app.use('/api/*', apiContext());
+  // Unified dev get-session: createLowdefyContext resolves the mock or headless
+  // caller into context.user on every path, so read it here rather than
+  // re-deriving the precedence. context.user is only absent in the real-engine
+  // case (the developer's own browser), which must fall through to BetterAuth.
+  // Registered before the /api/auth/* mount so this exact path wins while every
+  // other auth route still reaches the engine.
+  app.get('/api/auth/get-session', async (c, next) => {
+    const context = c.get('lowdefyContext');
+    if (context.user) return c.json({ session: { id: 'dev' }, user: context.user });
+    return next();
+  });
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);

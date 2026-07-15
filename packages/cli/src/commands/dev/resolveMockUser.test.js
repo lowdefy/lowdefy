@@ -18,7 +18,6 @@ import resolveMockUser from './resolveMockUser.js';
 
 test('resolveMockUser returns a default roleless user for the bare flag', () => {
   expect(JSON.parse(resolveMockUser(true))).toEqual({
-    sub: 'lowdefy-dev',
     id: 'lowdefy-dev',
     name: 'Lowdefy Dev User',
     roles: [],

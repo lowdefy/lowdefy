@@ -15,7 +15,12 @@
 */
 
 import path from 'node:path';
-import { createApiContext, resolveAuthentication, resolvePinnedOrganization } from '@lowdefy/api';
+import {
+  createApiContext,
+  normalizeInjectedCaller,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+} from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -27,7 +32,7 @@ import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getAuth from './auth/getAuth.js';
-import getHeadlessSession from './auth/getHeadlessSession.js';
+import getHeadlessUser from './auth/getHeadlessUser.js';
 import getMockUser from './auth/getMockUser.js';
 import getStrategies from './auth/getStrategies.js';
 import i18nConfig from '../build/i18n.js';
@@ -85,22 +90,23 @@ async function createLowdefyContext({ c }) {
   };
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
-  const headlessSession = getHeadlessSession(c);
+  const headlessUser = getHeadlessUser(c);
   if (mockUser) {
     // The mock user is a pre-resolved caller - it substitutes for the
     // whole resolveAuthentication step and its roles are authoritative.
     // No auth engine runs while dev.mockUser is active (see src/app.js),
-    // so mock mode never touches the auth database.
+    // so mock mode never touches the auth database. normalizeInjectedCaller
+    // floors it to the resolved-caller shape.
     context.auth = null;
-    context.user = mockUser;
-  } else if (headlessSession) {
+    context.user = normalizeInjectedCaller(mockUser);
+  } else if (headlessUser) {
     // The headless renderer (docs/MCP screenshot and state tools) injects a
     // user cookie on its own browser context (getBrowser.js), so its /api/*
     // fetches carry a pre-resolved caller and auth-protected pages render.
     // The developer's real browser has no cookie and resolves through the
     // auth engine below, so it is unaffected.
     context.auth = null;
-    context.user = headlessSession.user;
+    context.user = normalizeInjectedCaller(headlessUser);
   } else {
     // Hoisted once per request - resolveAuthentication also needs it, and
     // getBetterAuth memoizes the instance, but this keeps the auth engine

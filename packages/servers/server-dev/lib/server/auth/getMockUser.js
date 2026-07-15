@@ -50,9 +50,8 @@ function getMockUser() {
     );
   }
 
-  if (!mockUser.roles) {
-    mockUser.roles = [];
-  }
+  // The roles/attributes floor is applied at injection by
+  // normalizeInjectedCaller (createLowdefyContext.js) - return the raw user.
   return mockUser;
 }
 

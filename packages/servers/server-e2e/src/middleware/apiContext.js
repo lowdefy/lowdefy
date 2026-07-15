@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, normalizeInjectedCaller } from '@lowdefy/api';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
@@ -72,8 +72,11 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
-    // The cookie user is a pre-resolved caller substituting for resolveAuthentication.
-    context.user = getUser(c);
+    // The cookie user is a pre-resolved caller substituting for
+    // resolveAuthentication - normalizeInjectedCaller floors it to the
+    // resolved-caller shape. An absent cookie stays a logged-out (null) caller.
+    const user = getUser(c);
+    context.user = user ? normalizeInjectedCaller(user) : null;
     createApiContext(context);
     logRequest({ context });
     c.set('lowdefyContext', context);
