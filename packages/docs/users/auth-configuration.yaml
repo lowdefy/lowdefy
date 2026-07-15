@@ -146,7 +146,7 @@ _ref:
                 - The environment variable takes precedence over the config file if both are set
                 - A warning is logged at dev server startup: "Mock user active - login bypassed"
                 - The mock user goes through the normal session callback, so `userFields` mappings and custom callbacks still apply
-                - The `_user` operator returns values from the mock user
+                - The `_user` operator returns values from the mock user, on the server and in the browser client — the dev server serves the mock session to both
                 - Protected pages are accessible based on the mock user's roles
                 - The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as the mock user, so it can capture pages with roles the default user lacks
 

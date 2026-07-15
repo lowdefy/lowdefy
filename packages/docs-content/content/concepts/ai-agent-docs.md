@@ -59,6 +59,10 @@ Feedback: 1 annotation(s) on page "orders" (/orders) — viewport 1280x800 @2x, 
 
 Esc cancels; the overlay never ships to production servers. The `/lowdefy-feedback` route prefix is reserved in dev.
 
+## Open code — Cmd/Ctrl+click jumps to the yaml
+
+Hold **Cmd** (macOS) or **Ctrl** (Windows/Linux) and click any element in your running dev app to open the yaml that defines its block in VS Code, at the exact line. While the modifier is held, the block under the cursor shows a blue highlight with its blockId — the same picking affordance as the annotation overlay — and the cursor becomes a pointer, so you see exactly what a click will open. The dev server resolves the clicked element to its block and looks up the config source the same way annotations do — blocks inside lists resolve to the item block that defines them (runtime array indices fold back to the config's `$` placeholder), other runtime-generated blocks resolve to their nearest configured ancestor, and blocks defined in modules open the module file that defines them. Plain clicks, and Cmd/Ctrl+clicks outside any block, keep their normal behaviour. Dev server only.
+
 ## The feedback loop
 
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
@@ -71,6 +75,10 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 ## Live state — the agent sees what you see
 
 When you have a page open in your browser, the agent can read its **actual live state** — page state, request results, and the event log of recent actions — via `lowdefy_inspect_state`. Reproduce a problem by clicking through the app, then ask the agent to look: it inspects your exact tab, not a guess. `lowdefy_eval_operator` then evaluates any operator expression (like `{"_state": "customer.name"}`) against that same live context, so `_state`/`_request` binding bugs get debugged against real data. With no tab open, both tools run the page headless instead.
+
+## Auth-protected pages
+
+The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of returning a 404. To render pages that require specific roles, start the dev server with a mock user carrying those roles — `lowdefy dev --mock-user '{"sub":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 
 ## State checkpoints — put the app in a known state
 

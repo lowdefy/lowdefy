@@ -22,6 +22,7 @@ import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import BuildingPage from '../lib/client/BuildingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
+import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
 import setPageId from '../lib/client/setPageId.js';
@@ -72,6 +73,7 @@ function Routing({ auth, lowdefy, router }) {
     <>
       <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
       <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+      <OpenInEditorListener basePath={router.basePath} pageId={pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
         {(resetContext) => (
           <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>

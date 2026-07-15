@@ -20,6 +20,7 @@ import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
+import formatNoticeBox from './utils/formatNoticeBox.mjs';
 
 /*
 The run script does the following:
@@ -109,8 +110,23 @@ try {
 
   startServer(context);
   await wait(800);
+  const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
   context.logger.info(
-    `Dev server ready at http://localhost:${context.options.port} — press Cmd/Ctrl+/ in the browser to annotate the page and copy feedback for your coding agent.`
+    { color: 'blue' },
+    formatNoticeBox({
+      title: 'Lowdefy coding agent tools',
+      lines: [
+        `Docs & MCP  ${docsUrl}`,
+        '            run `lowdefy agent-setup` to connect your agent',
+        '',
+        'Annotate    Press Cmd/Ctrl+/ in the browser to point, draw,',
+        '            and comment on the running app, then paste the',
+        '            copied feedback into your coding agent session.',
+        '',
+        'Open code   Cmd/Ctrl+click any element in the browser to open',
+        '            its yaml in VS Code at the defining line.',
+      ],
+    })
   );
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen

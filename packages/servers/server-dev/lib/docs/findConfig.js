@@ -51,6 +51,28 @@ function scanKeyMap({ id, keyMap, refMap, configDirectory }) {
   return matches;
 }
 
+// List item blocks render with array indices applied to their ids
+// (`my_list.0.name`) while config — and therefore keyMap — holds the `$`
+// placeholder form (`my_list.$.name`, see applyArrayIndices in
+// @lowdefy/helpers). Fold numeric segments back to `$` so a runtime id from
+// inside a list resolves to the yaml that defines the item block instead of
+// missing and falling back to an ancestor (usually the list itself).
+function deIndexId(id) {
+  return id.replace(/\.\d+(?=\.|$)/g, () => '.$');
+}
+
+function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory }) {
+  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory });
+  if (matches.length > 0) {
+    return matches;
+  }
+  const deIndexedId = deIndexId(id);
+  if (deIndexedId === id) {
+    return matches;
+  }
+  return scanKeyMap({ id: deIndexedId, keyMap, refMap, configDirectory });
+}
+
 // Locates a block/request/connection/etc by id, or a page by pageId. Block
 // content only exists in keyMap once its page has been JIT-built (see
 // lib/server/jitPageBuilder.js), so pass `pageId` to force-build and scan a
@@ -93,7 +115,7 @@ async function findConfig({ id, pageId }) {
 
     const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
     const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
-    const matches = scanKeyMap({ id, keyMap, refMap, configDirectory });
+    const matches = scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory });
     return matches.length > 0
       ? { matches }
       : { matches, note: `No config found with id "${id}" on page "${pageId}".` };
@@ -101,7 +123,7 @@ async function findConfig({ id, pageId }) {
 
   const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
   const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
-  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory });
+  const matches = scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory });
   return {
     matches,
     note:
