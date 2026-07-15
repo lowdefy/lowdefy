@@ -189,11 +189,23 @@ async function findConfig({ id, pageId }) {
   }
 
   const pageRegistry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
-  if (pageRegistry[id]) {
-    return { kind: 'page', pageId: id, file: pageRegistry[id].refPath };
-  }
-
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+
+  // A page's root block renders with blockId === pageId, so open-in-editor
+  // and feedback enrichment hit this branch for it — they read
+  // matches[0].location.source, so the page result must carry a match, not
+  // just the file field the docs/MCP consumers use.
+  if (pageRegistry[id]) {
+    const refPath = pageRegistry[id].refPath;
+    const matches = [];
+    if (type.isString(refPath)) {
+      matches.push({
+        keyPath: `pages[${id}]`,
+        location: { source: path.resolve(configDirectory, refPath) },
+      });
+    }
+    return { kind: 'page', pageId: id, file: refPath, matches };
+  }
 
   if (!type.isNone(pageId)) {
     if (!pageRegistry[pageId]) {

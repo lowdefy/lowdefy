@@ -229,7 +229,13 @@ test('getPageConfig returns null for a pageId not in the page registry', async (
 
 test('findConfig resolves a known pageId to its source file', async () => {
   const result = await findConfig({ id: 'home' });
-  expect(result).toEqual({ kind: 'page', pageId: 'home', file: 'pages/home.yaml' });
+  expect(result.kind).toEqual('page');
+  expect(result.pageId).toEqual('home');
+  expect(result.file).toEqual('pages/home.yaml');
+  // A page's root block renders with blockId === pageId — open-in-editor and
+  // feedback enrichment read matches[0].location.source from this result.
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].location.source).toContain('pages/home.yaml');
 });
 
 test('findConfig scans keyMap for a matching id when no pageId is given', async () => {
