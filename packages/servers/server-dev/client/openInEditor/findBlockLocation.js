@@ -21,9 +21,11 @@
 // sendFeedback.js — a dev-only feature must never throw into the app.
 async function findBlockLocation({ basePath, blockId, pageId }) {
   try {
+    // Omit pageId when unknown — an empty ?pageId= reads as an unknown page
+    // on the server, while no param falls back to scanning all built pages.
+    const query = pageId ? `?pageId=${encodeURIComponent(pageId)}` : '';
     const response = await fetch(
-      `${basePath}/lowdefy-docs/find/${encodeURIComponent(blockId)}` +
-        `?pageId=${encodeURIComponent(pageId ?? '')}`
+      `${basePath}/lowdefy-docs/find/${encodeURIComponent(blockId)}${query}`
     );
     if (!response.ok) {
       return null;

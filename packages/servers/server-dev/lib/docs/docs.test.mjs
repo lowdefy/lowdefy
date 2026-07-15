@@ -43,6 +43,13 @@ jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
 
+// findConfig force-builds a page when pageId is passed — the fixture pages
+// only exist as pre-written build artifacts, so stub the JIT builder out.
+const mockBuildPageIfNeeded = jest.fn(async () => true);
+jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+  default: mockBuildPageIfNeeded,
+}));
+
 const { default: listTypes } = await import('./listTypes.js');
 const { default: listPlugins } = await import('./listPlugins.js');
 const { default: getSchema } = await import('./getSchema.js');
@@ -226,11 +233,52 @@ test('findConfig resolves a known pageId to its source file', async () => {
 });
 
 test('findConfig scans keyMap for a matching id when no pageId is given', async () => {
+  // my_button exists on both built pages — an unscoped scan returns both.
   const result = await findConfig({ id: 'my_button' });
-  expect(result.matches.length).toEqual(1);
-  expect(result.matches[0].keyPath).toEqual('root.pages[0:home].blocks[2:my_button:Button]');
+  expect(result.matches.length).toEqual(2);
+  expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
   expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.matches[1].keyPath).toEqual('root.blocks[0:my_button:Button]');
   expect(result.note).toContain('Pass ?pageId=');
+});
+
+test('findConfig with pageId only returns matches on that page', async () => {
+  // Both pages hold a my_button whose JIT key paths are indistinguishable
+  // (`root.blocks[N:my_button:Button]`) — scoping must resolve through the
+  // ~k_parent chain to the page's own subtree root.
+  const result = await findConfig({ id: 'my_button', pageId: 'other' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toEqual('root.blocks[0:my_button:Button]');
+  expect(result.matches[0].location.source).toContain('pages/other.yaml:4');
+});
+
+test('findConfig with pageId resolves the same id to each page respectively', async () => {
+  const result = await findConfig({ id: 'my_button', pageId: 'home' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
+  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+});
+
+test('findConfig scopes skeleton-built pages via the page key segment', async () => {
+  // Pages built during the skeleton build (e.g. the default 404) chain to the
+  // shared config root — the page segment in the key path identifies them.
+  const result = await findConfig({ id: 'legal_button', pageId: 'legal' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toEqual('root.pages[2:legal].blocks[0:legal_button:Button]');
+  expect(result.matches[0].location.source).toContain('pages/legal.yaml:3');
+});
+
+test('findConfig with a skeleton-built pageId does not leak other pages ids', async () => {
+  const result = await findConfig({ id: 'my_button', pageId: 'legal' });
+  expect(result.matches).toEqual([]);
+});
+
+test('findConfig with pageId does not match ids that only exist on other pages', async () => {
+  // my_list.$.item_title only exists on home — scoped to "other" it must not
+  // resolve, instead of falling back to the wrong page.
+  const result = await findConfig({ id: 'my_list.0.item_title', pageId: 'other' });
+  expect(result.matches).toEqual([]);
+  expect(result.note).toContain('No config found with id "my_list.0.item_title" on page "other"');
 });
 
 test('findConfig resolves a runtime list item id to its $ placeholder config id', async () => {
@@ -240,6 +288,12 @@ test('findConfig resolves a runtime list item id to its $ placeholder config id'
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toContain('[0:my_list.$.item_title:Title]');
   expect(result.matches[0].location.source).toContain('pages/home.yaml:9');
+});
+
+test('findConfig resolves a runtime list item id within a pageId scope', async () => {
+  const result = await findConfig({ id: 'my_list.0.item_title', pageId: 'home' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toContain('[0:my_list.$.item_title:Title]');
 });
 
 test('findConfig de-indexes any list index, not just the first item', async () => {
@@ -252,7 +306,7 @@ test('findConfig prefers an exact id match over de-indexing', async () => {
   // my_button contains no indices — exact scan must resolve it without the
   // de-index retry changing anything.
   const result = await findConfig({ id: 'my_button' });
-  expect(result.matches[0].keyPath).toEqual('root.pages[0:home].blocks[2:my_button:Button]');
+  expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
 });
 
 test('findConfig returns empty matches with a note when nothing matches', async () => {
