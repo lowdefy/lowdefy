@@ -50,6 +50,9 @@ function setup({ signInResult, signUpResult } = {}) {
     signInEmail: jest.fn(() =>
       Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
     ),
+    signInPasskey: jest.fn(() =>
+      Promise.resolve({ data: signInResult ?? { session: {}, user: {} }, error: null })
+    ),
     signInPhoneNumber: jest.fn(() =>
       Promise.resolve({ data: signInResult ?? { token: 't' }, error: null })
     ),
@@ -386,6 +389,33 @@ test('passkeyRegister surfaces a cancelled WebAuthn ceremony as an error', async
   );
   const { passkeyRegister } = createAuthMethods(lowdefy, auth);
   await expect(passkeyRegister()).rejects.toThrow('Registration cancelled.');
+});
+
+test('passkeySignIn navigates to callbackURL on a session-bearing success', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { session: {}, user: {} } });
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  const data = await passkeySignIn({ callbackUrl: { url: '/dashboard' } });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+  expect(data).toEqual({ session: {}, user: {} });
+});
+
+test('passkeySignIn calls auth.signInPasskey with no forwarded params', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  await passkeySignIn({ callbackUrl: { url: '/dashboard' } });
+  expect(auth.signInPasskey.mock.calls).toEqual([[]]);
+});
+
+test('passkeySignIn surfaces a failed ceremony or walled-out response as an error', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInPasskey = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'Membership required.', code: 'MEMBERSHIP_REQUIRED', status: 403 },
+    })
+  );
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  await expect(passkeySignIn()).rejects.toThrow('Membership required.');
 });
 
 test('passkeyDelete maps passkeyId onto the deletePasskey id param', async () => {

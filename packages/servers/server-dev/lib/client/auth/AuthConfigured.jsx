@@ -128,6 +128,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
     signInOauth2: (params) => authClient.signIn.oauth2(params),
+    signInPasskey: (params) => authClient.signIn.passkey(params),
     signInPhoneNumber: (params) => authClient.signIn.phoneNumber(params),
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),

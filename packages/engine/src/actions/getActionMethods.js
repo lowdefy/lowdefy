@@ -36,6 +36,7 @@ import createLogout from './createLogout.js';
 import createDisplayMessage from './createDisplayMessage.js';
 import createPasskeyDelete from './createPasskeyDelete.js';
 import createPasskeyRegister from './createPasskeyRegister.js';
+import createPasskeySignIn from './createPasskeySignIn.js';
 import createPhoneNumberSendOtp from './createPhoneNumberSendOtp.js';
 import createPhoneNumberVerify from './createPhoneNumberVerify.js';
 import createPublish from './createPublish.js';
@@ -84,6 +85,7 @@ function getActionMethods(props) {
     logout: createLogout(props),
     passkeyDelete: createPasskeyDelete(props),
     passkeyRegister: createPasskeyRegister(props),
+    passkeySignIn: createPasskeySignIn(props),
     phoneNumberSendOtp: createPhoneNumberSendOtp(props),
     phoneNumberVerify: createPhoneNumberVerify(props),
     publish: createPublish(props),

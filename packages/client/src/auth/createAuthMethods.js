@@ -288,6 +288,22 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.addPasskey(params));
   }
 
+  // Passkey sign-in: the BetterAuth client method runs the whole WebAuthn
+  // assertion ceremony itself (options fetch, navigator.credentials.get(),
+  // verification), so the ceremony runs inside the action. verify-authentication
+  // creates the session, so on success navigate to callbackUrl like login's
+  // email path. A successful assertion is terminal - passkey never returns a
+  // two-factor challenge - so there is no twoFactorRedirect branch.
+  async function passkeySignIn({ callbackUrl } = {}) {
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(auth.signInPasskey());
+    const window = lowdefy._internal?.globals?.window;
+    if (callbackURL && window) {
+      window.location.assign(callbackURL);
+    }
+    return data;
+  }
+
   // Dispatches by parameter, matching login: a phoneNumber param requests the
   // reset code over SMS (the "phone.passwordReset.send" hook), otherwise
   // email carries the reset link.
@@ -410,6 +426,7 @@ function createAuthMethods(lowdefy, auth) {
     logout,
     passkeyDelete,
     passkeyRegister,
+    passkeySignIn,
     phoneNumberSendOtp,
     phoneNumberVerify,
     requestPasswordReset,
