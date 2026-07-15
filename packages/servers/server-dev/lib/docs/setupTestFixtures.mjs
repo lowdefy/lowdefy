@@ -168,6 +168,14 @@ function setupTestFixtures() {
       '~r': 'ref-home',
       '~l': 5,
     },
+    // List item block — config ids inside lists carry the `$` placeholder;
+    // runtime block ids have array indices applied (`my_list.0.item_title`).
+    'key-list-item': {
+      key: 'root.pages[0:home].blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
+      '~k_parent': 'key-home',
+      '~r': 'ref-home',
+      '~l': 9,
+    },
   });
 
   write('build/refMap.json', {

@@ -233,6 +233,28 @@ test('findConfig scans keyMap for a matching id when no pageId is given', async 
   expect(result.note).toContain('Pass ?pageId=');
 });
 
+test('findConfig resolves a runtime list item id to its $ placeholder config id', async () => {
+  // A block inside a list renders with array indices applied to its id —
+  // the config (and keyMap) hold the `$` form.
+  const result = await findConfig({ id: 'my_list.0.item_title' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toContain('[0:my_list.$.item_title:Title]');
+  expect(result.matches[0].location.source).toContain('pages/home.yaml:9');
+});
+
+test('findConfig de-indexes any list index, not just the first item', async () => {
+  const result = await findConfig({ id: 'my_list.17.item_title' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toContain('my_list.$.item_title');
+});
+
+test('findConfig prefers an exact id match over de-indexing', async () => {
+  // my_button contains no indices — exact scan must resolve it without the
+  // de-index retry changing anything.
+  const result = await findConfig({ id: 'my_button' });
+  expect(result.matches[0].keyPath).toEqual('root.pages[0:home].blocks[2:my_button:Button]');
+});
+
 test('findConfig returns empty matches with a note when nothing matches', async () => {
   const result = await findConfig({ id: 'no-such-id' });
   expect(result.matches).toEqual([]);
