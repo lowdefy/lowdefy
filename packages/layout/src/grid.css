@@ -110,6 +110,24 @@
     order: var(--lf-order, 0);
   }
 
+  /* =====================================================
+     Column-direction areas
+
+     The span flex-basis formula sizes the MAIN axis, which in
+     a column-direction area is vertical. A percentage basis
+     against the area's indefinite height resolves to content
+     size, so it happens to render correctly — but as soon as
+     the height becomes definite (an explicit height, or a
+     DOM-cloning rasterizer like html-to-image inlining
+     computed px heights) basis 100% overflows the area and
+     wrap spills blocks into a new column. Blocks in column
+     areas size their height by content; span still constrains
+     width via max-width.
+     ===================================================== */
+  .lf-row-column > .lf-col {
+    flex-basis: auto;
+  }
+
   /* Push/pull: only apply positioning when class is present */
   .lf-col-push {
     position: relative;
