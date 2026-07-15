@@ -70,6 +70,7 @@ test('send with valid request and connection', async () => {
   ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
+    results: [{ messageId: 'test-message-id', to: 'a@b.com' }],
   });
 });
 
@@ -99,6 +100,12 @@ test('send to list of emails', async () => {
   ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
+    results: [
+      {
+        messageId: 'test-message-id',
+        to: ['a@b.com', 'aaa bbb <aaa@bbb.com>', { email: 'ddd@eee.com', name: 'ccc' }],
+      },
+    ],
   });
 });
 
@@ -145,6 +152,71 @@ test('send a list of different emails', async () => {
   ]);
   expect(send).toEqual({
     response: 'Mail sent successfully',
+    results: [
+      { messageId: 'test-message-id', to: 'a@b.com' },
+      { messageId: 'test-message-id', to: 'b@b.com' },
+    ],
+  });
+});
+
+test('SendGridMailSend includes filtered results for filtered-out messages', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const request = [
+    {
+      to: 'a@allowed.com',
+      subject: 'A',
+      text: 'A',
+    },
+    {
+      to: 'b@other.com',
+      subject: 'B',
+      text: 'B',
+    },
+  ];
+  const connection = {
+    apiKey: 'X',
+    from: 'x@y.com',
+    filter: { allowlist: ['allowed.com'] },
+  };
+  const send = await SendGridMailSend({ request, connection });
+  expect(mockSend.mock.calls).toEqual([
+    [
+      {
+        from: 'x@y.com',
+        mailSettings: undefined,
+        subject: 'A',
+        templateId: undefined,
+        text: 'A',
+        to: 'a@allowed.com',
+      },
+    ],
+  ]);
+  expect(send).toEqual({
+    response: 'Mail sent successfully',
+    results: [
+      { messageId: 'test-message-id', to: 'a@allowed.com' },
+      { messageId: null, to: null, filtered: true },
+    ],
+  });
+});
+
+test('SendGridMailSend returns the replaced address when the filter redirects mail', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const request = {
+    to: 'a@b.com',
+    subject: 'A',
+    text: 'B',
+  };
+  const connection = {
+    apiKey: 'X',
+    from: 'x@y.com',
+    filter: { replaceAddress: 'dev@test.com' },
+  };
+  const send = await SendGridMailSend({ request, connection });
+  expect(mockSend.mock.calls[0][0].to).toEqual('dev@test.com');
+  expect(send).toEqual({
+    response: 'Mail sent successfully',
+    results: [{ messageId: 'test-message-id', to: 'dev@test.com' }],
   });
 });
 
