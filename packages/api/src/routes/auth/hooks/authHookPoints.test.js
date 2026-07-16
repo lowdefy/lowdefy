@@ -33,7 +33,6 @@ test('the catalog covers the frozen launch point set', () => {
       'verification.create.before',
       'verification.create.after',
       'email.verified',
-      'invitation.send',
       'phone.otp.send',
       'phone.passwordReset.send',
       'phone.verified',

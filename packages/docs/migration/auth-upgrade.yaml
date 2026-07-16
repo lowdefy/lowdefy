@@ -108,29 +108,52 @@ _ref:
 
             ### 6. Migrate `EmailProvider` to `magicLink`
 
-            Magic-link login is a plugin with its own key, not a provider entry. Move the SMTP transport into `auth.email`, which is shared by all email flows (magic links, verification, password reset):
+            Magic-link login is a plugin with its own key, not a provider entry. `auth.email` no longer carries an inline SMTP transport — it references an `SMTP` connection by id. That one connection owns `from`, `replyTo`, the transport, and the delivery `filter`, and is shared by every email flow (magic links, verification, password reset, invitations):
 
             ```yaml
+            connections:
+              - id: email
+                type: SMTP
+                properties:
+                  from: noreply@example.com
+                  host:
+                    _secret: SMTP_HOST
+                  port: 587
+                  auth:
+                    user:
+                      _secret: SMTP_USER
+                    pass:
+                      _secret: SMTP_PASS
             auth:
               magicLink:
                 enabled: true
                 expiresIn: 300
               email:
-                from: noreply@example.com
-                provider:
-                  type: smtp
-                  properties:
-                    host:
-                      _secret: SMTP_HOST
-                    port: 587
-                    auth:
-                      user:
-                        _secret: SMTP_USER
-                      pass:
-                        _secret: SMTP_PASS
+                connectionId: email   # an SMTP connection in connections[]
             ```
 
             The client signs in with the `Login` action: `params: { magicLink: true, email: ... }`.
+
+            **Auth emails obey the connection's delivery filter.** Because auth email now sends through the same `SMTP` connection your app uses for notification and routine mail, that connection's `filter` (dev catch-all, sandbox allowlist/regex, none in production) governs auth email too. This closes the old footgun where auth emails bypassed the filter and shipped to real inboxes while everything else was caught in development.
+
+            **Branded HTML by default.** The four auth emails — verification, password reset, magic link, and invitation — render branded HTML from your `app.email` theme (logo, colour, layout), not the old plain-text link. There is no per-flow theme knob; one `app.email` brand covers them all.
+
+            **Overriding a flow.** Point any flow at one of your own `notifications:` entries to replace its email with a bespoke notification template (its own copy, subject, and per-notification `theme` merged over `app.email`):
+
+            ```yaml
+            auth:
+              email:
+                connectionId: email
+                templates:            # all optional; unset → branded stock template
+                  verifyEmail: verify-email-notification
+                  resetPassword: reset-password-notification
+                  magicLink: magic-link-notification
+                  invitation: invite-notification
+            ```
+
+            Each value is a notification id from `notifications:`. These `templates` keys are an email-flow namespace, separate from the `authPages` roles despite the shared `resetPassword` / `verifyEmail` spelling. An override template **must surface the framework `url` behind its call-to-action** — the engine injects `url` (and, for invitations, the accept-page link). A verify email with no verify link is a dead end, so a template that ignores `url` is a mistake.
+
+            **`invitation.send` is removed.** The invitation email is now symmetric with the other three: branded stock `InvitationEmail` by default, an override notification when configured. The old `invitation.send` auth hook — whose only purpose was branding the invite before overrides existed — is gone. If you bound it, point `auth.email.templates.invitation` at a notification instead.
 
             ### 7. Rewrite callbacks and events as hooks
 

@@ -76,13 +76,12 @@ beforeEach(() => {
 });
 
 test('buildHooks always registers the engine session.create.before policy slot', () => {
-  const { afterEmailVerification, databaseHooks, sendInvitationEmail } = buildTestHooks({
+  const { afterEmailVerification, databaseHooks } = buildTestHooks({
     hooks: [],
   });
   expect(databaseHooks.session.create.before).toBeInstanceOf(Function);
   expect(databaseHooks.user).toBeUndefined();
   expect(afterEmailVerification).toBeUndefined();
-  expect(sendInvitationEmail).toBeUndefined();
 });
 
 test('buildHooks registers the auto-join user.create.after slot for open signup under pinned', () => {
@@ -328,32 +327,6 @@ test('email.verified builds an afterEmailVerification callback, not a database h
   await expect(afterEmailVerification({ id: 'user_1', email: 'a@b.c' })).rejects.toThrow(
     'verified:a@b.c'
   );
-});
-
-test('invitation.send builds the sendInvitationEmail callback with the catalog payload', async () => {
-  const { databaseHooks, sendInvitationEmail } = buildTestHooks({
-    hooks: [{ id: 'invite', point: 'invitation.send', endpointId: 'auth/invite' }],
-    endpointConfigs: {
-      'auth/invite': {
-        endpointId: 'auth/invite',
-        type: 'InternalApi',
-        routine: {
-          ':reject': { '_string.concat': ['invite:', { _payload: 'invitation.email' }] },
-        },
-      },
-    },
-  });
-  expect(databaseHooks.invitation).toBeUndefined();
-  await expect(
-    sendInvitationEmail({
-      id: 'inv_1',
-      role: 'member',
-      email: 'a@b.c',
-      invitation: { id: 'inv_1', email: 'a@b.c' },
-      organization: { id: 'org_1', name: 'Org One' },
-      inviter: { user: { email: 'inviter@b.c' } },
-    })
-  ).rejects.toThrow('invite:a@b.c');
 });
 
 test('two before hooks on one point run in array order and thread the record through both', async () => {

@@ -29,6 +29,7 @@
   "type": "module",
   "exports": {
     "./connections": "./dist/connections.js",
+    "./send": "./dist/connections/SMTP/send.js",
     "./types": "./dist/types.js",
     "./transportSchema": "./dist/connections/SMTP/transportSchema.js"
   },

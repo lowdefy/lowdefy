@@ -58,7 +58,6 @@ test('buildAuthHooks accepts every point in the frozen catalog', () => {
     'verification.create.before',
     'verification.create.after',
     'email.verified',
-    'invitation.send',
   ];
   const components = {
     auth: {

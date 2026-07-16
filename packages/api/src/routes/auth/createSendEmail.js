@@ -14,31 +14,24 @@
   limitations under the License.
 */
 
-import nodemailer from 'nodemailer';
+import send from '@lowdefy/connection-smtp/send';
 import { ServiceError } from '@lowdefy/errors';
 
-// auth.email configures one SMTP transport that every auth email
-// (verification, password reset, magic link) sends through. Transport
-// correctness cannot be validated at build - host and credentials are
-// secrets - so failures surface here at send time.
-function createSendEmail({ emailConfig }) {
-  const { host, port, secure, auth } = emailConfig.provider.properties ?? {};
-  const transport = nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth,
-  });
+import getConnectionConfig from '../connections/getConnectionConfig.js';
 
-  return async function sendEmail({ to, subject, text, html }) {
+// auth.email sends every auth email (verification, password reset, magic link)
+// through an SMTP connection. Resolving the connection per fire lets operators
+// and the connection's delivery filter apply, so failures - and filtering -
+// surface here at send time rather than at construction.
+function createSendEmail({ connectionId }) {
+  return async function sendEmail({ to, subject, html, text, context }) {
+    const connectionConfig = await getConnectionConfig(context, { connectionId });
+    const connection = context.evaluateOperators({
+      input: connectionConfig.properties ?? {},
+      location: connectionId,
+    });
     try {
-      await transport.sendMail({
-        from: emailConfig.from,
-        to,
-        subject,
-        text,
-        html,
-      });
+      return await send({ connection, mail: { to, subject, html, text } });
     } catch (error) {
       throw new ServiceError(undefined, {
         cause: error,

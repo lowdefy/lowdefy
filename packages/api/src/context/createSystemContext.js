@@ -40,6 +40,7 @@ function createSystemContext({
   i18n,
   jsMap,
   logger,
+  notifications,
   operators,
   rid,
   secrets,
@@ -60,6 +61,7 @@ function createSystemContext({
     i18n: i18n?.defaultLocale ? { ...i18n, active: i18n.defaultLocale } : undefined,
     jsMap,
     logger,
+    notifications,
     operators,
     req: {
       url: 'system:auth-hook',

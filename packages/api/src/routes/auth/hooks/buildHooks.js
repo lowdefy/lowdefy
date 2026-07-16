@@ -53,7 +53,6 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
   const databaseHooks = {};
   let afterEmailVerification;
   let phoneVerified;
-  let sendInvitationEmail;
   let sendPhoneOtp;
   let sendPhonePasswordResetOtp;
 
@@ -79,9 +78,6 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
     if (point === 'email.verified') {
       afterEmailVerification = composeAfterSlot({ hooks });
     }
-    if (point === 'invitation.send') {
-      sendInvitationEmail = composeAfterSlot({ hooks });
-    }
     if (point === 'phone.otp.send') {
       sendPhoneOtp = composeAfterSlot({ hooks });
     }
@@ -97,7 +93,6 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
     afterEmailVerification,
     databaseHooks,
     phoneVerified,
-    sendInvitationEmail,
     sendPhoneOtp,
     sendPhonePasswordResetOtp,
   };

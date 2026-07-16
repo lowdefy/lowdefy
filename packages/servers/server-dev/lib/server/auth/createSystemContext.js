@@ -28,6 +28,7 @@ import createLogger from '../log/createLogger.js';
 import fileCache from '../fileCache.js';
 import i18nConfig from '../../build/i18n.js';
 import loadDynamicJsMap from '../loadDynamicJsMap.js';
+import notifications from '../../../build/plugins/notifications.js';
 import operators from '../../../build/plugins/operators/server.js';
 import steps from '../../../build/plugins/steps.js';
 import websockets from '../../../build/plugins/websockets.js';
@@ -58,6 +59,7 @@ function createSystemContext({ auth } = {}) {
     i18n: i18nConfig,
     jsMap: loadDynamicJsMap(buildDirectory),
     logger: createLogger({ rid }),
+    notifications,
     operators,
     secrets,
     steps,

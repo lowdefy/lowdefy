@@ -17,7 +17,30 @@
 import { jest } from '@jest/globals';
 import { ConfigError } from '@lowdefy/errors';
 
-import getBetterAuthConfig from './getBetterAuthConfig.js';
+const mockSendEmail = jest.fn(async () => ({ messageId: 'msg_1' }));
+const mockCreateSendEmail = jest.fn(() => mockSendEmail);
+const mockRenderAuthEmail = jest.fn(async () => ({
+  subject: 'Rendered subject',
+  html: '<p>Rendered</p>',
+  text: 'Rendered text',
+}));
+
+jest.unstable_mockModule('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
+jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({ default: mockRenderAuthEmail }));
+
+const { default: getBetterAuthConfig } = await import('./getBetterAuthConfig.js');
+
+const emailConfig = {
+  connectionId: 'auth_email',
+  from: 'noreply@example.com',
+  provider: { properties: { host: 'smtp.example.com', port: 587 } },
+};
+
+beforeEach(() => {
+  mockSendEmail.mockClear();
+  mockCreateSendEmail.mockClear();
+  mockRenderAuthEmail.mockClear();
+});
 
 // Matches the defaulted auth.json artifact shape written by the build.
 function createAuthJson(overrides = {}) {
@@ -497,6 +520,231 @@ test('does not add emailVerification when email is not configured', () => {
     secrets: baseSecrets,
   });
   expect(options.emailVerification).toBeUndefined();
+});
+
+describe('auth email flows route through renderAuthEmail and sendEmail', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+  const sentinelContext = { system: true };
+  const createSystemContext = jest.fn(() => sentinelContext);
+
+  afterEach(() => {
+    createSystemContext.mockClear();
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  function getInvitationSender(options) {
+    return options.plugins.find((p) => p.id === 'organization').options.sendInvitationEmail;
+  }
+
+  test('constructs sendEmail from the resolved auth.email.connectionId', () => {
+    getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(mockCreateSendEmail).toHaveBeenCalledWith({ connectionId: 'auth_email' });
+  });
+
+  test('sendResetPassword renders the resetPassword flow and sends to the user email', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await options.emailAndPassword.sendResetPassword({
+      user: { email: 'user@example.com' },
+      url: 'https://app.example.com/reset?token=abc',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'resetPassword',
+        vars: { url: 'https://app.example.com/reset?token=abc' },
+        authEmailConfig: expect.objectContaining({ connectionId: 'auth_email' }),
+        context: sentinelContext,
+      })
+    );
+    expect(mockSendEmail).toHaveBeenCalledWith({
+      to: 'user@example.com',
+      subject: 'Rendered subject',
+      html: '<p>Rendered</p>',
+      text: 'Rendered text',
+      context: sentinelContext,
+    });
+  });
+
+  test('sendVerificationEmail renders the verifyEmail flow and sends to the user email', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await options.emailVerification.sendVerificationEmail({
+      user: { email: 'user@example.com' },
+      url: 'https://app.example.com/verify?token=xyz',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'verifyEmail',
+        vars: { url: 'https://app.example.com/verify?token=xyz' },
+        context: sentinelContext,
+      })
+    );
+    expect(mockSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'user@example.com', context: sentinelContext })
+    );
+  });
+
+  test('sendMagicLink renders the magicLink flow and sends to the provided email', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const magicPlugin = options.plugins.find((p) => p.id === 'magic-link');
+    await magicPlugin.options.sendMagicLink({
+      email: 'user@example.com',
+      url: 'https://app.example.com/magic?token=mmm',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'magicLink',
+        vars: { url: 'https://app.example.com/magic?token=mmm' },
+        context: sentinelContext,
+      })
+    );
+    expect(mockSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'user@example.com', context: sentinelContext })
+    );
+  });
+
+  test('the invitation sender composes the accept URL when origin and acceptInvitation are set', async () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        authPages: { acceptInvitation: '/accept-invitation' },
+      }),
+      config: { basePath: '/my-app' },
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await getInvitationSender(options)({
+      email: 'invitee@example.com',
+      organization: { name: 'Acme' },
+      invitation: { id: 'inv_1' },
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'invitation',
+        vars: {
+          url: 'https://app.example.com/my-app/accept-invitation?invitationId=inv_1',
+          organizationName: 'Acme',
+          invitationId: 'inv_1',
+        },
+        context: sentinelContext,
+      })
+    );
+    expect(mockSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'invitee@example.com', context: sentinelContext })
+    );
+  });
+
+  test('the invitation sender falls back to url undefined when the origin is not pinned', async () => {
+    delete process.env.BETTER_AUTH_URL;
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        authPages: { acceptInvitation: '/accept-invitation' },
+      }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await getInvitationSender(options)({
+      email: 'invitee@example.com',
+      organization: { name: 'Acme' },
+      invitation: { id: 'inv_1' },
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'invitation',
+        vars: { url: undefined, organizationName: 'Acme', invitationId: 'inv_1' },
+      })
+    );
+  });
+
+  test('the invitation sender falls back to url undefined when acceptInvitation is not set', async () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await getInvitationSender(options)({
+      email: 'invitee@example.com',
+      organization: { name: 'Acme' },
+      invitation: { id: 'inv_1' },
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        vars: { url: undefined, organizationName: 'Acme', invitationId: 'inv_1' },
+      })
+    );
+  });
+
+  test('the invitation sender throws a configure-auth.email error when auth.email is unset', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    await expect(
+      getInvitationSender(options)({
+        email: 'invitee@example.com',
+        organization: { name: 'Acme' },
+        invitation: { id: 'inv_1' },
+      })
+    ).rejects.toThrow('Cannot send the invitation email. Configure "auth.email".');
+    expect(mockRenderAuthEmail).not.toHaveBeenCalled();
+    expect(mockSendEmail).not.toHaveBeenCalled();
+  });
 });
 
 test('sets socialProviders only when at least one built-in provider is configured', () => {

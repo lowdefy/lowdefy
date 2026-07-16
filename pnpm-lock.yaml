@@ -69,6 +69,12 @@ importers:
       '@lowdefy/build':
         specifier: 5.4.0
         version: link:../build
+      '@lowdefy/connection-smtp':
+        specifier: 5.4.0
+        version: link:../plugins/connections/connection-smtp
+      '@lowdefy/email-templates':
+        specifier: 5.4.0
+        version: link:../utils/email-templates
       '@lowdefy/errors':
         specifier: 5.4.0
         version: link:../utils/errors

@@ -29,8 +29,8 @@ import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
 import createSendEmail from './createSendEmail.js';
-import createStockInvitationEmail from './organizations/createStockInvitationEmail.js';
 import modelNames from './modelNames.js';
+import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
 
 // Assembles the BetterAuthOptions object from the auth.json build artifact.
@@ -118,7 +118,7 @@ function getBetterAuthConfig({
 
   const sendEmail = type.isNone(authConfig.email)
     ? undefined
-    : createSendEmail({ emailConfig: authConfig.email });
+    : createSendEmail({ connectionId: authConfig.email.connectionId });
 
   // BetterAuth builds password-reset, magic-link and email-verification links,
   // and its CSRF Origin allowlist, from the base URL. When the deployment's
@@ -140,6 +140,9 @@ function getBetterAuthConfig({
     }
     baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };
   }
+  // When BETTER_AUTH_URL is not pinned baseURL is an object and the origin is
+  // unknown - used for logo resolution AND the invitation accept-URL fallback.
+  const baseUrlOrigin = type.isString(baseURL) ? baseURL : undefined;
 
   const options = {
     appName: appMeta?.name ?? 'Lowdefy',
@@ -208,11 +211,15 @@ function getBetterAuthConfig({
     };
     if (sendEmail) {
       options.emailAndPassword.sendResetPassword = async ({ user, url }) => {
-        await sendEmail({
-          to: user.email,
-          subject: 'Reset your password',
-          text: `Click the link to reset your password: ${url}`,
+        const context = createSystemContext({ auth: getAuth() });
+        const { subject, html, text } = await renderAuthEmail({
+          flow: 'resetPassword',
+          vars: { url },
+          authEmailConfig: authConfig.email,
+          baseURL: baseUrlOrigin,
+          context,
         });
+        await sendEmail({ to: user.email, subject, html, text, context });
       };
     } else {
       // Password reset is implicit in emailAndPassword, so a missing email
@@ -226,11 +233,15 @@ function getBetterAuthConfig({
   if (sendEmail) {
     options.emailVerification = {
       sendVerificationEmail: async ({ user, url }) => {
-        await sendEmail({
-          to: user.email,
-          subject: 'Verify your email address',
-          text: `Click the link to verify your email address: ${url}`,
+        const context = createSystemContext({ auth: getAuth() });
+        const { subject, html, text } = await renderAuthEmail({
+          flow: 'verifyEmail',
+          vars: { url },
+          authEmailConfig: authConfig.email,
+          baseURL: baseUrlOrigin,
+          context,
         });
+        await sendEmail({ to: user.email, subject, html, text, context });
       },
     };
   }
@@ -245,11 +256,15 @@ function getBetterAuthConfig({
         expiresIn: authConfig.magicLink.expiresIn,
         disableSignUp: authConfig.magicLink.disableSignUp,
         sendMagicLink: async ({ email, url }) => {
-          await sendEmail({
-            to: email,
-            subject: 'Your sign-in link',
-            text: `Click the link to sign in: ${url}`,
+          const context = createSystemContext({ auth: getAuth() });
+          const { subject, html, text } = await renderAuthEmail({
+            flow: 'magicLink',
+            vars: { url },
+            authEmailConfig: authConfig.email,
+            baseURL: baseUrlOrigin,
+            context,
           });
+          await sendEmail({ to: email, subject, html, text, context });
         },
       })
     );
@@ -293,7 +308,6 @@ function getBetterAuthConfig({
     afterEmailVerification,
     databaseHooks,
     phoneVerified,
-    sendInvitationEmail,
     sendPhoneOtp,
     sendPhonePasswordResetOtp,
   } = buildHooks({
@@ -325,14 +339,41 @@ function getBetterAuthConfig({
     );
   }
 
-  // Organizations are always on. A bound "invitation.send" hook owns the
-  // invitation email; unbound, the engine falls back to a stock template
-  // through auth.email.
+  // Organizations are always on, so the plugin always gets an invitation
+  // sender. Without auth.email the sender throws at invite-send time (not at
+  // build), the same stance as password reset. The accept URL is only
+  // buildable when the origin is pinned AND authPages.acceptInvitation is set;
+  // otherwise the stock InvitationEmail renders branded with no CTA button.
+  async function sendInvitationEmail({ email, organization, invitation }) {
+    if (type.isNone(authConfig.email)) {
+      throw new Error('Cannot send the invitation email. Configure "auth.email".');
+    }
+    const acceptPath = authConfig.authPages?.acceptInvitation;
+    const canBuildAcceptUrl = type.isString(baseUrlOrigin) && type.isString(acceptPath);
+    const basePath = config.basePath ?? '';
+    const acceptUrl = canBuildAcceptUrl
+      ? `${baseUrlOrigin}${basePath}${acceptPath}?invitationId=${invitation.id}`
+      : undefined;
+    const context = createSystemContext({ auth: getAuth() });
+    const { subject, html, text } = await renderAuthEmail({
+      flow: 'invitation',
+      vars: {
+        url: acceptUrl,
+        organizationName: organization.name,
+        invitationId: invitation.id,
+      },
+      authEmailConfig: authConfig.email,
+      baseURL: baseUrlOrigin,
+      context,
+    });
+    await sendEmail({ to: email, subject, html, text, context });
+  }
+
   options.plugins.push(
     buildOrganizationPlugin({
       authConfig,
       getAuth,
-      sendInvitationEmail: sendInvitationEmail ?? createStockInvitationEmail({ sendEmail }),
+      sendInvitationEmail,
     })
   );
 

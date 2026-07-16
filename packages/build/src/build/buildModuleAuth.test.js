@@ -100,7 +100,7 @@ test('buildModuleAuth orders hook contributions by module-entry declaration orde
     {
       id: 'user-admin',
       manifest: {
-        auth: { hooks: [{ point: 'invitation.send', endpoint: 'send-invitation-email' }] },
+        auth: { hooks: [{ point: 'email.verified', endpoint: 'welcome-user' }] },
       },
     },
   ]);
@@ -116,7 +116,7 @@ test('buildModuleAuth orders hook contributions by module-entry declaration orde
   });
   expect(components.auth.hooks.map((hook) => hook.id)).toEqual([
     'crm/link-contact:user.create.before',
-    'user-admin/send-invitation-email:invitation.send',
+    'user-admin/welcome-user:email.verified',
     'app-audit',
   ]);
 });

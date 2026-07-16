@@ -22,7 +22,7 @@ import addStepResult from './addStepResult.js';
 import derivePreview from '../notifications/derivePreview.js';
 import getNotificationConfig from '../notifications/getNotificationConfig.js';
 import resolveNotificationLinks from '../notifications/resolveNotificationLinks.js';
-import resolveThemeLogo from '../notifications/resolveThemeLogo.js';
+import resolveThemeLogo from '../../email/resolveThemeLogo.js';
 
 function itemHasPageLinks(item, dataKeys) {
   const links = Object.values(item.links ?? {});

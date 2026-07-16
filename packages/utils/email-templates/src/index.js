@@ -19,3 +19,7 @@ export { default as defaultTheme } from './defaultTheme.js';
 export { default as interpolateProperties } from './interpolate/interpolateProperties.js';
 export { default as markdownToHtml } from './markdown/markdownToHtml.js';
 export { default as renderEmail } from './renderEmail.js';
+export { default as VerifyEmail } from './auth/VerifyEmail/VerifyEmail.js';
+export { default as ResetPasswordEmail } from './auth/ResetPasswordEmail/ResetPasswordEmail.js';
+export { default as MagicLinkEmail } from './auth/MagicLinkEmail/MagicLinkEmail.js';
+export { default as InvitationEmail } from './auth/InvitationEmail/InvitationEmail.js';

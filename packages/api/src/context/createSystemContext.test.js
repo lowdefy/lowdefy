@@ -87,6 +87,17 @@ test('createSystemContext carries auth and steps so hook routines can run auth s
   expect(context.steps).toBe(steps);
 });
 
+test('createSystemContext carries notifications so hook routines can send notifications', () => {
+  const notifications = { welcomeEmail: { subject: 'Welcome' } };
+  const context = createTestSystemContext({ notifications });
+  expect(context.notifications).toBe(notifications);
+});
+
+test('createSystemContext leaves notifications undefined when not configured', () => {
+  const context = createTestSystemContext();
+  expect(context.notifications).toBeUndefined();
+});
+
 test('createSystemContext activates the default locale when i18n is configured', () => {
   const context = createTestSystemContext({
     i18n: { defaultLocale: 'en', locales: ['en', 'de'] },

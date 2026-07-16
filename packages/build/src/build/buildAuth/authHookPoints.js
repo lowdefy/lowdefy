@@ -20,8 +20,6 @@
 // Twin catalog: packages/api/src/routes/auth/hooks/authHookPoints.js maps the
 // same point names to their runtime definitions - a point added here without
 // a runtime definition crashes buildHooks at startup; keep the two in sync.
-// "invitation.send" is accepted here per the frozen point set; its backing
-// callback ships with the organization plugin in a later phase.
 const authHookPoints = [
   'user.create.before',
   'user.create.after',
@@ -35,7 +33,6 @@ const authHookPoints = [
   'verification.create.before',
   'verification.create.after',
   'email.verified',
-  'invitation.send',
   'phone.otp.send',
   'phone.passwordReset.send',
   'phone.verified',
