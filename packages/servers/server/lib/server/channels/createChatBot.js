@@ -60,8 +60,11 @@ async function createChatBot({ logger, mode = 'webhook' } = {}) {
     adapters[platform] = factory(mode === 'polling' ? { mode: 'polling' } : {});
   }
 
-  // Must run before polling starts - see disableFetchHttp2.js.
-  await disableFetchHttp2({ logger });
+  // Polling only - the H2 serialization needs a held long-poll to bite, and
+  // webhook mode (serverless) has none. See disableFetchHttp2.js.
+  if (mode === 'polling') {
+    await disableFetchHttp2({ logger });
+  }
 
   const bot = new Chat({
     userName: 'lowdefy',
