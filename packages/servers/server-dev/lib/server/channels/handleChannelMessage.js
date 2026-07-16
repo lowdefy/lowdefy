@@ -63,6 +63,7 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
   messages.push({ role: 'user', parts: [{ type: 'text', text: message.text ?? '' }] });
 
   try {
+    const agentStart = performance.now();
     const { response: textStream } = await callAgent(context, {
       agentId: channelConfig.agentId,
       pageId: null,
@@ -79,6 +80,8 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
     for await (const chunk of textStream) {
       reply += chunk;
     }
+    const agentMs = Math.round(performance.now() - agentStart);
+    const postStart = performance.now();
     // Platforms reject empty messages - a tool-only turn can produce no text.
     if (reply.trim().length > 0) {
       await thread.post(reply);
@@ -88,6 +91,8 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
       platform,
       threadId: thread.id,
       durationMs: Math.round(performance.now() - startTime),
+      agentMs,
+      postMs: Math.round(performance.now() - postStart),
       replyLength: reply.length,
     });
   } catch (error) {
