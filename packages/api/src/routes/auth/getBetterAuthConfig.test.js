@@ -1016,6 +1016,93 @@ test('always pushes the organization plugin', () => {
   expect(options.plugins.some((p) => p.id === 'organization')).toBe(true);
 });
 
+describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
+  const mutationPaths = [
+    '/organization/set-active',
+    '/organization/update',
+    '/organization/delete',
+    '/organization/leave',
+    '/organization/update-member-role',
+    '/organization/remove-member',
+    '/organization/invite-member',
+    '/organization/cancel-invitation',
+  ];
+  const readPaths = [
+    '/organization/list-members',
+    '/organization/get-active-member',
+    '/organization/get-active-member-role',
+    '/organization/get-full-organization',
+    '/organization/list',
+    '/organization/get-invitation',
+    '/organization/list-invitations',
+    '/organization/list-user-invitations',
+    '/organization/check-slug',
+    '/organization/reject-invitation',
+    '/organization/has-permission',
+  ];
+
+  test('under pinned policy, disables every mutation and read org path', () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    [...mutationPaths, ...readPaths].forEach((path) => {
+      expect(options.disabledPaths).toContain(path);
+    });
+  });
+
+  test('under pinned policy, does not disable accept-invitation or create', () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.disabledPaths).not.toContain('/organization/accept-invitation');
+    expect(options.disabledPaths).not.toContain('/organization/create');
+  });
+
+  test('defaults to the pinned disabled set when organizations.policy is absent', () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ organizations: { org: 'default', signup: 'invite-only' } }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.disabledPaths).toContain('/organization/set-active');
+    expect(options.disabledPaths).not.toContain('/organization/accept-invitation');
+  });
+
+  test('under tenant policy, enables all org endpoints (disabledPaths is empty)', () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        organizations: { policy: 'tenant', org: 'default', signup: 'invite-only' },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.disabledPaths).toEqual([]);
+    [...mutationPaths, ...readPaths].forEach((path) => {
+      expect(options.disabledPaths).not.toContain(path);
+    });
+  });
+});
+
 test('registers the internal user additionalFields (attributes, profile)', () => {
   const options = getBetterAuthConfig({
     appMeta,

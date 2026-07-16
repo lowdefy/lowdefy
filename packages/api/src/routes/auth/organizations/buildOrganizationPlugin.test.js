@@ -18,7 +18,7 @@ import buildOrganizationPlugin from './buildOrganizationPlugin.js';
 
 const authConfig = {
   organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
-  roles: ['auditor', 'branch-manager'],
+  roles: [{ id: 'auditor' }, { id: 'branch-manager' }],
 };
 
 test('buildOrganizationPlugin constructs the organization plugin', () => {
@@ -30,33 +30,99 @@ test('buildOrganizationPlugin constructs the organization plugin', () => {
   expect(plugin.id).toBe('organization');
 });
 
-test('buildOrganizationPlugin registers catalog roles alongside the built-in roles', () => {
+test('buildOrganizationPlugin reads role.id from the authored catalog entries', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,
     getAuth: () => ({}),
     sendInvitationEmail: async () => {},
   });
-  // The plugin exposes its resolved options; the roles map drives which role
-  // names the member APIs accept.
+  // The catalog is a list of { id, label, description }; the id is the role
+  // string the member APIs accept, registered with empty statements.
+  expect(plugin.options.roles.auditor.statements).toEqual({});
+  expect(plugin.options.roles['branch-manager'].statements).toEqual({});
+});
+
+test('buildOrganizationPlugin registers the reserved $lowdefy-system authority role under pinned', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.roles['$lowdefy-system'].statements).toEqual({
+    member: ['create', 'update', 'delete'],
+    invitation: ['create', 'cancel'],
+    organization: ['update', 'delete'],
+  });
+});
+
+test('buildOrganizationPlugin does not pass the built-in roles under pinned', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  // Only the authored catalog plus the reserved authority role are registered -
+  // owner/admin/member are not merged in, so they carry no org-admin power.
   expect(Object.keys(plugin.options.roles).sort()).toEqual([
+    '$lowdefy-system',
+    'auditor',
+    'branch-manager',
+  ]);
+});
+
+test('buildOrganizationPlugin sets creatorRole to $lowdefy-system under pinned', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.creatorRole).toBe('$lowdefy-system');
+});
+
+test('buildOrganizationPlugin leaves a catalog role reusing a built-in name with empty statements under pinned', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: { ...authConfig, roles: [{ id: 'owner' }, { id: 'auditor' }] },
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  // Under pinned a catalog role named "owner" authorizes nothing at the AC
+  // layer, and is not the creator (that is the reserved role).
+  expect(plugin.options.roles.owner.statements).toEqual({});
+  expect(plugin.options.creatorRole).toBe('$lowdefy-system');
+});
+
+test('buildOrganizationPlugin passes the built-in roles and registers $lowdefy-system under tenant', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: { ...authConfig, organizations: { ...authConfig.organizations, policy: 'tenant' } },
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(Object.keys(plugin.options.roles).sort()).toEqual([
+    '$lowdefy-system',
     'admin',
     'auditor',
     'branch-manager',
     'member',
     'owner',
   ]);
+  // The built-in member role keeps its plugin statements (ac: ["read"]).
+  expect(plugin.options.roles.member.statements.ac).toEqual(['read']);
+  expect(plugin.options.roles['$lowdefy-system'].statements).toEqual({
+    member: ['create', 'update', 'delete'],
+    invitation: ['create', 'cancel'],
+    organization: ['update', 'delete'],
+  });
 });
 
-test('buildOrganizationPlugin keeps the built-in role statements when the catalog reuses a name', () => {
+test('buildOrganizationPlugin does not override creatorRole under tenant', () => {
   const plugin = buildOrganizationPlugin({
-    authConfig: { ...authConfig, roles: ['member', 'auditor'] },
+    authConfig: { ...authConfig, organizations: { ...authConfig.organizations, policy: 'tenant' } },
     getAuth: () => ({}),
     sendInvitationEmail: async () => {},
   });
-  // The built-in member role keeps its plugin statements (ac: ["read"]),
-  // while the catalog-only auditor role registers with empty statements.
-  expect(plugin.options.roles.member.statements.ac).toEqual(['read']);
-  expect(plugin.options.roles.auditor.statements).toEqual({});
+  // Left unset so the plugin defaults it to "owner" (last-owner protection
+  // keys on the owner creator under tenant).
+  expect(plugin.options.creatorRole).toBeUndefined();
 });
 
 test('buildOrganizationPlugin blocks client-driven organization creation', () => {

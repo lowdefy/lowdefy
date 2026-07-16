@@ -22,27 +22,46 @@ import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.j
 import modelNames from '../modelNames.js';
 
 // Organizations are always on - the membership and boundary mechanism for
-// every app. The build collects the app's role catalog (auth.roles); each
-// role registers in the plugin's access control with empty permission
-// statements - enough for the member APIs to accept it for storage and
-// assignment. Real statements per role are the permissions milestone's.
-// Known limitation of empty statements: an actor holding only custom roles
-// cannot call inviteMember as itself through the plugin's own AC check -
-// admin member-mutations run through steps with server authority instead.
+// every app. The build collects the app's role catalog (auth.roles, a list of
+// { id, label, description }); each role.id registers in the plugin's access
+// control with empty permission statements - enough for the member APIs to
+// accept it for storage and assignment, but authorizing nothing at the AC
+// statement layer. Real statements per role are the permissions milestone's.
+//
+// One reserved authority role, id "$lowdefy-system" (the "$" namespace is
+// un-authorable, so no real user can hold it), carries the statements the
+// audited admin steps need - they drive member mutations by invoking the org
+// endpoint handlers directly, which still run hasPermission against the acting
+// member row (fabricated in createActingMemberAdapter, claiming this role).
+//
+// The wiring is policy-aware:
+//   - pinned: pass only catalogRoles + the reserved role (no defaultRoles), and
+//     set creatorRole to "$lowdefy-system". With defaultRoles dropped, owner/
+//     admin/member no longer resolve as real plugin roles, so they become inert
+//     app-feature strings with no hidden org-admin power; the acting member is
+//     the creator, so it passes the plugin's creator-protection guards.
+//   - tenant: keep the built-in owner/admin/member tier active (self-serve
+//     per-org administration), so pass defaultRoles and leave creatorRole at its
+//     default ("owner"). The reserved role is still registered but is not
+//     load-bearing here - the audited steps belong to the pinned admin module.
 function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
   const ac = createAccessControl(defaultStatements);
   const catalogRoles = {};
-  (authConfig.roles ?? []).forEach((roleName) => {
-    catalogRoles[roleName] = ac.newRole({});
+  (authConfig.roles ?? []).forEach((role) => {
+    catalogRoles[role.id] = ac.newRole({});
+  });
+  catalogRoles['$lowdefy-system'] = ac.newRole({
+    member: ['create', 'update', 'delete'],
+    invitation: ['create', 'cancel'],
+    organization: ['update', 'delete'],
   });
 
-  return organization({
+  const policy = authConfig.organizations?.policy ?? 'pinned';
+  const roles = policy === 'tenant' ? { ...catalogRoles, ...defaultRoles } : { ...catalogRoles };
+
+  const options = {
     ac,
-    // The built-in owner/admin/member roles keep their plugin statements
-    // even when the app catalog reuses a built-in name - and the plugin's
-    // permission check replaces rather than merges its defaults, so they
-    // must be passed explicitly.
-    roles: { ...catalogRoles, ...defaultRoles },
+    roles,
     // Organization creation is engine-only: the pinned org is seeded by
     // ensure-by-slug and tenant orgs are minted lazily at session.create -
     // both system actions that bypass this client-facing switch.
@@ -83,7 +102,17 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
       }),
     },
     sendInvitationEmail,
-  });
+  };
+
+  // Under pinned the reserved role is the creator, so the plugin's creator
+  // short-circuit and creator-protection guards key on it rather than "owner".
+  // Under tenant creatorRole stays at its "owner" default (last-owner
+  // protection keys on it), so it is left unset.
+  if (policy !== 'tenant') {
+    options.creatorRole = '$lowdefy-system';
+  }
+
+  return organization(options);
 }
 
 export default buildOrganizationPlugin;
