@@ -138,7 +138,7 @@ _ref:
 
             - Page load events are `onInit` / `onInitAsync` — there is no `onEnter` event, and a wrong event name fails silently.
             - `AxiosHttp` responses are the full envelope: use `_request: my_request.data`, not `_request: my_request`, when you want the response body.
-            - Mobile input blocks have no `label` property (antd-mobile fields are placeholder-driven) — use `placeholder`, `pickerTitle`, or add captions with an `Html` block.
+            - Mobile input blocks label via `title:` (or `label: {title: ...}`), which renders a caption above the field — an antd-style `label: <string>` string is silently ignored. Use `placeholder` and `pickerTitle` for in-field hints.
             - `NavBar` shows a back arrow by default — set `back: false` on top-level tab pages.
             - When a device loads a dev server, `localhost` only works in the iOS Simulator; the Android emulator needs `http://10.0.2.2:<port>` and a physical phone needs your machine's LAN IP.
 
