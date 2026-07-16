@@ -17,10 +17,12 @@
 import path from 'path';
 import { createRequire } from 'module';
 
-function getViteBin() {
-  const require = createRequire(import.meta.url);
+// Pass `from` (a directory) to resolve the vite installed there instead of
+// the server's own — the mobile client lane runs its package's vite version.
+function getViteBin({ from } = {}) {
+  const require = createRequire(from ? path.join(from, 'package.json') : import.meta.url);
   const vitePackageJsonPath = require.resolve('vite/package.json');
-  const vitePackageJson = require('vite/package.json');
+  const vitePackageJson = require(vitePackageJsonPath);
 
   let viteBinFragment = vitePackageJson.bin.vite;
   if (process.platform === 'win32') {

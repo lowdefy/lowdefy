@@ -17,6 +17,8 @@
 import path from 'path';
 import { spawn } from 'child_process';
 
+import getViteBin from '../utils/getViteBin.mjs';
+
 // Optional mobile client lane — enabled by `lowdefy mobile dev` via env flag.
 // Runs the @lowdefy/mobile-client Vite dev server on a second port, with
 // /api proxied to this dev server (see the mobile client's vite.config.js).
@@ -35,15 +37,16 @@ function startMobileClient(context) {
   );
   const port = process.env.LOWDEFY_MOBILE_PORT ?? '3001';
 
-  // Run the mobile package's own vite (pnpm run dev) so its config and vite
-  // version apply. --host exposes the LAN address for on-device live reload.
+  // Spawn the mobile package's vite directly (like startServer) — a package
+  // manager wrapper would orphan the vite child on kill(), leaving the port
+  // bound across restarts. cwd applies the mobile package's vite config.
+  // --host exposes the LAN address for on-device live reload.
   const mobileClient = spawn(
-    context.packageManagerCmd,
-    ['run', 'dev', '--port', String(port), '--strictPort', '--host'],
+    'node',
+    [getViteBin({ from: mobileDirectory }), '--port', String(port), '--strictPort', '--host'],
     {
       cwd: mobileDirectory,
       stdio: ['ignore', 'inherit', 'pipe'],
-      shell: process.platform === 'win32',
       env: {
         ...process.env,
         LOWDEFY_DIRECTORY_BUILD: context.directories.build,
