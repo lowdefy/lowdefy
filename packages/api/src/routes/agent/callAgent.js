@@ -19,7 +19,7 @@ import prepareAgent from './prepareAgent.js';
 
 async function callAgent(
   context,
-  { agentId, pageId, messages, conversationId, urlQuery, sharedState }
+  { agentId, pageId, messages, conversationId, urlQuery, sharedState, format }
 ) {
   const { logger } = context;
 
@@ -38,7 +38,7 @@ async function callAgent(
 
   const { agentConfig, connectionInstance, agentType, resolverContext } = await prepareAgent(
     context,
-    { agentId, agentContext, endpointDepth: 0, mode: 'chat' }
+    { agentId, agentContext, endpointDepth: 0, format: format ?? 'ui-message', mode: 'chat' }
   );
 
   // Call the agent resolver

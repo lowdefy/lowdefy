@@ -26,27 +26,11 @@ import {
 
 import { serializer } from '@lowdefy/helpers';
 
+import convertDataUrlsToBase64 from './convertDataUrlsToBase64.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
-
-// Convert data: URLs in file parts to raw base64 so the AI SDK does not attempt
-// to download them (it only supports http/https).  The mediaType field already
-// carries the MIME type, so nothing is lost.
-function convertDataUrlsToBase64(messages) {
-  return messages.map((msg) => {
-    if (!msg.parts) return msg;
-    const converted = msg.parts.map((part) => {
-      if (part.type !== 'file' || typeof part.url !== 'string' || !part.url.startsWith('data:')) {
-        return part;
-      }
-      const commaIndex = part.url.indexOf(',');
-      if (commaIndex === -1) return part;
-      return { ...part, url: part.url.slice(commaIndex + 1) };
-    });
-    return { ...msg, parts: converted };
-  });
-}
+import handleAgentTextStream from './handleAgentTextStream.js';
 
 // Concatenate the text parts of the first user message — used as the source
 // for generateTitle.
@@ -64,6 +48,12 @@ async function handleAgentChat({ connection, properties, context }) {
   // so provider agent plugins delegate unchanged in both modes.
   if (context.mode === 'generate') {
     return handleAgentGenerate({ connection, properties, context });
+  }
+
+  // Plain-text representations for the pageless route ('text') and channels
+  // ('stream') — the default UIMessage SSE path below stays untouched.
+  if (context.format === 'text' || context.format === 'stream') {
+    return handleAgentTextStream({ connection, properties, context });
   }
 
   const { agent, messages: rawMessages } = properties;

@@ -58,6 +58,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -131,6 +132,7 @@ test('callAgent throws ConfigError when agent type not found in registry', async
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'UnknownAgent',
     connectionId: 'my-conn',
     properties: {},
@@ -173,6 +175,7 @@ test('callAgent throws when connection type not found in registry', async () => 
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-conn',
     properties: {},
@@ -220,6 +223,7 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['search'],
@@ -282,6 +286,7 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['search'],
@@ -345,6 +350,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['internal-tool'],
@@ -404,6 +410,7 @@ test('callAgent propagates error when connection.create throws', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -443,6 +450,7 @@ test('callAgent propagates error when resolver throws', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -486,6 +494,7 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: ['failing-tool'],
@@ -547,6 +556,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -588,6 +598,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -636,6 +647,7 @@ test('callAgent passes userId from context.user.id when sub is not present', asy
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -676,6 +688,7 @@ test('callAgent passes null userId when no user session', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -715,6 +728,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -723,6 +737,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
   const subAgentConfig = {
     agentId: 'sub-agent',
     id: 'agent:sub-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -768,6 +783,7 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -816,6 +832,7 @@ test('callAgent evaluates operators in agent properties before passing to resolv
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -858,6 +875,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],
@@ -918,6 +936,7 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
   const agentConfig = {
     agentId: 'my-agent',
     id: 'agent:my-agent',
+    auth: { public: true },
     type: 'ClaudeAgent',
     connectionId: 'my-anthropic',
     tools: [],

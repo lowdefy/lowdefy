@@ -126,6 +126,11 @@ jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
   default: mockHandleAgentGenerate,
 }));
 
+const mockHandleAgentTextStream = jest.fn();
+jest.unstable_mockModule('./handleAgentTextStream.js', () => ({
+  default: mockHandleAgentTextStream,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
 test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
@@ -143,6 +148,39 @@ test('dispatches to handleAgentGenerate when context.mode is generate', async ()
   expect(mockHandleAgentGenerate).toHaveBeenCalledWith(args);
   expect(result).toBe(mockResult);
   expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+});
+
+test.each(['text', 'stream'])(
+  'dispatches to handleAgentTextStream when context.format is %s',
+  async (format) => {
+    const { default: handleAgentChat } = await import('./handleAgentChat.js');
+    const mockResult = { response: { type: `${format}-response` } };
+    mockHandleAgentTextStream.mockResolvedValue(mockResult);
+
+    const args = {
+      connection: { provider: jest.fn() },
+      properties: { agent: { properties: { model: 'test-model' } }, messages: [] },
+      context: { mode: 'chat', format },
+    };
+    const result = await handleAgentChat(args);
+
+    expect(mockHandleAgentTextStream).toHaveBeenCalledWith(args);
+    expect(result).toBe(mockResult);
+    expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+  }
+);
+
+test('default ui-message format does not dispatch to handleAgentTextStream', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn() },
+    properties: { agent: { properties: { model: 'test-model' } }, messages: [] },
+    context: { mode: 'chat', format: 'ui-message' },
+  });
+
+  expect(mockHandleAgentTextStream).not.toHaveBeenCalled();
+  expect(mockCreateUIMessageStream).toHaveBeenCalledTimes(1);
 });
 
 test('creates ToolLoopAgent with correct parameters', async () => {

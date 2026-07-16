@@ -18,6 +18,7 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import authorizeAgent from './authorizeAgent.js';
 import getAgentConfig from './getAgentConfig.js';
 import getAgentResolver from './getAgentResolver.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
@@ -27,10 +28,20 @@ import getConnection from '../connections/getConnection.js';
 // and the headless CallAgent routine step (handleAgentCall): loads the agent
 // config, evaluates operators, creates the provider connection, and builds the
 // resolver context. mode ('chat' | 'generate') selects the resolver's execution
-// path; endpointDepth threads the endpoint call depth cap through agent tool
-// and hook endpoint calls.
-async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0, mode = 'chat' }) {
+// path; format ('ui-message' | 'text' | 'stream') selects the chat response
+// representation; endpointDepth threads the endpoint call depth cap through
+// agent tool and hook endpoint calls.
+async function prepareAgent(
+  context,
+  { agentId, agentContext, endpointDepth = 0, format = 'ui-message', mode = 'chat' }
+) {
   const agentConfig = await getAgentConfig(context, { agentId });
+
+  // Every addressable agent invocation (page route, pageless route, MCP tool,
+  // CallAgent routine step) passes through here - sub-agents are part of the
+  // parent's build-validated composition and are intentionally not
+  // re-authorized. System contexts short-circuit in createAuthorize.
+  authorizeAgent(context, { agentConfig });
 
   // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
   agentConfig.properties = context.evaluateOperators({
@@ -68,6 +79,7 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
   // Build resolver context with callEndpoint that allows InternalApi endpoints
   const resolverContext = {
     agentContext,
+    format,
     i18n: context.i18n,
     mode,
     evaluateOperators: (input) =>
