@@ -59,6 +59,7 @@
     "@lowdefy/operators-nunjucks": "5.4.0",
     "@lowdefy/operators-uuid": "5.4.0",
     "@lowdefy/operators-yaml": "5.4.0",
+    "@lowdefy/plugin-csv": "5.4.0",
     "@vitejs/plugin-react": "6.0.2",
     "antd-mobile": "5.42.1",
     "dayjs": "1.11.20",
