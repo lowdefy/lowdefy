@@ -1862,11 +1862,24 @@ export default {
           },
         },
         webhook: {
-          type: 'boolean',
+          anyOf: [
+            { type: 'boolean' },
+            {
+              type: 'object',
+              properties: {
+                // The verify request plugin runs as a gate against the raw
+                // request before the routine; on success the run earns trust
+                // (context.system). Its concrete config surface (connectionId,
+                // type, properties) is request-plugin scope, so it is not
+                // constrained further here.
+                verify: { type: 'object' },
+              },
+            },
+          ],
           description:
-            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope) and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes. The transport is public, so the run starts untrusted; set webhook to { verify: <request plugin> } to earn trust (a system context) when the verifier passes the provider signature/secret check before the routine runs. A bare `true` runs untrusted throughout, so any nested protected CallApi fails closed.',
           errorMessage: {
-            type: 'Api endpoint "webhook" should be a boolean.',
+            _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
           },
         },
         schedules: {

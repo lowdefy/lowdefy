@@ -327,7 +327,7 @@ test('buildEntityAuth api: the roles-and-public conflict names the endpoint', ()
   );
 });
 
-test('buildEntityAuth api: webhook endpoints stay public by default', () => {
+test('buildEntityAuth api: throws when a webhook endpoint is only implicitly public (in neither list)', () => {
   const components = {
     auth: {
       api: {
@@ -336,8 +336,11 @@ test('buildEntityAuth api: webhook endpoints stay public by default', () => {
     },
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
-  const res = buildEntityAuth({ components, entity: 'api' });
-  expect(res.api).toEqual([{ id: 'hook', type: 'Api', webhook: true, auth: { public: true } }]);
+  // Defaulted public is not explicit public - the developer must acknowledge
+  // the public transport by listing the endpoint in auth.api.public.
+  expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
+    'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
+  );
 });
 
 test('buildEntityAuth api: throws when a webhook endpoint is protected by auth.api.protected true', () => {
@@ -351,7 +354,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is protected by auth.a
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
   expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
-    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+    'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
 
@@ -366,7 +369,7 @@ test('buildEntityAuth api: throws when a webhook endpoint is listed in auth.api.
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
   expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
-    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+    'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
 
@@ -382,8 +385,22 @@ test('buildEntityAuth api: throws when a webhook endpoint is protected by roles'
     api: [{ id: 'hook', type: 'Api', webhook: true }],
   };
   expect(() => buildEntityAuth({ components, entity: 'api' })).toThrow(
-    'Endpoint "hook" is a webhook receiver but is protected by auth.api.'
+    'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
+});
+
+test('buildEntityAuth api: a webhook endpoint explicitly listed in auth.api.public builds', () => {
+  const components = {
+    auth: {
+      api: {
+        public: ['hook'],
+        roles: {},
+      },
+    },
+    api: [{ id: 'hook', type: 'Api', webhook: true }],
+  };
+  const res = buildEntityAuth({ components, entity: 'api' });
+  expect(res.api).toEqual([{ id: 'hook', type: 'Api', webhook: true, auth: { public: true } }]);
 });
 
 test('buildEntityAuth api: a webhook endpoint listed in auth.api.public builds under protected true', () => {
@@ -405,4 +422,31 @@ test('buildEntityAuth api: a webhook endpoint listed in auth.api.public builds u
     { id: 'hook', type: 'Api', webhook: true, auth: { public: true } },
     { id: 'ep1', type: 'Api', auth: { public: false } },
   ]);
+});
+
+test('buildEntityAuth api: a webhook: { verify } object is accepted via truthiness and needs explicit public', () => {
+  const verifying = {
+    id: 'hook',
+    type: 'Api',
+    webhook: { verify: { type: 'VerifyGithubWebhook', properties: {} } },
+  };
+  const components = {
+    auth: {
+      api: {
+        public: ['hook'],
+        roles: {},
+      },
+    },
+    api: [verifying],
+  };
+  const res = buildEntityAuth({ components, entity: 'api' });
+  expect(res.api[0].auth).toEqual({ public: true });
+
+  const implicit = {
+    auth: { api: { roles: {} } },
+    api: [{ id: 'hook', type: 'Api', webhook: { verify: { type: 'VerifyGithubWebhook' } } }],
+  };
+  expect(() => buildEntityAuth({ components: implicit, entity: 'api' })).toThrow(
+    'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
+  );
 });

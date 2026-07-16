@@ -25,21 +25,21 @@ async function endpointsHandler(c) {
   const context = c.get('lowdefyContext');
   const endpointId = getPathSegments(c, '/api/endpoints/').join('/');
 
-  // Endpoints opting in with `webhook: true` are third-party webhook receivers
-  // (SNS, Event Grid, Stripe, ...): they take the request RAW — body in the
-  // caller's own format (not the { payload } envelope), plus query + headers —
-  // and their return value is sent back verbatim, because webhook handshakes
-  // (e.g. Event Grid's validationResponse) require exact response shapes.
-  // The config lookup is a cached file read; an unknown endpoint falls through
-  // to the standard path so its error shape is unchanged. Everything about
-  // non-webhook endpoints is untouched.
+  // Endpoints opting in with `webhook` (true or a { verify } object) are
+  // third-party webhook receivers (SNS, Event Grid, Stripe, ...): they take the
+  // request RAW — body in the caller's own format (not the { payload }
+  // envelope), plus query + headers — and their return value is sent back
+  // verbatim, because webhook handshakes (e.g. Event Grid's validationResponse)
+  // require exact response shapes. The config lookup is a cached file read; an
+  // unknown endpoint falls through to the standard path so its error shape is
+  // unchanged. Everything about non-webhook endpoints is untouched.
   let endpointConfig = null;
   try {
     endpointConfig = await getEndpointConfig(context, { endpointId });
   } catch {
     /* unknown endpoint — the standard path below reports it exactly as before */
   }
-  if (endpointConfig?.webhook === true) {
+  if (endpointConfig?.webhook) {
     // SNS posts JSON as text/plain — parse regardless of content-type; an
     // unparseable body arrives as the raw string.
     const raw = await c.req.text();
@@ -56,6 +56,11 @@ async function endpointsHandler(c) {
       query: c.req.query(),
       headers: c.req.header(),
     });
+    // A failed verify gate is a rejected caller (401), distinct from a routine
+    // error (500).
+    if (result.status === 'unauthorized') {
+      return c.json({ error: 'Webhook verification failed.' }, 401);
+    }
     if (!result.success) {
       return c.json({ error: 'Webhook failed.' }, 500);
     }

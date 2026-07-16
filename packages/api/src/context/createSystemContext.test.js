@@ -33,7 +33,11 @@ function createTestSystemContext(overrides = {}) {
     buildDirectory: '/build',
     config: {},
     connections: {},
-    createHandleError: jest.fn(({ context }) => async (error) => context.logger.error(error)),
+    createHandleError: jest.fn(
+      ({ context }) =>
+        async (error) =>
+          context.logger.error(error)
+    ),
     fileCache: new Map(),
     i18n: undefined,
     jsMap: {},
@@ -46,9 +50,10 @@ function createTestSystemContext(overrides = {}) {
   });
 }
 
-test('createSystemContext runs with an empty user - the caller is the auth engine', () => {
+test('createSystemContext is a caller-less system context - user is null, system is true', () => {
   const context = createTestSystemContext();
-  expect(context.user).toEqual({});
+  expect(context.user).toBe(null);
+  expect(context.system).toBe(true);
 });
 
 test('createSystemContext authorize allows any endpoint - auth is not re-checked against a session', () => {
@@ -93,7 +98,7 @@ test('createSystemContext activates the default locale when i18n is configured',
 
 test('createSystemContext evaluateOperators resolves _secret and leaves _user empty', () => {
   const context = createTestSystemContext();
-  expect(context.user).toEqual({});
+  expect(context.user).toBe(null);
   expect(context.secrets.KEY).toBe('value');
 });
 

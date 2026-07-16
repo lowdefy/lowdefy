@@ -17,7 +17,11 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function createAuthorize({ user, system = false }) {
+// createAuthorize is called with the context object on every path
+// (createApiContext, createSystemContext, and the runners), so `system` is read
+// straight off context.system - the single run-level trust marker every
+// authorization layer reads (Decisions 1, 2).
+function createAuthorize({ user, system }) {
   // resolveAuthentication is the single writer of context.user - a resolved
   // caller object when authenticated, else null.
   const authenticated = !type.isNone(user);
@@ -29,8 +33,11 @@ function createAuthorize({ user, system = false }) {
   }
 
   function authorize(config) {
-    // A system context (scheduled, webhook, detached runs) was authorized at the
-    // transport layer, so nested endpoint calls are never gated on a user session.
+    // In a system context (context.system === true) there is no session and no
+    // caller, so `auth.public` / `auth.roles` - which ask "does this caller's
+    // session carry the required roles?" - is undefined, not denied. Endpoint
+    // role-authorization is skipped, not satisfied by a synthetic role:
+    // "system" is never a role, it is the absence of a principal (Decision 2).
     if (system === true) return true;
     const { auth } = config;
     if (auth.public === true) return true;

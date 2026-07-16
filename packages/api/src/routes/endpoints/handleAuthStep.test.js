@@ -200,6 +200,36 @@ test('AuthStep step allows step.system true to run caller-less with no caller at
   expect(mockStepFn.mock.calls[0][0].acting).toEqual({ system: true, user: null });
 });
 
+test('AuthStep step runs caller-less in a run-level system context with no step.system marker', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  // A trusted, caller-less run (cron / hook / verified webhook): context.system
+  // is true and there is no principal. The run-level door passes the caller
+  // gate and skips the user-admin floor without any per-step marker.
+  const context = createTestContext({ user: null });
+  context.system = true;
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStepRoutine(),
+  });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(mockStepFn.mock.calls[0][0].acting).toEqual({ system: true, user: null });
+});
+
+test('AuthStep step in a run-level system context passes the floor even when auth.userAdminRole is not configured', async () => {
+  mockStepFn.mockResolvedValue({ ok: true });
+  const context = createTestContext({ user: null, userAdminRole: null });
+  context.system = true;
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(mockStepFn.mock.calls[0][0].acting).toEqual({ system: true, user: null });
+  expect(mockStepFn.mock.calls[0][0].userAdminRole).toBeNull();
+});
+
 test('AuthStep step passes the session caller through to acting.user', async () => {
   mockStepFn.mockResolvedValue({ ok: true });
   const sessionUser = { id: 'user_2', roles: ['user-admin'], activeOrganizationId: 'org_1' };

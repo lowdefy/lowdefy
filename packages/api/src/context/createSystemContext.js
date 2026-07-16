@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
+import applySystemTrust from './applySystemTrust.js';
 import createEvaluateOperators from './createEvaluateOperators.js';
 import createReadConfigFile from './createReadConfigFile.js';
 import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 
-// Builds a fresh off-request context for a trusted system caller - an auth
-// hook fire. The caller is the auth engine, not a user: `user` is empty so
-// `_user` resolves to nothing (the hook's subject is in `_payload`), and the
-// target endpoint's auth is not re-checked against a session - InternalApi
-// already guarantees the endpoint is unreachable over HTTP.
+// Builds a fresh off-request context for a trusted, caller-less system context -
+// an auth hook fire. The caller is the auth engine, not a user: `user` is null
+// so the run is detectable as caller-less (`type.isNone(context.user)`) and
+// `_user` resolves to nothing (the hook's subject is in `_payload`). The run is
+// trusted at construction (`context.system = true`), the single trust marker
+// every authorization layer reads (Decision 1); its `authorize` is derived from
+// createAuthorize like every other layer, so endpoint auth is not re-checked
+// against a session (Decision 2).
 function createSystemContext({
   agents,
   appMeta,
@@ -64,15 +68,15 @@ function createSystemContext({
     },
     secrets,
     steps,
-    user: {},
     websockets,
   };
   // Hook routines read the retained organizations state too - a step or
   // _organization inside a hook-bound endpoint resolves the same pinned org.
   context.organization = getOrganizationBinding({ auth: auth ?? null });
-  // System caller: trusted internal invocation - endpoint auth is not
-  // re-checked against a session.
-  context.authorize = () => true;
+  // Trusted, caller-less system context (Decisions 1, 2): user: null,
+  // system: true, and authorize derived from createAuthorize - the same
+  // invariant bundle the caller-less runners apply, set in one place.
+  applySystemTrust(context);
   context.handleError = createHandleError({ context });
   context.readConfigFile = createReadConfigFile(context);
   context.evaluateOperators = createEvaluateOperators(context);

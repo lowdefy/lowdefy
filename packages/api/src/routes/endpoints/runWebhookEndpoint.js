@@ -14,24 +14,31 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import applySystemTrust from '../../context/applySystemTrust.js';
 import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import runWebhookVerify from './runWebhookVerify.js';
 
-// Runs an endpoint declared `webhook: true` — a third-party webhook receiver
+// Runs an endpoint declared `webhook` — a third-party webhook receiver
 // (SNS, Event Grid, Stripe, ...) served on the standard /api/endpoints route,
 // but taking the request RAW: bodies are the caller's own format, not
 // Lowdefy's { payload } envelope, so the routine receives
 // { body, query, headers } as its payload and its return value is sent back
 // verbatim (handshakes require exact response shapes). Only endpoints that
 // opt in are runnable here (a missing flag reads as a missing endpoint — no
-// probing). The transport is public by design: authenticating the caller
-// (shared-secret query param, signature header) is the webhook routine's own
-// first step. Executes as a system context.
+// probing).
+//
+// The transport is public by design, so the run starts caller-less AND
+// UNTRUSTED (Decision 3): context.user = null, context.system unset. It earns
+// trust only when its declared `webhook.verify` gate passes, run mechanically
+// BEFORE the routine body - so verification can never be forgotten, mis-ordered,
+// or placed after a privileged CallApi. A webhook with no declared verifier
+// runs untrusted throughout, so any nested protected CallApi fails closed.
 async function runWebhookEndpoint(context, { endpointId, body, query, headers }) {
   const { logger } = context;
 
@@ -41,17 +48,38 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
   logger.debug({ event: 'debug_webhook_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  if (endpointConfig.webhook !== true) {
+  // webhook may be `true` or a `{ verify }` object — gate on truthiness.
+  if (!endpointConfig.webhook) {
     const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }
 
-  // Force a system context regardless of any session cookie sent with the request.
-  // system: true — nested CallApi steps are authorized like function calls (the run
-  // was already authorized at the transport layer), not re-gated on a user session.
+  // Caller-less and UNTRUSTED: with context.system unset, createAuthorize fails
+  // closed on any protected target exactly as an unauthenticated call would
+  // (Api and InternalApi alike — InternalApi is an HTTP-exposure choice, not a
+  // trust tier, so it earns no special pass).
   context.user = null;
-  context.authorize = createAuthorize({ user: null, system: true });
+  context.authorize = createAuthorize(context);
+
+  // A declared verifier is the only thing that can make the run trusted, and it
+  // runs before any routine step. On success the runner (not routine or
+  // resolver code) sets context.system, matching the state createSystemContext
+  // produces for cron. On failure the routine never runs.
+  const verify = type.isObject(endpointConfig.webhook) ? endpointConfig.webhook.verify : undefined;
+  if (!type.isNone(verify)) {
+    const verified = await runWebhookVerify(context, { verify, body, query, headers });
+    if (!verified) {
+      logger.warn({ event: 'webhook_verify_failed', endpointId });
+      return {
+        error: null,
+        response: null,
+        status: 'unauthorized',
+        success: false,
+      };
+    }
+    applySystemTrust(context);
+  }
 
   const routineContext = {
     steps: {},

@@ -137,15 +137,23 @@ test('throws ConfigError when user.roles contains a non-string entry', () => {
   throw new Error('Expected ConfigError to be thrown');
 });
 
-test('system: true authorizes protected config without a user', () => {
+test('context.system true authorizes protected config without a user', () => {
   const authorize = createAuthorize({ user: null, system: true });
   expect(authorize({ auth: { public: false } })).toBe(true);
   expect(authorize({ auth: { public: true } })).toBe(true);
 });
 
-test('system: true authorizes roles-protected config without a user', () => {
+test('context.system true authorizes roles-protected config without a user', () => {
   const authorize = createAuthorize({ user: null, system: true });
   expect(authorize({ auth: { public: false, roles: ['admin'] } })).toBe(true);
+});
+
+test('an unset context.system applies the normal auth.public / auth.roles matching', () => {
+  // createAuthorize is called with the whole context; a normal run has
+  // context.system unset, so the blanket pass never triggers.
+  const authorize = createAuthorize({ user: null });
+  expect(authorize({ auth: { public: false } })).toBe(false);
+  expect(authorize({ auth: { public: true } })).toBe(true);
 });
 
 test('throws ConfigError with configKey for location tracing', () => {

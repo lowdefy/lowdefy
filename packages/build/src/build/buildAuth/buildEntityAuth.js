@@ -73,13 +73,18 @@ function buildEntityAuth({ components, context, entity }) {
         public: true,
       };
     }
-    // Webhook endpoints serve third-party callers with no session - the
-    // webhook route bypasses the session check by design, so a protected
-    // webhook endpoint would silently serve unauthenticated traffic. Make
-    // the contradiction a build error instead.
-    if (entity === 'api' && item.webhook === true && item.auth.public !== true) {
+    // A webhook endpoint's transport is public and has no caller to gate, so
+    // its own auth is inert - roles cannot protect it. Force the developer to
+    // acknowledge that by declaring the endpoint EXPLICITLY public (listed in
+    // auth.api.public), rather than relying on the defaulted public that an
+    // endpoint in neither list resolves to. An implicit/defaulted public, a
+    // protected endpoint, or one carrying roles is a build error - the webhook
+    // earns trust at runtime through its declared verify gate, never from auth
+    // (Decision 3). webhook may be `true` or the `{ verify }` object, so gate
+    // on truthiness, not `=== true`.
+    if (entity === 'api' && item.webhook && !isInPatternList(item.id, configPublic)) {
       throw new ConfigError(
-        `Endpoint "${item.id}" is a webhook receiver but is protected by auth.api. Webhook endpoints run as a system context and must authenticate the caller in the routine - list the endpoint in auth.api.public or remove the webhook flag.`,
+        `Endpoint "${item.id}" is a webhook receiver and must be declared explicitly public - list it in "auth.api.public". The webhook transport is public and has no caller to gate, so "auth.api.protected" and roles cannot protect it; the routine authenticates the caller itself (a declared webhook.verify gate). Remove the webhook flag if the endpoint is not a webhook receiver.`,
         { configKey: item['~k'] }
       );
     }

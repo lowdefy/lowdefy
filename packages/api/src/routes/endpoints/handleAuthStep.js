@@ -56,21 +56,31 @@ async function handleAuthStep(context, routineContext, { step }) {
     );
   }
 
-  // A resolved caller is context.user carrying an id - hook routines run
-  // with context.user = {}, which is a caller-less system invocation unless
-  // the step explicitly opts into running as the system.
+  // The floor passes on either of two independent doors (Decision 1):
+  //   1. a run-level system context (context.system === true) - a trusted,
+  //      caller-less run (cron, hook, verified webhook), or
+  //   2. a single step marked system (step.system === true, admin's
+  //      skipUserAdminRoleCheck) - a per-step waiver in an otherwise
+  //      user/public run, which never sets context.system.
+  // Either door makes the step act caller-less as the system.
+  const actingAsSystem = context.system === true || step.system === true;
+
+  // A resolved caller is context.user carrying an id. A caller-less run needs
+  // no principal only when one of the two system doors is open.
   const hasCaller = type.isObject(context.user) && !type.isNone(context.user.id);
-  if (!hasCaller && step.system !== true) {
+  if (!hasCaller && !actingAsSystem) {
     throw new ConfigError(
       `Auth step "${step.stepId}" requires an authenticated caller. Set system: true on the step for caller-less system routines.`,
       { configKey: step['~k'] }
     );
   }
 
-  // system: true is an explicit trust decision, not attribution - the step
-  // runs caller-less as the system even when a caller is present.
-  const acting =
-    step.system === true ? { system: true, user: null } : { system: false, user: context.user };
+  // Acting as the system is an explicit trust decision, not attribution - the
+  // step runs caller-less as the system (even when a caller is present, for
+  // the per-step marker).
+  const acting = actingAsSystem
+    ? { system: true, user: null }
+    : { system: false, user: context.user };
 
   // The user-administration floor, enforced mechanically here so an app can
   // never expose member mutation by forgetting a check: every user-initiated

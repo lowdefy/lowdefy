@@ -16,6 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 
+import applySystemTrust from '../../context/applySystemTrust.js';
 import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -24,24 +25,43 @@ import runRoutine from './runRoutine.js';
 // Runs an endpoint invoked through the detached route (a CallApi step with
 // `detached: true` fire-and-forgets an HTTP call back to the deployment, so the
 // target runs in its OWN function invocation with a fresh duration budget).
-// Like a cron run this is authorized by the transport layer (CRON_SECRET) and
-// executes as a system context: no user session, `_user` resolves to undefined,
-// and InternalApi endpoints are callable. Payload arrives serialized (dates
-// etc. survive the HTTP hop via @lowdefy/helpers serializer).
-async function runDetachedEndpoint(context, { endpointId, payload }) {
+// The transport is authorized by CRON_SECRET, which proves the loopback request
+// originated from the deployment (an ORIGIN proof, not an identity). A detached
+// call is a fresh invocation, not a fresh principal (Decision 4): it runs with
+// the SAME identity the dispatching run had, carried across the hop and
+// rehydrated here. There is no detached-specific authorization rule - nested
+// calls flow through the normal `authorize` path against the carried identity.
+// Payload arrives serialized (dates etc. survive the HTTP hop via
+// @lowdefy/helpers serializer).
+async function runDetachedEndpoint(context, { endpointId, payload, principal }) {
   const { logger } = context;
 
   context.endpointId = endpointId;
+
+  // Rehydrate the dispatcher's identity carried across the CRON_SECRET-gated
+  // hop BEFORE deriving authorize and evaluateOperators, so both the auth check
+  // and the `_user` operator see the carried identity. This is a sanctioned
+  // substitute writer for resolveAuthentication - the principal was resolved
+  // upstream and built server-side, never from user input. A stale principal
+  // (roles changed between dispatch and run) is acceptable for at-most-once
+  // fire-and-forget - no re-resolution.
+  if (principal?.system === true) {
+    // The dispatcher was a trusted system context (cron, hook, or a verified
+    // webhook) - the detached run inherits it and blanket-passes.
+    applySystemTrust(context);
+  } else {
+    // The dispatcher was a real user (or a strategy caller) - carry that
+    // identity. This is NOT a system context (context.system stays unset), so
+    // nested authorization is re-checked against these roles exactly as it
+    // would be in-invocation - the run reaches nothing the dispatcher could not
+    // reach synchronously.
+    context.user = serializer.deserialize(principal?.user ?? null);
+    context.authorize = createAuthorize(context);
+  }
   context.evaluateOperators = createEvaluateOperators(context);
 
   logger.debug({ event: 'debug_detached_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
-
-  // Force a system context regardless of any session cookie sent with the request.
-  // system: true — nested CallApi steps are authorized like function calls (the run
-  // was already authorized at the transport layer), not re-gated on a user session.
-  context.user = null;
-  context.authorize = createAuthorize({ user: null, system: true });
 
   const routineContext = {
     steps: {},

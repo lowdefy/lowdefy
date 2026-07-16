@@ -63,8 +63,21 @@ async function handleEndpointCall(context, routineContext, { step }) {
           'content-type': 'application/json',
           authorization: `Bearer ${process.env.CRON_SECRET}`,
         },
+        // Carry the already-resolved dispatcher identity across the hop
+        // (Decision 4): a detached call is a fresh invocation, not a fresh
+        // principal. The receiver rehydrates context.user / context.system from
+        // this snapshot and authorizes nested calls against it through the
+        // normal path - so a user-dispatched detached run reaches nothing the
+        // user could not reach synchronously, and a cron/hook/verified-webhook
+        // run blanket-passes like its dispatcher. Built server-side from the
+        // resolved context, never from user input; the CRON_SECRET proves
+        // origin, which is what lets the receiver trust the assertion.
         body: JSON.stringify({
           payload: serializer.serialize(evaluatedProperties.payload ?? {}),
+          principal: {
+            user: serializer.serialize(context.user ?? null),
+            system: context.system === true,
+          },
         }),
       })
     );
