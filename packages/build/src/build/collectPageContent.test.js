@@ -202,3 +202,48 @@ test('collectPageContent collects class from nested operator object', () => {
   expect(result).toContain('bg-gray-900');
   expect(result).toContain('bg-white');
 });
+
+test('collectPageContent collects tailwind classes from _js string source', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Html',
+      properties: {
+        html: {
+          _js: 'return `<span class="bg-warning text-white text-[10px] px-1.5">${label}</span>`;',
+        },
+      },
+    },
+  ]);
+  expect(result).toContain('bg-warning');
+  expect(result).toContain('text-[10px]');
+  expect(result).toContain('px-1.5');
+});
+
+test('collectPageContent collects classes from _js fn body source', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Html',
+      properties: {
+        html: {
+          _js: { fn: 'return `<div class="bg-success rounded-sm">${args[0]}</div>`;', args: [1] },
+        },
+      },
+    },
+  ]);
+  expect(result).toContain('bg-success');
+  expect(result).toContain('rounded-sm');
+});
+
+test('collectPageContent collects _js source in block.class', () => {
+  const result = collectPageContent([
+    {
+      id: 'p1',
+      type: 'Box',
+      class: { _js: 'return active ? "border-primary" : "border-transparent";' },
+    },
+  ]);
+  expect(result).toContain('border-primary');
+  expect(result).toContain('border-transparent');
+});
