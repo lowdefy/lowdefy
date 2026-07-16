@@ -46,6 +46,9 @@ function TextInput({
         id={`${blockId}_input`}
         className={classNames.element}
         style={{
+          // border-box: adm-input is width 100% and this inline padding would
+          // otherwise overflow the field wrapper.
+          boxSizing: 'border-box',
           border: '1px solid var(--adm-color-border)',
           borderRadius: 'var(--adm-radius-s)',
           padding: '6px 10px',

@@ -25,6 +25,7 @@ function PickerTrigger({ blockId, classNames = {}, disabled, hasValue, label, on
       role="button"
       className={classNames.element}
       style={{
+        boxSizing: 'border-box',
         border: '1px solid var(--adm-color-border)',
         borderRadius: 'var(--adm-radius-s)',
         padding: '6px 10px',
