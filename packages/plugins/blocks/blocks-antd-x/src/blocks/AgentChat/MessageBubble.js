@@ -16,6 +16,11 @@
 
 import React, { useMemo } from 'react';
 import Markdown from '@ant-design/x-markdown';
+// The .x-markdown class styles ship separately from the component - without
+// this sheet, markdown text falls back to browser-default sizing instead of
+// inheriting the bubble font (assistant messages render larger than user
+// messages), and paragraph/list spacing is unstyled.
+import '@ant-design/x-markdown/dist/x-markdown.css';
 import {
   Actions,
   CodeHighlighter,
