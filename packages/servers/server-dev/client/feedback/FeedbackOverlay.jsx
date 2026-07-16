@@ -76,7 +76,7 @@ function rectToXY(rect) {
 }
 
 const initialState = {
-  phase: 'picking', // picking | annotating | drawing | review | sent
+  phase: 'picking', // picking | annotating | drawing | sent
   hoverBlock: null, // { blockId, rect }
   selection: null, // { kind, blockId, blockChain, tag, classes, text, rect }
   draftComment: '',
@@ -123,10 +123,12 @@ function reducer(state, action) {
       };
     case 'CANCEL_DRAWING':
       return { ...state, phase: 'annotating', draftTool: null };
+    // "Add another" — bank the current draft and go straight back to picking;
+    // the banked annotations show in the pending tray until sent.
     case 'SAVE_ANNOTATION':
       return {
         ...state,
-        phase: 'review',
+        phase: 'picking',
         batch: [...state.batch, action.annotation],
         selection: null,
         draftComment: '',
@@ -145,12 +147,8 @@ function reducer(state, action) {
       };
     case 'REMOVE_FROM_BATCH':
       return { ...state, batch: state.batch.filter((annotation) => annotation.id !== action.id) };
-    case 'ADD_ANOTHER':
-      return { ...state, phase: 'picking' };
     case 'DISCARD_ALL':
       return { ...state, phase: 'picking', batch: [] };
-    case 'BACK_TO_PICKING':
-      return { ...state, phase: 'picking' };
     case 'SEND_START':
       return { ...state, sending: true, sendError: null };
     case 'SEND_SUCCESS':
@@ -190,7 +188,7 @@ function buildAnnotation(state) {
   };
 }
 
-function buildBatch({ state, pageId }) {
+function buildBatch({ annotations, includeScreenshot, pageId }) {
   return {
     batchId: generateId(),
     timestamp: new Date().toISOString(),
@@ -204,8 +202,8 @@ function buildBatch({ state, pageId }) {
       scrollY: window.scrollY,
       dpr: window.devicePixelRatio,
     },
-    annotations: state.batch,
-    includeScreenshot: state.includeScreenshot,
+    annotations,
+    includeScreenshot,
     stateRef: { captured: true, pageId },
   };
 }
@@ -218,10 +216,6 @@ function handleEscape({ stateRef, dispatch, onClose }) {
   }
   if (phase === 'annotating') {
     dispatch({ type: 'DISCARD_DRAFT' });
-    return;
-  }
-  if (phase === 'review') {
-    dispatch({ type: 'BACK_TO_PICKING' });
     return;
   }
   // picking (or sent, though Esc is irrelevant there)
@@ -315,7 +309,7 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
   // Capture-phase keydown suppressor: blocks every key from reaching the
   // app's own shortcut manager while the overlay is active, except when the
   // developer is typing inside the overlay itself (e.g. the comment
-  // textarea). Esc and $mod+Enter are handled here first, before deciding
+  // textarea). Esc and Enter are handled here first, before deciding
   // whether to suppress, so they always work regardless of focus.
   useEffect(() => {
     function onKeyDown(event) {
@@ -330,18 +324,15 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
           return;
         }
 
-        // Enter drives the primary (blue) action for the current phase;
-        // Shift+Enter still inserts a newline in the comment textarea.
+        // Enter drives the primary (blue) action for the current phase —
+        // copy for agent, including the in-flight draft. Shift+Enter still
+        // inserts a newline in the comment textarea.
         const isPlainEnter = event.key === 'Enter' && !event.shiftKey;
         if (isPlainEnter) {
           const current = stateRef.current;
-          if (current.phase === 'annotating' && current.selection) {
-            event.preventDefault();
-            dispatch({ type: 'SAVE_ANNOTATION', annotation: buildAnnotation(current) });
-            event.stopImmediatePropagation();
-            return;
-          }
-          if (current.phase === 'review' && !current.sending && current.batch.length > 0) {
+          const canSendDraft = current.phase === 'annotating' && current.selection;
+          const canSendBatch = current.phase === 'picking' && current.batch.length > 0;
+          if (!current.sending && (canSendDraft || canSendBatch)) {
             event.preventDefault();
             primarySendRef.current?.();
             event.stopImmediatePropagation();
@@ -412,6 +403,11 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
 
     function onClickCapture(event) {
       try {
+        // Clicks on the overlay's own UI (the pending tray) are real button
+        // clicks, not element picks.
+        if (event.target instanceof Element && event.target.closest(FEEDBACK_ROOT_SELECTOR)) {
+          return;
+        }
         event.preventDefault();
         event.stopPropagation();
         const el = document.elementFromPoint(event.clientX, event.clientY);
@@ -602,7 +598,7 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
     }
   }
 
-  function handleSave() {
+  function handleAddAnother() {
     try {
       if (!state.selection) {
         return;
@@ -615,14 +611,27 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
 
   async function handleSend() {
     try {
+      // The in-flight draft is part of the send — copying from the panel
+      // must not require banking the draft as a separate step first.
+      const current = stateRef.current;
+      const annotations = current.selection
+        ? [...current.batch, buildAnnotation(current)]
+        : current.batch;
+      if (current.sending || annotations.length === 0) {
+        return;
+      }
       dispatch({ type: 'SEND_START' });
-      const batch = buildBatch({ state, pageId });
+      const batch = buildBatch({
+        annotations,
+        includeScreenshot: current.includeScreenshot,
+        pageId,
+      });
       // Capture the annotated screenshot in THIS tab — the pixels the
       // developer is actually looking at (theme, loaded data) — and ship it
       // with the batch for the server to save. On failure the field is
       // absent and the server falls back to its headless capture.
-      if (state.includeScreenshot) {
-        const screenshot = await captureTabScreenshot({ annotations: state.batch });
+      if (current.includeScreenshot) {
+        const screenshot = await captureTabScreenshot({ annotations });
         if (screenshot) {
           batch.screenshot = screenshot;
         }
@@ -655,8 +664,8 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
       });
     }
   }
-  // Enter in the review tray triggers the primary action via the capture
-  // handler above — a ref keeps the freshest closure without re-binding.
+  // Enter triggers the send via the capture handler above — a ref keeps the
+  // freshest closure without re-binding.
   primarySendRef.current = handleSend;
 
   let content = null;
@@ -665,7 +674,7 @@ function FeedbackOverlay({ basePath, pageId, onClose }) {
       state,
       dispatch,
       textareaRef,
-      handleSave,
+      handleAddAnother,
       handleSend,
       handleDrawPointerDown,
       handleDrawPointerMove,
@@ -694,7 +703,7 @@ function renderOverlayContent({
   state,
   dispatch,
   textareaRef,
-  handleSave,
+  handleAddAnother,
   handleSend,
   handleDrawPointerDown,
   handleDrawPointerMove,
@@ -709,8 +718,16 @@ function renderOverlayContent({
   const showAnnotatingPanel =
     (state.phase === 'annotating' || state.phase === 'drawing') && state.selection;
   const showSvg = state.phase === 'drawing';
-  const showReview = state.phase === 'review';
+  // Annotations banked via "Add another" — visible while picking the next
+  // element so they stay reviewable/removable without a separate step.
+  const showPendingTray = state.phase === 'picking' && state.batch.length > 0;
   const showSent = state.phase === 'sent';
+  // The panel's send includes the in-flight draft on top of the banked batch.
+  const draftSendCount = state.batch.length + 1;
+  let draftSendLabel = draftSendCount > 1 ? `Copy ${draftSendCount} for agent` : 'Copy for agent';
+  if (state.sending) {
+    draftSendLabel = 'Copying…';
+  }
 
   return (
     <div data-lowdefy-feedback style={overlayContainer}>
@@ -796,6 +813,16 @@ function renderOverlayContent({
           {state.draftShapes.length > 0 && (
             <div style={descriptorRow}>{state.draftShapes.length} shape(s) drawn</div>
           )}
+          <label style={consoleCountRow}>
+            <input
+              checked={state.includeScreenshot}
+              onChange={() => dispatch({ type: 'TOGGLE_SCREENSHOT' })}
+              style={{ marginRight: 6, verticalAlign: 'middle' }}
+              type="checkbox"
+            />
+            Include annotated screenshot
+          </label>
+          {state.sendError && <div style={errorRow}>{state.sendError}</div>}
           <div style={buttonRow}>
             <button
               type="button"
@@ -804,14 +831,22 @@ function renderOverlayContent({
             >
               Cancel
             </button>
-            <button type="button" style={primaryButton} onClick={handleSave}>
-              Save annotation
+            <button type="button" style={secondaryButton} onClick={handleAddAnother}>
+              Add another
+            </button>
+            <button
+              type="button"
+              style={primaryButton}
+              disabled={state.sending}
+              onClick={handleSend}
+            >
+              {draftSendLabel}
             </button>
           </div>
         </div>
       )}
 
-      {showReview && (
+      {showPendingTray && (
         <div style={reviewTray}>
           <div style={panelHeading}>Pending feedback ({state.batch.length})</div>
           {state.batch.map((annotation, index) => (
@@ -837,15 +872,6 @@ function renderOverlayContent({
               </button>
             </div>
           ))}
-          <label style={consoleCountRow}>
-            <input
-              checked={state.includeScreenshot}
-              onChange={() => dispatch({ type: 'TOGGLE_SCREENSHOT' })}
-              style={{ marginRight: 6, verticalAlign: 'middle' }}
-              type="checkbox"
-            />
-            Include annotated screenshot
-          </label>
           {state.sendError && <div style={errorRow}>{state.sendError}</div>}
           <div style={buttonRow}>
             <button
@@ -857,15 +883,8 @@ function renderOverlayContent({
             </button>
             <button
               type="button"
-              style={secondaryButton}
-              onClick={() => dispatch({ type: 'ADD_ANOTHER' })}
-            >
-              Add another
-            </button>
-            <button
-              type="button"
               style={primaryButton}
-              disabled={state.sending || state.batch.length === 0}
+              disabled={state.sending}
               onClick={handleSend}
             >
               {state.sending ? 'Copying…' : `Copy ${state.batch.length} for agent`}

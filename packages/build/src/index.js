@@ -167,12 +167,9 @@ async function build(options) {
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
-    tryBuildStep(buildJs, 'buildJs', { components, context });
-    tryBuildStep(buildTypes, 'buildTypes', { components, context });
-    tryBuildStep(buildImports, 'buildImports', { components, context });
-    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
-    tryBuildStep(addKeys, 'addKeys', { components, context });
-    // Collect page content strings for Tailwind to scan
+    // Collect page content strings for Tailwind to scan. Must run before
+    // buildJs — jsMapParser replaces _js source with hashes, and class
+    // candidates used only inside _js source would otherwise never be scanned.
     context.tailwindContentMap = new Map();
     for (const page of components.pages ?? []) {
       const content = collectPageContent([page]);
@@ -180,6 +177,11 @@ async function build(options) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    tryBuildStep(buildJs, 'buildJs', { components, context });
+    tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildImports, 'buildImports', { components, context });
+    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
+    tryBuildStep(addKeys, 'addKeys', { components, context });
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);

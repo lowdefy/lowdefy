@@ -110,6 +110,56 @@ type: PageHeaderMenu
   expect(result.type).toBe('PageHeaderMenu');
 });
 
+test('buildPageJit writes tailwind candidate file with classes from _js source, not the extracted hash', async () => {
+  const context = createTestContext();
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: pill
+    type: Html
+    properties:
+      html:
+        _js: |
+          return '<span class="bg-warning text-[10px] px-1.5">pill</span>';
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry,
+    context,
+  });
+
+  const tailwindWrite = mockWriteFileIfChanged.mock.calls.find(([filePath]) =>
+    filePath.includes(path.join('lowdefy-build', 'tailwind', 'home.html'))
+  );
+  expect(tailwindWrite).toBeDefined();
+  expect(tailwindWrite[1]).toContain('bg-warning');
+  expect(tailwindWrite[1]).toContain('text-[10px]');
+  expect(tailwindWrite[1]).toContain('px-1.5');
+
+  // The built page itself only holds the extracted _js hash, not the source.
+  expect(JSON.stringify(result)).not.toContain('bg-warning');
+});
+
 test('buildPageJit resolves page template with simple vars', async () => {
   const context = createTestContext();
   mockFiles([

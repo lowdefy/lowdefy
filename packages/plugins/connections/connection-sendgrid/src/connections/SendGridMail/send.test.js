@@ -53,7 +53,7 @@ test('send sets the api key and returns the messageId from response headers', as
       },
     ],
   ]);
-  expect(result).toEqual({ messageId: 'message-id-1' });
+  expect(result).toEqual({ messageId: 'message-id-1', to: 'a@b.com' });
 });
 
 test('send returns messageId null when response has no message id header', async () => {
@@ -63,13 +63,13 @@ test('send returns messageId null when response has no message id header', async
     connection: { apiKey: 'X', from: 'from@x.com' },
     mail: { to: 'a@b.com' },
   });
-  expect(result).toEqual({ messageId: null });
+  expect(result).toEqual({ messageId: null, to: 'a@b.com' });
 });
 
 test('send applies the connection filter to the mail', async () => {
   const send = (await import('./send.js')).default;
   mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
-  await send({
+  const result = await send({
     connection: { apiKey: 'X', from: 'from@x.com', filter: { allowlist: ['allowed.com'] } },
     mail: { to: ['a@allowed.com', 'b@other.com'], cc: 'c@other.com', subject: 'A' },
   });
@@ -87,6 +87,18 @@ test('send applies the connection filter to the mail', async () => {
       },
     ],
   ]);
+  expect(result).toEqual({ messageId: 'message-id-1', to: ['a@allowed.com'] });
+});
+
+test('send returns the replaced address when the filter redirects mail', async () => {
+  const send = (await import('./send.js')).default;
+  mockSend.mockResolvedValue([{ headers: { 'x-message-id': 'message-id-1' } }]);
+  const result = await send({
+    connection: { apiKey: 'X', from: 'from@x.com', filter: { replaceAddress: 'dev@test.com' } },
+    mail: { to: 'a@b.com', subject: 'A' },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('dev@test.com');
+  expect(result).toEqual({ messageId: 'message-id-1', to: 'dev@test.com' });
 });
 
 test('send returns filtered result without calling sendgrid when no to recipients survive', async () => {
@@ -95,7 +107,7 @@ test('send returns filtered result without calling sendgrid when no to recipient
     connection: { apiKey: 'X', from: 'from@x.com', filter: { allowlist: ['allowed.com'] } },
     mail: { to: 'a@other.com', subject: 'A' },
   });
-  expect(result).toEqual({ messageId: null, filtered: true });
+  expect(result).toEqual({ messageId: null, to: null, filtered: true });
   expect(mockSend).not.toHaveBeenCalled();
 });
 

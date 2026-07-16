@@ -27,6 +27,7 @@ beforeEach(() => {
   mockSend.mockImplementation(({ mail }) => {
     return Promise.resolve({
       messageId: `<${mail.to}>`,
+      to: mail.to,
       accepted: [mail.to],
       rejected: [],
     });
@@ -62,6 +63,7 @@ test('SMTPMailSend sends a single object request through send', async () => {
     results: [
       {
         messageId: '<someone@example.com>',
+        to: 'someone@example.com',
         accepted: ['someone@example.com'],
         rejected: [],
       },
@@ -115,11 +117,13 @@ test('SMTPMailSend sends each message in an array request through send sequentia
     results: [
       {
         messageId: '<a@example.com>',
+        to: 'a@example.com',
         accepted: ['a@example.com'],
         rejected: [],
       },
       {
         messageId: '<b@example.com>',
+        to: 'b@example.com',
         accepted: ['b@example.com'],
         rejected: [],
       },
@@ -129,7 +133,7 @@ test('SMTPMailSend sends each message in an array request through send sequentia
 
 test('SMTPMailSend includes filtered results for filtered-out messages', async () => {
   const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
-  mockSend.mockResolvedValue({ messageId: null, filtered: true });
+  mockSend.mockResolvedValue({ messageId: null, to: null, filtered: true });
   const connection = {
     host: 'smtp.example.com',
     from: 'from@example.com',
@@ -142,7 +146,7 @@ test('SMTPMailSend includes filtered results for filtered-out messages', async (
   const result = await SMTPMailSend({ request, connection });
   expect(result).toEqual({
     response: 'Mail sent successfully',
-    results: [{ messageId: null, filtered: true }],
+    results: [{ messageId: null, to: null, filtered: true }],
   });
 });
 
