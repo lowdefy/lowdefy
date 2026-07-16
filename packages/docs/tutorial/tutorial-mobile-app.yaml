@@ -1,0 +1,319 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-mobile-app
+    pageTitle: Build a mobile app
+    section: Tutorial
+    filePath: tutorial/tutorial-mobile-app.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content:
+            _nunjucks:
+              on:
+                version:
+                  _ref: version.yaml
+              template: |
+                In this tutorial you will turn a Lowdefy project into an installable iOS/Android app. You will build a small "Team" app with two tabs — a team directory fed by an HTTP API, and a check-in form — and run it as a native app. It works standalone in a fresh project, so you can follow it without completing the main tutorial first.
+
+                The mobile app shares everything with your web app: the same server, connections, requests, auth and config language. If you can build a Lowdefy page, you already know how to build a mobile page. See [Mobile Apps](/mobile-apps) for the full reference.
+
+                #### 1. Add the mobile key
+
+                In `lowdefy.yaml`, add a top-level `mobile:` key next to your existing config:
+
+                ##### `lowdefy.yaml`
+
+                ```yaml
+                lowdefy: {{ version }}
+
+                connections:
+                  - id: jsonplaceholder
+                    type: AxiosHttp
+                    properties:
+                      baseURL: https://jsonplaceholder.typicode.com
+
+                mobile:
+                  appId: com.example.team        # reverse-DNS native bundle id
+                  name: Team                     # name under the app icon
+                  serverUrl: https://app.example.com  # your deployed Lowdefy server
+                  menus:
+                    - id: default
+                      links:
+                        - id: menu-team
+                          type: MenuLink
+                          pageId: m-team
+                          properties:
+                            title: Team
+                            icon: AiOutlineTeam
+                        - id: menu-checkin
+                          type: MenuLink
+                          pageId: m-checkin
+                          properties:
+                            title: Check-in
+                            icon: AiOutlineForm
+                  pages:
+                    - _ref: pages/m-team.yaml
+                    - _ref: pages/m-member.yaml
+                    - _ref: pages/m-checkin.yaml
+
+                pages:
+                  # your web pages, unchanged
+                ```
+
+                Mobile pages live under `mobile.pages` and share one page id namespace with your web pages — reusing an id across targets is a build error. Inside mobile pages, block types resolve to the mobile block set: `Button` is the mobile Button on mobile pages and the Ant Design Button on web pages.
+
+                #### 2. The team directory page
+
+                Create the first mobile page. It fetches users from the API when the page loads, and renders them in a native list:
+
+                ##### `pages/m-team.yaml`
+
+                ```yaml
+                id: m-team
+                type: Box
+                requests:
+                  - id: fetch_users
+                    type: AxiosHttp
+                    connectionId: jsonplaceholder
+                    properties:
+                      url: /users
+                events:
+                  onInit:
+                    - id: load_users
+                      type: Request
+                      params: fetch_users
+                    - id: set_team
+                      type: SetState
+                      params:
+                        team:
+                          _request: fetch_users.data
+                blocks:
+                  - id: nav
+                    type: NavBar
+                    properties:
+                      title: Team
+                      back: false
+                  - id: team
+                    type: List
+                    blocks:
+                      - id: team_item
+                        type: Html
+                        properties:
+                          html:
+                            _string.concat:
+                              - '<div style="font-weight:600">'
+                              - _state: team.$.name
+                              - '</div><div style="color:#888;font-size:13px">'
+                              - _state: team.$.email
+                              - '</div>'
+                  - id: tab_bar
+                    type: TabBar
+                ```
+
+                Three details worth pausing on — they trip up most first attempts:
+
+                - Page load events are `onInit` (blocks rendering until done) or `onInitAsync` (runs alongside rendering). There is no `onEnter` event — a typo here fails silently.
+                - `AxiosHttp` returns the full response envelope (`status`, `headers`, `data`, ...), so take `_request: fetch_users.data` — setting the whole envelope into state gives the `List` an object where it expects an array.
+                - The `List` block repeats its child blocks once per item in the state array at its own block id (`team` here). Inside those children, `$` is replaced with each item's index — `team.$.name` becomes `team.0.name`, `team.1.name`, and so on.
+
+                The `TabBar` needs no configuration — it reads `mobile.menus` and highlights the active page. `back: false` hides the NavBar back arrow, which top-level tab pages don't need.
+
+                #### 3. The check-in form
+
+                ##### `pages/m-checkin.yaml`
+
+                ```yaml
+                id: m-checkin
+                type: Box
+                blocks:
+                  - id: nav_checkin
+                    type: NavBar
+                    properties:
+                      title: Daily Check-in
+                      back: false
+                  - id: checkin_card
+                    type: Card
+                    properties:
+                      title: How is your day going?
+                    blocks:
+                      - id: name
+                        type: TextInput
+                        required: true
+                        properties:
+                          title: Name
+                          placeholder: Your name
+                      - id: mood
+                        type: Selector
+                        properties:
+                          title: Mood
+                          placeholder: How are you feeling?
+                          pickerTitle: Mood
+                          options:
+                            - Great
+                            - Okay
+                            - Swamped
+                      - id: submit
+                        type: Button
+                        properties:
+                          title: Check in
+                        events:
+                          onClick:
+                            - id: validate_checkin
+                              type: Validate
+                            - id: toast
+                              type: DisplayMessage
+                              params:
+                                content:
+                                  _string.concat:
+                                    - 'Checked in: '
+                                    - _state: name
+                                    - ' is feeling '
+                                    - _if_none:
+                                        - _state: mood
+                                        - okay
+                  - id: tab_bar_checkin
+                    type: TabBar
+                ```
+
+                Mobile input blocks label differently from web blocks: `title` renders a small caption above the field (`label: {title: ...}` also works), but an antd-style `label: <string>` string is silently ignored. Placeholders (and `pickerTitle` on pickers) carry the in-field hints.
+
+                Validation works exactly as on web: `required: true` marks the label with a red asterisk, and the `Validate` action stops the chain when a field is invalid — showing the inline error under the field and the standard validation toast. `Selector` opens a native-feel wheel picker, and `DisplayMessage` shows a mobile toast — same action as on web, mobile-native rendering.
+
+                #### 4. Tap through to a detail page
+
+                Real apps navigate from lists to detail pages. The pattern is the same as on web: `Link` with `input` to pass the tapped item, `_input` to read it on the target page. Make the team list items tappable:
+
+                ##### `pages/m-team.yaml`
+
+                ```yaml
+                - id: team
+                  type: List
+                  properties:
+                    itemArrow: true
+                  events:
+                    onItemClick:
+                      - id: open_member
+                        type: Link
+                        params:
+                          pageId: m-member
+                          input:
+                            member:
+                              _get:
+                                key:
+                                  _event: index
+                                from:
+                                  _state: team
+                ```
+
+                `onItemClick` fires with the tapped `index`, so `_get` picks the member out of the state array, and `Link` passes it as page `input`. Then the detail page reads it with `_input`:
+
+                ##### `pages/m-member.yaml`
+
+                ```yaml
+                id: m-member
+                type: Box
+                blocks:
+                  - id: nav_member
+                    type: NavBar
+                    properties:
+                      title:
+                        _input: member.name
+                    events:
+                      onBack:
+                        - id: back_to_team
+                          type: Link
+                          params:
+                            pageId: m-team
+                  - id: member_card
+                    type: Card
+                    properties:
+                      title:
+                        _input: member.name
+                    blocks:
+                      - id: member_fields
+                        type: Html
+                        properties:
+                          html:
+                            _string.concat:
+                              - '<div style="line-height: 2"><div><b>Email:</b> '
+                              - _input: member.email
+                              - '</div><div><b>Phone:</b> '
+                              - _input: member.phone
+                              - '</div><div><b>Company:</b> '
+                              - _input: member.company.name
+                              - '</div></div>'
+                ```
+
+                Two things to notice: `m-member` is registered in `mobile.pages` but not in `mobile.menus` — any registered page is navigable, menus only drive the `TabBar`. And the `NavBar` back arrow is an event (`onBack`), so navigation stays in your config.
+
+                #### 5. Run it
+
+                ```bash
+                lowdefy mobile dev
+                ```
+
+                This starts the normal dev server plus a mobile preview on [http://localhost:3001](http://localhost:3001). Open it in your browser, turn on device emulation in dev tools (Cmd+Shift+M / Ctrl+Shift+M), and pick a phone. Edit a page and save — the preview hot reloads like the web dev server.
+
+                #### 6. Make it native
+
+                ```bash
+                lowdefy mobile init
+                ```
+
+                This scaffolds a `mobile/` directory — a [Capacitor](https://capacitorjs.com) project you commit to git, holding the native `ios/` and `android/` platforms, signing configuration and icons.
+
+                To develop with live reload on a simulator or device:
+
+                ```bash
+                lowdefy mobile dev --ios       # Xcode required
+                lowdefy mobile dev --android   # Android SDK required
+                ```
+
+                When pointing a device at your dev server manually (editing `mobile/capacitor.config.json`), the URL depends on where the app runs:
+
+                | App running on   | Dev server URL                                   |
+                | ---------------- | ------------------------------------------------ |
+                | iOS Simulator    | `http://localhost:3001`                          |
+                | Android emulator | `http://10.0.2.2:3001`                           |
+                | Physical phone   | `http://<your-machine-LAN-IP>:3001` (same Wi-Fi) |
+
+                #### 7. Ship it
+
+                ```bash
+                lowdefy mobile build
+                ```
+
+                This builds the app bundle against your production `mobile.serverUrl` and syncs the native project. Add `logo.png` and `splash.png` to `mobile/assets/` and the build generates all icon and splash sizes. Then open the native project to run, archive and distribute through the normal App Store / Play Store flows:
+
+                ```bash
+                cd mobile
+                npx cap open ios        # Xcode
+                npx cap open android    # Android Studio
+                ```
+
+                To build against a different environment without touching config:
+
+                ```bash
+                LOWDEFY_MOBILE_SERVER_URL=https://staging.example.com lowdefy mobile build
+                ```
+
+                #### Where to next
+
+                - [Mobile Apps concepts](/mobile-apps) — the full `mobile:` key reference, block set, auth behavior and v1 limitations.
+                - Your web pages and mobile pages can link to each other's data but not to each other's pages — a `Link` across targets shows a 404, so keep navigation within each target's menus.

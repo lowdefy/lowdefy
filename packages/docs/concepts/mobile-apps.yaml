@@ -28,6 +28,8 @@ _ref:
 
             Mobile pages use a mobile-native block set based on [antd-mobile](https://mobile.ant.design) — tab bars, nav bars, wheel pickers and native scrolling feel — while everything else works exactly like the web: operators, actions, requests, menus and auth.
 
+            For a guided walkthrough from an empty project to an app running on a phone, see the [Build a mobile app](/tutorial-mobile-app) tutorial.
+
             # The mobile key
 
             ```yaml
@@ -131,6 +133,14 @@ _ref:
             # Auth
 
             Public pages, role-filtered menus and `auth.pages` rules work on mobile exactly as on web — mobile page ids participate in the same `protected`, `public` and `roles` patterns. Signing in supports credentials-type providers in v1; OAuth providers (Google, GitHub, ...) are not yet supported on mobile.
+
+            # Common pitfalls
+
+            - Page load events are `onInit` / `onInitAsync` — there is no `onEnter` event, and a wrong event name fails silently.
+            - `AxiosHttp` responses are the full envelope: use `_request: my_request.data`, not `_request: my_request`, when you want the response body.
+            - Mobile input blocks have no `label` property (antd-mobile fields are placeholder-driven) — use `placeholder`, `pickerTitle`, or add captions with an `Html` block.
+            - `NavBar` shows a back arrow by default — set `back: false` on top-level tab pages.
+            - When a device loads a dev server, `localhost` only works in the iOS Simulator; the Android emulator needs `http://10.0.2.2:<port>` and a physical phone needs your machine's LAN IP.
 
             # Not supported in v1
 

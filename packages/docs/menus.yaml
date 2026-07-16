@@ -52,6 +52,11 @@
         #   pageId: tutorial-deploy
         #   properties:
         #     title: Deploy to Netlify
+        - id: tutorial-mobile-app
+          type: MenuLink
+          pageId: tutorial-mobile-app
+          properties:
+            title: Build a mobile app
         - id: tutorial-next-steps
           type: MenuLink
           pageId: tutorial-next-steps
