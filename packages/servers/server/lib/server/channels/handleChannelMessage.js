@@ -29,6 +29,22 @@ function toUIMessages(platformMessages) {
     }));
 }
 
+// The model can legitimately end a turn with only tool calls and no closing
+// text. Chat platforms reject empty messages (Telegram's adapter throws), so
+// yield a short fallback when the stream drains without any visible text.
+async function* withTextFallback(textStream) {
+  let hasText = false;
+  for await (const chunk of textStream) {
+    if (!hasText && chunk.trim().length > 0) {
+      hasText = true;
+    }
+    yield chunk;
+  }
+  if (!hasText) {
+    yield 'Done.';
+  }
+}
+
 async function handleChannelMessage({ channelConfig, message, platform, thread }) {
   const startTime = performance.now();
   const context = createChannelContext({ channelConfig, platform });
@@ -77,7 +93,7 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
     // draft preview, other platforms fall back to post+edit or buffering.
     // (Concurrent platform calls during a polling long-poll require the
     // HTTP/1.1 dispatcher swap in disableFetchHttp2.js.)
-    await thread.post(textStream);
+    await thread.post(withTextFallback(textStream));
     logger.info({
       event: 'channel_reply',
       platform,
