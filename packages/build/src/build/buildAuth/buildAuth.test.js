@@ -202,6 +202,7 @@ test('buildAuth applies page roles on top of a protected/public configuration', 
       secret: validSecret,
       database: validDatabase,
       emailAndPassword: { enabled: true },
+      roles: [{ id: 'role1' }, { id: 'role2' }],
       pages: {
         roles: {
           role1: ['page1'],
@@ -230,6 +231,7 @@ test('buildAuth throws when a page is both protected by roles and public', () =>
       secret: validSecret,
       database: validDatabase,
       emailAndPassword: { enabled: true },
+      roles: [{ id: 'role1' }],
       pages: {
         roles: {
           role1: ['page1'],

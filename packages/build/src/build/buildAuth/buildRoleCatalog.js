@@ -19,43 +19,73 @@
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-// Collects every role name declared in config into auth.roles - the catalog
-// the runtime registers in the organization plugin's access control so its
-// member APIs accept custom roles for assignment. Registration carries empty
-// permission statements; real statements are the permissions milestone's.
-function buildRoleCatalog({ components }) {
-  const roleNames = new Set();
+import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 
-  function addRoleName({ configKey, roleName }) {
+// The authored auth.roles catalog is the single source of truth for an app's
+// roles. This validates the catalog and every gate reference against it,
+// policy-aware, then normalizes the catalog to { id, label, description }
+// entries the runtime registers in the organization plugin's access control.
+function buildRoleCatalog({ components }) {
+  const authoredRoles = components.auth.roles ?? [];
+  const policy = components.auth.organizations?.policy ?? 'pinned';
+
+  const authoredIds = new Set();
+  authoredRoles.forEach((role) => {
+    const configKey = role['~k'] ?? components.auth['~k'];
     // member.role stores multiple roles as one comma-separated string, so a
-    // comma inside a role name would corrupt the split back into an array.
-    if (roleName.includes(',')) {
+    // comma inside a role id would corrupt the split back into an array.
+    if (role.id.includes(',')) {
       throw new ConfigError(
-        `Auth role name "${roleName}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
+        `Auth role name "${role.id}" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.`,
         { configKey }
       );
     }
-    roleNames.add(roleName);
+    // The "$" namespace is reserved for engine-internal roles such as
+    // "$lowdefy-system"; authored ids may not claim it.
+    if (role.id.startsWith('$')) {
+      throw new ConfigError(
+        `Auth role id "${role.id}" is reserved — role ids may not begin with "$".`,
+        { configKey }
+      );
+    }
+    if (authoredIds.has(role.id)) {
+      throw new ConfigError(`Auth role id "${role.id}" is declared more than once.`, {
+        configKey,
+      });
+    }
+    authoredIds.add(role.id);
+  });
+
+  // Under tenant policy the built-in organization tier is always registered,
+  // so its names are implicitly declared gate references.
+  const validGateIds = new Set(authoredIds);
+  if (policy === 'tenant') {
+    ['owner', 'admin', 'member'].forEach((builtIn) => validGateIds.add(builtIn));
   }
 
   ['pages', 'api', 'websockets'].forEach((entity) => {
-    const rolesMap = components.auth[entity].roles;
+    const rolesMap = components.auth[entity]?.roles ?? {};
     Object.keys(rolesMap).forEach((roleName) => {
-      addRoleName({ configKey: rolesMap['~k'] ?? components.auth['~k'], roleName });
+      if (!validGateIds.has(roleName)) {
+        throw new ConfigError(
+          `Auth gate references role "${roleName}", which is not declared in auth.roles.`,
+          { configKey: rolesMap['~k'] ?? components.auth['~k'] }
+        );
+      }
     });
   });
 
-  // The configured user-admin role must be a grantable member role even when
-  // no entity roles map names it - UpdateMemberRoles grants through the org
-  // plugin's member APIs, which reject roles missing from its access control.
-  if (!type.isNone(components.auth.userAdminRole)) {
-    addRoleName({
-      configKey: components.auth['~k'],
-      roleName: components.auth.userAdminRole,
-    });
+  // userAdminRole is pinned-only (validateAuthConfig rejects it under tenant),
+  // so it must resolve through the authored catalog, not the built-in tier.
+  const { userAdminRole } = components.auth;
+  if (!type.isNone(userAdminRole) && !authoredIds.has(userAdminRole)) {
+    throw new ConfigError(
+      `Auth "userAdminRole" is "${userAdminRole}", which is not declared in auth.roles.`,
+      { configKey: components.auth['~k'] }
+    );
   }
 
-  components.auth.roles = [...roleNames].sort();
+  components.auth.roles = normalizeRoleCatalog(authoredRoles);
 
   return components;
 }

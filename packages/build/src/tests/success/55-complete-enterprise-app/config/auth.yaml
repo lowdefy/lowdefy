@@ -6,6 +6,9 @@ database:
   properties: {}
 emailAndPassword:
   enabled: true
+roles:
+  - id: admin
+  - id: sales
 providers:
   - id: google
     type: Google

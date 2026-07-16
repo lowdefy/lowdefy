@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import normalizeRoleCatalog from './normalizeRoleCatalog.js';
+
 // The curated projection the _build.authConfig operator reads. Computed from
 // the resolved auth: block with the same effective defaults setAuthDefaults
 // applies: presence of twoFactor/passkey implies enabled, and organizations
@@ -51,6 +53,9 @@ function computeAuthConfigProjection(auth = {}) {
       type: provider?.type ?? null,
     })),
     organizations: { signup: organizations.signup ?? signupDefault },
+    // Normalized through the same helper buildRoleCatalog uses so the two
+    // decoupled clones of the auth subtree agree on the label ?? id default.
+    roles: normalizeRoleCatalog(source.roles),
   };
 }
 

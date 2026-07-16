@@ -338,6 +338,91 @@ test('menus schema warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "pageId"');
 });
 
+test('auth roles catalog of id, label and description objects emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [
+        { id: 'admin', label: 'Administrator', description: 'Full access to admin surfaces' },
+        { id: 'branch-manager', label: 'Branch Manager' },
+        { id: 'auditor' },
+      ],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('auth roles as a non-array value emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: 'admin',
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles" should be an array.');
+});
+
+test('auth role entry missing id emits required warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ label: 'Administrator' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Auth role entries should have required property "id".'
+  );
+});
+
+test('auth role entry with a non-string id emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].id" should be a string.');
+});
+
+test('auth role entry with a non-string label emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', label: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].label" should be a string.');
+});
+
+test('auth role entry with a non-string description emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', description: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].description" should be a string.');
+});
+
+test('auth role entry with an unknown key emits additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', color: 'red' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Auth role entry has an unknown property. Allowed: "id", "label", "description".'
+  );
+});
+
 test('valid slug emits no warnings', () => {
   const cases = ['my-app', 'a', 'a-b-c-1', 'app1', 'a1-b2-c3'];
   cases.forEach((slug) => {

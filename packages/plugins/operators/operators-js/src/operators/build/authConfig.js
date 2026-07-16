@@ -30,6 +30,7 @@ const readablePaths = [
   'captcha.siteKey',
   'providers',
   'organizations.signup',
+  'roles',
 ];
 
 // Build-only operator, addressed as { _build.authConfig: '<path>' }. Reads the

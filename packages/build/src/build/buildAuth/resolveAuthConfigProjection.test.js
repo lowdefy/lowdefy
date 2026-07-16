@@ -51,6 +51,7 @@ test('resolveAuthConfigProjection sets default projection when no auth block', a
     phoneNumber: { enabled: false, signUpOnVerification: false },
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
+    roles: [],
     organizations: { signup: 'invite-only' },
   });
 });
@@ -76,6 +77,7 @@ test('resolveAuthConfigProjection computes projection from an inline auth block'
     phoneNumber: { enabled: false, signUpOnVerification: false },
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [{ id: 'google', type: 'Google' }],
+    roles: [],
     organizations: { signup: 'open' },
   });
 });
