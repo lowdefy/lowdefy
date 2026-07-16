@@ -291,6 +291,66 @@ test('buildAgentTools with no agents property returns only endpoint tools', asyn
   expect(Object.keys(tools)).toEqual([]);
 });
 
+test('buildAgentTools keys endpoint tools by name and executes by endpointId', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'reporting/query-data', name: 'query_data' }],
+    mcp: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Query data',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: { rows: [] } }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.keys(tools)).toEqual(['query_data']);
+  await tools['query_data'].execute({ dataset: 'orders' }, {});
+  expect(context.callEndpoint).toHaveBeenCalledWith('reporting/query-data', {
+    payload: { dataset: 'orders' },
+    abortSignal: undefined,
+  });
+});
+
+test('buildAgentTools keys sub-agent tools by name', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const subAgentConfig = {
+    agentId: 'reporting/researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [],
+    properties: {
+      model: 'claude-haiku-4-5-20251001',
+      instructions: 'You research topics.',
+    },
+  };
+  const agent = {
+    tools: [],
+    mcp: [],
+    agents: [{ agentId: 'reporting/researcher', name: 'reporting__researcher' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest
+      .fn()
+      .mockResolvedValue({ provider: jest.fn().mockReturnValue('sub-model') }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.keys(tools)).toEqual(['reporting__researcher']);
+});
+
 test('buildAgentTools throws ConfigError when endpoint tool name collides with reserved platform tool', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

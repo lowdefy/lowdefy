@@ -36,6 +36,7 @@
 - _ref: concepts/api.yaml
 - _ref: concepts/notifications.yaml
 - _ref: concepts/dynamic-page-content.yaml
+- _ref: concepts/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
@@ -107,6 +108,8 @@
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
+- _ref: blocks/input/TagMultipleSelector.yaml
+- _ref: blocks/input/TagSelector.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TiptapInput.yaml

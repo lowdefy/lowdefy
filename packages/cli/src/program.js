@@ -17,8 +17,10 @@
 import { createRequire } from 'module';
 import { Command, Option } from 'commander';
 
+import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
+import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
@@ -59,10 +61,18 @@ const options = {
     .choices(['error', 'warn', 'info', 'debug'])
     .default('info')
     .env('LOWDEFY_LOG_LEVEL'),
+  mockUser: new Option(
+    '--mock-user [user]',
+    'Start the dev server authenticated as a mock user (auth.dev.mockUser). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
+  ).env('LOWDEFY_DEV_USER'),
   port: new Option(
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
   ).env('PORT'),
+  projectDirectory: new Option(
+    '--project-directory <project-directory>',
+    'Change the directory where agent files (.mcp.json, AGENTS.md, Claude Code skill) are written. Default is the nearest ancestor directory containing .git, falling back to the config directory.'
+  ).env('LOWDEFY_DIRECTORY_PROJECT'),
   refResolver: new Option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
@@ -80,6 +90,19 @@ const options = {
     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   ),
 };
+
+program
+  .command('agent-setup')
+  .description(
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skill).'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.projectDirectory)
+  .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program
   .command('build')
@@ -108,6 +131,7 @@ program
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
+  .addOption(options.mockUser)
   .option('--no-open', 'Do not open a new tab in the default browser.')
   .addOption(options.port)
   .addOption(options.refResolver)
@@ -131,6 +155,16 @@ program
   .addOption(options.refResolver)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: emails }));
+
+program
+  .command('docker-output')
+  .description('Assemble a minimal Docker runtime (.lowdefy/docker) from a built app.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: dockerOutput }));
 
 program
   .command('init')

@@ -858,6 +858,42 @@ pages:
   ]);
 });
 
+test('resolveFullManifest filters null entries from notifications', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+notifications:
+  - id: invite-user
+    type: NotificationEmail
+    properties:
+      subject: Invite
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  // Manually inject a null to simulate a failed ref resolution
+  context.modules['my-mod'].manifest.notifications.push(null);
+
+  await resolveFullManifest({ entryId: 'my-mod', context });
+
+  expect(context.modules['my-mod'].manifest.notifications).toEqual([
+    expect.objectContaining({ id: 'invite-user', type: 'NotificationEmail' }),
+  ]);
+});
+
 describe('operator-generated components sections', () => {
   // Components are record-ified by the exportables pass (Phase C.5), which
   // runs after the header parse — drive both, as buildModuleDefs does.

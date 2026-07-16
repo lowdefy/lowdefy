@@ -31,6 +31,7 @@ import validateServerStateReferences from '../buildPages/validateServerStateRefe
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
+import collectPageContent from '../collectPageContent.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
@@ -329,6 +330,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
 
+    // Collect Tailwind class candidates before _js extraction — jsMapParser
+    // replaces _js source with hashes, so classes used only inside _js source
+    // would otherwise never reach the Tailwind scanner.
+    const tailwindContent = collectPageContent([processed]);
+
     // Extract JS functions from the page
     const pageRequests = [...(processed.requests ?? [])];
     delete processed.requests;
@@ -350,7 +356,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
 
     // Write page artifacts
-    const { tailwindChanged } = await writePageJit({ page: finalPage, context: buildContext });
+    const { tailwindChanged } = await writePageJit({
+      page: finalPage,
+      context: buildContext,
+      tailwindContent,
+    });
 
     // Attached after the disk write (like _warnings) so it never persists in
     // artifacts — the JIT server uses it to decide whether to trigger a CSS

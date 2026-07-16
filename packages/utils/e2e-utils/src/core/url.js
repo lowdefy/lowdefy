@@ -14,27 +14,6 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-
-async function expectUrl(page, { url, timeout = 5000 }) {
-  if (!url) {
-    throw new Error('expectUrl requires a "url" parameter (string or RegExp).');
-  }
-  await expect(page).toHaveURL(url, { timeout });
-}
-
-async function expectUrlQuery(page, { key, value, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const url = new URL(page.url());
-        return url.searchParams.get(key);
-      },
-      { timeout }
-    )
-    .toBe(value);
-}
-
 async function setUrlQuery(page, { key, value }) {
   await page.evaluate(
     ({ k, v }) => {
@@ -50,4 +29,4 @@ async function setUrlQuery(page, { key, value }) {
   );
 }
 
-export { expectUrl, expectUrlQuery, setUrlQuery };
+export { setUrlQuery };

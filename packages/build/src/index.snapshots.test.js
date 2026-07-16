@@ -23,8 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/success');
 
-// Set NEXTAUTH_SECRET for auth-related tests
-process.env.NEXTAUTH_SECRET = 'test-secret-for-snapshot-tests';
+// Set AUTH_SECRET for auth-related tests
+process.env.AUTH_SECRET = 'test-secret-for-snapshot-tests';
 
 // Pin gitSha so buildAppMeta produces a deterministic appMeta in snapshots.
 process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';

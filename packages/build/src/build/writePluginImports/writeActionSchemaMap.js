@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import importPluginModule from './importPluginModule.js';
+
 async function writeActionSchemaMap({ components, context }) {
   const schemas = {};
 
@@ -28,12 +30,10 @@ async function writeActionSchemaMap({ components, context }) {
   }
 
   for (const [packageName, actions] of Object.entries(actionsByPackage)) {
-    let packageSchemas;
-    try {
-      packageSchemas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
-    } catch {
-      // Package not resolvable from build context (custom plugins) — skip
-    }
+    const packageSchemas = await importPluginModule({
+      context,
+      specifier: `${packageName}/schemas`,
+    });
     for (const action of actions) {
       if (typesMapSchemas[action.typeName]) {
         schemas[action.typeName] = typesMapSchemas[action.typeName];

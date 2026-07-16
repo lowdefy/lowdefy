@@ -29,8 +29,8 @@ jest.unstable_mockModule('./createProviders.js', () => ({ default: mockProviders
 jest.unstable_mockModule('./createLogger.js', () => ({ default: mockLogger }));
 
 test('getAuthConfig resolves `_app` in authJson and sets Auth.js v5 config fields', async () => {
-  process.env.NEXTAUTH_SECRET = 'v4-secret-for-test';
-  delete process.env.AUTH_SECRET;
+  process.env.AUTH_SECRET = 'secret-for-test';
+  delete process.env.NEXTAUTH_SECRET;
   const { default: getAuthConfig } = await import('./getAuthConfig.js');
   const authJson = {
     name: { _app: 'name' },
@@ -53,9 +53,8 @@ test('getAuthConfig resolves `_app` in authJson and sets Auth.js v5 config field
   // Auth.js v5 engine fields.
   expect(result.trustHost).toBe(true);
   expect(result.basePath).toBe('/api/auth');
-  // @auth/core does not read NEXTAUTH_SECRET from env — getAuthConfig maps it.
-  expect(result.secret).toBe('v4-secret-for-test');
-  delete process.env.NEXTAUTH_SECRET;
+  expect(result.secret).toBe('secret-for-test');
+  delete process.env.AUTH_SECRET;
 });
 
 test('getAuthConfig returns the cached config on subsequent calls', async () => {

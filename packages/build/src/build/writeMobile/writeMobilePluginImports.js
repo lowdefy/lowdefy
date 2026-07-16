@@ -32,6 +32,7 @@ async function writeMobilePluginImports({ components, context }) {
 
   const { schemas, blockMetas } = await getBlockSchemasAndMetas({
     blocks: imports.blocks,
+    context,
     typesMap: context.typesMapMobile,
   });
   await context.writeBuildArtifact('mobile/plugins/blockSchemas.json', JSON.stringify(schemas));

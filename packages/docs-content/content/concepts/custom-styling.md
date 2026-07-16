@@ -1,0 +1,161 @@
+# Custom Styling
+
+Lowdefy provides several ways to style blocks and customize the look of your app:
+
+- **`class`** — Apply CSS class names (including Tailwind CSS utility classes) to blocks.
+- **`style`** — Apply inline CSS styles to blocks. Use `--`-prefixed keys to target specific parts (CSS slots).
+- **`properties.theme`** — Override antd design tokens per block. See [Theming](/theming) for details.
+- **`public/styles.css`** — A global CSS file for custom styles.
+
+## The `class` property
+
+The `class` property applies CSS class names to a block. [Tailwind CSS](https://tailwindcss.com/) is always available in Lowdefy apps, so you can use any Tailwind utility classes directly.
+
+`class` can be a string, an array of strings, or an object keyed by the block's CSS keys:
+
+```yaml
+# String — applied to the block wrapper
+- id: my_card
+  type: Card
+  class: "p-4 shadow-lg rounded-xl"
+
+# Array — all classes joined
+- id: my_card
+  type: Card
+  class:
+    - p-4
+    - shadow-lg
+    - rounded-xl
+
+# Object — target specific parts of the block using CSS keys (-- prefix)
+- id: my_card
+  type: Card
+  class:
+    .element: "shadow-lg"
+    .header: "bg-gray-100"
+    .body: "p-8"
+```
+
+Tailwind responsive prefixes work as expected:
+
+```yaml
+- id: my_box
+  type: Box
+  class: "p-4 sm:p-8 lg:p-16"
+```
+
+### Theme-aware Tailwind classes
+
+Lowdefy bridges antd design tokens to Tailwind, so utility classes like `text-primary` and `bg-bg-container` automatically reflect your theme configuration (including dark mode):
+
+```yaml
+- id: themed_card
+  type: Box
+  class: "bg-bg-container text-text-primary border border-border rounded-lg p-4"
+```
+
+See [Theming](/theming) for the full list of bridged tokens and how to add custom Tailwind tokens via `theme.tailwind`.
+
+## The `style` property
+
+The `style` property applies inline CSS styles to a block. When used with flat CSS properties (no `--` prefix), it targets the block's layout wrapper:
+
+```yaml
+- id: my_block
+  type: Box
+  style:
+    maxWidth: 800
+    margin: "0 auto"
+```
+
+To target specific parts of a block, use `.`-prefixed **CSS slot keys**. Each block declares which slots it supports in its `meta.cssKeys`. Common keys include `.block` (layout wrapper), `.element` (main component), `.header`, `.body`, `.footer`, etc.
+
+```yaml
+- id: my_card
+  type: Card
+  style:
+    .element:
+      borderRadius: 12
+    .header:
+      backgroundColor: "#f5f5f5"
+      fontWeight: bold
+    .body:
+      padding: 32
+```
+
+You can mix flat CSS (which targets `.block`) with explicit slot keys:
+
+```yaml
+- id: my_card
+  type: Card
+  style:
+    .block:
+      flex: 1
+    .element:
+      borderRadius: 12
+```
+
+Each block's documentation page lists its supported CSS keys.
+
+> **Note:** The responsive `style.sm`, `style.md` breakpoint syntax from v4 has been removed. Use Tailwind responsive classes via `class` instead.
+
+## CSS keys
+
+Each block declares named style targets in its `meta.cssKeys`. For example, the [Card](/Card) block supports: `element`, `header`, `body`, `cover`, `actions`, `extra`.
+
+Both `class` (object form) and `style` use `--`-prefixed versions of these keys to target specific parts of a block. The `--` prefix mirrors CSS custom property convention and avoids confusion with CSS property names.
+
+To find the CSS keys for a block, check the block's documentation page.
+
+## Global styles with `public/styles.css`
+
+To add global custom CSS to your app, create a file named `styles.css` in your app's `public` folder. This replaces the `styles.less` file used in v4.
+
+```css
+/* public/styles.css */
+
+h1 {
+  font-size: 32px;
+  color: #2ac8bb;
+}
+
+.my-custom-class {
+  border: 2px solid var(--ant-color-primary);
+  border-radius: 8px;
+}
+```
+
+Additional CSS files can be imported:
+
+```css
+/* public/styles.css */
+@import 'other.css';
+```
+
+## CSS variables
+
+Antd v6 uses CSS custom properties (CSS variables) for all its design tokens. You can reference these in your custom CSS or inline styles:
+
+```css
+/* Access antd theme tokens as CSS variables */
+.my-class {
+  color: var(--ant-color-primary);
+  background: var(--ant-color-bg-container);
+  border: 1px solid var(--ant-color-border);
+  font-size: var(--ant-font-size);
+}
+```
+
+These variables are automatically set based on your app's theme configuration. See [Theming](/theming) for how to configure theme tokens.
+
+## Migration from v4
+
+| v4 | v5 |
+|---|---|
+| `public/styles.less` | `public/styles.css` |
+| `@primary-color: #2ac8bb;` | `theme.antd.token.colorPrimary: '#2ac8bb'` in `lowdefy.yaml` |
+| `style.sm.padding: 32` | `class: "p-8 sm:p-4"` |
+| `properties.bodyStyle: {...}` | `style: { .body: {...} }` |
+| `@import 'antd/dist/antd.dark.less';` | `theme.antd.algorithm: dark` in `lowdefy.yaml` |
+
+See the [Migration Guide](/v4-to-v5) for full details.

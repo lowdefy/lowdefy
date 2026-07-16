@@ -22,10 +22,11 @@ import schema from './schema.js';
 async function SendGridMailSend({ request, connection }) {
   const messages = type.isArray(request) ? request : [request];
   // Send per message so the connection mail filter is enforced in one place.
+  const results = [];
   for (const mail of messages) {
-    await send({ connection, mail });
+    results.push(await send({ connection, mail }));
   }
-  return { response: 'Mail sent successfully' };
+  return { response: 'Mail sent successfully', results };
 }
 
 SendGridMailSend.schema = schema;

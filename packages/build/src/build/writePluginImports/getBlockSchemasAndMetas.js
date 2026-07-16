@@ -16,7 +16,9 @@
 
 import { buildBlockSchema } from '@lowdefy/block-utils';
 
-async function getBlockSchemasAndMetas({ blocks, typesMap }) {
+import importPluginModule from './importPluginModule.js';
+
+async function getBlockSchemasAndMetas({ blocks, context, typesMap }) {
   const schemas = {};
   const allMetas = {};
 
@@ -31,15 +33,9 @@ async function getBlockSchemasAndMetas({ blocks, typesMap }) {
   }
 
   for (const [packageName, packageBlocks] of Object.entries(blocksByPackage)) {
-    let packageMetas;
-    try {
-      packageMetas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/metas`);
-    } catch {
-      try {
-        packageMetas = await import(/* webpackIgnore: true */ /* @vite-ignore */ `${packageName}/schemas`);
-      } catch {
-        // Package not resolvable from build context (custom plugins) — skip
-      }
+    let packageMetas = await importPluginModule({ context, specifier: `${packageName}/metas` });
+    if (!packageMetas) {
+      packageMetas = await importPluginModule({ context, specifier: `${packageName}/schemas` });
     }
     for (const block of packageBlocks) {
       const meta = packageMetas?.[block.originalTypeName];

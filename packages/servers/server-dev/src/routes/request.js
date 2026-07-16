@@ -15,8 +15,10 @@
 */
 
 import { callRequest } from '@lowdefy/api';
+import { serializer } from '@lowdefy/helpers';
 
 import getPathSegments from '../lib/getPathSegments.js';
+import { getMock } from '../../lib/docs/devMockRegistry.js';
 
 async function requestHandler(c) {
   if (c.req.method !== 'POST') {
@@ -30,6 +32,32 @@ async function requestHandler(c) {
   const requestId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
   const { actionId, blockId, payload } = await c.req.json();
+
+  // Dev-only agent tooling: once a state checkpoint has been loaded
+  // (lib/docs/loadState.js), its recorded request/response pairs live in
+  // devMockRegistry keyed by (pageId, requestId). Short-circuit here, before
+  // ever touching the real connection, so a headless verification page, a
+  // human tester's browser tab, or an e2e test replays exactly what was
+  // recorded. The response shape mirrors @lowdefy/api's callRequest contract
+  // (see callRequestResolver.js / callRequest.js success shape, and
+  // middleware/errorHandler.js for the error shape) so the client's
+  // Requests.js can't tell the difference from a real request.
+  const mock = getMock({ pageId, requestId });
+  if (mock) {
+    context.logger.info({ event: 'dev_mock_request', pageId, requestId, blockId, actionId });
+    if (mock.error) {
+      const error = mock.error instanceof Error ? mock.error : new Error(mock.error);
+      const serialized = serializer.serialize(error);
+      if (serialized?.['~e']) {
+        delete serialized['~e'].received;
+        delete serialized['~e'].stack;
+        delete serialized['~e'].configKey;
+      }
+      return c.json(serialized, 500);
+    }
+    return c.json({ success: true, response: serializer.serialize(mock.response) });
+  }
+
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   return c.json(response);

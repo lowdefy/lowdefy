@@ -128,6 +128,11 @@
           pageId: dynamic-page-content
           properties:
             title: Dynamic Page Content
+        - id: ai-agent-docs
+          type: MenuLink
+          pageId: ai-agent-docs
+          properties:
+            title: Docs for AI Agents
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -515,6 +520,12 @@
         - id: Switch
           type: MenuLink
           pageId: Switch
+        - id: TagMultipleSelector
+          type: MenuLink
+          pageId: TagMultipleSelector
+        - id: TagSelector
+          type: MenuLink
+          pageId: TagSelector
         - id: TextArea
           type: MenuLink
           pageId: TextArea

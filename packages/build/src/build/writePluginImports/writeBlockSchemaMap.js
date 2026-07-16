@@ -19,6 +19,7 @@ import getBlockSchemasAndMetas from './getBlockSchemasAndMetas.js';
 async function writeBlockSchemaMap({ components, context }) {
   const { schemas, blockMetas } = await getBlockSchemasAndMetas({
     blocks: components.imports.blocks,
+    context,
     typesMap: context.typesMap,
   });
 

@@ -39,9 +39,11 @@ async function controlReject(context, routineContext, { control }) {
   });
   const error = new UserError(message, { cause, isReject: true });
 
+  // Log under `err` — see controlThrow: only the `err` key runs the pino error
+  // serializer, so `error` would drop the message from the log line.
   context.logger.warn({
     event: 'warn_control_reject',
-    error,
+    err: error,
   });
   return {
     status: 'reject',

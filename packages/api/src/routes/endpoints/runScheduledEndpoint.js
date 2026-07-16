@@ -56,9 +56,11 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
   }
 
   // Force a system context regardless of any session cookie sent with the request.
+  // system: true — nested CallApi steps are authorized like function calls (the run
+  // was already authorized at the transport layer), not re-gated on a user session.
   context.session = undefined;
   context.user = undefined;
-  context.authorize = createAuthorize({ session: undefined });
+  context.authorize = createAuthorize({ session: undefined, system: true });
 
   const routineContext = {
     steps: {},

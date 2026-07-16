@@ -26,7 +26,7 @@ async function send({ connection, mail }) {
   sendgrid.setApiKey(apiKey);
   const filtered = applyMailFilter({ filter, mail });
   if (filtered === null) {
-    return { messageId: null, filtered: true };
+    return { messageId: null, to: null, filtered: true };
   }
   const message = {
     ...filtered,
@@ -39,7 +39,9 @@ async function send({ connection, mail }) {
   };
   try {
     const [response] = await sendgrid.send(message);
-    return { messageId: response?.headers?.['x-message-id'] ?? null };
+    // Return the post-filter to so callers can record where mail actually went
+    // when a connection filter (replaceAddress/allowlist/regex) rewrites it.
+    return { messageId: response?.headers?.['x-message-id'] ?? null, to: filtered.to };
   } catch (error) {
     if (error.response) {
       throw new Error('SendGrid request failed.', { cause: error });

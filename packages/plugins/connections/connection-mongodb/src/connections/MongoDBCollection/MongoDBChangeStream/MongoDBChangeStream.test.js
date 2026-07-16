@@ -53,12 +53,11 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
 
 function createHarness({ changes, failWith } = {}) {
   const stream = createFakeStream({ changes, failWith });
-  const client = { close: jest.fn() };
   const collection = { watch: jest.fn(() => stream) };
-  mockGetCollection.mockResolvedValue({ client, collection });
+  mockGetCollection.mockResolvedValue(collection);
   const publish = jest.fn();
   const abortController = new AbortController();
-  return { abortController, client, collection, publish, stream };
+  return { abortController, collection, publish, stream };
 }
 
 beforeEach(() => {
@@ -68,7 +67,7 @@ beforeEach(() => {
 test('MongoDBChangeStream publishes serialized change events', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const createdAt = new Date('2026-01-15T00:00:00.000Z');
-  const { abortController, client, publish } = createHarness({
+  const { abortController, collection, publish } = createHarness({
     changes: [
       { operationType: 'insert', fullDocument: { name: 'one', createdAt } },
       { operationType: 'update', fullDocument: { name: 'two' } },
@@ -84,13 +83,13 @@ test('MongoDBChangeStream publishes serialized change events', async () => {
   });
   await run;
   expect(publish).toHaveBeenCalledTimes(0); // aborted before start — resolver returns early
-  expect(client.close).toHaveBeenCalled();
+  expect(collection.watch).not.toHaveBeenCalled();
 });
 
 test('MongoDBChangeStream publishes events until aborted', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const createdAt = new Date('2026-01-15T00:00:00.000Z');
-  const { abortController, client, collection, publish, stream } = createHarness({
+  const { abortController, collection, publish, stream } = createHarness({
     changes: [
       { operationType: 'insert', fullDocument: { name: 'one', createdAt } },
       { operationType: 'update', fullDocument: { name: 'two' } },
@@ -117,7 +116,6 @@ test('MongoDBChangeStream publishes events until aborted', async () => {
   expect(publish.mock.calls[0][0].data.fullDocument.createdAt).toEqual(createdAt);
   expect(publish.mock.calls[1][0].data.fullDocument.name).toEqual('two');
   expect(stream.close).toHaveBeenCalled();
-  expect(client.close).toHaveBeenCalled();
 });
 
 test('MongoDBChangeStream passes fullDocument option through', async () => {
@@ -137,7 +135,7 @@ test('MongoDBChangeStream passes fullDocument option through', async () => {
 
 test('MongoDBChangeStream rethrows stream errors when not aborted', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const { abortController, client, publish } = createHarness({
+  const { abortController, publish, stream } = createHarness({
     changes: [],
     failWith: new Error('stream broke'),
   });
@@ -149,5 +147,5 @@ test('MongoDBChangeStream rethrows stream errors when not aborted', async () => 
       signal: abortController.signal,
     })
   ).rejects.toThrow('stream broke');
-  expect(client.close).toHaveBeenCalled();
+  expect(stream.close).toHaveBeenCalled();
 });

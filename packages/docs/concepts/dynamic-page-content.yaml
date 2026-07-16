@@ -38,5 +38,5 @@ _ref:
           vars:
             previous_page_title: Notifications
             previous_page_id: notifications
-            next_page_title: References and Templates
-            next_page_id: references-and-templates
+            next_page_title: Docs for AI Agents
+            next_page_id: ai-agent-docs
