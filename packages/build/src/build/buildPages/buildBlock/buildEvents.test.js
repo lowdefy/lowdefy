@@ -1081,3 +1081,117 @@ test('throw on :switch case with an unknown key', () => {
     'Control ":switch" case has invalid key ":default" on event "onClick" on block "block_1" on page "page_1".'
   );
 });
+
+test('SetActiveOrganization action wired under the default pinned policy fails the build', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the active organization is fixed for a pinned deployment.'
+  );
+});
+
+test('SetActiveOrganization action wired under an explicit pinned policy fails the build', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the active organization is fixed for a pinned deployment.'
+  );
+});
+
+test('SetActiveOrganization action wired under the tenant policy builds cleanly', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('non-SetActiveOrganization actions do not trigger the pinned policy build error', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'reset',
+                  type: 'Reset',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});

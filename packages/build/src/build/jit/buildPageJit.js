@@ -28,6 +28,7 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateSetActiveOrgRefs from '../buildPages/validateSetActiveOrgRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
@@ -274,6 +275,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.dynamicBlockRefs) {
       buildContext.dynamicBlockRefs = [];
     }
+    if (!buildContext.setActiveOrgActionRefs) {
+      buildContext.setActiveOrgActionRefs = [];
+    }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
     // it from skeleton-built websockets when the context doesn't carry it
@@ -328,6 +332,26 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       endpointConfigs,
       context: buildContext,
     });
+    // Fail the build when a SetActiveOrganization action is wired under the
+    // "pinned" organizations policy. The dev JIT context is rebuilt from disk
+    // and carries no components.auth, so the policy is read from the auth.json
+    // artifact - only when a ref exists, to avoid a disk read on every build.
+    if (buildContext.setActiveOrgActionRefs.length > 0) {
+      let policy = buildContext.components?.auth?.organizations?.policy;
+      if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
+        const authPath = path.join(buildContext.directories.build, 'auth.json');
+        try {
+          const authContent = await fs.promises.readFile(authPath, 'utf8');
+          policy = serializer.deserialize(JSON.parse(authContent))?.organizations?.policy;
+        } catch (err) {
+          if (err.code !== 'ENOENT') throw err;
+        }
+      }
+      validateSetActiveOrgRefs({
+        setActiveOrgActionRefs: buildContext.setActiveOrgActionRefs,
+        policy: policy ?? 'pinned',
+      });
+    }
     validateDynamicBlockRefs({
       dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
