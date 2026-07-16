@@ -63,8 +63,19 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
       conversationId: thread.id,
       format: 'stream',
     });
-    // Chat SDK accepts any AsyncIterable<string> and streams it to the thread.
-    await thread.post(textStream);
+    // Drain the stream and post the complete reply once. Streaming into the
+    // platform (draft previews / post+edit) hits chat rate limits and holds
+    // the Chat SDK thread lock for the whole generation - new messages get
+    // dropped while locked. The model finishes in seconds; one post is
+    // faster in practice and releases the lock immediately.
+    let reply = '';
+    for await (const chunk of textStream) {
+      reply += chunk;
+    }
+    // Platforms reject empty messages - a tool-only turn can produce no text.
+    if (reply.trim().length > 0) {
+      await thread.post(reply);
+    }
   } catch (error) {
     await context.handleError(error);
     await thread.post(`Sorry, something went wrong: ${error.message}`);
