@@ -21,6 +21,7 @@ import { createMemoryState } from '@chat-adapter/state-memory';
 import { createTelegramAdapter } from '@chat-adapter/telegram';
 import { serializer } from '@lowdefy/helpers';
 
+import disableFetchHttp2 from './disableFetchHttp2.js';
 import handleChannelMessage from './handleChannelMessage.js';
 
 // Adding a platform = adding an adapter factory here (plus its schema entry).
@@ -58,6 +59,9 @@ async function createChatBot({ logger, mode = 'webhook' } = {}) {
     const factory = adapterFactories[platform];
     adapters[platform] = factory(mode === 'polling' ? { mode: 'polling' } : {});
   }
+
+  // Must run before polling starts - see disableFetchHttp2.js.
+  await disableFetchHttp2({ logger });
 
   const bot = new Chat({
     userName: 'lowdefy',
