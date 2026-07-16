@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { emoji } from 'chat';
 import { callAgent } from '@lowdefy/api';
 
 import createChannelContext from './createChannelContext.js';
@@ -39,10 +38,6 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
   // Subscribe so follow-up messages in the thread reach the bot without a
   // fresh mention.
   await thread.subscribe();
-
-  // Instant "seen" ack while the agent works - best effort, some platforms
-  // or message types cannot be reacted to.
-  thread.adapter.addReaction?.(thread.id, message.id, emoji.eyes)?.catch?.(() => {});
 
   // Thread history is the conversation memory - there is no server-side
   // conversation persistence. Fetched oldest-first per the Chat SDK contract.
