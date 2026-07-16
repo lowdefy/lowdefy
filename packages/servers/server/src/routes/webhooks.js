@@ -30,8 +30,14 @@ async function webhooksHandler(c) {
   if (!webhookHandler) {
     return c.json({ error: `Unknown platform "${platform}".` }, 404);
   }
-  // Chat SDK takes the Web Request and returns a Web Response.
-  return webhookHandler(c.req.raw);
+  // Chat SDK takes the Web Request and returns a Web Response. Message
+  // processing continues after the response - on serverless, waitUntil keeps
+  // the invocation alive until the agent reply is posted; on long-lived
+  // hosts the lookup resolves to nothing and the promise just runs.
+  return webhookHandler(c.req.raw, {
+    waitUntil: (task) =>
+      globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(task),
+  });
 }
 
 export default webhooksHandler;
