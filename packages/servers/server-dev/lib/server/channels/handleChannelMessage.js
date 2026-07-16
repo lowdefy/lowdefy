@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { emoji } from 'chat';
 import { callAgent } from '@lowdefy/api';
 
 import createChannelContext from './createChannelContext.js';
@@ -38,6 +39,10 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
   // Subscribe so follow-up messages in the thread reach the bot without a
   // fresh mention.
   await thread.subscribe();
+
+  // Instant "seen" ack while the agent works - best effort, some platforms
+  // or message types cannot be reacted to.
+  thread.adapter.addReaction?.(thread.id, message.id, emoji.eyes)?.catch?.(() => {});
 
   // Thread history is the conversation memory - there is no server-side
   // conversation persistence. Fetched oldest-first per the Chat SDK contract.
@@ -71,21 +76,13 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
       conversationId: thread.id,
       format: 'stream',
     });
-    // Drain the stream and post the complete reply once. Streaming into the
-    // platform (draft previews / post+edit) hits chat rate limits and holds
-    // the Chat SDK thread lock for the whole generation - new messages get
-    // dropped while locked. The model finishes in seconds; one post is
-    // faster in practice and releases the lock immediately.
-    let reply = '';
-    for await (const chunk of textStream) {
-      reply += chunk;
-    }
     const agentMs = Math.round(performance.now() - agentStart);
     const postStart = performance.now();
-    // Platforms reject empty messages - a tool-only turn can produce no text.
-    if (reply.trim().length > 0) {
-      await thread.post(reply);
-    }
+    // Stream the reply into the thread - Telegram DMs render it as a live
+    // draft preview, other platforms fall back to post+edit or buffering.
+    // (Concurrent platform calls during a polling long-poll require the
+    // HTTP/1.1 dispatcher swap in disableFetchHttp2.js.)
+    await thread.post(textStream);
     logger.info({
       event: 'channel_reply',
       platform,
@@ -93,7 +90,6 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
       durationMs: Math.round(performance.now() - startTime),
       agentMs,
       postMs: Math.round(performance.now() - postStart),
-      replyLength: reply.length,
     });
   } catch (error) {
     await context.handleError(error);
