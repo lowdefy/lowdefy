@@ -22,6 +22,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
 import agentsHandler from './routes/agents.js';
+import mcpHandler from './routes/mcp.js';
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
 import authJson from '../lib/build/auth.js';
@@ -71,6 +72,7 @@ function createApp({ serveStaticAssets = true } = {}) {
       if (
         c.req.path.includes('/api/agent/') ||
         c.req.path.includes('/api/agents/') ||
+        c.req.path.includes('/api/mcp') ||
         c.req.path.includes('/api/websocket')
       ) {
         return next();
@@ -85,6 +87,7 @@ function createApp({ serveStaticAssets = true } = {}) {
     if (
       c.req.path.includes('/api/agent/') ||
       c.req.path.includes('/api/agents/') ||
+      c.req.path.includes('/api/mcp') ||
       c.req.path.includes('/api/websocket')
     ) {
       return next();
@@ -113,6 +116,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/agents/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentsHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/user', userHandler);

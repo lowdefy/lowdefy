@@ -32,6 +32,7 @@ import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
+import buildMcp from '../buildMcp.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
@@ -58,6 +59,7 @@ import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
+import writeMcp from '../writeMcp.js';
 import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
 import writeJs from '../buildJs/writeJs.js';
@@ -168,6 +170,8 @@ async function shallowBuild(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    // Runs after buildAgents — needs context.agentIds and normalized agent.tools
+    tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
     // Cross-config validations — need buildApi (stepIds) and the buildAgents/
@@ -205,6 +209,7 @@ async function shallowBuild(options) {
     await writeAuth({ components, context });
     await writeConnections({ components, context });
     await writeApi({ components, context });
+    await writeMcp({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });

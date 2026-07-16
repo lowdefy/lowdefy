@@ -232,6 +232,14 @@ export default {
             type: 'Agent "connectionId" should be a string.',
           },
         },
+        description: {
+          type: 'string',
+          description:
+            'Human description of what the agent does - required when the agent is exposed as an MCP tool.',
+          errorMessage: {
+            type: 'Agent "description" should be a string.',
+          },
+        },
         properties: {
           type: 'object',
           errorMessage: {
@@ -2953,6 +2961,50 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Api endpoint ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array of endpoint id strings.',
+          },
+        },
+        agents: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Agent ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "agents" should be an array of agent id strings.',
+          },
+        },
       },
     },
     websockets: {

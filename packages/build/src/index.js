@@ -32,6 +32,7 @@ import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
+import buildMcp from './build/buildMcp.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
@@ -61,6 +62,7 @@ import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
+import writeMcp from './build/writeMcp.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
@@ -156,6 +158,7 @@ async function build(options) {
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context })
     // Runs after buildAgents — needs context.agentIds and normalized agent.tools
+    tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
     // Cross-config step validations — need buildApi (stepIds) and the
@@ -194,6 +197,7 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeMcp({ components, context });
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });
     await writeRequests({ components, context });
