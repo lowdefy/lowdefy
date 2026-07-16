@@ -199,6 +199,7 @@ function validateAuthConfig({ components }) {
     }
   }
 
+  validateMutualExclusivity({ components, entity: 'agents' });
   validateMutualExclusivity({ components, entity: 'api' });
   validateMutualExclusivity({ components, entity: 'pages' });
   validateMutualExclusivity({ components, entity: 'websockets' });

@@ -38,7 +38,7 @@ function buildRoleCatalog({ components }) {
     roleNames.add(roleName);
   }
 
-  ['pages', 'api', 'websockets'].forEach((entity) => {
+  ['pages', 'api', 'agents', 'websockets'].forEach((entity) => {
     const rolesMap = components.auth[entity].roles;
     Object.keys(rolesMap).forEach((roleName) => {
       addRoleName({ configKey: rolesMap['~k'] ?? components.auth['~k'], roleName });

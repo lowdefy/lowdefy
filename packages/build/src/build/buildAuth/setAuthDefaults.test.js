@@ -26,6 +26,7 @@ test('setAuthDefaults sets only authorization defaults when auth is not configur
   expect(res).toEqual({
     auth: {
       configured: false,
+      agents: { roles: {} },
       api: { roles: {} },
       pages: { roles: {} },
       websockets: { roles: {} },
@@ -55,6 +56,7 @@ test('setAuthDefaults sets full defaults when auth is configured', () => {
   expect(res).toEqual({
     auth: {
       configured: true,
+      agents: { roles: {} },
       api: { roles: {} },
       pages: { roles: {} },
       websockets: { roles: {} },

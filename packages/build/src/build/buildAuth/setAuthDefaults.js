@@ -31,7 +31,9 @@ function setAuthDefaults({ components }) {
   const auth = components.auth;
 
   // Authorization defaults apply whether or not auth is configured - the
-  // page/api/websocket auth build steps mark every item.
+  // page/api/agent/websocket auth build steps mark every item.
+  setDefault(auth, 'agents', {});
+  setDefault(auth.agents, 'roles', {});
   setDefault(auth, 'api', {});
   setDefault(auth.api, 'roles', {});
   setDefault(auth, 'pages', {});

@@ -32,6 +32,7 @@ test('buildAuth returns unconfigured defaults when auth is absent', () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      agents: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
       configured: false,
@@ -53,6 +54,7 @@ test('buildAuth returns unconfigured defaults when there are no pages', () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      agents: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },
       configured: false,
@@ -116,6 +118,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
       disableSignUp: false,
     },
     configured: true,
+    agents: { roles: {} },
     api: { roles: {} },
     websockets: { roles: {} },
     pages: { roles: {} },

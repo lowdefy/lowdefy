@@ -21,6 +21,7 @@ test('buildRoleCatalog writes an empty catalog when no roles are declared', () =
     auth: {
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -28,16 +29,17 @@ test('buildRoleCatalog writes an empty catalog when no roles are declared', () =
   expect(res.auth.roles).toEqual([]);
 });
 
-test('buildRoleCatalog collects the union of page, api and websocket role names sorted', () => {
+test('buildRoleCatalog collects the union of page, api, agent and websocket role names sorted', () => {
   const components = {
     auth: {
       pages: { roles: { admin: ['admin-*'], auditor: ['reports'] } },
       api: { roles: { admin: ['admin-api'], 'branch-manager': ['branches'] } },
+      agents: { roles: { 'agent-caller': ['support-bot'] } },
       websockets: { roles: { operator: ['live-feed'] } },
     },
   };
   const res = buildRoleCatalog({ components });
-  expect(res.auth.roles).toEqual(['admin', 'auditor', 'branch-manager', 'operator']);
+  expect(res.auth.roles).toEqual(['admin', 'agent-caller', 'auditor', 'branch-manager', 'operator']);
 });
 
 test('buildRoleCatalog throws when a role name contains a comma', () => {
@@ -46,6 +48,7 @@ test('buildRoleCatalog throws when a role name contains a comma', () => {
       '~k': 'auth-key',
       pages: { roles: { 'admin,auditor': ['reports'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -59,6 +62,7 @@ test('buildRoleCatalog includes the configured userAdminRole in the catalog', ()
     auth: {
       pages: { roles: { auditor: ['reports'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
       userAdminRole: 'user-admin',
     },
@@ -72,6 +76,7 @@ test('buildRoleCatalog does not duplicate the userAdminRole when an entity roles
     auth: {
       pages: { roles: { 'user-admin': ['admin-*'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
       userAdminRole: 'user-admin',
     },
@@ -86,6 +91,7 @@ test('buildRoleCatalog throws when the userAdminRole contains a comma', () => {
       '~k': 'auth-key',
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
       userAdminRole: 'user,admin',
     },

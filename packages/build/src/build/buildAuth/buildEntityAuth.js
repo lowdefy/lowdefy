@@ -22,13 +22,14 @@ import getProtectedEntities from './getProtectedEntities.js';
 import { isInPatternList } from './matchPattern.js';
 
 const labels = {
+  agents: 'Agent',
   api: 'Endpoint',
   pages: 'Page',
   websockets: 'Websocket',
 };
 
 // Writes the auth artifact ({ public, roles? }) onto every item of one auth
-// entity (pages, api or websockets), so the runtime reads a resolved
+// entity (pages, api, agents or websockets), so the runtime reads a resolved
 // decision and never re-derives it from patterns.
 function buildEntityAuth({ components, context, entity }) {
   const label = labels[entity];
