@@ -178,7 +178,7 @@ test('validates and converts UI messages before streaming', async () => {
   }
 
   expect(mockValidateUIMessages).toHaveBeenCalledWith({
-    messages,
+    messages: messages.map((msg, index) => ({ ...msg, id: `msg-${index}` })),
     tools: lastAgentConfig.tools,
   });
   expect(mockConvertToModelMessages).toHaveBeenCalledWith(['validated-message'], {
@@ -267,6 +267,80 @@ test('MCP clients close after the stream drains', async () => {
   }
 
   expect(mockClose).toHaveBeenCalledTimes(1);
+});
+
+test('format text rejects when the AI SDK reports the error via onError', async () => {
+  const { default: handleAgentTextStream } = await import('./handleAgentTextStream.js');
+  // The AI SDK does not throw during streaming - it calls onError and ends
+  // the stream cleanly.
+  mockStream.mockImplementation(async ({ onError }) => {
+    onError({ error: new Error('Unauthenticated request to AI Gateway.') });
+    return {
+      textStream: (async function* () {})(),
+      response: Promise.resolve({ messages: [] }),
+    };
+  });
+
+  await expect(
+    handleAgentTextStream({
+      connection,
+      properties: { agent: createAgent(), messages },
+      context: createTestContext({ format: 'text' }),
+    })
+  ).rejects.toThrow('Unauthenticated request to AI Gateway.');
+});
+
+test('format text rejects when the model errors before the first chunk', async () => {
+  const { default: handleAgentTextStream } = await import('./handleAgentTextStream.js');
+  const mockClose = jest.fn().mockResolvedValue(undefined);
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({}),
+    close: mockClose,
+  });
+  mockStream.mockImplementation(async () => ({
+    textStream: (async function* () {
+      throw new Error('Invalid provider API key.');
+    })(),
+    response: Promise.resolve({ messages: [] }),
+  }));
+
+  await expect(
+    handleAgentTextStream({
+      connection,
+      properties: {
+        agent: createAgent({ mcp: [{ url: 'https://mcp.example.com', transport: 'http' }] }),
+        messages,
+      },
+      context: createTestContext({ format: 'text' }),
+    })
+  ).rejects.toThrow('Invalid provider API key.');
+  // Cleanup still runs when the stream errors before the first chunk.
+  expect(mockClose).toHaveBeenCalledTimes(1);
+});
+
+test('bare messages without ids get index-derived ids before validation', async () => {
+  const { default: handleAgentTextStream } = await import('./handleAgentTextStream.js');
+  mockStreamResult();
+
+  const { response } = await handleAgentTextStream({
+    connection,
+    properties: {
+      agent: createAgent(),
+      messages: [
+        { role: 'user', parts: [{ type: 'text', text: 'first' }] },
+        { id: 'kept', role: 'assistant', parts: [{ type: 'text', text: 'reply' }] },
+        { role: 'user', parts: [{ type: 'text', text: 'second' }] },
+      ],
+    },
+    context: createTestContext({ format: 'stream' }),
+  });
+  // eslint-disable-next-line no-unused-vars
+  for await (const chunk of response) {
+    // drain
+  }
+
+  const validated = mockValidateUIMessages.mock.calls[0][0].messages;
+  expect(validated.map((m) => m.id)).toEqual(['msg-0', 'kept', 'msg-2']);
 });
 
 test('confirm tools auto-execute - no approval channel exists', async () => {

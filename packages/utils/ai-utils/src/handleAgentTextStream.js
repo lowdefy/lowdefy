@@ -29,7 +29,11 @@ import createUsageAccumulator from './createUsageAccumulator.js';
 // clients still close once the stream completes.
 async function handleAgentTextStream({ connection, properties, context }) {
   const { agent, messages: rawMessages } = properties;
-  const messages = convertDataUrlsToBase64(rawMessages);
+  // External callers and channel history send bare { role, parts } messages;
+  // validateUIMessages requires an id, so index-derived ids fill the gap.
+  const messages = convertDataUrlsToBase64(rawMessages).map((msg, index) =>
+    msg.id === undefined ? { ...msg, id: `msg-${index}` } : msg
+  );
 
   const { agentInstance, mcpClients, timeoutConfig, locale } = await createToolLoopAgent({
     connection,
@@ -66,10 +70,17 @@ async function handleAgentTextStream({ connection, properties, context }) {
     });
   }
 
+  // The AI SDK does not throw during streaming - errors go to onError and
+  // the stream ends cleanly. Capture and rethrow after the drain so callers
+  // receive a real error instead of a silently truncated stream.
+  let streamError;
   const result = await agentInstance.stream({
     prompt: modelMessages,
     ...timeoutConfig,
     onStepFinish: collectStep,
+    onError: ({ error }) => {
+      streamError = error;
+    },
   });
 
   async function runOnFinish() {
@@ -110,6 +121,9 @@ async function handleAgentTextStream({ connection, properties, context }) {
       for await (const chunk of result.textStream) {
         yield chunk;
       }
+      if (streamError) {
+        throw streamError;
+      }
     } finally {
       await runOnFinish();
     }
@@ -121,7 +135,18 @@ async function handleAgentTextStream({ connection, properties, context }) {
 
   const encoder = new TextEncoder();
   const iterator = streamText();
+  // Pull the first chunk before constructing the Response - errors raised
+  // before any token (invalid model, provider auth) propagate to the route's
+  // error handler as a real error response instead of an empty 200 stream.
+  const first = await iterator.next();
   const readable = new ReadableStream({
+    start(controller) {
+      if (first.done) {
+        controller.close();
+        return;
+      }
+      controller.enqueue(encoder.encode(first.value));
+    },
     async pull(controller) {
       const { done, value } = await iterator.next();
       if (done) {
