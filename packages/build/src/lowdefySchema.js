@@ -2963,6 +2963,56 @@ export default {
         type: 'App "api" should be an array.',
       },
     },
+    channels: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "channels" should be an object. Supported platforms: "telegram".',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        telegram: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['agentId'],
+          errorMessage: {
+            type: 'Channel "telegram" should be an object.',
+            required: 'Channel "telegram" requires an "agentId".',
+          },
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            agentId: {
+              type: 'string',
+              description: 'The agent that handles messages on this channel.',
+              errorMessage: {
+                type: 'Channel "telegram.agentId" should be a string.',
+              },
+            },
+            roles: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+              description: 'Roles granted to the channel service identity.',
+              errorMessage: {
+                type: 'Channel "telegram.roles" should be an array of strings.',
+              },
+            },
+            attributes: {
+              type: 'object',
+              description: 'Attributes carried by the channel service identity.',
+              errorMessage: {
+                type: 'Channel "telegram.attributes" should be an object.',
+              },
+            },
+          },
+        },
+      },
+    },
     mcp: {
       type: 'object',
       additionalProperties: false,

@@ -41,6 +41,7 @@ import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
+import webhooksHandler from './routes/webhooks.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -104,6 +105,10 @@ function createApp({ serveStaticAssets = true } = {}) {
     getStrategies({ logger });
   }
 
+  // Registered before apiContext - the webhook transport is public and earns
+  // trust from the Chat SDK adapter's platform signature verification, not
+  // from a session; handlers run under the channel's service identity.
+  app.post('/api/webhooks/:platform', webhooksHandler);
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);

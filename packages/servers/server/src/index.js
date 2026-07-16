@@ -26,6 +26,9 @@ const sentryEnabled = initSentryServer();
 const { default: createApp } = await import('./app.js');
 const { default: createLogger } = await import('../lib/server/log/createLogger.js');
 const { default: appMeta } = await import('../lib/build/appMeta.js');
+const { default: createChatBot, stopChatBot } = await import(
+  '../lib/server/channels/createChatBot.js'
+);
 
 const app = createApp();
 const logger = createLogger({ server: 'lowdefy' });
@@ -48,6 +51,11 @@ const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (in
   );
 });
 
+// Start the channel bot (no-op when channels are unconfigured) so webhook
+// handlers are registered at boot and config errors fail startup, mirroring
+// the eager auth construction in createApp.
+await createChatBot({ logger });
+
 // Container runtimes send SIGTERM and escalate to SIGKILL after a grace period
 // (Docker defaults to 10s) — finish in-flight work and exit before that deadline.
 let shuttingDown = false;
@@ -60,6 +68,8 @@ function shutdown() {
   for (const client of wss.clients) {
     client.close(1001, 'Server shutting down');
   }
+  // Stop channel polling adapters (webhook mode is a no-op).
+  stopChatBot();
   // Drop idle keep-alive connections so close() only waits on in-flight requests.
   server.closeIdleConnections?.();
   server.close(() => {

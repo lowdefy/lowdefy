@@ -20,6 +20,8 @@ import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
 import agentsHandler from './routes/agents.js';
+import createChatBot from '../lib/server/channels/createChatBot.js';
+import webhooksHandler from './routes/webhooks.js';
 import mcpHandler from './routes/mcp.js';
 import apiContext from './middleware/apiContext.js';
 import authJson from '../lib/build/auth.js';
@@ -141,6 +143,11 @@ function createApp() {
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
+  // Registered before apiContext - the webhook transport is public and earns
+  // trust from the Chat SDK adapter's platform signature verification, not
+  // from a session; handlers run under the channel's service identity. Dev
+  // normally uses polling mode, but the route exists for webhook testing.
+  app.post('/api/webhooks/:platform', webhooksHandler);
   app.use('/api/*', apiContext());
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
   // caller into context.user on every path, so read it here rather than
@@ -185,6 +192,14 @@ function createApp() {
   app.get('/:rest{.+}', (c) => renderDevPage(c, { basePath }));
 
   app.onError(createErrorHandler({ basePath, logger }));
+
+  // Start the channel bot in polling mode (no-op when channels are
+  // unconfigured) - dev has no public URL for platform webhooks. The
+  // globalThis singleton inside createChatBot guards against Vite module
+  // reloads spawning duplicate pollers; errors log rather than break dev.
+  createChatBot({ logger, mode: 'polling' }).catch((error) => {
+    logger.warn({ event: 'channel_bot_failed', err: error }, error.message);
+  });
 
   return app;
 }
