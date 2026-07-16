@@ -1,0 +1,90 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: agent-channels
+    pageTitle: Channels
+    section: Agents
+    filePath: agents/channels.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content:
+            _nunjucks:
+              on:
+                version:
+                  _ref: version.yaml
+              template: |
+                Channels connect an agent to a chat platform — users message your bot and the agent replies, streaming, with multi-turn context. Telegram is supported today; the design is pluggable so more platforms can follow.
+
+                ## Configuration
+
+                ```yaml
+                lowdefy: {{ version }}
+                channels:
+                  telegram:
+                    agentId: support-bot
+                    roles:
+                      - support
+                ```
+
+                Set the `TELEGRAM_BOT_TOKEN` environment variable with the token from [@BotFather](https://t.me/botfather). The bot starts with the server when a channel is configured.
+
+                ## Channel Identity
+
+                Channel messages do not run as a system user — each channel calls its agent as a **service identity**: an authenticated caller named `channel:telegram` carrying the configured `roles` and `attributes`. The agent's `auth.agents` protection applies to this caller like any other, and `_user` operators in the agent's properties resolve against it.
+
+                If the referenced agent is role-protected and the channel's roles cannot satisfy it, the **build fails** — a channel that could never call its agent is a config error, not a runtime surprise.
+
+                ```yaml
+                auth:
+                  agents:
+                    protected: true
+                    roles:
+                      support:
+                        - support-bot
+
+                channels:
+                  telegram:
+                    agentId: support-bot
+                    roles:
+                      - support   # satisfies the agent's role requirement
+                    attributes:
+                      source: telegram
+                ```
+
+                ## Conversation Context
+
+                The bot fetches the last 20 messages of the thread as conversation history on every message — the thread *is* the conversation memory, no server-side persistence is involved. The bot's own earlier replies become assistant turns, so follow-up questions work naturally. Replies stream into the chat as the model generates them.
+
+                Since there is no chat client to approve tool calls, agent tools configured with `confirm: true` execute automatically on channels.
+
+                ## Development and Production
+
+                - **Development** (`lowdefy dev`): the bot runs in *polling* mode — no public URL needed, just the bot token.
+                - **Production**: the bot receives updates via webhook at `POST /api/webhooks/telegram`. Register it with Telegram after deploying, using a secret token so Telegram's requests are verified:
+
+                ```bash
+                curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                    "url": "https://myapp.com/api/webhooks/telegram",
+                    "secret_token": "..."
+                  }'
+                ```
+
+                Set the same value as the `TELEGRAM_WEBHOOK_SECRET_TOKEN` environment variable on the server so incoming webhooks are verified.

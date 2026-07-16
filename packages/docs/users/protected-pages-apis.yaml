@@ -119,9 +119,24 @@ _ref:
                         - notifications/*
                 ```
 
+                ## Agents and Websockets
+
+                The same `protected` / `public` / `roles` configuration protects [agents](/agents-introduction) (`auth.agents`) and websockets (`auth.websockets`). Agent protection applies to every way an agent can be called — the AgentChat block, the [external agent API](/agent-external-api), [MCP tools](/agent-mcp-server), and [channels](/agent-channels).
+
+                ###### Protect all agents:
+                ```yaml
+                lowdefy: {{ version }}
+                auth:
+                  agents:
+                    protected: true
+                    roles:
+                      support:
+                        - support-bot
+                ```
+
                 ## Important Notes
 
-                - Pages and APIs are configured separately - protecting pages does not automatically protect APIs
+                - Pages, APIs and agents are configured separately - protecting pages does not automatically protect APIs or agents
                 - Protected resources require users to be authenticated before access is granted
                 - Role-based access control can be layered on top of protection for finer-grained permissions
 
