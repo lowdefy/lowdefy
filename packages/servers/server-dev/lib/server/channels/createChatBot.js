@@ -65,7 +65,9 @@ async function createChatBot({ logger, mode = 'webhook' } = {}) {
     userName: 'lowdefy',
     adapters,
     state: createMemoryState(),
-    logger: 'warn',
+    // 'info' in dev - surfaces the SDK's message-queued / message-dequeued /
+    // lock lines, which make concurrency behavior visible while smoke testing.
+    logger: 'info',
     // The default 'drop' strategy discards messages that arrive while the
     // per-thread lock is held (i.e. while a reply is being generated) -
     // queue processes them in order instead.

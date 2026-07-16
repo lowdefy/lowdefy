@@ -41,20 +41,26 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
 
   // Thread history is the conversation memory - there is no server-side
   // conversation persistence. Fetched oldest-first per the Chat SDK contract.
+  // Only history BEFORE the triggering message counts: the adapter cache may
+  // lag or already include it, so cut at the message id instead of guessing.
+  // Text comparison is not an identity check - repeated identical texts
+  // ("Hi", "Hi") would otherwise drop the current message and the agent
+  // answers the previous turn.
   let messages = [];
   try {
     const history = await thread.adapter.fetchMessages(thread.id, { limit: 20 });
-    messages = toUIMessages(history?.messages ?? []);
+    let platformMessages = history?.messages ?? [];
+    const currentIndex = platformMessages.findIndex((msg) => msg.id === message.id);
+    if (currentIndex !== -1) {
+      platformMessages = platformMessages.slice(0, currentIndex);
+    }
+    messages = toUIMessages(platformMessages);
   } catch (error) {
     logger.warn({ event: 'channel_history_failed', err: error }, error.message);
   }
 
-  // The triggering message is usually the newest history entry - append it
-  // only when history missed it (or history failed).
-  const lastText = messages[messages.length - 1]?.parts?.[0]?.text;
-  if (messages.length === 0 || lastText !== message.text) {
-    messages.push({ role: 'user', parts: [{ type: 'text', text: message.text ?? '' }] });
-  }
+  // The triggering message is always the final user turn.
+  messages.push({ role: 'user', parts: [{ type: 'text', text: message.text ?? '' }] });
 
   try {
     const { response: textStream } = await callAgent(context, {
