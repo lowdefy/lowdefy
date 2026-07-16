@@ -879,8 +879,8 @@ importers:
         specifier: 5.4.0
         version: link:../../../utils/helpers
       ai:
-        specifier: 6.0.176
-        version: 6.0.176(zod@4.3.6)
+        specifier: 6.0.228
+        version: 6.0.228(zod@4.3.6)
       antd:
         specifier: 6.3.1
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2290,10 +2290,10 @@ importers:
         version: 1.6.23(@better-auth/core@1.6.23(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@4.3.6))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-auth@1.6.23(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mongodb@7.2.0)(mysql2@3.22.3(@types/node@24.13.2))(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(better-call@1.3.7(zod@4.3.6))(nanostores@1.4.0)
       '@chat-adapter/state-memory':
         specifier: 4.34.0
-        version: 4.34.0(zod@4.3.6)
+        version: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
       '@chat-adapter/telegram':
         specifier: 4.34.0
-        version: 4.34.0(zod@4.3.6)
+        version: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
       '@hono/mcp':
         specifier: 0.3.0
         version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@4.3.6)
@@ -2392,7 +2392,7 @@ importers:
         version: 1.6.23(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mongodb@7.2.0)(mysql2@3.22.3(@types/node@24.13.2))(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       chat:
         specifier: 4.34.0
-        version: 4.34.0(zod@4.3.6)
+        version: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
       dayjs:
         specifier: 1.11.20
         version: 1.11.20
@@ -2453,10 +2453,10 @@ importers:
         version: 1.6.23(@better-auth/core@1.6.23(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.3.7(zod@3.25.76))(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-auth@1.6.23(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mongodb@7.2.0)(mysql2@3.22.3(@types/node@24.13.2))(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(better-call@1.3.7(zod@3.25.76))(nanostores@1.4.0)
       '@chat-adapter/state-memory':
         specifier: 4.34.0
-        version: 4.34.0(zod@3.25.76)
+        version: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
       '@chat-adapter/telegram':
         specifier: 4.34.0
-        version: 4.34.0(zod@3.25.76)
+        version: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
       '@hono/mcp':
         specifier: 0.3.0
         version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@3.25.76)
@@ -2582,7 +2582,7 @@ importers:
         version: 1.6.23(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mongodb@7.2.0)(mysql2@3.22.3(@types/node@24.13.2))(next@14.2.35(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       chat:
         specifier: 4.34.0
-        version: 4.34.0(zod@3.25.76)
+        version: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
       chokidar:
         specifier: 3.5.3
         version: 3.5.3
@@ -2814,8 +2814,8 @@ importers:
         specifier: 5.4.0
         version: link:../helpers
       ai:
-        specifier: 6.0.176
-        version: 6.0.176(zod@4.3.6)
+        specifier: 6.0.228
+        version: 6.0.228(zod@4.3.6)
       glob:
         specifier: 13.0.6
         version: 13.0.6
@@ -3346,6 +3346,12 @@ packages:
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
+  '@ai-sdk/gateway@3.0.151':
+    resolution: {integrity: sha512-gsKEm1LleR/xm1FiJjnNxf1ZUKZryj20STsKJB7TdMcaiRqQgeHrdYWv/DNSA8ZBkRahHC+wEYHaI0VR9/EOwQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
   '@ai-sdk/google@3.0.70':
     resolution: {integrity: sha512-ZM77Ri/hWCf7hTt8KmdwI8CU92RSy58MCK3kr6sj+okuU7g8RZfm6JNeiyYdMxKkUhrOOC8WmbnLMfQaSO/QoQ==}
     engines: {node: '>=18'}
@@ -3370,8 +3376,18 @@ packages:
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
+  '@ai-sdk/provider-utils@4.0.39':
+    resolution: {integrity: sha512-XPR6o7561RYUkfYlLYouWsvm6Gv2tYIQy5pttGRkvML98u138ClPThn5yiQg5rMQutTtZLB+GUC8qFFCzDKQQQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
   '@ai-sdk/provider@3.0.10':
     resolution: {integrity: sha512-Q3BZ27qfpYqnCYGvE3vt+Qi6LGOF9R5Nmzn+9JoM1lCRsD9mYaIhfJLkSunN48nfGXJ6n+XNV0J/XVpqGQl7Dw==}
+    engines: {node: '>=18'}
+
+  '@ai-sdk/provider@3.0.14':
+    resolution: {integrity: sha512-5X1k57JBJ4H7H1QjX7CnJYAB1I19r/trVZTMcSms7/kLNZ8RaU4Nt2agcwZzv82Hfx6Q7/TOLU7agAKeFfc8cA==}
     engines: {node: '>=18'}
 
   '@ai-sdk/react@3.0.178':
@@ -7547,6 +7563,12 @@ packages:
 
   ai@6.0.176:
     resolution: {integrity: sha512-dhxDef3VCIxaFr6tKyG0BrkkCelmnporlen8nHajIwCk7S4PvIaSVI/iyJenhFOZ9KBoKjCAoUs6TzZ3yrSjxw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
+  ai@6.0.228:
+    resolution: {integrity: sha512-3TXPF+meV/B0ObVWqLZDfTo0UjT9eKQX+QO5B8n7TSyLxnU3U9FHKxRp7U9mGuTVh7fdo2OtU0J8uGFR4EStsg==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -14410,6 +14432,21 @@ snapshots:
       '@vercel/oidc': 3.2.0
       zod: 4.3.6
 
+  '@ai-sdk/gateway@3.0.151(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 3.0.14
+      '@ai-sdk/provider-utils': 4.0.39(zod@3.25.76)
+      '@vercel/oidc': 3.2.0
+      zod: 3.25.76
+    optional: true
+
+  '@ai-sdk/gateway@3.0.151(zod@4.3.6)':
+    dependencies:
+      '@ai-sdk/provider': 3.0.14
+      '@ai-sdk/provider-utils': 4.0.39(zod@4.3.6)
+      '@vercel/oidc': 3.2.0
+      zod: 4.3.6
+
   '@ai-sdk/google@3.0.70(zod@4.3.6)':
     dependencies:
       '@ai-sdk/provider': 3.0.10
@@ -14436,7 +14473,26 @@ snapshots:
       eventsource-parser: 3.0.8
       zod: 4.3.6
 
+  '@ai-sdk/provider-utils@4.0.39(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 3.0.14
+      '@standard-schema/spec': 1.1.0
+      eventsource-parser: 3.0.8
+      zod: 3.25.76
+    optional: true
+
+  '@ai-sdk/provider-utils@4.0.39(zod@4.3.6)':
+    dependencies:
+      '@ai-sdk/provider': 3.0.14
+      '@standard-schema/spec': 1.1.0
+      eventsource-parser: 3.0.8
+      zod: 4.3.6
+
   '@ai-sdk/provider@3.0.10':
+    dependencies:
+      json-schema: 0.4.0
+
+  '@ai-sdk/provider@3.0.14':
     dependencies:
       json-schema: 0.4.0
 
@@ -15658,51 +15714,51 @@ snapshots:
       human-id: 4.1.3
       prettier: 2.8.8
 
-  '@chat-adapter/shared@4.34.0(zod@3.25.76)':
+  '@chat-adapter/shared@4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      chat: 4.34.0(zod@3.25.76)
+      chat: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
     transitivePeerDependencies:
       - ai
       - supports-color
       - zod
 
-  '@chat-adapter/shared@4.34.0(zod@4.3.6)':
+  '@chat-adapter/shared@4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)':
     dependencies:
-      chat: 4.34.0(zod@4.3.6)
+      chat: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
     transitivePeerDependencies:
       - ai
       - supports-color
       - zod
 
-  '@chat-adapter/state-memory@4.34.0(zod@3.25.76)':
+  '@chat-adapter/state-memory@4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      chat: 4.34.0(zod@3.25.76)
+      chat: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
     transitivePeerDependencies:
       - ai
       - supports-color
       - zod
 
-  '@chat-adapter/state-memory@4.34.0(zod@4.3.6)':
+  '@chat-adapter/state-memory@4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)':
     dependencies:
-      chat: 4.34.0(zod@4.3.6)
+      chat: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
     transitivePeerDependencies:
       - ai
       - supports-color
       - zod
 
-  '@chat-adapter/telegram@4.34.0(zod@3.25.76)':
+  '@chat-adapter/telegram@4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      '@chat-adapter/shared': 4.34.0(zod@3.25.76)
-      chat: 4.34.0(zod@3.25.76)
+      '@chat-adapter/shared': 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
+      chat: 4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76)
     transitivePeerDependencies:
       - ai
       - supports-color
       - zod
 
-  '@chat-adapter/telegram@4.34.0(zod@4.3.6)':
+  '@chat-adapter/telegram@4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)':
     dependencies:
-      '@chat-adapter/shared': 4.34.0(zod@4.3.6)
-      chat: 4.34.0(zod@4.3.6)
+      '@chat-adapter/shared': 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
+      chat: 4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6)
     transitivePeerDependencies:
       - ai
       - supports-color
@@ -19678,6 +19734,23 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       zod: 4.3.6
 
+  ai@6.0.228(zod@3.25.76):
+    dependencies:
+      '@ai-sdk/gateway': 3.0.151(zod@3.25.76)
+      '@ai-sdk/provider': 3.0.14
+      '@ai-sdk/provider-utils': 4.0.39(zod@3.25.76)
+      '@opentelemetry/api': 1.9.1
+      zod: 3.25.76
+    optional: true
+
+  ai@6.0.228(zod@4.3.6):
+    dependencies:
+      '@ai-sdk/gateway': 3.0.151(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.14
+      '@ai-sdk/provider-utils': 4.0.39(zod@4.3.6)
+      '@opentelemetry/api': 1.9.1
+      zod: 4.3.6
+
   ajv-errors@3.0.0(ajv@8.20.0):
     dependencies:
       ajv: 8.20.0
@@ -20476,7 +20549,7 @@ snapshots:
 
   chardet@2.1.1: {}
 
-  chat@4.34.0(zod@3.25.76):
+  chat@4.34.0(ai@6.0.228(zod@3.25.76))(zod@3.25.76):
     dependencies:
       '@workflow/serde': 4.1.0-beta.2
       mdast-util-to-string: 4.0.0
@@ -20486,11 +20559,12 @@ snapshots:
       remend: 1.3.0
       unified: 11.0.5
     optionalDependencies:
+      ai: 6.0.228(zod@3.25.76)
       zod: 3.25.76
     transitivePeerDependencies:
       - supports-color
 
-  chat@4.34.0(zod@4.3.6):
+  chat@4.34.0(ai@6.0.228(zod@4.3.6))(zod@4.3.6):
     dependencies:
       '@workflow/serde': 4.1.0-beta.2
       mdast-util-to-string: 4.0.0
@@ -20500,6 +20574,7 @@ snapshots:
       remend: 1.3.0
       unified: 11.0.5
     optionalDependencies:
+      ai: 6.0.228(zod@4.3.6)
       zod: 4.3.6
     transitivePeerDependencies:
       - supports-color

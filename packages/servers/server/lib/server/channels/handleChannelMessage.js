@@ -30,6 +30,7 @@ function toUIMessages(platformMessages) {
 }
 
 async function handleChannelMessage({ channelConfig, message, platform, thread }) {
+  const startTime = performance.now();
   const context = createChannelContext({ channelConfig, platform });
   const { logger } = context;
   logger.info({ event: 'channel_message', platform, threadId: thread.id });
@@ -76,6 +77,13 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
     if (reply.trim().length > 0) {
       await thread.post(reply);
     }
+    logger.info({
+      event: 'channel_reply',
+      platform,
+      threadId: thread.id,
+      durationMs: Math.round(performance.now() - startTime),
+      replyLength: reply.length,
+    });
   } catch (error) {
     await context.handleError(error);
     await thread.post(`Sorry, something went wrong: ${error.message}`);

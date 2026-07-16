@@ -64,6 +64,10 @@ async function createChatBot({ logger, mode = 'webhook' } = {}) {
     adapters,
     state: createMemoryState(),
     logger: 'warn',
+    // The default 'drop' strategy discards messages that arrive while the
+    // per-thread lock is held (i.e. while a reply is being generated) -
+    // queue processes them in order instead.
+    concurrency: 'queue',
   });
 
   function onMessage(thread, message) {
