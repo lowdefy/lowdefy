@@ -69,7 +69,7 @@ _ref:
 
                 ## Conversation Context
 
-                The bot fetches the last 20 messages of the thread as conversation history on every message — the thread *is* the conversation memory, no server-side persistence is involved. The bot's own earlier replies become assistant turns, so follow-up questions work naturally. Replies stream into the chat as the model generates them (Telegram private chats show a live draft preview), and the bot reacts to your message while it works.
+                The bot fetches the last 20 messages of the thread as conversation history on every message — the thread *is* the conversation memory, no server-side persistence is involved. The bot's own earlier replies become assistant turns, so follow-up questions work naturally. Replies stream into the chat as the model generates them (Telegram private chats show a live draft preview).
 
                 Since there is no chat client to approve tool calls, agent tools configured with `confirm: true` execute automatically on channels.
 
