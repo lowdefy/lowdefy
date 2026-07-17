@@ -47,10 +47,24 @@ function sentFrames(subscriber) {
 // Uses the resolver and websocket properties returned by mockPrepareChannel.
 // Properties default to the subscription payload so tests control channel
 // identity through the payload they subscribe with.
-function mockPrepare({ resolver, connectionProperties = null, properties } = {}) {
+function mockPrepare({ resolver, connectionProperties = null, properties, tenant = null } = {}) {
   mockPrepareChannel.mockImplementation(async (context, { websocketId, payload }) => ({
     connectionProperties,
     properties: properties ?? payload ?? {},
+    tenant,
+    websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
+    websocketResolver: resolver,
+  }));
+}
+
+// Like mockPrepare, but the tenant verdict is resolved from the subscribing
+// context's user organization — mirroring how prepareChannel resolves the
+// verdict per subscriber.
+function mockPrepareWithUserTenant({ resolver } = {}) {
+  mockPrepareChannel.mockImplementation(async (context, { websocketId }) => ({
+    connectionProperties: null,
+    properties: { room: 1 },
+    tenant: { field: 'organizationId', value: context.user.organizationId },
     websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
     websocketResolver: resolver,
   }));
@@ -402,6 +416,86 @@ test('publish deserializes the payload and broadcasts it through the channel', a
       payload: { data: { text: 'hi', at: { '~d': 5000 } } },
     },
   ]);
+});
+
+test('resolver receives tenant null when prepareChannel resolves no tenant verdict', async () => {
+  const resolver = createPendingResolver();
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber });
+  await flushMicrotasks();
+
+  expect(resolver.mock.calls[0][0].tenant).toBe(null);
+});
+
+test('resolver receives the tenant verdict resolved for the channel', async () => {
+  const resolver = createPendingResolver();
+  mockPrepare({ resolver, tenant: { field: 'organizationId', value: 'org-1' } });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber });
+  await flushMicrotasks();
+
+  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organizationId', value: 'org-1' });
+});
+
+test('subscribers with identical properties but different tenant verdicts get separate channels', async () => {
+  const resolver = createPendingResolver();
+  mockPrepareWithUserTenant({ resolver });
+  const registry = createChannelRegistry();
+  const contextOrgA = { ...createTestContext(), user: { sub: 'user-1', organizationId: 'org-a' } };
+  const contextOrgB = { ...createTestContext(), user: { sub: 'user-2', organizationId: 'org-b' } };
+  const subscriberA = createSubscriber('a');
+  const subscriberB = createSubscriber('b');
+
+  await registry.subscribe(contextOrgA, {
+    websocketId: 'ticker',
+    payload: { room: 1 },
+    subscriber: subscriberA,
+  });
+  await registry.subscribe(contextOrgB, {
+    websocketId: 'ticker',
+    payload: { room: 1 },
+    subscriber: subscriberB,
+  });
+  await flushMicrotasks();
+
+  expect(resolver).toHaveBeenCalledTimes(2);
+  expect(registry.channels.size).toBe(2);
+  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organizationId', value: 'org-a' });
+  expect(resolver.mock.calls[1][0].tenant).toEqual({ field: 'organizationId', value: 'org-b' });
+});
+
+test('subscribers with identical properties and the same tenant verdict share the channel', async () => {
+  const resolver = createPendingResolver();
+  mockPrepareWithUserTenant({ resolver });
+  const registry = createChannelRegistry();
+  const contextA = { ...createTestContext(), user: { sub: 'user-1', organizationId: 'org-a' } };
+  const contextB = { ...createTestContext(), user: { sub: 'user-2', organizationId: 'org-a' } };
+  const subscriberA = createSubscriber('a');
+  const subscriberB = createSubscriber('b');
+
+  await registry.subscribe(contextA, {
+    websocketId: 'ticker',
+    payload: { room: 1 },
+    subscriber: subscriberA,
+  });
+  await registry.subscribe(contextB, {
+    websocketId: 'ticker',
+    payload: { room: 1 },
+    subscriber: subscriberB,
+  });
+  await flushMicrotasks();
+
+  expect(resolver).toHaveBeenCalledTimes(1);
+  expect(registry.channels.size).toBe(1);
+  const channel = [...registry.channels.values()][0];
+  expect(channel.subscribers.size).toBe(2);
 });
 
 test('resolver errors after the channel is aborted are ignored', async () => {

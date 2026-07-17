@@ -21,6 +21,7 @@ import evaluateRequestOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import resolveTenant from '../request/resolveTenant.js';
 
 // Runs the endpoint's declared `webhook.verify` request plugin as a gate,
 // against the RAW request (body, query, headers), before the routine body
@@ -50,9 +51,14 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     connectionId: verify.connectionId,
     requestId: 'webhook.verify',
     properties: verify.properties ?? {},
+    // Webhooks run in system context, so a verifier on a tenant connection
+    // fails closed (caught below, verdict false) unless the verify config
+    // opts out with tenant: none.
+    tenant: verify.tenant,
     '~k': verify['~k'],
   };
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
 
   const { connectionProperties, requestProperties } = evaluateRequestOperators(context, {
     connectionConfig,
@@ -69,6 +75,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
       requestConfig,
       requestProperties,
       requestResolver,
+      tenant,
     });
     return response === true || (type.isObject(response) && response.verified === true);
   } catch (error) {

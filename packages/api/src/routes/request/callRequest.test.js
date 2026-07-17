@@ -70,6 +70,13 @@ const connections = {
       TestRequestCheckWrite: mockTestRequestCheckWrite,
     },
   },
+  TestTenantConnection: {
+    meta: { tenant: true },
+    schema: {},
+    requests: {
+      TestRequest: mockTestRequest,
+    },
+  },
 };
 
 const operators = {
@@ -396,9 +403,60 @@ test('deserialize inputs', async () => {
           payload: { date: new Date(0) },
           payloadDate: new Date(0),
         },
+        tenant: null,
       },
     ],
   ]);
+});
+
+test('tenant connection passes the tenant verdict to the resolver', async () => {
+  const organizationContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    secrets,
+    user: { id: 'id', organizationId: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await callRequest(organizationContext, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].tenant).toEqual({
+    field: 'organizationId',
+    value: 'org-1',
+  });
+});
+
+test('tenant connection without a caller organization throws AuthenticationError', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
+    AuthenticationError
+  );
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
+    'Request "requestId" reads tenant connection "testConnection" but no caller organization resolved.'
+  );
 });
 
 test('evaluate request properties operators', async () => {
