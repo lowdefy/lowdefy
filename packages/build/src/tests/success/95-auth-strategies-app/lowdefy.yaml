@@ -8,6 +8,10 @@ auth:
   secret:
     _secret: BETTER_AUTH_SECRET
 
+  roles:
+    - id: partner
+    - id: api-user
+
   strategies:
     - id: partner-access
       type: apiKey

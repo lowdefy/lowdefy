@@ -11,6 +11,10 @@ auth:
     properties: {}
   emailAndPassword:
     enabled: true
+  roles:
+    - id: admin
+    - id: manager
+    - id: user
   pages:
     protected: true
     public:

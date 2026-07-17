@@ -28,6 +28,10 @@ const authConfig = {
     { id: 'custom-oauth', type: 'GenericOAuth' },
   ],
   organizations: { signup: 'invite-only' },
+  roles: [
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'editor', description: 'Can edit content' },
+  ],
 };
 
 test('_authConfig dynamic is true', () => {
@@ -81,7 +85,7 @@ test('_authConfig throws for unknown path and names all readable paths', () => {
       '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", ' +
       '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
       '"captcha.enabled", "captcha.provider", "captcha.siteKey", ' +
-      '"providers", "organizations.signup".'
+      '"providers", "organizations.signup", "roles".'
   );
 });
 
@@ -113,5 +117,24 @@ test('_authConfig returns captcha projection paths', () => {
 test('_authConfig throws for the un-projected captcha secretKey', () => {
   expect(() => _authConfig({ authConfig, params: 'captcha.secretKey' })).toThrow(
     'Readable paths are:'
+  );
+});
+
+test('_authConfig returns the projected roles catalog', () => {
+  expect(_authConfig({ authConfig, params: 'roles' })).toEqual([
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'editor', description: 'Can edit content' },
+  ]);
+});
+
+test('_authConfig returns a copy of roles so config cannot mutate the projection', () => {
+  const result = _authConfig({ authConfig, params: 'roles' });
+  result[0].id = 'mutated';
+  expect(authConfig.roles[0].id).toBe('admin');
+});
+
+test('_authConfig throws self-reference error for roles when projection is not available', () => {
+  expect(() => _authConfig({ authConfig: undefined, params: 'roles' })).toThrow(
+    '_build.authConfig cannot be used inside the auth block'
   );
 });

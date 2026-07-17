@@ -20,9 +20,12 @@ import { type } from '@lowdefy/helpers';
 // (findMemberByOrgId -> adapter.findOne on "member" by userId + organizationId,
 // joined to the user). Admin steps act with server authority, so the acting user
 // has no real member row. This wrapper intercepts exactly that lookup and returns
-// a virtual owner member (in-memory only; never written), which passes the org
-// plugin's hasPermission check via the creator role. Every other adapter call
-// delegates to the real adapter unchanged.
+// a virtual member (in-memory only; never written) claiming the reserved
+// "$lowdefy-system" authority role. That role is registered by the org plugin
+// with the authority statements the mutations require and is the creator under
+// the pinned wiring, so the fabricated row passes both the plugin's
+// hasPermission check and its creator-protection guards. Every other adapter
+// call delegates to the real adapter unchanged.
 function createActingMemberAdapter({ actingUser, adapter }) {
   async function findOne(args) {
     if (args.model === 'member' && type.isArray(args.where)) {
@@ -37,7 +40,7 @@ function createActingMemberAdapter({ actingUser, adapter }) {
           id: 'lowdefy:system-member',
           userId: actingUser.id,
           organizationId: organizationIdClause.value,
-          role: 'owner',
+          role: '$lowdefy-system',
           createdAt: new Date(),
           user: {
             id: actingUser.id,

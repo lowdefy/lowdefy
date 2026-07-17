@@ -33,6 +33,43 @@ import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
 
+// Decision 4: under the "pinned" org policy, disable every mounted
+// /organization/* HTTP path EXCEPT /organization/accept-invitation (the
+// invitation flow depends on it and BetterAuth gates it itself). /organization/create
+// is already off via allowUserToCreateOrganization:false. The audited admin steps
+// bypass the router (callPluginEndpoint), so disabling these closes client HTTP
+// access without breaking them. Set on the top-level `options.disabledPaths` (a
+// BetterAuth CORE option, not an org-plugin option): the router's onRequest matches
+// exactly via disabledPaths.includes(normalizedPath), with basePath/`/api/auth`
+// stripped first, so entries must be the exact basePath-stripped `/organization/<segment>`.
+// Verified against the mounted surface of better-auth@1.6.23. Team (`*-team*`) and
+// dynamic-access-control role (`*-role`) endpoints are conditional on
+// teams.enabled / dynamicAccessControl.enabled - neither is set by
+// buildOrganizationPlugin, so they are not mounted and are not listed here.
+const ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED = [
+  // Mutations
+  '/organization/set-active',
+  '/organization/update',
+  '/organization/delete',
+  '/organization/leave',
+  '/organization/update-member-role',
+  '/organization/remove-member',
+  '/organization/invite-member',
+  '/organization/cancel-invitation',
+  // Reads
+  '/organization/list-members',
+  '/organization/get-active-member',
+  '/organization/get-active-member-role',
+  '/organization/get-full-organization',
+  '/organization/list',
+  '/organization/get-invitation',
+  '/organization/list-invitations',
+  '/organization/list-user-invitations',
+  '/organization/check-slug',
+  '/organization/reject-invitation',
+  '/organization/has-permission',
+];
+
 // Assembles the BetterAuthOptions object from the auth.json build artifact.
 // Build has validated the config and written all defaults, so this function
 // resolves the _secret operators and maps the Lowdefy surface onto
@@ -376,6 +413,12 @@ function getBetterAuthConfig({
       sendInvitationEmail,
     })
   );
+
+  // Policy-aware lockdown of the org plugin's client HTTP endpoints (Decision 4).
+  // pinned: disable the full set (everything except accept-invitation/create).
+  // tenant: self-serve, leave the org endpoints enabled.
+  const policy = authConfig.organizations?.policy ?? 'pinned';
+  options.disabledPaths = policy === 'pinned' ? ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED : [];
 
   return options;
 }

@@ -720,6 +720,48 @@ export default {
             },
           },
         },
+        roles: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "roles" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].id" should be a string.',
+                },
+              },
+              label: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].label" should be a string.',
+                },
+              },
+              description: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].description" should be a string.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth role entry should be an object.',
+              additionalProperties:
+                'Auth role entry has an unknown property. Allowed: "id", "label", "description".',
+              required: {
+                id: 'Auth role entries should have required property "id".',
+              },
+            },
+          },
+        },
         session: {
           type: 'object',
           additionalProperties: false,

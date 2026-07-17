@@ -26,6 +26,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
     organizations: { signup: 'invite-only' },
+    roles: [],
   });
 });
 
@@ -145,4 +146,30 @@ test('computeAuthConfigProjection returns disabled captcha defaults when absent'
     provider: null,
     siteKey: null,
   });
+});
+
+test('computeAuthConfigProjection projects roles as id, label and description', () => {
+  const projection = computeAuthConfigProjection({
+    roles: [
+      { id: 'admin', label: 'Administrator', description: 'Full access' },
+      { id: 'editor', label: 'Editor', description: 'Can edit content' },
+    ],
+  });
+  expect(projection.roles).toEqual([
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'Editor', description: 'Can edit content' },
+  ]);
+});
+
+test('computeAuthConfigProjection defaults role label to id when label is omitted', () => {
+  const projection = computeAuthConfigProjection({
+    roles: [{ id: 'admin', description: 'Full access' }],
+  });
+  expect(projection.roles).toEqual([
+    { id: 'admin', label: 'admin', description: 'Full access' },
+  ]);
+});
+
+test('computeAuthConfigProjection returns empty roles when source roles are absent', () => {
+  expect(computeAuthConfigProjection({}).roles).toEqual([]);
 });

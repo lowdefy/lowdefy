@@ -18,10 +18,10 @@ import ensureOrganization from './ensureOrganization.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
 
 // The engine-tier user.create.after hook for open signup under the pinned
-// policy: auto-join the pinned org with the plugin's built-in "member" role,
-// through the server-only addMember endpoint so the plugin's invariants and
-// hooks run. The role carries no page grants - the user passes the
-// membership wall while role-gated pages still gate them. With
+// policy: auto-join the pinned org with an empty role, through the
+// server-only addMember endpoint so the plugin's invariants and hooks run.
+// The user passes the membership wall by row existence while role-gated
+// pages still gate them; _user.roles reads []. With
 // requireEmailVerification the signup holds this member row but obtains no
 // session until verified, so joining at user-create is safe.
 //
@@ -48,7 +48,7 @@ function createAutoJoinHook({ getAuth, organizations }) {
       body: {
         userId: user.id,
         organizationId: organization.id,
-        role: 'member',
+        role: '',
       },
       headers: getHookRequestHeaders(ctx),
     });

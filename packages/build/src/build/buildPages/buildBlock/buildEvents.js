@@ -56,6 +56,7 @@ function checkAction(
     linkActionRefs,
     pageId,
     requestActionRefs,
+    setActiveOrgActionRefs,
     typeCounters,
     websocketActionRefs,
   }
@@ -131,6 +132,13 @@ function checkAction(
         sourcePageId: pageId,
       });
     }
+  }
+
+  // Collect static SetActiveOrganization action references for policy validation.
+  // No id param (unlike Link's pageId or CallAPI's requestId) - sourcePageId
+  // alone locates the offending page for the pinned-policy build error.
+  if (action.type === 'SetActiveOrganization') {
+    setActiveOrgActionRefs.push({ action, blockId, eventId, sourcePageId: pageId });
   }
 
   // Collect static Subscribe/Unsubscribe/Publish action references for validation
@@ -315,6 +323,7 @@ function buildEvents(block, pageContext) {
         pageId: pageContext.pageId,
         linkActionRefs: pageContext.linkActionRefs,
         requestActionRefs: pageContext.requestActionRefs,
+        setActiveOrgActionRefs: pageContext.setActiveOrgActionRefs,
         websocketActionRefs: pageContext.websocketActionRefs,
         checkDuplicateActionId,
       };

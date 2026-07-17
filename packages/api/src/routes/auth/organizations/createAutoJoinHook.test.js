@@ -42,7 +42,7 @@ function createMockAuth({ member = null } = {}) {
 
 const organizations = { policy: 'pinned', org: 'default', signup: 'open' };
 
-test('autoJoinHook adds the new user to the pinned org with the built-in member role', async () => {
+test('autoJoinHook adds the new user to the pinned org with an empty role', async () => {
   const { auth, addMember } = createMockAuth();
   const hook = createAutoJoinHook({ getAuth: () => auth, organizations });
 
@@ -53,7 +53,7 @@ test('autoJoinHook adds the new user to the pinned org with the built-in member 
     body: {
       userId: 'user_1',
       organizationId: 'org_pinned',
-      role: 'member',
+      role: '',
     },
     headers,
   });
@@ -62,7 +62,7 @@ test('autoJoinHook adds the new user to the pinned org with the built-in member 
 test('autoJoinHook skips when the member row already exists', async () => {
   // The session.create policy hook joins first when the signup mints an
   // immediate session - after-hooks flush at the end of the request.
-  const { auth, addMember } = createMockAuth({ member: { id: 'member_1', role: 'member' } });
+  const { auth, addMember } = createMockAuth({ member: { id: 'member_1', role: '' } });
   const hook = createAutoJoinHook({ getAuth: () => auth, organizations });
 
   await hook({ id: 'user_1', email: 'a@b.c' });
