@@ -19,6 +19,7 @@ import { convertToModelMessages, pruneMessages, validateUIMessages } from 'ai';
 import convertDataUrlsToBase64 from './convertDataUrlsToBase64.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
+import transcribeAudioParts from './transcribeAudioParts.js';
 
 // Streams an agent's reply as plain text - no UIMessage protocol. Used by the
 // pageless agent route (format 'text' returns a text/plain Response) and by
@@ -31,9 +32,13 @@ async function handleAgentTextStream({ connection, properties, context }) {
   const { agent, messages: rawMessages } = properties;
   // External callers and channel history send bare { role, parts } messages;
   // validateUIMessages requires an id, so index-derived ids fill the gap.
-  const messages = convertDataUrlsToBase64(rawMessages).map((msg, index) =>
-    msg.id === undefined ? { ...msg, id: `msg-${index}` } : msg
-  );
+  const messages = await transcribeAudioParts({
+    agent,
+    messages: convertDataUrlsToBase64(rawMessages).map((msg, index) =>
+      msg.id === undefined ? { ...msg, id: `msg-${index}` } : msg
+    ),
+    context,
+  });
 
   const { agentInstance, mcpClients, timeoutConfig, locale } = await createToolLoopAgent({
     connection,

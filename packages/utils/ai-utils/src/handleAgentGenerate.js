@@ -20,7 +20,8 @@ import createUsageAccumulator from './createUsageAccumulator.js';
 // Runs an agent headlessly to completion — no chat UI, no streaming. Used by
 // the CallAgent routine step. Confirm tools auto-execute (no client exists to
 // resolve an approval), update-page-state is excluded (callers pass no
-// sharedState), and no conversation title is generated.
+// sharedState), and no conversation title is generated. Transcription does
+// not apply here — prompt is a string, so audio file parts cannot occur.
 async function handleAgentGenerate({ connection, properties, context }) {
   const { agent, prompt } = properties;
 
@@ -69,13 +70,15 @@ async function handleAgentGenerate({ connection, properties, context }) {
   if (onFinishEndpointIds && onFinishEndpointIds.length > 0) {
     const finishPayload = {
       messages: result.response.messages,
-      steps: result.steps.map(({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
-        stepNumber,
-        text,
-        toolCalls: calls,
-        toolResults: results,
-        finishReason,
-      })),
+      steps: result.steps.map(
+        ({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
+          stepNumber,
+          text,
+          toolCalls: calls,
+          toolResults: results,
+          finishReason,
+        })
+      ),
       toolResults,
       finishReason: result.finishReason,
       isAborted: false,

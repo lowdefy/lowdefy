@@ -132,7 +132,11 @@ function buildAgents({ components, context }) {
       }
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.name)) {
         throw new ConfigError(
-          `Agent "${agent.id}" tool "${toolConfig.name}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.id}" tool "${
+            toolConfig.name
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }
@@ -251,7 +255,11 @@ function buildAgents({ components, context }) {
       }
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(ref.name)) {
         throw new ConfigError(
-          `Agent "${agent.id}" sub-agent "${ref.agentId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.id}" sub-agent "${
+            ref.agentId
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }
@@ -268,10 +276,10 @@ function buildAgents({ components, context }) {
     if (agent.properties?.fileSystem) {
       const basePath = agent.properties.fileSystem.basePath;
       if (!type.isString(basePath)) {
-        throw new ConfigError(
-          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
-          { received: basePath, configKey }
-        );
+        throw new ConfigError(`Agent "${agent.id}" fileSystem.basePath is not a string.`, {
+          received: basePath,
+          configKey,
+        });
       }
       const resolved = path.resolve(context.directories.config, basePath);
       if (!fs.existsSync(resolved)) {
@@ -279,6 +287,31 @@ function buildAgents({ components, context }) {
           `Agent "${agent.id}" fileSystem.basePath "${basePath}" does not exist.`,
           { configKey }
         );
+      }
+    }
+
+    // Validate transcription config if present
+    if (agent.properties?.transcription) {
+      const transcription = agent.properties.transcription;
+      if (!type.isString(transcription.connectionId)) {
+        throw new ConfigError(`Agent "${agent.id}" "transcription.connectionId" is not a string.`, {
+          received: transcription.connectionId,
+          configKey,
+        });
+      }
+      const transcriptionConnectionExists = (components.connections ?? []).some(
+        (c) => c.id === transcription.connectionId || c.connectionId === transcription.connectionId
+      );
+      if (!transcriptionConnectionExists) {
+        throw new ConfigError(
+          `Agent "${agent.id}" "transcription.connectionId" references connection "${transcription.connectionId}" which does not exist.`,
+          { configKey }
+        );
+      }
+      if (type.isNone(transcription.model)) {
+        throw new ConfigError(`Agent "${agent.id}" "transcription.model" is not defined.`, {
+          configKey,
+        });
       }
     }
 

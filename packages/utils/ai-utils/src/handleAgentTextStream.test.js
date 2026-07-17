@@ -25,6 +25,7 @@ const mockStream = jest.fn();
 const mockConvertToModelMessages = jest.fn().mockResolvedValue(['model-message']);
 const mockPruneMessages = jest.fn().mockReturnValue(['pruned-message']);
 const mockValidateUIMessages = jest.fn().mockResolvedValue(['validated-message']);
+const mockTranscribe = jest.fn();
 
 let lastAgentConfig = null;
 
@@ -40,6 +41,7 @@ class MockToolLoopAgent {
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   convertToModelMessages: mockConvertToModelMessages,
+  experimental_transcribe: mockTranscribe,
   generateText: mockGenerateText,
   pruneMessages: mockPruneMessages,
   tool: mockTool,
@@ -363,4 +365,80 @@ test('confirm tools auto-execute - no approval channel exists', async () => {
 
   // autoApprove strips needsApproval from confirm tools.
   expect(lastAgentConfig.tools['send-email']?.needsApproval).toBeUndefined();
+});
+
+test('transcribes audio file parts before validating messages when transcription is configured', async () => {
+  const { default: handleAgentTextStream } = await import('./handleAgentTextStream.js');
+  mockStreamResult();
+  mockTranscribe.mockResolvedValue({ text: 'stream transcript' });
+  const context = createTestContext({
+    format: 'stream',
+    getConnectionForAgent: jest.fn().mockResolvedValue({
+      provider: { transcription: jest.fn((model) => ({ transcriptionModelId: model })) },
+    }),
+  });
+
+  const { response } = await handleAgentTextStream({
+    connection,
+    properties: {
+      agent: createAgent({
+        properties: {
+          model: 'test-model',
+          transcription: { connectionId: 'openai', model: 'whisper-1' },
+        },
+      }),
+      messages: [
+        {
+          role: 'user',
+          parts: [
+            { type: 'file', url: 'data:audio/ogg;base64,c3RyZWFtLWF1ZGlv', mediaType: 'audio/ogg' },
+          ],
+        },
+      ],
+    },
+    context,
+  });
+  // eslint-disable-next-line no-unused-vars
+  for await (const chunk of response) {
+    // drain
+  }
+
+  expect(mockTranscribe).toHaveBeenCalledWith({
+    model: { transcriptionModelId: 'whisper-1' },
+    audio: 'c3RyZWFtLWF1ZGlv',
+  });
+  const validated = mockValidateUIMessages.mock.calls[0][0].messages;
+  expect(validated[0].parts).toEqual([{ type: 'text', text: 'stream transcript' }]);
+});
+
+test('audio file parts pass through to validation when transcription is not configured', async () => {
+  const { default: handleAgentTextStream } = await import('./handleAgentTextStream.js');
+  mockStreamResult();
+  const context = createTestContext({ format: 'stream' });
+
+  const { response } = await handleAgentTextStream({
+    connection,
+    properties: {
+      agent: createAgent(),
+      messages: [
+        {
+          role: 'user',
+          parts: [
+            { type: 'file', url: 'data:audio/ogg;base64,bmF0aXZlLWF1ZGlv', mediaType: 'audio/ogg' },
+          ],
+        },
+      ],
+    },
+    context,
+  });
+  // eslint-disable-next-line no-unused-vars
+  for await (const chunk of response) {
+    // drain
+  }
+
+  expect(mockTranscribe).not.toHaveBeenCalled();
+  const validated = mockValidateUIMessages.mock.calls[0][0].messages;
+  expect(validated[0].parts).toEqual([
+    { type: 'file', url: 'bmF0aXZlLWF1ZGlv', mediaType: 'audio/ogg' },
+  ]);
 });

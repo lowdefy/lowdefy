@@ -31,6 +31,7 @@ import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
 import handleAgentTextStream from './handleAgentTextStream.js';
+import transcribeAudioParts from './transcribeAudioParts.js';
 
 // Concatenate the text parts of the first user message — used as the source
 // for generateTitle.
@@ -57,7 +58,11 @@ async function handleAgentChat({ connection, properties, context }) {
   }
 
   const { agent, messages: rawMessages } = properties;
-  const messages = convertDataUrlsToBase64(rawMessages);
+  const messages = await transcribeAudioParts({
+    agent,
+    messages: convertDataUrlsToBase64(rawMessages),
+    context,
+  });
 
   const { agentInstance, mcpClients, model, timeoutConfig, locale } = await createToolLoopAgent({
     connection,
