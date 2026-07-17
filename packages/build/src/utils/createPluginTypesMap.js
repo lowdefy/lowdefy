@@ -144,6 +144,19 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
       typesMap.blockMetas[`${typePrefix}${blockType}`] = meta;
     });
   }
+
+  // Connection capability metadata (eg. { tenant: true } for connection types
+  // that implement the tenant scoping contract). Same flow as blockMetas. The
+  // store is initialized here because typesMap skeletons predating the key
+  // exist in several packages.
+  if (type.isObject(packageTypes.connectionMetas)) {
+    if (!type.isObject(typesMap.connectionMetas)) {
+      typesMap.connectionMetas = {};
+    }
+    Object.entries(packageTypes.connectionMetas).forEach(([connectionType, meta]) => {
+      typesMap.connectionMetas[`${typePrefix}${connectionType}`] = meta;
+    });
+  }
 }
 
 export default createPluginTypesMap;

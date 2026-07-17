@@ -69,6 +69,39 @@ function validateConnection(connection, context) {
   return true;
 }
 
+// The tenant wall is only real if the connection type implements the scoping
+// contract — a declared-but-unenforced wall would read as protection while
+// providing none, so an unsupported type is a build error, never a silent
+// no-op. Connection types declare support via connectionMetas in their
+// types.js (eg. { MongoDBCollection: { tenant: true } }).
+function validateTenant(connection, context) {
+  if (type.isUndefined(connection.tenant)) return;
+  const configKey = connection['~k'];
+  const valid =
+    connection.tenant === true ||
+    (type.isObject(connection.tenant) && type.isString(connection.tenant.field));
+  if (!valid) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Connection "tenant" should be true or an object with a "field" string at connection "${connection.id}".`,
+        { received: connection.tenant, configKey }
+      )
+    );
+    return;
+  }
+  const connectionMeta = context.typesMap.connectionMetas?.[connection.type];
+  if (connectionMeta?.tenant !== true) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Connection type "${connection.type}" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "${connection.id}". Use a connection type that enforces the tenant wall.`,
+        { configKey }
+      )
+    );
+  }
+}
+
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
@@ -84,6 +117,7 @@ function buildConnections({ components, context }) {
 
     checkDuplicateConnectionId({ id: connection.id, configKey });
     validateId({ id: connection.id, field: 'Connection id', configKey });
+    validateTenant(connection, context);
 
     // Track type usage for buildTypes validation
     context.typeCounters.connections.increment(connection.type, configKey);

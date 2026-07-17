@@ -157,6 +157,74 @@ test('connectionId is not a string', () => {
     'Step connectionId is not a string at endpoint "test_no_connectionId".'
   );
 });
+test('request step tenant none is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_none',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+test('request step tenant true throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_true',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request step tenant with another string throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_string',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'off',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
 test('valid routine step config nested array', () => {
   const context = testContext({ logger });
   const components = {

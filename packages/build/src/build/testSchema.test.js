@@ -423,6 +423,135 @@ test('auth role entry with an unknown key emits additional properties warning', 
   );
 });
 
+test('connection tenant true emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: true,
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant with a field object emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant with an invalid shape emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'organizationId',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  // The oneOf branch error at the same instance path wins testSchema's
+  // same-path dedup, so the raw const error surfaces instead of the custom
+  // oneOf errorMessage. The focused buildConnections validateTenant error
+  // carries the descriptive message.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+});
+
+test('request tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('request tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Request "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit request-level opt-out.'
+  );
+});
+
+test('websocket tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'none',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('websocket tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'off',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use.'
+  );
+});
+
 test('valid slug emits no warnings', () => {
   const cases = ['my-app', 'a', 'a-b-c-1', 'app1', 'a1-b2-c3'];
   cases.forEach((slug) => {

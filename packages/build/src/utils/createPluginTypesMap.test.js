@@ -76,3 +76,64 @@ test('createPluginTypesMap leaves typesMap.steps unchanged when packageTypes.ste
   });
   expect(typesMap.steps).toEqual({});
 });
+
+test('createPluginTypesMap initializes and merges connectionMetas into the typesMap', () => {
+  const typesMap = createEmptyTypesMap();
+  expect(typesMap.connectionMetas).toBe(undefined);
+  createPluginTypesMap({
+    packageName: '@lowdefy/connection-mongodb',
+    packageTypes: {
+      connections: ['MongoDBCollection'],
+      connectionMetas: { MongoDBCollection: { tenant: true } },
+    },
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.connectionMetas).toEqual({
+    MongoDBCollection: { tenant: true },
+  });
+});
+
+test('createPluginTypesMap applies typePrefix to connectionMetas type names', () => {
+  const typesMap = createEmptyTypesMap();
+  createPluginTypesMap({
+    packageName: '@lowdefy/connection-mongodb',
+    packageTypes: {
+      connectionMetas: { MongoDBCollection: { tenant: true } },
+    },
+    typePrefix: 'MyPrefix_',
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.connectionMetas).toEqual({
+    MyPrefix_MongoDBCollection: { tenant: true },
+  });
+});
+
+test('createPluginTypesMap merges connectionMetas into an existing store', () => {
+  const typesMap = createEmptyTypesMap();
+  typesMap.connectionMetas = { ExistingConnection: { tenant: true } };
+  createPluginTypesMap({
+    packageName: '@lowdefy/connection-mongodb',
+    packageTypes: {
+      connectionMetas: { MongoDBCollection: { tenant: true } },
+    },
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.connectionMetas).toEqual({
+    ExistingConnection: { tenant: true },
+    MongoDBCollection: { tenant: true },
+  });
+});
+
+test('createPluginTypesMap does not initialize connectionMetas when packageTypes has none', () => {
+  const typesMap = createEmptyTypesMap();
+  createPluginTypesMap({
+    packageName: '@lowdefy/actions-core',
+    packageTypes: { actions: ['Link'] },
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.connectionMetas).toBe(undefined);
+});

@@ -46,6 +46,7 @@ async function createCustomPluginTypesMap({ directories }) {
       strategies: {},
     },
     blockMetas: {},
+    connectionMetas: {},
     blocks: {},
     connections: {},
     icons: {},

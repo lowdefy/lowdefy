@@ -196,6 +196,14 @@ function validateStep(step, { endpointId, stepTypes }) {
       configKey,
     });
   }
+  // The only step-level tenant value is the explicit opt-out sentinel — the
+  // wall itself is declared on the connection, never per step.
+  if (!type.isUndefined(step.tenant) && step.tenant !== 'none') {
+    throw new ConfigError(
+      `Step "${step.id}" at endpoint "${endpointId}" "tenant" only accepts "none" — the tenant wall is declared on the connection.`,
+      { received: step.tenant, configKey }
+    );
+  }
 }
 
 export default validateStep;

@@ -58,6 +58,15 @@ function buildRequest(request, pageContext) {
     }
   }
 
+  // The only request-level tenant value is the explicit opt-out sentinel —
+  // the wall itself is declared on the connection, never per request.
+  if (!type.isUndefined(request.tenant) && request.tenant !== 'none') {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "tenant" only accepts "none" — the tenant wall is declared on the connection.`,
+      { received: request.tenant, configKey }
+    );
+  }
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {

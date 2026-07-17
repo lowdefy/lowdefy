@@ -434,6 +434,59 @@ test('request references non-existent connection', () => {
   );
 });
 
+test('request tenant none is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        requests: [
+          {
+            id: 'request_1',
+            type: 'Request',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(res.pages[0].requests[0].tenant).toBe('none');
+});
+
+test('request tenant true throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: true }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request tenant with another string throws', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: 'off' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
 test('request with valid connectionId', () => {
   const contextWithConnection = testContext({ logger });
   contextWithConnection.connectionIds.add('validConnection');

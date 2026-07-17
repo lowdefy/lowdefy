@@ -2009,6 +2009,13 @@ export default {
             type: 'Websocket "properties" should be an object.',
           },
         },
+        tenant: {
+          const: 'none',
+          errorMessage: {
+            const:
+              'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use.',
+          },
+        },
       },
       errorMessage: {
         type: 'Websocket should be an object.',
@@ -2207,6 +2214,26 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Connection "properties" should be an object.',
+          },
+        },
+        tenant: {
+          oneOf: [
+            { const: true },
+            {
+              type: 'object',
+              additionalProperties: false,
+              required: ['field'],
+              properties: {
+                field: {
+                  type: 'string',
+                  minLength: 1,
+                },
+              },
+            },
+          ],
+          errorMessage: {
+            oneOf:
+              'Connection "tenant" should be true or an object with a "field" string, eg. { field: "organization_id" }.',
           },
         },
       },
@@ -2627,6 +2654,13 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Request "properties" should be an object.',
+          },
+        },
+        tenant: {
+          const: 'none',
+          errorMessage: {
+            const:
+              'Request "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit request-level opt-out.',
           },
         },
       },

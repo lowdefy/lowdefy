@@ -132,6 +132,198 @@ test('throw on Duplicate ids', () => {
   );
 });
 
+function tenantContext({ connectionMetas } = {}) {
+  const tenantTestContext = testContext();
+  tenantTestContext.typesMap = { connectionMetas };
+  return tenantTestContext;
+}
+
+test('buildConnections tenant true on an implementing connection type passes', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+  });
+  expect(res.connections).toEqual([
+    {
+      id: 'connection:connection1',
+      connectionId: 'connection1',
+      type: 'TestType',
+      tenant: true,
+    },
+  ]);
+});
+
+test('buildConnections tenant with a field object on an implementing connection type passes', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+  });
+  expect(res.connections[0].tenant).toEqual({ field: 'organization_id' });
+});
+
+test('buildConnections throws when tenant is false', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: false,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant is a string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'organizationId',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant object has no field', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: {},
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when tenant field is not a string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 42 },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+  );
+});
+
+test('buildConnections throws when the connection type does not implement the tenant contract', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws when no connectionMetas store exists in the typesMap', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: tenantContext() })).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws when the connection type meta tenant is not exactly true', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: 'yes' } } }),
+    })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections without tenant does not require the typesMap', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const res = buildConnections({ components, context: testContext() });
+  expect(res.connections[0].connectionId).toBe('connection1');
+});
+
 test('count operators', () => {
   const components = {
     connections: [

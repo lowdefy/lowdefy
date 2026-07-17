@@ -188,6 +188,43 @@ test('buildWebsockets throws when properties is not an object', () => {
   );
 });
 
+test('buildWebsockets tenant none is accepted', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: 'none' }],
+  };
+  const res = buildWebsockets({ components, context });
+  expect(res.websockets).toEqual([
+    {
+      id: 'websocket:ws1',
+      websocketId: 'ws1',
+      type: 'Channel',
+      tenant: 'none',
+      properties: {},
+    },
+  ]);
+});
+
+test('buildWebsockets throws when tenant is true', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: true }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket "ws1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('buildWebsockets throws when tenant is another string', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: 'ws1', type: 'Channel', tenant: 'off' }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket "ws1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+  );
+});
+
 test('buildWebsockets renames id to internal format and sets websocketId', () => {
   const context = createTestContext();
   const components = {
