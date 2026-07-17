@@ -14,25 +14,27 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertConsecutiveId',
-    'MongoDBInsertMany',
-    'MongoDBInsertManyConsecutiveIds',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-    'MongoDBVersionedUpdateOne',
-  ],
-  auth: {
-    adapters: ['MongoDBAuthAdapter'],
-  },
-  websockets: ['MongoDBChangeStream'],
-};
+async function getConsecutiveIdIndex({ collection, prefix, session }) {
+  const previous = await collection
+    .aggregate(
+      [
+        { $match: { _id: { $regex: `^${prefix}\\d+$` } } },
+        {
+          $project: {
+            index: { $toInt: { $replaceOne: { input: '$_id', find: prefix, replacement: '' } } },
+          },
+        },
+        {
+          $sort: {
+            index: -1,
+          },
+        },
+        { $limit: 1 },
+      ],
+      { session }
+    )
+    .toArray();
+  return (previous?.[0]?.index ?? 0) + 1;
+}
+
+export default getConsecutiveIdIndex;

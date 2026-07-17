@@ -14,25 +14,16 @@
   limitations under the License.
 */
 
-export default {
-  connections: ['MongoDBCollection'],
-  requests: [
-    'MongoDBAggregation',
-    'MongoDBBulkWrite',
-    'MongoDBDeleteMany',
-    'MongoDBDeleteOne',
-    'MongoDBFind',
-    'MongoDBFindOne',
-    'MongoDBInsertConsecutiveId',
-    'MongoDBInsertMany',
-    'MongoDBInsertManyConsecutiveIds',
-    'MongoDBInsertOne',
-    'MongoDBUpdateMany',
-    'MongoDBUpdateOne',
-    'MongoDBVersionedUpdateOne',
-  ],
-  auth: {
-    adapters: ['MongoDBAuthAdapter'],
-  },
-  websockets: ['MongoDBChangeStream'],
-};
+import { MongoClient } from 'mongodb';
+
+async function findLogCollectionRecordTestMongoDb({ logCollection, requestId }) {
+  const client = new MongoClient(process.env.MONGO_URL);
+  await client.connect();
+  const db = client.db();
+  const record = await db.collection(logCollection).findOne({ requestId });
+
+  await client.close();
+  return record;
+}
+
+export default findLogCollectionRecordTestMongoDb;

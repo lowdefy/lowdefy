@@ -41,6 +41,14 @@ export default {
         type: 'MongoDBUpdateOne request property "options" should be an object.',
       },
     },
+    disableNoMatchError: {
+      type: 'boolean',
+      description:
+        'Do not throw an error when no document matches the filter. By default the request throws "No matching record to update." when nothing matched and upsert is not set.',
+      errorMessage: {
+        type: 'MongoDBUpdateOne request property "disableNoMatchError" should be a boolean.',
+      },
+    },
   },
   errorMessage: {
     type: 'MongoDBUpdateOne request properties should be an object.',

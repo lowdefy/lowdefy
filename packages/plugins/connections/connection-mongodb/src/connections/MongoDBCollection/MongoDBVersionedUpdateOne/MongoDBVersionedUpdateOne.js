@@ -18,7 +18,7 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbUpdateOne({
+async function MongoDBVersionedUpdateOne({
   blockId,
   connection,
   connectionId,
@@ -30,17 +30,30 @@ async function MongodbUpdateOne({
   const deserializedRequest = deserialize(request);
   const { filter, update, options, disableNoMatchError } = deserializedRequest;
   const { collection, logCollection } = await getCollection({ connection });
+  const findOptions = options?.find;
+  const insertOptions = options?.insert;
+  const updateOptions = options?.update;
+
+  // The matched document is re-inserted under a new _id so the previous
+  // version is preserved, then the update is applied to the new copy.
+  const document = await collection.findOne(filter, { ...findOptions });
+  let insertedDocument;
+  if (document) {
+    delete document._id;
+    insertedDocument = await collection.insertOne(document, { ...insertOptions });
+  }
+
   let response;
   if (logCollection) {
-    // findOneAndUpdate instead of updateOne to capture before and after
-    // documents for the change log. The response shape matches the updateOne
-    // response so it is invariant to the connection having a changeLog.
-    const before = await collection.findOne(filter);
-    const result = await collection.findOneAndUpdate(filter, update, {
-      ...options,
-      includeResultMetadata: true,
-      returnDocument: 'after',
-    });
+    const result = await collection.findOneAndUpdate(
+      insertedDocument ? { _id: insertedDocument.insertedId } : filter,
+      update,
+      {
+        ...updateOptions,
+        includeResultMetadata: true,
+        returnDocument: 'after',
+      }
+    );
     const after = result.value ?? null;
     const upsertedId = result.lastErrorObject?.upserted ?? null;
     const matched = result.lastErrorObject?.updatedExisting ? 1 : 0;
@@ -52,7 +65,7 @@ async function MongodbUpdateOne({
       upsertedCount: upsertedId ? 1 : 0,
     };
     // Throw before writing the log record so a no-match update never logs.
-    if (!disableNoMatchError && !options?.upsert && matched === 0 && !upsertedId) {
+    if (!disableNoMatchError && !updateOptions?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
     await logCollection.insertOne({
@@ -62,25 +75,29 @@ async function MongodbUpdateOne({
       pageId,
       payload,
       requestId,
-      before,
+      before: document,
       after,
       timestamp: new Date(),
-      type: 'MongoDBUpdateOne',
+      type: 'MongoDBVersionedUpdateOne',
       meta: connection.changeLog?.meta,
     });
   } else {
-    response = await collection.updateOne(filter, update, options);
-    if (!disableNoMatchError && !options?.upsert && response.matchedCount === 0) {
+    response = await collection.updateOne(
+      insertedDocument ? { _id: insertedDocument.insertedId } : filter,
+      update,
+      { ...updateOptions }
+    );
+    if (!disableNoMatchError && !updateOptions?.upsert && response.matchedCount === 0) {
       throw new Error('No matching record to update.');
     }
   }
   return serialize(response);
 }
 
-MongodbUpdateOne.schema = schema;
-MongodbUpdateOne.meta = {
+MongoDBVersionedUpdateOne.schema = schema;
+MongoDBVersionedUpdateOne.meta = {
   checkRead: false,
   checkWrite: true,
 };
 
-export default MongodbUpdateOne;
+export default MongoDBVersionedUpdateOne;

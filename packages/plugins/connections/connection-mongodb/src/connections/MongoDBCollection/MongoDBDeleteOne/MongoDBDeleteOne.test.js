@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteOne from './MongoDBDeleteOne.js';
+import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBDeleteOne.meta;
@@ -24,6 +25,7 @@ const schema = MongoDBDeleteOne.schema;
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'deleteOne';
+const logCollection = 'logCollection';
 const documents = [{ _id: 'deleteOne' }, { _id: 'deleteOne_log' }];
 
 beforeAll(() => {
@@ -45,6 +47,101 @@ test('deleteOne', async () => {
     acknowledged: true,
     deletedCount: 1,
   });
+});
+
+test('deleteOne logCollection', async () => {
+  const request = {
+    filter: { _id: 'deleteOne_log' },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBDeleteOne({
+    request,
+    blockId: 'blockId',
+    connectionId: 'connectionId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteOne_log',
+    connection,
+  });
+  expect(res).toEqual({
+    acknowledged: true,
+    deletedCount: 1,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'deleteOne_log',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    connectionId: 'connectionId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteOne_log',
+    before: { _id: 'deleteOne_log' },
+    type: 'MongoDBDeleteOne',
+    meta: { meta: true },
+  });
+});
+
+test('deleteOne response shape is invariant to logCollection', async () => {
+  const invarianceCollection = 'deleteOneInvariance';
+  await populateTestMongoDb({
+    collection: invarianceCollection,
+    documents: [{ _id: 'inv_no_log' }, { _id: 'inv_with_log' }],
+  });
+  const baseConnection = {
+    databaseUri,
+    databaseName,
+    collection: invarianceCollection,
+    write: true,
+  };
+  const logConnection = {
+    ...baseConnection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+  };
+
+  const expectedKeys = ['acknowledged', 'deletedCount'];
+
+  const resNoLog = await MongoDBDeleteOne({
+    request: { filter: { _id: 'inv_no_log' } },
+    connection: baseConnection,
+  });
+  const resWithLog = await MongoDBDeleteOne({
+    request: { filter: { _id: 'inv_with_log' } },
+    blockId: 'blockId',
+    connectionId: 'connectionId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteOne_invariance_log',
+    connection: logConnection,
+  });
+  expect(Object.keys(resNoLog).sort()).toEqual(expectedKeys);
+  expect(Object.keys(resWithLog).sort()).toEqual(expectedKeys);
+  expect(resWithLog).toEqual(resNoLog);
+
+  // No-match case
+  const resNoMatchNoLog = await MongoDBDeleteOne({
+    request: { filter: { _id: 'inv_missing' } },
+    connection: baseConnection,
+  });
+  const resNoMatchWithLog = await MongoDBDeleteOne({
+    request: { filter: { _id: 'inv_missing' } },
+    blockId: 'blockId',
+    connectionId: 'connectionId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteOne_invariance_no_match_log',
+    connection: logConnection,
+  });
+  expect(Object.keys(resNoMatchNoLog).sort()).toEqual(expectedKeys);
+  expect(Object.keys(resNoMatchWithLog).sort()).toEqual(expectedKeys);
+  expect(resNoMatchWithLog).toEqual(resNoMatchNoLog);
 });
 
 test('deleteOne connection error', async () => {

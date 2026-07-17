@@ -34,7 +34,7 @@ async function MongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
-  const collection = await getCollection({ connection });
+  const { collection } = await getCollection({ connection });
   const cursor = await collection.aggregate(pipeline, options);
   const res = await cursor.toArray();
   return serialize(res);

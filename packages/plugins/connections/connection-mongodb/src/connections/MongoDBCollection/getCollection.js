@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import getClient from './getClient.js';
 
 async function getCollection({ connection }) {
-  const { collection, databaseName, databaseUri, options } = connection;
+  const { changeLog, collection, databaseName, databaseUri, options } = connection;
   if (!type.isString(databaseUri)) {
     throw new Error('Database URI must be a string');
   }
@@ -30,7 +30,12 @@ async function getCollection({ connection }) {
     throw new Error('Collection name must be a string');
   }
   const client = await getClient({ databaseUri, options });
-  return client.db(databaseName).collection(collection);
+  const db = client.db(databaseName);
+  return {
+    client,
+    collection: db.collection(collection),
+    logCollection: changeLog?.collection ? db.collection(changeLog.collection) : undefined,
+  };
 }
 
 export default getCollection;
