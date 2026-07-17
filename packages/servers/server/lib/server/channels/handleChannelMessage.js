@@ -22,11 +22,19 @@ import createChannelContext from './createChannelContext.js';
 // intentionally excluded.
 const SUPPORTED_ATTACHMENT_TYPES = ['audio', 'image'];
 
+// Telegram photos carry no mime_type - the platform re-encodes every photo as
+// JPEG, so image attachments without one default to image/jpeg.
+function attachmentMediaType(attachment) {
+  if (typeof attachment.mimeType === 'string') return attachment.mimeType;
+  if (attachment.type === 'image') return 'image/jpeg';
+  return null;
+}
+
 function supportedAttachments(attachments) {
   return (attachments ?? []).filter(
     (attachment) =>
       SUPPORTED_ATTACHMENT_TYPES.includes(attachment.type) &&
-      typeof attachment.mimeType === 'string'
+      attachmentMediaType(attachment) !== null
   );
 }
 
@@ -40,10 +48,11 @@ async function toAttachmentFileParts(attachments) {
       attachment.data ??
       (typeof attachment.fetchData === 'function' ? await attachment.fetchData() : null);
     if (!buffer) continue;
+    const mediaType = attachmentMediaType(attachment);
     parts.push({
       type: 'file',
-      url: `data:${attachment.mimeType};base64,${Buffer.from(buffer).toString('base64')}`,
-      mediaType: attachment.mimeType,
+      url: `data:${mediaType};base64,${Buffer.from(buffer).toString('base64')}`,
+      mediaType,
       ...(attachment.name ? { filename: attachment.name } : {}),
     });
   }
@@ -130,7 +139,9 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
     }
     parts.push(...(await toAttachmentFileParts(message.attachments)));
     if (parts.length === 0) {
-      parts.push({ type: 'text', text: '' });
+      // A message with only unsupported attachments (documents, video,
+      // stickers) still needs content - providers reject empty user messages.
+      parts.push({ type: 'text', text: '[unsupported attachment]' });
     }
     messages.push({ role: 'user', parts });
 
