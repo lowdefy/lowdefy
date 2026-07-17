@@ -18,15 +18,59 @@ import { callAgent } from '@lowdefy/api';
 
 import createChannelContext from './createChannelContext.js';
 
+// Attachment media the agent pipeline can consume - documents and video are
+// intentionally excluded.
+const SUPPORTED_ATTACHMENT_TYPES = ['audio', 'image'];
+
+function supportedAttachments(attachments) {
+  return (attachments ?? []).filter(
+    (attachment) =>
+      SUPPORTED_ATTACHMENT_TYPES.includes(attachment.type) &&
+      typeof attachment.mimeType === 'string'
+  );
+}
+
+// Download the triggering message's media and build UIMessage file parts.
+// Data URLs match the AgentChat block's file part shape - ai-utils'
+// convertDataUrlsToBase64 strips the prefix before the AI SDK sees them.
+async function toAttachmentFileParts(attachments) {
+  const parts = [];
+  for (const attachment of supportedAttachments(attachments)) {
+    const buffer =
+      attachment.data ??
+      (typeof attachment.fetchData === 'function' ? await attachment.fetchData() : null);
+    if (!buffer) continue;
+    parts.push({
+      type: 'file',
+      url: `data:${attachment.mimeType};base64,${Buffer.from(buffer).toString('base64')}`,
+      mediaType: attachment.mimeType,
+      ...(attachment.name ? { filename: attachment.name } : {}),
+    });
+  }
+  return parts;
+}
+
 // Maps chat platform messages to UIMessages - the bot's own messages become
 // assistant turns so multi-turn context survives across webhook invocations.
+// History media becomes text placeholders instead of real file parts:
+// re-downloading (and re-transcribing) up to 20 history attachments on every
+// request is unbounded cost, and the assistant's prior replies already carry
+// the semantics. Only the triggering message gets real media.
 function toUIMessages(platformMessages) {
   return platformMessages
-    .filter((msg) => typeof msg.text === 'string' && msg.text.length > 0)
-    .map((msg) => ({
-      role: msg.author?.isMe === true ? 'assistant' : 'user',
-      parts: [{ type: 'text', text: msg.text }],
-    }));
+    .map((msg) => {
+      const text = typeof msg.text === 'string' ? msg.text : '';
+      const placeholders = supportedAttachments(msg.attachments).map((attachment) =>
+        attachment.type === 'audio' ? '[voice message]' : '[image]'
+      );
+      const fullText = [text, ...placeholders].filter((part) => part.length > 0).join('\n');
+      if (fullText.length === 0) return null;
+      return {
+        role: msg.author?.isMe === true ? 'assistant' : 'user',
+        parts: [{ type: 'text', text: fullText }],
+      };
+    })
+    .filter((msg) => msg !== null);
 }
 
 // The model can legitimately end a turn with only tool calls and no closing
@@ -75,10 +119,21 @@ async function handleChannelMessage({ channelConfig, message, platform, thread }
     logger.warn({ event: 'channel_history_failed', err: error }, error.message);
   }
 
-  // The triggering message is always the final user turn.
-  messages.push({ role: 'user', parts: [{ type: 'text', text: message.text ?? '' }] });
-
   try {
+    // The triggering message is always the final user turn - text plus any
+    // supported media as file parts. Built inside the try so a failed
+    // Telegram media download posts the error to the chat instead of
+    // crashing the webhook.
+    const parts = [];
+    if (typeof message.text === 'string' && message.text.length > 0) {
+      parts.push({ type: 'text', text: message.text });
+    }
+    parts.push(...(await toAttachmentFileParts(message.attachments)));
+    if (parts.length === 0) {
+      parts.push({ type: 'text', text: '' });
+    }
+    messages.push({ role: 'user', parts });
+
     const agentStart = performance.now();
     const { response: textStream } = await callAgent(context, {
       agentId: channelConfig.agentId,
