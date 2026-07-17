@@ -65,6 +65,9 @@ function setAuthDefaults({ components }) {
   setDefault(auth.authPages, 'forgotPassword', '/forgot-password');
   setDefault(auth.authPages, 'resetPassword', '/reset-password');
   setDefault(auth.authPages, 'verifyEmail', '/verify-email');
+  // No default for authPages.acceptInvitation - it must stay unset so the
+  // invitation email falls back to no-CTA copy for apps without an accept
+  // page (the runtime's canBuildAcceptUrl relies on this).
 
   if (!type.isNone(auth.emailAndPassword)) {
     setDefault(auth.emailAndPassword, 'requireEmailVerification', false);

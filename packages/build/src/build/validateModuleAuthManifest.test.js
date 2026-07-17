@@ -107,7 +107,7 @@ test('validateModuleAuthManifest throws on an unknown authPages role', () => {
   expect(() =>
     validateModuleAuthManifest({ auth: { pages: { logIn: 'login' } }, entryId: 'crm' })
   ).toThrow(
-    'Module "crm" manifest "auth.pages" has unknown role "logIn". Valid roles are: signIn, signUp, error, forgotPassword, resetPassword, verifyEmail.'
+    'Module "crm" manifest "auth.pages" has unknown role "logIn". Valid roles are: signIn, signUp, error, forgotPassword, resetPassword, verifyEmail, acceptInvitation.'
   );
 });
 

@@ -213,7 +213,9 @@ test('the point payload reaches the routine as _payload - user.create.before han
     },
   });
   const result = await databaseHooks.user.create.before({ name: 'A', email: 'a@b.c' });
-  expect(result).toEqual({ data: { user: { name: 'A', email: 'a@b.c' } } });
+  expect(result).toEqual({
+    data: { user: { name: 'A', email: 'a@b.c' }, point: 'user.create.before' },
+  });
 });
 
 test('inside a hook routine _user is empty and _secret resolves', async () => {
