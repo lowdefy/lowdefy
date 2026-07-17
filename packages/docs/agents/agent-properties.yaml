@@ -177,6 +177,27 @@ _ref:
                 user's question based on what you find.
             ```
 
+            ## Audio Transcription
+
+            The `transcription` property transcribes audio file parts in incoming user messages (for example Telegram voice notes, or audio uploads in the chat UI) to text before calling the model. Each audio part is replaced with its transcript as a text part, so any chat model can respond to voice input — including models without native audio support.
+
+            - `transcription: object`:
+              - `connectionId: string`: __Required__ - Connection id of an AI provider that supports transcription models, like an [OpenAI](/OpenAI-connection) or [AIGateway](/AIGateway) connection. This can be a different provider than the agent's own connection.
+              - `model: string`: __Required__ - Transcription model id, like `whisper-1` or `gpt-4o-transcribe` on OpenAI, or `openai/whisper-1` through AI Gateway.
+              - `providerOptions: object`: Provider-specific transcription options passed to the AI SDK, like `openai: { language: en }`.
+
+            When `transcription` is not configured, audio file parts pass through to the model untouched — models with native audio support (like Gemini) handle them directly, while other models return an error.
+
+            ###### Claude agent with voice transcription through AI Gateway:
+            ```yaml
+            properties:
+              model: anthropic/claude-sonnet-4.5
+              transcription:
+                connectionId: gateway
+                model: openai/whisper-1
+              instructions: You are a helpful assistant.
+            ```
+
             ## Timeouts and Retries
 
             - `maxRetries: integer`: Default: `2` - Maximum retries on provider errors. Set to `0` to disable.

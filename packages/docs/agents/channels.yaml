@@ -73,6 +73,26 @@ _ref:
 
                 Since there is no chat client to approve tool calls, agent tools configured with `confirm: true` execute automatically on channels.
 
+                ## Voice Notes and Images
+
+                Voice notes and photos sent to the bot are passed to the agent as file parts. Configure [`transcription`](/agent-properties) on the agent to transcribe voice notes to text before the model is called — this makes voice input work with any chat model:
+
+                ```yaml
+                agents:
+                  - id: support-bot
+                    type: AIGatewayAgent
+                    connectionId: gateway
+                    properties:
+                      model: anthropic/claude-sonnet-4.5
+                      transcription:
+                        connectionId: gateway
+                        model: openai/whisper-1
+                ```
+
+                Without `transcription`, audio passes through to the model untouched — models with native audio support (like Gemini) handle voice notes directly, while other models reply with an error message in the chat. Images work natively on all major vision models with no extra configuration. Documents and video are not passed to the agent.
+
+                In conversation history, earlier voice notes and images appear to the agent as `[voice message]` and `[image]` placeholders — only the message that triggers a reply carries the actual media.
+
                 ## Development and Production
 
                 - **Development** (`lowdefy dev`): the bot runs in *polling* mode — no public URL needed, just the bot token.
