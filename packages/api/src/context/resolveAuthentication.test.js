@@ -102,6 +102,7 @@ test('resolves roles from the active member row, splitting the CSV role string',
     roles: ['admin', 'branch-manager'],
     attributes: {},
     activeOrganizationId: 'org_1',
+    organizationId: 'org_1',
   });
 });
 
@@ -118,6 +119,22 @@ test('sets activeOrganizationId from the session so steps can scope org operatio
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user.activeOrganizationId).toBe('org_1');
+});
+
+test('sets organizationId to the active org for tenant stamping and _user: organizationId', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.organizationId).toBe('org_1');
+  expect(context.user.organizationId).toBe(context.user.activeOrganizationId);
 });
 
 test('omits impersonatedBy from context.user when the session is not impersonated', async () => {
