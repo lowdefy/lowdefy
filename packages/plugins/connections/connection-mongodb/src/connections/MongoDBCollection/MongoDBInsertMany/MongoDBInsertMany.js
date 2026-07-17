@@ -15,6 +15,7 @@
 */
 
 import getCollection from '../getCollection.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -26,9 +27,14 @@ async function MongodbInsertMany({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { docs, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { docs } = deserializedRequest;
+  if (tenant) {
+    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+  }
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.insertMany(docs, options);
   if (logCollection) {

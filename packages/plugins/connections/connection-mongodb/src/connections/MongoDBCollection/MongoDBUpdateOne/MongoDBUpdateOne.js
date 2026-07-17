@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,9 +28,15 @@ async function MongodbUpdateOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, update, options, disableNoMatchError } = deserializedRequest;
+  const { options, disableNoMatchError } = deserializedRequest;
+  let { filter, update } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   let response;
   if (logCollection) {

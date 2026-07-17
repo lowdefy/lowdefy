@@ -54,7 +54,9 @@ function createFakeStream({ changes = [], failWith = null } = {}) {
 function createHarness({ changes, failWith } = {}) {
   const stream = createFakeStream({ changes, failWith });
   const collection = { watch: jest.fn(() => stream) };
-  mockGetCollection.mockResolvedValue(collection);
+  // getCollection resolves { client, collection, logCollection } — the
+  // resolver destructures collection off it.
+  mockGetCollection.mockResolvedValue({ collection });
   const publish = jest.fn();
   const abortController = new AbortController();
   return { abortController, collection, publish, stream };

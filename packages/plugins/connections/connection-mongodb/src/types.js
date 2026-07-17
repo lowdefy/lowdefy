@@ -16,6 +16,13 @@
 
 export default {
   connections: ['MongoDBCollection'],
+  // MongoDBCollection implements the tenant scoping contract: the tenant wall
+  // (connection-level `tenant:`) is enforced across all its request types and
+  // the change stream. Declaring `tenant:` on a connection type without this
+  // meta is a build error.
+  connectionMetas: {
+    MongoDBCollection: { tenant: true },
+  },
   requests: [
     'MongoDBAggregation',
     'MongoDBBulkWrite',

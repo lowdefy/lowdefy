@@ -31,6 +31,14 @@ import schema from './schema.js';
 
 export default {
   schema,
+  // MongoDBCollection implements the tenant scoping contract: the request
+  // layer passes the resolved tenant verdict ({ field, value }) to every
+  // resolver, which stamps writes, merges filters, and injects pipeline
+  // matches. The runtime check in resolveTenant reads this meta; the build
+  // check reads connectionMetas in types.js.
+  meta: {
+    tenant: true,
+  },
   requests: {
     MongoDBAggregation,
     MongoDBBulkWrite,

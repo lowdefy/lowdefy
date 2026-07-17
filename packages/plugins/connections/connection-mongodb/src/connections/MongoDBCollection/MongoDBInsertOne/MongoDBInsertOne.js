@@ -15,6 +15,7 @@
 */
 
 import getCollection from '../getCollection.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -26,9 +27,14 @@ async function MongodbInsertOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { doc, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { doc } = deserializedRequest;
+  if (tenant) {
+    doc = stampTenantOnDoc({ doc, tenant });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.insertOne(doc, options);
   if (logCollection) {
