@@ -1442,6 +1442,12 @@ export default {
                 type: 'Auth "authPages.verifyEmail" should be a string.',
               },
             },
+            acceptInvitation: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.acceptInvitation" should be a string.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "authPages" should be an object.',

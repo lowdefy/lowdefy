@@ -19,6 +19,11 @@ import findHookUser from './findHookUser.js';
 // The bindable auth hook points and what each hands the hook routine as
 // _payload - the contract between the hook mechanism and the hook author.
 // Build validation guarantees every configured point is in this catalog.
+//
+// The dispatch layer (createHookDispatch) injects a reserved "point" field
+// onto every payload - the firing point name - so a routine bound to multiple
+// points can branch on _payload.point. buildPayload definitions own the domain
+// data only and must never produce a field named "point".
 // Twin catalog: packages/build/src/build/buildAuth/authHookPoints.js lists
 // the point names build accepts - a point accepted there without a
 // definition here crashes buildHooks at startup; keep the two in sync.

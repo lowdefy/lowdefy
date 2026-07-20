@@ -14,18 +14,27 @@
   limitations under the License.
 */
 
-// The auth page roles an app (auth.authPages) or a module manifest
-// (auth.pages) may fill. Mirrors the authPages keys in lowdefySchema.js - a
-// role added there is added here too. Most also get a path default in
-// setAuthDefaults.js; acceptInvitation is the exception (intentionally unset).
-const authPageRoles = [
-  'signIn',
-  'signUp',
-  'error',
-  'forgotPassword',
-  'resetPassword',
-  'verifyEmail',
-  'acceptInvitation',
-];
+async function getConsecutiveIdIndex({ collection, prefix, session }) {
+  const previous = await collection
+    .aggregate(
+      [
+        { $match: { _id: { $regex: `^${prefix}\\d+$` } } },
+        {
+          $project: {
+            index: { $toInt: { $replaceOne: { input: '$_id', find: prefix, replacement: '' } } },
+          },
+        },
+        {
+          $sort: {
+            index: -1,
+          },
+        },
+        { $limit: 1 },
+      ],
+      { session }
+    )
+    .toArray();
+  return (previous?.[0]?.index ?? 0) + 1;
+}
 
-export default authPageRoles;
+export default getConsecutiveIdIndex;

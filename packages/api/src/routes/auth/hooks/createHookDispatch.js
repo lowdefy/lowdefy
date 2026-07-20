@@ -26,7 +26,12 @@ function createHookDispatch({ createSystemContext, getAuth, hook }) {
   const { buildPayload } = authHookPoints[hook.point];
   return async function dispatchHook(data, ctx) {
     const start = performance.now();
-    const payload = await buildPayload(data, ctx);
+    // point is a reserved envelope key injected onto every payload so a
+    // routine bound to multiple points (which may hand identical domain data,
+    // e.g. user.create.before and email.verified both give { user }) can tell
+    // which point fired. No point's buildPayload produces a "point" field, so
+    // the spread never collides.
+    const payload = { ...(await buildPayload(data, ctx)), point: hook.point };
     // getAuth resolves the BetterAuth instance lazily at fire time - hooks
     // only fire after construction completes, so the accessor is always
     // resolved by now. This is the same chicken-and-egg fix used by the

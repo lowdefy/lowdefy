@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-// The auth page roles an app (auth.authPages) or a module manifest
-// (auth.pages) may fill. Mirrors the authPages keys in lowdefySchema.js - a
-// role added there is added here too. Most also get a path default in
-// setAuthDefaults.js; acceptInvitation is the exception (intentionally unset).
-const authPageRoles = [
-  'signIn',
-  'signUp',
-  'error',
-  'forgotPassword',
-  'resetPassword',
-  'verifyEmail',
-  'acceptInvitation',
-];
+import { MongoClient } from 'mongodb';
 
-export default authPageRoles;
+async function findLogCollectionRecordTestMongoDb({ logCollection, requestId }) {
+  const client = new MongoClient(process.env.MONGO_URL);
+  await client.connect();
+  const db = client.db();
+  const record = await db.collection(logCollection).findOne({ requestId });
+
+  await client.close();
+  return record;
+}
+
+export default findLogCollectionRecordTestMongoDb;
