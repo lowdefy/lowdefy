@@ -16,6 +16,7 @@ A connection can now declare `tenant: true` (or `tenant: { field: ... }`) to wal
 - Every find/findOne/update/delete selector is merged with the caller's organization equality; every insert, replacement, and upsert is stamped server-side with the organization id.
 - Aggregation pipelines get recursive injection at every cross-collection stage — `$lookup` (both forms), `$unionWith`, `$graphLookup` (`restrictSearchWithMatch`), and inside `$facet` branches. `$out`/`$merge` are rejected on tenant connections.
 - Atlas Search support: a pipeline-leading `$search`/`$searchMeta` is rewritten in place with the tenant equality as a `compound.filter` `equals` clause, keeping relevance ordering and `$search`-computed counts tenant-correct. Requires the tenant field to be `token`-mapped in the Atlas Search index (and in `storedSource` where `returnStoredSource` is used).
+- Other first-stage-only aggregation stages: a pipeline-leading `$vectorSearch` gains the tenant equality in its `filter` (requires the tenant field indexed as the `filter` type in the Atlas Vector Search index) plus a trailing `$match`, and `$geoNear` gains it in its `query`. `$collStats`/`$indexStats` are rejected on tenant connections — collection-level statistics cannot be tenant-scoped.
 - Change streams are scoped via a `fullDocument` match with `updateLookup` forced; events that cannot prove they match (deletes) are not delivered, and callers from different organizations never share a change-stream channel.
 - The tenant field may be read but never authored in a write or filter position — authored usage is rejected loudly.
 - Fail-closed everywhere: system-context and strategy callers carry no organization, so requests to tenant connections fail unless the request explicitly declares `tenant: none`, the only opt-out, authored at the point of use.
@@ -25,3 +26,10 @@ A connection can now declare `tenant: true` (or `tenant: { field: ... }`) to wal
 
 - `tenant:` is validated on connections and gated to connection types that implement the scoping contract (v1: `MongoDBCollection`) — declaring it on any other type is a build error.
 - `tenant: none` is validated as the only request/step/websocket-level value.
+
+**Enabling the wall on an existing connection**
+
+Declaring `tenant:` on a connection with existing data is deliberately breaking, in the fail-closed direction:
+
+- Documents without the tenant field fall outside every walled read — backfill the field on existing documents before (or immediately after) enabling the wall.
+- Every system-context caller of the connection (webhook verifiers, hook routines, scheduled endpoints) and every strategy caller starts failing with an `AuthenticationError` until it either runs with an organization or declares `tenant: none` at the point of use.

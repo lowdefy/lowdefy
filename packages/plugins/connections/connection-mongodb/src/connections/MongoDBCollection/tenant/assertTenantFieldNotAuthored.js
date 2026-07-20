@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // The tenant field may be read, but never authored in a write or filter
 // position. In filter and insert positions authoring it is fail-closed
 // already (the injected equality ANDs in; the stamp overwrites), so this scan
@@ -23,18 +25,18 @@
 //
 // The scan is key-based: an object key equal to the tenant field, or a dotted
 // path rooted in it (`organizationId.x`), at any depth of the tree. Values
-// are recursed through plain objects and arrays only - BSON values like
-// ObjectId and Date are leaves.
-function isPlainObject(value) {
-  return value !== null && typeof value === 'object' && value.constructor === Object;
-}
-
+// are recursed through objects and arrays only. type.isObject classifies by
+// shape, not constructor, so null-prototype objects are scanned too - in the
+// update position this scan is the security guard, and an Object.create(null)
+// shape must not slip past it as a leaf. Dates and other recognized kinds
+// stay leaves; recursing into an unrecognized BSON value is harmless (its own
+// keys never spell the tenant field).
 function walk({ node, field, position }) {
-  if (Array.isArray(node)) {
+  if (type.isArray(node)) {
     node.forEach((item) => walk({ node: item, field, position }));
     return;
   }
-  if (!isPlainObject(node)) {
+  if (!type.isObject(node)) {
     return;
   }
   Object.entries(node).forEach(([key, value]) => {

@@ -184,6 +184,37 @@ test('aggregation with $out throws on a tenant connection even when write is all
   );
 });
 
+test('aggregation with a $geoNear first stage only returns tenant docs', async () => {
+  const collection = 'tenantIsolationGeoNear';
+  await populateTestMongoDb({
+    collection,
+    documents: [
+      { _id: 'a1', organizationId: 'org_a', location: { type: 'Point', coordinates: [0, 0] } },
+      { _id: 'b1', organizationId: 'org_b', location: { type: 'Point', coordinates: [0, 0] } },
+    ],
+  });
+  const { collection: testCollection, client } = await getTestCollection({ collection });
+  await testCollection.createIndex({ location: '2dsphere' });
+  await client.close();
+  const connection = makeConnection(collection, { read: true });
+  const res = await MongoDBAggregation({
+    request: {
+      pipeline: [
+        {
+          $geoNear: {
+            near: { type: 'Point', coordinates: [0, 0] },
+            distanceField: 'distance',
+          },
+        },
+        { $project: { organizationId: 1 } },
+      ],
+    },
+    connection,
+    tenant,
+  });
+  expect(res).toEqual([{ _id: 'a1', organizationId: 'org_a' }]);
+});
+
 test('insertOne stamps the tenant field on the doc', async () => {
   const collection = 'tenantIsolationInsertOne';
   await populateTestMongoDb({ collection, documents: [{ _id: 'seed' }] });

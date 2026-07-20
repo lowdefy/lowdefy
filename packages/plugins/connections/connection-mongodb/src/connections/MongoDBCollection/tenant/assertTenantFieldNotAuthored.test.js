@@ -118,6 +118,19 @@ test('scans through arrays', () => {
   ).toThrow('Tenant field "organizationId" can not be set in a query');
 });
 
+test('scans null-prototype objects', () => {
+  const nullProtoDoc = Object.create(null);
+  nullProtoDoc.organizationId = 'org_b';
+  expect(() => assertTenantFieldNotAuthored({ value: nullProtoDoc, field, position })).toThrow(
+    'Tenant field "organizationId" can not be set in a query'
+  );
+  const nested = { $set: Object.create(null) };
+  nested.$set.organizationId = 'org_b';
+  expect(() => assertTenantFieldNotAuthored({ value: nested, field, position })).toThrow(
+    'Tenant field "organizationId" can not be set in a query'
+  );
+});
+
 test('uses the custom tenant field name', () => {
   expect(() =>
     assertTenantFieldNotAuthored({

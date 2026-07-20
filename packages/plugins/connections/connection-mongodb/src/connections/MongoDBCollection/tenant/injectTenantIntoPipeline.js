@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
 // Recursive tenant injection over the whole pipeline tree - not a pass over
@@ -38,8 +40,20 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // storedSource wherever returnStoredSource is used - a documented consumer
 // requirement; a missing mapping fails closed (the equals clause matches
 // nothing).
+//
+// Other first-stage-only stages get the same in-stage treatment: $vectorSearch
+// is rewritten with the tenant equality merged into its `filter` (requires the
+// tenant field indexed as the `filter` type in the Atlas Vector Search index)
+// plus a trailing $match as defense in depth, and $geoNear has the tenant
+// equality merged into its `query` (plain MQL - full server-side enforcement,
+// no index requirement). $collStats and $indexStats are rejected outright:
+// they return collection-wide statistics that can not be tenant-scoped.
 
 // Stage-level $search options that sit beside the operator being wrapped.
+// This allowlist must track Atlas $search stage-level options: an option
+// missing here is wrapped into compound.must as if it were an operator and
+// rejected by Atlas - fail-closed, but a needless error until the key is
+// added.
 const SEARCH_OPTION_KEYS = new Set([
   'index',
   'count',
@@ -53,10 +67,6 @@ const SEARCH_OPTION_KEYS = new Set([
   'tracking',
 ]);
 
-function isPlainObject(value) {
-  return value !== null && typeof value === 'object' && value.constructor === Object;
-}
-
 // The authored-tenant-field rejection extends into $search internals: a
 // clause on the tenant field's path can not bypass the wall (the injected
 // filter still ANDs in), but rejecting it loudly beats a baffling silent
@@ -66,7 +76,7 @@ function assertNoAuthoredSearchPath({ node, field }) {
     node.forEach((item) => assertNoAuthoredSearchPath({ node: item, field }));
     return;
   }
-  if (!isPlainObject(node)) {
+  if (!type.isObject(node)) {
     return;
   }
   Object.entries(node).forEach(([key, value]) => {
@@ -87,7 +97,7 @@ function rewriteSearchBody({ body, tenant }) {
   assertNoAuthoredSearchPath({ node: body, field });
   const equalsClause = { equals: { path: field, value } };
 
-  if (isPlainObject(body.compound)) {
+  if (type.isObject(body.compound)) {
     const existingFilter = body.compound.filter;
     const filter = [
       ...(Array.isArray(existingFilter) ? existingFilter : existingFilter ? [existingFilter] : []),
@@ -112,12 +122,26 @@ function rewriteSearchBody({ body, tenant }) {
   return { ...options, compound };
 }
 
+// $vectorSearch takes a `filter` of MQL match expressions over fields indexed
+// as the `filter` type. The tenant equality is $and-merged in ($eq form -
+// vector search filters take explicit comparison operators), which keeps the
+// top-`limit` candidate set tenant-correct; the caller adds a trailing $match
+// as defense in depth, so a missing filter-type index mapping fails closed
+// rather than open.
+function rewriteVectorSearchBody({ body, tenant }) {
+  const { field, value } = tenant;
+  assertTenantFieldNotAuthored({ value: body.filter, field, position: 'a $vectorSearch filter' });
+  const equalsExpression = { [field]: { $eq: value } };
+  const filter = body.filter ? { $and: [body.filter, equalsExpression] } : equalsExpression;
+  return { ...body, filter };
+}
+
 function injectTenantIntoPipeline({ pipeline, tenant }) {
   const { field, value } = tenant;
   const tenantMatch = () => ({ $match: { [field]: value } });
 
   function transformStage(stage) {
-    if (!isPlainObject(stage)) {
+    if (!type.isObject(stage)) {
       return stage;
     }
     if (stage.$out !== undefined || stage.$merge !== undefined) {
@@ -125,11 +149,16 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
         'Aggregation pipelines on a tenant connection can not contain "$out" or "$merge" - they write whole collections outside the tenant stamp path.'
       );
     }
+    if (stage.$collStats !== undefined || stage.$indexStats !== undefined) {
+      throw new Error(
+        'Aggregation pipelines on a tenant connection can not contain "$collStats" or "$indexStats" - collection-level statistics can not be tenant-scoped.'
+      );
+    }
     if (stage.$match !== undefined) {
       assertTenantFieldNotAuthored({ value: stage.$match, field, position: 'a $match stage' });
       return stage;
     }
-    if (isPlainObject(stage.$lookup)) {
+    if (type.isObject(stage.$lookup)) {
       const lookup = stage.$lookup;
       // A localField/foreignField lookup gains a pipeline (valid since
       // MongoDB 5.0 - it filters the joined docs in addition to the equality
@@ -141,12 +170,15 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       if (typeof unionWith === 'string') {
         return { ...stage, $unionWith: { coll: unionWith, pipeline: injectEntry([]) } };
       }
-      if (isPlainObject(unionWith)) {
-        return { ...stage, $unionWith: { ...unionWith, pipeline: injectEntry(unionWith.pipeline ?? []) } };
+      if (type.isObject(unionWith)) {
+        return {
+          ...stage,
+          $unionWith: { ...unionWith, pipeline: injectEntry(unionWith.pipeline ?? []) },
+        };
       }
       return stage;
     }
-    if (isPlainObject(stage.$graphLookup)) {
+    if (type.isObject(stage.$graphLookup)) {
       const graphLookup = stage.$graphLookup;
       const restrict = graphLookup.restrictSearchWithMatch;
       assertTenantFieldNotAuthored({
@@ -157,7 +189,7 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       const merged = restrict ? { $and: [restrict, { [field]: value }] } : { [field]: value };
       return { ...stage, $graphLookup: { ...graphLookup, restrictSearchWithMatch: merged } };
     }
-    if (isPlainObject(stage.$facet)) {
+    if (type.isObject(stage.$facet)) {
       // A branch in the walk, not a terminal: the documents entering a facet
       // are already tenant-filtered, but each sub-pipeline may reach another
       // collection - recurse without re-injecting at the entry. (MongoDB
@@ -176,11 +208,11 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
   function injectEntry(stages) {
     const transformed = (stages ?? []).map(transformStage);
     const first = transformed[0];
-    if (isPlainObject(first) && isPlainObject(first.$search)) {
+    if (type.isObject(first) && type.isObject(first.$search)) {
       const rewritten = { ...first, $search: rewriteSearchBody({ body: first.$search, tenant }) };
       return [rewritten, tenantMatch(), ...transformed.slice(1)];
     }
-    if (isPlainObject(first) && isPlainObject(first.$searchMeta)) {
+    if (type.isObject(first) && type.isObject(first.$searchMeta)) {
       // $searchMeta returns metadata documents (counts, facets) that carry no
       // tenant field - the in-stage filter is the whole enforcement, a
       // trailing $match would blank correct results.
@@ -189,6 +221,23 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
         $searchMeta: rewriteSearchBody({ body: first.$searchMeta, tenant }),
       };
       return [rewritten, ...transformed.slice(1)];
+    }
+    if (type.isObject(first) && type.isObject(first.$vectorSearch)) {
+      const rewritten = {
+        ...first,
+        $vectorSearch: rewriteVectorSearchBody({ body: first.$vectorSearch, tenant }),
+      };
+      return [rewritten, tenantMatch(), ...transformed.slice(1)];
+    }
+    if (type.isObject(first) && type.isObject(first.$geoNear)) {
+      // $geoNear's `query` is plain MQL applied server-side against the
+      // documents - merging the tenant equality there is full enforcement.
+      const geoNear = first.$geoNear;
+      assertTenantFieldNotAuthored({ value: geoNear.query, field, position: 'a $geoNear query' });
+      const query = geoNear.query
+        ? { $and: [geoNear.query, { [field]: value }] }
+        : { [field]: value };
+      return [{ ...first, $geoNear: { ...geoNear, query } }, ...transformed.slice(1)];
     }
     return [tenantMatch(), ...transformed];
   }

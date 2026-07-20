@@ -503,6 +503,170 @@ test('allows a $search path that only shares the tenant field prefix', () => {
   ]);
 });
 
+test('a stage-0 $vectorSearch without a filter gains the tenant filter and a trailing $match', () => {
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $vectorSearch: {
+            index: 'vector_index',
+            path: 'embedding',
+            queryVector: [0.1, 0.2],
+            numCandidates: 100,
+            limit: 10,
+          },
+        },
+        { $project: { name: 1 } },
+      ],
+      tenant,
+    })
+  ).toEqual([
+    {
+      $vectorSearch: {
+        index: 'vector_index',
+        path: 'embedding',
+        queryVector: [0.1, 0.2],
+        numCandidates: 100,
+        limit: 10,
+        filter: { organizationId: { $eq: 'org_a' } },
+      },
+    },
+    tenantMatch,
+    { $project: { name: 1 } },
+  ]);
+});
+
+test('a stage-0 $vectorSearch with an existing filter merges with $and', () => {
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $vectorSearch: {
+            index: 'vector_index',
+            path: 'embedding',
+            queryVector: [0.1],
+            limit: 5,
+            filter: { status: { $eq: 'open' } },
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toEqual([
+    {
+      $vectorSearch: {
+        index: 'vector_index',
+        path: 'embedding',
+        queryVector: [0.1],
+        limit: 5,
+        filter: { $and: [{ status: { $eq: 'open' } }, { organizationId: { $eq: 'org_a' } }] },
+      },
+    },
+    tenantMatch,
+  ]);
+});
+
+test('throws when a $vectorSearch filter authors the tenant field', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $vectorSearch: {
+            index: 'vector_index',
+            path: 'embedding',
+            queryVector: [0.1],
+            limit: 5,
+            filter: { organizationId: { $eq: 'org_b' } },
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toThrow('Tenant field "organizationId" can not be set in a $vectorSearch filter');
+});
+
+test('a stage-0 $geoNear without a query gains the tenant query', () => {
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $geoNear: {
+            near: { type: 'Point', coordinates: [1, 2] },
+            distanceField: 'distance',
+          },
+        },
+        { $limit: 10 },
+      ],
+      tenant,
+    })
+  ).toEqual([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [1, 2] },
+        distanceField: 'distance',
+        query: { organizationId: 'org_a' },
+      },
+    },
+    { $limit: 10 },
+  ]);
+});
+
+test('a stage-0 $geoNear with a query merges with $and', () => {
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $geoNear: {
+            near: { type: 'Point', coordinates: [1, 2] },
+            distanceField: 'distance',
+            query: { status: 'open' },
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toEqual([
+    {
+      $geoNear: {
+        near: { type: 'Point', coordinates: [1, 2] },
+        distanceField: 'distance',
+        query: { $and: [{ status: 'open' }, { organizationId: 'org_a' }] },
+      },
+    },
+  ]);
+});
+
+test('throws when a $geoNear query authors the tenant field', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $geoNear: {
+            near: { type: 'Point', coordinates: [1, 2] },
+            distanceField: 'distance',
+            query: { organizationId: 'org_b' },
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toThrow('Tenant field "organizationId" can not be set in a $geoNear query');
+});
+
+test('throws on $collStats', () => {
+  expect(() =>
+    injectTenantIntoPipeline({ pipeline: [{ $collStats: { count: {} } }], tenant })
+  ).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$collStats" or "$indexStats" - collection-level statistics can not be tenant-scoped.'
+  );
+});
+
+test('throws on $indexStats', () => {
+  expect(() => injectTenantIntoPipeline({ pipeline: [{ $indexStats: {} }], tenant })).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$collStats" or "$indexStats"'
+  );
+});
+
 test('passes a non-object stage through for the driver to reject', () => {
   expect(injectTenantIntoPipeline({ pipeline: ['not-a-stage'], tenant })).toEqual([
     tenantMatch,
