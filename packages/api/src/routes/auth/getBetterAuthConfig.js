@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
+
 import { genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
@@ -224,6 +226,10 @@ function getBetterAuthConfig({
     },
     advanced: {
       cookiePrefix: resolveCookiePrefix({ appMeta, dev }),
+      // Decision 7: function-form generateId. The vendored adapter stores a
+      // function result verbatim as a plain string (no ObjectId/UUID-binary
+      // coercion), so all ids are plain UUID strings that native reads match.
+      database: { generateId: () => randomUUID() },
     },
     plugins: [],
   };

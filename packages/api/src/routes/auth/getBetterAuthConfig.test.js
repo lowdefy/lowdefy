@@ -949,6 +949,23 @@ test('sets cookie prefix to lowdefy in production', () => {
   expect(options.advanced.cookiePrefix).toBe('lowdefy');
 });
 
+test('sets function-form advanced.database.generateId that returns a plain UUID string', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  // Decision 7: a function keeps the adapter off its ObjectId/UUID-binary
+  // coercion paths, so the stored id is a plain UUID string.
+  expect(typeof options.advanced.database.generateId).toBe('function');
+  const id = options.advanced.database.generateId();
+  expect(typeof id).toBe('string');
+  expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+});
+
 test('assembles databaseHooks from auth.hooks bindings', () => {
   const options = getBetterAuthConfig({
     appMeta,
