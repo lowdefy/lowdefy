@@ -1083,7 +1083,7 @@ test('buildPageJit collects the unavailable-projection error when no projection 
   ).rejects.toThrow('build failed with');
   expect(
     context.errors.some((e) =>
-      e.message.includes('_build.authConfig cannot be used inside the auth block')
+      e.message.includes('_build.authConfig is not available here.')
     )
   ).toBe(true);
 });

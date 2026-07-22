@@ -102,9 +102,9 @@ test('_authConfig throws for non-string params', () => {
   expect(() => _authConfig({ authConfig, params: true })).toThrow('unreadable path');
 });
 
-test('_authConfig throws self-reference error when projection is not available', () => {
+test('_authConfig throws the boundary error when projection is not available', () => {
   expect(() => _authConfig({ authConfig: undefined, params: 'providers' })).toThrow(
-    '_build.authConfig cannot be used inside the auth block'
+    '_build.authConfig is not available here.'
   );
 });
 
@@ -133,8 +133,8 @@ test('_authConfig returns a copy of roles so config cannot mutate the projection
   expect(authConfig.roles[0].id).toBe('admin');
 });
 
-test('_authConfig throws self-reference error for roles when projection is not available', () => {
+test('_authConfig throws the boundary error for roles when projection is not available', () => {
   expect(() => _authConfig({ authConfig: undefined, params: 'roles' })).toThrow(
-    '_build.authConfig cannot be used inside the auth block'
+    '_build.authConfig is not available here.'
   );
 });

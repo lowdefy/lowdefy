@@ -39,10 +39,13 @@ const readablePaths = [
 // to the client or server at runtime.
 function _authConfig({ authConfig, params }) {
   if (type.isUndefined(authConfig)) {
-    // The projection is threaded everywhere except while the auth: block
-    // itself resolves — the self-reference rule.
+    // The projection is present on the build context after the pre-pass, so an
+    // undefined projection means the operator ran somewhere it does not exist
+    // yet: inside the auth: block during the pre-pass (self-reference), or in
+    // config that resolves earlier (app metadata, module entry vars). One
+    // honest message names the boundary without asserting a single cause.
     throw new Error(
-      '_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves.'
+      '_build.authConfig is not available here. The auth config projection is computed after module registration, so it resolves in module pages, api, connections, and app config — but not inside the auth: block itself, nor in config that resolves earlier (app metadata app:, module entry vars modules[].vars).'
     );
   }
   if (!readablePaths.includes(params)) {

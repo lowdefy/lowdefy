@@ -3,10 +3,10 @@
     {
       "mode": "prod",
       "errors": [
-        "_build.authConfig cannot be used inside the auth block"
+        "_build.authConfig is not available here."
       ],
       "errorContains": [
-        "_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves."
+        "_build.authConfig is not available here. The auth config projection is computed after module registration, so it resolves in module pages, api, connections, and app config — but not inside the auth: block itself, nor in config that resolves earlier (app metadata app:, module entry vars modules[].vars)."
       ]
     }
   ]

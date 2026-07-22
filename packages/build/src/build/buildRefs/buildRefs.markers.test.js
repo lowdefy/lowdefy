@@ -744,7 +744,7 @@ oops:
     await buildRefs({ context });
     expect(context.errors).toHaveLength(1);
     expect(context.errors[0].message).toContain(
-      '_build.authConfig cannot be used inside the auth block'
+      '_build.authConfig is not available here.'
     );
   });
 });
