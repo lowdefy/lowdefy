@@ -16,13 +16,13 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
+function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
   const { home, pageId, urlQuery, url } = callbackUrl;
 
   const targets = [home, pageId, url].filter((target) => target);
   if (targets.length > 1) {
     throw new Error(
-      `Invalid callbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
+      `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
@@ -46,8 +46,8 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
 // target is empty. Shared by callbackUrl and its magic-link/social siblings
 // so basePath handling lives in one place. Off-site safety for the resolved
 // URL is BetterAuth's server-side originCheck / trustedOrigins, not here.
-function resolveTargetURL({ lowdefy, callbackUrl }) {
-  const explicit = getCallbackUrl({ lowdefy, callbackUrl });
+function resolveTargetURL({ lowdefy, callbackUrl, name }) {
+  const explicit = getCallbackUrl({ lowdefy, callbackUrl, name });
   if (type.isNone(explicit)) {
     return undefined;
   }
@@ -125,11 +125,19 @@ function createAuthMethods(lowdefy, auth) {
     // resolve each as a structured target and forward only the ones the app
     // supplied, so BetterAuth's own default-to-callbackURL stands otherwise.
     const routingCallbacks = {};
-    const newUserCallbackURL = resolveTargetURL({ lowdefy, callbackUrl: newUserCallbackUrl });
+    const newUserCallbackURL = resolveTargetURL({
+      lowdefy,
+      callbackUrl: newUserCallbackUrl,
+      name: 'newUserCallbackUrl',
+    });
     if (!type.isNone(newUserCallbackURL)) {
       routingCallbacks.newUserCallbackURL = newUserCallbackURL;
     }
-    const errorCallbackURL = resolveTargetURL({ lowdefy, callbackUrl: errorCallbackUrl });
+    const errorCallbackURL = resolveTargetURL({
+      lowdefy,
+      callbackUrl: errorCallbackUrl,
+      name: 'errorCallbackUrl',
+    });
     if (!type.isNone(errorCallbackURL)) {
       routingCallbacks.errorCallbackURL = errorCallbackURL;
     }

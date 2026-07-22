@@ -690,10 +690,26 @@ test('login with magicLink passes an absolute url target through unchanged, with
   await login({
     email: 'user@example.com',
     magicLink: true,
+    newUserCallbackUrl: { url: 'https://example.com/welcome' },
     errorCallbackUrl: { url: 'https://example.com/expired' },
   });
-  expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual(
-    'https://example.com/expired'
+  const call = auth.signInMagicLink.mock.calls[0][0];
+  expect(call.newUserCallbackURL).toEqual('https://example.com/welcome');
+  expect(call.errorCallbackURL).toEqual('https://example.com/expired');
+});
+
+test('login names the offending param when an errorCallbackUrl target is ambiguous', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(
+    login({
+      email: 'user@example.com',
+      magicLink: true,
+      errorCallbackUrl: { pageId: 'expired', url: 'https://example.com/expired' },
+    })
+  ).rejects.toThrow(
+    "Invalid errorCallbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."
   );
 });
 
