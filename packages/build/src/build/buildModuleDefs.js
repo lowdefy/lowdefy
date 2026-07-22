@@ -17,7 +17,6 @@
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
-import { assertNoPlaceholderLeaks } from './buildRefs/deferredRegistry.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
@@ -26,7 +25,6 @@ import fetchModules from './fetchModules.js';
 import {
   resolveLocalManifest,
   recordifyExportables,
-  resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
 import resolveModuleDependencies from './resolveModuleDependencies.js';
@@ -184,15 +182,6 @@ async function buildModuleDefs({ context }) {
   for (const entry of moduleEntries) {
     await sweepEntryConfig({ moduleEntry: context.modules[entry.id], context });
   }
-
-  // Step 3: Full resolve — cross-module refs, preserved content
-  for (const entryId of Object.keys(context.modules)) {
-    await resolveFullManifest({ entryId, context });
-  }
-
-  // Post-sweep invariant: no deferred placeholder survives outside the
-  // per-consumer slots (manifest component/menu bodies, varDefs defaults).
-  assertNoPlaceholderLeaks(context);
 }
 
 export default buildModuleDefs;

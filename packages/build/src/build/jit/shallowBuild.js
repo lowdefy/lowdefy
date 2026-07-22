@@ -36,6 +36,7 @@ import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
+import { resolveModuleManifests } from '../registerModules.js';
 import buildModules from '../buildModules.js';
 import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
@@ -99,6 +100,10 @@ async function shallowBuild(options) {
     // _build.authConfig projection so the operator can resolve during buildRefs
     // and the dev server's JIT page walks (matches the full build in index.js).
     await resolveAuthConfigProjection({ context });
+
+    // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
+    // that the projection exists (matches the full build in index.js).
+    await resolveModuleManifests({ context });
 
 
     let components;
