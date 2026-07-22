@@ -643,6 +643,129 @@ test('login with magicLink threads captchaToken into the magic-link call', async
   expect(auth.signInMagicLink.mock.calls[0][0].captchaToken).toBeUndefined();
 });
 
+test('login with magicLink forwards newUserCallbackUrl and errorCallbackUrl as resolved targets', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    magicLink: true,
+    callbackUrl: { pageId: 'dashboard' },
+    newUserCallbackUrl: { pageId: 'welcome' },
+    errorCallbackUrl: { pageId: 'link-expired' },
+  });
+  expect(auth.signInMagicLink.mock.calls).toEqual([
+    [
+      {
+        email: 'user@example.com',
+        callbackURL: '/dashboard',
+        newUserCallbackURL: '/welcome',
+        errorCallbackURL: '/link-expired',
+      },
+    ],
+  ]);
+});
+
+test('login with magicLink basePath-prefixes newUserCallbackUrl and errorCallbackUrl like callbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/base';
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    magicLink: true,
+    newUserCallbackUrl: { pageId: 'welcome' },
+    errorCallbackUrl: { pageId: 'link-expired' },
+  });
+  const call = auth.signInMagicLink.mock.calls[0][0];
+  expect(call.newUserCallbackURL).toEqual('/base/welcome');
+  expect(call.errorCallbackURL).toEqual('/base/link-expired');
+});
+
+test('login with magicLink passes an absolute url target through unchanged, without basePath', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/base';
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    magicLink: true,
+    errorCallbackUrl: { url: 'https://example.com/expired' },
+  });
+  expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual(
+    'https://example.com/expired'
+  );
+});
+
+test('login with magicLink omits newUserCallbackURL and errorCallbackURL when the params are absent', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true, callbackUrl: { pageId: 'dashboard' } });
+  const call = auth.signInMagicLink.mock.calls[0][0];
+  expect('newUserCallbackURL' in call).toBe(false);
+  expect('errorCallbackURL' in call).toBe(false);
+});
+
+test('login does not read the ?callbackUrl= query fallback for newUserCallbackUrl or errorCallbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=/from-query';
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  const call = auth.signInMagicLink.mock.calls[0][0];
+  // The primary callbackUrl still honors the query fallback...
+  expect(call.callbackURL).toEqual('/from-query');
+  // ...but the two new params have no query source and are omitted.
+  expect('newUserCallbackURL' in call).toBe(false);
+  expect('errorCallbackURL' in call).toBe(false);
+});
+
+test('login with a social provider forwards newUserCallbackUrl and errorCallbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'google',
+    callbackUrl: { pageId: 'dashboard' },
+    newUserCallbackUrl: { pageId: 'welcome' },
+    errorCallbackUrl: { pageId: 'sign-in-failed' },
+  });
+  expect(auth.signInSocial.mock.calls).toEqual([
+    [
+      {
+        provider: 'google',
+        callbackURL: '/dashboard',
+        newUserCallbackURL: '/welcome',
+        errorCallbackURL: '/sign-in-failed',
+      },
+    ],
+  ]);
+});
+
+test('login with a GenericOAuth provider forwards newUserCallbackUrl and errorCallbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'keycloak', type: 'GenericOAuth' }];
+  auth.signInOauth2 = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    providerId: 'keycloak',
+    newUserCallbackUrl: { pageId: 'welcome' },
+    errorCallbackUrl: { pageId: 'sign-in-failed' },
+  });
+  expect(auth.signInOauth2.mock.calls).toEqual([
+    [
+      {
+        providerId: 'keycloak',
+        callbackURL: undefined,
+        newUserCallbackURL: '/welcome',
+        errorCallbackURL: '/sign-in-failed',
+      },
+    ],
+  ]);
+});
+
 test('login with phoneNumber threads captchaToken into the phone sign-in call', async () => {
   const { auth, lowdefy } = setup();
   const { login } = createAuthMethods(lowdefy, auth);
