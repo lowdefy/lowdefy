@@ -21,10 +21,16 @@ import { type } from '@lowdefy/helpers';
 // the compute half: resolve the tenant field and the caller's organization id
 // for a request against a tenant connection, or fail closed.
 //
+// The request-level sentinel is three-valued (amendment-1):
 // - No `tenant:` on the connection -> null verdict, nothing injected.
 // - `tenant: 'none'` on the request/step/websocket -> null verdict. This is
 //   the ONLY opt-out: a visible, reviewable statement at the point of use.
 //   There is no silent fallback and no connection-level "off".
+// - `tenant: 'authored'` on the request -> the verdict resolves exactly as
+//   the default (an org-less caller is still rejected) and carries
+//   authored: true, telling the connection resolver to AUDIT the request's
+//   own tenant clause (stages the wall can not scope mechanically) instead
+//   of injecting one. Aggregation-only; other operations refuse the marker.
 // - Otherwise the caller must carry an organization (context.user.organizationId,
 //   the active org in string form). System context (hook routines, scheduled
 //   jobs) and strategy callers have none, so they fail here by design - the
@@ -56,6 +62,9 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
     throw new AuthenticationError(
       `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request outside the wall, declare tenant: none on it and author the organization value explicitly.`
     );
+  }
+  if (requestConfig.tenant === 'authored') {
+    return { field, value, authored: true };
   }
   return { field, value };
 }

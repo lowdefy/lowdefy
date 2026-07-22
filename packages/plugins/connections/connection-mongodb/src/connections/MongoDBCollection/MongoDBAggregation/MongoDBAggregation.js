@@ -37,10 +37,13 @@ async function MongodbAggregation({ request, connection, tenant }) {
   let { pipeline } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
   if (tenant) {
-    // Recursive injection over the whole pipeline tree - $lookup, $unionWith,
-    // $graphLookup, $facet branches, and the $search/$searchMeta entry stages.
-    // Also rejects $out/$merge outright on tenant connections (they write
-    // whole collections outside the stamp path, even when write is allowed).
+    // Recursive $match prepend over the whole pipeline tree - $lookup,
+    // $unionWith, and $facet branches. First-stage-only entry stages and
+    // $graphLookup are refused unless the verdict carries authored: true
+    // (tenant: authored on the request), in which case the developer-authored
+    // tenant clause is audited against the verdict instead. Also rejects
+    // $out/$merge outright on tenant connections (they write whole
+    // collections outside the stamp path, even when write is allowed).
     pipeline = injectTenantIntoPipeline({ pipeline, tenant });
   }
   const { collection } = await getCollection({ connection });

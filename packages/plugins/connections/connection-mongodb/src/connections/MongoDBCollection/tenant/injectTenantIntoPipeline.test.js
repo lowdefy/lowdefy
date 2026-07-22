@@ -17,6 +17,7 @@
 import injectTenantIntoPipeline from './injectTenantIntoPipeline.js';
 
 const tenant = { field: 'organizationId', value: 'org_a' };
+const authoredTenant = { field: 'organizationId', value: 'org_a', authored: true };
 const tenantMatch = { $match: { organizationId: 'org_a' } };
 const equalsClause = { equals: { path: 'organizationId', value: 'org_a' } };
 
@@ -193,96 +194,6 @@ test('object form $unionWith without a pipeline gains one', () => {
   ).toEqual([tenantMatch, { $unionWith: { coll: 'other', pipeline: [tenantMatch] } }]);
 });
 
-test('a $unionWith pipeline that starts with $search is rewritten at its entry', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $unionWith: {
-            coll: 'other',
-            pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }],
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    tenantMatch,
-    {
-      $unionWith: {
-        coll: 'other',
-        pipeline: [
-          {
-            $search: {
-              compound: { must: [{ text: { query: 'q', path: 'name' } }], filter: [equalsClause] },
-            },
-          },
-          tenantMatch,
-        ],
-      },
-    },
-  ]);
-});
-
-test('$graphLookup without restrictSearchWithMatch gains the tenant equality', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $graphLookup: {
-            from: 'other',
-            startWith: '$a',
-            connectFromField: 'a',
-            connectToField: 'b',
-            as: 'j',
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    tenantMatch,
-    {
-      $graphLookup: {
-        from: 'other',
-        startWith: '$a',
-        connectFromField: 'a',
-        connectToField: 'b',
-        as: 'j',
-        restrictSearchWithMatch: { organizationId: 'org_a' },
-      },
-    },
-  ]);
-});
-
-test('$graphLookup with restrictSearchWithMatch merges with $and', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [{ $graphLookup: { from: 'other', restrictSearchWithMatch: { status: 'open' } } }],
-      tenant,
-    })
-  ).toEqual([
-    tenantMatch,
-    {
-      $graphLookup: {
-        from: 'other',
-        restrictSearchWithMatch: { $and: [{ status: 'open' }, { organizationId: 'org_a' }] },
-      },
-    },
-  ]);
-});
-
-test('$graphLookup with an authored tenant field in restrictSearchWithMatch throws', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [
-        { $graphLookup: { from: 'other', restrictSearchWithMatch: { organizationId: 'org_b' } } },
-      ],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be set in restrictSearchWithMatch');
-});
-
 test('$facet branches are recursed without entry injection', () => {
   expect(
     injectTenantIntoPipeline({
@@ -315,342 +226,6 @@ test('$facet branches are recursed without entry injection', () => {
       },
     },
   ]);
-});
-
-test('a stage-0 bare operator $search is wrapped in compound with a tenant filter', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $search: {
-            index: 'default',
-            text: { query: 'q', path: 'name' },
-            count: { type: 'total' },
-            highlight: { path: 'name' },
-            returnStoredSource: true,
-            sort: { score: { $meta: 'searchScore' } },
-          },
-        },
-        { $limit: 10 },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $search: {
-        index: 'default',
-        count: { type: 'total' },
-        highlight: { path: 'name' },
-        returnStoredSource: true,
-        sort: { score: { $meta: 'searchScore' } },
-        compound: { must: [{ text: { query: 'q', path: 'name' } }], filter: [equalsClause] },
-      },
-    },
-    tenantMatch,
-    { $limit: 10 },
-  ]);
-});
-
-test('a stage-0 $search with a compound filter array appends the tenant clause', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $search: {
-            compound: {
-              must: [{ text: { query: 'q', path: 'name' } }],
-              filter: [{ range: { path: 'age', gte: 18 } }],
-            },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $search: {
-        compound: {
-          must: [{ text: { query: 'q', path: 'name' } }],
-          filter: [{ range: { path: 'age', gte: 18 } }, equalsClause],
-        },
-      },
-    },
-    tenantMatch,
-  ]);
-});
-
-test('a stage-0 $search with a single object compound filter becomes an array', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $search: {
-            compound: {
-              must: [{ text: { query: 'q', path: 'name' } }],
-              filter: { range: { path: 'age', gte: 18 } },
-            },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $search: {
-        compound: {
-          must: [{ text: { query: 'q', path: 'name' } }],
-          filter: [{ range: { path: 'age', gte: 18 } }, equalsClause],
-        },
-      },
-    },
-    tenantMatch,
-  ]);
-});
-
-test('a stage-0 $search compound without a filter gains one', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [{ $search: { compound: { must: [{ text: { query: 'q', path: 'name' } }] } } }],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $search: {
-        compound: { must: [{ text: { query: 'q', path: 'name' } }], filter: [equalsClause] },
-      },
-    },
-    tenantMatch,
-  ]);
-});
-
-test('a stage-0 $searchMeta is rewritten without a trailing $match', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [{ $searchMeta: { index: 'default', count: { type: 'total' } } }],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $searchMeta: {
-        index: 'default',
-        count: { type: 'total' },
-        compound: { filter: [equalsClause] },
-      },
-    },
-  ]);
-});
-
-test('throws when a $search path uses the tenant field', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [{ $search: { text: { query: 'org_b', path: 'organizationId' } } }],
-      tenant,
-    })
-  ).toThrow(
-    'Tenant field "organizationId" can not be used as a $search path on a tenant connection - the tenant wall injects the organization filter mechanically.'
-  );
-});
-
-test('throws when a $search path array includes the tenant field', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [{ $search: { text: { query: 'q', path: ['name', 'organizationId'] } } }],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be used as a $search path');
-});
-
-test('throws when a $search path uses a dotted tenant field path', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [{ $search: { text: { query: 'q', path: 'organizationId.x' } } }],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be used as a $search path');
-});
-
-test('throws when a nested $search compound clause paths the tenant field', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $search: {
-            compound: { filter: [{ equals: { path: 'organizationId', value: 'org_b' } }] },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be used as a $search path');
-});
-
-test('allows a $search path that only shares the tenant field prefix', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [{ $search: { text: { query: 'q', path: 'organizationIdentifier' } } }],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $search: {
-        compound: {
-          must: [{ text: { query: 'q', path: 'organizationIdentifier' } }],
-          filter: [equalsClause],
-        },
-      },
-    },
-    tenantMatch,
-  ]);
-});
-
-test('a stage-0 $vectorSearch without a filter gains the tenant filter and a trailing $match', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $vectorSearch: {
-            index: 'vector_index',
-            path: 'embedding',
-            queryVector: [0.1, 0.2],
-            numCandidates: 100,
-            limit: 10,
-          },
-        },
-        { $project: { name: 1 } },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $vectorSearch: {
-        index: 'vector_index',
-        path: 'embedding',
-        queryVector: [0.1, 0.2],
-        numCandidates: 100,
-        limit: 10,
-        filter: { organizationId: { $eq: 'org_a' } },
-      },
-    },
-    tenantMatch,
-    { $project: { name: 1 } },
-  ]);
-});
-
-test('a stage-0 $vectorSearch with an existing filter merges with $and', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $vectorSearch: {
-            index: 'vector_index',
-            path: 'embedding',
-            queryVector: [0.1],
-            limit: 5,
-            filter: { status: { $eq: 'open' } },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $vectorSearch: {
-        index: 'vector_index',
-        path: 'embedding',
-        queryVector: [0.1],
-        limit: 5,
-        filter: { $and: [{ status: { $eq: 'open' } }, { organizationId: { $eq: 'org_a' } }] },
-      },
-    },
-    tenantMatch,
-  ]);
-});
-
-test('throws when a $vectorSearch filter authors the tenant field', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $vectorSearch: {
-            index: 'vector_index',
-            path: 'embedding',
-            queryVector: [0.1],
-            limit: 5,
-            filter: { organizationId: { $eq: 'org_b' } },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be set in a $vectorSearch filter');
-});
-
-test('a stage-0 $geoNear without a query gains the tenant query', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $geoNear: {
-            near: { type: 'Point', coordinates: [1, 2] },
-            distanceField: 'distance',
-          },
-        },
-        { $limit: 10 },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $geoNear: {
-        near: { type: 'Point', coordinates: [1, 2] },
-        distanceField: 'distance',
-        query: { organizationId: 'org_a' },
-      },
-    },
-    { $limit: 10 },
-  ]);
-});
-
-test('a stage-0 $geoNear with a query merges with $and', () => {
-  expect(
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $geoNear: {
-            near: { type: 'Point', coordinates: [1, 2] },
-            distanceField: 'distance',
-            query: { status: 'open' },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toEqual([
-    {
-      $geoNear: {
-        near: { type: 'Point', coordinates: [1, 2] },
-        distanceField: 'distance',
-        query: { $and: [{ status: 'open' }, { organizationId: 'org_a' }] },
-      },
-    },
-  ]);
-});
-
-test('throws when a $geoNear query authors the tenant field', () => {
-  expect(() =>
-    injectTenantIntoPipeline({
-      pipeline: [
-        {
-          $geoNear: {
-            near: { type: 'Point', coordinates: [1, 2] },
-            distanceField: 'distance',
-            query: { organizationId: 'org_b' },
-          },
-        },
-      ],
-      tenant,
-    })
-  ).toThrow('Tenant field "organizationId" can not be set in a $geoNear query');
 });
 
 test('throws on $collStats', () => {
@@ -692,4 +267,327 @@ test('uses the custom tenant field name', () => {
   expect(() =>
     injectTenantIntoPipeline({ pipeline: [{ $match: { tenantId: 't_2' } }], tenant: customTenant })
   ).toThrow('Tenant field "tenantId" can not be set in a $match stage');
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Refusal: stages the wall can not scope mechanically (amendment-1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test.each(['$search', '$searchMeta'])('refuses a %s entry stage without authored', (stageKey) => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ [stageKey]: { text: { query: 'q', path: 'name' } } }],
+      tenant,
+    })
+  ).toThrow(
+    `Aggregation pipelines on a tenant connection can not contain "${stageKey}" unless the request declares "tenant: authored"`
+  );
+});
+
+test('refuses a $vectorSearch entry stage without authored', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $vectorSearch: { index: 'v', queryVector: [0.1], path: 'e', limit: 5 } }],
+      tenant,
+    })
+  ).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$vectorSearch" unless the request declares "tenant: authored"'
+  );
+});
+
+test('refuses a $geoNear entry stage without authored', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $geoNear: { near: { type: 'Point', coordinates: [0, 0] }, distanceField: 'd' } }],
+      tenant,
+    })
+  ).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$geoNear" unless the request declares "tenant: authored"'
+  );
+});
+
+test('refuses $graphLookup without authored', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $graphLookup: {
+            from: 'other',
+            startWith: '$a',
+            connectFromField: 'a',
+            connectToField: 'b',
+            as: 'j',
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$graphLookup" unless the request declares "tenant: authored"'
+  );
+});
+
+test('refuses a $search entry inside a $unionWith sub-pipeline without authored', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $unionWith: {
+            coll: 'other',
+            pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }],
+          },
+        },
+      ],
+      tenant,
+    })
+  ).toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$search" unless the request declares "tenant: authored"'
+  );
+});
+
+test('the refusal error carries the fix snippet', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }],
+      tenant,
+    })
+  ).toThrow('_user: organizationId');
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Authored: the audit accepts a correct clause and never rewrites the stage
+// ─────────────────────────────────────────────────────────────────────────────
+
+test('authored $search with the org equals in compound.filter passes untouched, no trailing $match', () => {
+  const search = {
+    $search: {
+      returnStoredSource: true,
+      compound: {
+        filter: [{ compound: { must: [{ text: { query: 'q', path: 'name' } }] } }, equalsClause],
+      },
+    },
+  };
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [search, { $limit: 10 }],
+      tenant: authoredTenant,
+    })
+  ).toEqual([search, { $limit: 10 }]);
+});
+
+test('authored $searchMeta with the org equals passes untouched', () => {
+  const searchMeta = {
+    $searchMeta: { compound: { filter: [equalsClause], must: [{ text: { query: 'q', path: 'n' } }] } },
+  };
+  expect(
+    injectTenantIntoPipeline({ pipeline: [searchMeta], tenant: authoredTenant })
+  ).toEqual([searchMeta]);
+});
+
+test('authored $search still gets mechanical injection at later $lookup entries', () => {
+  const search = { $search: { compound: { filter: [equalsClause] } } };
+  expect(
+    injectTenantIntoPipeline({
+      pipeline: [
+        search,
+        { $lookup: { from: 'other', localField: 'a', foreignField: 'b', as: 'j' } },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toEqual([
+    search,
+    {
+      $lookup: {
+        from: 'other',
+        localField: 'a',
+        foreignField: 'b',
+        as: 'j',
+        pipeline: [tenantMatch],
+      },
+    },
+  ]);
+});
+
+test('authored $search audit fails when the equals clause is missing', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $search: { compound: { must: [{ text: { query: 'q', path: 'n' } }] } } }],
+      tenant: authoredTenant,
+    })
+  ).toThrow(
+    'Request declares "tenant: authored", but its "$search" stage has no "compound.filter" equals clause on tenant field "organizationId"'
+  );
+});
+
+test('authored $search audit fails on a wrong value', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $search: {
+            compound: { filter: [{ equals: { path: 'organizationId', value: 'org_b' } }] },
+          },
+        },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow('has no "compound.filter" equals clause on tenant field "organizationId"');
+});
+
+test('authored $search audit fails on a wrong path', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        { $search: { compound: { filter: [{ equals: { path: 'orgId', value: 'org_a' } }] } } },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow('has no "compound.filter" equals clause on tenant field "organizationId"');
+});
+
+test('authored $search audit fails when the clause sits outside compound.filter', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $search: { compound: { should: [equalsClause] } } }],
+      tenant: authoredTenant,
+    })
+  ).toThrow('has no "compound.filter" equals clause');
+});
+
+test('authored $vectorSearch with the org equality in filter passes untouched, no trailing $match', () => {
+  const vectorSearch = {
+    $vectorSearch: {
+      index: 'v',
+      queryVector: [0.1],
+      path: 'e',
+      limit: 5,
+      filter: { $and: [{ status: 'open' }, { organizationId: { $eq: 'org_a' } }] },
+    },
+  };
+  expect(
+    injectTenantIntoPipeline({ pipeline: [vectorSearch], tenant: authoredTenant })
+  ).toEqual([vectorSearch]);
+});
+
+test('authored $vectorSearch audit fails without the equality', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        { $vectorSearch: { index: 'v', queryVector: [0.1], path: 'e', limit: 5 } },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow(
+    'Request declares "tenant: authored", but its "$vectorSearch" stage has no "filter" equality on tenant field "organizationId"'
+  );
+});
+
+test('an equality inside $or does not satisfy the audit', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $vectorSearch: {
+            index: 'v',
+            queryVector: [0.1],
+            path: 'e',
+            limit: 5,
+            filter: { $or: [{ organizationId: 'org_a' }, { status: 'open' }] },
+          },
+        },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow('has no "filter" equality on tenant field "organizationId"');
+});
+
+test('authored $geoNear with the org equality in query passes untouched', () => {
+  const geoNear = {
+    $geoNear: {
+      near: { type: 'Point', coordinates: [0, 0] },
+      distanceField: 'd',
+      query: { organizationId: 'org_a' },
+    },
+  };
+  expect(injectTenantIntoPipeline({ pipeline: [geoNear], tenant: authoredTenant })).toEqual([
+    geoNear,
+  ]);
+});
+
+test('authored $geoNear audit fails without the equality', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        { $geoNear: { near: { type: 'Point', coordinates: [0, 0] }, distanceField: 'd' } },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow(
+    'Request declares "tenant: authored", but its "$geoNear" stage has no "query" equality on tenant field "organizationId"'
+  );
+});
+
+test('authored $graphLookup with the org equality in restrictSearchWithMatch passes untouched', () => {
+  const graphLookup = {
+    $graphLookup: {
+      from: 'other',
+      startWith: '$a',
+      connectFromField: 'a',
+      connectToField: 'b',
+      as: 'j',
+      restrictSearchWithMatch: { organizationId: 'org_a' },
+    },
+  };
+  expect(
+    injectTenantIntoPipeline({ pipeline: [graphLookup], tenant: authoredTenant })
+  ).toEqual([tenantMatch, graphLookup]);
+});
+
+test('authored $graphLookup audit fails without the equality', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [
+        {
+          $graphLookup: {
+            from: 'other',
+            startWith: '$a',
+            connectFromField: 'a',
+            connectToField: 'b',
+            as: 'j',
+            restrictSearchWithMatch: { status: 'open' },
+          },
+        },
+      ],
+      tenant: authoredTenant,
+    })
+  ).toThrow(
+    'Request declares "tenant: authored", but its "$graphLookup" stage has no "restrictSearchWithMatch" equality on tenant field "organizationId"'
+  );
+});
+
+test('authored with nothing to author is refused', () => {
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $match: { status: 'open' } }],
+      tenant: authoredTenant,
+    })
+  ).toThrow(
+    'Request declares "tenant: authored" but its pipeline contains no stage that requires an authored tenant clause'
+  );
+});
+
+test('authored audit uses the custom tenant field name', () => {
+  const customAuthored = { field: 'tenantId', value: 't_1', authored: true };
+  const search = {
+    $search: { compound: { filter: [{ equals: { path: 'tenantId', value: 't_1' } }] } },
+  };
+  expect(injectTenantIntoPipeline({ pipeline: [search], tenant: customAuthored })).toEqual([
+    search,
+  ]);
+  expect(() =>
+    injectTenantIntoPipeline({
+      pipeline: [{ $search: { compound: { filter: [equalsClause] } } }],
+      tenant: customAuthored,
+    })
+  ).toThrow('has no "compound.filter" equals clause on tenant field "tenantId"');
 });

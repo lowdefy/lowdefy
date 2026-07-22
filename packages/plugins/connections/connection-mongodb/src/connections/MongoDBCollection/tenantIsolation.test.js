@@ -184,7 +184,29 @@ test('aggregation with $out throws on a tenant connection even when write is all
   );
 });
 
-test('aggregation with a $geoNear first stage only returns tenant docs', async () => {
+test('aggregation with a $geoNear first stage is refused without tenant: authored', async () => {
+  const connection = makeConnection('tenantIsolationGeoNear', { read: true });
+  await expect(
+    MongoDBAggregation({
+      request: {
+        pipeline: [
+          {
+            $geoNear: {
+              near: { type: 'Point', coordinates: [0, 0] },
+              distanceField: 'distance',
+            },
+          },
+        ],
+      },
+      connection,
+      tenant,
+    })
+  ).rejects.toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$geoNear" unless the request declares "tenant: authored"'
+  );
+});
+
+test('authored $geoNear with the org equality in query only returns tenant docs', async () => {
   const collection = 'tenantIsolationGeoNear';
   await populateTestMongoDb({
     collection,
@@ -204,15 +226,103 @@ test('aggregation with a $geoNear first stage only returns tenant docs', async (
           $geoNear: {
             near: { type: 'Point', coordinates: [0, 0] },
             distanceField: 'distance',
+            // The authored tenant clause (tenant: authored) - audited against
+            // the verdict, then enforced by MongoDB itself.
+            query: { organizationId: 'org_a' },
           },
         },
         { $project: { organizationId: 1 } },
       ],
     },
     connection,
-    tenant,
+    tenant: { ...tenant, authored: true },
   });
   expect(res).toEqual([{ _id: 'a1', organizationId: 'org_a' }]);
+});
+
+test('authored $geoNear audit refuses a missing org equality', async () => {
+  const connection = makeConnection('tenantIsolationGeoNear', { read: true });
+  await expect(
+    MongoDBAggregation({
+      request: {
+        pipeline: [
+          {
+            $geoNear: {
+              near: { type: 'Point', coordinates: [0, 0] },
+              distanceField: 'distance',
+            },
+          },
+        ],
+      },
+      connection,
+      tenant: { ...tenant, authored: true },
+    })
+  ).rejects.toThrow(
+    'Request declares "tenant: authored", but its "$geoNear" stage has no "query" equality on tenant field "organizationId"'
+  );
+});
+
+test('$graphLookup is refused without tenant: authored', async () => {
+  const connection = makeConnection('tenantIsolationGraphLookup', { read: true });
+  await expect(
+    MongoDBAggregation({
+      request: {
+        pipeline: [
+          {
+            $graphLookup: {
+              from: 'tenantIsolationGraphLookup',
+              startWith: '$_id',
+              connectFromField: '_id',
+              connectToField: 'parentId',
+              as: 'descendants',
+            },
+          },
+        ],
+      },
+      connection,
+      tenant,
+    })
+  ).rejects.toThrow(
+    'Aggregation pipelines on a tenant connection can not contain "$graphLookup" unless the request declares "tenant: authored"'
+  );
+});
+
+test('authored $graphLookup with the org equality in restrictSearchWithMatch walls the traversal', async () => {
+  const collection = 'tenantIsolationGraphLookup';
+  await populateTestMongoDb({
+    collection,
+    documents: [
+      // org_a: root -> childA. org_b holds a doc that ALSO claims root as its
+      // parent - without the restrict clause the traversal would leak it.
+      { _id: 'root', organizationId: 'org_a', parentId: null },
+      { _id: 'childA', organizationId: 'org_a', parentId: 'root' },
+      { _id: 'childB', organizationId: 'org_b', parentId: 'root' },
+    ],
+  });
+  const connection = makeConnection(collection, { read: true });
+  const res = await MongoDBAggregation({
+    request: {
+      pipeline: [
+        { $match: { _id: 'root' } },
+        {
+          $graphLookup: {
+            from: collection,
+            startWith: '$_id',
+            connectFromField: '_id',
+            connectToField: 'parentId',
+            as: 'descendants',
+            // The authored tenant clause (tenant: authored) - audited against
+            // the verdict, then enforced by MongoDB on every traversal step.
+            restrictSearchWithMatch: { organizationId: 'org_a' },
+          },
+        },
+        { $project: { 'descendants._id': 1 } },
+      ],
+    },
+    connection,
+    tenant: { ...tenant, authored: true },
+  });
+  expect(res).toEqual([{ _id: 'root', descendants: [{ _id: 'childA' }] }]);
 });
 
 test('insertOne stamps the tenant field on the doc', async () => {

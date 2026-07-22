@@ -14,18 +14,18 @@ A connection can now declare `tenant: true` (or `tenant: { field: ... }`) to wal
 **Tenant wall (`@lowdefy/connection-mongodb`, `@lowdefy/api`)**
 
 - Every find/findOne/update/delete selector is merged with the caller's organization equality; every insert, replacement, and upsert is stamped server-side with the organization id.
-- Aggregation pipelines get recursive injection at every cross-collection stage — `$lookup` (both forms), `$unionWith`, `$graphLookup` (`restrictSearchWithMatch`), and inside `$facet` branches. `$out`/`$merge` are rejected on tenant connections.
-- Atlas Search support: a pipeline-leading `$search`/`$searchMeta` is rewritten in place with the tenant equality as a `compound.filter` `equals` clause, keeping relevance ordering and `$search`-computed counts tenant-correct. Requires the tenant field to be `token`-mapped in the Atlas Search index (and in `storedSource` where `returnStoredSource` is used).
-- Other first-stage-only aggregation stages: a pipeline-leading `$vectorSearch` gains the tenant equality in its `filter` (requires the tenant field indexed as the `filter` type in the Atlas Vector Search index) plus a trailing `$match`, and `$geoNear` gains it in its `query`. `$collStats`/`$indexStats` are rejected on tenant connections — collection-level statistics cannot be tenant-scoped.
+- Aggregation pipelines: the wall's one pipeline move is prepending the tenant `$match` at every pipeline entry — the root pipeline and every `$lookup` (both forms) / `$unionWith` sub-pipeline entry, recursing through `$facet` branches. The wall never rewrites the inside of a stage. `$out`/`$merge` are rejected on tenant connections, and `$collStats`/`$indexStats` too — collection-level statistics cannot be tenant-scoped.
+- Stages the prepend cannot scope — a pipeline-leading `$search`/`$searchMeta`/`$vectorSearch`/`$geoNear`, and `$graphLookup` at any position — are **refused** unless the request declares `tenant: authored`: the request then authors the tenant clause itself (a `compound.filter` `equals` for `$search`/`$searchMeta`, the `filter` for `$vectorSearch`, the `query` for `$geoNear`, `restrictSearchWithMatch` for `$graphLookup`, typically with `_user: organizationId` as the value), and the wall **audits** it at runtime — clause present, tenant field, value strictly equal to the caller's resolved organization — refusing to run on any miss. The rest of an authored request's pipeline is still walled mechanically, and the caller must still resolve an organization. Atlas index requirements for authored clauses: the tenant field `token`-mapped in the Atlas Search index (and in `storedSource` where `returnStoredSource` is used); indexed as the `filter` type for Atlas Vector Search.
 - Change streams are scoped via a `fullDocument` match with `updateLookup` forced; events that cannot prove they match (deletes) are not delivered, and callers from different organizations never share a change-stream channel.
-- The tenant field may be read but never authored in a write or filter position — authored usage is rejected loudly.
+- The tenant field may be read but never authored in a write or filter position — authored usage is rejected loudly. (On a `tenant: authored` request the audited stage position is the one place it is instead *required*.)
 - Fail-closed everywhere: system-context and strategy callers carry no organization, so requests to tenant connections fail unless the request explicitly declares `tenant: none`, the only opt-out, authored at the point of use.
 - `context.user.organizationId` (the caller's active organization id) is now exposed and readable as `_user: organizationId` under both organizations policies.
 
 **Build validation (`@lowdefy/build`)**
 
 - `tenant:` is validated on connections and gated to connection types that implement the scoping contract (v1: `MongoDBCollection`) — declaring it on any other type is a build error.
-- `tenant: none` is validated as the only request/step/websocket-level value.
+- The request/step-level sentinel accepts `none` and `authored`; websockets accept `none` only (`authored` is aggregation-only).
+- Best-effort entry-stage check: a literal walled pipeline leading with `$search`/`$searchMeta`/`$vectorSearch`/`$geoNear` or containing `$graphLookup` without `tenant: authored` is a build error (operator-composed pipelines are checked at runtime, which is the enforcement gate).
 
 **Enabling the wall on an existing connection**
 

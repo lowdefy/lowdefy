@@ -25,6 +25,14 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // (Revisit delete delivery with MongoDB 6.0 pre-images when an app needs it.)
 function applyTenantToChangeStream({ pipeline, tenant }) {
   const { field, value } = tenant;
+  if (tenant.authored === true) {
+    // Change-stream pipelines never carry the first-stage-only stages the
+    // authored sentinel exists for - refuse it here (build also rejects it
+    // on websockets).
+    throw new Error(
+      '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this change stream mechanically. Remove "tenant: authored".'
+    );
+  }
   const authored = pipeline ?? [];
   assertTenantFieldNotAuthored({
     value: authored,

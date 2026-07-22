@@ -455,6 +455,27 @@ test('request tenant none is accepted', () => {
   expect(res.pages[0].requests[0].tenant).toBe('none');
 });
 
+test('request tenant authored is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        requests: [
+          {
+            id: 'request_1',
+            type: 'Request',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(res.pages[0].requests[0].tenant).toBe('authored');
+});
+
 test('request tenant true throws', () => {
   const components = {
     pages: [
@@ -467,7 +488,7 @@ test('request tenant true throws', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request "my_request" at page "page_1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
   );
 });
 
@@ -483,8 +504,137 @@ test('request tenant with another string throws', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request "my_request" at page "page_1" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
   );
+});
+
+test('a literal $search pipeline on a walled connection without tenant authored throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $graphLookup on a walled connection without tenant authored throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: {
+              pipeline: [{ $match: { a: 1 } }, { $graphLookup: { from: 'walled' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" contains "$graphLookup" on tenant connection "walled"'
+  );
+});
+
+test('a $search pipeline with tenant authored passes the build check', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithTenant });
+  expect(res.pages[0].requests[0].tenant).toBe('authored');
+});
+
+test('a $search pipeline on an unwalled connection passes the build check', () => {
+  const contextWithConn = testContext({ logger });
+  contextWithConn.connectionIds.add('open');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'open',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithConn });
+  expect(res.pages[0].requests[0].id).toBe('request:page_1:my_request');
+});
+
+test('an operator-composed pipeline on a walled connection passes the build check silently', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('walled');
+  contextWithTenant.tenantConnectionIds.add('walled');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'walled',
+            properties: { pipeline: { '_array.concat': [[], []] } },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithTenant });
+  expect(res.pages[0].requests[0].id).toBe('request:page_1:my_request');
 });
 
 test('request with valid connectionId', () => {

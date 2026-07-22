@@ -105,6 +105,9 @@ function validateTenant(connection, context) {
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
+  // Walled connection ids, for the best-effort entry-stage check on requests
+  // and steps (validateTenantPipelineEntry).
+  context.tenantConnectionIds = new Set();
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
@@ -125,6 +128,9 @@ function buildConnections({ components, context }) {
     // Store connectionId for request validation and rename id
     connection.connectionId = connection.id;
     context.connectionIds.add(connection.connectionId);
+    if (!type.isUndefined(connection.tenant)) {
+      context.tenantConnectionIds.add(connection.connectionId);
+    }
     connection.id = `connection:${connection.id}`;
 
     // Count operators in connection properties

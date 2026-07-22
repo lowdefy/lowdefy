@@ -514,8 +514,30 @@ test('request tenant with any other value emits warning', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn).toHaveBeenCalledWith(
-    'Request "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit request-level opt-out.'
+    'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).'
   );
+});
+
+test('request tenant authored emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
 test('websocket tenant none emits no warnings', () => {
@@ -548,7 +570,7 @@ test('websocket tenant with any other value emits warning', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn).toHaveBeenCalledWith(
-    'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use.'
+    'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)'
   );
 });
 

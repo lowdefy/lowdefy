@@ -2019,7 +2019,7 @@ export default {
           const: 'none',
           errorMessage: {
             const:
-              'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use.',
+              'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)',
           },
         },
       },
@@ -2663,10 +2663,9 @@ export default {
           },
         },
         tenant: {
-          const: 'none',
+          enum: ['none', 'authored'],
           errorMessage: {
-            const:
-              'Request "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit request-level opt-out.',
+            enum: 'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).',
           },
         },
       },

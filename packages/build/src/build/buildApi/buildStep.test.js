@@ -179,6 +179,28 @@ test('request step tenant none is accepted', () => {
   expect(res.api[0].routine[0].tenant).toBe('none');
 });
 
+test('request step tenant authored is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'connection',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
 test('request step tenant true throws', () => {
   const context = testContext({ logger });
   const components = {
@@ -198,7 +220,7 @@ test('request step tenant true throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
   );
 });
 
@@ -221,8 +243,56 @@ test('request step tenant with another string throws', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" — the tenant wall is declared on the connection.'
+    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
   );
+});
+
+test('a literal $search step pipeline on a walled connection without tenant authored throws at build', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_search_unauthored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_graphlookup_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $graphLookup: { from: 'walled' } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
 });
 
 test('valid routine step config nested array', () => {

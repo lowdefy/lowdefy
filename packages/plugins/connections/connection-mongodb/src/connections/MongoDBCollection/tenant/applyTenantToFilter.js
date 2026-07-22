@@ -23,6 +23,14 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // an upserted document, which is what carries the tenant field onto upserts.
 function applyTenantToFilter({ filter, tenant, position = 'a filter' }) {
   const { field, value } = tenant;
+  if (tenant.authored === true) {
+    // Every non-aggregation operation reaches the wall through this helper or
+    // stampTenantOnDoc, so the authored sentinel is refused here once rather
+    // than in each operation file.
+    throw new Error(
+      '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this request mechanically. Remove "tenant: authored".'
+    );
+  }
   assertTenantFieldNotAuthored({ value: filter, field, position });
   if (filter == null || Object.keys(filter).length === 0) {
     return { [field]: value };

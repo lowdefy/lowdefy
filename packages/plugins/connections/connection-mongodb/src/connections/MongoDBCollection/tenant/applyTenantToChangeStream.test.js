@@ -73,3 +73,12 @@ test('uses the custom tenant field name', () => {
     fullDocument: 'updateLookup',
   });
 });
+
+test('refuses an authored verdict — tenant: authored is aggregation-only', () => {
+  expect(() =>
+    applyTenantToChangeStream({
+      pipeline: [],
+      tenant: { field: 'organizationId', value: 'org_a', authored: true },
+    })
+  ).toThrow('"tenant: authored" applies only to aggregation requests');
+});

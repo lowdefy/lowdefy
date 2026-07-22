@@ -250,3 +250,34 @@ test('tenant value comes from context.user.organizationId', () => {
   );
   expect(res).toEqual({ field: 'organizationId', value: 'org-2' });
 });
+
+test('tenant authored resolves the verdict with the authored marker', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: defaultConnectionConfig,
+    requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
+  });
+  expect(res).toEqual({ field: 'organizationId', value: 'org-1', authored: true });
+});
+
+test('tenant authored still requires a caller organization', () => {
+  expect(() =>
+    resolveTenant(
+      { user: { id: 'id' } },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
+      }
+    )
+  ).toThrow('no caller organization resolved');
+});
+
+test('tenant authored resolves the custom field with the authored marker', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
+    requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
+  });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1', authored: true });
+});

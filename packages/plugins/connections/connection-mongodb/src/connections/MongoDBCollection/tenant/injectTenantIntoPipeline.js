@@ -17,128 +17,68 @@
 import { type } from '@lowdefy/helpers';
 
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
+import { auditSearchCompound, auditMqlEquality } from './auditAuthoredClause.js';
 
 // Recursive tenant injection over the whole pipeline tree - not a pass over
-// the top-level stage array. Every pipeline that reads a collection (the root
-// pipeline, $lookup sub-pipelines, $unionWith sub-pipelines) gets the tenant
-// $match injected at its entry, and the walk recurses into $facet branches and
-// nested sub-pipelines to any depth, so no cross-collection stage reaches
-// another collection unfiltered. The contract this enforces: every collection
-// reachable from a tenant connection carries the tenant field - a collection
-// without it fails closed (the injected filter matches nothing).
+// the top-level stage array. The wall has exactly ONE pipeline move:
+// prepending { $match: { <field>: <value> } } at a pipeline entry - the root
+// pipeline and every $lookup/$unionWith sub-pipeline entry, recursing through
+// $facet branches to any depth. It never rewrites the inside of a stage:
+// injected behavior must be obvious from that one documented rule.
 //
-// Atlas Search: $search/$searchMeta must be a pipeline's first stage, so a
-// stage-0 $match can not be injected before them. Instead the injector
-// rewrites the stage itself, adding the tenant equality as a compound.filter
-// `equals` clause (filter clauses do not contribute to scoring, so matching
-// AND relevance ordering are preserved), which also makes $search-computed
-// counts (count, $$SEARCH_META) tenant-correct. For $search a standard $match
-// is additionally injected immediately after the stage as defense in depth
-// ($searchMeta returns metadata documents that carry no tenant field, so the
-// trailing $match is omitted there). This requires the tenant field to be
-// mapped as the `token` type in the Atlas Search index - and included in
-// storedSource wherever returnStoredSource is used - a documented consumer
-// requirement; a missing mapping fails closed (the equals clause matches
-// nothing).
+// Stages the prepend can not scope are the request author's (amendment-1):
+// - First-stage-only entry stages ($search, $searchMeta, $vectorSearch,
+//   $geoNear) - nothing can be prepended before them.
+// - $graphLookup at any position - the traversal reads its target collection
+//   by name, so an entry $match does not constrain it.
+// Without `tenant: authored` on the request these are REFUSED. With it, the
+// author writes the tenant clause into the stage's documented position and
+// this injector AUDITS it (field + value strictly equal to the verdict)
+// before the pipeline runs - see auditAuthoredClause.js. No trailing $match
+// is injected after an audited stage: what the author wrote is what runs,
+// and the audit, not a second hidden filter, is the enforcement. The rest of
+// an authored request's pipeline is still walled mechanically.
 //
-// Other first-stage-only stages get the same in-stage treatment: $vectorSearch
-// is rewritten with the tenant equality merged into its `filter` (requires the
-// tenant field indexed as the `filter` type in the Atlas Vector Search index)
-// plus a trailing $match as defense in depth, and $geoNear has the tenant
-// equality merged into its `query` (plain MQL - full server-side enforcement,
-// no index requirement). $collStats and $indexStats are rejected outright:
-// they return collection-wide statistics that can not be tenant-scoped.
+// The contract this enforces: every collection reachable from a tenant
+// connection carries the tenant field - a collection without it fails closed
+// (the injected filter matches nothing).
 
-// Stage-level $search options that sit beside the operator being wrapped.
-// This allowlist must track Atlas $search stage-level options: an option
-// missing here is wrapped into compound.must as if it were an operator and
-// rejected by Atlas - fail-closed, but a needless error until the key is
-// added.
-const SEARCH_OPTION_KEYS = new Set([
-  'index',
-  'count',
-  'highlight',
-  'concurrent',
-  'returnStoredSource',
-  'scoreDetails',
-  'searchAfter',
-  'searchBefore',
-  'sort',
-  'tracking',
-]);
+// Entry stages MongoDB requires to be a pipeline's first stage, which the
+// prepended $match therefore can not scope. Each maps to the position the
+// authored tenant clause must sit in.
+const AUTHORED_ENTRY_STAGES = {
+  $search: 'compound.filter',
+  $searchMeta: 'compound.filter',
+  $vectorSearch: 'filter',
+  $geoNear: 'query',
+};
 
-// The authored-tenant-field rejection extends into $search internals: a
-// clause on the tenant field's path can not bypass the wall (the injected
-// filter still ANDs in), but rejecting it loudly beats a baffling silent
-// no-match - the same DX rationale as the $match positions.
-function assertNoAuthoredSearchPath({ node, field }) {
-  if (Array.isArray(node)) {
-    node.forEach((item) => assertNoAuthoredSearchPath({ node: item, field }));
-    return;
-  }
-  if (!type.isObject(node)) {
-    return;
-  }
-  Object.entries(node).forEach(([key, value]) => {
-    if (key === 'path') {
-      const paths = Array.isArray(value) ? value : [value];
-      if (paths.some((p) => p === field || (typeof p === 'string' && p.startsWith(`${field}.`)))) {
-        throw new Error(
-          `Tenant field "${field}" can not be used as a $search path on a tenant connection - the tenant wall injects the organization filter mechanically.`
-        );
-      }
-    }
-    assertNoAuthoredSearchPath({ node: value, field });
-  });
-}
-
-function rewriteSearchBody({ body, tenant }) {
-  const { field, value } = tenant;
-  assertNoAuthoredSearchPath({ node: body, field });
-  const equalsClause = { equals: { path: field, value } };
-
-  if (type.isObject(body.compound)) {
-    const existingFilter = body.compound.filter;
-    const filter = [
-      ...(Array.isArray(existingFilter) ? existingFilter : existingFilter ? [existingFilter] : []),
-      equalsClause,
-    ];
-    return { ...body, compound: { ...body.compound, filter } };
-  }
-
-  // A bare top-level operator (text, autocomplete, phrase, ...) is wrapped as
-  // compound.must - any top-level operator may nest in a compound clause, and
-  // filter clauses don't score, so matching and relevance are preserved.
-  const options = {};
-  const must = [];
-  Object.entries(body).forEach(([key, val]) => {
-    if (SEARCH_OPTION_KEYS.has(key)) {
-      options[key] = val;
-    } else {
-      must.push({ [key]: val });
-    }
-  });
-  const compound = must.length ? { must, filter: [equalsClause] } : { filter: [equalsClause] };
-  return { ...options, compound };
-}
-
-// $vectorSearch takes a `filter` of MQL match expressions over fields indexed
-// as the `filter` type. The tenant equality is $and-merged in ($eq form -
-// vector search filters take explicit comparison operators), which keeps the
-// top-`limit` candidate set tenant-correct; the caller adds a trailing $match
-// as defense in depth, so a missing filter-type index mapping fails closed
-// rather than open.
-function rewriteVectorSearchBody({ body, tenant }) {
-  const { field, value } = tenant;
-  assertTenantFieldNotAuthored({ value: body.filter, field, position: 'a $vectorSearch filter' });
-  const equalsExpression = { [field]: { $eq: value } };
-  const filter = body.filter ? { $and: [body.filter, equalsExpression] } : equalsExpression;
-  return { ...body, filter };
+function refusalError({ stageKey, field, position }) {
+  const snippet =
+    stageKey === '$search' || stageKey === '$searchMeta'
+      ? `  compound:
+    filter:
+      - equals:
+          path: ${field}
+          value:
+            _user: organizationId`
+      : `  ${position}:
+    ${field}:
+      _user: organizationId`;
+  return new Error(
+    `Aggregation pipelines on a tenant connection can not contain "${stageKey}" unless the request declares "tenant: authored" - the tenant wall does not scope this stage mechanically. Author the organization clause inside the stage:
+${snippet}
+then declare "tenant: authored" on the request to confirm it owns its organization scoping.`
+  );
 }
 
 function injectTenantIntoPipeline({ pipeline, tenant }) {
   const { field, value } = tenant;
+  const authored = tenant.authored === true;
   const tenantMatch = () => ({ $match: { [field]: value } });
+  // Counts the authored-responsibility sites seen, so `tenant: authored` on a
+  // pipeline with nothing to author is refused rather than silently accepted.
+  let authoredSites = 0;
 
   function transformStage(stage) {
     if (!type.isObject(stage)) {
@@ -179,15 +119,21 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       return stage;
     }
     if (type.isObject(stage.$graphLookup)) {
-      const graphLookup = stage.$graphLookup;
-      const restrict = graphLookup.restrictSearchWithMatch;
-      assertTenantFieldNotAuthored({
-        value: restrict,
+      // The traversal reads its target collection by name - the entry $match
+      // does not constrain it, and merging into restrictSearchWithMatch would
+      // be in-stage rewriting. The clause is the author's (amendment-1).
+      if (!authored) {
+        throw refusalError({ stageKey: '$graphLookup', field, position: 'restrictSearchWithMatch' });
+      }
+      authoredSites += 1;
+      auditMqlEquality({
+        query: stage.$graphLookup.restrictSearchWithMatch,
         field,
+        value,
+        stage: '$graphLookup',
         position: 'restrictSearchWithMatch',
       });
-      const merged = restrict ? { $and: [restrict, { [field]: value }] } : { [field]: value };
-      return { ...stage, $graphLookup: { ...graphLookup, restrictSearchWithMatch: merged } };
+      return stage;
     }
     if (type.isObject(stage.$facet)) {
       // A branch in the walk, not a terminal: the documents entering a facet
@@ -208,41 +154,40 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
   function injectEntry(stages) {
     const transformed = (stages ?? []).map(transformStage);
     const first = transformed[0];
-    if (type.isObject(first) && type.isObject(first.$search)) {
-      const rewritten = { ...first, $search: rewriteSearchBody({ body: first.$search, tenant }) };
-      return [rewritten, tenantMatch(), ...transformed.slice(1)];
-    }
-    if (type.isObject(first) && type.isObject(first.$searchMeta)) {
-      // $searchMeta returns metadata documents (counts, facets) that carry no
-      // tenant field - the in-stage filter is the whole enforcement, a
-      // trailing $match would blank correct results.
-      const rewritten = {
-        ...first,
-        $searchMeta: rewriteSearchBody({ body: first.$searchMeta, tenant }),
-      };
-      return [rewritten, ...transformed.slice(1)];
-    }
-    if (type.isObject(first) && type.isObject(first.$vectorSearch)) {
-      const rewritten = {
-        ...first,
-        $vectorSearch: rewriteVectorSearchBody({ body: first.$vectorSearch, tenant }),
-      };
-      return [rewritten, tenantMatch(), ...transformed.slice(1)];
-    }
-    if (type.isObject(first) && type.isObject(first.$geoNear)) {
-      // $geoNear's `query` is plain MQL applied server-side against the
-      // documents - merging the tenant equality there is full enforcement.
-      const geoNear = first.$geoNear;
-      assertTenantFieldNotAuthored({ value: geoNear.query, field, position: 'a $geoNear query' });
-      const query = geoNear.query
-        ? { $and: [geoNear.query, { [field]: value }] }
-        : { [field]: value };
-      return [{ ...first, $geoNear: { ...geoNear, query } }, ...transformed.slice(1)];
+    const entryKey =
+      type.isObject(first) &&
+      Object.keys(AUTHORED_ENTRY_STAGES).find((key) => first[key] !== undefined);
+    if (entryKey) {
+      const position = AUTHORED_ENTRY_STAGES[entryKey];
+      if (!authored) {
+        throw refusalError({ stageKey: entryKey, field, position });
+      }
+      authoredSites += 1;
+      if (entryKey === '$search' || entryKey === '$searchMeta') {
+        auditSearchCompound({ body: first[entryKey], field, value, stage: entryKey });
+      } else {
+        auditMqlEquality({
+          query: type.isObject(first[entryKey]) ? first[entryKey][position] : null,
+          field,
+          value,
+          stage: entryKey,
+          position,
+        });
+      }
+      // No prepend before (invalid - the stage must be first) and no trailing
+      // $match after: the audited authored clause is the enforcement.
+      return transformed;
     }
     return [tenantMatch(), ...transformed];
   }
 
-  return injectEntry(pipeline ?? []);
+  const result = injectEntry(pipeline ?? []);
+  if (authored && authoredSites === 0) {
+    throw new Error(
+      'Request declares "tenant: authored" but its pipeline contains no stage that requires an authored tenant clause - the tenant wall scopes this pipeline mechanically. Remove "tenant: authored".'
+    );
+  }
+  return result;
 }
 
 export default injectTenantIntoPipeline;

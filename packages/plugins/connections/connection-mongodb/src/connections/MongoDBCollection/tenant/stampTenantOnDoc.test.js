@@ -69,3 +69,12 @@ test('uses the custom tenant field name', () => {
     'Tenant field "tenantId" can not be set in an insert document'
   );
 });
+
+test('refuses an authored verdict — tenant: authored is aggregation-only', () => {
+  expect(() =>
+    stampTenantOnDoc({
+      doc: { name: 'x' },
+      tenant: { field: 'organizationId', value: 'org_a', authored: true },
+    })
+  ).toThrow('"tenant: authored" applies only to aggregation requests');
+});

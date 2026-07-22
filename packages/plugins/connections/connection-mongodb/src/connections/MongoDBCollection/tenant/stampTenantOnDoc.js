@@ -21,6 +21,13 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // stamped.
 function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
   const { field, value } = tenant;
+  if (tenant.authored === true) {
+    // See applyTenantToFilter - the shared refusal of the authored sentinel
+    // on non-aggregation operations.
+    throw new Error(
+      '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this request mechanically. Remove "tenant: authored".'
+    );
+  }
   assertTenantFieldNotAuthored({ value: doc, field, position });
   return { ...doc, [field]: value };
 }

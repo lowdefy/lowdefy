@@ -92,9 +92,11 @@ function buildWebsockets({ components, context }) {
 
     // The only websocket-level tenant value is the explicit opt-out sentinel —
     // the wall itself is declared on the connection, never per websocket.
+    // ("authored" is aggregation-only: change-stream pipelines never carry
+    // the first-stage-only stages it exists for, so it is rejected here.)
     if (!type.isUndefined(websocket.tenant) && websocket.tenant !== 'none') {
       throw new ConfigError(
-        `Websocket "${websocket.id}" "tenant" only accepts "none" — the tenant wall is declared on the connection.`,
+        `Websocket "${websocket.id}" "tenant" only accepts "none" — the tenant wall is declared on the connection, and "authored" is aggregation-only.`,
         { received: websocket.tenant, configKey }
       );
     }
