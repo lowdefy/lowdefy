@@ -1,0 +1,7 @@
+- id: google
+  type: Google
+  properties:
+    clientId:
+      _secret: GOOGLE_CLIENT_ID
+    clientSecret:
+      _secret: GOOGLE_CLIENT_SECRET

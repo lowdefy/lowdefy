@@ -1087,3 +1087,79 @@ test('buildPageJit collects the unavailable-projection error when no projection 
     )
   ).toBe(true);
 });
+
+const moduleAuthConfigPageYaml = `
+id: panel
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  roles:
+    _build.authConfig: roles
+`;
+
+test('buildPageJit resolves _build.authConfig in a module page from the restored projection artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-module-auth-'));
+  const rolesCatalog = [
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'Editor', description: 'Can edit content' },
+    { id: 'viewer', label: 'Viewer', description: 'Read only access' },
+  ];
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: true },
+      magicLink: { enabled: false },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+      roles: rolesCatalog,
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  context.modules = {
+    authmod: {
+      id: 'authmod',
+      moduleRoot: path.resolve('src/test-utils'),
+      packageRoot: path.resolve('src/test-utils'),
+      moduleDependencies: null,
+    },
+  };
+  mockFiles([
+    { path: path.resolve('src/test-utils/panel.yaml'), content: moduleAuthConfigPageYaml },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'authmod/panel',
+      {
+        pageId: 'authmod/panel',
+        auth: { public: true },
+        refId: 'ref-panel',
+        refPath: 'panel.yaml',
+        unresolvedVars: null,
+        moduleEntryId: 'authmod',
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'authmod/panel',
+    pageRegistry,
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.id).toBe('page:authmod/panel');
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.roles).toEqual(rolesCatalog);
+  // The projection was restored from the artifact into the JIT context.
+  expect(context.authConfigProjection.emailAndPassword.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
