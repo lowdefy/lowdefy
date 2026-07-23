@@ -45,7 +45,6 @@ async function buildRefs({ context, shallowOptions }) {
     operators,
     env: process.env,
     lowdefyApp: context.appMeta,
-    authConfig: context.authConfigProjection,
     dynamicIdentifiers,
     shouldStop: (path, refId) => {
       // Module entry vars/connections were already resolved by parseLowdefyYaml

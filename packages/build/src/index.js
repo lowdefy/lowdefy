@@ -37,6 +37,7 @@ import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
+import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
@@ -99,6 +100,11 @@ async function build(options) {
     // Scoped pre-pass: resolve the auth: subtree and compute the
     // _build.authConfig projection so the operator can resolve during buildRefs.
     await resolveAuthConfigProjection({ context });
+
+    // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
+    // that the projection exists, so module page/api/connection operators like
+    // _build.authConfig resolve against it.
+    await resolveModuleManifests({ context });
 
 
     let components;

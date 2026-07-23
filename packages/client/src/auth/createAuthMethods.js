@@ -16,13 +16,13 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
+function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
   const { home, pageId, urlQuery, url } = callbackUrl;
 
   const targets = [home, pageId, url].filter((target) => target);
   if (targets.length > 1) {
     throw new Error(
-      `Invalid callbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
+      `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
@@ -40,16 +40,32 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   return undefined;
 }
 
+// Resolves a structured target ({ home, pageId, urlQuery, url }) to a URL,
+// prefixing basePath onto app-relative paths - an absolute url target passes
+// through unchanged (external landing pages). Returns undefined when the
+// target is empty. Shared by callbackUrl and its magic-link/social siblings
+// so basePath handling lives in one place. Off-site safety for the resolved
+// URL is BetterAuth's server-side originCheck / trustedOrigins, not here.
+function resolveTargetURL({ lowdefy, callbackUrl, name }) {
+  const explicit = getCallbackUrl({ lowdefy, callbackUrl, name });
+  if (type.isNone(explicit)) {
+    return undefined;
+  }
+  if (explicit.startsWith('/')) {
+    return `${lowdefy.basePath ?? ''}${explicit}`;
+  }
+  return explicit;
+}
+
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
 // param set by the unauthenticated page redirect, so login returns to the
 // page the user asked for. Only relative paths are accepted from the query
-// to avoid open redirects.
+// to avoid open redirects. The query fallback is exclusive to the primary
+// callbackUrl - a new-user or error destination has no equivalent query
+// source, so reading it for them would misroute.
 function resolveCallbackURL({ lowdefy, callbackUrl }) {
-  const explicit = getCallbackUrl({ lowdefy, callbackUrl });
+  const explicit = resolveTargetURL({ lowdefy, callbackUrl });
   if (!type.isNone(explicit)) {
-    if (explicit.startsWith('/')) {
-      return `${lowdefy.basePath ?? ''}${explicit}`;
-    }
     return explicit;
   }
   const window = lowdefy._internal?.globals?.window;
@@ -93,7 +109,9 @@ function createAuthMethods(lowdefy, auth) {
     callbackUrl,
     captchaToken,
     email,
+    errorCallbackUrl,
     magicLink,
+    newUserCallbackUrl,
     password,
     phoneNumber,
     providerId,
@@ -102,6 +120,46 @@ function createAuthMethods(lowdefy, auth) {
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const captchaOptions = captchaFetchOptions(captchaToken);
     const providers = auth.authConfig?.providers ?? [];
+
+    // The magic-link and social/OAuth routes accept these two extra callbacks;
+    // resolve each as a structured target and forward only the ones the app
+    // supplied, so BetterAuth's own default-to-callbackURL stands otherwise.
+    const routingCallbacks = {};
+    const newUserCallbackURL = resolveTargetURL({
+      lowdefy,
+      callbackUrl: newUserCallbackUrl,
+      name: 'newUserCallbackUrl',
+    });
+    if (!type.isNone(newUserCallbackURL)) {
+      routingCallbacks.newUserCallbackURL = newUserCallbackURL;
+    }
+    const errorCallbackURL = resolveTargetURL({
+      lowdefy,
+      callbackUrl: errorCallbackUrl,
+      name: 'errorCallbackUrl',
+    });
+    if (!type.isNone(errorCallbackURL)) {
+      routingCallbacks.errorCallbackURL = errorCallbackURL;
+    } else {
+      // No caller-supplied error destination: default to the app's declared
+      // auth-error page (authPages.error), resolved through resolveTargetURL
+      // like every other callback so basePath handling stays in one place and
+      // an absolute authPages.error passes through untouched. For the
+      // app-relative page this yields `${basePath}${authPages.error}`, so a
+      // failed magic-link verify lands there with ?error= intact instead of on
+      // the success page. Mirrors the server-side onAPIError.errorURL default
+      // (signup-admission-gate Decision 5) on the one path that default cannot
+      // structurally reach. Omitted when authPages.error is unset, letting
+      // BetterAuth's fallback stand.
+      const errorPage = auth.authConfig?.authPages?.error;
+      if (type.isString(errorPage)) {
+        routingCallbacks.errorCallbackURL = resolveTargetURL({
+          lowdefy,
+          callbackUrl: { url: errorPage },
+          name: 'errorCallbackUrl',
+        });
+      }
+    }
 
     if (
       type.isNone(providerId) &&
@@ -118,12 +176,21 @@ function createAuthMethods(lowdefy, auth) {
         throw new Error(`Login provider "${providerId}" is not a configured auth provider.`);
       }
       if (provider.type === 'GenericOAuth') {
-        return unwrap(auth.signInOauth2({ providerId, callbackURL, ...rest, ...captchaOptions }));
+        return unwrap(
+          auth.signInOauth2({
+            providerId,
+            callbackURL,
+            ...routingCallbacks,
+            ...rest,
+            ...captchaOptions,
+          })
+        );
       }
       return unwrap(
         auth.signInSocial({
           provider: provider.type.toLowerCase(),
           callbackURL,
+          ...routingCallbacks,
           ...rest,
           ...captchaOptions,
         })
@@ -133,7 +200,15 @@ function createAuthMethods(lowdefy, auth) {
       if (!type.isString(email)) {
         throw new Error('Login with magicLink requires an "email" param.');
       }
-      return unwrap(auth.signInMagicLink({ email, callbackURL, ...rest, ...captchaOptions }));
+      return unwrap(
+        auth.signInMagicLink({
+          email,
+          callbackURL,
+          ...routingCallbacks,
+          ...rest,
+          ...captchaOptions,
+        })
+      );
     }
     if (!type.isNone(phoneNumber)) {
       if (!type.isString(password)) {
@@ -316,7 +391,9 @@ function createAuthMethods(lowdefy, auth) {
   } = {}) {
     const captchaOptions = captchaFetchOptions(captchaToken);
     if (type.isString(phoneNumber)) {
-      return unwrap(auth.phoneNumberRequestPasswordReset({ phoneNumber, ...rest, ...captchaOptions }));
+      return unwrap(
+        auth.phoneNumberRequestPasswordReset({ phoneNumber, ...rest, ...captchaOptions })
+      );
     }
     if (!type.isString(email)) {
       throw new Error('RequestPasswordReset requires an "email" or "phoneNumber" param.');

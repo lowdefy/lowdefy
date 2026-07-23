@@ -187,7 +187,6 @@ async function resolveRecordBody(ctx, id, record) {
     operators: ctx.operators,
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
-    authConfig: ctx.authConfig,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
     activeRecord: id,
   });

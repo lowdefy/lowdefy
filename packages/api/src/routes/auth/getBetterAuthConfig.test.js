@@ -26,14 +26,14 @@ const mockRenderAuthEmail = jest.fn(async () => ({
 }));
 
 jest.unstable_mockModule('./createSendEmail.js', () => ({ default: mockCreateSendEmail }));
-jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({ default: mockRenderAuthEmail }));
+jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({
+  default: mockRenderAuthEmail,
+}));
 
 const { default: getBetterAuthConfig } = await import('./getBetterAuthConfig.js');
 
 const emailConfig = {
   connectionId: 'auth_email',
-  from: 'noreply@example.com',
-  provider: { properties: { host: 'smtp.example.com', port: 587 } },
 };
 
 beforeEach(() => {
@@ -494,8 +494,7 @@ test('adds sendResetPassword and emailVerification when email is configured', ()
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { properties: { host: 'smtp.example.com', port: 587 } },
+        connectionId: 'auth_email',
       },
     }),
     getAuth,
@@ -810,8 +809,7 @@ test('pushes the magic-link plugin when magicLink is enabled', () => {
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { properties: { host: 'smtp.example.com', port: 587 } },
+        connectionId: 'auth_email',
       },
       magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
     }),
@@ -949,6 +947,23 @@ test('sets cookie prefix to lowdefy in production', () => {
   expect(options.advanced.cookiePrefix).toBe('lowdefy');
 });
 
+test('sets function-form advanced.database.generateId that returns a plain UUID string', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  // Decision 7: a function keeps the adapter off its ObjectId/UUID-binary
+  // coercion paths, so the stored id is a plain UUID string.
+  expect(typeof options.advanced.database.generateId).toBe('function');
+  const id = options.advanced.database.generateId();
+  expect(typeof id).toBe('string');
+  expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+});
+
 test('assembles databaseHooks from auth.hooks bindings', () => {
   const options = getBetterAuthConfig({
     appMeta,
@@ -969,7 +984,7 @@ test('assembles databaseHooks from auth.hooks bindings', () => {
   expect(options.emailVerification?.afterEmailVerification).toBeUndefined();
 });
 
-test('always sets the engine session.create.before policy slot even with no user hooks', () => {
+test('always sets the engine session.create.before and user.create.before slots even with no user hooks', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({ hooks: [] }),
@@ -980,7 +995,8 @@ test('always sets the engine session.create.before policy slot even with no user
     secrets: baseSecrets,
   });
   expect(options.databaseHooks.session.create.before).toBeInstanceOf(Function);
-  expect(options.databaseHooks.user).toBeUndefined();
+  // The engine-tier admission gate (Decision 2) always binds user.create.before.
+  expect(options.databaseHooks.user.create.before).toBeInstanceOf(Function);
 });
 
 test('an email.verified hook sets emailVerification.afterEmailVerification and preserves sendVerificationEmail', () => {
@@ -988,8 +1004,7 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { type: 'smtp', properties: { host: 'localhost', port: 1025 } },
+        connectionId: 'auth_email',
       },
       hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
     }),
@@ -1001,7 +1016,8 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
   });
   expect(options.emailVerification.afterEmailVerification).toBeInstanceOf(Function);
   expect(options.emailVerification.sendVerificationEmail).toBeInstanceOf(Function);
-  expect(options.databaseHooks.user).toBeUndefined();
+  // email.verified is synthetic - it never binds a user database operation.
+  expect(options.databaseHooks.user.create.after).toBeUndefined();
 });
 
 test('always pushes the organization plugin', () => {
@@ -1228,4 +1244,87 @@ test('does not push the captcha plugin when captcha is not enabled', () => {
     secrets: baseSecrets,
   });
   expect(options.plugins.some((p) => p.id === 'captcha')).toBe(false);
+});
+
+describe('onAPIError.errorURL default landing page (Decision 5)', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+
+  afterEach(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  test('sets an absolute errorURL of origin + basePath + authPages.error when the origin is pinned', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      config: { basePath: '/base' },
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.onAPIError).toEqual({ errorURL: 'https://app.example.com/base/auth/error' });
+  });
+
+  test('falls back to the app-relative error path when the origin is not pinned', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.onAPIError).toEqual({ errorURL: '/auth/error' });
+  });
+
+  test('honours a custom authPages.error path', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        authPages: { signIn: '/login', error: '/oops' },
+      }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.onAPIError).toEqual({ errorURL: 'https://app.example.com/oops' });
+  });
+});
+
+test('wires the engine-tier magic-link send gate as options.hooks.before when magicLink is enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      email: {
+        connectionId: 'auth_email',
+      },
+      magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+    }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(typeof options.hooks?.before).toBe('function');
+});
+
+test('does not register options.hooks when magicLink is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.hooks).toBeUndefined();
 });

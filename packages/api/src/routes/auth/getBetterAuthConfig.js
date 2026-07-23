@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
+
 import { genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
@@ -28,6 +30,7 @@ import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js'
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import createAuthLogger from './createAuthLogger.js';
+import createMagicLinkSendGate from './organizations/createMagicLinkSendGate.js';
 import createSendEmail from './createSendEmail.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
@@ -172,7 +175,7 @@ function getBetterAuthConfig({
   } else {
     if (!dev) {
       logger.warn(
-        'Auth base URL is not pinned. Set BETTER_AUTH_URL to the app\'s canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header.'
+        "Auth base URL is not pinned. Set BETTER_AUTH_URL to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
       );
     }
     baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };
@@ -224,6 +227,10 @@ function getBetterAuthConfig({
     },
     advanced: {
       cookiePrefix: resolveCookiePrefix({ appMeta, dev }),
+      // Decision 7: function-form generateId. The vendored adapter stores a
+      // function result verbatim as a plain string (no ObjectId/UUID-binary
+      // coercion), so all ids are plain UUID strings that native reads match.
+      database: { generateId: () => randomUUID() },
     },
     plugins: [],
   };
@@ -305,6 +312,13 @@ function getBetterAuthConfig({
         },
       })
     );
+    // The engine-tier send gate suppresses the magic-link email for an
+    // unadmitted address (Decision 3) - a request hooks.before matching
+    // /sign-in/magic-link. options.hooks.before is a single core-level function
+    // (BetterAuth wraps it match-all), so the gate checks the path itself.
+    options.hooks = {
+      before: createMagicLinkSendGate({ getAuth, organizations: authConfig.organizations }),
+    };
   }
 
   if (genericOAuthConfigs.length > 0) {
@@ -419,6 +433,21 @@ function getBetterAuthConfig({
   // tenant: self-serve, leave the org endpoints enabled.
   const policy = authConfig.organizations?.policy ?? 'pinned';
   options.disabledPaths = policy === 'pinned' ? ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED : [];
+
+  // Decision 5: default every redirect-style auth error - chiefly an OAuth
+  // failure - to the resolved authPages.error page, instead of BetterAuth's
+  // bare built-in ${baseURL}/error. BetterAuth uses errorURL verbatim in the
+  // redirect (it is not joined with baseURL), so make it an absolute app URL
+  // when the origin is pinned; without a pinned origin fall back to the
+  // app-relative path, which the browser resolves against the callback origin.
+  // A per-action errorCallbackUrl on the login action still wins (BetterAuth
+  // resolves errorURL ?? onAPIError.errorURL).
+  if (type.isString(authConfig.authPages?.error)) {
+    const errorPath = `${config.basePath ?? ''}${authConfig.authPages.error}`;
+    options.onAPIError = {
+      errorURL: type.isString(baseUrlOrigin) ? `${baseUrlOrigin}${errorPath}` : errorPath,
+    };
+  }
 
   return options;
 }

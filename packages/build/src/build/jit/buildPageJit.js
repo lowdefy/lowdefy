@@ -165,7 +165,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         operators,
         env: process.env,
         lowdefyApp: buildContext.appMeta,
-        authConfig: buildContext.authConfigProjection,
         dynamicIdentifiers,
         shouldStop: null,
       });
@@ -222,7 +221,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       operators,
       env: process.env,
       lowdefyApp: buildContext.appMeta,
-      authConfig: buildContext.authConfigProjection,
       dynamicIdentifiers,
       shouldStop: null,
     });

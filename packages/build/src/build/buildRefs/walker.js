@@ -56,7 +56,6 @@ class WalkContext {
     operators,
     env,
     lowdefyApp,
-    authConfig,
     dynamicIdentifiers,
     shouldStop,
     entryId,
@@ -90,7 +89,6 @@ class WalkContext {
     this.operators = operators;
     this.env = env;
     this.lowdefyApp = lowdefyApp;
-    this.authConfig = authConfig;
     this.dynamicIdentifiers = dynamicIdentifiers;
     this.shouldStop = shouldStop;
   }
@@ -113,7 +111,6 @@ class WalkContext {
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
-      authConfig: this.authConfig,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
       entryId: this.entryId,
@@ -148,7 +145,6 @@ class WalkContext {
       operators: this.operators,
       env: this.env,
       lowdefyApp: this.lowdefyApp,
-      authConfig: this.authConfig,
       dynamicIdentifiers: this.dynamicIdentifiers,
       shouldStop: this.shouldStop,
       entryId: (moduleEntry ?? this.moduleEntry)?.id ?? this.entryId,
@@ -210,7 +206,7 @@ function evaluateBuildOperator(node, ctx) {
     operatorPrefix: '_build.',
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
-    authConfig: ctx.authConfig,
+    authConfig: ctx.buildContext.authConfigProjection,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
   });
   if (errors.length > 0) {

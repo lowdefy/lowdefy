@@ -21,6 +21,7 @@ import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import { assertNoPlaceholderLeaks } from './buildRefs/deferredRegistry.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
@@ -390,4 +391,24 @@ async function resolveFullManifest({ entryId, context }) {
   }
 }
 
-export { resolveLocalManifest, recordifyExportables, resolveFullManifest, validateRequiredVars };
+// Step 3 (orchestrator step): full-resolve every registered module's manifest —
+// cross-module refs, preserved content. Runs AFTER resolveAuthConfigProjection so
+// module page/api/connection operators (e.g. _build.authConfig) resolve against a
+// computed projection. Ends with the post-sweep placeholder-leak invariant.
+async function resolveModuleManifests({ context }) {
+  for (const entryId of Object.keys(context.modules)) {
+    await resolveFullManifest({ entryId, context });
+  }
+
+  // Post-sweep invariant: no deferred placeholder survives outside the
+  // per-consumer slots (manifest component/menu bodies, varDefs defaults).
+  assertNoPlaceholderLeaks(context);
+}
+
+export {
+  resolveLocalManifest,
+  recordifyExportables,
+  resolveFullManifest,
+  resolveModuleManifests,
+  validateRequiredVars,
+};
