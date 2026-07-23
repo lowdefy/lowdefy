@@ -34,8 +34,6 @@ const { default: getBetterAuthConfig } = await import('./getBetterAuthConfig.js'
 
 const emailConfig = {
   connectionId: 'auth_email',
-  from: 'noreply@example.com',
-  provider: { properties: { host: 'smtp.example.com', port: 587 } },
 };
 
 beforeEach(() => {
@@ -496,8 +494,7 @@ test('adds sendResetPassword and emailVerification when email is configured', ()
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { properties: { host: 'smtp.example.com', port: 587 } },
+        connectionId: 'auth_email',
       },
     }),
     getAuth,
@@ -812,8 +809,7 @@ test('pushes the magic-link plugin when magicLink is enabled', () => {
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { properties: { host: 'smtp.example.com', port: 587 } },
+        connectionId: 'auth_email',
       },
       magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
     }),
@@ -1008,8 +1004,7 @@ test('an email.verified hook sets emailVerification.afterEmailVerification and p
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { type: 'smtp', properties: { host: 'localhost', port: 1025 } },
+        connectionId: 'auth_email',
       },
       hooks: [{ id: 'on-verified', point: 'email.verified', endpointId: 'auth/on-verified' }],
     }),
@@ -1310,8 +1305,7 @@ test('wires the engine-tier magic-link send gate as options.hooks.before when ma
     appMeta,
     authJson: createAuthJson({
       email: {
-        from: 'noreply@example.com',
-        provider: { properties: { host: 'smtp.example.com', port: 587 } },
+        connectionId: 'auth_email',
       },
       magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
     }),

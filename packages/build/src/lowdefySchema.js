@@ -570,105 +570,69 @@ export default {
             },
           },
         },
+        // Auth email references an SMTP connection by id — the connection owns
+        // "from", "replyTo", the transport, and the delivery filter. There is
+        // no inline transport shape; the runtime reads only connectionId and
+        // templates (createSendEmail / renderAuthEmail).
         email: {
           type: 'object',
           additionalProperties: false,
-          required: ['from', 'provider'],
+          required: ['connectionId'],
           properties: {
             '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
-            from: {
-              type: ['string', 'object'],
+            connectionId: {
+              type: 'string',
               errorMessage: {
-                type: 'Auth "email.from" should be a string or _secret operator reference.',
+                type: 'Auth "email.connectionId" should be a string — the id of an SMTP connection in "connections".',
               },
             },
-            provider: {
+            templates: {
               type: 'object',
               additionalProperties: false,
-              required: ['type'],
               properties: {
                 '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
-                type: {
+                verifyEmail: {
                   type: 'string',
-                  enum: ['smtp'],
                   errorMessage: {
-                    type: 'Auth "email.provider.type" should be a string.',
-                    enum: 'Auth "email.provider.type" should be "smtp".',
+                    type: 'Auth "email.templates.verifyEmail" should be a string — a notification id from "notifications".',
                   },
                 },
-                properties: {
-                  type: 'object',
-                  additionalProperties: false,
-                  properties: {
-                    '~ignoreBuildChecks': {},
-                    '~r': {},
-                    '~l': {},
-                    host: {
-                      type: ['string', 'object'],
-                      errorMessage: {
-                        type: 'Auth "email.provider.properties.host" should be a string or _secret operator reference.',
-                      },
-                    },
-                    port: {
-                      type: ['integer', 'object'],
-                      errorMessage: {
-                        type: 'Auth "email.provider.properties.port" should be an integer or _secret operator reference.',
-                      },
-                    },
-                    secure: {
-                      type: ['boolean', 'object'],
-                      errorMessage: {
-                        type: 'Auth "email.provider.properties.secure" should be a boolean or _secret operator reference.',
-                      },
-                    },
-                    auth: {
-                      type: 'object',
-                      additionalProperties: false,
-                      properties: {
-                        '~ignoreBuildChecks': {},
-                        '~r': {},
-                        '~l': {},
-                        user: {
-                          type: ['string', 'object'],
-                          errorMessage: {
-                            type: 'Auth "email.provider.properties.auth.user" should be a string or _secret operator reference.',
-                          },
-                        },
-                        pass: {
-                          type: ['string', 'object'],
-                          errorMessage: {
-                            type: 'Auth "email.provider.properties.auth.pass" should be a string or _secret operator reference.',
-                          },
-                        },
-                      },
-                      errorMessage: {
-                        type: 'Auth "email.provider.properties.auth" should be an object.',
-                      },
-                    },
-                  },
+                resetPassword: {
+                  type: 'string',
                   errorMessage: {
-                    type: 'Auth "email.provider.properties" should be an object.',
+                    type: 'Auth "email.templates.resetPassword" should be a string — a notification id from "notifications".',
+                  },
+                },
+                magicLink: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.magicLink" should be a string — a notification id from "notifications".',
+                  },
+                },
+                invitation: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.invitation" should be a string — a notification id from "notifications".',
                   },
                 },
               },
               errorMessage: {
-                type: 'Auth "email.provider" should be an object.',
-                required: {
-                  type: 'Auth "email.provider" should have required property "type".',
-                },
+                type: 'Auth "email.templates" should be an object mapping auth email flows (verifyEmail, resetPassword, magicLink, invitation) to notification ids.',
               },
             },
           },
           errorMessage: {
             type: 'Auth "email" should be an object.',
             required: {
-              from: 'Auth "email" should have required property "from".',
-              provider: 'Auth "email" should have required property "provider".',
+              connectionId:
+                'Auth "email" should have required property "connectionId" — the id of an SMTP connection in "connections". The old inline "from"/"provider" transport shape moved onto the SMTP connection.',
             },
+            additionalProperties:
+              'Auth "email" should only have properties "connectionId" and "templates". The old inline "from"/"provider" transport shape moved onto the SMTP connection referenced by "connectionId".',
           },
         },
         providers: {
