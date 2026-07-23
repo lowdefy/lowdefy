@@ -141,7 +141,7 @@ test('resolveAuthConfigProjection collects a self-reference error for _build.aut
   await resolveAuthConfigProjection({ context });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0].message).toContain(
-    '_build.authConfig is not available here.'
+    '_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves.'
   );
 });
 
@@ -162,6 +162,6 @@ signup:
   await resolveAuthConfigProjection({ context });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0].message).toContain(
-    '_build.authConfig is not available here.'
+    '_build.authConfig cannot be used inside the auth block — the auth config projection is not available while the auth block resolves.'
   );
 });

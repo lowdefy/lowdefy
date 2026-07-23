@@ -216,12 +216,62 @@ test('validateAuthConfig passes with a magicLink mechanism when email is configu
       database: validDatabase,
       magicLink: { enabled: true },
       email: {
-        from: 'noreply@example.com',
-        provider: { type: 'smtp', properties: {} },
+        connectionId: 'email',
       },
     },
   };
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig passes with email templates overrides', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: {
+        connectionId: 'email',
+        templates: {
+          verifyEmail: 'verify-email-notification',
+          resetPassword: 'reset-password-notification',
+          magicLink: 'magic-link-notification',
+          invitation: 'invite-notification',
+        },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when email is missing connectionId', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "email" should have required property "connectionId" — the id of an SMTP connection in "connections". The old inline "from"/"provider" transport shape moved onto the SMTP connection.'
+  );
+});
+
+test('validateAuthConfig throws on the old inline from/provider email shape', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: {
+        from: 'noreply@example.com',
+        provider: { type: 'smtp', properties: { host: 'smtp.example.com', port: 587 } },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "email" should only have properties "connectionId" and "templates". The old inline "from"/"provider" transport shape moved onto the SMTP connection referenced by "connectionId".'
+  );
 });
 
 test('validateAuthConfig throws on duplicate provider ids', () => {
