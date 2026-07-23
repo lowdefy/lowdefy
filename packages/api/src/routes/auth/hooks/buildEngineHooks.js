@@ -15,6 +15,7 @@
 */
 
 import createActiveOrgPolicyHook from '../organizations/createActiveOrgPolicyHook.js';
+import createAdmissionGateHook from '../organizations/createAdmissionGateHook.js';
 import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
 
 // Engine-tier hook bindings - hard-coded framework behavior, not entries in
@@ -29,6 +30,15 @@ function buildEngineHooks({ authConfig, getAuth }) {
   const engineHooks = {
     'session.create.before': [createActiveOrgPolicyHook({ getAuth, organizations })],
   };
+
+  // The admission gate bites only under pinned + invite-only (the predicate
+  // admits everyone otherwise), so it is bound only there. It is the first - and
+  // only - engine binding on user.create.before, so it runs ahead of the
+  // module-contributed merge-on-signup hook: an unadmitted create is vetoed
+  // before merge runs, and no orphan contact is linked or created.
+  if (organizations.policy === 'pinned' && organizations.signup === 'invite-only') {
+    engineHooks['user.create.before'] = [createAdmissionGateHook({ getAuth, organizations })];
+  }
 
   if (organizations.policy === 'pinned' && organizations.signup === 'open') {
     engineHooks['user.create.after'] = [createAutoJoinHook({ getAuth, organizations })];

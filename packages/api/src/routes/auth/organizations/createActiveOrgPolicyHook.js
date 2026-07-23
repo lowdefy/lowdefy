@@ -20,6 +20,7 @@ import { getOrgAdapter } from 'better-auth/plugins';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
+import isEmailAdmitted from './isEmailAdmitted.js';
 
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for
@@ -65,16 +66,16 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       });
       return { data: { ...session, activeOrganizationId: organization.id } };
     }
-    const user = await internalAdapter.findUserById(session.userId);
-    const invitation = user
-      ? await findPendingInvitation({
-          adapter,
-          email: user.email,
-          organizationId: organization.id,
-        })
-      : null;
-    if (invitation) {
-      // The pending-invitation carve-out: the invitee needs a session to
+    const admitted = await isEmailAdmitted({
+      userId: session.userId,
+      organizations,
+      auth,
+      adapter,
+      internalAdapter,
+    });
+    if (admitted) {
+      // The member row was a miss above, so admission under invite-only means
+      // the pending-invitation carve-out: the invitee needs a session to
       // accept, so the session is created without an active organization.
       return;
     }
@@ -95,9 +96,7 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       return { data: { ...session, activeOrganizationId: members[0].organizationId } };
     }
     const user = await internalAdapter.findUserById(session.userId);
-    const invitation = user
-      ? await findPendingInvitation({ adapter, email: user.email })
-      : null;
+    const invitation = user ? await findPendingInvitation({ adapter, email: user.email }) : null;
     if (invitation) {
       // An invited user joins the inviter's tenant on accept - mint nothing.
       // If the invitation expires unaccepted, the next login lands here with

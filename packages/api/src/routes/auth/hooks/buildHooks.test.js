@@ -63,7 +63,11 @@ function createMockSystemContextFactory({ endpointConfigs = {} } = {}) {
 
 const defaultOrganizations = { policy: 'pinned', org: 'default', signup: 'invite-only' };
 
-function buildTestHooks({ endpointConfigs, hooks, organizations = defaultOrganizations }) {
+// The generic hook-mechanism tests below bind their own user.create.before
+// hooks and invoke the composed slot directly. Default to the tenant policy so
+// the engine-tier admission gate (bound only under pinned + invite-only) does
+// not compose ahead of them - the gate's own behavior is covered separately.
+function buildTestHooks({ endpointConfigs, hooks, organizations = { policy: 'tenant' } }) {
   return buildHooks({
     authConfig: { hooks, organizations },
     createSystemContext: createMockSystemContextFactory({ endpointConfigs }),
@@ -103,11 +107,29 @@ test('buildHooks registers no auto-join slot under the tenant policy', () => {
 
 test('buildHooks tolerates an authConfig without a hooks array', () => {
   const { databaseHooks } = buildHooks({
-    authConfig: { organizations: defaultOrganizations },
+    authConfig: { organizations: { policy: 'tenant' } },
     createSystemContext: createMockSystemContextFactory(),
     getAuth: () => ({}),
   });
   expect(databaseHooks.user).toBeUndefined();
+});
+
+test('buildHooks binds the engine admission gate on user.create.before under pinned + invite-only', () => {
+  const { databaseHooks } = buildHooks({
+    authConfig: { hooks: [], organizations: defaultOrganizations },
+    createSystemContext: createMockSystemContextFactory(),
+    getAuth: () => ({}),
+  });
+  expect(databaseHooks.user.create.before).toBeInstanceOf(Function);
+});
+
+test('buildHooks binds no admission gate under pinned + open signup', () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [],
+    organizations: { policy: 'pinned', org: 'default', signup: 'open' },
+  });
+  // Only the auto-join after-hook is bound under open signup, never the gate.
+  expect(databaseHooks.user.create.before).toBeUndefined();
 });
 
 test('buildHooks throws when hooks are configured without a createSystemContext factory', () => {
