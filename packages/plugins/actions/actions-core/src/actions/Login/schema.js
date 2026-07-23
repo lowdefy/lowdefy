@@ -37,7 +37,7 @@ export default {
       errorCallbackUrl: {
         type: 'string',
         description:
-          'Structured callback target for where a failed or expired magic link (or social/OAuth sign-in) lands, carrying the ?error= reason. Resolved like callbackUrl - basePath-prefixed. When omitted, BetterAuth defaults it to callbackUrl. Ignored by email and phone sign-in.',
+          "Structured callback target for where a failed or expired magic link (or social/OAuth sign-in) lands, carrying the ?error= reason. Resolved like callbackUrl - basePath-prefixed. When omitted, defaults to the app's authPages.error page (basePath-prefixed); if authPages.error is unset, BetterAuth's own fallback stands. Ignored by email and phone sign-in.",
       },
       captchaToken: {
         type: 'string',

@@ -140,6 +140,25 @@ function createAuthMethods(lowdefy, auth) {
     });
     if (!type.isNone(errorCallbackURL)) {
       routingCallbacks.errorCallbackURL = errorCallbackURL;
+    } else {
+      // No caller-supplied error destination: default to the app's declared
+      // auth-error page (authPages.error), resolved through resolveTargetURL
+      // like every other callback so basePath handling stays in one place and
+      // an absolute authPages.error passes through untouched. For the
+      // app-relative page this yields `${basePath}${authPages.error}`, so a
+      // failed magic-link verify lands there with ?error= intact instead of on
+      // the success page. Mirrors the server-side onAPIError.errorURL default
+      // (signup-admission-gate Decision 5) on the one path that default cannot
+      // structurally reach. Omitted when authPages.error is unset, letting
+      // BetterAuth's fallback stand.
+      const errorPage = auth.authConfig?.authPages?.error;
+      if (type.isString(errorPage)) {
+        routingCallbacks.errorCallbackURL = resolveTargetURL({
+          lowdefy,
+          callbackUrl: { url: errorPage },
+          name: 'errorCallbackUrl',
+        });
+      }
     }
 
     if (

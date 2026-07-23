@@ -782,6 +782,65 @@ test('login with a GenericOAuth provider forwards newUserCallbackUrl and errorCa
   ]);
 });
 
+test('login with magicLink defaults errorCallbackURL to authPages.error when no errorCallbackUrl is given', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { error: '/auth/error' };
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual('/auth/error');
+});
+
+test('login with magicLink basePath-prefixes the defaulted authPages.error', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/base';
+  auth.authConfig.authPages = { error: '/auth/error' };
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual('/base/auth/error');
+});
+
+test('login with magicLink honors a caller errorCallbackUrl over the authPages.error default', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { error: '/auth/error' };
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    magicLink: true,
+    errorCallbackUrl: { pageId: 'link-expired' },
+  });
+  expect(auth.signInMagicLink.mock.calls[0][0].errorCallbackURL).toEqual('/link-expired');
+});
+
+test('login with magicLink omits errorCallbackURL when authPages.error is unset and no param is given', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  expect('errorCallbackURL' in auth.signInMagicLink.mock.calls[0][0]).toBe(false);
+});
+
+test('the authPages.error default does not leak into newUserCallbackURL', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { error: '/auth/error' };
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  expect('newUserCallbackURL' in auth.signInMagicLink.mock.calls[0][0]).toBe(false);
+});
+
+test('login with a social provider carries the same defaulted authPages.error errorCallbackURL', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.authConfig.authPages = { error: '/auth/error' };
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ providerId: 'google' });
+  expect(auth.signInSocial.mock.calls[0][0].errorCallbackURL).toEqual('/auth/error');
+});
+
 test('login with phoneNumber threads captchaToken into the phone sign-in call', async () => {
   const { auth, lowdefy } = setup();
   const { login } = createAuthMethods(lowdefy, auth);
