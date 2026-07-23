@@ -24,6 +24,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
 import { buildMenuItems } from '../buildMenuItems.js';
+import './style.module.css';
 
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
