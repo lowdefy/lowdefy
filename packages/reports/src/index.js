@@ -37,6 +37,7 @@ import generateReport from './generateReport.js';
 import evaluatePage from './evaluatePage/evaluatePage.js';
 import walkBlocks from './render/walkBlocks.js';
 import { toPdfMake, renderPdfBuffer, contentWidthOf } from './render/pdf/toPdfMake.js';
+import toXlsx from './render/xlsx/toXlsx.js';
 
 export {
   // IR
@@ -66,4 +67,5 @@ export {
   toPdfMake,
   renderPdfBuffer,
   contentWidthOf,
+  toXlsx,
 };

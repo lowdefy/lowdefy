@@ -171,7 +171,47 @@ describe('pdf generation', () => {
 });
 
 describe('xlsx format', () => {
-  test('throws the placeholder until task 13 lands', async () => {
+  // A minimal tabular renderer: any `Grid` block projects to a table IR node.
+  // (The real AgGrid static renderer lands in its own package/task; this stub
+  // exercises the xlsx projection end to end without that dependency.)
+  const gridRegistry = {
+    Grid: {
+      toReport: ({ block }) => ({
+        kind: 'table',
+        sheetName: block.properties.sheetName,
+        header: [{ value: 'Region' }, { value: 'Total' }],
+        rows: [
+          [{ value: 'North' }, { value: 100 }],
+          [{ value: 'South' }, { value: 250 }],
+        ],
+      }),
+    },
+  };
+  const gridMetas = { ...blockMetas, Grid: { category: 'display' } };
+
+  test('returns xlsx contentType, filename, and a workbook buffer', async () => {
+    const pageConfig = buildTestPage({
+      pageConfig: {
+        id: 'page1',
+        type: 'Box',
+        blocks: [{ id: 'g', type: 'Grid', properties: { sheetName: 'Sales' } }],
+      },
+    });
+
+    const result = await generateReport(
+      baseOptions({ pageConfig, format: 'xlsx', registry: gridRegistry, blockMetas: gridMetas })
+    );
+
+    expect(Buffer.isBuffer(result.buffer)).toBe(true);
+    // The xlsx container is a zip; it starts with the PK signature.
+    expect(result.buffer.subarray(0, 2).toString('latin1')).toBe('PK');
+    expect(result.contentType).toBe(
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    expect(result.filename).toBe('page1.xlsx');
+  });
+
+  test('a page with no tables rejects rather than emitting an empty workbook', async () => {
     const pageConfig = buildTestPage({
       pageConfig: {
         id: 'page1',
@@ -180,8 +220,8 @@ describe('xlsx format', () => {
       },
     });
 
-    await expect(generateReport(baseOptions({ pageConfig, format: 'xlsx' }))).rejects.toThrow(
-      'xlsx not yet implemented'
-    );
+    await expect(
+      generateReport(baseOptions({ pageConfig, format: 'xlsx' }))
+    ).rejects.toThrow('no tables to export');
   });
 });

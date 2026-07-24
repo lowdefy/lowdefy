@@ -31,6 +31,7 @@ import { type } from '@lowdefy/helpers';
 import evaluatePage from './evaluatePage/evaluatePage.js';
 import walkBlocks from './render/walkBlocks.js';
 import { renderPdfBuffer, contentWidthOf } from './render/pdf/toPdfMake.js';
+import toXlsx from './render/xlsx/toXlsx.js';
 import { fonts } from './fonts/fonts.js';
 
 // --- Concurrency semaphore ---------------------------------------------------
@@ -181,15 +182,15 @@ async function runGeneration({
     contentWidth: contentWidthOf(report),
   };
 
+  const walked = walkBlocks(context, registry, reportOptions, renderContext);
+  const skippedBlockTypes = walked.warnings;
+
   let buffer;
-  let skippedBlockTypes = [];
   if (format === 'pdf') {
-    const walked = walkBlocks(context, registry, reportOptions, renderContext);
-    skippedBlockTypes = walked.warnings;
     buffer = await renderPdfBuffer(walked.nodes, report, { now });
   } else {
-    // format === 'xlsx' — walkBlocks → toXlsx lands in task 13.
-    throw new Error('xlsx not yet implemented');
+    // format === 'xlsx' — project the same IR's table nodes into a workbook.
+    buffer = await toXlsx(walked.nodes);
   }
 
   const warnings = { skippedActions, skippedBlockTypes };
