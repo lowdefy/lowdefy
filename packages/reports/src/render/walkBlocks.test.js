@@ -19,7 +19,7 @@ import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
 import evaluatePage from '../evaluatePage/evaluatePage.js';
 import walkBlocks from './walkBlocks.js';
-import { text } from '../ir/nodes.js';
+import { cell, table, text } from '../ir/nodes.js';
 
 const operators = { ...operatorsClient };
 
@@ -292,6 +292,49 @@ describe('page break hints', () => {
     );
 
     expect(nodes).toEqual([{ ...text({ text: 'A' }), pageBreakBefore: true }]);
+  });
+});
+
+describe('sheet names', () => {
+  const tableRegistry = {
+    Widget: {
+      toReport: () => table({ header: [cell('h')], rows: [[cell(1)]] }),
+    },
+  };
+
+  test('a table node takes the report sheetName hint, else the blockId', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'sales', type: 'Widget' },
+        { id: 'costs', type: 'Widget' },
+      ],
+    });
+    const { nodes } = walkBlocks(
+      context,
+      tableRegistry,
+      { sales: { sheetName: 'Monthly Sales' } },
+      renderContext()
+    );
+
+    expect(nodes.map((node) => node.sheetName)).toEqual(['Monthly Sales', 'costs']);
+  });
+
+  test('a renderer-set sheetName is not overwritten', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [{ id: 'a', type: 'Widget' }],
+    });
+    const named = {
+      Widget: {
+        toReport: () => table({ header: [cell('h')], rows: [[cell(1)]], sheetName: 'Fixed' }),
+      },
+    };
+    const { nodes } = walkBlocks(context, named, {}, renderContext());
+
+    expect(nodes[0].sheetName).toEqual('Fixed');
   });
 });
 

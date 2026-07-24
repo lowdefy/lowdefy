@@ -173,7 +173,13 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
       // renderer's returned node object is never mutated in place.
       nodes[0] = { ...nodes[0], pageBreakBefore: true };
     }
-    return nodes;
+    // Name xlsx sheets here — the only place that holds both the report
+    // sheetName hint and the source blockId. Renderers emit unnamed tables.
+    return nodes.map((node) =>
+      node.kind === 'table' && type.isNone(node.sheetName)
+        ? { ...node, sheetName: options.sheetName ?? block.blockId }
+        : node
+    );
   };
 
   // Walk a sibling list into IR, grouping row-participating blocks and splicing
