@@ -52,7 +52,7 @@ function computeAuthConfigProjection(auth = {}) {
       id: provider?.id ?? null,
       type: provider?.type ?? null,
     })),
-    organizations: { signup: organizations.signup ?? signupDefault },
+    organizations: { policy, signup: organizations.signup ?? signupDefault },
     // Normalized through the same helper buildRoleCatalog uses so the two
     // decoupled clones of the auth subtree agree on the label ?? id default.
     roles: normalizeRoleCatalog(source.roles),

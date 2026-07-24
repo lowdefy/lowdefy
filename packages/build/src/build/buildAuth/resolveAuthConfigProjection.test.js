@@ -52,7 +52,7 @@ test('resolveAuthConfigProjection sets default projection when no auth block', a
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
     roles: [],
-    organizations: { signup: 'invite-only' },
+    organizations: { policy: 'pinned', signup: 'invite-only' },
   });
 });
 
@@ -78,7 +78,7 @@ test('resolveAuthConfigProjection computes projection from an inline auth block'
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [{ id: 'google', type: 'Google' }],
     roles: [],
-    organizations: { signup: 'open' },
+    organizations: { policy: 'pinned', signup: 'open' },
   });
 });
 
