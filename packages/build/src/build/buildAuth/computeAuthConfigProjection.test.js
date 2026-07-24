@@ -25,7 +25,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
     phoneNumber: { enabled: false, signUpOnVerification: false },
     captcha: { enabled: false, provider: null, siteKey: null },
     providers: [],
-    organizations: { signup: 'invite-only' },
+    organizations: { policy: 'pinned', signup: 'invite-only' },
     roles: [],
   });
 });
@@ -98,6 +98,17 @@ test('computeAuthConfigProjection explicit organizations signup wins', () => {
   expect(
     computeAuthConfigProjection({ organizations: { signup: 'open' } }).organizations.signup
   ).toBe('open');
+});
+
+test('computeAuthConfigProjection projects organizations policy, defaulted to pinned', () => {
+  expect(computeAuthConfigProjection({}).organizations.policy).toBe('pinned');
+  expect(computeAuthConfigProjection({ organizations: {} }).organizations.policy).toBe('pinned');
+  expect(
+    computeAuthConfigProjection({ organizations: { policy: 'pinned' } }).organizations.policy
+  ).toBe('pinned');
+  expect(
+    computeAuthConfigProjection({ organizations: { policy: 'tenant' } }).organizations.policy
+  ).toBe('tenant');
 });
 
 test('computeAuthConfigProjection reflects phoneNumber enabled and signUpOnVerification presence', () => {

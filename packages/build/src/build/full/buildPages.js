@@ -25,7 +25,7 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
-import validateSetActiveOrgRefs from '../buildPages/validateSetActiveOrgRefs.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
@@ -40,7 +40,7 @@ function buildPages({ components, context }) {
   context.callApiActionRefs = [];
   context.websocketActionRefs = [];
   context.dynamicBlockRefs = [];
-  context.setActiveOrgActionRefs = [];
+  context.orgClientActionRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -88,10 +88,10 @@ function buildPages({ components, context }) {
     context,
   });
 
-  // Fail the build when a SetActiveOrganization action is wired under the
-  // "pinned" organizations policy (the endpoint is disabled there).
-  validateSetActiveOrgRefs({
-    setActiveOrgActionRefs: context.setActiveOrgActionRefs,
+  // Fail the build when a per-org client action is wired under the "pinned"
+  // organizations policy (the endpoints are disabled there).
+  validateOrgClientActionRefs({
+    orgClientActionRefs: context.orgClientActionRefs,
     policy: components.auth?.organizations?.policy ?? 'pinned',
   });
 
