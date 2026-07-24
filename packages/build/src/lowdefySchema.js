@@ -1194,6 +1194,65 @@ export default {
             type: 'Block "areas" should be an object.',
           },
         },
+        report: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            // Page-level print hints. title, header and footer accept any type
+            // because they may be operators evaluated at render time.
+            title: {},
+            header: {},
+            footer: {},
+            size: {
+              type: 'string',
+              enum: ['A4', 'letter'],
+              errorMessage: {
+                type: 'Block "report.size" should be "A4" or "letter".',
+                enum: 'Block "report.size" should be "A4" or "letter".',
+              },
+            },
+            orientation: {
+              type: 'string',
+              enum: ['portrait', 'landscape'],
+              errorMessage: {
+                type: 'Block "report.orientation" should be "portrait" or "landscape".',
+                enum: 'Block "report.orientation" should be "portrait" or "landscape".',
+              },
+            },
+            rendering: {
+              type: 'string',
+              enum: ['document', 'chromium'],
+              errorMessage: {
+                type: 'Block "report.rendering" should be "document" or "chromium".',
+                enum: 'Block "report.rendering" should be "document" or "chromium".',
+              },
+            },
+            // Block-level print hints.
+            exclude: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.exclude" should be a boolean.',
+              },
+            },
+            pageBreakBefore: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.pageBreakBefore" should be a boolean.',
+              },
+            },
+            sheetName: {
+              type: 'string',
+              errorMessage: {
+                type: 'Block "report.sheetName" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Block "report" should be an object.',
+          },
+        },
       },
       errorMessage: {
         type: 'Block should be an object.',

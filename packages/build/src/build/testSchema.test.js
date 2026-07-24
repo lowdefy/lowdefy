@@ -436,3 +436,67 @@ test('missing lowdefy version schema warning', () => {
     'Lowdefy configuration should have required property "lowdefy".'
   );
 });
+
+test('valid page and block report keys emit no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        report: {
+          title: 'Monthly Sales Report',
+          size: 'A4',
+          orientation: 'portrait',
+          header: { '_string.concat': ['a', 'b'] },
+          footer: 'Confidential',
+          rendering: 'document',
+        },
+        blocks: [
+          {
+            id: 'box_1',
+            type: 'Box',
+            report: { exclude: true },
+          },
+          {
+            id: 'box_2',
+            type: 'Box',
+            report: { pageBreakBefore: true, sheetName: 'Regional Sales' },
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('unknown report sub-key emits an additional property warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        report: { nope: true },
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "nope"');
+});
+
+test('invalid report.size enum emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        report: { size: 'A3' },
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Block "report.size" should be "A4" or "letter".');
+});

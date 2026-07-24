@@ -51,6 +51,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   const requests = [];
   const requestActionRefs = [];
   const shortcutRefs = [];
+  const reportSheetNameRefs = [];
   // Extract subscriptions before block building — validateBlock rejects the
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
@@ -69,6 +70,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     requests,
     requestActionRefs,
     shortcutRefs,
+    reportSheetNameRefs,
     linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
   };
@@ -114,6 +116,22 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
       );
     } else {
       seenShortcuts[shortcut] = { blockId, eventId };
+    }
+  });
+
+  // Warn on duplicate report sheet names within the page. Dedup happens at
+  // render time, but the author should know two blocks target one sheet.
+  const seenSheetNames = {};
+  reportSheetNameRefs.forEach(({ sheetName, blockId, configKey }) => {
+    if (seenSheetNames[sheetName]) {
+      context.handleWarning(
+        new ConfigWarning(
+          `Duplicate report sheetName "${sheetName}" on block "${blockId}" on page "${page.pageId}" — already defined on block "${seenSheetNames[sheetName].blockId}".`,
+          { configKey }
+        )
+      );
+    } else {
+      seenSheetNames[sheetName] = { blockId };
     }
   });
 

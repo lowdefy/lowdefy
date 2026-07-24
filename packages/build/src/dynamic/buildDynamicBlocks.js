@@ -91,6 +91,7 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
     pageId,
     requestActionRefs,
     requests: [],
+    reportSheetNameRefs: [],
     shortcutRefs: [],
     typeCounters: {
       actions: createMembershipCounter({
