@@ -28,7 +28,7 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
-import validateSetActiveOrgRefs from '../buildPages/validateSetActiveOrgRefs.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
@@ -273,8 +273,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.dynamicBlockRefs) {
       buildContext.dynamicBlockRefs = [];
     }
-    if (!buildContext.setActiveOrgActionRefs) {
-      buildContext.setActiveOrgActionRefs = [];
+    if (!buildContext.orgClientActionRefs) {
+      buildContext.orgClientActionRefs = [];
     }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
@@ -330,11 +330,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       endpointConfigs,
       context: buildContext,
     });
-    // Fail the build when a SetActiveOrganization action is wired under the
+    // Fail the build when a per-org client action is wired under the
     // "pinned" organizations policy. The dev JIT context is rebuilt from disk
     // and carries no components.auth, so the policy is read from the auth.json
     // artifact - only when a ref exists, to avoid a disk read on every build.
-    if (buildContext.setActiveOrgActionRefs.length > 0) {
+    if (buildContext.orgClientActionRefs.length > 0) {
       let policy = buildContext.components?.auth?.organizations?.policy;
       if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
         const authPath = path.join(buildContext.directories.build, 'auth.json');
@@ -345,8 +345,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
           if (err.code !== 'ENOENT') throw err;
         }
       }
-      validateSetActiveOrgRefs({
-        setActiveOrgActionRefs: buildContext.setActiveOrgActionRefs,
+      validateOrgClientActionRefs({
+        orgClientActionRefs: buildContext.orgClientActionRefs,
         policy: policy ?? 'pinned',
       });
     }

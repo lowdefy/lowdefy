@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
+import { ORG_CLIENT_ACTION_TYPES } from '../validateOrgClientActionRefs.js';
 
 const BROWSER_DEFAULT_SHORTCUTS = new Set([
   'mod+n',
@@ -54,9 +55,9 @@ function checkAction(
     checkDuplicateActionId,
     eventId,
     linkActionRefs,
+    orgClientActionRefs,
     pageId,
     requestActionRefs,
-    setActiveOrgActionRefs,
     typeCounters,
     websocketActionRefs,
   }
@@ -134,11 +135,11 @@ function checkAction(
     }
   }
 
-  // Collect static SetActiveOrganization action references for policy validation.
+  // Collect static per-org client action references for policy validation.
   // No id param (unlike Link's pageId or CallAPI's requestId) - sourcePageId
   // alone locates the offending page for the pinned-policy build error.
-  if (action.type === 'SetActiveOrganization') {
-    setActiveOrgActionRefs.push({ action, blockId, eventId, sourcePageId: pageId });
+  if (ORG_CLIENT_ACTION_TYPES.includes(action.type)) {
+    orgClientActionRefs.push({ action, blockId, eventId, sourcePageId: pageId });
   }
 
   // Collect static Subscribe/Unsubscribe/Publish action references for validation
@@ -322,8 +323,8 @@ function buildEvents(block, pageContext) {
         typeCounters: pageContext.typeCounters,
         pageId: pageContext.pageId,
         linkActionRefs: pageContext.linkActionRefs,
+        orgClientActionRefs: pageContext.orgClientActionRefs,
         requestActionRefs: pageContext.requestActionRefs,
-        setActiveOrgActionRefs: pageContext.setActiveOrgActionRefs,
         websocketActionRefs: pageContext.websocketActionRefs,
         checkDuplicateActionId,
       };

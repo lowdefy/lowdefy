@@ -112,14 +112,18 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     // addPasskey runs the WebAuthn browser ceremony itself - options fetch,
     // authenticator prompt, verification.
     addPasskey: (params) => authClient.passkey.addPasskey(params),
+    cancelInvitation: (params) => authClient.organization.cancelInvitation(params),
     changePassword: (params) => authClient.changePassword(params),
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
     impersonateUser: (params) => authClient.admin.impersonateUser(params),
+    inviteMember: (params) => authClient.organization.inviteMember(params),
+    leaveOrganization: (params) => authClient.organization.leave(params),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
     phoneNumberSendOtp: (params) => authClient.phoneNumber.sendOtp(params),
     phoneNumberVerify: (params) => authClient.phoneNumber.verify(params),
+    removeMember: (params) => authClient.organization.removeMember(params),
     requestPasswordReset: (params) => authClient.requestPasswordReset(params),
     resetPassword: (params) => authClient.resetPassword(params),
     revokeOtherSessions: () => authClient.revokeOtherSessions(),
@@ -138,6 +142,8 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     twoFactorEnable: (params) => authClient.twoFactor.enable(params),
     twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
     twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
+    updateMemberRole: (params) => authClient.organization.updateMemberRole(params),
+    updateOrganization: (params) => authClient.organization.update(params),
   };
   return (
     <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>

@@ -342,6 +342,81 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.acceptInvitation({ invitationId }));
   }
 
+  // Invites a user to the caller's active organization - no organizationId
+  // is forwarded, so BetterAuth defaults to the active org. Authorization is
+  // BetterAuth's own per-org access control, enforced server-side against
+  // the caller's member role in the active organization.
+  async function inviteMember({ email, role } = {}) {
+    if (!type.isString(email)) {
+      throw new Error('InviteMember requires an "email" param.');
+    }
+    if (!type.isString(role) && !type.isArray(role)) {
+      throw new Error('InviteMember requires a "role" param.');
+    }
+    return unwrap(auth.inviteMember({ email, role }));
+  }
+
+  // Cancels a pending invitation in the caller's active organization.
+  // Authorization is BetterAuth's own per-org access control, enforced
+  // server-side against the caller's member role in the active organization.
+  async function cancelInvitation({ invitationId } = {}) {
+    if (!type.isString(invitationId)) {
+      throw new Error('CancelInvitation requires an "invitationId" param.');
+    }
+    return unwrap(auth.cancelInvitation({ invitationId }));
+  }
+
+  // Removes a member from the caller's active organization - no
+  // organizationId is forwarded, so BetterAuth defaults to the active org.
+  // Authorization is BetterAuth's own per-org access control, enforced
+  // server-side against the caller's member role in the active organization.
+  async function removeMember({ memberIdOrEmail } = {}) {
+    if (!type.isString(memberIdOrEmail)) {
+      throw new Error('RemoveMember requires a "memberIdOrEmail" param.');
+    }
+    return unwrap(auth.removeMember({ memberIdOrEmail }));
+  }
+
+  // Updates a member's role in the caller's active organization - no
+  // organizationId is forwarded, so BetterAuth defaults to the active org.
+  // Authorization is BetterAuth's own per-org access control, enforced
+  // server-side against the caller's member role in the active organization.
+  async function updateMemberRole({ memberId, role } = {}) {
+    if (!type.isString(memberId)) {
+      throw new Error('UpdateMemberRole requires a "memberId" param.');
+    }
+    if (!type.isString(role) && !type.isArray(role)) {
+      throw new Error('UpdateMemberRole requires a "role" param.');
+    }
+    return unwrap(auth.updateMemberRole({ memberId, role }));
+  }
+
+  // Renames the caller's active organization - no organizationId is
+  // forwarded, so BetterAuth defaults to the active org. Authorization is
+  // BetterAuth's own per-org access control, enforced server-side against
+  // the caller's member role in the active organization.
+  async function updateOrganization({ name } = {}) {
+    if (!type.isString(name)) {
+      throw new Error('UpdateOrganization requires a "name" param.');
+    }
+    return unwrap(auth.updateOrganization({ data: { name } }));
+  }
+
+  // Removes the caller's own membership from the active organization.
+  // BetterAuth's leave endpoint requires an explicit organizationId, so it
+  // is resolved from the session's active organization - the action can
+  // only ever leave the org the caller is acting in. Authorization is
+  // BetterAuth's own per-org access control, enforced server-side against
+  // the caller's member role in the active organization.
+  async function leaveOrganization() {
+    const session = await unwrap(auth.getSession());
+    const organizationId = session?.session?.activeOrganizationId;
+    if (type.isNone(organizationId)) {
+      throw new Error('LeaveOrganization requires an active organization on the session.');
+    }
+    return unwrap(auth.leaveOrganization({ organizationId }));
+  }
+
   async function changePassword({ currentPassword, newPassword, revokeOtherSessions } = {}) {
     if (!type.isString(currentPassword) || !type.isString(newPassword)) {
       throw new Error('ChangePassword requires "currentPassword" and "newPassword" params.');
@@ -497,8 +572,11 @@ function createAuthMethods(lowdefy, auth) {
 
   return {
     acceptInvitation,
+    cancelInvitation,
     changePassword,
     impersonateUser,
+    inviteMember,
+    leaveOrganization,
     login,
     logout,
     passkeyDelete,
@@ -506,6 +584,7 @@ function createAuthMethods(lowdefy, auth) {
     passkeySignIn,
     phoneNumberSendOtp,
     phoneNumberVerify,
+    removeMember,
     requestPasswordReset,
     resetPassword,
     revokeOtherSessions,
@@ -516,6 +595,8 @@ function createAuthMethods(lowdefy, auth) {
     twoFactorDisable,
     twoFactorEnable,
     twoFactorVerify,
+    updateMemberRole,
+    updateOrganization,
     updateSession,
   };
 }

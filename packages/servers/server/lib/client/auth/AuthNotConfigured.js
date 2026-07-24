@@ -24,11 +24,15 @@ function AuthNotConfigured({ authConfig, children }) {
     user: null,
     acceptInvitation: authNotConfigured,
     addPasskey: authNotConfigured,
+    cancelInvitation: authNotConfigured,
     changePassword: authNotConfigured,
     deletePasskey: authNotConfigured,
     getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
     impersonateUser: authNotConfigured,
+    inviteMember: authNotConfigured,
+    leaveOrganization: authNotConfigured,
+    removeMember: authNotConfigured,
     requestPasswordReset: authNotConfigured,
     resetPassword: authNotConfigured,
     revokeOtherSessions: authNotConfigured,
@@ -45,6 +49,8 @@ function AuthNotConfigured({ authConfig, children }) {
     twoFactorEnable: authNotConfigured,
     twoFactorVerifyBackupCode: authNotConfigured,
     twoFactorVerifyTotp: authNotConfigured,
+    updateMemberRole: authNotConfigured,
+    updateOrganization: authNotConfigured,
   };
 
   return children(auth);
