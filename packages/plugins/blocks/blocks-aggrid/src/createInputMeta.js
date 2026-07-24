@@ -19,6 +19,7 @@
 // each block's meta.js is a one-line call to this factory rather than a duplicated copy.
 function createInputMeta(blockName) {
   return {
+    static: true,
     category: 'input',
     icons: [],
     valueType: 'array',

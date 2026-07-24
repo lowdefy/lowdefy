@@ -19,6 +19,7 @@
 // is a one-line call to this factory rather than a duplicated copy of the whole schema.
 function createDisplayMeta(blockName) {
   return {
+    static: true,
     category: 'display',
     icons: [],
     valueType: null,
