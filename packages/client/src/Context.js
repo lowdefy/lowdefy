@@ -42,6 +42,7 @@ const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
   return (
     <MountEvents
       context={context}
+      pageId={config.pageId}
       triggerEvent={async () => {
         await context._internal.runOnInit(() => {
           lowdefy._internal.progress.dispatch({

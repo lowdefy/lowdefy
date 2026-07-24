@@ -16,7 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => {
+const MountEvents = ({ children, context, pageId, triggerEvent, triggerEventAsync }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -32,6 +32,16 @@ const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => 
     };
     mount();
   }, [context]);
+
+  // Expose bare readiness globals for external capture tooling (e.g. headless
+  // PDF rendering), following the __lowdefy_isDark precedent in useDarkMode.js.
+  // Write-only from the app's perspective — no config, no API surface.
+  // page_ready mirrors the page loading lifecycle: false during mount/init and
+  // on navigation to another page, true once onInit has completed and the
+  // loading skeleton tears down. window.lowdefy only exists in dev/e2e, so
+  // production capture tooling reads the current pageId from here.
+  window.__lowdefy_page_id = pageId;
+  window.__lowdefy_page_ready = !loading;
 
   if (error) throw error;
 
