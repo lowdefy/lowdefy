@@ -176,8 +176,31 @@ test('markdown throws a not-yet-translated error', () => {
   expect(() => toPdfMake([markdown({ markdown: '# hi' })])).toThrow(/markdown.*not yet translated/i);
 });
 
-test('image throws a not-yet-translated error', () => {
-  expect(() => toPdfMake([image({ src: 'x.png' })])).toThrow(/image.*not yet translated/i);
+// --- image -------------------------------------------------------------------
+
+// A resolved image carries a base64 `data` URL, attached by the resolveImages
+// pre-pass; `toPdfMake` reads it directly.
+const PNG_DATA_URL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==';
+
+test('a resolved image with width and height translates to a sized pdfmake image', () => {
+  const { content } = toPdfMake([{ ...image({ src: 'logo.png', width: 120, height: 80 }), data: PNG_DATA_URL }]);
+  expect(content[0]).toMatchObject({ image: PNG_DATA_URL, width: 120, height: 80, unbreakable: true });
+  expect(content[0].maxWidth).toBeUndefined();
+});
+
+test('a resolved image without dimensions caps its natural size to the content width', () => {
+  const { content } = toPdfMake([{ ...image({ src: 'logo.png' }), data: PNG_DATA_URL }]);
+  // A4 portrait content width: 595.28 - 40 - 40.
+  expect(content[0]).toMatchObject({ image: PNG_DATA_URL, maxWidth: 515.28 });
+  expect(content[0].width).toBeUndefined();
+  expect(content[0].height).toBeUndefined();
+});
+
+test('an unresolved image (no data) is skipped from the content', () => {
+  const { content } = toPdfMake([image({ src: 'missing.png' }), text({ text: 'after' })]);
+  expect(content).toHaveLength(1);
+  expect(content[0]).toMatchObject({ text: 'after' });
 });
 
 // --- unknown kinds -----------------------------------------------------------
@@ -284,4 +307,19 @@ test('renders a mixed document to a non-trivial PDF Buffer', async () => {
   expect(Buffer.isBuffer(buffer)).toBe(true);
   expect(buffer.length).toBeGreaterThan(1000);
   expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+});
+
+test('renderPdfBuffer resolves one image, skips an unresolvable one, and warns', async () => {
+  const warnings = [];
+  const logger = { warn: (...args) => warnings.push(args) };
+  const nodes = [
+    text({ text: 'Report with images.' }),
+    image({ src: PNG_DATA_URL }), // a data URI resolves
+    image({ src: 'data:text/plain;base64,aGVsbG8=' }), // not an image -> skipped
+  ];
+  const buffer = await renderPdfBuffer(nodes, {}, { logger });
+  expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+  // The unresolvable image logged exactly one warning.
+  expect(warnings).toHaveLength(1);
+  expect(warnings[0][1]).toMatch(/not an image/i);
 });

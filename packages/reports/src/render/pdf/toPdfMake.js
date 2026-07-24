@@ -33,6 +33,7 @@ import virtualFileSystemModule from 'pdfmake/js/virtual-fs.js';
 
 import { validateNodes } from '../../ir/nodes.js';
 import { fonts, FONT_FAMILY } from '../../fonts/fonts.js';
+import { resolveImage } from '../resolveImage.js';
 
 const PdfPrinter = PrinterModule.default ?? PrinterModule;
 const URLResolver = URLResolverModule.default ?? URLResolverModule;
@@ -160,17 +161,25 @@ function translateRow(node, ctx) {
   return {
     margin: [0, 0, 0, 8],
     columnGap: 8,
-    columns: children.map((child, index) => {
-      const fraction = widths[index] ?? 1 / children.length;
-      return { ...translateNode(child, ctx), width: `${fraction * 100}%` };
-    }),
+    // A child may translate to null (a skipped image); drop its column and keep
+    // the remaining columns at their original fractions.
+    columns: children
+      .map((child, index) => {
+        const translated = translateNode(child, ctx);
+        if (translated === null) return null;
+        const fraction = widths[index] ?? 1 / children.length;
+        return { ...translated, width: `${fraction * 100}%` };
+      })
+      .filter((column) => column !== null),
   };
 }
 
 function translateStack(node, ctx) {
   return {
     margin: [0, 0, 0, 8],
-    stack: (node.children ?? []).map((child) => translateNode(child, ctx)),
+    stack: (node.children ?? [])
+      .map((child) => translateNode(child, ctx))
+      .filter((child) => child !== null),
   };
 }
 
@@ -198,8 +207,28 @@ function translateSpacer(node) {
 }
 
 /**
+ * Translate a resolved `image` node. The `resolveImages` pre-pass attaches a
+ * base64 `data` URL to every image whose bytes were acquired; an image without
+ * one failed resolution and is skipped (returns null) so the report still
+ * renders. Explicit `width`/`height` (points) win; with neither set the image
+ * keeps its natural size but is capped to the content width via `maxWidth`,
+ * which pdfmake clamps without upscaling.
+ */
+function translateImage(node, ctx) {
+  if (typeof node.data !== 'string') return null;
+  const translated = { image: node.data, unbreakable: true, margin: [0, 0, 0, 8] };
+  const hasWidth = typeof node.width === 'number';
+  const hasHeight = typeof node.height === 'number';
+  if (hasWidth) translated.width = node.width;
+  if (hasHeight) translated.height = node.height;
+  if (!hasWidth && !hasHeight) translated.maxWidth = ctx.contentWidth;
+  return translated;
+}
+
+/**
  * Translate one IR node to a pdfmake node. Recurses through `row`/`stack`
  * children. `ctx` carries the content width (points) for width-aware nodes.
+ * Returns null for a node that should be skipped (an unresolved image).
  */
 function translateNode(node, ctx) {
   switch (node.kind) {
@@ -224,7 +253,7 @@ function translateNode(node, ctx) {
     case 'markdown':
       throw new Error("Report IR node 'markdown' is not yet translated to PDF (task 15).");
     case 'image':
-      throw new Error("Report IR node 'image' is not yet translated to PDF (task 14).");
+      return translateImage(node, ctx);
     default:
       // validateNodes runs first, so an unknown kind should never reach here.
       throw new Error(`Report IR node kind '${node.kind}' cannot be translated to PDF.`);
@@ -234,6 +263,7 @@ function translateNode(node, ctx) {
 /** Top-level nodes may carry a `pageBreakBefore` flag from the walker. */
 function translateTopNode(node, ctx) {
   const translated = translateNode(node, ctx);
+  if (translated === null) return null; // a skipped image
   if (node.pageBreakBefore) {
     translated.pageBreak = 'before';
   }
@@ -287,7 +317,9 @@ export function toPdfMake(nodes, report = {}, options = {}) {
   const contentWidth = contentWidthOf(report);
 
   const ctx = { contentWidth };
-  const content = nodes.map((node) => translateTopNode(node, ctx));
+  const content = nodes
+    .map((node) => translateTopNode(node, ctx))
+    .filter((node) => node !== null);
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);
@@ -333,6 +365,38 @@ function registerFonts() {
   fontsRegistered = true;
 }
 
+// --- Image resolution pre-pass -----------------------------------------------
+
+/**
+ * Acquire bytes for every `image` node before the synchronous translation.
+ * `toPdfMake` is a pure IR -> docDefinition mapping, but image acquisition is
+ * async (disk reads, guarded fetches), so it happens here first. Each image is
+ * routed through the one central `resolveImage`; a success attaches a base64
+ * `data` URL to the node, a failure leaves the node unresolved (a warning is
+ * logged by the resolver) and the translator skips it. Returns a new node list;
+ * inputs are not mutated.
+ *
+ * @param {object[]} nodes IR nodes.
+ * @param {object} [opts] `publicDir` (public assets root), `logger`.
+ * @returns {Promise<object[]>} nodes with resolved images carrying `data`.
+ */
+export async function resolveImages(nodes, { publicDir, logger } = {}) {
+  return Promise.all(
+    (nodes ?? []).map(async (node) => {
+      if (node.kind === 'image') {
+        const resolved = await resolveImage({ src: node.src, publicDir, logger });
+        if (resolved === null) return node;
+        const data = `data:${resolved.mime};base64,${resolved.buffer.toString('base64')}`;
+        return { ...node, data };
+      }
+      if (node.kind === 'row' || node.kind === 'stack') {
+        return { ...node, children: await resolveImages(node.children, { publicDir, logger }) };
+      }
+      return node;
+    })
+  );
+}
+
 function collectBuffer(pdfKitDoc) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -348,11 +412,17 @@ function collectBuffer(pdfKitDoc) {
  *
  * @param {object[]} nodes IR nodes.
  * @param {object} [report] Page-level options (see `toPdfMake`).
- * @param {object} [options] `now` (Date) fixes the footer timestamp.
+ * @param {object} [options] `now` (Date) fixes the footer timestamp;
+ *   `publicDir` (public assets root) and `logger` are threaded to the image
+ *   resolver.
  * @returns {Promise<Buffer>} the PDF file bytes.
  */
 export async function renderPdfBuffer(nodes, report = {}, options = {}) {
-  const docDefinition = toPdfMake(nodes, report, options);
+  const resolved = await resolveImages(nodes, {
+    publicDir: options.publicDir,
+    logger: options.logger,
+  });
+  const docDefinition = toPdfMake(resolved, report, options);
   registerFonts();
   const fontDescriptors = { [FONT_FAMILY]: { ...FONT_FILES } };
   const urlResolver = new URLResolver(virtualFileSystem);

@@ -14,28 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  static: true,
-  category: 'container',
-  icons: [],
-  valueType: null,
-  slots: {
-    content: 'Child blocks in the Span.',
-  },
-  cssKeys: {
-    element: 'The Span element.',
-  },
-  events: {
-    onClick: 'Trigger actions when the Span is clicked.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      content: {
-        type: 'string',
-        description: 'Span content string. Overrides the "content" content area.',
-      },
-    },
-  },
-};
+/**
+ * Static report renderers for blocks-basic. Each export is keyed by block type
+ * and exposes `{ toReport }`, mapping a block's evaluated properties to report
+ * IR. This entry must stay free of React so the server can load the registry
+ * without a browser runtime; renderers emit plain IR object literals.
+ */
+
+export { Img } from './Img.js';
+export { Span } from './Span.js';
+export { Box } from './Box.js';

@@ -147,6 +147,7 @@ async function runGeneration({
   user,
   lowdefyGlobal,
   serverUrl,
+  publicDir,
   logger,
   now,
 }) {
@@ -187,7 +188,7 @@ async function runGeneration({
 
   let buffer;
   if (format === 'pdf') {
-    buffer = await renderPdfBuffer(walked.nodes, report, { now });
+    buffer = await renderPdfBuffer(walked.nodes, report, { now, publicDir, logger });
   } else {
     // format === 'xlsx' — project the same IR's table nodes into a workbook.
     buffer = await toXlsx(walked.nodes);
@@ -232,6 +233,8 @@ async function runGeneration({
  * @param {object|null} [options.user] The invoking user (null for system).
  * @param {object} [options.lowdefyGlobal]
  * @param {string} [options.serverUrl] Base URL for `_location`/`_url`.
+ * @param {string} [options.publicDir] Absolute path to the app's public assets
+ *   directory, threaded to the image resolver for relative-path image sources.
  * @param {object} [options.logger] Pino-style logger.
  * @param {Date} [options.now] Fixes the footer timestamp (tests).
  * @param {number} [options.timeoutMs] Generation timeout; default 30000.
