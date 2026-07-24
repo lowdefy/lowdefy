@@ -1107,7 +1107,7 @@ test('SetActiveOrganization action wired under the default pinned policy fails t
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the active organization is fixed for a pinned deployment.'
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
   );
 });
 
@@ -1137,7 +1137,7 @@ test('SetActiveOrganization action wired under an explicit pinned policy fails t
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the active organization is fixed for a pinned deployment.'
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
   );
 });
 
@@ -1169,7 +1169,7 @@ test('SetActiveOrganization action wired under the tenant policy builds cleanly'
   expect(() => buildPages({ components, context })).not.toThrow();
 });
 
-test('non-SetActiveOrganization actions do not trigger the pinned policy build error', () => {
+test('non-org-client actions do not trigger the pinned policy build error', () => {
   const components = {
     pages: [
       {
@@ -1185,6 +1185,65 @@ test('non-SetActiveOrganization actions do not trigger the pinned policy build e
                 {
                   id: 'reset',
                   type: 'Reset',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('InviteMember action wired under the default pinned policy fails the build', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'invite_member',
+                  type: 'InviteMember',
+                  params: { email: 'invitee@example.com', role: 'admin' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'InviteMember action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
+  );
+});
+
+test('InviteMember action wired under the tenant policy builds cleanly', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'invite_member',
+                  type: 'InviteMember',
+                  params: { email: 'invitee@example.com', role: 'admin' },
                 },
               ],
             },
