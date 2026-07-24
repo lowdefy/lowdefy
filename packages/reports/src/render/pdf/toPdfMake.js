@@ -50,6 +50,23 @@ const PAGE_SIZES = {
 
 const PAGE_MARGINS = [40, 60, 40, 50]; // [left, top, right, bottom]
 
+/**
+ * Content width in points for a report's page geometry: the page width for the
+ * chosen size/orientation minus the left and right margins. The walker sizes
+ * its columns against this, so generation shares one source of truth with the
+ * PDF translator rather than duplicating the constants.
+ *
+ * @param {object} [report] `size` ('A4' | 'letter'), `orientation`
+ *   ('portrait' | 'landscape').
+ * @returns {number} content width in PostScript points.
+ */
+export function contentWidthOf(report = {}) {
+  const size = PAGE_SIZES[String(report.size ?? 'A4').toLowerCase()] ?? PAGE_SIZES.a4;
+  const orientation = report.orientation === 'landscape' ? 'landscape' : 'portrait';
+  const pageWidth = orientation === 'landscape' ? size.height : size.width;
+  return pageWidth - PAGE_MARGINS[0] - PAGE_MARGINS[2];
+}
+
 // --- Text styling ------------------------------------------------------------
 
 const HEADING_SIZES = { 1: 22, 2: 17, 3: 14, 4: 12 };
@@ -267,8 +284,7 @@ export function toPdfMake(nodes, report = {}, options = {}) {
 
   const size = PAGE_SIZES[String(report.size ?? 'A4').toLowerCase()] ?? PAGE_SIZES.a4;
   const orientation = report.orientation === 'landscape' ? 'landscape' : 'portrait';
-  const pageWidth = orientation === 'landscape' ? size.height : size.width;
-  const contentWidth = pageWidth - PAGE_MARGINS[0] - PAGE_MARGINS[2];
+  const contentWidth = contentWidthOf(report);
 
   const ctx = { contentWidth };
   const content = nodes.map((node) => translateTopNode(node, ctx));

@@ -33,6 +33,10 @@ import {
   validateNodes,
 } from './ir/nodes.js';
 import { fonts, FONT_FAMILY } from './fonts/fonts.js';
+import generateReport from './generateReport.js';
+import evaluatePage from './evaluatePage/evaluatePage.js';
+import walkBlocks from './render/walkBlocks.js';
+import { toPdfMake, renderPdfBuffer, contentWidthOf } from './render/pdf/toPdfMake.js';
 
 export {
   // IR
@@ -55,4 +59,11 @@ export {
   // Fonts
   fonts,
   FONT_FAMILY,
+  // Pipeline
+  generateReport,
+  evaluatePage,
+  walkBlocks,
+  toPdfMake,
+  renderPdfBuffer,
+  contentWidthOf,
 };
