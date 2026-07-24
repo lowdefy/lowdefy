@@ -14,29 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  static: true,
-  category: 'container',
-  icons: [],
-  valueType: null,
-  slots: {
-    content: 'Child blocks in the content area.',
-  },
-  cssKeys: {
-    element: 'The Content element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-    },
-  },
+import { linearizePanels } from './utils.js';
+
+/** Collapse → a linearised `stack`: each panel title as a `heading`, then children. */
+export const Collapse = {
+  toReport: ({ block, children }) =>
+    linearizePanels({ panels: block.properties.panels, children }),
 };

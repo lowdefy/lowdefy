@@ -14,29 +14,13 @@
   limitations under the License.
 */
 
-export default {
-  static: true,
-  category: 'container',
-  icons: [],
-  valueType: null,
-  slots: {
-    content: 'Child blocks in the content area.',
-  },
-  cssKeys: {
-    element: 'The Content element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-    },
+import { isBlank } from './utils.js';
+
+/** Paragraph → `text`. Empty content yields no node. */
+export const Paragraph = {
+  toReport: ({ block }) => {
+    const { content } = block.properties;
+    if (isBlank(content)) return null;
+    return { kind: 'text', text: String(content) };
   },
 };

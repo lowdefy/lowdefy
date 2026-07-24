@@ -14,29 +14,11 @@
   limitations under the License.
 */
 
-export default {
-  static: true,
-  category: 'container',
-  icons: [],
-  valueType: null,
-  slots: {
-    content: 'Child blocks in the content area.',
-  },
-  cssKeys: {
-    element: 'The Content element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-    },
+/** Content → a `stack` of its children. An empty content area yields no node. */
+export const Content = {
+  toReport: ({ children }) => {
+    const nodes = children ?? [];
+    if (nodes.length === 0) return null;
+    return { kind: 'stack', children: nodes };
   },
 };

@@ -14,29 +14,20 @@
   limitations under the License.
 */
 
-export default {
-  static: true,
-  category: 'container',
-  icons: [],
-  valueType: null,
-  slots: {
-    content: 'Child blocks in the content area.',
-  },
-  cssKeys: {
-    element: 'The Content element.',
-  },
-  properties: {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
-    },
+import { isBlank } from './utils.js';
+
+/**
+ * Card → a `stack` of its children. A `title` prepends a `heading` so the
+ * card's header survives into the document. An empty, untitled card yields no
+ * node.
+ */
+export const Card = {
+  toReport: ({ block, children }) => {
+    const nodes = [];
+    const { title } = block.properties;
+    if (!isBlank(title)) nodes.push({ kind: 'heading', text: String(title), level: 4 });
+    nodes.push(...(children ?? []));
+    if (nodes.length === 0) return null;
+    return { kind: 'stack', children: nodes };
   },
 };
