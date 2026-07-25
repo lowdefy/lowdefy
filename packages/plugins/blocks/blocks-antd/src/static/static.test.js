@@ -99,8 +99,15 @@ describe('Statistic', () => {
 });
 
 describe('Divider', () => {
-  test('always returns a divider node', () => {
+  test('no title returns a bare divider node', () => {
     expect(run(Divider, {})).toEqual({ kind: 'divider' });
+    expect(run(Divider, { properties: { title: '' } })).toEqual({ kind: 'divider' });
+  });
+  test('a title adds a small section heading after the rule', () => {
+    expect(run(Divider, { properties: { title: 'Revenue by Month' } })).toEqual([
+      { kind: 'divider' },
+      { kind: 'heading', text: 'Revenue by Month', level: 4 },
+    ]);
   });
 });
 
