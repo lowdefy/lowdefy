@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
@@ -21,8 +22,12 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
+import blocksStatic from '../../build/plugins/blocksStatic.js';
+import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
+import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
+import { generateReport } from '../../build/plugins/reports.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
@@ -40,6 +45,35 @@ import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
+
+// Report generation artifacts, read once at startup. blockMetas drives the
+// engine's category lookup; the report stylesheet sizes Html/chart renders; the
+// public assets directory resolves relative image sources. The stylesheet is
+// optional — an app without custom report styles has none.
+const blockMetas = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), 'build/plugins/blockMetas.json'), 'utf8')
+);
+
+let reportStyles;
+try {
+  reportStyles = fs.readFileSync(path.join(process.cwd(), 'build/reports/styles.css'), 'utf8');
+} catch {
+  reportStyles = undefined;
+}
+
+// The Node server serves the built client and public assets from dist/client
+// (Vite copies public/ into it), so relative image sources resolve there.
+const publicDir = path.join(process.cwd(), 'dist/client');
+
+const report = {
+  blockMetas,
+  generateReport,
+  jsMap: clientJsMap,
+  operators: clientOperators,
+  publicDir,
+  registry: blocksStatic,
+  stylesheets: reportStyles,
+};
 
 // Charset/length guard so a hostile x-request-id can't inject into logs.
 const REQUEST_ID_REGEX = /^[\w.:-]{1,128}$/;
@@ -83,6 +117,7 @@ function apiContext() {
       notifications,
       operators,
       renderEmail,
+      report,
       req: {
         url: c.req.path,
         method: c.req.method,

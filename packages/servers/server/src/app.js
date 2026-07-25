@@ -35,6 +35,7 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
+import reportHandler from './routes/report.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
@@ -92,6 +93,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
   app.all('/api/request/*', requestHandler);
+  app.post('/api/report/*', reportHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
   app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
