@@ -16,7 +16,7 @@
 
 import path from 'path';
 import semver from 'semver';
-import { type } from '@lowdefy/helpers';
+import { ReservedKeyError, setKey, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
@@ -171,9 +171,6 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
         `Use a flat identifier like "team-users".`
     );
   }
-  if (entry.id === '__proto__' || entry.id === 'constructor' || entry.id === 'prototype') {
-    throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`);
-  }
   if (!entry.source || !type.isString(entry.source)) {
     throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
@@ -282,21 +279,28 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     }
   }
 
-  context.modules[entry.id] = {
-    id: entry.id,
-    source: entry.source,
-    packageRoot,
-    moduleRoot,
-    isLocal,
-    consumerVars: entry.vars ?? {},
-    varDefs,
-    resolvedVarCache: {},
-    connections: entry.connections ?? {},
-    manifest,
-    dependencies,
-    moduleDependencies: entry.dependencies ?? {},
-    refDef,
-  };
+  try {
+    setKey(context.modules, entry.id, {
+      id: entry.id,
+      source: entry.source,
+      packageRoot,
+      moduleRoot,
+      isLocal,
+      consumerVars: entry.vars ?? {},
+      varDefs,
+      resolvedVarCache: {},
+      connections: entry.connections ?? {},
+      manifest,
+      dependencies,
+      moduleDependencies: entry.dependencies ?? {},
+      refDef,
+    });
+  } catch (error) {
+    if (error instanceof ReservedKeyError) {
+      throw new ConfigError(`Module entry id "${entry.id}" is a reserved name.`, { cause: error });
+    }
+    throw error;
+  }
 }
 
 // Phase C.5 — record-ify exportables: walk only the components and menus
