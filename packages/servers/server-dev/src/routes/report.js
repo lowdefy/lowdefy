@@ -14,38 +14,29 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { renderReport } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
 
-// Collect the per-block `report:` options the build leaves on the built page
-// JSON. The engine drops these keys during evaluation, so the map is extracted
-// here from the raw config and passed to generateReport keyed by blockId. Walk
-// every slot's blocks recursively; a block's own children live under its slots.
-function collectReportOptions(block, map) {
-  for (const slot of Object.values(block?.slots ?? {})) {
-    for (const child of slot?.blocks ?? []) {
-      if (child.report && child.blockId) {
-        map[child.blockId] = child.report;
-      }
-      collectReportOptions(child, map);
-    }
-  }
-}
-
 // A download filename becomes a quoted Content-Disposition value, so strip the
 // characters that would break the header or escape the download directory:
-// quotes, backslashes, path separators, and control characters.
+// quotes, backslashes, path separators, and control characters. Stripping
+// control bytes is the point here, hence the rule exemption.
+// eslint-disable-next-line no-control-regex
+const UNSAFE_FILENAME_CHARS = /["\\/\x00-\x1f]/g;
+
 function sanitizeFilename(name) {
-  return name.replace(/["\\/\r\n\t -]/g, '').trim();
+  return name.replace(UNSAFE_FILENAME_CHARS, '').trim();
 }
 
 async function reportHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/report/').join('/');
+
+  const body = (await c.req.json().catch(() => ({}))) ?? {};
+  const { format = 'pdf', filename, urlQuery, input, state } = body;
 
   // Dev builds pages on demand, so a page that has never been opened has no
   // config artifact yet. Build it first — otherwise downloading a report for a
@@ -58,55 +49,21 @@ async function reportHandler(c) {
     configDirectory: context.configDirectory,
   });
 
-  // Existence-masking: an unknown page and a page the session may not view
-  // return the same 404, so the route never reveals which pages exist. The
-  // authorize check is identical to viewing the page (getPageConfig.js).
-  const pageConfig = await context.readConfigFile(`pages/${pageId}.json`);
-  if (!pageConfig || !context.authorize(pageConfig)) {
-    context.logger.info({ event: 'report_not_found', pageId });
-    return c.body('Not found', 404);
-  }
-
-  // readConfigFile caches parsed artifacts — deep copy so the headless render
-  // never mutates the shared cached config, and drop the auth key the engine
-  // has no use for.
-  // eslint-disable-next-line no-unused-vars
-  const { auth, ...rest } = serializer.copy(pageConfig);
-
-  const reportOptions = {};
-  collectReportOptions(rest, reportOptions);
-
-  const { report } = context;
-
-  // Every page request runs through @lowdefy/api callRequest, so it passes the
-  // same authorizeRequest gate as an interactive request — a user can never
-  // download data from a request they could not call in the browser.
-  const reportCallRequest = (args) => callRequest(context, args);
-
-  const lowdefyGlobal = (await context.readConfigFile('global.json')) || {};
-
-  const body = (await c.req.json().catch(() => ({}))) ?? {};
-  const { format = 'pdf', filename, urlQuery, input, state } = body;
-
   try {
-    const result = await report.generateReport({
-      pageConfig: rest,
+    // renderReport (@lowdefy/api) authorizes the page exactly as viewing it does
+    // and returns null for both an unknown page and one this session may not
+    // view, so the route never reveals which pages exist.
+    const result = await renderReport(context, {
+      pageId,
       format,
       snapshot: { urlQuery, input, state },
-      reportOptions,
       invocation: 'user',
-      callRequest: reportCallRequest,
-      operators: report.operators,
-      jsMap: report.jsMap,
-      blockMetas: report.blockMetas,
-      registry: report.registry,
-      stylesheets: report.stylesheets,
-      user: context.session?.user ?? null,
-      lowdefyGlobal,
-      serverUrl: context.origin,
-      publicDir: report.publicDir,
-      logger: context.logger,
     });
+
+    if (!result) {
+      context.logger.info({ event: 'report_not_found', pageId });
+      return c.body('Not found', 404);
+    }
 
     const downloadName = sanitizeFilename(filename || result.filename) || result.filename;
     context.logger.info({ event: 'report_generated', pageId, format });
