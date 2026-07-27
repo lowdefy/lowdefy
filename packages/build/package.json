@@ -65,10 +65,13 @@
     "@lowdefy/nunjucks": "5.4.0",
     "@lowdefy/operators": "5.4.0",
     "@lowdefy/operators-js": "5.4.0",
+    "@tailwindcss/node": "4.3.1",
+    "@tailwindcss/oxide": "4.3.1",
     "ajv": "8.20.0",
     "json5": "2.2.3",
     "picomatch": "4.0.1",
     "semver": "7.7.4",
+    "tailwindcss": "4.3.1",
     "tar": "7.5.13",
     "yaml": "2.9.0",
     "yargs": "18.0.0"

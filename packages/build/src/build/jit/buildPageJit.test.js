@@ -26,6 +26,14 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   writeFileIfChanged: mockWriteFileIfChanged,
 }));
 
+// Mocked so the JIT tests don't run a real Tailwind compile against the test
+// context's placeholder directories — writeReportStyles.test.js covers the
+// compile itself.
+const mockWriteReportStyles = jest.fn();
+jest.unstable_mockModule('../writePluginImports/writeReportStyles.js', () => ({
+  default: mockWriteReportStyles,
+}));
+
 const { default: testContext } = await import('../../test-utils/testContext.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 const { default: makeId } = await import('../../utils/makeId.js');
@@ -61,6 +69,8 @@ beforeEach(() => {
   mockWriteFile.mockResolvedValue(undefined);
   mockWriteFileIfChanged.mockReset();
   mockWriteFileIfChanged.mockResolvedValue(true);
+  mockWriteReportStyles.mockReset();
+  mockWriteReportStyles.mockResolvedValue(undefined);
 });
 
 test('buildPageJit returns null for unknown pageId', async () => {
@@ -158,6 +168,10 @@ blocks:
 
   // The built page itself only holds the extracted _js hash, not the source.
   expect(JSON.stringify(result)).not.toContain('bg-warning');
+
+  // The report stylesheet is recompiled from the refreshed content files so
+  // server-side Html rendering resolves the page's classes after a dev rebuild.
+  expect(mockWriteReportStyles).toHaveBeenCalledWith({ context });
 });
 
 test('buildPageJit resolves page template with simple vars', async () => {

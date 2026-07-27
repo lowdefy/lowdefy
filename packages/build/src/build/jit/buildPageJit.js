@@ -43,6 +43,7 @@ import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
+import writeReportStyles from '../writePluginImports/writeReportStyles.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
@@ -354,6 +355,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       context: buildContext,
       tailwindContent,
     });
+
+    // Recompile the report stylesheet from the content files on disk, which
+    // writePageJit just refreshed for this page. Reports render Html blocks
+    // server-side against this artifact, so it has to follow page content in
+    // dev the way the client CSS does. Ungated like the full build: the compile
+    // is milliseconds, and writeBuildArtifact skips byte-identical writes.
+    await writeReportStyles({ context: buildContext });
 
     // Attached after the disk write (like _warnings) so it never persists in
     // artifacts — the JIT server uses it to decide whether to trigger a CSS

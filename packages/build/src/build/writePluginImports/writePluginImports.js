@@ -31,6 +31,7 @@ import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import writeReportImports from './writeReportImports.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
+import writeReportStyles from './writeReportStyles.js';
 
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
@@ -50,6 +51,10 @@ async function writePluginImports({ components, context }) {
   await writeWebsocketImports({ components, context });
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
+  // Runs after writeGlobalsCss, which writes the collected page and block
+  // content files the report stylesheet's @source glob scans. No usage gate —
+  // report downloads are zero-config, so there is no signal to gate on.
+  await writeReportStyles({ context });
 
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.

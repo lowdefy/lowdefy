@@ -52,7 +52,9 @@ const BRIDGE_DEFAULTS = {
   },
 };
 
-function objectToThemeVars(obj, prefix) {
+// Exported so writeReportStyles.js emits the app's theme tokens as the same
+// `@theme` variable names the client gets — one mapping, no drift.
+export function objectToThemeVars(obj, prefix) {
   const lines = [];
   for (const [key, value] of Object.entries(obj)) {
     const varName = prefix ? `${prefix}-${key}` : `--${key}`;
