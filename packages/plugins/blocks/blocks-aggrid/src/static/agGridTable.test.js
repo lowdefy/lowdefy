@@ -29,6 +29,13 @@ function run({ properties = {}, context = {} } = {}) {
 }
 
 describe('agGridTable', () => {
+  test('emits a grid node — worksheet data, not document content', () => {
+    const result = run({
+      properties: { columnDefs: [{ field: 'name' }], rowData: [{ name: 'Ada' }] },
+    });
+    expect(result.kind).toBe('grid');
+  });
+
   test('maps columnDefs to a header row and rowData to cell rows', () => {
     const result = run({
       properties: {

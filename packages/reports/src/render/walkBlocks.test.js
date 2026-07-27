@@ -19,7 +19,7 @@ import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
 import evaluatePage from '../evaluatePage/evaluatePage.js';
 import walkBlocks from './walkBlocks.js';
-import { cell, table, text } from '../ir/nodes.js';
+import { cell, grid, table, text } from '../ir/nodes.js';
 
 const operators = { ...operatorsClient };
 
@@ -298,11 +298,11 @@ describe('page break hints', () => {
 describe('sheet names', () => {
   const tableRegistry = {
     Widget: {
-      toReport: () => table({ header: [cell('h')], rows: [[cell(1)]] }),
+      toReport: () => grid({ header: [cell('h')], rows: [[cell(1)]] }),
     },
   };
 
-  test('a table node takes the report sheetName hint, else the blockId', async () => {
+  test('a grid node takes the report sheetName hint, else the blockId', async () => {
     const context = await evaluate({
       id: 'page1',
       type: 'Box',
@@ -329,7 +329,7 @@ describe('sheet names', () => {
     });
     const named = {
       Widget: {
-        toReport: () => table({ header: [cell('h')], rows: [[cell(1)]], sheetName: 'Fixed' }),
+        toReport: () => grid({ header: [cell('h')], rows: [[cell(1)]], sheetName: 'Fixed' }),
       },
     };
     const { nodes } = await walkBlocks(context, named, {}, renderContext());

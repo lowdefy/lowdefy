@@ -118,7 +118,35 @@ function translateSvg(node) {
   };
 }
 
-function translateTable(node) {
+/**
+ * A grid is worksheet data, so the document names it and its size instead of
+ * printing it (see the `grid` node in ir/nodes.js). Without this line a section
+ * heading would introduce nothing at all, which reads as a broken report.
+ */
+function translateGrid(node, ctx) {
+  const rowCount = node.rows?.length ?? 0;
+  const label = node.sheetName ? `'${node.sheetName}'` : 'This table';
+  ctx.logger?.debug?.(
+    { sheetName: node.sheetName, rows: rowCount },
+    `Report grid ${label} (${rowCount} rows) is exported to xlsx, not rendered in the PDF.`
+  );
+  return {
+    text: `${label} — ${rowCount} ${
+      rowCount === 1 ? 'row' : 'rows'
+    }, included in the Excel export.`,
+    italics: true,
+    color: MUTED,
+    margin: [0, 0, 0, 8],
+  };
+}
+
+/**
+ * Columns divide the available width evenly, as explicit points rather than
+ * pdfmake star columns: a star column is never narrower than its widest
+ * unbreakable token, so one long email or id grows the whole table past the page
+ * margin. Fixed widths wrap instead, which keeps every table on the page.
+ */
+function translateTable(node, ctx) {
   const columnCount = node.header?.length ?? node.rows?.[0]?.length ?? 0;
   const headerRow = (node.header ?? []).map((cell) => ({
     text: cellText(cell),
@@ -128,11 +156,13 @@ function translateTable(node) {
   const dataRows = (node.rows ?? []).map((dataRow) =>
     (dataRow ?? []).map((cell) => ({ text: cellText(cell) }))
   );
+  // pdfmake's default cell padding is 4pt a side, so each column loses 8pt.
+  const available = ctx.contentWidth - columnCount * 8;
   return {
     margin: [0, 0, 0, 8],
     table: {
       headerRows: 1,
-      widths: Array(columnCount).fill('*'), // star columns -> full content width
+      widths: Array(columnCount).fill(available / Math.max(1, columnCount)),
       body: [headerRow, ...dataRows],
     },
     layout: 'lightHorizontalLines',
@@ -160,9 +190,14 @@ function translateRow(node, ctx) {
     // the remaining columns at their original fractions.
     columns: children
       .map((child, index) => {
-        const translated = translateNode(child, ctx);
-        if (translated === null) return null;
         const fraction = widths[index] ?? 1 / children.length;
+        // Narrow the context to the cell: a table or divider inside a row must
+        // size to its column, not to the full page width.
+        const translated = translateNode(child, {
+          ...ctx,
+          contentWidth: ctx.contentWidth * fraction,
+        });
+        if (translated === null) return null;
         return { ...translated, width: `${fraction * 100}%` };
       })
       .filter((column) => column !== null),
@@ -221,8 +256,10 @@ function translateNode(node, ctx) {
       return translateText(node);
     case 'svg':
       return translateSvg(node);
+    case 'grid':
+      return translateGrid(node, ctx);
     case 'table':
-      return translateTable(node);
+      return translateTable(node, ctx);
     case 'stat':
       return translateStat(node);
     case 'row':

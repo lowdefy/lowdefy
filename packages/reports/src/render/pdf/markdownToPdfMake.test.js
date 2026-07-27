@@ -209,7 +209,7 @@ test('a GFM table maps to a pdfmake table with a header row and alignment', () =
       margin: [0, 0, 0, 8],
       table: {
         headerRows: 1,
-        widths: ['*', '*'],
+        widths: [(CONTENT_WIDTH - 16) / 2, (CONTENT_WIDTH - 16) / 2],
         body: [
           [
             { text: 'Region', bold: true, fillColor: '#f5f5f5' },

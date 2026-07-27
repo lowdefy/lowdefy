@@ -205,13 +205,13 @@ describe('pdf generation', () => {
 });
 
 describe('xlsx format', () => {
-  // A minimal tabular renderer: any `Grid` block projects to a table IR node.
+  // A minimal tabular renderer: any `Grid` block projects to a grid IR node.
   // (The real AgGrid static renderer lands in its own package/task; this stub
   // exercises the xlsx projection end to end without that dependency.)
   const gridRegistry = {
     Grid: {
       toReport: ({ block }) => ({
-        kind: 'table',
+        kind: 'grid',
         sheetName: block.properties.sheetName,
         header: [{ value: 'Region' }, { value: 'Total' }],
         rows: [
@@ -245,7 +245,7 @@ describe('xlsx format', () => {
     expect(result.filename).toBe('page1.xlsx');
   });
 
-  test('a page with no tables rejects rather than emitting an empty workbook', async () => {
+  test('a page with no grids rejects rather than emitting an empty workbook', async () => {
     const pageConfig = buildTestPage({
       pageConfig: {
         id: 'page1',
@@ -255,7 +255,7 @@ describe('xlsx format', () => {
     });
 
     await expect(generateReport(baseOptions({ pageConfig, format: 'xlsx' }))).rejects.toThrow(
-      'no tables to export'
+      'no grids to export'
     );
   });
 });

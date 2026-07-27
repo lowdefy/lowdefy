@@ -24,6 +24,7 @@ import {
   svg,
   image,
   cell,
+  grid,
   table,
   stat,
   row,
@@ -35,7 +36,7 @@ import {
 } from './nodes.js';
 
 test('IR_VERSION is exported as a number', () => {
-  expect(IR_VERSION).toBe(1);
+  expect(IR_VERSION).toBe(2);
 });
 
 test('NODE_KINDS lists exactly the closed node set', () => {
@@ -49,6 +50,7 @@ test('NODE_KINDS lists exactly the closed node set', () => {
       'spacer',
       'stack',
       'stat',
+      'grid',
       'svg',
       'table',
       'text',
@@ -65,9 +67,13 @@ describe('constructors produce validating nodes', () => {
     svg: svg({ svg: '<svg></svg>', width: 100, height: 50 }),
     'image with dims': image({ src: 'files/logo.png', width: 120, height: 40 }),
     'image without dims': image({ src: 'files/logo.png' }),
-    table: table({
+    grid: grid({
       header: [cell('Name'), cell('Total')],
       rows: [[cell('Widget'), cell(12.5, '12.50')]],
+    }),
+    table: table({
+      header: [cell('Field'), cell('Value')],
+      rows: [[cell('Region'), cell('EU')]],
     }),
     stat: stat({ label: 'Revenue', value: '$1,000' }),
     row: row({ children: [text({ text: 'a' }), text({ text: 'b' })], widths: [0.5, 0.5] }),
@@ -110,13 +116,21 @@ describe('constructor shapes', () => {
     expect(spacer({ width: 0.25 })).toEqual({ kind: 'spacer', width: 0.25 });
   });
 
-  test('table carries a sheetName hint only when given', () => {
-    expect(table({ header: [], rows: [] })).toEqual({ kind: 'table', header: [], rows: [] });
+  test('grid carries a sheetName hint only when given', () => {
+    expect(grid({ header: [], rows: [] })).toEqual({ kind: 'grid', header: [], rows: [] });
+    expect(grid({ header: [], rows: [], sheetName: 'Sales' })).toEqual({
+      kind: 'grid',
+      header: [],
+      rows: [],
+      sheetName: 'Sales',
+    });
+  });
+
+  test('table takes no sheetName — it is document content, not a worksheet', () => {
     expect(table({ header: [], rows: [], sheetName: 'Sales' })).toEqual({
       kind: 'table',
       header: [],
       rows: [],
-      sheetName: 'Sales',
     });
   });
 });

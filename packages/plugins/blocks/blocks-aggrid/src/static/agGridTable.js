@@ -59,9 +59,10 @@ function buildCell({ col, data, blockId, logger }) {
 }
 
 /**
- * Shared static renderer for every AgGrid block variant: a grid becomes a
- * `table` node. Visible `columnDefs` (respecting `hide: true`) map to header
- * cells and each `rowData` row to a row of cells.
+ * Shared static renderer for every AgGrid block variant: a grid becomes a `grid`
+ * node, which the report exports as a worksheet rather than printing into the
+ * PDF. Visible `columnDefs` (respecting `hide: true`) map to header cells and
+ * each `rowData` row to a row of cells.
  *
  * Imperative grid state is ignored — client-side filtering and sorting do not
  * apply (the report is a fidelity snapshot of the configured data), so rows
@@ -79,6 +80,6 @@ export const agGridTable = {
     const rows = rowData.map((data) =>
       columns.map((col) => buildCell({ col, data, blockId, logger }))
     );
-    return { kind: 'table', header, rows };
+    return { kind: 'grid', header, rows };
   },
 };

@@ -181,9 +181,9 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       nodes[0] = { ...nodes[0], pageBreakBefore: true };
     }
     // Name xlsx sheets here — the only place that holds both the report
-    // sheetName hint and the source blockId. Renderers emit unnamed tables.
+    // sheetName hint and the source blockId. Renderers emit unnamed grids.
     return nodes.map((node) =>
-      node.kind === 'table' && type.isNone(node.sheetName)
+      node.kind === 'grid' && type.isNone(node.sheetName)
         ? { ...node, sheetName: options.sheetName ?? block.blockId }
         : node
     );

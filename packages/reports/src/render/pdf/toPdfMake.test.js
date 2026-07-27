@@ -69,6 +69,29 @@ test('svg translates to a sized svg node wrapped unbreakable', () => {
   });
 });
 
+// --- grid --------------------------------------------------------------------
+
+test('a grid is named in the document, not printed, and never becomes a table', () => {
+  const node = {
+    kind: 'grid',
+    sheetName: 'Feedback',
+    header: [cell('Author')],
+    rows: [[cell('a')], [cell('b')]],
+  };
+  const { content } = toPdfMake([node]);
+  expect(content).toHaveLength(1);
+  expect(content[0].table).toBeUndefined();
+  expect(content[0]).toMatchObject({
+    text: "'Feedback' — 2 rows, included in the Excel export.",
+    italics: true,
+  });
+});
+
+test('a one-row grid reads as a single row', () => {
+  const node = { kind: 'grid', sheetName: 'Sales', header: [cell('A')], rows: [[cell(1)]] };
+  expect(toPdfMake([node]).content[0].text).toContain('1 row,');
+});
+
 // --- table -------------------------------------------------------------------
 
 test('table renders formatted ?? value per cell with a repeated header row', () => {
@@ -82,8 +105,9 @@ test('table renders formatted ?? value per cell with a repeated header row', () 
   const { content } = toPdfMake([node]);
   const { table: t, layout } = content[0];
   expect(t.headerRows).toBe(1);
-  // Full-width: one star column per header cell.
-  expect(t.widths).toEqual(['*', '*']);
+  // Explicit points, not star columns: A4 content width less pdfmake's 8pt of
+  // cell padding per column, divided evenly.
+  expect(t.widths).toEqual([(515.28 - 16) / 2, (515.28 - 16) / 2]);
   expect(layout).toBeDefined();
   // Header cells are bold.
   expect(t.body[0]).toEqual([
@@ -93,6 +117,30 @@ test('table renders formatted ?? value per cell with a repeated header row', () 
   // formatted wins over value; raw value used when no formatted string.
   expect(t.body[1]).toEqual([{ text: 'West' }, { text: '$1,250' }]);
   expect(t.body[2]).toEqual([{ text: 'East' }, { text: '0' }]);
+});
+
+test('a long unbreakable token does not widen the table past the page', () => {
+  // A star column is never narrower than its widest unbreakable token, so an
+  // email or id would push the table off the page. Fixed widths wrap instead.
+  const node = table({
+    header: [cell('Author'), cell('Comment')],
+    rows: [[cell('Maynard.Hodkiewicz@roberta.com'), cell('a comment')]],
+  });
+  const { content } = toPdfMake([node]);
+  const total = content[0].table.widths.reduce((sum, width) => sum + width, 0);
+  expect(total).toBeLessThanOrEqual(515.28);
+  expect(content[0].table.widths.every((width) => typeof width === 'number')).toBe(true);
+});
+
+test('a table inside a row sizes to its column, not the page', () => {
+  const node = row({
+    children: [table({ header: [cell('A'), cell('B')], rows: [] }), text({ text: 'beside it' })],
+    widths: [0.5, 0.5],
+  });
+  const { content } = toPdfMake([node]);
+  const nested = content[0].columns[0].table.widths;
+  const total = nested.reduce((sum, width) => sum + width, 0);
+  expect(total).toBeLessThanOrEqual(515.28 / 2);
 });
 
 test('table renders null/undefined cell values as blank', () => {

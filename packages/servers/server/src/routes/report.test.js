@@ -19,7 +19,7 @@ import { jest } from '@jest/globals';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 import { operatorsServer } from '@lowdefy/operators-js';
-import { generateReport, text, table } from '@lowdefy/reports';
+import { generateReport, grid, text } from '@lowdefy/reports';
 
 import reportHandler from './report.js';
 
@@ -27,14 +27,14 @@ const clientOperators = { ...operatorsClient };
 
 // Minimal static renderers — the route only passes the registry through; the
 // real renderers are covered in @lowdefy/reports. A Paragraph emits a text
-// node (PDF), a Grid emits a table node (xlsx).
+// node (PDF), a Grid emits a grid node (xlsx).
 const pdfRegistry = {
   Paragraph: { toReport: ({ block }) => text({ text: block.properties?.content ?? '' }) },
 };
 const xlsxRegistry = {
   Grid: {
     toReport: () =>
-      table({
+      grid({
         header: [{ value: 'Region' }, { value: 'Total' }],
         rows: [[{ value: 'N' }, { value: 1 }]],
       }),

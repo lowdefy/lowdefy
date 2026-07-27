@@ -55,6 +55,8 @@ export function parseMarkdown(markdown) {
 // --- Style constants ---------------------------------------------------------
 
 const PARAGRAPH_MARGIN = [0, 0, 0, 6];
+// A4 portrait content width, for a caller that supplied no geometry.
+const DEFAULT_CONTENT_WIDTH = 515.28;
 const BLOCK_MARGIN = [0, 0, 0, 8];
 const CODE_COLOR = '#c41d7f';
 const CODE_BACKGROUND = '#f5f5f5';
@@ -284,7 +286,12 @@ function listBlock(node, state) {
   ];
 }
 
-/** A GFM table: the first row is the header, columns share the width evenly. */
+/**
+ * A GFM table: the first row is the header, columns share the width evenly as
+ * explicit points. Star columns would grow past the page margin around any long
+ * unbreakable token (a url, an id), so fixed widths wrap instead — the same rule
+ * `toPdfMake` applies to `table` nodes.
+ */
 function tableBlock(node, state) {
   const rows = node.children ?? [];
   if (rows.length === 0) return [];
@@ -309,12 +316,14 @@ function tableBlock(node, state) {
   };
 
   const [headerRow, ...bodyRows] = rows;
+  // pdfmake's default cell padding is 4pt a side, so each column loses 8pt.
+  const available = (state.contentWidth ?? DEFAULT_CONTENT_WIDTH) - columnCount * 8;
   return [
     {
       margin: BLOCK_MARGIN,
       table: {
         headerRows: 1,
-        widths: Array(columnCount).fill('*'),
+        widths: Array(columnCount).fill(available / columnCount),
         body: [buildRow(headerRow, true), ...bodyRows.map((row) => buildRow(row, false))],
       },
       layout: 'lightHorizontalLines',

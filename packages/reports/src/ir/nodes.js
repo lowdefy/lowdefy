@@ -31,7 +31,7 @@ import { ConfigError } from '@lowdefy/errors';
  * IR node-set version. Bump when the closed node set changes so callers that
  * cache or serialise IR can detect a mismatch.
  */
-export const IR_VERSION = 1;
+export const IR_VERSION = 2;
 
 /** Every kind the IR permits. Renderers cannot invent kinds outside this set. */
 export const NODE_KINDS = Object.freeze([
@@ -40,6 +40,7 @@ export const NODE_KINDS = Object.freeze([
   'markdown',
   'svg',
   'image',
+  'grid',
   'table',
   'stat',
   'row',
@@ -103,16 +104,36 @@ export function cell(value, formatted) {
 }
 
 /**
- * A table. `header` is the header row (an array of cells); `rows` is an array of
- * data rows, each an array of cells. `sheetName` is an optional xlsx worksheet
- * hint attached by the walker.
+ * A data grid — the tabular output of a grid block. `header` is the header row
+ * (an array of cells); `rows` is an array of data rows, each an array of cells.
+ * `sheetName` is the xlsx worksheet name, attached by the walker.
+ *
+ * A grid is worksheet data, not document content: it goes to the xlsx workbook
+ * and never into the PDF. Report data sets run to hundreds of rows and a dozen
+ * columns — a shape a paginated document cannot show usefully, and one the
+ * reader wants to sort and filter anyway. Tabular content that *is* meant to be
+ * read in the document — a markdown table, a table in an Html block, a
+ * label/value summary — is a `table`.
  */
-export function table({ header, rows, sheetName }) {
+export function grid({ header, rows, sheetName }) {
+  return {
+    kind: 'grid',
+    header,
+    rows,
+    ...(sheetName !== undefined ? { sheetName } : {}),
+  };
+}
+
+/**
+ * A presentational table, rendered in the document: a label/value summary, or
+ * any small table a block lays out for reading rather than for analysis. Same
+ * shape as a `grid` minus the worksheet role — see `grid` for the split.
+ */
+export function table({ header, rows }) {
   return {
     kind: 'table',
     header,
     rows,
-    ...(sheetName !== undefined ? { sheetName } : {}),
   };
 }
 
@@ -176,7 +197,7 @@ export function validateNode(node) {
   if (!KIND_SET.has(kind)) {
     throw new ConfigError(`Unknown report IR node kind '${kind}'.`);
   }
-  if (kind === 'table') {
+  if (kind === 'grid' || kind === 'table') {
     for (const headerCell of node.header ?? []) {
       validateCell(headerCell, kind);
     }

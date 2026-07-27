@@ -16,9 +16,10 @@
 
 /**
  * The one module that knows ExcelJS. Excel output is a projection of the same
- * IR the PDF uses: only `table` nodes cross into a workbook, one worksheet per
- * table, in document order. Everything else about the page — headings, prose,
- * charts, page-break policy, pdf options — is a deliberate no-op for xlsx.
+ * IR the PDF uses: only `grid` nodes cross into a workbook, one worksheet per
+ * grid, in document order. Everything else about the page — headings, prose,
+ * charts, presentational tables, page-break policy, pdf options — is a
+ * deliberate no-op for xlsx.
  *
  * The one deliberate difference from PDF: each cell writes its raw typed
  * `value` (ExcelJS stores real numbers, dates, and booleans natively), never
@@ -68,19 +69,19 @@ function uniqueSheetName(name, used) {
   return candidate;
 }
 
-// Collect `table` nodes in document order, descending into the `row`/`stack`
+// Collect `grid` nodes in document order, descending into the `row`/`stack`
 // containers the walker nests them in. Filtering (`visible:`/`exclude`) has
-// already run in the walker, so every table reached here belongs in the output.
-function collectTables(nodes, tables = []) {
+// already run in the walker, so every grid reached here belongs in the output.
+function collectGrids(nodes, grids = []) {
   for (const node of nodes ?? []) {
     if (!node || typeof node !== 'object') continue;
-    if (node.kind === 'table') {
-      tables.push(node);
+    if (node.kind === 'grid') {
+      grids.push(node);
     } else if (node.kind === 'row' || node.kind === 'stack') {
-      collectTables(node.children, tables);
+      collectGrids(node.children, grids);
     }
   }
-  return tables;
+  return grids;
 }
 
 // Map a row of IR cells to the raw typed values ExcelJS writes. `undefined`
@@ -92,36 +93,36 @@ function rowValues(cells) {
 /**
  * Project the report IR into an xlsx workbook Buffer.
  *
- * One worksheet per `table` node, named from its `sheetName` (the walker
- * resolves the `report.sheetName` hint, else the source blockId, into this
- * field) — sanitized and de-duplicated. The header row is bold; data rows write
- * each cell's raw typed `value`.
+ * One worksheet per `grid` node, named from its `sheetName` (the walker resolves
+ * the `report.sheetName` hint, else the source blockId, into this field) —
+ * sanitized and de-duplicated. The header row is bold; data rows write each
+ * cell's raw typed `value`.
  *
- * Zero tables is an error, never an empty workbook: an empty file delivered on a
+ * Zero grids is an error, never an empty workbook: an empty file delivered on a
  * schedule is a silent failure.
  *
  * @param {IRNode[]} nodes The walked IR node list.
  * @returns {Promise<Buffer>} The xlsx bytes.
  */
 async function toXlsx(nodes) {
-  const tables = collectTables(nodes);
-  if (tables.length === 0) {
-    throw new ConfigError('Report page has no tables to export as xlsx.');
+  const grids = collectGrids(nodes);
+  if (grids.length === 0) {
+    throw new ConfigError('Report page has no grids to export as xlsx.');
   }
 
   const workbook = new ExcelJS.Workbook();
   const usedNames = new Set();
 
-  for (const table of tables) {
-    const name = uniqueSheetName(sanitizeSheetName(table.sheetName), usedNames);
+  for (const grid of grids) {
+    const name = uniqueSheetName(sanitizeSheetName(grid.sheetName), usedNames);
     const sheet = workbook.addWorksheet(name);
 
-    const header = rowValues(table.header);
+    const header = rowValues(grid.header);
     if (header.length > 0) {
       const headerRow = sheet.addRow(header);
       headerRow.font = { bold: true };
     }
-    for (const dataRow of table.rows ?? []) {
+    for (const dataRow of grid.rows ?? []) {
       sheet.addRow(rowValues(dataRow));
     }
   }

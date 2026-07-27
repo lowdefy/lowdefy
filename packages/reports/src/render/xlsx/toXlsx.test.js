@@ -17,7 +17,7 @@
 import ExcelJS from 'exceljs';
 import { ConfigError } from '@lowdefy/errors';
 
-import { cell, heading, row, stack, table } from '../../ir/nodes.js';
+import { cell, grid, heading, row, stack, table } from '../../ir/nodes.js';
 import toXlsx from './toXlsx.js';
 
 // Load a produced buffer back into a fresh workbook for round-trip assertions.
@@ -27,14 +27,14 @@ async function readBack(buffer) {
   return workbook;
 }
 
-test('one worksheet per table, in document order, named by sheetName hint', async () => {
+test('one worksheet per grid, in document order, named by sheetName hint', async () => {
   const buffer = await toXlsx([
-    table({
+    grid({
       sheetName: 'Regional Sales',
       header: [cell('Region'), cell('Total')],
       rows: [[cell('North'), cell(100)]],
     }),
-    table({
+    grid({
       sheetName: 'Products',
       header: [cell('SKU')],
       rows: [[cell('A-1')]],
@@ -45,25 +45,25 @@ test('one worksheet per table, in document order, named by sheetName hint', asyn
   expect(workbook.worksheets.map((s) => s.name)).toEqual(['Regional Sales', 'Products']);
 });
 
-test('a table without a sheetName hint falls back to a default name', async () => {
-  const buffer = await toXlsx([table({ header: [cell('A')], rows: [[cell(1)]] })]);
+test('a grid without a sheetName hint falls back to a default name', async () => {
+  const buffer = await toXlsx([grid({ header: [cell('A')], rows: [[cell(1)]] })]);
 
   const workbook = await readBack(buffer);
   expect(workbook.worksheets.map((s) => s.name)).toEqual(['Sheet']);
 });
 
-test('table collection descends into row and stack containers in document order', async () => {
+test('grid collection descends into row and stack containers in document order', async () => {
   const buffer = await toXlsx([
     row({
       children: [
-        table({ sheetName: 'First', header: [cell('A')], rows: [] }),
+        grid({ sheetName: 'First', header: [cell('A')], rows: [] }),
         stack({
-          children: [table({ sheetName: 'Second', header: [cell('B')], rows: [] })],
+          children: [grid({ sheetName: 'Second', header: [cell('B')], rows: [] })],
         }),
       ],
       widths: [0.5, 0.5],
     }),
-    table({ sheetName: 'Third', header: [cell('C')], rows: [] }),
+    grid({ sheetName: 'Third', header: [cell('C')], rows: [] }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -72,9 +72,9 @@ test('table collection descends into row and stack containers in document order'
 
 test('name collisions get numeric suffixes', async () => {
   const buffer = await toXlsx([
-    table({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
-    table({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
-    table({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
+    grid({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
+    grid({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
+    grid({ sheetName: 'Sales', header: [cell('A')], rows: [] }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -83,7 +83,7 @@ test('name collisions get numeric suffixes', async () => {
 
 test('an illegal-charset hint is sanitized defensively', async () => {
   const buffer = await toXlsx([
-    table({ sheetName: 'a[b]c:d*e?f/g\\h', header: [cell('A')], rows: [] }),
+    grid({ sheetName: 'a[b]c:d*e?f/g\\h', header: [cell('A')], rows: [] }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -92,7 +92,7 @@ test('an illegal-charset hint is sanitized defensively', async () => {
 
 test('a hint longer than 31 characters is truncated', async () => {
   const long = 'x'.repeat(40);
-  const buffer = await toXlsx([table({ sheetName: long, header: [cell('A')], rows: [] })]);
+  const buffer = await toXlsx([grid({ sheetName: long, header: [cell('A')], rows: [] })]);
 
   const workbook = await readBack(buffer);
   expect(workbook.worksheets[0].name).toBe('x'.repeat(31));
@@ -100,7 +100,7 @@ test('a hint longer than 31 characters is truncated', async () => {
 
 test('the header row is written bold', async () => {
   const buffer = await toXlsx([
-    table({
+    grid({
       sheetName: 'S',
       header: [cell('Region'), cell('Total')],
       rows: [[cell('N'), cell(1)]],
@@ -118,7 +118,7 @@ test('the header row is written bold', async () => {
 
 test('a numeric value round-trips as a number cell', async () => {
   const buffer = await toXlsx([
-    table({ sheetName: 'S', header: [cell('Amount')], rows: [[cell(1234.5)]] }),
+    grid({ sheetName: 'S', header: [cell('Amount')], rows: [[cell(1234.5)]] }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -130,7 +130,7 @@ test('a numeric value round-trips as a number cell', async () => {
 test('a date value round-trips as a date cell', async () => {
   const date = new Date('2026-03-15T00:00:00.000Z');
   const buffer = await toXlsx([
-    table({ sheetName: 'S', header: [cell('When')], rows: [[cell(date)]] }),
+    grid({ sheetName: 'S', header: [cell('When')], rows: [[cell(date)]] }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -141,7 +141,7 @@ test('a date value round-trips as a date cell', async () => {
 
 test('strings and booleans keep their type', async () => {
   const buffer = await toXlsx([
-    table({
+    grid({
       sheetName: 'S',
       header: [cell('Name'), cell('Active')],
       rows: [[cell('Ann'), cell(true)]],
@@ -158,7 +158,7 @@ test('strings and booleans keep their type', async () => {
 
 test('the raw typed value is written, never the formatted display string', async () => {
   const buffer = await toXlsx([
-    table({
+    grid({
       sheetName: 'S',
       header: [cell('Rate')],
       rows: [[cell(0.125, '12.5%')]],
@@ -171,15 +171,15 @@ test('the raw typed value is written, never the formatted display string', async
   expect(typeof value).toBe('number');
 });
 
-test('zero tables throws a ConfigError rather than emitting an empty workbook', async () => {
+test('zero grids throws a ConfigError rather than emitting an empty workbook', async () => {
   await expect(toXlsx([heading({ text: 'No tables here', level: 1 })])).rejects.toThrow(
     ConfigError
   );
-  await expect(toXlsx([])).rejects.toThrow('no tables to export');
+  await expect(toXlsx([])).rejects.toThrow('no grids to export');
 });
 
 test('returns a Buffer of a valid xlsx workbook', async () => {
-  const buffer = await toXlsx([table({ sheetName: 'S', header: [cell('A')], rows: [] })]);
+  const buffer = await toXlsx([grid({ sheetName: 'S', header: [cell('A')], rows: [] })]);
   expect(Buffer.isBuffer(buffer)).toBe(true);
   // The xlsx container is a zip; it starts with the PK signature.
   expect(buffer.subarray(0, 2).toString('latin1')).toBe('PK');
