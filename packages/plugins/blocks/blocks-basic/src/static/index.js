@@ -24,3 +24,4 @@
 export { Img } from './Img.js';
 export { Span } from './Span.js';
 export { Box } from './Box.js';
+export { Html, DangerousHtml } from './Html.js';

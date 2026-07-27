@@ -15,6 +15,7 @@
 */
 
 export default {
+  static: true,
   category: 'display',
   icons: [],
   valueType: null,

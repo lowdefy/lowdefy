@@ -70,7 +70,9 @@ describe('Span', () => {
   });
 
   test('content wins over children', () => {
-    expect(run(Span, { properties: { content: 'Inline' }, children: [{ kind: 'text', text: 'kid' }] })).toEqual({
+    expect(
+      run(Span, { properties: { content: 'Inline' }, children: [{ kind: 'text', text: 'kid' }] })
+    ).toEqual({
       kind: 'text',
       text: 'Inline',
     });
@@ -91,9 +93,19 @@ describe('Span', () => {
 
 describe('Box', () => {
   test('passes children through as a stack', () => {
-    expect(run(Box, { children: [{ kind: 'text', text: 'a' }, { kind: 'text', text: 'b' }] })).toEqual({
+    expect(
+      run(Box, {
+        children: [
+          { kind: 'text', text: 'a' },
+          { kind: 'text', text: 'b' },
+        ],
+      })
+    ).toEqual({
       kind: 'stack',
-      children: [{ kind: 'text', text: 'a' }, { kind: 'text', text: 'b' }],
+      children: [
+        { kind: 'text', text: 'a' },
+        { kind: 'text', text: 'b' },
+      ],
     });
   });
 

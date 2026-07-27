@@ -24,7 +24,7 @@ import * as staticRenderers from './index.js';
 const STATIC_DIR = path.join(process.cwd(), 'src', 'static');
 
 test('the static entry exports a toReport renderer for each supported block type', () => {
-  const types = ['Img', 'Span', 'Box'];
+  const types = ['Img', 'Span', 'Box', 'Html', 'DangerousHtml'];
   types.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
   });
