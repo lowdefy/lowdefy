@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import { ConfigError } from '@lowdefy/errors';
 import {
   cell,
@@ -170,10 +172,36 @@ test('a standalone spacer is an empty node', () => {
   expect(content[0]).toEqual({ text: '', width: '50%' });
 });
 
-// --- not-yet-translated kinds ------------------------------------------------
+// --- markdown ----------------------------------------------------------------
+// The mdast mapping is covered in markdownToPdfMake.test.js; here we check the
+// dispatch: a markdown node becomes one stack of blocks, and markdown that
+// renders nothing is skipped like an unresolved image.
 
-test('markdown throws a not-yet-translated error', () => {
-  expect(() => toPdfMake([markdown({ markdown: '# hi' })])).toThrow(/markdown.*not yet translated/i);
+test('markdown translates to a stack of mapped blocks', () => {
+  const { content } = toPdfMake([markdown({ markdown: '# Title\n\nBody' })]);
+  expect(content[0].stack).toEqual([
+    { text: 'Title', fontSize: 22, bold: true, margin: [0, 8, 0, 4] },
+    { text: 'Body', margin: [0, 0, 0, 6] },
+  ]);
+});
+
+test('markdown that renders nothing is skipped, and a page break moves to the next node', () => {
+  const { content } = toPdfMake([markdown({ markdown: '   ' }), text({ text: 'after' })]);
+  expect(content).toHaveLength(1);
+  expect(content[0]).toMatchObject({ text: 'after' });
+});
+
+test('a markdown rule is sized to the report content width', () => {
+  const { content } = toPdfMake([markdown({ markdown: '---' })], { size: 'letter' });
+  // Letter portrait width is 612; minus 80 of horizontal margin.
+  expect(content[0].stack[0].canvas[0].x2).toBeCloseTo(532, 2);
+});
+
+test('the markdown html warning is logged through the options logger', () => {
+  const warn = jest.fn();
+  toPdfMake([markdown({ markdown: '<div>x</div>\n\nkept' })], {}, { logger: { warn } });
+  expect(warn).toHaveBeenCalledTimes(1);
+  expect(warn.mock.calls[0][0]).toEqual({ htmlNodes: 1 });
 });
 
 // --- image -------------------------------------------------------------------
@@ -307,6 +335,35 @@ test('renders a mixed document to a non-trivial PDF Buffer', async () => {
   expect(Buffer.isBuffer(buffer)).toBe(true);
   expect(buffer.length).toBeGreaterThan(1000);
   expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+});
+
+test('renders a GFM markdown document, embedding its image, to a PDF Buffer', async () => {
+  const source = [
+    '# Markdown report',
+    '',
+    'Prose with **bold**, _italic_, `code`, and a [link](https://lowdefy.com).',
+    '',
+    '- one',
+    '  - nested',
+    '',
+    '> quoted',
+    '',
+    '```js',
+    'const a = 1;',
+    '```',
+    '',
+    '| Region | Total |',
+    '| --- | ---: |',
+    '| North | 100 |',
+    '',
+    '---',
+    '',
+    `![logo](${PNG_DATA_URL})`,
+  ].join('\n');
+
+  const buffer = await renderPdfBuffer([markdown({ markdown: source })], { title: 'Markdown' });
+  expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+  expect(buffer.length).toBeGreaterThan(1000);
 });
 
 test('renderPdfBuffer resolves one image, skips an unresolvable one, and warns', async () => {

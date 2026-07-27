@@ -44,7 +44,8 @@
     "exceljs": "4.4.0",
     "pdfmake": "0.3.11",
     "remark-gfm": "3.0.0",
-    "remark-parse": "10.0.2"
+    "remark-parse": "10.0.2",
+    "unified": "10.1.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

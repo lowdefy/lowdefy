@@ -18,16 +18,19 @@ import buildTestPage from '@lowdefy/build/buildTestPage';
 import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
 import generateReport from './generateReport.js';
-// The real blocks-antd static registry, loaded from src (React-free by design).
-import * as registry from '../../plugins/blocks/blocks-antd/src/static/index.js';
+// The real static registries, loaded from src (React-free by design).
+import * as antdRegistry from '../../plugins/blocks/blocks-antd/src/static/index.js';
+import * as markdownRegistry from '../../plugins/blocks/blocks-markdown/src/static/index.js';
 
 const operators = { ...operatorsClient };
+const registry = { ...antdRegistry, ...markdownRegistry };
 
 const blockMetas = {
   Box: { category: 'container' },
   Title: { category: 'display' },
   Paragraph: { category: 'display' },
   Statistic: { category: 'display' },
+  Markdown: { category: 'display' },
   Widget: { category: 'display' },
 };
 
@@ -146,6 +149,39 @@ describe('pdf generation', () => {
     expect(result.warnings.skippedBlockTypes).toEqual([
       { blockType: 'Widget', blockIds: ['w'] },
     ]);
+  });
+
+  test('a Markdown block renders end to end, operators evaluated in its content', async () => {
+    const pageConfig = buildTestPage({
+      pageConfig: {
+        id: 'page1',
+        type: 'Box',
+        blocks: [
+          {
+            id: 'md',
+            type: 'Markdown',
+            properties: {
+              content: {
+                // The content is operator-evaluated like any other property.
+                _string: {
+                  concat: [
+                    '# Markdown heading\n\nProse with **bold** and a table.\n\n',
+                    '| Region | Total |\n| --- | ---: |\n| North | 100 |\n',
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    const result = await generateReport(baseOptions({ pageConfig }));
+
+    expect(result.buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+    // No blocks were skipped: the Markdown type resolved through the registry.
+    expect(result.warnings.skippedBlockTypes).toEqual([]);
+    expect(result.buffer.length).toBeGreaterThan(1000);
   });
 
   test('logs the warning summary once per generation', async () => {

@@ -34,6 +34,8 @@ import virtualFileSystemModule from 'pdfmake/js/virtual-fs.js';
 import { validateNodes } from '../../ir/nodes.js';
 import { fonts, FONT_FAMILY } from '../../fonts/fonts.js';
 import { resolveImage } from '../resolveImage.js';
+import { markdownToPdfMake, resolveMarkdownImages } from './markdownToPdfMake.js';
+import { dividerContent, headingContent, HEADER_FILL, MUTED } from './styles.js';
 
 const PdfPrinter = PrinterModule.default ?? PrinterModule;
 const URLResolver = URLResolverModule.default ?? URLResolverModule;
@@ -70,7 +72,9 @@ export function contentWidthOf(report = {}) {
 
 // --- Text styling ------------------------------------------------------------
 
-const HEADING_SIZES = { 1: 22, 2: 17, 3: 14, 4: 12 };
+// Heading sizes, the rule colour, the table header fill, and the muted grey live
+// in `styles.js` — `markdownToPdfMake` maps markdown headings and rules through
+// the same builders, so the two translators cannot drift.
 
 // `tint` hints (e.g. an Alert severity) mapped to a text colour. Unknown tints
 // fall through with no colour.
@@ -80,10 +84,6 @@ const TINT_COLORS = {
   success: '#389e0d',
   info: '#0958d9',
 };
-
-const MUTED = '#8c8c8c';
-const RULE_COLOR = '#d9d9d9';
-const HEADER_FILL = '#f5f5f5';
 
 // --- Cell text ---------------------------------------------------------------
 
@@ -96,12 +96,7 @@ function cellText(cell) {
 // --- Node translation --------------------------------------------------------
 
 function translateHeading(node) {
-  return {
-    text: node.text,
-    fontSize: HEADING_SIZES[node.level] ?? HEADING_SIZES[4],
-    bold: true,
-    margin: [0, 8, 0, 4],
-  };
+  return headingContent({ text: node.text, level: node.level });
 }
 
 function translateText(node) {
@@ -184,20 +179,7 @@ function translateStack(node, ctx) {
 }
 
 function translateDivider(_node, ctx) {
-  return {
-    margin: [0, 4, 0, 8],
-    canvas: [
-      {
-        type: 'line',
-        x1: 0,
-        y1: 0,
-        x2: ctx.contentWidth,
-        y2: 0,
-        lineWidth: 0.5,
-        lineColor: RULE_COLOR,
-      },
-    ],
-  };
+  return dividerContent(ctx.contentWidth);
 }
 
 function translateSpacer(node) {
@@ -227,8 +209,9 @@ function translateImage(node, ctx) {
 
 /**
  * Translate one IR node to a pdfmake node. Recurses through `row`/`stack`
- * children. `ctx` carries the content width (points) for width-aware nodes.
- * Returns null for a node that should be skipped (an unresolved image).
+ * children. `ctx` carries the content width (points) for width-aware nodes and
+ * the logger for the markdown translator's warnings. Returns null for a node
+ * that should be skipped (an unresolved image, markdown that renders nothing).
  */
 function translateNode(node, ctx) {
   switch (node.kind) {
@@ -251,7 +234,9 @@ function translateNode(node, ctx) {
     case 'spacer':
       return translateSpacer(node);
     case 'markdown':
-      throw new Error("Report IR node 'markdown' is not yet translated to PDF (task 15).");
+      // Parsed and mapped by the one markdown translator; null when the
+      // markdown renders nothing (empty or HTML-only source).
+      return markdownToPdfMake(node, ctx);
     case 'image':
       return translateImage(node, ctx);
     default:
@@ -263,7 +248,7 @@ function translateNode(node, ctx) {
 /** Top-level nodes may carry a `pageBreakBefore` flag from the walker. */
 function translateTopNode(node, ctx) {
   const translated = translateNode(node, ctx);
-  if (translated === null) return null; // a skipped image
+  if (translated === null) return null; // a skipped image, or empty markdown
   if (node.pageBreakBefore) {
     translated.pageBreak = 'before';
   }
@@ -306,7 +291,8 @@ function buildFooter(footerText, generatedAt) {
  * @param {object} [report] Page-level options, already operator-evaluated:
  *   `title`, `size` ('A4' | 'letter'), `orientation` ('portrait' | 'landscape'),
  *   `header` (string; defaults to the title), `footer` (string).
- * @param {object} [options] `now` (Date) fixes the footer timestamp for tests.
+ * @param {object} [options] `now` (Date) fixes the footer timestamp for tests;
+ *   `logger` receives the markdown translator's warnings.
  * @returns {object} a pdfmake docDefinition.
  */
 export function toPdfMake(nodes, report = {}, options = {}) {
@@ -316,7 +302,7 @@ export function toPdfMake(nodes, report = {}, options = {}) {
   const orientation = report.orientation === 'landscape' ? 'landscape' : 'portrait';
   const contentWidth = contentWidthOf(report);
 
-  const ctx = { contentWidth };
+  const ctx = { contentWidth, logger: options.logger };
   const content = nodes
     .map((node) => translateTopNode(node, ctx))
     .filter((node) => node !== null);
@@ -368,13 +354,15 @@ function registerFonts() {
 // --- Image resolution pre-pass -----------------------------------------------
 
 /**
- * Acquire bytes for every `image` node before the synchronous translation.
- * `toPdfMake` is a pure IR -> docDefinition mapping, but image acquisition is
- * async (disk reads, guarded fetches), so it happens here first. Each image is
- * routed through the one central `resolveImage`; a success attaches a base64
- * `data` URL to the node, a failure leaves the node unresolved (a warning is
- * logged by the resolver) and the translator skips it. Returns a new node list;
- * inputs are not mutated.
+ * Acquire bytes for every image before the synchronous translation. `toPdfMake`
+ * is a pure IR -> docDefinition mapping, but image acquisition is async (disk
+ * reads, guarded fetches), so it happens here first. Each image is routed
+ * through the one central `resolveImage`; a success attaches a base64 `data` URL
+ * to the node, a failure leaves the node unresolved (a warning is logged by the
+ * resolver) and the translator skips it. A `markdown` node's images are
+ * acquired the same way — its markdown is parsed here and the parsed tree is
+ * attached with the resolved image map, so translation parses nothing twice.
+ * Returns a new node list; inputs are not mutated.
  *
  * @param {object[]} nodes IR nodes.
  * @param {object} [opts] `publicDir` (public assets root), `logger`.
@@ -388,6 +376,9 @@ export async function resolveImages(nodes, { publicDir, logger } = {}) {
         if (resolved === null) return node;
         const data = `data:${resolved.mime};base64,${resolved.buffer.toString('base64')}`;
         return { ...node, data };
+      }
+      if (node.kind === 'markdown') {
+        return resolveMarkdownImages(node, { publicDir, logger });
       }
       if (node.kind === 'row' || node.kind === 'stack') {
         return { ...node, children: await resolveImages(node.children, { publicDir, logger }) };
