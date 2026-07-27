@@ -37,7 +37,7 @@ function evaluatedContext(pageChildren) {
   return { _internal: { RootSlots: { slots: { root: { blocks: [page] } } } } };
 }
 
-test('a Card of Title + Statistic + Paragraph walks to stack[heading, heading, stat, text]', () => {
+test('a Card of Title + Statistic + Paragraph walks to stack[heading, heading, stat, text]', async () => {
   const context = evaluatedContext([
     block({
       id: 'card',
@@ -62,7 +62,7 @@ test('a Card of Title + Statistic + Paragraph walks to stack[heading, heading, s
     }),
   ]);
 
-  const { nodes, warnings } = walkBlocks(context, registry, {}, { contentWidth: 500 });
+  const { nodes, warnings } = await walkBlocks(context, registry, {}, { contentWidth: 500 });
 
   expect(warnings).toEqual([]);
   expect(nodes).toHaveLength(1);

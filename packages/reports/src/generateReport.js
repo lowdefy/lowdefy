@@ -183,7 +183,7 @@ async function runGeneration({
     contentWidth: contentWidthOf(report),
   };
 
-  const walked = walkBlocks(context, registry, reportOptions, renderContext);
+  const walked = await walkBlocks(context, registry, reportOptions, renderContext);
   const skippedBlockTypes = walked.warnings;
 
   let buffer;

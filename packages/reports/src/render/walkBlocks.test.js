@@ -82,7 +82,12 @@ describe('layout row grouping', () => {
       ],
     });
     const layoutLog = [];
-    const { nodes, warnings } = walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
+    const { nodes, warnings } = await walkBlocks(
+      context,
+      stubRegistry(layoutLog),
+      {},
+      renderContext()
+    );
 
     expect(warnings).toEqual([]);
     expect(nodes).toHaveLength(1);
@@ -106,7 +111,7 @@ describe('layout row grouping', () => {
       ],
     });
     const layoutLog = [];
-    const { nodes } = walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
+    const { nodes } = await walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
 
     expect(nodes).toHaveLength(2);
     expect(nodes[0].kind).toBe('row');
@@ -131,7 +136,7 @@ describe('layout row grouping', () => {
         { id: 'd', type: 'Paragraph', layout: { span: 8 }, properties: { content: 'D' } },
       ],
     });
-    const { nodes } = walkBlocks(context, stubRegistry(), {}, renderContext());
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     expect(nodes.map((n) => n.kind)).toEqual(['row', 'text', 'row']);
     expect(nodes[0].widths).toEqual([0.5]);
@@ -149,7 +154,7 @@ describe('layout row grouping', () => {
         { id: 'c', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'C' } },
       ],
     });
-    const { nodes } = walkBlocks(context, stubRegistry(), {}, renderContext());
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     expect(nodes.map((n) => n.kind)).toEqual(['row', 'row']);
     expect(nodes[0].children).toEqual([text({ text: 'A' }), text({ text: 'B' })]);
@@ -170,7 +175,7 @@ describe('layout row grouping', () => {
       ],
     });
     const layoutLog = [];
-    const { nodes } = walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
+    const { nodes } = await walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
 
     expect(nodes).toHaveLength(1);
     expect(nodes[0].kind).toBe('row');
@@ -194,7 +199,7 @@ describe('filtering', () => {
         { id: 'field', type: 'TextInput' },
       ],
     });
-    const { nodes, warnings } = walkBlocks(
+    const { nodes, warnings } = await walkBlocks(
       context,
       stubRegistry(),
       { excluded: { exclude: true } },
@@ -217,7 +222,7 @@ describe('unsupported block types', () => {
         { id: 'w2', type: 'Widget', properties: {} },
       ],
     });
-    const { nodes, warnings } = walkBlocks(context, stubRegistry(), {}, renderContext());
+    const { nodes, warnings } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     // No placeholder boxes: unsupported leaves emit nothing.
     expect(nodes).toEqual([text({ text: 'ok' })]);
@@ -241,7 +246,7 @@ describe('container passthrough', () => {
         },
       ],
     });
-    const { nodes, warnings } = walkBlocks(context, stubRegistry(), {}, renderContext());
+    const { nodes, warnings } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     expect(nodes).toEqual([text({ text: 'inner-1' }), text({ text: 'inner-2' })]);
     expect(warnings).toEqual([{ blockType: 'Box', blockIds: ['card'] }]);
@@ -262,7 +267,7 @@ describe('container passthrough', () => {
       ],
     });
     const layoutLog = [];
-    const { nodes } = walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
+    const { nodes } = await walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
 
     expect(nodes).toHaveLength(1);
     expect(nodes[0].kind).toBe('row');
@@ -279,7 +284,7 @@ describe('page break hints', () => {
       type: 'Box',
       blocks: [{ id: 'a', type: 'Paragraph', properties: { content: 'A' } }],
     });
-    const { nodes } = walkBlocks(
+    const { nodes } = await walkBlocks(
       context,
       stubRegistry(),
       { a: { pageBreakBefore: true } },
@@ -306,7 +311,7 @@ describe('sheet names', () => {
         { id: 'costs', type: 'Widget' },
       ],
     });
-    const { nodes } = walkBlocks(
+    const { nodes } = await walkBlocks(
       context,
       tableRegistry,
       { sales: { sheetName: 'Monthly Sales' } },
@@ -327,7 +332,7 @@ describe('sheet names', () => {
         toReport: () => table({ header: [cell('h')], rows: [[cell(1)]], sheetName: 'Fixed' }),
       },
     };
-    const { nodes } = walkBlocks(context, named, {}, renderContext());
+    const { nodes } = await walkBlocks(context, named, {}, renderContext());
 
     expect(nodes[0].sheetName).toEqual('Fixed');
   });
@@ -341,7 +346,7 @@ describe('IR validation', () => {
       blocks: [{ id: 'bad', type: 'Bogus', properties: {} }],
     });
 
-    expect(() => walkBlocks(context, stubRegistry(), {}, renderContext())).toThrow(
+    await expect(walkBlocks(context, stubRegistry(), {}, renderContext())).rejects.toThrow(
       /Unknown report IR node kind 'not-a-real-kind'/
     );
   });
@@ -363,7 +368,7 @@ describe('ignored layout features log at debug', () => {
     });
     const debug = [];
     const logger = { debug: (meta, message) => debug.push({ meta, message }) };
-    const { nodes } = walkBlocks(context, stubRegistry(), {}, renderContext({ logger }));
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext({ logger }));
 
     // The block still renders on its span; the extras are dropped.
     expect(nodes[0].kind).toBe('row');
@@ -376,7 +381,7 @@ describe('ignored layout features log at debug', () => {
 describe('empty page', () => {
   test('a page with no children returns no nodes and no warnings', async () => {
     const context = await evaluate({ id: 'page1', type: 'Box' });
-    const { nodes, warnings } = walkBlocks(context, stubRegistry(), {}, renderContext());
+    const { nodes, warnings } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     expect(nodes).toEqual([]);
     expect(warnings).toEqual([]);

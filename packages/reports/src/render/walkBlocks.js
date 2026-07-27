@@ -22,6 +22,13 @@
  *
  *   { toReport: ({ block, children, layout, context }) => IRNode | IRNode[] | null }
  *
+ * A renderer may return a promise of that — the walker awaits every result. Not
+ * every rendering engine offers a synchronous entry point (takumi, which lays
+ * out Html blocks, is promise-only), and one awaited contract costs a sync
+ * renderer nothing while keeping async rendering out of every other renderer's
+ * business. Siblings render in order rather than concurrently: a report holds
+ * tens of blocks, not thousands, and serial rendering keeps warnings ordered.
+ *
  * where `block` is a plain projection ({ id, blockId, type, properties, value,
  * style, layout }) — `block.properties` is the fully resolved
  * `propertiesEval.output`; `children` is the already-walked child IR node array
@@ -78,9 +85,9 @@ const LAYOUT_IGNORED_KEYS = [
  *   (`{ [blockId]: { exclude?, pageBreakBefore?, sheetName? } }`). List items
  *   fall back to the un-indexed blockId pattern.
  * @param {object} context - render context passed to every renderer.
- * @returns {{ nodes: IRNode[], warnings: Array<{ blockType, blockIds }> }}
+ * @returns {Promise<{ nodes: IRNode[], warnings: Array<{ blockType, blockIds }> }>}
  */
-function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context = {}) {
+async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context = {}) {
   const logger = context.logger;
   // Unsupported types are collected once per type, listing every blockId, so a
   // page with ten unrenderable widgets warns ten blockIds under one type.
@@ -147,17 +154,17 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
   // first (at the block's own resolved width), then call the renderer with them;
   // a container with no renderer passes its children through transparently so a
   // plain Card never swallows its contents — but still records the warning.
-  const renderBlock = (block, width, fraction) => {
+  const renderBlock = async (block, width, fraction) => {
     const layout = { width, fraction };
     const renderer = registry[block.type];
     let children;
     if (isContainerLike(block)) {
-      children = walkList(childBlocksOf(block), width);
+      children = await walkList(childBlocksOf(block), width);
     }
 
     let result = null;
     if (renderer && typeof renderer.toReport === 'function') {
-      result = renderer.toReport({ block: projectBlock(block), children, layout, context });
+      result = await renderer.toReport({ block: projectBlock(block), children, layout, context });
     } else {
       recordUnsupported(block);
       if (children) result = children; // transparent passthrough
@@ -185,7 +192,7 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
   // Walk a sibling list into IR, grouping row-participating blocks and splicing
   // full-width blocks in transparently. `availableWidth` is the content width
   // this list is laid out within (a cell width when nested inside a row).
-  const walkList = (blocks, availableWidth) => {
+  const walkList = async (blocks, availableWidth) => {
     const output = [];
     let cells = [];
     let widths = [];
@@ -199,11 +206,11 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
       rowSpan = 0;
     };
 
-    blocks.forEach((block) => {
-      if (block.visibleEval?.output === false) return; // dynamic hiding
+    for (const block of blocks) {
+      if (block.visibleEval?.output === false) continue; // dynamic hiding
       const options = optionsFor(block);
-      if (options.exclude === true) return; // opt-out
-      if (block.meta?.category === 'input') return; // reports are display documents
+      if (options.exclude === true) continue; // opt-out
+      if (block.meta?.category === 'input') continue; // reports are display documents
 
       const layout = block.layoutEval?.output ?? {};
       logIgnoredLayout(block, layout);
@@ -214,13 +221,13 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
 
       if (fullWidth) {
         flush();
-        renderBlock(block, availableWidth, 1).forEach((node) => output.push(node));
-        return;
+        (await renderBlock(block, availableWidth, 1)).forEach((node) => output.push(node));
+        continue;
       }
 
       const fraction = span / FULL_SPAN;
-      const nodes = renderBlock(block, fraction * availableWidth, fraction);
-      if (nodes.length === 0) return; // skipped; reserves no grid space
+      const nodes = await renderBlock(block, fraction * availableWidth, fraction);
+      if (nodes.length === 0) continue; // skipped; reserves no grid space
 
       if (rowSpan + offset + span > FULL_SPAN) flush();
       if (offset > 0) {
@@ -232,7 +239,7 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
       cells.push(nodes.length === 1 ? nodes[0] : stack({ children: nodes }));
       widths.push(fraction);
       rowSpan += span;
-    });
+    }
 
     flush();
     return output;
@@ -243,7 +250,7 @@ function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context
     ? context.contentWidth
     : DEFAULT_CONTENT_WIDTH;
   // The page block is the document, not a rendered node — walk its children.
-  const nodes = root ? walkList(childBlocksOf(root), contentWidth) : [];
+  const nodes = root ? await walkList(childBlocksOf(root), contentWidth) : [];
 
   const warnings = [...unsupported.entries()].map(([blockType, blockIds]) => ({
     blockType,
