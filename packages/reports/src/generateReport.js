@@ -143,6 +143,7 @@ async function runGeneration({
   jsMap,
   blockMetas,
   registry = {},
+  icons = {},
   stylesheets,
   user,
   lowdefyGlobal,
@@ -179,6 +180,7 @@ async function runGeneration({
   const renderContext = {
     logger,
     fonts,
+    icons,
     stylesheets,
     contentWidth: contentWidthOf(report),
   };
@@ -229,6 +231,7 @@ async function runGeneration({
  * @param {object} [options.jsMap] Compiled `_js` map.
  * @param {object} [options.blockMetas] Block type → `{ category, … }`.
  * @param {object} options.registry Block type → `{ toReport }` static renderer.
+ * @param {object} [options.icons] The build's icon components, keyed by name.
  * @param {string} [options.stylesheets] Compiled report CSS (Html/chart sizing).
  * @param {object|null} [options.user] The invoking user (null for system).
  * @param {object} [options.lowdefyGlobal]

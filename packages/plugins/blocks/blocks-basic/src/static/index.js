@@ -17,11 +17,13 @@
 /**
  * Static report renderers for blocks-basic. Each export is keyed by block type
  * and exposes `{ toReport }`, mapping a block's evaluated properties to report
- * IR. This entry must stay free of React so the server can load the registry
- * without a browser runtime; renderers emit plain IR object literals.
+ * IR. This entry must stay free of React at load time so the server can load the
+ * registry without a browser runtime; renderers emit plain IR object literals.
+ * (The Icon renderer imports React lazily, on the first icon it draws.)
  */
 
 export { Img } from './Img.js';
 export { Span } from './Span.js';
 export { Box } from './Box.js';
 export { Html, DangerousHtml } from './Html.js';
+export { Icon } from './Icon.js';

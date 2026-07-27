@@ -92,6 +92,7 @@ async function renderReport(
     jsMap: report.jsMap,
     blockMetas: report.blockMetas,
     registry: report.registry,
+    icons: report.icons,
     stylesheets: report.stylesheets,
     user: context.session?.user ?? null,
     lowdefyGlobal,

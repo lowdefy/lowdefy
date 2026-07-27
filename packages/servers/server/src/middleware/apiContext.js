@@ -27,6 +27,7 @@ import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
 import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
+import icons from '../../build/plugins/icons.js';
 import { generateReport } from '../../build/plugins/reports.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
@@ -47,8 +48,9 @@ import websockets from '../../build/plugins/websockets.js';
 const secrets = getSecretsFromEnv();
 
 // Report generation artifacts, read once at startup. blockMetas drives the
-// engine's category lookup; the report stylesheet sizes Html/chart renders; the
-// public assets directory resolves relative image sources. The stylesheet is
+// engine's category lookup; icons are the build's tree-shaken icon components,
+// which the Icon renderer draws from; the report stylesheet sizes Html/chart
+// renders; the public assets directory resolves relative image sources. The stylesheet is
 // optional — an app without custom report styles has none.
 const blockMetas = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), 'build/plugins/blockMetas.json'), 'utf8')
@@ -68,6 +70,7 @@ const publicDir = path.join(process.cwd(), 'dist/client');
 const report = {
   blockMetas,
   generateReport,
+  icons,
   jsMap: clientJsMap,
   operators: clientOperators,
   publicDir,

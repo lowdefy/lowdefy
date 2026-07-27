@@ -21,6 +21,7 @@ import blocksStatic from '../../build/plugins/blocksStatic.js';
 import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
 import clientOperators from '../../build/plugins/operators/client.js';
 import createJsMapLoader from './createJsMapLoader.js';
+import icons from '../../build/plugins/icons.js';
 import { generateReport } from '../../build/plugins/reports.js';
 
 const loadClientJsMap = createJsMapLoader({
@@ -63,6 +64,7 @@ function getReport({ buildDirectory }) {
   return {
     blockMetas: readBlockMetas(path.join(buildDirectory, 'plugins', 'blockMetas.json')),
     generateReport,
+    icons,
     jsMap: loadClientJsMap(buildDirectory),
     operators: clientOperators,
     publicDir: path.join(process.cwd(), 'public'),

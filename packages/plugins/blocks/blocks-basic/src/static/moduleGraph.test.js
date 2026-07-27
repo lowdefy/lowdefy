@@ -24,7 +24,7 @@ import * as staticRenderers from './index.js';
 const STATIC_DIR = path.join(process.cwd(), 'src', 'static');
 
 test('the static entry exports a toReport renderer for each supported block type', () => {
-  const types = ['Img', 'Span', 'Box', 'Html', 'DangerousHtml'];
+  const types = ['Img', 'Span', 'Box', 'Html', 'DangerousHtml', 'Icon'];
   types.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
   });
@@ -45,6 +45,15 @@ test('no renderer file imports React or a block component', () => {
       expect(source).not.toMatch(pattern);
     });
   });
+});
+
+test('the Icon renderer imports React lazily, not at module load', () => {
+  // Every report imports this package for Box and Span; only a page that draws
+  // an icon should pay for React. The forbidden-import test above covers the
+  // static form — this pins the deliberate dynamic one.
+  const source = fs.readFileSync(path.join(STATIC_DIR, 'Icon.js'), 'utf8');
+  expect(source).toMatch(/import\('react'\)/);
+  expect(source).toMatch(/import\('react-dom\/server'\)/);
 });
 
 test('package.json declares the ./static export', () => {

@@ -16,6 +16,7 @@
 
 export default {
   category: 'display',
+  static: true,
   icons: ['AiOutlineCloseCircle'],
   valueType: null,
   cssKeys: {
