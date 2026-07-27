@@ -184,3 +184,65 @@ test('returns a Buffer of a valid xlsx workbook', async () => {
   // The xlsx container is a zip; it starts with the PK signature.
   expect(buffer.subarray(0, 2).toString('latin1')).toBe('PK');
 });
+
+describe('ISO date strings become real date cells', () => {
+  // JSON requests deliver dates as strings; a text cell cannot be filtered,
+  // sorted by month, or fed to a formula.
+  async function cellOf(value) {
+    const buffer = await toXlsx([
+      grid({ sheetName: 'S', header: [cell('When')], rows: [[cell(value)]] }),
+    ]);
+    const workbook = await readBack(buffer);
+    return workbook.getWorksheet('S').getRow(2).getCell(1);
+  }
+
+  test('an ISO datetime converts, keeping its instant and a readable format', async () => {
+    const target = await cellOf('2026-07-01T13:45:00.000Z');
+    expect(target.value instanceof Date).toBe(true);
+    expect(target.value.toISOString()).toBe('2026-07-01T13:45:00.000Z');
+    expect(target.numFmt).toBe('yyyy-mm-dd hh:mm');
+  });
+
+  test('a date-only string converts without a time of day', async () => {
+    const target = await cellOf('2026-07-01');
+    expect(target.value.toISOString()).toBe('2026-07-01T00:00:00.000Z');
+    expect(target.numFmt).toBe('yyyy-mm-dd');
+  });
+
+  test('a datetime naming no zone keeps the clock time it states', async () => {
+    // Read as local time this would shift by the server's offset, showing an
+    // hour the source never mentioned.
+    const target = await cellOf('2026-07-01T13:45');
+    expect(target.value.toISOString()).toBe('2026-07-01T13:45:00.000Z');
+  });
+
+  test('an offset is resolved to the instant it names', async () => {
+    const target = await cellOf('2026-07-01T13:45:00+02:00');
+    expect(target.value.toISOString()).toBe('2026-07-01T11:45:00.000Z');
+  });
+
+  test('a Date at midnight gets the date format, one with a time the datetime format', async () => {
+    expect((await cellOf(new Date('2026-03-15T00:00:00.000Z'))).numFmt).toBe('yyyy-mm-dd');
+    expect((await cellOf(new Date('2026-03-15T09:30:00.000Z'))).numFmt).toBe('yyyy-mm-dd hh:mm');
+  });
+
+  test.each([
+    ['12/07/2026', 'ambiguous by locale'],
+    ['1-2', 'a product code JS would read as January 2001'],
+    ['2026-02-31', 'a day JS would silently roll into March'],
+    ['2026-13-01', 'not a real month'],
+    ['July 1, 2026', 'prose'],
+    ['20260701', 'no separators'],
+  ])('%s stays text (%s)', async (value) => {
+    const target = await cellOf(value);
+    expect(typeof target.value).toBe('string');
+    expect(target.value).toBe(value);
+    expect(target.numFmt).toBeUndefined();
+  });
+
+  test('numbers, booleans and nulls are untouched', async () => {
+    expect(typeof (await cellOf(1234.5)).value).toBe('number');
+    expect(typeof (await cellOf(true)).value).toBe('boolean');
+    expect((await cellOf(null)).value).toBeNull();
+  });
+});

@@ -24,8 +24,12 @@
  * The one deliberate difference from PDF: each cell writes its raw typed
  * `value` (ExcelJS stores real numbers, dates, and booleans natively), never
  * the `formatted` display string. A grid showing "12.5%" exports as `0.125`,
- * usable in formulas, rather than as text that merely looks right. Excel-side
- * number formats (`numFmt`) can be layered on if a concrete need arrives.
+ * usable in formulas, rather than as text that merely looks right.
+ *
+ * Dates get one conversion on top of that: an ISO-8601 string becomes a real
+ * date cell, because JSON requests deliver dates as strings and a text cell
+ * cannot be filtered, sorted by month, or fed to a formula. Only the two
+ * unambiguous ISO shapes convert — see `toExcelDate`.
  */
 
 import { ConfigError } from '@lowdefy/errors';
@@ -84,10 +88,78 @@ function collectGrids(nodes, grids = []) {
   return grids;
 }
 
-// Map a row of IR cells to the raw typed values ExcelJS writes. `undefined`
-// becomes `null` so a sparse row keeps its column alignment.
+// --- Dates -------------------------------------------------------------------
+
+// Only these two shapes become dates. Anything looser is a trap: JS reads
+// '12/07/2026' as December 7th (or July 12th, depending on where you live) and
+// the product code '1-2' as January 2001 — the spreadsheet-eats-your-data bug
+// this refuses to reproduce. An unrecognised string stays text.
+const ISO_DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2}(\.\d{1,9})?)?(Z|[+-]\d{2}:?\d{2})?$/;
+
+// Locale-neutral and sorts as it reads. ExcelJS otherwise leaves a date cell on
+// Excel's built-in format 14 ('mm-dd-yy'), which is both US-centric and
+// ambiguous.
+const DATE_FORMAT = 'yyyy-mm-dd';
+const DATETIME_FORMAT = 'yyyy-mm-dd hh:mm';
+
+const isValidDate = (date) => date instanceof Date && !Number.isNaN(date.getTime());
+
+/** A date carrying no time of day reads better without a 00:00 on the end. */
+const isUtcMidnight = (date) =>
+  date.getUTCHours() === 0 &&
+  date.getUTCMinutes() === 0 &&
+  date.getUTCSeconds() === 0 &&
+  date.getUTCMilliseconds() === 0;
+
+/**
+ * A cell value as a real Excel date, or undefined to leave it as it is.
+ *
+ * ExcelJS writes UTC-based serials, so a UTC instant lands on the same calendar
+ * date in Excel with no timezone compensation. A datetime that names no zone is
+ * read as UTC rather than as server-local time: the report has no timezone
+ * context, and the cell should show the clock time the source string states.
+ */
+function toExcelDate(value) {
+  if (value instanceof Date) {
+    return isValidDate(value) ? { date: value, dateOnly: isUtcMidnight(value) } : undefined;
+  }
+  if (typeof value !== 'string') return undefined;
+
+  if (ISO_DATE_ONLY.test(value)) {
+    const date = new Date(`${value}T00:00:00Z`);
+    // JS rolls '2026-02-31' forward to March 3rd, so only keep a date that says
+    // what it was given.
+    if (!isValidDate(date) || !date.toISOString().startsWith(value)) return undefined;
+    return { date, dateOnly: true };
+  }
+
+  if (ISO_DATETIME.test(value)) {
+    const zoned = /(Z|[+-]\d{2}:?\d{2})$/.test(value);
+    const date = new Date(zoned ? value : `${value.replace(' ', 'T')}Z`);
+    return isValidDate(date) ? { date, dateOnly: false } : undefined;
+  }
+
+  return undefined;
+}
+
+// Map a row of IR cells to the values ExcelJS writes: raw and typed, with an ISO
+// date becoming a real date cell. `undefined` becomes `null` so a sparse row
+// keeps its column alignment.
 function rowValues(cells) {
-  return (cells ?? []).map((c) => (c?.value === undefined ? null : c.value));
+  return (cells ?? []).map((c) => {
+    if (c?.value === undefined) return null;
+    return toExcelDate(c.value)?.date ?? c.value;
+  });
+}
+
+/** The number format for each cell that became a date, else undefined. */
+function rowDateFormats(cells) {
+  return (cells ?? []).map((c) => {
+    const converted = c?.value === undefined ? undefined : toExcelDate(c.value);
+    if (!converted) return undefined;
+    return converted.dateOnly ? DATE_FORMAT : DATETIME_FORMAT;
+  });
 }
 
 /**
@@ -123,7 +195,10 @@ async function toXlsx(nodes) {
       headerRow.font = { bold: true };
     }
     for (const dataRow of grid.rows ?? []) {
-      sheet.addRow(rowValues(dataRow));
+      const row = sheet.addRow(rowValues(dataRow));
+      rowDateFormats(dataRow).forEach((numFmt, index) => {
+        if (numFmt) row.getCell(index + 1).numFmt = numFmt;
+      });
     }
   }
 
