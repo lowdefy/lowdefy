@@ -42,6 +42,9 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
         return () => undefined;
       },
       globals: {
+        // Actions that call app routes need the configured basePath to build
+        // their urls, the same way createCallRequest and createCallAPI do.
+        basePath: router.basePath ?? '',
         document: window.document,
         fetch: window.fetch,
         window,

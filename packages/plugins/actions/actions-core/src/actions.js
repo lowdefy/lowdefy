@@ -18,6 +18,7 @@ export { default as CallAPI } from './actions/CallAPI/CallAPI.js';
 export { default as CallMethod } from './actions/CallMethod/CallMethod.js';
 export { default as CopyToClipboard } from './actions/CopyToClipboard/CopyToClipboard.js';
 export { default as DisplayMessage } from './actions/DisplayMessage/DisplayMessage.js';
+export { default as DownloadReport } from './actions/DownloadReport/DownloadReport.js';
 export { default as Fetch } from './actions/Fetch/Fetch.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/GeolocationCurrentPosition.js';
 export { default as Link } from './actions/Link/Link.js';

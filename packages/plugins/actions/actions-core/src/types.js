@@ -20,6 +20,7 @@ export default {
     'CallMethod',
     'CopyToClipboard',
     'DisplayMessage',
+    'DownloadReport',
     'Fetch',
     'GeolocationCurrentPosition',
     'Link',
