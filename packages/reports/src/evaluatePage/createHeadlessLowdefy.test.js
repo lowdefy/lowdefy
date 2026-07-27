@@ -82,9 +82,7 @@ describe('synthetic window operators', () => {
     const { lowdefy } = build();
     expect(parse(lowdefy, { _location: 'pathname' }).output).toBe('/page1');
     expect(parse(lowdefy, { _location: 'origin' }).output).toBe('https://reports.example.com');
-    expect(parse(lowdefy, { _location: 'href' }).output).toBe(
-      'https://reports.example.com/page1'
-    );
+    expect(parse(lowdefy, { _location: 'href' }).output).toBe('https://reports.example.com/page1');
   });
 
   test('urlQuery seed is encoded into the synthetic location', () => {

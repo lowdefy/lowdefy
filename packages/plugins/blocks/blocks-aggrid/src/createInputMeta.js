@@ -369,7 +369,8 @@ function createInputMeta(blockName) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',

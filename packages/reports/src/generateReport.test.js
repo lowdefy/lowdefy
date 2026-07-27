@@ -146,9 +146,7 @@ describe('pdf generation', () => {
 
     expect(result.warnings.skippedActions).toHaveLength(1);
     expect(result.warnings.skippedActions[0].actionType).toBe('ScrollTo');
-    expect(result.warnings.skippedBlockTypes).toEqual([
-      { blockType: 'Widget', blockIds: ['w'] },
-    ]);
+    expect(result.warnings.skippedBlockTypes).toEqual([{ blockType: 'Widget', blockIds: ['w'] }]);
   });
 
   test('a Markdown block renders end to end, operators evaluated in its content', async () => {
@@ -256,8 +254,8 @@ describe('xlsx format', () => {
       },
     });
 
-    await expect(
-      generateReport(baseOptions({ pageConfig, format: 'xlsx' }))
-    ).rejects.toThrow('no tables to export');
+    await expect(generateReport(baseOptions({ pageConfig, format: 'xlsx' }))).rejects.toThrow(
+      'no tables to export'
+    );
   });
 });

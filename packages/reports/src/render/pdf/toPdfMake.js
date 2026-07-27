@@ -303,9 +303,7 @@ export function toPdfMake(nodes, report = {}, options = {}) {
   const contentWidth = contentWidthOf(report);
 
   const ctx = { contentWidth, logger: options.logger };
-  const content = nodes
-    .map((node) => translateTopNode(node, ctx))
-    .filter((node) => node !== null);
+  const content = nodes.map((node) => translateTopNode(node, ctx)).filter((node) => node !== null);
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);

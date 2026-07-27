@@ -62,10 +62,7 @@ function redact(src) {
 }
 
 function warn(logger, src, reason) {
-  logger?.warn?.(
-    { src: redact(src) },
-    `Report image skipped: ${reason} (src '${redact(src)}').`
-  );
+  logger?.warn?.({ src: redact(src) }, `Report image skipped: ${reason} (src '${redact(src)}').`);
 }
 
 // --- Private-address guard ---------------------------------------------------

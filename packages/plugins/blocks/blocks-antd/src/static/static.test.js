@@ -77,7 +77,9 @@ describe('Paragraph', () => {
 
 describe('Statistic', () => {
   test('formats value with precision, group separator, and prefix', () => {
-    expect(run(Statistic, { properties: { title: 'Revenue', value: 1234.5, precision: 2, prefix: '$' } })).toEqual({
+    expect(
+      run(Statistic, { properties: { title: 'Revenue', value: 1234.5, precision: 2, prefix: '$' } })
+    ).toEqual({
       kind: 'stat',
       label: 'Revenue',
       value: '$1,234.50',
@@ -85,7 +87,9 @@ describe('Statistic', () => {
   });
 
   test('truncates decimals rather than rounding (matches antd)', () => {
-    expect(run(Statistic, { properties: { value: 1234.567, precision: 2 } }).value).toBe('1,234.56');
+    expect(run(Statistic, { properties: { value: 1234.567, precision: 2 } }).value).toBe(
+      '1,234.56'
+    );
   });
 
   test('applies suffix and passes non-numeric values through', () => {

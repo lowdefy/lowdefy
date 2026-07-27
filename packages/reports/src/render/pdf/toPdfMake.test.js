@@ -212,8 +212,15 @@ const PNG_DATA_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==';
 
 test('a resolved image with width and height translates to a sized pdfmake image', () => {
-  const { content } = toPdfMake([{ ...image({ src: 'logo.png', width: 120, height: 80 }), data: PNG_DATA_URL }]);
-  expect(content[0]).toMatchObject({ image: PNG_DATA_URL, width: 120, height: 80, unbreakable: true });
+  const { content } = toPdfMake([
+    { ...image({ src: 'logo.png', width: 120, height: 80 }), data: PNG_DATA_URL },
+  ]);
+  expect(content[0]).toMatchObject({
+    image: PNG_DATA_URL,
+    width: 120,
+    height: 80,
+    unbreakable: true,
+  });
   expect(content[0].maxWidth).toBeUndefined();
 });
 
@@ -314,7 +321,10 @@ test('renders a mixed document to a non-trivial PDF Buffer', async () => {
     heading({ text: 'Quarterly Report', level: 1 }),
     text({ text: 'Summary of the quarter.' }),
     row({
-      children: [stat({ label: 'Revenue', value: '$1.2M' }), stat({ label: 'Users', value: '3,400' })],
+      children: [
+        stat({ label: 'Revenue', value: '$1.2M' }),
+        stat({ label: 'Users', value: '3,400' }),
+      ],
       widths: [0.5, 0.5],
     }),
     divider(),
@@ -331,7 +341,10 @@ test('renders a mixed document to a non-trivial PDF Buffer', async () => {
       ],
     }),
   ];
-  const buffer = await renderPdfBuffer(nodes, { title: 'Quarterly Report', footer: 'Confidential' });
+  const buffer = await renderPdfBuffer(nodes, {
+    title: 'Quarterly Report',
+    footer: 'Confidential',
+  });
   expect(Buffer.isBuffer(buffer)).toBe(true);
   expect(buffer.length).toBeGreaterThan(1000);
   expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');

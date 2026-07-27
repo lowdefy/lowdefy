@@ -18,6 +18,5 @@ import { linearizePanels } from './utils.js';
 
 /** Collapse → a linearised `stack`: each panel title as a `heading`, then children. */
 export const Collapse = {
-  toReport: ({ block, children }) =>
-    linearizePanels({ panels: block.properties.panels, children }),
+  toReport: ({ block, children }) => linearizePanels({ panels: block.properties.panels, children }),
 };

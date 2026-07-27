@@ -45,8 +45,18 @@ test('a Card of Title + Statistic + Paragraph walks to stack[heading, heading, s
       category: 'container',
       properties: { title: 'Sales' },
       children: [
-        block({ id: 't', type: 'Title', category: 'display', properties: { content: 'Overview', level: 3 } }),
-        block({ id: 's', type: 'Statistic', category: 'display', properties: { title: 'Revenue', value: 1000, prefix: '$' } }),
+        block({
+          id: 't',
+          type: 'Title',
+          category: 'display',
+          properties: { content: 'Overview', level: 3 },
+        }),
+        block({
+          id: 's',
+          type: 'Statistic',
+          category: 'display',
+          properties: { title: 'Revenue', value: 1000, prefix: '$' },
+        }),
         block({ id: 'p', type: 'Paragraph', category: 'display', properties: { content: 'Body' } }),
       ],
     }),

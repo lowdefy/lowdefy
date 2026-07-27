@@ -71,7 +71,9 @@ describe('init + request feeds a block property', () => {
           ],
         },
         requests: [{ id: 'getData', type: 'Fetch' }],
-        blocks: [{ id: 'out', type: 'Paragraph', properties: { content: { _request: 'getData' } } }],
+        blocks: [
+          { id: 'out', type: 'Paragraph', properties: { content: { _request: 'getData' } } },
+        ],
       },
     });
 

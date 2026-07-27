@@ -82,12 +82,7 @@ describe('layout row grouping', () => {
       ],
     });
     const layoutLog = [];
-    const { nodes, warnings } = walkBlocks(
-      context,
-      stubRegistry(layoutLog),
-      {},
-      renderContext()
-    );
+    const { nodes, warnings } = walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
 
     expect(warnings).toEqual([]);
     expect(nodes).toHaveLength(1);

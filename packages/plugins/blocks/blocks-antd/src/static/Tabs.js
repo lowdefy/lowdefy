@@ -18,6 +18,5 @@ import { linearizePanels } from './utils.js';
 
 /** Tabs → a linearised `stack`: each tab title as a `heading`, then children. */
 export const Tabs = {
-  toReport: ({ block, children }) =>
-    linearizePanels({ panels: block.properties.tabs, children }),
+  toReport: ({ block, children }) => linearizePanels({ panels: block.properties.tabs, children }),
 };

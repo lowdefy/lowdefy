@@ -36,7 +36,12 @@ import { fonts, FONT_FAMILY } from './fonts/fonts.js';
 import generateReport from './generateReport.js';
 import evaluatePage from './evaluatePage/evaluatePage.js';
 import walkBlocks from './render/walkBlocks.js';
-import { toPdfMake, renderPdfBuffer, resolveImages, contentWidthOf } from './render/pdf/toPdfMake.js';
+import {
+  toPdfMake,
+  renderPdfBuffer,
+  resolveImages,
+  contentWidthOf,
+} from './render/pdf/toPdfMake.js';
 import { resolveImage } from './render/resolveImage.js';
 import toXlsx from './render/xlsx/toXlsx.js';
 

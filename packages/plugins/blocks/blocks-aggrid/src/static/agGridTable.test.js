@@ -123,11 +123,7 @@ describe('agGridTable', () => {
   test('hidden columns are absent from header and rows', () => {
     const result = run({
       properties: {
-        columnDefs: [
-          { field: 'name' },
-          { field: 'secret', hide: true },
-          { field: 'age' },
-        ],
+        columnDefs: [{ field: 'name' }, { field: 'secret', hide: true }, { field: 'age' }],
         rowData: [{ name: 'Ada', secret: 'x', age: 36 }],
       },
     });

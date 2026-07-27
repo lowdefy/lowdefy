@@ -77,7 +77,11 @@ test('a malformed option returns null, logs a warning with the blockId, and disp
     throw new Error('bad option');
   });
   const warn = jest.fn();
-  const node = run({ properties: { option: {} }, layout: { width: 400 }, context: { logger: { warn } } });
+  const node = run({
+    properties: { option: {} },
+    layout: { width: 400 },
+    context: { logger: { warn } },
+  });
   expect(node).toBeNull();
   expect(warn).toHaveBeenCalledTimes(1);
   const [meta, message] = warn.mock.calls[0];

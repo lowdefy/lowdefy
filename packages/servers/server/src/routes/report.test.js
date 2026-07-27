@@ -34,7 +34,10 @@ const pdfRegistry = {
 const xlsxRegistry = {
   Grid: {
     toReport: () =>
-      table({ header: [{ value: 'Region' }, { value: 'Total' }], rows: [[{ value: 'N' }, { value: 1 }]] }),
+      table({
+        header: [{ value: 'Region' }, { value: 'Total' }],
+        rows: [[{ value: 'N' }, { value: 1 }]],
+      }),
   },
 };
 

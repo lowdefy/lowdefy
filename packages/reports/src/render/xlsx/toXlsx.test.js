@@ -46,9 +46,7 @@ test('one worksheet per table, in document order, named by sheetName hint', asyn
 });
 
 test('a table without a sheetName hint falls back to a default name', async () => {
-  const buffer = await toXlsx([
-    table({ header: [cell('A')], rows: [[cell(1)]] }),
-  ]);
+  const buffer = await toXlsx([table({ header: [cell('A')], rows: [[cell(1)]] })]);
 
   const workbook = await readBack(buffer);
   expect(workbook.worksheets.map((s) => s.name)).toEqual(['Sheet']);
@@ -102,7 +100,11 @@ test('a hint longer than 31 characters is truncated', async () => {
 
 test('the header row is written bold', async () => {
   const buffer = await toXlsx([
-    table({ sheetName: 'S', header: [cell('Region'), cell('Total')], rows: [[cell('N'), cell(1)]] }),
+    table({
+      sheetName: 'S',
+      header: [cell('Region'), cell('Total')],
+      rows: [[cell('N'), cell(1)]],
+    }),
   ]);
 
   const workbook = await readBack(buffer);
@@ -139,7 +141,11 @@ test('a date value round-trips as a date cell', async () => {
 
 test('strings and booleans keep their type', async () => {
   const buffer = await toXlsx([
-    table({ sheetName: 'S', header: [cell('Name'), cell('Active')], rows: [[cell('Ann'), cell(true)]] }),
+    table({
+      sheetName: 'S',
+      header: [cell('Name'), cell('Active')],
+      rows: [[cell('Ann'), cell(true)]],
+    }),
   ]);
 
   const workbook = await readBack(buffer);
