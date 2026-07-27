@@ -80,7 +80,6 @@ async function createLowdefyContext({ c }) {
     notifications,
     operators,
     renderEmail,
-    report: getReport({ buildDirectory }),
     req: {
       url: c.req.path,
       method: c.req.method,
@@ -89,6 +88,19 @@ async function createLowdefyContext({ c }) {
     secrets,
     websockets,
   };
+  // Lazy, because this context is built in middleware — before a route has had a
+  // chance to JIT-build the page it is about to render, and that build is what
+  // writes the artifacts the seam reads (the page's _js functions, its block
+  // metas, its Tailwind classes). Read eagerly, the first report for a
+  // never-opened page renders against artifacts that predate it: charts come out
+  // empty and tiles unstyled, and only the second request looks right. A getter
+  // means no dev route can get this ordering wrong; the reads inside are
+  // mtime-cached, so repeat access is a few stat calls.
+  Object.defineProperty(context, 'report', {
+    enumerable: true,
+    get: () => getReport({ buildDirectory }),
+  });
+
   context.logger = createLogger();
   context.handleError = createHandleError({ context });
   if (!c.req.path.includes('/api/auth')) {
