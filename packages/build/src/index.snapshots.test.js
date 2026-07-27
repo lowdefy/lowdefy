@@ -118,7 +118,14 @@ async function runBuildForFixture(fixtureDir) {
 
   const parsedArtifacts = {};
   for (const [filePath, content] of Object.entries(normalizedArtifacts)) {
-    if (filePath.endsWith('.json')) {
+    if (filePath === 'reports/styles.css') {
+      // Tailwind's compiled output runs to tens of kilobytes of preflight per
+      // fixture and rewrites itself on every Tailwind release, which would swamp
+      // 91 snapshots with churn that says nothing about the build. The snapshot
+      // still asserts the artifact is written; its content is covered by
+      // writePluginImports/writeReportStyles.test.js.
+      parsedArtifacts[filePath] = '<compiled css>';
+    } else if (filePath.endsWith('.json')) {
       try {
         parsedArtifacts[filePath] = JSON.parse(content);
       } catch {
