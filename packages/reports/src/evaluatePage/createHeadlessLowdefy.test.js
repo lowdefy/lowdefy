@@ -99,8 +99,12 @@ describe('_user invocation guard', () => {
     expect(parse(lowdefy, { '_user.hasRole': 'admin' }).output).toBe(true);
   });
 
-  test('system render throws the designed ConfigError when _user is evaluated', () => {
-    const { lowdefy } = build({ invocation: 'system' });
+  test('the parser swallows the guard, so the assertion is what fails a render', () => {
+    // The operator's throw does not propagate: the parser collects every
+    // operator error and substitutes null. Asserting only this — as this test
+    // once did — passes while a scheduled report still renders and emails a
+    // document with an empty name where the user should be.
+    const { lowdefy, assertUserNotEvaluated } = build({ invocation: 'system' });
     const { output, errors } = parse(lowdefy, { _user: 'name' });
     expect(output).toBe(null);
     expect(errors).toHaveLength(1);
@@ -108,6 +112,15 @@ describe('_user invocation guard', () => {
     expect(errors[0].message).toBe(
       "Page 'page1' uses _user and cannot be rendered on a schedule; pass explicit parameters via the schedule payload instead."
     );
+    // The read was recorded, so the caller's assertion refuses the render.
+    expect(() => assertUserNotEvaluated()).toThrow(ConfigError);
+    expect(() => assertUserNotEvaluated()).toThrow(/cannot be rendered on a schedule/);
+  });
+
+  test('the assertion passes when _user was never evaluated', () => {
+    const { lowdefy, assertUserNotEvaluated } = build({ invocation: 'system' });
+    parse(lowdefy, { _media: 'width' });
+    expect(() => assertUserNotEvaluated()).not.toThrow();
   });
 
   test('system render leaves other operators working (no spurious tripping)', () => {

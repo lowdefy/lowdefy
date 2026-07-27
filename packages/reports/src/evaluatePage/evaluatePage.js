@@ -46,7 +46,8 @@ const noop = () => undefined;
  */
 async function evaluatePage(options) {
   const handle = createHeadlessLowdefy(options);
-  const { lowdefy, pageConfig, jsMap, seed, warnings, drainRequests } = handle;
+  const { lowdefy, pageConfig, jsMap, seed, warnings, drainRequests, assertUserNotEvaluated } =
+    handle;
 
   const context = getContext({
     config: pageConfig,
@@ -67,8 +68,18 @@ async function evaluatePage(options) {
     context.state = serializer.copy(seed.state);
   }
 
+  // Assert at every phase boundary, not once at the end: a system render that
+  // reads _user must stop before an init request carries the wrong parameters to
+  // an external system, and before any document exists. The parser swallows the
+  // guard's own throw (see createHeadlessLowdefy), so these calls are what
+  // actually fail the render.
+  assertUserNotEvaluated();
+
   await context._internal.runOnInit(noop);
+  assertUserNotEvaluated();
+
   await context._internal.runOnInitAsync(noop);
+  assertUserNotEvaluated();
 
   // The engine keeps no promise handles — the factory's tracking Set is the
   // only drain mechanism. It re-checks after each await, so requests triggered
@@ -78,6 +89,7 @@ async function evaluatePage(options) {
   // One final evaluation so visibleEval/propertiesEval reflect every response,
   // even those that settled after the last engine update during the drain.
   context._internal.update();
+  assertUserNotEvaluated();
 
   return { context, warnings };
 }

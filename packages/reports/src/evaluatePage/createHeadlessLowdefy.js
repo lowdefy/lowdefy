@@ -44,6 +44,11 @@ const SERVER_SAFE_ACTIONS = {
 // to this size regardless of the invoker's device.
 const PRINT_VIEWPORT = { innerWidth: 1200, innerHeight: 800 };
 
+// One wording for the guard, raised both from the operator and by the caller's
+// assertion so a scheduled render reports the same cause either way.
+const userOnScheduleMessage = (pageId) =>
+  `Page '${pageId}' uses _user and cannot be rendered on a schedule; pass explicit parameters via the schedule payload instead.`;
+
 // An action registry that returns the real implementation for server-safe
 // actions and a skip stub for everything else. The stub records the skipped
 // action and resolves, so an init chain containing browser-only actions
@@ -171,14 +176,26 @@ function createHeadlessLowdefy({
   // Copy the operator map so the caller's map is never mutated. On system
   // (scheduled) renders, swap _user for a fail-fast guard: only actual _user
   // evaluation trips it, never incidental access to the user object.
+  //
+  // The guard records the read as well as throwing, because throwing alone
+  // cannot stop a render: the parser collects every error an operator raises
+  // into its own `errors` array and substitutes null (webParser.js), so a
+  // scheduled report would otherwise sail on and email a document with an empty
+  // name where the user should be — the exact failure this guard exists to
+  // prevent. `assertUserNotEvaluated` is what actually stops it, and the caller
+  // asserts at each phase boundary so nothing external happens after the read.
   const resolvedOperators = { ...operators };
+  let userEvaluated = false;
   if (invocation === 'system') {
     resolvedOperators._user = () => {
-      throw new ConfigError(
-        `Page '${pageId}' uses _user and cannot be rendered on a schedule; pass explicit parameters via the schedule payload instead.`
-      );
+      userEvaluated = true;
+      throw new ConfigError(userOnScheduleMessage(pageId));
     };
   }
+
+  const assertUserNotEvaluated = () => {
+    if (userEvaluated) throw new ConfigError(userOnScheduleMessage(pageId));
+  };
 
   const { trackedCallRequest, drainRequests } = createTrackingCallRequest(callRequest);
 
@@ -220,7 +237,15 @@ function createHeadlessLowdefy({
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
 
-  return { lowdefy, pageConfig, jsMap, seed, warnings, drainRequests };
+  return {
+    lowdefy,
+    pageConfig,
+    jsMap,
+    seed,
+    warnings,
+    drainRequests,
+    assertUserNotEvaluated,
+  };
 }
 
 export default createHeadlessLowdefy;

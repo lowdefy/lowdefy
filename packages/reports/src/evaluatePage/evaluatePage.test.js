@@ -243,3 +243,66 @@ describe('warnings', () => {
     expect(warnings[0].actionType).toBe('ScrollTo');
   });
 });
+
+describe('a system render refuses a page that reads _user', () => {
+  // The safety property the whole scheduled path rests on: no report is ever
+  // rendered as nobody. Proven here through the phases, because the operator's
+  // own throw is swallowed by the parser — a smoke test caught a scheduled run
+  // producing a document with an empty name where the user should be.
+  // A factory, not a shared object: buildTestPage transforms the config it is
+  // given, so a second test would build an already-built page.
+  const userPage = () => ({
+    id: 'page1',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'greeting',
+        type: 'Paragraph',
+        properties: { content: { '_string.concat': ['Prepared for ', { _user: 'name' }] } },
+      },
+    ],
+  });
+
+  test('a page property reading _user rejects', async () => {
+    await expect(run({ pageConfig: userPage(), invocation: 'system' })).rejects.toThrow(
+      /uses _user and cannot be rendered on a schedule/
+    );
+  });
+
+  test('an init action reading _user rejects before any request goes out', async () => {
+    const calls = [];
+    await expect(
+      run({
+        invocation: 'system',
+        callRequest: ({ requestId }) => {
+          calls.push(requestId);
+          return Promise.resolve({ response: null });
+        },
+        pageConfig: {
+          id: 'page1',
+          type: 'Box',
+          requests: [{ id: 'getData', type: 'Test', connectionId: 'test' }],
+          events: {
+            onInit: [
+              { id: 'set', type: 'SetState', params: { who: { _user: 'name' } } },
+              { id: 'req', type: 'Request', params: 'getData' },
+            ],
+          },
+        },
+      })
+    ).rejects.toThrow(/uses _user and cannot be rendered on a schedule/);
+    // The request must never have carried a null user to an external system.
+    expect(calls).toEqual([]);
+  });
+
+  test('the same page renders for a user invocation', async () => {
+    const { context } = await run({
+      pageConfig: userPage(),
+      invocation: 'user',
+      user: { name: 'Ada' },
+    });
+    expect(context._internal.RootSlots.map.greeting.propertiesEval.output.content).toBe(
+      'Prepared for Ada'
+    );
+  });
+});
