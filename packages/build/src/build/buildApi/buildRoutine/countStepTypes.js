@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
+import { prefixByType } from './setStepId.js';
+
+// Only connection request steps count towards the request types the app imports —
+// built-in step types (the setStepId prefix map) are handled by @lowdefy/api.
 function countStepTypes(step, { typeCounters }) {
-  if (
-    step.type === 'CallAgent' ||
-    step.type === 'CallApi' ||
-    step.type === 'RenderNotification' ||
-    step.type === 'ValidateSchema'
-  ) {
+  if (prefixByType[step.type]) {
     return;
   }
   typeCounters.requests.increment(step.type, step['~k']);

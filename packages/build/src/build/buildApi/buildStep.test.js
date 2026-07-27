@@ -928,3 +928,193 @@ test('RenderNotification step is not counted in typeCounters.requests', () => {
     MongoDBInsertOne: 1,
   });
 });
+
+test('RenderReport step builds with report prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: {
+              pageId: 'sales_dashboard',
+              format: 'pdf',
+              urlQuery: { _payload: 'urlQuery' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_renderreport_step',
+        endpointId: 'test_renderreport_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report:test_renderreport_step:report',
+            endpointId: 'test_renderreport_step',
+            stepId: 'report',
+            type: 'RenderReport',
+            properties: {
+              pageId: 'sales_dashboard',
+              format: 'pdf',
+              urlQuery: { _payload: 'urlQuery' },
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('RenderReport step allows operator objects for all properties', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: {
+              pageId: { _payload: 'pageId' },
+              format: { _payload: 'format' },
+              filename: { _payload: 'filename' },
+              urlQuery: { _payload: 'urlQuery' },
+              input: { _payload: 'input' },
+              state: { _payload: 'state' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('RenderReport step without properties.pageId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_no_page',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: { format: 'pdf' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderReport step "report" at endpoint "test_renderreport_no_page" requires properties.pageId.'
+  );
+});
+
+test('RenderReport step with an unsupported static format throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_bad_format',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: { pageId: 'sales_dashboard', format: 'docx' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderReport step "report" at endpoint "test_renderreport_bad_format" properties.format must be "pdf" or "xlsx".'
+  );
+});
+
+test('RenderReport step with a non-object urlQuery throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_bad_url_query',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: { pageId: 'sales_dashboard', urlQuery: 'region=emea' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderReport step "report" at endpoint "test_renderreport_bad_url_query" properties.urlQuery is not an object.'
+  );
+});
+
+test('RenderReport step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'report',
+            type: 'RenderReport',
+            connectionId: 'test_connection',
+            properties: { pageId: 'sales_dashboard' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderReport step "report" at endpoint "test_renderreport_with_connection" should not have a connectionId.'
+  );
+});
+
+test('RenderReport step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_renderreport_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'report',
+            type: 'RenderReport',
+            properties: { pageId: 'sales_dashboard' },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});

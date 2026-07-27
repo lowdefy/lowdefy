@@ -27,6 +27,7 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import renderReport from './routes/reports/renderReport.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
@@ -45,6 +46,7 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  renderReport,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,

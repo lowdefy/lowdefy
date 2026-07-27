@@ -35,10 +35,9 @@ function validateStep(step, { endpointId }) {
   }
   validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
-    throw new ConfigError(
-      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.type)) {
     throw new ConfigError(
@@ -135,6 +134,64 @@ function validateStep(step, { endpointId }) {
     if (!type.isNone(step.connectionId)) {
       throw new ConfigError(
         `RenderNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
+  if (step.type === 'RenderReport') {
+    if (type.isNone(step.properties?.pageId)) {
+      throw new ConfigError(
+        `RenderReport step "${step.id}" at endpoint "${endpointId}" requires properties.pageId.`,
+        { configKey }
+      );
+    }
+    if (!type.isString(step.properties.pageId) && !type.isObject(step.properties.pageId)) {
+      throw new ConfigError(
+        `RenderReport step "${step.id}" at endpoint "${endpointId}" properties.pageId is not a string.`,
+        { received: step.properties.pageId, configKey }
+      );
+    }
+    if (!type.isNone(step.properties.format)) {
+      if (!type.isString(step.properties.format) && !type.isObject(step.properties.format)) {
+        throw new ConfigError(
+          `RenderReport step "${step.id}" at endpoint "${endpointId}" properties.format is not a string.`,
+          { received: step.properties.format, configKey }
+        );
+      }
+      // A static format is checked here — an operator format resolves at runtime.
+      if (
+        type.isString(step.properties.format) &&
+        !['pdf', 'xlsx'].includes(step.properties.format)
+      ) {
+        throw new ConfigError(
+          `RenderReport step "${step.id}" at endpoint "${endpointId}" properties.format must be "pdf" or "xlsx".`,
+          { received: step.properties.format, configKey }
+        );
+      }
+    }
+    if (
+      !type.isNone(step.properties.filename) &&
+      !type.isString(step.properties.filename) &&
+      !type.isObject(step.properties.filename)
+    ) {
+      throw new ConfigError(
+        `RenderReport step "${step.id}" at endpoint "${endpointId}" properties.filename is not a string.`,
+        { received: step.properties.filename, configKey }
+      );
+    }
+    ['urlQuery', 'input', 'state'].forEach((key) => {
+      if (!type.isNone(step.properties[key]) && !type.isObject(step.properties[key])) {
+        throw new ConfigError(
+          `RenderReport step "${step.id}" at endpoint "${endpointId}" properties.${key} is not an object.`,
+          { received: step.properties[key], configKey }
+        );
+      }
+    });
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `RenderReport step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
         { configKey }
       );
     }

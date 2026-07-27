@@ -45,6 +45,11 @@ function createAuthorize({ session, system = false }) {
       configKey: config['~k'],
     });
   }
+  // Steps that render as their invoker (RenderReport) need to know whether they
+  // run in a system context. Expose it off the authorize function so it is
+  // derived from the same flag wherever a system context is created.
+  authorize.system = system === true;
+
   return authorize;
 }
 

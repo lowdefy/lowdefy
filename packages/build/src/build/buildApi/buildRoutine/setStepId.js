@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-const prefixByType = {
+// Built-in step types and the runtime id prefix runRoutine dispatches on. A type
+// that is not listed here is a connection request step (prefix "request:"), so
+// this map is also the single source of truth for "is this a built-in step type".
+export const prefixByType = {
   CallAgent: 'agent',
   CallApi: 'endpoint',
   RenderNotification: 'notification',
+  RenderReport: 'report',
   ValidateSchema: 'validate',
 };
 

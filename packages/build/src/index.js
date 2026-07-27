@@ -53,6 +53,7 @@ import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
 import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
+import validateRenderReportSteps from './build/validateRenderReportSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
@@ -159,6 +160,7 @@ async function build(options) {
       components,
       context,
     });
+    tryBuildStep(validateRenderReportSteps, 'validateRenderReportSteps', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before

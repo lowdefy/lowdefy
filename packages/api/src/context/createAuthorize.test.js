@@ -147,3 +147,9 @@ test('throws ConfigError with configKey for location tracing', () => {
     expect(e.received).toBeUndefined();
   }
 });
+
+test('authorize exposes the system flag so steps can render as their invoker', () => {
+  expect(createAuthorize({ session: undefined, system: true }).system).toBe(true);
+  expect(createAuthorize({ session: undefined }).system).toBe(false);
+  expect(createAuthorize({ session: { user: { id: 'u1' } } }).system).toBe(false);
+});

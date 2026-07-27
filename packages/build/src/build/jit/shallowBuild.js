@@ -45,6 +45,7 @@ import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
 import validateCallAgentSteps from '../validateCallAgentSteps.js';
 import validateRenderNotificationSteps from '../validateRenderNotificationSteps.js';
+import validateRenderReportSteps from '../validateRenderReportSteps.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
 import copyAgentFileSystems from '../copyAgentFileSystems.js';
 import copyPublicFolder from '../copyPublicFolder.js';
@@ -170,6 +171,7 @@ async function shallowBuild(options) {
       components,
       context,
     });
+    tryBuildStep(validateRenderReportSteps, 'validateRenderReportSteps', { components, context });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
