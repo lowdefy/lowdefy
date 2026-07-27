@@ -63,6 +63,7 @@ import lowdefyConfig from '../lib/build/config.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
+import reportHandler from './routes/report.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
 import usageHandler from './routes/usage.js';
@@ -143,6 +144,7 @@ function createApp() {
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
+  app.post('/api/report/*', reportHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
   app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);

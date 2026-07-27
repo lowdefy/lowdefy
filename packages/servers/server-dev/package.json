@@ -81,6 +81,7 @@
     "@lowdefy/operators-uuid": "5.4.0",
     "@lowdefy/operators-yaml": "5.4.0",
     "@lowdefy/plugin-next-auth": "5.4.0",
+    "@lowdefy/reports": "5.4.0",
     "@lowdefy/websockets-core": "5.4.0",
     "@modelcontextprotocol/sdk": "1.29.0",
     "@tailwindcss/postcss": "4.3.1",
