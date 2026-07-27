@@ -42,8 +42,15 @@
  * consecutive siblings whose numeric `layout.span` values sum to ≤ 24 form one
  * `row` node with `span/24` width fractions; a missing (or ≥ 24) span is full
  * width and ends any open row; `offset` becomes a leading `spacer` child.
- * `order`, `push`, `pull`, responsive overrides, and flex sizing are ignored
- * with a debug log.
+ * `order`, `push`, `pull` and responsive overrides are ignored with a debug log.
+ *
+ * Flex sizing is honoured, because ignoring it split the commonest tile pattern
+ * across two lines. In the Lowdefy grid a block carrying any of `flex`, `grow`,
+ * `shrink` or `size` is a plain flex child — sized by its content and sitting
+ * inline with its siblings — while a block with no layout at all is full width
+ * (`deriveLayout.js`: those four keys short-circuit the span classes). So an
+ * icon and its label, both `flex: 0 1 auto`, belong on one line. Such siblings
+ * join the row with a content width (`auto`), or `fill` when they grow.
  */
 
 import { type } from '@lowdefy/helpers';
@@ -60,21 +67,26 @@ const FULL_SPAN = 24;
  */
 const DEFAULT_CONTENT_WIDTH = 515.28;
 
-const LAYOUT_IGNORED_KEYS = [
-  'order',
-  'push',
-  'pull',
-  'flex',
-  'grow',
-  'shrink',
-  'size',
-  'xs',
-  'sm',
-  'md',
-  'lg',
-  'xl',
-  '2xl',
-];
+const LAYOUT_IGNORED_KEYS = ['order', 'push', 'pull', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+
+// The keys that make a block a flex child rather than a grid column, mirroring
+// deriveFlex in @lowdefy/layout.
+const FLEX_KEYS = ['flex', 'grow', 'shrink', 'size'];
+
+const isFlexChild = (layout) => FLEX_KEYS.some((key) => !type.isNone(layout[key]));
+
+/**
+ * Does this flex child take the row's spare width? `flex` shorthand leads with
+ * grow (`1 0 auto`, or `true` for `0 1 auto`), and `grow` sets it directly.
+ */
+const flexGrows = (layout) => {
+  if (type.isNumber(layout.grow)) return layout.grow > 0;
+  if (layout.grow === true) return true;
+  if (layout.flex === true) return false; // shorthand for '0 1 auto'
+  if (type.isNumber(layout.flex)) return layout.flex > 0;
+  if (type.isString(layout.flex)) return Number.parseFloat(layout.flex) > 0;
+  return false;
+};
 
 /**
  * Walk the evaluated tree into report IR.
@@ -200,7 +212,19 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
 
     const flush = () => {
       if (cells.length === 0) return;
-      output.push(row({ children: cells, widths }));
+      // A lone content-sized child is just a block — no row wrapper needed.
+      if (cells.length === 1 && !type.isNumber(widths[0])) {
+        output.push(cells[0]);
+      } else {
+        // Give the last content-sized child the spare width when nothing grows,
+        // the way a flex row's last item absorbs the slack. This also bounds the
+        // row to the available width instead of letting content run past it.
+        const grown = widths.some((width) => width === 'fill' || type.isNumber(width));
+        const bounded = grown
+          ? widths
+          : widths.map((width, index) => (index === widths.length - 1 ? 'fill' : width));
+        output.push(row({ children: cells, widths: bounded }));
+      }
       cells = [];
       widths = [];
       rowSpan = 0;
@@ -214,6 +238,18 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
 
       const layout = block.layoutEval?.output ?? {};
       logIgnoredLayout(block, layout);
+
+      // A flex child sits inline at its content width, so it joins the open row
+      // without consuming grid span. Its render width is unknowable up front —
+      // give it the row's remaining width so a chart or Html block inside one
+      // still sizes sanely.
+      if (isFlexChild(layout)) {
+        const nodes = await renderBlock(block, availableWidth, 1);
+        if (nodes.length === 0) continue;
+        cells.push(nodes.length === 1 ? nodes[0] : stack({ children: nodes }));
+        widths.push(flexGrows(layout) ? 'fill' : 'auto');
+        continue;
+      }
 
       const span = type.isNumber(layout.span) ? layout.span : undefined;
       const offset = type.isNumber(layout.offset) && layout.offset > 0 ? layout.offset : 0;

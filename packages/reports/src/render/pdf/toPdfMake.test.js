@@ -69,6 +69,64 @@ test('svg translates to a sized svg node wrapped unbreakable', () => {
   });
 });
 
+// --- rows and orphan control -------------------------------------------------
+
+test('row widths map fractions to percentages, auto to auto, fill to a star column', () => {
+  const node = row({
+    children: [text({ text: 'a' }), text({ text: 'b' }), text({ text: 'c' })],
+    widths: [0.25, 'auto', 'fill'],
+  });
+  const { content } = toPdfMake([node]);
+  expect(content[0].columns.map((column) => column.width)).toEqual(['25%', 'auto', '*']);
+});
+
+test('a divider and heading travel with the chart they introduce', () => {
+  const { content } = toPdfMake([
+    divider(),
+    heading({ text: 'Revenue by month', level: 4 }),
+    svg({ svg: '<svg></svg>', width: 500, height: 320 }),
+  ]);
+  // One unbreakable group, so the chart cannot leave its heading behind.
+  expect(content).toHaveLength(1);
+  expect(content[0].unbreakable).toBe(true);
+  expect(content[0].stack).toHaveLength(3);
+  expect(content[0].stack[1].text).toBe('Revenue by month');
+});
+
+test('a heading before flowing content is not grouped', () => {
+  // Text and tables break across pages, so they never strand a heading.
+  const { content } = toPdfMake([heading({ text: 'H', level: 2 }), text({ text: 'prose' })]);
+  expect(content).toHaveLength(2);
+  expect(content[0].stack).toBeUndefined();
+});
+
+test('a heading before a stat row travels with it', () => {
+  const { content } = toPdfMake([
+    heading({ text: 'H', level: 2 }),
+    row({ children: [stat({ label: 'a', value: '1' })], widths: [1] }),
+  ]);
+  expect(content).toHaveLength(1);
+  expect(content[0].unbreakable).toBe(true);
+});
+
+test('a heading is left alone when its content is taller than a page', () => {
+  const { content } = toPdfMake([
+    heading({ text: 'H', level: 2 }),
+    svg({ svg: '<svg></svg>', width: 500, height: 900 }),
+  ]);
+  // Grouping an over-tall chart would make a block pdfmake cannot place.
+  expect(content).toHaveLength(2);
+});
+
+test('a page break asked for on the heading moves to the group', () => {
+  const { content } = toPdfMake([
+    { ...heading({ text: 'H', level: 2 }), pageBreakBefore: true },
+    svg({ svg: '<svg></svg>', width: 500, height: 300 }),
+  ]);
+  expect(content[0].pageBreak).toBe('before');
+  expect(content[0].stack[0].pageBreak).toBeUndefined();
+});
+
 // --- grid --------------------------------------------------------------------
 
 test('a grid is named in the document, not printed, and never becomes a table', () => {

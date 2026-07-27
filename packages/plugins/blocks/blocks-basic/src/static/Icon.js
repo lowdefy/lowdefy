@@ -33,6 +33,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import { styleValue } from './utils.js';
+
 // A line of body text is ~14pt, which is the size an icon beside a label wants.
 const DEFAULT_SIZE = 14;
 // react-icons paints with `currentColor`; the client inherits the surrounding
@@ -82,8 +84,9 @@ const toReport = async ({ block, context }) => {
     return null;
   }
 
-  const size = toPoints(properties.size) ?? toPoints(block.style?.fontSize) ?? DEFAULT_SIZE;
-  const color = properties.color ?? block.style?.color ?? DEFAULT_COLOR;
+  const size =
+    toPoints(properties.size) ?? toPoints(styleValue(block.style, 'fontSize')) ?? DEFAULT_SIZE;
+  const color = properties.color ?? styleValue(block.style, 'color') ?? DEFAULT_COLOR;
 
   if (properties.rotate !== undefined || properties.spin === true) {
     context?.logger?.debug?.(

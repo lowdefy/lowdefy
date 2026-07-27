@@ -31,3 +31,19 @@ import { type } from '@lowdefy/helpers';
 export function isBlank(value) {
   return type.isNone(value) || value === '';
 }
+
+/**
+ * Read one CSS property from a block's evaluated style.
+ *
+ * A bare `style: { height: 76 }` does not survive the build as written — styles
+ * are keyed by the block's css-keys, and the build files a bare style under
+ * `block` (`{ block: { height: 76 } }`), while `style: { element: {...} }` stays
+ * where the author put it. A report collapses a block's several DOM nodes into
+ * one rendered box, so it takes the most specific value on offer: the inner
+ * element, then the block wrapper, then a flat style (which is what a direct
+ * renderer call in a test passes).
+ */
+export function styleValue(style, key) {
+  if (!type.isObject(style)) return undefined;
+  return style.element?.[key] ?? style.block?.[key] ?? style[key];
+}

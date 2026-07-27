@@ -262,3 +262,32 @@ describe('DangerousHtml', () => {
     expect(warn.mock.calls[0][1]).toContain("DangerousHtml block 'raw_1'");
   });
 });
+
+test('a block height gives the markup a definite box to fill', async () => {
+  // Two tiles of the same declared height must render the same height even when
+  // one of their labels wraps, so a row of them lines up.
+  const tile = (label) =>
+    `<div style="height: 100%; border: 1px solid #f0f0f0; padding: 8px"><span style="font-size: 11px">${label}</span></div>`;
+  const short = await run(Html, { properties: { html: tile('OWNERS') }, style: { height: 76 } });
+  const wrapping = await run(Html, {
+    properties: { html: tile('COMPLETION RATE OVER THE PERIOD') },
+    style: { height: 76 },
+  });
+  expect(short.height).toBe(76);
+  expect(wrapping.height).toBe(76);
+  // The wrapper is what makes `height: 100%` resolvable, so both tiles draw the
+  // same number of border segments at the same size.
+  expect(wrapping.svg.length).toBeGreaterThan(0);
+  expect(short.svg).toContain('height="76"');
+  expect(wrapping.svg).toContain('height="76"');
+});
+
+test('a bare block style survives the build as a css-keyed style', async () => {
+  // The build files `style: { height: 76 }` under the block's css-key, so a
+  // renderer that reads `style.height` sees nothing at all.
+  const node = await run(Html, {
+    properties: { html: TILE_INLINE },
+    style: { block: { height: 90 } },
+  });
+  expect(node.height).toBe(90);
+});

@@ -143,8 +143,12 @@ export function stat({ label, value }) {
 }
 
 /**
- * A horizontal group. `children` are laid out side by side; `widths` holds the
- * width fraction (span/24) for each child, parallel to `children`.
+ * A horizontal group. `children` are laid out side by side; `widths` is parallel
+ * to `children` and each entry is one of:
+ *
+ *   - a number in (0, 1] — that fraction of the row (a grid `span/24`)
+ *   - `'auto'` — the child's content width (a flex child that does not grow)
+ *   - `'fill'` — an equal share of whatever width the other children leave
  */
 export function row({ children, widths }) {
   return { kind: 'row', children, widths };
@@ -204,6 +208,19 @@ export function validateNode(node) {
     for (const dataRow of node.rows ?? []) {
       for (const dataCell of dataRow ?? []) {
         validateCell(dataCell, kind);
+      }
+    }
+  }
+  if (kind === 'row') {
+    for (const width of node.widths ?? []) {
+      const valid =
+        width === 'auto' ||
+        width === 'fill' ||
+        (typeof width === 'number' && width > 0 && width <= 1);
+      if (!valid) {
+        throw new ConfigError(
+          `Invalid report IR 'row' width '${width}': expected a fraction in (0, 1], 'auto', or 'fill'.`
+        );
       }
     }
   }

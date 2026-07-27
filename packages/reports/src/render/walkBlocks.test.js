@@ -352,8 +352,102 @@ describe('IR validation', () => {
   });
 });
 
+describe('flex children sit inline', () => {
+  // In the Lowdefy grid, flex/grow/shrink/size make a block a content-sized flex
+  // child sharing a line with its siblings — the icon-plus-label tile pattern.
+  test('consecutive flex siblings form one row, the last taking the slack', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'icon',
+          type: 'Paragraph',
+          layout: { flex: '0 1 auto' },
+          properties: { content: '^' },
+        },
+        {
+          id: 'label',
+          type: 'Paragraph',
+          layout: { flex: '0 1 auto' },
+          properties: { content: '12%' },
+        },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0].kind).toBe('row');
+    expect(nodes[0].widths).toEqual(['auto', 'fill']);
+  });
+
+  test('a growing flex child fills, and siblings stay content-sized', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'icon', type: 'Paragraph', layout: { size: 'auto' }, properties: { content: '^' } },
+        { id: 'label', type: 'Paragraph', layout: { grow: 1 }, properties: { content: '12%' } },
+        {
+          id: 'end',
+          type: 'Paragraph',
+          layout: { flex: '0 1 auto' },
+          properties: { content: 'x' },
+        },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes[0].widths).toEqual(['auto', 'fill', 'auto']);
+  });
+
+  test('a lone flex child needs no row wrapper', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'only', type: 'Paragraph', layout: { flex: true }, properties: { content: 'A' } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0].kind).toBe('text');
+  });
+
+  test('a full-width block ends an open flex row', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'a', type: 'Paragraph', layout: { flex: '0 1 auto' }, properties: { content: 'a' } },
+        { id: 'b', type: 'Paragraph', properties: { content: 'b' } },
+        { id: 'c', type: 'Paragraph', layout: { flex: '0 1 auto' }, properties: { content: 'c' } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes.map((node) => node.kind)).toEqual(['text', 'text', 'text']);
+  });
+
+  test('a flex child joins a span row without consuming span', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'a', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'a' } },
+        { id: 'b', type: 'Paragraph', layout: { flex: '0 1 auto' }, properties: { content: 'b' } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes[0].kind).toBe('row');
+    expect(nodes[0].widths).toEqual([0.5, 'auto']);
+  });
+});
+
 describe('ignored layout features log at debug', () => {
-  test('order/push/pull/responsive/flex are logged and ignored', async () => {
+  test('order/push/pull/responsive are logged and ignored', async () => {
     const context = await evaluate({
       id: 'page1',
       type: 'Box',

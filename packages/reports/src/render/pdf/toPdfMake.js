@@ -180,6 +180,17 @@ function translateStat(node) {
   };
 }
 
+/**
+ * A row width entry as a pdfmake column width: a fraction becomes a percentage,
+ * `'auto'` sizes to content, `'fill'` takes an equal share of the remainder
+ * (pdfmake's star column).
+ */
+function columnWidth(width) {
+  if (width === 'auto') return 'auto';
+  if (width === 'fill') return '*';
+  return `${width * 100}%`;
+}
+
 function translateRow(node, ctx) {
   const children = node.children ?? [];
   const widths = node.widths ?? [];
@@ -187,18 +198,18 @@ function translateRow(node, ctx) {
     margin: [0, 0, 0, 8],
     columnGap: 8,
     // A child may translate to null (a skipped image); drop its column and keep
-    // the remaining columns at their original fractions.
+    // the remaining columns at their original widths.
     columns: children
       .map((child, index) => {
-        const fraction = widths[index] ?? 1 / children.length;
+        const width = widths[index] ?? 1 / children.length;
         // Narrow the context to the cell: a table or divider inside a row must
-        // size to its column, not to the full page width.
-        const translated = translateNode(child, {
-          ...ctx,
-          contentWidth: ctx.contentWidth * fraction,
-        });
+        // size to its column, not to the full page width. A content-sized or
+        // filling column has no width until pdfmake lays the row out, so those
+        // children keep the row's width as an upper bound.
+        const cellWidth = typeof width === 'number' ? ctx.contentWidth * width : ctx.contentWidth;
+        const translated = translateNode(child, { ...ctx, contentWidth: cellWidth });
         if (translated === null) return null;
-        return { ...translated, width: `${fraction * 100}%` };
+        return { ...translated, width: columnWidth(width) };
       })
       .filter((column) => column !== null),
   };
@@ -292,6 +303,93 @@ function translateTopNode(node, ctx) {
   return translated;
 }
 
+// --- Section grouping --------------------------------------------------------
+
+/** A heading and a divider introduce what follows, so they travel with it. */
+const SECTION_MARKERS = new Set(['heading', 'divider']);
+
+// A heading is ~30pt with its margins; used to size a candidate group.
+const MARKER_HEIGHT = 30;
+// A chart-plus-heading group has to leave room for the rest of the page's flow,
+// so only group when the pair takes at most this share of the page.
+const GROUP_HEIGHT_LIMIT = 0.9;
+
+/**
+ * The height a node takes when it cannot be split, or undefined when it flows
+ * (text, markdown, tables) and so never strands the heading above it.
+ */
+function unbreakableHeight(node) {
+  switch (node.kind) {
+    case 'svg':
+      return (node.height ?? 0) + 8;
+    case 'stat':
+      return 40;
+    case 'row':
+      return Math.max(40, ...(node.children ?? []).map((child) => unbreakableHeight(child) ?? 0));
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Assemble the top-level content, keeping each heading with the content it
+ * introduces. A chart that does not fit the remaining space moves to the next
+ * page whole (it is unbreakable), which used to leave its heading behind above a
+ * blank half page. Grouping the pair in one unbreakable stack moves them
+ * together.
+ *
+ * This is done here rather than with pdfmake's `pageBreakBefore` callback: that
+ * callback decides from which nodes share a page, and a row whose children
+ * overflow still counts as being on the heading's page, so the orphan goes
+ * unnoticed. Grouping needs no such bookkeeping.
+ *
+ * Groups are capped at a share of the page: a heading plus something taller than
+ * the page would otherwise become an unbreakable block that cannot be placed.
+ */
+function assembleContent(nodes, ctx, pageContentHeight) {
+  const content = [];
+  let markers = [];
+
+  const flushMarkers = () => {
+    content.push(...markers);
+    markers = [];
+  };
+
+  for (const node of nodes) {
+    const translated = translateTopNode(node, ctx);
+    if (translated === null) continue;
+
+    if (SECTION_MARKERS.has(node.kind)) {
+      markers.push(translated);
+      continue;
+    }
+
+    const height = unbreakableHeight(node);
+    const fits =
+      height !== undefined &&
+      height + markers.length * MARKER_HEIGHT <= pageContentHeight * GROUP_HEIGHT_LIMIT;
+
+    if (markers.length > 0 && fits) {
+      // A page break asked for on the first marker belongs to the group.
+      const [first, ...rest] = markers;
+      const { pageBreak, ...head } = first;
+      content.push({
+        stack: [head, ...rest, translated],
+        unbreakable: true,
+        ...(pageBreak !== undefined ? { pageBreak } : {}),
+      });
+      markers = [];
+      continue;
+    }
+
+    flushMarkers();
+    content.push(translated);
+  }
+
+  flushMarkers();
+  return content;
+}
+
 // --- Page chrome -------------------------------------------------------------
 
 function buildHeader(headerText) {
@@ -340,7 +438,8 @@ export function toPdfMake(nodes, report = {}, options = {}) {
   const contentWidth = contentWidthOf(report);
 
   const ctx = { contentWidth, logger: options.logger };
-  const content = nodes.map((node) => translateTopNode(node, ctx)).filter((node) => node !== null);
+  const pageHeight = orientation === 'landscape' ? size.width : size.height;
+  const content = assembleContent(nodes, ctx, pageHeight - PAGE_MARGINS[1] - PAGE_MARGINS[3]);
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);

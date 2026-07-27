@@ -37,7 +37,7 @@
 import { Renderer } from '@takumi-rs/core';
 import { fromHtml } from '@takumi-rs/helpers/html';
 
-import { isBlank } from './utils.js';
+import { isBlank, styleValue } from './utils.js';
 
 // Fallback when the walker gives no column geometry (e.g. a direct unit-test
 // call): A4 portrait content width, matching the reports walker default.
@@ -122,11 +122,22 @@ const toReport = async ({ block, layout, context }) => {
   const width = isNumber(layout?.width) ? layout.width : DEFAULT_WIDTH;
   // The block's own style height wins over auto-measurement, and is given to
   // takumi so the markup lays out in the box the page would give it.
-  const styleHeight = toPoints(block.style?.height);
+  const styleHeight = toPoints(styleValue(block.style, 'height'));
+
+  // A block height sizes the canvas, but takumi's root element stays
+  // content-height inside it, so `height: 100%` in the markup has no definite
+  // parent to resolve against and a bordered tile ends up shorter than the box
+  // it was given. Wrapping the markup in a column of that exact height gives it
+  // one, which is what an author setting a height means: tiles in a row line up
+  // even when one of their labels wraps.
+  const markup =
+    styleHeight === undefined
+      ? source
+      : `<div style="display: flex; flex-direction: column; width: ${width}px; height: ${styleHeight}px">${source}</div>`;
 
   try {
     await registerFonts(context?.fonts);
-    const { node, stylesheets } = fromHtml(source);
+    const { node, stylesheets } = fromHtml(markup);
     const svg = await getRenderer().renderSvg(node, {
       width,
       ...(styleHeight !== undefined ? { height: styleHeight } : {}),
