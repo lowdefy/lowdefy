@@ -212,7 +212,16 @@ export function validateNode(node) {
     }
   }
   if (kind === 'row') {
-    for (const width of node.widths ?? []) {
+    const widths = node.widths ?? [];
+    const children = node.children ?? [];
+    if (widths.length !== children.length) {
+      throw new ConfigError(
+        `Invalid report IR 'row': ${widths.length} width(s) for ${children.length} child(ren). ` +
+          'widths must be parallel to children.'
+      );
+    }
+    let fractionSum = 0;
+    for (const width of widths) {
       const valid =
         width === 'auto' ||
         width === 'fill' ||
@@ -222,6 +231,17 @@ export function validateNode(node) {
           `Invalid report IR 'row' width '${width}': expected a fraction in (0, 1], 'auto', or 'fill'.`
         );
       }
+      if (typeof width === 'number') fractionSum += width;
+    }
+    // Check the row's budget, not only each entry: fractions summing past the
+    // whole row run off the page, and because a document renderer resolves them
+    // against the full row width, they starve any content-sized sibling instead
+    // of clipping visibly. The slack absorbs the float error in `span/24` sums
+    // (7/24 + 7/24 + 10/24 lands just over 1).
+    if (fractionSum > 1 + 1e-9) {
+      throw new ConfigError(
+        `Invalid report IR 'row': widths sum to ${fractionSum}, more than the row's width.`
+      );
     }
   }
   if (kind === 'row' || kind === 'stack') {

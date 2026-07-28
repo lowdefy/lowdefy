@@ -14,11 +14,21 @@
   limitations under the License.
 */
 
-// The route writes `Content-Disposition: attachment; filename="report.pdf"`, so
-// the download name is read back from the quoted value.
+// The route writes both spellings of the name (RFC 6266): a quoted ASCII
+// `filename` and a `filename*` carrying the real one as percent-encoded UTF-8.
+// Prefer the encoded one — the quoted fallback has had every non-ASCII character
+// replaced, so reading it would save `Rapport Août.pdf` as `Rapport Ao_t.pdf`.
 function filenameFromHeaders(headers) {
   const disposition = headers?.get?.('content-disposition') ?? '';
-  return /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(disposition)?.[1];
+  const encoded = /filename\*=UTF-8''([^;]+)/i.exec(disposition)?.[1];
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded);
+    } catch {
+      // A malformed escape — fall through to the quoted name.
+    }
+  }
+  return /filename="?([^";]+)"?/i.exec(disposition)?.[1];
 }
 
 async function DownloadReport({ globals, methods, params = {} }) {
@@ -74,6 +84,11 @@ async function DownloadReport({ globals, methods, params = {} }) {
   el.href = url;
   el.setAttribute('download', filename);
   el.click();
+  // An object URL pins its blob until it is revoked, and a report is megabytes —
+  // a dashboard the user downloads from a few times would hold every copy for
+  // the life of the page. The browser reads the blob after the click returns, so
+  // the URL has to outlive this call: revoke on a later task, not now.
+  window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
   return;
 }
 

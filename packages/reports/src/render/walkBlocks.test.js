@@ -430,7 +430,11 @@ describe('flex children sit inline', () => {
     expect(nodes.map((node) => node.kind)).toEqual(['text', 'text', 'text']);
   });
 
-  test('a flex child joins a span row without consuming span', async () => {
+  // Spans and flex children size against different things, so a row that held
+  // both would overflow: the document renderer resolves the fractions against
+  // the whole row and leaves the content-sized child nothing, which collapses it
+  // to its minimum and pushes the row past the page margin.
+  test('a flex child after a span column starts a new row', async () => {
     const context = await evaluate({
       id: 'page1',
       type: 'Box',
@@ -441,8 +445,27 @@ describe('flex children sit inline', () => {
     });
     const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
-    expect(nodes[0].kind).toBe('row');
-    expect(nodes[0].widths).toEqual([0.5, 'auto']);
+    expect(nodes).toHaveLength(2);
+    expect(nodes[0]).toMatchObject({ kind: 'row', widths: [0.5] });
+    // A lone flex child needs no row wrapper.
+    expect(nodes[1].kind).toBe('text');
+  });
+
+  test('a span column after a flex child starts a new row', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'a', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'a' } },
+        { id: 'b', type: 'Paragraph', layout: { flex: true }, properties: { content: 'b' } },
+        { id: 'c', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'c' } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes.map((node) => node.kind)).toEqual(['row', 'text', 'row']);
+    expect(nodes[0].widths).toEqual([0.5]);
+    expect(nodes[2].widths).toEqual([0.5]);
   });
 });
 

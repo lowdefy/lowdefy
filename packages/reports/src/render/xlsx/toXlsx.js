@@ -143,23 +143,38 @@ function toExcelDate(value) {
   return undefined;
 }
 
-// Map a row of IR cells to the values ExcelJS writes: raw and typed, with an ISO
-// date becoming a real date cell. `undefined` becomes `null` so a sparse row
-// keeps its column alignment.
-function rowValues(cells) {
-  return (cells ?? []).map((c) => {
-    if (c?.value === undefined) return null;
-    return toExcelDate(c.value)?.date ?? c.value;
-  });
+// A header names a column, so it stays text even when it reads like a date — the
+// columns of a monthly pivot are '2026-01-01', '2026-02-01', … and converting
+// them gave the header row date serials and number formats, leaving the sheet
+// with no readable labels to filter or sort by.
+function headerValues(cells) {
+  return (cells ?? []).map((c) => (c?.value === undefined ? null : c.value));
 }
 
-/** The number format for each cell that became a date, else undefined. */
-function rowDateFormats(cells) {
-  return (cells ?? []).map((c) => {
-    const converted = c?.value === undefined ? undefined : toExcelDate(c.value);
-    if (!converted) return undefined;
-    return converted.dateOnly ? DATE_FORMAT : DATETIME_FORMAT;
-  });
+/**
+ * A data row as the values ExcelJS writes and the number format each cell needs:
+ * raw and typed, with an ISO date becoming a real date cell. `undefined` becomes
+ * `null` so a sparse row keeps its column alignment. One pass over the row, since
+ * date parsing is the expensive part and a grid runs to hundreds of rows.
+ */
+function dataRowCells(cells) {
+  const values = [];
+  const formats = [];
+  for (const cell of cells ?? []) {
+    if (cell?.value === undefined) {
+      values.push(null);
+      formats.push(undefined);
+      continue;
+    }
+    const converted = toExcelDate(cell.value);
+    values.push(converted?.date ?? cell.value);
+    if (!converted) {
+      formats.push(undefined);
+    } else {
+      formats.push(converted.dateOnly ? DATE_FORMAT : DATETIME_FORMAT);
+    }
+  }
+  return { values, formats };
 }
 
 /**
@@ -167,7 +182,7 @@ function rowDateFormats(cells) {
  *
  * One worksheet per `grid` node, named from its `sheetName` (the walker resolves
  * the `report.sheetName` hint, else the source blockId, into this field) —
- * sanitized and de-duplicated. The header row is bold; data rows write each
+ * sanitized and de-duplicated. The header row is bold text; data rows write each
  * cell's raw typed `value`.
  *
  * Zero grids is an error, never an empty workbook: an empty file delivered on a
@@ -189,14 +204,15 @@ async function toXlsx(nodes) {
     const name = uniqueSheetName(sanitizeSheetName(grid.sheetName), usedNames);
     const sheet = workbook.addWorksheet(name);
 
-    const header = rowValues(grid.header);
+    const header = headerValues(grid.header);
     if (header.length > 0) {
       const headerRow = sheet.addRow(header);
       headerRow.font = { bold: true };
     }
     for (const dataRow of grid.rows ?? []) {
-      const row = sheet.addRow(rowValues(dataRow));
-      rowDateFormats(dataRow).forEach((numFmt, index) => {
+      const { values, formats } = dataRowCells(dataRow);
+      const row = sheet.addRow(values);
+      formats.forEach((numFmt, index) => {
         if (numFmt) row.getCell(index + 1).numFmt = numFmt;
       });
     }

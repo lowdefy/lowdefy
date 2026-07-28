@@ -156,6 +156,54 @@ describe('remote fetch', () => {
     expect(called).toBe(false);
   });
 
+  // Every spelling of a refused address, because `URL` picks the spelling: it
+  // rewrote `[::ffff:127.0.0.1]` to `[::ffff:7f00:1]`, which the old text guard
+  // could not match, and the fetch reached 127.0.0.1.
+  test('refuses every spelling of a private IPv6 address without connecting', async () => {
+    let called = false;
+    globalThis.fetch = () => {
+      called = true;
+      throw new Error('should not connect');
+    };
+    const hosts = [
+      '::ffff:127.0.0.1', // IPv4-mapped loopback, dotted
+      '::ffff:7f00:1', // the same address, hex — what URL hands the guard
+      '::ffff:169.254.169.254', // IPv4-mapped cloud metadata
+      '::ffff:a9fe:a9fe', // the same, hex
+      '::0:1', // loopback with a zero hextet written out
+      '0:0:0:0:0:0:0:1', // loopback fully expanded
+      'fe80::1', // link-local
+      'fe80::5054:ff:fe12:3456',
+      'febf::1', // the top of fe80::/10
+      'fd00::1', // unique-local
+      'fc00::1',
+      '64:ff9b::7f00:1', // NAT64-embedded loopback
+      '::', // unspecified
+    ];
+    for (const host of hosts) {
+      expect(await resolveImage({ src: `http://[${host}]/logo.png` })).toBeNull();
+    }
+    expect(called).toBe(false);
+  });
+
+  test('a public IPv6 literal still fetches', async () => {
+    let reached = null;
+    globalThis.fetch = async (url) => {
+      reached = String(url);
+      return {
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'image/png']]),
+        body: (async function* () {
+          yield PNG_BYTES;
+        })(),
+      };
+    };
+    const result = await resolveImage({ src: 'http://[2606:4700:4700::1111]/logo.png' });
+    expect(result?.mime).toBe('image/png');
+    expect(reached).toBe('http://[2606:4700:4700::1111]/logo.png');
+  });
+
   test('fetches a public image and caps nothing under the limit', async () => {
     globalThis.fetch = async () => ({
       ok: true,

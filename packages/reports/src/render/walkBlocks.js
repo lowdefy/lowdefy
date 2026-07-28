@@ -50,7 +50,10 @@
  * inline with its siblings — while a block with no layout at all is full width
  * (`deriveLayout.js`: those four keys short-circuit the span classes). So an
  * icon and its label, both `flex: 0 1 auto`, belong on one line. Such siblings
- * join the row with a content width (`auto`), or `fill` when they grow.
+ * join the row with a content width (`auto`), or `fill` when they grow. A row is
+ * one mode or the other — a run of siblings that switches between spans and flex
+ * breaks into a row per mode, since a fraction and a content width cannot share
+ * one width budget.
  */
 
 import { type } from '@lowdefy/helpers';
@@ -209,6 +212,13 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
     let cells = [];
     let widths = [];
     let rowSpan = 0;
+    // A row holds grid columns or flex children, never both, so a mixed run of
+    // siblings breaks into one row per mode. The two size against different
+    // things — a span column takes its fraction of the row, a flex child takes
+    // its content width — and pdfmake resolves the fractions against the whole
+    // row, leaving a content-sized sibling nothing: it collapses to its minimum
+    // token width and pushes the row past the page margin.
+    let rowMode;
 
     const flush = () => {
       if (cells.length === 0) return;
@@ -228,6 +238,7 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       cells = [];
       widths = [];
       rowSpan = 0;
+      rowMode = undefined;
     };
 
     for (const block of blocks) {
@@ -246,8 +257,10 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       if (isFlexChild(layout)) {
         const nodes = await renderBlock(block, availableWidth, 1);
         if (nodes.length === 0) continue;
+        if (rowMode === 'grid') flush();
         cells.push(nodes.length === 1 ? nodes[0] : stack({ children: nodes }));
         widths.push(flexGrows(layout) ? 'fill' : 'auto');
+        rowMode = 'flex';
         continue;
       }
 
@@ -265,7 +278,7 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       const nodes = await renderBlock(block, fraction * availableWidth, fraction);
       if (nodes.length === 0) continue; // skipped; reserves no grid space
 
-      if (rowSpan + offset + span > FULL_SPAN) flush();
+      if (rowMode === 'flex' || rowSpan + offset + span > FULL_SPAN) flush();
       if (offset > 0) {
         const offsetFraction = offset / FULL_SPAN;
         cells.push(spacer({ width: offsetFraction }));
@@ -275,6 +288,7 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       cells.push(nodes.length === 1 ? nodes[0] : stack({ children: nodes }));
       widths.push(fraction);
       rowSpan += span;
+      rowMode = 'grid';
     }
 
     flush();

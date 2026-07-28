@@ -53,6 +53,11 @@ const PAGE_SIZES = {
 
 const PAGE_MARGINS = [40, 60, 40, 50]; // [left, top, right, bottom]
 
+// The gutter between the columns of a `row`. pdfmake takes the gutters out of the
+// row's width before resolving column widths, so the translator has to subtract
+// them too when it sizes a child against its column.
+const COLUMN_GAP = 8;
+
 /**
  * Content width in points for a report's page geometry: the page width for the
  * chosen size/orientation minus the left and right margins. The walker sizes
@@ -194,9 +199,17 @@ function columnWidth(width) {
 function translateRow(node, ctx) {
   const children = node.children ?? [];
   const widths = node.widths ?? [];
+  // pdfmake takes the gaps out of the row before it resolves the column widths
+  // (layoutBuilder subtracts `(gaps.length - 1) * columnGap`, then percentages are
+  // taken of what is left), so a child sized against the full row is drawn a few
+  // points into the gutter. Size against what the column will actually get. The
+  // count is of children, not of surviving columns, so a row with a skipped image
+  // over-reserves one gap — narrower than it needs to be, never wider.
+  const gutters = Math.max(children.length - 1, 0) * COLUMN_GAP;
+  const rowWidth = Math.max(ctx.contentWidth - gutters, 0);
   return {
     margin: [0, 0, 0, 8],
-    columnGap: 8,
+    columnGap: COLUMN_GAP,
     // A child may translate to null (a skipped image); drop its column and keep
     // the remaining columns at their original widths.
     columns: children
@@ -206,7 +219,7 @@ function translateRow(node, ctx) {
         // size to its column, not to the full page width. A content-sized or
         // filling column has no width until pdfmake lays the row out, so those
         // children keep the row's width as an upper bound.
-        const cellWidth = typeof width === 'number' ? ctx.contentWidth * width : ctx.contentWidth;
+        const cellWidth = typeof width === 'number' ? rowWidth * width : rowWidth;
         const translated = translateNode(child, { ...ctx, contentWidth: cellWidth });
         if (translated === null) return null;
         return { ...translated, width: columnWidth(width) };
@@ -314,17 +327,29 @@ const MARKER_HEIGHT = 30;
 // so only group when the pair takes at most this share of the page.
 const GROUP_HEIGHT_LIMIT = 0.9;
 
+// Unbreakable, but measurable only when the node declares a height: pdfmake sizes
+// an image or a dimensionless svg from bytes it has not decoded yet. `Infinity`
+// says "unbreakable and unmeasurable", which keeps the node out of a group instead
+// of counting it as nothing — as zero, a row of natural-size images measured 40pt,
+// cleared the group cap, and could become an unbreakable block taller than a page.
+const declaredHeight = (node) => (typeof node.height === 'number' ? node.height + 8 : Infinity);
+
 /**
  * The height a node takes when it cannot be split, or undefined when it flows
- * (text, markdown, tables) and so never strands the heading above it.
+ * (text, markdown, tables) and so never strands the heading above it. `Infinity`
+ * is the third answer — see `declaredHeight`.
  */
 function unbreakableHeight(node) {
   switch (node.kind) {
     case 'svg':
-      return (node.height ?? 0) + 8;
+      return declaredHeight(node);
+    case 'image':
+      return declaredHeight(node);
     case 'stat':
       return 40;
     case 'row':
+      // One unmeasurable child makes the row unmeasurable, because Infinity wins
+      // the max.
       return Math.max(40, ...(node.children ?? []).map((child) => unbreakableHeight(child) ?? 0));
     default:
       return undefined;

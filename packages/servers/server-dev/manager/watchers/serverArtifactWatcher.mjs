@@ -34,7 +34,17 @@ const trackedFiles = [
   'build/plugins/auth/callbacks.js',
   'build/plugins/auth/events.js',
   'build/plugins/auth/providers.js',
+  // The report renderer reads both of these at startup (lib/server/getReport.js):
+  // the static block renderers it resolves block types against, and the icon
+  // components it resolves icon names against. A config rebuild that pulls in a
+  // new block package or a new icon rewrites them, and with no restart the
+  // running server keeps its boot-time bindings — reports then call the block
+  // type unsupported and the icon unbundled. plugins/iconsDynamic.js, which JIT
+  // builds write, is deliberately absent: getReport re-reads that one per
+  // request, so discovering an icon mid-session costs no restart.
+  'build/plugins/blocksStatic.js',
   'build/plugins/connections.js',
+  'build/plugins/icons.js',
   'build/plugins/operators/server.js',
   'package.json',
 ];

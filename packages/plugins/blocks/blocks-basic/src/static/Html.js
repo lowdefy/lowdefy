@@ -62,6 +62,12 @@ const FONT_FACES = [
 // warning naming the config-side fix.
 const TABLE_PATTERN = /<table[\s/>]/i;
 
+// takumi never fetches an image: its `ImageSource` takes caller-supplied bytes
+// (2.5.0) and this renderer registers none, so an `<img>` draws nothing and takes
+// no space — a logo in a tile just disappears. Warn rather than let it vanish
+// silently, and name the block that does load images.
+const IMG_PATTERN = /<img[\s/>]/i;
+
 const isNumber = (value) => typeof value === 'number' && Number.isFinite(value);
 
 // One renderer per process: constructing it initialises the Rust engine, and
@@ -89,7 +95,14 @@ function registerFonts(fonts) {
     FONT_FACES.filter(([key]) => fonts[key]).map(([key, weight, style]) =>
       engine.registerFont({ name: FONT_FAMILY, data: fonts[key], weight, style })
     )
-  );
+  ).catch((error) => {
+    // Forget the failure. A cached rejected promise would be handed to every
+    // later block in every later report, so one transient failure here would
+    // skip every Html block for the life of the process. Rethrow so this block
+    // still reports it.
+    fontsRegistered = undefined;
+    throw error;
+  });
   return fontsRegistered;
 }
 
@@ -116,6 +129,13 @@ const toReport = async ({ block, layout, context }) => {
     context?.logger?.warn?.(
       { blockId: block.blockId },
       `${block.type} block '${block.blockId}' contains <table> markup, which reports cannot lay out — cells run on inline. Use flex markup, or a table block, for tabular report content.`
+    );
+  }
+
+  if (IMG_PATTERN.test(source)) {
+    context?.logger?.warn?.(
+      { blockId: block.blockId },
+      `${block.type} block '${block.blockId}' contains <img> markup, which reports cannot load — the image draws nothing and takes no space. Use an Img block for report images.`
     );
   }
 

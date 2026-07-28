@@ -118,6 +118,40 @@ test('a heading is left alone when its content is taller than a page', () => {
   expect(content).toHaveLength(2);
 });
 
+// An image with no declared height is unbreakable but unmeasurable — pdfmake only
+// learns its size when it decodes the bytes. Counted as nothing, a row of them
+// measured 40pt, cleared the cap above, and could group a heading with a block
+// taller than the page.
+test('a heading is left alone before images of unknown height', () => {
+  const { content } = toPdfMake([
+    heading({ text: 'H', level: 2 }),
+    row({
+      children: [
+        { ...image({ src: '/a.png' }), data: PNG_DATA_URL },
+        { ...image({ src: '/b.png' }), data: PNG_DATA_URL },
+      ],
+      widths: [0.5, 0.5],
+    }),
+  ]);
+  expect(content).toHaveLength(2);
+  expect(content[0].stack).toBeUndefined();
+});
+
+test('a heading travels with images that declare their height', () => {
+  const { content } = toPdfMake([
+    heading({ text: 'H', level: 2 }),
+    row({
+      children: [
+        { ...image({ src: '/a.png', height: 120, width: 200 }), data: PNG_DATA_URL },
+        { ...image({ src: '/b.png', height: 120, width: 200 }), data: PNG_DATA_URL },
+      ],
+      widths: [0.5, 0.5],
+    }),
+  ]);
+  expect(content).toHaveLength(1);
+  expect(content[0].unbreakable).toBe(true);
+});
+
 test('a page break asked for on the heading moves to the group', () => {
   const { content } = toPdfMake([
     { ...heading({ text: 'H', level: 2 }), pageBreakBefore: true },
@@ -190,15 +224,28 @@ test('a long unbreakable token does not widen the table past the page', () => {
   expect(content[0].table.widths.every((width) => typeof width === 'number')).toBe(true);
 });
 
-test('a table inside a row sizes to its column, not the page', () => {
-  const node = row({
-    children: [table({ header: [cell('A'), cell('B')], rows: [] }), text({ text: 'beside it' })],
-    widths: [0.5, 0.5],
-  });
-  const { content } = toPdfMake([node]);
-  const nested = content[0].columns[0].table.widths;
-  const total = nested.reduce((sum, width) => sum + width, 0);
-  expect(total).toBeLessThanOrEqual(515.28 / 2);
+// pdfmake takes the gutters out of the row before it resolves percentage widths,
+// so a child sized against the full row is drawn into the gutter.
+test('a table inside a row sizes to its column, gutters removed', () => {
+  const tableNode = () => table({ header: [cell('A'), cell('B')], rows: [] });
+  const totalOf = (node) => node.table.widths.reduce((sum, width) => sum + width, 0);
+  const firstColumn = (children, widths) =>
+    toPdfMake([row({ children, widths })]).content[0].columns[0];
+
+  // What a table takes for its own cell padding, measured at full width, so the
+  // column arithmetic below carries no magic number.
+  const padding = 515.28 - totalOf(toPdfMake([tableNode()]).content[0]);
+
+  const twoUp = firstColumn([tableNode(), text({ text: 'beside it' })], [0.5, 0.5]);
+  expect(totalOf(twoUp)).toBeLessThanOrEqual(515.28 / 2);
+  expect(totalOf(twoUp)).toBeCloseTo((515.28 - 8) / 2 - padding, 5);
+
+  // Three columns leave two gutters.
+  const threeUp = firstColumn(
+    [tableNode(), text({ text: 'b' }), text({ text: 'c' })],
+    [1 / 3, 1 / 3, 1 / 3]
+  );
+  expect(totalOf(threeUp)).toBeCloseTo((515.28 - 16) / 3 - padding, 5);
 });
 
 test('table renders null/undefined cell values as blank', () => {

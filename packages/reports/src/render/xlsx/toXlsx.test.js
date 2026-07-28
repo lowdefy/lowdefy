@@ -116,6 +116,31 @@ test('the header row is written bold', async () => {
   expect(sheet.getRow(2).getCell(1).font?.bold ?? false).toBe(false);
 });
 
+// A monthly pivot's column labels are dates, but they are labels: as date cells
+// the header row loses the text a reader filters and sorts by.
+test('a header that reads like a date stays text', async () => {
+  const buffer = await toXlsx([
+    grid({
+      sheetName: 'S',
+      header: [cell('Region'), cell('2026-01-01'), cell('2026-02-01')],
+      rows: [[cell('North'), cell(1), cell(2)]],
+    }),
+  ]);
+
+  const workbook = await readBack(buffer);
+  const headerRow = workbook.getWorksheet('S').getRow(1);
+  expect(headerRow.getCell(2).value).toBe('2026-01-01');
+  expect(headerRow.getCell(2).numFmt).toBeUndefined();
+  expect(headerRow.getCell(3).value).toBe('2026-02-01');
+  // The same string in a data row is still a real date cell.
+  const dataBuffer = await toXlsx([
+    grid({ sheetName: 'S', header: [cell('When')], rows: [[cell('2026-01-01')]] }),
+  ]);
+  const dataCell = (await readBack(dataBuffer)).getWorksheet('S').getRow(2).getCell(1);
+  expect(dataCell.value instanceof Date).toBe(true);
+  expect(dataCell.numFmt).toBe('yyyy-mm-dd');
+});
+
 test('a numeric value round-trips as a number cell', async () => {
   const buffer = await toXlsx([
     grid({ sheetName: 'S', header: [cell('Amount')], rows: [[cell(1234.5)]] }),

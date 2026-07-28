@@ -174,6 +174,23 @@ describe('Html', () => {
     expect(message).toContain('flex markup');
   });
 
+  // takumi never fetches an image, so an <img> draws nothing and takes no space.
+  // Without a warning an author's logo just disappears from the document.
+  test('<img> markup logs a warning naming the block that does load images', async () => {
+    const warn = jest.fn();
+    const node = await run(Html, {
+      properties: { html: '<div><img src="/logo.png" width="40" height="40" />Acme</div>' },
+      layout: { width: 200 },
+      context: { logger: { warn } },
+    });
+    expect(node.kind).toBe('svg');
+    expect(warn).toHaveBeenCalledTimes(1);
+    const [meta, message] = warn.mock.calls[0];
+    expect(meta.blockId).toBe('tile_1');
+    expect(message).toContain('<img>');
+    expect(message).toContain('Img block');
+  });
+
   test('a failing render returns null and logs a warning naming the block', async () => {
     const warn = jest.fn();
     const node = await run(Html, {

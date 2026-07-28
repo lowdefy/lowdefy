@@ -197,6 +197,48 @@ describe('validateNode rejects bad input', () => {
     const node = { kind: 'table', header: [], rows: [[{ value: 1, formatted: 2 }]] };
     expect(() => validateNode(node)).toThrow("'formatted' must be a string");
   });
+
+  test('row width outside (0, 1] throws ConfigError', () => {
+    const node = { kind: 'row', children: [divider()], widths: [1.5] };
+    expect(() => validateNode(node)).toThrow(ConfigError);
+    expect(() => validateNode(node)).toThrow("Invalid report IR 'row' width '1.5'");
+  });
+
+  // The row budget, not just each entry: fractions that sum past the row run off
+  // the page, and starve a content-sized sibling rather than clipping visibly.
+  test('row fractions summing past 1 throw ConfigError', () => {
+    const node = {
+      kind: 'row',
+      children: [divider(), divider(), divider()],
+      widths: [0.5, 0.5, 0.5],
+    };
+    expect(() => validateNode(node)).toThrow(ConfigError);
+    expect(() => validateNode(node)).toThrow("Invalid report IR 'row': widths sum to 1.5");
+  });
+
+  test('row fractions summing to 1 with float slack pass (7/24 + 7/24 + 10/24)', () => {
+    const node = {
+      kind: 'row',
+      children: [divider(), divider(), divider()],
+      widths: [7 / 24, 7 / 24, 10 / 24],
+    };
+    expect(() => validateNode(node)).not.toThrow();
+  });
+
+  test("'auto' and 'fill' do not count against the row budget", () => {
+    const node = {
+      kind: 'row',
+      children: [divider(), divider(), divider()],
+      widths: [0.25, 'auto', 'fill'],
+    };
+    expect(() => validateNode(node)).not.toThrow();
+  });
+
+  test('widths that are not parallel to children throw ConfigError', () => {
+    const node = { kind: 'row', children: [divider(), divider()], widths: [1] };
+    expect(() => validateNode(node)).toThrow(ConfigError);
+    expect(() => validateNode(node)).toThrow('1 width(s) for 2 child(ren)');
+  });
 });
 
 describe('validateNodes', () => {

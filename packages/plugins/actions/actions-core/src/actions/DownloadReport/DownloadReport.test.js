@@ -19,6 +19,9 @@ import DownloadReport from './DownloadReport.js';
 
 const mockFetch = jest.fn();
 const mockCreateObjectURL = jest.fn(() => 'blob:report');
+const mockRevokeObjectURL = jest.fn();
+// Run the revoke timer immediately so a test can assert it fires.
+const mockSetTimeout = jest.fn((callback) => callback());
 const mockClick = jest.fn();
 const mockSetAttribute = jest.fn();
 const mockCreateElement = jest.fn(() => ({
@@ -37,7 +40,10 @@ const globals = {
   basePath: '/app',
   document: { createElement: mockCreateElement },
   fetch: mockFetch,
-  window: { URL: { createObjectURL: mockCreateObjectURL } },
+  window: {
+    URL: { createObjectURL: mockCreateObjectURL, revokeObjectURL: mockRevokeObjectURL },
+    setTimeout: mockSetTimeout,
+  },
 };
 
 const response = ({ ok = true, status = 200, headers = {}, size = 9, text = '' } = {}) => ({
@@ -53,10 +59,27 @@ const requestBody = () => JSON.parse(mockFetch.mock.calls[0][1].body);
 beforeEach(() => {
   mockFetch.mockReset();
   mockCreateObjectURL.mockClear();
+  mockRevokeObjectURL.mockClear();
+  mockSetTimeout.mockClear();
   mockClick.mockClear();
   mockSetAttribute.mockClear();
   mockCreateElement.mockClear();
   mockCreateObjectURL.mockReturnValue('blob:report');
+});
+
+test('the object URL is revoked after the download starts', async () => {
+  // A report is megabytes, and an unrevoked object URL pins its blob for the life
+  // of the page — a few downloads from one dashboard would hold every copy.
+  mockFetch.mockResolvedValue(response());
+  await DownloadReport({ globals, methods });
+
+  expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:report');
+  // Not before the browser has read the blob: the revoke is deferred, and the
+  // click that starts the download comes first.
+  expect(mockSetTimeout).toHaveBeenCalledTimes(1);
+  expect(mockClick.mock.invocationCallOrder[0]).toBeLessThan(
+    mockSetTimeout.mock.invocationCallOrder[0]
+  );
 });
 
 test('default params post the current page snapshot', async () => {
@@ -136,6 +159,40 @@ test('a successful response downloads the file from the content disposition file
   expect(anchor.href).toEqual('blob:report');
   expect(mockSetAttribute.mock.calls).toEqual([['download', 'dashboard.pdf']]);
   expect(mockClick).toHaveBeenCalledTimes(1);
+});
+
+// The route sends both spellings; the quoted one has had its accents stripped to
+// survive a latin1 header, so only the encoded one names the file the user asked
+// for.
+test('an accented filename is read from the encoded content disposition name', async () => {
+  mockFetch.mockResolvedValue(
+    response({
+      headers: {
+        'content-type': 'application/pdf',
+        'content-disposition':
+          'attachment; filename="Rapport Ao_t.pdf"; filename*=UTF-8\'\'Rapport%20Ao%C3%BBt.pdf',
+      },
+    })
+  );
+
+  await DownloadReport({ globals, methods });
+
+  expect(mockSetAttribute.mock.calls).toEqual([['download', 'Rapport Août.pdf']]);
+});
+
+test('a malformed encoded name falls back to the quoted one', async () => {
+  mockFetch.mockResolvedValue(
+    response({
+      headers: {
+        'content-type': 'application/pdf',
+        'content-disposition': 'attachment; filename="dashboard.pdf"; filename*=UTF-8\'\'%E0%A4%A',
+      },
+    })
+  );
+
+  await DownloadReport({ globals, methods });
+
+  expect(mockSetAttribute.mock.calls).toEqual([['download', 'dashboard.pdf']]);
 });
 
 test('the filename param wins over the content disposition filename', async () => {

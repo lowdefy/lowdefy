@@ -27,9 +27,18 @@
  *   - Relative paths read from the app's public assets directory on disk
  *     (`publicDir`, injected by the server). Path traversal is refused.
  *   - Absolute `http(s)` URLs fetch with SSRF guardrails: the host must not
- *     resolve to a private, loopback, or link-local address; the request times
- *     out after 5s; the body is capped at 5 MB; the response content-type must
- *     be `image/*`.
+ *     resolve to a private, loopback, or link-local address; redirects are
+ *     refused rather than followed; the request times out after 5s; the body is
+ *     capped at 5 MB; the response content-type must be `image/*`.
+ *
+ * Not guarded: DNS rebinding. A hostname is resolved here to judge its addresses
+ * and then resolved again, independently, by `fetch` — a record that changes
+ * between the two connects to an address this module never saw. Closing that
+ * needs the connection pinned to the address that was checked, which `fetch`
+ * cannot express; it would mean dropping to `node:https` and carrying the
+ * redirect, timeout and streaming rules by hand. The exposure is narrow (the
+ * attacker must control both the `src` and a DNS zone), so the trade is stated
+ * here rather than paid for.
  */
 
 import dns from 'node:dns/promises';
@@ -67,9 +76,15 @@ function warn(logger, src, reason) {
 
 // --- Private-address guard ---------------------------------------------------
 // Refuse addresses in the ranges an SSRF probe would target: 10/8, 172.16/12,
-// 192.168/16, 127/8 (loopback), 169.254/16 (link-local), ::1 (loopback), and
-// fc00::/7 (unique-local). IPv4-mapped IPv6 (::ffff:a.b.c.d) is unwrapped and
-// checked as IPv4.
+// 192.168/16, 127/8 (loopback), 169.254/16 (link-local, and so the cloud
+// metadata service), 0/8, ::/96 and ::ffff:0:0/96 and 64:ff9b::/96 (all of which
+// embed an IPv4 address), fc00::/7 (unique-local) and fe80::/10 (link-local).
+//
+// An IPv6 address is normalised to its 16 bytes before being judged, never
+// matched as text. `URL` rewrites a host into its own canonical form, so the
+// spelling a text guard looks for is not the spelling it gets: the mapped
+// loopback `::ffff:127.0.0.1` arrives as `::ffff:7f00:1`, which a dotted-quad
+// pattern cannot match, and it reached 127.0.0.1. Bytes have one spelling.
 
 function isPrivateIPv4(ip) {
   const parts = ip.split('.').map((p) => Number(p));
@@ -86,18 +101,72 @@ function isPrivateIPv4(ip) {
   return false;
 }
 
-function isPrivateIPv6(ip) {
-  const address = ip.toLowerCase();
-  if (address === '::1' || address === '::') return true;
-  // IPv4-mapped (::ffff:a.b.c.d) — unwrap and check the embedded IPv4.
-  const mapped = address.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
-  if (mapped) return isPrivateIPv4(mapped[1]);
-  // fc00::/7 — unique-local (first byte 0xfc or 0xfd).
-  const firstHextet = address.split(':')[0];
-  if (firstHextet.length > 0) {
-    const value = parseInt(firstHextet.padStart(4, '0').slice(0, 2), 16);
-    if ((value & 0xfe) === 0xfc) return true;
+/**
+ * The 16 bytes of an IPv6 address, or `null` when it does not parse. Handles the
+ * `::` run, a trailing dotted-quad, and a `%zone` suffix.
+ */
+function ipv6Bytes(ip) {
+  let text = ip.toLowerCase();
+  // A zone index (fe80::1%eth0) names a local interface, not part of the address.
+  const zone = text.indexOf('%');
+  if (zone !== -1) text = text.slice(0, zone);
+
+  // A trailing dotted-quad (::ffff:127.0.0.1) is two hextets written the other way.
+  const dotted = text.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  if (dotted) {
+    const octets = dotted[1].split('.').map(Number);
+    if (octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) return null;
+    text =
+      text.slice(0, -dotted[1].length) +
+      [
+        ((octets[0] << 8) | octets[1]).toString(16),
+        ((octets[2] << 8) | octets[3]).toString(16),
+      ].join(':');
   }
+
+  const [head, tail, ...extra] = text.split('::');
+  if (extra.length > 0) return null; // more than one '::' run
+  const hextetsOf = (part) => (part === '' ? [] : part.split(':'));
+  const left = hextetsOf(head);
+  const right = tail === undefined ? [] : hextetsOf(tail);
+  const filled = 8 - left.length - right.length;
+  // Without a '::' run every hextet must be written out; with one, at least one
+  // must be elided.
+  if (tail === undefined ? filled !== 0 : filled < 0) return null;
+  const hextets = [...left, ...Array(filled).fill('0'), ...right];
+
+  const bytes = new Uint8Array(16);
+  for (let index = 0; index < 8; index += 1) {
+    if (!/^[0-9a-f]{1,4}$/.test(hextets[index])) return null;
+    const value = Number.parseInt(hextets[index], 16);
+    bytes[index * 2] = value >> 8;
+    bytes[index * 2 + 1] = value & 0xff;
+  }
+  return bytes;
+}
+
+const isZero = (bytes, from, to) => bytes.subarray(from, to).every((byte) => byte === 0);
+
+function isPrivateIPv6(ip) {
+  const bytes = ipv6Bytes(ip);
+  if (!bytes) return true; // unparseable — refuse rather than risk it
+
+  // Three ranges carry an IPv4 address in their low four bytes: IPv4-mapped
+  // (::ffff:0:0/96), the deprecated IPv4-compatible (::/96, which is also how
+  // loopback `::1` and the unspecified `::` land here), and NAT64 (64:ff9b::/96).
+  // Each is a route to that address, so judge it as the address it carries.
+  const embedsIPv4 =
+    (isZero(bytes, 0, 10) && bytes[10] === 0xff && bytes[11] === 0xff) ||
+    isZero(bytes, 0, 12) ||
+    (bytes[0] === 0x00 &&
+      bytes[1] === 0x64 &&
+      bytes[2] === 0xff &&
+      bytes[3] === 0x9b &&
+      isZero(bytes, 4, 12));
+  if (embedsIPv4) return isPrivateIPv4(bytes.slice(12).join('.'));
+
+  if ((bytes[0] & 0xfe) === 0xfc) return true; // fc00::/7 — unique-local
+  if (bytes[0] === 0xfe && (bytes[1] & 0xc0) === 0x80) return true; // fe80::/10 — link-local
   return false;
 }
 
