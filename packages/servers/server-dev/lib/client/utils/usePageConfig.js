@@ -29,7 +29,9 @@ function parseJsModule(text) {
 
 async function fetchJsEntries(basePath) {
   try {
-    const res = await fetch(`${basePath}/api/js/client`);
+    const res = await fetch(`${basePath}/api/js/client`, {
+      signal: AbortSignal.timeout(10_000),
+    });
     if (!res.ok) return {};
     return parseJsModule(await res.text());
   } catch {
@@ -39,7 +41,9 @@ async function fetchJsEntries(basePath) {
 
 async function fetchDynamicIcons(basePath) {
   try {
-    const res = await fetch(`${basePath}/api/icons/dynamic`);
+    const res = await fetch(`${basePath}/api/icons/dynamic`, {
+      signal: AbortSignal.timeout(10_000),
+    });
     if (!res.ok) return {};
     return parseJsModule(await res.text());
   } catch {
@@ -48,18 +52,37 @@ async function fetchDynamicIcons(basePath) {
 }
 
 async function fetchPageConfig(url) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  // A stalled request (server restart mid-request, exhausted sockets) must
+  // become a visible error, never an eternal Suspense fallback — the reload
+  // recovery path cannot fire while the page tree is suspended.
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(30_000),
+    });
+  } catch (error) {
+    if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+      throw new Error(
+        `Page config request "${url}" timed out - the dev server may be restarting. Reload the page.`
+      );
+    }
+    throw error;
+  }
   if (res.status === 404) {
     return null;
   }
   if (res.status === 401) {
-    // Logged-out navigation to a protected page - full load to the login
-    // page so it can return here after sign-in.
+    // Logged-out navigation to a protected page - Page renders a redirect
+    // screen and full-loads to the login page so it can return here after
+    // sign-in. Returning a settled value (never a parked promise) keeps the
+    // SWR key healthy: if the navigation is dropped, the tab still recovers
+    // on the next reload event or via the manual link on the redirect screen.
     const { redirect } = await res.json();
-    window.location.assign(redirect ?? '/404');
-    return new Promise(() => {});
+    const basePath = url.replace(/\/api\/page\/.*$/, '');
+    const authRedirect = redirect ?? `${basePath}/404`;
+    console.warn(`Lowdefy dev: "${url}" returned 401 - redirecting to "${authRedirect}".`);
+    return { authRedirect };
   }
   const data = await res.json();
   if (data?.buildError) {
