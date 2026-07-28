@@ -18,6 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 // resolveAuthentication is the single writer of context.user - nothing
@@ -32,10 +33,16 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // every request so membership removal and role changes take effect
 // immediately - roles are deliberately not stamped onto the session. A
 // session whose user holds no member row in the active org resolves to
-// unauthenticated: an invitee's pre-accept session (the session.create
-// carve-out), a stale cookie from another app's deployment, and a member
-// removed mid-session are all treated as logged out, not logged-in with no
-// roles.
+// unauthenticated: a stale cookie from another app's deployment and a member
+// removed mid-session are treated as logged out, not logged-in with no roles.
+//
+// A session carrying no active organization at all is the one case that
+// differs by policy. Under pinned it resolves to unauthenticated on the same
+// reasoning. Under tenant it resolves to a caller carrying identity, no
+// membership and no roles, marked awaitingOrganization - the invited user
+// before they accept. Authorization refuses that caller wherever auth.public
+// is false (createAuthorize), so the marker widens no access; it exists so the
+// public accept page can tell an invited user from a stranger.
 //
 // member.role stores multiple roles as a comma-separated string - split back
 // into the array Lowdefy authorization expects. context.user.attributes is
@@ -64,34 +71,53 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
   }
   const activeOrganizationId = session.session.activeOrganizationId;
   if (type.isNone(activeOrganizationId)) {
-    context.user = null;
-    return;
+    // Under tenant a session legitimately carries no organization: the invited
+    // user, before they accept. Resolving them to null makes the accept page
+    // unable to tell them from a stranger, and the page it needs is the one
+    // page they can reach. They become a caller carrying identity and no
+    // membership, marked awaitingOrganization - createAuthorize refuses that
+    // caller wherever auth.public is false, so no protected page opens up.
+    // Under pinned the state has no meaning: one organization exists, and
+    // someone outside it has no reason to be known to the app.
+    if (getOrganizationBinding({ auth })?.policy !== 'tenant') {
+      context.user = null;
+      return;
+    }
+    context.user = {
+      ...session.user,
+      roles: [],
+      // The per-organization half of the bag needs a member row, so an
+      // awaiting caller carries the global attributes alone.
+      attributes: session.user.attributes ?? {},
+      awaitingOrganization: true,
+    };
+  } else {
+    const { adapter } = await auth.$context;
+    const member = await adapter.findOne({
+      model: 'member',
+      where: [
+        { field: 'userId', value: session.user.id },
+        { field: 'organizationId', value: activeOrganizationId },
+      ],
+    });
+    if (type.isNone(member)) {
+      context.user = null;
+      return;
+    }
+    const roles = (member.role ?? '')
+      .split(',')
+      .map((role) => role.trim())
+      .filter(Boolean);
+    context.user = {
+      ...session.user,
+      roles,
+      attributes: {
+        ...(session.user.attributes ?? {}),
+        ...(member.attributes ?? {}),
+      },
+      activeOrganizationId,
+    };
   }
-  const { adapter } = await auth.$context;
-  const member = await adapter.findOne({
-    model: 'member',
-    where: [
-      { field: 'userId', value: session.user.id },
-      { field: 'organizationId', value: activeOrganizationId },
-    ],
-  });
-  if (type.isNone(member)) {
-    context.user = null;
-    return;
-  }
-  const roles = (member.role ?? '')
-    .split(',')
-    .map((role) => role.trim())
-    .filter(Boolean);
-  context.user = {
-    ...session.user,
-    roles,
-    attributes: {
-      ...(session.user.attributes ?? {}),
-      ...(member.attributes ?? {}),
-    },
-    activeOrganizationId,
-  };
   // impersonatedBy is a BetterAuth admin plugin session field - present only
   // while an admin is impersonating this session. Steps read it off the
   // settled _user surface, so it is omitted (not set to undefined) when absent.

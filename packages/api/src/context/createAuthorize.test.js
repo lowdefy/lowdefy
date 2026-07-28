@@ -156,6 +156,46 @@ test('an unset context.system applies the normal auth.public / auth.roles matchi
   expect(authorize({ auth: { public: true } })).toBe(true);
 });
 
+test('a caller awaiting an organization is refused wherever auth.public is false', () => {
+  const user = { sub: 'sub', roles: [], awaitingOrganization: true };
+  const authorize = createAuthorize({ user });
+
+  // Public pages must still admit them - the accept page is public, and being
+  // addressable there is the whole point of the state.
+  expect(authorize({ auth: { public: true } })).toBe(true);
+  // Role-less protected pages are the case authenticated-alone would open.
+  expect(authorize({ auth: { public: false } })).toBe(false);
+  expect(authorize({ auth: { public: false, roles: ['role1'] } })).toBe(false);
+});
+
+test('the awaiting-organization marker beats any roles on the caller', () => {
+  // Nothing writes roles onto an awaiting caller today; the marker must win
+  // regardless, so a future writer cannot open a protected page by accident.
+  const user = { sub: 'sub', roles: ['role1'], awaitingOrganization: true };
+  const authorize = createAuthorize({ user });
+
+  expect(authorize({ auth: { public: false, roles: ['role1'] } })).toBe(false);
+});
+
+test('a caller with no organization but no marker is authorized normally', () => {
+  // Strategy callers (apiKey, jwt) hold no organization and are deliberately
+  // outside the membership boundary.
+  const user = { id: 'apiKey:partner-access:acme', roles: ['partner'] };
+  const authorize = createAuthorize({ user });
+
+  expect(authorize({ auth: { public: false } })).toBe(true);
+  expect(authorize({ auth: { public: false, roles: ['partner'] } })).toBe(true);
+});
+
+test('a system context still passes with an awaiting-organization caller', () => {
+  const authorize = createAuthorize({
+    user: { sub: 'sub', awaitingOrganization: true },
+    system: true,
+  });
+
+  expect(authorize({ auth: { public: false } })).toBe(true);
+});
+
 test('throws ConfigError with configKey for location tracing', () => {
   const authorize = createAuthorize({});
   try {

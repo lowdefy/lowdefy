@@ -25,6 +25,15 @@ function createAuthorize({ user, system }) {
   // resolveAuthentication is the single writer of context.user - a resolved
   // caller object when authenticated, else null.
   const authenticated = !type.isNone(user);
+  // A caller awaiting an organization is signed in and holds no membership -
+  // under tenant, the invited user before they accept (resolveAuthentication).
+  // They are known so the public accept page can address them, and refused
+  // everywhere auth.public is false, roles or not: empty roles is not a wall
+  // (user-model Decision 2), so authenticated alone must not admit them to a
+  // role-less protected page. Strategy callers (apiKey, jwt) also hold no
+  // organization but are deliberately outside the membership boundary, so the
+  // test is this explicit marker, never the absence of an organization.
+  const awaitingOrganization = user?.awaitingOrganization === true;
   const roles = user?.roles ?? [];
   if (!Array.isArray(roles) || roles.some((role) => !type.isString(role))) {
     throw new ConfigError('user.roles must be an array of strings.', {
@@ -42,6 +51,7 @@ function createAuthorize({ user, system }) {
     const { auth } = config;
     if (auth.public === true) return true;
     if (auth.public === false) {
+      if (awaitingOrganization) return false;
       if (auth.roles) {
         return authenticated && auth.roles.some((role) => roles.includes(role));
       }

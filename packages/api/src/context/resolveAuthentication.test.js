@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import resolveAuthentication from './resolveAuthentication.js';
+import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 
 function mockAuth({ session, member }) {
   const findOne = jest.fn().mockResolvedValue(member ?? null);
@@ -333,4 +334,90 @@ test('a session rejected by the membership wall does not fall through to strateg
 
   expect(context.user).toBe(null);
   expect(strategies[0].verify).not.toHaveBeenCalled();
+});
+
+test('resolves a caller awaiting an organization when a tenant session carries none', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com', name: 'Invited' },
+      session: { id: 'sess_1' },
+    },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toEqual({
+    id: 'user_1',
+    email: 'invited@example.com',
+    name: 'Invited',
+    roles: [],
+    attributes: {},
+    awaitingOrganization: true,
+  });
+  // No organization means there is no member row to read.
+  expect(findOne).not.toHaveBeenCalled();
+});
+
+test('a caller awaiting an organization carries the global attributes alone', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', attributes: { region: 'eu' } },
+      session: { id: 'sess_1' },
+    },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.attributes).toEqual({ region: 'eu' });
+  expect(context.user.activeOrganizationId).toBeUndefined();
+});
+
+test('a session carrying no organization stays unauthenticated under pinned', async () => {
+  const { auth, findOne } = mockAuth({
+    session: { user: { id: 'user_1' }, session: { id: 'sess_1' } },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team-portal' } });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+  expect(findOne).not.toHaveBeenCalled();
+});
+
+test('a tenant member removed mid-session stays unauthenticated', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: null,
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  // Awaiting an organization covers a session carrying none at all. It must
+  // never become a way around revocation.
+  expect(context.user).toBe(null);
+});
+
+test('impersonation rides a caller awaiting an organization', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', impersonatedBy: 'admin_1' },
+    },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.impersonatedBy).toBe('admin_1');
 });
