@@ -22,11 +22,22 @@ import renderReport from '../reports/renderReport.js';
 
 // Mail providers reject large attachments, so a report the app could never send
 // must fail loudly instead of succeeding into an undeliverable email.
+//
+// Both limits are measured against the attachment, not the document: the envelope
+// carries the bytes base64-encoded, which is what a mail provider weighs, and
+// that runs a third larger than the buffer. Measured raw, a 24 MB PDF passed as a
+// 32 MB attachment — over the very limit the error message invokes.
 const WARN_BYTES = 10 * 1024 * 1024;
 const MAX_BYTES = 25 * 1024 * 1024;
 
 function formatMb(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+// The exact length of `buffer.toString('base64')`, without allocating it: every
+// three bytes become four characters, padded up to a multiple of four.
+function base64Length(bytes) {
+  return 4 * Math.ceil(bytes / 3);
 }
 
 async function handleRenderReport(context, routineContext, { step }) {
@@ -112,18 +123,21 @@ async function handleRenderReport(context, routineContext, { step }) {
 
   const { buffer, contentType, warnings } = result;
   const size = buffer.length;
+  const attachmentSize = base64Length(size);
 
-  if (size > MAX_BYTES) {
+  if (attachmentSize > MAX_BYTES) {
     throw new ConfigError(
       `RenderReport step "${step.stepId}" generated ${formatMb(
         size
-      )} for page "${pageId}", over the ${formatMb(
+      )} for page "${pageId}", which is ${formatMb(
+        attachmentSize
+      )} as an attachment — over the ${formatMb(
         MAX_BYTES
       )} limit. Mail providers reject attachments this large — reduce the report's content or split it.`,
       { configKey: step['~k'] }
     );
   }
-  if (size > WARN_BYTES) {
+  if (attachmentSize > WARN_BYTES) {
     logger.warn(
       {
         event: 'report_step_large',
@@ -131,10 +145,11 @@ async function handleRenderReport(context, routineContext, { step }) {
         stepId: step.stepId,
         pageId,
         size,
+        attachmentSize,
       },
-      `RenderReport step "${step.stepId}" generated ${formatMb(
-        size
-      )} for page "${pageId}" — attachments this large are often rejected or silently dropped.`
+      `RenderReport step "${step.stepId}" generated ${formatMb(size)} for page "${pageId}", ` +
+        `${formatMb(attachmentSize)} as an attachment — attachments this large are often ` +
+        'rejected or silently dropped.'
     );
   }
 

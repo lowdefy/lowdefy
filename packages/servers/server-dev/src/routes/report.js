@@ -16,20 +16,10 @@
 
 import { renderReport } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
+import { ReportBusyError, ReportTimeoutError, reportContentDisposition } from '@lowdefy/reports';
 
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
-
-// A download filename becomes a quoted Content-Disposition value, so strip the
-// characters that would break the header or escape the download directory:
-// quotes, backslashes, path separators, and control characters. Stripping
-// control bytes is the point here, hence the rule exemption.
-// eslint-disable-next-line no-control-regex
-const UNSAFE_FILENAME_CHARS = /["\\/\x00-\x1f]/g;
-
-function sanitizeFilename(name) {
-  return name.replace(UNSAFE_FILENAME_CHARS, '').trim();
-}
 
 async function reportHandler(c) {
   const context = c.get('lowdefyContext');
@@ -65,21 +55,26 @@ async function reportHandler(c) {
       return c.body('Not found', 404);
     }
 
-    const downloadName = sanitizeFilename(filename || result.filename) || result.filename;
     context.logger.info({ event: 'report_generated', pageId, format });
     c.header('Content-Type', result.contentType);
-    c.header('Content-Disposition', `attachment; filename="${downloadName}"`);
+    c.header(
+      'Content-Disposition',
+      reportContentDisposition({ requested: filename, fallback: result.filename })
+    );
     return c.body(result.buffer);
   } catch (error) {
-    // A timeout freed the semaphore slot but the render never settled; a busy
-    // process rejected before starting. ConfigErrors are the caller's fault
-    // (bad format, _user on a system render). Everything else is a 500 routed
-    // to the app error handler.
-    if (/timed out/.test(error.message)) {
+    // Map by class, never by message text: a report's own timeout and an
+    // upstream data source's read the same in prose, and half the caller's
+    // mistakes name neither. A timeout means the render exceeded its deadline
+    // and was aborted; busy means the queue was full before it started;
+    // ConfigErrors are the caller's fault (bad format, xlsx for a page with no
+    // grids, _user on a system render). Everything else is a 500 routed to the
+    // app error handler.
+    if (error instanceof ReportTimeoutError) {
       context.logger.error({ event: 'report_timeout', pageId }, error.message);
       return c.body('Report generation timed out', 504);
     }
-    if (/busy|too many/i.test(error.message)) {
+    if (error instanceof ReportBusyError) {
       context.logger.error({ event: 'report_busy', pageId }, error.message);
       return c.body('Report generation is busy', 503);
     }

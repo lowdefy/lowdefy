@@ -33,6 +33,8 @@ import {
   validateNode,
   validateNodes,
 } from './ir/nodes.js';
+import { reportContentDisposition, sanitizeReportFilename } from './downloadName.js';
+import { ReportBusyError, ReportTimeoutError } from './errors.js';
 import { fonts, FONT_FAMILY } from './fonts/fonts.js';
 import generateReport from './generateReport.js';
 import evaluatePage from './evaluatePage/evaluatePage.js';
@@ -65,6 +67,12 @@ export {
   spacer,
   validateNode,
   validateNodes,
+  // Errors
+  ReportBusyError,
+  ReportTimeoutError,
+  // Download naming
+  reportContentDisposition,
+  sanitizeReportFilename,
   // Fonts
   fonts,
   FONT_FAMILY,

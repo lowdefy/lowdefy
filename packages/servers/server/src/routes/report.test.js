@@ -19,7 +19,8 @@ import { jest } from '@jest/globals';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 import { operatorsServer } from '@lowdefy/operators-js';
-import { generateReport, grid, text } from '@lowdefy/reports';
+import { ConfigError } from '@lowdefy/errors';
+import { ReportBusyError, ReportTimeoutError, generateReport, grid, text } from '@lowdefy/reports';
 
 import reportHandler from './report.js';
 
@@ -74,6 +75,8 @@ function makeContext({
   resolver = jest.fn(({ request }) => ({ ok: true, request })),
   requestAuth = { public: true },
   requestPayloadOp,
+  lowdefyGlobal,
+  generate = generateReport,
 }) {
   const pageId = pageConfig?.pageId ?? pageConfig?.id;
   const connectionConfig = {
@@ -91,10 +94,14 @@ function makeContext({
     auth: requestAuth,
     properties: requestPayloadOp ? { forwarded: requestPayloadOp } : {},
   };
+  // readConfigFile stands in for the server's parsed-artifact cache: every caller
+  // gets the same object back, which is exactly why the render must copy what it
+  // is handed.
   const readConfigFile = jest.fn(async (p) => {
     if (p === `pages/${pageId}.json`) return pageConfig;
     if (p === `pages/${pageId}/requests/getData.json`) return requestConfig;
     if (p === 'connections/testConnection.json') return connectionConfig;
+    if (p === 'global.json') return lowdefyGlobal ?? null;
     return null;
   });
   const context = {
@@ -107,7 +114,7 @@ function makeContext({
     secrets: {},
     session,
     report: {
-      generateReport,
+      generateReport: generate,
       registry,
       operators: clientOperators,
       jsMap: {},
@@ -153,7 +160,9 @@ describe('POST /api/report/:pageId', () => {
     const res = await post(createApp(context), 'report1');
     expect(res.status).toBe(200);
     expect(res.headers.get('content-type')).toBe('application/pdf');
-    expect(res.headers.get('content-disposition')).toBe('attachment; filename="report1.pdf"');
+    expect(res.headers.get('content-disposition')).toBe(
+      `attachment; filename="report1.pdf"; filename*=UTF-8''report1.pdf`
+    );
     const buffer = Buffer.from(await res.arrayBuffer());
     expect(buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
   });
@@ -198,7 +207,9 @@ describe('POST /api/report/:pageId', () => {
     expect(res.headers.get('content-type')).toBe(
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     );
-    expect(res.headers.get('content-disposition')).toBe('attachment; filename="report1.xlsx"');
+    expect(res.headers.get('content-disposition')).toBe(
+      `attachment; filename="report1.xlsx"; filename*=UTF-8''report1.xlsx`
+    );
     const buffer = Buffer.from(await res.arrayBuffer());
     expect(buffer.subarray(0, 2).toString('latin1')).toBe('PK');
   });
@@ -206,7 +217,24 @@ describe('POST /api/report/:pageId', () => {
   test('a custom filename is honored and sanitized', async () => {
     const { context } = makeContext({ pageConfig: displayPage() });
     const res = await post(createApp(context), 'report1', { filename: 'Q3/"report".pdf' });
-    expect(res.headers.get('content-disposition')).toBe('attachment; filename="Q3report.pdf"');
+    expect(res.headers.get('content-disposition')).toBe(
+      `attachment; filename="Q3report.pdf"; filename*=UTF-8''Q3report.pdf`
+    );
+  });
+
+  // A header value is latin1: an accented name written into the quoted parameter
+  // reaches the browser mangled, and the download saves as `Rapport Aoï¿½t.pdf`.
+  test('an accented filename survives in the encoded parameter', async () => {
+    const { context } = makeContext({ pageConfig: displayPage() });
+    const res = await post(createApp(context), 'report1', { filename: 'Rapport Août.pdf' });
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-disposition')).toBe(
+      `attachment; filename="Rapport Ao_t.pdf"; filename*=UTF-8''Rapport%20Ao%C3%BBt.pdf`
+    );
+    // The header the client actually receives still round-trips to the real name.
+    const encoded = /filename\*=UTF-8''(.+)$/.exec(res.headers.get('content-disposition'))[1];
+    expect(decodeURIComponent(encoded)).toBe('Rapport Août.pdf');
   });
 });
 
@@ -238,6 +266,40 @@ describe('per-request authorization and the state snapshot', () => {
     expect(resolver.mock.calls[0][0].request.forwarded).toBe('MYFILTER');
   });
 
+  test('a SetGlobal during the render never reaches the shared config cache', async () => {
+    // SetGlobal is server-safe, and the engine writes into the global object in
+    // place. Uncopied, one report page would rewrite the cached global.json that
+    // every later request in the process reads — including every other user's.
+    const shared = { tenant: 'acme' };
+    const { context, resolver } = makeContext({
+      pageConfig: buildTestPage({
+        pageConfig: {
+          id: 'report1',
+          type: 'Box',
+          auth: { public: true },
+          events: {
+            onInit: [
+              { id: 'set', type: 'SetGlobal', params: { tenant: 'LEAKED' } },
+              { id: 'req', type: 'Request', params: 'getData' },
+            ],
+          },
+          requests: [{ id: 'getData', type: 'Fetch', payload: { echo: { _global: 'tenant' } } }],
+          blocks: [{ id: 'p', type: 'Paragraph', properties: { content: 'hi' } }],
+        },
+      }),
+      lowdefyGlobal: shared,
+      requestPayloadOp: { _payload: 'echo' },
+    });
+
+    const res = await post(createApp(context), 'report1');
+
+    expect(res.status).toBe(200);
+    // The write did land inside the render — the request payload read it back.
+    expect(resolver.mock.calls[0][0].request.forwarded).toBe('LEAKED');
+    // …and left the cached artifact alone.
+    expect(shared).toEqual({ tenant: 'acme' });
+  });
+
   test('a request the user may not call fails the render (authorizeRequest gate holds)', async () => {
     const { context, resolver } = makeContext({
       pageConfig: requestPage(),
@@ -249,5 +311,52 @@ describe('per-request authorization and the state snapshot', () => {
     // its resolver — the data a user could not load never appears.
     expect(res.status).toBe(200);
     expect(resolver).not.toHaveBeenCalled();
+  });
+});
+
+// The status a failed report gets is decided by the error's class. Matching on
+// message text — the first attempt — mapped an unsupported format to 500 and any
+// upstream timeout to a 504 blaming report generation.
+describe('failure status mapping', () => {
+  const failing = (error) => () => Promise.reject(error);
+
+  function statusOf({ generate, body }) {
+    const { context } = makeContext({ pageConfig: displayPage(), generate });
+    return post(createApp(context), 'report1', body);
+  }
+
+  test('a report timeout is a 504', async () => {
+    const res = await statusOf({
+      generate: failing(new ReportTimeoutError("Report generation for page 'report1' timed out")),
+    });
+    expect(res.status).toBe(504);
+    expect(await res.text()).toBe('Report generation timed out');
+  });
+
+  test('a busy queue is a 503', async () => {
+    const res = await statusOf({ generate: failing(new ReportBusyError('busy')) });
+    expect(res.status).toBe(503);
+    expect(await res.text()).toBe('Report generation is busy');
+  });
+
+  test('a ConfigError is a 400 carrying its message', async () => {
+    const res = await statusOf({ generate: failing(new ConfigError('Report page has no grids')) });
+    expect(res.status).toBe(400);
+    expect(await res.text()).toBe('Report page has no grids');
+  });
+
+  test('an unsupported format is a 400, through the real generator', async () => {
+    const res = await statusOf({ body: { format: 'docx' } });
+    expect(res.status).toBe(400);
+    expect(await res.text()).toMatch("Report format 'docx' is not supported");
+  });
+
+  test('an upstream failure that mentions a timeout is a 500, not a 504', async () => {
+    // A slow database or API is not the report timing out, and the caller must
+    // not be told to retry a render that was never the problem.
+    const res = await statusOf({
+      generate: failing(new Error('connect ETIMEDOUT: the query timed out after 30000ms')),
+    });
+    expect(res.status).toBe(500);
   });
 });

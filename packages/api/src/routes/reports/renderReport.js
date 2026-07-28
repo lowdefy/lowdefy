@@ -74,7 +74,13 @@ async function renderReport(
   collectReportOptions(rest, reportOptions);
 
   const { report } = context;
-  const lowdefyGlobal = (await context.readConfigFile('global.json')) || {};
+  // Copy for the same reason the page config is copied above, and it matters
+  // more here: `SetGlobal` is a server-safe action, and the engine's
+  // implementation writes into the object it is handed in place. Uncopied, one
+  // report page with `SetGlobal` in `onInit` would rewrite the cached
+  // global.json every later request in the process reads — including every other
+  // user's `getLowdefyGlobal`.
+  const lowdefyGlobal = serializer.copy((await context.readConfigFile('global.json')) ?? {});
 
   // Every page request runs through callRequest, so it passes the same
   // authorizeRequest gate as an interactive request — a report can never read

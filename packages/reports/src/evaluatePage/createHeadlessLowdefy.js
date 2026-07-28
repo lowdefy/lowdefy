@@ -129,6 +129,28 @@ function createTrackingCallRequest(callRequest) {
   return { trackedCallRequest, drainRequests };
 }
 
+// A promise that rejects when the caller aborts the generation — the escape
+// hatch for every wait in the evaluation. A request is what makes those waits
+// unbounded: an init action awaits the one it fires, the drain awaits them all,
+// and `callRequest` reaches a data source with its own timeout or none. Neither
+// the engine nor a connection offers cancellation, so the pipeline cannot stop
+// the request; racing against this lets it walk away from one and be reclaimed.
+//
+// One promise for the whole evaluation rather than one per wait, so a long init
+// chain does not stack listeners. The no-op catch keeps an abort that fires after
+// the evaluation finished from surfacing as an unhandled rejection; a race
+// against it still sees the rejection.
+function createAbortPromise(signal) {
+  if (!signal) return undefined;
+  const aborted = new Promise((_resolve, reject) => {
+    const onAbort = () => reject(signal.reason ?? new Error('Report generation was aborted.'));
+    if (signal.aborted) onAbort();
+    else signal.addEventListener('abort', onAbort, { once: true });
+  });
+  aborted.catch(() => undefined);
+  return aborted;
+}
+
 const silentLogger = {
   debug: () => undefined,
   error: () => undefined,
@@ -142,6 +164,9 @@ const silentLogger = {
  * mirroring the shape the browser client assembles in
  * `packages/client/src/initLowdefyContext.js`. Everything the engine needs is
  * injected by the caller (the server) — no server package is imported here.
+ *
+ * `signal` is the generation's abort signal. The handle turns it into `aborted`,
+ * a promise the caller races each phase against.
  *
  * Returns a handle: `{ lowdefy, pageConfig, jsMap, seed, warnings, drainRequests }`.
  * The factory owns the synthetic window (including `seed.urlQuery`); seeding
@@ -167,6 +192,7 @@ function createHeadlessLowdefy({
   i18n,
   seed = {},
   invocation = 'user',
+  signal,
 }) {
   const pageId = pageConfig?.pageId ?? pageConfig?.id;
   const warnings = [];
@@ -245,6 +271,7 @@ function createHeadlessLowdefy({
     warnings,
     drainRequests,
     assertUserNotEvaluated,
+    aborted: createAbortPromise(signal),
   };
 }
 

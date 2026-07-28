@@ -300,7 +300,26 @@ test('output over the 25 MB cap throws', async () => {
   const routineContext = createRoutineContext();
 
   await expect(handleRenderReport(context, routineContext, { step: reportStep() })).rejects.toThrow(
-    'RenderReport step "report" generated 30.0 MB for page "sales_dashboard", over the 25.0 MB limit.'
+    'RenderReport step "report" generated 30.0 MB for page "sales_dashboard", which is 40.0 MB ' +
+      'as an attachment — over the 25.0 MB limit.'
+  );
+  expect(routineContext.steps.report).toBeUndefined();
+});
+
+// The cap is on the attachment, and base64 inflates the document by a third — so
+// a document comfortably under 25 MB can still be an attachment no provider takes.
+test('a document under the cap that encodes over it throws', async () => {
+  mockGenerateReport.mockResolvedValue({
+    buffer: Buffer.alloc(20 * 1024 * 1024),
+    contentType: 'application/pdf',
+    filename: 'sales_dashboard.pdf',
+    warnings: {},
+  });
+  const context = createTestContext();
+  const routineContext = createRoutineContext();
+
+  await expect(handleRenderReport(context, routineContext, { step: reportStep() })).rejects.toThrow(
+    'generated 20.0 MB for page "sales_dashboard", which is 26.7 MB as an attachment'
   );
   expect(routineContext.steps.report).toBeUndefined();
 });

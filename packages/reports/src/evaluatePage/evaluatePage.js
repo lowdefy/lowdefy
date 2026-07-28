@@ -46,8 +46,24 @@ const noop = () => undefined;
  */
 async function evaluatePage(options) {
   const handle = createHeadlessLowdefy(options);
-  const { lowdefy, pageConfig, jsMap, seed, warnings, drainRequests, assertUserNotEvaluated } =
-    handle;
+  const {
+    lowdefy,
+    pageConfig,
+    jsMap,
+    seed,
+    warnings,
+    drainRequests,
+    assertUserNotEvaluated,
+    aborted,
+  } = handle;
+
+  // Every phase below waits on requests — an init action awaits the one it fires,
+  // the drain awaits them all — and a request that never settles is what wedges a
+  // generation. Race each phase against the abort so the pipeline unwinds when
+  // the caller's deadline passes, instead of parking here with an engine context
+  // nothing can reclaim. The orphaned phase promise stays pending; the request
+  // holding it was unreclaimable either way.
+  const untilAborted = (promise) => (aborted ? Promise.race([promise, aborted]) : promise);
 
   const context = getContext({
     config: pageConfig,
@@ -75,16 +91,16 @@ async function evaluatePage(options) {
   // actually fail the render.
   assertUserNotEvaluated();
 
-  await context._internal.runOnInit(noop);
+  await untilAborted(context._internal.runOnInit(noop));
   assertUserNotEvaluated();
 
-  await context._internal.runOnInitAsync(noop);
+  await untilAborted(context._internal.runOnInitAsync(noop));
   assertUserNotEvaluated();
 
   // The engine keeps no promise handles — the factory's tracking Set is the
   // only drain mechanism. It re-checks after each await, so requests triggered
   // while draining are awaited too.
-  await drainRequests();
+  await untilAborted(drainRequests());
 
   // One final evaluation so visibleEval/propertiesEval reflect every response,
   // even those that settled after the last engine update during the drain.

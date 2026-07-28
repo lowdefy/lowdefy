@@ -93,7 +93,10 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
   app.all('/api/request/*', requestHandler);
-  app.post('/api/report/*', reportHandler);
+  // The report body is the caller's page snapshot (urlQuery, input, and the
+  // whole of state), parsed into memory and copied into the engine before the
+  // most expensive render in the app — cap it like the other POST routes.
+  app.post('/api/report/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), reportHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
   app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);

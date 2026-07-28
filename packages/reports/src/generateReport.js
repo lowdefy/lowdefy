@@ -26,8 +26,10 @@
  * into the next.
  */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import { ReportBusyError, ReportTimeoutError } from './errors.js';
 import evaluatePage from './evaluatePage/evaluatePage.js';
 import walkBlocks from './render/walkBlocks.js';
 import { renderPdfBuffer, contentWidthOf } from './render/pdf/toPdfMake.js';
@@ -44,13 +46,28 @@ import { fonts } from './fonts/fonts.js';
 
 const MAX_CONCURRENT = 2;
 
+// How many callers may wait for a slot. The queue is bounded because an
+// unbounded one only moves the burst problem: every queued caller holds an open
+// connection and its parsed request body until its own timeout, and the ones at
+// the back wait past any useful deadline anyway. Past the bound, callers get a
+// busy error the route turns into a fast 503.
+const MAX_QUEUED = 8;
+
 let active = 0;
 const waiters = [];
 
-function acquire() {
+function acquire(pageId) {
   if (active < MAX_CONCURRENT) {
     active += 1;
     return Promise.resolve();
+  }
+  if (waiters.length >= MAX_QUEUED) {
+    return Promise.reject(
+      new ReportBusyError(
+        `Report generation is busy: ${MAX_CONCURRENT} running, ${waiters.length} queued. ` +
+          `The report for page '${pageId}' was not generated; retry shortly.`
+      )
+    );
   }
   return new Promise((resolve) => waiters.push(resolve));
 }
@@ -69,24 +86,38 @@ function release() {
 
 const DEFAULT_TIMEOUT_MS = 30000;
 
-// Race the generation against a timer. The generation cannot be cancelled — the
-// engine has no abort — but the timeout frees the semaphore slot and surfaces a
-// clear error naming the page, so a wedged run (a request that never settles is
-// the usual suspect, since the drain awaits every outstanding request) never
-// blocks the queue forever.
-function withTimeout(promise, timeoutMs, pageId) {
+// Race the generation against a timer, and abort it when the timer wins. The
+// abort is what makes the timeout mean anything: a report holds an engine
+// context, a rendered document and its buffers, so a run that keeps going after
+// its caller has been answered is pure leaked memory. The signal reaches both
+// places a generation can outlive its deadline: every wait in the evaluation
+// (evaluatePage races each phase against it — an init action or the drain
+// awaiting a request that never settles is the usual wedge), and the phase
+// boundaries of the pipeline here.
+function withTimeout(promise, timeoutMs, pageId, controller) {
   let timer;
   const timeout = new Promise((_resolve, reject) => {
     timer = setTimeout(() => {
-      reject(
-        new Error(
-          `Report generation for page '${pageId}' timed out after ${timeoutMs}ms. ` +
-            'A request that never settles during the drain is the usual cause.'
-        )
+      const error = new ReportTimeoutError(
+        `Report generation for page '${pageId}' timed out after ${timeoutMs}ms. ` +
+          'A request that never settles during the drain is the usual cause.'
       );
+      // Abort with the same error the caller sees, so whatever the generation
+      // rejects with downstream carries the same cause.
+      controller.abort(error);
+      reject(error);
     }, timeoutMs);
   });
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+// Stop between phases once the caller has aborted. Each phase — evaluating the
+// page, walking it to IR, laying out the document — is a chunk of CPU work that
+// nobody is waiting for any more.
+function throwIfAborted(signal) {
+  if (signal?.aborted) {
+    throw signal.reason ?? new ReportTimeoutError('Report generation was aborted.');
+  }
 }
 
 // --- Report chrome -----------------------------------------------------------
@@ -151,12 +182,15 @@ async function runGeneration({
   publicDir,
   logger,
   now,
+  signal,
 }) {
   const pageId = pageConfig?.pageId ?? pageConfig?.id;
 
   const spec = FORMATS[format];
   if (!spec) {
-    throw new Error(
+    // The caller asked for something the config surface does not offer, so this
+    // is a ConfigError like any other bad config value — the routes answer 400.
+    throw new ConfigError(
       `Report format '${format}' is not supported for page '${pageId}'. Use 'pdf' or 'xlsx'.`
     );
   }
@@ -173,7 +207,9 @@ async function runGeneration({
     lowdefyGlobal,
     serverUrl,
     logger,
+    signal,
   });
+  throwIfAborted(signal);
 
   const report = evaluateReport({ context, pageConfig, pageId });
 
@@ -186,6 +222,7 @@ async function runGeneration({
   };
 
   const walked = await walkBlocks(context, registry, reportOptions, renderContext);
+  throwIfAborted(signal);
   const skippedBlockTypes = walked.warnings;
 
   let buffer;
@@ -247,11 +284,28 @@ async function generateReport(options) {
   const pageId = options?.pageConfig?.pageId ?? options?.pageConfig?.id;
   const timeoutMs = type.isNumber(options?.timeoutMs) ? options.timeoutMs : DEFAULT_TIMEOUT_MS;
 
-  await acquire();
+  await acquire(pageId);
+  const controller = new AbortController();
+  const generation = runGeneration({ ...options, signal: controller.signal });
+  // The race below reports the first outcome to the caller; this tracks the
+  // generation's own, which is what the slot is held against. The handlers
+  // swallow the rejection here because the caller already sees it through the
+  // race — without them a timed-out generation would look unhandled.
+  const settled = generation.then(
+    () => undefined,
+    () => undefined
+  );
   try {
-    return await withTimeout(runGeneration(options), timeoutMs, pageId);
+    return await withTimeout(generation, timeoutMs, pageId, controller);
   } finally {
-    release();
+    // Release when the work stops, not when the caller gives up. Freeing the
+    // slot on the timeout alone hands it to the next caller while the aborted
+    // generation is still holding its engine context and buffers, so a page that
+    // wedges every time would accumulate orphans past MAX_CONCURRENT — the bound
+    // would fail exactly when the process is under stress. Held this way, a
+    // wedge that somehow ignores the abort surfaces as a busy 503 rather than as
+    // silent memory growth.
+    settled.then(release);
   }
 }
 

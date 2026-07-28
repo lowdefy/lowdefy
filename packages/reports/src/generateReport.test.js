@@ -15,9 +15,11 @@
 */
 
 import buildTestPage from '@lowdefy/build/buildTestPage';
+import { ConfigError } from '@lowdefy/errors';
 import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
 import generateReport from './generateReport.js';
+import { ReportBusyError, ReportTimeoutError } from './errors.js';
 // The real static registries, loaded from src (React-free by design).
 import * as antdRegistry from '../../plugins/blocks/blocks-antd/src/static/index.js';
 import * as markdownRegistry from '../../plugins/blocks/blocks-markdown/src/static/index.js';
@@ -106,13 +108,63 @@ describe('concurrency semaphore', () => {
 });
 
 describe('generation timeout', () => {
-  test('rejects with the pageId when generation exceeds the timeout', async () => {
+  test('rejects with a ReportTimeoutError naming the page', async () => {
     // A request that never settles wedges the drain; the timeout must fire.
     const neverSettles = () => new Promise(() => {});
+    const promise = generateReport(baseOptions({ callRequest: neverSettles, timeoutMs: 50 }));
 
-    await expect(
-      generateReport(baseOptions({ callRequest: neverSettles, timeoutMs: 50 }))
-    ).rejects.toThrow(/page 'page1'/);
+    await expect(promise).rejects.toThrow(ReportTimeoutError);
+    await expect(promise).rejects.toThrow(/page 'page1'/);
+  });
+
+  test('a timed-out generation stops and gives its slot back', async () => {
+    // The bound only holds if the work actually stops: releasing the slot while
+    // a wedged render kept its engine context alive would let orphans pile up
+    // past MAX_CONCURRENT. Wedge both slots, then check that a later generation
+    // still runs — which it can only do once both aborted runs have unwound.
+    const neverSettles = () => new Promise(() => {});
+    const wedged = [
+      generateReport(baseOptions({ callRequest: neverSettles, timeoutMs: 30 })),
+      generateReport(baseOptions({ callRequest: neverSettles, timeoutMs: 30 })),
+    ];
+    await Promise.all(wedged.map((promise) => expect(promise).rejects.toThrow(ReportTimeoutError)));
+
+    const result = await generateReport(
+      baseOptions({
+        pageConfig: buildTestPage({
+          pageConfig: {
+            id: 'page1',
+            type: 'Box',
+            blocks: [{ id: 'p', type: 'Paragraph', properties: { content: 'after' } }],
+          },
+        }),
+      })
+    );
+    expect(result.buffer.subarray(0, 5).toString('latin1')).toBe('%PDF-');
+  });
+});
+
+describe('a full queue fails fast', () => {
+  test('callers past the queue bound reject with a ReportBusyError', async () => {
+    // MAX_CONCURRENT running + MAX_QUEUED waiting = 10 accepted; the 11th is
+    // refused rather than parked on an open connection until its own timeout.
+    const { callRequest, openGate } = gatedRequests();
+    const accepted = Array.from({ length: 10 }, () => generateReport(baseOptions({ callRequest })));
+
+    await expect(generateReport(baseOptions({ callRequest }))).rejects.toThrow(ReportBusyError);
+    await expect(generateReport(baseOptions({ callRequest }))).rejects.toThrow(/page 'page1'/);
+
+    openGate();
+    await Promise.all(accepted);
+  });
+});
+
+describe('unsupported format', () => {
+  test('rejects with a ConfigError — the caller asked for something not offered', async () => {
+    await expect(generateReport(baseOptions({ format: 'docx' }))).rejects.toThrow(ConfigError);
+    await expect(generateReport(baseOptions({ format: 'docx' }))).rejects.toThrow(
+      "Report format 'docx' is not supported"
+    );
   });
 });
 
