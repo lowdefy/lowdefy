@@ -52,6 +52,7 @@ async function fetchDynamicIcons(basePath) {
 }
 
 async function fetchPageConfig(url) {
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
   // A stalled request (server restart mid-request, exhausted sockets) must
   // become a visible error, never an eternal Suspense fallback — the reload
   // recovery path cannot fire while the page tree is suspended.
@@ -79,7 +80,6 @@ async function fetchPageConfig(url) {
     // SWR key healthy: if the navigation is dropped, the tab still recovers
     // on the next reload event or via the manual link on the redirect screen.
     const { redirect } = await res.json();
-    const basePath = url.replace(/\/api\/page\/.*$/, '');
     const authRedirect = redirect ?? `${basePath}/404`;
     console.warn(`Lowdefy dev: "${url}" returned 401 - redirecting to "${authRedirect}".`);
     return { authRedirect };
@@ -97,8 +97,6 @@ async function fetchPageConfig(url) {
 
   // Fetch jsMap and dynamic icons after page build completes
   // (JIT build may have added new entries).
-  // Extract basePath from the URL to construct the endpoints.
-  const basePath = url.replace(/\/api\/page\/.*$/, '');
   const [jsEntries, dynamicIcons] = await Promise.all([
     fetchJsEntries(basePath),
     fetchDynamicIcons(basePath),
