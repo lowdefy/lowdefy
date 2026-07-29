@@ -151,6 +151,8 @@ await ldf.url().expect.toMatch(/\/tickets\/\d+/);
 
 // Query params
 await ldf.urlQuery('filter').expect.toBe('active');
+// do.set navigates through the app router, so a Dynamic page re-resolves its
+// content for the new query before this resolves.
 await ldf.urlQuery('page').do.set('2');
 
 // Get raw values
