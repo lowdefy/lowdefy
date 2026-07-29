@@ -60,6 +60,7 @@ async function screenshotPage({
   clip,
   scrollX = 0,
   scrollY = 0,
+  user,
   width = 1280,
   height = 800,
   timeout = 15000,
@@ -88,7 +89,7 @@ async function screenshotPage({
 
   let context;
   try {
-    const opened = await openPage({ browser, origin, pageId, width, height, timeout });
+    const opened = await openPage({ browser, origin, pageId, user, width, height, timeout });
     context = opened.context;
     // Let post-load rendering (fonts, transitions, client-side state) settle.
     await opened.page.waitForTimeout(300);
