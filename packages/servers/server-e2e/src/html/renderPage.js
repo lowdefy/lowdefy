@@ -42,7 +42,10 @@ async function renderPage(c, { pageId, status = 200 }) {
     resolvedPageId = home.pageId;
   }
 
-  const pageConfig = await getPageConfig(context, { pageId: resolvedPageId });
+  const pageConfig = await getPageConfig(context, {
+    pageId: resolvedPageId,
+    urlQuery: c.req.query(),
+  });
 
   if (!pageConfig) {
     if (resolvedPageId === '404') {
