@@ -18,6 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
+import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+
 // pnpm no longer reads the "pnpm" field in package.json, and pnpm 11 fails
 // installs with ERR_PNPM_IGNORED_BUILDS unless dependency build scripts are
 // allowed in pnpm-workspace.yaml. The key differs by version:
@@ -44,6 +46,18 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
   const filePath = path.join(directory, 'pnpm-workspace.yaml');
   // Keep existing files so users can allow builds for their own plugin deps.
   if (fs.existsSync(filePath)) {
+    return;
+  }
+  // Apps inside a pnpm workspace install the server as part of that workspace —
+  // custom plugins pinned as workspace:* only resolve there, and the root's
+  // overrides, packageExtensions and build allowlists must keep applying.
+  // Writing packages: ['.'] would isolate the server and break all of that,
+  // so build allowlists stay the workspace root's responsibility.
+  const workspaceRoot = findPnpmWorkspaceRoot(path.dirname(directory));
+  if (workspaceRoot !== null) {
+    context.logger.debug(
+      `Found pnpm workspace at ${workspaceRoot}; the server installs as part of that workspace.`
+    );
     return;
   }
   await writeFile(filePath, pnpmWorkspaceYaml);

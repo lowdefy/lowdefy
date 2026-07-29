@@ -64,6 +64,19 @@ test('ensurePnpmWorkspaceYaml does not overwrite an existing pnpm-workspace.yaml
   expect(writeFile).not.toHaveBeenCalled();
 });
 
+test('ensurePnpmWorkspaceYaml skips writing when the server directory is inside a pnpm workspace', async () => {
+  const { default: fs } = await import('fs');
+  const { writeFile } = await import('@lowdefy/node-utils');
+  const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
+  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
+  await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
+  expect(writeFile).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Found pnpm workspace at /repo; the server installs as part of that workspace.'
+  );
+});
+
 test('ensurePnpmWorkspaceYaml skips writing when running local version', async () => {
   const { default: fs } = await import('fs');
   const { writeFile } = await import('@lowdefy/node-utils');
