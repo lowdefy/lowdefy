@@ -64,6 +64,9 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
   }
   const activeOrganizationId = session.session.activeOrganizationId;
   if (type.isNone(activeOrganizationId)) {
+    context.logger.debug(
+      `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
+    );
     context.user = null;
     return;
   }
@@ -76,6 +79,9 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     ],
   });
   if (type.isNone(member)) {
+    context.logger.debug(
+      `User "${session.user.id}" has no member row in organization "${activeOrganizationId}" - resolved unauthenticated.`
+    );
     context.user = null;
     return;
   }

@@ -54,12 +54,15 @@ test('sets context.user to null when the session has no active organization', as
   const { auth, findOne } = mockAuth({
     session: { user: { id: 'user_1' }, session: { id: 'sess_1' } },
   });
-  const context = {};
+  const context = { logger: mockLogger() };
 
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user).toBe(null);
   expect(findOne).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has no active organization - resolved unauthenticated.'
+  );
 });
 
 test('sets context.user to null when the user holds no member row in the active org', async () => {
@@ -70,7 +73,7 @@ test('sets context.user to null when the user holds no member row in the active 
     },
     member: null,
   });
-  const context = {};
+  const context = { logger: mockLogger() };
 
   await resolveAuthentication(context, { auth, headers: {} });
 
@@ -82,6 +85,9 @@ test('sets context.user to null when the user holds no member row in the active 
       { field: 'organizationId', value: 'org_1' },
     ],
   });
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'User "user_1" has no member row in organization "org_1" - resolved unauthenticated.'
+  );
 });
 
 test('resolves roles from the active member row, splitting the CSV role string', async () => {
