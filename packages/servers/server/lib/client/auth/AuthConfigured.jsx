@@ -48,10 +48,17 @@ const authClient = createAuthClient({
 // UpdateSession owns session freshness - suppress BetterAuth's own
 // signal-driven refetch on the calls that would otherwise fire one, so
 // nothing competes with (and aborts) the refetch UpdateSession awaits.
+// Only calls that mutate an existing session are suppressed - calls that
+// can establish one (the sign-ins, and the two-factor, phone-number and
+// passkey verifies) keep their signal: its refetch is what makes the store
+// notice a login when no navigation follows.
 // disableSignal silences all atomListeners for the call, including the
 // organization plugin's org atoms - none are exposed to app config, so a
 // future design exposing one must refresh it through its own action.
-const sessionScoped = (params) => ({ ...params, fetchOptions: { disableSignal: true } });
+const sessionScoped = (params) => ({
+  ...params,
+  fetchOptions: { ...params?.fetchOptions, disableSignal: true },
+});
 
 // The server resolves the caller per request and embeds it in the page
 // config, so the first render never flashes unauthenticated. The BetterAuth
@@ -95,7 +102,9 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     // switch between the session refetch and the /api/user result). Render
     // the last resolved caller rather than a caller with no roles - blocks
     // re-evaluate operators on render, so a role-guarded page would act on
-    // roles: [].
+    // roles: []. UpdateSession closes the window when it lands the new
+    // caller; a flow that swaps the session user without chaining it leaves
+    // the previous caller rendered until the next page load.
     return children(resolved, resolvedUserRef);
   }
   // The resolved caller contributes every field the session user lacks: roles
@@ -180,8 +189,8 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
     stopImpersonating: () => authClient.admin.stopImpersonating(sessionScoped()),
-    twoFactorDisable: (params) => authClient.twoFactor.disable(params),
-    twoFactorEnable: (params) => authClient.twoFactor.enable(params),
+    twoFactorDisable: (params) => authClient.twoFactor.disable(sessionScoped(params)),
+    twoFactorEnable: (params) => authClient.twoFactor.enable(sessionScoped(params)),
     twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
     twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
     updateMemberRole: (params) => authClient.organization.updateMemberRole(params),
