@@ -16,6 +16,8 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
+import getHomePathname from './getHomePathname.js';
+
 function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
   function link(props) {
     if (props.disabled === true) {
@@ -35,13 +37,13 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
     }
     const query = type.isNone(props.urlQuery) ? '' : `${urlQueryFn.stringify(props.urlQuery)}`;
     if (props.home === true) {
+      const pathname = getHomePathname({ lowdefy });
       // An app whose home config names no page has no resolvable home - fall
       // through to noLink's `Invalid Link.` rather than pushing "/undefined"
       // into history and writing inputs['page:undefined'] on the way.
-      if (lowdefy.home?.configured !== true && !type.isString(lowdefy.home?.pageId)) {
+      if (type.isNone(pathname)) {
         return noLink(props);
       }
-      const pathname = `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}`;
       return sameOriginLink({
         ...props,
         pathname,
