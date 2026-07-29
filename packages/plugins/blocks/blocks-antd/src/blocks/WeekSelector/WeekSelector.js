@@ -26,6 +26,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
@@ -73,6 +74,7 @@ const WeekSelector = ({
               format={properties.format ?? 'YYYY-wo'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder}
+              presets={getPresets({ methods, presets: properties.presets })}
               size={properties.size}
               status={validation.status}
               suffixIcon={

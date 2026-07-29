@@ -297,6 +297,53 @@
         label:
           disabled: true
 
+- title: Presets
+  blocks:
+    - id: ms_presets_relative
+      type: MonthSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: This month
+            value:
+              _dayjs:
+                - now
+                - utc
+                - startOf: month
+          - label: Last month
+            value:
+              _dayjs:
+                - now
+                - utc
+                - subtract: [1, month]
+          - label: 3 months ago
+            value:
+              _dayjs:
+                - now
+                - utc
+                - subtract: [3, months]
+          - label: A year ago
+            value:
+              _dayjs:
+                - now
+                - utc
+                - subtract: [1, year]
+    - id: ms_presets_fixed
+      type: MonthSelector
+      properties:
+        title: Fixed Presets
+        label:
+          disabled: true
+        presets:
+          - label: Start of 2026
+            value: '2026-01-01'
+          - label: Mid 2026
+            value: '2026-07-01'
+          - label: End of 2026
+            value: '2026-12-01'
+
 - title: Label Options
   blocks:
     - id: month_label_default

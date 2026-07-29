@@ -233,6 +233,49 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+- id: ws_presets_relative
+  type: WeekSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This week
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: week
+      - label: Last week
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - week
+      - label: 4 weeks ago
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 4
+                - weeks
+- id: ws_presets_fixed
+  type: WeekSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: First week of 2026
+        value: 2026-01-01
+      - label: Week of 1 July 2026
+        value: 2026-07-01
+```
+
+```yaml
 - id: ws_lbl_default
   type: WeekSelector
   properties:
@@ -557,6 +600,9 @@ Week picker for selecting a week of the year.
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | `"YYYY-wo"` | Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]". |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

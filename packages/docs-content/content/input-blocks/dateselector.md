@@ -282,6 +282,81 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+- id: ds_presets_relative
+  type: DateSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Today
+        value:
+          _date: now
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - day
+      - label: A week ago
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - week
+      - label: A month ago
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - month
+- id: ds_presets_boundaries
+  type: DateSelector
+  properties:
+    title: Period Boundaries
+    label:
+      disabled: true
+    presets:
+      - label: Start of month
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: month
+      - label: End of month
+        value:
+          _dayjs:
+            - now
+            - utc
+            - endOf: month
+      - label: Start of year
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: year
+- id: ds_presets_fixed
+  type: DateSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: New Year's Day
+        value: 2026-01-01
+      - label: Midsummer
+        value: 2026-06-21
+      - label: Christmas
+        value: 2026-12-25
+```
+
+```yaml
 - id: label_default
   type: DateSelector
   properties:
@@ -640,6 +715,9 @@ Date picker with configurable format and disabled dates.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `format` | string | - | Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale's date format, or "YYYY-MM-DD" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]". |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

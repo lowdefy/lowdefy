@@ -104,6 +104,12 @@ export default createBlockHelper({
         await dropdown.locator('.ant-picker-ok button').click();
       }
     },
+    selectPreset: async (page, blockId, label) => {
+      await locator(page, blockId).click();
+      const dropdown = page.locator('.ant-picker-dropdown:visible');
+      await expect(dropdown).toBeVisible();
+      await dropdown.locator('.ant-picker-presets').getByText(label, { exact: true }).click();
+    },
     clear: async (page, blockId) => {
       await locator(page, blockId).hover();
       await locator(page, blockId).locator('.ant-picker-clear').click();

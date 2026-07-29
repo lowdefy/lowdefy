@@ -368,6 +368,73 @@ Combined date and time picker.
 ```
 
 ```yaml
+- id: dts_presets_relative
+  type: DateTimeSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Now
+        value:
+          _date: now
+      - label: An hour ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - hour
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+- id: dts_presets_start_of_day
+  type: DateTimeSelector
+  properties:
+    title: Start of Day
+    label:
+      disabled: true
+    presets:
+      - label: Today 09:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 9
+                - hours
+      - label: Today 17:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 17
+                - hours
+- id: dts_presets_utc
+  type: DateTimeSelector
+  properties:
+    title: UTC Presets
+    selectUTC: true
+    label:
+      extra: With selectUTC, preset dates are read as UTC.
+    presets:
+      - label: Now (UTC)
+        value:
+          _date: now
+      - label: Midnight UTC
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: day
+```
+
+```yaml
 - id: dts_lbl_default
   type: DateTimeSelector
   properties:
@@ -731,6 +798,9 @@ Combined date and time picker.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `minuteStep` | integer | `5` | Minute intervals to show in the time selector. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]". |
 | `secondStep` | integer | `5` | Minute intervals to show in the time selector. |
 | `selectUTC` | boolean | `false` | Shows the user's selection as UTC time, not time-zone based. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |

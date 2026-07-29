@@ -18,6 +18,7 @@ import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
 import disabledDates from '../../schemas/disabledDates.js';
+import { dateRangePresets } from '../../schemas/presets.js';
 import {
   disabled,
   inputTitle,
@@ -119,6 +120,7 @@ export default {
           },
         },
       },
+      presets: dateRangePresets,
       separator: {
         type: 'string',
         default: '~',

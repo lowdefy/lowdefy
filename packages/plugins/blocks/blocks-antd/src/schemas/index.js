@@ -21,6 +21,7 @@ export { default as icon } from './icon.js';
 export { default as label } from './label.js';
 export { default as menuLinks } from './menuLinks.js';
 export { default as options } from './options.js';
+export { datePresets, dateRangePresets } from './presets.js';
 export {
   disabled,
   placeholder,

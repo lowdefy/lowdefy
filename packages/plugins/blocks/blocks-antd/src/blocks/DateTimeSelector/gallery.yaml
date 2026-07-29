@@ -375,6 +375,65 @@
         label:
           disabled: true
 
+- title: Presets
+  blocks:
+    - id: dts_presets_relative
+      type: DateTimeSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: Now
+            value:
+              _date: now
+          - label: An hour ago
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, hour]
+          - label: Yesterday
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, day]
+    - id: dts_presets_start_of_day
+      type: DateTimeSelector
+      properties:
+        title: Start of Day
+        label:
+          disabled: true
+        presets:
+          - label: Today 09:00
+            value:
+              _dayjs:
+                - now
+                - startOf: day
+                - add: [9, hours]
+          - label: Today 17:00
+            value:
+              _dayjs:
+                - now
+                - startOf: day
+                - add: [17, hours]
+    - id: dts_presets_utc
+      type: DateTimeSelector
+      properties:
+        title: UTC Presets
+        selectUTC: true
+        label:
+          extra: With selectUTC, preset dates are read as UTC.
+        presets:
+          - label: Now (UTC)
+            value:
+              _date: now
+          - label: Midnight UTC
+            value:
+              _dayjs:
+                - now
+                - utc
+                - startOf: day
+
 - title: Label Options
   blocks:
     - id: dts_lbl_default

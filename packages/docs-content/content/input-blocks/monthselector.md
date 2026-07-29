@@ -290,6 +290,59 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+- id: ms_presets_relative
+  type: MonthSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This month
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: month
+      - label: Last month
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - month
+      - label: 3 months ago
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 3
+                - months
+      - label: A year ago
+        value:
+          _dayjs:
+            - now
+            - utc
+            - subtract:
+                - 1
+                - year
+- id: ms_presets_fixed
+  type: MonthSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: Start of 2026
+        value: 2026-01-01
+      - label: Mid 2026
+        value: 2026-07-01
+      - label: End of 2026
+        value: 2026-12-01
+```
+
+```yaml
 - id: month_label_default
   type: MonthSelector
   properties:
@@ -647,6 +700,9 @@ Month picker for selecting year and month.
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | - | Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale's month format, or "YYYY-MM" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]". |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

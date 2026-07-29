@@ -24,6 +24,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 
@@ -81,6 +82,7 @@ const DateRangeSelector = ({
               placeholder={
                 type.isArray(properties.placeholder) ? properties.placeholder : undefined
               }
+              presets={getPresets({ methods, presets: properties.presets })}
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}

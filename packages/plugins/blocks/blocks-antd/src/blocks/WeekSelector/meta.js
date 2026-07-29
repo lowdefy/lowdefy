@@ -18,6 +18,7 @@ import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
 import disabledDates from '../../schemas/disabledDates.js';
+import { datePresets } from '../../schemas/presets.js';
 import {
   disabled,
   placeholder,
@@ -73,6 +74,7 @@ export default {
           'Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats.',
       },
       placeholder: { ...placeholder },
+      presets: datePresets,
       label,
       showToday: {
         type: 'boolean',

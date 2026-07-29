@@ -283,6 +283,124 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+- id: drs_presets_relative
+  type: DateRangeSelector
+  properties:
+    title: Relative Ranges
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Last 7 Days
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - subtract:
+                  - 7
+                  - days
+          - _date: now
+      - label: Last 14 Days
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - subtract:
+                  - 14
+                  - days
+          - _date: now
+      - label: Last 30 Days
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - subtract:
+                  - 30
+                  - days
+          - _date: now
+      - label: Last 90 Days
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - subtract:
+                  - 90
+                  - days
+          - _date: now
+- id: drs_presets_to_date
+  type: DateRangeSelector
+  properties:
+    title: Period To Date
+    label:
+      disabled: true
+    presets:
+      - label: Week to date
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - startOf: week
+          - _date: now
+      - label: Month to date
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - startOf: month
+          - _date: now
+      - label: Year to date
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - startOf: year
+          - _date: now
+- id: drs_presets_fixed
+  type: DateRangeSelector
+  properties:
+    title: Fixed Ranges
+    label:
+      disabled: true
+    presets:
+      - label: 2026 Q1
+        value:
+          - 2026-01-01
+          - 2026-03-31
+      - label: 2026 Q2
+        value:
+          - 2026-04-01
+          - 2026-06-30
+      - label: 2026 Q3
+        value:
+          - 2026-07-01
+          - 2026-09-30
+      - label: 2026 Q4
+        value:
+          - 2026-10-01
+          - 2026-12-31
+- id: drs_presets_html_label
+  type: DateRangeSelector
+  properties:
+    title: Html Labels
+    label:
+      disabled: true
+    presets:
+      - label: <b>Today</b>
+        value:
+          - _date: now
+          - _date: now
+      - label: '<span style="color: #1677ff">This month</span>'
+        value:
+          - _dayjs:
+              - now
+              - utc
+              - startOf: month
+          - _dayjs:
+              - now
+              - utc
+              - endOf: month
+```
+
+```yaml
 - id: drs_label_default
   type: DateRangeSelector
   properties:
@@ -721,6 +839,9 @@ Date range picker for selecting start and end dates.
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `placeholder` | array | - | Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | array | - | The start and end date of the range. |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

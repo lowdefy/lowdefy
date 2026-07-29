@@ -240,6 +240,45 @@
         label:
           disabled: true
 
+- title: Presets
+  blocks:
+    - id: ws_presets_relative
+      type: WeekSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: This week
+            value:
+              _dayjs:
+                - now
+                - utc
+                - startOf: week
+          - label: Last week
+            value:
+              _dayjs:
+                - now
+                - utc
+                - subtract: [1, week]
+          - label: 4 weeks ago
+            value:
+              _dayjs:
+                - now
+                - utc
+                - subtract: [4, weeks]
+    - id: ws_presets_fixed
+      type: WeekSelector
+      properties:
+        title: Fixed Presets
+        label:
+          disabled: true
+        presets:
+          - label: First week of 2026
+            value: '2026-01-01'
+          - label: Week of 1 July 2026
+            value: '2026-07-01'
+
 - title: Label Options
   blocks:
     - id: ws_lbl_default

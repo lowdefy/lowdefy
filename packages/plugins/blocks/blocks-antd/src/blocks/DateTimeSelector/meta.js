@@ -18,6 +18,7 @@ import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
 import disabledDates from '../../schemas/disabledDates.js';
+import { datePresets } from '../../schemas/presets.js';
 import {
   disabled,
   placeholder,
@@ -85,6 +86,7 @@ export default {
         description: 'Minute intervals to show in the time selector.',
       },
       placeholder: { ...placeholder },
+      presets: datePresets,
       secondStep: {
         type: 'integer',
         default: 5,
