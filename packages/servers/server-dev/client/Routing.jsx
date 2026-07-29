@@ -20,6 +20,7 @@ import Head from '@lowdefy/client/adapters/Head.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 
 import BuildingPage from '../lib/client/BuildingPage.jsx';
+import RestartingPage from '../lib/client/RestartingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
@@ -75,29 +76,36 @@ function Routing({ auth, lowdefy, router }) {
       <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
       <OpenInEditorListener basePath={router.basePath} pageId={pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
-        {(resetContext) => (
-          <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
-            <Page
-              auth={auth}
-              Components={{ Head, Link }}
-              config={{
-                rootConfig,
-              }}
-              jsMap={staticJsMap}
-              lowdefy={lowdefy}
-              pageId={pageId}
-              resetContext={resetContext}
-              router={router}
-              types={{
-                actions,
-                blockMetas,
-                blocks,
-                icons,
-                operators,
-              }}
-            />
-          </Suspense>
-        )}
+        {(resetContext) =>
+          // Rendered here, not in Page — Page sits below the Suspense boundary
+          // and cannot render anything while its config fetch is suspended, so
+          // a restarting server would present as "Building page..." forever.
+          resetContext.restarting ? (
+            <RestartingPage />
+          ) : (
+            <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
+              <Page
+                auth={auth}
+                Components={{ Head, Link }}
+                config={{
+                  rootConfig,
+                }}
+                jsMap={staticJsMap}
+                lowdefy={lowdefy}
+                pageId={pageId}
+                resetContext={resetContext}
+                router={router}
+                types={{
+                  actions,
+                  blockMetas,
+                  blocks,
+                  icons,
+                  operators,
+                }}
+              />
+            </Suspense>
+          )
+        }
       </Reload>
     </>
   );

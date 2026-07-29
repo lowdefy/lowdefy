@@ -77,6 +77,9 @@ async function jitPageHandler(c) {
     // The client follows this redirect with a full page load, so the login
     // page can return to the requested page after sign-in.
     const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.debug(
+      `Page config request for "${pageId}" resolved unauthenticated - returning a sign-in redirect.`
+    );
     return c.json(
       {
         redirect: `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(
