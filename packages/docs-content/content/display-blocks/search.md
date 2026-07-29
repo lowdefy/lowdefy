@@ -356,5 +356,6 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `/itemDescription` | The description/snippet in a result item. |
 | `/highlight` | Highlighted match text (<mark> elements). |
 | `/empty` | The empty state message. |
+| `/loading` | The loading spinner container. |
 
 No slots defined.
