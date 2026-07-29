@@ -42,6 +42,9 @@
 - _ref: agents/mcp-tools.yaml
 - _ref: agents/multi-agent.yaml
 - _ref: agents/server-hooks.yaml
+- _ref: agents/external-api.yaml
+- _ref: agents/mcp-server.yaml
+- _ref: agents/channels.yaml
 - _ref: agents/AgentChat.yaml
 - _ref: agents/AgentConversations.yaml
 - _ref: websockets/introduction.yaml

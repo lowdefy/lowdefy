@@ -310,6 +310,138 @@ test('buildEntityAuth pages: module-contributed public pages never join a protec
   ]);
 });
 
+test('buildEntityAuth agents: returns components when no agents defined', () => {
+  const components = {
+    auth: {
+      agents: {
+        roles: {},
+      },
+    },
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toBe(undefined);
+});
+
+test('buildEntityAuth agents: sets all agents public by default', () => {
+  const components = {
+    auth: {
+      agents: {
+        roles: {},
+      },
+    },
+    agents: [
+      { id: 'support-bot', type: 'ClaudeAgent' },
+      { id: 'internal-bot', type: 'ClaudeAgent' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toEqual([
+    { id: 'support-bot', type: 'ClaudeAgent', auth: { public: true } },
+    { id: 'internal-bot', type: 'ClaudeAgent', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth agents: protected true makes all agents protected', () => {
+  const components = {
+    auth: {
+      agents: {
+        protected: true,
+        roles: {},
+      },
+    },
+    agents: [
+      { id: 'support-bot', type: 'ClaudeAgent' },
+      { id: 'internal-bot', type: 'ClaudeAgent' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toEqual([
+    { id: 'support-bot', type: 'ClaudeAgent', auth: { public: false } },
+    { id: 'internal-bot', type: 'ClaudeAgent', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth agents: protected list protects only listed agents', () => {
+  const components = {
+    auth: {
+      agents: {
+        protected: ['internal-bot'],
+        roles: {},
+      },
+    },
+    agents: [
+      { id: 'support-bot', type: 'ClaudeAgent' },
+      { id: 'internal-bot', type: 'ClaudeAgent' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toEqual([
+    { id: 'support-bot', type: 'ClaudeAgent', auth: { public: true } },
+    { id: 'internal-bot', type: 'ClaudeAgent', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth agents: public list protects all agents not listed', () => {
+  const components = {
+    auth: {
+      agents: {
+        public: ['support-bot'],
+        roles: {},
+      },
+    },
+    agents: [
+      { id: 'support-bot', type: 'ClaudeAgent' },
+      { id: 'internal-bot', type: 'ClaudeAgent' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toEqual([
+    { id: 'support-bot', type: 'ClaudeAgent', auth: { public: true } },
+    { id: 'internal-bot', type: 'ClaudeAgent', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth agents: roles protect agents and list the granted roles', () => {
+  const components = {
+    auth: {
+      agents: {
+        roles: {
+          admin: ['internal-*'],
+          support: ['support-bot', 'internal-bot'],
+        },
+      },
+    },
+    agents: [
+      { id: 'support-bot', type: 'ClaudeAgent' },
+      { id: 'internal-bot', type: 'ClaudeAgent' },
+      { id: 'open-bot', type: 'ClaudeAgent' },
+    ],
+  };
+  const res = buildEntityAuth({ components, entity: 'agents' });
+  expect(res.agents).toEqual([
+    { id: 'support-bot', type: 'ClaudeAgent', auth: { public: false, roles: ['support'] } },
+    { id: 'internal-bot', type: 'ClaudeAgent', auth: { public: false, roles: ['admin', 'support'] } },
+    { id: 'open-bot', type: 'ClaudeAgent', auth: { public: true } },
+  ]);
+});
+
+test('buildEntityAuth agents: throws when an agent is both protected by roles and public', () => {
+  const components = {
+    auth: {
+      agents: {
+        roles: {
+          admin: ['support-bot'],
+        },
+        public: ['support-bot'],
+      },
+    },
+    agents: [{ id: 'support-bot', type: 'ClaudeAgent' }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'agents' })).toThrow(
+    'Agent "support-bot" is both protected by roles and public.'
+  );
+});
+
 test('buildEntityAuth api: the roles-and-public conflict names the endpoint', () => {
   const components = {
     auth: {

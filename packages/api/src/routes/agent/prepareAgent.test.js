@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import prepareAgent from './prepareAgent.js';
+import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import testContext from '../../test/testContext.js';
 
@@ -30,6 +31,7 @@ const logger = {
 const agentConfig = {
   agentId: 'my-agent',
   id: 'agent:my-agent',
+  auth: { public: true },
   type: 'ClaudeAgent',
   connectionId: 'my-anthropic',
   tools: [],
@@ -95,6 +97,50 @@ test('prepareAgent sets resolver context mode to generate', async () => {
     mode: 'generate',
   });
   expect(resolverContext.mode).toBe('generate');
+});
+
+test('prepareAgent defaults resolver context format to ui-message', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, { agentId: 'my-agent', agentContext });
+  expect(resolverContext.format).toBe('ui-message');
+});
+
+test('prepareAgent sets resolver context format to text', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, {
+    agentId: 'my-agent',
+    agentContext,
+    format: 'text',
+  });
+  expect(resolverContext.format).toBe('text');
+});
+
+test('prepareAgent throws AuthenticationError for a protected agent without a user', async () => {
+  const context = createContext();
+  context.user = null;
+  context.authorize = createAuthorize({ user: null });
+  const protectedAgent = { ...agentConfig, auth: { public: false } };
+  context.readConfigFile = jest.fn((path) => {
+    if (path === 'agents/my-agent.json') return protectedAgent;
+    return null;
+  });
+  await expect(prepareAgent(context, { agentId: 'my-agent', agentContext })).rejects.toThrow(
+    'Authentication required for agent "my-agent".'
+  );
+});
+
+test('prepareAgent throws an opaque not-found error for a caller without the role', async () => {
+  const context = createContext();
+  context.user = { id: 'user_1', roles: ['viewer'] };
+  context.authorize = createAuthorize({ user: context.user });
+  const protectedAgent = { ...agentConfig, auth: { public: false, roles: ['admin'] } };
+  context.readConfigFile = jest.fn((path) => {
+    if (path === 'agents/my-agent.json') return protectedAgent;
+    return null;
+  });
+  await expect(prepareAgent(context, { agentId: 'my-agent', agentContext })).rejects.toThrow(
+    'Agent "my-agent" does not exist.'
+  );
 });
 
 test('prepareAgent callEndpoint runs an endpoint and returns its response', async () => {

@@ -325,6 +325,44 @@ export default {
         },
       },
     },
+    transcription: {
+      type: 'object',
+      required: ['connectionId', 'model'],
+      properties: {
+        connectionId: {
+          type: 'string',
+          description:
+            'Connection id of an AI provider that supports transcription (e.g. an OpenAI or AIGateway connection).',
+          errorMessage: {
+            type: 'AISDKAgent agent property "transcription.connectionId" should be a string.',
+          },
+        },
+        model: {
+          type: 'string',
+          description: 'Transcription model id (e.g. "whisper-1" or "gpt-4o-transcribe").',
+          errorMessage: {
+            type: 'AISDKAgent agent property "transcription.model" should be a string.',
+          },
+        },
+        providerOptions: {
+          type: 'object',
+          description: 'Provider-specific transcription options passed to the AI SDK.',
+          errorMessage: {
+            type: 'AISDKAgent agent property "transcription.providerOptions" should be an object.',
+          },
+        },
+      },
+      description:
+        'Transcribe audio file parts in incoming user messages to text before calling the model. Audio parts are replaced with their transcripts, so any chat model can respond. When omitted, audio passes through to the model untouched.',
+      errorMessage: {
+        type: 'AISDKAgent agent property "transcription" should be an object.',
+        required: {
+          connectionId:
+            'AISDKAgent agent property "transcription" should have required property "connectionId".',
+          model: 'AISDKAgent agent property "transcription" should have required property "model".',
+        },
+      },
+    },
   },
   errorMessage: {
     type: 'AISDKAgent agent properties should be an object.',

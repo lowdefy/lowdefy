@@ -22,6 +22,7 @@ test('buildRoleCatalog normalizes an empty catalog to an empty array', () => {
       roles: [],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -34,6 +35,7 @@ test('buildRoleCatalog treats an absent catalog as empty', () => {
     auth: {
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -50,6 +52,7 @@ test('buildRoleCatalog defaults label to id and passes description through', () 
       ],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -66,6 +69,7 @@ test('buildRoleCatalog does not auto-inject gate role names into the catalog', (
       roles: [{ id: 'admin' }, { id: 'auditor' }],
       pages: { roles: { admin: ['admin-*'], auditor: ['reports'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -79,9 +83,16 @@ test('buildRoleCatalog does not auto-inject gate role names into the catalog', (
 test('buildRoleCatalog passes when every gate reference is declared under pinned', () => {
   const components = {
     auth: {
-      roles: [{ id: 'admin' }, { id: 'auditor' }, { id: 'branch-manager' }, { id: 'operator' }],
+      roles: [
+        { id: 'admin' },
+        { id: 'agent-caller' },
+        { id: 'auditor' },
+        { id: 'branch-manager' },
+        { id: 'operator' },
+      ],
       pages: { roles: { admin: ['admin-*'], auditor: ['reports'] } },
       api: { roles: { admin: ['admin-api'], 'branch-manager': ['branches'] } },
+      agents: { roles: { 'agent-caller': ['support-bot'] } },
       websockets: { roles: { operator: ['live-feed'] } },
     },
   };
@@ -95,6 +106,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
       roles: [{ id: 'admin' }],
       pages: { roles: { auditor: ['reports'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -111,11 +123,28 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
       organizations: {},
       pages: { roles: {} },
       api: { roles: { auditor: ['reports'] } },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
     'Auth gate references role "auditor", which is not declared in auth.roles.'
+  );
+});
+
+test('buildRoleCatalog throws when an agent gate references an undeclared role', () => {
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      roles: [{ id: 'admin' }],
+      pages: { roles: {} },
+      api: { roles: {} },
+      agents: { roles: { 'agent-caller': ['support-bot'] } },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth gate references role "agent-caller", which is not declared in auth.roles.'
   );
 });
 
@@ -126,6 +155,7 @@ test('buildRoleCatalog accepts built-in tier names as gate references under tena
       organizations: { policy: 'tenant' },
       pages: { roles: { owner: ['org-settings'], admin: ['admin-*'], member: ['dashboard'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -140,6 +170,7 @@ test('buildRoleCatalog throws for an undeclared custom gate reference under tena
       organizations: { policy: 'tenant' },
       pages: { roles: { auditor: ['reports'] } },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -155,6 +186,7 @@ test('buildRoleCatalog throws when an authored id contains a comma', () => {
       roles: [{ id: 'admin,auditor' }],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -170,6 +202,7 @@ test('buildRoleCatalog throws when an authored id begins with "$"', () => {
       roles: [{ id: '$lowdefy-system' }],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -185,6 +218,7 @@ test('buildRoleCatalog throws when an authored id is declared more than once', (
       roles: [{ id: 'admin' }, { id: 'admin', label: 'Duplicate' }],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -200,6 +234,7 @@ test('buildRoleCatalog passes when the userAdminRole is declared in the catalog'
       userAdminRole: 'user-admin',
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -214,6 +249,7 @@ test('buildRoleCatalog throws when the userAdminRole is not declared in the cata
       userAdminRole: 'user-admin',
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };
@@ -229,6 +265,7 @@ test('buildRoleCatalog uses the role entry config key when an authored id is inv
       roles: [{ id: '$reserved', '~k': 'role-key' }],
       pages: { roles: {} },
       api: { roles: {} },
+      agents: { roles: {} },
       websockets: { roles: {} },
     },
   };

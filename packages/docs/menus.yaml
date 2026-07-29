@@ -235,6 +235,21 @@
           pageId: agent-server-hooks
           properties:
             title: Server Hooks
+        - id: agent-external-api
+          type: MenuLink
+          pageId: agent-external-api
+          properties:
+            title: External API
+        - id: agent-mcp-server
+          type: MenuLink
+          pageId: agent-mcp-server
+          properties:
+            title: MCP Server
+        - id: agent-channels
+          type: MenuLink
+          pageId: agent-channels
+          properties:
+            title: Channels
         - id: AgentChat
           type: MenuLink
           pageId: AgentChat

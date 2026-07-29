@@ -440,6 +440,23 @@ test('validateAuthConfig throws when both protected and public api are set', () 
   );
 });
 
+test('validateAuthConfig throws when both protected and public agents are set', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      agents: {
+        protected: ['a'],
+        public: ['b'],
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Protected and public agents are mutually exclusive. When protected agents are listed, all unlisted agents are public by default and vice versa.'
+  );
+});
+
 test('validateAuthConfig throws when both protected and public websockets are set', () => {
   const components = {
     auth: {

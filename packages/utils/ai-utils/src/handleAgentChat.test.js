@@ -86,6 +86,7 @@ class MockToolLoopAgent {
 const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
 const mockPruneMessages = jest.fn().mockReturnValue([]);
 const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
+const mockTranscribe = jest.fn().mockResolvedValue({ text: 'voice transcript' });
 
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
@@ -93,6 +94,7 @@ jest.unstable_mockModule('ai', () => ({
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
+  experimental_transcribe: mockTranscribe,
   generateText: mockGenerateText,
   pruneMessages: mockPruneMessages,
   tool: mockTool,
@@ -126,6 +128,11 @@ jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
   default: mockHandleAgentGenerate,
 }));
 
+const mockHandleAgentTextStream = jest.fn();
+jest.unstable_mockModule('./handleAgentTextStream.js', () => ({
+  default: mockHandleAgentTextStream,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
 
 test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
@@ -143,6 +150,39 @@ test('dispatches to handleAgentGenerate when context.mode is generate', async ()
   expect(mockHandleAgentGenerate).toHaveBeenCalledWith(args);
   expect(result).toBe(mockResult);
   expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+});
+
+test.each(['text', 'stream'])(
+  'dispatches to handleAgentTextStream when context.format is %s',
+  async (format) => {
+    const { default: handleAgentChat } = await import('./handleAgentChat.js');
+    const mockResult = { response: { type: `${format}-response` } };
+    mockHandleAgentTextStream.mockResolvedValue(mockResult);
+
+    const args = {
+      connection: { provider: jest.fn() },
+      properties: { agent: { properties: { model: 'test-model' } }, messages: [] },
+      context: { mode: 'chat', format },
+    };
+    const result = await handleAgentChat(args);
+
+    expect(mockHandleAgentTextStream).toHaveBeenCalledWith(args);
+    expect(result).toBe(mockResult);
+    expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+  }
+);
+
+test('default ui-message format does not dispatch to handleAgentTextStream', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn() },
+    properties: { agent: { properties: { model: 'test-model' } }, messages: [] },
+    context: { mode: 'chat', format: 'ui-message' },
+  });
+
+  expect(mockHandleAgentTextStream).not.toHaveBeenCalled();
+  expect(mockCreateUIMessageStream).toHaveBeenCalledTimes(1);
 });
 
 test('creates ToolLoopAgent with correct parameters', async () => {
@@ -2342,4 +2382,87 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
 
   consoleSpy.mockRestore();
   mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
+});
+
+test('transcribes audio file parts before streaming when transcription is configured', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const getConnectionForAgent = jest.fn().mockResolvedValue({
+    provider: { transcription: jest.fn((model) => ({ transcriptionModelId: model })) },
+  });
+
+  await handleAgentChat({
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        agentId: 'voice_agent',
+        properties: {
+          model: 'claude-sonnet-4-5',
+          transcription: { connectionId: 'openai', model: 'whisper-1' },
+        },
+      },
+      messages: [
+        {
+          role: 'user',
+          parts: [
+            { type: 'file', url: 'data:audio/ogg;base64,Y2hhdC1hdWRpbw==', mediaType: 'audio/ogg' },
+          ],
+        },
+      ],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      getConnectionForAgent,
+    },
+  });
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+
+  expect(mockTranscribe).toHaveBeenCalledWith({
+    model: { transcriptionModelId: 'whisper-1' },
+    audio: 'Y2hhdC1hdWRpbw==',
+  });
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({
+      uiMessages: [{ role: 'user', parts: [{ type: 'text', text: 'voice transcript' }] }],
+    })
+  );
+});
+
+test('audio file parts pass through untouched when transcription is not configured', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  mockTranscribe.mockClear();
+  mockCreateAgentUIStream.mockClear();
+
+  await handleAgentChat({
+    connection: { provider: jest.fn() },
+    properties: {
+      agent: {
+        agentId: 'audio_agent',
+        properties: { model: 'gemini-2.5-pro' },
+      },
+      messages: [
+        {
+          role: 'user',
+          parts: [
+            { type: 'file', url: 'data:audio/ogg;base64,cGFzc3Rocm91Z2g=', mediaType: 'audio/ogg' },
+          ],
+        },
+      ],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+
+  expect(mockTranscribe).not.toHaveBeenCalled();
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({
+      uiMessages: [
+        {
+          role: 'user',
+          parts: [{ type: 'file', url: 'cGFzc3Rocm91Z2g=', mediaType: 'audio/ogg' }],
+        },
+      ],
+    })
+  );
 });

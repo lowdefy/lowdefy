@@ -21,6 +21,8 @@ import { timeout } from 'hono/timeout';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
+import agentsHandler from './routes/agents.js';
+import mcpHandler from './routes/mcp.js';
 import apiContext from './middleware/apiContext.js';
 import apiPageHandler from './routes/apiPage.js';
 import authJson from '../lib/build/auth.js';
@@ -39,6 +41,7 @@ import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
+import webhooksHandler from './routes/webhooks.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -67,7 +70,12 @@ function createApp({ serveStaticAssets = true } = {}) {
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
     app.use('*', async (c, next) => {
-      if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
+      if (
+        c.req.path.includes('/api/agent/') ||
+        c.req.path.includes('/api/agents/') ||
+        c.req.path.includes('/api/mcp') ||
+        c.req.path.includes('/api/websocket')
+      ) {
         return next();
       }
       return timeout(requestTimeoutMs)(c, next);
@@ -77,7 +85,12 @@ function createApp({ serveStaticAssets = true } = {}) {
   // Next.js compressed responses by default — keep parity, but leave
   // streaming responses (agent SSE) and websocket upgrades uncompressed.
   app.use('*', async (c, next) => {
-    if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
+    if (
+      c.req.path.includes('/api/agent/') ||
+      c.req.path.includes('/api/agents/') ||
+      c.req.path.includes('/api/mcp') ||
+      c.req.path.includes('/api/websocket')
+    ) {
       return next();
     }
     return compress()(c, next);
@@ -92,6 +105,10 @@ function createApp({ serveStaticAssets = true } = {}) {
     getStrategies({ logger });
   }
 
+  // Registered before apiContext - the webhook transport is public and earns
+  // trust from the Chat SDK adapter's platform signature verification, not
+  // from a session; handlers run under the channel's service identity.
+  app.post('/api/webhooks/:platform', webhooksHandler);
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
@@ -103,6 +120,8 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.all('/api/agents/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentsHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/user', userHandler);

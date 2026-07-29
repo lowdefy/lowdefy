@@ -232,6 +232,14 @@ export default {
             type: 'Agent "connectionId" should be a string.',
           },
         },
+        description: {
+          type: 'string',
+          description:
+            'Human description of what the agent does - required when the agent is exposed as an MCP tool.',
+          errorMessage: {
+            type: 'Agent "description" should be a string.',
+          },
+        },
         properties: {
           type: 'object',
           errorMessage: {
@@ -1196,6 +1204,83 @@ export default {
               },
               errorMessage: {
                 type: 'App "auth.api.roles" should be an object.',
+              },
+            },
+          },
+        },
+        agents: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.agents" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.agents.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Agent ids for which authentication is required. When specified, all unspecified agents will be public.',
+                errorMessage: {
+                  type: 'App "auth.agents.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.agents.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Agent ids for which authentication is not required. When specified, all unspecified agents will be protected.',
+                errorMessage: {
+                  type: 'App "auth.agents.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.agents.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.agents.roles" should be an object.',
               },
             },
           },
@@ -2888,6 +2973,100 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
+      },
+    },
+    channels: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "channels" should be an object. Supported platforms: "telegram".',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        telegram: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['agentId'],
+          errorMessage: {
+            type: 'Channel "telegram" should be an object.',
+            required: 'Channel "telegram" requires an "agentId".',
+          },
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            agentId: {
+              type: 'string',
+              description: 'The agent that handles messages on this channel.',
+              errorMessage: {
+                type: 'Channel "telegram.agentId" should be a string.',
+              },
+            },
+            roles: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+              description: 'Roles granted to the channel service identity.',
+              errorMessage: {
+                type: 'Channel "telegram.roles" should be an array of strings.',
+              },
+            },
+            attributes: {
+              type: 'object',
+              description: 'Attributes carried by the channel service identity.',
+              errorMessage: {
+                type: 'Channel "telegram.attributes" should be an object.',
+              },
+            },
+          },
+        },
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Api endpoint ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array of endpoint id strings.',
+          },
+        },
+        agents: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Agent ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "agents" should be an array of agent id strings.',
+          },
+        },
       },
     },
     websockets: {

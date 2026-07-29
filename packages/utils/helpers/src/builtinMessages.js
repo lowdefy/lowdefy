@@ -36,6 +36,7 @@ const builtinMessages = {
   'agent.runtime.urlQueryMustBeObject': 'urlQuery must be an object',
   'agent.runtime.sharedStateMustBeObject': 'sharedState must be an object',
   'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',
+  'agent.runtime.authenticationRequired': 'Authentication required for agent "{agentId}".',
   'agent.runtime.agentTypeNotFound': 'Agent type "{type}" can not be found.',
   'agent.runtime.toolExecutionFailed': 'Endpoint execution failed',
   'agent.runtime.subAgentDepthExceeded': 'Sub-agent nesting exceeds maximum depth of {max}.',

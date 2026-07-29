@@ -1,6 +1,6 @@
 ---
 title: Agent System
-updated: 2026-06-10
+updated: 2026-07-16
 packages:
   [
     '@lowdefy/ai-utils',
@@ -519,6 +519,26 @@ Events: `onSelect`, `onNew`, `onMenuClick`
 
 Developers wire their own persistence. The block renders the list; the app config connects it to `AgentChat` via shared state (typically `conversationId`).
 
+## External Surfaces (Authorization, External API, MCP Server, Channels)
+
+Agents are a protected auth entity, and three transports expose them beyond the page chat route.
+
+### Authorization
+
+`buildEntityAuth({ entity: 'agents' })` stamps `agent.auth = { public, roles? }` onto every agent from `auth.agents.{protected|public|roles}` — the same generic mechanism as pages/api/websockets (`packages/build/src/build/buildAuth/buildEntityAuth.js`). Enforcement lives in `prepareAgent` (`packages/api/src/routes/agent/authorizeAgent.js`), the single choke point for every addressable invocation: page route, pageless route, MCP agent tools, and `CallAgent` routine steps. Sub-agents deliberately bypass it (they run via `resolverContext.getAgentConfig`, part of the parent's build-validated composition); system contexts short-circuit in `createAuthorize`. Unauthenticated callers get a 401 `AuthenticationError`; wrong-role callers get the opaque "Agent does not exist" wording.
+
+### External agent API
+
+`POST /api/agents/{agentId}` (`packages/servers/server/src/routes/agents.js`) is the pageless route. External callers authenticate via `auth.strategies` (jwt/apiKey) through the ordinary apiContext middleware; the `Accept` header selects the representation — `text/event-stream` for UIMessage SSE, plain text stream otherwise. The `format` value ('ui-message' | 'text' | 'stream') threads through `callAgent → prepareAgent → resolverContext` exactly like `mode`, so connection resolvers never see it; `handleAgentChat` dispatches `text`/`stream` to `handleAgentTextStream` (`packages/utils/ai-utils/src/handleAgentTextStream.js`), which auto-approves confirm tools (no approval channel exists) and runs onFinish hooks + MCP client cleanup in the stream generator's `finally`.
+
+### MCP server
+
+The top-level `mcp:` block (`buildMcp.js` → `mcp.json`) lists endpoints and agents exposed as MCP tools at `POST /api/mcp`. `createMcpServer` (`packages/api/src/routes/mcp/createMcpServer.js`) builds a stateless per-request SDK low-level `Server` — config-provided `payloadSchema` is used directly as tool inputSchema, so no zod conversion. Constructed with the request's context: `tools/list` filters by `context.authorize`, `tools/call` re-authorizes inside `callEndpoint` / `prepareAgent`. Agent tools run headlessly via `callAgentGenerate` (single `prompt` → final text). `InternalApi` endpoints are build errors as MCP tools. This is distinct from server-dev's `/lowdefy-docs/mcp` (docs/dev tools); `/api/mcp` ships in production.
+
+### Channels
+
+The top-level `channels:` block (`buildChannels.js` → `channels.json`) binds a chat platform to an agent — Telegram today via the Chat SDK (`chat` + `@chat-adapter/telegram`), with a pluggable adapter map in `createChatBot.js` (`packages/servers/server/lib/server/channels/`). Each message builds a context whose caller is the channel's **service identity** — `normalizeInjectedCaller({ id: 'channel:telegram', roles, attributes })`, never `context.system` — so `authorizeAgent` applies; build cross-checks that the channel's roles can satisfy the agent's stamped auth (dead-on-arrival channels fail the build). Thread history (last 20 messages, bot turns as assistant) is the conversation memory; the reply streams into the thread via `format: 'stream'` (raw `AsyncIterable<string>` into `thread.post`). The bot uses the `queue` concurrency strategy (the SDK default drops messages arriving while the per-thread lock is held). Critical polling-mode caveat: Node's fetch shares one HTTP/2 session per origin, so the `getUpdates` long-poll serializes every other Telegram API call behind it — `disableFetchHttp2.js` swaps the global dispatcher to HTTP/1.1 before polling starts (webhook mode is unaffected and keeps H2). Production receives updates at `POST /api/webhooks/{platform}` (mounted before apiContext — trust comes from the adapter's platform signature verification); dev polls (no public URL), with a `globalThis` singleton guarding Vite module reloads.
+
 ## Key Files
 
 | File                                                                                                            | Purpose                                                                     |
@@ -541,6 +561,16 @@ Developers wire their own persistence. The block renders the list; the app confi
 | `packages/build/src/build/writePluginImports/writeAgentImports.js`                                              | Generates agent type import registry                                        |
 | `packages/build/src/build/copyAgentFileSystems.js`                                                              | Copies fileSystem directories to server output                              |
 | `packages/servers/server/src/routes/agent.js`                                                                   | Hono route — streams callAgent's Web Response as SSE                        |
+| `packages/api/src/routes/agent/authorizeAgent.js`                                                               | Per-agent authorization at the prepareAgent choke point                     |
+| `packages/api/src/routes/agent/callAgentGenerate.js`                                                            | Headless single-prompt agent run (MCP agent tools)                          |
+| `packages/api/src/routes/mcp/createMcpServer.js`                                                                | Per-request MCP server over endpoints + agents                              |
+| `packages/utils/ai-utils/src/handleAgentTextStream.js`                                                          | Plain-text streaming formats ('text' Response / 'stream' AsyncIterable)     |
+| `packages/servers/server/src/routes/agents.js`                                                                  | Pageless external agent route with Accept-based format selection            |
+| `packages/servers/server/src/routes/mcp.js`                                                                     | /api/mcp StreamableHTTPTransport handler                                    |
+| `packages/servers/server/lib/server/channels/createChatBot.js`                                                  | Chat SDK bot singleton (webhook/polling lifecycle)                          |
+| `packages/servers/server/lib/server/channels/handleChannelMessage.js`                                           | Thread history -> UIMessages -> callAgent stream -> thread.post             |
+| `packages/build/src/build/buildMcp.js`                                                                          | Validates mcp block references, writes mcp.json defaults                    |
+| `packages/build/src/build/buildChannels.js`                                                                     | Validates channels, cross-checks channel roles vs agent auth                |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/AgentChat.js`                                       | Chat block component                                                        |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/LowdefyChatTransport.js`                            | DefaultChatTransport factory                                                |
 | `packages/plugins/blocks/blocks-antd-x/src/blocks/AgentChat/useAgentEvents.js`                                  | AI SDK to Lowdefy event bridging                                            |

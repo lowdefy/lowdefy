@@ -37,6 +37,7 @@ function createAgentConfig(overrides = {}) {
   return {
     agentId: 'research_agent',
     id: 'agent:research_agent',
+    auth: { public: true },
     type: 'TestAgent',
     connectionId: 'my_anthropic',
     tools: [],
@@ -116,6 +117,7 @@ test('CallAgent step runs the agent in generate mode and stores the result in st
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -150,6 +152,7 @@ test('CallAgent step resolves agentId and prompt with operators', async () => {
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -171,6 +174,7 @@ test('CallAgent step returns error status when the agent does not exist', async 
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -190,6 +194,7 @@ test('CallAgent step returns error status when the resolver throws', async () =>
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -208,6 +213,7 @@ test('CallAgent step returns error status when agentId does not evaluate to a st
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -228,6 +234,7 @@ test('CallAgent step returns error status when prompt does not evaluate to a str
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -249,6 +256,7 @@ test('CallAgent step runs with userId null in system (scheduled) context', async
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -281,6 +289,7 @@ test('CallAgent step threads endpointDepth so agent tool endpoint calls hit the 
   const res = await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',
@@ -304,6 +313,7 @@ test('CallAgent step evaluates agent properties operators against the headless a
   await runRoutine(context, routineContext, {
     routine: {
       id: 'agent:test_endpoint:run_agent',
+      auth: { public: true },
       type: 'CallAgent',
       stepId: 'run_agent',
       endpointId: 'test_endpoint',

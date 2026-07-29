@@ -63,7 +63,7 @@ function buildRoleCatalog({ components }) {
     ['owner', 'admin', 'member'].forEach((builtIn) => validGateIds.add(builtIn));
   }
 
-  ['pages', 'api', 'websockets'].forEach((entity) => {
+  ['pages', 'api', 'agents', 'websockets'].forEach((entity) => {
     const rolesMap = components.auth[entity]?.roles ?? {};
     Object.keys(rolesMap).forEach((roleName) => {
       if (!validGateIds.has(roleName)) {
