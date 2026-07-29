@@ -14,9 +14,26 @@
   limitations under the License.
 */
 
+import { getHomePathname } from '@lowdefy/engine';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
+function getCallbackUrl({ lowdefy, callbackUrl, name = 'callbackUrl' }) {
+  // An absent target means "no target" - the ladder in resolveCallbackURL
+  // decides what absence falls back to. null is absence too: an operator with no
+  // matching branch (an `_if` without an `else`) resolves to null, and
+  // destructuring that throws a TypeError instead of falling to the default.
+  //
+  // A non-object target - notably the bare string these params were wrongly
+  // declared as before the schemas were corrected - expresses none of the four
+  // keys below and so resolves to no target, letting the ladder continue. It is
+  // deliberately not an error: apps written against the old string schema are
+  // common, and the two better-looking alternatives are both worse. Throwing
+  // fails a sign-in that works today, and reading a string as { url } would
+  // double-prefix basePath on the most common spelling of all, a string holding
+  // the already-prefixed ?callbackUrl= query.
+  if (!type.isObject(callbackUrl)) {
+    return undefined;
+  }
   const { home, pageId, urlQuery, url } = callbackUrl;
 
   const targets = [home, pageId, url].filter((target) => target);
@@ -32,10 +49,11 @@ function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
     // target rather than interpolating the missing pageId into the path.
     // getHomeAndMenus resolves pageId to null when there is no homePageId and no
     // menu link to fall back on, which built the literal "/null".
-    if (lowdefy.home?.configured !== true && !type.isString(lowdefy.home?.pageId)) {
+    const pathname = getHomePathname({ lowdefy });
+    if (type.isNone(pathname)) {
       return undefined;
     }
-    return `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}${query ? `?${query}` : ''}`;
+    return `${pathname}${query ? `?${query}` : ''}`;
   }
   if (type.isString(pageId)) {
     return `/${pageId}${query ? `?${query}` : ''}`;
@@ -64,12 +82,23 @@ function resolveTargetURL({ lowdefy, callbackUrl, name }) {
   return explicit;
 }
 
+// Accepts only a path-absolute URL from the ?callbackUrl= query. A bare
+// startsWith('/') is not enough: "//evil.com" and "/\evil.com" also start with
+// "/" but are protocol-relative (browsers normalize the backslash to a slash),
+// so a crafted sign-in link would navigate off-site with a fresh session. This
+// value is the one target that never reaches BetterAuth on the email, phone and
+// passkey paths - it goes straight into window.location.assign - so its
+// server-side originCheck / trustedOrigins do not cover it.
+function isAppRelativePath(value) {
+  return type.isString(value) && /^\/([^/\\]|$)/.test(value);
+}
+
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
 // param set by the unauthenticated page redirect, so login returns to the
-// page the user asked for; otherwise the app's home page. Only relative paths
-// are accepted from the query to avoid open redirects. The query fallback is
-// exclusive to the primary callbackUrl - a new-user or error destination has no
-// equivalent query source, so reading it for them would misroute.
+// page the user asked for; otherwise the app's home page. Only app-relative
+// paths are accepted from the query to avoid open redirects. The query fallback
+// is exclusive to the primary callbackUrl - a new-user or error destination has
+// no equivalent query source, so reading it for them would misroute.
 function resolveCallbackURL({ lowdefy, callbackUrl }) {
   // An explicit refusal to navigate, above the ladder so a bounced sign-in
   // honors it too. Absence means "go home" below, so "stay put" needs its own
@@ -84,7 +113,7 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
   }
   const window = lowdefy._internal?.globals?.window;
   const fromQuery = new URLSearchParams(window?.location?.search ?? '').get('callbackUrl');
-  if (type.isString(fromQuery) && fromQuery.startsWith('/')) {
+  if (isAppRelativePath(fromQuery)) {
     // Returned raw, not through resolveTargetURL: both producers of this query
     // param already bake basePath into the value they emit (renderPage.js,
     // apiPage.js), so prefixing here would yield /app/app/reports.
@@ -110,10 +139,10 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
 // lands the user on BetterAuth's own "/" fallback, which resolves against the
 // auth baseURL and so drops basePath entirely, and silently substituting the
 // home default contradicts an explicit instruction.
-function assertCallbackUrlNavigable({ callbackUrl, path }) {
+function assertCallbackUrlNavigable({ callbackUrl, method }) {
   if (callbackUrl === false) {
     throw new Error(
-      `Invalid callbackUrl: "false" is not valid for ${path}, which redirects through an external hop. Give a destination.`
+      `Invalid callbackUrl: "false" is not valid for ${method}, which redirects through an external hop. Give a destination.`
     );
   }
 }
@@ -213,7 +242,7 @@ function createAuthMethods(lowdefy, auth) {
     }
 
     if (!type.isNone(providerId)) {
-      assertCallbackUrlNavigable({ callbackUrl, path: 'Login with a provider' });
+      assertCallbackUrlNavigable({ callbackUrl, method: 'Login with a provider' });
       const provider = providers.find((configured) => configured.id === providerId);
       if (type.isNone(provider)) {
         throw new Error(`Login provider "${providerId}" is not a configured auth provider.`);
@@ -240,7 +269,7 @@ function createAuthMethods(lowdefy, auth) {
       );
     }
     if (magicLink === true) {
-      assertCallbackUrlNavigable({ callbackUrl, path: 'Login with magicLink' });
+      assertCallbackUrlNavigable({ callbackUrl, method: 'Login with magicLink' });
       if (!type.isString(email)) {
         throw new Error('Login with magicLink requires an "email" param.');
       }
@@ -298,7 +327,7 @@ function createAuthMethods(lowdefy, auth) {
     // the session-bearing success, and BetterAuth puts the same value in the
     // verification email. A value with two consumers cannot be suppressed for
     // one of them alone.
-    assertCallbackUrlNavigable({ callbackUrl, path: 'SignUp' });
+    assertCallbackUrlNavigable({ callbackUrl, method: 'SignUp' });
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(
       auth.signUpEmail({
@@ -553,10 +582,10 @@ function createAuthMethods(lowdefy, auth) {
   // where the emailed verification link lands after verifying, matching the
   // signUp param of the same name.
   async function sendVerificationEmail({ callbackUrl, captchaToken, email, ...rest } = {}) {
-    assertCallbackUrlNavigable({ callbackUrl, path: 'SendVerificationEmail' });
     if (!type.isString(email)) {
       throw new Error('SendVerificationEmail requires an "email" param.');
     }
+    assertCallbackUrlNavigable({ callbackUrl, method: 'SendVerificationEmail' });
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     return unwrap(
       auth.sendVerificationEmail({
