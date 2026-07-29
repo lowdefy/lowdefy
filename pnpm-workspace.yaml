@@ -8,3 +8,8 @@ onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
   - '@sentry/cli'
+# allowBuilds replaces onlyBuiltDependencies in pnpm >=10.29 and pnpm 11.
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  '@sentry/cli': true
