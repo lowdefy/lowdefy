@@ -35,6 +35,12 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
     }
     const query = type.isNone(props.urlQuery) ? '' : `${urlQueryFn.stringify(props.urlQuery)}`;
     if (props.home === true) {
+      // An app whose home config names no page has no resolvable home - fall
+      // through to noLink's `Invalid Link.` rather than pushing "/undefined"
+      // into history and writing inputs['page:undefined'] on the way.
+      if (lowdefy.home?.configured !== true && !type.isString(lowdefy.home?.pageId)) {
+        return noLink(props);
+      }
       const pathname = `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}`;
       return sameOriginLink({
         ...props,
