@@ -45,15 +45,23 @@ const authClient = createAuthClient({
   ],
 });
 
+// UpdateSession owns session freshness - suppress BetterAuth's own
+// signal-driven refetch on the calls that would otherwise fire one, so
+// nothing competes with (and aborts) the refetch UpdateSession awaits.
+// disableSignal silences all atomListeners for the call, including the
+// organization plugin's org atoms - none are exposed to app config, so a
+// future design exposing one must refresh it through its own action.
+const sessionScoped = (params) => ({ ...params, fetchOptions: { disableSignal: true } });
+
 // The server resolves the caller per request and embeds it in the page
 // config, so the first render never flashes unauthenticated. The BetterAuth
 // client store takes over once its session fetch settles.
 //
 // Roles and merged attributes resolve server-side from the active member row
 // - the base session carries neither. The last server-resolved caller is
-// kept in a ref: while the session user is unchanged its roles and
-// attributes stay authoritative, and UpdateSession refreshes the ref from
-// /api/user after a change (e.g. SetActiveOrganization).
+// kept in a ref: while the session user is unchanged it stays authoritative
+// for the fields the session does not carry, and UpdateSession refreshes the
+// ref from /api/user after a change (e.g. SetActiveOrganization).
 function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const resolvedUserRef = useRef(serverUser);
@@ -79,10 +87,29 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     return children(null, resolvedUserRef);
   }
   const resolved = resolvedUserRef.current;
-  const user =
-    resolved && resolved.id === session.user.id
-      ? { ...session.user, roles: resolved.roles, attributes: resolved.attributes }
-      : { roles: [], ...session.user };
+  if (!resolved) {
+    return children({ roles: [], ...session.user }, resolvedUserRef);
+  }
+  if (resolved.id !== session.user.id) {
+    // The ref has not caught up with a changed session user (an impersonation
+    // switch between the session refetch and the /api/user result). Render
+    // the last resolved caller rather than a caller with no roles - blocks
+    // re-evaluate operators on render, so a role-guarded page would act on
+    // roles: [].
+    return children(resolved, resolvedUserRef);
+  }
+  // The resolved caller contributes every field the session user lacks: roles
+  // (the active member row), attributes (the merged bag), and
+  // activeOrganizationId / impersonatedBy (session row, not session user).
+  // impersonatedBy is carried only when present, matching the server, which
+  // omits it rather than setting it to undefined.
+  const user = {
+    ...session.user,
+    roles: resolved.roles,
+    attributes: resolved.attributes,
+    activeOrganizationId: resolved.activeOrganizationId,
+    ...('impersonatedBy' in resolved ? { impersonatedBy: resolved.impersonatedBy } : {}),
+  };
   return children(user, resolvedUserRef);
 }
 
@@ -92,6 +119,19 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     authConfig,
     getSession: ({ disableCookieCache } = {}) =>
       authClient.getSession(disableCookieCache ? { query: { disableCookieCache: true } } : {}),
+    // Refetches the session through the session atom - the store's only
+    // writer - and resolves only after the store is written. fetchSession
+    // returns undefined and never rejects (failures are written into the
+    // atom), so the atom's own { data, error } is read back and returned,
+    // keeping unwrap working and surfacing a failed refresh to the action.
+    refreshSession: async ({ disableCookieCache } = {}) => {
+      const sessionAtom = authClient.$store.atoms.session;
+      await sessionAtom
+        .get()
+        .refetch(disableCookieCache ? { query: { disableCookieCache: true } } : undefined);
+      const { data, error } = sessionAtom.get();
+      return { data, error };
+    },
     // The server-resolved caller - roles from the active member row and the
     // merged attributes bag - for re-syncing after session changes.
     getResolvedUser: async () => {
@@ -99,8 +139,10 @@ function AuthConfigured({ authConfig, children, serverUser }) {
         credentials: 'same-origin',
       });
       if (!response.ok) {
-        // Throw instead of parsing an error page - a silent { user: undefined }
-        // would read as a client-side logout in updateSession.
+        // /api/user itself always answers 200 { user } - user: null when no
+        // caller is admitted, which updateSession branches on. A non-OK
+        // response is a transport failure (gateway error page, 5xx) with no
+        // parsable body.
         throw new Error(`Failed to fetch the resolved user (HTTP ${response.status}).`);
       }
       return response.json();
@@ -108,27 +150,27 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     suppressSignOutReload: () => {
       reloadSuppressedRef.current = true;
     },
-    acceptInvitation: (params) => authClient.organization.acceptInvitation(params),
+    acceptInvitation: (params) => authClient.organization.acceptInvitation(sessionScoped(params)),
     // addPasskey runs the WebAuthn browser ceremony itself - options fetch,
     // authenticator prompt, verification.
     addPasskey: (params) => authClient.passkey.addPasskey(params),
     cancelInvitation: (params) => authClient.organization.cancelInvitation(params),
-    changePassword: (params) => authClient.changePassword(params),
+    changePassword: (params) => authClient.changePassword(sessionScoped(params)),
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
-    impersonateUser: (params) => authClient.admin.impersonateUser(params),
+    impersonateUser: (params) => authClient.admin.impersonateUser(sessionScoped(params)),
     inviteMember: (params) => authClient.organization.inviteMember(params),
-    leaveOrganization: (params) => authClient.organization.leave(params),
+    leaveOrganization: (params) => authClient.organization.leave(sessionScoped(params)),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
     phoneNumberSendOtp: (params) => authClient.phoneNumber.sendOtp(params),
     phoneNumberVerify: (params) => authClient.phoneNumber.verify(params),
-    removeMember: (params) => authClient.organization.removeMember(params),
+    removeMember: (params) => authClient.organization.removeMember(sessionScoped(params)),
     requestPasswordReset: (params) => authClient.requestPasswordReset(params),
     resetPassword: (params) => authClient.resetPassword(params),
-    revokeOtherSessions: () => authClient.revokeOtherSessions(),
+    revokeOtherSessions: () => authClient.revokeOtherSessions(sessionScoped()),
     sendVerificationEmail: (params) => authClient.sendVerificationEmail(params),
-    setActiveOrganization: (params) => authClient.organization.setActive(params),
+    setActiveOrganization: (params) => authClient.organization.setActive(sessionScoped(params)),
     signInEmail: (params) => authClient.signIn.email(params),
     signInMagicLink: (params) => authClient.signIn.magicLink(params),
     signInOauth2: (params) => authClient.signIn.oauth2(params),
@@ -137,7 +179,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
-    stopImpersonating: () => authClient.admin.stopImpersonating(),
+    stopImpersonating: () => authClient.admin.stopImpersonating(sessionScoped()),
     twoFactorDisable: (params) => authClient.twoFactor.disable(params),
     twoFactorEnable: (params) => authClient.twoFactor.enable(params),
     twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),

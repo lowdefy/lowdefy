@@ -34,6 +34,9 @@ function setup({ signInResult, signUpResult } = {}) {
       Promise.resolve({ data: { token: null, user: {} }, error: null })
     ),
     deletePasskey: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    getResolvedUser: jest.fn(() =>
+      Promise.resolve({ user: { id: 'user-1', roles: ['admin'], attributes: {} } })
+    ),
     getSession: jest.fn(() =>
       Promise.resolve({
         data: { session: { activeOrganizationId: 'org-1' }, user: {} },
@@ -52,6 +55,9 @@ function setup({ signInResult, signUpResult } = {}) {
     phoneNumberSendOtp: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     phoneNumberVerify: jest.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
+    ),
+    refreshSession: jest.fn(() =>
+      Promise.resolve({ data: { session: {}, user: { id: 'user-1' } }, error: null })
     ),
     removeMember: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
@@ -88,6 +94,7 @@ function setup({ signInResult, signUpResult } = {}) {
     updateOrganization: jest.fn(() =>
       Promise.resolve({ data: { id: 'org-1', name: 'Acme Inc' }, error: null })
     ),
+    updateResolvedUser: jest.fn(),
   };
   return { auth, lowdefy, assign };
 }
@@ -1422,4 +1429,71 @@ test('sendVerificationEmail reports a missing email before judging the callbackU
   await expect(sendVerificationEmail({ callbackUrl: false })).rejects.toThrow(
     'SendVerificationEmail requires an "email" param.'
   );
+});
+
+test('updateSession awaits the store refetch, with disableCookieCache, before resolving the user', async () => {
+  const { auth, lowdefy } = setup();
+  const order = [];
+  auth.refreshSession = jest.fn(
+    () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          order.push('refreshSession resolved');
+          resolve({ data: { session: {}, user: { id: 'user-1' } }, error: null });
+        }, 0);
+      })
+  );
+  auth.getResolvedUser = jest.fn(() => {
+    order.push('getResolvedUser called');
+    return Promise.resolve({ user: { id: 'user-1', roles: ['admin'], attributes: {} } });
+  });
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await updateSession();
+  expect(auth.refreshSession.mock.calls).toEqual([[{ disableCookieCache: true }]]);
+  expect(order).toEqual(['refreshSession resolved', 'getResolvedUser called']);
+});
+
+test('updateSession updates the resolved user ref and lowdefy.user from /api/user', async () => {
+  const { auth, lowdefy } = setup();
+  const resolved = { id: 'user-1', roles: ['admin'], attributes: { plan: 'pro' } };
+  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: resolved }));
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await updateSession();
+  expect(auth.updateResolvedUser.mock.calls).toEqual([[resolved]]);
+  expect(lowdefy.user).toEqual(resolved);
+});
+
+test('updateSession throws when the session refresh fails and never reaches /api/user', async () => {
+  const { auth, lowdefy } = setup();
+  auth.refreshSession = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Failed to fetch the session.', status: 500 } })
+  );
+  lowdefy.user = { id: 'user-1' };
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await expect(updateSession()).rejects.toThrow('Failed to fetch the session.');
+  expect(auth.getResolvedUser).not.toHaveBeenCalled();
+  expect(lowdefy.user).toEqual({ id: 'user-1' });
+});
+
+test('updateSession throws when a session is present but no user resolves, instead of nulling', async () => {
+  const { auth, lowdefy } = setup();
+  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: null }));
+  lowdefy.user = { id: 'user-1' };
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await expect(updateSession()).rejects.toThrow(
+    'UpdateSession failed: a session is active but the server resolved no user.'
+  );
+  expect(auth.updateResolvedUser).not.toHaveBeenCalled();
+  expect(lowdefy.user).toEqual({ id: 'user-1' });
+});
+
+test('updateSession nulls the user when the session is genuinely absent', async () => {
+  const { auth, lowdefy } = setup();
+  auth.refreshSession = jest.fn(() => Promise.resolve({ data: null, error: null }));
+  auth.getResolvedUser = jest.fn(() => Promise.resolve({ user: null }));
+  lowdefy.user = { id: 'user-1' };
+  const { updateSession } = createAuthMethods(lowdefy, auth);
+  await updateSession();
+  expect(auth.updateResolvedUser.mock.calls).toEqual([[null]]);
+  expect(lowdefy.user).toBe(null);
 });
