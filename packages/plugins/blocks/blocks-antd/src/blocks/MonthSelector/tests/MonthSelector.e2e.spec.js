@@ -38,7 +38,7 @@ test.describe('MonthSelector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const input = getInput(page, 'ms_basic');
     await expect(input).toBeVisible();
-    await expect(input).toHaveAttribute('placeholder', 'Select Month');
+    await expect(input).toHaveAttribute('placeholder', 'Select month');
   });
 
   test('can display selected month value', async ({ page }) => {

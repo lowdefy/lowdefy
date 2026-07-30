@@ -38,7 +38,7 @@ test.describe('WeekSelector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const input = getInput(page, 'ws_basic');
     await expect(input).toBeVisible();
-    await expect(input).toHaveAttribute('placeholder', 'Select Week');
+    await expect(input).toHaveAttribute('placeholder', 'Select week');
   });
 
   test('can display selected week value', async ({ page }) => {

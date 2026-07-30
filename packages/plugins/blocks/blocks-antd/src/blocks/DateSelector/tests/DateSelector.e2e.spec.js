@@ -38,7 +38,7 @@ test.describe('DateSelector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const input = getInput(page, 'ds_basic');
     await expect(input).toBeVisible();
-    await expect(input).toHaveAttribute('placeholder', 'Select Date');
+    await expect(input).toHaveAttribute('placeholder', 'Select date');
   });
 
   test('can display selected date value', async ({ page }) => {
