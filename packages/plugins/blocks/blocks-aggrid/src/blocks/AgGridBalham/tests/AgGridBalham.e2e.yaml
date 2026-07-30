@@ -160,6 +160,7 @@ blocks:
     properties:
       rowSelection:
         mode: singleRow
+        checkboxes: false
         enableClickSelection: true
       columnDefs:
         - headerName: Name

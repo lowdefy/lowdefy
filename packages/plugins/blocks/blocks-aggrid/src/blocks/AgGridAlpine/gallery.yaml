@@ -243,6 +243,8 @@
         height: 300
         rowSelection:
           mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
           enableClickSelection: true
         defaultColDef:
           sortable: true
@@ -461,6 +463,8 @@
         height: 300
         rowSelection:
           mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
           enableClickSelection: true
         defaultColDef:
           sortable: true
