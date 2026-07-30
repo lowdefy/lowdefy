@@ -291,6 +291,8 @@
           disabled: true
 
 - title: Preset Ranges
+  # The popup is wider than a gallery column, and the card clips what overflows it.
+  overflowVisible: true
   blocks:
     - id: drs_presets_relative
       type: DateRangeSelector

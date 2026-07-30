@@ -376,6 +376,8 @@
           disabled: true
 
 - title: Presets
+  # The popup is wider than a gallery column, and the card clips what overflows it.
+  overflowVisible: true
   blocks:
     - id: dts_presets_relative
       type: DateTimeSelector
