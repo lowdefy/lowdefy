@@ -44,16 +44,38 @@ function toPickerDate({ date, local, preset }) {
   return pickerDate;
 }
 
-const getPresets = ({ local, methods, presets }) => {
+// The picker does not check the arity of a preset value. A range picker commits a value of one date
+// as a range of one date, and a single picker ignores the click without any feedback. The block knows
+// which shape it takes, so the mismatch is caught here rather than inferred from the configured value.
+function toPickerValue({ local, preset, range }) {
+  if (range) {
+    if (!type.isArray(preset.value) || preset.value.length !== 2) {
+      throw new Error(
+        `Preset value is not an array of a start and an end date. Received ${JSON.stringify(
+          preset
+        )}.`
+      );
+    }
+    return preset.value.map((date) => toPickerDate({ date, local, preset }));
+  }
+  if (type.isArray(preset.value)) {
+    throw new Error(
+      `Preset value is an array, but the block selects a single date. Received ${JSON.stringify(
+        preset
+      )}.`
+    );
+  }
+  return toPickerDate({ date: preset.value, local, preset });
+}
+
+const getPresets = ({ local, methods, presets, range }) => {
   if (type.isNone(presets)) return undefined;
   if (!type.isArray(presets)) {
     throw new Error(`Presets is not an array. Received ${JSON.stringify(presets)}.`);
   }
   return presets.map((preset) => ({
     label: renderHtml({ html: preset.label, methods }),
-    value: type.isArray(preset.value)
-      ? preset.value.map((date) => toPickerDate({ date, local, preset }))
-      : toPickerDate({ date: preset.value, local, preset }),
+    value: toPickerValue({ local, preset, range }),
   }));
 };
 

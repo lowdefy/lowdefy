@@ -237,6 +237,9 @@ test.describe('DateRangeSelector Block', () => {
 test.describe('DateRangeSelector Block presets', () => {
   test.use({ timezoneId: 'America/New_York' });
 
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'daterangeselector');
   });
@@ -244,7 +247,7 @@ test.describe('DateRangeSelector Block presets', () => {
   test('lists presets next to the calendar', async ({ page }) => {
     await getStartInput(page, 'drs_presets').click();
 
-    const presets = page.locator('.ant-picker-dropdown:visible .ant-picker-presets');
+    const presets = presetPanel(page, 'drs_presets');
     await expect(presets).toBeVisible();
     await expect(presets.locator('li')).toHaveCount(3);
     await expect(presets.getByText('Q1 2024', { exact: true })).toBeVisible();
@@ -253,17 +256,14 @@ test.describe('DateRangeSelector Block presets', () => {
   test('does not render the presets panel when no presets are set', async ({ page }) => {
     await getStartInput(page, 'drs_no_presets').click();
 
-    const dropdown = page.locator('.ant-picker-dropdown:visible');
+    const dropdown = getBlock(page, 'drs_no_presets').locator('.ant-picker-dropdown');
     await expect(dropdown).toBeVisible();
     await expect(dropdown.locator('.ant-picker-presets')).toHaveCount(0);
   });
 
   test('selects the range of a preset given as date strings', async ({ page }) => {
     await getStartInput(page, 'drs_presets').click();
-    await page
-      .locator('.ant-picker-dropdown:visible .ant-picker-presets')
-      .getByText('Q1 2024', { exact: true })
-      .click();
+    await presetPanel(page, 'drs_presets').getByText('Q1 2024', { exact: true }).click();
 
     await expect(getStartInput(page, 'drs_presets')).toHaveValue('2024-01-01');
     await expect(getEndInput(page, 'drs_presets')).toHaveValue('2024-03-31');
@@ -271,10 +271,7 @@ test.describe('DateRangeSelector Block presets', () => {
 
   test('selects the range of a preset given as _date objects', async ({ page }) => {
     await getStartInput(page, 'drs_presets').click();
-    await page
-      .locator('.ant-picker-dropdown:visible .ant-picker-presets')
-      .getByText('Q2 2024', { exact: true })
-      .click();
+    await presetPanel(page, 'drs_presets').getByText('Q2 2024', { exact: true }).click();
 
     await expect(getStartInput(page, 'drs_presets')).toHaveValue('2024-04-01');
     await expect(getEndInput(page, 'drs_presets')).toHaveValue('2024-06-30');
@@ -283,7 +280,7 @@ test.describe('DateRangeSelector Block presets', () => {
   test('renders html in preset labels', async ({ page }) => {
     await getStartInput(page, 'drs_presets').click();
 
-    const presets = page.locator('.ant-picker-dropdown:visible .ant-picker-presets');
+    const presets = presetPanel(page, 'drs_presets');
     await expect(presets.locator('b')).toHaveText('Html label');
 
     await presets.getByText('Html label', { exact: true }).click();

@@ -34,4 +34,7 @@ render instead of being frozen at page load:
 Preset dates are read as UTC, the same as the block value, so a `_date` object selects the calendar
 date it names in every timezone. Start `_dayjs` chains with a `utc` step — steps that snap to a
 calendar boundary, like `startOf` and `endOf`, resolve in local time otherwise and can land on the
-wrong day.
+wrong day. `DateTimeSelector` follows its `selectUTC` setting: without it, a preset is read as the
+instant it names and shown on the local clock, so `_dayjs` chains resolve in local time there.
+
+A preset that resolves to a date excluded by `disabledDates` does nothing when it is clicked.

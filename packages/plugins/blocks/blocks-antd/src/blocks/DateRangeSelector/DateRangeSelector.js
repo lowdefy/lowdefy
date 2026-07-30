@@ -82,7 +82,7 @@ const DateRangeSelector = ({
               placeholder={
                 type.isArray(properties.placeholder) ? properties.placeholder : undefined
               }
-              presets={getPresets({ methods, presets: properties.presets })}
+              presets={getPresets({ methods, presets: properties.presets, range: true })}
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}

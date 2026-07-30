@@ -213,6 +213,9 @@ test.describe('DateSelector Block', () => {
 test.describe('DateSelector Block presets', () => {
   test.use({ timezoneId: 'America/New_York' });
 
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'dateselector');
   });
@@ -220,27 +223,20 @@ test.describe('DateSelector Block presets', () => {
   test('lists presets next to the calendar', async ({ page }) => {
     await getInput(page, 'ds_presets').click();
 
-    const presets = page.locator('.ant-picker-dropdown:visible .ant-picker-presets');
-    await expect(presets).toBeVisible();
-    await expect(presets.locator('li')).toHaveCount(2);
+    await expect(presetPanel(page, 'ds_presets')).toBeVisible();
+    await expect(presetPanel(page, 'ds_presets').locator('li')).toHaveCount(2);
   });
 
   test('selects the date of a preset given as a date string', async ({ page }) => {
     await getInput(page, 'ds_presets').click();
-    await page
-      .locator('.ant-picker-dropdown:visible .ant-picker-presets')
-      .getByText('New Year 2024', { exact: true })
-      .click();
+    await presetPanel(page, 'ds_presets').getByText('New Year 2024', { exact: true }).click();
 
     await expect(getInput(page, 'ds_presets')).toHaveValue('2024-01-01');
   });
 
   test('selects the date of a preset given as a _date object', async ({ page }) => {
     await getInput(page, 'ds_presets').click();
-    await page
-      .locator('.ant-picker-dropdown:visible .ant-picker-presets')
-      .getByText('Mid 2024', { exact: true })
-      .click();
+    await presetPanel(page, 'ds_presets').getByText('Mid 2024', { exact: true }).click();
 
     await expect(getInput(page, 'ds_presets')).toHaveValue('2024-06-15');
   });

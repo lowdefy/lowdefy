@@ -715,7 +715,7 @@ Date picker with configurable format and disabled dates.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `format` | string | - | Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale's date format, or "YYYY-MM-DD" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. A preset that resolves to a date excluded by disabledDates does nothing when it is clicked. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
 | `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
