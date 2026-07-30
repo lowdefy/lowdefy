@@ -36,22 +36,73 @@ const toWallClock = (date) => {
   return dayjs.utc(wrapped.format('YYYY-MM-DDTHH:mm:ss.SSS'));
 };
 
-const disabledDate = (disabledDates = {}) => {
+function toConfiguredDate({ date, key }) {
+  if (type.isNone(date)) {
+    throw new Error(`disabledDates.${key} is missing.`);
+  }
+  if (!dayjs(date).isValid()) {
+    throw new Error(`disabledDates.${key} is not a date. Received ${JSON.stringify(date)}.`);
+  }
+  return toWallClock(date);
+}
+
+function toConfiguredArray({ key, value }) {
+  if (type.isNone(value)) return [];
+  if (!type.isArray(value)) {
+    throw new Error(`disabledDates.${key} is not an array. Received ${JSON.stringify(value)}.`);
+  }
+  return value;
+}
+
+// A range is documented as { from, to }. An array of a from and a to date is the shape the block
+// read before, so it is still accepted. Anything else is a config error: dropping it left a range
+// that read as valid config but disabled nothing.
+function toRangeBounds({ index, range }) {
+  if (type.isArray(range)) {
+    if (range.length !== 2) {
+      throw new Error(
+        `disabledDates.ranges[${index}] is not an array of a from and a to date. Received ${JSON.stringify(
+          range
+        )}.`
+      );
+    }
+    return { from: range[0], to: range[1] };
+  }
+  if (type.isObject(range)) {
+    return { from: range.from, to: range.to };
+  }
+  throw new Error(
+    `disabledDates.ranges[${index}] is not an object with a from and a to date. Received ${JSON.stringify(
+      range
+    )}.`
+  );
+}
+
+const disabledDate = (disabledDatesConfig) => {
+  if (!type.isNone(disabledDatesConfig) && !type.isObject(disabledDatesConfig)) {
+    throw new Error(
+      `disabledDates is not an object. Received ${JSON.stringify(disabledDatesConfig)}.`
+    );
+  }
+  const disabledDates = disabledDatesConfig ?? {};
   const min = type.isNone(disabledDates.min)
     ? undefined
-    : toWallClock(disabledDates.min).startOf('day');
+    : toConfiguredDate({ date: disabledDates.min, key: 'min' }).startOf('day');
   const max = type.isNone(disabledDates.max)
     ? undefined
-    : toWallClock(disabledDates.max).endOf('day');
-  const dates = (disabledDates.dates || []).map((date) => toWallClock(date).startOf('day'));
-  const ranges = (disabledDates.ranges || [])
-    .map((range) => {
-      if (type.isArray(range) && range.length === 2) {
-        return [toWallClock(range[0]).startOf('day'), toWallClock(range[1]).endOf('day')];
-      }
-      return null;
-    })
-    .filter((range) => range !== null);
+    : toConfiguredDate({ date: disabledDates.max, key: 'max' }).endOf('day');
+  const dates = toConfiguredArray({ key: 'dates', value: disabledDates.dates }).map((date, index) =>
+    toConfiguredDate({ date, key: `dates[${index}]` }).startOf('day')
+  );
+  const ranges = toConfiguredArray({ key: 'ranges', value: disabledDates.ranges }).map(
+    (range, index) => {
+      const { from, to } = toRangeBounds({ index, range });
+      return [
+        toConfiguredDate({ date: from, key: `ranges[${index}].from` }).startOf('day'),
+        toConfiguredDate({ date: to, key: `ranges[${index}].to` }).endOf('day'),
+      ];
+    }
+  );
 
   return (currentDate) => {
     const current = toWallClock(currentDate);

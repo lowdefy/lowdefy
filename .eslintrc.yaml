@@ -83,6 +83,8 @@ overrides:
             - '^expect'
           assertFunctionNames:
             - closed
+            - dateDisabled
+            - dateEnabled
             - endValue
             - noPresets
             - placeholder

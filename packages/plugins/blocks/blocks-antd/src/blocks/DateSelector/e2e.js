@@ -116,6 +116,14 @@ export default createBlockHelper({
       expect(presetItem(page, blockId, label)).toHaveCSS('pointer-events', 'none'),
     presetEnabled: (page, blockId, label) =>
       expect(presetItem(page, blockId, label)).toHaveCSS('pointer-events', 'auto'),
+    dateDisabled: (page, blockId, dateString) =>
+      expect(
+        pickerDropdown(page, blockId).locator(`.ant-picker-cell[title="${dateString}"]`).first()
+      ).toHaveClass(/ant-picker-cell-disabled/),
+    dateEnabled: (page, blockId, dateString) =>
+      expect(
+        pickerDropdown(page, blockId).locator(`.ant-picker-cell[title="${dateString}"]`).first()
+      ).not.toHaveClass(/ant-picker-cell-disabled/),
     // The picker only closes the popup once it accepts the value, so a closed popup is the
     // signal that a selection was committed rather than just shown in the input.
     closed: (page, blockId) => expect(pickerDropdown(page, blockId)).toBeHidden(),

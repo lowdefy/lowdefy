@@ -285,3 +285,45 @@ test.describe('DateSelector Block presets and disabledDates', () => {
     await dateSelector.expect.value(page, 'ds_presets_min_now', '2026-07-15');
   });
 });
+
+// disabledDates.ranges accepts a { from, to } object and an array of the two dates.
+test.describe('DateSelector Block disabledDates ranges', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-03-17T12:00:00.000Z'));
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  test('disables the dates of a range given as a from and to object', async ({ page }) => {
+    await dateSelector.do.open(page, 'ds_disabled_ranges_from_to');
+
+    await dateSelector.expect.dateDisabled(page, 'ds_disabled_ranges_from_to', '2026-03-10');
+    await dateSelector.expect.dateDisabled(page, 'ds_disabled_ranges_from_to', '2026-03-12');
+    await dateSelector.expect.dateDisabled(page, 'ds_disabled_ranges_from_to', '2026-03-14');
+    await dateSelector.expect.dateEnabled(page, 'ds_disabled_ranges_from_to', '2026-03-09');
+    await dateSelector.expect.dateEnabled(page, 'ds_disabled_ranges_from_to', '2026-03-15');
+  });
+
+  test('disables the dates of a range given as an array', async ({ page }) => {
+    await dateSelector.do.open(page, 'ds_disabled_ranges_array');
+
+    await dateSelector.expect.dateDisabled(page, 'ds_disabled_ranges_array', '2026-03-12');
+    await dateSelector.expect.dateEnabled(page, 'ds_disabled_ranges_array', '2026-03-15');
+  });
+
+  test('disables a preset that falls inside a from and to range', async ({ page }) => {
+    await dateSelector.do.open(page, 'ds_disabled_ranges_from_to');
+
+    await dateSelector.expect.presetDisabled(
+      page,
+      'ds_disabled_ranges_from_to',
+      'In the disabled range'
+    );
+    await dateSelector.expect.presetEnabled(
+      page,
+      'ds_disabled_ranges_from_to',
+      'Outside the disabled range'
+    );
+  });
+});

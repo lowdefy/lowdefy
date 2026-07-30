@@ -595,7 +595,7 @@ Week picker for selecting a week of the year.
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
 | `disabledDates.dates` | array | - | Array of specific dates to disable. |
-| `disabledDates.ranges` | array | - | Array of date ranges to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | `"YYYY-wo"` | Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats. |

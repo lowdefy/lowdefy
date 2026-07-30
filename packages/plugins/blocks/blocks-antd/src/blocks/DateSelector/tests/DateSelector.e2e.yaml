@@ -203,3 +203,27 @@ blocks:
         - label: Today
           value:
             _dayjs: [now, { format: YYYY-MM-DD }]
+
+  - id: ds_disabled_ranges_from_to
+    type: DateSelector
+    properties:
+      title: Disabled ranges as from and to
+      format: YYYY-MM-DD
+      disabledDates:
+        ranges:
+          - from: '2026-03-10'
+            to: '2026-03-14'
+      presets:
+        - label: In the disabled range
+          value: '2026-03-12'
+        - label: Outside the disabled range
+          value: '2026-03-17'
+
+  - id: ds_disabled_ranges_array
+    type: DateSelector
+    properties:
+      title: Disabled ranges as an array
+      format: YYYY-MM-DD
+      disabledDates:
+        ranges:
+          - ['2026-03-10', '2026-03-14']
