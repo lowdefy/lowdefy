@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
+import { ReservedKeyError, applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 function _request({ arrayIndices, params, requests }) {
   if (!type.isString(params)) {
@@ -28,10 +28,18 @@ function _request({ arrayIndices, params, requests }) {
       return serializer.copy(entry.response);
     }
     const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
-    return get(entry.response, applyArrayIndices(arrayIndices, key), {
-      copy: true,
-      default: null,
-    });
+    try {
+      return get(entry.response, applyArrayIndices(arrayIndices, key), {
+        copy: true,
+        default: null,
+      });
+    } catch (error) {
+      // A runtime read: the key comes from app data or an author keypath evaluated at render time,
+      // and there is no config location to attach in the browser. The reserved rule's job — refusing
+      // the read — is already done, so degrade to the miss value rather than crashing the page.
+      if (error instanceof ReservedKeyError) return null;
+      throw error;
+    }
   }
   return null;
 }

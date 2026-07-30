@@ -71,6 +71,12 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     const { endpointId, confirm } = toolConfig;
     const toolName = toolConfig.name ?? endpointId;
     assertNotReserved(toolName, 'Endpoint tool', context.i18n);
+    // The build rejects reserved tool names, so this only fires for a stale or hand-edited build
+    // artifact. Skip the tool rather than fail the whole agent, as the MCP name cases below do.
+    if (isReserved(toolName)) {
+      console.warn(`Endpoint tool "${toolName}" uses a reserved key name — skipped.`);
+      continue;
+    }
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
     setKey(
@@ -168,6 +174,12 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   for (const subAgentRef of agent.agents ?? []) {
     const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
     assertNotReserved(subAgentToolName, 'Sub-agent', context.i18n);
+    // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
+    // than fail the whole agent.
+    if (isReserved(subAgentToolName)) {
+      console.warn(`Sub-agent tool "${subAgentToolName}" uses a reserved key name — skipped.`);
+      continue;
+    }
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
