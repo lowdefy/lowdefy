@@ -290,3 +290,46 @@ test.describe('DateRangeSelector Block presets', () => {
     await dateRangeSelector.expect.endValue(page, 'drs_presets', '2024-09-30');
   });
 });
+
+// Pinned to a fixed clock so "now" based presets and disabledDates resolve to known dates, in a
+// timezone where the local and UTC calendar dates agree so the test is only about disabledDates.
+test.describe('DateRangeSelector Block presets and disabledDates', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-07-15T12:00:00.000Z'));
+    await navigateToTestPage(page, 'daterangeselector');
+  });
+
+  test('narrows the start of a preset to the first date it may select', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_min_now', 'Last 7 Days');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_min_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_min_now', '2026-07-15');
+  });
+
+  test('narrows the end of a preset to the last date it may select', async ({ page }) => {
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_max_now', 'Next 7 Days');
+
+    await dateRangeSelector.expect.closed(page, 'drs_presets_max_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_max_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_max_now', '2026-07-15');
+  });
+
+  test('disables a preset with no date it may select', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets_min_now');
+
+    await dateRangeSelector.expect.presetDisabled(page, 'drs_presets_min_now', 'Last Year');
+  });
+
+  test('leaves a preset inside the allowed dates selectable', async ({ page }) => {
+    await dateRangeSelector.do.open(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.presetEnabled(page, 'drs_presets_min_now', 'Next 7 Days');
+
+    await dateRangeSelector.do.selectPreset(page, 'drs_presets_min_now', 'Next 7 Days');
+    await dateRangeSelector.expect.closed(page, 'drs_presets_min_now');
+    await dateRangeSelector.expect.startValue(page, 'drs_presets_min_now', '2026-07-15');
+    await dateRangeSelector.expect.endValue(page, 'drs_presets_min_now', '2026-07-22');
+  });
+});

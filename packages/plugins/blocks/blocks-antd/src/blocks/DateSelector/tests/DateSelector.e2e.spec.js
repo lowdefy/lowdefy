@@ -258,3 +258,30 @@ test.describe('DateSelector Block presets in a timezone ahead of UTC', () => {
     await dateSelector.expect.value(page, 'ds_presets_today', '2026-07-01');
   });
 });
+
+// Pinned to a fixed clock so "now" based presets and disabledDates resolve to known dates, in a
+// timezone where the local and UTC calendar dates agree so the test is only about disabledDates.
+test.describe('DateSelector Block presets and disabledDates', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-07-15T12:00:00.000Z'));
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  // A single date cannot be narrowed to a date it may select, so it is only ever disabled.
+  test('disables a preset whose date the calendar disables', async ({ page }) => {
+    await dateSelector.do.open(page, 'ds_presets_min_now');
+
+    await dateSelector.expect.presetDisabled(page, 'ds_presets_min_now', 'A Week Ago');
+  });
+
+  test('leaves a preset inside the allowed dates selectable', async ({ page }) => {
+    await dateSelector.do.open(page, 'ds_presets_min_now');
+    await dateSelector.expect.presetEnabled(page, 'ds_presets_min_now', 'Today');
+
+    await dateSelector.do.selectPreset(page, 'ds_presets_min_now', 'Today');
+    await dateSelector.expect.closed(page, 'ds_presets_min_now');
+    await dateSelector.expect.value(page, 'ds_presets_min_now', '2026-07-15');
+  });
+});

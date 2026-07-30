@@ -86,6 +86,8 @@ overrides:
             - endValue
             - noPresets
             - placeholder
+            - presetDisabled
+            - presetEnabled
             - presetLabelHtml
             - presetLabels
             - startValue

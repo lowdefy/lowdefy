@@ -409,6 +409,41 @@
                   - now
                   - endOf: month
                   - format: YYYY-MM-DD
+    - id: drs_presets_disabled_dates
+      type: DateRangeSelector
+      properties:
+        title: Presets And Disabled Dates
+        label:
+          extra: >-
+            Future dates are disabled. "Last 7 days" selects the allowed part of the range, and
+            "Next 7 days" has nothing to select, so it is listed as disabled.
+        disabledDates:
+          min: '2026-01-01'
+          max:
+            _dayjs:
+              - now
+              - format: YYYY-MM-DD
+        presets:
+          - label: Last 7 days
+            value:
+              - _dayjs:
+                  - now
+                  - subtract: [7, days]
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - add: [7, days]
+                  - format: YYYY-MM-DD
+          - label: Next 7 days
+            value:
+              - _dayjs:
+                  - now
+                  - add: [1, day]
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - add: [7, days]
+                  - format: YYYY-MM-DD
 
 - title: Label Options
   blocks:

@@ -40,3 +40,8 @@ browser timezone and the time of day.
 `DateTimeSelector` selects an instant, so `_date: now` and plain `_dayjs` chains are all it needs. It
 follows its `selectUTC` setting: with it the instant is shown on the UTC clock, without it on the
 local clock.
+
+Presets respect `disabledDates`. A preset is offered on the same terms as the calendar cells: a
+`DateRangeSelector` range that starts or ends on a disabled date is narrowed to the dates it may
+select, so a `Last 7 days` shortcut next to `disabledDates.min: now` selects today rather than
+silently doing nothing. A shortcut with nothing it may select is listed as disabled.

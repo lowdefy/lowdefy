@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
+
+import disabledDate from './disabledDate.js';
+import './pickerPresetsStyle.css';
 
 dayjs.extend(utc);
 
@@ -61,11 +65,49 @@ function toPickerValue({ local, preset, range }) {
   return toPickerDate({ date: preset.value, local, preset });
 }
 
-const getPresets = ({ local, methods, presets, range }) => {
+// The scan walks a day at a time from one end of the range towards the other, so it visits the
+// range at most once and only runs at all when that end is disabled.
+function firstSelectable({ from, isDisabledDate, step, to }) {
+  let date = from;
+  while (step > 0 ? !date.isAfter(to, 'day') : !date.isBefore(to, 'day')) {
+    if (!isDisabledDate(date)) return date;
+    date = date.add(step, 'day');
+  }
+  return undefined;
+}
+
+// The picker validates a preset against disabledDate on click, and rejects it by writing the value
+// to the input, marking it invalid and leaving the popup open without committing anything. Rather
+// than offer a shortcut that does that, a range is narrowed to the dates it may select, and a
+// preset left with nothing to select is disabled.
+function toSelectableValue({ isDisabledDate, value }) {
+  if (!type.isArray(value)) {
+    if (isDisabledDate(value)) return undefined;
+    return value;
+  }
+  // The picker orders a reversed range itself, so the scan reads the range in calendar order.
+  const [from, to] = value[0].isAfter(value[1]) ? [value[1], value[0]] : value;
+  const start = firstSelectable({ from, isDisabledDate, step: 1, to });
+  if (!start) return undefined;
+  const end = firstSelectable({ from: to, isDisabledDate, step: -1, to: start });
+  return [start, end];
+}
+
+// The picker's preset panel has no disabled state and renders the label it is given inside its own
+// list item, so the label carries the marker the stylesheet disables the list item by.
+function toLabel({ disabled, label }) {
+  if (!disabled) return label;
+  return <span className="lf-picker-preset-disabled">{label}</span>;
+}
+
+const getPresets = ({ disabledDates, local, methods, presets, range }) => {
   if (type.isNone(presets)) return undefined;
   if (!type.isArray(presets)) {
     throw new Error(`Presets is not an array. Received ${JSON.stringify(presets)}.`);
   }
+  // Built from the same config as the picker's disabledDate prop, so a preset is offered on exactly
+  // the terms the calendar cells are.
+  const isDisabledDate = type.isNone(disabledDates) ? undefined : disabledDate(disabledDates);
   return presets.map((preset) => {
     if (!type.isObject(preset)) {
       throw new Error(`Preset is not an object. Received ${JSON.stringify(preset)}.`);
@@ -74,9 +116,14 @@ const getPresets = ({ local, methods, presets, range }) => {
     if (!type.isString(preset.label)) {
       throw new Error(`Preset label is not a string. Received ${JSON.stringify(preset)}.`);
     }
+    const value = toPickerValue({ local, preset, range });
+    const selectableValue = isDisabledDate ? toSelectableValue({ isDisabledDate, value }) : value;
+    const disabled = type.isNone(selectableValue);
     return {
-      label: renderHtml({ html: preset.label, methods }),
-      value: toPickerValue({ local, preset, range }),
+      label: toLabel({ disabled, label: renderHtml({ html: preset.label, methods }) }),
+      // A disabled preset keeps its configured value. The stylesheet stops the list item receiving
+      // the click that would read it.
+      value: disabled ? value : selectableValue,
     };
   });
 };

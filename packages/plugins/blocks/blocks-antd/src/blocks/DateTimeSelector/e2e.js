@@ -24,6 +24,8 @@ const input = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 const pickerDropdown = (page, blockId) =>
   page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
 const presets = (page, blockId) => pickerDropdown(page, blockId).locator('.ant-picker-presets');
+const presetItem = (page, blockId, label) =>
+  presets(page, blockId).locator('li', { hasText: label });
 
 const monthNames = [
   'Jan',
@@ -128,6 +130,12 @@ export default createBlockHelper({
     presetLabelHtml: (page, blockId, { selector, text }) =>
       expect(presets(page, blockId).locator(selector)).toHaveText(text),
     noPresets: (page, blockId) => expect(presets(page, blockId)).toHaveCount(0),
+    // A preset the calendar cannot select is disabled through the list item's pointer events, so
+    // asserting on those checks the shortcut is really unclickable and not only styled as such.
+    presetDisabled: (page, blockId, label) =>
+      expect(presetItem(page, blockId, label)).toHaveCSS('pointer-events', 'none'),
+    presetEnabled: (page, blockId, label) =>
+      expect(presetItem(page, blockId, label)).toHaveCSS('pointer-events', 'auto'),
     // The picker only closes the popup once it accepts the value, so a closed popup is the
     // signal that a selection was committed rather than just shown in the input.
     closed: (page, blockId) => expect(pickerDropdown(page, blockId)).toBeHidden(),

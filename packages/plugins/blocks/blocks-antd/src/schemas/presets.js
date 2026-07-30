@@ -19,8 +19,14 @@ const label = {
   description: 'Text shown for the shortcut - supports html.',
 };
 
+const disabledDatesNote =
+  'A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled.';
+
 const presetsDescription = (selects) =>
-  `Shortcuts listed next to the calendar to quickly select ${selects}. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current.`;
+  `Shortcuts listed next to the calendar to quickly select ${selects}. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. ${disabledDatesNote}`;
+
+const rangePresetsDescription = (selects) =>
+  `Shortcuts listed next to the calendar to quickly select ${selects}. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a range that starts or ends on a date disabledDates disables is narrowed to the dates it may select, so a "Last 7 days" shortcut still selects the allowed part of the last 7 days. A shortcut with nothing it may select is listed as disabled.`;
 
 const utcDateDescription = ({ example, unit }) =>
   `A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same ${unit} in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "${example}". Without the format step the chain resolves to an instant, which can select the ${unit} before or after the current one, depending on the browser timezone and the time of day.`;
@@ -68,7 +74,7 @@ export const dateTimePresets = {
 
 export const dateRangePresets = {
   type: 'array',
-  description: presetsDescription('a date range'),
+  description: rangePresetsDescription('a date range'),
   docs: {
     displayType: 'yaml',
   },

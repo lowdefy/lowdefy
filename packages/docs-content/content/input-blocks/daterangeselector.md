@@ -416,6 +416,49 @@ Date range picker for selecting start and end dates.
               - now
               - endOf: month
               - format: YYYY-MM-DD
+- id: drs_presets_disabled_dates
+  type: DateRangeSelector
+  properties:
+    title: Presets And Disabled Dates
+    label:
+      extra: Future dates are disabled. "Last 7 days" selects the allowed part of the
+        range, and "Next 7 days" has nothing to select, so it is listed as
+        disabled.
+    disabledDates:
+      min: 2026-01-01
+      max:
+        _dayjs:
+          - now
+          - format: YYYY-MM-DD
+    presets:
+      - label: Last 7 days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+      - label: Next 7 days
+        value:
+          - _dayjs:
+              - now
+              - add:
+                  - 1
+                  - day
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
 ```
 
 ```yaml
@@ -857,7 +900,7 @@ Date range picker for selecting start and end dates.
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `placeholder` | array | - | Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a range that starts or ends on a date disabledDates disables is narrowed to the dates it may select, so a "Last 7 days" shortcut still selects the allowed part of the last 7 days. A shortcut with nothing it may select is listed as disabled. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
 | `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same day in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the day before or after the current one, depending on the browser timezone and the time of day. |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |

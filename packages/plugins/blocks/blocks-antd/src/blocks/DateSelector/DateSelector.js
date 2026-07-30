@@ -65,10 +65,16 @@ const DateSelector = ({
               className={classNames.element}
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
-              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
+              format={
+                properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder}
-              presets={getPresets({ methods, presets: properties.presets })}
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+              })}
               showToday={properties.showToday}
               size={properties.size}
               status={validation.status}

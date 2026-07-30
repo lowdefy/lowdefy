@@ -187,3 +187,19 @@ blocks:
             _dayjs:
               - now
               - format: YYYY-MM-DD
+
+  - id: ds_presets_min_now
+    type: DateSelector
+    properties:
+      title: Presets with a minimum date
+      format: YYYY-MM-DD
+      disabledDates:
+        min:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: A Week Ago
+          value:
+            _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+        - label: Today
+          value:
+            _dayjs: [now, { format: YYYY-MM-DD }]

@@ -93,6 +93,7 @@ const DateTimeSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder}
               presets={getPresets({
+                disabledDates: properties.disabledDates,
                 local: !properties.selectUTC,
                 methods,
                 presets: properties.presets,

@@ -798,7 +798,7 @@ Combined date and time picker.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `minuteStep` | integer | `5` | Minute intervals to show in the time selector. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date and time. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date and time. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
 | `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. The date is used as the instant it names, so "_date: now" and _dayjs chains need no special handling. With selectUTC the instant is shown on the UTC clock, so a chain that snaps to a calendar boundary needs a utc step to snap to the UTC day, eg. "_dayjs: [now, utc, {startOf: day}]". Without selectUTC the instant is shown on the local clock, so a chain resolves in local time, eg. "_dayjs: [now, {startOf: day}]". |
 | `secondStep` | integer | `5` | Minute intervals to show in the time selector. |

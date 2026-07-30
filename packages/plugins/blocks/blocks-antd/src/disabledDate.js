@@ -24,35 +24,45 @@ dayjs.extend(utc);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
+// A picker calls disabledDate with the dayjs instance its panel works in, which is a UTC mode
+// instance when the block reads its value as a UTC wall clock and a local mode instance when it
+// does not. Both name the calendar date the user sees, so it is the wall clock that is compared and
+// the bounds are read the same way. Comparing the instants instead makes the same calendar date
+// disabled or allowed depending on which mode it arrives in.
+const toWallClock = (date) => {
+  // Wrap with our dayjs to ensure the utc plugin is available — antd v6's internal dayjs instance
+  // may not have it loaded.
+  const wrapped = dayjs(date);
+  return dayjs.utc(wrapped.format('YYYY-MM-DDTHH:mm:ss.SSS'));
+};
+
 const disabledDate = (disabledDates = {}) => {
   const min = type.isNone(disabledDates.min)
     ? undefined
-    : dayjs(disabledDates.min).utc().startOf('day');
+    : toWallClock(disabledDates.min).startOf('day');
   const max = type.isNone(disabledDates.max)
     ? undefined
-    : dayjs(disabledDates.max).utc().endOf('day');
-  const dates = (disabledDates.dates || []).map((date) => dayjs(date).utc().startOf('day'));
+    : toWallClock(disabledDates.max).endOf('day');
+  const dates = (disabledDates.dates || []).map((date) => toWallClock(date).startOf('day'));
   const ranges = (disabledDates.ranges || [])
     .map((range) => {
       if (type.isArray(range) && range.length === 2) {
-        return [dayjs(range[0]).utc().startOf('day'), dayjs(range[1]).utc().endOf('day')];
+        return [toWallClock(range[0]).startOf('day'), toWallClock(range[1]).endOf('day')];
       }
       return null;
     })
     .filter((range) => range !== null);
 
   return (currentDate) => {
-    // Wrap with our dayjs to ensure utc plugin is available — antd v6's internal
-    // dayjs instance may not have it loaded.
-    const utcCurrentData = dayjs(currentDate).utc();
-    if (min && utcCurrentData.isBefore(min)) return true;
-    if (max && utcCurrentData.isAfter(max)) return true;
-    let match = dates.find((date) => date.isSame(utcCurrentData.startOf('day')));
+    const current = toWallClock(currentDate);
+    if (min && current.isBefore(min)) return true;
+    if (max && current.isAfter(max)) return true;
+    let match = dates.find((date) => date.isSame(current.startOf('day')));
     if (match) return true;
     ranges.forEach((range) => {
       if (
-        utcCurrentData.startOf('day').isSameOrAfter(range[0]) &&
-        utcCurrentData.endOf('day').isSameOrBefore(range[1])
+        current.startOf('day').isSameOrAfter(range[0]) &&
+        current.endOf('day').isSameOrBefore(range[1])
       ) {
         match = true;
       }

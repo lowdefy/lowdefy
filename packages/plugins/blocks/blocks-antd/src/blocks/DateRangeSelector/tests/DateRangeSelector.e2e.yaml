@@ -168,3 +168,37 @@ blocks:
     type: DateRangeSelector
     properties:
       title: No Presets
+
+  - id: drs_presets_min_now
+    type: DateRangeSelector
+    properties:
+      title: Presets with a minimum date
+      format: YYYY-MM-DD
+      disabledDates:
+        min:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: Last 7 Days
+          value:
+            - _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+        - label: Next 7 Days
+          value:
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { add: [7, days] }, { format: YYYY-MM-DD }]
+        - label: Last Year
+          value: ['2025-01-01', '2025-12-31']
+
+  - id: drs_presets_max_now
+    type: DateRangeSelector
+    properties:
+      title: Presets with a maximum date
+      format: YYYY-MM-DD
+      disabledDates:
+        max:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: Next 7 Days
+          value:
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { add: [7, days] }, { format: YYYY-MM-DD }]

@@ -74,7 +74,9 @@ const DateRangeSelector = ({
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
+              format={
+                properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               separator={properties.separator ?? '~'}
               size={properties.size}
@@ -82,7 +84,12 @@ const DateRangeSelector = ({
               placeholder={
                 type.isArray(properties.placeholder) ? properties.placeholder : undefined
               }
-              presets={getPresets({ methods, presets: properties.presets, range: true })}
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+                range: true,
+              })}
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
