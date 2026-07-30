@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { serializer, type } from '@lowdefy/helpers';
+import { ReservedKeyError, serializer, setKey, type } from '@lowdefy/helpers';
 
 import { getConfigDirectory } from './checkpointPaths.js';
 
@@ -90,7 +90,14 @@ function readEntries({ dir, subdir }) {
     .filter((fileName) => fileName.endsWith('.json'))
     .forEach((fileName) => {
       const id = fileName.slice(0, -'.json'.length);
-      entries[id] = readJsonFile(path.join(entriesDir, fileName), null);
+      try {
+        setKey(entries, id, readJsonFile(path.join(entriesDir, fileName), null));
+      } catch (error) {
+        if (!(error instanceof ReservedKeyError)) throw error;
+        // A checkpoint directory is on-disk state a developer can edit by hand.
+        // A reserved file name can't round-trip through the entries map, so skip
+        // it rather than fail the whole checkpoint load.
+      }
     });
   return entries;
 }

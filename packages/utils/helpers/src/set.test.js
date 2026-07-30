@@ -15,7 +15,9 @@
 */
 
 import typeTest from './type.js';
-import set, { split } from './set.js';
+import * as setModule from './set.js';
+import set from './set.js';
+import { ReservedKeyError } from './ReservedKeyError.js';
 
 test('setNestedValue - set a nested value in array object', () => {
   const objOne = {
@@ -132,6 +134,38 @@ test('setNestedObject - should merge an existing value with the given value', ()
   expect(o.a.b).toEqual({ c: 'd', y: 'z' });
 });
 
+test('set with merge skips a reserved key carried inside the merged value', () => {
+  const evil = JSON.parse('{"__proto__":{"pwned":"json"},"safe":1}');
+  const o = { a: { existing: 1 } };
+  set(o, 'a', evil, { merge: true });
+  expect(o.a).toEqual({ existing: 1, safe: 1 });
+  expect(Object.keys(o.a)).toEqual(['existing', 'safe']);
+  expect(o.a.pwned).toBeUndefined();
+  expect(Object.getPrototypeOf(o.a)).toBe(Object.prototype);
+  expect({}.pwned).toBeUndefined();
+  expect(Object.prototype.pwned).toBeUndefined();
+});
+
+test('set with merge skips a reserved key carried inside the existing target value', () => {
+  const o = { a: JSON.parse('{"__proto__":{"pwned":"json"},"existing":1}') };
+  set(o, 'a', { safe: 1 }, { merge: true });
+  expect(o.a).toEqual({ existing: 1, safe: 1 });
+  expect(o.a.pwned).toBeUndefined();
+  expect(Object.getPrototypeOf(o.a)).toBe(Object.prototype);
+  expect({}.pwned).toBeUndefined();
+});
+
+test('set with merge skips every reserved key, not just __proto__', () => {
+  const evil = { safe: 1 };
+  Object.defineProperty(evil, 'constructor', { value: 'x', enumerable: true, writable: true });
+  evil.prototype = 'y';
+  evil.__defineGetter__ = 'z';
+  const o = { a: { existing: 1 } };
+  set(o, 'a', evil, { merge: true });
+  expect(o.a).toEqual({ existing: 1, safe: 1 });
+  expect(o.a.constructor).toBe(Object);
+});
+
 test('setNestedObject - should update an object value', () => {
   const o = {};
   set(o, 'a', { b: 'c' });
@@ -214,9 +248,13 @@ test('setNestedObject - should set the specified property.', () => {
   expect(set({ a: 'aaa', b: 'b' }, 'a', 'bbb')).toEqual({ a: 'bbb', b: 'b' });
 });
 
-test('setNestedObject - should support passing an array as the key.', () => {
-  const actual = set({ a: 'a', b: { c: 'd' } }, ['b', 'c', 'd'], 'eee');
-  expect(actual).toEqual({ a: 'a', b: { c: { d: 'eee' } } });
+test('set returns the target unchanged when the path is not a string.', () => {
+  expect(set({ a: 'a', b: { c: 'd' } }, ['b', 'c', 'd'], 'eee')).toEqual({
+    a: 'a',
+    b: { c: 'd' },
+  });
+  expect(set({ a: 'a' }, 1, 'eee')).toEqual({ a: 'a' });
+  expect(set({ a: 'a' }, null, 'eee')).toEqual({ a: 'a' });
 });
 
 test('setNestedObject - should set a deeply nested value.', () => {
@@ -262,18 +300,93 @@ test('setNestedObject - should work with multiple escaped dots.', () => {
   expect(obj2).toEqual({ 'e.f': { 'g.h.i': { j: 1 } } });
 });
 
-// Test split
-
-test('setNestedObject - split on dot', () => {
-  expect(split('a.b.c.d.e')).toEqual(['a', 'b', 'c', 'd', 'e']);
+test('set only exports a default, no named split', () => {
+  expect(Object.keys(setModule)).toEqual(['default']);
 });
 
-test('setNestedObject - split should not split on escape dots', () => {
-  expect(split('e\\.f\\.g')).toEqual(['e.f.g']);
+test('set does not memoize path splits', () => {
+  expect(set.memo).toBeUndefined();
 });
 
-test('setNestedObject - split path with number', () => {
-  expect(split('a.0.a')).toEqual(['a', '0', 'a']);
+test('set returns the original target reference', () => {
+  const objOne = {};
+  expect(set(objOne, 'a.b.c', 1)).toBe(objOne);
+  expect(objOne).toEqual({ a: { b: { c: 1 } } });
+  expect(set(objOne, 'd.0.e', 1)).toBe(objOne);
+  expect(objOne.d).toEqual([{ e: 1 }]);
+});
+
+// Reserved keys
+
+test('set throws ReservedKeyError when the path is __proto__', () => {
+  expect(() => set({}, '__proto__', 1)).toThrow(ReservedKeyError);
+  expect(() => set({}, '__proto__', 1)).toThrow('Reserved key "__proto__"');
+});
+
+test('set throws ReservedKeyError with the offending segment for a nested __proto__', () => {
+  const objOne = {};
+  expect.assertions(3);
+  try {
+    set(objOne, 'a.__proto__.b', 1);
+  } catch (error) {
+    expect(error).toBeInstanceOf(ReservedKeyError);
+    expect(error.segment).toEqual('__proto__');
+  }
+  expect(objOne).toEqual({});
+});
+
+test('set throws ReservedKeyError on the first reserved segment encountered', () => {
+  expect.assertions(1);
+  try {
+    set({}, 'a.constructor.prototype', 1);
+  } catch (error) {
+    expect(error.segment).toEqual('constructor');
+  }
+});
+
+test('set throws ReservedKeyError for prototype', () => {
+  expect(() => set({}, 'a.prototype', 1)).toThrow(ReservedKeyError);
+});
+
+test.each(['__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__'])(
+  'set throws ReservedKeyError for %s',
+  (key) => {
+    expect(() => set({}, key, 1)).toThrow(ReservedKeyError);
+    expect(() => set({}, `a.${key}.b`, 1)).toThrow(ReservedKeyError);
+  }
+);
+
+test('set does not pollute Object.prototype when a reserved segment is rejected', () => {
+  expect(() => set({}, '__proto__.polluted', 'yes')).toThrow(ReservedKeyError);
+  expect({}.polluted).toBeUndefined();
+});
+
+test('set writes hasOwnProperty as an own property without throwing', () => {
+  const objOne = {};
+  set(objOne, 'hasOwnProperty', 1);
+  expect(Object.hasOwn(objOne, 'hasOwnProperty')).toEqual(true);
+  expect(objOne.hasOwnProperty).toEqual(1);
+});
+
+test('set writes toString without throwing', () => {
+  const objOne = {};
+  const fn = () => 'x';
+  set(objOne, 'toString', fn);
+  expect(objOne.toString).toEqual(fn);
+});
+
+test('set autovivifies over an inherited key instead of descending into it', () => {
+  const objOne = {};
+  set(objOne, 'toString.a', 1);
+  expect(Object.hasOwn(objOne, 'toString')).toEqual(true);
+  expect(objOne.toString).toEqual({ a: 1 });
+});
+
+test('set only rejects reserved path segments, not existing target properties', () => {
+  const objOne = { __proto__: { a: 1 } };
+  expect(set(objOne, 'b', 2)).toEqual({ b: 2 });
+  expect(objOne.b).toEqual(2);
+  expect(objOne.a).toEqual(1);
 });
 
 test('setNestedObject - object pointers - we maintain the reference', () => {

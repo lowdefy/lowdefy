@@ -44,96 +44,60 @@
 
 import typeTest from './type.js';
 import serializer from './serializer.js';
+import splitPath from './splitPath.js';
+import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 
-function join(segs, joinChar, options) {
-  if (typeof options.join === 'function') {
-    return options.join(segs);
-  }
-  return segs[0] + joinChar + segs[1];
-}
-
-function split(path, splitChar, options) {
-  if (typeof options.split === 'function') {
-    return options.split(path);
-  }
-  return path.split(splitChar);
-}
-
-function isValid(key, target, options) {
-  if (typeof options.isValid === 'function') {
-    return options.isValid(key, target);
-  }
-  return true;
-}
-
-function isValidObject(val) {
-  return typeTest.isObject(val) || Array.isArray(val) || typeof val === 'function';
+// "May I step into this value to reach a child?" Deliberately looser than type.isObject, which
+// is plain-object-only: the walk must step into arrays, errors, class instances, Date and URL,
+// otherwise a nested path like `x.error.cause.code` resolves to nothing even though the value
+// is there. Kept local rather than shared with set/unset - a module imported by all three trips
+// a Jest ESM module-cache bug in operators-js' mocked re-imports.
+function isTraversable(value) {
+  return !typeTest.isNone(value) && (typeof value === 'object' || typeof value === 'function');
 }
 
 function getter(target, path, options) {
-  if (typeTest.isNone(path) || !isValidObject(target)) {
-    return typeof options.default !== 'undefined' ? options.default : undefined;
+  if (typeTest.isNone(path) || !isTraversable(target)) {
+    return options.default;
   }
 
-  if (typeof path === 'number') {
+  if (typeTest.isNumber(path)) {
     path = String(path);
   }
-
-  const isArray = Array.isArray(path);
-  const isString = typeof path === 'string';
-  const splitChar = options.separator || '.';
-  const joinChar = options.joinChar || (typeof splitChar === 'string' ? splitChar : '.');
-
-  if (isString && path in target) {
-    return isValid(path, target, options) ? target[path] : options.default;
+  if (!typeTest.isString(path)) {
+    return options.default;
   }
 
-  const segs = isArray ? path : split(path, splitChar, options);
+  const segs = splitPath(path);
+
+  // Scanned before the fast path so a reserved key is rejected even when it is an own
+  // property — the reserved rule is about illegal input, not about what the target holds.
+  const reservedSeg = segs.find(isReserved);
+  if (!typeTest.isNone(reservedSeg)) {
+    throw new ReservedKeyError(reservedSeg);
+  }
+
+  // Own-property fast path: skip the walk when the whole path is a single own key. `hasOwn`
+  // rather than `in` because this shortcut must only fire on a key the target really holds -
+  // it also lets keys containing literal dots resolve before splitPath breaks them up. It is
+  // not an inherited-property guard: when it misses, the walk below uses `prop in target`, so
+  // inherited members like `error.message` still resolve by design.
+  if (Object.prototype.hasOwnProperty.call(target, path)) {
+    return target[path];
+  }
+
   const len = segs.length;
   let idx = 0;
 
   do {
-    let prop = segs[idx];
-    if (typeof prop === 'number') {
-      prop = String(prop);
+    const prop = segs[idx];
+
+    if (!(prop in target)) {
+      return options.default;
     }
-
-    while (prop && prop.slice(-1) === '\\') {
-      idx += 1;
-      prop = join([prop.slice(0, -1), segs[idx] || ''], joinChar, options);
-    }
-
-    if (prop in target) {
-      if (!isValid(prop, target, options)) {
-        return options.default;
-      }
-
-      target = target[prop];
-    } else {
-      let hasProp = false;
-      let n = idx + 1;
-
-      while (n < len) {
-        prop = join([prop, segs[n]], joinChar, options);
-        n += 1;
-        hasProp = prop in target;
-        if (hasProp) {
-          if (!isValid(prop, target, options)) {
-            return options.default;
-          }
-
-          target = target[prop];
-          idx = n - 1;
-          break;
-        }
-      }
-
-      if (!hasProp) {
-        return options.default;
-      }
-    }
-    // eslint-disable-next-line no-plusplus
-  } while (++idx < len && isValidObject(target));
+    target = target[prop];
+    idx += 1;
+  } while (idx < len && isTraversable(target));
 
   if (idx === len) {
     return target;
