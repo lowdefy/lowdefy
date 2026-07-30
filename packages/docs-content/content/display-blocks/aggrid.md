@@ -225,7 +225,9 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
   type: AgGridAlpine
   properties:
     height: 300
-    rowSelection: multiple
+    rowSelection:
+      mode: multiRow
+      enableClickSelection: true
     defaultColDef:
       sortable: true
       flex: 1
@@ -439,7 +441,9 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
   type: AgGridAlpine
   properties:
     height: 300
-    rowSelection: multiple
+    rowSelection:
+      mode: multiRow
+      enableClickSelection: true
     defaultColDef:
       sortable: true
       flex: 1
