@@ -290,6 +290,28 @@ test('validateAuthConfig throws on duplicate provider ids', () => {
   );
 });
 
+test('validateAuthConfig throws a located error when a provider id is a reserved name', () => {
+  const provider = { id: '__proto__', type: 'GenericOAuth', properties: {} };
+  // addKeys writes ~k non-enumerably, which is what keeps it out of the schema's
+  // additionalProperties check - mirror that here.
+  Object.defineProperty(provider, '~k', { value: 'providerKey', enumerable: false });
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [provider],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+  try {
+    validateAuthConfig({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('providerKey');
+  }
+});
+
 test('validateAuthConfig throws when a built-in provider type is configured twice', () => {
   const components = {
     auth: {

@@ -17,7 +17,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 
 import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 
@@ -45,6 +45,14 @@ function buildRoleCatalog({ components }) {
     if (role.id.startsWith('$')) {
       throw new ConfigError(
         `Auth role id "${role.id}" is reserved — role ids may not begin with "$".`,
+        { configKey }
+      );
+    }
+    // The role id keys the organization plugin's access-control role catalog,
+    // a plain object.
+    if (isReserved(role.id)) {
+      throw new ConfigError(
+        `Auth role id "${role.id}" is a reserved name and cannot be used as a role id.`,
         { configKey }
       );
     }

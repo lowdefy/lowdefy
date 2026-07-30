@@ -168,3 +168,24 @@ test('buildAuthHooks throws when the endpoint is not type InternalApi', () => {
     'Auth hook "public-target" endpoint "auth/hook" must be type "InternalApi" so it is not callable over HTTP.'
   );
 });
+
+// Coverage regression: buildHooks.js keys userHooks by hook.point, so a reserved
+// point would re-parent that plain object at runtime. It cannot reach the key -
+// the fixed authHookPoints allowlist below rejects it with a located error first,
+// which is why buildHooks.js needs no reserved-name guard of its own.
+test('buildAuthHooks rejects a reserved hook point through the existing allowlist', () => {
+  const components = {
+    auth: {
+      hooks: [{ id: 'evil', '~k': 'hook-key', point: '__proto__', endpointId: 'auth/hook' }],
+    },
+    api: [{ id: 'auth/hook', type: 'InternalApi', routine: [] }],
+  };
+  expect(() => buildAuthHooks({ components })).toThrow(
+    'Auth hook "evil" binds unknown point "__proto__".'
+  );
+  try {
+    buildAuthHooks({ components });
+  } catch (e) {
+    expect(e.configKey).toBe('hook-key');
+  }
+});
