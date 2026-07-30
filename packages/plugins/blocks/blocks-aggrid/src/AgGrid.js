@@ -25,7 +25,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 // Registration is idempotent, so each core registers independently to stay standalone.
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const AgGrid = ({ properties, methods, loading, events, components }) => {
+const AgGrid = ({ components, events, loading, methods, properties, theme }) => {
   const {
     quickFilterValue,
     columnDefs,
@@ -162,6 +162,7 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
       <AgGridReact
         columnMenu="legacy"
         {...someProperties}
+        theme={theme}
         suppressCellFocus={suppressCellFocus}
         rowData={rowData}
         defaultColDef={memoDefaultColDef}
