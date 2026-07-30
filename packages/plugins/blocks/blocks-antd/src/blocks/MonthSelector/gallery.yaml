@@ -310,26 +310,26 @@
             value:
               _dayjs:
                 - now
-                - utc
                 - startOf: month
+                - format: YYYY-MM-DD
           - label: Last month
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, month]
+                - format: YYYY-MM-DD
           - label: 3 months ago
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [3, months]
+                - format: YYYY-MM-DD
           - label: A year ago
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, year]
+                - format: YYYY-MM-DD
     - id: ms_presets_fixed
       type: MonthSelector
       properties:

@@ -173,3 +173,17 @@ blocks:
         - label: Mid 2024
           value:
             _date: '2024-06-15'
+
+  # The recommended idiom for a relative shortcut: a local time chain ending in a format step, so
+  # the preset selects the calendar date the browser shows as today rather than the UTC date.
+  - id: ds_presets_today
+    type: DateSelector
+    properties:
+      title: Presets Today
+      format: YYYY-MM-DD
+      presets:
+        - label: Today
+          value:
+            _dayjs:
+              - now
+              - format: YYYY-MM-DD

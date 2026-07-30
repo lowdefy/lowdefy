@@ -303,30 +303,38 @@
             value:
               - _dayjs:
                   - now
-                  - utc
                   - subtract: [7, days]
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: Last 14 Days
             value:
               - _dayjs:
                   - now
-                  - utc
                   - subtract: [14, days]
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: Last 30 Days
             value:
               - _dayjs:
                   - now
-                  - utc
                   - subtract: [30, days]
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: Last 90 Days
             value:
               - _dayjs:
                   - now
-                  - utc
                   - subtract: [90, days]
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
     - id: drs_presets_to_date
       type: DateRangeSelector
       properties:
@@ -338,23 +346,29 @@
             value:
               - _dayjs:
                   - now
-                  - utc
                   - startOf: week
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: Month to date
             value:
               - _dayjs:
                   - now
-                  - utc
                   - startOf: month
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: Year to date
             value:
               - _dayjs:
                   - now
-                  - utc
                   - startOf: year
-              - _date: now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
     - id: drs_presets_fixed
       type: DateRangeSelector
       properties:
@@ -379,18 +393,22 @@
         presets:
           - label: '<b>Today</b>'
             value:
-              - _date: now
-              - _date: now
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
+              - _dayjs:
+                  - now
+                  - format: YYYY-MM-DD
           - label: '<span style="color: #1677ff">This month</span>'
             value:
               - _dayjs:
                   - now
-                  - utc
                   - startOf: month
+                  - format: YYYY-MM-DD
               - _dayjs:
                   - now
-                  - utc
                   - endOf: month
+                  - format: YYYY-MM-DD
 
 - title: Label Options
   blocks:

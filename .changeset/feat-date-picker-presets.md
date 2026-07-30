@@ -21,20 +21,22 @@ render instead of being frozen at page load:
     presets:
       - label: Last 7 Days
         value:
-          - _dayjs: [now, utc, { subtract: [7, days] }]
-          - _date: now
+          - _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+          - _dayjs: [now, { format: YYYY-MM-DD }]
       - label: Month to date
         value:
-          - _dayjs: [now, utc, { startOf: month }]
-          - _date: now
+          - _dayjs: [now, { startOf: month }, { format: YYYY-MM-DD }]
+          - _dayjs: [now, { format: YYYY-MM-DD }]
       - label: 2026 Q1
         value: ['2026-01-01', '2026-03-31']
 ```
 
-Preset dates are read as UTC, the same as the block value, so a `_date` object selects the calendar
-date it names in every timezone. Start `_dayjs` chains with a `utc` step — steps that snap to a
-calendar boundary, like `startOf` and `endOf`, resolve in local time otherwise and can land on the
-wrong day. `DateTimeSelector` follows its `selectUTC` setting: without it, a preset is read as the
-instant it names and shown on the local clock, so `_dayjs` chains resolve in local time there.
+The date pickers read a preset as UTC, the same as the block value, so a fixed date like
+`2026-01-01` selects the day it names in every timezone. A date relative to now is an instant rather
+than a calendar date, so end a `_dayjs` chain with a `format` step, as above — a chain that resolves
+to an instant can select the day, month or week before or after the current one, depending on the
+browser timezone and the time of day.
 
-A preset that resolves to a date excluded by `disabledDates` does nothing when it is clicked.
+`DateTimeSelector` selects an instant, so `_date: now` and plain `_dayjs` chains are all it needs. It
+follows its `selectUTC` setting: with it the instant is shown on the UTC clock, without it on the
+local clock.

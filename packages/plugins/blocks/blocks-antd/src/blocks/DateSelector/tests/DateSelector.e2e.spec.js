@@ -241,3 +241,25 @@ test.describe('DateSelector Block presets', () => {
     await expect(getInput(page, 'ds_presets')).toHaveValue('2024-06-15');
   });
 });
+
+// Pinned to a positive UTC offset and to a moment where the local and UTC calendar dates differ:
+// 21:30 UTC on 30 June is 09:30 on 1 July in Auckland. A relative preset that resolves to an
+// instant instead of a local calendar date selects 30 June here.
+test.describe('DateSelector Block presets in a timezone ahead of UTC', () => {
+  test.use({ timezoneId: 'Pacific/Auckland' });
+
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-06-30T21:30:00.000Z'));
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  test('selects the local date for a relative preset', async ({ page }) => {
+    await getInput(page, 'ds_presets_today').click();
+    await presetPanel(page, 'ds_presets_today').getByText('Today', { exact: true }).click();
+
+    await expect(getInput(page, 'ds_presets_today')).toHaveValue('2026-07-01');
+  });
+});

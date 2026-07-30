@@ -301,32 +301,32 @@ Month picker for selecting year and month.
         value:
           _dayjs:
             - now
-            - utc
             - startOf: month
+            - format: YYYY-MM-DD
       - label: Last month
         value:
           _dayjs:
             - now
-            - utc
             - subtract:
                 - 1
                 - month
+            - format: YYYY-MM-DD
       - label: 3 months ago
         value:
           _dayjs:
             - now
-            - utc
             - subtract:
                 - 3
                 - months
+            - format: YYYY-MM-DD
       - label: A year ago
         value:
           _dayjs:
             - now
-            - utc
             - subtract:
                 - 1
                 - year
+            - format: YYYY-MM-DD
 - id: ms_presets_fixed
   type: MonthSelector
   properties:
@@ -700,9 +700,9 @@ Month picker for selecting year and month.
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | - | Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale's month format, or "YYYY-MM" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. A preset that resolves to a date excluded by disabledDates does nothing when it is clicked. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a month. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
-| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

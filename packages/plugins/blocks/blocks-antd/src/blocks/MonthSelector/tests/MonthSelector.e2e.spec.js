@@ -224,3 +224,27 @@ test.describe('MonthSelector Block presets', () => {
     await expect(getInput(page, 'ms_presets')).toHaveValue('2024-06');
   });
 });
+
+// Pinned to a positive UTC offset and to a moment where the local and UTC months differ: 21:30 UTC
+// on 30 June is 09:30 on 1 July in Auckland. A relative preset that resolves to an instant instead
+// of a local calendar date selects June here.
+test.describe('MonthSelector Block presets in a timezone ahead of UTC', () => {
+  test.use({ timezoneId: 'Pacific/Auckland' });
+
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-06-30T21:30:00.000Z'));
+    await navigateToTestPage(page, 'monthselector');
+  });
+
+  test('selects the local month for a relative preset', async ({ page }) => {
+    await getInput(page, 'ms_presets_this_month').click();
+    await presetPanel(page, 'ms_presets_this_month')
+      .getByText('This month', { exact: true })
+      .click();
+
+    await expect(getInput(page, 'ms_presets_this_month')).toHaveValue('2026-07');
+  });
+});

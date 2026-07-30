@@ -244,24 +244,24 @@ Week picker for selecting a week of the year.
         value:
           _dayjs:
             - now
-            - utc
             - startOf: week
+            - format: YYYY-MM-DD
       - label: Last week
         value:
           _dayjs:
             - now
-            - utc
             - subtract:
                 - 1
                 - week
+            - format: YYYY-MM-DD
       - label: 4 weeks ago
         value:
           _dayjs:
             - now
-            - utc
             - subtract:
                 - 4
                 - weeks
+            - format: YYYY-MM-DD
 - id: ws_presets_fixed
   type: WeekSelector
   properties:
@@ -600,9 +600,9 @@ Week picker for selecting a week of the year.
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | `"YYYY-wo"` | Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. A preset that resolves to a date excluded by disabledDates does nothing when it is clicked. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a week. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
-| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same week in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: week}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the week before or after the current one, depending on the browser timezone and the time of day. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

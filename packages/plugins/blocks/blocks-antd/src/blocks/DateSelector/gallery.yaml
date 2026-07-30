@@ -300,25 +300,27 @@
         presets:
           - label: Today
             value:
-              _date: now
+              _dayjs:
+                - now
+                - format: YYYY-MM-DD
           - label: Yesterday
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, day]
+                - format: YYYY-MM-DD
           - label: A week ago
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, week]
+                - format: YYYY-MM-DD
           - label: A month ago
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, month]
+                - format: YYYY-MM-DD
     - id: ds_presets_boundaries
       type: DateSelector
       properties:
@@ -330,20 +332,20 @@
             value:
               _dayjs:
                 - now
-                - utc
                 - startOf: month
+                - format: YYYY-MM-DD
           - label: End of month
             value:
               _dayjs:
                 - now
-                - utc
                 - endOf: month
+                - format: YYYY-MM-DD
           - label: Start of year
             value:
               _dayjs:
                 - now
-                - utc
                 - startOf: year
+                - format: YYYY-MM-DD
     - id: ds_presets_fixed
       type: DateSelector
       properties:

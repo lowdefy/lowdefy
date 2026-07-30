@@ -294,38 +294,46 @@ Date range picker for selecting start and end dates.
         value:
           - _dayjs:
               - now
-              - utc
               - subtract:
                   - 7
                   - days
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: Last 14 Days
         value:
           - _dayjs:
               - now
-              - utc
               - subtract:
                   - 14
                   - days
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: Last 30 Days
         value:
           - _dayjs:
               - now
-              - utc
               - subtract:
                   - 30
                   - days
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: Last 90 Days
         value:
           - _dayjs:
               - now
-              - utc
               - subtract:
                   - 90
                   - days
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
 - id: drs_presets_to_date
   type: DateRangeSelector
   properties:
@@ -337,23 +345,29 @@ Date range picker for selecting start and end dates.
         value:
           - _dayjs:
               - now
-              - utc
               - startOf: week
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: Month to date
         value:
           - _dayjs:
               - now
-              - utc
               - startOf: month
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: Year to date
         value:
           - _dayjs:
               - now
-              - utc
               - startOf: year
-          - _date: now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
 - id: drs_presets_fixed
   type: DateRangeSelector
   properties:
@@ -386,18 +400,22 @@ Date range picker for selecting start and end dates.
     presets:
       - label: <b>Today</b>
         value:
-          - _date: now
-          - _date: now
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
       - label: '<span style="color: #1677ff">This month</span>'
         value:
           - _dayjs:
               - now
-              - utc
               - startOf: month
+              - format: YYYY-MM-DD
           - _dayjs:
               - now
-              - utc
               - endOf: month
+              - format: YYYY-MM-DD
 ```
 
 ```yaml
@@ -839,9 +857,9 @@ Date range picker for selecting start and end dates.
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `placeholder` | array | - | Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale. |
-| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. A preset that resolves to a date excluded by disabledDates does nothing when it is clicked. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
-| `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
+| `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same day in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the day before or after the current one, depending on the browser timezone and the time of day. |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

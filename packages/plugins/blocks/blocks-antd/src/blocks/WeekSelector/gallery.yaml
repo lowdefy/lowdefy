@@ -253,20 +253,20 @@
             value:
               _dayjs:
                 - now
-                - utc
                 - startOf: week
+                - format: YYYY-MM-DD
           - label: Last week
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [1, week]
+                - format: YYYY-MM-DD
           - label: 4 weeks ago
             value:
               _dayjs:
                 - now
-                - utc
                 - subtract: [4, weeks]
+                - format: YYYY-MM-DD
     - id: ws_presets_fixed
       type: WeekSelector
       properties:

@@ -20,22 +20,19 @@ const label = {
 };
 
 const presetsDescription = (selects) =>
-  `Shortcuts listed next to the calendar to quickly select ${selects}. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. A preset that resolves to a date excluded by disabledDates does nothing when it is clicked.`;
+  `Shortcuts listed next to the calendar to quickly select ${selects}. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current.`;
 
-const utcDateDescription =
-  'A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]".';
+const utcDateDescription = ({ example, unit }) =>
+  `A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same ${unit} in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "${example}". Without the format step the chain resolves to an instant, which can select the ${unit} before or after the current one, depending on the browser timezone and the time of day.`;
 
-const dateTimeDescription =
-  'A date string, a timestamp, or a _date object. With selectUTC the date is read as UTC, the same as the block value, so a _dayjs chain that snaps to a calendar boundary, like startOf or endOf, needs a utc step first, eg. "_dayjs: [now, utc, {startOf: day}]". Without selectUTC the date is read as the instant it names and shown on the local clock, so a _dayjs chain resolves in local time, eg. "_dayjs: [now, {startOf: day}]".';
-
-const utcDate = {
+const utcDate = ({ example, unit }) => ({
   type: ['string', 'number', 'object'],
-  description: utcDateDescription,
-};
+  description: utcDateDescription({ example, unit }),
+});
 
-export const datePresets = {
+export const datePresets = ({ example, selects, unit }) => ({
   type: 'array',
-  description: presetsDescription('a date'),
+  description: presetsDescription(selects),
   docs: {
     displayType: 'yaml',
   },
@@ -44,10 +41,10 @@ export const datePresets = {
     required: ['label', 'value'],
     properties: {
       label,
-      value: utcDate,
+      value: utcDate({ example, unit }),
     },
   },
-};
+});
 
 export const dateTimePresets = {
   type: 'array',
@@ -62,7 +59,8 @@ export const dateTimePresets = {
       label,
       value: {
         type: ['string', 'number', 'object'],
-        description: dateTimeDescription,
+        description:
+          'A date string, a timestamp, or a _date object. The date is used as the instant it names, so "_date: now" and _dayjs chains need no special handling. With selectUTC the instant is shown on the UTC clock, so a chain that snaps to a calendar boundary needs a utc step to snap to the UTC day, eg. "_dayjs: [now, utc, {startOf: day}]". Without selectUTC the instant is shown on the local clock, so a chain resolves in local time, eg. "_dayjs: [now, {startOf: day}]".',
       },
     },
   },
@@ -83,10 +81,16 @@ export const dateRangePresets = {
         // The docs table does not recurse into the items of a nested array, so the date description
         // is repeated here to keep it on the DateRangeSelector page.
         type: 'array',
-        description: `The start and end date of the range. ${utcDateDescription}`,
+        description: `The start and end date of the range. ${utcDateDescription({
+          example: '_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]',
+          unit: 'day',
+        })}`,
         minItems: 2,
         maxItems: 2,
-        items: utcDate,
+        items: utcDate({
+          example: '_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]',
+          unit: 'day',
+        }),
       },
     },
   },
