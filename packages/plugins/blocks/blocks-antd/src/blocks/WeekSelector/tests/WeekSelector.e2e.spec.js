@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import weekSelector from '../e2e.js';
+
 // Helper to get the week input
 const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
@@ -194,33 +196,30 @@ test.describe('WeekSelector Block presets', () => {
   // Pinned to a negative offset, where a preset date lands a day early without the UTC conversion.
   test.use({ timezoneId: 'America/New_York' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'weekselector');
   });
 
   test('lists presets next to the calendar', async ({ page }) => {
-    await getInput(page, 'ws_presets').click();
+    await weekSelector.do.open(page, 'ws_presets');
 
-    await expect(presetPanel(page, 'ws_presets')).toBeVisible();
-    await expect(presetPanel(page, 'ws_presets').locator('li')).toHaveCount(2);
+    await weekSelector.expect.presetLabels(page, 'ws_presets', [
+      'Week of mid 2024',
+      'Week of 15 January 2024',
+    ]);
   });
 
   test('selects the week a preset given as a _date object falls in', async ({ page }) => {
-    await getInput(page, 'ws_presets').click();
-    await presetPanel(page, 'ws_presets').getByText('Week of mid 2024', { exact: true }).click();
+    await weekSelector.do.selectPreset(page, 'ws_presets', 'Week of mid 2024');
 
-    await expect(getInput(page, 'ws_presets')).toHaveValue('2024-06-09');
+    await weekSelector.expect.closed(page, 'ws_presets');
+    await weekSelector.expect.value(page, 'ws_presets', '2024-06-09');
   });
 
   test('selects the week of a preset given as a date string', async ({ page }) => {
-    await getInput(page, 'ws_presets').click();
-    await presetPanel(page, 'ws_presets')
-      .getByText('Week of 15 January 2024', { exact: true })
-      .click();
+    await weekSelector.do.selectPreset(page, 'ws_presets', 'Week of 15 January 2024');
 
-    await expect(getInput(page, 'ws_presets')).toHaveValue('2024-01-14');
+    await weekSelector.expect.closed(page, 'ws_presets');
+    await weekSelector.expect.value(page, 'ws_presets', '2024-01-14');
   });
 });

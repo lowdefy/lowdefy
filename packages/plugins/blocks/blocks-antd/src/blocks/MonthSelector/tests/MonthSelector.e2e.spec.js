@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import monthSelector from '../e2e.js';
+
 // Helper to get the month input
 const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
@@ -196,32 +198,31 @@ test.describe('MonthSelector Block presets', () => {
   // Pinned to a negative offset, where a preset date lands a day early without the UTC conversion.
   test.use({ timezoneId: 'America/New_York' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'monthselector');
   });
 
   test('lists presets next to the calendar', async ({ page }) => {
-    await getInput(page, 'ms_presets').click();
+    await monthSelector.do.open(page, 'ms_presets');
 
-    await expect(presetPanel(page, 'ms_presets')).toBeVisible();
-    await expect(presetPanel(page, 'ms_presets').locator('li')).toHaveCount(2);
+    await monthSelector.expect.presetLabels(page, 'ms_presets', [
+      'March 2024',
+      'Month of mid 2024',
+    ]);
   });
 
   test('selects the month of a preset given as a date string', async ({ page }) => {
-    await getInput(page, 'ms_presets').click();
-    await presetPanel(page, 'ms_presets').getByText('March 2024', { exact: true }).click();
+    await monthSelector.do.selectPreset(page, 'ms_presets', 'March 2024');
 
-    await expect(getInput(page, 'ms_presets')).toHaveValue('2024-03');
+    await monthSelector.expect.closed(page, 'ms_presets');
+    await monthSelector.expect.value(page, 'ms_presets', '2024-03');
   });
 
   test('selects the month a preset given as a _date object falls in', async ({ page }) => {
-    await getInput(page, 'ms_presets').click();
-    await presetPanel(page, 'ms_presets').getByText('Month of mid 2024', { exact: true }).click();
+    await monthSelector.do.selectPreset(page, 'ms_presets', 'Month of mid 2024');
 
-    await expect(getInput(page, 'ms_presets')).toHaveValue('2024-06');
+    await monthSelector.expect.closed(page, 'ms_presets');
+    await monthSelector.expect.value(page, 'ms_presets', '2024-06');
   });
 });
 
@@ -231,20 +232,15 @@ test.describe('MonthSelector Block presets', () => {
 test.describe('MonthSelector Block presets in a timezone ahead of UTC', () => {
   test.use({ timezoneId: 'Pacific/Auckland' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await page.clock.setFixedTime(new Date('2026-06-30T21:30:00.000Z'));
     await navigateToTestPage(page, 'monthselector');
   });
 
   test('selects the local month for a relative preset', async ({ page }) => {
-    await getInput(page, 'ms_presets_this_month').click();
-    await presetPanel(page, 'ms_presets_this_month')
-      .getByText('This month', { exact: true })
-      .click();
+    await monthSelector.do.selectPreset(page, 'ms_presets_this_month', 'This month');
 
-    await expect(getInput(page, 'ms_presets_this_month')).toHaveValue('2026-07');
+    await monthSelector.expect.closed(page, 'ms_presets_this_month');
+    await monthSelector.expect.value(page, 'ms_presets_this_month', '2026-07');
   });
 });

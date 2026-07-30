@@ -23,6 +23,7 @@ const input = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 // the block rather than to every open picker on the page.
 const pickerDropdown = (page, blockId) =>
   page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+const presets = (page, blockId) => pickerDropdown(page, blockId).locator('.ant-picker-presets');
 
 const monthNames = [
   'Jan',
@@ -110,9 +111,8 @@ export default createBlockHelper({
     },
     selectPreset: async (page, blockId, label) => {
       await locator(page, blockId).click();
-      const dropdown = pickerDropdown(page, blockId);
-      await expect(dropdown).toBeVisible();
-      await dropdown.locator('.ant-picker-presets').getByText(label, { exact: true }).click();
+      await expect(pickerDropdown(page, blockId)).toBeVisible();
+      await presets(page, blockId).getByText(label, { exact: true }).click();
     },
     clear: async (page, blockId) => {
       await locator(page, blockId).hover();
@@ -123,5 +123,13 @@ export default createBlockHelper({
     value: (page, blockId, val) => expect(input(page, blockId)).toHaveValue(val),
     placeholder: (page, blockId, text) =>
       expect(input(page, blockId)).toHaveAttribute('placeholder', text),
+    presetLabels: (page, blockId, labels) =>
+      expect(presets(page, blockId).locator('li')).toHaveText(labels),
+    presetLabelHtml: (page, blockId, { selector, text }) =>
+      expect(presets(page, blockId).locator(selector)).toHaveText(text),
+    noPresets: (page, blockId) => expect(presets(page, blockId)).toHaveCount(0),
+    // The picker only closes the popup once it accepts the value, so a closed popup is the
+    // signal that a selection was committed rather than just shown in the input.
+    closed: (page, blockId) => expect(pickerDropdown(page, blockId)).toBeHidden(),
   },
 });

@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import dateSelector from '../e2e.js';
+
 // Helper to get the date input
 const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
@@ -213,32 +215,28 @@ test.describe('DateSelector Block', () => {
 test.describe('DateSelector Block presets', () => {
   test.use({ timezoneId: 'America/New_York' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'dateselector');
   });
 
   test('lists presets next to the calendar', async ({ page }) => {
-    await getInput(page, 'ds_presets').click();
+    await dateSelector.do.open(page, 'ds_presets');
 
-    await expect(presetPanel(page, 'ds_presets')).toBeVisible();
-    await expect(presetPanel(page, 'ds_presets').locator('li')).toHaveCount(2);
+    await dateSelector.expect.presetLabels(page, 'ds_presets', ['New Year 2024', 'Mid 2024']);
   });
 
   test('selects the date of a preset given as a date string', async ({ page }) => {
-    await getInput(page, 'ds_presets').click();
-    await presetPanel(page, 'ds_presets').getByText('New Year 2024', { exact: true }).click();
+    await dateSelector.do.selectPreset(page, 'ds_presets', 'New Year 2024');
 
-    await expect(getInput(page, 'ds_presets')).toHaveValue('2024-01-01');
+    await dateSelector.expect.closed(page, 'ds_presets');
+    await dateSelector.expect.value(page, 'ds_presets', '2024-01-01');
   });
 
   test('selects the date of a preset given as a _date object', async ({ page }) => {
-    await getInput(page, 'ds_presets').click();
-    await presetPanel(page, 'ds_presets').getByText('Mid 2024', { exact: true }).click();
+    await dateSelector.do.selectPreset(page, 'ds_presets', 'Mid 2024');
 
-    await expect(getInput(page, 'ds_presets')).toHaveValue('2024-06-15');
+    await dateSelector.expect.closed(page, 'ds_presets');
+    await dateSelector.expect.value(page, 'ds_presets', '2024-06-15');
   });
 });
 
@@ -248,18 +246,15 @@ test.describe('DateSelector Block presets', () => {
 test.describe('DateSelector Block presets in a timezone ahead of UTC', () => {
   test.use({ timezoneId: 'Pacific/Auckland' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await page.clock.setFixedTime(new Date('2026-06-30T21:30:00.000Z'));
     await navigateToTestPage(page, 'dateselector');
   });
 
   test('selects the local date for a relative preset', async ({ page }) => {
-    await getInput(page, 'ds_presets_today').click();
-    await presetPanel(page, 'ds_presets_today').getByText('Today', { exact: true }).click();
+    await dateSelector.do.selectPreset(page, 'ds_presets_today', 'Today');
 
-    await expect(getInput(page, 'ds_presets_today')).toHaveValue('2026-07-01');
+    await dateSelector.expect.closed(page, 'ds_presets_today');
+    await dateSelector.expect.value(page, 'ds_presets_today', '2026-07-01');
   });
 });

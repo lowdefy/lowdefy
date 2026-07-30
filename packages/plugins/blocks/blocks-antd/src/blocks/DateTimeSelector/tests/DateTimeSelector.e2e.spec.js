@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import dateTimeSelector from '../e2e.js';
+
 // Helper to get the datetime input
 const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
@@ -197,39 +199,36 @@ test.describe('DateTimeSelector Block presets', () => {
   // Pinned to a negative offset, where a preset resolves to a different instant per selectUTC.
   test.use({ timezoneId: 'America/New_York' });
 
-  const presetPanel = (page, blockId) =>
-    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
-
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'datetimeselector');
   });
 
   test('lists presets next to the calendar', async ({ page }) => {
-    await getInput(page, 'dts_presets').click();
+    await dateTimeSelector.do.open(page, 'dts_presets');
 
-    await expect(presetPanel(page, 'dts_presets')).toBeVisible();
-    await expect(presetPanel(page, 'dts_presets').locator('li')).toHaveCount(2);
+    await dateTimeSelector.expect.presetLabels(page, 'dts_presets', ['Noon UTC', 'Local morning']);
   });
 
   test('selects a preset as an instant when selectUTC is not set', async ({ page }) => {
-    await getInput(page, 'dts_presets').click();
-    await presetPanel(page, 'dts_presets').getByText('Noon UTC', { exact: true }).click();
+    await dateTimeSelector.do.selectPreset(page, 'dts_presets', 'Noon UTC');
 
+    await dateTimeSelector.expect.closed(page, 'dts_presets');
     // New York is UTC-4 in June, so noon UTC reads as 08:00 on the local clock the block shows.
-    await expect(getInput(page, 'dts_presets')).toHaveValue('2024-06-15 08:00');
+    await dateTimeSelector.expect.value(page, 'dts_presets', '2024-06-15 08:00');
   });
 
   test('selects the datetime of a preset given as a date string', async ({ page }) => {
-    await getInput(page, 'dts_presets').click();
-    await presetPanel(page, 'dts_presets').getByText('Local morning', { exact: true }).click();
+    await dateTimeSelector.do.selectPreset(page, 'dts_presets', 'Local morning');
 
-    await expect(getInput(page, 'dts_presets')).toHaveValue('2024-06-15 09:30');
+    await dateTimeSelector.expect.closed(page, 'dts_presets');
+    await dateTimeSelector.expect.value(page, 'dts_presets', '2024-06-15 09:30');
+    // 09:30 in New York in June is 13:30 UTC.
   });
 
   test('selects a preset as a UTC wall clock when selectUTC is set', async ({ page }) => {
-    await getInput(page, 'dts_presets_utc').click();
-    await presetPanel(page, 'dts_presets_utc').getByText('Noon UTC', { exact: true }).click();
+    await dateTimeSelector.do.selectPreset(page, 'dts_presets_utc', 'Noon UTC');
 
-    await expect(getInput(page, 'dts_presets_utc')).toHaveValue('2024-06-15 12:00');
+    await dateTimeSelector.expect.closed(page, 'dts_presets_utc');
+    await dateTimeSelector.expect.value(page, 'dts_presets_utc', '2024-06-15 12:00');
   });
 });
