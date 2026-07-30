@@ -17,8 +17,6 @@
 import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
 import antdStyles from '../../ag-grid-antd.module.css';
 
 import AgGridInput from '../../AgGridInput.js';
