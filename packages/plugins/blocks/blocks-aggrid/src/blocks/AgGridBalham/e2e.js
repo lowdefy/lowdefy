@@ -16,4 +16,4 @@
 
 import createAgGridDisplayHelper from '../../createAgGridDisplayHelper.js';
 
-export default createAgGridDisplayHelper('balham');
+export default createAgGridDisplayHelper();

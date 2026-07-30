@@ -16,4 +16,4 @@
 
 import createAgGridDisplayHelper from '../../createAgGridDisplayHelper.js';
 
-export default createAgGridDisplayHelper('alpine');
+export default createAgGridDisplayHelper();

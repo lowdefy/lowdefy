@@ -16,4 +16,4 @@
 
 import createAgGridInputHelper from '../../createAgGridInputHelper.js';
 
-export default createAgGridInputHelper('balham');
+export default createAgGridInputHelper();
