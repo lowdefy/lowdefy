@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { get, type } from '@lowdefy/helpers';
+import { get, ReservedKeyError, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
@@ -217,19 +217,36 @@ function evaluateBuildOperator(node, ctx) {
   return output;
 }
 
+// _var keys are author-written YAML, so a reserved name (e.g. "constructor") is a config
+// mistake, not a missing var. Wraps both call shapes for that check. The object form call
+// site below passes no `options` argument at all, so a missing key comes back from `get` as
+// `undefined` instead of a default — resolveVar relies on that `undefined` to tell "var not
+// provided" apart from "var provided as null".
+function readVar(key, ctx, options) {
+  try {
+    return get(ctx.vars, key, options);
+  } catch (error) {
+    if (!(error instanceof ReservedKeyError)) throw error;
+    throw new ConfigError(`_var key "${key}" is a reserved name.`, {
+      cause: error,
+      filePath: ctx.currentFile,
+    });
+  }
+}
+
 // Resolve a _var node
 function resolveVar(node, ctx) {
   const varDef = node._var;
 
   // String form: { _var: "key" }
   if (type.isString(varDef)) {
-    const value = get(ctx.vars, varDef, { default: null });
+    const value = readVar(varDef, ctx, { default: null });
     return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
   }
 
   // Object form: { _var: { key, default } }
   if (type.isObject(varDef) && type.isString(varDef.key)) {
-    const varFromParent = get(ctx.vars, varDef.key);
+    const varFromParent = readVar(varDef.key, ctx);
 
     // Var provided (even if null) → use parent's sourceRefId for location
     if (!type.isUndefined(varFromParent)) {
@@ -844,7 +861,7 @@ async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
     });
 
     // 14. Extract key
-    content = getKey({ input: content, refDef });
+    content = getKey({ input: content, refDef, filePath: fromFile });
 
     // 15. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
