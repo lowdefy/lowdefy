@@ -16,6 +16,7 @@
 
 // Core helpers (runner-agnostic - also available from the "./runtime" subpath)
 import { escapeId } from './core/escapeId.js';
+import { getShortcutModifier } from './core/keyboard.js';
 import { getBlock } from './core/locators.js';
 import { goto, waitForReady, waitForPage } from './core/navigation.js';
 import { getRequestState, getRequestResponse } from './core/requests.js';
@@ -24,6 +25,7 @@ import { getValidation } from './core/validation.js';
 import { setUrlQuery } from './core/url.js';
 
 export { escapeId };
+export { getShortcutModifier };
 export { getBlock };
 export { goto, waitForReady, waitForPage };
 export { getRequestState, getRequestResponse };
