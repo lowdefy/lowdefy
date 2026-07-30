@@ -30,8 +30,12 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
     quickFilterValue,
     columnDefs,
     defaultColDef,
+    height,
     rowData: newRowData,
+    rowId,
+    size,
     suppressCellFocus = true,
+    themeParams,
     ...someProperties
   } = properties;
   const [rowData, setRowData] = useState(newRowData ?? []);
@@ -42,11 +46,10 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
 
   const getRowId = useCallback(
     (params) => {
-      if (properties.rowId && params.data[properties.rowId] !== undefined)
-        return params.data[properties.rowId];
+      if (rowId && params.data[rowId] !== undefined) return params.data[rowId];
       return assignRowId(params);
     },
-    [properties.rowId]
+    [rowId]
   );
 
   const onRowClick = useCallback((event) => {
