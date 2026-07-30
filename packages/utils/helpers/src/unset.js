@@ -64,26 +64,48 @@ const unset = (obj, prop) => {
     throw new ReservedKeyError(reserved);
   }
 
-  if (segs.length === 1) {
-    if (Object.prototype.hasOwnProperty.call(obj, segs[0])) {
-      delete obj[segs[0]];
-    }
-    return true;
-  }
-
-  const last = segs.pop();
+  const len = segs.length;
   let target = obj;
-  for (const seg of segs) {
-    // A missing or primitive intermediate means there is nothing to unset.
-    if (!isTraversable(target) || !Object.prototype.hasOwnProperty.call(target, seg)) {
+  let idx = 0;
+
+  while (idx < len) {
+    let seg = segs[idx];
+    let next = idx + 1;
+
+    // The strict segment wins if present. On a miss, grow the candidate one segment at a time
+    // looking for a literal dotted key - shortest-first, no backtracking, matching get and set.
+    if (!Object.hasOwn(target, seg)) {
+      let candidate = seg;
+      let n = next;
+      while (n < len) {
+        candidate = `${candidate}.${segs[n]}`;
+        n += 1;
+        if (Object.hasOwn(target, candidate)) {
+          seg = candidate;
+          next = n;
+          break;
+        }
+      }
+    }
+
+    // Nothing matches at this level, so there is nothing to unset.
+    if (!Object.hasOwn(target, seg)) {
       return true;
     }
+
+    if (next === len) {
+      return delete target[seg];
+    }
+
     target = target[seg];
+    // A missing or primitive intermediate means there is nothing to unset.
+    if (!isTraversable(target)) {
+      return true;
+    }
+    idx = next;
   }
-  if (!isTraversable(target)) {
-    return true;
-  }
-  return delete target[last];
+
+  return true;
 };
 
 export default unset;
