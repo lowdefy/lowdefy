@@ -241,14 +241,7 @@ try {
 #### set
 
 ```
-(
-  target: any,
-  path: string,
-  value: any,
-  options?: {
-    merge?: boolean | function,
-  }
-): any
+(target: any, path: string, value: any): any
 ```
 
 Sets a value in a object at a key given by path, and returns `target`. Intermediate objects are created as needed (autovivification); the next segment decides whether a missing intermediate becomes an array or an object. Returns `target` unchanged if `target` is not a plain object or `path` is not a string.
@@ -262,7 +255,19 @@ set(obj, 'd.0.e', 3);
 // obj.d becomes [{ e: 3 }] - the integer segment creates an array
 ```
 
-Paths are strings only; array paths are not supported. With `options.merge` truthy, an existing object at the leaf is merged with the value instead of replaced (`Object.assign` by default, or the supplied function).
+At each level of the walk the strict segment wins if it is present on the target. If it is absent, the segment is joined with successive following segments and the shortest joined key present on the target is used, so a write reaches a literal dotted key instead of creating a nested twin beside it. If nothing matches, the intermediate is created as usual.
+
+```js
+const obj = { 'a.b': { c: 1 } };
+set(obj, 'a.b.c', 2);
+// obj becomes { 'a.b': { c: 2 } } - no obj.a is created
+
+const both = { a: { b: {} }, 'a.b': {} };
+set(both, 'a.b.c', 1);
+// writes to both.a.b.c - the strict segment wins when both are present
+```
+
+Paths are strings only; array paths are not supported. The leaf value always replaces what is there; to merge instead, write `set(obj, path, mergeObjects([get(obj, path), value]))`.
 
 Reserved segments (see [Reserved keys](#reserved-keys)) at any depth throw `ReservedKeyError` before anything is written, so a rejected path leaves the target untouched.
 
