@@ -23,14 +23,13 @@ function setup({ signInResult, signUpResult } = {}) {
     _internal: {
       globals: { window: { location: { assign, search: '' } } },
     },
+    home: { configured: false, pageId: 'home-page' },
   };
   const auth = {
     authConfig: { providers: [] },
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
-    cancelInvitation: jest.fn(() =>
-      Promise.resolve({ data: { status: 'canceled' }, error: null })
-    ),
+    cancelInvitation: jest.fn(() => Promise.resolve({ data: { status: 'canceled' }, error: null })),
     changePassword: jest.fn(() =>
       Promise.resolve({ data: { token: null, user: {} }, error: null })
     ),
@@ -557,9 +556,7 @@ test('removeMember calls auth.removeMember with the memberIdOrEmail param', asyn
 test('removeMember throws when memberIdOrEmail is missing', async () => {
   const { auth, lowdefy } = setup();
   const { removeMember } = createAuthMethods(lowdefy, auth);
-  await expect(removeMember()).rejects.toThrow(
-    'RemoveMember requires a "memberIdOrEmail" param.'
-  );
+  await expect(removeMember()).rejects.toThrow('RemoveMember requires a "memberIdOrEmail" param.');
   expect(auth.removeMember).not.toHaveBeenCalled();
 });
 
@@ -594,9 +591,7 @@ test('updateOrganization wraps the name param in the update data object', async 
 test('updateOrganization throws when name is missing', async () => {
   const { auth, lowdefy } = setup();
   const { updateOrganization } = createAuthMethods(lowdefy, auth);
-  await expect(updateOrganization()).rejects.toThrow(
-    'UpdateOrganization requires a "name" param.'
-  );
+  await expect(updateOrganization()).rejects.toThrow('UpdateOrganization requires a "name" param.');
   expect(auth.updateOrganization).not.toHaveBeenCalled();
 });
 
@@ -942,7 +937,7 @@ test('login with a GenericOAuth provider forwards newUserCallbackUrl and errorCa
     [
       {
         providerId: 'keycloak',
-        callbackURL: undefined,
+        callbackURL: '/home-page',
         newUserCallbackURL: '/welcome',
         errorCallbackURL: '/sign-in-failed',
       },
@@ -1069,4 +1064,362 @@ test('phoneNumberSendOtp threads captchaToken as the x-captcha-response header',
       },
     ],
   ]);
+});
+
+// The callbackUrl precedence ladder: callbackUrl: false, then the explicit
+// param, then the ?callbackUrl= query, then the app's home page, then a throw.
+
+test('login with email and password lands on the home page when no callbackUrl and no query are given', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('an explicit callbackUrl still wins over a present ?callbackUrl= query', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Ffrom-query';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { pageId: 'dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+});
+
+test('the ?callbackUrl= query wins over the home default', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Ffrom-query';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/from-query']]);
+});
+
+test('the ?callbackUrl= query rung is not re-prefixed with basePath', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  // Both producers of this query param already bake basePath into the value.
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fapp%2Freports';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/app/reports']]);
+});
+
+test('the home default is basePath-prefixed', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  lowdefy.home = { configured: true, pageId: 'dashboard' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/app/']]);
+});
+
+test('login with phoneNumber lands on the home page when no callbackUrl is given', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ phoneNumber: '+27831234567', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('passkeySignIn lands on the home page when no callbackUrl is given', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  await passkeySignIn();
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('signUp navigates to the home page when a token is present and no callbackUrl is given', async () => {
+  const { auth, lowdefy, assign } = setup({ signUpResult: { token: 'session-token', user: {} } });
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({ email: 'user@example.com', password: 'password123' });
+  expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toEqual('/home-page');
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('signUp with requireEmailVerification still does not navigate, though a destination now resolves', async () => {
+  const { auth, lowdefy, assign } = setup({ signUpResult: { token: null, user: {} } });
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({ email: 'user@example.com', password: 'password123' });
+  // The emailed verification link still carries the resolved destination.
+  expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toEqual('/home-page');
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('sendVerificationEmail defaults the emailed link to the home page', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await sendVerificationEmail({ email: 'user@example.com' });
+  expect(auth.sendVerificationEmail.mock.calls[0][0].callbackURL).toEqual('/home-page');
+});
+
+test('sendVerificationEmail lands the emailed link inside the app under a basePath', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/app';
+  lowdefy.home = { configured: true, pageId: 'dashboard' };
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await sendVerificationEmail({ email: 'user@example.com' });
+  // Not "/", which BetterAuth would resolve against its baseURL to the origin
+  // root - outside the app.
+  expect(auth.sendVerificationEmail.mock.calls[0][0].callbackURL).toEqual('/app/');
+});
+
+test('login with magicLink defaults callbackURL to the home page inside the app', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/app';
+  lowdefy.home = { configured: true, pageId: 'dashboard' };
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', magicLink: true });
+  expect(auth.signInMagicLink.mock.calls[0][0].callbackURL).toEqual('/app/');
+});
+
+test('login with a social provider defaults callbackURL to the home page inside the app', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/app';
+  lowdefy.home = { configured: true, pageId: 'dashboard' };
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ providerId: 'google' });
+  expect(auth.signInSocial.mock.calls[0][0].callbackURL).toEqual('/app/');
+});
+
+test('login throws when no destination resolves and the home config names no page', async () => {
+  const { auth, lowdefy, assign } = setup();
+  // What getHomeAndMenus returns for an app with no homePageId and no menu link.
+  lowdefy.home = { configured: false, pageId: null };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ email: 'user@example.com', password: 'password123' })).rejects.toThrow(
+    'Invalid callbackUrl: no destination resolved. The app has no resolvable home page - set homePageId, give an explicit callbackUrl, or use "callbackUrl: false" to stay on the page.'
+  );
+  expect(assign).not.toHaveBeenCalled();
+  // The destination resolves before the sign-in call, so the throw mints no
+  // session - a login page mapping the failure to "sign-in failed" is telling
+  // the truth. Reordering the resolve below the call would make it a lie.
+  expect(auth.signInEmail).not.toHaveBeenCalled();
+});
+
+test('login throws the callbackUrl error, not a TypeError, when lowdefy.home is absent', async () => {
+  const { auth, lowdefy } = setup();
+  delete lowdefy.home;
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ email: 'user@example.com', password: 'password123' })).rejects.toThrow(
+    'Invalid callbackUrl: no destination resolved. The app has no resolvable home page - set homePageId, give an explicit callbackUrl, or use "callbackUrl: false" to stay on the page.'
+  );
+});
+
+test('an explicit callbackUrl home target throws instead of resolving to /undefined', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.home = { configured: false, pageId: null };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(
+    login({ email: 'user@example.com', password: 'password123', callbackUrl: { home: true } })
+  ).rejects.toThrow('Invalid callbackUrl: no destination resolved.');
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('logout with a home callbackUrl does not navigate when the home config names no page', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.home = { configured: false, pageId: null };
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSignOutReload = jest.fn();
+  const { logout } = createAuthMethods(lowdefy, auth);
+  // logout gains no default and no throw, but inherits the correctness fix -
+  // the post-sign-out reload takes over instead of navigating to /undefined.
+  await logout({ callbackUrl: { home: true } });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+});
+
+test('login with email and callbackUrl false mints the session without navigating', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: false,
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('login with phoneNumber and callbackUrl false does not navigate', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ phoneNumber: '+27831234567', password: 'password123', callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('passkeySignIn with callbackUrl false does not navigate', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  const data = await passkeySignIn({ callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ session: {}, user: {} });
+});
+
+test('callbackUrl false wins over a present ?callbackUrl= query', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Ffrom-query';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('login with magicLink and callbackUrl false throws - the redirect hop is not ours to suppress', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInMagicLink = jest.fn(() => Promise.resolve({ data: { status: true }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(
+    login({ email: 'user@example.com', magicLink: true, callbackUrl: false })
+  ).rejects.toThrow(
+    'Invalid callbackUrl: "false" is not valid for Login with magicLink, which redirects through an external hop. Give a destination.'
+  );
+  expect(auth.signInMagicLink).not.toHaveBeenCalled();
+});
+
+test('login with a provider and callbackUrl false throws', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ providerId: 'google', callbackUrl: false })).rejects.toThrow(
+    'Invalid callbackUrl: "false" is not valid for Login with a provider, which redirects through an external hop. Give a destination.'
+  );
+  expect(auth.signInSocial).not.toHaveBeenCalled();
+});
+
+test('signUp with callbackUrl false throws - the same value is the emailed link', async () => {
+  const { auth, lowdefy } = setup();
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await expect(
+    signUp({ email: 'user@example.com', password: 'password123', callbackUrl: false })
+  ).rejects.toThrow(
+    'Invalid callbackUrl: "false" is not valid for SignUp, which redirects through an external hop. Give a destination.'
+  );
+  expect(auth.signUpEmail).not.toHaveBeenCalled();
+});
+
+test('sendVerificationEmail with callbackUrl false throws', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await expect(
+    sendVerificationEmail({ email: 'user@example.com', callbackUrl: false })
+  ).rejects.toThrow(
+    'Invalid callbackUrl: "false" is not valid for SendVerificationEmail, which redirects through an external hop. Give a destination.'
+  );
+  expect(auth.sendVerificationEmail).not.toHaveBeenCalled();
+});
+
+test('logout with an empty url callbackUrl neither navigates nor suppresses the reload', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  auth.suppressSignOutReload = jest.fn();
+  const { logout } = createAuthMethods(lowdefy, auth);
+  // The one input where resolving through resolveTargetURL changes when the
+  // basePath prefix is applied - willNavigate must stay false either way.
+  await logout({ callbackUrl: { url: '' } });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSignOutReload).not.toHaveBeenCalled();
+});
+
+// The ?callbackUrl= query is attacker-supplied - a crafted sign-in link is the
+// whole point of an open redirect - and on the email, phone and passkey paths it
+// reaches window.location.assign without BetterAuth ever seeing it.
+
+test('a protocol-relative ?callbackUrl= query is rejected and falls through to the home default', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%2Fevil.com';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('a backslash-obfuscated protocol-relative ?callbackUrl= query is rejected', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  // Browsers normalize the backslash to a slash, making this off-site too.
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%5Cevil.com';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('an absolute ?callbackUrl= query is rejected and falls through to the home default', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=https%3A%2F%2Fevil.com';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('a bare "/" ?callbackUrl= query is still accepted', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/']]);
+});
+
+// A callbackUrl that resolves to something other than an object is absence, not
+// an error - an operator with no matching branch resolves to null, and the bare
+// string the schemas wrongly declared before this change is still common in apps.
+
+test('a null callbackUrl falls through to the home default instead of throwing a TypeError', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: null });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
+test('a null callbackUrl on logout neither navigates nor throws', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.signOut = jest.fn(() => Promise.resolve({ data: { success: true }, error: null }));
+  const { logout } = createAuthMethods(lowdefy, auth);
+  await logout({ callbackUrl: null });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('a string callbackUrl falls through the ladder rather than failing the sign-in', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  lowdefy.home = { configured: true, pageId: 'router' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  // The spelling the schemas wrongly declared before this change, still written
+  // by apps in the wild: it expresses none of the four target keys, so the home
+  // rung answers. Reading it as { url } instead would basePath-prefix a value
+  // that is usually the already-prefixed query, yielding /app/app/reports.
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: '/' });
+  expect(assign.mock.calls).toEqual([['/app/']]);
+});
+
+test('a string callbackUrl leaves a present ?callbackUrl= query to answer, un-prefixed', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fapp%2Freports';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: '/app/reports',
+  });
+  expect(assign.mock.calls).toEqual([['/app/reports']]);
+});
+
+test('a non-object newUserCallbackUrl is omitted so BetterAuth defaults it to callbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.providers = [{ id: 'google', type: 'Google' }];
+  auth.signInSocial = jest.fn(() => Promise.resolve({ data: { url: 'x' }, error: null }));
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ providerId: 'google', newUserCallbackUrl: '/welcome' });
+  expect(auth.signInSocial.mock.calls[0][0].newUserCallbackURL).toBeUndefined();
+});
+
+test('sendVerificationEmail reports a missing email before judging the callbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await expect(sendVerificationEmail({ callbackUrl: false })).rejects.toThrow(
+    'SendVerificationEmail requires an "email" param.'
+  );
 });
