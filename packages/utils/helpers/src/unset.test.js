@@ -53,10 +53,10 @@ test('should unset nested values:', () => {
   expect(three).toEqual({ a: { b: { e: 'f' } } });
 });
 
-test('should leave a literal dotted key intact when the path is unescaped:', () => {
+test('should unset a literal dotted key when the path is unescaped:', () => {
   const three = { 'a.b': 'c', d: 'e' };
   expect(unset(three, 'a.b')).toBe(true);
-  expect(three).toEqual({ 'a.b': 'c', d: 'e' });
+  expect(three).toEqual({ d: 'e' });
 });
 
 test('should unset nested escaped values:', () => {
@@ -104,10 +104,10 @@ describe('unset', () => {
     expect(three).toEqual({ a: { b: { e: 'f' } } });
   });
 
-  test('should leave a literal dotted key intact when the path is unescaped:', () => {
+  test('should unset a literal dotted key when the path is unescaped:', () => {
     const three = { 'a.b': 'c', d: 'e' };
     expect(unset(three, 'a.b')).toBe(true);
-    expect(three).toEqual({ 'a.b': 'c', d: 'e' });
+    expect(three).toEqual({ d: 'e' });
   });
 
   test('should unset nested escaped values:', () => {
@@ -251,16 +251,68 @@ describe('unset escaped paths', () => {
     expect(obj).toEqual({});
   });
 
-  // An unescaped path is always a nested walk, never a raw key match.
-  test('unset leaves a literal dotted top level key intact when the dot is not escaped', () => {
+  // A miss on the strict segment falls back to a literal dotted key at the same level.
+  test('unset deletes a literal dotted top level key when the dot is not escaped', () => {
     const obj = { 'a.b': 1 };
     expect(unset(obj, 'a.b')).toBe(true);
-    expect(obj).toEqual({ 'a.b': 1 });
+    expect(obj).toEqual({});
   });
 
   test('unset walks nested segments when no raw key matches the path', () => {
     const obj = { a: { b: 1 } };
     expect(unset(obj, 'a.b')).toBe(true);
     expect(Object.prototype.hasOwnProperty.call(obj.a, 'b')).toBe(false);
+  });
+});
+
+describe('unset dotted key rejoin', () => {
+  test('unset deletes a literal dotted key nested below a strict segment', () => {
+    const obj = { attributes: { 'a.b': 1 } };
+    expect(unset(obj, 'attributes.a.b')).toBe(true);
+    expect(obj).toEqual({ attributes: {} });
+  });
+
+  test('unset deletes the nested value when both a strict segment and a dotted key exist', () => {
+    const obj = { a: { b: 1 }, 'a.b': 2 };
+    expect(unset(obj, 'a.b')).toBe(true);
+    expect(obj).toEqual({ a: {}, 'a.b': 2 });
+  });
+
+  test('unset matches the shortest joined key first', () => {
+    const obj = { 'a.b': { c: 1 }, 'a.b.c': 2 };
+    expect(unset(obj, 'a.b.c')).toBe(true);
+    expect(obj).toEqual({ 'a.b': {}, 'a.b.c': 2 });
+  });
+
+  test('unset does not backtrack to a longer joined key after a match', () => {
+    const obj = { 'a.b': {}, 'a.b.c': 1 };
+    expect(unset(obj, 'a.b.c')).toBe(true);
+    expect(obj).toEqual({ 'a.b': {}, 'a.b.c': 1 });
+  });
+
+  test('unset is a no-op when no strict or joined key matches', () => {
+    const obj = {};
+    expect(unset(obj, 'a.b.c')).toBe(true);
+    expect(obj).toEqual({});
+  });
+
+  test('unset is a no-op when an intermediate is a primitive', () => {
+    const obj = { a: 1 };
+    expect(unset(obj, 'a.b')).toBe(true);
+    expect(obj).toEqual({ a: 1 });
+  });
+
+  // The strict segment wins even when it cannot be traversed - a present scalar `a` blocks the
+  // rejoin to the literal `a.b` key, and there is no backtracking to try it.
+  test('unset is a no-op when a strict scalar segment coexists with a literal dotted key', () => {
+    const obj = { a: 1, 'a.b': 2 };
+    expect(unset(obj, 'a.b')).toBe(true);
+    expect(obj).toEqual({ a: 1, 'a.b': 2 });
+  });
+
+  test('unset deletes through a rejoin match followed by ordinary strict descent', () => {
+    const obj = { 'a.b': { c: { d: 1 } } };
+    expect(unset(obj, 'a.b.c.d')).toBe(true);
+    expect(obj).toEqual({ 'a.b': { c: {} } });
   });
 });

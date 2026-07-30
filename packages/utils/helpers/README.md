@@ -387,9 +387,23 @@ unset(obj, 'a.b'); // returns true
 // obj becomes { a: {} }
 ```
 
+At each level of the walk the strict segment wins if it is present. If it is absent, the segment is joined with successive following segments and the first joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. A present strict segment always wins, even when it holds a value the walk cannot descend into: `unset({ a: 1, 'a.b': 2 }, 'a.b')` is a no-op.
+
+```js
+const obj = { 'a.b': 1 };
+unset(obj, 'a.b'); // returns true
+// obj becomes {}
+
+const both = { a: { b: 1 }, 'a.b': 2 };
+unset(both, 'a.b'); // deletes the nested b, the strict segment wins
+// both becomes { a: {}, 'a.b': 2 }
+```
+
+Joined candidates are matched shortest-first and there is no backtracking: once a joined key matches, a later miss is a no-op rather than a retry with a longer join. Given `{ 'a.b': {}, 'a.b.c': 1 }`, `unset(obj, 'a.b.c')` takes `'a.b'`, finds no `c` inside it, and leaves `'a.b.c'` intact.
+
 Throws `TypeError('expected an object.')` if `object` is not a plain object. Returns `true` without doing anything if `property` is not a string.
 
-Reserved segments (see [Reserved keys](#reserved-keys)) at any depth throw `ReservedKeyError`.
+Reserved segments (see [Reserved keys](#reserved-keys)) at any depth throw `ReservedKeyError`. A joined candidate always contains a dot, so it can never be a reserved name.
 
 #### unsetKey
 
