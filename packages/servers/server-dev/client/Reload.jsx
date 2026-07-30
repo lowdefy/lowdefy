@@ -25,6 +25,13 @@ import waitForRestartedServer from '../lib/client/utils/waitForRestartedServer.j
 const Reload = ({ children, basePath, lowdefy }) => {
   const [reset, setReset] = useState(false);
   const [restarting, setRestarting] = useState(false);
+  // reset is a one-shot boolean the engine lowers only after a page mounts
+  // (getContext.js) — while a page is suspended it stays true and setReset(true)
+  // bails out of re-rendering. The tick always changes, so every reload event
+  // re-invokes Routing's render prop, which re-reads reloadVersion and mints a
+  // fresh Suspense/SWR key — a suspended tab recovers instead of stranding on
+  // the building screen.
+  const [, setReloadTick] = useState(0);
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
     const sse = new EventSource(`${basePath}/api/reload`);
@@ -38,6 +45,7 @@ const Reload = ({ children, basePath, lowdefy }) => {
           lowdefy._internal.initialised = false;
         }
         setReset(true);
+        setReloadTick((tick) => tick + 1);
         console.log('Reloaded config.');
       }, 600);
     });
