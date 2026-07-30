@@ -15,13 +15,15 @@
 */
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { AgGridReact } from '@ag-grid-community/react';
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
-import { CsvExportModule } from '@ag-grid-community/csv-export';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import processColDefs from './processColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
+
+// Registration is idempotent, so each core registers independently to stay standalone.
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const { quickFilterValue, columnDefs, defaultColDef, ...someProperties } = properties;
@@ -211,7 +213,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         onSortChanged={onSortChanged}
         onRowDragEnd={onRowDragEnd}
         defaultColDef={memoDefaultColDef}
-        modules={[ClientSideRowModelModule, CsvExportModule]}
         columnDefs={processColDefs(columnDefs, methods)}
         ref={gridRef}
         getRowId={getRowId}
