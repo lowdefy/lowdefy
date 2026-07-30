@@ -19,13 +19,12 @@ const label = {
   description: 'Text shown for the shortcut - supports html.',
 };
 
+const dateDescription =
+  'A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]".';
+
 const date = {
   type: ['string', 'number', 'object'],
-  description:
-    'A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]".',
-  docs: {
-    displayType: 'date',
-  },
+  description: dateDescription,
 };
 
 export const datePresets = {
@@ -58,8 +57,10 @@ export const dateRangePresets = {
     properties: {
       label,
       value: {
+        // The docs table does not recurse into the items of a nested array, so the date description
+        // is repeated here to keep it on the DateRangeSelector page.
         type: 'array',
-        description: 'The start and end date of the range.',
+        description: `The start and end date of the range. ${dateDescription}`,
         minItems: 2,
         maxItems: 2,
         items: date,

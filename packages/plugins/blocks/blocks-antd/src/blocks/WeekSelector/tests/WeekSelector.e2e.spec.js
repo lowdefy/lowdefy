@@ -189,3 +189,38 @@ test.describe('WeekSelector Block', () => {
     await expect(dropdown).toBeHidden();
   });
 });
+
+test.describe('WeekSelector Block presets', () => {
+  // Pinned to a negative offset, where a preset date lands a day early without the UTC conversion.
+  test.use({ timezoneId: 'America/New_York' });
+
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'weekselector');
+  });
+
+  test('lists presets next to the calendar', async ({ page }) => {
+    await getInput(page, 'ws_presets').click();
+
+    await expect(presetPanel(page, 'ws_presets')).toBeVisible();
+    await expect(presetPanel(page, 'ws_presets').locator('li')).toHaveCount(2);
+  });
+
+  test('selects the week a preset given as a _date object falls in', async ({ page }) => {
+    await getInput(page, 'ws_presets').click();
+    await presetPanel(page, 'ws_presets').getByText('Week of mid 2024', { exact: true }).click();
+
+    await expect(getInput(page, 'ws_presets')).toHaveValue('2024-06-09');
+  });
+
+  test('selects the week of a preset given as a date string', async ({ page }) => {
+    await getInput(page, 'ws_presets').click();
+    await presetPanel(page, 'ws_presets')
+      .getByText('Week of 15 January 2024', { exact: true })
+      .click();
+
+    await expect(getInput(page, 'ws_presets')).toHaveValue('2024-01-14');
+  });
+});

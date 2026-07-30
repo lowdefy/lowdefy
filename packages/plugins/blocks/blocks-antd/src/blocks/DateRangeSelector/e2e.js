@@ -22,6 +22,10 @@ const locator = (page, blockId) =>
 const startInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 const endInput = (page, blockId) =>
   locator(page, blockId).locator('.ant-picker-input').last().locator('input');
+// The block renders the picker popup into a container inside itself, so the dropdown is scoped to
+// the block rather than to every open picker on the page.
+const pickerDropdown = (page, blockId) =>
+  page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
 
 const monthNames = [
   'Jan',
@@ -86,7 +90,7 @@ export default createBlockHelper({
       const [sYear, sMonth] = startDateStr.split('-').map(Number);
       const [eYear, eMonth] = endDateStr.split('-').map(Number);
       await startInput(page, blockId).click();
-      const dropdown = page.locator('.ant-picker-dropdown:visible');
+      const dropdown = pickerDropdown(page, blockId);
       await expect(dropdown).toBeVisible();
       await navigateToMonth(dropdown, sYear, sMonth);
       await dropdown.locator(`.ant-picker-cell-in-view[title="${startDateStr}"]`).click();
@@ -95,7 +99,7 @@ export default createBlockHelper({
     },
     selectPreset: async (page, blockId, label) => {
       await locator(page, blockId).click();
-      const dropdown = page.locator('.ant-picker-dropdown:visible');
+      const dropdown = pickerDropdown(page, blockId);
       await expect(dropdown).toBeVisible();
       await dropdown.locator('.ant-picker-presets').getByText(label, { exact: true }).click();
     },

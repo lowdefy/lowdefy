@@ -27,18 +27,33 @@ dayjs.extend(utc);
 // clock of the configured date is rebuilt in local mode - onChange then normalises it back to UTC
 // the same way it does for a cell click. DateTimeSelector without selectUTC reads its value in
 // local time, so there the configured date is used as the instant it is.
-function toPickerDate(date, local) {
-  if (local) return dayjs(date);
-  return dayjs(dayjs.utc(date).format('YYYY-MM-DDTHH:mm:ss'));
+//
+// A rebuilt wall clock cannot express a time the local calendar skips, so a DateTimeSelector preset
+// with selectUTC whose UTC time falls in the local daylight saving gap shifts forward by the length
+// of the gap. The date only pickers are unaffected, since their onChange snaps the result to the
+// start of the day, month or week.
+function toPickerDate({ date, local, preset }) {
+  // dayjs reads a missing date as now, which would make a mistyped preset select today.
+  if (type.isNone(date)) {
+    throw new Error(`Preset value is missing. Received ${JSON.stringify(preset)}.`);
+  }
+  const pickerDate = local ? dayjs(date) : dayjs(dayjs.utc(date).format('YYYY-MM-DDTHH:mm:ss'));
+  if (!pickerDate.isValid()) {
+    throw new Error(`Preset value is not a date. Received ${JSON.stringify(preset)}.`);
+  }
+  return pickerDate;
 }
 
 const getPresets = ({ local, methods, presets }) => {
   if (type.isNone(presets)) return undefined;
+  if (!type.isArray(presets)) {
+    throw new Error(`Presets is not an array. Received ${JSON.stringify(presets)}.`);
+  }
   return presets.map((preset) => ({
     label: renderHtml({ html: preset.label, methods }),
     value: type.isArray(preset.value)
-      ? preset.value.map((date) => toPickerDate(date, local))
-      : toPickerDate(preset.value, local),
+      ? preset.value.map((date) => toPickerDate({ date, local, preset }))
+      : toPickerDate({ date: preset.value, local, preset }),
   }));
 };
 

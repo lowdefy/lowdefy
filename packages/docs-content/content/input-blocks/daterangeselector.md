@@ -841,7 +841,7 @@ Date range picker for selecting start and end dates.
 | `placeholder` | array | - | Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale. |
 | `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
-| `presets.$.value` | array | - | The start and end date of the range. |
+| `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

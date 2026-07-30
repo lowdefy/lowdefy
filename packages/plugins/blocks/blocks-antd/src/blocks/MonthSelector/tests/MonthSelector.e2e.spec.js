@@ -191,3 +191,36 @@ test.describe('MonthSelector Block', () => {
     await expect(dropdown).toBeHidden();
   });
 });
+
+test.describe('MonthSelector Block presets', () => {
+  // Pinned to a negative offset, where a preset date lands a day early without the UTC conversion.
+  test.use({ timezoneId: 'America/New_York' });
+
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'monthselector');
+  });
+
+  test('lists presets next to the calendar', async ({ page }) => {
+    await getInput(page, 'ms_presets').click();
+
+    await expect(presetPanel(page, 'ms_presets')).toBeVisible();
+    await expect(presetPanel(page, 'ms_presets').locator('li')).toHaveCount(2);
+  });
+
+  test('selects the month of a preset given as a date string', async ({ page }) => {
+    await getInput(page, 'ms_presets').click();
+    await presetPanel(page, 'ms_presets').getByText('March 2024', { exact: true }).click();
+
+    await expect(getInput(page, 'ms_presets')).toHaveValue('2024-03');
+  });
+
+  test('selects the month a preset given as a _date object falls in', async ({ page }) => {
+    await getInput(page, 'ms_presets').click();
+    await presetPanel(page, 'ms_presets').getByText('Month of mid 2024', { exact: true }).click();
+
+    await expect(getInput(page, 'ms_presets')).toHaveValue('2024-06');
+  });
+});

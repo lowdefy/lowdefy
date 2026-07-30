@@ -800,7 +800,7 @@ Combined date and time picker.
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
 | `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are evaluated every time the block renders, so operator based values like "_date: now" stay current. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
-| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator with a utc step, eg. "_dayjs: [now, utc, {subtract: [7, days]}]". |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value. For dates relative to now, use the _dayjs operator, and start the chain with a utc step - steps that snap to a calendar boundary, like startOf and endOf, resolve in local time otherwise and can land on the wrong day, eg. "_dayjs: [now, utc, {startOf: month}]". |
 | `secondStep` | integer | `5` | Minute intervals to show in the time selector. |
 | `selectUTC` | boolean | `false` | Shows the user's selection as UTC time, not time-zone based. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |

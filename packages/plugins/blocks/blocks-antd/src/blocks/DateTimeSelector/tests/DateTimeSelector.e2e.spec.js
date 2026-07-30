@@ -192,3 +192,44 @@ test.describe('DateTimeSelector Block', () => {
     await expect(dropdown).toBeHidden();
   });
 });
+
+test.describe('DateTimeSelector Block presets', () => {
+  // Pinned to a negative offset, where a preset resolves to a different instant per selectUTC.
+  test.use({ timezoneId: 'America/New_York' });
+
+  const presetPanel = (page, blockId) =>
+    getBlock(page, blockId).locator('.ant-picker-dropdown .ant-picker-presets');
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'datetimeselector');
+  });
+
+  test('lists presets next to the calendar', async ({ page }) => {
+    await getInput(page, 'dts_presets').click();
+
+    await expect(presetPanel(page, 'dts_presets')).toBeVisible();
+    await expect(presetPanel(page, 'dts_presets').locator('li')).toHaveCount(2);
+  });
+
+  test('selects a preset as an instant when selectUTC is not set', async ({ page }) => {
+    await getInput(page, 'dts_presets').click();
+    await presetPanel(page, 'dts_presets').getByText('Noon UTC', { exact: true }).click();
+
+    // New York is UTC-4 in June, so noon UTC reads as 08:00 on the local clock the block shows.
+    await expect(getInput(page, 'dts_presets')).toHaveValue('2024-06-15 08:00');
+  });
+
+  test('selects the datetime of a preset given as a date string', async ({ page }) => {
+    await getInput(page, 'dts_presets').click();
+    await presetPanel(page, 'dts_presets').getByText('Local morning', { exact: true }).click();
+
+    await expect(getInput(page, 'dts_presets')).toHaveValue('2024-06-15 09:30');
+  });
+
+  test('selects a preset as a UTC wall clock when selectUTC is set', async ({ page }) => {
+    await getInput(page, 'dts_presets_utc').click();
+    await presetPanel(page, 'dts_presets_utc').getByText('Noon UTC', { exact: true }).click();
+
+    await expect(getInput(page, 'dts_presets_utc')).toHaveValue('2024-06-15 12:00');
+  });
+});

@@ -19,6 +19,10 @@ import { expect } from '@playwright/test';
 
 const locator = (page, blockId) => page.locator(`.ant-picker:has(#${escapeId(blockId)}_input)`);
 const input = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
+// The block renders the picker popup into a container inside itself, so the dropdown is scoped to
+// the block rather than to every open picker on the page.
+const pickerDropdown = (page, blockId) =>
+  page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
 
 const navigateToYear = async (dropdown, targetYear) => {
   const headerView = dropdown.locator('.ant-picker-header-view');
@@ -50,14 +54,14 @@ export default createBlockHelper({
     select: async (page, blockId, monthString) => {
       const [year] = monthString.split('-').map(Number);
       await locator(page, blockId).click();
-      const dropdown = page.locator('.ant-picker-dropdown:visible');
+      const dropdown = pickerDropdown(page, blockId);
       await expect(dropdown).toBeVisible();
       await navigateToYear(dropdown, year);
       await dropdown.locator(`.ant-picker-cell-in-view[title="${monthString}"]`).click();
     },
     selectPreset: async (page, blockId, label) => {
       await locator(page, blockId).click();
-      const dropdown = page.locator('.ant-picker-dropdown:visible');
+      const dropdown = pickerDropdown(page, blockId);
       await expect(dropdown).toBeVisible();
       await dropdown.locator('.ant-picker-presets').getByText(label, { exact: true }).click();
     },
