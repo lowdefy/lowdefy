@@ -336,12 +336,10 @@ test('set writes into an existing literal dotted key instead of creating a neste
   expect(objOne.a).toBeUndefined();
 });
 
-// The read is escaped because get's own dotted-key rejoin lands in a sibling change; once it
-// does, `get(objOne, 'a.b.c')` reads the same value and this test can drop the escape.
 test('set round-trips a literal dotted key read with get', () => {
   const objOne = { 'a.b': { c: 1 } };
-  set(objOne, 'a.b.c', get(objOne, 'a\\.b.c') + 1);
-  expect(get(objOne, 'a\\.b.c')).toEqual(2);
+  set(objOne, 'a.b.c', get(objOne, 'a.b.c') + 1);
+  expect(get(objOne, 'a.b.c')).toEqual(2);
   expect(objOne).toEqual({ 'a.b': { c: 2 } });
 });
 
