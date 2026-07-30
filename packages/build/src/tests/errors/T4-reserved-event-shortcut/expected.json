@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "is a reserved name"
+      ],
+      "errorContains": [
+        "Event shortcut \"__proto__\" on event \"onClick\" on block \"save_button\" on page \"home\" is a reserved name and cannot be used as a shortcut.",
+        "lowdefy.yaml:23"
+      ]
+    }
+  ]
+}

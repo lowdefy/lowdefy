@@ -1600,3 +1600,27 @@ test('buildAgents throws when sub-agent agentId uses a reserved platform tool na
     /sub-agent "read-file" uses a reserved platform tool name/
   );
 });
+
+test('buildAgents throws a located error when an agent id is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: '__proto__',
+        '~k': 'agentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+  try {
+    buildAgents({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('agentKey');
+  }
+});

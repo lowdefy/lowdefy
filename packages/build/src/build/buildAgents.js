@@ -18,7 +18,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
@@ -71,6 +71,16 @@ function buildAgents({ components, context }) {
 
   components.agents.forEach((agent) => {
     const configKey = agent['~k'];
+
+    // agent.id becomes agent.agentId, which keys the detectCycles graph and the
+    // runtime agent registry - both plain objects. Reject a reserved name here,
+    // where the config location is still in hand.
+    if (isReserved(agent.id)) {
+      throw new ConfigError(
+        `Agent id "${agent.id}" is a reserved name and cannot be used as an id.`,
+        { configKey }
+      );
+    }
 
     // Check duplicates
     checkDuplicateAgentId({ id: agent.id, configKey });
