@@ -399,13 +399,20 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.stopImpersonating());
   }
 
-  // Bypasses the cookie cache (a live re-resolve), so role, attribute or
-  // session changes surface immediately instead of after cookieCache.maxAge.
-  // Roles and merged attributes come from the server-resolved caller - the
-  // active member row read the base session does not carry.
+  // Refreshes the BetterAuth client session store through an awaited
+  // store refetch, bypassing the cookie cache (a live re-resolve) so role,
+  // attribute or session changes surface immediately instead of after
+  // cookieCache.maxAge. The store holds a fresh session user before this
+  // resolves. Roles and merged attributes come from the server-resolved
+  // caller - the active member row read the base session does not carry.
   async function updateSession() {
-    await unwrap(auth.getSession({ disableCookieCache: true }));
+    const session = await unwrap(auth.refreshSession({ disableCookieCache: true }));
     const { user } = await auth.getResolvedUser();
+    if (session && type.isNone(user)) {
+      // A session with no resolved caller is the admission wall rejecting a
+      // real session, not a logout - surface it instead of nulling the caller.
+      throw new Error('UpdateSession failed: a session is active but the server resolved no user.');
+    }
     if (auth.updateResolvedUser) {
       auth.updateResolvedUser(user ?? null);
     }
