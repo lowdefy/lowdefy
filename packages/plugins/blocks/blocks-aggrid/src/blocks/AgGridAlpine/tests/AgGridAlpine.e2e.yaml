@@ -158,7 +158,9 @@ blocks:
   - id: aggridalpine_onrowselected
     type: AgGridAlpine
     properties:
-      rowSelection: single
+      rowSelection:
+        mode: singleRow
+        enableClickSelection: true
       columnDefs:
         - headerName: Name
           field: name
