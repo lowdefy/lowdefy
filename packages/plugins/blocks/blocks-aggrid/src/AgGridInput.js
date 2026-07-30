@@ -25,7 +25,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 // Registration is idempotent, so each core registers independently to stay standalone.
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const AgGridInput = ({ properties, methods, loading, events, value }) => {
+const AgGridInput = ({ events, loading, methods, properties, theme, value }) => {
   const { quickFilterValue, columnDefs, defaultColDef, ...someProperties } = properties;
   const [rowData, setRowData] = useState(value ?? []);
 
@@ -205,6 +205,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
       <AgGridReact
         columnMenu="legacy"
         {...someProperties}
+        theme={theme}
         rowData={rowData}
         onCellClicked={onCellClicked}
         onCellValueChanged={onCellValueChanged}
