@@ -30,14 +30,15 @@ const SIZES = {
 // Every colour is a var(--ant-*) reference rather than a resolved value, so antd's cssVar mode
 // regenerates the grid's colours on each theme or dark-mode change with no JS.
 //
-// Four tokens carry a fallback chain because their only common emitter is a single antd component a
-// page may not render, while the grid still uses the corresponding feature. antd only emits a
-// --ant-* variable when a rendered component references the token, so a bare reference to those
-// would resolve to nothing. Each fallback stays mode-correct — a hardcoded colour would render
+// Three of these tokens carry a fallback chain because their only common emitter is a single antd
+// component a page may not render, while the grid still uses the corresponding feature. antd only
+// emits a --ant-* variable when a rendered component references the token, so a bare reference to
+// those would resolve to nothing. Each fallback stays mode-correct — a hardcoded colour would render
 // wrong in the opposite mode.
 //
-// Applied to all four bases: this is exactly what the deleted antd CSS overlay imposed on the six
-// original theme blocks, fontFamily / fontSize / oddRowBackgroundColor included.
+// Applied to all four bases: this is what the antd CSS overlay (src/ag-grid-antd.module.css) imposes
+// on the six original theme blocks today, fontFamily / fontSize / oddRowBackgroundColor included; its
+// --ag-* colour block is superseded by these params once that file's colours are removed.
 const antdParams = {
   accentColor: 'var(--ant-color-primary)',
   backgroundColor: 'var(--ant-color-bg-container)',
@@ -95,13 +96,18 @@ const warned = new Set();
 
 // Object.hasOwn rather than `in`: `in` walks the prototype chain, so size: 'toString' would resolve
 // themes['toString'] to a function and AG Grid would be handed a function as its theme.
+//
+// size is normalised to a string before the hasOwn check, the warned Set and the message: a
+// non-primitive size (e.g. an object or array from a config mistake) is a fresh reference every
+// render, so keying on the raw value would warn once per render instead of once per distinct value.
 const resolveSize = (size) => {
   if (type.isNone(size)) return 'middle';
-  if (Object.hasOwn(SIZES, size)) return size;
-  if (!warned.has(size)) {
-    warned.add(size);
+  const key = String(size);
+  if (Object.hasOwn(SIZES, key)) return key;
+  if (!warned.has(key)) {
+    warned.add(key);
     console.warn(
-      `AgGridLowdefy property "size" received "${size}", which is not a valid size. Use one of ${Object.keys(
+      `Lowdefy AG Grid property "size" received "${key}", which is not a valid size. Use one of ${Object.keys(
         SIZES
       ).join(', ')}. Falling back to "middle".`
     );
