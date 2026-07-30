@@ -117,7 +117,7 @@ test('mergeObjects does not mutate any of its inputs', () => {
   expect(obj2).toEqual(snapshot2);
 });
 
-test('mergeObjects returns a new object that shares no reference with its inputs', () => {
+test('mergeObjects returns a new object that shares no plain-object or array reference with its inputs', () => {
   const obj1 = { nested: { x: 1 } };
   const obj2 = { nested: { y: 2 } };
   const merged = mergeObjects([obj1, obj2]);
@@ -303,6 +303,41 @@ test('mergeObjects skips a reserved key nested inside an array element', () => {
   expect(merged).toEqual({ a: [{ b: 1 }] });
   expect(Object.prototype.hasOwnProperty.call(merged.a[0], '__proto__')).toBe(false);
   expect({}.polluted).toBeUndefined();
+});
+
+test('mergeObjects overwrites an earlier value with a later undefined', () => {
+  const merged = mergeObjects([{ a: 1 }, { a: undefined }]);
+  expect(merged).toEqual({ a: undefined });
+  expect('a' in merged).toBe(true);
+});
+
+test('mergeObjects keeps a later value when an earlier value is undefined', () => {
+  expect(mergeObjects([{ a: undefined }, { a: 1 }])).toEqual({ a: 1 });
+});
+
+test('mergeObjects overwrites a nested object with a later undefined', () => {
+  const merged = mergeObjects([{ a: { b: 1 } }, { a: undefined }]);
+  expect(merged).toEqual({ a: undefined });
+  expect('a' in merged).toBe(true);
+});
+
+test('mergeObjects preserves an earlier value when a later object omits the key', () => {
+  expect(mergeObjects([{ a: 1 }, {}])).toEqual({ a: 1 });
+});
+
+test('mergeObjects([x]) does not return x by identity', () => {
+  const x = { a: 1, nested: { b: 2 } };
+  const merged = mergeObjects([x]);
+  expect(merged).not.toBe(x);
+  expect(merged).toEqual(x);
+});
+
+test('mergeObjects([x]) called twice returns two distinct objects', () => {
+  const x = { a: 1, nested: { b: 2 } };
+  const first = mergeObjects([x]);
+  const second = mergeObjects([x]);
+  expect(first).not.toBe(second);
+  expect(first).toEqual(second);
 });
 
 test('mergeObjects returns non-array input unchanged', () => {

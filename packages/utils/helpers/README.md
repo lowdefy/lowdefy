@@ -224,6 +224,28 @@ mergeObjects([
 - **Non-mutating.** Inputs are never modified; a fresh object is returned.
 - **Arrays are atomic leaves.** A later array replaces an earlier one rather than index-merging into it. Same for `Date`, `RegExp`, `Map` and any other non-plain value.
 - **Reserved keys are skipped**, not thrown on — see [Reserved keys](#reserved-keys).
+- **Plain objects and arrays are always copied.** No plain object or array in the result is reference-identical to one in the inputs, at any depth reachable through plain objects and arrays. Every other value — `Date`, `RegExp`, `Map`, a function, and any other value whose type tag marks it as non-plain — is an opaque leaf and is shared by reference, along with whatever it holds: a plain object hanging off a shared `Map` or function is shared too. A plain user class is not exempt from the split: it has no such tag, so it is copied and flattened into a bare object, losing its prototype and methods.
+
+  The copy carries own enumerable string keys only. Non-enumerable keys and symbol keys are dropped, a getter is flattened to its value at merge time, and a null-prototype object comes back with `Object.prototype` — so an object deliberately created with `Object.create(null)` loses that hardening on the way through a merge.
+
+  ```js
+  const date = new Date();
+  mergeObjects([{ at: date }, {}]).at === date; // true, shared by reference
+
+  class Widget {}
+  mergeObjects([{ w: new Widget() }, {}]).w instanceof Widget; // false, copied and flattened
+  ```
+
+- **A later `undefined` replaces an earlier value** rather than being skipped. A caller that wants "no override" must omit the key rather than set it to `undefined`.
+
+  ```js
+  mergeObjects([{ a: 1 }, { a: undefined }]); // returns { a: undefined }
+  mergeObjects([{ a: 1 }, {}]); // returns { a: 1 }
+  ```
+
+  Every in-repo call site is defaults-first, overrides-last (e.g. `[connection, request]`, `[defaultTypesMap, customTypesMap]`). A call site that inverts that order and passes a possibly-`undefined` value in the override position silently erases the value it meant to keep.
+
+- **No identity pass-through.** `mergeObjects([x])` returns a copy, never `x` itself. If a caller needs a stable reference across renders, memoise at the call site.
 
 #### omit
 
