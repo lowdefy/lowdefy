@@ -30,11 +30,13 @@ const SIZES = {
 // Every colour is a var(--ant-*) reference rather than a resolved value, so antd's cssVar mode
 // regenerates the grid's colours on each theme or dark-mode change with no JS.
 //
-// Three of these tokens carry a fallback chain because their only common emitter is a single antd
-// component a page may not render, while the grid still uses the corresponding feature. antd only
-// emits a --ant-* variable when a rendered component references the token, so a bare reference to
-// those would resolve to nothing. Each fallback stays mode-correct — a hardcoded colour would render
-// wrong in the opposite mode.
+// Four of these tokens carry a fallback chain even though antd's cssVar mode emits its whole alias
+// token set on `.lowdefy` regardless of which components a page renders — so in practice the primary
+// --ant-* reference always resolves and the fallback never fires. The chains are defensive, not
+// load-bearing: they guard against an antd alias no longer being emitted. That defensiveness is not
+// free — tooltipBackgroundColor's and modalOverlayBackgroundColor's fallbacks land on the grid's
+// normal surface colour, which would flatten the tooltip onto the grid and make the loading mask
+// opaque if either ever fired. They stay because removing them is not this fix's call.
 //
 // Applied to all four bases: this is what the antd CSS overlay (src/ag-grid-antd.module.css) imposes
 // on the six original theme blocks today, fontFamily / fontSize / oddRowBackgroundColor included; its
@@ -62,6 +64,12 @@ const antdParams = {
   // light-mode literal, so leaving it unset renders wrong in dark mode.
   cardShadow: 'var(--ant-box-shadow-secondary)',
   tooltipBackgroundColor: 'var(--ant-color-bg-spotlight, var(--ant-color-bg-container))',
+  // AG Grid's default tooltipTextColor refs textColor, which foregroundColor above sets to antd's
+  // normal (non-inverted) text colour — unreadable against the spotlight surface tooltipBackgroundColor
+  // uses. antd always pairs colorBgSpotlight with colorTextLightSolid, a token that is #fff in both
+  // light and dark mode, so the fallback here is a literal #fff rather than another --ant-* alias:
+  // aliasing to e.g. --ant-color-text would just reintroduce this same inversion.
+  tooltipTextColor: 'var(--ant-color-text-light-solid, #fff)',
   modalOverlayBackgroundColor: 'var(--ant-color-bg-mask, var(--ant-color-bg-container))',
   // Not a colour. AG Grid's own dark value lives under a data-ag-theme-mode="dark" attribute Lowdefy
   // never sets, and this param has no antd token to ride on, so the decision is handed to the
@@ -135,11 +143,17 @@ const themeMaterialAntd = themeMaterial.withParams({
 
 // Returns the base object untouched when there is nothing to merge, so the module-scope themes stay
 // shared and identity-stable. An empty object counts as absent: {} is what an operator-driven
-// themeParams produces when nothing applies. Keyed on the serialised params rather than object
-// identity because Lowdefy re-evaluates block properties each render, so themeParams is a fresh
-// reference every time.
+// themeParams produces when nothing applies. type.isObject rejects anything that is not a plain
+// object (a string, array, number or boolean from a config mistake) instead of letting
+// Object.keys coerce it — Object.keys('dark') is truthy and would make withParams emit junk
+// --ag-0 / --ag-1 style variables from the string's characters. Keyed on the serialised params
+// rather than object identity because Lowdefy re-evaluates block properties each render, so
+// themeParams is a fresh reference every time.
 const useGridTheme = (baseTheme, themeParams) => {
-  const key = Object.keys(themeParams ?? {}).length ? JSON.stringify(themeParams) : null;
+  const key =
+    type.isObject(themeParams) && Object.keys(themeParams).length
+      ? JSON.stringify(themeParams)
+      : null;
   return useMemo(() => (key ? baseTheme.withParams(JSON.parse(key)) : baseTheme), [baseTheme, key]);
 };
 
