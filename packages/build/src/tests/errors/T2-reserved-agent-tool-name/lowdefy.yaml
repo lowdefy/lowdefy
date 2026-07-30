@@ -1,0 +1,41 @@
+# T2: Reserved Agent Tool Name
+# ============================
+# Tests that an agent tool name which is a reserved name fails the build with
+# a located ConfigError. TOOL_NAME_REGEX (^[a-zA-Z0-9_-]{1,64}$) admits every
+# reserved name, and tool names key a plain-object tools map.
+#
+# Expected error:
+#   [Config Error] Agent "assistant" tool name "__proto__" is a reserved name
+#   and cannot be used as a tool name.
+#
+# The error points to line 21 where the agent is defined.
+
+lowdefy: local
+
+connections:
+  - id: claude
+    type: Anthropic
+    properties: {}
+
+agents:
+  - id: assistant
+    type: ClaudeAgent
+    connectionId: claude
+    tools:
+      - endpointId: lookup
+        name: __proto__
+    properties:
+      model: claude-sonnet-4-20250514
+
+api:
+  - id: lookup
+    type: Api
+    description: Looks something up.
+    payloadSchema:
+      type: object
+    routine:
+      - :return: ok
+
+pages:
+  - id: home
+    type: Box
