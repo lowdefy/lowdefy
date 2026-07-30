@@ -106,6 +106,36 @@ test('api endpoint id contains invalid characters', () => {
   );
 });
 
+test('api endpoint id is a reserved name', () => {
+  const components = {
+    api: [
+      {
+        id: '__proto__',
+        type: 'Api',
+        routine: [],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+});
+
+test('api step id is a reserved name', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [{ id: 'constructor' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step id "constructor" at endpoint "api1" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('api type missing', () => {
   const components = {
     api: [
