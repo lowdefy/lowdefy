@@ -194,6 +194,117 @@ test('mergeObjects skips reserved keys nested inside a merged value', () => {
   expect({}.polluted).toBeUndefined();
 });
 
+test('mergeObjects copies a plain object that only the target holds', () => {
+  const obj1 = { x: { y: 1 } };
+  const merged = mergeObjects([obj1, { z: 2 }]);
+  expect(merged.x).not.toBe(obj1.x);
+  merged.x.y = 9;
+  expect(obj1.x.y).toBe(1);
+});
+
+test('mergeObjects copies a plain object that only the source holds', () => {
+  const obj2 = { x: { y: 1 } };
+  const merged = mergeObjects([{ z: 2 }, obj2]);
+  expect(merged.x).not.toBe(obj2.x);
+  merged.x.y = 9;
+  expect(obj2.x.y).toBe(1);
+});
+
+test('mergeObjects copies the keys of a single input object', () => {
+  const obj1 = { x: { y: 1 } };
+  const merged = mergeObjects([obj1]);
+  expect(merged.x).not.toBe(obj1.x);
+  merged.x.y = 9;
+  expect(obj1.x.y).toBe(1);
+});
+
+test('mergeObjects copies arrays and their object elements', () => {
+  const obj1 = { list: [{ y: 1 }] };
+  const merged = mergeObjects([obj1]);
+  expect(merged.list).not.toBe(obj1.list);
+  expect(merged.list[0]).not.toBe(obj1.list[0]);
+  merged.list[0].y = 9;
+  expect(obj1.list[0].y).toBe(1);
+});
+
+test('mergeObjects copies an array that replaces an earlier array', () => {
+  const obj2 = { list: [{ y: 2 }] };
+  const merged = mergeObjects([{ list: [{ y: 1 }] }, obj2]);
+  expect(merged.list).not.toBe(obj2.list);
+  expect(merged.list[0]).not.toBe(obj2.list[0]);
+  merged.list[0].y = 9;
+  expect(obj2.list[0].y).toBe(2);
+});
+
+test('mergeObjects shares no reference three levels down', () => {
+  const obj1 = { a: { b: { c: { d: 1 } } } };
+  const merged = mergeObjects([obj1, { z: 2 }]);
+  expect(merged.a).not.toBe(obj1.a);
+  expect(merged.a.b).not.toBe(obj1.a.b);
+  expect(merged.a.b.c).not.toBe(obj1.a.b.c);
+  merged.a.b.c.d = 9;
+  expect(obj1.a.b.c.d).toBe(1);
+});
+
+test('mergeObjects returns a fresh subtree when both sides hold plain objects', () => {
+  const obj1 = { a: { b: 1 } };
+  const obj2 = { a: { c: 2 } };
+  const merged = mergeObjects([obj1, obj2]);
+  expect(merged.a).not.toBe(obj1.a);
+  expect(merged.a).not.toBe(obj2.a);
+  merged.a.b = 9;
+  merged.a.c = 9;
+  expect(obj1.a.b).toBe(1);
+  expect(obj2.a.c).toBe(2);
+});
+
+test('mergeObjects shares Date, RegExp, Map and web-platform built-ins by reference', () => {
+  const obj1 = {
+    date: new Date('2024-06-01T00:00:00.000Z'),
+    regExp: /a/g,
+    map: new Map([['a', 1]]),
+    instance: new URL('https://lowdefy.com/docs'),
+    fn: () => 'result',
+  };
+  const merged = mergeObjects([obj1, { other: 1 }]);
+  expect(merged.date).toBe(obj1.date);
+  expect(merged.regExp).toBe(obj1.regExp);
+  expect(merged.map).toBe(obj1.map);
+  expect(merged.instance).toBe(obj1.instance);
+  expect(merged.fn).toBe(obj1.fn);
+});
+
+test('mergeObjects copies a class instance that type.isObject reports as a plain object', () => {
+  class Widget {
+    constructor() {
+      this.id = 'widget';
+    }
+    greet() {
+      return 'hi';
+    }
+  }
+  const obj1 = { instance: new Widget() };
+  const merged = mergeObjects([obj1, { other: 1 }]);
+  expect(merged.instance).not.toBe(obj1.instance);
+  expect(merged.instance).not.toBeInstanceOf(Widget);
+  expect(Object.getPrototypeOf(merged.instance)).toBe(Object.prototype);
+  expect(merged.instance.greet).toBeUndefined();
+});
+
+test('mergeObjects skips a reserved key nested in the only input object', () => {
+  const merged = mergeObjects([{ a: JSON.parse('{"__proto__":{"polluted":true},"b":1}') }]);
+  expect(merged).toEqual({ a: { b: 1 } });
+  expect(Object.prototype.hasOwnProperty.call(merged.a, '__proto__')).toBe(false);
+  expect({}.polluted).toBeUndefined();
+});
+
+test('mergeObjects skips a reserved key nested inside an array element', () => {
+  const merged = mergeObjects([{ a: JSON.parse('[{"__proto__":{"polluted":true},"b":1}]') }]);
+  expect(merged).toEqual({ a: [{ b: 1 }] });
+  expect(Object.prototype.hasOwnProperty.call(merged.a[0], '__proto__')).toBe(false);
+  expect({}.polluted).toBeUndefined();
+});
+
 test('mergeObjects returns non-array input unchanged', () => {
   expect(mergeObjects('foo')).toBe('foo');
   expect(mergeObjects(undefined)).toBeUndefined();
