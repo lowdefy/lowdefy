@@ -290,6 +290,12 @@
       "path": "content/other/next-auth-providers.md"
     },
     {
+      "slug": "other/mongodbadapter",
+      "title": "MongoDBAdapter",
+      "section": "Other",
+      "path": "content/other/mongodbadapter.md"
+    },
+    {
       "slug": "testing/e2e-introduction",
       "title": "E2E Testing",
       "section": "Testing",
@@ -540,6 +546,22 @@
       "path": "content/input-blocks/switch.md",
       "kind": "block",
       "typeName": "Switch"
+    },
+    {
+      "slug": "input-blocks/tagmultipleselector",
+      "title": "TagMultipleSelector",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tagmultipleselector.md",
+      "kind": "block",
+      "typeName": "TagMultipleSelector"
+    },
+    {
+      "slug": "input-blocks/tagselector",
+      "title": "TagSelector",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tagselector.md",
+      "kind": "block",
+      "typeName": "TagSelector"
     },
     {
       "slug": "input-blocks/textarea",
@@ -2264,6 +2286,12 @@
       "title": "Upgrade Guide",
       "section": "Migration",
       "path": "content/migration/upgrade-guide.md"
+    },
+    {
+      "slug": "migration/auth-upgrade",
+      "title": "Auth Upgrade (BetterAuth)",
+      "section": "Migration",
+      "path": "content/migration/auth-upgrade.md"
     },
     {
       "slug": "migration/v5-to-v6",

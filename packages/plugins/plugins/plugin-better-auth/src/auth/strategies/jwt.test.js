@@ -151,6 +151,55 @@ test('jwt verify rejects a valid token whose mapped id claim is missing', async 
   expect(await mapped({ headers: bearer(await signHmac({ sub: 's' })), logger })).toBe(null);
 });
 
+test('jwt verify rejects a valid token when the mapped id claim is a reserved key', async () => {
+  const logger = mockLogger();
+  const verify = jwt({
+    logger,
+    properties: {
+      secret: hmacSecret,
+      algorithms: ['HS256'],
+      claimMapping: { id: '__proto__' },
+    },
+    strategyId: 'service-jwt',
+  });
+  const token = await signHmac({ sub: 's', email: 's@x.com' });
+  await expect(verify({ headers: bearer(token), logger })).resolves.toBe(null);
+  expect(logger.debug).toHaveBeenCalledWith(
+    { event: 'auth_strategy_token_rejected', strategyId: 'service-jwt' },
+    'Auth strategy "service-jwt" rejected a Bearer token: the "__proto__" id claim is missing.'
+  );
+});
+
+test('jwt verify skips claim-mapped fields whose claim paths are reserved keys', async () => {
+  const logger = mockLogger();
+  const verify = jwt({
+    logger,
+    properties: {
+      secret: hmacSecret,
+      algorithms: ['HS256'],
+      claimMapping: {
+        id: 'sub',
+        email: 'email',
+        name: 'constructor',
+        roles: 'realm_access.prototype',
+        'attributes.branches': 'branches',
+      },
+    },
+    strategyId: 'service-jwt',
+  });
+  const token = await signHmac({
+    sub: 'service-1',
+    email: 'svc@example.com',
+    branches: ['north'],
+  });
+  const match = await verify({ headers: bearer(token), logger });
+  expect(match).toEqual({
+    attributes: { branches: ['north'] },
+    roles: [],
+    user: { id: 'service-1', email: 'svc@example.com' },
+  });
+});
+
 test('jwt verify rejects an expired token', async () => {
   const logger = mockLogger();
   const verify = jwt({

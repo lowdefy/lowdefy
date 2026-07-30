@@ -636,3 +636,76 @@ test('buildAgentTools propagates autoApprove into recursive sub-agent tool build
   // First tool() call is the sub-agent's confirm endpoint tool.
   expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
 });
+
+test('buildAgentTools throws ReservedKeyError when an endpoint tool name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: '__proto__' }],
+    mcp: [],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'polluting',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow('Reserved key "__proto__"');
+});
+
+test('buildAgentTools warns and skips an MCP tool whose name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ constructor: { description: 'polluting' } }),
+  });
+
+  const agent = {
+    tools: [],
+    mcp: [{ transport: 'http', url: 'https://mcp.example.com' }],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(warn).toHaveBeenCalledWith(expect.stringContaining('uses a reserved key name'));
+  warn.mockRestore();
+});
+
+test('buildAgentTools registers an MCP tool named after an inherited Object prototype member', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const mcpTool = { description: 'stringify things' };
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ toString: mcpTool }),
+  });
+
+  const agent = {
+    tools: [],
+    mcp: [{ transport: 'http', url: 'https://mcp.example.com' }],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(tools.toString).toBe(mcpTool);
+});

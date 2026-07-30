@@ -14,12 +14,25 @@
   limitations under the License.
 */
 
+import { ReservedKeyError, setKey } from '@lowdefy/helpers';
+
 function getSecretsFromEnv() {
   const secrets = {};
 
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith('LOWDEFY_SECRET_')) {
-      secrets[key.replace('LOWDEFY_SECRET_', '')] = process.env[key];
+      const name = key.replace('LOWDEFY_SECRET_', '');
+      try {
+        setKey(secrets, name, process.env[key]);
+      } catch (error) {
+        if (!(error instanceof ReservedKeyError)) throw error;
+        // Fail at boot rather than at first _secret read: the reserved name is
+        // unreadable through get/getKey, so the secret would never resolve.
+        throw new Error(
+          `Environment variable "${key}" names a reserved secret "${name}". Rename the secret.`,
+          { cause: error }
+        );
+      }
     }
   });
   Object.freeze(secrets);

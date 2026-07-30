@@ -43,7 +43,11 @@ beforeEach(() => {
 test('inspectState uses the tab when source is "tab" and it succeeds', async () => {
   mockInspectStateFromTab.mockResolvedValue({ state: { a: 1 } });
 
-  const result = await inspectState({ origin: 'http://localhost:3001', pageId: 'home', source: 'tab' });
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'tab',
+  });
 
   expect(result).toEqual({ state: { a: 1 }, source: 'tab' });
   expect(mockInspectStateFromTab).toHaveBeenCalledWith({ pageId: 'home' });
@@ -54,16 +58,27 @@ test('inspectState falls back to headless when source is "tab" but the tab error
   mockInspectStateFromTab.mockResolvedValue({ error: 'No browser tab connected.' });
   mockInspectStateHeadless.mockResolvedValue({ state: { a: 1 } });
 
-  const result = await inspectState({ origin: 'http://localhost:3001', pageId: 'home', source: 'tab' });
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'tab',
+  });
 
   expect(result).toEqual({ state: { a: 1 }, source: 'headless' });
-  expect(mockInspectStateHeadless).toHaveBeenCalledWith({ origin: 'http://localhost:3001', pageId: 'home' });
+  expect(mockInspectStateHeadless).toHaveBeenCalledWith({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+  });
 });
 
 test('inspectState goes straight to headless when source is "headless"', async () => {
   mockInspectStateHeadless.mockResolvedValue({ state: { a: 1 } });
 
-  const result = await inspectState({ origin: 'http://localhost:3001', pageId: 'home', source: 'headless' });
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'headless',
+  });
 
   expect(result).toEqual({ state: { a: 1 }, source: 'headless' });
   expect(mockTabAvailable).not.toHaveBeenCalled();
@@ -88,4 +103,38 @@ test('inspectState goes straight to headless when source is unset and no tab is 
 
   expect(result).toEqual({ state: { a: 1 }, source: 'headless' });
   expect(mockInspectStateFromTab).not.toHaveBeenCalled();
+});
+
+test('inspectState ignores an available tab and passes the user to headless when a user is given', async () => {
+  mockTabAvailable.mockReturnValue(true);
+  mockInspectStateHeadless.mockResolvedValue({ state: { a: 1 } });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    user: { roles: ['admin'] },
+  });
+
+  expect(result).toEqual({ state: { a: 1 }, source: 'headless' });
+  expect(mockInspectStateFromTab).not.toHaveBeenCalled();
+  expect(mockInspectStateHeadless).toHaveBeenCalledWith({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    user: { roles: ['admin'] },
+  });
+});
+
+test('inspectState errors when a user is combined with source "tab"', async () => {
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'tab',
+    user: { roles: ['admin'] },
+  });
+
+  expect(result.error).toMatch(/cannot apply "user" to the developer's live tab/);
+  // Flagged as the caller's mistake so the HTTP route answers 400, not 502.
+  expect(result.invalidInput).toBe(true);
+  expect(mockInspectStateFromTab).not.toHaveBeenCalled();
+  expect(mockInspectStateHeadless).not.toHaveBeenCalled();
 });

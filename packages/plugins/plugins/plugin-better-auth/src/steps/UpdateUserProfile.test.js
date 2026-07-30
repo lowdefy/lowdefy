@@ -63,6 +63,30 @@ test('UpdateUserProfile removes a profile key set to null', async () => {
   });
 });
 
+test('UpdateUserProfile throws when a profile key is a reserved key', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateUserProfile({
+      auth,
+      properties: { userId: 'user-1', profile: { ['__proto__']: { isAdmin: true } } },
+    })
+  ).rejects.toThrow('Reserved key "__proto__"');
+  expect(adapter.update).not.toHaveBeenCalled();
+});
+
+test('UpdateUserProfile throws when a reserved profile key is set to null', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateUserProfile({
+      auth,
+      properties: { userId: 'user-1', profile: { ['constructor']: null } },
+    })
+  ).rejects.toThrow('Reserved key "constructor"');
+  expect(adapter.update).not.toHaveBeenCalled();
+});
+
 test('UpdateUserProfile writes the profile as the bag when the user has no existing profile', async () => {
   const adapter = createAdapter({ user: { id: 'user-1' } });
   const { auth } = createMockAuth({ adapter });

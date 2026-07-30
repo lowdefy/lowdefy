@@ -15,6 +15,7 @@
 */
 
 import inspectState from '../../../lib/docs/inspectState.js';
+import parseUserParam from './parseUserParam.js';
 
 async function docsInspectStateHandler(c) {
   const pageId = c.req.param('pageId');
@@ -24,9 +25,18 @@ async function docsInspectStateHandler(c) {
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await inspectState({ origin, pageId, source });
+  const { user, error: userError } = parseUserParam({ value: c.req.query('user') });
+  if (userError) {
+    return c.json({ error: userError }, 400);
+  }
+
+  const result = await inspectState({ origin, pageId, source, user });
   if (result.error) {
-    return c.json({ error: result.error, source: result.source }, 502);
+    // A contradictory call (`user` with `source=tab`) is the caller's mistake,
+    // not a failed render — 502 would read as "the renderer broke" and invite a
+    // pointless retry of the same request.
+    const status = result.invalidInput ? 400 : 502;
+    return c.json({ error: result.error, source: result.source }, status);
   }
   return c.json(result);
 }

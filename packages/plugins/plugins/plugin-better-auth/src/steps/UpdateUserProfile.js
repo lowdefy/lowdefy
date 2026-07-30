@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { setKey, type, unsetKey } from '@lowdefy/helpers';
 
 const allowedProperties = ['image', 'name', 'profile', 'userId'];
 
@@ -74,10 +74,10 @@ async function UpdateUserProfile({ auth, properties }) {
     const merged = { ...(user.profile ?? {}) };
     Object.entries(profile).forEach(([key, value]) => {
       if (value === null) {
-        delete merged[key];
+        unsetKey(merged, key);
         return;
       }
-      merged[key] = value;
+      setKey(merged, key, value);
     });
     update.profile = merged;
   }

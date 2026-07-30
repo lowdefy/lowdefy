@@ -15,7 +15,23 @@
 */
 
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { get, type } from '@lowdefy/helpers';
+import { ReservedKeyError, get, type } from '@lowdefy/helpers';
+
+// Claim paths come from the strategy's YAML claimMapping, so a path segment
+// can be a reserved key and make `get` throw. The throw would happen after
+// jwtVerify has already succeeded - outside this strategy's token catch, and
+// with no try/catch between here and the request middleware - so it would
+// surface as an unlocated 500 on every request carrying a valid token. A
+// reserved claim path resolves to no claim instead: the id claim then rejects
+// the token, and any other mapping entry is skipped.
+function readClaim({ claimPath, payload }) {
+  try {
+    return get(payload, claimPath);
+  } catch (error) {
+    if (error instanceof ReservedKeyError) return undefined;
+    throw error;
+  }
+}
 
 function toRoles(value) {
   if (type.isArray(value)) {
@@ -72,7 +88,7 @@ function jwt({ logger, properties, strategyId }) {
       return null;
     }
     const idClaim = claimMapping.id ?? 'sub';
-    const id = get(payload, idClaim);
+    const id = readClaim({ claimPath: idClaim, payload });
     if (type.isNone(id)) {
       // A caller without an identity cannot be authenticated - a signed token
       // missing the id claim is rejected, not promoted to an id-less caller.
@@ -89,7 +105,7 @@ function jwt({ logger, properties, strategyId }) {
       if (field === 'id') {
         return;
       }
-      const value = get(payload, claimPath);
+      const value = readClaim({ claimPath, payload });
       if (field === 'roles') {
         roles = toRoles(value);
         return;

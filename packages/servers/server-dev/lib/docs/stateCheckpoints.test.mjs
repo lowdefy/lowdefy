@@ -345,4 +345,22 @@ describe('loadState', () => {
     });
     expect(result).toEqual({ error: 'Checkpoint "does-not-exist" not found.' });
   });
+
+  test('rejects a user in registry-only mode as invalid input', async () => {
+    writeCheckpoint({
+      name: 'cp-load-registry-user',
+      snapshot: buildSnapshot({ urlQuery: '' }),
+    });
+
+    const result = await loadState({
+      origin: 'http://localhost:3111',
+      name: 'cp-load-registry-user',
+      mode: 'registry-only',
+      user: { roles: ['admin'] },
+    });
+
+    expect(result.invalidInput).toBe(true);
+    expect(result.error).toMatch(/cannot apply "user" in "registry-only" mode/);
+    expect(result.url).toBeUndefined();
+  });
 });

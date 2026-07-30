@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
+import { ReservedKeyError, applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 const getFromObject = ({ arrayIndices, location, method, object, params }) => {
   if (params === true) params = { all: true };
@@ -24,17 +24,23 @@ const getFromObject = ({ arrayIndices, location, method, object, params }) => {
       `Method Error: ${method} params must be of type string, integer, boolean or object at ${location}.`
     );
   }
-  if (params.key === null) return get(params, 'default', { default: null, copy: true });
+  const defaultValue = get(params, 'default', { default: null, copy: true });
+  if (params.key === null) return defaultValue;
   if (params.all === true) return serializer.copy(object);
   if (!type.isString(params.key) && !type.isInt(params.key)) {
     throw new Error(
       `Method Error: ${method} params.key must be of type string or integer at ${location}.`
     );
   }
-  return get(object, applyArrayIndices(arrayIndices, params.key), {
-    default: get(params, 'default', { default: null, copy: true }),
-    copy: true,
-  });
+  try {
+    return get(object, applyArrayIndices(arrayIndices, params.key), {
+      default: defaultValue,
+      copy: true,
+    });
+  } catch (error) {
+    if (error instanceof ReservedKeyError) return defaultValue;
+    throw error;
+  }
 };
 
 export default getFromObject;

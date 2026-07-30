@@ -95,9 +95,50 @@ test('evalOperator prefers the tab when source is unset and a tab is available',
   mockTabAvailable.mockReturnValue(true);
   mockEvalOperatorInTab.mockResolvedValue({ value: 'Jane', errors: [] });
 
-  const result = await evalOperator({ origin: 'http://localhost:3001', pageId: 'home', expression });
+  const result = await evalOperator({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression,
+  });
 
   expect(result).toEqual({ value: 'Jane', errors: [], source: 'tab' });
+  expect(mockEvalOperatorHeadless).not.toHaveBeenCalled();
+});
+
+test('evalOperator ignores an available tab and passes the user to headless when a user is given', async () => {
+  mockTabAvailable.mockReturnValue(true);
+  mockEvalOperatorHeadless.mockResolvedValue({ value: 'Jane', errors: [] });
+
+  const result = await evalOperator({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression,
+    user: { roles: ['admin'] },
+  });
+
+  expect(result).toEqual({ value: 'Jane', errors: [], source: 'headless' });
+  expect(mockEvalOperatorInTab).not.toHaveBeenCalled();
+  expect(mockEvalOperatorHeadless).toHaveBeenCalledWith({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression,
+    user: { roles: ['admin'] },
+  });
+});
+
+test('evalOperator errors when a user is combined with source "tab"', async () => {
+  const result = await evalOperator({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression,
+    source: 'tab',
+    user: { roles: ['admin'] },
+  });
+
+  expect(result.error).toMatch(/cannot apply "user" to the developer's live tab/);
+  // Flagged as the caller's mistake so the HTTP route answers 400, not 502.
+  expect(result.invalidInput).toBe(true);
+  expect(mockEvalOperatorInTab).not.toHaveBeenCalled();
   expect(mockEvalOperatorHeadless).not.toHaveBeenCalled();
 });
 
@@ -105,7 +146,11 @@ test('evalOperator goes straight to headless when source is unset and no tab is 
   mockTabAvailable.mockReturnValue(false);
   mockEvalOperatorHeadless.mockResolvedValue({ value: 'Jane', errors: [] });
 
-  const result = await evalOperator({ origin: 'http://localhost:3001', pageId: 'home', expression });
+  const result = await evalOperator({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    expression,
+  });
 
   expect(result).toEqual({ value: 'Jane', errors: [], source: 'headless' });
   expect(mockEvalOperatorInTab).not.toHaveBeenCalled();
