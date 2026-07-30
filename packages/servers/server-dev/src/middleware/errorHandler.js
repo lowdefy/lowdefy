@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { redactErrorResponse } from '@lowdefy/api';
 
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them. API routes get the serialized error
@@ -40,13 +40,7 @@ function createErrorHandler({ basePath = '', logger }) {
       logger.error(error);
     }
     if (path.startsWith('/api/')) {
-      const serialized = serializer.serialize(error);
-      if (serialized?.['~e']) {
-        delete serialized['~e'].received;
-        delete serialized['~e'].stack;
-        delete serialized['~e'].configKey;
-      }
-      return c.json(serialized, 500);
+      return c.json(redactErrorResponse(context, error), 500);
     }
     return c.text('Internal Server Error', 500);
   };
