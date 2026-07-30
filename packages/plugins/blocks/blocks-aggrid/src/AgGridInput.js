@@ -26,7 +26,16 @@ import LoadingOverlay from './LoadingOverlay.js';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const AgGridInput = ({ events, loading, methods, properties, theme, value }) => {
-  const { quickFilterValue, columnDefs, defaultColDef, ...someProperties } = properties;
+  const {
+    quickFilterValue,
+    columnDefs,
+    defaultColDef,
+    height,
+    rowId,
+    size,
+    themeParams,
+    ...someProperties
+  } = properties;
   const [rowData, setRowData] = useState(value ?? []);
 
   const gridRef = useRef();
@@ -35,11 +44,10 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
 
   const getRowId = useCallback(
     (params) => {
-      if (properties.rowId && params.data[properties.rowId] !== undefined)
-        return params.data[properties.rowId];
+      if (rowId && params.data[rowId] !== undefined) return params.data[rowId];
       return assignRowId(params);
     },
-    [properties.rowId]
+    [rowId]
   );
 
   const onRowClick = useCallback((event) => {
