@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["uses reserved name"],
+      "errorContains": [
+        "Block id \"a.constructor.b\" uses reserved name \"constructor\" as a path segment, at page \"home\".",
+        "lowdefy.yaml:31"
+      ],
+      "noErrors": ["Block id \"a\\.constructor\" uses reserved name"]
+    }
+  ]
+}
