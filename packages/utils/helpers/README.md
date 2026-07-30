@@ -50,6 +50,8 @@ silently filtering the segment would redirect `set(obj, 'a.__proto__.b', 1)` to 
 different location than the caller asked for. The caller decides whether to catch, log, skip or
 propagate.
 
+Use [`isReserved`](#isreserved) to check a key up front instead of catching `ReservedKeyError`.
+
 Names that merely live on `Object.prototype` but are not pollution vectors (`hasOwnProperty`,
 `toString`, `valueOf`, …) are allowed.
 
@@ -79,6 +81,9 @@ Traps worth knowing:
   returns `undefined`, not the default.
 - Native `Map` needs none of this — it stores keys in an internal slot and is pollution-safe by
   construction. Use `Map` directly where it fits.
+
+A site that skips or warns on a reserved key instead of throwing should guard with
+[`isReserved`](#isreserved) rather than catching `ReservedKeyError`.
 
 ## Usage
 
@@ -138,6 +143,22 @@ Read a single key off a plain object. The key is literal — no dot-path splitti
 ```js
 getKey({ 'a.b': 1 }, 'a.b'); // returns 1
 getKey({}, 'toString', null); // returns null, not Object.prototype.toString
+```
+
+#### isReserved
+
+```
+(key: string): boolean
+```
+
+True if `key` is one of the [reserved keys](#reserved-keys). Use this to guard a call site that
+should skip, warn or otherwise degrade on a reserved key instead of catching
+[`ReservedKeyError`](#reservedkeyerror) — see [Reserved keys](#reserved-keys) and
+[Keyed maps](#keyed-maps).
+
+```js
+isReserved('__proto__'); // returns true
+isReserved('toString'); // returns false
 ```
 
 #### joinPath
