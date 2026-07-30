@@ -79,10 +79,60 @@ test('nunjucksFunction - non-string template', () => {
   expect(obj('100')).toEqual({ x: 1 });
 });
 
+test('nunjucksFunction - distinct objects no longer collide', () => {
+  const objA = nunjucksFunction({ x: 1 });
+  const objB = nunjucksFunction({ y: 2 });
+  expect(objA).not.toBe(objB);
+  expect(objA('100')).toEqual({ x: 1 });
+  expect(objB('100')).toEqual({ y: 2 });
+});
+
+test('nunjucksFunction - a number and its string form no longer collide', () => {
+  expect(nunjucksFunction(100)('x')).toBe(100);
+  expect(nunjucksFunction('100')('x')).toBe('100');
+});
+
+test('nunjucksFunction - non-string calls are not memoised', () => {
+  expect(nunjucksFunction(true)).not.toBe(nunjucksFunction(true));
+});
+
 test('nunjucksFunction - memoization', () => {
   const func1 = nunjucksFunction('$ {{value}}');
   expect(func1('100')).toEqual('$ 100');
   const memo = nunjucksFunction('$ {{value}}');
   expect(memo('100')).toEqual('$ 100');
   expect(memo).toBe(func1);
+});
+
+test('nunjucksFunction - prototype collisions render literally', () => {
+  expect(nunjucksFunction('toString')('x')).toBe('toString');
+  expect(nunjucksFunction('constructor')('x')).toBe('constructor');
+  expect(nunjucksFunction('__proto__')('x')).toBe('__proto__');
+});
+
+test('nunjucksFunction - __proto__ does not corrupt the cache', () => {
+  nunjucksFunction('__proto__');
+  expect(nunjucksFunction('$ {{value}}')('100')).toBe('$ 100');
+});
+
+test('nunjucksFunction - eviction is bounded to maxSize 500', () => {
+  // This loop inserts 501 distinct templates, evicting nearly the whole module-level
+  // cache in the process - any test declared after this one must not rely on a
+  // template reference cached earlier in this file.
+  const first = nunjucksFunction('t0');
+  let midWindow;
+  let mostRecent;
+  for (let i = 1; i < 501; i++) {
+    const rendered = nunjucksFunction(`t${i}`);
+    if (i === 250) midWindow = rendered;
+    mostRecent = rendered;
+  }
+  // 501 distinct templates through a cache capped at 500 evicts the first.
+  expect(nunjucksFunction('t0')).not.toBe(first);
+  // t250 sits well inside the 500-entry window (half of it). The check above only pins
+  // an upper bound on maxSize - it would pass just as well at 100 - so this one pins a
+  // lower bound: a maxSize set too low evicts t250 too.
+  expect(nunjucksFunction('t250')).toBe(midWindow);
+  // The most recently compiled template is still a cache hit.
+  expect(nunjucksFunction('t500')).toBe(mostRecent);
 });
