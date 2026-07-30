@@ -31,6 +31,7 @@ import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
+import redactResponse from './response/redactResponse.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
 import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
@@ -55,6 +56,7 @@ export {
   logClientError,
   normalizeInjectedCaller,
   redactErrorResponse,
+  redactResponse,
   resolveAuthentication,
   resolvePinnedOrganization,
   runDetachedEndpoint,

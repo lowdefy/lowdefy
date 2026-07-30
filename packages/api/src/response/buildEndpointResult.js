@@ -14,26 +14,18 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
-import normalizeErrorSources from './normalizeErrorSources.js';
-import omitErrorProps from './omitErrorProps.js';
 import redactErrorResponse from './redactErrorResponse.js';
+import redactResponse from './redactResponse.js';
 
 // The wire object every endpoint route returns after running its routine. One
 // function rather than a copy of the same return statement per route, so the
 // `response` field cannot end up policed differently from the `error` field beside
-// it.
-//
-// The response takes the same policy, because it reaches the same audience:
-// makeReplacer wraps any Error it meets anywhere in a value, so an error riding
-// inside a routine's response value is redacted and its source normalised by
-// construction rather than left out as a non-goal.
+// it - see redactResponse for why the response needs the policy at all.
 function buildEndpointResult(context, { error, response, status }) {
   const success = !['error', 'reject'].includes(status);
   return {
     error: redactErrorResponse(context, error),
-    response: normalizeErrorSources(context, serializer.serialize(response, { omitErrorProps })),
+    response: redactResponse(context, response),
     status: success ? 'success' : status,
     success,
   };
