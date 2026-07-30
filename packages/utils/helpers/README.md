@@ -121,16 +121,48 @@ get({ a: [{ b: 1 }] }, 'a.7.b', { default: 4 }); // returns 4
 
 Paths are strings (numbers are coerced to strings). Array paths are not supported and return the default.
 
-The walk steps into any non-null object or function, so reads inside errors, class instances, `Date`, `URL` and `Map` resolve:
+At each level of the walk the strict segment wins if it is present on the target. If it is absent, the segment is joined with successive following segments and the shortest joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. There is no backtracking: once a joined key matches, a later miss returns the default rather than retrying a longer join. Shortest-first applies at the root too — there is no whole-path shortcut ahead of the walk, which is what makes `set`, `get` and `unset` resolve the same key, so `set(obj, path, get(obj, path))` is a fixed point.
+
+```js
+get({ attributes: { 'a.b': 'v' } }, 'attributes.a.b'); // returns 'v'
+get({ a: { b: { c: 1 } }, 'a.b': { c: 2 } }, 'a.b.c'); // returns 1 - the strict segment wins
+get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c'); // returns undefined - no backtracking
+```
+
+Traversable values are plain objects, arrays and errors — and, because `type.isObject` cannot distinguish them from plain objects, class instances whose `Object.prototype.toString` tag is `[object Object]`, so `get({ i: new Instance() }, 'i.own')` reads the instance's own property. Functions, `Date`, `URL`, `Map`, `Set`, `RegExp`, `Promise`, `Buffer`, typed arrays, `null`, `undefined` and primitives are not traversable, and yield the default when the path continues past them.
+
+Traversability only governs stepping _through_ a value on the way to a child. It says nothing about a value that is the _endpoint_ of the path: `get({ s: socket }, 's')` returns the live socket, and with `copy: true` serializes its internals, without the predicate being consulted at all.
+
+A lookup on an error reads the error's `extractErrorProps` form, so `name` resolves and an own key holding a class instance arrives as a `'[Object: Name]'` marker rather than a live object. An error that is the endpoint of the path is returned as-is — no lookup happens on it, so no conversion happens either.
 
 ```js
 get(error, 'cause.code'); // reads through an Error
-get({ url: new URL('https://example.com/p') }, 'url.pathname'); // returns '/p'
+get(error, 'name'); // returns 'Error'
+get({ e: error }, 'e'); // returns the Error instance itself
 ```
 
-`null`, `undefined` and primitives are not traversable and yield the default.
+Routing error lookups through `extractErrorProps` also inherits its depth limits, so error-borne data is not read at full fidelity. The `cause` chain resolves three levels deep (`MAX_CAUSE_DEPTH`); the fourth cause is the string `'[Truncated]'`, and a lookup on it returns the default. Lowdefy's own wrap (`ActionError` → `RequestError` → `ServiceError` → driver error) is only three `cause` links deep, so it resolves in full - `get(actionError, 'cause.cause.cause.message')` reads the driver error's message unchanged. Truncation needs a fifth link, such as a driver error that itself wraps a lower-level cause like a socket error. Objects held on an error are truncated at five levels (`MAX_OBJECT_DEPTH`). A miss returns a recognisable default, but reading the subtree itself returns a tree with `'[Truncated]'` baked in as a string literal — which will render if it reaches app config through something like `_actions: someAction.error.data`.
 
-Reserved segments (see [Reserved keys](#reserved-keys)) at any depth throw `ReservedKeyError`, even when a default is given — a reserved segment is illegal input, not a missing path. Wrap in try/catch to fall back to the default.
+```js
+let error = new Error('l4');
+for (const message of ['l3', 'l2', 'l1', 'l0']) error = new Error(message, { cause: error });
+get(error, 'cause.cause.cause.message'); // returns 'l3'
+get(error, 'cause.cause.cause.cause.message'); // returns undefined - past MAX_CAUSE_DEPTH
+
+error.data = { a: { b: { c: { d: { e: { f: 'deep' } } } } } };
+get(error, 'data.a.b.c.d.e.f'); // returns undefined - past MAX_OBJECT_DEPTH
+get(error, 'data'); // returns { a: { b: { c: { d: { e: '[Truncated]' } } } } }
+```
+
+A third fidelity loss is not about depth: `extractErrorProps` enumerates an error's own keys with `Object.keys`, so a non-enumerable own property or an accessor never reaches the extracted form, and `get` returns the default for it rather than the value. `AggregateError`'s own `errors` array is non-enumerable, so it is lost this way; a getter defined on an `Error` subclass is lost the same way. This is scoped narrowly - Node's own `fs`/`ENOENT`-style errors are unaffected, since `errno`, `code`, `syscall` and `path` are ordinary enumerable own properties, and no Lowdefy error class defines a property with `Object.defineProperty` - so the loss reaches third-party and built-in errors, not Lowdefy's own. `AggregateError` is the one an app author is realistically likely to meet.
+
+```js
+get(new AggregateError([new Error('a')], 'agg'), 'errors.0.message'); // returns undefined - errors is non-enumerable
+```
+
+Lookups are own properties only, so a built-in prototype member is never returned as a value: `get({}, 'toString')` yields the default, and `get([1], 'length')` returns `1` because `length` is own on arrays.
+
+Reserved segments (see [Reserved keys](#reserved-keys)) at any depth throw `ReservedKeyError`, even when a default is given — a reserved segment is illegal input, not a missing path. Wrap in try/catch to fall back to the default. The scan runs on the split segments before the walk, so a literal dotted key containing a reserved name throws rather than resolving: `get({ 'a.constructor': 1 }, 'a.constructor')` throws, matching `set` and `unset`.
 
 #### getKey
 
