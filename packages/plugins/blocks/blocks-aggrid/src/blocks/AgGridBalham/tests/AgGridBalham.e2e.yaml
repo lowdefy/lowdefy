@@ -158,7 +158,9 @@ blocks:
   - id: aggridbalham_onrowselected
     type: AgGridBalham
     properties:
-      rowSelection: single
+      rowSelection:
+        mode: singleRow
+        enableClickSelection: true
       columnDefs:
         - headerName: Name
           field: name

@@ -176,7 +176,9 @@
       type: AgGridInputMaterial
       properties:
         height: 300
-        rowSelection: multiple
+        rowSelection:
+          mode: multiRow
+          enableClickSelection: true
         defaultColDef:
           sortable: true
           editable: true

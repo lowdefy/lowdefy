@@ -299,12 +299,14 @@ pages:
             sortable: true
             resizable: true
             filter: true
-          rowSelection: 'multiple'
+          rowSelection:
+            mode: multiRow
+            enableClickSelection: true
+            checkboxes: true
           columnDefs:
             - headerName: Title
               field: title
               width: 350
-              checkboxSelection: true
             - headerName: Year
               field: year
               width: 100
@@ -379,13 +381,15 @@ pages:
             sortable: true
             resizable: true
             filter: true
-          rowSelection: 'multiple'
+          rowSelection:
+            mode: multiRow
+            enableClickSelection: true
+            checkboxes: true
+            headerCheckbox: true
           columnDefs:
             - headerName: Title
               field: title
               width: 350
-              checkboxSelection: true
-              headerCheckboxSelection: true
             - headerName: Year
               field: year
               width: 100
