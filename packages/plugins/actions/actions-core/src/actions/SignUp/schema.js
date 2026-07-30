@@ -17,8 +17,28 @@ export default {
         description: 'Name of the user.',
       },
       callbackUrl: {
-        type: 'string',
-        description: 'URL to redirect to after email verification.',
+        type: 'object',
+        description:
+          'Structured callback target for where the new account lands - both where the emailed verification link goes and, when the response carries a session, where the browser navigates. basePath-prefixed. Defaults to the home page when omitted and no ?callbackUrl= query is present. A false value is not valid here: the same value is the emailed link destination, which SignUp cannot suppress.',
+        properties: {
+          home: {
+            type: 'boolean',
+            description: "Land on the app's home page.",
+          },
+          pageId: {
+            type: 'string',
+            description: 'The pageId to land on.',
+          },
+          url: {
+            type: 'string',
+            description:
+              'The URL to land on. An absolute URL is not basePath-prefixed, so it can be an external landing page.',
+          },
+          urlQuery: {
+            type: 'object',
+            description: 'The urlQuery to set on the destination.',
+          },
+        },
       },
       captchaToken: {
         type: 'string',

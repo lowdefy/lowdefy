@@ -14,9 +14,26 @@
   limitations under the License.
 */
 
+import { getHomePathname } from '@lowdefy/engine';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
+function getCallbackUrl({ lowdefy, callbackUrl, name = 'callbackUrl' }) {
+  // An absent target means "no target" - the ladder in resolveCallbackURL
+  // decides what absence falls back to. null is absence too: an operator with no
+  // matching branch (an `_if` without an `else`) resolves to null, and
+  // destructuring that throws a TypeError instead of falling to the default.
+  //
+  // A non-object target - notably the bare string these params were wrongly
+  // declared as before the schemas were corrected - expresses none of the four
+  // keys below and so resolves to no target, letting the ladder continue. It is
+  // deliberately not an error: apps written against the old string schema are
+  // common, and the two better-looking alternatives are both worse. Throwing
+  // fails a sign-in that works today, and reading a string as { url } would
+  // double-prefix basePath on the most common spelling of all, a string holding
+  // the already-prefixed ?callbackUrl= query.
+  if (!type.isObject(callbackUrl)) {
+    return undefined;
+  }
   const { home, pageId, urlQuery, url } = callbackUrl;
 
   const targets = [home, pageId, url].filter((target) => target);
@@ -28,7 +45,15 @@ function getCallbackUrl({ lowdefy, callbackUrl = {}, name = 'callbackUrl' }) {
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
 
   if (home === true) {
-    return `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}${query ? `?${query}` : ''}`;
+    // An app whose home config names no page has no resolvable home - return no
+    // target rather than interpolating the missing pageId into the path.
+    // getHomeAndMenus resolves pageId to null when there is no homePageId and no
+    // menu link to fall back on, which built the literal "/null".
+    const pathname = getHomePathname({ lowdefy });
+    if (type.isNone(pathname)) {
+      return undefined;
+    }
+    return `${pathname}${query ? `?${query}` : ''}`;
   }
   if (type.isString(pageId)) {
     return `/${pageId}${query ? `?${query}` : ''}`;
@@ -57,23 +82,69 @@ function resolveTargetURL({ lowdefy, callbackUrl, name }) {
   return explicit;
 }
 
+// Accepts only a path-absolute URL from the ?callbackUrl= query. A bare
+// startsWith('/') is not enough: "//evil.com" and "/\evil.com" also start with
+// "/" but are protocol-relative (browsers normalize the backslash to a slash),
+// so a crafted sign-in link would navigate off-site with a fresh session. This
+// value is the one target that never reaches BetterAuth on the email, phone and
+// passkey paths - it goes straight into window.location.assign - so its
+// server-side originCheck / trustedOrigins do not cover it.
+function isAppRelativePath(value) {
+  return type.isString(value) && /^\/([^/\\]|$)/.test(value);
+}
+
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
 // param set by the unauthenticated page redirect, so login returns to the
-// page the user asked for. Only relative paths are accepted from the query
-// to avoid open redirects. The query fallback is exclusive to the primary
-// callbackUrl - a new-user or error destination has no equivalent query
-// source, so reading it for them would misroute.
+// page the user asked for; otherwise the app's home page. Only app-relative
+// paths are accepted from the query to avoid open redirects. The query fallback
+// is exclusive to the primary callbackUrl - a new-user or error destination has
+// no equivalent query source, so reading it for them would misroute.
 function resolveCallbackURL({ lowdefy, callbackUrl }) {
+  // An explicit refusal to navigate, above the ladder so a bounced sign-in
+  // honors it too. Absence means "go home" below, so "stay put" needs its own
+  // spelling - a login form in a modal or an embedded panel relies on the
+  // session store re-rendering the tree with the new user in place.
+  if (callbackUrl === false) {
+    return undefined;
+  }
   const explicit = resolveTargetURL({ lowdefy, callbackUrl });
   if (!type.isNone(explicit)) {
     return explicit;
   }
   const window = lowdefy._internal?.globals?.window;
   const fromQuery = new URLSearchParams(window?.location?.search ?? '').get('callbackUrl');
-  if (type.isString(fromQuery) && fromQuery.startsWith('/')) {
+  if (isAppRelativePath(fromQuery)) {
+    // Returned raw, not through resolveTargetURL: both producers of this query
+    // param already bake basePath into the value they emit (renderPage.js,
+    // apiPage.js), so prefixing here would yield /app/app/reports.
     return fromQuery;
   }
-  return undefined;
+  // The bottom rung, below the query so a bounced sign-in still returns to the
+  // page the user asked for. Resolved through the same helper as the explicit
+  // rung, so basePath handling stays in one place.
+  const home = resolveTargetURL({ lowdefy, callbackUrl: { home: true } });
+  if (!type.isNone(home)) {
+    return home;
+  }
+  throw new Error(
+    'Invalid callbackUrl: no destination resolved. The app has no resolvable home page - set homePageId, give an explicit callbackUrl, or use "callbackUrl: false" to stay on the page.'
+  );
+}
+
+// callbackUrl: false suppresses Lowdefy's own window.location.assign, so it is
+// only honorable where that assign is the value's single consumer. The paths
+// that hand callbackURL to BetterAuth make it the destination of a later hop -
+// an emailed link, an OAuth return - which cannot be suppressed once the browser
+// has left. Both alternatives there are worse than an error: omitting the param
+// lands the user on BetterAuth's own "/" fallback, which resolves against the
+// auth baseURL and so drops basePath entirely, and silently substituting the
+// home default contradicts an explicit instruction.
+function assertCallbackUrlNavigable({ callbackUrl, method }) {
+  if (callbackUrl === false) {
+    throw new Error(
+      `Invalid callbackUrl: "false" is not valid for ${method}, which redirects through an external hop. Give a destination.`
+    );
+  }
 }
 
 // Maps the captchaToken action param onto the BetterAuth client's per-call
@@ -171,6 +242,7 @@ function createAuthMethods(lowdefy, auth) {
     }
 
     if (!type.isNone(providerId)) {
+      assertCallbackUrlNavigable({ callbackUrl, method: 'Login with a provider' });
       const provider = providers.find((configured) => configured.id === providerId);
       if (type.isNone(provider)) {
         throw new Error(`Login provider "${providerId}" is not a configured auth provider.`);
@@ -197,6 +269,7 @@ function createAuthMethods(lowdefy, auth) {
       );
     }
     if (magicLink === true) {
+      assertCallbackUrlNavigable({ callbackUrl, method: 'Login with magicLink' });
       if (!type.isString(email)) {
         throw new Error('Login with magicLink requires an "email" param.');
       }
@@ -250,6 +323,11 @@ function createAuthMethods(lowdefy, auth) {
   // Social, magic-link and passkey have no separate signup - the account is
   // created on first sign-in via login - so SignUp is email/password only.
   async function signUp({ callbackUrl, captchaToken, email, name, password, ...rest } = {}) {
+    // signUp is the case where the two consumers diverge: Lowdefy navigates on
+    // the session-bearing success, and BetterAuth puts the same value in the
+    // verification email. A value with two consumers cannot be suppressed for
+    // one of them alone.
+    assertCallbackUrlNavigable({ callbackUrl, method: 'SignUp' });
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(
       auth.signUpEmail({
@@ -270,8 +348,14 @@ function createAuthMethods(lowdefy, auth) {
     return data;
   }
 
+  // Deliberately the one method outside resolveCallbackURL's ladder: it reads
+  // neither the ?callbackUrl= query nor the home default. With no callback the
+  // session provider's post-sign-out reload takes over and the server re-applies
+  // the page auth fork, which is the right landing for a sign-out - sending a
+  // signed-out user to the home page could land them on a page they may no
+  // longer see.
   async function logout({ callbackUrl } = {}) {
-    const callbackURL = getCallbackUrl({ lowdefy, callbackUrl });
+    const callbackURL = resolveTargetURL({ lowdefy, callbackUrl });
     const window = lowdefy._internal?.globals?.window;
     const willNavigate = Boolean(callbackURL && window);
     if (willNavigate && auth.suppressSignOutReload) {
@@ -281,12 +365,7 @@ function createAuthMethods(lowdefy, auth) {
     }
     const data = await unwrap(auth.signOut());
     if (willNavigate) {
-      // Prefix basePath only onto app-relative callbacks - absolute URLs
-      // (external logout landing pages) navigate as given.
-      const target = callbackURL.startsWith('/')
-        ? `${lowdefy.basePath ?? ''}${callbackURL}`
-        : callbackURL;
-      window.location.assign(target);
+      window.location.assign(callbackURL);
     }
     return data;
   }
@@ -320,13 +399,20 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.stopImpersonating());
   }
 
-  // Bypasses the cookie cache (a live re-resolve), so role, attribute or
-  // session changes surface immediately instead of after cookieCache.maxAge.
-  // Roles and merged attributes come from the server-resolved caller - the
-  // active member row read the base session does not carry.
+  // Refreshes the BetterAuth client session store through an awaited
+  // store refetch, bypassing the cookie cache (a live re-resolve) so role,
+  // attribute or session changes surface immediately instead of after
+  // cookieCache.maxAge. The store holds a fresh session user before this
+  // resolves. Roles and merged attributes come from the server-resolved
+  // caller - the active member row read the base session does not carry.
   async function updateSession() {
-    await unwrap(auth.getSession({ disableCookieCache: true }));
+    const session = await unwrap(auth.refreshSession({ disableCookieCache: true }));
     const { user } = await auth.getResolvedUser();
+    if (session && type.isNone(user)) {
+      // A session with no resolved caller is the admission wall rejecting a
+      // real session, not a logout - surface it instead of nulling the caller.
+      throw new Error('UpdateSession failed: a session is active but the server resolved no user.');
+    }
     if (auth.updateResolvedUser) {
       auth.updateResolvedUser(user ?? null);
     }
@@ -506,6 +592,7 @@ function createAuthMethods(lowdefy, auth) {
     if (!type.isString(email)) {
       throw new Error('SendVerificationEmail requires an "email" param.');
     }
+    assertCallbackUrlNavigable({ callbackUrl, method: 'SendVerificationEmail' });
     const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     return unwrap(
       auth.sendVerificationEmail({

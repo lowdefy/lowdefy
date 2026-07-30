@@ -10,8 +10,28 @@ export default {
         description: 'Email address of the unverified account to send the verification email to.',
       },
       callbackUrl: {
-        type: 'string',
-        description: 'URL to redirect to after email verification.',
+        type: 'object',
+        description:
+          'Structured callback target for where the emailed verification link lands after verifying, basePath-prefixed. Defaults to the home page when omitted and no ?callbackUrl= query is present. A false value is not valid here: the destination belongs to a redirect hop this action cannot suppress.',
+        properties: {
+          home: {
+            type: 'boolean',
+            description: "Land on the app's home page.",
+          },
+          pageId: {
+            type: 'string',
+            description: 'The pageId to land on.',
+          },
+          url: {
+            type: 'string',
+            description:
+              'The URL to land on. An absolute URL is not basePath-prefixed, so it can be an external landing page.',
+          },
+          urlQuery: {
+            type: 'object',
+            description: 'The urlQuery to set on the destination.',
+          },
+        },
       },
       captchaToken: {
         type: 'string',

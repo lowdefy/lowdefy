@@ -461,6 +461,43 @@ test('createLink, link with home with inputs, not configured', () => {
   });
 });
 
+test('createLink, link with home calls noLink when the home config names no page', () => {
+  // What getHomeAndMenus returns for an app with no homePageId and no menu link
+  // to fall back on. Unguarded this pushed "/undefined" into history.
+  const lowdefy = { inputs: {}, home: { configured: false, pageId: null } };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ home: true });
+  expect(mockBackLink.mock.calls).toEqual([]);
+  expect(mockDisabledLink.mock.calls).toEqual([]);
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([[{ home: true }]]);
+  expect(lowdefy.inputs).toEqual({});
+});
+
+test('createLink, link with home calls noLink when there is no home config at all', () => {
+  const lowdefy = { inputs: {} };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ home: true, input: { a: 1 } });
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([[{ home: true, input: { a: 1 } }]]);
+  expect(lowdefy.inputs).toEqual({});
+});
+
 test('createLink, no params calls noLink', () => {
   const lowdefy = { inputs: {}, home: { pageId: 'home' } };
   const link = createLink({
