@@ -24,7 +24,7 @@ import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
-import { ReservedKeyError, setKey, type } from '@lowdefy/helpers';
+import { isReserved, setKey, type } from '@lowdefy/helpers';
 
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
@@ -136,14 +136,13 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
               ignored.push(key);
               continue;
             }
-            try {
-              setKey(writable, key, value);
-            } catch (error) {
-              if (!(error instanceof ReservedKeyError)) throw error;
-              // Same policy as a non-allowlisted key: drop it and report it back
-              // so the model can self-correct on the next turn.
+            // Same policy as a non-allowlisted key: drop it and report it back
+            // so the model can self-correct on the next turn.
+            if (isReserved(key)) {
               ignored.push(key);
+              continue;
             }
+            setKey(writable, key, value);
           }
           if (Object.keys(writable).length > 0) {
             await methods.triggerEvent({ name: '__updatePageState', event: writable });

@@ -37,3 +37,6 @@ response property named `constructor`, rename it.
 Deep merges of configuration are hardened the same way, but skip reserved keys rather than
 raising — a reserved name arriving inside a merged *value* is dropped so a single poisoned
 field can't abort an otherwise valid merge.
+
+`@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can
+test a key against this policy directly instead of catching a `ReservedKeyError`.

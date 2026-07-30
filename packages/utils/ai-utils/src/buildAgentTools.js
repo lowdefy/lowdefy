@@ -18,7 +18,7 @@ import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError } from '@lowdefy/errors';
-import { getKey, ReservedKeyError, serializer, setKey, translate } from '@lowdefy/helpers';
+import { getKey, isReserved, serializer, setKey, translate } from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
@@ -133,24 +133,23 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
           );
           continue;
         }
-        try {
-          if (getKey(tools, name)) {
-            console.warn(
-              `MCP tool "${name}" from ${source.url ?? source.command} ` +
-                `conflicts with endpoint tool — skipped.`
-            );
-            continue;
-          }
-          setKey(tools, name, source.confirm ? { ...mcpTool, needsApproval: true } : mcpTool);
-        } catch (error) {
-          if (!(error instanceof ReservedKeyError)) throw error;
-          // Same policy as the reserved-platform-name and collision cases above:
-          // MCP tool names are not under app control, so warn and skip.
+        // Same policy as the reserved-platform-name and collision cases above:
+        // MCP tool names are not under app control, so warn and skip.
+        if (isReserved(name)) {
           console.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `uses a reserved key name — skipped.`
           );
+          continue;
         }
+        if (getKey(tools, name)) {
+          console.warn(
+            `MCP tool "${name}" from ${source.url ?? source.command} ` +
+              `conflicts with endpoint tool — skipped.`
+          );
+          continue;
+        }
+        setKey(tools, name, source.confirm ? { ...mcpTool, needsApproval: true } : mcpTool);
       }
     } catch (err) {
       const label = source.transport === 'stdio' ? source.command : source.url;
