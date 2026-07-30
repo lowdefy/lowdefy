@@ -305,9 +305,7 @@ test('buildAgentTools throws ConfigError when endpoint tool name collides with r
     callEndpoint: jest.fn(),
   };
 
-  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
-    /reserved platform tool name/i
-  );
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
 });
 
 test('buildAgentTools throws ConfigError when sub-agent id collides with reserved name', async () => {
@@ -322,9 +320,7 @@ test('buildAgentTools throws ConfigError when sub-agent id collides with reserve
     resolveMcpSources: jest.fn(),
   };
 
-  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
-    /reserved platform tool name/i
-  );
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
 });
 
 test('endpoint tool returns top-level marker-wrapped array as a plain array', async () => {
@@ -355,10 +351,7 @@ test('endpoint tool returns top-level marker-wrapped array as a plain array', as
   };
 
   const { tools } = await buildAgentTools({ agent, context });
-  const result = await tools['search-policies'].execute(
-    { query: 'leave' },
-    { abortSignal: null }
-  );
+  const result = await tools['search-policies'].execute({ query: 'leave' }, { abortSignal: null });
 
   expect(Array.isArray(result)).toBe(true);
   expect(result).toEqual([
@@ -482,17 +475,18 @@ test('endpoint tool unwraps a marker-wrapped array nested under an object key', 
   expect(Array.isArray(result.items)).toBe(true);
 });
 
-test('buildAgentTools throws ReservedKeyError when an endpoint tool name is a reserved key', async () => {
+test('buildAgentTools warns and skips an endpoint tool whose name is a reserved key', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
   const agent = {
-    tools: [{ endpointId: '__proto__' }],
+    tools: [{ endpointId: 'constructor' }, { endpointId: 'safe' }],
     mcp: [],
     agents: [],
   };
   const context = {
     getEndpointConfig: jest.fn().mockResolvedValue({
-      description: 'polluting',
+      description: 'an endpoint',
       payloadSchema: { type: 'object' },
     }),
     callEndpoint: jest.fn(),
@@ -500,7 +494,51 @@ test('buildAgentTools throws ReservedKeyError when an endpoint tool name is a re
     resolveMcpSources: jest.fn().mockResolvedValue([]),
   };
 
-  await expect(buildAgentTools({ agent, context })).rejects.toThrow('Reserved key "__proto__"');
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(tools.safe).toBeDefined();
+  expect(warn).toHaveBeenCalledWith(
+    'Endpoint tool "constructor" uses a reserved key name — skipped.'
+  );
+  warn.mockRestore();
+});
+
+test('buildAgentTools warns and skips a sub-agent tool whose name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const subAgentConfig = {
+    agentId: 'researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [],
+    properties: { model: 'claude-haiku-4-5-20251001', instructions: 'You research topics.' },
+  };
+
+  const agent = {
+    tools: [],
+    mcp: [],
+    agents: [{ agentId: 'constructor' }, { agentId: 'researcher' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(tools.researcher).toBeDefined();
+  expect(context.getAgentConfig).not.toHaveBeenCalledWith({ agentId: 'constructor' });
+  expect(warn).toHaveBeenCalledWith(
+    'Sub-agent tool "constructor" uses a reserved key name — skipped.'
+  );
+  warn.mockRestore();
 });
 
 test('buildAgentTools warns and skips an MCP tool whose name is a reserved key', async () => {
