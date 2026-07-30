@@ -69,7 +69,9 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
     }
   }, []);
   const onRowSelected = useCallback((event) => {
-    if (!event.node.selected) return; // see https://stackoverflow.com/a/63265775/2453657
+    // AG Grid fires onRowSelected for deselection too, which the Lowdefy event does not represent.
+    // See https://stackoverflow.com/a/63265775/2453657
+    if (!event.node.isSelected()) return;
     if (events.onRowSelected) {
       methods.triggerEvent({
         name: 'onRowSelected',
