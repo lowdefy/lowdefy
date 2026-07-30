@@ -17,7 +17,7 @@
 // Shared meta for the display AgGrid theme blocks (AgGridAlpine / AgGridMaterial / AgGridBalham).
 // They are identical apart from the theme name in the css key description, so each block's meta.js
 // is a one-line call to this factory rather than a duplicated copy of the whole schema.
-function createDisplayMeta(blockName) {
+function createDisplayMeta(blockName, { size = false } = {}) {
   return {
     category: 'display',
     icons: [],
@@ -80,6 +80,22 @@ function createDisplayMeta(blockName) {
       type: 'object',
       additionalProperties: false,
       properties: {
+        ...(size
+          ? {
+              size: {
+                type: 'string',
+                enum: ['small', 'middle', 'large'],
+                default: 'middle',
+                description:
+                  "Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes.",
+              },
+            }
+          : {}),
+        themeParams: {
+          type: 'object',
+          description:
+            "AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference.",
+        },
         height: {
           type: ['number', 'string'],
           default: 'auto',
