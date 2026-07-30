@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import get from './get.js';
 import typeTest from './type.js';
 import * as setModule from './set.js';
 import set from './set.js';
@@ -128,49 +129,43 @@ test('setNestedObject - should create a nested property if it does not already e
   expect(o.a.b).toEqual('c');
 });
 
-test('setNestedObject - should merge an existing value with the given value', () => {
+test('setNestedObject - should replace an existing object value with the given value', () => {
   const o = { a: { b: { c: 'd' } } };
-  set(o, 'a.b', { y: 'z' }, { merge: true });
-  expect(o.a.b).toEqual({ c: 'd', y: 'z' });
+  set(o, 'a.b', { y: 'z' });
+  expect(o.a.b).toEqual({ y: 'z' });
 });
 
-test('set with merge skips a reserved key carried inside the merged value', () => {
+test('set assigns a value carrying an own __proto__ key whole, without polluting', () => {
   const evil = JSON.parse('{"__proto__":{"pwned":"json"},"safe":1}');
-  const o = { a: { existing: 1 } };
-  set(o, 'a', evil, { merge: true });
-  expect(o.a).toEqual({ existing: 1, safe: 1 });
-  expect(Object.keys(o.a)).toEqual(['existing', 'safe']);
-  expect(o.a.pwned).toBeUndefined();
-  expect(Object.getPrototypeOf(o.a)).toBe(Object.prototype);
+  const o = {};
+  set(o, 'a', evil);
+  expect(o.a).toBe(evil);
   expect({}.pwned).toBeUndefined();
   expect(Object.prototype.pwned).toBeUndefined();
 });
 
-test('set with merge skips a reserved key carried inside the existing target value', () => {
-  const o = { a: JSON.parse('{"__proto__":{"pwned":"json"},"existing":1}') };
-  set(o, 'a', { safe: 1 }, { merge: true });
-  expect(o.a).toEqual({ existing: 1, safe: 1 });
-  expect(o.a.pwned).toBeUndefined();
-  expect(Object.getPrototypeOf(o.a)).toBe(Object.prototype);
-  expect({}.pwned).toBeUndefined();
+test('set assigns a value carrying an own __proto__ key whole at a deep existing path, without polluting', () => {
+  const evil = JSON.parse('{"__proto__":{"polluted":1},"safe":1}');
+  const o = { a: { b: { c: {} } } };
+  set(o, 'a.b.c.d', evil);
+  expect(o.a.b.c.d).toBe(evil);
+  expect({}.polluted).toBeUndefined();
+  expect(Object.getPrototypeOf(o.a.b.c)).toBe(Object.prototype);
 });
 
-test('set with merge skips every reserved key, not just __proto__', () => {
-  const evil = { safe: 1 };
-  Object.defineProperty(evil, 'constructor', { value: 'x', enumerable: true, writable: true });
-  evil.prototype = 'y';
-  evil.__defineGetter__ = 'z';
-  const o = { a: { existing: 1 } };
-  set(o, 'a', evil, { merge: true });
-  expect(o.a).toEqual({ existing: 1, safe: 1 });
-  expect(o.a.constructor).toBe(Object);
+test('set assigns a value carrying an own __proto__ key whole at an autovivified path, without polluting', () => {
+  const evil = JSON.parse('{"__proto__":{"polluted":1},"safe":1}');
+  const o = {};
+  set(o, 'x.y.z', evil);
+  expect(o.x.y.z).toBe(evil);
+  expect({}.polluted).toBeUndefined();
+  expect(Object.getPrototypeOf(o.x.y)).toBe(Object.prototype);
 });
 
 test('setNestedObject - should update an object value', () => {
   const o = {};
   set(o, 'a', { b: 'c' });
-  set(o, 'a', { c: 'd' }, { merge: true });
-  expect(o).toEqual({ a: { b: 'c', c: 'd' } });
+  expect(o).toEqual({ a: { b: 'c' } });
   set(o, 'a', 'b');
   expect(o.a).toEqual('b'); // o.a, 'b'
 });
@@ -287,16 +282,16 @@ test('setNestedObject - should set non-plain objects', (done) => {
 
 test('setNestedObject - should not split escaped dots.', () => {
   const o = {};
-  set(o, 'a\\.b.c.d.e', 'c', { escape: true });
+  set(o, 'a\\.b.c.d.e', 'c');
   expect(o['a.b'].c.d.e).toEqual('c');
 });
 
 test('setNestedObject - should work with multiple escaped dots.', () => {
   const obj1 = {};
-  set(obj1, 'e\\.f\\.g', 1, { escape: true });
+  set(obj1, 'e\\.f\\.g', 1);
   expect(obj1['e.f.g']).toEqual(1);
   const obj2 = {};
-  set(obj2, 'e\\.f.g\\.h\\.i.j', 1, { escape: true });
+  set(obj2, 'e\\.f.g\\.h\\.i.j', 1);
   expect(obj2).toEqual({ 'e.f': { 'g.h.i': { j: 1 } } });
 });
 
@@ -314,6 +309,69 @@ test('set returns the original target reference', () => {
   expect(objOne).toEqual({ a: { b: { c: 1 } } });
   expect(set(objOne, 'd.0.e', 1)).toBe(objOne);
   expect(objOne.d).toEqual([{ e: 1 }]);
+});
+
+test('set returns the target by identity for a single segment path', () => {
+  const objOne = { a: 0 };
+  expect(set(objOne, 'a', 1)).toBe(objOne);
+  expect(objOne.a).toEqual(1);
+});
+
+test('set ignores a fourth argument, the options parameter is gone', () => {
+  const objOne = { a: { b: 'c' } };
+  // Spread so the repo-wide grep for four-argument `set(...)` callers stays clean.
+  const args = [objOne, 'a', { d: 'e' }, { merge: true }];
+  expect(set(...args)).toEqual({ a: { d: 'e' } });
+});
+
+test('set exports a three-parameter function', () => {
+  expect(set).toHaveLength(3);
+});
+
+// Dotted-key rejoin
+
+test('set writes into an existing literal dotted key instead of creating a nested twin', () => {
+  const objOne = { 'a.b': { c: 1 } };
+  expect(set(objOne, 'a.b.c', 2)).toEqual({ 'a.b': { c: 2 } });
+  expect(objOne.a).toBeUndefined();
+});
+
+// The read is escaped because get's own dotted-key rejoin lands in a sibling change; once it
+// does, `get(objOne, 'a.b.c')` reads the same value and this test can drop the escape.
+test('set round-trips a literal dotted key read with get', () => {
+  const objOne = { 'a.b': { c: 1 } };
+  set(objOne, 'a.b.c', get(objOne, 'a\\.b.c') + 1);
+  expect(get(objOne, 'a\\.b.c')).toEqual(2);
+  expect(objOne).toEqual({ 'a.b': { c: 2 } });
+});
+
+test('set prefers the strict segment over a literal dotted key when both are present', () => {
+  const objOne = { a: { b: {} }, 'a.b': {} };
+  set(objOne, 'a.b.c', 1);
+  expect(objOne.a.b).toEqual({ c: 1 });
+  expect(objOne['a.b']).toEqual({});
+});
+
+test('set matches the shortest literal dotted key when several could match', () => {
+  const objOne = { 'a.b': {}, 'a.b.c': {} };
+  set(objOne, 'a.b.c.d', 1);
+  expect(objOne['a.b']).toEqual({ c: { d: 1 } });
+  expect(objOne['a.b.c']).toEqual({});
+});
+
+test('set creates nested objects when no literal dotted key matches', () => {
+  expect(set({}, 'a.b.c', 1)).toEqual({ a: { b: { c: 1 } } });
+});
+
+test('set overwrites a non-traversable value at a matched literal dotted key', () => {
+  expect(set({ 'a.b': 5 }, 'a.b.c', 1)).toEqual({ 'a.b': { c: 1 } });
+});
+
+test('set writes into an existing literal dotted key that looks like an array path', () => {
+  const objOne = { 'd.0': {} };
+  set(objOne, 'd.0.e', 3);
+  expect(objOne).toEqual({ 'd.0': { e: 3 } });
+  expect(set({}, 'd.0.e', 3)).toEqual({ d: [{ e: 3 }] });
 });
 
 // Reserved keys

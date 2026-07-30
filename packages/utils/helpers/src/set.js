@@ -53,32 +53,6 @@ function isTraversable(value) {
   return !type.isNone(value) && (typeof value === 'object' || typeof value === 'function');
 }
 
-// Value-side pollution guard, matching mergeObjects' deepMerge: here the reserved name arrives
-// as data inside a merged value, not as a path a developer typed, so it is skipped rather than
-// thrown on. Without this, the default `Object.assign` merge copies via [[Set]], and an own
-// `__proto__` key - exactly what JSON.parse('{"__proto__":{...}}') produces - fires
-// Object.prototype's `__proto__` setter and re-parents the fresh merge target.
-function omitReservedKeys(source) {
-  const keys = Object.keys(source);
-  if (!keys.some(isReserved)) {
-    return source;
-  }
-  const cleaned = {};
-  for (const key of keys) {
-    if (isReserved(key)) continue;
-    cleaned[key] = source[key];
-  }
-  return cleaned;
-}
-
-function result(target, path, value, merge) {
-  if (merge && isTraversable(target[path]) && isTraversable(value)) {
-    target[path] = merge({}, omitReservedKeys(target[path]), omitReservedKeys(value));
-  } else {
-    target[path] = value;
-  }
-}
-
 // Only own properties count when deciding whether an intermediate needs to be
 // autovivified, so inherited members like `toString` are never descended into.
 function ownValue(target, prop) {
@@ -88,17 +62,12 @@ function ownValue(target, prop) {
   return target[prop];
 }
 
-function set(target, path, value, options) {
+function set(target, path, value) {
   if (!type.isObject(target)) {
     return target;
   }
   if (!type.isString(path)) {
     return target;
-  }
-
-  let { merge } = options ?? {};
-  if (merge && typeof merge !== 'function') {
-    merge = Object.assign;
   }
 
   const keys = splitPath(path);
@@ -110,29 +79,42 @@ function set(target, path, value, options) {
 
   const len = keys.length;
   const orig = target;
+  let idx = 0;
 
-  if (!options && len === 1) {
-    result(target, keys[0], value, merge);
-    return target;
-  }
+  while (idx < len) {
+    let prop = keys[idx];
+    let next = idx + 1;
 
-  for (let i = 0; i < len; i += 1) {
-    const prop = keys[i];
-    // The next segment decides whether a missing intermediate becomes an array or an object.
-    const propUp = keys[i + 1];
-    const current = ownValue(target, prop);
-    if (!isTraversable(current) && !type.isInt(parseInt(propUp, 10))) {
-      target[prop] = {};
-    } else if (!isTraversable(current) && type.isInt(parseInt(propUp, 10))) {
-      target[prop] = [];
+    // The strict segment wins if present. On a miss, grow the candidate one segment at a time
+    // looking for a literal dotted key already on the target - shortest-first, no backtracking,
+    // matching get. If nothing matches, keep the strict segment and autovivify as before.
+    if (!Object.hasOwn(target, prop)) {
+      let candidate = prop;
+      let n = next;
+      while (n < len) {
+        candidate = `${candidate}.${keys[n]}`;
+        n += 1;
+        if (Object.hasOwn(target, candidate)) {
+          prop = candidate;
+          next = n;
+          break;
+        }
+      }
     }
 
-    if (i === len - 1) {
-      result(target, prop, value, merge);
+    if (next === len) {
+      target[prop] = value;
       break;
     }
 
-    target = ownValue(target, prop);
+    // The next segment decides whether a missing intermediate becomes an array or an object.
+    const propUp = keys[next];
+    if (!isTraversable(ownValue(target, prop))) {
+      target[prop] = type.isInt(parseInt(propUp, 10)) ? [] : {};
+    }
+
+    target = target[prop];
+    idx = next;
   }
 
   return orig;
