@@ -227,6 +227,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
     height: 300
     rowSelection:
       mode: multiRow
+      checkboxes: false
+      headerCheckbox: false
       enableClickSelection: true
     defaultColDef:
       sortable: true
@@ -443,6 +445,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
     height: 300
     rowSelection:
       mode: multiRow
+      checkboxes: false
+      headerCheckbox: false
       enableClickSelection: true
     defaultColDef:
       sortable: true
