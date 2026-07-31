@@ -31,7 +31,7 @@ v33 keeps a `theme="legacy"` escape hatch for apps still on class-based file the
 
 v33 treats a legacy stylesheet in the document as an error, not a warning: `ag-grid.css` defines `--ag-legacy-styles-loaded`, and `environment.ts` raises AG Grid error 106 whenever a Theming API grid can read that property. Three facts make it fire in every app, not just on a page that mixes grids:
 
-1. **The flag is document-wide.** `ag-grid.css` sets it from an unscoped rule, custom properties inherit, and every grid creates a `div.ag-measurement-container` inside its own root — so any Theming API grid sees the flag once the stylesheet is anywhere in the document.
+1. **Every grid probes for the flag itself.** `ag-grid.css` carries one declaration, `.ag-measurement-container { --ag-legacy-styles-loaded: "true"; }`, and every grid creates a `div.ag-measurement-container` inside its own root. AG Grid then reads `getComputedStyle(this.getMeasurementContainer()).getPropertyValue('--ag-legacy-styles-loaded')` — the very element the rule targets. Nothing depends on inheritance or on a legacy grid existing: loading the stylesheet anywhere in the document is enough for every Theming API grid to see the flag on its own measurement container.
 2. **The stylesheet would always be in the document.** The build emits one static barrel import per block type, and `blocks.js` re-exports all eight blocks. The package declares no `sideEffects`, so a bundler must keep a module-scope `import 'ag-grid-community/styles/ag-grid.css'` in any block it loads, used or not.
 3. **AG Grid offers no in-document remedy** beyond migrating all grids together or shadow-DOM isolation.
 
@@ -43,7 +43,7 @@ Guard it with a static check: `grep -rn "ag-grid-community/styles" src/` must re
 
 One module builds every theme in the package. All theme objects are created **once at module scope** — Theming API objects are cheap and identity-stable, so switching `size` just swaps which object is passed.
 
-**`antdParams`** — 22 parameters mapping AG Grid onto antd design tokens, applied to all four bases. Every colour is a `var(--ant-*)` reference rather than a resolved value, so antd's cssVar mode regenerates the grid's colours on each theme or dark-mode change with no JS. The map carries exactly what the deleted `--ag-*` CSS overlay imposed on the six original blocks — colours, shadows, `fontFamily`, `fontSize` and the zebra stripe — plus `accentColor`, `chromeBackgroundColor`, `menuBackgroundColor`, `menuShadow`, `cardShadow` and `browserColorScheme`.
+**`antdParams`** — 23 parameters mapping AG Grid onto antd design tokens, applied to all four bases. Every colour is a `var(--ant-*)` reference rather than a resolved value, so antd's cssVar mode regenerates the grid's colours on each theme or dark-mode change with no JS. Seventeen of the 23 carry over what the deleted `--ag-*` CSS overlay imposed on the six original blocks — colours, shadows, `fontFamily`, `fontSize` and the zebra stripe — and six are additions the overlay never made: `accentColor`, `chromeBackgroundColor`, `menuBackgroundColor`, `menuShadow`, `tooltipTextColor` and `browserColorScheme`. `cardShadow` is **not** one of the additions: the overlay already set `--ag-card-shadow: var(--ant-box-shadow-secondary)` and the map holds the identical token.
 
 **`lowdefyParams`** — four structural parameters, on `themeQuartz` only: `headerFontWeight: 600`, `borderRadius`, `wrapperBorderRadius`, and `oddRowBackgroundColor: 'transparent'` (no zebra, antd Table's default).
 
@@ -78,9 +78,11 @@ Sizes differ only in spacing and heights — colours and fonts are identical acr
 
 ### Reconciling the deleted overlay against `antdParams`
 
-The `--ag-* : var(--ant-*)` overlay in `ag-grid-antd.module.css` is what coloured the six original blocks before v33. Its 34 declarations map onto the 22 in `antdParams` as follows.
+The `--ag-* : var(--ant-*)` overlay in `ag-grid-antd.module.css` is what coloured the six original blocks before v33. Its 34 declarations map onto the 23 in `antdParams` as follows. Both sides balance: **13 carried unchanged + 4 re-pointed + (6 + 3 + 6 + 2) dropped = the overlay's 34**, and **13 + 4 carried + 6 additions = the map's 23**.
 
-**Carried over unchanged (12).** `--ag-background-color`, `--ag-foreground-color`, `--ag-odd-row-background-color`, `--ag-header-background-color`, `--ag-header-cell-hover-background-color`, `--ag-selected-row-background-color`, `--ag-tooltip-background-color`, `--ag-modal-overlay-background-color`, `--ag-font-family` and `--ag-font-size` map onto identically-named parameters with the same antd token; `--ag-header-foreground-color` → `headerTextColor` and `--ag-checkbox-checked-color` → `checkboxCheckedBackgroundColor` carry over through a v33 rename.
+**Carried over unchanged (13).** `--ag-background-color`, `--ag-foreground-color`, `--ag-odd-row-background-color`, `--ag-header-background-color`, `--ag-header-cell-hover-background-color`, `--ag-selected-row-background-color`, `--ag-tooltip-background-color`, `--ag-modal-overlay-background-color`, `--ag-card-shadow`, `--ag-font-family` and `--ag-font-size` map onto identically-named parameters with the same antd token; `--ag-header-foreground-color` → `headerTextColor` and `--ag-checkbox-checked-color` → `checkboxCheckedBackgroundColor` carry over through a v33 rename.
+
+`--ag-card-shadow` → `cardShadow` had to be one of them. v33's `cardShadow` default is the hardcoded light-mode literal `'0 1px 4px 1px #00000018'`, and both `dropdownShadow` and `cellEditingShadow` are `{ ref: 'cardShadow' }`, so omitting it would put a light-mode shadow on cell editors and dropdowns in a dark app — exactly the "a static literal renders wrong in the opposite mode" failure the map exists to avoid.
 
 **Re-pointed to a different antd token (4)** — the visible colour changes on the six original blocks:
 
@@ -93,13 +95,24 @@ The `--ag-* : var(--ant-*)` overlay in `ag-grid-antd.module.css` is what coloure
 
 These four are accepted deliberately: applying one shared map uniformly is what keeps the six originals looking like antd rather than restoring per-block-family colour values.
 
-**Dropped because v33 derives them from a parameter that is set (7).** `--ag-secondary-foreground-color`, `--ag-header-cell-moving-background-color`, `--ag-column-hover-color`, `--ag-checkbox-background-color`, the `--ag-input-disabled-*` pair, and `--ag-range-selection-highlight-color`. Each still tracks the app's antd theme and dark mode through the parameter it refs.
+The remaining 17 declarations are dropped, in four distinct ways.
 
-**Dropped deliberately (2).** `--ag-range-selection-border-color` and `--ag-range-selection-background-color` style AG Grid **Enterprise** cell selection, which these community blocks cannot render.
+**Dropped because v33 derives them from a parameter that is set (6).** Each still tracks the app's antd theme and dark mode through the parameter it refs:
 
-**Dropped because v33 has no parameter for them (8).** `--ag-secondary-border-color`, `--ag-control-panel-background-color`, `--ag-subheader-background-color`, `--ag-subheader-toolbar-background-color`, `--ag-disabled-foreground-color`, `--ag-chip-background-color`, `--ag-input-focus-box-shadow` and `--ag-input-focus-border-color` were removed or folded into composite parameters (`focusShadow`, `inputFocusBorder`, `inputDisabledBorder`). Nothing reads them on v33 — the same renames behind the `themeParams` no-op caveat below. `chromeBackgroundColor` covers the control-panel and subheader surfaces three of them named.
+| Overlay | v33 parameter covering it | Derives from |
+| --- | --- | --- |
+| `--ag-secondary-foreground-color` | `subtleTextColor` (renamed) | `{ ref: textColor }` → `foregroundColor` |
+| `--ag-header-cell-moving-background-color` | `headerCellMovingBackgroundColor` | `{ ref: headerCellHoverBackgroundColor }` |
+| `--ag-column-hover-color` | `columnHoverColor` | `accentMix(0.05)` → `accentColor` |
+| `--ag-checkbox-background-color` | `checkboxUncheckedBackgroundColor` | `backgroundColor` |
+| `--ag-input-disabled-background-color` | `inputDisabledBackgroundColor` | foreground/background mix |
+| `--ag-input-disabled-border-color` | `inputDisabledBorder` (folded) | `{ ref: inputBorder }` → `borderColor` |
 
-**One drop was not safe, and is fixed.** `--ag-card-shadow` had no counterpart, and v33's `cardShadow` defaults to a hardcoded light-mode literal that `dropdownShadow` and `cellEditingShadow` both ref — so cell editors and dropdowns would carry a light shadow in dark mode. `cardShadow` is in the map.
+**Dropped deliberately — AG Grid Enterprise (3).** `--ag-range-selection-border-color`, `--ag-range-selection-background-color` and `--ag-range-selection-highlight-color` style **Enterprise** cell selection, which these community blocks cannot render. All three survive in v33 as parameters and all three already derive from `accentColor`, which the map sets, so nothing is lost by leaving them alone.
+
+**Dropped because v33 has neither the parameter nor the variable (6).** `--ag-secondary-border-color`, `--ag-control-panel-background-color`, `--ag-subheader-background-color`, `--ag-subheader-toolbar-background-color`, `--ag-disabled-foreground-color` and `--ag-chip-background-color` were removed outright — nothing on v33 reads them. `chromeBackgroundColor` covers the control-panel and subheader surfaces three of them named.
+
+**Dropped although v33 does have a parameter (2).** `--ag-input-focus-box-shadow` and `--ag-input-focus-border-color` both survived, under new names the map deliberately does not set: `inputFocusShadow` (a straight rename, `box-shadow` → `shadow`; `inputStyleBordered` gives it `{ ref: focusShadow }`) and `inputFocusBorder` (a fold, colour into a composite border). Focus styling is left to each base theme, which is why no loss follows: Alpine, Balham and Material all set their own `focusShadow` (and Alpine and Material their own `inputFocusBorder`), and every one of those resolves through `accentColor`, `foregroundColor` or Material's `primaryColor` — parameters the map does set. So focus rings still track antd, with each base's own geometry.
 
 ### Structural drift on the six original blocks
 
@@ -114,7 +127,7 @@ AG Grid's prebuilt themes approximate the file themes rather than reproducing th
 | header font-weight | 600 / 700 / 600 | **700** / 700 / 600 |
 | icons | shared `ag-icon` font | each base's own SVG icon set — glyph shapes differ |
 
-One behavioural change comes with it: **row height now tracks the app's antd font size.** v33 derives `rowHeight` from `dataFontSize`, and `antdParams` points `fontSize` at `var(--ant-font-size)`, so a larger app font makes rows taller. v32's file themes were font-size-independent. Alpine is immune — its base pins a literal row height.
+One behavioural change comes with it: **row height now tracks the app's antd font size, above the icon size.** v33's `rowHeight` is `calc: max(iconSize, dataFontSize) + spacing * 3.25` (Material uses `* 3.75`), `dataFontSize` refs `fontSize`, and `antdParams` points `fontSize` at `var(--ant-font-size)` — so a larger app font makes rows taller, but only once it passes `iconSize`, which is 16 on the core and 18 on Material. At antd's default 14px nothing changes; the drift is real at 18px or 20px. v32's file themes were font-size-independent at any size. Alpine is immune at every size, but not because it pins a row height — it does not set `rowHeight` at all. It pins the *input*: `themeAlpine` sets `dataFontSize: 14`, which `antdParams` never overrides (the map sets `fontSize`, and an explicit `dataFontSize` wins over the `{ ref: fontSize }` default).
 
 Zebra striping, fonts and overall density are preserved, which is what splitting `lowdefyParams` off the shared map buys.
 
@@ -130,7 +143,7 @@ Zebra striping, fonts and overall density are preserved, which is what splitting
 
 **`themeParams`** — an object of AG Grid Theming API parameter names merged onto the block's theme, added **unconditionally** in both meta factories because it is meaningful on all eight blocks. Merged by the shared `useGridTheme` hook; it *merges onto* the block's theme rather than replacing it.
 
-There is **no Lowdefy-side allow-list**, and the reason is not that AG Grid validates the names — it does not. `paramValueToCss` dispatches on `getParamType`, which matches the key's *suffix* and falls back to `'length'` for anything unrecognised, so `{ headrBackgroundColor: 'red' }` emits `--ag-headr-background-color: red` and warns nothing. AG Grid's `_error(107)` fires only when a *value* cannot be converted for the inferred type. No allow-list is added because there is no authoritative list to copy (`getParamDocs` is exported only from `private-theming-api.ts`) and a hand-maintained one would go stale every release while blocking parameters we never thought of.
+There is **no Lowdefy-side allow-list**, and the reason is not that AG Grid validates the names — it does not. `paramValueToCss` dispatches on `getParamType`, which matches the key's *suffix* against a fixed list (`color`, `length`, `border`, `shadow`, `fontFamily`, …) and falls back to `'length'` for anything matching none of them. Either way the key is typed, converted and emitted: `{ headrBackgroundColor: 'red' }` still ends in `color`, so it types as a colour and emits `--ag-headr-background-color: red`; a key matching no suffix at all, `{ headerBackgrund: '4px' }`, takes the `'length'` fallback and emits `--ag-header-backgrund: 4px`. Neither warns. AG Grid's `_error(107)` fires only when a *value* cannot be converted for the inferred type. No allow-list is added because there is no authoritative list to copy (`getParamDocs` is exported only from `private-theming-api.ts`) and a hand-maintained one would go stale every release while blocking parameters we never thought of.
 
 **The user-facing consequence: an unrecognised `themeParams` key is a silent no-op** — nothing at build time or run time flags it. The docs point at AG Grid's theming parameter reference as the place to check spelling.
 
@@ -140,7 +153,7 @@ There is **no Lowdefy-side allow-list**, and the reason is not that AG Grid vali
 
 The Theming API deliberately honours `--ag-*` inherited from an ancestor: `_getPerGridCss` emits `--ag-foo: var(--ag-inherited-foo, <theme value>)` on the grid root against a companion `--ag-inherited-foo: var(--ag-foo)` capture rule on the root's parent, both in `:where()` so neither side has specificity. The documented `custom_theme` technique — setting `--ag-*` in a block's `style` — therefore survived the v33 move, and stays supported.
 
-What did break is narrower: v33 renamed or folded away 12 of the 34 `--ag-*` names the overlay used, and an override naming one of those is a silent no-op. `--ag-header-foreground-color` (now `headerTextColor` / `--ag-header-text-color`) is the case in the documented example, and `src/blocks/AgGridAlpine/gallery.yaml` still carries it as an inert override. `themeParams` is the recommendation, not a rescue.
+What did break is narrower: v33 renamed, folded away or removed 14 of the 34 `--ag-*` names the overlay used, and an override naming one of those is a silent no-op. `--ag-header-foreground-color` (now `headerTextColor` / `--ag-header-text-color`) is the case in the documented example, and `src/blocks/AgGridAlpine/gallery.yaml` still carries it as an inert override. `themeParams` is the recommendation, not a rescue.
 
 ### Module registration
 
@@ -158,7 +171,7 @@ Fine-grained module selection to shrink the bundle is a **deliberate later optim
 | `size`              | `'middle'` | Lowdefy blocks only. Row density — see [Theming](#size-and-themeparams).                 |
 | `themeParams`       | —          | All eight blocks. Theming API parameters merged onto the block's theme.                  |
 
-`size`, `themeParams`, `height` and `rowId` are destructured out in **both** cores before the `{...someProperties}` spread. They are Lowdefy block properties, not grid options, and v33's `ValidationModule` warns `invalid gridOptions property '<key>'` on every render for anything unrecognised that reaches `<AgGridReact>`.
+`size`, `themeParams`, `height` and `rowId` are destructured out in **both** cores before the `{...someProperties}` spread. They are Lowdefy block properties, not grid options, and v33's `ValidationModule` warns `invalid gridOptions property '<key>' did you mean any of these: …` for anything unrecognised that reaches `<AgGridReact>`. The warning goes through `_warnOnce`, which dedupes on the message text, so it fires **once per distinct bad key** rather than once per render — a single line in the console for a mistake that never stops.
 
 All other ag-grid props pass through unchanged via `{...someProperties}`. Users can override the default by setting `suppressCellFocus: false` on the block.
 

@@ -630,22 +630,22 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
       - field: q1
         headerName: Q1
         cellStyle:
-          backgroundColor: "#e6f7ff"
+          backgroundColor: var(--ant-blue-1)
           textAlign: right
       - field: q2
         headerName: Q2
         cellStyle:
-          backgroundColor: "#f6ffed"
+          backgroundColor: var(--ant-green-1)
           textAlign: right
       - field: q3
         headerName: Q3
         cellStyle:
-          backgroundColor: "#fff7e6"
+          backgroundColor: var(--ant-orange-1)
           textAlign: right
       - field: q4
         headerName: Q4
         cellStyle:
-          backgroundColor: "#fff1f0"
+          backgroundColor: var(--ant-red-1)
           textAlign: right
     rowData:
       - metric: Revenue ($K)
