@@ -162,6 +162,9 @@ blocks:
   # SIZE — input core
   # ============================================
 
+  # theming_input_size_small also carries the dark-mode check for the input core, which shares
+  # antdParams with every other block but has its own wrapper.
+
   - id: theming_input_size_small
     type: AgGridLowdefyInput
     properties:
@@ -189,7 +192,8 @@ blocks:
   # ============================================
 
   # Both are Theming API grids now. The pair proves two different theme objects on one page stay
-  # independent and that neither trips AG Grid's legacy-CSS error.
+  # independent and that neither trips AG Grid's legacy-CSS error. The legacy block also carries the
+  # dark-mode check for the legacy bases, whose antdParams the Lowdefy blocks share.
 
   - id: theming_mixed_legacy
     type: AgGridBalham
