@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# AgGridLowdefyInput is an input block: it renders the rows held in its own value, and ignores a
+# rowData property. Each example therefore seeds its value from state on mount.
+
 - title: Lowdefy Input - Basic Editable Table
   fullWidth: true
   blocks:
@@ -31,27 +34,32 @@
             headerName: Email
           - field: country
             headerName: Country
-        rowData:
-          - name: Alice Johnson
-            age: 28
-            email: alice@example.com
-            country: United States
-          - name: Bob Smith
-            age: 35
-            email: bob@example.com
-            country: United Kingdom
-          - name: Charlie Lee
-            age: 42
-            email: charlie@example.com
-            country: Japan
-          - name: Diana Patel
-            age: 31
-            email: diana@example.com
-            country: India
-          - name: Erik Johansson
-            age: 26
-            email: erik@example.com
-            country: Sweden
+      events:
+        onMount:
+          - id: seed_basic_editable
+            type: SetState
+            params:
+              input_lowdefy_basic_editable:
+                - name: Alice Johnson
+                  age: 28
+                  email: alice@example.com
+                  country: United States
+                - name: Bob Smith
+                  age: 35
+                  email: bob@example.com
+                  country: United Kingdom
+                - name: Charlie Lee
+                  age: 42
+                  email: charlie@example.com
+                  country: Japan
+                - name: Diana Patel
+                  age: 31
+                  email: diana@example.com
+                  country: India
+                - name: Erik Johansson
+                  age: 26
+                  email: erik@example.com
+                  country: Sweden
 
 - title: Lowdefy Input - Row density (size)
   fullWidth: true
@@ -71,16 +79,21 @@
             headerName: Role
           - field: country
             headerName: Country
-        rowData:
-          - name: Alice Johnson
-            role: Developer
-            country: United States
-          - name: Bob Smith
-            role: Designer
-            country: United Kingdom
-          - name: Charlie Lee
-            role: Manager
-            country: Japan
+      events:
+        onMount:
+          - id: seed_size_small
+            type: SetState
+            params:
+              input_lowdefy_size_small:
+                - name: Alice Johnson
+                  role: Developer
+                  country: United States
+                - name: Bob Smith
+                  role: Designer
+                  country: United Kingdom
+                - name: Charlie Lee
+                  role: Manager
+                  country: Japan
     - id: input_lowdefy_size_middle
       type: AgGridLowdefyInput
       properties:
@@ -96,16 +109,21 @@
             headerName: Role
           - field: country
             headerName: Country
-        rowData:
-          - name: Alice Johnson
-            role: Developer
-            country: United States
-          - name: Bob Smith
-            role: Designer
-            country: United Kingdom
-          - name: Charlie Lee
-            role: Manager
-            country: Japan
+      events:
+        onMount:
+          - id: seed_size_middle
+            type: SetState
+            params:
+              input_lowdefy_size_middle:
+                - name: Alice Johnson
+                  role: Developer
+                  country: United States
+                - name: Bob Smith
+                  role: Designer
+                  country: United Kingdom
+                - name: Charlie Lee
+                  role: Manager
+                  country: Japan
     - id: input_lowdefy_size_large
       type: AgGridLowdefyInput
       properties:
@@ -121,16 +139,21 @@
             headerName: Role
           - field: country
             headerName: Country
-        rowData:
-          - name: Alice Johnson
-            role: Developer
-            country: United States
-          - name: Bob Smith
-            role: Designer
-            country: United Kingdom
-          - name: Charlie Lee
-            role: Manager
-            country: Japan
+      events:
+        onMount:
+          - id: seed_size_large
+            type: SetState
+            params:
+              input_lowdefy_size_large:
+                - name: Alice Johnson
+                  role: Developer
+                  country: United States
+                - name: Bob Smith
+                  role: Designer
+                  country: United Kingdom
+                - name: Charlie Lee
+                  role: Manager
+                  country: Japan
 
 - title: Lowdefy Input - Mixed Editable Columns
   fullWidth: true
@@ -165,37 +188,42 @@
             headerName: Rating
             width: 100
             editable: false
-        rowData:
-          - id: 1
-            product: Wireless Keyboard
-            category: Electronics
-            price: 49.99
-            stock: 230
-            rating: 4.5
-          - id: 2
-            product: Standing Desk
-            category: Furniture
-            price: 399.00
-            stock: 45
-            rating: 4.8
-          - id: 3
-            product: USB-C Hub
-            category: Electronics
-            price: 29.99
-            stock: 520
-            rating: 4.2
-          - id: 4
-            product: Ergonomic Chair
-            category: Furniture
-            price: 289.00
-            stock: 78
-            rating: 4.6
-          - id: 5
-            product: Webcam HD
-            category: Electronics
-            price: 79.99
-            stock: 310
-            rating: 4.0
+      events:
+        onMount:
+          - id: seed_mixed_editable
+            type: SetState
+            params:
+              input_lowdefy_mixed_editable:
+                - id: 1
+                  product: Wireless Keyboard
+                  category: Electronics
+                  price: 49.99
+                  stock: 230
+                  rating: 4.5
+                - id: 2
+                  product: Standing Desk
+                  category: Furniture
+                  price: 399.00
+                  stock: 45
+                  rating: 4.8
+                - id: 3
+                  product: USB-C Hub
+                  category: Electronics
+                  price: 29.99
+                  stock: 520
+                  rating: 4.2
+                - id: 4
+                  product: Ergonomic Chair
+                  category: Furniture
+                  price: 289.00
+                  stock: 78
+                  rating: 4.6
+                - id: 5
+                  product: Webcam HD
+                  category: Electronics
+                  price: 79.99
+                  stock: 310
+                  rating: 4.0
 
 - title: Lowdefy Input - Default Column Definitions
   fullWidth: true
@@ -221,32 +249,37 @@
             headerName: Office
           - field: startDate
             headerName: Start Date
-        rowData:
-          - employee: Sarah Chen
-            department: Engineering
-            title: Senior Developer
-            location: San Francisco
-            startDate: '2019-03-15'
-          - employee: James Wilson
-            department: Marketing
-            title: Campaign Manager
-            location: New York
-            startDate: '2020-07-01'
-          - employee: Maria Garcia
-            department: Engineering
-            title: Tech Lead
-            location: Austin
-            startDate: '2018-11-20'
-          - employee: David Kim
-            department: Sales
-            title: Account Executive
-            location: Chicago
-            startDate: '2021-01-10'
-          - employee: Emily Brown
-            department: Design
-            title: UX Designer
-            location: San Francisco
-            startDate: '2020-09-05'
+      events:
+        onMount:
+          - id: seed_default_col_def
+            type: SetState
+            params:
+              input_lowdefy_default_col_def:
+                - employee: Sarah Chen
+                  department: Engineering
+                  title: Senior Developer
+                  location: San Francisco
+                  startDate: '2019-03-15'
+                - employee: James Wilson
+                  department: Marketing
+                  title: Campaign Manager
+                  location: New York
+                  startDate: '2020-07-01'
+                - employee: Maria Garcia
+                  department: Engineering
+                  title: Tech Lead
+                  location: Austin
+                  startDate: '2018-11-20'
+                - employee: David Kim
+                  department: Sales
+                  title: Account Executive
+                  location: Chicago
+                  startDate: '2021-01-10'
+                - employee: Emily Brown
+                  department: Design
+                  title: UX Designer
+                  location: San Francisco
+                  startDate: '2020-09-05'
 
 - title: Lowdefy Input - Row Selection
   fullWidth: true
@@ -276,27 +309,32 @@
           - field: status
             headerName: Status
             width: 120
-        rowData:
-          - task: Design login page
-            assignee: Alice
-            priority: High
-            status: Done
-          - task: Implement API endpoints
-            assignee: Bob
-            priority: High
-            status: In Progress
-          - task: Write unit tests
-            assignee: Charlie
-            priority: Medium
-            status: To Do
-          - task: Update documentation
-            assignee: Diana
-            priority: Low
-            status: To Do
-          - task: Code review PR #42
-            assignee: Erik
-            priority: Medium
-            status: In Progress
+      events:
+        onMount:
+          - id: seed_row_selection
+            type: SetState
+            params:
+              input_lowdefy_row_selection:
+                - task: Design login page
+                  assignee: Alice
+                  priority: High
+                  status: Done
+                - task: Implement API endpoints
+                  assignee: Bob
+                  priority: High
+                  status: In Progress
+                - task: Write unit tests
+                  assignee: Charlie
+                  priority: Medium
+                  status: To Do
+                - task: Update documentation
+                  assignee: Diana
+                  priority: Low
+                  status: To Do
+                - task: Code review PR #42
+                  assignee: Erik
+                  priority: Medium
+                  status: In Progress
 
 - title: Lowdefy Input - Pagination
   fullWidth: true
@@ -330,55 +368,60 @@
           - field: status
             headerName: Status
             width: 120
-        rowData:
-          - orderId: ORD-701
-            customer: Acme Corp
-            product: Widget Pro
-            quantity: 50
-            total: 2499.50
-            status: Shipped
-          - orderId: ORD-702
-            customer: Globex Inc
-            product: Gadget X
-            quantity: 25
-            total: 1249.75
-            status: Processing
-          - orderId: ORD-703
-            customer: Initech
-            product: Widget Pro
-            quantity: 100
-            total: 4999.00
-            status: Delivered
-          - orderId: ORD-704
-            customer: Umbrella Ltd
-            product: Connector A
-            quantity: 200
-            total: 1998.00
-            status: Shipped
-          - orderId: ORD-705
-            customer: Stark Ind
-            product: Gadget X
-            quantity: 10
-            total: 499.90
-            status: Processing
-          - orderId: ORD-706
-            customer: Wayne Ent
-            product: Widget Pro
-            quantity: 75
-            total: 3749.25
-            status: Delivered
-          - orderId: ORD-707
-            customer: Oscorp
-            product: Connector A
-            quantity: 150
-            total: 1498.50
-            status: Shipped
-          - orderId: ORD-708
-            customer: LexCorp
-            product: Gadget X
-            quantity: 30
-            total: 1499.70
-            status: Processing
+      events:
+        onMount:
+          - id: seed_pagination
+            type: SetState
+            params:
+              input_lowdefy_pagination:
+                - orderId: ORD-701
+                  customer: Acme Corp
+                  product: Widget Pro
+                  quantity: 50
+                  total: 2499.50
+                  status: Shipped
+                - orderId: ORD-702
+                  customer: Globex Inc
+                  product: Gadget X
+                  quantity: 25
+                  total: 1249.75
+                  status: Processing
+                - orderId: ORD-703
+                  customer: Initech
+                  product: Widget Pro
+                  quantity: 100
+                  total: 4999.00
+                  status: Delivered
+                - orderId: ORD-704
+                  customer: Umbrella Ltd
+                  product: Connector A
+                  quantity: 200
+                  total: 1998.00
+                  status: Shipped
+                - orderId: ORD-705
+                  customer: Stark Ind
+                  product: Gadget X
+                  quantity: 10
+                  total: 499.90
+                  status: Processing
+                - orderId: ORD-706
+                  customer: Wayne Ent
+                  product: Widget Pro
+                  quantity: 75
+                  total: 3749.25
+                  status: Delivered
+                - orderId: ORD-707
+                  customer: Oscorp
+                  product: Connector A
+                  quantity: 150
+                  total: 1498.50
+                  status: Shipped
+                - orderId: ORD-708
+                  customer: LexCorp
+                  product: Gadget X
+                  quantity: 30
+                  total: 1499.70
+                  status: Processing
 
 - title: Lowdefy Input - Column Styling
   fullWidth: true
@@ -418,24 +461,29 @@
             cellStyle:
               backgroundColor: '#fff1f0'
               textAlign: right
-        rowData:
-          - metric: Revenue ($K)
-            q1: 1250
-            q2: 1380
-            q3: 1520
-            q4: 1690
-          - metric: New Customers
-            q1: 145
-            q2: 162
-            q3: 178
-            q4: 201
-          - metric: Churn Rate (%)
-            q1: 3.2
-            q2: 2.8
-            q3: 2.5
-            q4: 2.1
-          - metric: NPS Score
-            q1: 42
-            q2: 45
-            q3: 48
-            q4: 52
+      events:
+        onMount:
+          - id: seed_styled_columns
+            type: SetState
+            params:
+              input_lowdefy_styled_columns:
+                - metric: Revenue ($K)
+                  q1: 1250
+                  q2: 1380
+                  q3: 1520
+                  q4: 1690
+                - metric: New Customers
+                  q1: 145
+                  q2: 162
+                  q3: 178
+                  q4: 201
+                - metric: Churn Rate (%)
+                  q1: 3.2
+                  q2: 2.8
+                  q3: 2.5
+                  q4: 2.1
+                - metric: NPS Score
+                  q1: 42
+                  q2: 45
+                  q3: 48
+                  q4: 52

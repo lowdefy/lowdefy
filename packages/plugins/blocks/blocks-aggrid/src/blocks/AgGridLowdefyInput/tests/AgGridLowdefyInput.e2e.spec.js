@@ -185,7 +185,7 @@ test.describe('AgGridLowdefyInput Block', () => {
     await expect(display).toHaveText('Old: Alice');
   });
 
-  test('editing a cell writes the new value back to the block value', async ({ page }) => {
+  test('editing a cell updates the row the engine holds in state', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefyinput_editable');
     const display = getBlock(page, 'aggridlowdefyinput_value_display');
     await expect(display).toHaveText('Value: Alice');
@@ -195,8 +195,28 @@ test.describe('AgGridLowdefyInput Block', () => {
     await cellEditor.fill('Updated Alice');
     await cellEditor.press('Enter');
 
-    // The display reads the grid's own state key, so this only passes if methods.setValue ran.
+    // The core mutates the row object in place, and that object is the same reference the engine
+    // holds in state, so this shows the edit reaching state — not that methods.setValue ran. The
+    // no-events test below is the one that isolates setValue.
     await expect(display).toHaveText('Value: Updated Alice');
+  });
+
+  test('editing a cell re-renders the page, which only methods.setValue can do', async ({
+    page,
+  }) => {
+    // This grid has no events configured, so the core's triggerEvent returns without calling the
+    // engine's update(). Nothing else an edit does re-renders the display, so a missing
+    // methods.setValue leaves it showing the old value even though state itself was mutated.
+    const block = getBlock(page, 'aggridlowdefyinput_editable_no_events');
+    const display = getBlock(page, 'aggridlowdefyinput_no_events_value_display');
+    await expect(display).toHaveText('No events value: Alice');
+
+    await block.locator('.ag-row[row-index="0"] .ag-cell').first().dblclick();
+    const cellEditor = block.locator('.ag-cell-editor input');
+    await cellEditor.fill('Updated Alice');
+    await cellEditor.press('Enter');
+
+    await expect(display).toHaveText('No events value: Updated Alice');
   });
 
   test('edited value survives a re-render', async ({ page }) => {
@@ -227,14 +247,34 @@ test.describe('AgGridLowdefyInput Block', () => {
     await expect(dragHandle).toBeVisible();
   });
 
-  test('onRowDragEnd event fires when row is dragged', async ({ page }) => {
+  test('onRowDragEnd reports the moved row, its indices and the reordered rows', async ({
+    page,
+  }) => {
     const block = getBlock(page, 'aggridlowdefyinput_rowdrag');
+    const valueDisplay = getBlock(page, 'aggridlowdefyinput_row_drag_value_display');
+    await expect(valueDisplay).toHaveText('Value order: Alice, Bob, Charlie');
+
     const sourceHandle = block.locator('.ag-row[row-index="0"] .ag-drag-handle');
     const targetRow = block.locator('.ag-row[row-index="2"]');
     await sourceHandle.dragTo(targetRow);
 
-    const display = getBlock(page, 'aggridlowdefyinput_row_drag_display');
-    await expect(display).toHaveText('Drag ended');
+    // Alice is dragged from the top onto Charlie at the bottom.
+    await expect(getBlock(page, 'aggridlowdefyinput_row_drag_display')).toHaveText(
+      'Drag: Alice (0) -> Charlie (2)'
+    );
+    await expect(getBlock(page, 'aggridlowdefyinput_row_drag_order_display')).toHaveText(
+      'Event order: Bob, Charlie, Alice'
+    );
+    // newRowData is a fresh array, so the grid's state key only carries the new order if
+    // methods.setValue was called with it.
+    await expect(valueDisplay).toHaveText('Value order: Bob, Charlie, Alice');
+
+    // The rendered rows follow the new value through the useEffect that resyncs on value.
+    const rows = getRows(page, 'aggridlowdefyinput_rowdrag');
+    await expect(rows).toHaveCount(3);
+    await expect(block.locator('.ag-row[row-index="0"] .ag-cell').first()).toContainText('Bob');
+    await expect(block.locator('.ag-row[row-index="1"] .ag-cell').first()).toContainText('Charlie');
+    await expect(block.locator('.ag-row[row-index="2"] .ag-cell').first()).toContainText('Alice');
   });
 
   // ============================================
@@ -304,7 +344,7 @@ test.describe('AgGridLowdefyInput Block', () => {
     );
   });
 
-  test('cell.type: textInput writes through to the block value', async ({ page }) => {
+  test('cell.type: textInput updates the row the engine holds in state', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefyinput_cell_inputs');
     const display = getBlock(page, 'aggridlowdefyinput_inputs_value_display');
     await expect(display).toHaveText('Row name: Alice');
@@ -313,7 +353,9 @@ test.describe('AgGridLowdefyInput Block', () => {
     await input.fill('Alicia');
     await input.press('Enter');
 
-    // node.setDataValue reaches the core's onCellValueChanged, which is what calls methods.setValue.
+    // node.setDataValue routes through the core's onCellValueChanged. As with the editable-cell
+    // case above, the in-place row mutation means this shows the edit reaching state rather than
+    // discriminating the methods.setValue call.
     await expect(display).toHaveText('Row name: Alicia');
   });
 

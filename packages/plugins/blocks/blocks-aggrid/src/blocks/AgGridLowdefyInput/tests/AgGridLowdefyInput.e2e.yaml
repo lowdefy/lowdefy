@@ -72,6 +72,11 @@ events:
             age: 25
           - name: Bob
             age: 30
+        aggridlowdefyinput_editable_no_events:
+          - name: Alice
+            age: 25
+          - name: Bob
+            age: 30
         aggridlowdefyinput_rowdrag:
           - name: Alice
             age: 25
@@ -372,8 +377,11 @@ blocks:
               - _state: aggridlowdefyinput_cell_old_value
           else: ''
 
-  # Reads the grid's own state key, so it only changes when the block writes the edit back through
-  # methods.setValue — the event displays above would still fire if setValue were dropped.
+  # Reads the grid's own state key. The core mutates the edited row object in place before calling
+  # methods.setValue, and that row object is the same reference the engine already holds in state,
+  # so this display follows the edit whether or not setValue ran. It shows the edit reaches the
+  # engine's state — it does not isolate the setValue call. aggridlowdefyinput_editable_no_events
+  # below is the grid that does isolate it.
   - id: aggridlowdefyinput_value_display
     type: Span
     properties:
@@ -396,6 +404,34 @@ blocks:
     properties:
       title: Rerender
 
+  # No events are configured on this grid, so the core's triggerEvent call returns without asking
+  # the engine to re-render. methods.setValue is then the only thing an edit can do that re-renders
+  # the display below, which makes this pair the one place the setValue call itself is observable.
+  - id: aggridlowdefyinput_editable_no_events
+    type: AgGridLowdefyInput
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          editable: true
+        - headerName: Age
+          field: age
+
+  - id: aggridlowdefyinput_no_events_value_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefyinput_editable_no_events.0.name
+              - null
+          then:
+            _string.concat:
+              - 'No events value: '
+              - _state: aggridlowdefyinput_editable_no_events.0.name
+          else: ''
+
   # ============================================
   # INPUT-SPECIFIC: ROW DRAGGING
   # ============================================
@@ -414,7 +450,16 @@ blocks:
         - id: set_row_drag_end
           type: SetState
           params:
-            aggridlowdefyinput_drag_ended: true
+            aggridlowdefyinput_drag_from_index:
+              _event: fromIndex
+            aggridlowdefyinput_drag_to_index:
+              _event: toIndex
+            aggridlowdefyinput_drag_from_name:
+              _event: fromData.name
+            aggridlowdefyinput_drag_to_name:
+              _event: toData.name
+            aggridlowdefyinput_drag_new_order:
+              _event: newRowData
 
   - id: aggridlowdefyinput_row_drag_display
     type: Span
@@ -422,10 +467,60 @@ blocks:
       content:
         _if:
           test:
-            _eq:
-              - _state: aggridlowdefyinput_drag_ended
-              - true
-          then: Drag ended
+            _ne:
+              - _state: aggridlowdefyinput_drag_to_index
+              - null
+          then:
+            _string.concat:
+              - 'Drag: '
+              - _state: aggridlowdefyinput_drag_from_name
+              - ' ('
+              - _state: aggridlowdefyinput_drag_from_index
+              - ') -> '
+              - _state: aggridlowdefyinput_drag_to_name
+              - ' ('
+              - _state: aggridlowdefyinput_drag_to_index
+              - ')'
+          else: ''
+
+  - id: aggridlowdefyinput_row_drag_order_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefyinput_drag_new_order
+              - null
+          then:
+            _string.concat:
+              - 'Event order: '
+              - _state: aggridlowdefyinput_drag_new_order.0.name
+              - ', '
+              - _state: aggridlowdefyinput_drag_new_order.1.name
+              - ', '
+              - _state: aggridlowdefyinput_drag_new_order.2.name
+          else: ''
+
+  # onRowDragEnd builds a new array rather than mutating the rows, so unlike the cell-edit case the
+  # grid's state key only takes the new order if methods.setValue ran with it.
+  - id: aggridlowdefyinput_row_drag_value_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefyinput_rowdrag.0.name
+              - null
+          then:
+            _string.concat:
+              - 'Value order: '
+              - _state: aggridlowdefyinput_rowdrag.0.name
+              - ', '
+              - _state: aggridlowdefyinput_rowdrag.1.name
+              - ', '
+              - _state: aggridlowdefyinput_rowdrag.2.name
           else: ''
 
   # ============================================
