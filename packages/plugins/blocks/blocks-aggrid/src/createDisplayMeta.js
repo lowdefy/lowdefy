@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-// Shared meta for the display AgGrid theme blocks (AgGridAlpine / AgGridMaterial / AgGridBalham).
-// They are identical apart from the theme name in the css key description, so each block's meta.js
-// is a one-line call to this factory rather than a duplicated copy of the whole schema.
+// Shared meta for the display AgGrid theme blocks (AgGridAlpine / AgGridMaterial / AgGridBalham /
+// AgGridLowdefy). They are identical apart from the theme name in the css key description and
+// whether they take a size property, so each block's meta.js is a one-line call to this factory
+// rather than a duplicated copy of the whole schema.
 function createDisplayMeta(blockName, { size = false } = {}) {
   return {
     category: 'display',
