@@ -425,12 +425,14 @@ test.describe('AgGridLowdefy Block', () => {
     const avatar = getBlock(page, 'aggridlowdefy_avatar_small').locator('.ant-avatar').first();
     await expect(avatar).toHaveCSS('width', '20px');
     await expect(avatar).toHaveCSS('height', '20px');
+    await expect(avatar).toHaveCSS('font-size', '10px');
   });
 
   test('size: large sizes avatars from the inline avatar custom properties', async ({ page }) => {
     const avatar = getBlock(page, 'aggridlowdefy_avatar_large').locator('.ant-avatar').first();
     await expect(avatar).toHaveCSS('width', '28px');
     await expect(avatar).toHaveCSS('height', '28px');
+    await expect(avatar).toHaveCSS('font-size', '14px');
   });
 
   // ============================================
