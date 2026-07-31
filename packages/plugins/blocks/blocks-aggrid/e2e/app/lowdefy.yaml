@@ -26,3 +26,5 @@ pages:
   - _ref: ../../src/blocks/AgGridInputBalham/tests/AgGridInputBalham.e2e.yaml
   - _ref: ../../src/blocks/AgGridInputMaterial/tests/AgGridInputMaterial.e2e.yaml
   - _ref: ../../src/blocks/AgGridLowdefyInput/tests/AgGridLowdefyInput.e2e.yaml
+  # Cross-cutting
+  - _ref: ./theming.e2e.yaml
