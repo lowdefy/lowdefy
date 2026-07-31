@@ -13,18 +13,60 @@ get({ a: { b: 1 } }, 'a.b'); // returns 1        - two segments
 get({ 'a.b': 1 }, 'a\\.b'); // returns 1        - one segment, literal key 'a.b'
 ```
 
-An unescaped path does **not** fall back to matching a literal dotted key. `get`, `set` and `unset`
-all split first and walk the split segments — there is no retry against the un-split string:
+An unescaped path can still reach a literal dotted key. At each level of the walk the strict segment
+wins if it is an own key of the target, whatever value it holds; only when it is absent is the
+segment joined with successive following segments, and the shortest joined key present on the target
+is used. A nested match therefore always takes precedence, and a present strict segment blocks the
+join even when it holds a value the walk cannot descend into:
 
 ```js
-get({ 'a.b': { c: 1 } }, 'a.b.c'); // returns undefined
+get({ 'a.b': { c: 1 } }, 'a.b.c'); // returns 1 - joined to the literal key 'a.b'
+get({ a: { b: { c: 1 } }, 'a.b': { c: 2 } }, 'a.b.c'); // returns 1 - the strict segment wins
+get({ a: 1, 'a.b': 2 }, 'a.b'); // returns undefined - 'a' is present, the join is never tried
+unset({ 'a.b': 1 }, 'a.b'); // deletes the key, returns true
+set({ 'a.b': { c: 1 } }, 'a.b.c', 2); // returns { 'a.b': { c: 2 } } - no nested twin is created
+```
+
+Candidates are tried shortest-first, and there is no backtracking: once a joined key matches, the
+walk commits to it, and a later miss ends resolution at the committed key rather than retrying a
+longer join. `get` returns the default, `unset` is a no-op, and `set` writes into the committed key,
+autovivifying inside it:
+
+```js
+get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c'); // returns undefined - committed to 'a.b'
+unset({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c'); // returns true, 'a.b.c' is left intact
+set({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c', 2); // writes 2 to obj['a.b'].c, not to obj['a.b.c']
+set({ 'a.b': {} }, 'a.b.c.d', 5); // obj['a.b'] becomes { c: { d: 5 } } - autovivified inside
+```
+
+Escaping remains the way to address a literal dotted key unambiguously, and is the only way to reach
+one that a nested match would otherwise shadow:
+
+```js
 get({ 'a.b': { c: 1 } }, 'a\\.b.c'); // returns 1
-unset({ 'a.b': 1 }, 'a.b'); // no-op, returns true
+get({ a: { b: { c: 1 } }, 'a.b': { c: 2 } }, 'a\\.b.c'); // returns 2 - past the nested match
 unset({ 'a.b': 1 }, 'a\\.b'); // deletes the key, returns true
 ```
 
-`get` has one exception: if the whole path string is an own key of the target it is returned before
-any splitting, so `get({ 'a.b': 1 }, 'a.b')` returns `1`.
+`get`, `set` and `unset` all apply this rule identically, and none of them takes a whole-path
+shortcut ahead of the walk — which is what makes the three of them resolve the same key for a given
+path. A path that is wholly an own key of the target still resolves, through the join rather than
+ahead of it, so the strict segment wins where both exist:
+
+```js
+get({ 'a.b': 1 }, 'a.b'); // returns 1 - joined, no nested 'a' to descend
+get({ a: { b: 2 }, 'a.b': 1 }, 'a.b'); // returns 2 - the strict segment wins
+```
+
+Resolving the same key is not the same as round-tripping. `get` returns the default for a path it
+cannot resolve and `set` then materialises that path, so `set(obj, path, get(obj, path))` is not a
+no-op on an absent path:
+
+```js
+const obj = { x: 1 };
+set(obj, 'p.q', get(obj, 'p.q'));
+// obj becomes { x: 1, p: { q: undefined } }
+```
 
 `splitPath` and `joinPath` are the escape-aware primitives behind this and are exported for
 consumers that need to manipulate paths without losing escape information.
@@ -121,7 +163,7 @@ get({ a: [{ b: 1 }] }, 'a.7.b', { default: 4 }); // returns 4
 
 Paths are strings (numbers are coerced to strings). Array paths are not supported and return the default.
 
-At each level of the walk the strict segment wins if it is present on the target. If it is absent, the segment is joined with successive following segments and the shortest joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. There is no backtracking: once a joined key matches, a later miss returns the default rather than retrying a longer join. Shortest-first applies at the root too — there is no whole-path shortcut ahead of the walk, which is what makes `set`, `get` and `unset` resolve the same key, so `set(obj, path, get(obj, path))` is a fixed point.
+At each level of the walk the strict segment wins if it is present on the target. If it is absent, the segment is joined with successive following segments and the shortest joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. There is no backtracking: once a joined key matches, a later miss returns the default rather than retrying a longer join. Shortest-first applies at the root too — there is no whole-path shortcut ahead of the walk, which is what makes `set`, `get` and `unset` resolve the same key for a given path. That is not a round trip: `set(obj, path, get(obj, path))` materialises an absent path with the default rather than leaving the target unchanged.
 
 ```js
 get({ attributes: { 'a.b': 'v' } }, 'attributes.a.b'); // returns 'v'
