@@ -23,6 +23,14 @@ places where the old behaviour was visible:
   breakpoint variant such as `menuLg` or `menuMd`, the breakpoint value now replaces the base
   value outright rather than overlaying it index-by-index.
 
+Two smaller semantic changes come with this. A later `undefined` now replaces an earlier value
+instead of being skipped — `mergeObjects([{ a: 1 }, { a: undefined }])` was `{ a: 1 }` and is now
+`{ a: undefined }`, so a caller that means "no override" must omit the key rather than set it to
+`undefined`. And a single-object merge no longer passes its input through: `mergeObjects([x]) === x`
+was `true` and is now `false`, so memoise at the call site if a stable reference is needed across
+renders. Both are reachable only from code that calls `mergeObjects` — plugin and connection authors
+— not from YAML, which has no `undefined`; a config `null` merges as it always did.
+
 Also fixed: merging no longer mutates its inputs. `AxiosHttp` previously wrote merged request
 config back into the shared connection config, leaking values such as the HTTP agent between
 requests.

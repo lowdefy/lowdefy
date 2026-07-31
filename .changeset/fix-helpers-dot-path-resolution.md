@@ -11,7 +11,9 @@ fix(helpers): Dot paths resolve own properties only, and prefer a nested match t
 A key that contains dots still resolves without escaping, at every depth. `_url_query:
 my_object.subfield` against `?my_object.subfield=x` reads as before, and a JWT `claimMapping` of
 `resource_access.com.example.api.roles` against `{ resource_access: { 'com.example.api': { roles:
-['admin'] } } }` still returns `['admin']`. **No existing path needs a `\.` added to keep working.**
+['admin'] } } }` still returns `['admin']`. **No path needs a `\.` added unless a plain key or a
+shorter dotted key overlaps the dotted key it resolves through; where one does, escaping is now the
+way — see below.**
 What changed is how ties and misses resolve: `get`, `set` and `unset` now walk the path in a single
 forward pass, look only at own properties, and no longer try the whole path as one key ahead of the
 walk. The accepted breaks:
@@ -23,13 +25,17 @@ descended: `get({ a: 1, 'a.b': 2 }, 'a.b')` was `2` and is now the default. Wher
 overlap the shorter one wins: `get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c')` was `1` and is now the
 default. Escaping (`a\.b`) is the way to address a literal dotted key past a nested match.
 
-**Reads and writes see own properties only, never anything inherited from `Object.prototype`.** A
-data operator whose key was `toString`, `valueOf` or `hasOwnProperty` used to reach the built-in
-function and then fail while copying it, raising `SyntaxError: "undefined" is not valid JSON`;
-`_state: toString` now returns the operator default instead. Writes were worse off: `SetState:
-{ 'toString.x': 1 }` wrote `x` onto `Object.prototype.toString` — making `x` readable on every
-object in the process — and left state untouched. It now writes `{ toString: { x: 1 } }` into state,
-as asked.
+**Reads and writes see own properties only, never anything inherited from a prototype.** A data
+operator whose key was `toString`, `valueOf` or `hasOwnProperty` used to reach the built-in
+`Object.prototype` function and then fail while copying it, raising `SyntaxError: "undefined" is not
+valid JSON`; `_state: toString` now returns the operator default instead. Writes were worse off:
+`SetState: { 'toString.x': 1 }` wrote `x` onto `Object.prototype.toString` — making `x` readable on
+every object in the process — and left state untouched. It now writes `{ toString: { x: 1 } }` into
+state, as asked. Own-only applies to every prototype, not just `Object.prototype`, so any value
+reached through an inherited accessor is now unreachable — the realistic case being a class getter.
+Given a `Thing` class whose `derived` getter returns `'g'`, `get({ t: new Thing() }, 't.derived')` was
+`'g'` and is now the default. YAML config holds no class instances, so that shape reaches a path only
+from a custom plugin or connection.
 
 **A path no longer steps *through* a function value.** Given an `f` carrying an `f.z` of `3`,
 `get({ f }, 'f.z')` was `3` and is now the default. Config data holds no functions, so this is

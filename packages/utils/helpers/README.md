@@ -97,10 +97,11 @@ Use [`isReserved`](#isreserved) to check a key up front instead of catching `Res
 Names that merely live on `Object.prototype` but are not pollution vectors (`hasOwnProperty`,
 `toString`, `valueOf`, …) are allowed.
 
-`mergeObjects` is the one exception: it **skips** reserved keys instead of throwing. Its reserved
-names arrive as _data_ inside a merged value (`JSON.parse('{"__proto__":{…}}')`), not as a path a
-developer typed, so dropping them misroutes nothing, and throwing would abort an otherwise-valid
-config merge over a single poisoned field.
+Two helpers are exceptions and **skip** reserved keys instead of throwing: `mergeObjects` and
+[`urlQuery.parse`](#urlqueryparse). In both, the reserved name arrives as _data_ — inside a merged
+value (`JSON.parse('{"__proto__":{…}}')`), or as a URL parameter name — not as a path a developer
+typed, so dropping it misroutes nothing, and throwing would abort an otherwise-valid config merge or
+query parse over a single poisoned field.
 
 ## Keyed maps
 
@@ -483,7 +484,7 @@ unset(obj, 'a.b'); // returns true
 // obj becomes { a: {} }
 ```
 
-At each level of the walk the strict segment wins if it is present. If it is absent, the segment is joined with successive following segments and the first joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. A present strict segment always wins, even when it holds a value the walk cannot descend into: `unset({ a: 1, 'a.b': 2 }, 'a.b')` is a no-op.
+At each level of the walk the strict segment wins if it is present. If it is absent, the segment is joined with successive following segments and the shortest joined key present on the target is used, so a literal dotted key is reachable at any depth without escaping. A present strict segment always wins, even when it holds a value the walk cannot descend into: `unset({ a: 1, 'a.b': 2 }, 'a.b')` is a no-op.
 
 ```js
 const obj = { 'a.b': 1 };
