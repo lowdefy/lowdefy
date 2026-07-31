@@ -64,7 +64,7 @@ The file path to the referenced file, from the root of the project directory.
 
 ###### object
   - `path: string`:  The file path to the referenced file, from the root of the project directory. If no `resolver` is specified, `path` is required.
-  - `key: string`: Only include the content at the specified key, instead of the entire file content. Dot notation is supported. This can only be used with YAML or JSON files.
+  - `key: string`: Only include the content at the specified key, instead of the entire file content. Dot notation is supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably. This can only be used with YAML or JSON files.
   - `resolver: string`: The file path to a JavaScript file, from the root of the project directory, that exports a resolver function.
   - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
   - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
