@@ -14,10 +14,6 @@
   limitations under the License.
 */
 
-export { default as AgGridAlpine } from './blocks/AgGridAlpine/e2e.js';
-export { default as AgGridBalham } from './blocks/AgGridBalham/e2e.js';
-export { default as AgGridInputAlpine } from './blocks/AgGridInputAlpine/e2e.js';
-export { default as AgGridInputBalham } from './blocks/AgGridInputBalham/e2e.js';
-export { default as AgGridInputMaterial } from './blocks/AgGridInputMaterial/e2e.js';
-export { default as AgGridLowdefy } from './blocks/AgGridLowdefy/e2e.js';
-export { default as AgGridMaterial } from './blocks/AgGridMaterial/e2e.js';
+import createDisplayMeta from '../../createDisplayMeta.js';
+
+export default createDisplayMeta('AgGridLowdefy', { size: true });

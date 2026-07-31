@@ -19,6 +19,7 @@ pages:
   # Display variants
   - _ref: ../../src/blocks/AgGridAlpine/tests/AgGridAlpine.e2e.yaml
   - _ref: ../../src/blocks/AgGridBalham/tests/AgGridBalham.e2e.yaml
+  - _ref: ../../src/blocks/AgGridLowdefy/tests/AgGridLowdefy.e2e.yaml
   - _ref: ../../src/blocks/AgGridMaterial/tests/AgGridMaterial.e2e.yaml
   # Input variants
   - _ref: ../../src/blocks/AgGridInputAlpine/tests/AgGridInputAlpine.e2e.yaml
