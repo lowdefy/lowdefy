@@ -8,15 +8,17 @@ The `Login` action is used to start the user login flow. If only one OAuth provi
 
 The authorization url usually hosts a page where the user can input their credentials. After the user has logged in successfully, the user is redirected to the `/api/auth/callback/<provider_id>` route in the Lowdefy app, where the rest of the authorization code flow is completed. This URL usually needs to be configured in the identity provider's settings.
 
-The `callbackUrl` parameters of the Login action specify where the user is redirected after login is complete. If `callbackUrl` parameters not set, the user will return to the page from which the action was called.
+The `callbackUrl` parameter of the Login action specifies where the user lands after login is complete. Three sources are consulted, in order: the `callbackUrl` param, then the `?callbackUrl=` query parameter Lowdefy sets when it redirects an unauthenticated user to the sign-in page, then the app's home page. If none resolves the action throws, rather than staying silently on the sign-in page.
+
+To sign in without navigating at all - a login form in a modal, or an embedded panel - set `callbackUrl: false`. This is not valid for magic-link or social/OAuth sign-in, which redirect through a hop Lowdefy does not control.
 
 The parameters are:
 - `authUrl: object`:
   - `urlQuery: object`: Query parameters to set for the authorization URL.
-- `callbackUrl: object`:
+- `callbackUrl: object | false`: Set to `false` to sign in without navigating. As an object:
   - `home: boolean`: Redirect to the home page after the login flow is complete.
   - `pageId: string`: The pageId of the page to redirect to after the login flow is complete.
-  - `url: string`: The URL to redirect to after the login flow is complete.
+  - `url: string`: The URL to redirect to after the login flow is complete. An absolute URL is not `basePath`-prefixed, so it can be an external landing page.
   - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
 - `providerId: string`: The ID of the provider that should be used for login. If not set and only one provider is configured the configured provider will be used. Else the user will be redirected to a sign in page where they can choose a provider.
 
@@ -95,14 +97,14 @@ events:
 
 When the `Logout` action is called, the user data and authorization cookies are cleared by the app.
 
-The `callbackUrl` parameters of the Logout action specify where the user is redirected after logout is complete. If `callbackUrl` parameters are not set, the user will return to the page from which the action was called.
+The `callbackUrl` parameter of the Logout action specifies where the user lands after logout is complete. Unlike the `Login` action it has no default and does not read the `?callbackUrl=` query: with no `callbackUrl` the page is reloaded and the server re-applies the page's auth rules, which sends a signed-out user off a protected page to the sign-in page.
 
 The parameters are:
 - `callbackUrl: object`:
-  - `home: boolean`: Redirect to the home page after the login flow is complete.
-  - `pageId: string`: The pageId of the page to redirect to after the login flow is complete.
-  - `url: string`: The URL to redirect to after the login flow is complete.
-  - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+  - `home: boolean`: Redirect to the home page after the logout flow is complete.
+  - `pageId: string`: The pageId of the page to redirect to after the logout flow is complete.
+  - `url: string`: The URL to redirect to after the logout flow is complete. An absolute URL is not `basePath`-prefixed, so it can be an external logout landing page.
+  - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after logout.
 - `redirect: boolean`: If set to `false` the user session will be cleared, but the page will not be reloaded.
 
 
