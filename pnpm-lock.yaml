@@ -2288,6 +2288,9 @@ importers:
       '@lowdefy/block-utils':
         specifier: 5.4.0
         version: link:../../utils/block-utils
+      '@lowdefy/blocks-aggrid':
+        specifier: 5.4.0
+        version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
         specifier: 5.4.0
         version: link:../../plugins/blocks/blocks-antd
