@@ -39,6 +39,18 @@ const wrapperColorScheme = (page, blockId) =>
     .first()
     .evaluate((el) => getComputedStyle(el).colorScheme);
 
+const wrapperBorderRadius = (page, blockId) =>
+  getBlock(page, blockId)
+    .locator('.ag-root-wrapper')
+    .first()
+    .evaluate((el) => getComputedStyle(el).borderRadius);
+
+const headerFontWeight = (page, blockId) =>
+  getBlock(page, blockId)
+    .locator('.ag-header-cell')
+    .first()
+    .evaluate((el) => getComputedStyle(el).fontWeight);
+
 // The resolved colours come from antd's dark algorithm and must never be hardcoded here — the
 // assertions are on change plus luminance direction, so a token change does not break the test.
 function luminance(color) {
@@ -136,6 +148,40 @@ test.describe('AG Grid theming', () => {
       await expect.poll(() => isDark(page)).toBe(false);
       await expect.poll(() => wrapperColorScheme(page, 'theming_dark_grid')).toBe('light');
     });
+
+    // antdParams is shared by all eight blocks, so dark mode is not an AgGridLowdefy claim — a
+    // regression confined to themeBalhamAntd or to the input core's wrapper would leave the three
+    // tests above untouched. row-index="0" is an even row, so it reads the background colour rather
+    // than the odd-row colour on both: the legacy bases carry antdParams' real oddRowBackgroundColor
+    // instead of the Lowdefy blocks' transparent, and reading an odd row would compare two different
+    // params across the two block families.
+    test('row background follows dark mode on a legacy-base block', async ({ page }) => {
+      const lightRow = await rowBackground(page, 'theming_mixed_legacy');
+      expect(luminance(lightRow)).toBeGreaterThan(0.7);
+
+      await clickButton(page, 'theming_dark_on');
+      await expect.poll(() => isDark(page)).toBe(true);
+      await expect.poll(() => rowBackground(page, 'theming_mixed_legacy')).not.toBe(lightRow);
+      expect(luminance(await rowBackground(page, 'theming_mixed_legacy'))).toBeLessThan(0.3);
+
+      await clickButton(page, 'theming_dark_off');
+      await expect.poll(() => isDark(page)).toBe(false);
+      await expect.poll(() => rowBackground(page, 'theming_mixed_legacy')).toBe(lightRow);
+    });
+
+    test('row background follows dark mode on an input block', async ({ page }) => {
+      const lightRow = await rowBackground(page, 'theming_input_size_small');
+      expect(luminance(lightRow)).toBeGreaterThan(0.7);
+
+      await clickButton(page, 'theming_dark_on');
+      await expect.poll(() => isDark(page)).toBe(true);
+      await expect.poll(() => rowBackground(page, 'theming_input_size_small')).not.toBe(lightRow);
+      expect(luminance(await rowBackground(page, 'theming_input_size_small'))).toBeLessThan(0.3);
+
+      await clickButton(page, 'theming_dark_off');
+      await expect.poll(() => isDark(page)).toBe(false);
+      await expect.poll(() => rowBackground(page, 'theming_input_size_small')).toBe(lightRow);
+    });
   });
 
   // ============================================
@@ -183,6 +229,40 @@ test.describe('AG Grid theming', () => {
       const large = getBlock(page, 'theming_size_large').locator('.ant-avatar').first();
       await expect(large).toHaveCSS('width', '28px');
       await expect(large).toHaveCSS('height', '28px');
+    });
+  });
+
+  // ============================================
+  // MIXED — two theme objects on one page
+  // ============================================
+
+  test.describe('theme independence', () => {
+    // AG Grid gives each theme object its own params class, so a collision would let one grid's
+    // params leak onto the other and every other assertion on this page would still pass. Both
+    // properties read here are ones the two theme objects genuinely disagree on: Balham's base sets
+    // wrapperBorderRadius: 2 and headerFontWeight: 'bold', and neither is in antdParams, while
+    // lowdefyParams sets wrapperBorderRadius to --ant-border-radius-lg and headerFontWeight: 600.
+    test('a Balham and a Lowdefy grid on one page keep their own theme params', async ({
+      page,
+    }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      await expect(
+        getBlock(page, 'theming_mixed_legacy').locator('.ag-root-wrapper')
+      ).toBeVisible();
+      await expect(
+        getBlock(page, 'theming_mixed_lowdefy').locator('.ag-root-wrapper')
+      ).toBeVisible();
+
+      // The Lowdefy radius resolves from an antd token, so this is asserted as a difference rather
+      // than against a pixel value a token change could move.
+      expect(await wrapperBorderRadius(page, 'theming_mixed_legacy')).not.toBe(
+        await wrapperBorderRadius(page, 'theming_mixed_lowdefy')
+      );
+
+      // Both weights are literals in the theme module, not tokens, so these are pinned: 'bold' and
+      // 600 each resolving to the other's value is a leak in a specific direction.
+      expect(await headerFontWeight(page, 'theming_mixed_legacy')).toBe('700');
+      expect(await headerFontWeight(page, 'theming_mixed_lowdefy')).toBe('600');
     });
   });
 
