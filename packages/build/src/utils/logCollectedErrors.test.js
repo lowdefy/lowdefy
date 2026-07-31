@@ -123,11 +123,14 @@ test('logCollectedErrors attaches serialized warnings array to the thrown BuildE
   }
 });
 
-test('logCollectedErrors logs one error when two errors share a source line and a message', () => {
+// buildEntityAuth reaches page, endpoint and websocket ids before validateId does, and both gates
+// give the same message for the same config line.
+test('logCollectedErrors logs one error when two build steps report the same message on one line', () => {
+  const message = 'Page id "__proto__" is a reserved name and cannot be used as an id.';
   const context = {
     errors: [
-      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
-      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new ConfigError(message, { configKey: 'abc123' }),
+      new ConfigError(message, { configKey: 'abc123' }),
     ],
     keyMap: { abc123: { key: 'pages.0', '~r': 'ref1', '~l': 15 } },
     refMap: { ref1: { path: 'lowdefy.yaml' } },
@@ -180,16 +183,39 @@ test('logCollectedErrors logs both errors when the same message comes from diffe
   expect(context.handleError).toHaveBeenCalledTimes(2);
 });
 
-test('logCollectedErrors dedupes unlocated errors on their message alone', () => {
+test('logCollectedErrors logs both unlocated errors when they share a message', () => {
   const context = {
     errors: [new Error('Something broke'), new Error('Something broke')],
     handleError: jest.fn(),
   };
 
   expect(() => logCollectedErrors(context)).toThrow(
-    'Build failed with 1 error(s). See above for details.'
+    'Build failed with 2 error(s). See above for details.'
   );
-  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(context.handleError).toHaveBeenCalledTimes(2);
+});
+
+test('logCollectedErrors logs every error when resolveErrorLocation throws', () => {
+  const context = {
+    errors: [
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new Error('Something broke'),
+    ],
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
+    handleError: jest.fn(),
+  };
+  Object.defineProperty(context, 'keyMap', {
+    get() {
+      throw new Error('keyMap exploded');
+    },
+  });
+
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 3 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledTimes(3);
 });
 
 test('logCollectedErrors serializes only the errors it logged', () => {

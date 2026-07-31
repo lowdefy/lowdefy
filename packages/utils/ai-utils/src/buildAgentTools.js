@@ -35,7 +35,7 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
-function assertNotReserved(name, kind, i18n) {
+function assertNotPlatformToolName(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
     throw new ConfigError(
       translate({
@@ -70,9 +70,12 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
     const toolName = toolConfig.name ?? endpointId;
-    assertNotReserved(toolName, 'Endpoint tool', context.i18n);
-    // The build rejects reserved tool names, so this only fires for a stale or hand-edited build
-    // artifact. Skip the tool rather than fail the whole agent, as the MCP name cases below do.
+    assertNotPlatformToolName(toolName, 'Endpoint tool', context.i18n);
+    // A second, disjoint list: RESERVED_PLATFORM_TOOL_NAMES are the tools Lowdefy itself registers,
+    // isReserved are the prototype-pollution keys setKey refuses. A name can pass one gate and fail
+    // the other, so both checks are needed. The build rejects reserved key names, so this only fires
+    // for a stale or hand-edited build artifact. Skip the tool rather than fail the whole agent, as
+    // the MCP name cases below do.
     if (isReserved(toolName)) {
       console.warn(`Endpoint tool "${toolName}" uses a reserved key name — skipped.`);
       continue;
@@ -173,7 +176,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   // as endpoint tools (scoped agent ids contain '/').
   for (const subAgentRef of agent.agents ?? []) {
     const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
-    assertNotReserved(subAgentToolName, 'Sub-agent', context.i18n);
+    assertNotPlatformToolName(subAgentToolName, 'Sub-agent', context.i18n);
     // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
     // than fail the whole agent.
     if (isReserved(subAgentToolName)) {
