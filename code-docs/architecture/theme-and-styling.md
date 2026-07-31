@@ -853,8 +853,12 @@ The hook also listens for OS theme changes via `matchMedia('(prefers-color-schem
 
 ### 6. AgGrid-Specific Dark Mode
 
-**File:** `packages/plugins/blocks/blocks-aggrid/src/ag-grid-antd.module.css`
+**File:** `packages/plugins/blocks/blocks-aggrid/src/theme/themeLowdefy.js`
 
-AgGrid dark mode maps `--ag-*` variables to `--ant-*` variables via a CSS module (`.antdTheme` class). It does NOT depend on antd JS — only on CSS variables being present at runtime.
+AgGrid dark mode is driven by **AG Grid's Theming API**, not by CSS. `themeLowdefy.js` builds each block's theme object with `withParams`, where every colour is a `var(--ant-*)` reference (`antdParams`). AG Grid emits those references as `--ag-*` custom properties on the grid root, so when antd regenerates its variables on a dark-mode change the grid follows with no JS.
 
-**Check:** In the built `dist/client/assets/`, search for `antdTheme` in the CSS asset. The CSS module should contain the `--ag-*` to `--ant-*` mappings. If present, the issue is at runtime (variables not generated), not build-time.
+`ag-grid-antd.module.css` (`.antdTheme`) carries **no** `--ag-*` mappings any more — its colour block was deleted in the v33 move, because the Theming API honours `--ag-*` inherited from an ancestor and the module would have silently overridden every theme parameter it duplicated. The module now holds only structural helpers (flex cell layout, `.lf-ellipsis-N`, the paragraph-input fix, the empty-overlay colour, per-legacy-theme avatar sizing). See `code-docs/plugins/blocks/aggrid.md`.
+
+**Check:** In DevTools, inspect the grid root (`.ag-root-wrapper`) and confirm `--ag-background-color` etc. resolve to the current `--ant-*` values. If the `--ag-*` properties are absent, the block is not receiving a `theme` object; if they are present but resolve to nothing, the `--ant-*` variables are not being generated (see items 1 and 5). Grepping the built CSS for `--ag-*` mappings is **not** a valid check — there are none.
+
+Browser chrome inside the grid (scrollbars, native controls) follows `color-scheme`, which `browserColorScheme: 'inherit'` defers to the document. `@lowdefy/client`'s dark-mode effect and each server's pre-hydration inline script set `document.documentElement.style.colorScheme` from the resolved mode. If grid scrollbars render light in a dark app, check that property on `<html>` rather than anything in the grid.

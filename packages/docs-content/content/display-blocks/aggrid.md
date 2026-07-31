@@ -1,54 +1,100 @@
 # AgGrid
 
-Ag-Grid data table with sorting, filtering, and row selection. Available themes: AgGridAlpine, AgGridAlpineDark, AgGridBalham, AgGridBalhamDark, AgGridMaterial.
+AG Grid data table with sorting, filtering, and row selection. Four display blocks share one property schema and differ only in appearance: AgGridLowdefy, AgGridAlpine, AgGridBalham and AgGridMaterial, each with an input counterpart. AgGridLowdefy is the recommended grid for Lowdefy apps - it is themed from the app antd design tokens, follows light and dark mode automatically, and takes a size property matching antd Table densities. To adopt it, change `type: AgGridBalham` to `type: AgGridLowdefy`; every property carries over unchanged and the grid will deliberately look different afterwards.
+
+## Choosing a grid
+
+Four display blocks share one implementation and one property schema. They differ only in how they look:
+
+| Block | Look |
+| --- | --- |
+| `AgGridLowdefy` | Themed from the app's antd design tokens. **Recommended for Lowdefy apps.** |
+| `AgGridAlpine` | AG Grid's Alpine theme, recoloured with the app's antd tokens. |
+| `AgGridBalham` | AG Grid's Balham theme, recoloured with the app's antd tokens. Compact. |
+| `AgGridMaterial` | AG Grid's Material theme, recoloured with the app's antd tokens. |
+
+Each has an input counterpart that holds the table data as the block's value: `AgGridLowdefyInput`, `AgGridInputAlpine`, `AgGridInputBalham` and `AgGridInputMaterial`.
+
+**To adopt `AgGridLowdefy`, change `type: AgGridBalham` to `type: AgGridLowdefy`.** Every property carries over unchanged, and the grid will deliberately look different afterwards — that is the point. It is a visual opt-in, so there is nothing to migrate and no codemod to run. The Balham, Alpine and Material blocks are kept indefinitely.
+
+## Row density — the `size` property
+
+`AgGridLowdefy` and `AgGridLowdefyInput` take a `size` property, mirroring antd Table:
+
+| `size` | Row and header height |
+| --- | --- |
+| `small` | 36px |
+| `middle` (default) | 44px |
+| `large` | 54px |
+
+`size` changes spacing and heights only — colours and font size are identical across sizes.
+
+Two things to watch:
+
+- **A `rowHeight` or `headerHeight` grid option overrides what `size` sets.** Both are AG Grid grid options that pass straight through to the grid, and a grid option beats a theme parameter. So `size: large` together with `rowHeight: 30` gives 30px rows under a 54px header. Use one or the other, not both.
+- **There are two `size` vocabularies.** The block-level `size` takes `small | middle | large`, mirroring antd Table. The `cell.size` keys — on button cells and selector cells — take `small | default | large`, mirroring antd Button and Select. So `size: default` and `cell.size: middle` are both invalid. A bad block-level `size` logs a one-time browser console warning and falls back to `middle`; a bad `cell.size` is silent.
+
+The three original theme blocks have a fixed density, so they do not take `size`.
+
+## Retinting one grid — the `themeParams` property
+
+Every AgGrid block takes a `themeParams` object: [AG Grid theming parameter](https://www.ag-grid.com/react-data-grid/theming-parameters/) names, merged onto that block's own theme. This is the recommended way to override the theme of a single grid.
 
 ```yaml
 - id: custom_theme
-  type: AgGridAlpine
-  style:
-    --ag-header-background-color: "#1a1a2e"
-    --ag-header-foreground-color: "#e0e0ff"
-    --ag-selected-row-background-color: rgba(108, 99, 255, 0.2)
-    --ag-row-hover-color: rgba(108, 99, 255, 0.1)
-    --ag-border-color: "#2a2a4a"
+  type: AgGridLowdefy
   properties:
-    height: 300
-    columnDefs:
-      - field: name
-        headerName: Name
-      - field: role
-        headerName: Role
-      - field: department
-        headerName: Department
-      - field: status
-        headerName: Status
-        width: 120
-    rowData:
-      - name: Alice Johnson
-        role: Developer
-        department: Engineering
-        status: Active
-      - name: Bob Smith
-        role: Designer
-        department: Design
-        status: Active
-      - name: Charlie Lee
-        role: Manager
-        department: Sales
-        status: On Leave
-      - name: Diana Patel
-        role: Analyst
-        department: Finance
-        status: Active
-      - name: Erik Johansson
-        role: DevOps
-        department: Engineering
-        status: Active
+    themeParams:
+      headerBackgroundColor: '#1a1a2e'
+      headerTextColor: '#e0e0ff'
+      selectedRowBackgroundColor: rgba(108, 99, 255, 0.2)
+      rowHoverColor: rgba(108, 99, 255, 0.1)
+      borderColor: '#2a2a4a'
 ```
 
+Values are CSS strings, so they may reference the app's antd tokens — `borderColor: var(--ant-color-primary)` keeps the override following the app's theme and dark mode. See AG Grid's theming parameter reference for the full list of names; Lowdefy does not reproduce it.
+
+> **A misspelled parameter name is a silent no-op.** Neither Lowdefy nor AG Grid validates parameter names — AG Grid infers a value type from the name and emits a CSS variable nothing reads. There is no warning, at build time or at run time, so check spelling against AG Grid's reference.
+
+### Overriding `--ag-*` variables through `style`
+
+Setting AG Grid's `--ag-*` CSS variables in a block's `style` **still works** — AG Grid deliberately honours `--ag-*` declared on an ancestor element. Existing apps using that technique need no change.
+
+The one thing that did change: AG Grid v33 renamed or folded away a number of the v32 `--ag-*` variables, and an override naming one of those now does nothing. The variables used in the example above map to parameters like this:
+
+| `style` key (v32 `--ag-*`) | `themeParams` key |
+| --- | --- |
+| `--ag-header-background-color` | `headerBackgroundColor` |
+| `--ag-header-foreground-color` | `headerTextColor` |
+| `--ag-selected-row-background-color` | `selectedRowBackgroundColor` |
+| `--ag-row-hover-color` | `rowHoverColor` |
+| `--ag-border-color` | `borderColor` |
+
+Four of those five variable names still work as-is. `--ag-header-foreground-color` is the exception: v33 renamed it to `--ag-header-text-color`, so an app still setting the old name gets no header text colour and no warning. Move it to `themeParams.headerTextColor`.
+
+## Themes follow the app
+
+All AgGrid blocks take their colours from the app's antd design tokens, so a grid follows the app's theme and its light/dark mode with no configuration and no per-grid dark variant. There is no `AgGridLowdefyDark` block, and none is needed.
+
+## Row selection
+
+`rowSelection` takes AG Grid's object form:
+
 ```yaml
-- id: basic_table
-  type: AgGridAlpine
+rowSelection:
+  mode: multiRow # or singleRow
+  enableClickSelection: true
+  checkboxes: true
+  headerCheckbox: true
+```
+
+The older string form (`rowSelection: multiple` / `single`) still works but logs a deprecation warning. If you migrate it, **set `enableClickSelection: true`**: the string form enables click-to-select by default and the object form does not, so a bare `{ mode: singleRow }` silently stops clicking a row from selecting it, and `onRowSelected` / `onSelectionChanged` stop firing.
+
+Migrate the column-level checkbox flags in the same edit — `checkboxSelection` and `headerCheckboxSelection` on a `columnDefs` entry become `rowSelection.checkboxes` and `rowSelection.headerCheckbox`.
+
+```yaml
+- id: lowdefy_basic_table
+  type: AgGridLowdefy
   properties:
     height: 300
     columnDefs:
@@ -88,8 +134,127 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: column_features
-  type: AgGridAlpine
+- id: lowdefy_size_small
+  type: AgGridLowdefy
+  properties:
+    size: small
+    height: 220
+    defaultColDef:
+      flex: 1
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+      - field: country
+        headerName: Country
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+        country: United States
+      - name: Bob Smith
+        role: Designer
+        country: United Kingdom
+      - name: Charlie Lee
+        role: Manager
+        country: Japan
+- id: lowdefy_size_middle
+  type: AgGridLowdefy
+  properties:
+    size: middle
+    height: 220
+    defaultColDef:
+      flex: 1
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+      - field: country
+        headerName: Country
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+        country: United States
+      - name: Bob Smith
+        role: Designer
+        country: United Kingdom
+      - name: Charlie Lee
+        role: Manager
+        country: Japan
+- id: lowdefy_size_large
+  type: AgGridLowdefy
+  properties:
+    size: large
+    height: 220
+    defaultColDef:
+      flex: 1
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+      - field: country
+        headerName: Country
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+        country: United States
+      - name: Bob Smith
+        role: Designer
+        country: United Kingdom
+      - name: Charlie Lee
+        role: Manager
+        country: Japan
+```
+
+```yaml
+- id: custom_theme
+  type: AgGridLowdefy
+  properties:
+    themeParams:
+      headerBackgroundColor: "#1a1a2e"
+      headerTextColor: "#e0e0ff"
+      selectedRowBackgroundColor: rgba(108, 99, 255, 0.2)
+      rowHoverColor: rgba(108, 99, 255, 0.1)
+      borderColor: "#2a2a4a"
+    height: 300
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+      - field: department
+        headerName: Department
+      - field: status
+        headerName: Status
+        width: 120
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+        department: Engineering
+        status: Active
+      - name: Bob Smith
+        role: Designer
+        department: Design
+        status: Active
+      - name: Charlie Lee
+        role: Manager
+        department: Sales
+        status: On Leave
+      - name: Diana Patel
+        role: Analyst
+        department: Finance
+        status: Active
+      - name: Erik Johansson
+        role: DevOps
+        department: Engineering
+        status: Active
+```
+
+```yaml
+- id: lowdefy_column_features
+  type: AgGridLowdefy
   properties:
     height: 300
     columnDefs:
@@ -152,23 +317,11 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
         price: 79.99
         stock: 310
         rating: 4
-      - id: 6
-        product: Monitor Arm
-        category: Accessories
-        price: 39.99
-        stock: 190
-        rating: 4.3
-      - id: 7
-        product: Desk Lamp
-        category: Accessories
-        price: 24.99
-        stock: 415
-        rating: 4.1
 ```
 
 ```yaml
-- id: default_col_def
-  type: AgGridAlpine
+- id: lowdefy_default_col_def
+  type: AgGridLowdefy
   properties:
     height: 300
     defaultColDef:
@@ -213,16 +366,11 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
         title: UX Designer
         location: San Francisco
         startDate: 2020-09-05
-      - employee: Ahmed Hassan
-        department: Engineering
-        title: DevOps Engineer
-        location: Remote
-        startDate: 2022-02-14
 ```
 
 ```yaml
-- id: row_selection
-  type: AgGridAlpine
+- id: lowdefy_row_selection
+  type: AgGridLowdefy
   properties:
     height: 300
     rowSelection:
@@ -266,15 +414,11 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
         assignee: Erik
         priority: Medium
         status: In Progress
-      - task: Deploy to staging
-        assignee: Fatima
-        priority: High
-        status: Done
 ```
 
 ```yaml
-- id: pagination_table
-  type: AgGridAlpine
+- id: lowdefy_pagination
+  type: AgGridLowdefy
   properties:
     height: 350
     pagination: true
@@ -301,83 +445,59 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
         headerName: Status
         width: 120
     rowData:
-      - orderId: ORD-001
+      - orderId: ORD-201
         customer: Acme Corp
         product: Widget Pro
         quantity: 50
         total: 2499.5
         status: Shipped
-      - orderId: ORD-002
+      - orderId: ORD-202
         customer: Globex Inc
         product: Gadget X
         quantity: 25
         total: 1249.75
         status: Processing
-      - orderId: ORD-003
+      - orderId: ORD-203
         customer: Initech
         product: Widget Pro
         quantity: 100
         total: 4999
         status: Delivered
-      - orderId: ORD-004
+      - orderId: ORD-204
         customer: Umbrella Ltd
         product: Connector A
         quantity: 200
         total: 1998
         status: Shipped
-      - orderId: ORD-005
+      - orderId: ORD-205
         customer: Stark Ind
         product: Gadget X
         quantity: 10
         total: 499.9
         status: Processing
-      - orderId: ORD-006
+      - orderId: ORD-206
         customer: Wayne Ent
         product: Widget Pro
         quantity: 75
         total: 3749.25
         status: Delivered
-      - orderId: ORD-007
+      - orderId: ORD-207
         customer: Oscorp
         product: Connector A
         quantity: 150
         total: 1498.5
         status: Shipped
-      - orderId: ORD-008
+      - orderId: ORD-208
         customer: LexCorp
         product: Gadget X
         quantity: 30
         total: 1499.7
         status: Processing
-      - orderId: ORD-009
-        customer: Cyberdyne
-        product: Widget Pro
-        quantity: 60
-        total: 2999.4
-        status: Shipped
-      - orderId: ORD-010
-        customer: Tyrell Corp
-        product: Connector A
-        quantity: 500
-        total: 4990
-        status: Delivered
-      - orderId: ORD-011
-        customer: Weyland Co
-        product: Gadget X
-        quantity: 40
-        total: 1999.6
-        status: Processing
-      - orderId: ORD-012
-        customer: Soylent Inc
-        product: Widget Pro
-        quantity: 80
-        total: 3999.2
-        status: Shipped
 ```
 
 ```yaml
-- id: events_row_click
-  type: AgGridAlpine
+- id: lowdefy_events_row_click
+  type: AgGridLowdefy
   properties:
     height: 300
     defaultColDef:
@@ -439,8 +559,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
                   _event: cell.value
               template: "Cell: {{ name }} = {{ value }}"
           duration: 3
-- id: events_row_selected
-  type: AgGridAlpine
+- id: lowdefy_events_row_selected
+  type: AgGridLowdefy
   properties:
     height: 300
     rowSelection:
@@ -494,8 +614,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: styled_columns
-  type: AgGridAlpine
+- id: lowdefy_styled_columns
+  type: AgGridLowdefy
   properties:
     height: 300
     defaultColDef:
@@ -510,22 +630,22 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
       - field: q1
         headerName: Q1
         cellStyle:
-          backgroundColor: var(--ant-blue-1)
+          backgroundColor: "#e6f7ff"
           textAlign: right
       - field: q2
         headerName: Q2
         cellStyle:
-          backgroundColor: var(--ant-green-1)
+          backgroundColor: "#f6ffed"
           textAlign: right
       - field: q3
         headerName: Q3
         cellStyle:
-          backgroundColor: var(--ant-orange-1)
+          backgroundColor: "#fff7e6"
           textAlign: right
       - field: q4
         headerName: Q4
         cellStyle:
-          backgroundColor: var(--ant-red-1)
+          backgroundColor: "#fff1f0"
           textAlign: right
     rowData:
       - metric: Revenue ($K)
@@ -548,158 +668,11 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
         q2: 45
         q3: 48
         q4: 52
-      - metric: Support Tickets
-        q1: 892
-        q2: 756
-        q3: 623
-        q4: 541
 ```
 
 ```yaml
-- id: large_dataset
-  type: AgGridAlpine
-  properties:
-    height: 400
-    pagination: true
-    paginationPageSize: 8
-    defaultColDef:
-      sortable: true
-      filter: true
-      resizable: true
-    columnDefs:
-      - field: id
-        headerName: "#"
-        width: 70
-        pinned: left
-      - field: firstName
-        headerName: First Name
-        flex: 1
-      - field: lastName
-        headerName: Last Name
-        flex: 1
-      - field: email
-        headerName: Email
-        flex: 2
-      - field: department
-        headerName: Department
-        flex: 1
-      - field: salary
-        headerName: Salary ($)
-        width: 120
-      - field: city
-        headerName: City
-        flex: 1
-    rowData:
-      - id: 1
-        firstName: Olivia
-        lastName: Martinez
-        email: olivia.martinez@corp.com
-        department: Engineering
-        salary: 95000
-        city: San Francisco
-      - id: 2
-        firstName: Liam
-        lastName: Thompson
-        email: liam.thompson@corp.com
-        department: Marketing
-        salary: 72000
-        city: New York
-      - id: 3
-        firstName: Emma
-        lastName: Davis
-        email: emma.davis@corp.com
-        department: Sales
-        salary: 68000
-        city: Chicago
-      - id: 4
-        firstName: Noah
-        lastName: Anderson
-        email: noah.anderson@corp.com
-        department: Engineering
-        salary: 105000
-        city: Seattle
-      - id: 5
-        firstName: Ava
-        lastName: Wilson
-        email: ava.wilson@corp.com
-        department: Design
-        salary: 82000
-        city: Austin
-      - id: 6
-        firstName: William
-        lastName: Taylor
-        email: william.taylor@corp.com
-        department: Finance
-        salary: 88000
-        city: Boston
-      - id: 7
-        firstName: Sophia
-        lastName: Moore
-        email: sophia.moore@corp.com
-        department: HR
-        salary: 71000
-        city: Denver
-      - id: 8
-        firstName: James
-        lastName: Jackson
-        email: james.jackson@corp.com
-        department: Engineering
-        salary: 112000
-        city: San Francisco
-      - id: 9
-        firstName: Isabella
-        lastName: White
-        email: isabella.white@corp.com
-        department: Marketing
-        salary: 76000
-        city: Los Angeles
-      - id: 10
-        firstName: Benjamin
-        lastName: Harris
-        email: benjamin.harris@corp.com
-        department: Sales
-        salary: 65000
-        city: Miami
-      - id: 11
-        firstName: Mia
-        lastName: Clark
-        email: mia.clark@corp.com
-        department: Engineering
-        salary: 99000
-        city: Portland
-      - id: 12
-        firstName: Lucas
-        lastName: Lewis
-        email: lucas.lewis@corp.com
-        department: Design
-        salary: 85000
-        city: Austin
-      - id: 13
-        firstName: Charlotte
-        lastName: Robinson
-        email: charlotte.robinson@corp.com
-        department: Finance
-        salary: 91000
-        city: New York
-      - id: 14
-        firstName: Henry
-        lastName: Walker
-        email: henry.walker@corp.com
-        department: HR
-        salary: 69000
-        city: Chicago
-      - id: 15
-        firstName: Amelia
-        lastName: Young
-        email: amelia.young@corp.com
-        department: Engineering
-        salary: 108000
-        city: Seattle
-```
-
-```yaml
-- id: cell_types_demo
-  type: AgGridAlpine
+- id: lowdefy_cell_types_demo
+  type: AgGridLowdefy
   properties:
     height: 360
     defaultColDef:
@@ -779,94 +752,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: tag_array_demo
-  type: AgGridAlpine
-  properties:
-    height: 240
-    defaultColDef:
-      resizable: true
-      flex: 1
-    columnDefs:
-      - headerName: User
-        field: name
-        minWidth: 180
-      - headerName: Roles
-        field: roles
-        minWidth: 260
-        cell:
-          type: tag
-          colorMap:
-            admin: red
-            editor: blue
-            viewer: green
-            billing: orange
-          default: default
-    rowData:
-      - name: Alice Johnson
-        roles:
-          - admin
-          - editor
-      - name: Bob Smith
-        roles:
-          - viewer
-      - name: Charlie Lee
-        roles:
-          - editor
-          - billing
-          - viewer
-      - name: Diana Patel
-        roles: []
-      - name: Chan Maarten
-        roles: null
-```
-
-```yaml
-- id: tag_seeded_demo
-  type: AgGridAlpine
-  properties:
-    height: 300
-    defaultColDef:
-      resizable: true
-      flex: 1
-    columnDefs:
-      - headerName: Project
-        field: project
-        minWidth: 160
-      - headerName: Tags
-        field: tags
-        minWidth: 320
-        cell:
-          type: tag
-    rowData:
-      - project: Storefront
-        tags:
-          - frontend
-          - react
-          - typescript
-      - project: API gateway
-        tags:
-          - backend
-          - node
-          - typescript
-      - project: ML pipeline
-        tags:
-          - python
-          - airflow
-          - backend
-      - project: Mobile app
-        tags:
-          - frontend
-          - react
-          - mobile
-      - project: Design system
-        tags:
-          - frontend
-          - design
-```
-
-```yaml
-- id: linked_cells_demo
-  type: AgGridAlpine
+- id: lowdefy_linked_cells_demo
+  type: AgGridLowdefy
   properties:
     height: 240
     defaultColDef:
@@ -919,8 +806,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: ellipsis_demo
-  type: AgGridAlpine
+- id: lowdefy_ellipsis_demo
+  type: AgGridLowdefy
   properties:
     height: 280
     defaultColDef:
@@ -955,8 +842,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: number_demo
-  type: AgGridAlpine
+- id: lowdefy_number_demo
+  type: AgGridLowdefy
   properties:
     height: 320
     defaultColDef:
@@ -1043,14 +930,14 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: loading_demo_switch
+- id: lowdefy_loading_demo_switch
   type: Switch
   properties:
     title: Toggle loading overlay
-- id: loading_demo_grid
-  type: AgGridAlpine
+- id: lowdefy_loading_demo_grid
+  type: AgGridLowdefy
   loading:
-    _state: loading_demo_switch
+    _state: lowdefy_loading_demo_switch
   properties:
     height: 260
     defaultColDef:
@@ -1070,8 +957,94 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: buttons_cell_demo
-  type: AgGridAlpine
+- id: lowdefy_tag_array_demo
+  type: AgGridLowdefy
+  properties:
+    height: 240
+    defaultColDef:
+      resizable: true
+      flex: 1
+    columnDefs:
+      - headerName: User
+        field: name
+        minWidth: 180
+      - headerName: Roles
+        field: roles
+        minWidth: 260
+        cell:
+          type: tag
+          colorMap:
+            admin: red
+            editor: blue
+            viewer: green
+            billing: orange
+          default: default
+    rowData:
+      - name: Alice Johnson
+        roles:
+          - admin
+          - editor
+      - name: Bob Smith
+        roles:
+          - viewer
+      - name: Charlie Lee
+        roles:
+          - editor
+          - billing
+          - viewer
+      - name: Diana Patel
+        roles: []
+      - name: Chan Maarten
+        roles: null
+```
+
+```yaml
+- id: lowdefy_tag_seeded_demo
+  type: AgGridLowdefy
+  properties:
+    height: 300
+    defaultColDef:
+      resizable: true
+      flex: 1
+    columnDefs:
+      - headerName: Project
+        field: project
+        minWidth: 160
+      - headerName: Tags
+        field: tags
+        minWidth: 320
+        cell:
+          type: tag
+    rowData:
+      - project: Storefront
+        tags:
+          - frontend
+          - react
+          - typescript
+      - project: API gateway
+        tags:
+          - backend
+          - node
+          - typescript
+      - project: ML pipeline
+        tags:
+          - python
+          - airflow
+          - backend
+      - project: Mobile app
+        tags:
+          - frontend
+          - react
+          - mobile
+      - project: Design system
+        tags:
+          - frontend
+          - design
+```
+
+```yaml
+- id: lowdefy_buttons_cell_demo
+  type: AgGridLowdefy
   properties:
     height: 260
     defaultColDef:
@@ -1142,8 +1115,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: selector_cell_demo
-  type: AgGridAlpine
+- id: lowdefy_selector_cell_demo
+  type: AgGridLowdefy
   properties:
     height: 280
     defaultColDef:
@@ -1238,8 +1211,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 ```
 
 ```yaml
-- id: input_cell_demo
-  type: AgGridAlpine
+- id: lowdefy_input_cell_demo
+  type: AgGridLowdefy
   properties:
     height: 260
     defaultColDef:
@@ -1330,6 +1303,8 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `size` | string | `"middle"` | Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes. Enum: `small`, `middle`, `large`. |
+| `themeParams` | object | - | AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference. |
 | `height` | number \| string | `"auto"` | Specify table height explicitly, in pixel. |
 | `rowData` | array | - | The list of data to display on the table. |
 | `rowId` | string | - | The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/). |
@@ -1462,6 +1437,6 @@ Ag-Grid data table with sorting, filtering, and row selection. Available themes:
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
-| `/element` | The AgGridAlpine element. |
+| `/element` | The AgGridLowdefy element. |
 
 No slots defined.
