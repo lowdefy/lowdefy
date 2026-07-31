@@ -224,3 +224,68 @@ blocks:
           age: 25
         - name: Bob
           age: 30
+
+  # ============================================
+  # LEGACY BASES — identity markers
+  # ============================================
+
+  # The Balham grid above completes the set. Alpine and Material are here for the zebra check, which
+  # has to see all three bases: the stripe comes from antdParams' oddRowBackgroundColor, and Balham
+  # is the only base that would still stripe on its own if that param were dropped. Two rows each so
+  # row-index="1" is an odd row. The Material grid also carries the borderRadius and primary-colour
+  # checks — it is the only block that takes themeMaterialAntd.
+
+  - id: theming_legacy_alpine
+    type: AgGridAlpine
+    properties:
+      height: 200
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+
+  - id: theming_legacy_material
+    type: AgGridMaterial
+    properties:
+      height: 200
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+
+  # ============================================
+  # THEME PARAMS — per-grid override
+  # ============================================
+
+  # Two AgGridLowdefy grids that differ only in themeParams. The override colour is a literal here
+  # rather than an antd token so the assertion cannot be satisfied by the value the base theme would
+  # have resolved anyway, and headerBackgroundColor is chosen because .ag-header paints it with no
+  # interaction. The sibling is what proves the override did not reach the shared module-scope theme.
+
+  - id: theming_params_override
+    type: AgGridLowdefy
+    properties:
+      height: 200
+      themeParams:
+        headerBackgroundColor: rgb(255, 0, 255)
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+
+  - id: theming_params_sibling
+    type: AgGridLowdefy
+    properties:
+      height: 200
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob

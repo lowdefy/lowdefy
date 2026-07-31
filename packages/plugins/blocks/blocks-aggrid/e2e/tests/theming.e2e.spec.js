@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import { readdir, readFile } from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
@@ -26,6 +30,31 @@ const rowBackground = (page, blockId) =>
     .locator('.ag-row[row-index="0"]')
     .first()
     .evaluate((el) => getComputedStyle(el).backgroundColor);
+
+// row-index="1" is the odd row, the one --ag-odd-row-background-color paints. Every grid read this
+// way needs at least two rows on the theming page.
+const oddRowBackground = (page, blockId) =>
+  getBlock(page, blockId)
+    .locator('.ag-row[row-index="1"]')
+    .first()
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+
+// headerBackgroundColor paints .ag-header, not .ag-header-cell — the cell resolves to
+// rgba(0, 0, 0, 0) and reading it would make the themeParams assertions vacuous.
+const headerBackground = (page, blockId) =>
+  getBlock(page, blockId)
+    .locator('.ag-header')
+    .first()
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+
+// A custom property's computed value has its var() references substituted, so this reads the
+// resolved colour a param chain lands on without needing the surface that consumes it to be
+// on screen.
+const cssVariable = (page, blockId, variable) =>
+  getBlock(page, blockId)
+    .locator('.ag-root-wrapper')
+    .first()
+    .evaluate((el, name) => getComputedStyle(el).getPropertyValue(name).trim(), variable);
 
 const wrapperBackground = (page, blockId) =>
   getBlock(page, blockId)
@@ -80,6 +109,8 @@ const clickButton = (page, blockId) => getBlock(page, blockId).locator('button')
 // logs and on columnMenu="legacy" diagnostics.
 const LEGACY_CSS_ERROR =
   /error #(106|239)\b|Theming API and (Legacy Themes|CSS File Themes) are both used/i;
+
+const srcDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../src');
 
 function collectConsoleMessages(page) {
   const messages = [];
@@ -267,6 +298,97 @@ test.describe('AG Grid theming', () => {
   });
 
   // ============================================
+  // THEME PARAMS
+  // ============================================
+
+  test.describe('themeParams', () => {
+    // useGridTheme calls baseTheme.withParams(themeParams), which returns a new theme object rather
+    // than mutating the base. Nothing in the module enforces that, so the sibling half of this test
+    // is the one that would catch a rewrite that merged into the shared module-scope object: every
+    // AgGridLowdefy on the page would go magenta together and the difference half alone would still
+    // pass.
+    test('themeParams changes only the grid that declares it', async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      await expect(getBlock(page, 'theming_params_override').locator('.ag-header')).toBeVisible();
+      await expect(getBlock(page, 'theming_params_sibling').locator('.ag-header')).toBeVisible();
+
+      const override = await headerBackground(page, 'theming_params_override');
+      const sibling = await headerBackground(page, 'theming_params_sibling');
+
+      expect(override).not.toBe(sibling);
+      // Pinned to the literal the page config declares, not to a resolved token, so the difference
+      // above cannot be satisfied by some other divergence between the two grids.
+      expect(override).toBe('rgb(255, 0, 255)');
+
+      // A third default AgGridLowdefy: the sibling matching it is what "untouched" means here.
+      expect(sibling).toBe(await headerBackground(page, 'theming_dark_grid'));
+    });
+  });
+
+  // ============================================
+  // LEGACY BASE IDENTITY
+  // ============================================
+
+  // lowdefyParams must not reach the prebuilt bases. Balham's wrapperBorderRadius and
+  // headerFontWeight are covered under theme independence above; these are the rest of the list.
+  test.describe('legacy base identity', () => {
+    test.beforeEach(async ({ page }) => {
+      await navigateToTestPage(page, 'aggridtheming');
+      await expect(
+        getBlock(page, 'theming_legacy_material').locator('.ag-row[row-index="1"]')
+      ).toBeVisible();
+    });
+
+    test('Material keeps its own square wrapper corners', async ({ page }) => {
+      // 0 is a literal on AG Grid's Material base. The Lowdefy comparison is what makes the failure
+      // legible: lowdefyParams reaching Material would give it the antd radius instead.
+      expect(await wrapperBorderRadius(page, 'theming_legacy_material')).toBe('0px');
+      expect(await wrapperBorderRadius(page, 'theming_legacy_material')).not.toBe(
+        await wrapperBorderRadius(page, 'theming_mixed_lowdefy')
+      );
+    });
+
+    // The zebra is antdParams' oddRowBackgroundColor, not anything the bases bring — v33 defaults
+    // the param to backgroundColor, so Alpine and Material have no stripe of their own. The Lowdefy
+    // blocks override it to transparent, so the contrast between the two families is the assertion:
+    // a param moved from antdParams to lowdefyParams (or the reverse) breaks one side or the other.
+    test('the legacy bases stripe alternating rows and the Lowdefy blocks do not', async ({
+      page,
+    }) => {
+      for (const blockId of [
+        'theming_mixed_legacy',
+        'theming_legacy_alpine',
+        'theming_legacy_material',
+      ]) {
+        expect(await oddRowBackground(page, blockId)).not.toBe(await rowBackground(page, blockId));
+      }
+
+      expect(await oddRowBackground(page, 'theming_mixed_lowdefy')).toBe('rgba(0, 0, 0, 0)');
+      expect(await oddRowBackground(page, 'theming_params_sibling')).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    // primaryColor exists only on Material's param type, so it is the one param the shared antdParams
+    // map cannot carry and the only reason Material's tab underline, button text, input focus border
+    // and cell editing border are not still Material indigo. --ag-primary-color is read directly
+    // because none of those four surfaces render without interaction; --ag-button-text-color is read
+    // alongside it to prove the ref chain off primaryColor actually resolves.
+    test('Material follows the app primary colour rather than Material indigo', async ({
+      page,
+    }) => {
+      const primary = await cssVariable(page, 'theming_legacy_material', '--ant-color-primary');
+      // Guards the degenerate pass where both sides read as an empty string.
+      expect(primary).toMatch(/^#[0-9a-f]{6}$/i);
+
+      expect(await cssVariable(page, 'theming_legacy_material', '--ag-primary-color')).toBe(
+        primary
+      );
+      expect(await cssVariable(page, 'theming_legacy_material', '--ag-button-text-color')).toBe(
+        primary
+      );
+    });
+  });
+
+  // ============================================
   // NO LEGACY-CSS ERROR
   // ============================================
 
@@ -291,6 +413,27 @@ test.describe('AG Grid theming', () => {
       await navigateToTestPage(page, 'aggridlowdefy');
       await expect(getBlock(page, 'aggridlowdefy_basic').locator('.ag-root-wrapper')).toBeVisible();
       expect(messages.filter((message) => LEGACY_CSS_ERROR.test(message))).toEqual([]);
+    });
+
+    // The two tests above only see the block types the e2e app renders, and only once the app
+    // builds. A stylesheet import added to a block this app does not use, or to one whose page
+    // fails to build, would slip past them — and a single ag-grid.css anywhere in the bundle breaks
+    // theming for every grid in the app. The static half is what keeps the whole of src/ covered.
+    test('no source file imports AG Grid CSS', async () => {
+      const entries = await readdir(srcDir, { recursive: true, withFileTypes: true });
+      const files = entries.filter((entry) => entry.isFile());
+      // A wrong srcDir would make an empty sweep pass silently.
+      expect(files.length).toBeGreaterThan(0);
+
+      const importers = [];
+      for (const entry of files) {
+        const file = path.join(entry.parentPath, entry.name);
+        const contents = await readFile(file, 'utf8');
+        if (contents.includes('ag-grid-community/styles')) {
+          importers.push(path.relative(srcDir, file));
+        }
+      }
+      expect(importers).toEqual([]);
     });
   });
 });

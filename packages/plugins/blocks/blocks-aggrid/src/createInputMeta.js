@@ -15,8 +15,9 @@
 */
 
 // Shared meta for the input AgGrid theme blocks (AgGridInputAlpine / AgGridInputMaterial /
-// AgGridInputBalham). They are identical apart from the theme name in the css key description, so
-// each block's meta.js is a one-line call to this factory rather than a duplicated copy.
+// AgGridInputBalham / AgGridLowdefyInput). They are identical apart from the theme name in the css
+// key description and whether they take a size property, so each block's meta.js is a one-line call
+// to this factory rather than a duplicated copy of the whole schema.
 function createInputMeta(blockName, { size = false } = {}) {
   return {
     category: 'input',
@@ -384,7 +385,8 @@ function createInputMeta(blockName, { size = false } = {}) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',
