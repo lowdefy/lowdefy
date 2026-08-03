@@ -17,7 +17,8 @@
 // The auth page roles an app (auth.authPages) or a module manifest
 // (auth.pages) may fill. Mirrors the authPages keys in lowdefySchema.js - a
 // role added there is added here too. Most also get a path default in
-// setAuthDefaults.js; acceptInvitation is the exception (intentionally unset).
+// setAuthDefaults.js; acceptInvitation and twoFactor are the exceptions
+// (intentionally unset).
 const authPageRoles = [
   'signIn',
   'signUp',
@@ -25,6 +26,7 @@ const authPageRoles = [
   'forgotPassword',
   'resetPassword',
   'verifyEmail',
+  'twoFactor',
   'acceptInvitation',
 ];
 

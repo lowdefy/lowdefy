@@ -151,6 +151,21 @@ function validateAuthConfig({ components }) {
     }
   }
 
+  // The engine owns the two-factor challenge destination on every sign-in path -
+  // Login navigates there on twoFactorRedirect, and the magic-link/OAuth
+  // interception redirects there mid-flow. Routing by app config instead is
+  // opt-in correctness on the sign-in path: a login page that omits the branch
+  // leaves a 2FA-enrolled user unable to sign in at all, silently. So the page is
+  // required whenever 2FA is enabled, not only when magic-link or OAuth are
+  // configured. A module-contributed authPages.twoFactor satisfies this -
+  // buildModuleAuth runs before buildAuth.
+  if (auth.twoFactor?.enabled === true && type.isNone(auth.authPages?.twoFactor)) {
+    throw new ConfigError(
+      'Auth "authPages.twoFactor" is required when "twoFactor.enabled" is true. Set the page the engine routes a two-factor challenge to.',
+      { configKey: auth.twoFactor['~k'] ?? configKey }
+    );
+  }
+
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
     throw new ConfigError(

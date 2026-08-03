@@ -791,6 +791,56 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
+test('validateAuthConfig throws when twoFactor is enabled without authPages.twoFactor', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "authPages.twoFactor" is required when "twoFactor.enabled" is true. Set the page the engine routes a two-factor challenge to.'
+  );
+});
+
+test('validateAuthConfig passes when twoFactor is enabled with authPages.twoFactor set', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+      authPages: { twoFactor: '/two-factor-challenge' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is disabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is not configured', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
 const validCaptcha = {
   enabled: true,
   provider: 'cloudflare-turnstile',

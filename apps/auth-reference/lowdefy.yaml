@@ -157,9 +157,10 @@ auth:
       - verify-email
       - accept-invitation
       - home
-      # Phase-9 password reset pages (both also hold authPages roles, which
-      # implies public); the 2FA challenge page must be public - a 2FA-pending
-      # sign-in holds no session yet. login-methods renders the
+      # Phase-9 password reset pages and the 2FA challenge page all also hold
+      # authPages roles, which implies public - listing them here is
+      # redundant but harmless (getAlwaysPublicPageIds unions rather than
+      # conflicts). login-methods holds no role; it renders the
       # _build.authConfig projection for anyone.
       - forgot-password
       - reset-password
@@ -201,6 +202,7 @@ auth:
     verifyEmail: /verify-email
     forgotPassword: /forgot-password
     resetPassword: /reset-password
+    twoFactor: /two-factor-challenge
 
   # Each entry binds an auth lifecycle point to an InternalApi endpoint.
   # The endpoint's routine is the hook body; it runs in a system context
