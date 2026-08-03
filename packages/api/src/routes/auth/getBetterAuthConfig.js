@@ -29,8 +29,8 @@ import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
+import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 import createAuthLogger from './createAuthLogger.js';
-import createMagicLinkSendGate from './organizations/createMagicLinkSendGate.js';
 import createSendEmail from './createSendEmail.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
@@ -312,13 +312,6 @@ function getBetterAuthConfig({
         },
       })
     );
-    // The engine-tier send gate suppresses the magic-link email for an
-    // unadmitted address (Decision 3) - a request hooks.before matching
-    // /sign-in/magic-link. options.hooks.before is a single core-level function
-    // (BetterAuth wraps it match-all), so the gate checks the path itself.
-    options.hooks = {
-      before: createMagicLinkSendGate({ getAuth, organizations: authConfig.organizations }),
-    };
   }
 
   if (genericOAuthConfigs.length > 0) {
@@ -375,6 +368,12 @@ function getBetterAuthConfig({
       afterEmailVerification,
     };
   }
+
+  // Every engine-tier request hook lives in requestHooks/ and is dispatched by
+  // path from one assembler. BetterAuth wraps options.hooks.before/.after as a
+  // single match-all function each, so this is the only assignment of the slot -
+  // a second one would clobber it.
+  options.hooks = buildRequestHooks({ authConfig, getAuth });
 
   // Phone login sends SMS through the "phone.otp.send" hook binding - there
   // is no built-in SMS transport, so build validation requires the binding

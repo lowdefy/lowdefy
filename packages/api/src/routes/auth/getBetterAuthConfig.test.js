@@ -1300,7 +1300,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
   });
 });
 
-test('wires the engine-tier magic-link send gate as options.hooks.before when magicLink is enabled', () => {
+test('assembles both request hook slots when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({
@@ -1314,10 +1314,11 @@ test('wires the engine-tier magic-link send gate as options.hooks.before when ma
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(typeof options.hooks?.before).toBe('function');
+  expect(typeof options.hooks.before).toBe('function');
+  expect(typeof options.hooks.after).toBe('function');
 });
 
-test('does not register options.hooks when magicLink is not enabled', () => {
+test('always assembles both request hook slots even with no magic link configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -1326,5 +1327,7 @@ test('does not register options.hooks when magicLink is not enabled', () => {
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(options.hooks).toBeUndefined();
+  expect(Object.keys(options.hooks)).toEqual(['before', 'after']);
+  expect(typeof options.hooks.before).toBe('function');
+  expect(typeof options.hooks.after).toBe('function');
 });
