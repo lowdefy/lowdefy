@@ -331,6 +331,30 @@ test('validateAuthConfig passes with an OAuth provider mechanism', () => {
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig passes with a provider "twoFactorTrusted" boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: true }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when provider "twoFactorTrusted" is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: 'yes' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider "twoFactorTrusted" should be a boolean.'
+  );
+});
+
 test('validateAuthConfig throws when emailAndPassword is missing "enabled"', () => {
   const components = {
     auth: {
