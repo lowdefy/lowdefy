@@ -1671,3 +1671,111 @@ describe('deferModuleRefs record deferral', () => {
     expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
   });
 });
+
+describe('_build.authConfig deferral before the projection exists', () => {
+  function createDeferAuthConfigContext({ authConfigProjection, deferAuthConfig = true, vars } = {}) {
+    const buildContext = createBuildContext();
+    if (authConfigProjection !== undefined) {
+      buildContext.authConfigProjection = authConfigProjection;
+    }
+    return new WalkContext({
+      buildContext,
+      refId: 'test:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: vars ?? {},
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+      deferAuthConfig,
+    });
+  }
+
+  const policyFold = () => ({
+    '_build.if': {
+      test: {
+        '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+      },
+      then: [{ clause: true }],
+      else: [],
+    },
+  });
+
+  test('fold over _build.authConfig defers when the projection is absent', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual(policyFold());
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('bare _build.authConfig defers when the projection is absent', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { '_build.authConfig': 'organizations.policy' };
+    const result = await resolve(node, ctx);
+    expect(result).toEqual({ '_build.authConfig': 'organizations.policy' });
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('deferred fold keeps its resolved children', async () => {
+    const ctx = createDeferAuthConfigContext({ vars: { shape: 'search_filter' } });
+    const node = {
+      '_build.if': {
+        test: {
+          '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+        },
+        then: [{ _var: 'shape' }],
+        else: [],
+      },
+    };
+    const result = await resolve(node, ctx);
+    // _var substituted bottom-up; only the _build.* folds stay deferred.
+    expect(result['_build.if'].then).toEqual(['search_filter']);
+    expect(result['_build.if'].test).toEqual({
+      '_build.eq': [{ '_build.authConfig': 'organizations.policy' }, 'tenant'],
+    });
+  });
+
+  test('fold evaluates when the projection is present', async () => {
+    const ctx = createDeferAuthConfigContext({
+      authConfigProjection: { organizations: { policy: 'tenant', signup: 'open' } },
+    });
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual([{ clause: true }]);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('fold evaluates the pinned branch when the projection is present', async () => {
+    const ctx = createDeferAuthConfigContext({
+      authConfigProjection: { organizations: { policy: 'pinned', signup: 'invite-only' } },
+    });
+    const result = await resolve(policyFold(), ctx);
+    expect(result).toEqual([]);
+  });
+
+  test('without deferAuthConfig an absent projection is still a collected error', async () => {
+    const ctx = createDeferAuthConfigContext({ deferAuthConfig: false });
+    await resolve(policyFold(), ctx);
+    expect(ctx.buildContext.errors.length).toBeGreaterThan(0);
+    expect(ctx.buildContext.errors[0].message).toContain(
+      '_build.authConfig is not available here.'
+    );
+  });
+
+  test('deferAuthConfig does not defer folds that read no authConfig', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { '_build.eq': ['a', 'a'] };
+    const result = await resolve(node, ctx);
+    expect(result).toBe(true);
+  });
+
+  test('deferAuthConfig propagates through child contexts', async () => {
+    const ctx = createDeferAuthConfigContext();
+    const node = { outer: { inner: policyFold() } };
+    const result = await resolve(node, ctx);
+    expect(result.outer.inner).toEqual(policyFold());
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});

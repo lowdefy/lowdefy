@@ -86,6 +86,11 @@ function makeAppLevelCtx({ context, deferModuleRefs = false, entryId, entrySecti
     lowdefyApp: context.appMeta,
     dynamicIdentifiers,
     deferModuleRefs,
+    // Entry-config walks (prepare and sweep) run before the auth-config
+    // projection exists, and their output is consumed through _module.var,
+    // which re-walks the substituted value post-projection — so
+    // _build.authConfig folds defer here rather than erroring.
+    deferAuthConfig: true,
     entryId,
     entrySection,
   });
