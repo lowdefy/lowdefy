@@ -38,11 +38,14 @@ const operators = {
   _user,
 };
 
-function createTestContext({ user } = {}) {
+// The wall only engages under the tenant policy, so the default test context
+// carries it - pinned-policy tests pass their own binding.
+function createTestContext({ organization = { policy: 'tenant' }, user } = {}) {
   const context = testContext({
     connections,
     readConfigFile: mockReadConfigFile,
     operators,
+    organization,
     user,
   });
   context.websockets = {
@@ -132,6 +135,17 @@ test('tenant connection resolves the tenant verdict from the caller organization
   expect(res.tenant).toEqual({ field: 'organizationId', value: 'org-1' });
   expect(res.connectionProperties).toEqual({ connectionProperty: 'connectionProperty' });
   expect(res.properties).toEqual({ websocketProperty: 'websocketProperty' });
+});
+
+test('tenant connection resolves a null tenant under the pinned policy', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  const context = createTestContext({
+    organization: { policy: 'pinned' },
+    user: { id: 'id', organizationId: 'org-1' },
+  });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
+  expect(res.tenant).toBe(null);
 });
 
 test('tenant connection with a field object resolves the custom field', async () => {

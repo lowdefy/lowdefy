@@ -27,6 +27,24 @@ async function writeConnections({ components, context }) {
       serializer.serializeToString(connection)
     );
   });
+  // Index of connections declaring tenant:, read by the server's tenant
+  // preflight (resolveTenantPreflight) - connection artifacts are one file
+  // per id, so without an index the server can not enumerate the walled set.
+  // Written under both policies to keep the build policy-deterministic; the
+  // preflight only consults it under policy: tenant.
+  const tenantConnections = components.connections
+    .filter((connection) => !type.isNone(connection.tenant))
+    .map((connection) => ({
+      connectionId: connection.connectionId,
+      type: connection.type,
+      tenant: connection.tenant,
+    }));
+  writePromises.push(
+    context.writeBuildArtifact(
+      'tenantConnections.json',
+      serializer.serializeToString(tenantConnections)
+    )
+  );
   return Promise.all(writePromises);
 }
 

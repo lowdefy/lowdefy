@@ -31,6 +31,7 @@ function testContext({
   operators = {
     _test: () => 'test',
   },
+  organization = null,
   readConfigFile,
   secrets = {},
   steps = {},
@@ -42,6 +43,7 @@ function testContext({
     authorize: createAuthorize({ user }),
     config,
     connections,
+    organization,
     handleError: async (error) => {
       logger.error(error);
     },

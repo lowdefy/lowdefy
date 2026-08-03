@@ -414,6 +414,7 @@ test('tenant connection passes the tenant verdict to the resolver', async () => 
     connections,
     readConfigFile: mockReadConfigFile,
     operators,
+    organization: { policy: 'tenant' },
     secrets,
     user: { id: 'id', organizationId: 'org-1' },
   });
@@ -438,6 +439,14 @@ test('tenant connection passes the tenant verdict to the resolver', async () => 
 });
 
 test('tenant connection without a caller organization throws AuthenticationError', async () => {
+  const orglessTenantContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'tenant' },
+    secrets,
+    user: { id: 'id' },
+  });
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       connectionConfig: {
@@ -451,12 +460,38 @@ test('tenant connection without a caller organization throws AuthenticationError
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
+  await expect(callRequest(orglessTenantContext, defaultParams)).rejects.toThrow(
     AuthenticationError
   );
-  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
+  await expect(callRequest(orglessTenantContext, defaultParams)).rejects.toThrow(
     'Request "requestId" reads tenant connection "testConnection" but no caller organization resolved.'
   );
+});
+
+test('tenant connection resolves a null verdict under the pinned policy', async () => {
+  const pinnedContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'pinned' },
+    secrets,
+    user: { id: 'id', organizationId: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await callRequest(pinnedContext, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].tenant).toBe(null);
 });
 
 test('evaluate request properties operators', async () => {

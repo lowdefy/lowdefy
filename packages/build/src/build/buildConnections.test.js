@@ -360,3 +360,72 @@ test('count operators', () => {
     _string: 1,
   });
 });
+
+test('buildConnections populates tenantConnectionIds under the tenant policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+        tenant: true,
+      },
+      {
+        id: 'unwalled',
+        type: 'TestType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual(['walled']);
+});
+
+test('buildConnections leaves tenantConnectionIds empty under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections leaves tenantConnectionIds empty when auth declares no policy', () => {
+  const components = {
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections still validates the tenant contract under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1".'
+  );
+});

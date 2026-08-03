@@ -21,6 +21,16 @@ import { type } from '@lowdefy/helpers';
 // the compute half: resolve the tenant field and the caller's organization id
 // for a request against a tenant connection, or fail closed.
 //
+// The wall is policy-conditional: it engages only when the app declares
+// auth.organizations.policy: tenant. Under pinned (the default, including
+// apps with no auth or no organizations block) a connection's `tenant:`
+// declaration states that the collection is org-scoped WHEN the deployment
+// is multi-org, and the verdict is null - no filter, no stamp, no audit,
+// no fail-closed error. The one check that stays on under both policies is
+// the connection-type contract check below: a declaration a connection type
+// can not enforce should fail on the current deployment, not on the day the
+// app flips to tenant.
+//
 // The request-level sentinel is three-valued (amendment-1):
 // - No `tenant:` on the connection -> null verdict, nothing injected.
 // - `tenant: 'none'` on the request/step/websocket -> null verdict. This is
@@ -49,6 +59,9 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
       `Connection type "${connectionConfig.type}" does not implement the tenant scoping contract, so "tenant" can not be enforced at connection "${connectionConfig.connectionId}".`,
       { configKey: connectionConfig['~k'] }
     );
+  }
+  if ((context.organization?.policy ?? 'pinned') !== 'tenant') {
+    return null;
   }
   if (requestConfig.tenant === 'none') {
     return null;

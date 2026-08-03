@@ -27,7 +27,7 @@ const authConfig = {
     { id: 'google', type: 'Google' },
     { id: 'custom-oauth', type: 'GenericOAuth' },
   ],
-  organizations: { signup: 'invite-only' },
+  organizations: { policy: 'tenant', signup: 'invite-only' },
   roles: [
     { id: 'admin', label: 'Administrator', description: 'Full access' },
     { id: 'editor', label: 'editor', description: 'Can edit content' },
@@ -79,13 +79,23 @@ test('_authConfig returns organizations.signup policy', () => {
   expect(_authConfig({ authConfig, params: 'organizations.signup' })).toBe('invite-only');
 });
 
+test('_authConfig returns organizations.policy', () => {
+  expect(_authConfig({ authConfig, params: 'organizations.policy' })).toBe('tenant');
+  expect(
+    _authConfig({
+      authConfig: { organizations: { policy: 'pinned', signup: 'invite-only' } },
+      params: 'organizations.policy',
+    })
+  ).toBe('pinned');
+});
+
 test('_authConfig throws for unknown path and names all readable paths', () => {
   expect(() => _authConfig({ authConfig, params: 'authPages.signIn' })).toThrow(
     '_build.authConfig received an unreadable path "authPages.signIn". Readable paths are: ' +
       '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", ' +
       '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
       '"captcha.enabled", "captcha.provider", "captcha.siteKey", ' +
-      '"providers", "organizations.signup", "roles".'
+      '"providers", "organizations.policy", "organizations.signup", "roles".'
   );
 });
 

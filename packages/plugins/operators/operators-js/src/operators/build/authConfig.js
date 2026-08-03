@@ -29,6 +29,7 @@ const readablePaths = [
   'captcha.provider',
   'captcha.siteKey',
   'providers',
+  'organizations.policy',
   'organizations.signup',
   'roles',
 ];

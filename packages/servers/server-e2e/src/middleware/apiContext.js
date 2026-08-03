@@ -20,6 +20,7 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
+import authJson from '../../lib/build/auth.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
@@ -78,6 +79,13 @@ function apiContext() {
     const user = getUser(c);
     context.user = user ? normalizeInjectedCaller(user) : null;
     createApiContext(context);
+    // No auth engine runs in the e2e server, so createApiContext retains no
+    // organization binding. Derive the policy from the built auth config so
+    // the tenant wall's policy gate still engages for a tenant app; pinned
+    // stays null (no engine means no seeded organization row).
+    if (authJson.organizations) {
+      context.organization = { policy: authJson.organizations.policy, pinned: null };
+    }
     logRequest({ context });
     c.set('lowdefyContext', context);
     return next();

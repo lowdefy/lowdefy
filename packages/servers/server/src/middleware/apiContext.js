@@ -15,7 +15,12 @@
 */
 
 import path from 'node:path';
-import { createApiContext, resolveAuthentication, resolvePinnedOrganization } from '@lowdefy/api';
+import {
+  createApiContext,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+  resolveTenantPreflight,
+} from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -124,6 +129,10 @@ function apiContext() {
       });
     }
     createApiContext(context);
+    // Under policy: tenant, refuse to serve while walled collections hold
+    // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
+    // probe failure retries next request). No-op under pinned.
+    await resolveTenantPreflight(context);
     c.set('lowdefyContext', context);
     // Echo the request id so clients and proxies can quote it when reporting
     // a failure, and it can be matched to the rid on the server log lines.

@@ -106,8 +106,11 @@ function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
   // Walled connection ids, for the best-effort entry-stage check on requests
-  // and steps (validateTenantPipelineEntry).
+  // and steps (validateTenantPipelineEntry). Populated only under the tenant
+  // policy - the wall does not engage under pinned, so demanding an authored
+  // clause there would be a false alarm for a filter that never runs.
   context.tenantConnectionIds = new Set();
+  const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
@@ -128,7 +131,7 @@ function buildConnections({ components, context }) {
     // Store connectionId for request validation and rename id
     connection.connectionId = connection.id;
     context.connectionIds.add(connection.connectionId);
-    if (!type.isUndefined(connection.tenant)) {
+    if (tenantPolicy && !type.isUndefined(connection.tenant)) {
       context.tenantConnectionIds.add(connection.connectionId);
     }
     connection.id = `connection:${connection.id}`;

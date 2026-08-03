@@ -45,6 +45,7 @@ test('writeConnections write connection', async () => {
       'connections/connection1.json',
       '{"id":"connection:connection1","connectionId":"connection1","properties":{"prop":"val"}}',
     ],
+    ['tenantConnections.json', '[]'],
   ]);
 });
 
@@ -71,6 +72,36 @@ test('writeConnections multiple connection', async () => {
       'connections/connection2.json',
       '{"id":"connection:connection2","connectionId":"connection2"}',
     ],
+    ['tenantConnections.json', '[]'],
+  ]);
+});
+
+test('writeConnections writes the tenant connections index', async () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection:walled',
+        connectionId: 'walled',
+        type: 'MongoDBCollection',
+        tenant: true,
+      },
+      {
+        id: 'connection:custom-field',
+        connectionId: 'custom-field',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+      },
+      {
+        id: 'connection:unwalled',
+        connectionId: 'unwalled',
+        type: 'MongoDBCollection',
+      },
+    ],
+  };
+  await writeConnections({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls[3]).toEqual([
+    'tenantConnections.json',
+    '[{"connectionId":"walled","type":"MongoDBCollection","tenant":true},{"connectionId":"custom-field","type":"MongoDBCollection","tenant":{"field":"organization_id"}}]',
   ]);
 });
 
@@ -79,7 +110,7 @@ test('writeConnections no connections', async () => {
     connections: [],
   };
   await writeConnections({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['tenantConnections.json', '[]']]);
 });
 
 test('writeConnections connections undefined', async () => {

@@ -39,7 +39,12 @@ const defaultRequestConfig = {
   connectionId: 'testConnection',
 };
 
+// The wall is policy-conditional - the verdict and fail-closed paths only
+// resolve under the tenant policy, so verdict-side tests carry it.
+const tenantPolicy = { organization: { policy: 'tenant' } };
+
 const contextWithOrg = {
+  ...tenantPolicy,
   user: { id: 'id', organizationId: 'org-1' },
 };
 
@@ -117,7 +122,7 @@ test('returns null when request opts out with tenant none', () => {
 
 test('tenant none opt-out does not require a caller organization', () => {
   const res = resolveTenant(
-    { user: null },
+    { ...tenantPolicy, user: null },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
@@ -130,7 +135,7 @@ test('tenant none opt-out does not require a caller organization', () => {
 test('throws AuthenticationError when context has no user', () => {
   expect(() =>
     resolveTenant(
-      { user: null },
+      { ...tenantPolicy, user: null },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -140,7 +145,7 @@ test('throws AuthenticationError when context has no user', () => {
   ).toThrow(AuthenticationError);
   expect(() =>
     resolveTenant(
-      { user: null },
+      { ...tenantPolicy, user: null },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -155,7 +160,7 @@ test('throws AuthenticationError when context has no user', () => {
 test('throws AuthenticationError when user has no organizationId', () => {
   expect(() =>
     resolveTenant(
-      { user: { id: 'id' } },
+      { ...tenantPolicy, user: { id: 'id' } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -168,7 +173,7 @@ test('throws AuthenticationError when user has no organizationId', () => {
 test('throws AuthenticationError when user organizationId is an empty string', () => {
   expect(() =>
     resolveTenant(
-      { user: { id: 'id', organizationId: '' } },
+      { ...tenantPolicy, user: { id: 'id', organizationId: '' } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -181,7 +186,7 @@ test('throws AuthenticationError when user organizationId is an empty string', (
 test('throws AuthenticationError when user organizationId is not a string', () => {
   expect(() =>
     resolveTenant(
-      { user: { id: 'id', organizationId: 42 } },
+      { ...tenantPolicy, user: { id: 'id', organizationId: 42 } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -194,7 +199,7 @@ test('throws AuthenticationError when user organizationId is not a string', () =
 test('AuthenticationError message prefers stepId over requestId', () => {
   expect(() =>
     resolveTenant(
-      { user: null },
+      { ...tenantPolicy, user: null },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -209,7 +214,7 @@ test('AuthenticationError message prefers stepId over requestId', () => {
 test('AuthenticationError message falls back to websocketId for websocket configs', () => {
   expect(() =>
     resolveTenant(
-      { user: null },
+      { ...tenantPolicy, user: null },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -241,7 +246,7 @@ test('tenant with a field object resolves the custom field', () => {
 
 test('tenant value comes from context.user.organizationId', () => {
   const res = resolveTenant(
-    { user: { id: 'other', organizationId: 'org-2' } },
+    { ...tenantPolicy, user: { id: 'other', organizationId: 'org-2' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
@@ -263,7 +268,7 @@ test('tenant authored resolves the verdict with the authored marker', () => {
 test('tenant authored still requires a caller organization', () => {
   expect(() =>
     resolveTenant(
-      { user: { id: 'id' } },
+      { ...tenantPolicy, user: { id: 'id' } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -280,4 +285,74 @@ test('tenant authored resolves the custom field with the authored marker', () =>
     requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
   });
   expect(res).toEqual({ field: 'organization_id', value: 'org-1', authored: true });
+});
+
+test('returns null under the pinned policy', () => {
+  const res = resolveTenant(
+    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('returns null when no organization binding resolved', () => {
+  const res = resolveTenant(
+    { user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+  const resNullBinding = resolveTenant(
+    { organization: null, user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(resNullBinding).toBe(null);
+});
+
+test('pinned policy does not require a caller organization', () => {
+  const res = resolveTenant(
+    { organization: { policy: 'pinned' }, user: null },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('tenant authored returns null under the pinned policy', () => {
+  const res = resolveTenant(
+    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('contract check applies under the pinned policy', () => {
+  expect(() =>
+    resolveTenant(
+      { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+      {
+        connection: plainConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: defaultRequestConfig,
+      }
+    )
+  ).toThrow(ConfigError);
 });

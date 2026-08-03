@@ -28,6 +28,7 @@ import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import schema from './schema.js';
+import tenantPreflight from './tenant/tenantPreflight.js';
 
 export default {
   schema,
@@ -39,6 +40,10 @@ export default {
   meta: {
     tenant: true,
   },
+  // The tenant-preflight capability: the server probes every walled
+  // collection for unstamped rows before serving under policy: tenant
+  // (resolveTenantPreflight in @lowdefy/api).
+  tenantPreflight,
   requests: {
     MongoDBAggregation,
     MongoDBBulkWrite,

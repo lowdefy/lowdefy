@@ -20,12 +20,14 @@ import {
   normalizeInjectedCaller,
   resolveAuthentication,
   resolvePinnedOrganization,
+  resolveTenantPreflight,
 } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
+import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
@@ -126,6 +128,18 @@ async function createLowdefyContext({ c }) {
     }
   }
   createApiContext(context);
+  if (!context.auth && authJson.organizations) {
+    // Mock and headless callers run no auth engine, so createApiContext
+    // retains no organization binding. Derive the policy from the built auth
+    // config so the tenant wall's policy gate still engages under
+    // policy: tenant (a mock caller there must carry organizationId, or the
+    // wall fails closed - loudly, as it should).
+    context.organization = { policy: authJson.organizations.policy, pinned: null };
+  }
+  // Under policy: tenant, refuse to serve while walled collections hold
+  // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
+  // probe failure retries next request). No-op under pinned.
+  await resolveTenantPreflight(context);
   logRequest({ context });
   return context;
 }
