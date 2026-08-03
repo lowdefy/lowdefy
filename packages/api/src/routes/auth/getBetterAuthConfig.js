@@ -373,7 +373,12 @@ function getBetterAuthConfig({
   // path from one assembler. BetterAuth wraps options.hooks.before/.after as a
   // single match-all function each, so this is the only assignment of the slot -
   // a second one would clobber it.
-  options.hooks = buildRequestHooks({ authConfig, getAuth });
+  options.hooks = buildRequestHooks({
+    authConfig,
+    basePath: config.basePath ?? '',
+    baseUrlOrigin,
+    getAuth,
+  });
 
   // Phone login sends SMS through the "phone.otp.send" hook binding - there
   // is no built-in SMS transport, so build validation requires the binding

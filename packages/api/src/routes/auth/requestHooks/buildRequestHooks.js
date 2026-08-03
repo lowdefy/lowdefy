@@ -15,9 +15,13 @@
 */
 
 import { createAuthMiddleware } from 'better-auth/api';
+import { type } from '@lowdefy/helpers';
 
 import createMagicLinkSendGate from '../organizations/createMagicLinkSendGate.js';
+import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
+import redirectToChallenge from './redirectToChallenge.js';
+import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
 
 // The only place options.hooks may be constructed. BetterAuth wraps
 // options.hooks.before and options.hooks.after as a single match-all function
@@ -30,7 +34,7 @@ import dispatchRequestHooks from './dispatchRequestHooks.js';
 // for every path. Whether a registration is added stays conditional on config,
 // and those conditions live here so there is one place to read what the engine
 // hooks into.
-function buildRequestHooks({ authConfig, getAuth }) {
+function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }) {
   const before = [];
   const after = [];
 
@@ -43,6 +47,35 @@ function buildRequestHooks({ authConfig, getAuth }) {
         organizations: authConfig.organizations,
       }),
     });
+  }
+
+  const twoFactorPageUrl = resolveTwoFactorPageUrl({ authConfig, basePath, baseUrlOrigin });
+
+  // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
+  // plugin's sign-in matcher covers /sign-in/email and /sign-in/phone-number
+  // only, so an enrolled user walks past their second factor by clicking "email
+  // me a link", and so does anyone holding their inbox. No toggle: a magic link
+  // is possession-of-inbox, the factor most likely to be compromised in the
+  // incident two-factor exists to survive.
+  //
+  // twoFactorPageUrl is also gated on, so a challenge can never redirect to
+  // undefined. Build validation requires the page whenever twoFactor is enabled,
+  // which leaves this guard covering direct construction only.
+  if (
+    authConfig.twoFactor?.enabled === true &&
+    authConfig.magicLink?.enabled === true &&
+    type.isString(twoFactorPageUrl)
+  ) {
+    after.push(
+      createTwoFactorChallengeHook({
+        id: 'magicLinkTwoFactorChallenge',
+        matches: (path) => path === '/magic-link/verify',
+        // The browser is mid-redirect here with nothing to read a JSON flag
+        // with, so this exit redirects rather than returning the password
+        // path's { twoFactorRedirect: true }.
+        exit: (ctx) => redirectToChallenge({ baseUrlOrigin, ctx, twoFactorPageUrl }),
+      })
+    );
   }
 
   return {

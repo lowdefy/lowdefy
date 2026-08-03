@@ -74,7 +74,7 @@ test('twoFactor plugin version matches the pinned better-auth dependency', () =>
   // sign-in. This assertion over-fires by design - an unrelated patch
   // release trips it too - because that is the only failure mode
   // available for internals this deeply private. On failure, re-read
-  // requestHooks/createTwoFactorChallenge.js against the new plugin
+  // requestHooks/beginTwoFactorChallenge.js against the new plugin
   // source before touching the string.
   expect(twoFactor().version).toBe('1.6.23');
 });
