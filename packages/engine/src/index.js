@@ -22,7 +22,8 @@ import getContext from './getContext.js';
 import getHomePathname from './getHomePathname.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import stopChain from './stopChain.js';
 
-export { Actions, Slots, createLink, Events, getHomePathname, Requests, State };
+export { Actions, Slots, createLink, Events, getHomePathname, Requests, State, stopChain };
 
 export default getContext;
