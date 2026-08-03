@@ -126,6 +126,16 @@ test('setAuthDefaults does not overwrite explicitly provided values', () => {
   expect(res.auth.rateLimit.window).toBe(60);
 });
 
+test('setAuthDefaults does not default authPages.twoFactor - it stays unset so the build check in validateAuthConfig can require it', () => {
+  const components = {
+    auth: {
+      configured: true,
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.authPages.twoFactor).toBeUndefined();
+});
+
 test('setAuthDefaults pins the auto-seeded default org with invite-only signup', () => {
   const components = {
     auth: {

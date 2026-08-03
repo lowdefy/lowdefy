@@ -1321,6 +1321,12 @@ export default {
                 type: 'Auth "authPages.verifyEmail" should be a string.',
               },
             },
+            twoFactor: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.twoFactor" should be a string.',
+              },
+            },
             acceptInvitation: {
               type: 'string',
               errorMessage: {
