@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { callRequest, redactErrorResponse } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
 import getPathSegments from '../lib/getPathSegments.js';
@@ -47,13 +47,7 @@ async function requestHandler(c) {
     context.logger.info({ event: 'dev_mock_request', pageId, requestId, blockId, actionId });
     if (mock.error) {
       const error = mock.error instanceof Error ? mock.error : new Error(mock.error);
-      const serialized = serializer.serialize(error);
-      if (serialized?.['~e']) {
-        delete serialized['~e'].received;
-        delete serialized['~e'].stack;
-        delete serialized['~e'].configKey;
-      }
-      return c.json(serialized, 500);
+      return c.json(redactErrorResponse(context, error), 500);
     }
     return c.json({ success: true, response: serializer.serialize(mock.response) });
   }

@@ -271,3 +271,257 @@ test('extractErrorProps extracts errors nested inside plain object properties', 
   expect(props.context.inner.cause.code).toBe('DEEP');
   expect(() => JSON.stringify(props)).not.toThrow();
 });
+
+// The omit option, as a mechanism only: extractErrorProps applies whatever keys
+// the callback hands it, at every error node it builds. Which fields any audience
+// may see is the caller's policy and is tested by the caller, not here.
+
+function buildCauseChain() {
+  const withProps = (error, level) => {
+    error.configKey = `key-${level}`;
+    error.code = `CODE_${level}`;
+    return error;
+  };
+  const depth3 = withProps(new RangeError('depth 3'), 3);
+  const depth2 = withProps(new TypeError('depth 2', { cause: depth3 }), 2);
+  const depth1 = withProps(new SyntaxError('depth 1', { cause: depth2 }), 1);
+  const depth0 = withProps(new Error('depth 0', { cause: depth1 }), 0);
+  return { depth0, depth1, depth2, depth3 };
+}
+
+test('extractErrorProps omit removes a built-in field at the root and at every cause depth', () => {
+  const { depth0 } = buildCauseChain();
+
+  const props = extractErrorProps(depth0, { omit: () => ['stack'] });
+
+  const levels = [props, props.cause, props.cause.cause, props.cause.cause.cause];
+  expect(levels).toHaveLength(4);
+  levels.forEach((level, index) => {
+    expect(level.message).toBe(`depth ${index}`);
+    expect(level.stack).toBeUndefined();
+    expect('stack' in level).toBe(false);
+  });
+});
+
+test('extractErrorProps omit removes an own enumerable field at the root and at every cause depth', () => {
+  const { depth0 } = buildCauseChain();
+
+  const props = extractErrorProps(depth0, { omit: () => ['configKey'] });
+
+  const levels = [props, props.cause, props.cause.cause, props.cause.cause.cause];
+  levels.forEach((level, index) => {
+    expect('configKey' in level).toBe(false);
+    expect(level.code).toBe(`CODE_${index}`);
+  });
+});
+
+test('extractErrorProps omit is called once for each error node in the cause chain', () => {
+  const { depth0, depth1, depth2, depth3 } = buildCauseChain();
+  const nodes = [];
+
+  extractErrorProps(depth0, {
+    omit: (node) => {
+      nodes.push(node);
+      return [];
+    },
+  });
+
+  expect(nodes).toHaveLength(4);
+  expect(nodes[0]).toBe(depth0);
+  expect(nodes[1]).toBe(depth1);
+  expect(nodes[2]).toBe(depth2);
+  expect(nodes[3]).toBe(depth3);
+});
+
+test('extractErrorProps omit applies to an Error held in an own enumerable property', () => {
+  const err = new Error('outer');
+  err.original = new Error('original error');
+  err.original.code = 'ORIG';
+
+  const props = extractErrorProps(err, { omit: () => ['stack'] });
+
+  expect('stack' in props).toBe(false);
+  expect(props.original.message).toBe('original error');
+  expect(props.original.code).toBe('ORIG');
+  expect('stack' in props.original).toBe(false);
+});
+
+test('extractErrorProps omit applies to an Error nested inside a plain-object cause', () => {
+  const nested = new Error('nested in object');
+  nested.code = 'NESTED';
+  const err = new Error('outer');
+  err.cause = { operation: 'save', inner: nested };
+
+  const props = extractErrorProps(err, { omit: () => ['stack'] });
+
+  expect(props.cause.operation).toBe('save');
+  expect(props.cause.inner.message).toBe('nested in object');
+  expect(props.cause.inner.code).toBe('NESTED');
+  expect('stack' in props.cause.inner).toBe(false);
+});
+
+test('extractErrorProps omit applies to an Error nested inside an array', () => {
+  const nested = new Error('nested in array');
+  const err = new Error('outer');
+  err.errors = ['ok', nested];
+
+  const props = extractErrorProps(err, { omit: () => ['stack'] });
+
+  expect(props.errors[0]).toBe('ok');
+  expect(props.errors[1].message).toBe('nested in array');
+  expect('stack' in props.errors[1]).toBe(false);
+});
+
+test('extractErrorProps omit applies to an Error nested inside an array in a plain-object cause', () => {
+  const nested = new Error('nested in array in cause');
+  const err = new Error('outer');
+  err.cause = { failures: [nested] };
+
+  const props = extractErrorProps(err, { omit: () => ['stack'] });
+
+  expect(props.cause.failures[0].message).toBe('nested in array in cause');
+  expect('stack' in props.cause.failures[0]).toBe(false);
+});
+
+test('extractErrorProps omit of fields leaves the cause chain walkable with name and message intact', () => {
+  const { depth0 } = buildCauseChain();
+
+  const props = extractErrorProps(depth0, { omit: () => ['stack', 'configKey'] });
+
+  expect(props.name).toBe('Error');
+  expect(props.message).toBe('depth 0');
+  expect(props.cause.name).toBe('SyntaxError');
+  expect(props.cause.message).toBe('depth 1');
+  expect(props.cause.cause.name).toBe('TypeError');
+  expect(props.cause.cause.message).toBe('depth 2');
+  expect(props.cause.cause.cause.name).toBe('RangeError');
+  expect(props.cause.cause.cause.message).toBe('depth 3');
+});
+
+test('extractErrorProps omit of cause drops the Error cause and keeps sibling fields', () => {
+  const inner = new Error('inner');
+  const err = new Error('outer', { cause: inner });
+  err.code = 'OUTER_CODE';
+  err.details = { field: 'name' };
+
+  const props = extractErrorProps(err, { omit: () => ['cause'] });
+
+  expect('cause' in props).toBe(false);
+  expect(props.message).toBe('outer');
+  expect(props.name).toBe('Error');
+  expect(props.stack).toBeDefined();
+  expect(props.code).toBe('OUTER_CODE');
+  expect(props.details).toEqual({ field: 'name' });
+});
+
+test('extractErrorProps omit of cause drops a non-Error cause and keeps sibling fields', () => {
+  const err = new Error('outer');
+  err.cause = { status: 500 };
+  err.code = 'OUTER_CODE';
+
+  const props = extractErrorProps(err, { omit: () => ['cause'] });
+
+  expect('cause' in props).toBe(false);
+  expect(props.code).toBe('OUTER_CODE');
+  expect(props.message).toBe('outer');
+});
+
+test('extractErrorProps omit receives the error node so a per-node decision applies', () => {
+  const inner = new TypeError('inner');
+  const err = new Error('outer', { cause: inner });
+
+  const props = extractErrorProps(err, {
+    omit: (node) => (node.name === 'TypeError' ? ['stack'] : []),
+  });
+
+  expect(props.stack).toBeDefined();
+  expect(props.cause.message).toBe('inner');
+  expect(props.cause.name).toBe('TypeError');
+  expect('stack' in props.cause).toBe(false);
+});
+
+test('extractErrorProps omit can drop the cause of one node only, leaving deeper nodes of other names intact', () => {
+  const depth2 = new Error('depth 2');
+  const depth1 = new TypeError('depth 1', { cause: depth2 });
+  const depth0 = new Error('depth 0', { cause: depth1 });
+
+  const props = extractErrorProps(depth0, {
+    omit: (node) => (node.name === 'TypeError' ? ['cause'] : []),
+  });
+
+  expect(props.message).toBe('depth 0');
+  expect(props.cause.message).toBe('depth 1');
+  expect('cause' in props.cause).toBe(false);
+});
+
+test('extractErrorProps omit returning undefined omits nothing', () => {
+  const inner = new Error('inner');
+  const err = new Error('outer', { cause: inner });
+  err.code = 'CODE';
+
+  expect(extractErrorProps(err, { omit: () => undefined })).toEqual(extractErrorProps(err));
+});
+
+test('extractErrorProps omit returning an empty array omits nothing', () => {
+  const inner = new Error('inner');
+  const err = new Error('outer', { cause: inner });
+  err.code = 'CODE';
+
+  expect(extractErrorProps(err, { omit: () => [] })).toEqual(extractErrorProps(err));
+});
+
+test('extractErrorProps without an omit option keeps message, name, stack, cause and own fields', () => {
+  const inner = new Error('inner');
+  const err = new Error('outer', { cause: inner });
+  err.code = 'CODE';
+
+  const props = extractErrorProps(err);
+
+  expect(props.message).toBe('outer');
+  expect(props.name).toBe('Error');
+  expect(props.stack).toBeDefined();
+  expect(props.code).toBe('CODE');
+  expect(props.cause.message).toBe('inner');
+  expect(props.cause.stack).toBeDefined();
+});
+
+test('extractErrorProps with an empty options object behaves the same as no options', () => {
+  const inner = new Error('inner');
+  const err = new Error('outer', { cause: inner });
+  err.code = 'CODE';
+
+  expect(extractErrorProps(err, {})).toEqual(extractErrorProps(err));
+});
+
+test('extractErrorProps does not mark an omitted plain-object cause as seen, so a shared property is not [Circular]', () => {
+  const shared = { id: 'shared' };
+  const err = new Error('outer');
+  err.cause = shared;
+  err.detail = shared;
+
+  // Baseline: building the cause first marks `shared` as seen, so the sibling
+  // property that points at the same object collapses to the circular marker.
+  expect(extractErrorProps(err).detail).toBe('[Circular]');
+
+  const props = extractErrorProps(err, { omit: () => ['cause'] });
+
+  expect('cause' in props).toBe(false);
+  expect(props.detail).toEqual({ id: 'shared' });
+});
+
+test('extractErrorProps does not mark an omitted Error cause as seen, so a shared property is still extracted', () => {
+  const shared = new Error('shared');
+  shared.code = 'SHARED';
+  const err = new Error('outer', { cause: shared });
+  err.detail = shared;
+
+  // Baseline: the cause is built first, so the sibling pointing at the same
+  // error is dropped as already seen.
+  expect(extractErrorProps(err).detail).toBeUndefined();
+
+  const props = extractErrorProps(err, { omit: () => ['cause'] });
+
+  expect('cause' in props).toBe(false);
+  expect(props.detail.message).toBe('shared');
+  expect(props.detail.code).toBe('SHARED');
+});

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
@@ -29,6 +30,8 @@ import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
+import redactErrorResponse from './response/redactErrorResponse.js';
+import redactResponse from './response/redactResponse.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
 import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
 import resolveTenantPreflight from './routes/connections/resolveTenantPreflight.js';
@@ -37,6 +40,7 @@ import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
+  buildEndpointResult,
   callAgent,
   callEndpoint,
   getEndpointConfig,
@@ -52,6 +56,8 @@ export {
   getRootConfig,
   logClientError,
   normalizeInjectedCaller,
+  redactErrorResponse,
+  redactResponse,
   resolveAuthentication,
   resolvePinnedOrganization,
   resolveTenantPreflight,

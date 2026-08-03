@@ -17,6 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
+import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorize from '../../context/createAuthorize.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -76,14 +77,7 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
     routine: endpointConfig.routine,
   });
 
-  const success = !['error', 'reject'].includes(status);
-
-  return {
-    error: serializer.serialize(error),
-    response: serializer.serialize(response),
-    status: success ? 'success' : status,
-    success,
-  };
+  return buildEndpointResult(context, { error, response, status });
 }
 
 export default runDetachedEndpoint;
