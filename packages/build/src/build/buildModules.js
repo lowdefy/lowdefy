@@ -140,7 +140,36 @@ function buildModules({ components, context }) {
   // with scoped ids - buildAuth validates the merged result downstream.
   buildModuleAuth({ components, context, moduleEntries });
 
+  validateTenantRemaps({ components, context, moduleEntries });
+
   return components;
+}
+
+// A connection remap swaps the module's whole connection definition for the
+// app's - including the module's tenant: declaration. Under policy: tenant
+// that would run the module's requests outside the wall, silently: reads
+// unfiltered, writes unstamped. Per-connection opt-outs are exactly what the
+// wall refuses to offer, so under tenant a walled module connection may only
+// be remapped to a target that declares tenant: itself. Under pinned the
+// remap is harmless and stays legal - the flip to tenant is a rebuild, so
+// this check fires there, before any traffic. Runs after the module loop so
+// remap targets that are other modules' (scoped) connections are present.
+function validateTenantRemaps({ components, context, moduleEntries }) {
+  if (components.auth?.organizations?.policy !== 'tenant') return;
+  for (const entry of moduleEntries) {
+    const moduleEntry = context.modules[entry.id];
+    const remapping = moduleEntry.connections ?? {};
+    for (const conn of moduleEntry.manifest.connections ?? []) {
+      const targetId = remapping[conn.id];
+      if (!targetId || type.isNone(conn.tenant)) continue;
+      const target = (components.connections ?? []).find((c) => c.id === targetId);
+      if (target && type.isNone(target.tenant)) {
+        throw new ConfigError(
+          `Module "${entry.id}" declares connection "${conn.id}" as tenant-scoped, but the entry remaps it to connection "${targetId}", which does not declare "tenant". Under auth.organizations.policy: tenant this would run the module's requests outside the tenant wall - reads unfiltered, writes unstamped. Declare tenant on "${targetId}", or remove the remap.`
+        );
+      }
+    }
+  }
 }
 
 export default buildModules;

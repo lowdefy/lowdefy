@@ -816,3 +816,117 @@ test('buildModules preserves non-enumerable ~r marker on pages', () => {
   expect(result.pages[0].id).toBe('team-users/dashboard');
   expect(result.pages[0]['~r']).toBe('modules/team-users/pages/dashboard.yaml');
 });
+
+describe('tenant remap validation', () => {
+  function makeWalledRemapSetup({ policy, targetConnection }) {
+    const moduleEntry = makeModuleEntry({
+      id: 'contacts',
+      connections: { 'contacts-collection': 'my-crm-db' },
+      manifest: {
+        connections: [
+          { id: 'contacts-collection', type: 'MongoDBCollection', tenant: true, properties: {} },
+        ],
+      },
+    });
+    const context = makeContext([moduleEntry]);
+    const components = {
+      modules: [{ id: 'contacts' }],
+      connections: [targetConnection],
+    };
+    if (policy) {
+      components.auth = { organizations: { policy } };
+    }
+    return { components, context };
+  }
+
+  test('throws when a walled module connection is remapped to a tenant-less target under policy tenant', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: { id: 'my-crm-db', type: 'MongoDBCollection', properties: {} },
+    });
+    expect(() => buildModules({ components, context })).toThrow(
+      'Module "contacts" declares connection "contacts-collection" as tenant-scoped, but the entry remaps it to connection "my-crm-db", which does not declare "tenant".'
+    );
+  });
+
+  test('passes when the remap target declares tenant true', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: { id: 'my-crm-db', type: 'MongoDBCollection', tenant: true, properties: {} },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the remap target declares a custom tenant field', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'tenant',
+      targetConnection: {
+        id: 'my-crm-db',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+        properties: {},
+      },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes under the pinned policy', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: 'pinned',
+      targetConnection: { id: 'my-crm-db', type: 'MongoDBCollection', properties: {} },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the app declares no organizations policy', () => {
+    const { components, context } = makeWalledRemapSetup({
+      policy: null,
+      targetConnection: { id: 'my-crm-db', type: 'MongoDBCollection', properties: {} },
+    });
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('passes when the remapped module connection is not walled', () => {
+    const moduleEntry = makeModuleEntry({
+      id: 'contacts',
+      connections: { 'users-db': 'my-users-db' },
+      manifest: {
+        connections: [{ id: 'users-db', type: 'MongoDBCollection', properties: {} }],
+      },
+    });
+    const context = makeContext([moduleEntry]);
+    const components = {
+      modules: [{ id: 'contacts' }],
+      connections: [{ id: 'my-users-db', type: 'MongoDBCollection', properties: {} }],
+      auth: { organizations: { policy: 'tenant' } },
+    };
+    expect(() => buildModules({ components, context })).not.toThrow();
+  });
+
+  test('checks remaps targeting another module scoped connection', () => {
+    const provider = makeModuleEntry({
+      id: 'provider',
+      manifest: {
+        connections: [{ id: 'shared-db', type: 'MongoDBCollection', properties: {} }],
+      },
+    });
+    const consumer = makeModuleEntry({
+      id: 'consumer',
+      connections: { 'contacts-collection': 'provider/shared-db' },
+      manifest: {
+        connections: [
+          { id: 'contacts-collection', type: 'MongoDBCollection', tenant: true, properties: {} },
+        ],
+      },
+    });
+    const context = makeContext([provider, consumer]);
+    const components = {
+      modules: [{ id: 'provider' }, { id: 'consumer' }],
+      connections: [],
+      auth: { organizations: { policy: 'tenant' } },
+    };
+    expect(() => buildModules({ components, context })).toThrow(
+      'remaps it to connection "provider/shared-db", which does not declare "tenant"'
+    );
+  });
+});

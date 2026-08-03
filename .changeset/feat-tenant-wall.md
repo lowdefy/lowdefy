@@ -30,6 +30,7 @@ A connection can now declare `tenant: true` (or `tenant: { field: ... }`) to wal
 - `tenant:` is validated on connections and gated to connection types that implement the scoping contract (v1: `MongoDBCollection`) — declaring it on any other type is a build error.
 - The request/step-level sentinel accepts `none` and `authored`; websockets accept `none` only (`authored` is aggregation-only).
 - Best-effort entry-stage check: a literal walled pipeline leading with `$search`/`$searchMeta`/`$vectorSearch`/`$geoNear` or containing `$graphLookup` without `tenant: authored` is a build error (operator-composed pipelines are checked at runtime, which is the enforcement gate). The check only runs under `policy: tenant` — under `pinned` the wall never engages, so a missing authored clause is not an error.
+- Remap guard: a connection remap on a module entry swaps the module's whole connection definition for the app's — including its `tenant:` declaration. Under `policy: tenant`, remapping a walled module connection to a target that does not declare `tenant:` is a build error (it would silently run the module's requests outside the wall). Under `pinned` remaps stay unrestricted; the flip to `tenant` is a rebuild, so the guard fires there.
 
 **Enabling the wall**
 
