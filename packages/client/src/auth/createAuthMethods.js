@@ -440,23 +440,6 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.setActiveOrganization({ organizationId, organizationSlug }));
   }
 
-  // Impersonates a user for the session's remaining lifetime. Authorization
-  // is BetterAuth's own admin access control, enforced server-side against
-  // the caller's role - this method adds no gate of its own. Chain
-  // UpdateSession after to re-sync the client with the impersonated user.
-  async function impersonateUser({ userId } = {}) {
-    if (!type.isString(userId)) {
-      throw new Error('ImpersonateUser requires a "userId" param.');
-    }
-    return unwrap(auth.impersonateUser({ userId }));
-  }
-
-  // Ends impersonation and restores the original session. Chain
-  // UpdateSession after to re-sync the client with the original user.
-  async function stopImpersonating() {
-    return unwrap(auth.stopImpersonating());
-  }
-
   // Refreshes the BetterAuth client session store through an awaited
   // store refetch, bypassing the cookie cache (a live re-resolve) so role,
   // attribute or session changes surface immediately instead of after
@@ -763,7 +746,6 @@ function createAuthMethods(lowdefy, auth) {
     acceptInvitation,
     cancelInvitation,
     changePassword,
-    impersonateUser,
     inviteMember,
     leaveOrganization,
     login,
@@ -780,7 +762,6 @@ function createAuthMethods(lowdefy, auth) {
     sendVerificationEmail,
     setActiveOrganization,
     signUp,
-    stopImpersonating,
     twoFactorDisable,
     twoFactorEnable,
     twoFactorVerify,
