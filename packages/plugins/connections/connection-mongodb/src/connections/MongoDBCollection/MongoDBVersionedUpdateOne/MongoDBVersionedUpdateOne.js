@@ -16,6 +16,7 @@
 
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -83,19 +84,24 @@ async function MongoDBVersionedUpdateOne({
     if (!disableNoMatchError && !updateOptions?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    await logCollection.insertOne({
-      args: { filter, update, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      before: document,
-      after,
-      timestamp: new Date(),
-      type: 'MongoDBVersionedUpdateOne',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, update, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          before: document,
+          after,
+          timestamp: new Date(),
+          type: 'MongoDBVersionedUpdateOne',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   } else {
     response = await collection.updateOne(
       insertedDocument ? { _id: insertedDocument.insertedId } : filter,

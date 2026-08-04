@@ -30,6 +30,7 @@ import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
+import findLogCollectionRecordTestMongoDb from '../../../test/findLogCollectionRecordTestMongoDb.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
@@ -664,4 +665,48 @@ test('bulkWrite with an authored organizationId throws before writing', async ()
       tenant,
     })
   ).rejects.toThrow('Tenant field "organizationId" can not be set in an insert document');
+});
+
+test('insertOne changeLog record is stamped with the tenant verdict', async () => {
+  const collection = 'tenantIsolationInsertOneLog';
+  const logCollection = 'tenantIsolationInsertOneLog_log';
+  const connection = makeConnection(collection, {
+    write: true,
+    changeLog: { collection: logCollection },
+  });
+  await MongoDBInsertOne({
+    request: { doc: { _id: 'log_a1' } },
+    connection,
+    requestId: 'tenantLogInsertOne',
+    tenant,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'tenantLogInsertOne',
+  });
+  expect(logged.organizationId).toEqual('org_a');
+});
+
+test('updateOne changeLog record is stamped with the tenant verdict', async () => {
+  const collection = 'tenantIsolationUpdateOneLog';
+  const logCollection = 'tenantIsolationUpdateOneLog_log';
+  await populateTestMongoDb({
+    collection,
+    documents: [{ _id: 'u1', organizationId: 'org_a', v: 'before' }],
+  });
+  const connection = makeConnection(collection, {
+    write: true,
+    changeLog: { collection: logCollection },
+  });
+  await MongoDBUpdateOne({
+    request: { filter: { _id: 'u1' }, update: { $set: { v: 'after' } } },
+    connection,
+    requestId: 'tenantLogUpdateOne',
+    tenant,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'tenantLogUpdateOne',
+  });
+  expect(logged.organizationId).toEqual('org_a');
 });

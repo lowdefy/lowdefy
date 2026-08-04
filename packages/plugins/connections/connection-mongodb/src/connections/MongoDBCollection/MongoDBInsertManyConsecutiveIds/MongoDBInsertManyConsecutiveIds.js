@@ -17,6 +17,7 @@
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -56,18 +57,21 @@ async function MongoDBInsertManyConsecutiveIds({
       response = await collection.insertMany(docs, { ...options, session });
       if (logCollection) {
         await logCollection.insertOne(
-          {
-            args: { docs, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBInsertManyConsecutiveIds',
-            meta: connection.changeLog?.meta,
-          },
+          stampTenantOnLogRecord({
+            record: {
+              args: { docs, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBInsertManyConsecutiveIds',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+          }),
           { session }
         );
       }

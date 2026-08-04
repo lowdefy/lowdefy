@@ -16,6 +16,7 @@
 
 import getCollection from '../getCollection.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -38,18 +39,23 @@ async function MongodbInsertMany({
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.insertMany(docs, options);
   if (logCollection) {
-    await logCollection.insertOne({
-      args: { docs, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      response,
-      timestamp: new Date(),
-      type: 'MongoDBInsertMany',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { docs, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          response,
+          timestamp: new Date(),
+          type: 'MongoDBInsertMany',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   }
   const { acknowledged, insertedCount, insertedIds } = serialize(response);
   return { acknowledged, insertedCount, insertedIds };
