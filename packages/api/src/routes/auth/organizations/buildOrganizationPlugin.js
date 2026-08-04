@@ -45,7 +45,7 @@ import { ac, roles } from './organizationAccessControl.js';
 // creator-protection guards, which key on the member's role string. With app
 // roles out of that field and the fabricated acting member claiming "owner"
 // itself, there is nothing left to defend against.
-function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
+function buildOrganizationPlugin({ getAuth, sendInvitationEmail }) {
   const options = {
     ac,
     roles,
@@ -99,10 +99,7 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
       },
     },
     organizationHooks: {
-      afterAcceptInvitation: createAfterAcceptInvitationHook({
-        getAuth,
-        userAdminRole: authConfig.userAdminRole ?? null,
-      }),
+      afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
     },
     sendInvitationEmail,
   };

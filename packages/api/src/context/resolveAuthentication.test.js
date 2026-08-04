@@ -127,23 +127,11 @@ test('sets activeOrganizationId from the session so steps can scope org operatio
   expect(context.user.activeOrganizationId).toBe('org_1');
 });
 
-test('omits impersonatedBy from context.user when the session is not impersonated', async () => {
-  const { auth } = mockAuth({
-    session: {
-      user: { id: 'user_1' },
-      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
-    },
-    member: { id: 'member_1', role: 'member' },
-  });
-  const context = {};
-
-  await resolveAuthentication(context, { auth, headers: {} });
-
-  expect(context.user.impersonatedBy).toBeUndefined();
-  expect('impersonatedBy' in context.user).toBe(false);
-});
-
-test('carries impersonatedBy onto context.user when the admin plugin is impersonating', async () => {
+// The admin plugin's session field never reaches the caller. Nothing writes
+// user.role, so no browser session can be an impersonation in the first place,
+// and a session row still carrying the field must not resurrect a _user surface
+// no step reads.
+test('never carries impersonatedBy onto context.user, even when the session row holds it', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -155,7 +143,7 @@ test('carries impersonatedBy onto context.user when the admin plugin is imperson
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.impersonatedBy).toBe('admin_1');
+  expect('impersonatedBy' in context.user).toBe(false);
 });
 
 test('splits a multi-value member role string into orgRoles', async () => {
