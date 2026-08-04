@@ -46,7 +46,7 @@ _ref:
             | `authPages` | `signIn`, `signOut`, `error`, `verifyRequest`, `newUser` | `signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail` |
             | OIDC profile claims | ~20 claims copied onto the session user | Only `id`, `name`, `email`, `image`, `emailVerified` |
             | `sub` | `_user.sub` = provider's OIDC subject | Removed — `_user.id` is the internal id (a different value) |
-            | Roles | On the user record via `userFields` | On the active membership (`member.role`) |
+            | Roles | On the user record via `userFields` | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.orgRoles`) |
             | Attributes | `_user.app_attributes`, `_user.global_attributes` | One merged `_user.attributes` bag |
 
             ## Upgrade steps
@@ -197,6 +197,8 @@ _ref:
 
             The old `signOut`, `verifyRequest`, and `newUser` keys are removed. New optional keys for email flows: `signUp`, `forgotPassword`, `resetPassword`, `verifyEmail`. `twoFactor` is a further key, and unlike those it is **required** when `auth.twoFactor.enabled` is true — the build fails without it, because the engine routes the two-factor challenge to that page itself. See [Two-Factor Authentication](/two-factor).
 
+            `acceptInvitation` is a further key, naming the page that consumes an `?invitationId=` link. **Write its copy for the unauthenticated case.** Where one app sends another organization's invitations, the invitee accepts on the *sending* app, and `AcceptInvitation` sets the active organization inside its own transaction — so the accept page itself renders unauthenticated the moment the accept succeeds. That page must tell an already-signed-in invitee to sign in again **at the app they are on**, not at the app that sent the invitation: the active-organization policy runs at every session create and re-pins them here, while the production cookie prefix is shared across apps on one host, so signing in at the other app flips the shared session back the other way.
+
             Sign-in uses the `Login` action, which dispatches by parameter — `providerId` for OAuth, `magicLink: true`, or `email` + `password`. Email/password sign-up pages use the new `SignUp` action; social and magic-link "sign-up" pages use `Login`, since those methods create the account on first sign-in. Sign-in errors now surface inline (the `Login` action returns `error.code`) rather than as a `?error=` query parameter on the error page.
 
             ### 9. Run the user-model data migration
@@ -209,7 +211,15 @@ _ref:
 
             ## The session user shape
 
-            The session user now carries exactly: `id`, `name`, `email`, `image`, `emailVerified`, plus Lowdefy's resolved `roles` (from the active membership) and `attributes` (merged), `activeOrganizationId`, and `impersonatedBy` (present only during admin impersonation).
+            The session user carries `id`, `name`, `email`, `image`, `emailVerified`, `activeOrganizationId`, and the user record's own `profile` bag, plus three fields Lowdefy resolves from the caller's row in the active organization:
+
+            - **`roles`** — the app's own role names, read from the active membership's `appRoles` array. These are what page and endpoint `auth.roles` gates match, and the only thing they match.
+            - **`orgRoles`** — the organization tier, from `member.role`: `owner`, `admin` or `member`. This is an administrative fact about the active organization, and it is **not a gate source** — `createAuthorize` reads only `roles`. An app that wants a page for organization administrators gates that page on one of its own app roles, and lets the write authority answer the administration question separately, at the step.
+            - **`attributes`** — the one merged bag of authorization inputs: `user.attributes` (global) under the active `member.attributes` (per-organization), merged per key, member wins.
+
+            **`_user.role` (singular) carries nothing.** It rides the session-user spread off the user record, and Lowdefy never writes it. It sits one character away from `roles`, so an app that gates on `_user.role` is gating on a constant — the gate either always passes or always fails, and never for the reason the author intended. Read `roles`.
+
+            There is no `impersonatedBy` field on the session user. Impersonation is not part of the platform.
 
             Where old `_user` reads land:
 
@@ -218,10 +228,64 @@ _ref:
             | `_user.sub` | `_user.id` — a **different value**: the internal id, not the provider subject. The provider subject lives on the `user-accounts` collection (`accountId`). |
             | `_user.picture` | `_user.image` |
             | `_user.email_verified` | `_user.emailVerified` |
-            | `_user.roles` | Unchanged read — but roles now resolve from the active organization membership, granted via invitations and admin steps, not provider claims. |
+            | `_user.roles` | Unchanged read — but roles now resolve from the active organization membership's `appRoles`, granted via invitations and auth steps, not provider claims. |
             | `_user.app_attributes.*` | `_user.attributes.*` — per-app values live on the membership (`member.attributes`). |
             | `_user.global_attributes.*` | `_user.attributes.*` — global values live on the user (`user.attributes`); merged per key, member wins. |
             | Other OIDC claims (`given_name`, `phone_number`, `address`, ...) | Not in the session. Persist what you need at signup via an endpoint hook — profile data onto your contact collection, authorization inputs into attributes — and read it from there. |
+
+            ## Administering organizations
+
+            Administering an organization means holding `admin` (or `owner`) in that organization — the `member.role` tier, on the caller's own member row there. There is no app-wide administering role, and no config key that grants administration across organizations: nothing to configure. Every auth step declares the authority it requires, and the step floor authorizes the caller against their member row in the organization the step names, so a caller who administers the team organization holds nothing in the customer organization. The steps that write the deployment-wide `user` row — `UpdateUserProfile`, `UpdateUserAttributes`, `BanUser`, `UnbanUser`, `DeleteUser`, `RevokeUserSessions` — additionally require the **target** to hold a member row in that organization, so an administrator can only reach people who are members of an organization they administer.
+
+            ## Bootstrapping the first administrator
+
+            Nothing grants organization authority implicitly. On a fresh `policy: pinned` + `signup: invite-only` deployment that is a closed loop: nobody can be invited, because inviting needs `invitation: ['create']` authority that nobody holds, and nobody can sign up, because the admission gate admits only members and pending invitees. Breaking the loop is one document inserted into the `user-invitations` collection, by hand, outside the platform:
+
+            ```js
+            { _id: <uuid>, organizationId: 'team', email: 'admin@example.com',
+              role: 'owner', appRoles: [], status: 'pending',
+              inviterId: 'bootstrap', expiresAt: <future date>, createdAt: new Date() }
+            ```
+
+            **`organizationId` is the configured slug.** Under `pinned` the organization's id *is* `auth.organizations.org`, so there is no id to look up and the same document works in every environment.
+
+            **The key is `_id`, not `id`.** The adapter maps the logical `id` to the physical `_id` inbound and back outbound, so every invitation the platform writes stores its id at `_id`. A document inserted literally as `{ id: … }` gets a driver-generated `ObjectId` `_id` plus a stray `id` field, after which the accept flow's invitation lookup never finds it — while the admission gate, which queries by email and status, happily admits the person to sign up. The result is a user who can log in, an invitation that cannot be accepted, and no error pointing at either. Use `_id`.
+
+            **The role is `owner`, not `admin`, and that is not cosmetic.** With no owner in the organization every membership guard is inert: `removeMember`'s creator protection engages only when the target holds the creator role, and `updateMemberRole`'s last-owner count only when the updater is the creator editing themselves. So a sole `admin` could demote themselves to `member`, or remove the last other `admin`, after which nobody anywhere holds `member: ['update']` or `invitation: ['create']` — and under `signup: invite-only` nobody can sign up to fix it. Seeding `owner` makes all three guards live, and costs nothing reachable: `owner`'s only statement beyond `admin`'s is `organization: ['delete']`, whose endpoint is disabled under `pinned` and has no step.
+
+            **Deliver the accept URL by hand.** The accept URL is built only inside the invitation email sender, which only the `InviteMember` step reaches, so a hand-inserted invitation sends no email. Give the nominated person this link:
+
+            ```
+            {baseUrlOrigin}{basePath}{authPages.acceptInvitation}?invitationId=<the _id above>
+            ```
+
+            **The pre-accept state looks like a failure and is not.** Under `invite-only`, an invitee holding only a pending invitation gets a session with **no** active organization, and a session with no active organization resolves unauthenticated. So the nominated person signs up successfully and lands logged out everywhere. That is the carve-out working: it admits them just far enough to accept. The link is the only way forward — the front door alone does not finish the bootstrap.
+
+            **Email verification is required before accepting.** Lowdefy sets a function-form `advanced.database.generateId`, which makes the organization plugin require a verified email for the accept-by-invitation-id action. Normal flow, not a workaround: verify the address, then open the link.
+
+            **Under `signup: open` this route does not work.** The auto-join hooks mint a `role: 'member'` member row before the accept, so accepting fails as already-a-member. There the single write is the other one: the person signs up normally, and the operator sets `member.role: 'owner'` on the row they already have. That one field is the whole grant — no second write and no denormalized copy to leave stale, because nothing writes `user.role`.
+
+            **Bootstrap is per-organization, not per-deployment.** An `admin` of the team organization holds no authority in the customer organization, so that organization's first `admin` needs its own inserted invitation. After the first one, each organization is self-sustaining: its owner can invite and promote from inside the app.
+
+            The field names above are the live camelCase names. If the `snake-case-data-fields` change has landed in your version, they are `organization_id`, `inviter_id`, `expires_at`, `created_at` and `app_roles`.
+
+            ## Retired client actions
+
+            Seven client actions are gone. An app that authors one fails at build with the unknown-action-type error; each has a named replacement, except the two that do not:
+
+            | Retired action | Replacement |
+            |---|---|
+            | `ImpersonateUser` | **None.** The capability is retired. |
+            | `StopImpersonating` | **None.** The capability is retired. |
+            | `InviteMember` | The `InviteMember` step |
+            | `CancelInvitation` | The `CancelInvitation` step |
+            | `UpdateMemberRole` | The `UpdateMemberOrgRole` step (the `owner`/`admin`/`member` tier). App roles are the `UpdateMemberRoles` step. |
+            | `RemoveMember` | The `RemoveMember` step |
+            | `UpdateOrganization` | The `UpdateOrganization` step |
+
+            The rule that produced the list also tells you which actions will keep existing: **a client action is an operation that mutates the caller's own session, and nothing else.** So `SetActiveOrganization`, `AcceptInvitation` and `LeaveOrganization` remain — each acts on the caller. An app administering **other** people's memberships authors a routine instead, and that is what earns it the per-step authority floor, an explicitly named target organization, and both role tiers (`appRoles` and `orgRole`) rather than one fused `role`.
+
+            Two consequences. A `pinned` app never had these actions working in the first place — every organization route is disabled under `pinned` — so this reads as a removal only for `tenant` apps. And the step path is what makes cross-organization administration possible at all: a client action forwards no organization id, so it could only ever act on the session's active organization.
 
             ## What you don't need to change
 

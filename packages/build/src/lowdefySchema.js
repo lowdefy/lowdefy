@@ -1114,6 +1114,8 @@ export default {
             },
             roles: {
               type: 'object',
+              description:
+                'Role names mapped to the page id patterns (picomatch) they gate. Matched against the app role names on "_user.roles". A module contributes no role gates of its own: the app gates a whole module entry with one pattern per instance, matching the entry id prefix the build scopes its page ids with (user-admin: ["user-admin/**"]).',
               patternProperties: {
                 '^.*$': {
                   type: 'array',
@@ -1191,6 +1193,8 @@ export default {
             },
             roles: {
               type: 'object',
+              description:
+                'Role names mapped to the api endpoint id patterns (picomatch) they gate. Matched against the app role names on "_user.roles". A module contributes no role gates of its own: the app gates a whole module entry with one pattern per instance, matching the entry id prefix the build scopes its endpoint ids with (user-admin: ["user-admin/**"]).',
               patternProperties: {
                 '^.*$': {
                   type: 'array',
@@ -1464,7 +1468,8 @@ export default {
             },
             org: {
               type: 'string',
-              description: 'Organization slug the deployment pins as the active organization.',
+              description:
+                'Organization slug the deployment pins as the active organization. Under the "pinned" policy the slug is the organization\'s id. Renaming it strands the existing membership: the startup ensure is by slug, so a rename mints a fresh organization rather than renaming one, and every member row still points at the old id.',
               errorMessage: {
                 type: 'Auth "organizations.org" should be a string.',
               },
