@@ -32,7 +32,6 @@ function setup({ signInResult, signUpResult } = {}) {
     authConfig: { providers: [] },
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
-    cancelInvitation: jest.fn(() => Promise.resolve({ data: { status: 'canceled' }, error: null })),
     changePassword: jest.fn(() =>
       Promise.resolve({ data: { token: null, user: {} }, error: null })
     ),
@@ -46,7 +45,6 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
-    inviteMember: jest.fn(() => Promise.resolve({ data: { id: 'invitation-1' }, error: null })),
     leaveOrganization: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     phoneNumberRequestPasswordReset: jest.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
@@ -61,7 +59,6 @@ function setup({ signInResult, signUpResult } = {}) {
     refreshSession: jest.fn(() =>
       Promise.resolve({ data: { session: {}, user: { id: 'user-1' } }, error: null })
     ),
-    removeMember: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     resetPassword: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     revokeOtherSessions: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
@@ -90,10 +87,6 @@ function setup({ signInResult, signUpResult } = {}) {
     ),
     twoFactorVerifyTotp: jest.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
-    ),
-    updateMemberRole: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
-    updateOrganization: jest.fn(() =>
-      Promise.resolve({ data: { id: 'org-1', name: 'Acme Inc' }, error: null })
     ),
     updateResolvedUser: jest.fn(),
   };
@@ -503,117 +496,6 @@ test('acceptInvitation surfaces the error returned by the endpoint', async () =>
   await expect(acceptInvitation({ invitationId: 'invitation-1' })).rejects.toThrow(
     'Invitation not found.'
   );
-});
-
-test('inviteMember calls auth.inviteMember with email and role', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await inviteMember({ email: 'invitee@example.com', role: 'admin' });
-  expect(auth.inviteMember.mock.calls).toEqual([[{ email: 'invitee@example.com', role: 'admin' }]]);
-});
-
-test('inviteMember accepts a role array', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await inviteMember({ email: 'invitee@example.com', role: ['admin', 'user'] });
-  expect(auth.inviteMember.mock.calls).toEqual([
-    [{ email: 'invitee@example.com', role: ['admin', 'user'] }],
-  ]);
-});
-
-test('inviteMember throws when email or role is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await expect(inviteMember({ role: 'admin' })).rejects.toThrow(
-    'InviteMember requires an "email" param.'
-  );
-  await expect(inviteMember({ email: 'invitee@example.com' })).rejects.toThrow(
-    'InviteMember requires a "role" param.'
-  );
-  expect(auth.inviteMember).not.toHaveBeenCalled();
-});
-
-test('inviteMember surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.inviteMember = jest.fn(() =>
-    Promise.resolve({
-      data: null,
-      error: {
-        message: 'You are not allowed to invite users to this organization.',
-        code: 'YOU_ARE_NOT_ALLOWED_TO_INVITE_USERS_TO_THIS_ORGANIZATION',
-        status: 403,
-      },
-    })
-  );
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await expect(inviteMember({ email: 'invitee@example.com', role: 'admin' })).rejects.toThrow(
-    'You are not allowed to invite users to this organization.'
-  );
-});
-
-test('cancelInvitation calls auth.cancelInvitation with the invitationId param', async () => {
-  const { auth, lowdefy } = setup();
-  const { cancelInvitation } = createAuthMethods(lowdefy, auth);
-  await cancelInvitation({ invitationId: 'invitation-1' });
-  expect(auth.cancelInvitation.mock.calls).toEqual([[{ invitationId: 'invitation-1' }]]);
-});
-
-test('cancelInvitation throws when invitationId is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { cancelInvitation } = createAuthMethods(lowdefy, auth);
-  await expect(cancelInvitation()).rejects.toThrow(
-    'CancelInvitation requires an "invitationId" param.'
-  );
-  expect(auth.cancelInvitation).not.toHaveBeenCalled();
-});
-
-test('removeMember calls auth.removeMember with the memberIdOrEmail param', async () => {
-  const { auth, lowdefy } = setup();
-  const { removeMember } = createAuthMethods(lowdefy, auth);
-  await removeMember({ memberIdOrEmail: 'member-1' });
-  expect(auth.removeMember.mock.calls).toEqual([[{ memberIdOrEmail: 'member-1' }]]);
-});
-
-test('removeMember throws when memberIdOrEmail is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { removeMember } = createAuthMethods(lowdefy, auth);
-  await expect(removeMember()).rejects.toThrow('RemoveMember requires a "memberIdOrEmail" param.');
-  expect(auth.removeMember).not.toHaveBeenCalled();
-});
-
-test('updateMemberRole calls auth.updateMemberRole with memberId and role', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateMemberRole } = createAuthMethods(lowdefy, auth);
-  await updateMemberRole({ memberId: 'member-1', role: ['admin', 'user'] });
-  expect(auth.updateMemberRole.mock.calls).toEqual([
-    [{ memberId: 'member-1', role: ['admin', 'user'] }],
-  ]);
-});
-
-test('updateMemberRole throws when memberId or role is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateMemberRole } = createAuthMethods(lowdefy, auth);
-  await expect(updateMemberRole({ role: 'admin' })).rejects.toThrow(
-    'UpdateMemberRole requires a "memberId" param.'
-  );
-  await expect(updateMemberRole({ memberId: 'member-1' })).rejects.toThrow(
-    'UpdateMemberRole requires a "role" param.'
-  );
-  expect(auth.updateMemberRole).not.toHaveBeenCalled();
-});
-
-test('updateOrganization wraps the name param in the update data object', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateOrganization } = createAuthMethods(lowdefy, auth);
-  await updateOrganization({ name: 'Acme Inc' });
-  expect(auth.updateOrganization.mock.calls).toEqual([[{ data: { name: 'Acme Inc' } }]]);
-});
-
-test('updateOrganization throws when name is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateOrganization } = createAuthMethods(lowdefy, auth);
-  await expect(updateOrganization()).rejects.toThrow('UpdateOrganization requires a "name" param.');
-  expect(auth.updateOrganization).not.toHaveBeenCalled();
 });
 
 test('leaveOrganization resolves the active organization from the session', async () => {

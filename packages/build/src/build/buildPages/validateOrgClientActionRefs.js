@@ -23,15 +23,7 @@ import { ConfigError } from '@lowdefy/errors';
 // that silent runtime break into an early, legible build error that blocks
 // both dev and prod (unlike validateCallApiRefs's prodError warning, which
 // only fails prod).
-export const ORG_CLIENT_ACTION_TYPES = [
-  'CancelInvitation',
-  'InviteMember',
-  'LeaveOrganization',
-  'RemoveMember',
-  'SetActiveOrganization',
-  'UpdateMemberRole',
-  'UpdateOrganization',
-];
+export const ORG_CLIENT_ACTION_TYPES = ['LeaveOrganization', 'SetActiveOrganization'];
 
 function validateOrgClientActionRefs({ orgClientActionRefs, policy }) {
   if (policy !== 'pinned') {

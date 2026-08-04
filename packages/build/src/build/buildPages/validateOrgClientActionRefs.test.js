@@ -32,15 +32,7 @@ const makeRef = (actionType = 'SetActiveOrganization') => ({
 });
 
 test('ORG_CLIENT_ACTION_TYPES covers all per-org client actions', () => {
-  expect(ORG_CLIENT_ACTION_TYPES).toEqual([
-    'CancelInvitation',
-    'InviteMember',
-    'LeaveOrganization',
-    'RemoveMember',
-    'SetActiveOrganization',
-    'UpdateMemberRole',
-    'UpdateOrganization',
-  ]);
+  expect(ORG_CLIENT_ACTION_TYPES).toEqual(['LeaveOrganization', 'SetActiveOrganization']);
 });
 
 test.each(ORG_CLIENT_ACTION_TYPES)(
@@ -62,8 +54,8 @@ test.each(ORG_CLIENT_ACTION_TYPES)(
 );
 
 test('validateOrgClientActionRefs throws on the first ref when multiple are wired under pinned', () => {
-  const first = makeRef('InviteMember');
-  const second = makeRef('RemoveMember');
+  const first = makeRef('SetActiveOrganization');
+  const second = makeRef('LeaveOrganization');
   second.sourcePageId = 'page2';
   second.action['~k'] = 'pages.page2.events.onClick.0';
   let thrown;
@@ -73,7 +65,7 @@ test('validateOrgClientActionRefs throws on the first ref when multiple are wire
     thrown = error;
   }
   expect(thrown).toBeInstanceOf(ConfigError);
-  expect(thrown.message).toContain('InviteMember action on page "page1"');
+  expect(thrown.message).toContain('SetActiveOrganization action on page "page1"');
   expect(thrown.configKey).toBe('pages.page1.events.onClick.0');
 });
 

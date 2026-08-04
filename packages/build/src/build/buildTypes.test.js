@@ -83,3 +83,19 @@ test('buildTypes does not require any step types to be used', () => {
   expect(() => buildTypes({ components, context })).not.toThrow();
   expect(components.types.steps).toEqual({});
 });
+
+// These four names belong to steps and to nothing else - there is no action of
+// any of them. Step and action types resolve from separate maps against
+// separate counters, so a routine using them builds while the same name
+// authored as an action fails as an undefined action type.
+test('buildTypes resolves the organization step types that no action type shares', () => {
+  const stepTypeNames = ['CancelInvitation', 'InviteMember', 'RemoveMember', 'UpdateOrganization'];
+  const context = createTypesMapContext({ steps: createDefinitions(stepTypeNames) });
+  stepTypeNames.forEach((typeName) => context.typeCounters.steps.increment(typeName, 'configKey1'));
+  const components = {};
+  expect(() => buildTypes({ components, context })).not.toThrow();
+  expect(Object.keys(components.types.steps)).toEqual(stepTypeNames);
+  stepTypeNames.forEach((typeName) => {
+    expect(components.types.actions[typeName]).toBeUndefined();
+  });
+});
