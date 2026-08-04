@@ -25,7 +25,7 @@ function createMockAuth({ member = null } = {}) {
       adapter: {
         findOne: jest.fn(async ({ model }) => {
           if (model === 'organization') {
-            return { id: 'org_pinned', slug: 'default' };
+            return { id: 'default', slug: 'default' };
           }
           if (model === 'member') {
             return member;
@@ -52,7 +52,7 @@ test('autoJoinHook adds the new user to the pinned org with an empty role', asyn
   expect(addMember).toHaveBeenCalledWith({
     body: {
       userId: 'user_1',
-      organizationId: 'org_pinned',
+      organizationId: 'default',
       role: '',
     },
     headers,

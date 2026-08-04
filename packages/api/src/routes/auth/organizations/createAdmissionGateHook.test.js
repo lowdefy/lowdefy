@@ -20,7 +20,7 @@ import { APIError } from 'better-auth/api';
 import createAdmissionGateHook from './createAdmissionGateHook.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
-const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
+const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 
 function createMockAuth({ member = null, invitations = [] } = {}) {
   const adapter = {
