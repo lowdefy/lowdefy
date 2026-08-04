@@ -15,13 +15,16 @@
 */
 
 import { jest } from '@jest/globals';
+import { Actions } from '@lowdefy/engine';
 import createAuthMethods from './createAuthMethods.js';
 
 function setup({ signInResult, signUpResult } = {}) {
   const assign = jest.fn();
   const lowdefy = {
     _internal: {
-      globals: { window: { location: { assign, search: '' } } },
+      globals: {
+        window: { location: { assign, origin: 'https://app.lowdefy.test', search: '' } },
+      },
     },
     home: { configured: false, pageId: 'home-page' },
   };
@@ -243,7 +246,7 @@ test('login with email and password navigates to callbackURL on a session respon
   expect(data).toEqual({ token: 't', user: {} });
 });
 
-test('login returns the two-factor challenge without navigating', async () => {
+test('login returns the two-factor challenge without navigating when authPages.twoFactor is unset', async () => {
   const { auth, lowdefy, assign } = setup({
     signInResult: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
   });
@@ -654,7 +657,7 @@ test('login with phoneNumber and password calls signInPhoneNumber and navigates 
   expect(assign.mock.calls).toEqual([['/home']]);
 });
 
-test('login with phoneNumber does not navigate on a twoFactorRedirect response', async () => {
+test('login with phoneNumber does not navigate on a twoFactorRedirect response when authPages.twoFactor is unset', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: { twoFactorRedirect: true } });
   const { login } = createAuthMethods(lowdefy, auth);
   const data = await login({
@@ -1496,4 +1499,246 @@ test('updateSession nulls the user when the session is genuinely absent', async 
   await updateSession();
   expect(auth.updateResolvedUser.mock.calls).toEqual([[null]]);
   expect(lowdefy.user).toBe(null);
+});
+
+// The two-factor challenge destination belongs to the engine, not the login page:
+// a page that omits the routing leaves an enrolled user unable to sign in with
+// nothing to show for the click.
+
+const challenge = { twoFactorRedirect: true, twoFactorMethods: ['totp'] };
+
+// Ending the event chain is only observable through the chain itself, so these
+// run the engine's Actions over the auth methods exactly as the Login and
+// PhoneNumberVerify action plugins do, with a following step whose recorded
+// response says whether it ran.
+function callActionChain({ actions, auth, lowdefy }) {
+  const next = jest.fn(() => 'next');
+  const context = {
+    _internal: {
+      lowdefy: {
+        _internal: {
+          actions: {
+            Login: ({ methods, params }) => methods.login(params),
+            Next: next,
+            PhoneNumberVerify: ({ methods, params }) => methods.phoneNumberVerify(params),
+          },
+          auth: createAuthMethods(lowdefy, auth),
+          displayMessage: () => () => undefined,
+          globals: lowdefy._internal.globals,
+          translate: (key) => key,
+        },
+      },
+      parser: { parse: ({ input }) => ({ output: input, errors: [] }) },
+    },
+  };
+  return new Actions(context).callActions({
+    actions,
+    arrayIndices: [],
+    block: { blockId: 'login-button' },
+    catchActions: [],
+    event: {},
+    eventName: 'onClick',
+  });
+}
+
+function loginChain({ auth, lowdefy, params }) {
+  return callActionChain({
+    actions: [
+      { id: 'login', type: 'Login', params },
+      { id: 'after', type: 'Next' },
+    ],
+    auth,
+    lowdefy,
+  });
+}
+
+test('login navigates to authPages.twoFactor on a two-factor challenge, carrying the callbackUrl', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
+});
+
+test('login basePath-prefixes the authPages.twoFactor challenge destination', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  lowdefy.basePath = '/base';
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([
+    ['/base/two-factor-challenge?callbackUrl=%2Fbase%2Fdashboard'],
+  ]);
+});
+
+test('login keeps the origin of an absolute authPages.twoFactor', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: 'https://id.example.com/2fa' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['https://id.example.com/2fa?callbackUrl=%2Fdashboard']]);
+});
+
+test('login carries a deep-link callbackUrl onto the two-factor challenge', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/invoices/123' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Finvoices%2F123']]);
+});
+
+test('login merges the callbackUrl into an authPages.twoFactor that already carries a query', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/2fa?x=1' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/2fa?x=1&callbackUrl=%2Fdashboard']]);
+});
+
+test('a protocol-relative ?callbackUrl= query never reaches the two-factor challenge (open redirect)', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%2Fevil.com';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  // The crafted value is rejected before it becomes the callbackURL, so the home
+  // default is what rides along - the challenge page can never be talked into
+  // sending a completed challenge off-site.
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fhome-page']]);
+});
+
+test('login omits the callbackUrl parameter from the challenge when the destination is off-origin', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: 'https://elsewhere.example.com/landing' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge']]);
+});
+
+test('login with phoneNumber and password navigates to the two-factor challenge on the flag', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    phoneNumber: '+27831234567',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fdashboard']]);
+});
+
+test('the two-factor challenge navigation ends the event chain, leaving the response unchanged', async () => {
+  const { auth, lowdefy } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const res = await loginChain({
+    auth,
+    lowdefy,
+    params: { email: 'user@example.com', password: 'password123' },
+  });
+  expect(res.success).toBe(true);
+  expect(res.responses.login).toEqual({
+    type: 'Login',
+    index: 0,
+    response: challenge,
+    stoppedChain: true,
+  });
+  expect(res.responses.after).toEqual({ type: 'Next', skipped: true, index: 1 });
+});
+
+test('a two-factor challenge with no configured page does not end the event chain', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: challenge });
+  const res = await loginChain({
+    auth,
+    lowdefy,
+    params: { email: 'user@example.com', password: 'password123' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(res.responses.login).toEqual({ type: 'Login', index: 0, response: challenge });
+  expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
+});
+
+test('a login that returns a session navigates to the callbackUrl and does not end the event chain', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { token: 't', user: {} } });
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const res = await loginChain({
+    auth,
+    lowdefy,
+    params: { email: 'user@example.com', password: 'password123', callbackUrl: { url: '/dash' } },
+  });
+  expect(assign.mock.calls).toEqual([['/dash']]);
+  expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
+});
+
+test('phoneNumberVerify navigates to the two-factor challenge with no callbackUrl and ends the chain', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  const res = await callActionChain({
+    actions: [
+      {
+        id: 'verify',
+        type: 'PhoneNumberVerify',
+        params: { phoneNumber: '+27831234567', code: '123456' },
+      },
+      { id: 'after', type: 'Next' },
+    ],
+    auth,
+    lowdefy,
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge']]);
+  expect(res.responses.verify).toEqual({
+    type: 'PhoneNumberVerify',
+    index: 0,
+    response: challenge,
+    stoppedChain: true,
+  });
+  expect(res.responses.after).toEqual({ type: 'Next', skipped: true, index: 1 });
+});
+
+test('phoneNumberVerify does not navigate or end the chain on a successful verification', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  const res = await callActionChain({
+    actions: [
+      {
+        id: 'verify',
+        type: 'PhoneNumberVerify',
+        params: { phoneNumber: '+27831234567', code: '123456' },
+      },
+      { id: 'after', type: 'Next' },
+    ],
+    auth,
+    lowdefy,
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(res.responses.verify).toEqual({
+    type: 'PhoneNumberVerify',
+    index: 0,
+    response: { token: 't', user: {} },
+  });
+  expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
 });

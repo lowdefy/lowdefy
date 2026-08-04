@@ -169,7 +169,7 @@ auth:
     error: /auth-error
 ```
 
-The old `signOut`, `verifyRequest`, and `newUser` keys are removed. New optional keys for email flows: `signUp`, `forgotPassword`, `resetPassword`, `verifyEmail`.
+The old `signOut`, `verifyRequest`, and `newUser` keys are removed. New optional keys for email flows: `signUp`, `forgotPassword`, `resetPassword`, `verifyEmail`. `twoFactor` is a further key, and unlike those it is **required** when `auth.twoFactor.enabled` is true — the build fails without it, because the engine routes the two-factor challenge to that page itself. See [Two-Factor Authentication](/two-factor).
 
 Sign-in uses the `Login` action, which dispatches by parameter — `providerId` for OAuth, `magicLink: true`, or `email` + `password`. Email/password sign-up pages use the new `SignUp` action; social and magic-link "sign-up" pages use `Login`, since those methods create the account on first sign-in. Sign-in errors now surface inline (the `Login` action returns `error.code`) rather than as a `?error=` query parameter on the error page.
 

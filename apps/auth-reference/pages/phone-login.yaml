@@ -120,6 +120,13 @@ blocks:
           # creates the account on first verify) but does not navigate -
           # verify serves sign-in, sign-up and phone-change confirmation,
           # so the page owns what comes next.
+          #
+          # A 2FA-enrolled user's verify instead returns
+          # { twoFactorRedirect: true } and no session: PhoneNumberVerify
+          # navigates to the challenge page and ends the event chain with
+          # stopChain, so this step is never reached on that path and needs no
+          # guard. A skip on the flag would work, and would put the branch back
+          # on every app that copies this page.
           - id: to_dashboard
             type: Link
             params:

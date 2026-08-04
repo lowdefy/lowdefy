@@ -358,6 +358,11 @@
           pageId: login-and-logout
           properties:
             title: Login and Logout
+        - id: two-factor
+          type: MenuLink
+          pageId: two-factor
+          properties:
+            title: Two-Factor Authentication
         - id: auth-providers
           type: MenuLink
           pageId: auth-providers

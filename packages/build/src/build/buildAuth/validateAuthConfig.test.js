@@ -331,6 +331,30 @@ test('validateAuthConfig passes with an OAuth provider mechanism', () => {
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig passes with a provider "twoFactorTrusted" boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: true }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when provider "twoFactorTrusted" is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: 'yes' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider "twoFactorTrusted" should be a boolean.'
+  );
+});
+
 test('validateAuthConfig throws when emailAndPassword is missing "enabled"', () => {
   const components = {
     auth: {
@@ -789,6 +813,56 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
+test('validateAuthConfig throws when twoFactor is enabled without authPages.twoFactor', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "authPages.twoFactor" is required when "twoFactor.enabled" is true. Set the page the engine routes a two-factor challenge to.'
+  );
+});
+
+test('validateAuthConfig passes when twoFactor is enabled with authPages.twoFactor set', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+      authPages: { twoFactor: '/two-factor-challenge' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is disabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is not configured', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
 const validCaptcha = {
