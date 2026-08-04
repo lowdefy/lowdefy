@@ -33,13 +33,14 @@ test('InviteMember passes properties including profile through as body to create
     organizationId,
     properties: {
       email: 'new@example.com',
-      role: 'member',
+      orgRole: 'member',
       resend: true,
       profile: { contactId: 'contact-1' },
     },
   });
   expect(result).toEqual({ id: 'invitation-1' });
   expect(createInvitation.mock.calls[0][0].body).toEqual({
+    appRoles: undefined,
     attributes: undefined,
     email: 'new@example.com',
     role: 'member',
@@ -49,6 +50,89 @@ test('InviteMember passes properties including profile through as body to create
   });
 });
 
+test('InviteMember sends role "member" when orgRole is omitted', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com', appRoles: ['branch-manager'] },
+  });
+  expect(createInvitation.mock.calls[0][0].body).toEqual({
+    appRoles: ['branch-manager'],
+    attributes: undefined,
+    email: 'new@example.com',
+    organizationId: 'org-1',
+    profile: undefined,
+    resend: undefined,
+    role: 'member',
+  });
+});
+
+test('InviteMember sends the authored orgRole as the invitation role', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com', orgRole: 'admin' },
+  });
+  expect(createInvitation.mock.calls[0][0].body.role).toBe('admin');
+});
+
+test('InviteMember forwards appRoles in the createInvitation body', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com', appRoles: ['branch-manager', 'no-such-role'] },
+  });
+  expect(createInvitation.mock.calls[0][0].body.appRoles).toEqual([
+    'branch-manager',
+    'no-such-role',
+  ]);
+});
+
+test('InviteMember carries appRoles as undefined in the body when omitted', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com' },
+  });
+  expect(createInvitation.mock.calls[0][0].body.appRoles).toBe(undefined);
+});
+
+test('InviteMember throws when appRoles is a comma-separated string', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    InviteMember({
+      acting,
+      auth,
+      organizationId,
+      properties: { email: 'new@example.com', appRoles: 'a,b' },
+    })
+  ).rejects.toThrow('InviteMember "appRoles" is not an array. Received "a,b".');
+});
+
+test('InviteMember throws when orgRole is not a string', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    InviteMember({
+      acting,
+      auth,
+      organizationId,
+      properties: { email: 'new@example.com', orgRole: ['admin'] },
+    })
+  ).rejects.toThrow('InviteMember "orgRole" is not a string. Received ["admin"].');
+});
+
 test('InviteMember scopes the invitation to the organizationId passed by the floor', async () => {
   const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
@@ -56,7 +140,7 @@ test('InviteMember scopes the invitation to the organizationId passed by the flo
     acting,
     auth,
     organizationId: 'org-explicit',
-    properties: { email: 'new@example.com', role: 'member' },
+    properties: { email: 'new@example.com' },
   });
   expect(createInvitation.mock.calls[0][0].body.organizationId).toBe('org-explicit');
 });
@@ -64,15 +148,8 @@ test('InviteMember scopes the invitation to the organizationId passed by the flo
 test('InviteMember throws when email property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
-    InviteMember({ acting, auth, organizationId, properties: { role: 'member' } })
+    InviteMember({ acting, auth, organizationId, properties: { orgRole: 'member' } })
   ).rejects.toThrow('InviteMember requires an "email" property.');
-});
-
-test('InviteMember throws when role property is missing', async () => {
-  const { auth } = createMockAuth();
-  await expect(
-    InviteMember({ acting, auth, organizationId, properties: { email: 'new@example.com' } })
-  ).rejects.toThrow('InviteMember requires a "role" property.');
 });
 
 test('InviteMember forwards attributes in the createInvitation body', async () => {
@@ -84,7 +161,6 @@ test('InviteMember forwards attributes in the createInvitation body', async () =
     organizationId,
     properties: {
       email: 'new@example.com',
-      role: 'member',
       attributes: { region: 'eu' },
     },
   });
@@ -98,7 +174,7 @@ test('InviteMember carries attributes as undefined in the body when omitted', as
     acting,
     auth,
     organizationId,
-    properties: { email: 'new@example.com', role: 'member' },
+    properties: { email: 'new@example.com' },
   });
   expect(createInvitation.mock.calls[0][0].body.attributes).toBe(undefined);
 });
@@ -112,7 +188,6 @@ test('InviteMember throws when attributes is not a plain object', async () => {
       organizationId,
       properties: {
         email: 'new@example.com',
-        role: 'member',
         attributes: 'not-an-object',
       },
     })
@@ -126,7 +201,7 @@ test('InviteMember carries profile as undefined in the body when omitted', async
     acting,
     auth,
     organizationId,
-    properties: { email: 'new@example.com', role: 'member' },
+    properties: { email: 'new@example.com' },
   });
   expect(createInvitation.mock.calls[0][0].body.profile).toBe(undefined);
 });
@@ -140,7 +215,6 @@ test('InviteMember throws when profile is not a plain object', async () => {
       organizationId,
       properties: {
         email: 'new@example.com',
-        role: 'member',
         profile: 'not-an-object',
       },
     })
