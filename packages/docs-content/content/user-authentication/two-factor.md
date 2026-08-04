@@ -1,0 +1,118 @@
+# Two-Factor Authentication
+
+Enabling `auth.twoFactor` gives your app a second factor for sign-in: time-based one-time password (TOTP) codes from an authenticator app, plus a set of single-use backup codes for when the authenticator is unavailable. Backup codes are consumed one per use. The challenge is enforced by the engine on every sign-in method that can meet it — not left to your app config — so an enrolled user cannot walk past their second factor by choosing a different way in.
+
+## Enabling it
+
+```yaml
+auth:
+  twoFactor:
+    enabled: true
+  authPages:
+    twoFactor: /two-factor-challenge
+```
+
+`authPages.twoFactor` is required when `twoFactor.enabled` is true — the build fails without it. This is not a convenience default the build could invent: the engine navigates the user to that page itself, so a missing page would leave an enrolled user unable to sign in, with nowhere to show an error.
+
+The challenge page is public automatically, the same way the password-reset page is. By the time a user lands on it, the engine has already deleted the session the sign-in created and set a signed cookie holding the pending challenge, so there is no session to authenticate the page against — the protection lives in the cookie, not in a page role.
+
+The page should catch the `INVALID_TWO_FACTOR_COOKIE` error and redirect to sign-in. Visited directly, without the cookie, the page renders fine and the verify call throws. That is harmless, but it leaves the user looking at a code box that can never succeed.
+
+## Which sign-in methods are challenged
+
+| Sign-in method                 | Challenged                          |
+| ------------------------------ | ----------------------------------- |
+| Email + password               | Yes                                 |
+| Phone number + password        | Yes                                 |
+| Magic link                     | Yes — always, no toggle             |
+| SMS code (`PhoneNumberVerify`) | Yes — always, no toggle             |
+| OAuth provider                 | Yes, unless the provider is trusted |
+| Passkey (`PasskeySignIn`)      | No — deliberately                   |
+
+Magic link and SMS code have no toggle. A magic link is possession-of-inbox — the factor most likely to be compromised in exactly the incident two-factor authentication exists to survive. An SMS code is possession-of-SIM, and SIM-swap is the best-documented account-takeover attack of any factor on this list. Neither is a factor worth accepting on its own for an enrolled user.
+
+Passkey sign-in is not challenged, and that is correct rather than missing. A passkey is possession of the authenticator plus user verification in a single phishing-resistant ceremony, and the major identity providers accept one as satisfying multi-factor authentication outright.
+
+### The engine routes the challenge
+
+[`Login`](/Login) and `PhoneNumberVerify` navigate to `authPages.twoFactor` themselves, and they **end the event chain** when they do. A step placed after `Login` or `PhoneNumberVerify` does not run on the challenge path, so your app needs no `skip` guard for it. Your app does not route the challenge. The action response still carries `twoFactorRedirect` and `twoFactorMethods` if you want to read them.
+
+The trade this makes: an inline two-factor challenge rendered on the login page itself is no longer possible. The challenge is always a page.
+
+### Reading `?callbackUrl=` on the challenge page
+
+The engine carries the destination the caller asked for onto the challenge URL as `?callbackUrl=` — the same parameter the sign-in bounce already uses — so an enrolled user who deep-linked to `/invoices/123`, was bounced to sign in and then challenged, can still be returned there. A challenge page that hard-codes its post-verify destination silently discards that deep link.
+
+Only app-relative, same-origin destinations are carried; anything else is dropped. The page does not need to re-validate the value.
+
+Note that `_url_query: callbackUrl` arrives as a path, not a `pageId`, and the [`Link`](/Link) action's `url` param is an off-origin target — it gains an `https://` scheme when the value has no colon, so `url: /invoices/123` would resolve to the host `invoices`. Prefix the origin:
+
+```yaml
+- id: to_destination
+  type: Link
+  params:
+    _if:
+      test:
+        _eq:
+          - _url_query: callbackUrl
+          - null
+      then:
+        pageId: dashboard
+      else:
+        url:
+          _string.concat:
+            - _location: origin
+            - _url_query: callbackUrl
+```
+
+`basePath` needs no handling either way: the carried path already includes it, and `pageId` applies it.
+
+### Trusting a device
+
+`TwoFactorVerify`'s `trustDevice` param sets a cookie that short-circuits the challenge on later sign-ins from the same browser. It applies on every one of the challenged paths above, not just the one it was set from.
+
+## Trusting an OAuth provider
+
+An enterprise identity provider often enforces its own multi-factor policy. `twoFactorTrusted` on a provider entry tells the engine not to challenge sign-ins that came through it:
+
+```yaml
+auth:
+  providers:
+    - id: corp-idp
+      type: GenericOAuth
+      twoFactorTrusted: true
+      properties: ...
+```
+
+What it means: skip the engine's challenge for sign-ins through this provider, because you are asserting the IdP enforced multi-factor authentication itself.
+
+**The trust is declared, not verified.** The engine cannot confirm what the IdP actually enforced, and it checks nothing. Set this only where you control or otherwise trust the IdP's own MFA policy.
+
+`twoFactorTrusted` is **unrelated to `auth.account.accountLinking.trustedProviders`**, which trusts a provider's _email claim_ enough to link a sign-in to an existing account automatically. Trusting Google's email claim is routine; it is not a claim that every Google sign-in cleared MFA. The two lists are independent, and setting one has no effect on the other. This is the mistake the separate key exists to prevent.
+
+The escape hatch exists because without it the only advice would be "don't enable two-factor alongside an enterprise IdP", which is a functionality loss dressed up as operational advice. Entra has federated-IdP-MFA trust settings and Okta has the IdP factor: nobody double-challenges by default, and nobody silently accepts either.
+
+## Known limitation: TOTP codes are replayable within their window
+
+A TOTP code that has already been used successfully is accepted again inside its validity window — roughly 30 to 60 seconds. BetterAuth's verifier keeps no ledger of consumed codes and no last-used counter, so nothing distinguishes a second presentation of a code from the first.
+
+This violates the standards:
+
+- RFC 6238 §5.2: "The verifier MUST NOT accept the second attempt of the OTP after the successful validation has been issued for the first OTP."
+- OWASP ASVS 5.0 §6.5.1 (L2), which requires the same single-use property.
+
+**Severity is narrow.** Exploiting this needs the user's password _and_ a code inside its window — and an attacker holding both can simply sign in, with no replay involved. The real gain is the case where the legitimate user spent the code first: an attacker who has the password and observes that code can mint their own session inside the window without racing anyone for it.
+
+It is not a bypass. The second factor works; it is replayable within its own validity. Replay against the _same_ sign-in challenge already fails, because that challenge's verification record is consumed and its cookie expired. What remains is a _fresh_ challenge accepting the same code while the window is still open.
+
+Tracked upstream at [#10387](https://github.com/better-auth/better-auth/issues/10387). Lowdefy has not mitigated it locally: a `before` hook on the sign-in path has no session to work from, so recovering the user would mean reaching into the two-factor plugin's private cookie and verification internals — a bad trade for a sixty-second window that already sits behind a password.
+
+If you are enabling multi-factor authentication to satisfy an auditor, know about this before the auditor tells you.
+
+## Concurrent enrolment and the unique index
+
+Two `TwoFactorEnable` calls that run concurrently for the same user can write two rows to the two-factor collection. Sign-in may then read the unverified row, find no methods to offer, and leave the user unable to complete a challenge — a silent lockout. Tracked upstream at [#10561](https://github.com/better-auth/better-auth/issues/10561).
+
+The mitigation is a unique index on `userId` in the two-factor collection (`user-two-factors`), applied by the host app — no layer in Lowdefy provisions indexes. For MongoDB, see the `modules-mongodb` `user-account` index reference for how that module declares its auth indexes, rather than writing the command by hand.
+
+Be clear about what the index buys: it converts an unrecoverable silent lockout into a visible, retryable duplicate-key error. It does not fix the race.
