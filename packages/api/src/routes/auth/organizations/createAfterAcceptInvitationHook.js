@@ -24,11 +24,19 @@ import syncUserAdminRole from './syncUserAdminRole.js';
 // accepting shallow-merges it onto the accepting user's user.profile,
 // invitation winning per key - an opaque copy the engine never reads inside.
 // The merge is in-band: a failed copy fails the accept and the user retries.
-// Invite-time member attributes ride the invitation the same way: accepting
-// copies invitation.attributes onto the minted member row (an adapter-layer
-// update, parallel to the opaque profile merge), so an invited user's
-// authorization parameters hold from their first session instead of an empty
-// bag until an admin edits the member.
+// Invite-time member attributes and app roles ride the invitation the same
+// way: accepting copies invitation.attributes and invitation.appRoles onto the
+// minted member row (one adapter-layer update, parallel to the opaque profile
+// merge), so an invited user's authorization parameters and app roles hold
+// from their first session instead of an empty bag until an admin edits the
+// member. The guard fires when either field is present - folding appRoles into
+// an attributes-only guard would silently drop the roles of every invitation
+// that carries roles and no attributes.
+//
+// invitation.role needs no copy: acceptInvitation mints the member row from it
+// directly (crud-invites.mjs:324), never validating it against the registered
+// set - which is what makes the bootstrap recipe's hand-inserted role: 'owner'
+// work.
 function createAfterAcceptInvitationHook({ getAuth, userAdminRole }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
@@ -44,11 +52,20 @@ function createAfterAcceptInvitationHook({ getAuth, userAdminRole }) {
         profile: { ...(userRow.profile ?? {}), ...invitation.profile },
       });
     }
+    const memberUpdate = {};
     if (type.isObject(invitation.attributes)) {
+      memberUpdate.attributes = invitation.attributes;
+    }
+    // An empty appRoles array is a copied value, not an absent field - an
+    // invitation that deliberately grants nothing writes [].
+    if (type.isArray(invitation.appRoles)) {
+      memberUpdate.appRoles = invitation.appRoles;
+    }
+    if (Object.keys(memberUpdate).length > 0) {
       await adapter.update({
         model: 'member',
         where: [{ field: 'id', value: member.id }],
-        update: { attributes: invitation.attributes },
+        update: memberUpdate,
       });
     }
     // The accept mints member roles from the invitation, so it is one of the

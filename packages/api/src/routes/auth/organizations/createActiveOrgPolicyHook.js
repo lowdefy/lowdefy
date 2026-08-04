@@ -60,6 +60,8 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
         body: {
           userId: session.userId,
           organizationId: organization.id,
+          // The canonical no-authority org tier - createAutoJoinHook mints the
+          // same value, so whichever join wins the race writes the same row.
           role: 'member',
         },
         headers: getHookRequestHeaders(ctx),
