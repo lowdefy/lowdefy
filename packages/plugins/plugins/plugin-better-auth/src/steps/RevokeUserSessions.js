@@ -32,4 +32,12 @@ async function RevokeUserSessions({ acting, auth, properties }) {
   });
 }
 
+// Sessions belong to the person, not to an organization, so revoking them on
+// the caller's org authority alone would let an administrator of any
+// organization sign out any user at all. targetUser makes the floor require the
+// target to hold a member row in the organization the caller administers.
+RevokeUserSessions.meta = {
+  authority: { scope: 'org', permissions: { session: ['revoke'] }, targetUser: 'userId' },
+};
+
 export default RevokeUserSessions;

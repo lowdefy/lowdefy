@@ -50,4 +50,10 @@ async function RemoveMember({ acting, auth, organization, properties, userAdminR
   return result;
 }
 
+// Deleting a member row needs member:delete authority in the organization the
+// row belongs to.
+RemoveMember.meta = {
+  authority: { scope: 'org', permissions: { member: ['delete'] } },
+};
+
 export default RemoveMember;

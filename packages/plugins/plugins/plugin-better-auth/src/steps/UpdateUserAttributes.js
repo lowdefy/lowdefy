@@ -46,4 +46,12 @@ async function UpdateUserAttributes({ auth, properties }) {
   return user;
 }
 
+// Attributes are authorization inputs on the deployment-wide user row, so org
+// authority alone would let an administrator of any organization rewrite any
+// user's inputs. targetUser makes the floor require the target to hold a member
+// row in the organization the caller administers.
+UpdateUserAttributes.meta = {
+  authority: { scope: 'org', permissions: { user: ['set-attributes'] }, targetUser: 'userId' },
+};
+
 export default UpdateUserAttributes;

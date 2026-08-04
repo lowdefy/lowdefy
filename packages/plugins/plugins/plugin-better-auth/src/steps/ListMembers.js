@@ -58,4 +58,11 @@ async function ListMembers({ acting, auth, organization, properties }) {
   });
 }
 
+// Reading an organization's member list needs member:list authority in that
+// organization - the list is scoped to one organization, so the caller's
+// authority there is the whole bound.
+ListMembers.meta = {
+  authority: { scope: 'org', permissions: { member: ['list'] } },
+};
+
 export default ListMembers;

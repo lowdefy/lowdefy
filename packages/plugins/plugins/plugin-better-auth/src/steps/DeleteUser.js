@@ -77,4 +77,13 @@ async function DeleteUser({ acting, auth, properties }) {
   return { success: true, user, members: members ?? [], invitations: invitations ?? [] };
 }
 
+// The hard delete removes the deployment-wide user row and every member row
+// with it, so org authority alone would let an administrator of any organization
+// destroy any user at all. targetUser makes the floor require the target to hold
+// a member row in the organization the caller administers - membership is the
+// relationship that makes them the caller's business.
+DeleteUser.meta = {
+  authority: { scope: 'org', permissions: { user: ['delete'] }, targetUser: 'userId' },
+};
+
 export default DeleteUser;

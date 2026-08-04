@@ -55,4 +55,10 @@ async function InviteMember({ acting, auth, organization, properties }) {
   });
 }
 
+// Minting an invitation into an organization needs invitation:create authority
+// in that organization.
+InviteMember.meta = {
+  authority: { scope: 'org', permissions: { invitation: ['create'] } },
+};
+
 export default InviteMember;
