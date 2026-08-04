@@ -284,6 +284,12 @@
       "path": "content/user-authentication/login-and-logout.md"
     },
     {
+      "slug": "user-authentication/two-factor",
+      "title": "Two-Factor Authentication",
+      "section": "User Authentication",
+      "path": "content/user-authentication/two-factor.md"
+    },
+    {
       "slug": "other/next-auth-providers",
       "title": "next-auth-providers",
       "section": "Other",
