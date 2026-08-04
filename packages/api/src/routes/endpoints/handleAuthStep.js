@@ -94,7 +94,7 @@ async function handleAuthStep(context, routineContext, { step }) {
   // The user-administration floor. It is per-step and per-scope: each step
   // declares the authority it requires in meta.authority, and the floor
   // enforces it mechanically here so an app can never expose member mutation
-  // by forgetting a check. Only six of the fifteen steps call an organization
+  // by forgetting a check. Only seven of the sixteen steps call an organization
   // plugin endpoint; the other nine go adapter-direct or through the admin
   // plugin, whose check reads a deployment-wide user.role and structurally
   // cannot answer "is the caller an administrator of THIS organization". For
