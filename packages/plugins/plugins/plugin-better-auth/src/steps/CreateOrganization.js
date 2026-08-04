@@ -43,4 +43,10 @@ async function CreateOrganization({ acting, auth, properties }) {
   });
 }
 
+// system scope: under the pinned policy organizations are seeded by
+// ensureOrganization, under tenant they are minted lazily at session create, and
+// allowUserToCreateOrganization: false already says no user creates one. There
+// is no organization to hold authority in before this step runs.
+CreateOrganization.meta = { authority: { scope: 'system' } };
+
 export default CreateOrganization;

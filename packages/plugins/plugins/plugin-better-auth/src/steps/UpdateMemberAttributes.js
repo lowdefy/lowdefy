@@ -58,4 +58,10 @@ async function UpdateMemberAttributes({ auth, organization, properties }) {
   return member;
 }
 
+// Attributes are authorization inputs carried on the member row, so setting
+// them needs member:update authority in the organization that row belongs to.
+UpdateMemberAttributes.meta = {
+  authority: { scope: 'org', permissions: { member: ['update'] } },
+};
+
 export default UpdateMemberAttributes;

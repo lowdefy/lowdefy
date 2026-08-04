@@ -32,4 +32,12 @@ async function UnbanUser({ acting, auth, properties }) {
   });
 }
 
+// Lifting the ban writes the same deployment-wide user row BanUser sets, so it
+// carries the same bound: org authority alone would reach every user in the
+// deployment, and targetUser makes the floor require the target to hold a member
+// row in the organization the caller administers.
+UnbanUser.meta = {
+  authority: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
+};
+
 export default UnbanUser;

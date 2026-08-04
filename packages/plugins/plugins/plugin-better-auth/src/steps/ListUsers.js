@@ -49,4 +49,12 @@ async function ListUsers({ acting, auth, properties }) {
   });
 }
 
+// system scope: this enumerates the whole users collection, and no per-org check
+// can bound a result set that is deliberately unbounded. It has no shipped
+// caller - the user-admin module's members list is a native aggregation $matched
+// on the organization, not a ListUsers call. An app that wants a
+// deployment-wide list writes a system routine and answers for it through its
+// own auth.api.roles gate.
+ListUsers.meta = { authority: { scope: 'system' } };
+
 export default ListUsers;

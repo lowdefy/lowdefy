@@ -192,6 +192,7 @@ test('UpdateUserProfile throws when userId matches no user', async () => {
   expect(adapter.update).not.toHaveBeenCalled();
 });
 
-test('UpdateUserProfile declares the userId self-target exemption for the step interface layer', () => {
-  expect(UpdateUserProfile.meta).toEqual({ selfTargetExempt: 'userId' });
+test('UpdateUserProfile declares the userId self-target exemption inside its authority', () => {
+  expect(UpdateUserProfile.meta.authority.selfTargetExempt).toEqual('userId');
+  expect(UpdateUserProfile.meta.selfTargetExempt).toBeUndefined();
 });

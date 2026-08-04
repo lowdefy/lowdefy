@@ -87,4 +87,10 @@ async function UpdateMemberRoles({ acting, auth, organization, properties, userA
   return updatedMember;
 }
 
+// Rewriting a member row's roles needs member:update authority in the
+// organization that row belongs to.
+UpdateMemberRoles.meta = {
+  authority: { scope: 'org', permissions: { member: ['update'] } },
+};
+
 export default UpdateMemberRoles;

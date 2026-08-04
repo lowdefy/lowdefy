@@ -32,4 +32,14 @@ async function BanUser({ acting, auth, properties }) {
   });
 }
 
+// The ban is written on the user row, which is one row per person for the whole
+// deployment - authorizing on the caller's org authority alone would let an
+// administrator of any organization reach any user at all. targetUser names the
+// property holding the target's id so the floor can require that person to hold
+// a member row in the organization the caller administers: membership is the
+// relationship that makes them the caller's business.
+BanUser.meta = {
+  authority: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
+};
+
 export default BanUser;
