@@ -14,31 +14,16 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 import callPluginEndpoint from './support/callPluginEndpoint.js';
-import resolveOrganizationId from './support/resolveOrganizationId.js';
 
-async function ListMembers({ acting, auth, organization, properties }) {
-  const {
-    filterField,
-    filterOperator,
-    filterValue,
-    limit,
-    offset,
-    organizationSlug,
-    sortBy,
-    sortDirection,
-  } = properties;
-  // An explicit organizationSlug is an explicit org selection too - only
-  // default the id when the step names no organization at all.
-  const organizationId = type.isNone(organizationSlug)
-    ? resolveOrganizationId({
-        organization,
-        organizationId: properties.organizationId,
-        step: 'ListMembers',
-      })
-    : properties.organizationId;
+// organizationId and organizationSlug are both part of the authored property
+// surface, and the floor resolves either of them - or the pinned default - to
+// the id passed in here. Only that id is forwarded: sending the slug on as well
+// would let the endpoint read a different organization from the one the floor
+// authorized the caller in.
+async function ListMembers({ acting, auth, organizationId, properties }) {
+  const { filterField, filterOperator, filterValue, limit, offset, sortBy, sortDirection } =
+    properties;
   return callPluginEndpoint({
     acting,
     auth,
@@ -51,11 +36,17 @@ async function ListMembers({ acting, auth, organization, properties }) {
       limit,
       offset,
       organizationId,
-      organizationSlug,
       sortBy,
       sortDirection,
     },
   });
 }
+
+// Reading an organization's member list needs member:list authority in that
+// organization - the list is scoped to one organization, so the caller's
+// authority there is the whole bound.
+ListMembers.meta = {
+  authority: { scope: 'org', permissions: { member: ['list'] } },
+};
 
 export default ListMembers;

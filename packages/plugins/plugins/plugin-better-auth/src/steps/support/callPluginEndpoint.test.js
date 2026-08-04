@@ -33,6 +33,114 @@ const sessionCaller = {
 
 const systemCaller = { system: true, user: null };
 
+test('callPluginEndpoint for a user-initiated organization call uses the real adapter', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const adapter = { findOne: jest.fn() };
+  const { auth, authContext } = createMockAuth({
+    adapter,
+    organizationEndpoints: { listMembers },
+  });
+  await callPluginEndpoint({
+    acting: sessionCaller,
+    auth,
+    body: { organizationId: 'org-2' },
+    endpointKey: 'listMembers',
+    pluginId: 'organization',
+  });
+  const { context } = listMembers.mock.calls[0][0];
+  expect(context.adapter).toBe(authContext.adapter);
+  expect(context.options.database).toBe(undefined);
+  expect(context.options.secondaryStorage).toBe(undefined);
+});
+
+test('callPluginEndpoint for a user-initiated organization call injects the real caller identity', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
+  await callPluginEndpoint({
+    acting: sessionCaller,
+    auth,
+    body: { organizationId: 'org-2' },
+    endpointKey: 'listMembers',
+    pluginId: 'organization',
+  });
+  const { session } = listMembers.mock.calls[0][0].context;
+  expect(session.user.id).toEqual('user-1');
+  expect(session.session.userId).toEqual('user-1');
+  expect(session.session.activeOrganizationId).toEqual('org-1');
+});
+
+test('callPluginEndpoint for a user-initiated organization call carries the caller own role, not admin', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
+  await callPluginEndpoint({
+    acting: { system: false, user: { ...sessionCaller.user, role: 'member' } },
+    auth,
+    body: { organizationId: 'org-2' },
+    endpointKey: 'listMembers',
+    pluginId: 'organization',
+  });
+  expect(listMembers.mock.calls[0][0].context.session.user.role).toEqual('member');
+});
+
+test('callPluginEndpoint for a user-initiated organization call leaves role undefined when the caller has none', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const { auth } = createMockAuth({ organizationEndpoints: { listMembers } });
+  await callPluginEndpoint({
+    acting: sessionCaller,
+    auth,
+    body: { organizationId: 'org-2' },
+    endpointKey: 'listMembers',
+    pluginId: 'organization',
+  });
+  expect(listMembers.mock.calls[0][0].context.session.user.role).toBe(undefined);
+});
+
+test('callPluginEndpoint for a user-initiated admin call injects role admin and uses the real adapter', async () => {
+  const banUser = jest.fn().mockResolvedValue({});
+  const adapter = { findOne: jest.fn() };
+  const { auth, authContext } = createMockAuth({ adapter, adminEndpoints: { banUser } });
+  await callPluginEndpoint({
+    acting: sessionCaller,
+    auth,
+    body: { userId: 'user-2' },
+    endpointKey: 'banUser',
+    pluginId: 'admin',
+  });
+  const { context } = banUser.mock.calls[0][0];
+  expect(context.session.user.role).toEqual('admin');
+  expect(context.session.user.id).toEqual('user-1');
+  expect(context.adapter).toBe(authContext.adapter);
+});
+
+test('callPluginEndpoint for a caller-less organization call wraps the adapter', async () => {
+  const listMembers = jest.fn().mockResolvedValue({ members: [] });
+  const adapter = { findOne: jest.fn() };
+  const { auth, authContext } = createMockAuth({
+    adapter,
+    organizationEndpoints: { listMembers },
+  });
+  await callPluginEndpoint({
+    acting: systemCaller,
+    auth,
+    body: { organizationId: 'org-2' },
+    endpointKey: 'listMembers',
+    pluginId: 'organization',
+  });
+  const { context } = listMembers.mock.calls[0][0];
+  expect(context.adapter).not.toBe(authContext.adapter);
+  const member = await context.adapter.findOne({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'lowdefy:system' },
+      { field: 'organizationId', value: 'org-2' },
+    ],
+  });
+  expect(member.role).toEqual('owner');
+  expect(adapter.findOne).not.toHaveBeenCalled();
+  expect(context.options.database).toBe(undefined);
+  expect(context.options.secondaryStorage).toBe(undefined);
+});
+
 test('callPluginEndpoint injects an acting session with role admin and doctored options', async () => {
   const banUser = jest.fn().mockResolvedValue({ user: { id: 'user-2' } });
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
@@ -92,7 +200,7 @@ test('callPluginEndpoint for a session caller uses the caller id and activeOrgan
 
 test('callPluginEndpoint for a system caller uses the lowdefy system identity', async () => {
   const banUser = jest.fn().mockResolvedValue({});
-  const { auth } = createMockAuth({ adminEndpoints: { banUser } });
+  const { auth, authContext } = createMockAuth({ adminEndpoints: { banUser } });
   await callPluginEndpoint({
     acting: systemCaller,
     auth,
@@ -100,7 +208,8 @@ test('callPluginEndpoint for a system caller uses the lowdefy system identity', 
     endpointKey: 'banUser',
     pluginId: 'admin',
   });
-  const { session } = banUser.mock.calls[0][0].context;
+  const { adapter, session } = banUser.mock.calls[0][0].context;
+  expect(adapter).not.toBe(authContext.adapter);
   expect(session.user).toEqual({
     id: 'lowdefy:system',
     email: 'system@lowdefy.internal',

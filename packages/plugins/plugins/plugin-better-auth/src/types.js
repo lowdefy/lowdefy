@@ -68,6 +68,7 @@ export default {
     'RevokeUserSessions',
     'UnbanUser',
     'UpdateMemberAttributes',
+    'UpdateMemberOrgRole',
     'UpdateMemberRoles',
     'UpdateUserAttributes',
     'UpdateUserProfile',

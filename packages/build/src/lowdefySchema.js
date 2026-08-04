@@ -1484,14 +1484,6 @@ export default {
               'Auth "organizations" contains an unknown property. The known properties are "policy", "org" and "signup".',
           },
         },
-        userAdminRole: {
-          type: 'string',
-          description:
-            'Member role that administers users - gates every auth admin step and the impersonation client actions. Applies to the "pinned" organizations policy only.',
-          errorMessage: {
-            type: 'Auth "userAdminRole" should be a string.',
-          },
-        },
         dev: {
           type: 'object',
           additionalProperties: false,

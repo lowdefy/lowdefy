@@ -26,7 +26,7 @@ const actingUser = {
   role: 'admin',
 };
 
-test('createActingMemberAdapter returns a virtual member claiming the reserved $lowdefy-system role for the acting user member lookup', async () => {
+test('createActingMemberAdapter returns a virtual member claiming owner for the acting user member lookup', async () => {
   const findOne = jest.fn();
   const adapter = createActingMemberAdapter({ actingUser, adapter: { findOne } });
   const member = await adapter.findOne({
@@ -42,7 +42,7 @@ test('createActingMemberAdapter returns a virtual member claiming the reserved $
     id: 'lowdefy:system-member',
     userId: 'user-1',
     organizationId: 'org-1',
-    role: '$lowdefy-system',
+    role: 'owner',
     createdAt: expect.any(Date),
     user: {
       id: 'user-1',

@@ -88,6 +88,19 @@ test('buildRoleCatalog passes when every gate reference is declared under pinned
   expect(() => buildRoleCatalog({ components })).not.toThrow();
 });
 
+test('buildRoleCatalog passes when every gate reference is declared under tenant', () => {
+  const components = {
+    auth: {
+      roles: [{ id: 'admin' }, { id: 'branch-manager' }],
+      organizations: { policy: 'tenant' },
+      pages: { roles: { admin: ['admin-*'] } },
+      api: { roles: { 'branch-manager': ['branches'] } },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).not.toThrow();
+});
+
 test('buildRoleCatalog throws when a gate references an undeclared role under pinned', () => {
   const components = {
     auth: {
@@ -99,7 +112,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
   );
 });
 
@@ -115,21 +128,40 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
   );
 });
 
-test('buildRoleCatalog accepts built-in tier names as gate references under tenant', () => {
+test('buildRoleCatalog throws for an undeclared built-in tier gate reference under tenant', () => {
   const components = {
     auth: {
+      '~k': 'auth-key',
       roles: [{ id: 'branch-manager' }],
       organizations: { policy: 'tenant' },
-      pages: { roles: { owner: ['org-settings'], admin: ['admin-*'], member: ['dashboard'] } },
+      pages: { roles: { owner: ['page-a'] } },
       api: { roles: {} },
       websockets: { roles: {} },
     },
   };
-  expect(() => buildRoleCatalog({ components })).not.toThrow();
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+  );
+});
+
+test('buildRoleCatalog throws for an undeclared built-in tier gate reference under pinned', () => {
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      roles: [{ id: 'branch-manager' }],
+      organizations: { policy: 'pinned', org: 'team-portal' },
+      pages: { roles: { owner: ['page-a'] } },
+      api: { roles: {} },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+  );
 });
 
 test('buildRoleCatalog throws for an undeclared custom gate reference under tenant', () => {
@@ -144,11 +176,11 @@ test('buildRoleCatalog throws for an undeclared custom gate reference under tena
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
   );
 });
 
-test('buildRoleCatalog throws when an authored id contains a comma', () => {
+test('buildRoleCatalog accepts an authored id containing a comma', () => {
   const components = {
     auth: {
       '~k': 'auth-key',
@@ -158,12 +190,13 @@ test('buildRoleCatalog throws when an authored id contains a comma', () => {
       websockets: { roles: {} },
     },
   };
-  expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth role name "admin,auditor" contains a comma. Roles are stored as a comma-separated list on the membership record, so role names cannot contain commas.'
-  );
+  const res = buildRoleCatalog({ components });
+  expect(res.auth.roles).toEqual([
+    { id: 'admin,auditor', label: 'admin,auditor', description: undefined },
+  ]);
 });
 
-test('buildRoleCatalog throws when an authored id begins with "$"', () => {
+test('buildRoleCatalog accepts an authored id beginning with "$"', () => {
   const components = {
     auth: {
       '~k': 'auth-key',
@@ -173,9 +206,10 @@ test('buildRoleCatalog throws when an authored id begins with "$"', () => {
       websockets: { roles: {} },
     },
   };
-  expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth role id "$lowdefy-system" is reserved — role ids may not begin with "$".'
-  );
+  const res = buildRoleCatalog({ components });
+  expect(res.auth.roles).toEqual([
+    { id: '$lowdefy-system', label: '$lowdefy-system', description: undefined },
+  ]);
 });
 
 test('buildRoleCatalog throws when an authored id is declared more than once', () => {
@@ -193,40 +227,11 @@ test('buildRoleCatalog throws when an authored id is declared more than once', (
   );
 });
 
-test('buildRoleCatalog passes when the userAdminRole is declared in the catalog', () => {
-  const components = {
-    auth: {
-      roles: [{ id: 'user-admin' }],
-      userAdminRole: 'user-admin',
-      pages: { roles: {} },
-      api: { roles: {} },
-      websockets: { roles: {} },
-    },
-  };
-  expect(() => buildRoleCatalog({ components })).not.toThrow();
-});
-
-test('buildRoleCatalog throws when the userAdminRole is not declared in the catalog', () => {
-  const components = {
-    auth: {
-      '~k': 'auth-key',
-      roles: [{ id: 'admin' }],
-      userAdminRole: 'user-admin',
-      pages: { roles: {} },
-      api: { roles: {} },
-      websockets: { roles: {} },
-    },
-  };
-  expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth "userAdminRole" is "user-admin", which is not declared in auth.roles.'
-  );
-});
-
 test('buildRoleCatalog uses the role entry config key when an authored id is invalid', () => {
   const components = {
     auth: {
       '~k': 'auth-key',
-      roles: [{ id: '$reserved', '~k': 'role-key' }],
+      roles: [{ id: 'admin' }, { id: 'admin', '~k': 'role-key' }],
       pages: { roles: {} },
       api: { roles: {} },
       websockets: { roles: {} },

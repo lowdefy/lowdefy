@@ -32,4 +32,10 @@ async function CancelInvitation({ acting, auth, properties }) {
   });
 }
 
+// Cancelling a pending invitation needs invitation:cancel authority in the
+// organization the invitation was minted into.
+CancelInvitation.meta = {
+  authority: { scope: 'org', permissions: { invitation: ['cancel'] } },
+};
+
 export default CancelInvitation;

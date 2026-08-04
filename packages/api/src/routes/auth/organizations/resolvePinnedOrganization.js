@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import ensureOrganization from './ensureOrganization.js';
 import { getRegisteredOrganization } from './getOrganizationBinding.js';
+import OrganizationKeyError from './OrganizationKeyError.js';
 
 // Awaited by the request middleware before handlers run. The engine is
 // constructed lazily on the first request, so that same request would
@@ -26,7 +27,8 @@ import { getRegisteredOrganization } from './getOrganizationBinding.js';
 // promise; the retained binding makes it a no-op read. A failed ensure is
 // logged but not rethrown - the binding stays unresolved and the
 // _organization operator / step organizationId defaulting fail with their
-// own clear errors, instead of every request failing in the middleware.
+// own clear errors, instead of every request failing in the middleware. A
+// mis-keyed organization row is the one exception; see the catch.
 async function resolvePinnedOrganization({ auth, logger }) {
   if (type.isNone(auth)) {
     return;
@@ -43,6 +45,17 @@ async function resolvePinnedOrganization({ auth, logger }) {
   try {
     await ensureOrganization({ auth, slug: registered.slug });
   } catch (error) {
+    // Transient versus configured. A briefly unreachable database must not log
+    // the whole deployment out from the middleware, so those failures are
+    // warned and retried on the next fire. An organization row keyed by the
+    // wrong id is a permanent property of that database that never fixes
+    // itself, and swallowing it produces one warn line and then the pinned
+    // active-organization invariant refusing every session - the
+    // deployment-wide sign-in page the check exists to replace. Failing every
+    // request with a named configuration error is the kinder outcome.
+    if (error instanceof OrganizationKeyError) {
+      throw error;
+    }
     // Retried on the next fire - ensureOrganization does not memoize failures.
     logger.warn(
       { err: error },
