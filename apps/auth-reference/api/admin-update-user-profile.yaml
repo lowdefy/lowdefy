@@ -1,7 +1,8 @@
 # Role-gated admin step endpoint (see admin-list-users.yaml for the model).
-# UpdateUserProfile targeting another user requires the auth.userAdminRole
-# member role (the floor) on top of this endpoint's admin gate - only
-# self-targeting is exempt (see update-my-profile.yaml). The profile update
+# UpdateUserProfile targeting another user requires user:update authority in
+# the target organization on top of this endpoint's role gate - only
+# self-targeting is exempt (see update-my-profile.yaml), and the target must
+# be a member of that organization too. The profile update
 # is a shallow merge per top-level key onto the user's existing bag; a key
 # set to null is removed. name and image are the display copies; the step
 # writes nothing else.
