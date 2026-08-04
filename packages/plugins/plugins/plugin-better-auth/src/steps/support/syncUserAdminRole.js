@@ -16,7 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-import splitRoles from './splitRoles.js';
+// Local to this file because nothing else splits a role string any more:
+// member.role holds a single org-tier value. It survives only as long as the
+// denormalization below, which is due for deletion.
+function splitRoles(role) {
+  const roles = type.isArray(role) ? role : [role ?? ''];
+  return roles
+    .flatMap((entry) => String(entry).split(','))
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
 
 // The engine maintains user.role as an internal denormalization: BetterAuth's
 // admin plugin resolves impersonation permissions from the user-level role

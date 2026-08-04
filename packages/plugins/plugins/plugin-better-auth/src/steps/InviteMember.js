@@ -22,16 +22,26 @@ import callPluginEndpoint from './support/callPluginEndpoint.js';
 // resolves it: the floor resolves the target organization (defaulting to the
 // pinned one), authorizes the caller there, and passes the result in.
 async function InviteMember({ acting, auth, organizationId, properties }) {
-  // profile and attributes are registered invitation additionalFields in the
-  // engine config; accepting the invitation shallow-merges profile onto the
-  // user's profile bag (invitation wins per key) and copies attributes onto
-  // the minted member row.
-  const { attributes, email, profile, resend, role } = properties;
+  // appRoles, profile and attributes are registered invitation
+  // additionalFields in the engine config; accepting the invitation
+  // shallow-merges profile onto the user's profile bag (invitation wins per
+  // key) and copies attributes and appRoles onto the minted member row.
+  // invitation.appRoles is declared without input: false precisely so this
+  // body may carry it.
+  const { appRoles, attributes, email, orgRole, profile, resend } = properties;
   if (type.isNone(email)) {
     throw new Error('InviteMember requires an "email" property.');
   }
-  if (type.isNone(role)) {
-    throw new Error('InviteMember requires a "role" property.');
+  // Array-only, to keep the two authorities distinct wherever an author names
+  // roles. Absent is fine - an invitation carrying no app roles is legitimate
+  // and common.
+  if (!type.isNone(appRoles) && !type.isArray(appRoles)) {
+    throw new Error(
+      `InviteMember "appRoles" is not an array. Received ${JSON.stringify(appRoles)}.`
+    );
+  }
+  if (!type.isNone(orgRole) && !type.isString(orgRole)) {
+    throw new Error(`InviteMember "orgRole" is not a string. Received ${JSON.stringify(orgRole)}.`);
   }
   if (!type.isNone(attributes) && !type.isObject(attributes)) {
     throw new Error(
@@ -43,10 +53,24 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
       `InviteMember "profile" is not an object. Received ${JSON.stringify(profile)}.`
     );
   }
+  // An omitted orgRole must still send something: createInvitation's body
+  // schema declares role as required, so undefined fails the zod body, and ''
+  // passes it silently - BetterAuth filters the empty entry out before
+  // validating, stores role: '', and acceptInvitation mints the member row
+  // from that value verbatim. 'member' is the no-authority value, and this is
+  // the product's most common invitation: app roles, no org authority.
   return callPluginEndpoint({
     acting,
     auth,
-    body: { attributes, email, organizationId, profile, resend, role },
+    body: {
+      appRoles,
+      attributes,
+      email,
+      organizationId,
+      profile,
+      resend,
+      role: orgRole ?? 'member',
+    },
     endpointKey: 'createInvitation',
     pluginId: 'organization',
   });

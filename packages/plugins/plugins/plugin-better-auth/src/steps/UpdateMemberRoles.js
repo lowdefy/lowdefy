@@ -16,79 +16,57 @@
 
 import { type } from '@lowdefy/helpers';
 
-import callPluginEndpoint from './support/callPluginEndpoint.js';
-import splitRoles from './support/splitRoles.js';
-import syncUserAdminRole from './support/syncUserAdminRole.js';
-
+// Adapter-direct rather than through the organization plugin's member rails.
+// What the rails buy is invariant enforcement - last-owner protection, seat
+// counts, future Teams - and consistent member state for other plugins, and
+// every one of those invariants concerns the org tier (who may administer this
+// organization) or membership existence. An appRoles write touches neither: it
+// only changes what the member may do inside the app. Fires NO member.update
+// database hooks, for the same reason UpdateMemberAttributes fires none - app
+// roles are the same category of admin-set authorization input as attributes,
+// not a user-driven edit. The org tier lives on member.role and is written by
+// UpdateMemberOrgRole, never here.
+//
+// Submitted role names are deliberately not checked against any catalog. An
+// unrecognised entry grants nothing, so rejecting it would prevent no harmful
+// outcome while blocking display-only roles and failing an admin's whole save
+// because of a stale role they never touched. Orphaned role names stay
+// first-class, and removable.
+//
 // organizationId is part of the authored property surface but the step never
 // resolves it: the floor resolves the target organization (defaulting to the
 // pinned one), authorizes the caller there, and passes the result in.
-async function UpdateMemberRoles({
-  acting,
-  auth,
-  organization,
-  organizationId,
-  properties,
-  userAdminRole,
-}) {
-  const { memberId, role } = properties;
+async function UpdateMemberRoles({ auth, organizationId, properties }) {
+  const { appRoles, memberId } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberRoles requires a "memberId" property.');
   }
-  if (type.isNone(role)) {
-    throw new Error('UpdateMemberRoles requires a "role" property.');
+  // Array-only. Accepting a comma-separated string would preserve the exact
+  // ambiguity between the two authorities that this surface exists to remove,
+  // in the one place an author reads about roles. An empty array is valid - it
+  // clears the member's app roles.
+  if (!type.isArray(appRoles)) {
+    throw new Error(
+      `UpdateMemberRoles requires an "appRoles" array. Received ${JSON.stringify(appRoles)}.`
+    );
   }
-
-  // At better-auth 1.6.23, updateMemberRole's "cannot leave the organization
-  // without an owner" check only fires when the updater edits their own row.
-  // The step acts with a virtual owner session, so demoting the LAST real owner
-  // would slip through - guard here, mirroring BetterAuth's
-  // YOU_CANNOT_LEAVE_THE_ORGANIZATION_WITHOUT_AN_OWNER semantics.
   const { adapter } = await auth.$context;
-  // Scoped to the resolved organization so a memberId from another org falls
-  // through to the endpoint's member-not-found error instead of this guard.
-  const member = await adapter.findOne({
+  const member = await adapter.update({
     model: 'member',
     where: [
       { field: 'id', value: memberId },
       { field: 'organizationId', value: organizationId },
     ],
+    update: { appRoles },
   });
-  if (!type.isNone(member)) {
-    const currentRoles = splitRoles(member.role);
-    const newRoles = splitRoles(role);
-    if (currentRoles.includes('owner') && !newRoles.includes('owner')) {
-      const members = await adapter.findMany({
-        model: 'member',
-        where: [{ field: 'organizationId', value: organizationId }],
-      });
-      const ownerCount = (members ?? []).filter((row) =>
-        splitRoles(row.role).includes('owner')
-      ).length;
-      if (ownerCount <= 1) {
-        throw new Error('You cannot leave the organization without an owner.');
-      }
-    }
+  if (type.isNone(member)) {
+    // Mirrors the rails' member-not-found semantics - a memberId outside the
+    // resolved organization must fail loudly, not skip the write silently.
+    throw new Error(
+      `UpdateMemberRoles found no member "${memberId}" in organization "${organizationId}".`
+    );
   }
-
-  const updatedMember = await callPluginEndpoint({
-    acting,
-    auth,
-    body: { memberId, organizationId, role },
-    endpointKey: 'updateMemberRole',
-    pluginId: 'organization',
-  });
-
-  // Member-role writes are followed in-band by the engine's user.role
-  // denormalization - a sync failure fails the step.
-  await syncUserAdminRole({
-    auth,
-    organization,
-    userAdminRole,
-    userId: updatedMember?.userId ?? member?.userId,
-  });
-
-  return updatedMember;
+  return member;
 }
 
 // Rewriting a member row's roles needs member:update authority in the
