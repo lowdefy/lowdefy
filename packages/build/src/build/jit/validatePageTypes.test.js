@@ -77,6 +77,14 @@ test('validatePageTypes throws when action type is not defined', () => {
   );
 });
 
+test('validatePageTypes throws when the retired ImpersonateUser action type is used', () => {
+  const context = createContext({ actions: { SetState: {} } });
+  context.typeCounters.actions.increment('ImpersonateUser', 'key1');
+  expect(() => validatePageTypes({ context })).toThrow(
+    'Action type "ImpersonateUser" was used but is not defined'
+  );
+});
+
 test('validatePageTypes warns (not throws) for missing client operator types', () => {
   const context = createContext({ clientOps: { _state: {} } });
   context.typeCounters.operators.client.increment('_stat', 'key1');

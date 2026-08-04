@@ -30,7 +30,6 @@ import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
 import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
-import createImpersonateUser from './createImpersonateUser.js';
 import createInviteMember from './createInviteMember.js';
 import createLeaveOrganization from './createLeaveOrganization.js';
 import createLink from './createLink.js';
@@ -55,7 +54,6 @@ import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
 import createSignUp from './createSignUp.js';
-import createStopImpersonating from './createStopImpersonating.js';
 import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
 import createTwoFactorDisable from './createTwoFactorDisable.js';
@@ -86,7 +84,6 @@ function getActionMethods(props) {
     getState: createGetState(props),
     getUrlQuery: createGetUrlQuery(props),
     getUser: createGetUser(props),
-    impersonateUser: createImpersonateUser(props),
     inviteMember: createInviteMember(props),
     leaveOrganization: createLeaveOrganization(props),
     link: createLink(props),
@@ -110,7 +107,6 @@ function getActionMethods(props) {
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
     signUp: createSignUp(props),
-    stopImpersonating: createStopImpersonating(props),
     subscribe: createSubscribe(props),
     translate: createTranslate(props),
     twoFactorDisable: createTwoFactorDisable(props),

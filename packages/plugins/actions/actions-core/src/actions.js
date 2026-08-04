@@ -23,7 +23,6 @@ export { default as CopyToClipboard } from './actions/CopyToClipboard/CopyToClip
 export { default as DisplayMessage } from './actions/DisplayMessage/DisplayMessage.js';
 export { default as Fetch } from './actions/Fetch/Fetch.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/GeolocationCurrentPosition.js';
-export { default as ImpersonateUser } from './actions/ImpersonateUser/ImpersonateUser.js';
 export { default as InviteMember } from './actions/InviteMember/InviteMember.js';
 export { default as LeaveOrganization } from './actions/LeaveOrganization/LeaveOrganization.js';
 export { default as Link } from './actions/Link/Link.js';
@@ -51,7 +50,6 @@ export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
 export { default as SetLocale } from './actions/SetLocale/SetLocale.js';
 export { default as SetState } from './actions/SetState/SetState.js';
 export { default as SignUp } from './actions/SignUp/SignUp.js';
-export { default as StopImpersonating } from './actions/StopImpersonating/StopImpersonating.js';
 export { default as Subscribe } from './actions/Subscribe/Subscribe.js';
 export { default as Throw } from './actions/Throw/Throw.js';
 export { default as TwoFactorDisable } from './actions/TwoFactorDisable/TwoFactorDisable.js';

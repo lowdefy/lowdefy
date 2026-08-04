@@ -46,7 +46,6 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
-    impersonateUser: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
     inviteMember: jest.fn(() => Promise.resolve({ data: { id: 'invitation-1' }, error: null })),
     leaveOrganization: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     phoneNumberRequestPasswordReset: jest.fn(() =>
@@ -79,7 +78,6 @@ function setup({ signInResult, signUpResult } = {}) {
     signUpEmail: jest.fn(() =>
       Promise.resolve({ data: signUpResult ?? { token: null, user: {} }, error: null })
     ),
-    stopImpersonating: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
     twoFactorDisable: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     twoFactorEnable: jest.fn(() =>
       Promise.resolve({
@@ -190,48 +188,6 @@ test('login no longer handles signUp - a signUp-only call is rejected', async ()
     'Login requires a "providerId", "email" and "password", "phoneNumber" and "password", or "magicLink: true" param.'
   );
   expect(auth.signUpEmail).not.toHaveBeenCalled();
-});
-
-test('impersonateUser calls auth.impersonateUser with the userId param', async () => {
-  const { auth, lowdefy } = setup();
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await impersonateUser({ userId: 'user-1' });
-  expect(auth.impersonateUser.mock.calls).toEqual([[{ userId: 'user-1' }]]);
-});
-
-test('impersonateUser throws when userId is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await expect(impersonateUser()).rejects.toThrow('ImpersonateUser requires a "userId" param.');
-  expect(auth.impersonateUser).not.toHaveBeenCalled();
-});
-
-test('impersonateUser surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.impersonateUser = jest.fn(() =>
-    Promise.resolve({
-      data: null,
-      error: { message: 'Forbidden.', code: 'FORBIDDEN', status: 403 },
-    })
-  );
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await expect(impersonateUser({ userId: 'user-1' })).rejects.toThrow('Forbidden.');
-});
-
-test('stopImpersonating calls auth.stopImpersonating with no params', async () => {
-  const { auth, lowdefy } = setup();
-  const { stopImpersonating } = createAuthMethods(lowdefy, auth);
-  await stopImpersonating();
-  expect(auth.stopImpersonating.mock.calls).toEqual([[]]);
-});
-
-test('stopImpersonating surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.stopImpersonating = jest.fn(() =>
-    Promise.resolve({ data: null, error: { message: 'No impersonation session.' } })
-  );
-  const { stopImpersonating } = createAuthMethods(lowdefy, auth);
-  await expect(stopImpersonating()).rejects.toThrow('No impersonation session.');
 });
 
 test('login with email and password navigates to callbackURL on a session response', async () => {

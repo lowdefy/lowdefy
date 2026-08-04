@@ -23,7 +23,6 @@ export { default as CopyToClipboard } from './actions/CopyToClipboard/schema.js'
 export { default as DisplayMessage } from './actions/DisplayMessage/schema.js';
 export { default as Fetch } from './actions/Fetch/schema.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/schema.js';
-export { default as ImpersonateUser } from './actions/ImpersonateUser/schema.js';
 export { default as InviteMember } from './actions/InviteMember/schema.js';
 export { default as LeaveOrganization } from './actions/LeaveOrganization/schema.js';
 export { default as Link } from './actions/Link/schema.js';
@@ -51,7 +50,6 @@ export { default as SetGlobal } from './actions/SetGlobal/schema.js';
 export { default as SetLocale } from './actions/SetLocale/schema.js';
 export { default as SetState } from './actions/SetState/schema.js';
 export { default as SignUp } from './actions/SignUp/schema.js';
-export { default as StopImpersonating } from './actions/StopImpersonating/schema.js';
 export { default as Subscribe } from './actions/Subscribe/schema.js';
 export { default as Throw } from './actions/Throw/schema.js';
 export { default as TwoFactorDisable } from './actions/TwoFactorDisable/schema.js';
