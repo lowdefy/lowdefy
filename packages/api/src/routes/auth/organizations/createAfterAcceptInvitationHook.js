@@ -16,8 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-import syncUserAdminRole from './syncUserAdminRole.js';
-
 // The engine-tier binding on the organization plugin's afterAcceptInvitation
 // hook (an organizationHooks callback, not a database hook - it fires after
 // the member row is created). An invitation may carry an opaque profile bag;
@@ -37,7 +35,7 @@ import syncUserAdminRole from './syncUserAdminRole.js';
 // directly (crud-invites.mjs:324), never validating it against the registered
 // set - which is what makes the bootstrap recipe's hand-inserted role: 'owner'
 // work.
-function createAfterAcceptInvitationHook({ getAuth, userAdminRole }) {
+function createAfterAcceptInvitationHook({ getAuth }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
     if (type.isObject(invitation.profile)) {
@@ -68,10 +66,6 @@ function createAfterAcceptInvitationHook({ getAuth, userAdminRole }) {
         update: memberUpdate,
       });
     }
-    // The accept mints member roles from the invitation, so it is one of the
-    // engine-owned writers of the user.role denormalization. In-band like the
-    // copies above: a failed sync fails the accept and the user retries.
-    await syncUserAdminRole({ auth: getAuth(), userAdminRole, userId: user.id });
   };
 }
 

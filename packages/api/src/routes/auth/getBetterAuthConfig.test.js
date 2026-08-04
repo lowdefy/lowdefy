@@ -891,7 +891,7 @@ test('does not push the passkey plugin when passkey is not enabled', () => {
   expect(options.plugins.some((p) => p.id === 'passkey')).toBe(false);
 });
 
-test('always pushes the admin plugin, without a custom access control when userAdminRole is not configured', () => {
+test('always pushes the admin plugin, with no custom access control', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -904,29 +904,6 @@ test('always pushes the admin plugin, without a custom access control when userA
   expect(adminPlugin).toBeDefined();
   // admin() called with no options - BetterAuth's default roles apply.
   expect(adminPlugin.options).toBeUndefined();
-});
-
-test('registers the curated admin access control when userAdminRole is configured', () => {
-  const options = getBetterAuthConfig({
-    appMeta,
-    authJson: createAuthJson({ userAdminRole: 'user-admin', roles: ['user-admin'] }),
-    getAuth,
-    logger: createLogger(),
-    plugins: createPlugins(),
-    secrets: baseSecrets,
-  });
-  const adminPlugin = options.plugins.find((p) => p.id === 'admin');
-  // The user-admin role holds exactly user: ['impersonate'] - no
-  // impersonate-admins, set-password, set-email, ban or delete.
-  expect(adminPlugin.options.roles['user-admin'].statements).toEqual({ user: ['impersonate'] });
-  // Impersonating a user-admin demands the excluded impersonate-admins.
-  expect(adminPlugin.options.adminRoles).toEqual(['admin', 'user-admin']);
-  // The built-in admin role keeps its default statements so the steps'
-  // injected acting sessions (role "admin") retain their authority.
-  expect(adminPlugin.options.roles.admin.statements.user).toEqual(
-    expect.arrayContaining(['ban', 'delete', 'impersonate', 'list', 'set-password'])
-  );
-  expect(adminPlugin.options.roles.user.statements).toEqual({ user: [], session: [] });
 });
 
 test('sets cookie prefix via resolveCookiePrefix, using the app slug in dev', () => {
@@ -1041,6 +1018,23 @@ test('always pushes the organization plugin', () => {
 });
 
 describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
+  const adminPaths = [
+    '/admin/set-role',
+    '/admin/get-user',
+    '/admin/create-user',
+    '/admin/update-user',
+    '/admin/list-users',
+    '/admin/list-user-sessions',
+    '/admin/unban-user',
+    '/admin/ban-user',
+    '/admin/impersonate-user',
+    '/admin/stop-impersonating',
+    '/admin/revoke-user-session',
+    '/admin/revoke-user-sessions',
+    '/admin/remove-user',
+    '/admin/set-user-password',
+    '/admin/has-permission',
+  ];
   const mutationPaths = [
     '/organization/set-active',
     '/organization/update',
@@ -1065,7 +1059,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
     '/organization/has-permission',
   ];
 
-  test('under pinned policy, disables every mutation and read org path', () => {
+  test('under pinned policy, disables every mutation and read org path plus the admin surface', () => {
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson({
@@ -1076,7 +1070,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    [...mutationPaths, ...readPaths].forEach((path) => {
+    [...adminPaths, ...mutationPaths, ...readPaths].forEach((path) => {
       expect(options.disabledPaths).toContain(path);
     });
   });
@@ -1109,7 +1103,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
     expect(options.disabledPaths).not.toContain('/organization/accept-invitation');
   });
 
-  test('under tenant policy, enables all org endpoints (disabledPaths is empty)', () => {
+  test('under tenant policy, disables the whole admin surface and no org endpoint', () => {
     const options = getBetterAuthConfig({
       appMeta,
       authJson: createAuthJson({
@@ -1120,11 +1114,31 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.disabledPaths).toEqual([]);
+    expect(options.disabledPaths).toEqual(adminPaths);
     [...mutationPaths, ...readPaths].forEach((path) => {
       expect(options.disabledPaths).not.toContain(path);
     });
   });
+
+  // The impersonation endpoints carried a carve-out while client actions drove
+  // them; nothing drives them now, and no caller can pass their check.
+  test.each(['pinned', 'tenant'])(
+    'under %s policy, disables both impersonation endpoints',
+    (policy) => {
+      const options = getBetterAuthConfig({
+        appMeta,
+        authJson: createAuthJson({
+          organizations: { policy, org: 'default', signup: 'invite-only' },
+        }),
+        getAuth,
+        logger: createLogger(),
+        plugins: createPlugins(),
+        secrets: baseSecrets,
+      });
+      expect(options.disabledPaths).toContain('/admin/impersonate-user');
+      expect(options.disabledPaths).toContain('/admin/stop-impersonating');
+    }
+  );
 });
 
 test('registers the internal user additionalFields (attributes, profile)', () => {
