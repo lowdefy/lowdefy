@@ -446,6 +446,73 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
   expect(result.response).toEqual({ child: 'child_ran' });
 });
 
+// A verifier connection whose type implements the tenant scoping contract -
+// under policy: tenant the wall engages for it like for any connection.
+const walledVerifierConnections = {
+  StubVerifyConnection: {
+    ...verifierConnections.StubVerifyConnection,
+    meta: { tenant: true },
+  },
+};
+
+test('webhook verifier on a walled connection fails closed to unauthorized, never an error body', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: stubVerify },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    body: {},
+    query: { token: 'good' },
+    headers: {},
+  });
+  // Webhooks run in system context with no caller organization - the tenant
+  // wall refuses the verifier, and the refusal is a false verdict, not an
+  // AuthenticationError surfaced to the unauthenticated sender.
+  expect(result.status).toBe('unauthorized');
+  expect(result.success).toBe(false);
+  expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
+});
+
+test('webhook verifier on a walled connection with tenant none opts out and passes', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: { verify: { ...stubVerify, tenant: 'none' } },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: walledVerifierConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'parent_hook',
+    body: {},
+    query: { token: 'good' },
+    headers: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ child: 'child_ran' });
+});
+
 // Detached carries the dispatcher's identity (Decision 4). The child endpoint
 // is protected by roles so the carried identity is what decides the nested call.
 function createDetachedReadConfigFile({ childRoles = ['admin'] } = {}) {
