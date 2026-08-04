@@ -110,6 +110,9 @@ function createEnrolledCtx() {
       responseHeaders: new Headers({ location: 'https://app.example.com/invoices' }),
     },
     redirect: (url) => ({ redirectTo: url }),
+    // Stands in for Hono's Response so a returning exit can be told apart from
+    // a thrown redirect by shape alone.
+    json: (body) => ({ jsonBody: body }),
   };
 }
 
@@ -289,4 +292,102 @@ test('buildRequestHooks leaves an account linking callback with no new session u
   expect(thrown).toBeUndefined();
   expect(returned).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+const phoneNumberAuthConfig = {
+  ...twoFactorAuthConfig,
+  phoneNumber: { enabled: true },
+};
+
+function createPhoneHooks(authConfig) {
+  return buildRequestHooks({
+    authConfig,
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+}
+
+function createPhoneVerifyCtx(path = '/phone-number/verify') {
+  const ctx = createEnrolledCtx();
+  ctx.path = path;
+  return ctx;
+}
+
+test('buildRequestHooks challenges an enrolled user on /phone-number/verify with a JSON response rather than a redirect', async () => {
+  const hooks = createPhoneHooks(phoneNumberAuthConfig);
+
+  const { returned, thrown } = await catchAfter(hooks, createPhoneVerifyCtx());
+
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+  expect(thrown).toBeUndefined();
+  expect(returned).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+});
+
+test('buildRequestHooks claims no phone path other than /phone-number/verify', async () => {
+  const hooks = createPhoneHooks(phoneNumberAuthConfig);
+
+  expect(await hooks.after(createPhoneVerifyCtx('/phone-number/send-otp'))).toBeUndefined();
+  expect(await hooks.after(createPhoneVerifyCtx('/phone-number/verify-otp'))).toBeUndefined();
+  // The plugin's own matcher covers /sign-in/phone-number, so claiming it here
+  // would double-fire the challenge rather than close a gap.
+  expect(await hooks.after(createPhoneVerifyCtx('/sign-in/phone-number'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no phone number challenge when phoneNumber is disabled', async () => {
+  const hooks = createPhoneHooks({ ...phoneNumberAuthConfig, phoneNumber: { enabled: false } });
+
+  expect(await hooks.after(createPhoneVerifyCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no phone number challenge when twoFactor is disabled', async () => {
+  const hooks = createPhoneHooks({ ...phoneNumberAuthConfig, twoFactor: { enabled: false } });
+
+  expect(await hooks.after(createPhoneVerifyCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+// Sign-up and phone-change confirmation reach /phone-number/verify too, and
+// neither can be answered by a user holding no two-factor row.
+test('buildRequestHooks leaves an unenrolled user on /phone-number/verify untouched', async () => {
+  const hooks = createPhoneHooks(phoneNumberAuthConfig);
+  const ctx = createPhoneVerifyCtx();
+  ctx.context.newSession = { user: { id: 'user_1', twoFactorEnabled: false } };
+
+  const { returned, thrown } = await catchAfter(hooks, ctx);
+
+  expect(thrown).toBeUndefined();
+  expect(returned).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+  expect(ctx.context.newSession).toEqual({ user: { id: 'user_1', twoFactorEnabled: false } });
+});
+
+// A trusted device already stepped up, so the endpoint's own session-bearing
+// response must stand and PhoneNumberVerify must see no flag to navigate on.
+test('buildRequestHooks returns no challenge flag on /phone-number/verify when the device is trusted', async () => {
+  const hooks = createPhoneHooks(phoneNumberAuthConfig);
+  mockBeginTwoFactorChallenge.mockResolvedValueOnce('trusted');
+
+  const { returned, thrown } = await catchAfter(hooks, createPhoneVerifyCtx());
+
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+  expect(thrown).toBeUndefined();
+  expect(returned).toBeUndefined();
+});
+
+// This exit hands the destination to the client, so the registration must not
+// pick up the redirect paths' twoFactorPageUrl guard in a later refactor.
+test('buildRequestHooks challenges /phone-number/verify with authPages.twoFactor unset', async () => {
+  const hooks = createPhoneHooks({ ...phoneNumberAuthConfig, authPages: {} });
+
+  const { returned } = await catchAfter(hooks, createPhoneVerifyCtx());
+
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+  expect(returned).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
 });

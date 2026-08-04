@@ -126,6 +126,38 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     );
   }
 
+  // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
+  // plugin's sign-in matcher does not cover /phone-number/verify, which mints a
+  // session (phone-number/routes.mjs createSession then setSessionCookie), so an
+  // enrolled user signing in by SMS code walks past their second factor. No
+  // toggle: an SMS code is possession-of-SIM, and SIM-swap is the
+  // best-documented account-takeover attack of any factor here.
+  //
+  // No twoFactorPageUrl in the guard, unlike the redirect paths above: this exit
+  // hands the destination decision to the client, so the page URL is not read
+  // and a hook gated on it would be unregistered for no reason.
+  if (authConfig.twoFactor?.enabled === true && authConfig.phoneNumber?.enabled === true) {
+    after.push(
+      createTwoFactorChallengeHook({
+        id: 'phoneNumberTwoFactorChallenge',
+        matches: (path) => path === '/phone-number/verify',
+        // The one difference from the magic-link and OAuth exits: this endpoint
+        // answers a live JS caller with JSON rather than a redirect, so it
+        // reuses the password path's response shape. PhoneNumberVerify navigates
+        // to authPages.twoFactor on the flag, so the challenge page still sees a
+        // single arrival shape.
+        //
+        // twoFactorMethods is the literal ['totp'] rather than the plugin's
+        // computation of it. The scope here is TOTP plus backup codes and the
+        // challenge page offers both unconditionally, so the plugin's
+        // twoFactor-table read and its otpOptions.sendOTP branch - which the
+        // engine never configures - would cost a query to produce a value
+        // nothing branches on.
+        exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
+      })
+    );
+  }
+
   return {
     before: createAuthMiddleware(async (ctx) =>
       dispatchRequestHooks({ ctx, registrations: before })
