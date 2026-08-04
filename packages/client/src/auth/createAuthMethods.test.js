@@ -382,6 +382,61 @@ test('twoFactorVerify throws when neither code nor backupCode is given', async (
   expect(auth.twoFactorVerifyBackupCode).not.toHaveBeenCalled();
 });
 
+test('twoFactorVerify navigates to the resolved callbackUrl on the TOTP branch', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345', callbackUrl: { url: '/reports' } });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the resolved callbackUrl on the backup-code branch', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ backupCode: 'backup-1', callbackUrl: { url: '/reports' } });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the ?callbackUrl= the sign-in method carried onto the page', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the ?callbackUrl= query as carried, without re-applying basePath', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fbase%2Freports';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/base/reports']]);
+});
+
+test('twoFactorVerify with callbackUrl false stays put and does not throw', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  const data = await twoFactorVerify({ code: '012345', callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('twoFactorVerify does not navigate on a response carrying no session', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.twoFactorVerifyTotp = jest.fn(() => Promise.resolve({ data: { token: null }, error: null }));
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345', callbackUrl: { url: '/reports' } });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('a protocol-relative ?callbackUrl= query never leaves the challenge page (open redirect)', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%2Fevil.com';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
 test('twoFactorDisable calls auth.twoFactorDisable with the password', async () => {
   const { auth, lowdefy } = setup();
   const { twoFactorDisable } = createAuthMethods(lowdefy, auth);
@@ -788,6 +843,81 @@ test('phoneNumberVerify rethrows the BetterAuth error so onError chains fire', a
   await expect(phoneNumberVerify({ phoneNumber: '+27831234567', code: '000000' })).rejects.toThrow(
     'Invalid OTP'
   );
+});
+
+test('phoneNumberVerify navigates to an explicit callbackUrl, basePath-prefixed', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/base/reports']]);
+});
+
+test('phoneNumberVerify navigates to the ?callbackUrl= query when no param is given', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({ phoneNumber: '+27831234567', code: '123456' });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('phoneNumberVerify with callbackUrl false stays put and does not throw', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  const data = await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    callbackUrl: false,
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('phoneNumberVerify does not navigate with disableSession, which mints no session', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.phoneNumberVerify = jest.fn(() =>
+    Promise.resolve({ data: { token: null, user: {} }, error: null })
+  );
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    disableSession: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('phoneNumberVerify does not navigate when a signed-in user confirms a new phone number', async () => {
+  // updatePhoneNumber returns the caller's existing session token, so a token
+  // check alone would navigate away from the modal the confirmation runs in.
+  const { auth, lowdefy, assign } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    updatePhoneNumber: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('phoneNumberVerify navigates to the challenge on a phone-number change that is challenged', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    updatePhoneNumber: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Freports']]);
 });
 
 test('login threads captchaToken as the x-captcha-response header, never the body', async () => {
@@ -1521,6 +1651,7 @@ function callActionChain({ actions, auth, lowdefy }) {
             Login: ({ methods, params }) => methods.login(params),
             Next: next,
             PhoneNumberVerify: ({ methods, params }) => methods.phoneNumberVerify(params),
+            TwoFactorVerify: ({ methods, params }) => methods.twoFactorVerify(params),
           },
           auth: createAuthMethods(lowdefy, auth),
           displayMessage: () => () => undefined,
@@ -1693,7 +1824,7 @@ test('a login that returns a session navigates to the callbackUrl and does not e
   expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
 });
 
-test('phoneNumberVerify navigates to the two-factor challenge with no callbackUrl and ends the chain', async () => {
+test('phoneNumberVerify carries the resolved callbackUrl onto the two-factor challenge and ends the chain', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
   auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
@@ -1709,7 +1840,7 @@ test('phoneNumberVerify navigates to the two-factor challenge with no callbackUr
     auth,
     lowdefy,
   });
-  expect(assign.mock.calls).toEqual([['/two-factor-challenge']]);
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fhome-page']]);
   expect(res.responses.verify).toEqual({
     type: 'PhoneNumberVerify',
     index: 0,
@@ -1719,7 +1850,7 @@ test('phoneNumberVerify navigates to the two-factor challenge with no callbackUr
   expect(res.responses.after).toEqual({ type: 'Next', skipped: true, index: 1 });
 });
 
-test('phoneNumberVerify does not navigate or end the chain on a successful verification', async () => {
+test('phoneNumberVerify navigates on a successful verification without ending the chain', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
   const res = await callActionChain({
@@ -1734,11 +1865,26 @@ test('phoneNumberVerify does not navigate or end the chain on a successful verif
     auth,
     lowdefy,
   });
-  expect(assign).not.toHaveBeenCalled();
+  expect(assign.mock.calls).toEqual([['/home-page']]);
   expect(res.responses.verify).toEqual({
     type: 'PhoneNumberVerify',
     index: 0,
     response: { token: 't', user: {} },
   });
+  expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
+});
+
+test('twoFactorVerify navigates on a successful challenge without ending the chain', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const res = await callActionChain({
+    actions: [
+      { id: 'verify', type: 'TwoFactorVerify', params: { code: '012345' } },
+      { id: 'after', type: 'Next' },
+    ],
+    auth,
+    lowdefy,
+  });
+  expect(assign.mock.calls).toEqual([['/reports']]);
   expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
 });

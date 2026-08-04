@@ -674,27 +674,36 @@ function createAuthMethods(lowdefy, auth) {
   }
 
   // The OTP sign-in: on success BetterAuth sets the session cookie (and
-  // creates the account under signUpOnVerification). On that success, and unlike
-  // login, it does not auto-navigate - verify serves sign-in, sign-up and
-  // phone-change confirmation, and only the app knows which page follows.
-  async function phoneNumberVerify({ code, phoneNumber, ...rest } = {}) {
+  // creates the account under signUpOnVerification), and the browser navigates
+  // on the resolved callbackURL like every other method that mints a session.
+  async function phoneNumberVerify({ callbackUrl, code, phoneNumber, ...rest } = {}) {
     if (!type.isString(phoneNumber) || !type.isString(code)) {
       throw new Error('PhoneNumberVerify requires "phoneNumber" and "code" params.');
     }
+    // Resolved before the call, as login and signUp do, so a misconfigured
+    // destination throws before the OTP is consumed rather than after. No
+    // assertCallbackUrlNavigable: the resolved value has one consumer, the assign
+    // below, so callbackUrl: false is honorable here.
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
     // An enrolled user verifying by SMS gets a challenge instead of a session, in
     // the same JSON shape the password paths return, so the navigation is the one
-    // Login performs. Verify also serves sign-up and phone-change confirmation,
-    // where the flag is absent and the page owns what comes next. No callbackURL
-    // rides along: verify takes no callback param, so there is no destination the
-    // caller asked for and the challenge page falls back to its own default.
+    // Login performs and the destination rides along identically.
     //
-    // The halt matters more here than on the password paths, because verify
-    // deliberately does not navigate on success - so every app has a step after
-    // it. Without the halt that step re-renders the app with no session while the
-    // challenge page load is still in flight.
+    // The halt keeps the app's remaining steps from re-rendering with no session
+    // while the challenge page load is still in flight.
     if (data?.twoFactorRedirect) {
-      return navigateToTwoFactorChallenge({ lowdefy, auth }) ? stopChain(data) : data;
+      return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) ? stopChain(data) : data;
+    }
+    // The two modes that mint no usable arrival stay put: disableSession returns
+    // token: null, and updatePhoneNumber is a signed-in user confirming a new
+    // number - it returns their existing session token, so a token check alone
+    // would yank them out of what is usually a modal. The discriminator has to
+    // come from the request, and updatePhoneNumber is still in rest because
+    // BetterAuth needs it.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && rest.updatePhoneNumber !== true && callbackURL && window) {
+      window.location.assign(callbackURL);
     }
     return data;
   }
@@ -718,16 +727,36 @@ function createAuthMethods(lowdefy, auth) {
 
   // Serves both enrolment confirmation and the sign-in challenge, dispatching
   // by parameter (matching login): a backupCode param verifies a backup code,
-  // otherwise code verifies TOTP. The sign-in challenge verify sets the
-  // session cookie itself - navigation after is the app's business.
-  async function twoFactorVerify({ backupCode, code, trustDevice, ...rest } = {}) {
-    if (type.isString(backupCode)) {
-      return unwrap(auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest }));
+  // otherwise code verifies TOTP.
+  //
+  // The engine owns both ends of the challenge hop, not only arrival: every
+  // sign-in path navigates to authPages.twoFactor carrying ?callbackUrl=, and
+  // this is where that value is spent. Leaving the last hop to the challenge
+  // page is the same opt-in correctness the arrival navigation exists to avoid,
+  // and the rung is awkward to consume from config besides - it already carries
+  // basePath, so a Link's pageId double-prefixes it under a subpath. With the
+  // engine finishing the hop, no app config reads the parameter at all.
+  //
+  // No stopChain: this navigation is the end of the flow rather than a departure
+  // mid-chain, so an app may legitimately have a step after it.
+  async function twoFactorVerify({ backupCode, callbackUrl, code, trustDevice, ...rest } = {}) {
+    if (!type.isString(backupCode) && !type.isString(code)) {
+      throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
     }
-    if (type.isString(code)) {
-      return unwrap(auth.twoFactorVerifyTotp({ code, trustDevice, ...rest }));
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(
+      type.isString(backupCode)
+        ? auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest })
+        : auth.twoFactorVerifyTotp({ code, trustDevice, ...rest })
+    );
+    // A token is the whole guard here, unlike phoneNumberVerify's: verify has no
+    // session-less mode, so a successful challenge always mints one and a failed
+    // one throws to the action's catch.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && callbackURL && window) {
+      window.location.assign(callbackURL);
     }
-    throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
+    return data;
   }
 
   return {
