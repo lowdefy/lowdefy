@@ -147,6 +147,12 @@ test('beginTwoFactorChallenge returns trusted and rotates the record and cookie 
   const [rotated] = ctx.context.internalAdapter.createVerificationValue.mock.calls[0];
   expect(rotated.identifier).toMatch(/^trust-device-.{32}$/);
   expect(rotated.value).toBe(USER_ID);
+  // The rotated record must carry the trust-device lifetime, not the ten-minute
+  // challenge one. Getting this wrong expires trust on the next sign-in instead
+  // of in thirty days, and the only symptom is users being challenged again on a
+  // device they already stepped up on - which reads as intended behaviour.
+  expect(rotated.expiresAt.getTime()).toBeGreaterThan(Date.now() + 2591000 * 1000);
+  expect(rotated.expiresAt.getTime()).toBeLessThanOrEqual(Date.now() + 2592000 * 1000);
   expect(ctx.setSignedCookie).toHaveBeenCalledWith(
     'better-auth.trust_device',
     `${signTrust({ trustIdentifier: rotated.identifier })}!${rotated.identifier}`,
@@ -176,6 +182,35 @@ test('beginTwoFactorChallenge leaves the session intact on the trusted path', as
     ([data]) => data.identifier
   );
   expect(created.some((identifier) => identifier.startsWith('2fa-'))).toBe(false);
+});
+
+test('beginTwoFactorChallenge expires the trust cookie and challenges when a same-length token does not verify', async () => {
+  // A forged token is the same length as a real one - it is a digest of the same
+  // algorithm - so this is the case the constant-time compare exists for, and
+  // the only one that reaches it. A wrong-length token returns at the length
+  // screen instead, leaving timingSafeEqual unexercised.
+  const realToken = signTrust({ trustIdentifier: 'trust-device-old' });
+  const forgedToken = signTrust({
+    secret: 'a-different-secret',
+    trustIdentifier: 'trust-device-old',
+  });
+  expect(forgedToken).toHaveLength(realToken.length);
+  expect(forgedToken).not.toBe(realToken);
+
+  const ctx = createCtx({
+    trustCookie: `${forgedToken}!trust-device-old`,
+    verificationRecord: {
+      value: USER_ID,
+      identifier: 'trust-device-old',
+      expiresAt: new Date(Date.now() + 60000),
+    },
+  });
+
+  const outcome = await beginTwoFactorChallenge({ ctx, newSession: createNewSession() });
+
+  expect(outcome).toBe('challenged');
+  expect(mockExpireCookie).toHaveBeenCalledTimes(1);
+  expect(ctx.context.internalAdapter.findVerificationValue).not.toHaveBeenCalled();
 });
 
 test('beginTwoFactorChallenge expires the trust cookie and challenges when its token does not verify', async () => {

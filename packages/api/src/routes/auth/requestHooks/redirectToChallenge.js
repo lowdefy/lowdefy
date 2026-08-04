@@ -16,11 +16,34 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Placeholder base for parsing only. new URL needs an absolute base to resolve a
-// path-relative twoFactorPageUrl, and there is no origin to give it when the
-// auth base URL is not pinned. It is never emitted: the return strips back to
-// pathname + search whenever baseUrlOrigin is absent.
+// Last-resort base for parsing only, reached only when neither BETTER_AUTH_URL
+// nor the per-request base URL yields an origin. new URL needs an absolute base
+// to resolve a path-relative twoFactorPageUrl. It is never emitted: the return
+// strips back to pathname + search whenever baseUrlOrigin is absent.
 const PARSE_ONLY_ORIGIN = 'http://lowdefy.invalid';
+
+// The origin the pending destination is judged same-origin against.
+// BETTER_AUTH_URL pins it when set; otherwise the endpoint has already derived
+// one from the request and left it on ctx.context.baseURL - the very origin it
+// resolved its own redirect against, so comparing against it is exact rather
+// than approximate.
+//
+// This is load-bearing on the zero-config path rather than a tidy-up.
+// /magic-link/verify resolves its destination to an absolute URL
+// (`new URL(callbackURL, ctx.context.baseURL)`) and redirects there, so judging
+// that against a placeholder origin would rule every same-origin deep link
+// off-origin and silently drop it - the deployment keeps its challenge and
+// loses every deep link, with nothing logged.
+function resolveCompareOrigin({ baseUrlOrigin, ctx }) {
+  if (type.isString(baseUrlOrigin)) {
+    return baseUrlOrigin;
+  }
+  const requestBaseUrl = ctx.context.baseURL;
+  if (type.isString(requestBaseUrl) && URL.canParse(requestBaseUrl)) {
+    return new URL(requestBaseUrl).origin;
+  }
+  return PARSE_ONLY_ORIGIN;
+}
 
 // The redirect exit for an intercepted sign-in: sends the browser to the
 // challenge page carrying the destination the user was actually headed for, so
@@ -44,10 +67,11 @@ const PARSE_ONLY_ORIGIN = 'http://lowdefy.invalid';
 // there is no pending location - and the challenge page then falls back to its
 // own default.
 function redirectToChallenge({ baseUrlOrigin, ctx, twoFactorPageUrl }) {
-  const url = new URL(twoFactorPageUrl, baseUrlOrigin ?? PARSE_ONLY_ORIGIN);
+  const compareOrigin = resolveCompareOrigin({ baseUrlOrigin, ctx });
+  const url = new URL(twoFactorPageUrl, compareOrigin);
   const pending = ctx.context.responseHeaders?.get('location');
   if (type.isString(pending)) {
-    const target = new URL(pending, baseUrlOrigin ?? PARSE_ONLY_ORIGIN);
+    const target = new URL(pending, compareOrigin);
     if (target.origin === url.origin) {
       url.searchParams.set('callbackUrl', `${target.pathname}${target.search}`);
     }

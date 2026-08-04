@@ -52,10 +52,15 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   const twoFactorPageUrl = resolveTwoFactorPageUrl({ authConfig, basePath, baseUrlOrigin });
 
   // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
-  // plugin's sign-in matcher covers /sign-in/email and /sign-in/phone-number
-  // only, so an enrolled user walks past their second factor by clicking "email
-  // me a link", and so does anyone holding their inbox. No toggle: a magic link
-  // is possession-of-inbox, the factor most likely to be compromised in the
+  // plugin's sign-in matcher covers /sign-in/email, /sign-in/username and
+  // /sign-in/phone-number, and nothing else. Of those three only email and
+  // phone-number are reachable here, because /sign-in/username needs the
+  // username plugin the engine does not register - but the matcher does claim
+  // it, so registering a hook for it would double-fire the challenge rather
+  // than close a gap. Every other route to a session is uncovered, so an
+  // enrolled user walks past their second factor by clicking "email me a
+  // link", and so does anyone holding their inbox. No toggle: a magic link is
+  // possession-of-inbox, the factor most likely to be compromised in the
   // incident two-factor exists to survive.
   //
   // twoFactorPageUrl is also gated on, so a challenge can never redirect to

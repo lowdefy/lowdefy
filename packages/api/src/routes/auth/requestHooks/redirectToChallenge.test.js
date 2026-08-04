@@ -19,13 +19,13 @@ import redirectToChallenge from './redirectToChallenge.js';
 // ctx.redirect returns an APIError carrying the location header; the caller
 // throws it and runAfterHooks turns it into the response. The fake returns a
 // plain marker object so the thrown value can be read back in the test.
-function createCtx({ location } = {}) {
+function createCtx({ baseURL, location } = {}) {
   const responseHeaders = new Headers();
   if (location !== undefined) {
     responseHeaders.set('location', location);
   }
   return {
-    context: { responseHeaders },
+    context: { baseURL, responseHeaders },
     redirect: (url) => ({ redirectTo: url }),
   };
 }
@@ -121,5 +121,49 @@ test('redirectToChallenge returns a path-relative location and leaks no placehol
     })
   );
   expect(location).toBe('/app/two-factor?callbackUrl=%2Fapp%2Finvoices%2F123');
+  expect(location).not.toContain('lowdefy.invalid');
+});
+
+test('redirectToChallenge carries an absolute same-origin destination when no base origin is pinned', () => {
+  // The shape /magic-link/verify actually produces on the zero-config path: it
+  // resolves callbackURL against ctx.context.baseURL and redirects to an
+  // absolute URL. Judging that against a placeholder origin would call it
+  // off-origin and drop every deep link, with nothing logged.
+  const location = catchRedirect(() =>
+    redirectToChallenge({
+      baseUrlOrigin: undefined,
+      ctx: createCtx({
+        baseURL: 'https://app.example.com/api/auth',
+        location: 'https://app.example.com/invoices/123',
+      }),
+      twoFactorPageUrl: '/two-factor',
+    })
+  );
+  expect(location).toBe('/two-factor?callbackUrl=%2Finvoices%2F123');
+});
+
+test('redirectToChallenge drops an off-origin destination against the per-request base origin', () => {
+  const location = catchRedirect(() =>
+    redirectToChallenge({
+      baseUrlOrigin: undefined,
+      ctx: createCtx({
+        baseURL: 'https://app.example.com/api/auth',
+        location: 'https://evil.com/x',
+      }),
+      twoFactorPageUrl: '/two-factor',
+    })
+  );
+  expect(location).toBe('/two-factor');
+});
+
+test('redirectToChallenge still redirects when neither a pinned nor a request origin is available', () => {
+  const location = catchRedirect(() =>
+    redirectToChallenge({
+      baseUrlOrigin: undefined,
+      ctx: createCtx({ baseURL: undefined, location: 'https://app.example.com/invoices/123' }),
+      twoFactorPageUrl: '/two-factor',
+    })
+  );
+  expect(location).toBe('/two-factor');
   expect(location).not.toContain('lowdefy.invalid');
 });
