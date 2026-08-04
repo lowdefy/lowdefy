@@ -37,8 +37,12 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // removed mid-session are all treated as logged out, not logged-in with no
 // roles.
 //
-// member.role stores multiple roles as a comma-separated string - split back
-// into the array Lowdefy authorization expects. context.user.attributes is
+// The member row carries two unrelated authorities and they stay apart.
+// context.user.roles is member.appRoles - the app's own role strings, and the
+// only source createAuthorize matches against auth.roles page and endpoint
+// gates. context.user.orgRoles is the split of member.role - BetterAuth's
+// owner/admin/member tier, an administrative fact about this organization that
+// no gate reads. context.user.attributes is
 // the one merged bag of authorization inputs: user.attributes (global) and
 // the active member's attributes (per-org), shallow per-key merge where the
 // member value wins - nested objects replace, never deep-merge.
@@ -85,13 +89,18 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     context.user = null;
     return;
   }
-  const roles = (member.role ?? '')
+  // member.role is a CSV BetterAuth writes over a closed three-name set the
+  // platform itself writes, so no comma can appear inside a name.
+  const orgRoles = (member.role ?? '')
     .split(',')
     .map((role) => role.trim())
     .filter(Boolean);
   context.user = {
     ...session.user,
-    roles,
+    // Absent on a member row minted with no app roles - never falls back to
+    // member.role, which would make the two fields one dual-storage scheme.
+    roles: member.appRoles ?? [],
+    orgRoles,
     attributes: {
       ...(session.user.attributes ?? {}),
       ...(member.attributes ?? {}),
