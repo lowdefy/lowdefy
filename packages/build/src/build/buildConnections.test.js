@@ -82,9 +82,7 @@ test('buildConnections throws when connection id is not a string', () => {
       },
     ],
   };
-  expect(() => buildConnections({ components, context })).toThrow(
-    'Connection id is not a string.'
-  );
+  expect(() => buildConnections({ components, context })).toThrow('Connection id is not a string.');
 });
 
 test('buildConnections throws when connection type is not defined', () => {
@@ -219,6 +217,46 @@ test('buildConnections tenant with a field object on an implementing connection 
     context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
   });
   expect(res.connections[0].tenant).toEqual({ field: 'organization_id' });
+});
+
+test('buildConnections throws when tenant field is a dotted path', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'meta.organizationId' },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+  );
+});
+
+test('buildConnections throws when tenant field is an empty string', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: '' },
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+  );
 });
 
 test('buildConnections throws when tenant is false', () => {

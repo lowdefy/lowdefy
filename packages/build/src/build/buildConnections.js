@@ -34,10 +34,7 @@ function validateConnection(connection, context) {
     return false;
   }
   if (type.isUndefined(connection.id)) {
-    collectExceptions(
-      context,
-      new ConfigError('Connection id missing.', { configKey })
-    );
+    collectExceptions(context, new ConfigError('Connection id missing.', { configKey }));
     return false;
   }
   if (!type.isString(connection.id)) {
@@ -118,6 +115,23 @@ function validateTenant(connection, context, { tenantPolicy }) {
         new ConfigError(
           `Connection "tenant" should be "shared" or an object with a "field" string at connection "${connection.id}".`,
           { received: connection.tenant, configKey }
+        )
+      );
+      return;
+    }
+    // The wall stamps and matches the field as a single top-level document
+    // key ({ [field]: value }), so a dotted path would stamp a literal
+    // dotted key that path-based read filters never match, and the authored
+    // scan could not see nested writes onto it - both silent wall breaks.
+    if (
+      type.isObject(connection.tenant) &&
+      (connection.tenant.field === '' || connection.tenant.field.includes('.'))
+    ) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "${connection.id}" — the tenant wall stamps and matches it as a single document key.`,
+          { received: connection.tenant.field, configKey }
         )
       );
       return;

@@ -88,10 +88,19 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
   const field = type.isObject(connectionConfig.tenant)
     ? connectionConfig.tenant.field
     : 'organizationId';
+  // Belt-and-braces repeat of the build check: the wall stamps and matches
+  // the field as a single top-level document key, so a drifted artifact with
+  // a missing, empty, or dotted field must refuse rather than enforce on a
+  // key the read filters can never match.
+  if (!type.isString(field) || field === '' || field.includes('.')) {
+    throw new ConfigError(
+      `Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "${connectionConfig.connectionId}" — the tenant wall stamps and matches it as a single document key.`,
+      { received: field, configKey: connectionConfig['~k'] }
+    );
+  }
   const value = context.user?.organizationId;
   if (!type.isString(value) || value === '') {
-    const location =
-      requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
+    const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
     throw new AuthenticationError(
       `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request outside the wall, declare tenant: none on it and author the organization value explicitly.`
     );

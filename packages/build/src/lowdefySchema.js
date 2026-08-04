@@ -2211,13 +2211,14 @@ export default {
                 field: {
                   type: 'string',
                   minLength: 1,
+                  pattern: '^[^.]+$',
                 },
               },
             },
           ],
           errorMessage: {
             oneOf:
-              'Connection "tenant" should be "shared" or an object with a "field" string, eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
+              'Connection "tenant" should be "shared" or an object with a "field" top-level field name (non-empty, no dots), eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
           },
         },
       },

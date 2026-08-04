@@ -328,6 +328,35 @@ test('tenant with a field object resolves the custom field', () => {
   expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
 });
 
+test('tenant with a dotted field throws instead of enforcing on an unmatchable key', () => {
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'meta.organizationId' } },
+      requestConfig: defaultRequestConfig,
+    })
+  ).toThrow(
+    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "testConnection" — the tenant wall stamps and matches it as a single document key.'
+  );
+});
+
+test('tenant with a missing or empty field on a drifted artifact throws', () => {
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: {} },
+      requestConfig: defaultRequestConfig,
+    })
+  ).toThrow('Connection "tenant.field" should be a non-empty top-level field name');
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: '' } },
+      requestConfig: defaultRequestConfig,
+    })
+  ).toThrow('Connection "tenant.field" should be a non-empty top-level field name');
+});
+
 test('tenant value comes from context.user.organizationId', () => {
   const res = resolveTenant(
     { ...tenantPolicy, user: { id: 'other', organizationId: 'org-2' } },
