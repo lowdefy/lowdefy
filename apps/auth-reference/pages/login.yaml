@@ -30,6 +30,11 @@ blocks:
         # the distinct MEMBERSHIP_REQUIRED code (403); the page reads the
         # code off the thrown error and renders its own message.
         try:
+          # A 2FA-enrolled user gets a challenge instead of a session, and
+          # Login navigates to auth.authPages.twoFactor itself - so this page
+          # carries no routing branch to forget, and no enrolled user is left
+          # clicking Log in to no effect. The response still carries
+          # twoFactorRedirect and twoFactorMethods for an app that reads them.
           - id: login
             type: Login
             params:
@@ -37,19 +42,6 @@ blocks:
                 _state: email
               password:
                 _state: password
-          # A 2FA-enrolled user gets a challenge instead of a session -
-          # Login surfaces { twoFactorRedirect: true, twoFactorMethods } on
-          # its action response rather than navigating, and the page routes
-          # to the challenge page where TwoFactorVerify completes the
-          # session. Skipped (Login already navigated) for everyone else.
-          - id: to_two_factor_challenge
-            type: Link
-            skip:
-              _ne:
-                - _actions: login.response.twoFactorRedirect
-                - true
-            params:
-              pageId: two-factor-challenge
         catch:
           - id: show_login_error
             type: SetState
