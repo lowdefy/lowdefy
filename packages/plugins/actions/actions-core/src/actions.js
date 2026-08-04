@@ -17,13 +17,11 @@
 export { default as AcceptInvitation } from './actions/AcceptInvitation/AcceptInvitation.js';
 export { default as CallAPI } from './actions/CallAPI/CallAPI.js';
 export { default as CallMethod } from './actions/CallMethod/CallMethod.js';
-export { default as CancelInvitation } from './actions/CancelInvitation/CancelInvitation.js';
 export { default as ChangePassword } from './actions/ChangePassword/ChangePassword.js';
 export { default as CopyToClipboard } from './actions/CopyToClipboard/CopyToClipboard.js';
 export { default as DisplayMessage } from './actions/DisplayMessage/DisplayMessage.js';
 export { default as Fetch } from './actions/Fetch/Fetch.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/GeolocationCurrentPosition.js';
-export { default as InviteMember } from './actions/InviteMember/InviteMember.js';
 export { default as LeaveOrganization } from './actions/LeaveOrganization/LeaveOrganization.js';
 export { default as Link } from './actions/Link/Link.js';
 export { default as Login } from './actions/Login/Login.js';
@@ -34,7 +32,6 @@ export { default as PasskeySignIn } from './actions/PasskeySignIn/PasskeySignIn.
 export { default as PhoneNumberSendOtp } from './actions/PhoneNumberSendOtp/PhoneNumberSendOtp.js';
 export { default as PhoneNumberVerify } from './actions/PhoneNumberVerify/PhoneNumberVerify.js';
 export { default as Publish } from './actions/Publish/Publish.js';
-export { default as RemoveMember } from './actions/RemoveMember/RemoveMember.js';
 export { default as Request } from './actions/Request/Request.js';
 export { default as RequestPasswordReset } from './actions/RequestPasswordReset/RequestPasswordReset.js';
 export { default as Reset } from './actions/Reset/Reset.js';
@@ -56,8 +53,6 @@ export { default as TwoFactorDisable } from './actions/TwoFactorDisable/TwoFacto
 export { default as TwoFactorEnable } from './actions/TwoFactorEnable/TwoFactorEnable.js';
 export { default as TwoFactorVerify } from './actions/TwoFactorVerify/TwoFactorVerify.js';
 export { default as Unsubscribe } from './actions/Unsubscribe/Unsubscribe.js';
-export { default as UpdateMemberRole } from './actions/UpdateMemberRole/UpdateMemberRole.js';
-export { default as UpdateOrganization } from './actions/UpdateOrganization/UpdateOrganization.js';
 export { default as UpdateSession } from './actions/UpdateSession/UpdateSession.js';
 export { default as Validate } from './actions/Validate/Validate.js';
 export { default as Wait } from './actions/Wait/Wait.js';
