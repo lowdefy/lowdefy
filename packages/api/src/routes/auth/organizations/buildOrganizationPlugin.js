@@ -76,8 +76,12 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
       member: {
         modelName: modelNames.member,
         // Per-(user, org) admin-set authorization inputs - internal, not an
-        // app-facing additionalFields surface.
+        // app-facing additionalFields surface. appRoles carries the app's own
+        // role strings; member.role is left to BetterAuth's owner/admin/member
+        // org-authority tier, so the two authorities never share a field.
+        // input: false says these are never accepted from a request body.
         additionalFields: {
+          appRoles: { type: 'string[]', required: false, input: false },
           attributes: { type: 'json', required: false, input: false },
         },
       },
@@ -89,7 +93,19 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
         // invitation the same way - accepting copies them onto the minted
         // member row, so an invited user's authorization parameters hold
         // from their first session.
+        //
+        // appRoles is declared without the input: false its member counterpart
+        // carries. toZodSchema drops input: false fields when isClientSide is
+        // set, and the plugin builds the /organization/invite-member body with
+        // isClientSide: true - an input: false appRoles would be stripped from
+        // that body, and no invitation could ever carry app roles. Under tenant
+        // that endpoint is enabled, so an org admin or owner can invite an
+        // address with arbitrary, unvalidated app roles. That is intended:
+        // inviting members with app roles is what administering your own
+        // organization means, and it stays inside the organization the caller
+        // already administers.
         additionalFields: {
+          appRoles: { type: 'string[]', required: false },
           attributes: { type: 'json', required: false },
           profile: { type: 'json', required: false },
         },

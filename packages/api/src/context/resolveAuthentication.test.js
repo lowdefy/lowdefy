@@ -90,13 +90,13 @@ test('sets context.user to null when the user holds no member row in the active 
   );
 });
 
-test('resolves roles from the active member row, splitting the CSV role string', async () => {
+test('resolves roles from member.appRoles and orgRoles from the member role tier', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1', email: 'user@example.com' },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
-    member: { id: 'member_1', role: 'admin, branch-manager' },
+    member: { id: 'member_1', role: 'member', appRoles: ['branch-manager'] },
   });
   const context = {};
 
@@ -105,7 +105,8 @@ test('resolves roles from the active member row, splitting the CSV role string',
   expect(context.user).toEqual({
     id: 'user_1',
     email: 'user@example.com',
-    roles: ['admin', 'branch-manager'],
+    roles: ['branch-manager'],
+    orgRoles: ['member'],
     attributes: {},
     activeOrganizationId: 'org_1',
   });
@@ -157,7 +158,22 @@ test('carries impersonatedBy onto context.user when the admin plugin is imperson
   expect(context.user.impersonatedBy).toBe('admin_1');
 });
 
-test('resolves a single role string to a one-element roles array', async () => {
+test('splits a multi-value member role string into orgRoles', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'owner,admin' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.orgRoles).toEqual(['owner', 'admin']);
+});
+
+test('resolves an empty roles array when the member row has no appRoles key', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -169,22 +185,23 @@ test('resolves a single role string to a one-element roles array', async () => {
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.roles).toEqual(['member']);
+  expect(context.user.roles).toEqual([]);
 });
 
-test('resolves an empty roles array when the member row has no role', async () => {
+test('resolves an empty orgRoles array when the member row has an empty role string', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
-    member: { id: 'member_1' },
+    member: { id: 'member_1', role: '', appRoles: ['auditor'] },
   });
   const context = {};
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.roles).toEqual([]);
+  expect(context.user.orgRoles).toEqual([]);
+  expect(context.user.roles).toEqual(['auditor']);
 });
 
 test('merges user and member attributes shallowly with member winning', async () => {
