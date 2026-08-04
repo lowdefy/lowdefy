@@ -23,7 +23,7 @@ const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
 
 // The pinned org row the mock adapter serves for the ensure-by-slug lookup.
-const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
+const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 
 function createMockAuth({
   member = null,
@@ -74,7 +74,7 @@ test('pinned: a member of the pinned org gets it as the active organization', as
   const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: pinned });
   const result = await hook({ userId: 'user_1', token: 'tok' });
   expect(result).toEqual({
-    data: { userId: 'user_1', token: 'tok', activeOrganizationId: 'org_pinned' },
+    data: { userId: 'user_1', token: 'tok', activeOrganizationId: 'team-portal' },
   });
 });
 
@@ -120,7 +120,7 @@ test('pinned: the invitation lookup uses the lowercased user email scoped to the
     where: [
       { field: 'email', value: 'user@example.com' },
       { field: 'status', value: 'pending' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'team-portal' },
     ],
   });
 });
@@ -234,12 +234,12 @@ test('pinned open signup: a session for a not-yet-joined user ensures membership
   expect(auth.api.addMember).toHaveBeenCalledWith({
     body: {
       userId: 'user_1',
-      organizationId: 'org_pinned',
+      organizationId: 'team-portal',
       role: 'member',
     },
     headers: undefined,
   });
   expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_pinned' },
+    data: { userId: 'user_1', activeOrganizationId: 'team-portal' },
   });
 });
