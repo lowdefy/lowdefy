@@ -70,6 +70,7 @@ export default {
     'UpdateMemberAttributes',
     'UpdateMemberOrgRole',
     'UpdateMemberRoles',
+    'UpdateOrganization',
     'UpdateUserAttributes',
     'UpdateUserProfile',
   ],

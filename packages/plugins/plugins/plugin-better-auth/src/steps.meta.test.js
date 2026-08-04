@@ -33,6 +33,7 @@ const authorities = {
   UpdateMemberAttributes: { scope: 'org', permissions: { member: ['update'] } },
   UpdateMemberOrgRole: { scope: 'org', permissions: { member: ['update'] } },
   UpdateMemberRoles: { scope: 'org', permissions: { member: ['update'] } },
+  UpdateOrganization: { scope: 'org', permissions: { organization: ['update'] } },
   UpdateUserAttributes: {
     scope: 'org',
     permissions: { user: ['set-attributes'] },

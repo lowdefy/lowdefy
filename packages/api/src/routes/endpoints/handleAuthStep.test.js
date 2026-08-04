@@ -373,6 +373,34 @@ test('AuthStep step refuses an org-scoped step when the caller holds only the me
   expect(stepFn).not.toHaveBeenCalled();
 });
 
+test('AuthStep step runs an organization:update step when the caller is an admin of the resolved organization', async () => {
+  const stepFn = createStepFn({ scope: 'org', permissions: { organization: ['update'] } });
+  const { context } = createTestContext({ steps: { TestAuthStep: stepFn } });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res).toEqual({ status: 'continue' });
+  expect(stepFn).toHaveBeenCalledTimes(1);
+});
+
+test('AuthStep step refuses an organization:update step when the caller holds only the member role', async () => {
+  const stepFn = createStepFn({ scope: 'org', permissions: { organization: ['update'] } });
+  const { context } = createTestContext({
+    members: [{ userId: 'user_1', organizationId: 'org_pinned', role: 'member' }],
+    steps: { TestAuthStep: stepFn },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" refused - the caller does not hold organization: [update] in organization "org_pinned".'
+  );
+  expect(stepFn).not.toHaveBeenCalled();
+});
+
 test('AuthStep step refuses an org-scoped step when the caller holds no member row in the resolved organization', async () => {
   const stepFn = createStepFn();
   const { context } = createTestContext({ members: [], steps: { TestAuthStep: stepFn } });
