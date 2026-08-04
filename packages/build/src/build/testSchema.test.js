@@ -423,7 +423,22 @@ test('auth role entry with an unknown key emits additional properties warning', 
   );
 });
 
-test('connection tenant true emits no warnings', () => {
+test('connection tenant shared emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant true emits warning - the key was removed with the inverted default', () => {
   const components = {
     lowdefy: '1.0.0',
     connections: [
@@ -435,7 +450,9 @@ test('connection tenant true emits no warnings', () => {
     ],
   };
   testSchema({ components, context });
-  expect(mockLogWarn).not.toHaveBeenCalled();
+  // The raw const error surfaces here for the same reason as the invalid
+  // shape below; buildConnections validateTenant carries the teaching error.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
 });
 
 test('connection tenant with a field object emits no warnings', () => {

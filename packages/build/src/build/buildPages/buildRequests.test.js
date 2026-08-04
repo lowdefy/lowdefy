@@ -508,6 +508,40 @@ test('request tenant with another string throws', () => {
   );
 });
 
+test('request tenant shared throws naming the connection position', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', tenant: 'shared' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request tenant with a field object throws naming the connection position', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          { id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
 test('a literal $search pipeline on a walled connection without tenant authored throws at build', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');

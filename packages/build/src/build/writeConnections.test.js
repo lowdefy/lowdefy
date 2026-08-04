@@ -76,14 +76,19 @@ test('writeConnections multiple connection', async () => {
   ]);
 });
 
-test('writeConnections writes the tenant connections index', async () => {
+test('writeConnections writes the inverted tenant connections index', async () => {
+  // The walled set is every scoping-capable connection that does not declare
+  // tenant: shared - non-scopable types never enter it.
+  const indexContext = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
+  indexContext.typesMap = {
+    connectionMetas: { MongoDBCollection: { tenant: true }, SendGridMail: { tenant: false } },
+  };
   const components = {
     connections: [
       {
         id: 'connection:walled',
         connectionId: 'walled',
         type: 'MongoDBCollection',
-        tenant: true,
       },
       {
         id: 'connection:custom-field',
@@ -92,16 +97,22 @@ test('writeConnections writes the tenant connections index', async () => {
         tenant: { field: 'organization_id' },
       },
       {
-        id: 'connection:unwalled',
-        connectionId: 'unwalled',
+        id: 'connection:shared',
+        connectionId: 'shared',
         type: 'MongoDBCollection',
+        tenant: 'shared',
+      },
+      {
+        id: 'connection:mail',
+        connectionId: 'mail',
+        type: 'SendGridMail',
       },
     ],
   };
-  await writeConnections({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls[3]).toEqual([
+  await writeConnections({ components, context: indexContext });
+  expect(mockWriteBuildArtifact.mock.calls[4]).toEqual([
     'tenantConnections.json',
-    '[{"connectionId":"walled","type":"MongoDBCollection","tenant":true},{"connectionId":"custom-field","type":"MongoDBCollection","tenant":{"field":"organization_id"}}]',
+    '[{"connectionId":"walled","type":"MongoDBCollection"},{"connectionId":"custom-field","type":"MongoDBCollection","tenant":{"field":"organization_id"}}]',
   ]);
 });
 

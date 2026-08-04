@@ -138,13 +138,13 @@ function tenantContext({ connectionMetas } = {}) {
   return tenantTestContext;
 }
 
-test('buildConnections tenant true on an implementing connection type passes', () => {
+test('buildConnections tenant shared on an implementing connection type passes', () => {
   const components = {
     connections: [
       {
         id: 'connection1',
         type: 'TestType',
-        tenant: true,
+        tenant: 'shared',
       },
     ],
   };
@@ -157,9 +157,51 @@ test('buildConnections tenant true on an implementing connection type passes', (
       id: 'connection:connection1',
       connectionId: 'connection1',
       type: 'TestType',
-      tenant: true,
+      tenant: 'shared',
     },
   ]);
+});
+
+test('buildConnections throws when tenant is true', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: true,
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+    })
+  ).toThrow(
+    'Connection "tenant: true" was removed at connection "connection1" — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, so the declaration restates the default. Remove the key, or declare tenant: shared for data deliberately shared across organizations.'
+  );
+});
+
+test('buildConnections throws when a request-level sentinel is declared on a connection', () => {
+  ['none', 'authored'].forEach((sentinel) => {
+    const components = {
+      connections: [
+        {
+          id: 'connection1',
+          type: 'TestType',
+          tenant: sentinel,
+        },
+      ],
+    };
+    expect(() =>
+      buildConnections({
+        components,
+        context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
+      })
+    ).toThrow(
+      `Connection "tenant" does not accept "${sentinel}" at connection "connection1" — "none" and "authored" are declared on the request, step or websocket that needs the exception, not on the connection.`
+    );
+  });
 });
 
 test('buildConnections tenant with a field object on an implementing connection type passes', () => {
@@ -195,11 +237,11 @@ test('buildConnections throws when tenant is false', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
   );
 });
 
-test('buildConnections throws when tenant is a string', () => {
+test('buildConnections throws when tenant is an arbitrary string', () => {
   const components = {
     connections: [
       {
@@ -215,7 +257,7 @@ test('buildConnections throws when tenant is a string', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
   );
 });
 
@@ -235,7 +277,7 @@ test('buildConnections throws when tenant object has no field', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
   );
 });
 
@@ -255,7 +297,7 @@ test('buildConnections throws when tenant field is not a string', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be true or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
   );
 });
 
@@ -265,7 +307,7 @@ test('buildConnections throws when the connection type does not implement the te
       {
         id: 'connection1',
         type: 'TestType',
-        tenant: true,
+        tenant: 'shared',
       },
     ],
   };
@@ -282,7 +324,7 @@ test('buildConnections throws when no connectionMetas store exists in the typesM
       {
         id: 'connection1',
         type: 'TestType',
-        tenant: true,
+        tenant: 'shared',
       },
     ],
   };
@@ -297,7 +339,7 @@ test('buildConnections throws when the connection type meta tenant is not exactl
       {
         id: 'connection1',
         type: 'TestType',
-        tenant: true,
+        tenant: { field: 'organization_id' },
       },
     ],
   };
@@ -309,6 +351,72 @@ test('buildConnections throws when the connection type meta tenant is not exactl
   ).toThrow(
     'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
   );
+});
+
+test('buildConnections throws when tenant is declared on a non-scopable connection type', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({
+      components,
+      context: tenantContext({ connectionMetas: { TestType: { tenant: false } } }),
+    })
+  ).toThrow(
+    'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1". Use a connection type that enforces the tenant wall.'
+  );
+});
+
+test('buildConnections throws under the tenant policy when the type declares no capability', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  expect(() =>
+    buildConnections({ components, context: tenantContext({ connectionMetas: {} }) })
+  ).toThrow(
+    'Connection type "TestType" declares no tenant capability at connection "connection1". Under auth.organizations.policy: tenant every connection type must declare connectionMetas tenant: true (implements the tenant scoping contract) or tenant: false (non-scopable), so no connection is ever silently unscoped.'
+  );
+});
+
+test('buildConnections passes under the tenant policy when the type declares non-scopable', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: false } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+});
+
+test('buildConnections passes under the pinned policy when the type declares no capability', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+      },
+    ],
+  };
+  const res = buildConnections({ components, context: tenantContext({ connectionMetas: {} }) });
+  expect(res.connections[0].connectionId).toBe('connection1');
 });
 
 test('buildConnections without tenant does not require the typesMap', () => {
@@ -361,24 +469,38 @@ test('count operators', () => {
   });
 });
 
-test('buildConnections populates tenantConnectionIds under the tenant policy', () => {
+test('buildConnections populates tenantConnectionIds with the inverted set under the tenant policy', () => {
   const components = {
     auth: { organizations: { policy: 'tenant' } },
     connections: [
       {
-        id: 'walled',
+        id: 'walled-by-default',
         type: 'TestType',
-        tenant: true,
       },
       {
-        id: 'unwalled',
+        id: 'walled-custom-field',
         type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+      {
+        id: 'shared',
+        type: 'TestType',
+        tenant: 'shared',
+      },
+      {
+        id: 'non-scopable',
+        type: 'PlainType',
       },
     ],
   };
-  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  const buildContext = tenantContext({
+    connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
+  });
   buildConnections({ components, context: buildContext });
-  expect([...buildContext.tenantConnectionIds]).toEqual(['walled']);
+  expect([...buildContext.tenantConnectionIds]).toEqual([
+    'walled-by-default',
+    'walled-custom-field',
+  ]);
 });
 
 test('buildConnections leaves tenantConnectionIds empty under the pinned policy', () => {
@@ -388,7 +510,6 @@ test('buildConnections leaves tenantConnectionIds empty under the pinned policy'
       {
         id: 'walled',
         type: 'TestType',
-        tenant: true,
       },
     ],
   };
@@ -403,7 +524,6 @@ test('buildConnections leaves tenantConnectionIds empty when auth declares no po
       {
         id: 'walled',
         type: 'TestType',
-        tenant: true,
       },
     ],
   };
@@ -419,7 +539,7 @@ test('buildConnections still validates the tenant contract under the pinned poli
       {
         id: 'connection1',
         type: 'TestType',
-        tenant: true,
+        tenant: 'shared',
       },
     ],
   };

@@ -146,26 +146,36 @@ function buildModules({ components, context }) {
 }
 
 // A connection remap swaps the module's whole connection definition for the
-// app's - including the module's tenant: declaration. Under policy: tenant
-// that would run the module's requests outside the wall, silently: reads
-// unfiltered, writes unstamped. Per-connection opt-outs are exactly what the
-// wall refuses to offer, so under tenant a walled module connection may only
-// be remapped to a target that declares tenant: itself. Under pinned the
-// remap is harmless and stays legal - the flip to tenant is a rebuild, so
-// this check fires there, before any traffic. Runs after the module loop so
-// remap targets that are other modules' (scoped) connections are present.
+// app's - including its position against the tenant wall. Under
+// policy: tenant a module connection on a scoping-capable type is scoped by
+// default (amendment-3), so the unwalling case is remapping it onto a target
+// that is NOT scoped - one that declares tenant: shared, or whose type does
+// not implement the scoping contract. That would run the module's requests
+// outside the wall, silently: reads unfiltered, writes unstamped. Remapping
+// onto a target that declares nothing is safe - both sides are scoped. Under
+// pinned the remap is harmless and stays legal - the flip to tenant is a
+// rebuild, so this check fires there, before any traffic. Runs after the
+// module loop so remap targets that are other modules' (scoped) connections
+// are present.
 function validateTenantRemaps({ components, context, moduleEntries }) {
   if (components.auth?.organizations?.policy !== 'tenant') return;
+  const connectionMetas = context.typesMap?.connectionMetas ?? {};
+  const isScoped = (connection) =>
+    connectionMetas[connection.type]?.tenant === true && connection.tenant !== 'shared';
   for (const entry of moduleEntries) {
     const moduleEntry = context.modules[entry.id];
     const remapping = moduleEntry.connections ?? {};
     for (const conn of moduleEntry.manifest.connections ?? []) {
       const targetId = remapping[conn.id];
-      if (!targetId || type.isNone(conn.tenant)) continue;
+      if (!targetId || !isScoped(conn)) continue;
       const target = (components.connections ?? []).find((c) => c.id === targetId);
-      if (target && type.isNone(target.tenant)) {
+      if (target && !isScoped(target)) {
+        const remedy =
+          target.tenant === 'shared'
+            ? `it declares tenant: shared. Remove the tenant: shared declaration on "${targetId}"`
+            : `its type "${target.type}" does not implement the tenant scoping contract. Remap to a scoping-capable connection`;
         throw new ConfigError(
-          `Module "${entry.id}" declares connection "${conn.id}" as tenant-scoped, but the entry remaps it to connection "${targetId}", which does not declare "tenant". Under auth.organizations.policy: tenant this would run the module's requests outside the tenant wall - reads unfiltered, writes unstamped. Declare tenant on "${targetId}", or remove the remap.`
+          `Module "${entry.id}" connection "${conn.id}" is tenant-scoped, but the entry remaps it to connection "${targetId}", which is not scoped: ${remedy}, or remove the remap. Under auth.organizations.policy: tenant the remap would run the module's requests outside the tenant wall - reads unfiltered, writes unstamped.`
         );
       }
     }

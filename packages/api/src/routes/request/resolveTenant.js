@@ -19,23 +19,37 @@ import { type } from '@lowdefy/helpers';
 
 // The engine computes the tenant verdict, the connection enforces it. This is
 // the compute half: resolve the tenant field and the caller's organization id
-// for a request against a tenant connection, or fail closed.
+// for a request against a scoped connection, or fail closed.
 //
-// The wall is policy-conditional: it engages only when the app declares
-// auth.organizations.policy: tenant. Under pinned (the default, including
-// apps with no auth or no organizations block) a connection's `tenant:`
-// declaration states that the collection is org-scoped WHEN the deployment
-// is multi-org, and the verdict is null - no filter, no stamp, no audit,
-// no fail-closed error. The one check that stays on under both policies is
-// the connection-type contract check below: a declaration a connection type
-// can not enforce should fail on the current deployment, not on the day the
-// app flips to tenant.
+// The app's auth.organizations.policy sets the scoping default for every
+// connection (amendment-3). Under tenant, a connection whose type implements
+// the scoping contract (meta.tenant === true) is scoped unless it declares
+// tenant: shared. Under pinned (the default, including apps with no auth or
+// no organizations block) no connection is scoped and none can be - the
+// verdict is null: no filter, no stamp, no audit, no fail-closed error. The
+// one check that stays on under both policies is the contract check below: a
+// tenant declaration on a type that can not honour it should fail on the
+// current deployment, not on the day the app flips to tenant.
 //
-// The request-level sentinel is three-valued (amendment-1):
-// - No `tenant:` on the connection -> null verdict, nothing injected.
-// - `tenant: 'none'` on the request/step/websocket -> null verdict. This is
-//   the ONLY opt-out: a visible, reviewable statement at the point of use.
-//   There is no silent fallback and no connection-level "off".
+// The connection position accepts only the exception to the default:
+// - `tenant: 'shared'` -> null verdict. Data deliberately shared across
+//   organizations - the ONLY connection-level path out of the wall, visible
+//   in the connection file. (`tenant: true` was removed with the inversion;
+//   it restated the default and is a build error.)
+// - `tenant: { field }` -> scoped on that field instead of organizationId.
+//
+// Connection types declare their capability as meta.tenant: true implements
+// the scoping contract, false is non-scopable (object storage, SMTP - never
+// scoped, no declaration needed on its connections). A type declaring
+// neither is a build error under tenant (buildConnections validateTenant);
+// the checks here are runtime belt-and-braces repeats of the build errors,
+// because build artifacts and the running server can drift, and a silently
+// unscoped connection must never be reachable.
+//
+// The request-level sentinel is unchanged by the inversion (amendment-1):
+// - `tenant: 'none'` on the request/step/websocket -> null verdict. A
+//   visible, reviewable statement at the point of use - the request-level
+//   opt-out for caller-less contexts.
 // - `tenant: 'authored'` on the request -> the verdict resolves exactly as
 //   the default (an org-less caller is still rejected) and carries
 //   authored: true, telling the connection resolver to AUDIT the request's
@@ -45,29 +59,35 @@ import { type } from '@lowdefy/helpers';
 //   the active org in string form). System context (hook routines, scheduled
 //   jobs) and strategy callers have none, so they fail here by design - the
 //   wall never degrades to unscoped access.
-//
-// The connection-type contract check is a runtime belt-and-braces repeat of
-// the build error (buildConnections validateTenant): build artifacts and the
-// running server can drift, and a declared-but-unenforced wall must never be
-// reachable.
 function resolveTenant(context, { connection, connectionConfig, requestConfig }) {
-  if (type.isNone(connectionConfig.tenant)) {
-    return null;
-  }
-  if (connection.meta?.tenant !== true) {
+  const capability = connection.meta?.tenant;
+  if (!type.isNone(connectionConfig.tenant) && capability !== true) {
     throw new ConfigError(
-      `Connection type "${connectionConfig.type}" does not implement the tenant scoping contract, so "tenant" can not be enforced at connection "${connectionConfig.connectionId}".`,
+      `Connection type "${connectionConfig.type}" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "${connectionConfig.connectionId}".`,
       { configKey: connectionConfig['~k'] }
     );
   }
   if ((context.organization?.policy ?? 'pinned') !== 'tenant') {
     return null;
   }
+  if (connectionConfig.tenant === 'shared') {
+    return null;
+  }
+  if (capability === false) {
+    return null;
+  }
+  if (capability !== true) {
+    throw new ConfigError(
+      `Connection type "${connectionConfig.type}" declares no tenant capability, so connection "${connectionConfig.connectionId}" can not be served under auth.organizations.policy: tenant. The type must declare meta tenant: true (implements the scoping contract) or tenant: false (non-scopable).`,
+      { configKey: connectionConfig['~k'] }
+    );
+  }
   if (requestConfig.tenant === 'none') {
     return null;
   }
-  const field =
-    connectionConfig.tenant === true ? 'organizationId' : connectionConfig.tenant.field;
+  const field = type.isObject(connectionConfig.tenant)
+    ? connectionConfig.tenant.field
+    : 'organizationId';
   const value = context.user?.organizationId;
   if (!type.isString(value) || value === '') {
     const location =

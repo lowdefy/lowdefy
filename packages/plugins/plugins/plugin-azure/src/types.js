@@ -16,5 +16,10 @@
 
 export default {
   connections: ['AzureBlobContainer'],
+  // Non-scopable: the tenant wall does not cover object storage, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    AzureBlobContainer: { tenant: false },
+  },
   requests: ['AzureBlobDownloadSas', 'AzureBlobGet', 'AzureBlobPut', 'AzureBlobUploadSas'],
 };

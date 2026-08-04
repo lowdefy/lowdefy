@@ -2202,7 +2202,7 @@ export default {
         },
         tenant: {
           oneOf: [
-            { const: true },
+            { const: 'shared' },
             {
               type: 'object',
               additionalProperties: false,
@@ -2217,7 +2217,7 @@ export default {
           ],
           errorMessage: {
             oneOf:
-              'Connection "tenant" should be true or an object with a "field" string, eg. { field: "organization_id" }.',
+              'Connection "tenant" should be "shared" or an object with a "field" string, eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
           },
         },
       },

@@ -30,6 +30,9 @@ const connections = {
   TestConnection: {
     meta: { tenant: true },
   },
+  NonScopableConnection: {
+    meta: { tenant: false },
+  },
   PlainConnection: {},
 };
 
@@ -110,13 +113,31 @@ test('websocket without a connectionId returns a null tenant and null connection
   expect(res.websocketResolver).toBe(mockResolver);
 });
 
-test('connection without tenant declared returns a null tenant', async () => {
+test('connection on a non-scopable type returns a null tenant', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       connectionConfig: {
         id: 'connection:testConnection',
-        type: 'PlainConnection',
+        type: 'NonScopableConnection',
         connectionId: 'testConnection',
+        properties: {},
+      },
+    })
+  );
+  const context = createTestContext({ user: { id: 'id' } });
+
+  const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
+  expect(res.tenant).toBe(null);
+});
+
+test('connection declaring tenant shared returns a null tenant', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        tenant: 'shared',
         properties: {},
       },
     })
@@ -205,7 +226,7 @@ test('tenant declared on a connection type without the contract throws ConfigErr
         id: 'connection:testConnection',
         type: 'PlainConnection',
         connectionId: 'testConnection',
-        tenant: true,
+        tenant: { field: 'organization_id' },
         properties: {},
       },
     })
@@ -216,7 +237,7 @@ test('tenant declared on a connection type without the contract throws ConfigErr
     ConfigError
   );
   await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
-    'Connection type "PlainConnection" does not implement the tenant scoping contract, so "tenant" can not be enforced at connection "testConnection".'
+    'Connection type "PlainConnection" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "testConnection".'
   );
 });
 

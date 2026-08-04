@@ -16,5 +16,10 @@
 
 export default {
   connections: ['AxiosHttp'],
+  // Non-scopable: the tenant wall does not cover this type, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    AxiosHttp: { tenant: false },
+  },
   requests: ['AxiosHttp'],
 };

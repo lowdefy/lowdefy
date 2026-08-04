@@ -16,5 +16,11 @@
 
 export default {
   connections: ['Knex'],
+  // Non-scopable: the tenant wall is MongoDB-only, so SQL data sits outside
+  // the wall by this declaration - organization scoping, where a deployment
+  // needs it, is authored in the queries themselves.
+  connectionMetas: {
+    Knex: { tenant: false },
+  },
   requests: ['KnexBuilder', 'KnexRaw'],
 };

@@ -105,7 +105,7 @@ async function collectTargets(context, { tenantConnections }) {
       );
       continue;
     }
-    const field = entry.tenant === true ? 'organizationId' : entry.tenant.field;
+    const field = type.isObject(entry.tenant) ? entry.tenant.field : 'organizationId';
     // Several connections usually declare the same physical collection -
     // probe each evaluated target once.
     const key = JSON.stringify([entry.type, field, properties]);

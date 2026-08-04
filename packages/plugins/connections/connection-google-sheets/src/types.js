@@ -16,6 +16,12 @@
 
 export default {
   connections: ['GoogleSheet'],
+  // Non-scopable: the tenant wall is MongoDB-only, so sheet data sits
+  // outside the wall by this declaration - organization scoping, where a
+  // deployment needs it, is authored in the requests themselves.
+  connectionMetas: {
+    GoogleSheet: { tenant: false },
+  },
   requests: [
     'GoogleSheetAppendMany',
     'GoogleSheetAppendOne',

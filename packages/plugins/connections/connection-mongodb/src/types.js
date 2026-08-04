@@ -16,10 +16,11 @@
 
 export default {
   connections: ['MongoDBCollection'],
-  // MongoDBCollection implements the tenant scoping contract: the tenant wall
-  // (connection-level `tenant:`) is enforced across all its request types and
-  // the change stream. Declaring `tenant:` on a connection type without this
-  // meta is a build error.
+  // MongoDBCollection implements the tenant scoping contract: under
+  // auth.organizations.policy: tenant its connections are scoped by default -
+  // enforced across all its request types and the change stream - and a
+  // connection opts out only with tenant: shared. Declaring tenant: on a
+  // connection whose type lacks this meta is a build error.
   connectionMetas: {
     MongoDBCollection: { tenant: true },
   },

@@ -16,4 +16,9 @@
 
 export default {
   connections: ['Mcp'],
+  // Non-scopable: the tenant wall does not cover this type, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    Mcp: { tenant: false },
+  },
 };

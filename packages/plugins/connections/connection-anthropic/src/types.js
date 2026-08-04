@@ -16,6 +16,11 @@
 
 export default {
   connections: ['Anthropic'],
+  // Non-scopable: the tenant wall does not cover this type, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    Anthropic: { tenant: false },
+  },
   agents: ['ClaudeAgent'],
   requests: ['GenerateObject', 'GenerateText'],
 };

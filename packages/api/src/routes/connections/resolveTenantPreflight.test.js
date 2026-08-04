@@ -52,7 +52,7 @@ function createTestContext({ organization = { policy: 'tenant' } } = {}) {
 }
 
 function readConfigImp({
-  tenantConnections = [{ connectionId: 'walled', type: 'TestTenantConnection', tenant: true }],
+  tenantConnections = [{ connectionId: 'walled', type: 'TestTenantConnection' }],
   connectionConfigs = {
     walled: {
       connectionId: 'walled',
@@ -108,9 +108,9 @@ test('refuses with one aggregated error naming every offending target', async ()
   mockReadConfigFile.mockImplementation(
     readConfigImp({
       tenantConnections: [
-        { connectionId: 'contacts-a', type: 'TestTenantConnection', tenant: true },
-        { connectionId: 'contacts-b', type: 'TestTenantConnection', tenant: true },
-        { connectionId: 'companies', type: 'TestTenantConnection', tenant: true },
+        { connectionId: 'contacts-a', type: 'TestTenantConnection' },
+        { connectionId: 'contacts-b', type: 'TestTenantConnection' },
+        { connectionId: 'companies', type: 'TestTenantConnection' },
       ],
       connectionConfigs: {
         'contacts-a': {
@@ -211,7 +211,7 @@ test('skips a tenant-capable type without the preflight capability, with a warni
   mockReadConfigFile.mockImplementation(
     readConfigImp({
       tenantConnections: [
-        { connectionId: 'walled', type: 'NoProbeTenantConnection', tenant: true },
+        { connectionId: 'walled', type: 'NoProbeTenantConnection' },
       ],
     })
   );

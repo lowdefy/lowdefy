@@ -18,17 +18,24 @@ import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import resolveTenant from './resolveTenant.js';
 
+// Connection type capability: true implements the scoping contract, false is
+// non-scopable, absent means the type declares neither (a build error under
+// the tenant policy, repeated here at runtime).
 const tenantConnection = {
   meta: { tenant: true },
 };
 
+const nonScopableConnection = {
+  meta: { tenant: false },
+};
+
 const plainConnection = {};
 
+// Under the inverted default a scoped connection declares nothing.
 const defaultConnectionConfig = {
   id: 'connection:testConnection',
   type: 'TestConnection',
   connectionId: 'testConnection',
-  tenant: true,
   '~k': 'connection.0',
 };
 
@@ -48,31 +55,70 @@ const contextWithOrg = {
   user: { id: 'id', organizationId: 'org-1' },
 };
 
-test('returns null when connection has no tenant declared', () => {
+test('a scoping-capable connection with no tenant key is scoped by default', () => {
   const res = resolveTenant(contextWithOrg, {
-    connection: plainConnection,
-    connectionConfig: {
-      ...defaultConnectionConfig,
-      tenant: undefined,
-    },
+    connection: tenantConnection,
+    connectionConfig: defaultConnectionConfig,
+    requestConfig: defaultRequestConfig,
+  });
+  expect(res).toEqual({ field: 'organizationId', value: 'org-1' });
+});
+
+test('tenant shared returns null under the tenant policy', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
     requestConfig: defaultRequestConfig,
   });
   expect(res).toBe(null);
 });
 
-test('returns null when connection tenant is null', () => {
+test('tenant shared does not require a caller organization', () => {
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('tenant shared is inert under the pinned policy', () => {
+  const res = resolveTenant(
+    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('a non-scopable connection type is never scoped', () => {
   const res = resolveTenant(contextWithOrg, {
-    connection: plainConnection,
-    connectionConfig: {
-      ...defaultConnectionConfig,
-      tenant: null,
-    },
+    connection: nonScopableConnection,
+    connectionConfig: defaultConnectionConfig,
     requestConfig: defaultRequestConfig,
   });
   expect(res).toBe(null);
 });
 
-test('throws ConfigError when connection type does not implement the tenant contract', () => {
+test('a non-scopable connection type does not require a caller organization', () => {
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null },
+    {
+      connection: nonScopableConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('throws ConfigError under the tenant policy when the type declares no capability', () => {
   expect(() =>
     resolveTenant(contextWithOrg, {
       connection: plainConnection,
@@ -87,11 +133,11 @@ test('throws ConfigError when connection type does not implement the tenant cont
       requestConfig: defaultRequestConfig,
     })
   ).toThrow(
-    'Connection type "TestConnection" does not implement the tenant scoping contract, so "tenant" can not be enforced at connection "testConnection".'
+    'Connection type "TestConnection" declares no tenant capability, so connection "testConnection" can not be served under auth.organizations.policy: tenant.'
   );
 });
 
-test('throws ConfigError when connection meta.tenant is not exactly true', () => {
+test('throws ConfigError under the tenant policy when meta tenant is not exactly true or false', () => {
   expect(() =>
     resolveTenant(contextWithOrg, {
       connection: { meta: { tenant: 'yes' } },
@@ -101,11 +147,58 @@ test('throws ConfigError when connection meta.tenant is not exactly true', () =>
   ).toThrow(ConfigError);
 });
 
-test('contract check applies even when the request opts out with tenant none', () => {
+test('a type declaring no capability returns null under the pinned policy', () => {
+  const res = resolveTenant(
+    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    {
+      connection: plainConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('throws ConfigError when tenant is declared on a type without the contract', () => {
   expect(() =>
     resolveTenant(contextWithOrg, {
       connection: plainConnection,
-      connectionConfig: defaultConnectionConfig,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
+      requestConfig: defaultRequestConfig,
+    })
+  ).toThrow(
+    'Connection type "TestConnection" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "testConnection".'
+  );
+});
+
+test('throws ConfigError when tenant shared is declared on a type without the contract', () => {
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: nonScopableConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
+      requestConfig: defaultRequestConfig,
+    })
+  ).toThrow(ConfigError);
+});
+
+test('declared-tenant contract check applies under the pinned policy', () => {
+  expect(() =>
+    resolveTenant(
+      { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+      {
+        connection: plainConnection,
+        connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
+        requestConfig: defaultRequestConfig,
+      }
+    )
+  ).toThrow(ConfigError);
+});
+
+test('declared-tenant contract check applies even when the request opts out with tenant none', () => {
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: plainConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
       requestConfig: { ...defaultRequestConfig, tenant: 'none' },
     })
   ).toThrow(ConfigError);
@@ -226,15 +319,6 @@ test('AuthenticationError message falls back to websocketId for websocket config
   );
 });
 
-test('tenant true resolves the default organizationId field with the caller organization', () => {
-  const res = resolveTenant(contextWithOrg, {
-    connection: tenantConnection,
-    connectionConfig: defaultConnectionConfig,
-    requestConfig: defaultRequestConfig,
-  });
-  expect(res).toEqual({ field: 'organizationId', value: 'org-1' });
-});
-
 test('tenant with a field object resolves the custom field', () => {
   const res = resolveTenant(contextWithOrg, {
     connection: tenantConnection,
@@ -342,17 +426,4 @@ test('tenant authored returns null under the pinned policy', () => {
     }
   );
   expect(res).toBe(null);
-});
-
-test('contract check applies under the pinned policy', () => {
-  expect(() =>
-    resolveTenant(
-      { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
-      {
-        connection: plainConnection,
-        connectionConfig: defaultConnectionConfig,
-        requestConfig: defaultRequestConfig,
-      }
-    )
-  ).toThrow(ConfigError);
 });
