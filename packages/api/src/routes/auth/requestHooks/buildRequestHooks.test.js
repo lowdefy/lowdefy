@@ -22,6 +22,13 @@ jest.unstable_mockModule('better-auth/api', () => ({
   createAuthMiddleware: (handler) => handler,
 }));
 
+// beginTwoFactorChallenge is exercised against a fake endpoint context in its
+// own test; here the interest is only which paths reach it.
+const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
+jest.unstable_mockModule('./beginTwoFactorChallenge.js', () => ({
+  default: mockBeginTwoFactorChallenge,
+}));
+
 const { default: buildRequestHooks } = await import('./buildRequestHooks.js');
 
 const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
@@ -84,4 +91,97 @@ test('buildRequestHooks does not resolve the BetterAuth instance while assemblin
   const getAuth = jest.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });
   expect(getAuth).not.toHaveBeenCalled();
+});
+
+const twoFactorAuthConfig = {
+  authPages: { twoFactor: '/two-factor' },
+  magicLink: { enabled: true },
+  organizations,
+  twoFactor: { enabled: true },
+};
+
+// Enough of an endpoint context to reach the challenge; the challenge itself is
+// mocked, so only the pending redirect the exit reads matters.
+function createEnrolledCtx() {
+  return {
+    path: '/magic-link/verify',
+    context: {
+      newSession: { user: { id: 'user_1', twoFactorEnabled: true } },
+      responseHeaders: new Headers({ location: 'https://app.example.com/invoices' }),
+    },
+    redirect: (url) => ({ redirectTo: url }),
+  };
+}
+
+async function catchAfter(hooks, ctx) {
+  try {
+    return { returned: await hooks.after(ctx) };
+  } catch (thrown) {
+    return { thrown };
+  }
+}
+
+beforeEach(() => {
+  mockBeginTwoFactorChallenge.mockClear();
+});
+
+test('buildRequestHooks challenges an enrolled user on /magic-link/verify when twoFactor and magicLink are enabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: twoFactorAuthConfig,
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  const { thrown } = await catchAfter(hooks, createEnrolledCtx());
+
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+  expect(thrown.redirectTo).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
+});
+
+test('buildRequestHooks does not challenge on a path other than /magic-link/verify', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: twoFactorAuthConfig,
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  const ctx = createEnrolledCtx();
+  ctx.path = '/callback/google';
+
+  expect(await hooks.after(ctx)).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no two factor challenge when twoFactor is disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no two factor challenge when magicLink is disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no two factor challenge when authPages.twoFactor is unset', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, authPages: {} },
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 });
