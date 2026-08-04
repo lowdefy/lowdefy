@@ -139,7 +139,7 @@ test('buildRequestHooks challenges an enrolled user on /magic-link/verify when t
   expect(thrown.redirectTo).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
 });
 
-test('buildRequestHooks does not challenge on a path other than /magic-link/verify', async () => {
+test('buildRequestHooks does not challenge on a path no registration claims', async () => {
   const hooks = buildRequestHooks({
     authConfig: twoFactorAuthConfig,
     baseUrlOrigin: 'https://app.example.com',
@@ -147,7 +147,7 @@ test('buildRequestHooks does not challenge on a path other than /magic-link/veri
   });
 
   const ctx = createEnrolledCtx();
-  ctx.path = '/callback/google';
+  ctx.path = '/get-session';
 
   expect(await hooks.after(ctx)).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
@@ -183,5 +183,110 @@ test('buildRequestHooks registers no two factor challenge when authPages.twoFact
   });
 
   expect(await hooks.after(createEnrolledCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+function createOAuthHooks(mfaTrustedProviderKeys) {
+  return buildRequestHooks({
+    authConfig: {
+      ...twoFactorAuthConfig,
+      twoFactor: { enabled: true, mfaTrustedProviderKeys },
+    },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+}
+
+function createOAuthCtx(path) {
+  const ctx = createEnrolledCtx();
+  ctx.path = path;
+  return ctx;
+}
+
+test('buildRequestHooks challenges both OAuth callbacks when no provider is trusted', async () => {
+  const hooks = createOAuthHooks([]);
+
+  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
+  expect(
+    (await catchAfter(hooks, createOAuthCtx('/oauth2/callback/my-idp'))).thrown.redirectTo
+  ).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(2);
+});
+
+test('buildRequestHooks skips a trusted built-in provider by its lowercase type key and still challenges a generic provider', async () => {
+  const hooks = createOAuthHooks(['google']);
+
+  expect(await hooks.after(createOAuthCtx('/callback/google'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+
+  expect(
+    (await catchAfter(hooks, createOAuthCtx('/oauth2/callback/my-idp'))).thrown.redirectTo
+  ).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks skips a trusted GenericOAuth provider by its id and still challenges a built-in provider', async () => {
+  const hooks = createOAuthHooks(['my-idp']);
+
+  expect(await hooks.after(createOAuthCtx('/oauth2/callback/my-idp'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+
+  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks challenges the OAuth callbacks with mfaTrustedProviderKeys unset', async () => {
+  const hooks = createOAuthHooks(undefined);
+
+  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks challenges an OAuth callback with magicLink disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, magicLink: { enabled: false } },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect((await catchAfter(hooks, createOAuthCtx('/callback/google'))).thrown.redirectTo).toBe(
+    'https://app.example.com/app/two-factor?callbackUrl=%2Finvoices'
+  );
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+});
+
+test('buildRequestHooks challenges neither OAuth callback when twoFactor is disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: false } },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  expect(await hooks.after(createOAuthCtx('/callback/google'))).toBeUndefined();
+  expect(await hooks.after(createOAuthCtx('/oauth2/callback/my-idp'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+// /callback/:id also serves account linking, which attaches an account to an
+// already signed-in user and redirects without minting a session, so a null
+// newSession there is the ordinary linking case and must pass through untouched.
+test('buildRequestHooks leaves an account linking callback with no new session untouched', async () => {
+  const hooks = createOAuthHooks([]);
+  const ctx = createOAuthCtx('/callback/google');
+  ctx.context.newSession = null;
+
+  const { returned, thrown } = await catchAfter(hooks, ctx);
+
+  expect(thrown).toBeUndefined();
+  expect(returned).toBeUndefined();
   expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
 });

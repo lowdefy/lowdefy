@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import createMagicLinkSendGate from '../organizations/createMagicLinkSendGate.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
+import matchOAuthCallback from './matchOAuthCallback.js';
 import redirectToChallenge from './redirectToChallenge.js';
 import resolveTwoFactorPageUrl from './resolveTwoFactorPageUrl.js';
 
@@ -78,6 +79,48 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         // The browser is mid-redirect here with nothing to read a JSON flag
         // with, so this exit redirects rather than returning the password
         // path's { twoFactorRedirect: true }.
+        exit: (ctx) => redirectToChallenge({ baseUrlOrigin, ctx, twoFactorPageUrl }),
+      })
+    );
+  }
+
+  // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
+  // plugin's sign-in matcher covers neither OAuth callback, so an enrolled user
+  // signing in through any IdP walks past their second factor. Both callbacks are
+  // hooked: matching only /callback/:id would exempt every non-built-in IdP,
+  // because a Lowdefy GenericOAuth provider routes through the genericOAuth
+  // plugin's /oauth2/callback/:providerId instead - exactly the enterprise-IdP
+  // case the trust declaration exists for.
+  //
+  // Challenged unless the provider is declared trusted for 2FA. Double-challenging
+  // a user who has already cleared Google's own MFA is a functionality loss, and
+  // "don't enable two-factor alongside an enterprise IdP" is not advice worth
+  // giving: Entra has federated-IdP-MFA trust settings and Okta has the IdP
+  // factor, so trust is declared per provider. The trust is declared, not
+  // verified - no OAuth claim survives BetterAuth's handling reliably enough to
+  // depend on.
+  //
+  // The trust check belongs in matches, not in the handler: a trusted callback
+  // stays on exactly the code path it has today rather than entering the
+  // interception and short-circuiting inside it.
+  //
+  // Registered on twoFactor.enabled alone, not on any provider being configured,
+  // so adding a provider later cannot find the hook silently unregistered. The
+  // predicate costs nothing on paths that do not match.
+  if (authConfig.twoFactor?.enabled === true && type.isString(twoFactorPageUrl)) {
+    const trustedProviderKeys = authConfig.twoFactor.mfaTrustedProviderKeys ?? [];
+    after.push(
+      createTwoFactorChallengeHook({
+        id: 'oauthTwoFactorChallenge',
+        matches: (path) => {
+          const { matched, providerKey } = matchOAuthCallback(path);
+          return matched && !trustedProviderKeys.includes(providerKey);
+        },
+        // Mid-redirect with no JS caller, exactly like /magic-link/verify, so the
+        // same shared exit carries the destination the user asked for. Here that
+        // destination came from the OAuth state rather than a query parameter,
+        // which is why the exit reads the pending redirect's location instead of
+        // ctx.query.callbackURL.
         exit: (ctx) => redirectToChallenge({ baseUrlOrigin, ctx, twoFactorPageUrl }),
       })
     );
