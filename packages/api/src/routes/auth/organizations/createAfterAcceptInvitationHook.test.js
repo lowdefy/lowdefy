@@ -89,6 +89,65 @@ test('afterAcceptInvitationHook copies invitation attributes onto the minted mem
   expect(updateUser).not.toHaveBeenCalled();
 });
 
+// The silent-drop case the widened guard exists for: an app that does not use
+// member attributes carries roles and nothing else on every invitation.
+test('afterAcceptInvitationHook copies invitation appRoles onto the minted member row when the invitation carries no attributes', async () => {
+  const { auth, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', appRoles: ['branch-manager'] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: ['branch-manager'] },
+  });
+  expect(updateUser).not.toHaveBeenCalled();
+});
+
+test('afterAcceptInvitationHook copies attributes and appRoles in a single member update', async () => {
+  const { auth, update } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const attributes = { branch: 'north' };
+
+  await hook({
+    invitation: { id: 'inv_1', attributes, appRoles: ['branch-manager'] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledTimes(1);
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { attributes, appRoles: ['branch-manager'] },
+  });
+});
+
+test('afterAcceptInvitationHook copies an empty appRoles array, which is distinct from an absent field', async () => {
+  const { auth, update } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', appRoles: [] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: [] },
+  });
+});
+
 test('afterAcceptInvitationHook merges profile and copies attributes when the invitation carries both', async () => {
   const { auth, update, updateUser } = createMockAuth({ userRow: { id: 'user_1' } });
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
@@ -109,7 +168,7 @@ test('afterAcceptInvitationHook merges profile and copies attributes when the in
   });
 });
 
-test('afterAcceptInvitationHook does nothing when the invitation carries neither profile nor attributes', async () => {
+test('afterAcceptInvitationHook does nothing when the invitation carries no profile, attributes or appRoles', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
 
