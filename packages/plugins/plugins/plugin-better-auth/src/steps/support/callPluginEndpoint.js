@@ -20,17 +20,33 @@ import createActingMemberAdapter from './createActingMemberAdapter.js';
 import getPluginEndpoint from './getPluginEndpoint.js';
 import invokeEndpoint from './invokeEndpoint.js';
 
-// Admin steps carry server authority: the hosting Lowdefy endpoint's auth.api.roles
-// gate is the only authorization, so BetterAuth's own caller access control is
-// satisfied mechanically by injecting an acting session with role "admin" (admin
-// plugin) and a virtual owner member row (org plugin). Nothing here is written to
-// the database - the acting identity exists only for the duration of the call.
+// Ask the vendor's check where the vendor's check answers the right question.
+//
+// The organization plugin's does: on every mutation it resolves the CALLER's member
+// row in the organization the body names and authorizes against that row's role -
+// which is exactly the per-organization question a two-surface app asks, and an
+// answer no app-wide role string can give. So a user-initiated org call carries the
+// real caller: their identity, their own role, and the real adapter, so that check
+// runs for real.
+//
+// The admin plugin's does not and cannot: it reads user.role, one field per
+// deployment, so no value there can mean "may administer the customer
+// organization". Handing it a real caller would make it answer a different question,
+// not a better one. Admin calls therefore carry fabricated user-level authority and
+// the step's own authority floor is their authorization.
+//
+// A caller-less run (acting.system) acts with server authority throughout: the
+// lowdefy:system user plus createActingMemberAdapter, because auto-join, seeding and
+// tenant minting all run before anyone is a member and there is no real member row
+// to find. Nothing here is written to the database - the acting identity exists only
+// for the duration of the call.
 async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, query }) {
   const authContext = await auth.$context;
   const endpoint = getPluginEndpoint({ authContext, endpointKey, pluginId });
 
   let actingUser;
-  if (type.isNone(acting.user)) {
+  let activeOrganizationId;
+  if (acting.system === true) {
     actingUser = {
       id: 'lowdefy:system',
       email: 'system@lowdefy.internal',
@@ -39,6 +55,7 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
       image: null,
       role: 'admin',
     };
+    activeOrganizationId = null;
   } else {
     actingUser = {
       id: acting.user.id,
@@ -46,16 +63,28 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
       name: acting.user.name,
       image: acting.user.image,
       emailVerified: acting.user.emailVerified,
-      role: 'admin',
+      // The org plugin never reads this field, so the caller's own value rides along
+      // untouched - undefined when they hold no tier. The admin plugin reads it as
+      // the whole answer, so those calls get server authority instead.
+      role: pluginId === 'organization' ? acting.user.role : 'admin',
     };
+    // Steps always name the target organization in the body; this only feeds the org
+    // plugin's fallback, so a session pinned to one org can still write into another.
+    activeOrganizationId = acting.user.activeOrganizationId ?? null;
   }
 
   const actingSession = {
     session: {
       id: 'lowdefy:system-session',
+      // Synthetic under both branches - context.user carries no session token. The org
+      // plugin's self-removal paths are the only readers: removeMember (the one a step
+      // can reach) calls adapter.setActiveOrganization(token, null) when a caller
+      // removes their own membership from their active organization, and with a
+      // synthetic token that update matches no session row - so the caller's active
+      // organization keeps naming the organization they just left.
       token: 'lowdefy:system-session',
       userId: actingUser.id,
-      activeOrganizationId: acting.user?.activeOrganizationId ?? null,
+      activeOrganizationId,
       expiresAt: new Date(Date.now() + 60000),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -65,7 +94,12 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
 
   const context = {
     ...authContext,
-    adapter: createActingMemberAdapter({ actingUser, adapter: authContext.adapter }),
+    // Only a caller-less run needs a member row fabricated for it. A real caller must
+    // reach the real adapter, or the org plugin authorizes a row that does not exist.
+    adapter:
+      acting.system === true
+        ? createActingMemberAdapter({ actingUser, adapter: authContext.adapter })
+        : authContext.adapter,
     // The admin plugin re-fetches the session from headers when a server-side
     // session store exists (options.database or secondaryStorage). Forcing both
     // undefined on the per-call options makes it honor the injected session.

@@ -27,9 +27,10 @@ import { type } from '@lowdefy/helpers';
 // role strings against creatorRole literally and demand the caller hold it to
 // touch a member who does.
 //
-// Applies only to caller-less runs (acting.system === true) and to admin-plugin
-// endpoints; the step floor owns that boundary and decides when to wrap. Every
-// other adapter call delegates to the real adapter unchanged.
+// Applies only to caller-less runs (acting.system === true), where the step's
+// declared authority floor is the whole authorization; a user-initiated call reaches
+// the real adapter so the plugin reads the caller's real member row. Every other
+// adapter call delegates to the real adapter unchanged.
 function createActingMemberAdapter({ actingUser, adapter }) {
   async function findOne(args) {
     if (args.model === 'member' && type.isArray(args.where)) {
