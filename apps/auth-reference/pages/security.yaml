@@ -5,7 +5,7 @@
 # _actions.<id>.response in the same event chain - the stated pattern for
 # the whole catalog; no side-channel state. The profile section is the one
 # server call: UpdateUserProfile self-targeting (userId = the caller's own
-# id) is exempt from the user-admin floor.
+# id) is exempt from the step floor.
 id: security
 type: Box
 properties:
@@ -335,8 +335,8 @@ blocks:
       html: |
         <p>The update-my-profile endpoint runs UpdateUserProfile with
         <code>userId</code> fixed to the caller's own id - self-targeting is
-        exempt from the user-admin floor, so any member can save their own
-        display data. Save writes <code>name</code> and
+        exempt from the step floor, so any member can save their own display
+        data. Save writes <code>name</code> and
         <code>profile.displayName</code>; Clear sets
         <code>profile.displayName: null</code>, which removes the key from
         the bag (the per-key merge).</p>

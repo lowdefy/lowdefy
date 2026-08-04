@@ -3,6 +3,10 @@
 # cookie and an API key presented together resolve to the session user
 # (the session branch is terminal), while the key alone resolves to the
 # strategy caller shape (id, authMethod, strategyId, roles, attributes).
+# The whole caller is echoed, so a session caller shows both authorities
+# side by side: roles (member.appRoles) and orgRoles (member.role). A
+# strategy caller carries config-granted roles and no orgRoles - it is a
+# member of no organization.
 id: whoami
 type: Api
 routine:

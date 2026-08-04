@@ -6,14 +6,14 @@ lowdefy: local
 # OAuth (Google), protected/public/role-gated pages, sign out, sessions,
 # auth hooks (user.create.before, session.create.after, email.verified),
 # and organizations: this deployment pins org-a with open signup (auto-join
-# with the built-in member role), member-resolved roles and attributes,
-# invitations, merge-on-signup against user-contacts, and org switching.
+# with the built-in member tier and no app roles), member-resolved app roles
+# and attributes, invitations, merge-on-signup against user-contacts, and
+# the pinned active-organization invariant.
 # The sibling apps auth-reference-b (pinned org-b, invite-only) and
 # auth-reference-tenant (tenant policy) share the same auth database.
 # Phase 6 adds the admin steps: role-gated admin-* Api endpoints drive the
-# user and member administration routines (/users and /members), a
-# system: true step runs caller-less in the audit-login hook, and
-# ImpersonateUser/StopImpersonating exercise impersonation.
+# user and member administration routines (/users and /members), and a
+# system: true step runs caller-less in the audit-login hook.
 # Phase 8 adds the user-admin platform asks: attributes stored as native
 # sub-documents (a native aggregation filters on attribute contents at
 # admin-members-by-attribute), invite-time member attributes with
@@ -23,10 +23,11 @@ lowdefy: local
 # Phase 9 adds the account asks: the self-service action catalog (password
 # change/reset, two-factor with TOTP + backup codes, passkeys, session
 # revocation, AcceptInvitation), user.profile self-service through
-# UpdateUserProfile, the auth.userAdminRole floor with the impersonation
-# bridge, the account-kit local module contributing auth wiring from its
-# manifest, and the _build.authConfig build operator (the module's
-# login-methods page).
+# UpdateUserProfile, the per-step per-organization step floor, _user.roles
+# (member.appRoles) and _user.orgRoles (member.role) as separate fields, the
+# UpdateMemberOrgRole grant surface, the account-kit local module
+# contributing auth wiring from its manifest, and the _build.authConfig
+# build operator (the module's login-methods page).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -93,16 +94,11 @@ auth:
       - /sign-up/email
       - /phone-number/send-otp
 
-  # Local dev sending: run Mailpit (see README) and point SMTP at it.
+  # Local dev sending: run Mailpit (see README) and point the auth_email SMTP
+  # connection at it. auth.email only names the connection - the transport,
+  # the from address and the delivery filter live on the connection itself.
   email:
-    from: auth-reference@localhost
-    provider:
-      type: smtp
-      properties:
-        host:
-          _secret: SMTP_HOST
-        port: 1025
-        secure: false
+    connectionId: auth_email
 
   providers:
     - id: auth0
@@ -129,24 +125,42 @@ auth:
     updateAge: 86400
 
   # This deployment pins org-a as the active organization. Signup is open:
-  # a new signup auto-joins org-a with the plugin's built-in member role -
-  # it passes the membership wall while role-gated pages still gate it.
+  # a new signup auto-joins org-a with the built-in member tier and no app
+  # roles - it passes the membership wall while role-gated pages still gate
+  # it. Under pinned the organization's id IS this slug, and a session whose
+  # active organization is not org-a resolves unauthenticated here.
   organizations:
     policy: pinned
     org: org-a
     signup: open
 
-  # The member role that administers users (phase 9). Every user-initiated
-  # admin step and the impersonation client actions require the caller to
-  # hold this role - an engine-enforced floor UNDER the auth.api.roles gate
-  # below, so an endpoint misconfiguration can never expose member mutation.
-  # The engine denormalizes it onto user.role (the field BetterAuth's own
-  # admin plugin checks for impersonation) at its sync points:
-  # UpdateMemberRoles, the invitation-accept path, and RemoveMember.
-  # System routines (system: true steps in hooks) are exempt - they run
-  # caller-less. "admin" and "user" are reserved names; the role is
-  # registered in the role catalog automatically.
-  userAdminRole: user-admin
+  # The app's role catalog. These are APP roles: they live on
+  # member.appRoles, reach config as _user.roles, and are the only source the
+  # page and endpoint gates below match against. They say nothing about who
+  # may administer an organization - that is member.role, BetterAuth's
+  # owner/admin/member tier, which reaches config as _user.orgRoles and which
+  # no gate reads.
+  #
+  # There is no app-wide administering role to configure. Every auth step
+  # declares the authority it requires in meta.authority, and the engine
+  # enforces it per organization against the caller's member row in the
+  # TARGET organization, underneath the auth.api.roles gate below. Steps
+  # marked system: true run caller-less and are exempt.
+  #
+  # So user-admin below opens the admin UI and nothing more: the role gate
+  # alone is no longer sufficient for a write. The walkthrough admin also
+  # needs authority in org-a, which is data, not config - scripts/set-member.mjs
+  # seeds it with --org-role owner.
+  roles:
+    - id: user-admin
+      label: User administration
+      description: Opens the admin pages and the admin-* endpoints.
+    - id: auditor
+      label: Auditor
+      description: Opens the audit report pages.
+    - id: partner
+      label: Partner
+      description: Reaches the partner HTTP endpoints; granted to API strategy callers.
 
   pages:
     protected: true
@@ -169,7 +183,7 @@ auth:
       # Phone OTP sign-in/sign-up - public like login and signup.
       - phone-login
     roles:
-      admin:
+      user-admin:
         - admin
         - members
         - contacts
@@ -177,16 +191,17 @@ auth:
       auditor:
         - audit-reports
 
-  # The admin step endpoints carry no authorization of their own - this gate
-  # is the authority. A caller without the admin role gets the opaque
-  # endpoint-does-not-exist rejection before the routine runs.
   # HTTP API authorization. admin-* and partner-data are role-gated; whoami
   # is deliberately public - it echoes the resolved caller for the session-
   # vs-strategy precedence scenarios (resolution runs on public endpoints
   # too; only the authorization gate differs).
+  # This gate decides who reaches the routine: a caller without the
+  # user-admin app role gets the opaque endpoint-does-not-exist rejection
+  # before it runs. It does not decide whether the write lands - each step's
+  # own authority does, per organization.
   api:
     roles:
-      admin:
+      user-admin:
         - 'admin-*'
       partner:
         - partner-data
@@ -308,6 +323,15 @@ modules:
 # extra infrastructure is needed for the walkthrough. user-contacts is the
 # app-owned CRM contact collection the merge-on-signup hooks match against.
 connections:
+  # The transport auth.email sends through - Mailpit for the walkthrough.
+  - id: auth_email
+    type: SMTP
+    properties:
+      from: auth-reference@localhost
+      host:
+        _secret: SMTP_HOST
+      port: 1025
+      secure: false
   - id: audit_db
     type: MongoDBCollection
     properties:
@@ -363,6 +387,7 @@ api:
   - _ref: api/admin-cancel-invitation.yaml
   - _ref: api/admin-remove-member.yaml
   - _ref: api/admin-update-member-roles.yaml
+  - _ref: api/admin-update-member-org-role.yaml
   - _ref: api/admin-update-member-attributes.yaml
   - _ref: api/admin-create-organization.yaml
   # Phase-8 endpoints: the _organization operator read and the native
@@ -371,10 +396,11 @@ api:
   - _ref: api/admin-members-by-attribute.yaml
   # Phase-9 endpoints. update-my-profile is deliberately NOT role-gated -
   # UpdateUserProfile self-targeting (userId = the caller's own id) is exempt
-  # from the user-admin floor. admin-update-user-profile is role-gated like
-  # the other admin-* endpoints. list-members-ungated is deliberately ungated
-  # too: the floor refuses a caller without the user-admin role at the STEP,
-  # even through an endpoint with no auth.api.roles entry.
+  # from the step floor, so a plain member saves their own profile.
+  # admin-update-user-profile is role-gated like the other admin-* endpoints.
+  # list-members-ungated is deliberately ungated too: the floor refuses a
+  # caller who holds no member:list authority in the target organization at
+  # the STEP, even through an endpoint with no auth.api.roles entry.
   - _ref: api/update-my-profile.yaml
   - _ref: api/admin-update-user-profile.yaml
   - _ref: api/list-members-ungated.yaml

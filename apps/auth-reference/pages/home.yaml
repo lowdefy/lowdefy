@@ -19,49 +19,12 @@ blocks:
           <li><a href="/dashboard">Dashboard</a> - protected; logged-out visits redirect to the login page.</li>
           <li><a href="/sessions">Sessions</a> - protected; list and revoke your sessions.</li>
           <li><a href="/security">Security</a> - protected; the phase-9 self-service account surface (password, 2FA, passkeys, profile).</li>
-          <li><a href="/admin">Admin</a> - role-gated (admin); wrong roles get an opaque /404.</li>
-          <li><a href="/users">Users</a> - role-gated (admin); user administration on the phase-6 admin steps.</li>
-          <li><a href="/members">Members</a> - role-gated (admin); member administration on the phase-6 admin steps.</li>
+          <li><a href="/admin">Admin</a> - role-gated (user-admin); wrong roles get an opaque /404.</li>
+          <li><a href="/users">Users</a> - role-gated (user-admin); user administration on the phase-6 admin steps.</li>
+          <li><a href="/members">Members</a> - role-gated (user-admin); member administration on the phase-6 admin steps.</li>
           <li><a href="/login-methods">Login methods</a> - public; rendered from _build.authConfig at build time.</li>
           <li><a href="/account-kit/account-help">Account help</a> - public module page contributed by the account-kit manifest.</li>
         </ul>
-  # Visible only while impersonating - _user.impersonatedBy carries the
-  # impersonating admin's user id (absent otherwise).
-  - id: impersonation_alert
-    type: Alert
-    visible:
-      _ne:
-        - _if_none:
-            - _user: impersonatedBy
-            - null
-        - null
-    properties:
-      type: warning
-      message:
-        _string.concat:
-          - 'Impersonating '
-          - _user: email
-          - ' (impersonatedBy: '
-          - _user: impersonatedBy
-          - ')'
-  - id: stop_impersonating_button
-    type: Button
-    visible:
-      _ne:
-        - _if_none:
-            - _user: impersonatedBy
-            - null
-        - null
-    properties:
-      title: Stop impersonating
-      type: default
-    events:
-      onClick:
-        - id: stop_impersonating
-          type: StopImpersonating
-        # Re-sync the client caller - _user is the admin's own user again.
-        - id: resync_after_stop
-          type: UpdateSession
   - id: signed_in_alert
     type: Alert
     visible:
@@ -76,6 +39,26 @@ blocks:
         _string.concat:
           - 'Signed in as '
           - _user: email
+  # The two authorities side by side. roles is member.appRoles - what the
+  # gates above read. orgRoles is member.role - who administers org-a. Either
+  # can be held without the other.
+  - id: two_authorities_html
+    type: Html
+    visible:
+      _ne:
+        - _if_none:
+            - _user: id
+            - null
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
+            <b>orgRoles</b> (the org tier, member.role): {{ user.orgRoles | dump }}</p>
+          on:
+            user:
+              _user: true
   - id: login_button
     type: Button
     visible:

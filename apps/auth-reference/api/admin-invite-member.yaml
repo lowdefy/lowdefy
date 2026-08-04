@@ -3,11 +3,16 @@
 # the stock template through auth.email (Mailpit). profile and attributes
 # are only forwarded when the payload carries them - accepting the
 # invitation shallow-merges profile onto the user's profile bag (invitation
-# wins per key) and copies attributes onto the minted member row.
+# wins per key) and copies attributes and appRoles onto the minted member row.
+# The two authorities ride the invitation separately: appRoles is the app's
+# own role array (unvalidated - an unrecognised name grants nothing), orgRole
+# is the owner/admin/member tier. orgRole is passed explicitly rather than
+# left to the step's default so inviting an organization administrator is one
+# payload key, and so the value in the invitation row is never implicit.
 # organizationId is omitted: it defaults to the pinned org (org-a here);
 # pass one explicitly to invite into another org.
 # Correction semantics (cancelPendingInvitationsOnReInvite): inviting a
-# pending email again REPLACES the invitation (new role/attributes/
+# pending email again REPLACES the invitation (new roles/attributes/
 # profile; the old accept link dies), so repeat invites stay repeatable.
 # resend: true instead re-sends the existing invitation unchanged with a
 # refreshed expiry - it never rewrites what was invited.
@@ -20,8 +25,12 @@ routine:
       _object.assign:
         - email:
             _payload: email
-          role:
-            _payload: role
+          appRoles:
+            _payload: appRoles
+          orgRole:
+            _if_none:
+              - _payload: orgRole
+              - member
           resend:
             _payload: resend
         # contactId is a module-defined key inside the opaque profile bag,

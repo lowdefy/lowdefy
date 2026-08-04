@@ -43,7 +43,7 @@ blocks:
   - id: contacts_title
     type: Title
     properties:
-      content: Contacts (admin)
+      content: Contacts (user-admin)
       level: 2
   - id: contacts_list
     type: Html

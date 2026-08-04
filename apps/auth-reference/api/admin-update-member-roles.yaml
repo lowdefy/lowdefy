@@ -1,10 +1,10 @@
 # Role-gated admin step endpoint (see admin-list-users.yaml for the model).
-# role accepts a string or an array; multiple roles are stored as one
-# comma-separated string on member.role and split back per request. Role
-# names must be registered - built-ins (owner, admin, member) or the app's
-# catalog roles (auth.pages/api roles; auditor here) - an unregistered name
-# fails with BetterAuth's ROLE_NOT_FOUND. Demoting the last owner fails
-# (last-owner protection).
+# appRoles is an array of the app's own role strings and replaces whatever the
+# member row carried; an empty array clears them. Names are NOT checked
+# against auth.roles - an unrecognised entry is stored and grants nothing, so
+# an admin's save never fails because of a stale role they never touched.
+# This never touches member.role, the owner/admin/member org tier -
+# admin-update-member-org-role owns that field.
 id: admin-update-member-roles
 type: Api
 routine:
@@ -13,7 +13,7 @@ routine:
     properties:
       memberId:
         _payload: memberId
-      role:
-        _payload: role
+      appRoles:
+        _payload: appRoles
   - ':return':
       _step: update_member_roles

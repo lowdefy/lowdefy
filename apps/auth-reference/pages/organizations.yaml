@@ -1,7 +1,9 @@
-# Organization switching: SetActiveOrganization is session-scoped; roles and
-# attributes resolve from the new active member row server-side, so
-# UpdateSession is chained after to re-sync the client - the roles shown
-# below change without a reload.
+# The caller's organization, read-only. This deployment is pinned, so the
+# organization plugin's client HTTP surface is off: SetActiveOrganization
+# cannot be wired here (the build refuses it) and /organization/list is not
+# mounted, so the page reads the pinned organization through the org-info
+# endpoint instead. Switching is a tenant-policy affordance -
+# auth-reference-tenant's own copy of this page carries the switch.
 id: organizations
 type: Box
 properties:
@@ -10,85 +12,38 @@ properties:
     margin: 60px auto
 events:
   onInit:
-    - id: load_orgs
-      type: Fetch
+    - id: load_org
+      type: CallAPI
       params:
-        url: /api/auth/organization/list
-        responseFunction: json
-    - id: set_orgs
-      type: SetState
-      params:
-        my_organizations:
-          _actions: load_orgs.response
+        endpointId: org-info
 blocks:
   - id: organizations_title
     type: Title
     properties:
-      content: My organizations
+      content: My organization
       level: 2
+  - id: organization_details
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>pinned organization:</b> {{ org.name }} (slug:
+            {{ org.slug }}, id: <code>{{ org.id }}</code>) - under the pinned
+            policy the id IS the slug.</p>
+          on:
+            org:
+              _api: org-info.response.organization
   - id: current_user
     type: Html
     properties:
       html:
         _nunjucks:
           template: |
-            <p><b>roles:</b> {{ user.roles | dump }}<br/>
+            <p><b>activeOrganizationId:</b> <code>{{ user.activeOrganizationId }}</code><br/>
+            <b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
+            <b>orgRoles</b> (the org tier, member.role): {{ user.orgRoles | dump }}<br/>
             <b>attributes:</b> {{ user.attributes | dump }}</p>
           on:
             user:
               _user: true
-  - id: organizations_list
-    type: Html
-    properties:
-      html:
-        _nunjucks:
-          template: |
-            <ul>
-            {% for org in orgs %}
-              <li><b>{{ org.name }}</b> (slug: {{ org.slug }}, id: {{ org.id }})</li>
-            {% endfor %}
-            </ul>
-          on:
-            orgs:
-              _state: my_organizations
-  - id: org_slug
-    type: TextInput
-    properties:
-      title: Organization slug to activate
-  - id: switch_button
-    type: Button
-    properties:
-      title: Set active organization
-      block: true
-    events:
-      onClick:
-        try:
-          - id: set_active
-            type: SetActiveOrganization
-            params:
-              organizationSlug:
-                _state: org_slug
-          # Re-sync the client caller - roles and merged attributes resolve
-          # from the new active member row on the server.
-          - id: resync
-            type: UpdateSession
-        catch:
-          - id: show_switch_error
-            type: SetState
-            params:
-              switch_error:
-                _actions: set_active.error.message
-  - id: switch_error_html
-    type: Html
-    visible:
-      _ne:
-        - _state: switch_error
-        - null
-    properties:
-      html:
-        _nunjucks:
-          template: |
-            <p style="color:red">{{ error }}</p>
-          on:
-            error:
-              _state: switch_error
