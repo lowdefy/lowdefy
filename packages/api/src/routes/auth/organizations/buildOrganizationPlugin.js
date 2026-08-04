@@ -15,50 +15,37 @@
 */
 
 import { organization } from 'better-auth/plugins';
-import { createAccessControl } from 'better-auth/plugins/access';
-import { defaultRoles, defaultStatements } from 'better-auth/plugins/organization/access';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 import modelNames from '../modelNames.js';
+import { ac, roles } from './organizationAccessControl.js';
 
-// Organizations are always on - the membership and boundary mechanism for
-// every app. The build collects the app's role catalog (auth.roles, a list of
-// { id, label, description }); each role.id registers in the plugin's access
-// control with empty permission statements - enough for the member APIs to
-// accept it for storage and assignment, but authorizing nothing at the AC
-// statement layer. Real statements per role are the permissions milestone's.
+// Organizations are always on - the membership and boundary mechanism for every
+// app. member.role carries BetterAuth's org-authority tier and nothing else, so
+// the same three built-in roles - owner, admin, member - are registered under
+// both policies. The statement set they are rebuilt against is extended with the
+// actions the step floor's permission map asks for; see
+// organizationAccessControl.js.
 //
-// One reserved authority role, id "$lowdefy-system" (the "$" namespace is
-// un-authorable, so no real user can hold it), carries the statements the
-// audited admin steps need - they drive member mutations by invoking the org
-// endpoint handlers directly, which still run hasPermission against the acting
-// member row (fabricated in createActingMemberAdapter, claiming this role).
+// The app's authored role catalog (auth.roles) is NOT registered here. App roles
+// live on member.appRoles, a separate field, so they never need to resolve as
+// plugin roles. Registering only the three built-in names is what makes the
+// separation enforced rather than merely observed: validStaticRoles in
+// crud-members.mjs is built from Object.keys(roles), so update-member-role and
+// invite-member refuse any other value for member.role even from a hand-crafted
+// request body.
 //
-// The wiring is policy-aware:
-//   - pinned: pass only catalogRoles + the reserved role (no defaultRoles), and
-//     set creatorRole to "$lowdefy-system". With defaultRoles dropped, owner/
-//     admin/member no longer resolve as real plugin roles, so they become inert
-//     app-feature strings with no hidden org-admin power; the acting member is
-//     the creator, so it passes the plugin's creator-protection guards.
-//   - tenant: keep the built-in owner/admin/member tier active (self-serve
-//     per-org administration), so pass defaultRoles and leave creatorRole at its
-//     default ("owner"). The reserved role is still registered but is not
-//     load-bearing here - the audited steps belong to the pinned admin module.
+// The only policy difference left is who may call the endpoints, and that lives
+// in getBetterAuthConfig as disabledPaths - the client-facing org routes are
+// disabled under pinned and enabled under tenant.
+//
+// creatorRole is left at its "owner" default under both policies. The plugin's
+// creator short-circuit is gated on allowCreatorsAllPermissions, so it was never
+// the reason to override it; what an override defended were the
+// creator-protection guards, which key on the member's role string. With app
+// roles out of that field and the fabricated acting member claiming "owner"
+// itself, there is nothing left to defend against.
 function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
-  const ac = createAccessControl(defaultStatements);
-  const catalogRoles = {};
-  (authConfig.roles ?? []).forEach((role) => {
-    catalogRoles[role.id] = ac.newRole({});
-  });
-  catalogRoles['$lowdefy-system'] = ac.newRole({
-    member: ['create', 'update', 'delete'],
-    invitation: ['create', 'cancel'],
-    organization: ['update', 'delete'],
-  });
-
-  const policy = authConfig.organizations?.policy ?? 'pinned';
-  const roles = policy === 'tenant' ? { ...catalogRoles, ...defaultRoles } : { ...catalogRoles };
-
   const options = {
     ac,
     roles,
@@ -119,14 +106,6 @@ function buildOrganizationPlugin({ authConfig, getAuth, sendInvitationEmail }) {
     },
     sendInvitationEmail,
   };
-
-  // Under pinned the reserved role is the creator, so the plugin's creator
-  // short-circuit and creator-protection guards key on it rather than "owner".
-  // Under tenant creatorRole stays at its "owner" default (last-owner
-  // protection keys on it), so it is left unset.
-  if (policy !== 'tenant') {
-    options.creatorRole = '$lowdefy-system';
-  }
 
   return organization(options);
 }
