@@ -17,19 +17,23 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
-import resolveOrganizationId from './support/resolveOrganizationId.js';
 import syncUserAdminRole from './support/syncUserAdminRole.js';
 
-async function RemoveMember({ acting, auth, organization, properties, userAdminRole }) {
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function RemoveMember({
+  acting,
+  auth,
+  organization,
+  organizationId,
+  properties,
+  userAdminRole,
+}) {
   const { memberIdOrEmail } = properties;
   if (type.isNone(memberIdOrEmail)) {
     throw new Error('RemoveMember requires a "memberIdOrEmail" property.');
   }
-  const organizationId = resolveOrganizationId({
-    organization,
-    organizationId: properties.organizationId,
-    step: 'RemoveMember',
-  });
   const result = await callPluginEndpoint({
     acting,
     auth,

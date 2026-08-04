@@ -16,7 +16,11 @@
 
 import { setKey, type, unsetKey } from '@lowdefy/helpers';
 
-const allowedProperties = ['image', 'name', 'profile', 'userId'];
+// organizationId is accepted and never read here: the floor reads it to resolve
+// the organization the caller's authority and the target's membership are
+// checked in, and rejecting it would break every non-self-service save from a
+// second admin surface.
+const allowedProperties = ['image', 'name', 'organizationId', 'profile', 'userId'];
 
 // The sanctioned write path for the opaque user.profile bag (display and app
 // data - the platform never validates, indexes, or reads inside it). The
@@ -35,7 +39,7 @@ async function UpdateUserProfile({ auth, properties }) {
     const received = unknownProperties.map((key) => `"${key}"`).join(', ');
     throw new Error(
       `UpdateUserProfile received unknown properties ${received}. ` +
-        'Allowed properties are "userId", "profile", "name", and "image".'
+        'Allowed properties are "userId", "profile", "name", "image", and "organizationId".'
     );
   }
   if (type.isNone(userId)) {

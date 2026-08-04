@@ -17,9 +17,11 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
-import resolveOrganizationId from './support/resolveOrganizationId.js';
 
-async function InviteMember({ acting, auth, organization, properties }) {
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function InviteMember({ acting, auth, organizationId, properties }) {
   // profile and attributes are registered invitation additionalFields in the
   // engine config; accepting the invitation shallow-merges profile onto the
   // user's profile bag (invitation wins per key) and copies attributes onto
@@ -41,11 +43,6 @@ async function InviteMember({ acting, auth, organization, properties }) {
       `InviteMember "profile" is not an object. Received ${JSON.stringify(profile)}.`
     );
   }
-  const organizationId = resolveOrganizationId({
-    organization,
-    organizationId: properties.organizationId,
-    step: 'InviteMember',
-  });
   return callPluginEndpoint({
     acting,
     auth,

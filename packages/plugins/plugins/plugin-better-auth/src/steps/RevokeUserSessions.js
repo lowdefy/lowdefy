@@ -18,6 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 
+// organizationId is part of the authored property surface even though sessions
+// belong to the person rather than to an organization: the floor reads it to
+// resolve the organization the caller's session:revoke authority and the target's
+// membership are checked in. It defaults to the pinned organization, so without
+// it a second admin surface's Sign-out control would ask whether the caller holds
+// session: [revoke] in the wrong organization.
 async function RevokeUserSessions({ acting, auth, properties }) {
   const { userId } = properties;
   if (type.isNone(userId)) {

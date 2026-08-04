@@ -25,6 +25,13 @@ import callPluginEndpoint from './support/callPluginEndpoint.js';
 // The admin removeUser endpoint hard-deletes the user row and (confirmed by the
 // phase-0 probe at 1.6.23) also clears the user's session and account rows, so
 // those are not cleared here. App-owned data is left untouched.
+//
+// organizationId is part of the authored property surface even though the delete
+// is deployment-wide: the floor reads it to resolve the organization the caller's
+// user:delete authority and the target's membership are checked in. It defaults
+// to the pinned organization, so without it a second admin surface's Delete
+// control would ask whether the caller holds user: [delete] in the wrong
+// organization.
 async function DeleteUser({ acting, auth, properties }) {
   const { userId } = properties;
   if (type.isNone(userId)) {
