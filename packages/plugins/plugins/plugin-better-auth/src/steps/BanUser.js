@@ -18,6 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 
+// organizationId is part of the authored property surface even though the ban is
+// written on the user row and the step forwards nothing else: the floor reads it
+// to resolve the organization the caller's user:ban authority and the target's
+// membership are checked in. It defaults to the pinned organization, so without
+// it a second admin surface's Suspend control would ask whether the caller holds
+// user: [ban] in the wrong organization.
 async function BanUser({ acting, auth, properties }) {
   const { banExpiresIn, banReason, userId } = properties;
   if (type.isNone(userId)) {

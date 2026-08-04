@@ -20,6 +20,13 @@ import { type } from '@lowdefy/helpers';
 // json additionalField transform (native sub-document storage on MongoDB via
 // supportsJSON) on both ends. Fires NO user.update database hooks -
 // attributes are admin-set authorization inputs, not user-driven edits.
+//
+// organizationId is part of the authored property surface even though the write
+// lands on the deployment-wide user row: the floor reads it to resolve the
+// organization the caller's user:set-attributes authority and the target's
+// membership are checked in. It defaults to the pinned organization, so without
+// it a second admin surface's attribute editor would ask whether the caller
+// holds user: [set-attributes] in the wrong organization.
 async function UpdateUserAttributes({ auth, properties }) {
   const { attributes, userId } = properties;
   if (type.isNone(userId)) {

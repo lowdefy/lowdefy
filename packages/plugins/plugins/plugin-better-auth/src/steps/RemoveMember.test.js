@@ -24,6 +24,9 @@ const organization = {
   policy: 'pinned',
   pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' },
 };
+// The step floor resolves the target organization and passes the id in; the
+// defaulting and tenant-policy rules are tested there, not here.
+const organizationId = 'org-1';
 
 test('RemoveMember passes properties through as body to the org removeMember endpoint', async () => {
   const removeMember = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
@@ -32,7 +35,8 @@ test('RemoveMember passes properties through as body to the org removeMember end
     acting,
     auth,
     organization,
-    properties: { memberIdOrEmail: 'member-1', organizationId: 'org-1' },
+    organizationId,
+    properties: { memberIdOrEmail: 'member-1' },
   });
   expect(result).toEqual({ member: { id: 'member-1' } });
   expect(removeMember.mock.calls[0][0].body).toEqual({
@@ -41,37 +45,11 @@ test('RemoveMember passes properties through as body to the org removeMember end
   });
 });
 
-test('RemoveMember defaults organizationId to the pinned organization when omitted', async () => {
-  const removeMember = jest.fn().mockResolvedValue({ member: { id: 'member-1' } });
-  const { auth } = createMockAuth({ organizationEndpoints: { removeMember } });
-  await RemoveMember({
-    acting,
-    auth,
-    organization,
-    properties: { memberIdOrEmail: 'member-1' },
-  });
-  expect(removeMember.mock.calls[0][0].body.organizationId).toBe('org_pinned');
-});
-
-test('RemoveMember throws under the tenant organizations policy when organizationId is omitted', async () => {
-  const { auth } = createMockAuth();
-  await expect(
-    RemoveMember({
-      acting,
-      auth,
-      organization: { policy: 'tenant', pinned: null },
-      properties: { memberIdOrEmail: 'member-1' },
-    })
-  ).rejects.toThrow(
-    'RemoveMember requires an "organizationId" property under the "tenant" organizations policy - there is no pinned organization to default to. Set organizationId on the step properties.'
-  );
-});
-
 test('RemoveMember throws when memberIdOrEmail property is missing', async () => {
   const { auth } = createMockAuth();
-  await expect(RemoveMember({ acting, auth, organization, properties: {} })).rejects.toThrow(
-    'RemoveMember requires a "memberIdOrEmail" property.'
-  );
+  await expect(
+    RemoveMember({ acting, auth, organization, organizationId, properties: {} })
+  ).rejects.toThrow('RemoveMember requires a "memberIdOrEmail" property.');
 });
 
 test('RemoveMember clears user.role when the removed member held the user-admin role', async () => {
@@ -95,6 +73,7 @@ test('RemoveMember clears user.role when the removed member held the user-admin 
     acting,
     auth,
     organization,
+    organizationId,
     properties: { memberIdOrEmail: 'member-1' },
     userAdminRole: 'user-admin',
   });
@@ -121,6 +100,7 @@ test('RemoveMember does not touch user.role when no user-admin role is configure
     acting,
     auth,
     organization,
+    organizationId,
     properties: { memberIdOrEmail: 'member-1' },
   });
 

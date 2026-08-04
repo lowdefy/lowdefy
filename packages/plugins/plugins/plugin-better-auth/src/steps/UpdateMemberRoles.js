@@ -17,11 +17,20 @@
 import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
-import resolveOrganizationId from './support/resolveOrganizationId.js';
 import splitRoles from './support/splitRoles.js';
 import syncUserAdminRole from './support/syncUserAdminRole.js';
 
-async function UpdateMemberRoles({ acting, auth, organization, properties, userAdminRole }) {
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function UpdateMemberRoles({
+  acting,
+  auth,
+  organization,
+  organizationId,
+  properties,
+  userAdminRole,
+}) {
   const { memberId, role } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberRoles requires a "memberId" property.');
@@ -29,11 +38,6 @@ async function UpdateMemberRoles({ acting, auth, organization, properties, userA
   if (type.isNone(role)) {
     throw new Error('UpdateMemberRoles requires a "role" property.');
   }
-  const organizationId = resolveOrganizationId({
-    organization,
-    organizationId: properties.organizationId,
-    step: 'UpdateMemberRoles',
-  });
 
   // At better-auth 1.6.23, updateMemberRole's "cannot leave the organization
   // without an owner" check only fires when the updater edits their own row.
