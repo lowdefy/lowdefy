@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
 
 function mockAuth({ session, member }) {
@@ -88,6 +89,82 @@ test('sets context.user to null when the user holds no member row in the active 
   expect(context.logger.debug).toHaveBeenCalledWith(
     'User "user_1" has no member row in organization "org_1" - resolved unauthenticated.'
   );
+});
+
+test('sets context.user to null when a pinned app gets a session active in another organization', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'customer-portal' },
+    },
+    member: { id: 'member_1', role: 'admin', appRoles: ['user-admin'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+  expect(findOne).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has active organization "customer-portal", which is not this app\'s pinned organization "team" - resolved unauthenticated.'
+  );
+});
+
+test('resolves a session active in the pinned organization', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'team' },
+    },
+    member: { id: 'member_1', role: 'admin', appRoles: ['user-admin'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toEqual({
+    id: 'user_1',
+    roles: ['user-admin'],
+    orgRoles: ['admin'],
+    attributes: {},
+    activeOrganizationId: 'team',
+  });
+  expect(findOne).toHaveBeenCalled();
+});
+
+test('resolves any active organization under the tenant policy', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_9' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.roles).toEqual(['auditor']);
+});
+
+test('resolves any active organization when no organization binding is registered', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_9' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+  });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.roles).toEqual(['auditor']);
 });
 
 test('resolves roles from member.appRoles and orgRoles from the member role tier', async () => {

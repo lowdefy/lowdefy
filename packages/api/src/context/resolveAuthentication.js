@@ -18,6 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 // resolveAuthentication is the single writer of context.user - nothing
@@ -35,7 +36,8 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // unauthenticated: an invitee's pre-accept session (the session.create
 // carve-out), a stale cookie from another app's deployment, and a member
 // removed mid-session are all treated as logged out, not logged-in with no
-// roles.
+// roles. Under policy: pinned, a session whose active organization is not this
+// app's organization is treated the same way, member row there or not.
 //
 // The member row carries two unrelated authorities and they stay apart.
 // context.user.roles is member.appRoles - the app's own role strings, and the
@@ -70,6 +72,39 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
   if (type.isNone(activeOrganizationId)) {
     context.logger.debug(
       `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
+    );
+    context.user = null;
+    return;
+  }
+  // Under pinned, the active organization must be this app's organization.
+  // Without this, a session pinned elsewhere - accept-time drift from an
+  // invitation another app sent, a stale cookie, a session shared between two
+  // pinned apps on one host - resolves as an authenticated caller here
+  // carrying the other organization's roles, so every role name the two
+  // catalogs share becomes a page they can open. Ahead of the member read: a
+  // foreign session costs no database round trip.
+  //
+  // The comparison target is the configured slug, not getOrganizationBinding's
+  // pinned.id, because pinned can legitimately be absent on a live request -
+  // resolvePinnedOrganization swallows a failed ensure so the _organization
+  // operator and step organizationId defaulting fail with their own clear
+  // errors instead of every request failing in the middleware. Comparing
+  // against an unresolved binding would either log the whole deployment out on
+  // a transient database error or skip the check exactly when the database is
+  // unhealthy. Under pinned the organization's id is its slug, so the check
+  // needs no database read and an unhealthy ensure cannot defeat it.
+  //
+  // Recovery is one re-login at this app: applyPinnedPolicy runs at every
+  // session.create and re-pins the session whenever the caller holds a member
+  // row here. Never send the person to the other app - the production cookie
+  // prefix is shared across apps on one host, so signing in there flips the
+  // shared session the other way and breaks the app they came from.
+  //
+  // Under tenant there is no pinned organization and the check does not apply.
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && activeOrganizationId !== registered.slug) {
+    context.logger.debug(
+      `Session for user "${session.user.id}" has active organization "${activeOrganizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
     );
     context.user = null;
     return;
