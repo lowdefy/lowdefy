@@ -442,7 +442,13 @@ test('updateOne response shape is invariant to logCollection', async () => {
   // Pre-seed the match doc so the matched-case response is identical in both branches.
   await MongoDBUpdateOne({ request: match, connection: baseConnection });
 
-  const expectedKeys = ['acknowledged', 'matchedCount', 'modifiedCount', 'upsertedCount', 'upsertedId'];
+  const expectedKeys = [
+    'acknowledged',
+    'matchedCount',
+    'modifiedCount',
+    'upsertedCount',
+    'upsertedId',
+  ];
   for (const request of [match, upsert, noMatch]) {
     const resNoLog = await MongoDBUpdateOne({ request, connection: baseConnection });
     const resWithLog = await MongoDBUpdateOne({

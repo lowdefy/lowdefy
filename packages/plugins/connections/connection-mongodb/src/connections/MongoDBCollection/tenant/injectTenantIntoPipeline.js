@@ -123,7 +123,11 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       // does not constrain it, and merging into restrictSearchWithMatch would
       // be in-stage rewriting. The clause is the author's (amendment-1).
       if (!authored) {
-        throw refusalError({ stageKey: '$graphLookup', field, position: 'restrictSearchWithMatch' });
+        throw refusalError({
+          stageKey: '$graphLookup',
+          field,
+          position: 'restrictSearchWithMatch',
+        });
       }
       authoredSites += 1;
       auditMqlEquality({

@@ -28,10 +28,7 @@ test('tenantPreflight detects a document missing the tenant field', async () => 
   const collection = 'tenantPreflightMissingField';
   await populateTestMongoDb({
     collection,
-    documents: [
-      { _id: 'stamped', organizationId: 'org_a' },
-      { _id: 'unstamped' },
-    ],
+    documents: [{ _id: 'stamped', organizationId: 'org_a' }, { _id: 'unstamped' }],
   });
   const res = await tenantPreflight({
     connection: makeConnection(collection),

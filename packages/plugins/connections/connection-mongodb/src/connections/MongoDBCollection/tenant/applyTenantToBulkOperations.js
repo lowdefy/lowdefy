@@ -67,9 +67,7 @@ function applyTenantToBulkOperations({ operations, tenant }) {
           },
         };
       default:
-        throw new Error(
-          `Unsupported bulkWrite operation "${kind}" on a tenant connection.`
-        );
+        throw new Error(`Unsupported bulkWrite operation "${kind}" on a tenant connection.`);
     }
   });
 }

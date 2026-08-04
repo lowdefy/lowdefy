@@ -298,7 +298,9 @@ test('refuses a $vectorSearch entry stage without authored', () => {
 test('refuses a $geoNear entry stage without authored', () => {
   expect(() =>
     injectTenantIntoPipeline({
-      pipeline: [{ $geoNear: { near: { type: 'Point', coordinates: [0, 0] }, distanceField: 'd' } }],
+      pipeline: [
+        { $geoNear: { near: { type: 'Point', coordinates: [0, 0] }, distanceField: 'd' } },
+      ],
       tenant,
     })
   ).toThrow(
@@ -377,11 +379,13 @@ test('authored $search with the org equals in compound.filter passes untouched, 
 
 test('authored $searchMeta with the org equals passes untouched', () => {
   const searchMeta = {
-    $searchMeta: { compound: { filter: [equalsClause], must: [{ text: { query: 'q', path: 'n' } }] } },
+    $searchMeta: {
+      compound: { filter: [equalsClause], must: [{ text: { query: 'q', path: 'n' } }] },
+    },
   };
-  expect(
-    injectTenantIntoPipeline({ pipeline: [searchMeta], tenant: authoredTenant })
-  ).toEqual([searchMeta]);
+  expect(injectTenantIntoPipeline({ pipeline: [searchMeta], tenant: authoredTenant })).toEqual([
+    searchMeta,
+  ]);
 });
 
 test('authored $search still gets mechanical injection at later $lookup entries', () => {
@@ -464,17 +468,15 @@ test('authored $vectorSearch with the org equality in filter passes untouched, n
       filter: { $and: [{ status: 'open' }, { organizationId: { $eq: 'org_a' } }] },
     },
   };
-  expect(
-    injectTenantIntoPipeline({ pipeline: [vectorSearch], tenant: authoredTenant })
-  ).toEqual([vectorSearch]);
+  expect(injectTenantIntoPipeline({ pipeline: [vectorSearch], tenant: authoredTenant })).toEqual([
+    vectorSearch,
+  ]);
 });
 
 test('authored $vectorSearch audit fails without the equality', () => {
   expect(() =>
     injectTenantIntoPipeline({
-      pipeline: [
-        { $vectorSearch: { index: 'v', queryVector: [0.1], path: 'e', limit: 5 } },
-      ],
+      pipeline: [{ $vectorSearch: { index: 'v', queryVector: [0.1], path: 'e', limit: 5 } }],
       tenant: authoredTenant,
     })
   ).toThrow(
@@ -538,9 +540,10 @@ test('authored $graphLookup with the org equality in restrictSearchWithMatch pas
       restrictSearchWithMatch: { organizationId: 'org_a' },
     },
   };
-  expect(
-    injectTenantIntoPipeline({ pipeline: [graphLookup], tenant: authoredTenant })
-  ).toEqual([tenantMatch, graphLookup]);
+  expect(injectTenantIntoPipeline({ pipeline: [graphLookup], tenant: authoredTenant })).toEqual([
+    tenantMatch,
+    graphLookup,
+  ]);
 });
 
 test('authored $graphLookup audit fails without the equality', () => {
