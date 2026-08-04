@@ -31,6 +31,7 @@ const authorities = {
   RevokeUserSessions: { scope: 'org', permissions: { session: ['revoke'] }, targetUser: 'userId' },
   UnbanUser: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
   UpdateMemberAttributes: { scope: 'org', permissions: { member: ['update'] } },
+  UpdateMemberOrgRole: { scope: 'org', permissions: { member: ['update'] } },
   UpdateMemberRoles: { scope: 'org', permissions: { member: ['update'] } },
   UpdateUserAttributes: {
     scope: 'org',
