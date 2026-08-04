@@ -30,6 +30,14 @@ jest.unstable_mockModule('../../email/renderAuthEmail.js', () => ({
   default: mockRenderAuthEmail,
 }));
 
+// The challenge sequence walks endpoint-context internals a plain object cannot
+// supply, and has its own test; stub it so the two-factor interception's wiring
+// can be driven with a fake context.
+const mockBeginTwoFactorChallenge = jest.fn(async () => 'challenged');
+jest.unstable_mockModule('./requestHooks/beginTwoFactorChallenge.js', () => ({
+  default: mockBeginTwoFactorChallenge,
+}));
+
 const { default: getBetterAuthConfig } = await import('./getBetterAuthConfig.js');
 
 const emailConfig = {
@@ -1300,7 +1308,88 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
   });
 });
 
-test('wires the engine-tier magic-link send gate as options.hooks.before when magicLink is enabled', () => {
+describe('two factor challenge on the magic link path', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+
+  beforeEach(() => {
+    mockBeginTwoFactorChallenge.mockClear();
+  });
+
+  afterEach(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  function createMagicLinkTwoFactorAuthJson() {
+    return createAuthJson({
+      authPages: { signIn: '/login', error: '/auth/error', twoFactor: '/two-factor' },
+      email: emailConfig,
+      magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      twoFactor: { enabled: true },
+    });
+  }
+
+  // A completed magic-link sign-in for an enrolled user, mid-redirect to the
+  // destination the endpoint resolved from the link's callbackURL.
+  function createVerifyCtx() {
+    return {
+      path: '/magic-link/verify',
+      context: {
+        newSession: {
+          user: { id: 'user_1', twoFactorEnabled: true },
+          session: { token: 'session_token_1' },
+        },
+        responseHeaders: new Headers({ location: 'https://app.example.com/base/invoices/123' }),
+      },
+    };
+  }
+
+  test('redirects an enrolled magic link sign-in to the basePath-prefixed absolute two factor page', async () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createMagicLinkTwoFactorAuthJson(),
+      config: { basePath: '/base' },
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+
+    // createAuthMiddleware supplies the real ctx.redirect, so the hook throws the
+    // 302 APIError that runAfterHooks turns into the response.
+    const thrown = await options.hooks.after(createVerifyCtx()).catch((error) => error);
+    expect(thrown.statusCode).toBe(302);
+    expect(thrown.headers.get('location')).toBe(
+      'https://app.example.com/base/two-factor?callbackUrl=%2Fbase%2Finvoices%2F123'
+    );
+  });
+
+  test('leaves /magic-link/verify alone when twoFactor is not enabled', async () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        authPages: { signIn: '/login', error: '/auth/error', twoFactor: '/two-factor' },
+        email: emailConfig,
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      }),
+      config: { basePath: '/base' },
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+
+    await expect(options.hooks.after(createVerifyCtx())).resolves.toBeUndefined();
+    expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+  });
+});
+
+test('assembles both request hook slots when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson({
@@ -1314,10 +1403,11 @@ test('wires the engine-tier magic-link send gate as options.hooks.before when ma
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(typeof options.hooks?.before).toBe('function');
+  expect(typeof options.hooks.before).toBe('function');
+  expect(typeof options.hooks.after).toBe('function');
 });
 
-test('does not register options.hooks when magicLink is not enabled', () => {
+test('always assembles both request hook slots even with no magic link configured', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -1326,5 +1416,7 @@ test('does not register options.hooks when magicLink is not enabled', () => {
     plugins: createPlugins(),
     secrets: baseSecrets,
   });
-  expect(options.hooks).toBeUndefined();
+  expect(Object.keys(options.hooks)).toEqual(['before', 'after']);
+  expect(typeof options.hooks.before).toBe('function');
+  expect(typeof options.hooks.after).toBe('function');
 });

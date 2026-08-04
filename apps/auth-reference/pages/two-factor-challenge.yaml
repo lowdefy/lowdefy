@@ -1,10 +1,13 @@
 # Public page - a 2FA-pending sign-in holds no session yet; the pending
 # state rides a BetterAuth cookie set by the sign-in call, so this page must
-# be opened in the same browser straight after the login page routed here.
+# be opened in the same browser straight after the engine routed here. The
+# engine routes here from every sign-in method that can meet a challenge -
+# email or phone password, magic link, an untrusted OAuth provider, an SMS
+# code - so the page has one arrival shape and needs no per-method branch.
 # TwoFactorVerify serves the sign-in challenge (as well as enrolment
 # confirmation on /security): a TOTP code or a single-use backup code
 # completes the session itself - navigation after is the app's business,
-# so UpdateSession re-syncs the client and Link lands on the dashboard.
+# so UpdateSession re-syncs the client and Link lands on the destination.
 id: two-factor-challenge
 type: Box
 properties:
@@ -48,10 +51,30 @@ blocks:
                 _state: trust_device_switch
           - id: resync_after_totp
             type: UpdateSession
-          - id: to_dashboard_totp
+          # The engine carries the destination the user asked for onto this page
+          # as ?callbackUrl=, so an enrolled user who followed a deep link still
+          # gets there; hard-coding the dashboard would throw it away. Only an
+          # app-relative same-origin path is ever emitted, so the page does not
+          # re-validate it. It arrives as a path rather than a pageId, and
+          # Link's url is an off-origin target that gains an https:// scheme
+          # when it has none - "/invoices/123" would resolve to the host
+          # "invoices" - hence the origin. basePath needs no handling either
+          # way: the carried path already includes it, and pageId applies it.
+          - id: to_destination_totp
             type: Link
             params:
-              pageId: dashboard
+              _if:
+                test:
+                  _eq:
+                    - _url_query: callbackUrl
+                    - null
+                then:
+                  pageId: dashboard
+                else:
+                  url:
+                    _string.concat:
+                      - _location: origin
+                      - _url_query: callbackUrl
         catch:
           - id: show_totp_error
             type: SetState
@@ -80,10 +103,23 @@ blocks:
                 _state: trust_device_switch
           - id: resync_after_backup
             type: UpdateSession
-          - id: to_dashboard_backup
+          # Same destination ladder as the TOTP branch - a backup code completes
+          # the same sign-in, so it must not land somewhere else.
+          - id: to_destination_backup
             type: Link
             params:
-              pageId: dashboard
+              _if:
+                test:
+                  _eq:
+                    - _url_query: callbackUrl
+                    - null
+                then:
+                  pageId: dashboard
+                else:
+                  url:
+                    _string.concat:
+                      - _location: origin
+                      - _url_query: callbackUrl
         catch:
           - id: show_backup_error
             type: SetState

@@ -666,6 +666,14 @@ export default {
                   type: 'Auth provider "properties" should be an object.',
                 },
               },
+              twoFactorTrusted: {
+                type: 'boolean',
+                description:
+                  'Skip the engine two-factor challenge for sign-ins through this provider, because the IdP is trusted to have enforced MFA itself. Declared, not verified - the engine cannot confirm what the IdP enforced and checks nothing. Unrelated to account.accountLinking.trustedProviders, which is about trusting the provider email claim.',
+                errorMessage: {
+                  type: 'Auth provider "twoFactorTrusted" should be a boolean.',
+                },
+              },
             },
             errorMessage: {
               type: 'Auth provider should be an object.',
@@ -1319,6 +1327,12 @@ export default {
               type: 'string',
               errorMessage: {
                 type: 'Auth "authPages.verifyEmail" should be a string.',
+              },
+            },
+            twoFactor: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.twoFactor" should be a string.',
               },
             },
             acceptInvitation: {

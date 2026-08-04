@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getHomePathname } from '@lowdefy/engine';
+import { getHomePathname, stopChain } from '@lowdefy/engine';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 function getCallbackUrl({ lowdefy, callbackUrl, name = 'callbackUrl' }) {
@@ -91,6 +91,54 @@ function resolveTargetURL({ lowdefy, callbackUrl, name }) {
 // server-side originCheck / trustedOrigins do not cover it.
 function isAppRelativePath(value) {
   return type.isString(value) && /^\/([^/\\]|$)/.test(value);
+}
+
+// The engine owns the two-factor challenge destination on every sign-in path, so
+// every method that can receive a challenge instead of a session navigates
+// through here. Leaving it to the login page makes correctness opt-in: a page
+// that omits the branch leaves an enrolled user unable to sign in at all and
+// with nothing to show for the click. Routed through resolveTargetURL like every
+// other destination so basePath handling stays in one place and an absolute
+// authPages.twoFactor keeps its origin.
+//
+// The destination the user asked for travels with them: an enrolled user who
+// deep-linked to /invoices/123 must not be dropped on the challenge page's
+// default once the challenge is done. Only an app-relative path is carried - the
+// challenge page is public and its query is attacker-suppliable, and
+// isAppRelativePath is the guard that already rejects //evil.com and
+// /\evil.com here.
+//
+// Returns false rather than throwing when there is no page to navigate to: the
+// build check is what guarantees authPages.twoFactor exists whenever two-factor
+// is enabled, and a throw here would turn that guarantee into a failed sign-in.
+// The no-window case is legitimate too (server rendering, tests). The caller
+// then falls through to returning the response without navigating.
+function navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) {
+  const twoFactorPage = auth.authConfig?.authPages?.twoFactor;
+  if (!type.isString(twoFactorPage)) {
+    return false;
+  }
+  const target = resolveTargetURL({
+    lowdefy,
+    callbackUrl: { url: twoFactorPage },
+    name: 'authPages.twoFactor',
+  });
+  const window = lowdefy._internal?.globals?.window;
+  if (type.isNone(target) || !window) {
+    return false;
+  }
+  // Parsed rather than concatenated: authPages.twoFactor may already carry a
+  // query of its own, and searchParams encodes the callbackUrl value so one
+  // holding a '&' or '?' survives. An app-relative page must not gain an origin
+  // from being parsed against one, hence the round trip back to path + search.
+  const url = new URL(target, window.location.origin);
+  if (isAppRelativePath(callbackURL)) {
+    url.searchParams.set('callbackUrl', callbackURL);
+  }
+  window.location.assign(
+    url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.toString()
+  );
+  return true;
 }
 
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
@@ -291,7 +339,9 @@ function createAuthMethods(lowdefy, auth) {
         auth.signInPhoneNumber({ phoneNumber, password, ...rest, ...captchaOptions })
       );
       if (data?.twoFactorRedirect) {
-        return data;
+        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
+          ? stopChain(data)
+          : data;
       }
       const window = lowdefy._internal?.globals?.window;
       if (callbackURL && window) {
@@ -301,12 +351,20 @@ function createAuthMethods(lowdefy, auth) {
     }
     if (!type.isNone(email) || !type.isNone(password)) {
       const data = await unwrap(auth.signInEmail({ email, password, ...rest, ...captchaOptions }));
-      // A 2FA-enrolled user gets a challenge, not a session - do not navigate
-      // as if signed in. The login page reads the outcome via _actions and
-      // routes to the app's challenge page, where TwoFactorVerify completes
-      // the session.
+      // A 2FA-enrolled user gets a challenge, not a session - navigate to
+      // authPages.twoFactor instead of the callback URL, where TwoFactorVerify
+      // completes the session. The response still carries twoFactorRedirect and
+      // twoFactorMethods for an app that wants to read them, but the routing is
+      // not the app's job.
+      //
+      // The chain ends here: without that, the step the app put after Login
+      // races the challenge page load and re-renders the app with no session.
+      // When there was nothing to navigate to the chain continues as before, so
+      // a chain is never stranded by a navigation that did not happen.
       if (data?.twoFactorRedirect) {
-        return data;
+        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
+          ? stopChain(data)
+          : data;
       }
       const window = lowdefy._internal?.globals?.window;
       if (callbackURL && window) {
@@ -616,14 +674,29 @@ function createAuthMethods(lowdefy, auth) {
   }
 
   // The OTP sign-in: on success BetterAuth sets the session cookie (and
-  // creates the account under signUpOnVerification). Like TwoFactorVerify and
-  // unlike login it does not auto-navigate - verify serves sign-in, sign-up
-  // and phone-change confirmation, and only the app knows which page follows.
+  // creates the account under signUpOnVerification). On that success, and unlike
+  // login, it does not auto-navigate - verify serves sign-in, sign-up and
+  // phone-change confirmation, and only the app knows which page follows.
   async function phoneNumberVerify({ code, phoneNumber, ...rest } = {}) {
     if (!type.isString(phoneNumber) || !type.isString(code)) {
       throw new Error('PhoneNumberVerify requires "phoneNumber" and "code" params.');
     }
-    return unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
+    const data = await unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
+    // An enrolled user verifying by SMS gets a challenge instead of a session, in
+    // the same JSON shape the password paths return, so the navigation is the one
+    // Login performs. Verify also serves sign-up and phone-change confirmation,
+    // where the flag is absent and the page owns what comes next. No callbackURL
+    // rides along: verify takes no callback param, so there is no destination the
+    // caller asked for and the challenge page falls back to its own default.
+    //
+    // The halt matters more here than on the password paths, because verify
+    // deliberately does not navigate on success - so every app has a step after
+    // it. Without the halt that step re-renders the app with no session while the
+    // challenge page load is still in flight.
+    if (data?.twoFactorRedirect) {
+      return navigateToTwoFactorChallenge({ lowdefy, auth }) ? stopChain(data) : data;
+    }
+    return data;
   }
 
   async function twoFactorDisable({ password, ...rest } = {}) {
