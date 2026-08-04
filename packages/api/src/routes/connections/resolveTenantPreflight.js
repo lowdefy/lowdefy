@@ -65,7 +65,11 @@ async function probeTargets(context, { targets }) {
 }
 
 async function collectTargets(context, { tenantConnections }) {
-  const evaluateOperators = createEvaluateOperators(context);
+  // Caller-less by contract: the verdict is memoized per process, so
+  // connection properties must never resolve against whichever caller happens
+  // to hit the cold process first - _user reads resolve to nothing, exactly
+  // like a system-context request.
+  const evaluateOperators = createEvaluateOperators({ ...context, user: null });
   const targets = new Map();
   for (const entry of tenantConnections) {
     const plugin = context.connections[entry.type];
@@ -80,9 +84,7 @@ async function collectTargets(context, { tenantConnections }) {
       );
       continue;
     }
-    const connectionConfig = await context.readConfigFile(
-      `connections/${entry.connectionId}.json`
-    );
+    const connectionConfig = await context.readConfigFile(`connections/${entry.connectionId}.json`);
     if (!connectionConfig) {
       context.logger.warn(
         `Tenant preflight can not probe connection "${entry.connectionId}" - no connection artifact found.`
@@ -146,7 +148,9 @@ async function runPreflight(context) {
       } documents without the tenant field ${offenders
         .map((result) => `"${result.target.field}"`)
         .filter((fieldName, index, all) => all.indexOf(fieldName) === index)
-        .join(', ')}. Under auth.organizations.policy: tenant the wall filters every walled read on the tenant field, so these documents would be silently invisible. Backfill the field on the listed collections, then restart the server.`
+        .join(
+          ', '
+        )}. Under auth.organizations.policy: tenant the wall filters every walled read on the tenant field, so these documents would be silently invisible. Backfill the field on the listed collections, then restart the server.`
     );
   }
   const failures = results.filter((result) => result.error);

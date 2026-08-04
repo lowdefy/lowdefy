@@ -104,6 +104,35 @@ test('passes when every walled target is stamped', async () => {
   );
 });
 
+test('probes caller-less - connection properties never resolve against the requesting user', async () => {
+  mockReadConfigFile.mockImplementation(
+    readConfigImp({
+      connectionConfigs: {
+        walled: {
+          connectionId: 'walled',
+          type: 'TestTenantConnection',
+          properties: { databaseUri: { _user: 'organizationId' }, collection: 'user-contacts' },
+        },
+      },
+    })
+  );
+  mockProbe.mockResolvedValue({ ok: true });
+  const context = createTestContext();
+  // The preflight runs on a live request context - after resolveAuthentication -
+  // so a caller is present. The memoized verdict must not depend on whoever
+  // hits the cold process first, so the caller's identity never reaches the
+  // probe's operator evaluation.
+  context.user = { id: 'u1', organizationId: 'org_caller' };
+  context.operators = {
+    _user: ({ user, params }) => user?.[params],
+  };
+  await resolveTenantPreflight(context);
+  expect(mockProbe).toHaveBeenCalledTimes(1);
+  const probed = mockProbe.mock.calls[0][0];
+  expect(probed.connection.databaseUri).toBeUndefined();
+  expect(probed.connection.collection).toEqual('user-contacts');
+});
+
 test('refuses with one aggregated error naming every offending target', async () => {
   mockReadConfigFile.mockImplementation(
     readConfigImp({
@@ -210,9 +239,7 @@ test('skips with a warning when the tenantConnections artifact is missing', asyn
 test('skips a tenant-capable type without the preflight capability, with a warning', async () => {
   mockReadConfigFile.mockImplementation(
     readConfigImp({
-      tenantConnections: [
-        { connectionId: 'walled', type: 'NoProbeTenantConnection' },
-      ],
+      tenantConnections: [{ connectionId: 'walled', type: 'NoProbeTenantConnection' }],
     })
   );
   await resolveTenantPreflight(createTestContext());
