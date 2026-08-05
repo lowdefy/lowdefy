@@ -52,9 +52,10 @@ function Page({ auth, config, lowdefy }) {
         const res = await fetch(
           `${router.basePath}/api/page/${targetPageId}${window.location.search}`
         );
-        if (res.status === 401) {
-          // Logged-out navigation to a protected page - full load to the
-          // login page so it can return here after sign-in.
+        if (res.status === 401 || res.status === 403) {
+          // 401: logged-out navigation to a protected page. 403: authorised but
+          // second factor not yet enrolled. Both carry a { redirect } and full
+          // load away so the destination can return here afterwards.
           const { redirect } = await res.json();
           window.location.assign(redirect ?? `${router.basePath}/404`);
           return;

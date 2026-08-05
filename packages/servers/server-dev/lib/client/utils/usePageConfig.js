@@ -73,15 +73,18 @@ async function fetchPageConfig(url) {
   if (res.status === 404) {
     return null;
   }
-  if (res.status === 401) {
-    // Logged-out navigation to a protected page - Page renders a redirect
-    // screen and full-loads to the login page so it can return here after
-    // sign-in. Returning a settled value (never a parked promise) keeps the
-    // SWR key healthy: if the navigation is dropped, the tab still recovers
-    // on the next reload event or via the manual link on the redirect screen.
+  if (res.status === 401 || res.status === 403) {
+    // 401: logged-out navigation to a protected page. 403: authorised but second
+    // factor not yet enrolled. Page renders a redirect screen and full-loads to
+    // the destination so it can return here afterwards. Returning a settled value
+    // (never a parked promise) keeps the SWR key healthy: if the navigation is
+    // dropped, the tab still recovers on the next reload event or via the manual
+    // link on the redirect screen.
     const { redirect } = await res.json();
     const authRedirect = redirect ?? `${basePath}/404`;
-    console.warn(`Lowdefy dev: "${url}" returned 401 - redirecting to "${authRedirect}".`);
+    console.warn(
+      `Lowdefy dev: "${url}" returned ${res.status} - redirecting to "${authRedirect}".`
+    );
     return { authRedirect };
   }
   const data = await res.json();
