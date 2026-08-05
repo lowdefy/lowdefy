@@ -54,6 +54,18 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // no extra lookup). A user with no profile writes carries no profile key, so
 // _user.profile is undefined - never a synthesized {}. Strategy callers lack
 // profile exactly as they lack name and image.
+//
+// context.user.twoFactorEnrolled is the one caller fact no session field
+// carries: whether this person holds a factor that satisfies
+// auth.twoFactor.required. It is set only on session callers - strategy,
+// injected and system callers omit the key entirely, so the enrolment gate,
+// which tests === false, lets every non-session caller through untouched.
+// The passkey plugin is configured iff it is registered on the instance -
+// getBetterAuthConfig only pushes it when auth.passkey.enabled is true.
+function passkeyConfigured({ auth }) {
+  return (auth.options?.plugins ?? []).some((plugin) => plugin?.id === 'passkey');
+}
+
 async function resolveAuthentication(context, { auth, headers, strategies }) {
   if (type.isNone(auth)) {
     context.user = null;
@@ -130,6 +142,31 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     .split(',')
     .map((role) => role.trim())
     .filter(Boolean);
+  // twoFactorEnrolled - holds a factor that satisfies auth.twoFactor.required
+  // (Decision 4). Short-circuits on twoFactorEnabled, which rides session.user
+  // (the plugin declares input: false but not returned: false), so only an
+  // UNENROLLED caller costs the passkey read - and once required is on, that is
+  // the shrinking minority by design.
+  //
+  // The passkey read is gated on the plugin being CONFIGURED, not on
+  // required === true: gating on required would make this field mean "has
+  // enrolled" in one deployment and "has enrolled TOTP" in another, a value that
+  // lies depending on config. A passkey counts because it is a phishing-resistant
+  // possession factor with user verification bound to it - the reason Entra and
+  // Okta accept one outright. (It is not the ONLY route a passwordless user has:
+  // Lowdefy sets allowPasswordless: true, so TOTP is reachable by them too -
+  // Decision 4. The passkey still counts here on its own merit.)
+  //
+  // Needs the platform-owned user-passkeys { userId: 1 } index - without it this
+  // is a collection scan on every request from an unenrolled caller.
+  let twoFactorEnrolled = session.user.twoFactorEnabled === true;
+  if (!twoFactorEnrolled && passkeyConfigured({ auth })) {
+    const passkeyCount = await adapter.count({
+      model: 'passkey',
+      where: [{ field: 'userId', value: session.user.id }],
+    });
+    twoFactorEnrolled = passkeyCount > 0;
+  }
   context.user = {
     ...session.user,
     // Absent on a member row minted with no app roles - never falls back to
@@ -141,6 +178,7 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
       ...(member.attributes ?? {}),
     },
     activeOrganizationId,
+    twoFactorEnrolled,
     // organizationId is the caller's active org in its serialized string form -
     // the value the tenant wall stamps onto and filters walled collections with,
     // and the one operators read as _user: organizationId. It resolves under

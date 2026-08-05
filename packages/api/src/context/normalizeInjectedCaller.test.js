@@ -48,6 +48,11 @@ test('normalizeInjectedCaller does not synthesize profile or org fields', () => 
   expect(result).not.toHaveProperty('organizationId');
 });
 
+test('normalizeInjectedCaller does not synthesize twoFactorEnrolled', () => {
+  const result = normalizeInjectedCaller({ id: 'x', name: 'X' });
+  expect(result).not.toHaveProperty('twoFactorEnrolled');
+});
+
 test('normalizeInjectedCaller mirrors organizationId from activeOrganizationId', () => {
   const result = normalizeInjectedCaller({ id: 'x', activeOrganizationId: 'org_1' });
   expect(result.organizationId).toBe('org_1');

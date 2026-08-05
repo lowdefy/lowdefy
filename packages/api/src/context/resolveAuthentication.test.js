@@ -19,13 +19,17 @@ import { jest } from '@jest/globals';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
 
-function mockAuth({ session, member }) {
+function mockAuth({ session, member, count, passkey } = {}) {
   const findOne = jest.fn().mockResolvedValue(member ?? null);
+  const countFn = jest.fn().mockResolvedValue(count ?? 0);
   const auth = {
     api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
-    $context: Promise.resolve({ adapter: { findOne } }),
+    $context: Promise.resolve({ adapter: { findOne, count: countFn } }),
   };
-  return { auth, findOne };
+  if (passkey) {
+    auth.options = { plugins: [{ id: 'passkey' }] };
+  }
+  return { auth, findOne, count: countFn };
 }
 
 test('sets context.user to null when auth is not configured', async () => {
@@ -131,6 +135,7 @@ test('resolves a session active in the pinned organization', async () => {
     attributes: {},
     activeOrganizationId: 'team',
     organizationId: 'team',
+    twoFactorEnrolled: false,
   });
   expect(findOne).toHaveBeenCalled();
 });
@@ -188,6 +193,7 @@ test('resolves roles from member.appRoles and orgRoles from the member role tier
     attributes: {},
     activeOrganizationId: 'org_1',
     organizationId: 'org_1',
+    twoFactorEnrolled: false,
   });
 });
 
@@ -361,6 +367,96 @@ test('does not mutate the original session user object', async () => {
   expect(context.user).not.toBe(sessionUser);
 });
 
+test('resolves twoFactorEnrolled true and skips the passkey read when twoFactorEnabled is true', async () => {
+  const { auth, count } = mockAuth({
+    session: {
+      user: { id: 'user_1', twoFactorEnabled: true },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+    passkey: true,
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.twoFactorEnrolled).toBe(true);
+  expect(count).not.toHaveBeenCalled();
+});
+
+test('resolves twoFactorEnrolled true when an unenrolled caller has a passkey on a passkey instance', async () => {
+  const { auth, count } = mockAuth({
+    session: {
+      user: { id: 'user_1', twoFactorEnabled: false },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+    passkey: true,
+    count: 1,
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.twoFactorEnrolled).toBe(true);
+  expect(count).toHaveBeenCalledWith({
+    model: 'passkey',
+    where: [{ field: 'userId', value: 'user_1' }],
+  });
+});
+
+test('resolves twoFactorEnrolled false when an unenrolled caller has no passkey on a passkey instance', async () => {
+  const { auth, count } = mockAuth({
+    session: {
+      user: { id: 'user_1', twoFactorEnabled: false },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+    passkey: true,
+    count: 0,
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.twoFactorEnrolled).toBe(false);
+  expect(count).toHaveBeenCalledWith({
+    model: 'passkey',
+    where: [{ field: 'userId', value: 'user_1' }],
+  });
+});
+
+test('resolves twoFactorEnrolled false and skips the passkey read on an instance with no passkey plugin', async () => {
+  const { auth, count } = mockAuth({
+    session: {
+      user: { id: 'user_1', twoFactorEnabled: false },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.twoFactorEnrolled).toBe(false);
+  expect(count).not.toHaveBeenCalled();
+});
+
+test('resolves twoFactorEnrolled false, not undefined, when twoFactorEnabled is absent from the session', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.twoFactorEnrolled).toBe(false);
+});
+
 function mockStrategy({ attributes = {}, id, match = null, roles = [], type = 'apiKey' }) {
   return { attributes, id, roles, type, verify: jest.fn().mockResolvedValue(match) };
 }
@@ -389,6 +485,22 @@ test('resolves a strategy caller when no session resolves', async () => {
     roles: ['partner'],
     attributes: {},
   });
+});
+
+test('omits the twoFactorEnrolled key entirely on a strategy caller', async () => {
+  const { auth } = mockAuth({ session: null });
+  const context = { logger: mockLogger() };
+  const strategies = [
+    mockStrategy({
+      id: 'partner-access',
+      match: { user: { id: 'apiKey:partner-access:acme' } },
+      roles: ['partner'],
+    }),
+  ];
+
+  await resolveAuthentication(context, { auth, headers: {}, strategies });
+
+  expect('twoFactorEnrolled' in context.user).toBe(false);
 });
 
 test('sets context.user to null when no session resolves and no strategy matches', async () => {
