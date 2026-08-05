@@ -1,8 +1,7 @@
-# Phase-9 unconfigured-key demo, the passing half: system contexts are
-# unaffected by the auth.userAdminRole floor - hooks and system: true steps
-# run caller-less, so this returns org-b's members even though the key is
-# not configured here. The floor binds user-initiated calls only (see
-# list-members-step.yaml for the refusal).
+# Per-step floor demo, the passing half: system contexts bypass the
+# authority floor - hooks and system: true steps run caller-less, so this
+# returns org-b's members with no org-authority check. The floor binds
+# user-initiated calls only (see list-members-step.yaml for the refusal).
 id: list-members-system
 type: Api
 routine:
