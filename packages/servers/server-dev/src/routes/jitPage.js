@@ -28,6 +28,7 @@ const basePath = lowdefyConfig.basePath ?? '';
 //   200 { installing: true, packages }  — plugin install in progress, client polls
 //   500 { buildError: true, errors, message, source }  — build failed
 //   401 { redirect }  — logged-out navigation to a protected page
+//   403 { redirect }  — authorised but second factor not yet enrolled
 //   404 'Page not found.'
 //   200 pageConfig (+ _warnings)
 async function jitPageHandler(c) {
@@ -87,6 +88,23 @@ async function jitPageHandler(c) {
         )}`,
       },
       401
+    );
+  }
+  if (result.status === 'enrol_required') {
+    // 403, not the 401 the signed-out branch above uses: a 401 is the client's
+    // dead-session signal and would bounce the user to sign-in, which is the loop
+    // the enrolment gate exists to avoid.
+    const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.debug(
+      `Page config request for "${pageId}" resolved enrol_required - returning a two-factor enrolment redirect.`
+    );
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      403
     );
   }
   if (result.status !== 'ok') {

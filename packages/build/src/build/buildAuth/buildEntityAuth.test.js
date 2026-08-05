@@ -268,6 +268,56 @@ test('buildEntityAuth pages: pages holding an authPages role never join a protec
   ]);
 });
 
+test('buildEntityAuth pages: the page holding twoFactorEnrol is protected under protected true', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/login',
+        twoFactorEnrol: '/two-factor-enrol',
+      },
+      pages: {
+        protected: true,
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'login', type: 'Context' },
+      { id: 'two-factor-enrol', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'login', type: 'Context', auth: { public: true } },
+    { id: 'two-factor-enrol', type: 'Context', auth: { public: false } },
+  ]);
+});
+
+test('buildEntityAuth pages: the page holding twoFactorEnrol is protected under a public list', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/login',
+        twoFactorEnrol: '/two-factor-enrol',
+      },
+      pages: {
+        public: ['home'],
+        roles: {},
+      },
+    },
+    pages: [
+      { id: 'home', type: 'Context' },
+      { id: 'login', type: 'Context' },
+      { id: 'two-factor-enrol', type: 'Context' },
+    ],
+  };
+  const res = buildEntityAuth({ components, context: {}, entity: 'pages' });
+  expect(res.pages).toEqual([
+    { id: 'home', type: 'Context', auth: { public: true } },
+    { id: 'login', type: 'Context', auth: { public: true } },
+    { id: 'two-factor-enrol', type: 'Context', auth: { public: false } },
+  ]);
+});
+
 test('buildEntityAuth pages: module-contributed public pages stay public under protected true', () => {
   const components = {
     auth: {

@@ -135,6 +135,7 @@
       "max": 100,
       "~k": "1p"
     },
+    "pagesProtectedByDefault": false,
     "~k": "6"
   },
   "blockPackages.json": [

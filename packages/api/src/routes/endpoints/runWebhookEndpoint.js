@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
-import createAuthorize from '../../context/createAuthorize.js';
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
@@ -56,12 +56,12 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
     throw err;
   }
 
-  // Caller-less and UNTRUSTED: with context.system unset, createAuthorize fails
-  // closed on any protected target exactly as an unauthenticated call would
+  // Caller-less and UNTRUSTED: with context.system unset, createAuthorizeOutcome
+  // fails closed on any protected target exactly as an unauthenticated call would
   // (Api and InternalApi alike — InternalApi is an HTTP-exposure choice, not a
   // trust tier, so it earns no special pass).
   context.user = null;
-  context.authorize = createAuthorize(context);
+  context.authorizeOutcome = createAuthorizeOutcome(context);
 
   // A declared verifier is the only thing that can make the run trusted, and it
   // runs before any routine step. On success the runner (not routine or

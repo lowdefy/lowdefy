@@ -166,6 +166,177 @@ blocks:
             params:
               last_error:
                 _actions: revoke_user_sessions.error.message
+  # Two-factor lifecycle recovery. Each write is behind a ConfirmModal whose
+  # content enumerates the reach - these are destructive, cross-organization
+  # actions and the operator should see how far they go before confirming.
+  - id: two_factor_recovery_title
+    type: Title
+    properties:
+      content: Two-factor recovery
+      level: 4
+  - id: target_passkey_id
+    type: TextInput
+    properties:
+      title: Passkey id (only for "Revoke one passkey"; from db user-passkeys)
+  - id: reset_two_factor_button
+    type: Button
+    properties:
+      title: Reset two-factor (ResetUserTwoFactor + RevokeUserSessions)
+      type: danger
+      block: true
+    events:
+      onClick:
+        - id: open_reset_two_factor_confirm
+          type: CallMethod
+          params:
+            blockId: reset_two_factor_confirm
+            method: open
+  - id: reset_two_factor_confirm
+    type: ConfirmModal
+    properties:
+      title: Reset this user's two-factor?
+      status: warning
+      okText: Reset and revoke sessions
+      content:
+        _nunjucks:
+          template: |
+            This clears the second factor for user <b>{{ userId }}</b> in
+            <b>every organization</b> they belong to (there is one enrolment per
+            user, not one per organization), deletes their trust-device records,
+            and <b>revokes all their sessions</b>. They will be sent to enrol a
+            new factor on their next sign-in. This cannot be undone.
+          on:
+            userId:
+              _state: target_user_id
+    events:
+      onOk:
+        try:
+          - id: reset_two_factor
+            type: CallAPI
+            params:
+              endpointId: admin-reset-user-two-factor
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_reset_two_factor_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-reset-user-two-factor.response
+              last_error: null
+        catch:
+          - id: show_reset_two_factor_error
+            type: SetState
+            params:
+              last_error:
+                _actions: reset_two_factor.error.message
+  - id: revoke_all_passkeys_button
+    type: Button
+    properties:
+      title: Revoke all passkeys (RevokeUserPasskeys, no passkeyId)
+      type: danger
+      block: true
+    events:
+      onClick:
+        - id: open_revoke_all_passkeys_confirm
+          type: CallMethod
+          params:
+            blockId: revoke_all_passkeys_confirm
+            method: open
+  - id: revoke_all_passkeys_confirm
+    type: ConfirmModal
+    properties:
+      title: Revoke ALL of this user's passkeys?
+      status: warning
+      okText: Revoke all passkeys
+      content:
+        _nunjucks:
+          template: |
+            This deletes <b>every</b> registered passkey for user
+            <b>{{ userId }}</b> across the deployment. If a passkey was their
+            only second factor, they will be sent to enrol a new one on their
+            next request. Sessions are <b>not</b> revoked by this action - use
+            "Revoke sessions" above if the incident calls for it.
+          on:
+            userId:
+              _state: target_user_id
+    events:
+      onOk:
+        try:
+          - id: revoke_all_passkeys
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-passkeys
+              payload:
+                userId:
+                  _state: target_user_id
+          - id: show_revoke_all_passkeys_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-passkeys.response
+              last_error: null
+        catch:
+          - id: show_revoke_all_passkeys_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_all_passkeys.error.message
+  - id: revoke_one_passkey_button
+    type: Button
+    properties:
+      title: Revoke one passkey (RevokeUserPasskeys with passkeyId)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: open_revoke_one_passkey_confirm
+          type: CallMethod
+          params:
+            blockId: revoke_one_passkey_confirm
+            method: open
+  - id: revoke_one_passkey_confirm
+    type: ConfirmModal
+    properties:
+      title: Revoke one passkey?
+      status: warning
+      okText: Revoke this passkey
+      content:
+        _nunjucks:
+          template: |
+            This deletes only passkey <b>{{ passkeyId }}</b> for user
+            <b>{{ userId }}</b> - their other passkeys are untouched. Use this
+            for a single lost security key beside a working one. Sessions are
+            <b>not</b> revoked.
+          on:
+            userId:
+              _state: target_user_id
+            passkeyId:
+              _state: target_passkey_id
+    events:
+      onOk:
+        try:
+          - id: revoke_one_passkey
+            type: CallAPI
+            params:
+              endpointId: admin-revoke-user-passkeys
+              payload:
+                userId:
+                  _state: target_user_id
+                passkeyId:
+                  _state: target_passkey_id
+          - id: show_revoke_one_passkey_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-revoke-user-passkeys.response
+              last_error: null
+        catch:
+          - id: show_revoke_one_passkey_error
+            type: SetState
+            params:
+              last_error:
+                _actions: revoke_one_passkey.error.message
   - id: delete_user_button
     type: Button
     properties:

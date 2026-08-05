@@ -17,6 +17,7 @@
 import applySystemTrust from './applySystemTrust.js';
 import createEvaluateOperators from './createEvaluateOperators.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
 import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 
 // Builds a fresh off-request context for a trusted, caller-less system context -
@@ -24,9 +25,9 @@ import getOrganizationBinding from '../routes/auth/organizations/getOrganization
 // so the run is detectable as caller-less (`type.isNone(context.user)`) and
 // `_user` resolves to nothing (the hook's subject is in `_payload`). The run is
 // trusted at construction (`context.system = true`), the single trust marker
-// every authorization layer reads (Decision 1); its `authorize` is derived from
-// createAuthorize like every other layer, so endpoint auth is not re-checked
-// against a session (Decision 2).
+// every authorization layer reads (Decision 1); its `authorizeOutcome` is derived
+// from createAuthorizeOutcome like every other layer, so endpoint auth is not
+// re-checked against a session (Decision 2).
 function createSystemContext({
   agents,
   appMeta,
@@ -75,9 +76,12 @@ function createSystemContext({
   // Hook routines read the retained organizations state too - a step or
   // _organization inside a hook-bound endpoint resolves the same pinned org.
   context.organization = getOrganizationBinding({ auth: auth ?? null });
+  // A system context bypasses the enrolment check outright (system === true
+  // returns early), so this exists for shape consistency, not a live read.
+  context.authEnforcement = getAuthEnforcement({ auth: auth ?? null });
   // Trusted, caller-less system context (Decisions 1, 2): user: null,
-  // system: true, and authorize derived from createAuthorize - the same
-  // invariant bundle the caller-less runners apply, set in one place.
+  // system: true, and authorizeOutcome derived from createAuthorizeOutcome - the
+  // same invariant bundle the caller-less runners apply, set in one place.
   applySystemTrust(context);
   context.handleError = createHandleError({ context });
   context.readConfigFile = createReadConfigFile(context);

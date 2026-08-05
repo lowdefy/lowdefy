@@ -28,6 +28,16 @@ const authorities = {
   ListMembers: { scope: 'org', permissions: { member: ['list'] } },
   ListUsers: { scope: 'system' },
   RemoveMember: { scope: 'org', permissions: { member: ['delete'] } },
+  ResetUserTwoFactor: {
+    scope: 'org',
+    permissions: { user: ['reset-two-factor'] },
+    targetUser: 'userId',
+  },
+  RevokeUserPasskeys: {
+    scope: 'org',
+    permissions: { user: ['revoke-passkeys'] },
+    targetUser: 'userId',
+  },
   RevokeUserSessions: { scope: 'org', permissions: { session: ['revoke'] }, targetUser: 'userId' },
   UnbanUser: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
   UpdateMemberAttributes: { scope: 'org', permissions: { member: ['update'] } },

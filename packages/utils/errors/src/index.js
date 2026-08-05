@@ -54,6 +54,11 @@
  *    - Caught: Server error handlers, before structured logging and Sentry (401)
  *    - Format: [AuthenticationError] message
  *
+ * 8. TwoFactorEnrolmentRequiredError - Authorized caller with no enrolled second factor
+ *    - Thrown: The authorization gate, when auth.twoFactor.required is set and the caller is unenrolled
+ *    - Caught: Server error handlers, before structured logging and Sentry (403)
+ *    - Format: [TwoFactorEnrolmentRequiredError] message
+ *
  * Location Resolution Utilities:
  *   resolveConfigLocation     - Sync: configKey → {source, config} via keyMap/refMap
  *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
@@ -77,6 +82,7 @@ import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
 import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
+import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
 
 export {
@@ -96,6 +102,7 @@ export {
   resolveErrorLocation,
   ServiceError,
   shouldSuppressBuildCheck,
+  TwoFactorEnrolmentRequiredError,
   UserError,
   VALID_CHECK_SLUGS,
 };

@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import createSystemContext from './createSystemContext.js';
+import { registerAuthEnforcement } from '../routes/auth/getAuthEnforcement.js';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 
 const logger = {
@@ -56,10 +57,10 @@ test('createSystemContext is a caller-less system context - user is null, system
   expect(context.system).toBe(true);
 });
 
-test('createSystemContext authorize allows any endpoint - auth is not re-checked against a session', () => {
+test('createSystemContext authorizeOutcome allows any endpoint - auth is not re-checked against a session', () => {
   const context = createTestSystemContext();
-  expect(context.authorize({ auth: { public: false, roles: ['admin'] } })).toBe(true);
-  expect(context.authorize({ auth: { public: false } })).toBe(true);
+  expect(context.authorizeOutcome({ auth: { public: false, roles: ['admin'] } })).toBe('allow');
+  expect(context.authorizeOutcome({ auth: { public: false } })).toBe('allow');
 });
 
 test('createSystemContext wires readConfigFile, evaluateOperators and handleError', () => {
@@ -123,4 +124,27 @@ test('createSystemContext resolves the retained organization binding for the giv
 test('createSystemContext resolves organization to null when auth is not configured', () => {
   const context = createTestSystemContext({ auth: undefined });
   expect(context.organization).toBeNull();
+});
+
+test('createSystemContext carries the retained authEnforcement record for the given auth', () => {
+  const auth = { api: {} };
+  registerAuthEnforcement({
+    auth,
+    authJson: {
+      twoFactor: { required: true },
+      authPages: { twoFactorEnrol: '/two-factor-enrol' },
+      pagesProtectedByDefault: true,
+    },
+  });
+  const context = createTestSystemContext({ auth });
+  expect(context.authEnforcement).toEqual({
+    pagesProtectedByDefault: true,
+    twoFactorEnrolPageId: 'two-factor-enrol',
+    twoFactorRequired: true,
+  });
+});
+
+test('createSystemContext resolves authEnforcement to null when auth is not configured', () => {
+  const context = createTestSystemContext({ auth: undefined });
+  expect(context.authEnforcement).toBeNull();
 });

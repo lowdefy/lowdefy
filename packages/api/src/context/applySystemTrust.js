@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize.js';
+import createAuthorizeOutcome from './createAuthorizeOutcome.js';
 
 // The single writer of the trusted, caller-less system-context invariants
 // (Decision 1). It sets all three together on an existing context so no caller
 // can set one without the others:
 //   - user: null      — caller-less (detectable via type.isNone)
 //   - system: true     — the run-level trust marker every authorization layer reads
-//   - authorize        — derived from createAuthorize so it reads context.system
+//   - authorizeOutcome — derived from createAuthorizeOutcome so it reads context.system
 // createSystemContext builds a FRESH context for the off-request hook path;
 // this applies the same state to a request context a runner already holds
 // (cron at construction, webhook once its verify gate passes, a detached run
@@ -30,7 +30,7 @@ import createAuthorize from './createAuthorize.js';
 function applySystemTrust(context) {
   context.user = null;
   context.system = true;
-  context.authorize = createAuthorize(context);
+  context.authorizeOutcome = createAuthorizeOutcome(context);
   return context;
 }
 

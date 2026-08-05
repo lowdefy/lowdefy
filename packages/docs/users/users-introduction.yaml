@@ -54,6 +54,14 @@ _ref:
 
             The `_user` operator can be used to access data in the user object received from the identity provider. The OpenID Connect standard claims (fields like `name` or `email`) are mapped to the user object by default and addition fields can be configured using the `userFields` configuration option.
 
+            ### `twoFactorEnrolled`
+
+            `_user: twoFactorEnrolled` is `true` when the caller holds a factor that satisfies [`auth.twoFactor.required`](/two-factor) — a TOTP enrolment **or** a registered passkey.
+
+            It is a fact about the **user**, not the session: it does not assert that a factor was presented on this sign-in, only that the user has one on file. (The name is imperfect — a passkey is not literally a second factor. The field means precisely "holds a factor that satisfies `auth.twoFactor.required`", which a passkey does on its own.)
+
+            It is present only on session-resolved callers. The API strategy and the injected callers used in dev and e2e carry no session and so do not carry this field.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

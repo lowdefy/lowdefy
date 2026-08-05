@@ -14,16 +14,31 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  ConfigError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-function authorizeApiEndpoint({ authorize, logger, user }, { endpointConfig }) {
-  if (!authorize(endpointConfig)) {
+function authorizeApiEndpoint({ authorizeOutcome: authorize, logger, user }, { endpointConfig }) {
+  const outcome = authorize(endpointConfig);
+  if (outcome !== 'allow') {
     logger.debug({
       event: 'debug_api_authorize',
       authorized: false,
+      outcome,
       auth_config: endpointConfig.auth,
     });
+    if (outcome === 'enrol_required') {
+      // Reached only after the role check passed, so the caller is authorised and
+      // this reveals nothing about what exists (Decision 6). A distinct code, not
+      // a 401 - a 401 reads to the client as a dead session and bounces the user
+      // to sign-in, which is the loop by another route.
+      throw new TwoFactorEnrolmentRequiredError(
+        `Two-factor enrolment required for API Endpoint "${endpointConfig.endpointId}".`
+      );
+    }
     // Unauthenticated on a protected endpoint - 401 tells the caller to fix
     // its credentials. Wrong roles stay opaque below.
     if (type.isNone(user)) {

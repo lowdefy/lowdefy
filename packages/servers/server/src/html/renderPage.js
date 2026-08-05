@@ -61,6 +61,23 @@ async function renderPage(c, { pageId, status = 200 }) {
     );
   }
 
+  // An authorised caller who has not enrolled a second factor under
+  // auth.twoFactor.required. The callbackUrl brings them back to the page they
+  // asked for once they enrol. Without this branch they would fall through to the
+  // /404 redirect below on every page - fail-closed, and indistinguishable from a
+  // broken app.
+  if (result.status === 'enrol_required') {
+    const url = new URL(c.req.url);
+    const callbackUrl = `${url.pathname}${url.search}`;
+    logger.info({ event: 'redirect_two_factor_enrol', pageId: resolvedPageId });
+    return c.redirect(
+      `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
+        callbackUrl
+      )}`,
+      302
+    );
+  }
+
   if (result.status !== 'ok') {
     if (resolvedPageId === '404') {
       // No 404 page in the build — return a plain 404 rather than redirecting in a loop.

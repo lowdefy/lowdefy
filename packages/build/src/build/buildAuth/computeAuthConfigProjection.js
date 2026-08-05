@@ -32,7 +32,12 @@ function computeAuthConfigProjection(auth = {}) {
   return {
     emailAndPassword: { enabled: source.emailAndPassword?.enabled === true },
     magicLink: { enabled: source.magicLink?.enabled === true },
-    twoFactor: { enabled: !type.isNone(source.twoFactor) && source.twoFactor.enabled !== false },
+    twoFactor: {
+      enabled: !type.isNone(source.twoFactor) && source.twoFactor.enabled !== false,
+      // Strict === true so an absent twoFactor block projects false rather than
+      // undefined - the projection is a curated view a module reads directly.
+      required: source.twoFactor?.required === true,
+    },
     passkey: { enabled: !type.isNone(source.passkey) && source.passkey.enabled !== false },
     phoneNumber: {
       enabled: source.phoneNumber?.enabled === true,

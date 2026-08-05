@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import createAuthorize from '../context/createAuthorize.js';
+import createAuthorizeOutcome from '../context/createAuthorizeOutcome.js';
 
 function testContext({
   appMeta = {},
   auth,
+  authEnforcement = null,
   config = {},
   configDirectory,
   connections = {},
@@ -36,16 +37,19 @@ function testContext({
   readConfigFile,
   secrets = {},
   steps = {},
+  system,
   user = null,
 } = {}) {
   return {
     appMeta,
     auth,
-    authorize: createAuthorize({ user }),
+    authEnforcement,
+    authorizeOutcome: createAuthorizeOutcome({ authEnforcement, system, user }),
     config,
     configDirectory,
     connections,
     organization,
+    system,
     // Mirrors the servers' createHandleError contract: the sink logs the error
     // and marks it handled, which is what runRoutine's guard and the client's
     // already-logged check both read.

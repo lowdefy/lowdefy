@@ -48,6 +48,9 @@ _ref:
             | `sub` | `_user.sub` = provider's OIDC subject | Removed — `_user.id` is the internal id (a different value) |
             | Roles | On the user record via `userFields` | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.orgRoles`) |
             | Attributes | `_user.app_attributes`, `_user.global_attributes` | One merged `_user.attributes` bag |
+            | Signed-out request to any URL | `/404` if the page is missing, sign-in if protected | Sign-in for every URL, in apps whose unlisted ids default to protected |
+            | Missing request / endpoint id, signed out (auth'd app) | `500` (missing) vs `401` (protected) | `401` for both |
+            | 404 page | Had to serve signed-out visitors refused a protected page | Only ever serves signed-in visitors, in a protected app |
 
             ## Upgrade steps
 
@@ -232,6 +235,29 @@ _ref:
             | `_user.app_attributes.*` | `_user.attributes.*` — per-app values live on the membership (`member.attributes`). |
             | `_user.global_attributes.*` | `_user.attributes.*` — global values live on the user (`user.attributes`); merged per key, member wins. |
             | Other OIDC claims (`given_name`, `phone_number`, `address`, ...) | Not in the session. Persist what you need at signup via an endpoint hook — profile data onto your contact collection, authorization inputs into attributes — and read it from there. |
+
+            ## Page and API existence is no longer observable before you sign in
+
+            This is a behaviour change every app inherits, not a two-factor feature. It removes an enumeration asymmetry — a logged-out caller used to be able to tell a real-but-protected id apart from an absent one by the response they got back. That is an information leak the engine design had accepted as a documented cost of following web convention, not an access-control failure: no protected page or request was ever reachable without a session. Nothing about who can *reach* a surface changes here — only what a signed-out caller can *learn* about which surfaces exist.
+
+            **The rule.** When the caller is not authenticated, existence is never consulted. A protected app answers the sign-in page for any URL a logged-out visitor asks for — whether that URL is a real protected page or a typo that matches nothing. Existence is only resolved once there is a session to resolve it against.
+
+            **Which apps change, which don't.** Only apps whose *unlisted* page ids default to protected are affected. The `auth.pages.protected: [...]` shape (an explicit protected list, everything else public) is **untouched** — a logged-out visitor typing a wrong URL still gets `/404`, because unlisted ids there are public. Every other shape treats an unlisted id as protected, so a logged-out typo now lands on the sign-in page, then resolves to `/404` once the visitor authenticates — one extra hop for a wrong URL.
+
+            | Config | An unlisted page id is |
+            |---|---|
+            | `auth.pages.public: [...]` | protected |
+            | `auth.pages.protected: true` | protected |
+            | `auth.pages.protected: [...]` | public |
+            | neither | public |
+
+            **A known imprecision, so nobody files it as a bug.** The default the runtime reads for an unlisted id is a single build-resolved boolean, deliberately coarser than the glob-list config that produced it. In an app configured `auth.pages.public: ['docs/**']` (so unlisted ids default to protected), a signed-out visitor typing `docs/typo` gets the sign-in page rather than `/404`, even though the `docs/**` namespace was declared public. Every id that **is** in the build carries its own resolved decision, so no real page changes behaviour — only a URL matching nothing reads the coarse default. Shipping the pattern lists into the build artifact and re-matching globs per request was considered and rejected: the artifact exists precisely so the runtime reads a resolved decision and never re-derives access from patterns.
+
+            **What you can delete.** In a protected app the 404 page now answers one question — "does a page with this id exist for this signed-in caller?" — instead of three. The auth logic some apps hand-write onto their 404 page (a session check, a conditional "sign in" link for the logged-out case) is now dead code: a logged-out visitor never reaches the 404 page, so it only ever renders for someone already signed in. Delete it. The build still forces the `404` page id public, unchanged, so the page itself is always reachable.
+
+            **The API surface.** In an authenticated app a logged-out caller gets `401 Authentication required` for **every** request and endpoint id, present or absent. Two consequences for upgrading apps. A missing id used to surface as a `500`, so any error handling keyed on the status code will now see `401` where it previously saw `500`. And a typo'd `requestId` called from a logged-out browser now reads "Authentication required" rather than a not-found error — expected, given existence is no longer disclosed pre-auth. The **authenticated** case is unchanged: for a signed-in caller a missing id and a role-refused id both still surface as the same opaque "does not exist". A no-auth app is unchanged, and so is a system or routine context — the `401` rewrite is for a real session-less human on a protected surface, not for "no user" in general.
+
+            **Websockets are unchanged.** The websocket surface was already symmetric — a logged-out caller could never distinguish a present subscription id from an absent one — so it needed no change and got none. It is called out here only so a reader does not conclude the surface was overlooked.
 
             ## Administering organizations
 

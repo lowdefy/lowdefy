@@ -14,12 +14,34 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-async function getRequestConfig({ logger, readConfigFile }, { pageId, requestId }) {
+// A missing request id answers the same as a protected one for an anonymous
+// human on an auth'd app: before you authenticate, the only answer is
+// authenticate. Otherwise a logged-out caller enumerates request ids by
+// response difference - 500 for a miss (the handler special-cases only
+// AuthenticationError) versus 401 for a protected one. An authenticated caller
+// gets today's opaque "does not exist" for both a miss and a role refusal,
+// unchanged.
+//
+// Guarded on authEnforcement != null (auth configured) and system !== true (not
+// the engine talking to itself), exactly as the page fork is: "no user" is not
+// "anonymous human who should sign in" - it is also "no auth here" and "this is
+// a system run", and neither should be told to authenticate against nothing.
+// This is NOT a per-entity apiProtectedByDefault default; no such glob surface
+// exists.
+async function getRequestConfig(
+  { authEnforcement, logger, readConfigFile, system, user },
+  { pageId, requestId }
+) {
   const request = await readConfigFile(`pages/${pageId}/requests/${requestId}.json`);
   if (!request) {
-    const err = new ConfigError(`Request "${requestId}" does not exist.`);
+    const unauthenticatedHuman =
+      type.isNone(user) && !type.isNone(authEnforcement) && system !== true;
+    const err = unauthenticatedHuman
+      ? new AuthenticationError(`Authentication required for request "${requestId}".`)
+      : new ConfigError(`Request "${requestId}" does not exist.`);
     logger.debug({ params: { pageId, requestId }, err }, err.message);
     throw err;
   }

@@ -19,9 +19,10 @@
 // whole resolveAuthentication step, and must match the shape it produces. That
 // output always carries roles as an array and attributes as an object (a
 // whole-bag { _user: 'attributes' } read gives {} on a real caller), so both
-// are floored here. profile and activeOrganizationId are only ever produced by
-// a real user-row/member read, so they are left exactly as the caller carries
-// them - absent stays absent, and a bare _user.profile read is null-safe.
+// are floored here. profile, activeOrganizationId and twoFactorEnrolled are
+// only ever produced by a real user-row/member read, so they are left exactly
+// as the caller carries them - absent stays absent, and a bare _user.profile
+// read is null-safe.
 // organizationId (the tenant wall's org value) mirrors resolveAuthentication,
 // where it always equals activeOrganizationId - an injected caller declaring
 // either key gets both, so mock/e2e callers pass walled connections without

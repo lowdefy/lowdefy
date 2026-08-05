@@ -1074,3 +1074,155 @@ step says otherwise, with scenario 33's/48's console `call` helper.
 Automation note: manual like every phase before - two deployments, a
 database nudge and live sessions. Automate with the repo's e2e tooling as it
 grows.
+
+## Walkthrough (two-factor-lifecycle gate)
+
+This phase turns two-factor into a **floor**. `auth.twoFactor.required: true`
+(with `authPages.twoFactorEnrol: /two-factor-enrol`) means a member who has
+not enrolled a second factor cannot use the app until they do: every page
+redirects them to `/two-factor-enrol`, and every request, endpoint and
+websocket is refused with a `TwoFactorEnrolmentRequiredError` - a **403, not a
+401**. A caller satisfies the floor with **either** a TOTP enrolment **or** a
+registered passkey. `/two-factor-enrol` is the one **protected** auth page
+(its sibling `/two-factor-challenge` is public - opposite public-ness, on
+purpose) and it calls **no** Lowdefy request or endpoint, because an unenrolled
+caller would be refused at all of them; it runs entirely on the client auth
+actions `TwoFactorEnable`, `TwoFactorVerify` and `PasskeyRegister`. Recovery is
+two admin steps from `/users`: `ResetUserTwoFactor` (paired **mandatorily**
+with `RevokeUserSessions`) and `RevokeUserPasskeys`.
+
+Run the admin steps as the scenario-20 admin (`user-admin` in `appRoles`,
+`owner` in org-a) with scenario 48's console `call` helper; the floor scenarios
+use a few disposable signed-up-and-verified users. **Enrol the admin's own
+factor first** - turning `required` on sends the admin to `/two-factor-enrol`
+too, and a locked-out sole admin has no in-app way back. Re-run
+`node scripts/provision-indexes.mjs` before starting: this phase adds the
+platform-owned `user-passkeys { userId: 1 }` index (read per request for every
+unenrolled caller) and the unique `user-two-factors { userId: 1 }` index.
+
+79. **The enrolment floor redirects on a page**: sign up and verify a fresh
+    user (open signup makes them a plain `member`; they hold no factor). Signed
+    in as them, open any protected page, e.g. `/dashboard` - you are
+    redirected to `/two-factor-enrol?callbackUrl=%2Fdashboard`. The page
+    renders the TOTP and passkey options and calls no endpoint. (If it lands on
+    `/404` instead, the `renderPage` enrol branch is missing.)
+80. **The floor redirects on a client-side navigation too**: from
+    `/two-factor-enrol`, client-side navigate to another protected page (any
+    in-app link, e.g. back to `/dashboard`). The SPA follows the JSON page
+    route's `403 { redirect }` and returns you to `/two-factor-enrol`. (If the
+    client keyed on `401` only, this would silently do nothing and leave you on
+    a page you cannot use.)
+81. **Enrol TOTP clears the floor**: on `/two-factor-enrol`, enter your
+    password, press **Enable authenticator** - the `totpURI` and single-use
+    backup codes render once (copy them). Add the secret to an authenticator
+    app, enter the current code, press **Verify code and finish enrolment**.
+    You are returned to the `callbackUrl` page (`/dashboard`) and it now
+    renders. `_user.twoFactorEnrolled` reads `true` (the `/dashboard` block
+    that prints `_user` shows it), and
+    `db.users.findOne({email: "<you>"}, {twoFactorEnabled: 1})` is `true`.
+82. **Passwordless enrol, and a passkey satisfies the floor**: sign in as a
+    SECOND unenrolled user who is **passwordless** (an OAuth or magic-link
+    account that never set a password) and enrol TOTP on `/two-factor-enrol`
+    with the password field left empty - it is admitted, because Lowdefy sets
+    `allowPasswordless: true`. Then, as a THIRD unenrolled user, register a
+    **passkey** instead of TOTP (use `http://localhost:<port>`; `127.0.0.1`
+    will not work) - the passkey alone clears the floor and you reach
+    `/dashboard`. `db["user-passkeys"]` shows the credential. Keep this passkey
+    user for scenario 88.
+83. **Every non-page surface is refused at 403, not 401**: as an unenrolled
+    session (a fresh member from scenario 79 before enrolling), in the browser
+    console run `call('admin-list-users')` and a page request against any
+    protected page's JSON route - both are refused with a
+    `TwoFactorEnrolmentRequiredError` at **403** (not 401: a 401 would read as
+    a dead session and bounce to sign-in, the loop the floor avoids). A
+    websocket subscription from the same session is refused the same way.
+84. **The enrolment check runs AFTER the role check**: still as the unenrolled
+    caller, request a protected page whose **role you lack**, e.g. `/admin`
+    (needs `user-admin`) - you get the opaque `/404`, **byte-identical** to a
+    page that does not exist, NOT the enrol redirect. This is the ordering
+    assertion: an enrol redirect here would be a page-enumeration oracle,
+    revealing that `/admin` exists to someone never authorised for it.
+85. **Sessionless callers are untouched (Decision 10)**: with `required: true`
+    still on, the API-strategy path still works -
+    `call -H "X-API-Key: partner-key-acme-0123456789abcdef"
+http://localhost:3000/api/endpoints/partner-data` returns its report, not a
+    403. Uncomment `dev.mockUser` (`roles: [user-admin]`) and restart - the
+    pre-resolved dev caller reaches `/dashboard` and `/users` with no
+    enrolment. Both carry no session, so the floor does not apply. (A
+    redirect/403 for either means something tested `!twoFactorEnrolled`
+    instead of `=== false`.) Re-comment `dev.mockUser`.
+86. **Admin reset recovers the TOTP user - and revokes their sessions**: as
+    the scenario-20 admin on `/users`, in a second browser leave the scenario
+    81 TOTP user signed in on `/dashboard`. Enter their user id and press
+    **Reset two-factor** - confirm the dialog (it enumerates the reach: clears
+    the factor in **every** organization the person belongs to and revokes
+    their sessions). Verify:
+
+    ```sh
+    mongosh auth-reference --eval '
+      const userId = "<that user id>";
+      print("two-factors:", db["user-two-factors"].countDocuments({ userId }));
+      print("twoFactorEnabled:", db.users.findOne({ _id: userId }).twoFactorEnabled);
+      print("sessions:", db["user-sessions"].countDocuments({ userId }));
+      print("trust-device:", db["user-verifications"].countDocuments({ value: userId, identifier: /^trust-device-/ }));
+      print("2fa (unrelated):", db["user-verifications"].countDocuments({ value: userId, identifier: /^2fa-/ }));'
+    ```
+
+    `two-factors: 0`, `twoFactorEnabled: false`, `sessions: 0`, and
+    `trust-device: 0` - while any unrelated in-flight `2fa-*` verification
+    rows for the same user **survive** (the reset deletes only the
+    `trust-device-` records, by the identifier prefix). In the second browser,
+    the user's next navigation lands on the login page (sessions revoked).
+87. **A reset user is routed straight back to enrolment**: sign in as the
+    scenario 86 user - because they now hold no factor under `required`, the
+    first protected page redirects to `/two-factor-enrol`. Recovery is
+    re-enrolment, exactly like a new member.
+88. **Revoke passkeys, all and one**: as the admin on `/users`, act on the
+    scenario 82 passkey user. First register a second passkey for them (as
+    that user, on `/security` or `/two-factor-enrol`) so there are two. Use
+    **Revoke one passkey** with a specific `passkeyId` (from
+    `db["user-passkeys"].find({userId: "<id>"})`) - only that row is deleted.
+    Then **Revoke all passkeys** (no `passkeyId`) - the rest are gone.
+    Confirm `db["user-passkeys"].countDocuments({userId: "<id>"})` is `0`; on
+    the user's next request they are routed to `/two-factor-enrol` (no factor
+    left). This routine revokes **no** sessions - passkey revocation is
+    surgical, and ending sessions is the separate **Revoke sessions** control's
+    job.
+89. **A member cannot run either routine**: signed in as a plain member (no
+    `user-admin` app role), `/users` `404`s and
+    `call('admin-reset-user-two-factor', { userId: '<x>' })` /
+    `call('admin-revoke-user-passkeys', { userId: '<x>' })` both return the
+    opaque `does not exist` - the `admin-*` endpoint gate rejects before the
+    routine runs.
+90. **The target-user bound blocks a cross-org reset**: `auth-reference-b`
+    shares this auth database. As an **org-b** admin there, try to reset a user
+    who holds a member row in org-a but **none in org-b** -
+    `call('admin-reset-user-two-factor', { userId: '<org-a-only user id>' })`
+    is refused naming the bound (`user "<id>" is not a member of organization
+"org-b"`). `ResetUserTwoFactor`'s reach is suite-wide, so the membership bound
+    is the only thing stopping any org's admin from resetting any user; it
+    governs **who** you may reset, not how far the reset reaches.
+91. **Signed-out existence fork - protected-by-default hides non-existence**:
+    log out. Request a **nonexistent** page path in this app - because
+    `auth.pages.protected: true` here, a logged-out caller gets the **sign-in
+    page** (with a `callbackUrl`), **not** `/404`. A missing page and a
+    protected page are indistinguishable to an anonymous caller, so nothing
+    reveals which pages exist. (Contrast: an app configured with an explicit
+    `auth.pages.protected: [...]` allow-list still returns `/404` for a
+    nonexistent page - the opaque behaviour is specific to protected-by-default.)
+92. **Signed-out missing ids are 401, not 500**: still logged out, POST a
+    **nonexistent** `requestId` and a nonexistent `endpointId`
+    (`curl -s -X POST -H 'content-type: application/json' -d '{}'
+http://localhost:3000/api/request/<page>/no-such-request` and
+    `.../api/endpoints/no-such-endpoint`) - both answer **401**, the same as an
+    existing protected one would to an anonymous caller. (Before this phase a
+    missing id was a `500`.)
+93. **Signed-in missing requestId stays opaque and unchanged**: sign in, then
+    call a nonexistent `requestId` from a page you can reach - you get today's
+    opaque "does not exist" answer, unchanged by this phase. A signed-in caller
+    already passed identity, so there is nothing to hide from them here.
+
+Automation note: manual like every phase before - authenticator codes, passkey
+ceremonies, two browsers, a second deployment, restarts and live sessions. The
+console `call` helper keeps the API scenarios copy-paste. Automate with the
+repo's e2e tooling as it grows.

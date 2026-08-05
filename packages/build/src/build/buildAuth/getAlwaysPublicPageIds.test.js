@@ -42,6 +42,20 @@ test('getAlwaysPublicPageIds includes the page id held by authPages.twoFactor', 
   expect(res).toEqual(['login', 'two-factor-challenge']);
 });
 
+test('getAlwaysPublicPageIds excludes the page id held by authPages.twoFactorEnrol', () => {
+  const components = {
+    auth: {
+      authPages: {
+        signIn: '/login',
+        twoFactorEnrol: '/two-factor-enrol',
+      },
+    },
+  };
+  const res = getAlwaysPublicPageIds({ components, context: {} });
+  expect(res).toContain('login');
+  expect(res).not.toContain('two-factor-enrol');
+});
+
 test('getAlwaysPublicPageIds unions module-contributed public pages with role pages', () => {
   const components = {
     auth: {

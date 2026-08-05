@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { serializer, type } from '@lowdefy/helpers';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
@@ -35,9 +35,17 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  // Block HTTP access to InternalApi endpoints — same error as missing endpoint
+  // Block HTTP access to InternalApi endpoints - same error as a missing
+  // endpoint, including the guarded unauthenticated fork, so an internal
+  // endpoint is indistinguishable from one that does not exist on both paths.
   if (endpointConfig.type === 'InternalApi') {
-    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
+    const unauthenticatedHuman =
+      type.isNone(context.user) &&
+      !type.isNone(context.authEnforcement) &&
+      context.system !== true;
+    const err = unauthenticatedHuman
+      ? new AuthenticationError(`Authentication required for API endpoint "${endpointId}".`)
+      : new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }

@@ -55,6 +55,13 @@ function createAuthenticationError(message) {
   return error;
 }
 
+function createTwoFactorEnrolmentRequiredError(message) {
+  const error = new Error(message);
+  error.name = 'TwoFactorEnrolmentRequiredError';
+  error.received = SECRET;
+  return error;
+}
+
 // Two Error levels, each with a stack (every Error has one) and a recognisable
 // `received`, plus a configKey the policy keeps.
 function createErrorWithCause() {
@@ -103,6 +110,51 @@ test('errorHandler returns text Unauthorized at 401 for an AuthenticationError o
   expect(res.status).toEqual(401);
   expect(await res.text()).toEqual('Unauthorized');
   expect(logger.warn).toHaveBeenCalledTimes(1);
+});
+
+test('errorHandler returns 403 with only name and message for a TwoFactorEnrolmentRequiredError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({
+    name: 'TwoFactorEnrolmentRequiredError',
+    message: 'Two-factor enrolment required.',
+  });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Two-factor enrolment required/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send a TwoFactorEnrolmentRequiredError through the redactor', async () => {
+  const res = await createApp({
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+});
+
+test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on a page path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(403);
+  expect(await res.text()).toEqual('Two-factor enrolment required');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(context.handleError).not.toHaveBeenCalled();
 });
 
 test('errorHandler returns 500 with the serialized error envelope on an api path', async () => {

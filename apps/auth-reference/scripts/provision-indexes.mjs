@@ -52,6 +52,15 @@ const indexes = [
   },
   { collection: 'user-invitations', keys: { organizationId: 1, email: 1 }, options: {} },
   { collection: 'user-organizations', keys: { slug: 1 }, options: { unique: true } },
+  // Concurrent-enrolment guard (two-factor design): the unique index turns an
+  // unrecoverable silent double-write into a visible duplicate-key error, and
+  // it makes ResetUserTwoFactor's single-row delete exact. The reset path is
+  // exercised here, so the index belongs in this script.
+  { collection: 'user-two-factors', keys: { userId: 1 }, options: { unique: true } },
+  // Platform-owned, unlike the module-owned entries: the engine reads it per
+  // request for any unenrolled caller under auth.twoFactor.required, so without
+  // it that read is a collection scan.
+  { collection: 'user-passkeys', keys: { userId: 1 }, options: {} },
 ];
 
 const client = new MongoClient(uri);

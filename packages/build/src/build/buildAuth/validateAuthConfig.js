@@ -176,6 +176,27 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  if (auth.twoFactor?.required === true && type.isNone(auth.authPages?.twoFactorEnrol)) {
+    throw new ConfigError(
+      'Auth "authPages.twoFactorEnrol" is required when "twoFactor.required" is true. Every unenrolled user is redirected there, so a deployment requiring enrolment without the page redirects them to nowhere.',
+      { configKey }
+    );
+  }
+
+  // required: true is satisfied by a TOTP enrolment OR a registered passkey
+  // (Decision 4), so either plugin is a sufficient enrolment route. Neither
+  // present is a guaranteed lockout for every user, which no config should express.
+  if (
+    auth.twoFactor?.required === true &&
+    auth.twoFactor?.enabled === false &&
+    auth.passkey?.enabled !== true
+  ) {
+    throw new ConfigError(
+      'Auth "twoFactor.required" is true but no second factor can be enrolled - "twoFactor.enabled" is false and passkeys are not enabled. Every user would be locked out with no way to satisfy the requirement.',
+      { configKey }
+    );
+  }
+
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
     throw new ConfigError(

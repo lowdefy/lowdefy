@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -246,4 +246,119 @@ test('InternalApi error matches missing endpoint error message', async () => {
     expect(err.message).toBe(expectedMessage);
     expect(err).toBeInstanceOf(ConfigError);
   }
+});
+
+test('InternalApi endpoint throws AuthenticationError for an anonymous human on an auth\'d app', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: null,
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(AuthenticationError);
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('Authentication required for API endpoint "internal_ep".');
+});
+
+test('InternalApi endpoint throws ConfigError for a resolved user on an auth\'d app', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'internal_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('API Endpoint "internal_ep" does not exist.');
+});
+
+// An InternalApi endpoint must be indistinguishable from a nonexistent one on
+// both the unauthenticated and authenticated paths - otherwise the fork itself
+// becomes the oracle.
+test('InternalApi endpoint error is identical to a missing endpoint error for an anonymous human', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    authEnforcement: { public: false },
+    user: null,
+  });
+
+  const internalErr = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'internal_ep',
+    pageId: 'pageId',
+    payload: {},
+  }).catch((err) => err);
+  const missingErr = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'internal_ep_missing',
+    pageId: 'pageId',
+    payload: {},
+  }).catch((err) => err);
+
+  expect(internalErr).toBeInstanceOf(AuthenticationError);
+  expect(missingErr).toBeInstanceOf(AuthenticationError);
+  expect(internalErr.message).toBe('Authentication required for API endpoint "internal_ep".');
+  expect(missingErr.message).toBe(
+    'Authentication required for API endpoint "internal_ep_missing".'
+  );
 });

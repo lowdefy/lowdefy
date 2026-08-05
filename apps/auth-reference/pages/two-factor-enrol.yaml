@@ -1,0 +1,222 @@
+# The one PROTECTED auth page (authPages.twoFactorEnrol). Its opposite number,
+# two-factor-challenge, is PUBLIC: there the caller holds no session yet (the
+# pending challenge rides a BetterAuth cookie), so the page cannot sit behind a
+# session. Here the caller holds a valid session and is merely missing a second
+# factor under auth.twoFactor.required - an authorisation gap, not an identity
+# one - so the page stays behind the session, which is the whole point of the
+# enrolment floor. Do NOT "fix" one to match the other.
+#
+# The constraint that follows from being protected: this page CANNOT call a
+# single Lowdefy request or endpoint. An unenrolled caller is refused at every
+# one of them with TwoFactorEnrolmentRequiredError (403), and the person on this
+# page is unenrolled by definition. So it is built entirely on the client auth
+# actions - TwoFactorEnable, TwoFactorVerify, PasskeyRegister - which hit
+# /api/auth/* directly and sit outside the enrolment floor. Enrolment material
+# (TwoFactorEnable's totpURI and backup codes) is rendered once off the action
+# response in the same event chain, exactly as /security does it.
+#
+# On success the page navigates to the callbackUrl the server carried onto it
+# (?callbackUrl=<the page they were bounced from>, basePath already included),
+# defaulting to the app home. Ignoring it would strand the user on the enrolment
+# page after they enrolled.
+id: two-factor-enrol
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+events:
+  onInit:
+    - id: set_callback_url
+      type: SetState
+      params:
+        callback_url:
+          _url_query: callbackUrl
+blocks:
+  - id: enrol_title
+    type: Title
+    properties:
+      content: Enrol a second factor
+      level: 2
+  - id: enrol_help
+    type: Html
+    properties:
+      html: |
+        <p>This deployment requires every member to hold a second factor
+        (<code>auth.twoFactor.required</code>). You have a session but no
+        factor yet, so you were sent here - and you cannot use the rest of the
+        app until you register one. Register <b>either</b> a TOTP authenticator
+        <b>or</b> a passkey below; either one on its own satisfies the
+        requirement.</p>
+  # --- TOTP branch -------------------------------------------------------
+  - id: totp_title
+    type: Title
+    properties:
+      content: Option 1 - authenticator app (TOTP)
+      level: 4
+  - id: totp_help
+    type: Html
+    properties:
+      html: |
+        <p>Enable returns the <code>totpURI</code> and single-use backup codes
+        rendered below - the action response is the only carrier, so copy them
+        now. Add the secret to an authenticator app, then confirm enrolment
+        with a TOTP code: the factor is live only after the verify.</p>
+  - id: totp_password
+    type: PasswordInput
+    properties:
+      title: Password (leave empty if you signed in with OAuth or a magic link)
+  - id: enable_totp_button
+    type: Button
+    properties:
+      title: Enable authenticator (TwoFactorEnable)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: enable_totp
+            type: TwoFactorEnable
+            params:
+              password:
+                _state: totp_password
+          # The one render of the enrolment material - read off the action
+          # response in the same event chain, no side-channel state.
+          - id: show_totp_setup
+            type: SetState
+            params:
+              totp_setup:
+                _actions: enable_totp.response
+              enrol_error: null
+        catch:
+          - id: show_enable_totp_error
+            type: SetState
+            params:
+              enrol_error:
+                _actions: enable_totp.error.message
+  - id: totp_setup_html
+    type: Html
+    visible:
+      _ne:
+        - _state: totp_setup
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>totpURI</b> (add to an authenticator app - the
+            <code>secret</code> query param is the manual-entry key):</p>
+            <pre>{{ setup.totpURI }}</pre>
+            <p><b>Backup codes</b> (single use each - store them now):</p>
+            <pre>{{ setup.backupCodes | dump(2) }}</pre>
+          on:
+            setup:
+              _state: totp_setup
+  - id: totp_code
+    type: TextInput
+    properties:
+      title: TOTP code (from the authenticator app)
+  - id: verify_totp_button
+    type: Button
+    properties:
+      title: Verify code and finish enrolment (TwoFactorVerify)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: verify_totp
+            type: TwoFactorVerify
+            params:
+              code:
+                _state: totp_code
+          # Re-resolve the caller so _user.twoFactorEnrolled flips to true and
+          # the enrolment floor lets the callbackUrl page through.
+          - id: resync_after_totp
+            type: UpdateSession
+          - id: go_to_callback_after_totp
+            type: Link
+            params:
+              _if:
+                test:
+                  _eq:
+                    - _state: callback_url
+                    - null
+                then:
+                  home: true
+                else:
+                  href:
+                    _state: callback_url
+        catch:
+          - id: show_verify_totp_error
+            type: SetState
+            params:
+              enrol_error:
+                _actions: verify_totp.error.message
+  # --- Passkey branch ----------------------------------------------------
+  - id: passkey_title
+    type: Title
+    properties:
+      content: Option 2 - passkey
+      level: 4
+  - id: passkey_help
+    type: Html
+    properties:
+      html: |
+        <p>PasskeyRegister runs the whole WebAuthn browser ceremony inside the
+        action. A registered passkey satisfies the requirement on its own - it
+        is a phishing-resistant possession factor, so there is no need to add a
+        TOTP on top of it.</p>
+  - id: passkey_name
+    type: TextInput
+    properties:
+      title: Passkey name (optional)
+  - id: register_passkey_button
+    type: Button
+    properties:
+      title: Register a passkey (PasskeyRegister)
+      block: true
+    events:
+      onClick:
+        try:
+          - id: register_passkey
+            type: PasskeyRegister
+            params:
+              name:
+                _state: passkey_name
+          # A passkey count is read live per request, but re-sync anyway so
+          # _user.twoFactorEnrolled reflects it without a reload before the hop.
+          - id: resync_after_passkey
+            type: UpdateSession
+          - id: go_to_callback_after_passkey
+            type: Link
+            params:
+              _if:
+                test:
+                  _eq:
+                    - _state: callback_url
+                    - null
+                then:
+                  home: true
+                else:
+                  href:
+                    _state: callback_url
+        catch:
+          - id: show_register_passkey_error
+            type: SetState
+            params:
+              enrol_error:
+                _actions: register_passkey.error.message
+  # --- Shared error pane -------------------------------------------------
+  - id: enrol_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: enrol_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: enrol_error

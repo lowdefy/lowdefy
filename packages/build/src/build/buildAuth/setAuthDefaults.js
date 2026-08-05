@@ -107,6 +107,9 @@ function setAuthDefaults({ components }) {
   // Presence of the twoFactor/passkey block implies intent to enable.
   if (!type.isNone(auth.twoFactor)) {
     setDefault(auth.twoFactor, 'enabled', true);
+    // Requiring enrolment is opt-in: presence of the block implies the feature,
+    // never the deployment-wide floor.
+    setDefault(auth.twoFactor, 'required', false);
   }
 
   if (!type.isNone(auth.passkey)) {

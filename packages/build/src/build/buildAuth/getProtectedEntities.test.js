@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getProtectedEntities from './getProtectedEntities.js';
+import getProtectedEntities, { getEntityDefaultProtected } from './getProtectedEntities.js';
 
 test('No config', () => {
   const components = {
@@ -265,4 +265,34 @@ test('Mixed exact and wildcard in protected array', () => {
   };
   const res = getProtectedEntities({ components, entity: 'pages' });
   expect(res).toEqual(['home', 'team-users/users-list']);
+});
+
+test('getEntityDefaultProtected returns true when pages declare a public list', () => {
+  const components = { auth: { pages: { public: ['home'] } } };
+  expect(getEntityDefaultProtected({ components, entity: 'pages' })).toBe(true);
+});
+
+test('getEntityDefaultProtected returns true when pages protected is true', () => {
+  const components = { auth: { pages: { protected: true } } };
+  expect(getEntityDefaultProtected({ components, entity: 'pages' })).toBe(true);
+});
+
+test('getEntityDefaultProtected returns false when pages protected is a list', () => {
+  const components = { auth: { pages: { protected: ['admin'] } } };
+  expect(getEntityDefaultProtected({ components, entity: 'pages' })).toBe(false);
+});
+
+test('getEntityDefaultProtected returns false when pages declare no default', () => {
+  const components = { auth: { pages: {} } };
+  expect(getEntityDefaultProtected({ components, entity: 'pages' })).toBe(false);
+});
+
+test('getEntityDefaultProtected returns false when the app declares no auth.pages', () => {
+  const components = { auth: {} };
+  expect(getEntityDefaultProtected({ components, entity: 'pages' })).toBe(false);
+});
+
+test('getEntityDefaultProtected is entity-generic for api', () => {
+  const components = { auth: { api: { protected: true } } };
+  expect(getEntityDefaultProtected({ components, entity: 'api' })).toBe(true);
 });
