@@ -18,7 +18,7 @@ import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError } from '@lowdefy/errors';
 
-import createAuthorize from '../../context/createAuthorize.js';
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -160,7 +160,7 @@ test('system context authorizes nested call to a protected endpoint', async () =
     },
   });
   context.user = undefined;
-  context.authorize = createAuthorize({ user: null, system: true });
+  context.authorizeOutcome = createAuthorizeOutcome({ user: null, system: true });
   const result = await invokeEndpoint(context, {
     endpointId: 'target',
     payload: {},

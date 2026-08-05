@@ -57,10 +57,10 @@ test('createSystemContext is a caller-less system context - user is null, system
   expect(context.system).toBe(true);
 });
 
-test('createSystemContext authorize allows any endpoint - auth is not re-checked against a session', () => {
+test('createSystemContext authorizeOutcome allows any endpoint - auth is not re-checked against a session', () => {
   const context = createTestSystemContext();
-  expect(context.authorize({ auth: { public: false, roles: ['admin'] } })).toBe(true);
-  expect(context.authorize({ auth: { public: false } })).toBe(true);
+  expect(context.authorizeOutcome({ auth: { public: false, roles: ['admin'] } })).toBe('allow');
+  expect(context.authorizeOutcome({ auth: { public: false } })).toBe('allow');
 });
 
 test('createSystemContext wires readConfigFile, evaluateOperators and handleError', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize.js';
+import createAuthorizeOutcome from './createAuthorizeOutcome.js';
 import createReadConfigFile from './createReadConfigFile.js';
 import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
 import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
@@ -40,7 +40,7 @@ function createApiContext(context) {
   // configured, in which case nothing is protected and nothing is required.
   context.authEnforcement = getAuthEnforcement({ auth: context.auth ?? null });
 
-  context.authorize = createAuthorize(context);
+  context.authorizeOutcome = createAuthorizeOutcome(context);
   context.readConfigFile = createReadConfigFile(context);
 }
 

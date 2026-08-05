@@ -41,7 +41,7 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 //
 // The member row carries two unrelated authorities and they stay apart.
 // context.user.roles is member.appRoles - the app's own role strings, and the
-// only source createAuthorize matches against auth.roles page and endpoint
+// only source createAuthorizeOutcome matches against auth.roles page and endpoint
 // gates. context.user.orgRoles is the split of member.role - BetterAuth's
 // owner/admin/member tier, an administrative fact about this organization that
 // no gate reads. context.user.attributes is

@@ -29,7 +29,7 @@ async function getPageConfig(context, { pageId, urlQuery }) {
   if (!pageConfig) {
     return { status: 'not_found' };
   }
-  if (context.authorize(pageConfig)) {
+  if (context.authorizeOutcome(pageConfig, { pageId }) === 'allow') {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
     if (rest.dynamic !== true) {

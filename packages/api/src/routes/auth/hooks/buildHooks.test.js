@@ -55,7 +55,7 @@ function createMockSystemContextFactory({ endpointConfigs = {} } = {}) {
       user: {},
       secrets: { HOOK_KEY: 'hook-secret-value' },
     });
-    context.authorize = () => true;
+    context.authorizeOutcome = () => 'allow';
     context.evaluateOperators = createEvaluateOperators(context);
     return context;
   };
