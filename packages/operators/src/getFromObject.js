@@ -37,6 +37,9 @@ function getFromObject({ params, object, arrayIndices, operator, location }) {
       copy: true,
     });
   } catch (error) {
+    // Tier 2: a runtime read of an app-developer keypath. There is no loud failure that helps here —
+    // a thrown error in the browser is worse than the default, and the reserved rule's job (refusing
+    // the read) is already done. Author-written identifiers fail loudly at build instead.
     if (error instanceof ReservedKeyError) return defaultValue;
     throw error;
   }

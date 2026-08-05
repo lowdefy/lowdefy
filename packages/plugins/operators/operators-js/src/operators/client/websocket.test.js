@@ -121,3 +121,38 @@ test('_websocket returns null for a missing path on an existing channel', () => 
   expect(res.output).toBe(null);
   expect(res.errors).toEqual([]);
 });
+
+test('_websocket returns null and does not throw when a message holds a reserved key', () => {
+  const websockets = {
+    ticker: { lastMessage: { constructor: 'from the socket', safe: 'ok' } },
+  };
+  const input = { _websocket: 'ticker.lastMessage.constructor' };
+  const parser = new WebParser({ context: makeContext({ websockets }), operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(null);
+  expect(res.errors).toEqual([]);
+});
+
+test('_websocket still resolves a non-reserved key on a message that holds a reserved key', () => {
+  const websockets = {
+    ticker: { lastMessage: { constructor: 'from the socket', safe: 'ok' } },
+  };
+  const input = { _websocket: 'ticker.lastMessage.safe' };
+  const parser = new WebParser({ context: makeContext({ websockets }), operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe('ok');
+  expect(res.errors).toEqual([]);
+});
+
+test('_websocket propagates an error that is not a ReservedKeyError', () => {
+  const channel = {};
+  Object.defineProperty(channel, 'boom', {
+    enumerable: true,
+    get: () => {
+      throw new Error('read failed');
+    },
+  });
+  expect(() =>
+    _websocket({ arrayIndices, params: 'ticker.boom', websockets: { ticker: channel } })
+  ).toThrow('read failed');
+});

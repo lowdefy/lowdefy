@@ -1,0 +1,45 @@
+# B8: Reserved JWT claimMapping Field
+# ====================================
+# Tests that a jwt auth strategy's claimMapping field name that is (or
+# contains, as a dot-path segment) a reserved name fails the build with a
+# located ConfigError. At request time the strategy strips the "attributes."
+# prefix and assigns the remainder as a literal key onto a freshly built
+# attributes object (plugin-better-auth strategies/jwt.js:117); a reserved
+# segment there would re-parent that object instead of setting a claim.
+#
+# Uses "attributes.__proto__" rather than a bare "__proto__" key: the YAML
+# mapping-to-JS conversion (build/buildRefs/addLineNumbers.js) builds objects
+# with plain property assignment, so a literal top-level "__proto__" key hits
+# the object-literal proto setter and is silently dropped before any build
+# step sees it - accepted behavior for that generic, arbitrary-data walker
+# (sweep-classification.md category E). "attributes.__proto__" is a distinct
+# string key, unaffected by that setter, so it survives to reach this
+# strategy-specific gate intact - the same case the task's dedicated unit
+# tests cover directly for the bare "__proto__" key.
+#
+# Expected error:
+#   [Config Error] Auth strategy "service-jwt" claimMapping field
+#   "attributes.__proto__" uses reserved name "__proto__".
+#
+# The error points to line 33 where the jwt strategy is defined.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  strategies:
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        claimMapping:
+          attributes.__proto__: sub
+
+pages:
+  - id: home
+    type: Box

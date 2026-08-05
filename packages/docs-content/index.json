@@ -362,6 +362,14 @@
       "typeName": "ButtonSelector"
     },
     {
+      "slug": "input-blocks/captcha",
+      "title": "Captcha",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/captcha.md",
+      "kind": "block",
+      "typeName": "Captcha"
+    },
+    {
       "slug": "input-blocks/checkboxselector",
       "title": "CheckboxSelector",
       "section": "Input Blocks",

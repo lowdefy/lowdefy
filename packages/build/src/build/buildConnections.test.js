@@ -85,6 +85,20 @@ test('buildConnections throws when connection id is not a string', () => {
   expect(() => buildConnections({ components, context })).toThrow('Connection id is not a string.');
 });
 
+test('buildConnections throws when connection id is a reserved name', () => {
+  const components = {
+    connections: [
+      {
+        id: 'constructor',
+        type: 'ConnectionType',
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context })).toThrow(
+    'Connection id "constructor" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('buildConnections throws when connection type is not defined', () => {
   const components = {
     connections: [

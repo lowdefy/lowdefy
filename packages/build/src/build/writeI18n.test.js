@@ -117,6 +117,23 @@ test('writeI18n throws on duplicate locale codes', async () => {
   );
 });
 
+test('writeI18n throws a located error when a locale code is a reserved name', async () => {
+  const components = {
+    config: {
+      i18n: {
+        defaultLocale: 'en-US',
+        locales: [{ code: 'en-US' }, { code: '__proto__', '~k': 'localeKey' }],
+      },
+    },
+  };
+  await expect(writeI18n({ components, context })).rejects.toThrow(
+    'Locale code "__proto__" in "config.i18n.locales" is a reserved name and cannot be used as a locale code.'
+  );
+  await expect(writeI18n({ components, context })).rejects.toMatchObject({
+    configKey: 'localeKey',
+  });
+});
+
 test('writeI18n warns when a declared locale has no messages', async () => {
   const components = {
     config: {

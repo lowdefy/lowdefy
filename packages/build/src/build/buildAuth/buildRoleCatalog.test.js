@@ -212,6 +212,43 @@ test('buildRoleCatalog accepts an authored id beginning with "$"', () => {
   ]);
 });
 
+test('buildRoleCatalog throws a located error when an authored id is a reserved name', () => {
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      roles: [{ id: '__proto__', '~k': 'role-key' }],
+      pages: { roles: {} },
+      api: { roles: {} },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth role id "__proto__" is a reserved name and cannot be used as a role id.'
+  );
+  try {
+    buildRoleCatalog({ components });
+  } catch (e) {
+    expect(e.configKey).toBe('role-key');
+  }
+});
+
+test('buildRoleCatalog rejects a gate reference to a reserved role name as undeclared', () => {
+  // The catalog check above forbids declaring a reserved role id, so a gate
+  // naming one can never resolve - it fails as an undeclared reference.
+  const components = {
+    auth: {
+      '~k': 'auth-key',
+      roles: [{ id: 'admin' }],
+      pages: { roles: { constructor: ['reports'] } },
+      api: { roles: {} },
+      websockets: { roles: {} },
+    },
+  };
+  expect(() => buildRoleCatalog({ components })).toThrow(
+    'Auth gate references role "constructor", which is not declared in auth.roles.'
+  );
+});
+
 test('buildRoleCatalog throws when an authored id is declared more than once', () => {
   const components = {
     auth: {

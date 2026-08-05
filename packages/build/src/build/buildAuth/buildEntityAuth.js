@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getAlwaysPublicPageIds from './getAlwaysPublicPageIds.js';
 import getEntityRoles from './getEntityRoles.js';
@@ -32,6 +32,22 @@ const labels = {
 // decision and never re-derives it from patterns.
 function buildEntityAuth({ components, context, entity }) {
   const label = labels[entity];
+  // buildAuth runs before the steps that validateId these ids (buildApi,
+  // buildWebsockets, buildPages), so this is where an item id is first accepted
+  // as an object key. A reserved id keys getEntityRoles' itemRoles and the
+  // entityRoles lookup below through Object.prototype - `itemRoles[id]` reads a
+  // truthy inherited value so the Set is never created, and `entityRoles[id]`
+  // is truthy for an item no role config mentions. Reject it here, where the
+  // item's config location is still in hand, with the same message validateId
+  // gives so the developer sees one error either way.
+  (components[entity] ?? []).forEach((item) => {
+    if (isReserved(item.id)) {
+      throw new ConfigError(
+        `${label} id "${item.id}" is a reserved name and cannot be used as an id.`,
+        { configKey: item['~k'] }
+      );
+    }
+  });
   let protectedIds = getProtectedEntities({ components, entity });
   if (entity === 'pages') {
     // authPages role pages and module-contributed public pages stay public

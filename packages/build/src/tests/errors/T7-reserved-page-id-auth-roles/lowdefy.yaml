@@ -1,0 +1,37 @@
+# T7: Reserved Page ID With An Auth Roles Gate
+# ============================================
+# buildAuth runs before buildApi, buildWebsockets and buildPages, so the
+# validateId gate on those ids has not run yet when buildEntityAuth keys its
+# plain-object maps by item id. With a roles gate configured, getEntityRoles
+# reads itemRoles["__proto__"] off Object.prototype - truthy, so the Set is
+# never created and ".add" is not a function. That surfaced as an unlocated
+# LowdefyInternalError before the located page-id error.
+#
+# Expected error:
+#   [Config Error] Page id "__proto__" is a reserved name and cannot be used as an id.
+#
+# The error points to line 36 where the page is defined. Both the
+# buildEntityAuth gate and validateId in buildPages report it, and
+# logCollectedErrors collapses the pair, so it is reported once.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: admin
+  pages:
+    roles:
+      admin:
+        - '*'
+
+pages:
+  - id: __proto__
+    type: Box

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { setKey, type, unsetKey } from '@lowdefy/helpers';
+import { isReserved, setKey, type, unsetKey } from '@lowdefy/helpers';
 
 // organizationId is accepted and never read here: the floor reads it to resolve
 // the organization the caller's authority and the target's membership are
@@ -77,6 +77,11 @@ async function UpdateUserProfile({ auth, properties }) {
   if (!type.isNone(profile)) {
     const merged = { ...(user.profile ?? {}) };
     Object.entries(profile).forEach(([key, value]) => {
+      if (isReserved(key)) {
+        throw new Error(
+          `UpdateUserProfile profile field "${key}" is a reserved key and cannot be written to the user profile.`
+        );
+      }
       if (value === null) {
         unsetKey(merged, key);
         return;

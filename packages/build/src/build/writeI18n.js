@@ -15,7 +15,7 @@
 */
 
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
-import { mergeObjects, serializer, type } from '@lowdefy/helpers';
+import { isReserved, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 function collectPluginMessages({ messagesMap, declaredCodes }) {
   const collected = {};
@@ -57,6 +57,14 @@ async function writeI18n({ components, context }) {
       throw new ConfigError('App "config.i18n.locales[]" requires a string "code".', {
         configKey: locale?.['~k'] ?? i18n['~k'],
       });
+    }
+    // The code keys the collected plugin catalog and the merged messages
+    // artifact, both plain objects.
+    if (isReserved(locale.code)) {
+      throw new ConfigError(
+        `Locale code "${locale.code}" in "config.i18n.locales" is a reserved name and cannot be used as a locale code.`,
+        { configKey: locale['~k'] }
+      );
     }
     if (codes.has(locale.code)) {
       throw new ConfigError(`Duplicate locale code "${locale.code}" in "config.i18n.locales".`, {

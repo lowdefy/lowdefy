@@ -48,6 +48,10 @@ test('omit throws ReservedKeyError for a reserved segment in a nested key', () =
   expect(() => omit({ a: 1 }, ['x.constructor.y'])).toThrow(ReservedKeyError);
 });
 
+test('omit inherits the dotted key rejoin from unset', () => {
+  expect(omit({ 'a.b': 1, c: 2 }, ['a.b'])).toEqual({ c: 2 });
+});
+
 test('omit returns true for missing keys without throwing', () => {
   const obj = { a: 1 };
   expect(omit(obj, ['x.y.z'])).toEqual({ a: 1 });

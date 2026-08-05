@@ -795,6 +795,39 @@ describe('_var object form with operator in default (bottom-up)', () => {
   });
 });
 
+describe('_var reserved key handling', () => {
+  test('{ _var: "constructor" } (string form) throws a ConfigError naming the key', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: 'constructor' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].name).toBe('ConfigError');
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "constructor" is a reserved name.');
+  });
+
+  test('{ _var: { key: "__proto__", default: 1 } } (object form) throws a ConfigError naming the key, not the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: '__proto__', default: 1 } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "__proto__" is a reserved name.');
+  });
+
+  test('regression: { _var: { key: "missing", default: 1 } } still returns the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: 'missing', default: 1 } }, ctx);
+    expect(result).toBe(1);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('regression: { _var: { key: "provided", default: "fallback" } } with a null value returns null, not the default', async () => {
+    const ctx = createWalkContext({ vars: { provided: null } });
+    const result = await resolve({ _var: { key: 'provided', default: 'fallback' } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
 describe('_module.var with computed name (bottom-up)', () => {
   test('_build.string.concat computes module variable name', async () => {
     const entry = createModuleEntry({ theme: 'dark' });
