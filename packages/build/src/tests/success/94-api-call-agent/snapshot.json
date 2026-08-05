@@ -189,6 +189,7 @@
       "~arr": [],
       "~k": "2k"
     },
+    "pagesProtectedByDefault": false,
     "~k": "2c"
   },
   "blockPackages.json": [

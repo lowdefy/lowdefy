@@ -36,6 +36,7 @@ test('buildAuth returns unconfigured defaults when auth is absent', () => {
       websockets: { roles: {} },
       configured: false,
       pages: { roles: {} },
+      pagesProtectedByDefault: false,
       providers: [],
       roles: [],
     },
@@ -57,6 +58,7 @@ test('buildAuth returns unconfigured defaults when there are no pages', () => {
       websockets: { roles: {} },
       configured: false,
       pages: { roles: {} },
+      pagesProtectedByDefault: false,
       providers: [],
       roles: [],
     },
@@ -119,6 +121,7 @@ test('buildAuth fills in configured defaults for a minimal valid auth config', (
     api: { roles: {} },
     websockets: { roles: {} },
     pages: { roles: {} },
+    pagesProtectedByDefault: false,
     providers: [],
     roles: [],
     hooks: [],
@@ -263,6 +266,57 @@ test('buildAuth translates account.accountLinking.trustedProviders', () => {
   };
   const res = buildAuth({ components, context });
   expect(res.auth.account.accountLinking.trustedProviders).toEqual(['email-password', 'okta']);
+});
+
+test('buildAuth resolves pagesProtectedByDefault true when auth.pages.protected is true', () => {
+  const context = testContext();
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      pages: {
+        protected: true,
+      },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+  };
+  const res = buildAuth({ components, context });
+  expect(res.auth.pagesProtectedByDefault).toBe(true);
+});
+
+test('buildAuth resolves pagesProtectedByDefault false when auth.pages.protected is a list', () => {
+  const context = testContext();
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      pages: {
+        protected: ['admin'],
+      },
+    },
+    pages: [
+      { id: 'a', type: 'Context' },
+      { id: 'admin', type: 'Context' },
+    ],
+  };
+  const res = buildAuth({ components, context });
+  expect(res.auth.pagesProtectedByDefault).toBe(false);
+});
+
+test('buildAuth resolves pagesProtectedByDefault false when auth declares no pages', () => {
+  const context = testContext();
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+  };
+  const res = buildAuth({ components, context });
+  expect(res.auth.pagesProtectedByDefault).toBe(false);
 });
 
 test('buildAuth counts the database adapter and provider types', () => {
