@@ -35,6 +35,18 @@ function createErrorHandler({ basePath = '', logger }) {
       }
       return c.text('Unauthorized', 401);
     }
+    // An authorized caller who has not enrolled a second factor under
+    // auth.twoFactor.required. 403, not 401 - a 401 reads to the client as a dead
+    // session and bounces the user to sign-in, which is the loop the gate exists to
+    // avoid. Expected traffic under required: true, so one warning line and no
+    // Sentry capture, exactly as for AuthenticationError.
+    if (error.name === 'TwoFactorEnrolmentRequiredError') {
+      logger.warn(`Two-factor enrolment required: ${c.req.method} ${c.req.path}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 403);
+      }
+      return c.text('Two-factor enrolment required', 403);
+    }
     const context = c.get('lowdefyContext');
     if (context) {
       await context.handleError(error);
