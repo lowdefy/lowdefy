@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs-content",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "description": "Lowdefy documentation extracted as markdown for AI coding agents.",
   "homepage": "https://lowdefy.com",

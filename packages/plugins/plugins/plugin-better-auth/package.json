@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-better-auth",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "description": "Lowdefy providers, API auth strategies, and admin steps for the BetterAuth engine.",
   "homepage": "https://lowdefy.com",
@@ -42,7 +42,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "5.4.0",
+    "@lowdefy/helpers": "5.5.1",
     "jose": "^6.2.3"
   },
   "devDependencies": {
