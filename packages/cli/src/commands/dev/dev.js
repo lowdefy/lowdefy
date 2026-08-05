@@ -16,6 +16,7 @@
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import checkPortAvailable from '../../utils/checkPortAvailable.js';
+import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runDevServer from './runDevServer.js';
@@ -28,6 +29,7 @@ async function dev({ context }) {
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
+  await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });
   context.sendTelemetry();
   await runDevServer({ context, directory });
