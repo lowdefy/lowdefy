@@ -2280,6 +2280,40 @@ export default {
         type: 'App "api" should be an array.',
       },
     },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Api endpoint ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array of endpoint id strings.',
+          },
+        },
+      },
+    },
     websockets: {
       type: 'array',
       items: {
