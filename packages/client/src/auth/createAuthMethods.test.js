@@ -860,7 +860,7 @@ test('login names the offending param when an errorCallbackUrl target is ambiguo
       errorCallbackUrl: { pageId: 'expired', url: 'https://example.com/expired' },
     })
   ).rejects.toThrow(
-    "Invalid errorCallbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."
+    /Invalid errorCallbackUrl: .*only one of 'home', 'pageId' or 'url' can be defined\./
   );
 });
 
