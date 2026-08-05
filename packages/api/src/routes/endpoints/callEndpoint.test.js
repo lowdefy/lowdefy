@@ -93,7 +93,7 @@ test('Api endpoint proceeds normally', async () => {
   expect(result.status).toBe('success');
 });
 
-test('unauthenticated call to a protected endpoint throws masked does-not-exist error', async () => {
+test('unauthenticated call to a protected endpoint throws an authentication-required error', async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/protected_ep.json') {
       return {
@@ -106,6 +106,33 @@ test('unauthenticated call to a protected endpoint throws masked does-not-exist 
     return null;
   });
   const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'protected_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('Authentication required for API endpoint "protected_ep".');
+});
+
+test('authenticated call with the wrong role throws a masked does-not-exist error', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/protected_ep.json') {
+      return {
+        endpointId: 'protected_ep',
+        type: 'Api',
+        auth: { public: false, roles: ['admin'] },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    session: { user: { id: 'user_1', roles: ['viewer'] } },
+  });
   await expect(
     callEndpoint(context, {
       blockId: 'blockId',

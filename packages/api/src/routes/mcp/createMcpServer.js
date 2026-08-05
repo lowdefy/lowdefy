@@ -99,7 +99,13 @@ async function createMcpServer({ context }) {
         isError: true,
       };
     } catch (error) {
-      context.logger.error(error);
+      // Unauthenticated calls to gated tools are expected probing traffic -
+      // a warn line and the 401-shaped message, not a structured error log.
+      if (error.name === 'AuthenticationError') {
+        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
+      } else {
+        context.logger.error(error);
+      }
       return {
         content: [{ type: 'text', text: error.message }],
         isError: true,

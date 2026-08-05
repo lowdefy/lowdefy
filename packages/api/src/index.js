@@ -24,7 +24,9 @@ import createMcpServer from './routes/mcp/createMcpServer.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
 import getAuthConfig from './routes/auth/getAuthConfig.js';
+import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
+import resolveStrategyCaller from './context/resolveStrategyCaller.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
@@ -43,10 +45,12 @@ export {
   createSessionCallback,
   createWebSocketConnection,
   getAuthConfig,
+  getAuthStrategies,
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,
   logClientError,
+  resolveStrategyCaller,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,

@@ -168,7 +168,7 @@ test('tools/call returns an error result for an unknown tool', async () => {
   expect(result.content[0].text).toBe('Unknown tool "nope".');
 });
 
-test('tools/call returns an error result when authorization denies the endpoint', async () => {
+test('tools/call returns a 401-shaped error result for an unauthenticated caller', async () => {
   const context = createContext({
     session: null,
     configs: {
@@ -180,6 +180,25 @@ test('tools/call returns an error result when authorization denies the endpoint'
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  // callEndpoint masks protected endpoints as missing for unauthorized callers.
+  expect(result.content[0].text).toBe(
+    'Authentication required for API endpoint "get-customer".'
+  );
+  expect(logger.warn).toHaveBeenCalledWith('Unauthenticated MCP tool call: get-customer');
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('tools/call returns a masked error result for an authenticated caller with the wrong role', async () => {
+  const context = createContext({
+    session: { user: { id: 'user_1', roles: ['viewer'] } },
+    configs: {
+      'api/get-customer.json': { ...endpointConfig, auth: { public: false, roles: ['admin'] } },
+    },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  // callEndpoint masks protected endpoints as missing for wrong-role callers.
   expect(result.content[0].text).toBe('API Endpoint "get-customer" does not exist.');
 });
