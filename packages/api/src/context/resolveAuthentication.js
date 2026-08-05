@@ -141,6 +141,12 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
       ...(member.attributes ?? {}),
     },
     activeOrganizationId,
+    // organizationId is the caller's active org in its serialized string form -
+    // the value the tenant wall stamps onto and filters walled collections with,
+    // and the one operators read as _user: organizationId. It resolves under
+    // both organizations policies (under pinned it always equals the pinned
+    // org, since set-active-organization is disabled there).
+    organizationId: activeOrganizationId,
   };
 }
 

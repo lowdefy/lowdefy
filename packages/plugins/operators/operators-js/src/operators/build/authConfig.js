@@ -29,6 +29,7 @@ const readablePaths = [
   'captcha.provider',
   'captcha.siteKey',
   'providers',
+  'organizations.policy',
   'organizations.signup',
   'roles',
 ];
@@ -40,12 +41,13 @@ const readablePaths = [
 function _authConfig({ authConfig, params }) {
   if (type.isUndefined(authConfig)) {
     // The projection is present on the build context after the pre-pass, so an
-    // undefined projection means the operator ran somewhere it does not exist
-    // yet: inside the auth: block during the pre-pass (self-reference), or in
-    // config that resolves earlier (app metadata, module entry vars). One
-    // honest message names the boundary without asserting a single cause.
+    // undefined projection means the operator ran somewhere it can never
+    // exist: inside the auth: block during the pre-pass (self-reference), or
+    // in app metadata (app:), which resolves earlier and is never re-walked.
+    // Walks whose output IS re-walked post-projection (module entry vars,
+    // deferred-record bodies) defer the fold instead of reaching this throw.
     throw new Error(
-      '_build.authConfig is not available here. The auth config projection is computed after module registration, so it resolves in module pages, api, connections, and app config — but not inside the auth: block itself, nor in config that resolves earlier (app metadata app:, module entry vars modules[].vars).'
+      "_build.authConfig is not available here. The auth config projection is computed from the app's auth: block, so the operator can not resolve inside that block itself (a self-reference), nor in app metadata (app:), which resolves earlier."
     );
   }
   if (!readablePaths.includes(params)) {

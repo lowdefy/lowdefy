@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,9 +28,14 @@ async function MongodbDeleteOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { filter } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   let response;
   if (logCollection) {
@@ -43,18 +50,23 @@ async function MongodbDeleteOne({
       acknowledged: true,
       deletedCount: result.lastErrorObject?.n ?? 0,
     };
-    await logCollection.insertOne({
-      args: { filter, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      before,
-      timestamp: new Date(),
-      type: 'MongoDBDeleteOne',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          before,
+          timestamp: new Date(),
+          type: 'MongoDBDeleteOne',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   } else {
     response = await collection.deleteOne(filter, options);
   }

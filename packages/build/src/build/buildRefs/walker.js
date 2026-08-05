@@ -53,6 +53,7 @@ class WalkContext {
     currentFile,
     refChain,
     deferModuleRefs,
+    deferAuthConfig,
     operators,
     env,
     lowdefyApp,
@@ -83,6 +84,14 @@ class WalkContext {
     this.currentFile = currentFile;
     this.refChain = refChain;
     this.deferModuleRefs = deferModuleRefs ?? false;
+    // Walks that run before the auth-config projection is computed AND whose
+    // output is guaranteed a later post-projection walk (entry-config
+    // prepare/sweep, deferred-record bodies) leave _build.authConfig folds
+    // unevaluated instead of erroring — the operator resolves where the
+    // deferred value is consumed. Walks whose output is final (app metadata,
+    // the auth pre-pass itself) stay strict, so a genuinely-unresolvable read
+    // is still a loud build error.
+    this.deferAuthConfig = deferAuthConfig ?? false;
     // Which entry-config section a prepare walk serves ('consumerVars' or
     // 'connections') — entryRef record coordinates and slots need it.
     this.entrySection = entrySection ?? null;
@@ -107,6 +116,7 @@ class WalkContext {
       currentFile: this.currentFile,
       refChain: this.refChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -141,6 +151,7 @@ class WalkContext {
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -1065,6 +1076,19 @@ async function resolve(node, ctx) {
     if (ctx.deferModuleRefs && findPlaceholderInSubtree(node)) {
       return node;
     }
+    // Before the auth-config projection is computed, a fold over
+    // _build.authConfig cannot resolve. On walks whose output is re-walked
+    // post-projection (deferAuthConfig), leave the node unevaluated — its
+    // children (_ref, _var) are already resolved, so the fold happens where
+    // the deferred value is consumed. Bottom-up resolution makes this guard
+    // cover every enclosing _build.* fold of the authConfig read too.
+    if (
+      ctx.deferAuthConfig &&
+      type.isUndefined(ctx.buildContext.authConfigProjection) &&
+      findAuthConfigInSubtree(node)
+    ) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
@@ -1081,6 +1105,19 @@ function findPlaceholderInSubtree(node) {
   }
   if (type.isObject(node)) {
     return Object.keys(node).some((key) => findPlaceholderInSubtree(node[key]));
+  }
+  return false;
+}
+
+// Does any node in the subtree read _build.authConfig?
+function findAuthConfigInSubtree(node) {
+  if (type.isArray(node)) {
+    return node.some((item) => findAuthConfigInSubtree(item));
+  }
+  if (type.isObject(node)) {
+    return Object.keys(node).some(
+      (key) => key === '_build.authConfig' || findAuthConfigInSubtree(node[key])
+    );
   }
   return false;
 }

@@ -15,6 +15,8 @@
 */
 
 import getCollection from '../getCollection.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -26,24 +28,34 @@ async function MongodbInsertOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { doc, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { doc } = deserializedRequest;
+  if (tenant) {
+    doc = stampTenantOnDoc({ doc, tenant });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.insertOne(doc, options);
   if (logCollection) {
-    await logCollection.insertOne({
-      args: { doc, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      response,
-      timestamp: new Date(),
-      type: 'MongoDBInsertOne',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { doc, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          response,
+          timestamp: new Date(),
+          type: 'MongoDBInsertOne',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   }
   const { acknowledged, insertedId } = serialize(response);
   return { acknowledged, insertedId };

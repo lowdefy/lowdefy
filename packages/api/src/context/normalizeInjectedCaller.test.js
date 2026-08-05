@@ -41,10 +41,23 @@ test('normalizeInjectedCaller preserves existing roles and attributes', () => {
   });
 });
 
-test('normalizeInjectedCaller does not synthesize profile or activeOrganizationId', () => {
+test('normalizeInjectedCaller does not synthesize profile or org fields', () => {
   const result = normalizeInjectedCaller({ id: 'x', name: 'X' });
   expect(result).not.toHaveProperty('profile');
   expect(result).not.toHaveProperty('activeOrganizationId');
+  expect(result).not.toHaveProperty('organizationId');
+});
+
+test('normalizeInjectedCaller mirrors organizationId from activeOrganizationId', () => {
+  const result = normalizeInjectedCaller({ id: 'x', activeOrganizationId: 'org_1' });
+  expect(result.organizationId).toBe('org_1');
+  expect(result.activeOrganizationId).toBe('org_1');
+});
+
+test('normalizeInjectedCaller mirrors activeOrganizationId from organizationId', () => {
+  const result = normalizeInjectedCaller({ id: 'x', organizationId: 'org_1' });
+  expect(result.organizationId).toBe('org_1');
+  expect(result.activeOrganizationId).toBe('org_1');
 });
 
 test('normalizeInjectedCaller preserves an optional email', () => {

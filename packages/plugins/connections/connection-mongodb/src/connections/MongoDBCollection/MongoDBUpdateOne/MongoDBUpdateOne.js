@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,9 +29,15 @@ async function MongodbUpdateOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, update, options, disableNoMatchError } = deserializedRequest;
+  const { options, disableNoMatchError } = deserializedRequest;
+  let { filter, update } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   let response;
   if (logCollection) {
@@ -55,19 +64,24 @@ async function MongodbUpdateOne({
     if (!disableNoMatchError && !options?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    await logCollection.insertOne({
-      args: { filter, update, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      before,
-      after,
-      timestamp: new Date(),
-      type: 'MongoDBUpdateOne',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, update, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          before,
+          after,
+          timestamp: new Date(),
+          type: 'MongoDBUpdateOne',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   } else {
     response = await collection.updateOne(filter, update, options);
     if (!disableNoMatchError && !options?.upsert && response.matchedCount === 0) {

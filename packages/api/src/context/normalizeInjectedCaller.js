@@ -22,12 +22,23 @@
 // are floored here. profile and activeOrganizationId are only ever produced by
 // a real user-row/member read, so they are left exactly as the caller carries
 // them - absent stays absent, and a bare _user.profile read is null-safe.
+// organizationId (the tenant wall's org value) mirrors resolveAuthentication,
+// where it always equals activeOrganizationId - an injected caller declaring
+// either key gets both, so mock/e2e callers pass walled connections without
+// duplicating the org under two names. A caller with neither stays org-less
+// and fails closed on walled connections, same as a strategy caller.
 function normalizeInjectedCaller(user) {
-  return {
+  const normalized = {
     ...user,
     roles: user.roles ?? [],
     attributes: user.attributes ?? {},
   };
+  const organizationId = user.organizationId ?? user.activeOrganizationId;
+  if (organizationId != null) {
+    normalized.organizationId = organizationId;
+    normalized.activeOrganizationId = user.activeOrganizationId ?? organizationId;
+  }
+  return normalized;
 }
 
 export default normalizeInjectedCaller;

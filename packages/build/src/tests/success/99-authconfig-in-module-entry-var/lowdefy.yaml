@@ -1,9 +1,9 @@
-# B7: _build.authConfig in a module entry var
-# =============================================
+# 99: _build.authConfig in a module entry var
 # The app passes a module var whose value is _build.authConfig. Module entry
 # vars (modules[].vars) resolve BEFORE the auth config projection is computed,
-# so the operator must produce the boundary error.
-
+# so the fold defers on that walk and resolves where the module consumes the
+# var (_module.var re-walks the substituted value after the projection
+# exists). Formerly error fixture B7, when this position was a build error.
 lowdefy: local
 
 auth:

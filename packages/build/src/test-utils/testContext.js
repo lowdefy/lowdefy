@@ -58,6 +58,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),
+    tenantConnectionIds: new Set(),
     websocketIds: new Set(),
   };
 

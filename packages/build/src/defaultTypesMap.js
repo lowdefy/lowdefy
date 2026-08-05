@@ -7,6 +7,7 @@ const defaultTypesMap = {
     strategies: {},
   },
   blockMetas: {},
+  connectionMetas: {},
   blocks: {},
   connections: {},
   icons: {},

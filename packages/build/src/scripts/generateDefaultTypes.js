@@ -32,6 +32,7 @@ async function generateDefaultTypesMap() {
       strategies: {},
     },
     blockMetas: {},
+    connectionMetas: {},
     blocks: {},
     connections: {},
     icons: {},

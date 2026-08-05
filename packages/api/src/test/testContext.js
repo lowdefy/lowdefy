@@ -32,6 +32,7 @@ function testContext({
   operators = {
     _test: () => 'test',
   },
+  organization = null,
   readConfigFile,
   secrets = {},
   steps = {},
@@ -44,6 +45,7 @@ function testContext({
     config,
     configDirectory,
     connections,
+    organization,
     // Mirrors the servers' createHandleError contract: the sink logs the error
     // and marks it handled, which is what runRoutine's guard and the client's
     // already-logged check both read.

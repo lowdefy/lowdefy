@@ -16,6 +16,8 @@
 
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -27,9 +29,14 @@ async function MongoDBInsertConsecutiveId({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { doc, options, prefix, length } = deserializedRequest;
+  const { options, prefix, length } = deserializedRequest;
+  let { doc } = deserializedRequest;
+  if (tenant) {
+    doc = stampTenantOnDoc({ doc, tenant });
+  }
   const { client, collection, logCollection } = await getCollection({ connection });
 
   // The id read and insert run in a transaction so concurrent requests cannot
@@ -48,18 +55,21 @@ async function MongoDBInsertConsecutiveId({
       response = await collection.insertOne(doc, { ...options, session });
       if (logCollection) {
         await logCollection.insertOne(
-          {
-            args: { doc, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            response,
-            timestamp: new Date(),
-            type: 'MongoDBInsertConsecutiveId',
-            meta: connection.changeLog?.meta,
-          },
+          stampTenantOnLogRecord({
+            record: {
+              args: { doc, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              response,
+              timestamp: new Date(),
+              type: 'MongoDBInsertConsecutiveId',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+          }),
           { session }
         );
       }

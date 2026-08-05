@@ -21,6 +21,11 @@ import * as metas from './metas.js';
 export default {
   ...extractBlockTypes(metas),
   connections: ['AwsS3Bucket'],
+  // Non-scopable: the tenant wall does not cover object storage, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    AwsS3Bucket: { tenant: false },
+  },
   requests: [
     'AwsS3GetObject',
     'AwsS3PresignedGetObject',

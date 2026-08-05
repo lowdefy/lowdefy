@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { AuthenticationError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import callRequestResolver from '../request/callRequestResolver.js';
@@ -21,6 +22,7 @@ import evaluateRequestOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import resolveTenant from '../request/resolveTenant.js';
 
 // Runs the endpoint's declared `webhook.verify` request plugin as a gate,
 // against the RAW request (body, query, headers), before the routine body
@@ -50,9 +52,27 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     connectionId: verify.connectionId,
     requestId: 'webhook.verify',
     properties: verify.properties ?? {},
+    // Webhooks run in system context, so a verifier on a tenant connection
+    // fails closed (caught at resolveTenant below, verdict false) unless the
+    // verify config opts out with tenant: none.
+    tenant: verify.tenant,
     '~k': verify['~k'],
   };
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  let tenant;
+  try {
+    tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
+  } catch (error) {
+    // Only the org-less-caller refusal is a gate outcome - it must not reach
+    // the unauthenticated webhook sender as an error body. Config errors
+    // (tenant declared on a type without the contract) still throw: a
+    // misconfigured verifier breaks loudly, per the contract above.
+    if (!(error instanceof AuthenticationError)) {
+      throw error;
+    }
+    context.logger.debug({ event: 'debug_webhook_verify_error', err: error }, error.message);
+    return false;
+  }
 
   const { connectionProperties, requestProperties } = evaluateRequestOperators(context, {
     connectionConfig,
@@ -69,6 +89,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
       requestConfig,
       requestProperties,
       requestResolver,
+      tenant,
     });
     return response === true || (type.isObject(response) && response.verified === true);
   } catch (error) {

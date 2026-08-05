@@ -1990,6 +1990,13 @@ export default {
             type: 'Websocket "properties" should be an object.',
           },
         },
+        tenant: {
+          const: 'none',
+          errorMessage: {
+            const:
+              'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)',
+          },
+        },
       },
       errorMessage: {
         type: 'Websocket should be an object.',
@@ -2188,6 +2195,27 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Connection "properties" should be an object.',
+          },
+        },
+        tenant: {
+          oneOf: [
+            { const: 'shared' },
+            {
+              type: 'object',
+              additionalProperties: false,
+              required: ['field'],
+              properties: {
+                field: {
+                  type: 'string',
+                  minLength: 1,
+                  pattern: '^[^.]+$',
+                },
+              },
+            },
+          ],
+          errorMessage: {
+            oneOf:
+              'Connection "tenant" should be "shared" or an object with a "field" top-level field name (non-empty, no dots), eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
           },
         },
       },
@@ -2608,6 +2636,12 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Request "properties" should be an object.',
+          },
+        },
+        tenant: {
+          enum: ['none', 'authored'],
+          errorMessage: {
+            enum: 'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).',
           },
         },
       },

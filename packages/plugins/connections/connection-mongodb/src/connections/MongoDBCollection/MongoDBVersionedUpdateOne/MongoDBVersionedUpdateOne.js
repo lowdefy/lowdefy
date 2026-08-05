@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,13 +29,19 @@ async function MongoDBVersionedUpdateOne({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, update, options, disableNoMatchError } = deserializedRequest;
-  const { collection, logCollection } = await getCollection({ connection });
+  const { options, disableNoMatchError } = deserializedRequest;
+  let { filter, update } = deserializedRequest;
   const findOptions = options?.find;
   const insertOptions = options?.insert;
   const updateOptions = options?.update;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    update = applyTenantToUpdate({ update, tenant, upsert: updateOptions?.upsert === true });
+  }
+  const { collection, logCollection } = await getCollection({ connection });
 
   // The matched document is re-inserted under a new _id so the previous
   // version is preserved, then the update is applied to the new copy.
@@ -40,6 +49,13 @@ async function MongoDBVersionedUpdateOne({
   let insertedDocument;
   if (document) {
     delete document._id;
+    if (tenant) {
+      // The copy came through the walled read, so it belongs to the caller's
+      // org and already carries the field - the direct set (no authored-value
+      // scan, which would reject the field the document legitimately holds)
+      // keeps the version copy stamped by construction rather than by trust.
+      document[tenant.field] = tenant.value;
+    }
     insertedDocument = await collection.insertOne(document, { ...insertOptions });
   }
 
@@ -68,19 +84,24 @@ async function MongoDBVersionedUpdateOne({
     if (!disableNoMatchError && !updateOptions?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    await logCollection.insertOne({
-      args: { filter, update, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      before: document,
-      after,
-      timestamp: new Date(),
-      type: 'MongoDBVersionedUpdateOne',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, update, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          before: document,
+          after,
+          timestamp: new Date(),
+          type: 'MongoDBVersionedUpdateOne',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   } else {
     response = await collection.updateOne(
       insertedDocument ? { _id: insertedDocument.insertedId } : filter,

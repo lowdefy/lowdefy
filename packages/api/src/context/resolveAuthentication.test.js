@@ -130,6 +130,7 @@ test('resolves a session active in the pinned organization', async () => {
     orgRoles: ['admin'],
     attributes: {},
     activeOrganizationId: 'team',
+    organizationId: 'team',
   });
   expect(findOne).toHaveBeenCalled();
 });
@@ -186,6 +187,7 @@ test('resolves roles from member.appRoles and orgRoles from the member role tier
     orgRoles: ['member'],
     attributes: {},
     activeOrganizationId: 'org_1',
+    organizationId: 'org_1',
   });
 });
 
@@ -202,6 +204,22 @@ test('sets activeOrganizationId from the session so steps can scope org operatio
   await resolveAuthentication(context, { auth, headers: {} });
 
   expect(context.user.activeOrganizationId).toBe('org_1');
+});
+
+test('sets organizationId to the active org for tenant stamping and _user: organizationId', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.organizationId).toBe('org_1');
+  expect(context.user.organizationId).toBe(context.user.activeOrganizationId);
 });
 
 // The admin plugin's session field never reaches the caller. Nothing writes
