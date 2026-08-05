@@ -1,0 +1,27 @@
+# T4: Reserved Event Shortcut
+# ===========================
+# Tests that an event shortcut which is a reserved name fails the build with
+# a located ConfigError. The client's shortcut manager keys a plain object by
+# the normalized shortcut, and normalizeKey leaves "__proto__" unchanged.
+#
+# Expected error:
+#   [Config Error] Event shortcut "__proto__" on event "onClick" on block
+#   "save_button" on page "home" is a reserved name and cannot be used as a
+#   shortcut.
+#
+# The error points to line 23 where the event is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: save_button
+        type: Button
+        events:
+          onClick:
+            shortcut: __proto__
+            try:
+              - id: reset_page
+                type: Reset

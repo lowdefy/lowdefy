@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import buildAuth from './buildAuth.js';
 import getEntityRoles from './getEntityRoles.js';
+import testContext from '../../test-utils/testContext.js';
 
 test('No roles', () => {
   const components = {
@@ -128,4 +130,30 @@ test('Wildcard * does not match across slashes', () => {
   expect(res).toEqual({
     'team-users/list': ['admin'],
   });
+});
+
+// Coverage regression: itemRoles here is keyed by item id, not by role name -
+// role names only ever enter a Set. validateId does not save this function:
+// buildAuth runs before buildApi, buildWebsockets and buildPages, so a reserved
+// item id reaches getEntityRoles unvalidated and reads itemRoles[itemId] off
+// Object.prototype. buildEntityAuth gates the ids first. Assert that through
+// buildAuth, the step that actually precedes this function.
+test('buildAuth rejects a reserved page id before getEntityRoles can key itemRoles', () => {
+  const components = {
+    auth: {
+      secret: { _secret: 'BETTER_AUTH_SECRET' },
+      database: { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} },
+      emailAndPassword: { enabled: true },
+      roles: [{ id: 'admin' }],
+      pages: {
+        roles: {
+          admin: ['*'],
+        },
+      },
+    },
+    pages: [{ id: '__proto__', '~k': 'page-key', type: 'Box' }],
+  };
+  expect(() => buildAuth({ components, context: testContext() })).toThrow(
+    'Page id "__proto__" is a reserved name and cannot be used as an id.'
+  );
 });

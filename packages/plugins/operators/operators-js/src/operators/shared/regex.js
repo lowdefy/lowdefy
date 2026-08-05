@@ -14,19 +14,37 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { ReservedKeyError, get, type } from '@lowdefy/helpers';
 
 function _regex({ location, params, state }) {
   const pattern = type.isObject(params) ? params.pattern : params;
   if (!type.isString(pattern)) {
     throw new Error(`_regex.pattern must be a string.`);
   }
-  let on = !type.isUndefined(params.on) ? params.on : get(state, location);
+  let on = params.on;
+  if (type.isUndefined(on)) {
+    try {
+      on = get(state, location);
+    } catch (error) {
+      // A runtime read: the key comes from app data or an author keypath evaluated at render time,
+      // and there is no config location to attach in the browser. The reserved rule's job — refusing
+      // the read — is already done, so degrade to the miss value rather than crashing the page.
+      if (!(error instanceof ReservedKeyError)) throw error;
+    }
+  }
   if (!type.isUndefined(params.key)) {
     if (!type.isString(params.key)) {
       throw new Error(`_regex.key must be a string.`);
     }
-    on = get(state, params.key);
+    try {
+      on = get(state, params.key);
+    } catch (error) {
+      // A runtime read: the key comes from app data or an author keypath evaluated at render time,
+      // and there is no config location to attach in the browser. The reserved rule's job — refusing
+      // the read — is already done, so degrade to the miss value rather than crashing the page.
+      if (!(error instanceof ReservedKeyError)) throw error;
+      on = undefined;
+    }
   }
 
   if (type.isNone(on)) {

@@ -1824,3 +1824,181 @@ test('buildAgents throws when sub-agent name collides with a tool name', () => {
     /sub-agent "helper-agent" conflicts with an endpoint tool of the same name/
   );
 });
+
+test('buildAgents throws a located error when an agent id is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: '__proto__',
+        '~k': 'agentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+  try {
+    buildAgents({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('agentKey');
+  }
+});
+
+test('buildAgents throws a located error when an endpoint tool name is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:tool1',
+        endpointId: 'tool1',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        '~k': 'agentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: [{ endpointId: 'tool1', name: '__proto__' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" tool name "__proto__" is a reserved name and cannot be used as a tool name.'
+  );
+  try {
+    buildAgents({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('agentKey');
+  }
+});
+
+test('buildAgents throws a located error when a sub-agent tool name is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: 'helper',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'parent',
+        '~k': 'parentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        agents: [{ agentId: 'helper', name: 'constructor' }],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "parent" sub-agent tool name "constructor" is a reserved name and cannot be used as a tool name.'
+  );
+  try {
+    buildAgents({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('parentKey');
+  }
+});
+
+test('buildAgents accepts a sub-agent whose derived tool name is not a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: 'a/__proto__',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'parent',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        agents: ['a/__proto__'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  const res = buildAgents({ components, context });
+  // '/' becomes '__', so the derived name is 'a____proto__', not '__proto__'.
+  expect(res.agents[1].agents).toEqual([{ agentId: 'a/__proto__', name: 'a____proto__' }]);
+});
+
+// The reserved check has to run on the derived name, not the raw id: '/' becomes
+// '__', so a legal endpoint or agent id can manufacture a reserved tool name.
+test('buildAgents throws when an endpoint tool name derived from a legal id is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    api: [
+      {
+        id: 'endpoint:/proto__',
+        endpointId: '/proto__',
+        type: 'Api',
+        description: 'A tool',
+        payloadSchema: { type: 'object' },
+        routine: [],
+      },
+    ],
+    agents: [
+      {
+        id: 'agent1',
+        '~k': 'agentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        tools: ['/proto__'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "agent1" tool name "__proto__" is a reserved name and cannot be used as a tool name.'
+  );
+});
+
+test('buildAgents throws when a sub-agent tool name derived from a legal agent id is a reserved name', () => {
+  const context = testContext();
+  const components = {
+    connections: [{ id: 'connection:conn1', connectionId: 'conn1', type: 'Anthropic' }],
+    agents: [
+      {
+        id: '__proto/',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        properties: { model: 'test-model' },
+      },
+      {
+        id: 'parent',
+        '~k': 'parentKey',
+        type: 'AnthropicAgent',
+        connectionId: 'conn1',
+        agents: ['__proto/'],
+        properties: { model: 'test-model' },
+      },
+    ],
+  };
+  expect(() => buildAgents({ components, context })).toThrow(
+    'Agent "parent" sub-agent tool name "__proto__" is a reserved name and cannot be used as a tool name.'
+  );
+  try {
+    buildAgents({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBe('parentKey');
+  }
+});

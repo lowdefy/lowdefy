@@ -82,6 +82,16 @@ test('buildNotifications throws when notification id contains invalid characters
   );
 });
 
+test('buildNotifications throws when notification id is a reserved name', () => {
+  const context = createTestContext();
+  const components = {
+    notifications: [validNotification({ id: 'prototype' })],
+  };
+  expect(() => buildNotifications({ components, context })).toThrow(
+    'Notification id "prototype" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('buildNotifications throws on duplicate notification ids', () => {
   const context = createTestContext();
   const components = {

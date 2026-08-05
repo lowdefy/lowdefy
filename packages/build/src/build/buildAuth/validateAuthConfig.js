@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 import lowdefySchema from '../../lowdefySchema.js';
@@ -120,6 +120,16 @@ function validateAuthConfig({ components }) {
   const seenProviderTypes = {};
   (auth.providers ?? []).forEach((provider) => {
     const providerKey = provider['~k'] ?? configKey;
+    // The provider id keys seenProviderIds below, a plain object: assigning
+    // seenProviderIds['__proto__'] = true is a no-op, so two providers sharing
+    // that id both pass the duplicate check. It also becomes the GenericOAuth
+    // providerId the runtime resolves callbacks by.
+    if (isReserved(provider.id)) {
+      throw new ConfigError(
+        `Auth provider id "${provider.id}" is a reserved name and cannot be used as an id.`,
+        { configKey: providerKey }
+      );
+    }
     if (seenProviderIds[provider.id] === true) {
       throw new ConfigError(`Duplicate auth provider id "${provider.id}".`, {
         configKey: providerKey,

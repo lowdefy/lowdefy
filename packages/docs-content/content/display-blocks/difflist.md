@@ -1,6 +1,6 @@
 # DiffList
 
-`DiffList` renders a polished, user-friendly diff between a `before` and an `after` object as a grouped table of changes. Built on `microdiff` for the diff engine and antd primitives for rendering, it groups changes by top-level key, tags each row as Added / Removed / Changed, and supports per-path value formatters (`date`, `datetime`, `boolean`, `currency`, `enum`, `json`, `code`), humanised `labels`, and `hide` / `show` glob filtering. All colours come from antd&#39;s semantic tokens so dark mode and `theme` overrides work automatically.
+`DiffList` renders a polished, user-friendly diff between a `before` and an `after` object as a grouped table of changes. Built on `microdiff` for the diff engine and antd primitives for rendering, it groups changes by top-level key, tags each row as Added / Removed / Changed, and supports per-path value formatters (`date`, `datetime`, `boolean`, `currency`, `enum`, `json`, `code`), humanised `labels`, and `hide` / `show` glob filtering. All colours come from antd's semantic tokens so dark mode and `theme` overrides work automatically.
 
 ```yaml
 - id: diff_list_profile

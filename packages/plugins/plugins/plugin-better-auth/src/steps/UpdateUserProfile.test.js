@@ -71,7 +71,9 @@ test('UpdateUserProfile throws when a profile key is a reserved key', async () =
       auth,
       properties: { userId: 'user-1', profile: { ['__proto__']: { isAdmin: true } } },
     })
-  ).rejects.toThrow('Reserved key "__proto__"');
+  ).rejects.toThrow(
+    'UpdateUserProfile profile field "__proto__" is a reserved key and cannot be written to the user profile.'
+  );
   expect(adapter.update).not.toHaveBeenCalled();
 });
 
@@ -83,7 +85,23 @@ test('UpdateUserProfile throws when a reserved profile key is set to null', asyn
       auth,
       properties: { userId: 'user-1', profile: { ['constructor']: null } },
     })
-  ).rejects.toThrow('Reserved key "constructor"');
+  ).rejects.toThrow(
+    'UpdateUserProfile profile field "constructor" is a reserved key and cannot be written to the user profile.'
+  );
+  expect(adapter.update).not.toHaveBeenCalled();
+});
+
+test('UpdateUserProfile writes no partial profile when a later field is a reserved key', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateUserProfile({
+      auth,
+      properties: { userId: 'user-1', profile: { plan: 'pro', ['prototype']: 'x' } },
+    })
+  ).rejects.toThrow(
+    'UpdateUserProfile profile field "prototype" is a reserved key and cannot be written to the user profile.'
+  );
   expect(adapter.update).not.toHaveBeenCalled();
 });
 

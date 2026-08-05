@@ -58,7 +58,11 @@ const testTypesMap = {
     Throw: { package: '@lowdefy/blocks-basic' },
     Title: { package: '@lowdefy/blocks-basic' },
   },
+  agents: {
+    ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
+  },
   connections: {
+    Anthropic: { package: '@lowdefy/connection-anthropic' },
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
   },
@@ -73,6 +77,10 @@ const testTypesMap = {
     providers: {
       Google: { package: '@lowdefy/plugin-better-auth' },
       GenericOAuth: { package: '@lowdefy/plugin-better-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-better-auth' },
+      jwt: { package: '@lowdefy/plugin-better-auth' },
     },
   },
   operators: {

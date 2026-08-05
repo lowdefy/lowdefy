@@ -17,6 +17,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { isReserved } from '@lowdefy/helpers';
 
 import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 
@@ -35,6 +36,14 @@ function buildRoleCatalog({ components }) {
   const authoredIds = new Set();
   authoredRoles.forEach((role) => {
     const configKey = role['~k'] ?? components.auth['~k'];
+    // The role id keys the organization plugin's access-control role catalog,
+    // a plain object.
+    if (isReserved(role.id)) {
+      throw new ConfigError(
+        `Auth role id "${role.id}" is a reserved name and cannot be used as a role id.`,
+        { configKey }
+      );
+    }
     if (authoredIds.has(role.id)) {
       throw new ConfigError(`Auth role id "${role.id}" is declared more than once.`, {
         configKey,

@@ -450,3 +450,67 @@ test('buildEntityAuth api: a webhook: { verify } object is accepted via truthine
     'Endpoint "hook" is a webhook receiver and must be declared explicitly public'
   );
 });
+
+// buildAuth runs before buildApi, buildWebsockets and buildPages, so validateId
+// has not seen these ids when buildEntityAuth keys its plain-object maps by
+// them. The two tests below pin both ways a reserved id used to get through.
+test('buildEntityAuth pages: a reserved page id with a roles gate throws a located ConfigError instead of crashing getEntityRoles', () => {
+  const components = {
+    auth: {
+      pages: {
+        roles: {
+          admin: ['*'],
+        },
+      },
+    },
+    pages: [{ id: '__proto__', '~k': 'page-key', type: 'Box' }],
+  };
+  let thrown;
+  try {
+    buildEntityAuth({ components, entity: 'pages' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('ConfigError');
+  expect(thrown.message).toBe(
+    'Page id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+  expect(thrown.configKey).toBe('page-key');
+});
+
+test('buildEntityAuth api: a reserved endpoint id with no roles configured throws instead of building a protected auth artifact', () => {
+  const components = {
+    auth: {
+      api: {
+        roles: {},
+      },
+    },
+    api: [{ id: 'constructor', '~k': 'endpoint-key', type: 'Api' }],
+  };
+  let thrown;
+  try {
+    buildEntityAuth({ components, entity: 'api' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('ConfigError');
+  expect(thrown.message).toBe(
+    'Endpoint id "constructor" is a reserved name and cannot be used as an id.'
+  );
+  expect(thrown.configKey).toBe('endpoint-key');
+  expect(components.api[0].auth).toBe(undefined);
+});
+
+test('buildEntityAuth websockets: a reserved websocket id throws a located ConfigError', () => {
+  const components = {
+    auth: {
+      websockets: {
+        roles: {},
+      },
+    },
+    websockets: [{ id: 'prototype', '~k': 'ws-key', type: 'Channel' }],
+  };
+  expect(() => buildEntityAuth({ components, entity: 'websockets' })).toThrow(
+    'Websocket id "prototype" is a reserved name and cannot be used as an id.'
+  );
+});

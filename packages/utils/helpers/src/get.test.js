@@ -21,6 +21,8 @@
 
 import diff from 'jest-diff';
 import get from './get.js';
+import set from './set.js';
+import unset from './unset.js';
 import { ReservedKeyError } from './ReservedKeyError.js';
 
 const expectToEqual = (result, value) => {
@@ -198,7 +200,7 @@ test('should support options.default', () => {
 });
 
 test('should support nested keys with dots when the whole path is an own key', () => {
-  // An exact whole-path own key still wins via the top-level fast path.
+  // The walk grows the candidate until it matches the whole-path own key; no shortcut needed.
   expectToStrictEqual(get({ 'a.b.c': 'd' }, 'a.b.c'), 'd');
   expectToStrictEqual(get({ 'a.b.c.d': 'e' }, 'a.b.c.d'), 'e');
   expectToStrictEqual(get({ 'a.b.c.d': 'e' }, 'a.b.c'), undefined);
@@ -246,15 +248,16 @@ test('should support nested keys with dots when the literal dots are escaped', (
   expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c\\.d\\.e\\.f'), 'g');
 });
 
-test('should return the default for an unescaped path over a literal dotted key', () => {
-  // The joined-segment retry loop is gone: an unescaped path no longer resolves
-  // against a literal dotted key by luck. Consistent with set/unset.
-  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c'), undefined);
-  expectToStrictEqual(get({ a: { 'b.c': 'd' } }, 'a.b.c'), undefined);
-  expectToStrictEqual(get({ 'a.b': { c: { d: 'e' } } }, 'a.b.c.d'), undefined);
-  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e.f'), undefined);
-  expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c.d.e.f'), undefined);
-  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c', 'fallback'), 'fallback');
+test('should resolve an unescaped path against a literal dotted key at any depth', () => {
+  // At each level the strict segment wins if it is present; on a miss the segment is joined
+  // with successive following segments and the shortest joined key present on the target is
+  // used, so a literal dotted key is reachable without escaping.
+  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c'), 'd');
+  expectToStrictEqual(get({ a: { 'b.c': 'd' } }, 'a.b.c'), 'd');
+  expectToStrictEqual(get({ 'a.b': { c: { d: 'e' } } }, 'a.b.c.d'), 'e');
+  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e.f'), 'g');
+  expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
+  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c', 'fallback'), 'd');
 });
 
 test('should get a value from an array', () => {
@@ -339,10 +342,12 @@ describe('dot-prop tests:', () => {
     expectDeepStrictEqual(get({ 'foo\\.bar': true }, 'foo\\\\.bar'), true);
     expectDeepStrictEqual(get({ foo: 1 }, 'foo.bar'), undefined);
 
+    // dot-prop reads through a function target; Lowdefy does not - only data structures are
+    // traversable, so a function as the root target yields the default.
     function fn() {}
     fn.foo = { bar: 1 };
-    expectDeepStrictEqual(get(fn, 'foo'), fn.foo);
-    expectDeepStrictEqual(get(fn, 'foo.bar'), 1);
+    expectDeepStrictEqual(get(fn, 'foo'), undefined);
+    expectDeepStrictEqual(get(fn, 'foo.bar'), undefined);
 
     const f3 = { foo: null };
     expectDeepStrictEqual(get(f3, 'foo.bar'), undefined);
@@ -404,12 +409,12 @@ describe('object-path .get tests', () => {
     expectToEqual(get(obj, 'a.b'), []);
   });
 
-  // object-path fails this test. It pinned the unescaped lucky match, which is
-  // gone - the escaped form is now the way to address literal dotted keys.
+  // The escaped form is the explicit way to address a literal dotted key; the unescaped path
+  // reaches the same value through the rejoin.
   test('should return the value using dot in key', () => {
     const obj = { 'a.b': { 'looks.like': 1 } };
     expectToEqual(get(obj, 'a\\.b.looks\\.like'), 1);
-    expectToEqual(get(obj, 'a.b.looks.like'), undefined);
+    expectToEqual(get(obj, 'a.b.looks.like'), 1);
   });
 
   test('should return the value under shallow object', () => {
@@ -477,9 +482,9 @@ describe('object-path .get tests', () => {
     expectToEqual(get(objWithNullProto, 'foo'), foo);
   });
 
-  // this differs from object-path, which does not allow
-  // the user to get non-own properties for some reason.
-  test('should get non-"own" properties', () => {
+  // object-path does not allow the user to read non-own properties, and neither does this
+  // helper: a lookup is own-only, so an inherited member is never returned as a value.
+  test('should return the default for non-"own" properties', () => {
     const Base = function () {};
     Base.prototype = {
       one: {
@@ -493,11 +498,11 @@ describe('object-path .get tests', () => {
 
     const extended = new Extended();
 
-    expectToEqual(get(extended, 'one.two'), true);
+    expectToEqual(get(extended, 'one.two'), undefined);
     extended.enabled = true;
 
     expectToEqual(get(extended, 'enabled'), true);
-    expectDeepStrictEqual(get(extended, 'one'), { two: true });
+    expectDeepStrictEqual(get(extended, 'one'), undefined);
   });
 });
 
@@ -535,25 +540,6 @@ describe('deep-property unit tests', () => {
     expectToEqual(get(a, 'b.example.type'), 'vegetable');
     expectToEqual(get(a, 'c.example.type'), 'mineral');
     expectToEqual(get(a, 'c.gorky.type'), undefined);
-  });
-
-  test('should get properties on non-objects', () => {
-    const fn = function () {};
-
-    // the commented out lines are from from the "deep-property" lib,
-    // but it's invalid javascript. This is a good example of why it's always
-    // better to use "use strict" (and lint your code).
-
-    // const str = 'An example string';
-    // const num = 42;
-
-    fn.path = { to: { property: 'string' } };
-    // str.path = { to: { property: 'string' } };
-    // num.path = { to: { property: 'string' } };
-
-    expectToEqual(get(fn, 'path.to.property'), 'string');
-    // expectToEqual(get(str, 'path.to.property'), undefined);
-    // expectToEqual(get(num, 'path.to.property'), undefined);
   });
 });
 
@@ -639,13 +625,15 @@ describe('reserved key guard', () => {
     expect(() => get({}, 'a.b.c.prototype')).toThrow(ReservedKeyError);
   });
 
-  test('get resolves non-reserved Object.prototype member names', () => {
-    expect(get({}, 'hasOwnProperty')).toBe(Object.prototype.hasOwnProperty);
-    expect(get({}, 'toString')).toBe(Object.prototype.toString);
+  test('get returns the default for non-reserved Object.prototype member names', () => {
+    // Lookups are own-only, so a built-in prototype member is never returned as a value -
+    // the reserved list is about illegal input, not about hiding inherited members.
+    expect(get({}, 'hasOwnProperty')).toEqual(undefined);
+    expect(get({}, 'toString')).toEqual(undefined);
   });
 });
 
-describe('descent into non-plain objects', () => {
+describe('own-property lookup', () => {
   class Instance {
     constructor() {
       this.own = 'ownValue';
@@ -656,50 +644,78 @@ describe('descent into non-plain objects', () => {
     }
   }
 
-  test('get reads an own property off an Error target', () => {
-    expect(get(new Error('x'), 'message')).toEqual('x');
+  test('get returns the default for an inherited Object.prototype member', () => {
+    expect(get({}, 'toString')).toEqual(undefined);
+    expect(get({}, 'valueOf')).toEqual(undefined);
+    expect(get({}, 'hasOwnProperty')).toEqual(undefined);
+    expect(get({}, 'propertyIsEnumerable')).toEqual(undefined);
   });
 
-  test('get reads a property one level inside an Error', () => {
-    expect(get({ e: new Error('x') }, 'e.message')).toEqual('x');
+  test('get returns the default for an inherited Array.prototype member but reads length', () => {
+    expect(get([1], 'map')).toEqual(undefined);
+    expect(get([1], 'length')).toEqual(1);
   });
 
-  test('get descends through nested Error causes', () => {
-    const error = new Error('x', { cause: new Error('y') });
-    expect(get(error, 'cause.message')).toEqual('y');
-    expect(get({ error }, 'error.cause.message')).toEqual('y');
+  test('get does not throw on an inherited member under copy', () => {
+    // A built-in method used to be returned here, and serializer.copy turned it into
+    // `JSON.parse(undefined)`. Own-only lookup removes the path to it.
+    expect(() => get({}, 'toString', { copy: true })).not.toThrow();
+    expect(get({}, 'toString', { copy: true })).toEqual(undefined);
   });
 
-  test('get returns the default for a missing key inside an Error', () => {
-    expect(get({ e: new Error('x') }, 'e.code', 'fallback')).toEqual('fallback');
+  test('get returns the default for a class instance method on its prototype', () => {
+    expect(get(new Instance(), 'foo')).toEqual(undefined);
+    expect(get({ i: new Instance() }, 'i.foo')).toEqual(undefined);
   });
 
-  test('get descends into a class instance and reads an own property', () => {
+  test('get reads an own property off a class instance', () => {
+    expect(get({ i: new Instance() }, 'i.own')).toEqual('ownValue');
+  });
+});
+
+describe('descent predicate', () => {
+  test('get does not descend into a function', () => {
+    expect(get({ fn: () => 1 }, 'fn.name')).toEqual(undefined);
+    expect(get({ fn: () => 1 }, 'fn.call')).toEqual(undefined);
+  });
+
+  test('get returns the default when the root target is a function', () => {
+    expect(get(function () {}, 'a.b')).toEqual(undefined);
+  });
+
+  test('get does not descend into a Date, URL or Map', () => {
+    expect(get({ d: new Date(0) }, 'd.getTime')).toEqual(undefined);
+    expect(get({ u: new URL('https://example.com/p') }, 'u.pathname')).toEqual(undefined);
+    expect(get({ m: new Map([['a', 1]]) }, 'm.size')).toEqual(undefined);
+  });
+
+  test('get descends into arrays', () => {
+    expect(get({ a: [{ b: 1 }] }, 'a.0.b')).toEqual(1);
+  });
+
+  test('get descends into a class instance', () => {
+    // type.isObject cannot exclude class instances - kindOf maps every `[object Object]` tag to
+    // 'object' - so an instance's own properties are reachable. Pinned as the predicate's actual
+    // shape, not as a desired one; narrowing it is tracked separately.
+    class Instance {
+      constructor() {
+        this.own = 'ownValue';
+      }
+    }
     expect(get({ i: new Instance() }, 'i.own')).toEqual('ownValue');
   });
 
-  test('get walks the prototype chain for an inherited method', () => {
-    // `prop in target` is kept as the in-walk existence check, so inherited
-    // members still resolve once the reserved-key guard has passed.
-    expect(get(new Instance(), 'foo')).toBe(Instance.prototype.foo);
-    expect(get({ i: new Instance() }, 'i.foo')).toBe(Instance.prototype.foo);
-    expect(get({ i: new Instance() }, 'i.foo')()).toEqual('bar');
-  });
-
-  test('get descends into a Date', () => {
-    const date = new Date(0);
-    expect(get({ date }, 'date.toISOString')).toBe(Date.prototype.toISOString);
-    expect(get(date, 'getTime')).toBe(Date.prototype.getTime);
-  });
-
-  test('get descends into a URL', () => {
-    const url = new URL('https://example.com/path?a=1');
-    expect(get(url, 'hostname')).toEqual('example.com');
-    expect(get({ url }, 'url.pathname')).toEqual('/path');
-  });
-
-  test('get descends into a Map', () => {
-    expect(get({ m: new Map([['a', 1]]) }, 'm.size')).toEqual(1);
+  test('get returns a live object as-is when it is the endpoint of the path', () => {
+    // The predicate is never consulted for an endpoint value, so it cannot prevent a live
+    // object's internals being returned, or serialized under copy.
+    class Instance {
+      constructor() {
+        this.internal = 'secret';
+      }
+    }
+    const instance = new Instance();
+    expect(get({ i: instance }, 'i')).toBe(instance);
+    expect(get({ i: instance }, 'i', { copy: true })).toEqual({ internal: 'secret' });
   });
 
   test('get does not descend into null, undefined or primitives', () => {
@@ -710,18 +726,200 @@ describe('descent into non-plain objects', () => {
   });
 });
 
+describe('lookups on errors', () => {
+  test('get reads message and name off an Error target', () => {
+    const error = new Error('boom');
+    expect(get(error, 'message')).toEqual('boom');
+    expect(get(error, 'name')).toEqual('Error');
+  });
+
+  test('get reads a property one level inside an Error', () => {
+    expect(get({ e: new Error('boom') }, 'e.message')).toEqual('boom');
+  });
+
+  test('get descends through nested Error causes', () => {
+    const error = new Error('x', { cause: new Error('y') });
+    expect(get(error, 'cause.message')).toEqual('y');
+    expect(get({ error }, 'error.cause.message')).toEqual('y');
+  });
+
+  test('get descends into a plain-object cause', () => {
+    expect(get(new Error('x', { cause: { code: 'BAD' } }), 'cause.code')).toEqual('BAD');
+  });
+
+  test('get returns the default for a missing key inside an Error', () => {
+    expect(get({ e: new Error('x') }, 'e.code', 'fallback')).toEqual('fallback');
+  });
+
+  test('get returns the default for an inherited member of an Error', () => {
+    // The extracted props are a plain object, so own-only lookup applies to them too.
+    expect(get({ e: new Error('x') }, 'e.toString')).toEqual(undefined);
+  });
+
+  test('get returns an Error unchanged when the error is the endpoint of the path', () => {
+    // No lookup happens on the error, so no conversion happens either.
+    const error = new Error('boom');
+    expect(get({ e: error }, 'e')).toBeInstanceOf(Error);
+    expect(get({ a: { e: error } }, 'a.e')).toBeInstanceOf(Error);
+  });
+
+  test('get returns a class instance held on an Error as a marker', () => {
+    class FakeSocket {}
+    const error = new Error('boom');
+    error.socket = new FakeSocket();
+    expect(get({ e: error }, 'e.socket')).toEqual('[Object: FakeSocket]');
+  });
+
+  test('get resolves a cause chain to depth 3 and returns the default past it', () => {
+    // extractErrorProps has MAX_CAUSE_DEPTH = 3, so the fourth cause is the string '[Truncated]'
+    // and a lookup on it defaults. Lowdefy wraps errors several layers deep, so this is reachable.
+    let error = new Error('l4');
+    for (const message of ['l3', 'l2', 'l1', 'l0']) {
+      error = new Error(message, { cause: error });
+    }
+    expect(get(error, 'cause.message')).toEqual('l1');
+    expect(get(error, 'cause.cause.cause.message')).toEqual('l3');
+    expect(get(error, 'cause.cause.cause.cause')).toEqual('[Truncated]');
+    expect(get(error, 'cause.cause.cause.cause.message')).toEqual(undefined);
+  });
+
+  test('get truncates a deep object held on an error at object depth 5', () => {
+    // extractErrorProps has MAX_OBJECT_DEPTH = 5. A missed path returns a recognisable default,
+    // but the whole subtree arrives with '[Truncated]' baked in as a string literal.
+    const error = new Error('boom');
+    error.data = { a: { b: { c: { d: { e: { f: 'deep' } } } } } };
+    expect(get(error, 'data.a.b.c.d.e.f')).toEqual(undefined);
+    expect(get(error, 'data')).toEqual({ a: { b: { c: { d: { e: '[Truncated]' } } } } });
+  });
+
+  test('get returns a nested cause as extracted props rather than an Error instance', () => {
+    const error = new Error('x', { cause: new Error('y') });
+    expect(get(error, 'cause')).not.toBeInstanceOf(Error);
+    expect(get(error, 'cause').message).toEqual('y');
+  });
+
+  test('get returns the default for a non-enumerable own property on an error', () => {
+    // extractErrorProps enumerates with Object.keys, so a non-enumerable own property never makes
+    // it into the plain-data form get reads. AggregateError's own `errors` array is the built-in
+    // an app author is most likely to actually meet.
+    const aggregate = new AggregateError([new Error('a')], 'agg');
+    expect(get(aggregate, 'errors.0.message')).toEqual(undefined);
+
+    class WithHiddenProp extends Error {
+      constructor() {
+        super('boom');
+        Object.defineProperty(this, 'secret', { value: 'hidden', enumerable: false });
+      }
+    }
+    expect(get(new WithHiddenProp(), 'secret')).toEqual(undefined);
+  });
+
+  test('get returns the default for a getter on an Error subclass', () => {
+    // Object.keys does not report accessors either, so a computed property is lost the same way a
+    // non-enumerable one is.
+    class WithGetter extends Error {
+      get computed() {
+        return 'derived';
+      }
+    }
+    expect(get(new WithGetter(), 'computed')).toEqual(undefined);
+  });
+
+  test('get reads Node fs error fields unaffected by the enumerable-own limit', () => {
+    // errno/code/syscall/path are set as ordinary enumerable own properties, so this loss does not
+    // reach Node's own ENOENT-style errors.
+    const error = new Error('ENOENT: no such file');
+    error.errno = -2;
+    error.code = 'ENOENT';
+    error.syscall = 'open';
+    error.path = '/tmp/x';
+    expect(get(error, 'code')).toEqual('ENOENT');
+    expect(get(error, 'errno')).toEqual(-2);
+    expect(get(error, 'syscall')).toEqual('open');
+    expect(get(error, 'path')).toEqual('/tmp/x');
+  });
+});
+
 describe('dotted key resolution', () => {
   test('get resolves an escaped dot as a literal key character', () => {
     expect(get({ a: { 'b.c': 1 } }, 'a.b\\.c')).toEqual(1);
     expect(get({ 'a.b': { c: 1 } }, 'a\\.b.c')).toEqual(1);
   });
 
-  test('get returns the default for an unescaped path over a literal dotted key', () => {
-    // The joined-segment retry loop is gone, so an unescaped path no longer
-    // resolves against a literal dotted key by luck.
-    expect(get({ 'a.b': { c: 1 } }, 'a.b.c')).toEqual(undefined);
-    expect(get({ 'a.b': { c: 1 } }, 'a.b.c', 'fallback')).toEqual('fallback');
-    expect(get({ a: { 'b.c': 1 } }, 'a.b.c')).toEqual(undefined);
+  test('get resolves an unescaped path against a nested literal dotted key', () => {
+    expect(get({ attributes: { 'a.b': 'v' } }, 'attributes.a.b')).toEqual('v');
+    expect(get({ profile: { 'https://ex.com/c': 'v' } }, 'profile.https://ex.com/c')).toEqual('v');
+    expect(get({ 'a.b': { c: 1 } }, 'a.b.c')).toEqual(1);
+    expect(get({ a: { 'b.c': 1 } }, 'a.b.c')).toEqual(1);
+  });
+
+  test('get prefers the strict segment over a literal dotted key when both are present', () => {
+    expect(get({ a: { b: { c: 'nested' } }, 'a.b': { c: 'literal' } }, 'a.b.c')).toEqual('nested');
+  });
+
+  test('get matches joined candidates shortest-first', () => {
+    expect(get({ 'a.b': { c: { d: 1 } }, 'a.b.c': { d: 2 } }, 'a.b.c.d')).toEqual(1);
+  });
+
+  test('get does not backtrack to a longer joined key after a match', () => {
+    // 'a.b' is taken, 'c' is missing inside it, and 'a.b.c' is never retried.
+    expect(get({ 'a.b': {}, 'a.b.c': { d: 1 } }, 'a.b.c.d')).toEqual(undefined);
+    expect(get({ 'a.b': {}, 'a.b.c': { d: 1 } }, 'a.b.c.d', 'fallback')).toEqual('fallback');
+  });
+
+  test('get takes the shorter joined key over a whole-path own key and does not backtrack', () => {
+    // Shortest-first applies at the root too: 'a.b' is taken, 'c' is missing inside it, and the
+    // whole-path key 'a.b.c' is never retried. There is no whole-path shortcut ahead of the walk,
+    // which is what keeps set/get/unset resolving the same key.
+    expect(get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c')).toEqual(undefined);
+    expect(get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c', 'fallback')).toEqual('fallback');
+  });
+
+  test('get lets a strict segment holding a non-traversable value shadow a literal dotted sibling', () => {
+    // 'email' is present, so the strict segment wins even though its value ('x') cannot be walked
+    // into; the literal key 'email.verified' is never reached. This is the larger of the two shadow
+    // classes the removed whole-path fast path used to paper over, and the likelier real-world
+    // shape - an OIDC claim set or API response carrying both 'email' and 'email.verified'.
+    expect(get({ email: 'x', 'email.verified': true }, 'email.verified')).toEqual(undefined);
+  });
+
+  test('get read/modify/write round-trips through set on a strict-segment shadow', () => {
+    // set still resolves 'email' first and autovivifies it into an object to hold 'verified', so
+    // the write lands where the read looked, keeping set(o, p, get(o, p)) a fixed point even though
+    // the initial read returned undefined rather than the literal sibling's value.
+    const obj = { email: 'x', 'email.verified': true };
+    set(obj, 'email.verified', 'W');
+    expect(obj).toEqual({ email: { verified: 'W' }, 'email.verified': true });
+    expect(get(obj, 'email.verified')).toEqual('W');
+  });
+
+  test('get resolves a whole-path literal dotted key through the walk when nothing shadows it', () => {
+    expect(get({ 'a.b.c': 1 }, 'a.b.c')).toEqual(1);
+    expect(get({ 'a.': 1 }, 'a.')).toEqual(1);
+    expect(get({ '': 1 }, '')).toEqual(1);
+  });
+
+  test('get read/modify/write round-trips through set and unset on an overlapping key', () => {
+    // set(o, p, get(o, p)) must be a fixed point: all three helpers resolve 'a.b' then 'c'.
+    const obj = { 'a.b': { c: 1 }, 'a.b.c': 99 };
+    set(obj, 'a.b.c', get(obj, 'a.b.c') + 1);
+    expect(obj).toEqual({ 'a.b': { c: 2 }, 'a.b.c': 99 });
+    expect(get(obj, 'a.b.c')).toEqual(2);
+    unset(obj, 'a.b.c');
+    expect(obj).toEqual({ 'a.b': {}, 'a.b.c': 99 });
+    expect(get(obj, 'a.b.c')).toEqual(undefined);
+  });
+
+  test('get throws ReservedKeyError for a literal dotted key holding a reserved segment', () => {
+    // The reserved pre-scan runs on the split segments before the walk, so 'a.constructor' is
+    // rejected as illegal input even though it is an own key. set and unset reject it identically.
+    expect(() => get({ 'a.constructor': 1 }, 'a.constructor')).toThrow(ReservedKeyError);
+  });
+
+  test('get rejoins an escaped segment into a longer literal dotted key', () => {
+    // Escaping fixes what a segment contains, not whether it takes part in a rejoin, so
+    // `a.b\.c` joins to the literal key 'a.b.c'. Matches set and unset.
+    expect(get({ 'a.b.c': 1 }, 'a.b\\.c')).toEqual(1);
   });
 
   test('get returns the default when a trailing backslash escapes nothing', () => {

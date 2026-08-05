@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 import { ORG_CLIENT_ACTION_TYPES } from '../validateOrgClientActionRefs.js';
@@ -341,6 +341,17 @@ function buildEvents(block, pageContext) {
             throw new ConfigError(
               `Event shortcut is not a valid string on event "${key}" on block "${block.blockId}" on page "${pageContext.pageId}".`,
               { received: shortcut, configKey: eventConfigKey }
+            );
+          }
+          // The client's shortcut manager keys a plain object by the normalized
+          // shortcut. Normalization neither creates nor removes a reserved name:
+          // multi-character key names pass through unchanged, and no reserved
+          // name is a single character. So checking the raw string is enough, and
+          // a modified form like "Ctrl+__proto__" stays valid.
+          if (isReserved(shortcut)) {
+            throw new ConfigError(
+              `Event shortcut "${shortcut}" on event "${key}" on block "${block.blockId}" on page "${pageContext.pageId}" is a reserved name and cannot be used as a shortcut.`,
+              { configKey: eventConfigKey }
             );
           }
           if (BROWSER_DEFAULT_SHORTCUTS.has(shortcut.toLowerCase())) {

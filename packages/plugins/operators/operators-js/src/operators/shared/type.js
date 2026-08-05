@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { ReservedKeyError, get, type } from '@lowdefy/helpers';
 
 function _type({ location, params, state }) {
   const typeName = type.isObject(params) ? params.type : params;
@@ -22,9 +22,19 @@ function _type({ location, params, state }) {
     throw new Error(`_type.type must be a string.`);
   }
 
-  const on = Object.prototype.hasOwnProperty.call(params, 'on')
-    ? params.on
-    : get(state, get(params, 'key', { default: location }));
+  let on;
+  if (Object.prototype.hasOwnProperty.call(params, 'on')) {
+    on = params.on;
+  } else {
+    try {
+      on = get(state, get(params, 'key', { default: location }));
+    } catch (error) {
+      // A runtime read: the key comes from app data or an author keypath evaluated at render time,
+      // and there is no config location to attach in the browser. The reserved rule's job — refusing
+      // the read — is already done, so degrade to the miss value rather than crashing the page.
+      if (!(error instanceof ReservedKeyError)) throw error;
+    }
+  }
 
   switch (typeName) {
     case 'string':
