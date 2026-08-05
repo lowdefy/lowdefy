@@ -883,6 +883,12 @@ export default {
                 type: 'Auth "twoFactor.enabled" should be a boolean.',
               },
             },
+            required: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.required" should be a boolean.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "twoFactor" should be an object.',

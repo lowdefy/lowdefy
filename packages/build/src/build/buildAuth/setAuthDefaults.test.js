@@ -239,7 +239,19 @@ test('setAuthDefaults enables twoFactor sub-options by default when the block is
   const res = setAuthDefaults({ components });
   expect(res.auth.twoFactor).toEqual({
     enabled: true,
+    required: false,
   });
+});
+
+test('setAuthDefaults keeps twoFactor.required true when explicitly set', () => {
+  const components = {
+    auth: {
+      configured: true,
+      twoFactor: { enabled: true, required: true },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.twoFactor.required).toBe(true);
 });
 
 test('setAuthDefaults enables passkey by default when the block is present', () => {
