@@ -53,6 +53,7 @@ export default {
     'Throw',
     'TwoFactorDisable',
     'TwoFactorEnable',
+    'TwoFactorGenerateBackupCodes',
     'TwoFactorVerify',
     'Unsubscribe',
     'UpdateSession',

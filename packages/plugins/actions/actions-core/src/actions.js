@@ -51,6 +51,7 @@ export { default as Subscribe } from './actions/Subscribe/Subscribe.js';
 export { default as Throw } from './actions/Throw/Throw.js';
 export { default as TwoFactorDisable } from './actions/TwoFactorDisable/TwoFactorDisable.js';
 export { default as TwoFactorEnable } from './actions/TwoFactorEnable/TwoFactorEnable.js';
+export { default as TwoFactorGenerateBackupCodes } from './actions/TwoFactorGenerateBackupCodes/TwoFactorGenerateBackupCodes.js';
 export { default as TwoFactorVerify } from './actions/TwoFactorVerify/TwoFactorVerify.js';
 export { default as Unsubscribe } from './actions/Unsubscribe/Unsubscribe.js';
 export { default as UpdateSession } from './actions/UpdateSession/UpdateSession.js';

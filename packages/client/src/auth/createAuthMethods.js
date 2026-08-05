@@ -648,6 +648,17 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.twoFactorEnable({ password, ...rest }));
   }
 
+  // Rotates recovery codes only - the TOTP secret, the verified flag and
+  // user.twoFactorEnabled are untouched. Returns the new backup codes the page
+  // must render once (readable via _actions in the same event chain); no
+  // side-channel state.
+  async function twoFactorGenerateBackupCodes({ password, ...rest } = {}) {
+    if (!type.isString(password)) {
+      throw new Error('TwoFactorGenerateBackupCodes requires a "password" param.');
+    }
+    return unwrap(auth.twoFactorGenerateBackupCodes({ password, ...rest }));
+  }
+
   // Serves both enrolment confirmation and the sign-in challenge, dispatching
   // by parameter (matching login): a backupCode param verifies a backup code,
   // otherwise code verifies TOTP.
@@ -701,6 +712,7 @@ function createAuthMethods(lowdefy, auth) {
     signUp,
     twoFactorDisable,
     twoFactorEnable,
+    twoFactorGenerateBackupCodes,
     twoFactorVerify,
     updateSession,
   };

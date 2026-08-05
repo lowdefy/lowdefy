@@ -182,6 +182,8 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signUpEmail: (params) => authClient.signUp.email(params),
     twoFactorDisable: (params) => authClient.twoFactor.disable(sessionScoped(params)),
     twoFactorEnable: (params) => authClient.twoFactor.enable(sessionScoped(params)),
+    twoFactorGenerateBackupCodes: (params) =>
+      authClient.twoFactor.generateBackupCodes(sessionScoped(params)),
     twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
     twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
   };

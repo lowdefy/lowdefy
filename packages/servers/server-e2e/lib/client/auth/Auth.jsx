@@ -60,6 +60,7 @@ function Auth({ children, user }) {
     signUpEmail: e2eNotSupported,
     twoFactorDisable: e2eNotSupported,
     twoFactorEnable: e2eNotSupported,
+    twoFactorGenerateBackupCodes: e2eNotSupported,
     twoFactorVerifyBackupCode: e2eNotSupported,
     twoFactorVerifyTotp: e2eNotSupported,
   };

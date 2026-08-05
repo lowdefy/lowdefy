@@ -42,6 +42,7 @@ function AuthNotConfigured({ authConfig, children }) {
     signUpEmail: authNotConfigured,
     twoFactorDisable: authNotConfigured,
     twoFactorEnable: authNotConfigured,
+    twoFactorGenerateBackupCodes: authNotConfigured,
     twoFactorVerifyBackupCode: authNotConfigured,
     twoFactorVerifyTotp: authNotConfigured,
   };

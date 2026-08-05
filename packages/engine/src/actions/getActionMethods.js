@@ -55,6 +55,7 @@ import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
 import createTwoFactorDisable from './createTwoFactorDisable.js';
 import createTwoFactorEnable from './createTwoFactorEnable.js';
+import createTwoFactorGenerateBackupCodes from './createTwoFactorGenerateBackupCodes.js';
 import createTwoFactorVerify from './createTwoFactorVerify.js';
 import createUnsubscribe from './createUnsubscribe.js';
 import createUpdateSession from './createUpdateSession.js';
@@ -103,6 +104,7 @@ function getActionMethods(props) {
     translate: createTranslate(props),
     twoFactorDisable: createTwoFactorDisable(props),
     twoFactorEnable: createTwoFactorEnable(props),
+    twoFactorGenerateBackupCodes: createTwoFactorGenerateBackupCodes(props),
     twoFactorVerify: createTwoFactorVerify(props),
     unsubscribe: createUnsubscribe(props),
     updateSession: createUpdateSession(props),
