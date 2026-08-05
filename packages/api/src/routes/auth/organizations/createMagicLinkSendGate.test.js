@@ -16,16 +16,10 @@
 
 import { jest } from '@jest/globals';
 
-// The gate wraps its handler in createAuthMiddleware; mock it to identity so
-// the unit test can invoke the handler with a plain endpoint context.
-jest.unstable_mockModule('better-auth/api', () => ({
-  createAuthMiddleware: (handler) => handler,
-}));
-
-const { default: createMagicLinkSendGate } = await import('./createMagicLinkSendGate.js');
+import createMagicLinkSendGate from './createMagicLinkSendGate.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
-const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
+const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 
 function createMockAuth({ member = null, invitations = [] } = {}) {
   const adapter = {
@@ -43,18 +37,10 @@ function createMockAuth({ member = null, invitations = [] } = {}) {
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
 
-test('createMagicLinkSendGate falls through for a non-magic-link path without resolving auth', async () => {
-  const getAuth = jest.fn();
-  const gate = createMagicLinkSendGate({ getAuth, organizations: pinned });
-  const result = await gate({ path: '/sign-in/email', body: { email: 'x@example.com' } });
-  expect(result).toBeUndefined();
-  expect(getAuth).not.toHaveBeenCalled();
-});
-
 test('createMagicLinkSendGate falls through when the body has no email', async () => {
   const getAuth = jest.fn();
   const gate = createMagicLinkSendGate({ getAuth, organizations: pinned });
-  const result = await gate({ path: '/sign-in/magic-link', body: {} });
+  const result = await gate({ body: {} });
   expect(result).toBeUndefined();
   expect(getAuth).not.toHaveBeenCalled();
 });
@@ -65,19 +51,13 @@ test('createMagicLinkSendGate falls through so the send proceeds for an admitted
     invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
   });
   const gate = createMagicLinkSendGate({ getAuth: () => auth, organizations: pinned });
-  const result = await gate({
-    path: '/sign-in/magic-link',
-    body: { email: 'invited@example.com' },
-  });
+  const result = await gate({ body: { email: 'invited@example.com' } });
   expect(result).toBeUndefined();
 });
 
 test('createMagicLinkSendGate suppresses the send with a uniform { status: true } for an unadmitted email', async () => {
   const { auth } = createMockAuth({ member: null, invitations: [] });
   const gate = createMagicLinkSendGate({ getAuth: () => auth, organizations: pinned });
-  const result = await gate({
-    path: '/sign-in/magic-link',
-    body: { email: 'stranger@example.com' },
-  });
+  const result = await gate({ body: { email: 'stranger@example.com' } });
   expect(result).toEqual({ status: true });
 });

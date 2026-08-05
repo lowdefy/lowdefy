@@ -18,14 +18,19 @@ import { type } from '@lowdefy/helpers';
 
 // Org mutation endpoints authorize the CALLER by looking up their member row
 // (findMemberByOrgId -> adapter.findOne on "member" by userId + organizationId,
-// joined to the user). Admin steps act with server authority, so the acting user
-// has no real member row. This wrapper intercepts exactly that lookup and returns
-// a virtual member (in-memory only; never written) claiming the reserved
-// "$lowdefy-system" authority role. That role is registered by the org plugin
-// with the authority statements the mutations require and is the creator under
-// the pinned wiring, so the fabricated row passes both the plugin's
-// hasPermission check and its creator-protection guards. Every other adapter
-// call delegates to the real adapter unchanged.
+// joined to the user). A caller-less run has no real member row, so this wrapper
+// intercepts exactly that lookup and returns a virtual member (in-memory only;
+// never written) claiming "owner". owner/admin/member are the only roles the org
+// plugin registers, under both policies, and owner holds every statement - so
+// the fabricated row passes the plugin's hasPermission check. It also passes the
+// creator-protection guards (crud-members.mjs:173-181, 399-407), which compare
+// role strings against creatorRole literally and demand the caller hold it to
+// touch a member who does.
+//
+// Applies only to caller-less runs (acting.system === true), where the step's
+// declared authority floor is the whole authorization; a user-initiated call reaches
+// the real adapter so the plugin reads the caller's real member row. Every other
+// adapter call delegates to the real adapter unchanged.
 function createActingMemberAdapter({ actingUser, adapter }) {
   async function findOne(args) {
     if (args.model === 'member' && type.isArray(args.where)) {
@@ -40,7 +45,7 @@ function createActingMemberAdapter({ actingUser, adapter }) {
           id: 'lowdefy:system-member',
           userId: actingUser.id,
           organizationId: organizationIdClause.value,
-          role: '$lowdefy-system',
+          role: 'owner',
           createdAt: new Date(),
           user: {
             id: actingUser.id,

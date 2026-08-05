@@ -1,10 +1,13 @@
 # Public page - a 2FA-pending sign-in holds no session yet; the pending
 # state rides a BetterAuth cookie set by the sign-in call, so this page must
-# be opened in the same browser straight after the login page routed here.
+# be opened in the same browser straight after the engine routed here. The
+# engine routes here from every sign-in method that can meet a challenge -
+# email or phone password, magic link, an untrusted OAuth provider, an SMS
+# code - so the page has one arrival shape and needs no per-method branch.
 # TwoFactorVerify serves the sign-in challenge (as well as enrolment
 # confirmation on /security): a TOTP code or a single-use backup code
-# completes the session itself - navigation after is the app's business,
-# so UpdateSession re-syncs the client and Link lands on the dashboard.
+# completes the session itself, and the engine navigates on the destination
+# it carried onto this page as ?callbackUrl= - so the page routes nothing.
 id: two-factor-challenge
 type: Box
 properties:
@@ -48,10 +51,6 @@ blocks:
                 _state: trust_device_switch
           - id: resync_after_totp
             type: UpdateSession
-          - id: to_dashboard_totp
-            type: Link
-            params:
-              pageId: dashboard
         catch:
           - id: show_totp_error
             type: SetState
@@ -80,10 +79,6 @@ blocks:
                 _state: trust_device_switch
           - id: resync_after_backup
             type: UpdateSession
-          - id: to_dashboard_backup
-            type: Link
-            params:
-              pageId: dashboard
         catch:
           - id: show_backup_error
             type: SetState

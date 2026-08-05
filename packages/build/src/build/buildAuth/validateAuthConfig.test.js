@@ -53,6 +53,18 @@ test('validateAuthConfig throws when auth contains an unknown key', () => {
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
+test('validateAuthConfig throws when auth sets the retired userAdminRole key', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: 'user-admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
 test('validateAuthConfig throws when configured without an authentication mechanism', () => {
   const components = {
     auth: {
@@ -353,6 +365,30 @@ test('validateAuthConfig passes with an OAuth provider mechanism', () => {
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig passes with a provider "twoFactorTrusted" boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: true }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when provider "twoFactorTrusted" is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      providers: [{ id: 'google', type: 'Google', properties: {}, twoFactorTrusted: 'yes' }],
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth provider "twoFactorTrusted" should be a boolean.'
+  );
+});
+
 test('validateAuthConfig throws when emailAndPassword is missing "enabled"', () => {
   const components = {
     auth: {
@@ -642,88 +678,6 @@ test('validateAuthConfig throws when organizations contains an unknown property'
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
-test('validateAuthConfig passes a userAdminRole string', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).not.toThrow();
-});
-
-test('validateAuthConfig passes userAdminRole with an explicit pinned organizations block', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      organizations: { policy: 'pinned', org: 'team-portal' },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).not.toThrow();
-});
-
-test('validateAuthConfig throws when userAdminRole is not a string', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: ['user-admin'],
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" should be a string.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is set under the tenant policy', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      organizations: { policy: 'tenant' },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" applies only to the "pinned" organizations policy - user administration under "tenant" waits for a multi-tenant admin design.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is the reserved "admin" role', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" cannot be "admin" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is the reserved "user" role', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'user',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" cannot be "user" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
-  );
-});
-
 test('validateAuthConfig passes an enabled phoneNumber block with a phone.otp.send binding', () => {
   const components = {
     auth: {
@@ -811,6 +765,56 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
+test('validateAuthConfig throws when twoFactor is enabled without authPages.twoFactor', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "authPages.twoFactor" is required when "twoFactor.enabled" is true. Set the page the engine routes a two-factor challenge to.'
+  );
+});
+
+test('validateAuthConfig passes when twoFactor is enabled with authPages.twoFactor set', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true },
+      authPages: { twoFactor: '/two-factor-challenge' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is disabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require authPages.twoFactor when twoFactor is not configured', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
 const validCaptcha = {

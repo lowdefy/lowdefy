@@ -19,7 +19,6 @@ import { betterAuth } from 'better-auth';
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import { registerOrganizationBinding } from './organizations/getOrganizationBinding.js';
-import { registerUserAdminRole } from './getUserAdminRole.js';
 
 let instance;
 
@@ -52,10 +51,6 @@ function getBetterAuth({
       secrets,
     })
   );
-
-  // Retain the configured user-admin role per instance - handleAuthStep
-  // reads it to enforce the user-administration floor on auth steps.
-  registerUserAdminRole({ auth: instance, userAdminRole: authJson.userAdminRole ?? null });
 
   // Retain the organizations declaration per instance - request-time reads
   // (the _organization operator, step organizationId defaulting) resolve the

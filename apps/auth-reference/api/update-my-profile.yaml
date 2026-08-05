@@ -1,6 +1,6 @@
 # Phase-9 profile self-service. Deliberately NOT in auth.api.roles:
-# UpdateUserProfile self-targeting is exempt from the user-admin floor -
-# userId is fixed to the caller's own id here, so any signed-in member can
+# UpdateUserProfile self-targeting is exempt from the step floor - userId is
+# fixed to the caller's own id here, so any signed-in member can
 # save their own display data and nobody can pass another user's id through
 # this endpoint. The profile write is a shallow merge per top-level key onto
 # the existing bag; a key set to null is removed. An anonymous caller is

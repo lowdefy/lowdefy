@@ -281,9 +281,7 @@ test('request does not have a connectionId', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Connection id is missing.'
-  );
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Connection id is missing.');
 });
 
 test('request is not a valid request type', async () => {
@@ -871,4 +869,46 @@ test('checkWrite, write not set', async () => {
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
     'Connection "testConnection" does not allow writes.'
   );
+});
+
+test('call request redacts an error returned inside the response value', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  // A resolver is free to return an error as data rather than throwing - a
+  // per-item failure from a batch write is the realistic shape. makeReplacer
+  // wraps any Error it meets anywhere in a value, so this response is an
+  // error-serialization site and takes the same policy as the error field.
+  mockTestRequest.mockImplementation(() => {
+    const itemError = new RequestError('Item 2 rejected.', {
+      received: { apiKey: 'super-secret' },
+    });
+    return { written: 1, failed: [itemError] };
+  });
+
+  const res = await callRequest(context, defaultParams);
+
+  const serializedItemError = res.response.failed[0]['~e'];
+  expect(serializedItemError.message).toBe('Item 2 rejected.');
+  expect(serializedItemError.received).toBeUndefined();
+  expect(serializedItemError.stack).toBeUndefined();
+  expect(JSON.stringify(res)).not.toContain('super-secret');
+});
+
+test('call request normalises source on an error returned inside the response value', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  mockTestRequest.mockImplementation(() => {
+    const itemError = new RequestError('Item 2 rejected.');
+    itemError.source = `${process.cwd()}/pages/home.yaml:5`;
+    return { failed: [itemError] };
+  });
+  const configDirectoryContext = testContext({
+    configDirectory: process.cwd(),
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    secrets,
+  });
+
+  const res = await callRequest(configDirectoryContext, defaultParams);
+
+  expect(res.response.failed[0]['~e'].source).toBe('pages/home.yaml:5');
 });

@@ -16,13 +16,15 @@
 
 import { type } from '@lowdefy/helpers';
 
-import resolveOrganizationId from './support/resolveOrganizationId.js';
-
 // Adapter-direct per the mongodb design Decision 5: the adapter applies the
 // json additionalField transform (native sub-document storage on MongoDB via
 // supportsJSON) on both ends. Fires NO member.update database hooks -
 // attributes are admin-set authorization inputs, not user-driven edits.
-async function UpdateMemberAttributes({ auth, organization, properties }) {
+//
+// organizationId is part of the authored property surface but the step never
+// resolves it: the floor resolves the target organization (defaulting to the
+// pinned one), authorizes the caller there, and passes the result in.
+async function UpdateMemberAttributes({ auth, organizationId, properties }) {
   const { attributes, memberId } = properties;
   if (type.isNone(memberId)) {
     throw new Error('UpdateMemberAttributes requires a "memberId" property.');
@@ -34,11 +36,6 @@ async function UpdateMemberAttributes({ auth, organization, properties }) {
       )}.`
     );
   }
-  const organizationId = resolveOrganizationId({
-    organization,
-    organizationId: properties.organizationId,
-    step: 'UpdateMemberAttributes',
-  });
   const { adapter } = await auth.$context;
   const member = await adapter.update({
     model: 'member',
@@ -57,5 +54,11 @@ async function UpdateMemberAttributes({ auth, organization, properties }) {
   }
   return member;
 }
+
+// Attributes are authorization inputs carried on the member row, so setting
+// them needs member:update authority in the organization that row belongs to.
+UpdateMemberAttributes.meta = {
+  authority: { scope: 'org', permissions: { member: ['update'] } },
+};
 
 export default UpdateMemberAttributes;

@@ -18,6 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 // resolveAuthentication is the single writer of context.user - nothing
@@ -35,10 +36,15 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // unauthenticated: an invitee's pre-accept session (the session.create
 // carve-out), a stale cookie from another app's deployment, and a member
 // removed mid-session are all treated as logged out, not logged-in with no
-// roles.
+// roles. Under policy: pinned, a session whose active organization is not this
+// app's organization is treated the same way, member row there or not.
 //
-// member.role stores multiple roles as a comma-separated string - split back
-// into the array Lowdefy authorization expects. context.user.attributes is
+// The member row carries two unrelated authorities and they stay apart.
+// context.user.roles is member.appRoles - the app's own role strings, and the
+// only source createAuthorize matches against auth.roles page and endpoint
+// gates. context.user.orgRoles is the split of member.role - BetterAuth's
+// owner/admin/member tier, an administrative fact about this organization that
+// no gate reads. context.user.attributes is
 // the one merged bag of authorization inputs: user.attributes (global) and
 // the active member's attributes (per-org), shallow per-key merge where the
 // member value wins - nested objects replace, never deep-merge.
@@ -70,6 +76,39 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     context.user = null;
     return;
   }
+  // Under pinned, the active organization must be this app's organization.
+  // Without this, a session pinned elsewhere - accept-time drift from an
+  // invitation another app sent, a stale cookie, a session shared between two
+  // pinned apps on one host - resolves as an authenticated caller here
+  // carrying the other organization's roles, so every role name the two
+  // catalogs share becomes a page they can open. Ahead of the member read: a
+  // foreign session costs no database round trip.
+  //
+  // The comparison target is the configured slug, not getOrganizationBinding's
+  // pinned.id, because pinned can legitimately be absent on a live request -
+  // resolvePinnedOrganization swallows a failed ensure so the _organization
+  // operator and step organizationId defaulting fail with their own clear
+  // errors instead of every request failing in the middleware. Comparing
+  // against an unresolved binding would either log the whole deployment out on
+  // a transient database error or skip the check exactly when the database is
+  // unhealthy. Under pinned the organization's id is its slug, so the check
+  // needs no database read and an unhealthy ensure cannot defeat it.
+  //
+  // Recovery is one re-login at this app: applyPinnedPolicy runs at every
+  // session.create and re-pins the session whenever the caller holds a member
+  // row here. Never send the person to the other app - the production cookie
+  // prefix is shared across apps on one host, so signing in there flips the
+  // shared session the other way and breaks the app they came from.
+  //
+  // Under tenant there is no pinned organization and the check does not apply.
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && activeOrganizationId !== registered.slug) {
+    context.logger.debug(
+      `Session for user "${session.user.id}" has active organization "${activeOrganizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+    );
+    context.user = null;
+    return;
+  }
   const { adapter } = await auth.$context;
   const member = await adapter.findOne({
     model: 'member',
@@ -85,25 +124,24 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     context.user = null;
     return;
   }
-  const roles = (member.role ?? '')
+  // member.role is a CSV BetterAuth writes over a closed three-name set the
+  // platform itself writes, so no comma can appear inside a name.
+  const orgRoles = (member.role ?? '')
     .split(',')
     .map((role) => role.trim())
     .filter(Boolean);
   context.user = {
     ...session.user,
-    roles,
+    // Absent on a member row minted with no app roles - never falls back to
+    // member.role, which would make the two fields one dual-storage scheme.
+    roles: member.appRoles ?? [],
+    orgRoles,
     attributes: {
       ...(session.user.attributes ?? {}),
       ...(member.attributes ?? {}),
     },
     activeOrganizationId,
   };
-  // impersonatedBy is a BetterAuth admin plugin session field - present only
-  // while an admin is impersonating this session. Steps read it off the
-  // settled _user surface, so it is omitted (not set to undefined) when absent.
-  if (!type.isNone(session.session.impersonatedBy)) {
-    context.user.impersonatedBy = session.session.impersonatedBy;
-  }
 }
 
 export default resolveAuthentication;

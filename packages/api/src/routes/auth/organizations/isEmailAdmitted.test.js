@@ -21,7 +21,7 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
 
-const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
+const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 
 function createMocks({
   member = null,
@@ -98,7 +98,7 @@ test('isEmailAdmitted returns true when a member row exists for the given userId
     model: 'member',
     where: [
       { field: 'userId', value: 'user_1' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'team-portal' },
     ],
   });
 });
@@ -121,7 +121,7 @@ test('isEmailAdmitted returns true when a member row exists for the user resolve
     model: 'member',
     where: [
       { field: 'userId', value: 'user_9' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'team-portal' },
     ],
   });
 });
@@ -192,7 +192,7 @@ test('isEmailAdmitted lowercases the email once at entry for the invitation look
     where: [
       { field: 'email', value: 'mixed@example.com' },
       { field: 'status', value: 'pending' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'team-portal' },
     ],
   });
 });
@@ -217,7 +217,7 @@ test('isEmailAdmitted resolves the email from userId for the invitation lookup',
     where: [
       { field: 'email', value: 'wall@example.com' },
       { field: 'status', value: 'pending' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'team-portal' },
     ],
   });
 });

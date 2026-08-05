@@ -1,13 +1,20 @@
-# Phase-6 admin step endpoint. Every admin-* endpoint is role-gated by
-# auth.api.roles in lowdefy.yaml - the endpoint gate is the ONLY
-# authorization: a caller without the admin role gets the opaque
-# endpoint-does-not-exist rejection before the routine runs, and the steps
-# inside execute with server authority (no per-step permission checks).
+# Phase-6 admin step endpoint, the model the other admin-* endpoints follow.
+# Every admin-* endpoint is role-gated by auth.api.roles in lowdefy.yaml: a
+# caller without the user-admin app role gets the opaque
+# endpoint-does-not-exist rejection before the routine runs. The gate decides
+# who reaches the routine and nothing more - each step then declares the
+# authority it requires and the engine checks it against the caller's member
+# row in the target organization. ListUsers reads the whole deployment's user
+# rows, which no organization can authorize, so it declares system scope: no
+# caller can ever satisfy it. An app that wants a deployment-wide list marks
+# the step system: true and answers for it with its own gate - which is what
+# the user-admin entry in auth.api.roles is doing here.
 id: admin-list-users
 type: Api
 routine:
   - id: list_users
     type: ListUsers
+    system: true
     properties:
       limit: 100
       sortBy: createdAt

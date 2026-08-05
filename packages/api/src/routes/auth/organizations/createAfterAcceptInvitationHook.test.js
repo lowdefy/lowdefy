@@ -17,7 +17,6 @@
 import { jest } from '@jest/globals';
 
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
-import { registerOrganizationBinding, setPinnedOrganization } from './getOrganizationBinding.js';
 
 function createMockAuth({ userRow = { id: 'user_1' } } = {}) {
   const updateUser = jest.fn(async () => ({}));
@@ -89,6 +88,65 @@ test('afterAcceptInvitationHook copies invitation attributes onto the minted mem
   expect(updateUser).not.toHaveBeenCalled();
 });
 
+// The silent-drop case the widened guard exists for: an app that does not use
+// member attributes carries roles and nothing else on every invitation.
+test('afterAcceptInvitationHook copies invitation appRoles onto the minted member row when the invitation carries no attributes', async () => {
+  const { auth, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', appRoles: ['branch-manager'] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: ['branch-manager'] },
+  });
+  expect(updateUser).not.toHaveBeenCalled();
+});
+
+test('afterAcceptInvitationHook copies attributes and appRoles in a single member update', async () => {
+  const { auth, update } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+  const attributes = { branch: 'north' };
+
+  await hook({
+    invitation: { id: 'inv_1', attributes, appRoles: ['branch-manager'] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledTimes(1);
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { attributes, appRoles: ['branch-manager'] },
+  });
+});
+
+test('afterAcceptInvitationHook copies an empty appRoles array, which is distinct from an absent field', async () => {
+  const { auth, update } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', appRoles: [] },
+    member: { id: 'member_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(update).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'id', value: 'member_1' }],
+    update: { appRoles: [] },
+  });
+});
+
 test('afterAcceptInvitationHook merges profile and copies attributes when the invitation carries both', async () => {
   const { auth, update, updateUser } = createMockAuth({ userRow: { id: 'user_1' } });
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
@@ -109,7 +167,7 @@ test('afterAcceptInvitationHook merges profile and copies attributes when the in
   });
 });
 
-test('afterAcceptInvitationHook does nothing when the invitation carries neither profile nor attributes', async () => {
+test('afterAcceptInvitationHook does nothing when the invitation carries no profile, attributes or appRoles', async () => {
   const { auth, findOne, update, updateUser } = createMockAuth();
   const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
 
@@ -155,6 +213,24 @@ test('afterAcceptInvitationHook does not update the member row when attributes i
   expect(updateUser).not.toHaveBeenCalled();
 });
 
+// The minted member row's org tier is BetterAuth's business alone - the accept
+// denormalizes nothing onto the user row, whatever role the invitation carried.
+test('afterAcceptInvitationHook writes nothing to the user row when the minted member is an org admin', async () => {
+  const { auth, findOne, update, updateUser } = createMockAuth();
+  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth });
+
+  await hook({
+    invitation: { id: 'inv_1', role: 'admin' },
+    member: { id: 'member_1', role: 'admin', userId: 'user_1' },
+    user: { id: 'user_1' },
+    organization: { id: 'org_1' },
+  });
+
+  expect(findOne).not.toHaveBeenCalled();
+  expect(update).not.toHaveBeenCalled();
+  expect(updateUser).not.toHaveBeenCalled();
+});
+
 test('afterAcceptInvitationHook fails the accept in-band when the profile write fails', async () => {
   const { auth, updateUser } = createMockAuth();
   updateUser.mockRejectedValue(new Error('write failed'));
@@ -168,112 +244,4 @@ test('afterAcceptInvitationHook fails the accept in-band when the profile write 
       organization: { id: 'org_1' },
     })
   ).rejects.toThrow('write failed');
-});
-
-// The user.role denormalization on accept - the minted member roles may
-// include the configured user-admin role.
-function createSyncMockAuth({ memberRow = null, userRow = { id: 'user_1' } } = {}) {
-  const updateUser = jest.fn(async () => ({}));
-  const update = jest.fn(async () => ({}));
-  const findOne = jest.fn(async ({ model }) => {
-    if (model === 'member') return memberRow;
-    return userRow;
-  });
-  const auth = {
-    $context: Promise.resolve({
-      adapter: { findOne, update },
-      internalAdapter: { updateUser },
-    }),
-  };
-  registerOrganizationBinding({
-    auth,
-    database: true,
-    organizations: { policy: 'pinned', org: 'org-a' },
-  });
-  setPinnedOrganization({
-    auth,
-    organization: { id: 'org_pinned', slug: 'org-a', name: 'Org A' },
-    slug: 'org-a',
-  });
-  return { auth, findOne, update, updateUser };
-}
-
-test('afterAcceptInvitationHook sets user.role when the minted member role is the user-admin role', async () => {
-  const { auth, update } = createSyncMockAuth({
-    memberRow: { id: 'member_1', role: 'user-admin', userId: 'user_1' },
-    userRow: { id: 'user_1', role: null },
-  });
-  const hook = createAfterAcceptInvitationHook({
-    getAuth: () => auth,
-    userAdminRole: 'user-admin',
-  });
-
-  await hook({
-    invitation: { id: 'inv_1' },
-    member: { id: 'member_1', role: 'user-admin' },
-    user: { id: 'user_1' },
-    organization: { id: 'org_pinned' },
-  });
-
-  expect(update).toHaveBeenCalledWith({
-    model: 'user',
-    where: [{ field: 'id', value: 'user_1' }],
-    update: { role: 'user-admin' },
-  });
-});
-
-test('afterAcceptInvitationHook does not write user.role when the minted member role is not the user-admin role', async () => {
-  const { auth, update } = createSyncMockAuth({
-    memberRow: { id: 'member_1', role: 'member', userId: 'user_1' },
-    userRow: { id: 'user_1', role: null },
-  });
-  const hook = createAfterAcceptInvitationHook({
-    getAuth: () => auth,
-    userAdminRole: 'user-admin',
-  });
-
-  await hook({
-    invitation: { id: 'inv_1' },
-    member: { id: 'member_1', role: 'member' },
-    user: { id: 'user_1' },
-    organization: { id: 'org_pinned' },
-  });
-
-  expect(update).not.toHaveBeenCalled();
-});
-
-test('afterAcceptInvitationHook skips the user.role sync when userAdminRole is not configured', async () => {
-  const { auth, findOne, update } = createSyncMockAuth();
-  const hook = createAfterAcceptInvitationHook({ getAuth: () => auth, userAdminRole: null });
-
-  await hook({
-    invitation: { id: 'inv_1' },
-    member: { id: 'member_1', role: 'user-admin' },
-    user: { id: 'user_1' },
-    organization: { id: 'org_pinned' },
-  });
-
-  expect(findOne).not.toHaveBeenCalled();
-  expect(update).not.toHaveBeenCalled();
-});
-
-test('afterAcceptInvitationHook fails the accept in-band when the user.role sync write fails', async () => {
-  const { auth, update } = createSyncMockAuth({
-    memberRow: { id: 'member_1', role: 'user-admin', userId: 'user_1' },
-    userRow: { id: 'user_1', role: null },
-  });
-  update.mockRejectedValue(new Error('role write failed'));
-  const hook = createAfterAcceptInvitationHook({
-    getAuth: () => auth,
-    userAdminRole: 'user-admin',
-  });
-
-  await expect(
-    hook({
-      invitation: { id: 'inv_1' },
-      member: { id: 'member_1', role: 'user-admin' },
-      user: { id: 'user_1' },
-      organization: { id: 'org_pinned' },
-    })
-  ).rejects.toThrow('role write failed');
 });

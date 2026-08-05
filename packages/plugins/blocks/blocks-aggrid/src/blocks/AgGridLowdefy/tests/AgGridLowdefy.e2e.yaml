@@ -1,0 +1,667 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: aggridlowdefy
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: aggridlowdefy_basic
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+        - name: Charlie
+          age: 35
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: aggridlowdefy_height
+    type: AgGridLowdefy
+    properties:
+      height: 300
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+
+  - id: aggridlowdefy_default_col_def
+    type: AgGridLowdefy
+    properties:
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+
+  - id: aggridlowdefy_empty
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData: []
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: aggridlowdefy_onrowclick
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onRowClick:
+        - id: set_row_click
+          type: SetState
+          params:
+            aggridlowdefy_row_clicked:
+              _event: row.name
+
+  - id: aggridlowdefy_row_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_row_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Row: '
+              - _state: aggridlowdefy_row_clicked
+          else: ''
+
+  - id: aggridlowdefy_oncellclick
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onCellClick:
+        - id: set_cell_click
+          type: SetState
+          params:
+            aggridlowdefy_cell_clicked:
+              _event: cell.value
+
+  - id: aggridlowdefy_cell_click_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_cell_clicked
+              - null
+          then:
+            _string.concat:
+              - 'Cell: '
+              - _state: aggridlowdefy_cell_clicked
+          else: ''
+
+  - id: aggridlowdefy_onrowselected
+    type: AgGridLowdefy
+    properties:
+      rowSelection:
+        mode: singleRow
+        checkboxes: false
+        enableClickSelection: true
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Age
+          field: age
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onRowSelected:
+        - id: set_row_selected
+          type: SetState
+          params:
+            aggridlowdefy_row_selected:
+              _event: row.name
+
+  - id: aggridlowdefy_row_selected_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_row_selected
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _state: aggridlowdefy_row_selected
+          else: ''
+
+  # ============================================
+  # SORTING & FILTERING
+  # ============================================
+
+  - id: aggridlowdefy_sortable
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          sortable: true
+        - headerName: Age
+          field: age
+          sortable: true
+      rowData:
+        - name: Charlie
+          age: 35
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+    events:
+      onSortChanged:
+        - id: set_sort_changed
+          type: SetState
+          params:
+            aggridlowdefy_sort_changed: true
+
+  - id: aggridlowdefy_sort_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridlowdefy_sort_changed
+              - true
+          then: Sort changed
+          else: ''
+
+  - id: aggridlowdefy_filterable
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+          filter: true
+        - headerName: Age
+          field: age
+          filter: true
+      rowData:
+        - name: Alice
+          age: 25
+        - name: Bob
+          age: 30
+        - name: Charlie
+          age: 35
+    events:
+      onFilterChanged:
+        - id: set_filter_changed
+          type: SetState
+          params:
+            aggridlowdefy_filter_changed: true
+
+  - id: aggridlowdefy_filter_changed_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: aggridlowdefy_filter_changed
+              - true
+          then: Filter changed
+          else: ''
+
+  # ============================================
+  # BUILT-IN CELL RENDERERS — cell.type
+  # ============================================
+
+  - id: aggridlowdefy_cell_tag
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Status
+          field: status
+          cell:
+            type: tag
+            colorMap:
+              Active: green
+              Blocked: red
+              Pending: blue
+      rowData:
+        - status: Active
+        - status: Blocked
+        - status: Pending
+        - status: Unknown
+        - status: null
+
+  - id: aggridlowdefy_cell_tag_from
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Status
+          field: label
+          cell:
+            type: tag
+            colorFrom: color
+      rowData:
+        - label: A
+          color: green
+        - label: B
+          color: '#ff4d4f'
+
+  - id: aggridlowdefy_cell_tag_array
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Roles
+          field: roles
+          cell:
+            type: tag
+            colorMap:
+              admin: red
+              editor: blue
+              viewer: green
+      rowData:
+        - roles:
+            - admin
+            - editor
+        - roles:
+            - viewer
+        - roles: []
+        - roles: null
+
+  - id: aggridlowdefy_cell_tag_seeded
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Tag
+          field: tag
+          cell:
+            type: tag
+      rowData:
+        - tag: frontend
+        - tag: frontend
+        - tag: backend
+
+  - id: aggridlowdefy_cell_avatar
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            srcField: picture
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+          # antd Avatar drops the <img> when the src fails to load, so the
+          # fixture must always resolve — a data URI never touches the network.
+          picture: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=
+        - id: u2
+          name: Bob Smith
+          picture: null
+        - id: u3
+          name: null
+          picture: null
+
+  - id: aggridlowdefy_cell_avatar_link
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+            link:
+              pageId: user
+              urlQuery:
+                userId: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+    events:
+      onCellLink:
+        - id: capture_avatar_link
+          type: SetState
+          params:
+            aggridlowdefy_avatar_link_event:
+              _event: link.pageId
+
+  - id: aggridlowdefy_avatar_link_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_avatar_link_event
+              - null
+          then:
+            _string.concat:
+              - 'Link: '
+              - _state: aggridlowdefy_avatar_link_event
+          else: ''
+
+  - id: aggridlowdefy_cell_link
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: ID
+          field: _id
+          cell:
+            type: link
+            pageId: detail
+            urlQuery:
+              _id: _id
+      rowData:
+        - _id: TSK-001
+        - _id: TSK-002
+    events:
+      onCellLink:
+        - id: capture_link
+          type: SetState
+          params:
+            aggridlowdefy_link_event:
+              _event: link.urlQuery._id
+
+  - id: aggridlowdefy_link_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_link_event
+              - null
+          then:
+            _string.concat:
+              - 'Linked to: '
+              - _state: aggridlowdefy_link_event
+          else: ''
+
+  - id: aggridlowdefy_cell_date
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Created
+          field: created_at
+          cell:
+            type: date
+        - headerName: Custom
+          field: created_at
+          cell:
+            type: date
+            format: YYYY/MM/DD
+      rowData:
+        - created_at: '2025-01-15T09:30:00Z'
+        - created_at: null
+        - created_at: invalid-date
+
+  - id: aggridlowdefy_cell_boolean
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Verified
+          field: verified
+          cell:
+            type: boolean
+        - headerName: Active
+          field: active
+          cell:
+            type: boolean
+            trueLabel: Yes!
+            falseLabel: Nope
+      rowData:
+        - verified: true
+          active: true
+        - verified: false
+          active: false
+        - verified: null
+          active: null
+
+  - id: aggridlowdefy_cell_progress
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Progress
+          field: progress
+          cell:
+            type: progress
+      rowData:
+        - progress: 10
+        - progress: 55
+        - progress: 100
+        - progress: null
+
+  - id: aggridlowdefy_cell_number
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Revenue
+          field: revenue
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            decimals: 0
+        - headerName: Delta
+          field: delta
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            decimals: 2
+            negative: parentheses
+            signColor: true
+        - headerName: Margin
+          field: margin
+          cell:
+            type: number
+            format: percent
+            decimals: 1
+        - headerName: Views
+          field: views
+          cell:
+            type: number
+            format: compact
+      rowData:
+        - revenue: 1245000
+          delta: 12500
+          margin: 0.184
+          views: 12340
+        - revenue: 825500
+          delta: -44250.5
+          margin: 0.072
+          views: 1050000
+        - revenue: null
+          delta: null
+          margin: null
+          views: null
+
+  - id: aggridlowdefy_cell_align_override
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Revenue
+          field: revenue
+          cell:
+            type: number
+            format: currency
+            currency: USD
+            align: left
+      rowData:
+        - revenue: 1000
+
+  - id: aggridlowdefy_ellipsis
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Notes
+          field: notes
+          ellipsis: 2
+      rowData:
+        - notes: >-
+            Quite a long piece of text that should wrap across multiple lines
+            and then be clamped to two lines via the built-in line-clamp class
+            so that the rest is hidden.
+        - notes: Short.
+        - notes: null
+
+  # The buttons cell reaches components.Icon through the components prop the block
+  # forwards to the shared core — an icon here proves that forwarding.
+  - id: aggridlowdefy_cell_buttons
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Actions
+          field: _id
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onEditClick
+                title: Edit
+                icon: AiOutlineEdit
+      rowData:
+        - _id: TSK-001
+    events:
+      onEditClick:
+        - id: capture_button_click
+          type: SetState
+          params:
+            aggridlowdefy_button_event:
+              _event: row._id
+
+  - id: aggridlowdefy_button_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_button_event
+              - null
+          then:
+            _string.concat:
+              - 'Edit: '
+              - _state: aggridlowdefy_button_event
+          else: ''
+
+  # ============================================
+  # SIZE — avatar CSS custom properties
+  # ============================================
+
+  - id: aggridlowdefy_avatar_small
+    type: AgGridLowdefy
+    properties:
+      size: small
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+
+  - id: aggridlowdefy_avatar_large
+    type: AgGridLowdefy
+    properties:
+      size: large
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+
+  # ============================================
+  # LOADING FLAG — runtime toggle
+  # ============================================
+
+  - id: aggridlowdefy_loading_toggle
+    type: Switch
+    properties:
+      title: Loading
+
+  - id: aggridlowdefy_loading_grid
+    type: AgGridLowdefy
+    loading:
+      _state: aggridlowdefy_loading_toggle
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob

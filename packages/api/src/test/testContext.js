@@ -20,6 +20,7 @@ function testContext({
   appMeta = {},
   auth,
   config = {},
+  configDirectory,
   connections = {},
   headers = {},
   logger = {
@@ -41,6 +42,7 @@ function testContext({
     auth,
     authorize: createAuthorize({ user }),
     config,
+    configDirectory,
     connections,
     // Mirrors the servers' createHandleError contract: the sink logs the error
     // and marks it handled, which is what runRoutine's guard and the client's

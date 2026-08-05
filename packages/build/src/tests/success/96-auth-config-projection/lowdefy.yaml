@@ -16,6 +16,8 @@ auth:
     enabled: true
   twoFactor:
     enabled: true
+  authPages:
+    twoFactor: /two-factor-challenge
   providers:
     _ref: config/providers.yaml
   organizations:

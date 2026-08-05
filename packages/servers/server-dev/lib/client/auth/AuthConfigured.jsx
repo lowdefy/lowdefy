@@ -98,27 +98,23 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     return children({ roles: [], ...session.user }, resolvedUserRef);
   }
   if (resolved.id !== session.user.id) {
-    // The ref has not caught up with a changed session user (an impersonation
-    // switch between the session refetch and the /api/user result). Render
-    // the last resolved caller rather than a caller with no roles - blocks
-    // re-evaluate operators on render, so a role-guarded page would act on
-    // roles: []. UpdateSession closes the window when it lands the new
-    // caller; a flow that swaps the session user without chaining it leaves
-    // the previous caller rendered until the next page load.
+    // The ref has not caught up with a changed session user - a sign-in as a
+    // different person lands between the session refetch and the /api/user
+    // result. Render the last resolved caller whole rather than mixing the new
+    // session user with the previous person's resolved fields, or falling back
+    // to a caller with no roles - blocks re-evaluate operators on render, so a
+    // role-guarded page would act on an empty role list. UpdateSession closes
+    // the window when it lands the new caller; a flow that changes the session
+    // user without chaining it leaves the previous caller rendered until the
+    // next page load.
     return children(resolved, resolvedUserRef);
   }
-  // The resolved caller contributes every field the session user lacks: roles
-  // (the active member row), attributes (the merged bag), and
-  // activeOrganizationId / impersonatedBy (session row, not session user).
-  // impersonatedBy is carried only when present, matching the server, which
-  // omits it rather than setting it to undefined.
-  const user = {
-    ...session.user,
-    roles: resolved.roles,
-    attributes: resolved.attributes,
-    activeOrganizationId: resolved.activeOrganizationId,
-    ...('impersonatedBy' in resolved ? { impersonatedBy: resolved.impersonatedBy } : {}),
-  };
+  // _user is one object with one meaning on both sides: the resolved caller is
+  // spread whole, so every field resolveAuthentication emits is readable in app
+  // config without this file naming it. session.user is the floor - the client
+  // store may hold a fresher one than the ref, and the resolved object wins
+  // wherever both carry a key.
+  const user = { ...session.user, ...resolved };
   return children(user, resolvedUserRef);
 }
 
@@ -163,18 +159,14 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     // addPasskey runs the WebAuthn browser ceremony itself - options fetch,
     // authenticator prompt, verification.
     addPasskey: (params) => authClient.passkey.addPasskey(params),
-    cancelInvitation: (params) => authClient.organization.cancelInvitation(params),
     changePassword: (params) => authClient.changePassword(sessionScoped(params)),
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
-    impersonateUser: (params) => authClient.admin.impersonateUser(sessionScoped(params)),
-    inviteMember: (params) => authClient.organization.inviteMember(params),
     leaveOrganization: (params) => authClient.organization.leave(sessionScoped(params)),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
     phoneNumberSendOtp: (params) => authClient.phoneNumber.sendOtp(params),
     phoneNumberVerify: (params) => authClient.phoneNumber.verify(params),
-    removeMember: (params) => authClient.organization.removeMember(sessionScoped(params)),
     requestPasswordReset: (params) => authClient.requestPasswordReset(params),
     resetPassword: (params) => authClient.resetPassword(params),
     revokeOtherSessions: () => authClient.revokeOtherSessions(sessionScoped()),
@@ -188,13 +180,10 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     signInSocial: (params) => authClient.signIn.social(params),
     signOut: () => authClient.signOut(),
     signUpEmail: (params) => authClient.signUp.email(params),
-    stopImpersonating: () => authClient.admin.stopImpersonating(sessionScoped()),
     twoFactorDisable: (params) => authClient.twoFactor.disable(sessionScoped(params)),
     twoFactorEnable: (params) => authClient.twoFactor.enable(sessionScoped(params)),
     twoFactorVerifyBackupCode: (params) => authClient.twoFactor.verifyBackupCode(params),
     twoFactorVerifyTotp: (params) => authClient.twoFactor.verifyTotp(params),
-    updateMemberRole: (params) => authClient.organization.updateMemberRole(params),
-    updateOrganization: (params) => authClient.organization.update(params),
   };
   return (
     <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>

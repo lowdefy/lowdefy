@@ -93,6 +93,38 @@ events:
             screen_hint: signup
 ```
 
+## SMS sign-in
+
+`PhoneNumberVerify` completes a sign-in with an SMS code, and lands the user through the same three sources as `Login`: the `callbackUrl` param, then the `?callbackUrl=` query, then the app's home page. `callbackUrl: false` verifies without navigating.
+
+Two modes are exempt, because neither ends with the user arriving somewhere new:
+
+- `disableSession: true` creates no session to arrive with.
+- `updatePhoneNumber: true` is a signed-in user confirming a new number. They already had a session, and the confirmation usually runs in a modal a navigation would yank them out of.
+
+### Carrying the destination to a separate SMS form
+
+The `?callbackUrl=` query is read from the page the action runs on, and the unauthenticated bounce puts it on `authPages.signIn`. If your SMS form lives on its own page, the link that gets the user there has to carry the parameter, or the destination falls back to the home page:
+
+```yaml
+- id: to_phone_login
+  type: Link
+  params:
+    pageId: phone-login
+    urlQuery:
+      _if:
+        test:
+          _eq:
+            - _url_query: callbackUrl
+            - null
+        then: null
+        else:
+          callbackUrl:
+            _url_query: callbackUrl
+```
+
+The `_if` is what keeps a user who reached the sign-in page directly from being sent to `/phone-login?callbackUrl=null` — `urlQuery` serialises a null value rather than dropping the key.
+
 ## Logout
 
 When the `Logout` action is called, the user data and authorization cookies are cleared by the app.

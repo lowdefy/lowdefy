@@ -68,6 +68,9 @@ function setAuthDefaults({ components }) {
   // No default for authPages.acceptInvitation - it must stay unset so the
   // invitation email falls back to no-CTA copy for apps without an accept
   // page (the runtime's canBuildAcceptUrl relies on this).
+  // No default for authPages.twoFactor either - the build requires it
+  // explicitly when "twoFactor.enabled" is true (validateAuthConfig), and a
+  // default here would make that check unsatisfiable-by-failure.
 
   if (!type.isNone(auth.emailAndPassword)) {
     setDefault(auth.emailAndPassword, 'requireEmailVerification', false);

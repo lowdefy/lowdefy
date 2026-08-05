@@ -22,6 +22,7 @@ import buildAuthStrategies from './buildAuthStrategies.js';
 import buildEntityAuth from './buildEntityAuth.js';
 import buildRoleCatalog from './buildRoleCatalog.js';
 import buildTrustedProviders from './buildTrustedProviders.js';
+import buildTwoFactorTrustedProviders from './buildTwoFactorTrustedProviders.js';
 import setAuthConfigured from './setAuthConfigured.js';
 import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
@@ -32,6 +33,7 @@ function buildAuth({ components, context }) {
   setAuthDefaults({ components, context });
   buildRoleCatalog({ components, context });
   buildTrustedProviders({ components, context });
+  buildTwoFactorTrustedProviders({ components, context });
   buildAuthHooks({ components, context });
   buildAuthStrategies({ components, context });
   buildEntityAuth({ components, context, entity: 'api' });

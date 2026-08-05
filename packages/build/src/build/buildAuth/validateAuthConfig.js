@@ -161,6 +161,21 @@ function validateAuthConfig({ components }) {
     }
   }
 
+  // The engine owns the two-factor challenge destination on every sign-in path -
+  // Login navigates there on twoFactorRedirect, and the magic-link/OAuth
+  // interception redirects there mid-flow. Routing by app config instead is
+  // opt-in correctness on the sign-in path: a login page that omits the branch
+  // leaves a 2FA-enrolled user unable to sign in at all, silently. So the page is
+  // required whenever 2FA is enabled, not only when magic-link or OAuth are
+  // configured. A module-contributed authPages.twoFactor satisfies this -
+  // buildModuleAuth runs before buildAuth.
+  if (auth.twoFactor?.enabled === true && type.isNone(auth.authPages?.twoFactor)) {
+    throw new ConfigError(
+      'Auth "authPages.twoFactor" is required when "twoFactor.enabled" is true. Set the page the engine routes a two-factor challenge to.',
+      { configKey: auth.twoFactor['~k'] ?? configKey }
+    );
+  }
+
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
     throw new ConfigError(
@@ -184,29 +199,6 @@ function validateAuthConfig({ components }) {
       'Auth "organizations.org" applies only to the "pinned" policy - under "tenant" organizations are created per user at first session.',
       { configKey: auth.organizations['~k'] ?? configKey }
     );
-  }
-
-  // auth.userAdminRole is defined for the pinned policy alone - user.role is
-  // global while member roles are per-org, so under "tenant" a role held in
-  // one org would confer a global capability. Tenant semantics wait for a
-  // multi-tenant admin design.
-  if (!type.isNone(auth.userAdminRole)) {
-    if (auth.organizations?.policy === 'tenant') {
-      throw new ConfigError(
-        'Auth "userAdminRole" applies only to the "pinned" organizations policy - user administration under "tenant" waits for a multi-tenant admin design.',
-        { configKey: auth.organizations['~k'] ?? configKey }
-      );
-    }
-    // BetterAuth's admin plugin reserves "admin" (the engine's acting-session
-    // authority) and "user" (the default role stamped on every created user) -
-    // registering either with the curated impersonate-only statements would
-    // strip the acting sessions or grant impersonation to everyone.
-    if (auth.userAdminRole === 'admin' || auth.userAdminRole === 'user') {
-      throw new ConfigError(
-        `Auth "userAdminRole" cannot be "${auth.userAdminRole}" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.`,
-        { configKey }
-      );
-    }
   }
 
   validateMutualExclusivity({ components, entity: 'api' });

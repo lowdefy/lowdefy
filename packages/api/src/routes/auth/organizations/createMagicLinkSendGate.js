@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { createAuthMiddleware } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
 import isEmailAdmitted from './isEmailAdmitted.js';
@@ -23,6 +22,9 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // A magic-link send is unauthenticated: without this gate anyone could make an
 // invite-only app deliver its branded sign-in email to any address (and, absent
 // the create gate, manufacture orphan records by clicking it).
+//
+// A bare handler: the request-hook assembler matches /sign-in/magic-link and
+// owns the createAuthMiddleware wrapper.
 //
 // When the body email is not admitted the handler returns the magic-link
 // route's own success body { status: true } - short-circuiting the endpoint
@@ -33,10 +35,7 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // the normal send proceeds. A no-op under open and tenant (isEmailAdmitted
 // returns admitted).
 function createMagicLinkSendGate({ getAuth, organizations }) {
-  return createAuthMiddleware(async (ctx) => {
-    if (ctx.path !== '/sign-in/magic-link') {
-      return undefined;
-    }
+  return async function magicLinkSendGate(ctx) {
     const email = ctx.body?.email;
     // No email is the route's own validation error, not an admission decision -
     // fall through and let it answer.
@@ -56,7 +55,7 @@ function createMagicLinkSendGate({ getAuth, organizations }) {
       return undefined;
     }
     return { status: true };
-  });
+  };
 }
 
 export default createMagicLinkSendGate;

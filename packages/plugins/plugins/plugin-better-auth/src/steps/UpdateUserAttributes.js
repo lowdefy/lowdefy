@@ -20,6 +20,13 @@ import { type } from '@lowdefy/helpers';
 // json additionalField transform (native sub-document storage on MongoDB via
 // supportsJSON) on both ends. Fires NO user.update database hooks -
 // attributes are admin-set authorization inputs, not user-driven edits.
+//
+// organizationId is part of the authored property surface even though the write
+// lands on the deployment-wide user row: the floor reads it to resolve the
+// organization the caller's user:set-attributes authority and the target's
+// membership are checked in. It defaults to the pinned organization, so without
+// it a second admin surface's attribute editor would ask whether the caller
+// holds user: [set-attributes] in the wrong organization.
 async function UpdateUserAttributes({ auth, properties }) {
   const { attributes, userId } = properties;
   if (type.isNone(userId)) {
@@ -45,5 +52,13 @@ async function UpdateUserAttributes({ auth, properties }) {
   }
   return user;
 }
+
+// Attributes are authorization inputs on the deployment-wide user row, so org
+// authority alone would let an administrator of any organization rewrite any
+// user's inputs. targetUser makes the floor require the target to hold a member
+// row in the organization the caller administers.
+UpdateUserAttributes.meta = {
+  authority: { scope: 'org', permissions: { user: ['set-attributes'] }, targetUser: 'userId' },
+};
 
 export default UpdateUserAttributes;

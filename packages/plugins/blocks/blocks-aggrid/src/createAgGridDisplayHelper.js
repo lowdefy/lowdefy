@@ -17,7 +17,7 @@
 import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-function createAgGridDisplayHelper(theme) {
+function createAgGridDisplayHelper() {
   const locator = (page, blockId) => page.locator(`#${escapeId(blockId)} .ag-root-wrapper`);
 
   return createBlockHelper({
@@ -42,10 +42,6 @@ function createAgGridDisplayHelper(theme) {
             .locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`)
             .nth(colIndex)
         ).toHaveText(text),
-      themeClass: (page, blockId) =>
-        expect(page.locator(`#${escapeId(blockId)}`)).toHaveClass(
-          new RegExp(`ag-theme-${theme}`)
-        ),
       emptyOverlay: (page, blockId) =>
         expect(locator(page, blockId).locator('.ag-overlay-no-rows-center')).toBeVisible(),
     },

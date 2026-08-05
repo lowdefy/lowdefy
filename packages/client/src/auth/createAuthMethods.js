@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getHomePathname } from '@lowdefy/engine';
+import { getHomePathname, stopChain } from '@lowdefy/engine';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 function getCallbackUrl({ lowdefy, callbackUrl, name = 'callbackUrl' }) {
@@ -91,6 +91,54 @@ function resolveTargetURL({ lowdefy, callbackUrl, name }) {
 // server-side originCheck / trustedOrigins do not cover it.
 function isAppRelativePath(value) {
   return type.isString(value) && /^\/([^/\\]|$)/.test(value);
+}
+
+// The engine owns the two-factor challenge destination on every sign-in path, so
+// every method that can receive a challenge instead of a session navigates
+// through here. Leaving it to the login page makes correctness opt-in: a page
+// that omits the branch leaves an enrolled user unable to sign in at all and
+// with nothing to show for the click. Routed through resolveTargetURL like every
+// other destination so basePath handling stays in one place and an absolute
+// authPages.twoFactor keeps its origin.
+//
+// The destination the user asked for travels with them: an enrolled user who
+// deep-linked to /invoices/123 must not be dropped on the challenge page's
+// default once the challenge is done. Only an app-relative path is carried - the
+// challenge page is public and its query is attacker-suppliable, and
+// isAppRelativePath is the guard that already rejects //evil.com and
+// /\evil.com here.
+//
+// Returns false rather than throwing when there is no page to navigate to: the
+// build check is what guarantees authPages.twoFactor exists whenever two-factor
+// is enabled, and a throw here would turn that guarantee into a failed sign-in.
+// The no-window case is legitimate too (server rendering, tests). The caller
+// then falls through to returning the response without navigating.
+function navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) {
+  const twoFactorPage = auth.authConfig?.authPages?.twoFactor;
+  if (!type.isString(twoFactorPage)) {
+    return false;
+  }
+  const target = resolveTargetURL({
+    lowdefy,
+    callbackUrl: { url: twoFactorPage },
+    name: 'authPages.twoFactor',
+  });
+  const window = lowdefy._internal?.globals?.window;
+  if (type.isNone(target) || !window) {
+    return false;
+  }
+  // Parsed rather than concatenated: authPages.twoFactor may already carry a
+  // query of its own, and searchParams encodes the callbackUrl value so one
+  // holding a '&' or '?' survives. An app-relative page must not gain an origin
+  // from being parsed against one, hence the round trip back to path + search.
+  const url = new URL(target, window.location.origin);
+  if (isAppRelativePath(callbackURL)) {
+    url.searchParams.set('callbackUrl', callbackURL);
+  }
+  window.location.assign(
+    url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.toString()
+  );
+  return true;
 }
 
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
@@ -291,7 +339,9 @@ function createAuthMethods(lowdefy, auth) {
         auth.signInPhoneNumber({ phoneNumber, password, ...rest, ...captchaOptions })
       );
       if (data?.twoFactorRedirect) {
-        return data;
+        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
+          ? stopChain(data)
+          : data;
       }
       const window = lowdefy._internal?.globals?.window;
       if (callbackURL && window) {
@@ -301,12 +351,20 @@ function createAuthMethods(lowdefy, auth) {
     }
     if (!type.isNone(email) || !type.isNone(password)) {
       const data = await unwrap(auth.signInEmail({ email, password, ...rest, ...captchaOptions }));
-      // A 2FA-enrolled user gets a challenge, not a session - do not navigate
-      // as if signed in. The login page reads the outcome via _actions and
-      // routes to the app's challenge page, where TwoFactorVerify completes
-      // the session.
+      // A 2FA-enrolled user gets a challenge, not a session - navigate to
+      // authPages.twoFactor instead of the callback URL, where TwoFactorVerify
+      // completes the session. The response still carries twoFactorRedirect and
+      // twoFactorMethods for an app that wants to read them, but the routing is
+      // not the app's job.
+      //
+      // The chain ends here: without that, the step the app put after Login
+      // races the challenge page load and re-renders the app with no session.
+      // When there was nothing to navigate to the chain continues as before, so
+      // a chain is never stranded by a navigation that did not happen.
       if (data?.twoFactorRedirect) {
-        return data;
+        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
+          ? stopChain(data)
+          : data;
       }
       const window = lowdefy._internal?.globals?.window;
       if (callbackURL && window) {
@@ -382,23 +440,6 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.setActiveOrganization({ organizationId, organizationSlug }));
   }
 
-  // Impersonates a user for the session's remaining lifetime. Authorization
-  // is BetterAuth's own admin access control, enforced server-side against
-  // the caller's role - this method adds no gate of its own. Chain
-  // UpdateSession after to re-sync the client with the impersonated user.
-  async function impersonateUser({ userId } = {}) {
-    if (!type.isString(userId)) {
-      throw new Error('ImpersonateUser requires a "userId" param.');
-    }
-    return unwrap(auth.impersonateUser({ userId }));
-  }
-
-  // Ends impersonation and restores the original session. Chain
-  // UpdateSession after to re-sync the client with the original user.
-  async function stopImpersonating() {
-    return unwrap(auth.stopImpersonating());
-  }
-
   // Refreshes the BetterAuth client session store through an awaited
   // store refetch, bypassing the cookie cache (a live re-resolve) so role,
   // attribute or session changes surface immediately instead of after
@@ -426,66 +467,6 @@ function createAuthMethods(lowdefy, auth) {
       throw new Error('AcceptInvitation requires an "invitationId" param.');
     }
     return unwrap(auth.acceptInvitation({ invitationId }));
-  }
-
-  // Invites a user to the caller's active organization - no organizationId
-  // is forwarded, so BetterAuth defaults to the active org. Authorization is
-  // BetterAuth's own per-org access control, enforced server-side against
-  // the caller's member role in the active organization.
-  async function inviteMember({ email, role } = {}) {
-    if (!type.isString(email)) {
-      throw new Error('InviteMember requires an "email" param.');
-    }
-    if (!type.isString(role) && !type.isArray(role)) {
-      throw new Error('InviteMember requires a "role" param.');
-    }
-    return unwrap(auth.inviteMember({ email, role }));
-  }
-
-  // Cancels a pending invitation in the caller's active organization.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function cancelInvitation({ invitationId } = {}) {
-    if (!type.isString(invitationId)) {
-      throw new Error('CancelInvitation requires an "invitationId" param.');
-    }
-    return unwrap(auth.cancelInvitation({ invitationId }));
-  }
-
-  // Removes a member from the caller's active organization - no
-  // organizationId is forwarded, so BetterAuth defaults to the active org.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function removeMember({ memberIdOrEmail } = {}) {
-    if (!type.isString(memberIdOrEmail)) {
-      throw new Error('RemoveMember requires a "memberIdOrEmail" param.');
-    }
-    return unwrap(auth.removeMember({ memberIdOrEmail }));
-  }
-
-  // Updates a member's role in the caller's active organization - no
-  // organizationId is forwarded, so BetterAuth defaults to the active org.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function updateMemberRole({ memberId, role } = {}) {
-    if (!type.isString(memberId)) {
-      throw new Error('UpdateMemberRole requires a "memberId" param.');
-    }
-    if (!type.isString(role) && !type.isArray(role)) {
-      throw new Error('UpdateMemberRole requires a "role" param.');
-    }
-    return unwrap(auth.updateMemberRole({ memberId, role }));
-  }
-
-  // Renames the caller's active organization - no organizationId is
-  // forwarded, so BetterAuth defaults to the active org. Authorization is
-  // BetterAuth's own per-org access control, enforced server-side against
-  // the caller's member role in the active organization.
-  async function updateOrganization({ name } = {}) {
-    if (!type.isString(name)) {
-      throw new Error('UpdateOrganization requires a "name" param.');
-    }
-    return unwrap(auth.updateOrganization({ data: { name } }));
   }
 
   // Removes the caller's own membership from the active organization.
@@ -616,14 +597,38 @@ function createAuthMethods(lowdefy, auth) {
   }
 
   // The OTP sign-in: on success BetterAuth sets the session cookie (and
-  // creates the account under signUpOnVerification). Like TwoFactorVerify and
-  // unlike login it does not auto-navigate - verify serves sign-in, sign-up
-  // and phone-change confirmation, and only the app knows which page follows.
-  async function phoneNumberVerify({ code, phoneNumber, ...rest } = {}) {
+  // creates the account under signUpOnVerification), and the browser navigates
+  // on the resolved callbackURL like every other method that mints a session.
+  async function phoneNumberVerify({ callbackUrl, code, phoneNumber, ...rest } = {}) {
     if (!type.isString(phoneNumber) || !type.isString(code)) {
       throw new Error('PhoneNumberVerify requires "phoneNumber" and "code" params.');
     }
-    return unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
+    // Resolved before the call, as login and signUp do, so a misconfigured
+    // destination throws before the OTP is consumed rather than after. No
+    // assertCallbackUrlNavigable: the resolved value has one consumer, the assign
+    // below, so callbackUrl: false is honorable here.
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
+    // An enrolled user verifying by SMS gets a challenge instead of a session, in
+    // the same JSON shape the password paths return, so the navigation is the one
+    // Login performs and the destination rides along identically.
+    //
+    // The halt keeps the app's remaining steps from re-rendering with no session
+    // while the challenge page load is still in flight.
+    if (data?.twoFactorRedirect) {
+      return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) ? stopChain(data) : data;
+    }
+    // The two modes that mint no usable arrival stay put: disableSession returns
+    // token: null, and updatePhoneNumber is a signed-in user confirming a new
+    // number - it returns their existing session token, so a token check alone
+    // would yank them out of what is usually a modal. The discriminator has to
+    // come from the request, and updatePhoneNumber is still in rest because
+    // BetterAuth needs it.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && rest.updatePhoneNumber !== true && callbackURL && window) {
+      window.location.assign(callbackURL);
+    }
+    return data;
   }
 
   async function twoFactorDisable({ password, ...rest } = {}) {
@@ -645,24 +650,41 @@ function createAuthMethods(lowdefy, auth) {
 
   // Serves both enrolment confirmation and the sign-in challenge, dispatching
   // by parameter (matching login): a backupCode param verifies a backup code,
-  // otherwise code verifies TOTP. The sign-in challenge verify sets the
-  // session cookie itself - navigation after is the app's business.
-  async function twoFactorVerify({ backupCode, code, trustDevice, ...rest } = {}) {
-    if (type.isString(backupCode)) {
-      return unwrap(auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest }));
+  // otherwise code verifies TOTP.
+  //
+  // The engine owns both ends of the challenge hop, not only arrival: every
+  // sign-in path navigates to authPages.twoFactor carrying ?callbackUrl=, and
+  // this is where that value is spent. Leaving the last hop to the challenge
+  // page is the same opt-in correctness the arrival navigation exists to avoid,
+  // and the rung is awkward to consume from config besides - it already carries
+  // basePath, so a Link's pageId double-prefixes it under a subpath. With the
+  // engine finishing the hop, no app config reads the parameter at all.
+  //
+  // No stopChain: this navigation is the end of the flow rather than a departure
+  // mid-chain, so an app may legitimately have a step after it.
+  async function twoFactorVerify({ backupCode, callbackUrl, code, trustDevice, ...rest } = {}) {
+    if (!type.isString(backupCode) && !type.isString(code)) {
+      throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
     }
-    if (type.isString(code)) {
-      return unwrap(auth.twoFactorVerifyTotp({ code, trustDevice, ...rest }));
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(
+      type.isString(backupCode)
+        ? auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest })
+        : auth.twoFactorVerifyTotp({ code, trustDevice, ...rest })
+    );
+    // A token is the whole guard here, unlike phoneNumberVerify's: verify has no
+    // session-less mode, so a successful challenge always mints one and a failed
+    // one throws to the action's catch.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && callbackURL && window) {
+      window.location.assign(callbackURL);
     }
-    throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
+    return data;
   }
 
   return {
     acceptInvitation,
-    cancelInvitation,
     changePassword,
-    impersonateUser,
-    inviteMember,
     leaveOrganization,
     login,
     logout,
@@ -671,19 +693,15 @@ function createAuthMethods(lowdefy, auth) {
     passkeySignIn,
     phoneNumberSendOtp,
     phoneNumberVerify,
-    removeMember,
     requestPasswordReset,
     resetPassword,
     revokeOtherSessions,
     sendVerificationEmail,
     setActiveOrganization,
     signUp,
-    stopImpersonating,
     twoFactorDisable,
     twoFactorEnable,
     twoFactorVerify,
-    updateMemberRole,
-    updateOrganization,
     updateSession,
   };
 }

@@ -116,14 +116,6 @@ blocks:
                 _state: phone_number
               code:
                 _state: otp_code
-          # Verify sets the session cookie (and, under signUpOnVerification,
-          # creates the account on first verify) but does not navigate -
-          # verify serves sign-in, sign-up and phone-change confirmation,
-          # so the page owns what comes next.
-          - id: to_dashboard
-            type: Link
-            params:
-              pageId: dashboard
         catch:
           - id: show_verify_error
             type: SetState

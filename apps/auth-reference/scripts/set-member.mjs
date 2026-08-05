@@ -15,35 +15,52 @@
 */
 
 /*
-  Dev seed tool for the reference walkthrough: promotes a user's member row
-  in an organization (roles as a CSV string) and sets user/member attributes.
-  Attribute and role writes are the phase-6 admin steps' job in a real app -
-  auth collections are written only through BetterAuth's rails there. This
-  script is walkthrough bootstrap only (the same standing as the migration
-  codemod): without it a fresh environment has no owner/admin to drive
-  invitations from.
+  Dev seed tool for the reference walkthrough: writes a user's member row in an
+  organization and sets user/member attributes. Member and attribute writes are
+  the admin steps' job in a real app - auth collections are written only through
+  BetterAuth's rails there. This script is walkthrough bootstrap only (the same
+  standing as the migration codemod): without it a fresh environment has no
+  owner to drive invitations from.
 
-  Note: attributes are declared as type "json" additionalFields; the
-  vendored MongoDB adapter stores them as native sub-documents, so this
-  script stores them the same way the engine writes them - as objects.
+  The member row carries two unrelated authorities in two fields, and this
+  script writes each on its own flag:
+    --app-roles  member.appRoles, a native array of the app's own role strings.
+                 They reach config as _user.roles and are what auth.pages.roles
+                 and auth.api.roles gate on. Nothing validates them.
+    --org-role   member.role, BetterAuth's owner/admin/member tier. It reaches
+                 config as _user.orgRoles, no gate reads it, and it is what
+                 every auth step's authority is checked against - per
+                 organization, from the caller's row in the target org.
 
-  Phase 9: seed the walkthrough admin with the configured user-admin role
-  too (--roles admin,user-admin) - the auth.userAdminRole floor refuses
-  user-initiated admin steps for callers without it. This script writes the
-  member row only; the engine denormalizes user.role (which gates the
-  impersonation client actions) at its own sync points, so after seeding,
-  run one UpdateMemberRoles on your own member row through /members to let
-  the engine stamp it. The old set-user-role.mjs workaround is gone - the
-  engine maintains user.role itself now; never write that field by hand.
+  The member row is the whole grant. Nothing denormalizes either field onto the
+  user row, so an out-of-band member write like this one is as complete as an
+  in-product one - there is no stale copy left behind and nothing to run
+  afterwards to "sync" it.
+
+  Seed the walkthrough admin with --org-role owner, not admin: the plugin's
+  creator-protection and last-owner guards only bite while some member actually
+  holds owner, so an organization with no owner has every guard inert, and a
+  sole admin can demote or remove their way into a deployment nobody can
+  administer.
+
+  Note: attributes are declared as type "json" additionalFields; the vendored
+  MongoDB adapter stores them as native sub-documents, so this script stores
+  them the same way the engine writes them - as objects. Ids are plain strings:
+  the engine sets a function-form advanced.database.generateId, for which the
+  adapter skips BSON id coercion entirely. The pinned organization's id is its
+  slug.
 
   Usage:
     AUTH_DATABASE_URI='mongodb://...' node scripts/set-member.mjs \
-      --email user@example.com --org org-a [--roles admin,user-admin] \
+      --email user@example.com --org org-a \
+      [--app-roles user-admin,auditor] [--org-role owner] \
       [--member-attributes '{"branches":["a"]}'] \
       [--user-attributes '{"region":"emea"}'] [--remove]
 */
 
 import { MongoClient } from 'mongodb';
+
+const ORG_ROLES = ['owner', 'admin', 'member'];
 
 function getArg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -54,15 +71,21 @@ function getArg(name) {
 const uri = process.env.AUTH_DATABASE_URI;
 const email = getArg('email');
 const orgSlug = getArg('org');
-const roles = getArg('roles');
+const appRoles = getArg('app-roles');
+const orgRole = getArg('org-role');
 const memberAttributes = getArg('member-attributes');
 const userAttributes = getArg('user-attributes');
 const remove = process.argv.includes('--remove');
 
 if (!uri || !email || !orgSlug) {
   console.error(
-    'Usage: AUTH_DATABASE_URI=... node scripts/set-member.mjs --email <email> --org <slug> [--roles r1,r2] [--member-attributes <json>] [--user-attributes <json>] [--remove]'
+    'Usage: AUTH_DATABASE_URI=... node scripts/set-member.mjs --email <email> --org <slug> [--app-roles r1,r2] [--org-role owner|admin|member] [--member-attributes <json>] [--user-attributes <json>] [--remove]'
   );
+  process.exit(1);
+}
+
+if (orgRole && !ORG_ROLES.includes(orgRole)) {
+  console.error(`--org-role must be one of ${ORG_ROLES.join(', ')}. Received "${orgRole}".`);
   process.exit(1);
 }
 
@@ -79,8 +102,6 @@ try {
     console.error(`No organization found with slug ${orgSlug}.`);
     process.exit(1);
   }
-  // The adapter stores id references (member.userId / organizationId) as
-  // ObjectIds - a string here would never match the engine's member read.
   const userId = user._id;
   const organizationId = organization._id;
 
@@ -89,7 +110,8 @@ try {
     console.log(`Removed ${result.deletedCount} member row for ${email} in ${orgSlug}.`);
   } else {
     const set = { userId, organizationId };
-    if (roles) set.role = roles;
+    if (appRoles) set.appRoles = appRoles.split(',').map((role) => role.trim());
+    if (orgRole) set.role = orgRole;
     if (memberAttributes) set.attributes = JSON.parse(memberAttributes);
     await db.collection('user-members').updateOne(
       { userId, organizationId },
@@ -99,16 +121,17 @@ try {
       },
       { upsert: true }
     );
-    console.log(`Set member row for ${email} in ${orgSlug}${roles ? ` (role: ${roles})` : ''}.`);
+    console.log(
+      `Set member row for ${email} in ${orgSlug} (appRoles: ${JSON.stringify(
+        set.appRoles
+      )}, role: ${JSON.stringify(set.role)}).`
+    );
   }
 
   if (userAttributes) {
     await db
       .collection('users')
-      .updateOne(
-        { _id: user._id },
-        { $set: { attributes: JSON.parse(userAttributes) } }
-      );
+      .updateOne({ _id: user._id }, { $set: { attributes: JSON.parse(userAttributes) } });
     console.log(`Set user.attributes for ${email}.`);
   }
 } finally {

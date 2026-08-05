@@ -18,17 +18,21 @@ import ensureOrganization from './ensureOrganization.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
 
 // The engine-tier user.create.after hook for open signup under the pinned
-// policy: auto-join the pinned org with an empty role, through the
-// server-only addMember endpoint so the plugin's invariants and hooks run.
-// The user passes the membership wall by row existence while role-gated
-// pages still gate them; _user.roles reads []. With
-// requireEmailVerification the signup holds this member row but obtains no
-// session until verified, so joining at user-create is safe.
+// policy: auto-join the pinned org through the server-only addMember endpoint
+// so the plugin's invariants and hooks run. The member row is minted with the
+// no-authority org tier 'member' and no appRoles, so the user passes the
+// membership wall by row existence while role-gated pages still gate them -
+// _user.roles reads [] because _user.roles is member.appRoles, not because
+// the org tier is empty. With requireEmailVerification the signup holds this
+// member row but obtains no session until verified, so joining at user-create
+// is safe.
 //
 // BetterAuth flushes after-hooks at the end of the request (confirmed at
 // 1.6.23), so a signup minting an immediate session runs the session.create
 // policy hook first - that hook also ensures membership under open signup,
-// and this one skips when the member row already exists.
+// and this one skips when the member row already exists. Both sites therefore
+// have to agree on the value they mint, and createActiveOrgPolicyHook already
+// writes 'member'.
 function createAutoJoinHook({ getAuth, organizations }) {
   return async function autoJoinHook(user, ctx) {
     const auth = getAuth();
@@ -48,7 +52,7 @@ function createAutoJoinHook({ getAuth, organizations }) {
       body: {
         userId: user.id,
         organizationId: organization.id,
-        role: '',
+        role: 'member',
       },
       headers: getHookRequestHeaders(ctx),
     });
