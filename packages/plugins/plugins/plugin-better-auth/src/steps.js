@@ -23,6 +23,7 @@ export { default as ListMembers } from './steps/ListMembers.js';
 export { default as ListUsers } from './steps/ListUsers.js';
 export { default as RemoveMember } from './steps/RemoveMember.js';
 export { default as ResetUserTwoFactor } from './steps/ResetUserTwoFactor.js';
+export { default as RevokeUserPasskeys } from './steps/RevokeUserPasskeys.js';
 export { default as RevokeUserSessions } from './steps/RevokeUserSessions.js';
 export { default as UnbanUser } from './steps/UnbanUser.js';
 export { default as UpdateMemberAttributes } from './steps/UpdateMemberAttributes.js';
