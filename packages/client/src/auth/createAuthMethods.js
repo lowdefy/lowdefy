@@ -14,73 +14,10 @@
   limitations under the License.
 */
 
-import { getHomePathname, stopChain } from '@lowdefy/engine';
-import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+import { resolveTarget, stopChain } from '@lowdefy/engine';
+import { type } from '@lowdefy/helpers';
 
-function getCallbackUrl({ lowdefy, callbackUrl, name = 'callbackUrl' }) {
-  // An absent target means "no target" - the ladder in resolveCallbackURL
-  // decides what absence falls back to. null is absence too: an operator with no
-  // matching branch (an `_if` without an `else`) resolves to null, and
-  // destructuring that throws a TypeError instead of falling to the default.
-  //
-  // A non-object target - notably the bare string these params were wrongly
-  // declared as before the schemas were corrected - expresses none of the four
-  // keys below and so resolves to no target, letting the ladder continue. It is
-  // deliberately not an error: apps written against the old string schema are
-  // common, and the two better-looking alternatives are both worse. Throwing
-  // fails a sign-in that works today, and reading a string as { url } would
-  // double-prefix basePath on the most common spelling of all, a string holding
-  // the already-prefixed ?callbackUrl= query.
-  if (!type.isObject(callbackUrl)) {
-    return undefined;
-  }
-  const { home, pageId, urlQuery, url } = callbackUrl;
-
-  const targets = [home, pageId, url].filter((target) => target);
-  if (targets.length > 1) {
-    throw new Error(
-      `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
-    );
-  }
-  const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
-
-  if (home === true) {
-    // An app whose home config names no page has no resolvable home - return no
-    // target rather than interpolating the missing pageId into the path.
-    // getHomeAndMenus resolves pageId to null when there is no homePageId and no
-    // menu link to fall back on, which built the literal "/null".
-    const pathname = getHomePathname({ lowdefy });
-    if (type.isNone(pathname)) {
-      return undefined;
-    }
-    return `${pathname}${query ? `?${query}` : ''}`;
-  }
-  if (type.isString(pageId)) {
-    return `/${pageId}${query ? `?${query}` : ''}`;
-  }
-  if (type.isString(url)) {
-    return `${url}${query ? `?${query}` : ''}`;
-  }
-
-  return undefined;
-}
-
-// Resolves a structured target ({ home, pageId, urlQuery, url }) to a URL,
-// prefixing basePath onto app-relative paths - an absolute url target passes
-// through unchanged (external landing pages). Returns undefined when the
-// target is empty. Shared by callbackUrl and its magic-link/social siblings
-// so basePath handling lives in one place. Off-site safety for the resolved
-// URL is BetterAuth's server-side originCheck / trustedOrigins, not here.
-function resolveTargetURL({ lowdefy, callbackUrl, name }) {
-  const explicit = getCallbackUrl({ lowdefy, callbackUrl, name });
-  if (type.isNone(explicit)) {
-    return undefined;
-  }
-  if (explicit.startsWith('/')) {
-    return `${lowdefy.basePath ?? ''}${explicit}`;
-  }
-  return explicit;
-}
+import { createUrl } from '../adapters/url.js';
 
 // Accepts only a path-absolute URL from the ?callbackUrl= query. A bare
 // startsWith('/') is not enough: "//evil.com" and "/\evil.com" also start with
@@ -93,60 +30,16 @@ function isAppRelativePath(value) {
   return type.isString(value) && /^\/([^/\\]|$)/.test(value);
 }
 
-// The engine owns the two-factor challenge destination on every sign-in path, so
-// every method that can receive a challenge instead of a session navigates
-// through here. Leaving it to the login page makes correctness opt-in: a page
-// that omits the branch leaves an enrolled user unable to sign in at all and
-// with nothing to show for the click. Routed through resolveTargetURL like every
-// other destination so basePath handling stays in one place and an absolute
-// authPages.twoFactor keeps its origin.
-//
-// The destination the user asked for travels with them: an enrolled user who
-// deep-linked to /invoices/123 must not be dropped on the challenge page's
-// default once the challenge is done. Only an app-relative path is carried - the
-// challenge page is public and its query is attacker-suppliable, and
-// isAppRelativePath is the guard that already rejects //evil.com and
-// /\evil.com here.
-//
-// Returns false rather than throwing when there is no page to navigate to: the
-// build check is what guarantees authPages.twoFactor exists whenever two-factor
-// is enabled, and a throw here would turn that guarantee into a failed sign-in.
-// The no-window case is legitimate too (server rendering, tests). The caller
-// then falls through to returning the response without navigating.
-function navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) {
-  const twoFactorPage = auth.authConfig?.authPages?.twoFactor;
-  if (!type.isString(twoFactorPage)) {
-    return false;
-  }
-  const target = resolveTargetURL({
-    lowdefy,
-    callbackUrl: { url: twoFactorPage },
-    name: 'authPages.twoFactor',
-  });
-  const window = lowdefy._internal?.globals?.window;
-  if (type.isNone(target) || !window) {
-    return false;
-  }
-  // Parsed rather than concatenated: authPages.twoFactor may already carry a
-  // query of its own, and searchParams encodes the callbackUrl value so one
-  // holding a '&' or '?' survives. An app-relative page must not gain an origin
-  // from being parsed against one, hence the round trip back to path + search.
-  const url = new URL(target, window.location.origin);
-  if (isAppRelativePath(callbackURL)) {
-    url.searchParams.set('callbackUrl', callbackURL);
-  }
-  window.location.assign(
-    url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.toString()
-  );
-  return true;
-}
-
 // The action's callbackUrl param wins; otherwise honor the callbackUrl query
 // param set by the unauthenticated page redirect, so login returns to the
 // page the user asked for; otherwise the app's home page. Only app-relative
 // paths are accepted from the query to avoid open redirects. The query fallback
 // is exclusive to the primary callbackUrl - a new-user or error destination has
 // no equivalent query source, so reading it for them would misroute.
+//
+// Returns resolveTarget's typed, un-prefixed union (or undefined), never a
+// string: the caller navigates it via the router or serializes it for a wire
+// hop, and basePath is applied only at those single boundaries.
 function resolveCallbackURL({ lowdefy, callbackUrl }) {
   // An explicit refusal to navigate, above the ladder so a bounced sign-in
   // honors it too. Absence means "go home" below, so "stay put" needs its own
@@ -155,22 +48,31 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
   if (callbackUrl === false) {
     return undefined;
   }
-  const explicit = resolveTargetURL({ lowdefy, callbackUrl });
+  // resolveTarget returns undefined for a non-object or empty target, so a bare
+  // string (the spelling the schemas wrongly declared before this change, still
+  // common in apps) falls through the ladder rather than failing the sign-in.
+  const explicit = resolveTarget({ lowdefy, target: callbackUrl, name: 'callbackUrl' });
   if (!type.isNone(explicit)) {
     return explicit;
   }
   const window = lowdefy._internal?.globals?.window;
   const fromQuery = new URLSearchParams(window?.location?.search ?? '').get('callbackUrl');
   if (isAppRelativePath(fromQuery)) {
-    // Returned raw, not through resolveTargetURL: both producers of this query
-    // param already bake basePath into the value they emit (renderPage.js,
-    // apiPage.js), so prefixing here would yield /app/app/reports.
-    return fromQuery;
+    // The query value is a finished, basePath-prefixed URL string - both
+    // producers bake basePath in (renderPage.js, apiPage.js). This is the one
+    // boundary that parses it back to an un-prefixed page target: strip basePath
+    // conditionally so router.push does not re-apply it into /app/app/reports.
+    const parsed = new URL(fromQuery, window.location.origin);
+    const basePath = lowdefy.basePath ?? '';
+    const pathname =
+      basePath && parsed.pathname.startsWith(basePath)
+        ? parsed.pathname.slice(basePath.length)
+        : parsed.pathname;
+    return { kind: 'page', pathname, query: parsed.search.replace(/^\?/, '') };
   }
   // The bottom rung, below the query so a bounced sign-in still returns to the
-  // page the user asked for. Resolved through the same helper as the explicit
-  // rung, so basePath handling stays in one place.
-  const home = resolveTargetURL({ lowdefy, callbackUrl: { home: true } });
+  // page the user asked for.
+  const home = resolveTarget({ lowdefy, target: { home: true } });
   if (!type.isNone(home)) {
     return home;
   }
@@ -222,6 +124,91 @@ async function unwrap(promise) {
 }
 
 function createAuthMethods(lowdefy, auth) {
+  const router = lowdefy._internal.router;
+
+  // Every same-origin destination navigates through the router, which applies
+  // basePath once through createUrl and hard-reloads (forceReload) so the server
+  // re-runs the page auth fork - the new session's roles come from the active
+  // member row the client session does not carry, so a soft push would leave it
+  // half-applied. An external target leaves the app, so it cannot route through
+  // the in-app router. A resolved page target is un-prefixed; the router
+  // re-applies basePath, so nothing double-prefixes.
+  function navigateToTarget(target) {
+    if (type.isNone(target)) {
+      return;
+    }
+    if (target.kind === 'external') {
+      lowdefy._internal.globals.window.location.assign(target.href);
+      return;
+    }
+    router.push({ pathname: target.pathname, query: target.query, forceReload: true });
+  }
+
+  // The wire form of a target: a string BetterAuth performs a later redirect hop
+  // to (an emailed link, an OAuth return). A page target is baked to its
+  // basePath-prefixed URL through the single boundary; an external target is
+  // already a whole URL. Off-site safety for the resolved URL is BetterAuth's
+  // server-side originCheck / trustedOrigins, not here.
+  function serializeTarget(target) {
+    if (type.isNone(target)) {
+      return undefined;
+    }
+    if (target.kind === 'external') {
+      return target.href;
+    }
+    return createUrl({
+      basePath: lowdefy.basePath ?? '',
+      pathname: target.pathname,
+      query: target.query,
+    });
+  }
+
+  // The engine owns the two-factor challenge destination on every sign-in path,
+  // so every method that can receive a challenge instead of a session navigates
+  // through here. Leaving it to the login page makes correctness opt-in: a page
+  // that omits the branch leaves an enrolled user unable to sign in at all and
+  // with nothing to show for the click.
+  //
+  // The destination the user asked for rides along as ?callbackUrl= for the
+  // challenge page to spend once the challenge is done - a wire value stapled
+  // onto the page's own query rather than replacing it, so an authPages.twoFactor
+  // carrying a query of its own keeps it. Only an app-relative (kind:'page')
+  // return is stapled, and only onto an in-app (kind:'page') challenge page: the
+  // value was validated at the ladder's front door so no open-redirect guard is
+  // needed here, but an off-app challenge page must not carry the app's cargo.
+  //
+  // Returns false rather than throwing when there is no page to navigate to: the
+  // build check guarantees authPages.twoFactor exists whenever two-factor is
+  // enabled, and a throw here would turn that guarantee into a failed sign-in.
+  // The no-window case is legitimate too (server rendering, tests). The caller
+  // then falls through to returning the response without navigating.
+  function navigateToTwoFactorChallenge({ callbackTarget }) {
+    const twoFactorPage = auth.authConfig?.authPages?.twoFactor;
+    if (!type.isString(twoFactorPage)) {
+      return false;
+    }
+    const target = resolveTarget({
+      lowdefy,
+      target: { url: twoFactorPage },
+      name: 'authPages.twoFactor',
+    });
+    const window = lowdefy._internal?.globals?.window;
+    if (type.isNone(target) || !window) {
+      return false;
+    }
+    if (target.kind === 'page') {
+      const ownQuery = Object.fromEntries(new URLSearchParams(target.query));
+      const query =
+        callbackTarget?.kind === 'page'
+          ? { ...ownQuery, callbackUrl: serializeTarget(callbackTarget) }
+          : ownQuery;
+      navigateToTarget({ kind: 'page', pathname: target.pathname, query });
+      return true;
+    }
+    navigateToTarget(target);
+    return true;
+  }
+
   // login and logout are Lowdefy functions that handle action params;
   // the auth object provides the BetterAuth client methods.
   async function login({
@@ -236,47 +223,43 @@ function createAuthMethods(lowdefy, auth) {
     providerId,
     ...rest
   } = {}) {
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
+    // The wire form for the routes that hand the destination to BetterAuth for a
+    // later redirect hop; the direct-navigation routes use callbackTarget.
+    const callbackURL = serializeTarget(callbackTarget);
     const captchaOptions = captchaFetchOptions(captchaToken);
     const providers = auth.authConfig?.providers ?? [];
 
     // The magic-link and social/OAuth routes accept these two extra callbacks;
-    // resolve each as a structured target and forward only the ones the app
-    // supplied, so BetterAuth's own default-to-callbackURL stands otherwise.
+    // resolve each as a structured target, serialize to the wire string, and
+    // forward only the ones the app supplied, so BetterAuth's own
+    // default-to-callbackURL stands otherwise.
     const routingCallbacks = {};
-    const newUserCallbackURL = resolveTargetURL({
-      lowdefy,
-      callbackUrl: newUserCallbackUrl,
-      name: 'newUserCallbackUrl',
-    });
+    const newUserCallbackURL = serializeTarget(
+      resolveTarget({ lowdefy, target: newUserCallbackUrl, name: 'newUserCallbackUrl' })
+    );
     if (!type.isNone(newUserCallbackURL)) {
       routingCallbacks.newUserCallbackURL = newUserCallbackURL;
     }
-    const errorCallbackURL = resolveTargetURL({
-      lowdefy,
-      callbackUrl: errorCallbackUrl,
-      name: 'errorCallbackUrl',
-    });
+    const errorCallbackURL = serializeTarget(
+      resolveTarget({ lowdefy, target: errorCallbackUrl, name: 'errorCallbackUrl' })
+    );
     if (!type.isNone(errorCallbackURL)) {
       routingCallbacks.errorCallbackURL = errorCallbackURL;
     } else {
       // No caller-supplied error destination: default to the app's declared
-      // auth-error page (authPages.error), resolved through resolveTargetURL
-      // like every other callback so basePath handling stays in one place and
-      // an absolute authPages.error passes through untouched. For the
-      // app-relative page this yields `${basePath}${authPages.error}`, so a
-      // failed magic-link verify lands there with ?error= intact instead of on
-      // the success page. Mirrors the server-side onAPIError.errorURL default
-      // (signup-admission-gate Decision 5) on the one path that default cannot
-      // structurally reach. Omitted when authPages.error is unset, letting
-      // BetterAuth's fallback stand.
+      // auth-error page (authPages.error), serialized through the same single
+      // boundary so an app-relative page gains basePath and an absolute
+      // authPages.error passes through untouched. So a failed magic-link verify
+      // lands there with ?error= intact instead of on the success page. Mirrors
+      // the server-side onAPIError.errorURL default on the one path that default
+      // cannot structurally reach. Omitted when authPages.error is unset,
+      // letting BetterAuth's fallback stand.
       const errorPage = auth.authConfig?.authPages?.error;
       if (type.isString(errorPage)) {
-        routingCallbacks.errorCallbackURL = resolveTargetURL({
-          lowdefy,
-          callbackUrl: { url: errorPage },
-          name: 'errorCallbackUrl',
-        });
+        routingCallbacks.errorCallbackURL = serializeTarget(
+          resolveTarget({ lowdefy, target: { url: errorPage }, name: 'errorCallbackUrl' })
+        );
       }
     }
 
@@ -339,13 +322,11 @@ function createAuthMethods(lowdefy, auth) {
         auth.signInPhoneNumber({ phoneNumber, password, ...rest, ...captchaOptions })
       );
       if (data?.twoFactorRedirect) {
-        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
-          ? stopChain(data)
-          : data;
+        return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
       }
       const window = lowdefy._internal?.globals?.window;
-      if (callbackURL && window) {
-        window.location.assign(callbackURL);
+      if (callbackTarget && window) {
+        navigateToTarget(callbackTarget);
       }
       return data;
     }
@@ -362,13 +343,11 @@ function createAuthMethods(lowdefy, auth) {
       // When there was nothing to navigate to the chain continues as before, so
       // a chain is never stranded by a navigation that did not happen.
       if (data?.twoFactorRedirect) {
-        return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth })
-          ? stopChain(data)
-          : data;
+        return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
       }
       const window = lowdefy._internal?.globals?.window;
-      if (callbackURL && window) {
-        window.location.assign(callbackURL);
+      if (callbackTarget && window) {
+        navigateToTarget(callbackTarget);
       }
       return data;
     }
@@ -386,13 +365,13 @@ function createAuthMethods(lowdefy, auth) {
     // verification email. A value with two consumers cannot be suppressed for
     // one of them alone.
     assertCallbackUrlNavigable({ callbackUrl, method: 'SignUp' });
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(
       auth.signUpEmail({
         email,
         password,
         name,
-        callbackURL,
+        callbackURL: serializeTarget(callbackTarget),
         ...rest,
         ...captchaFetchOptions(captchaToken),
       })
@@ -400,8 +379,8 @@ function createAuthMethods(lowdefy, auth) {
     // With requireEmailVerification the response carries no session - do not
     // navigate; the page shows a "verify your email" message instead.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && callbackURL && window) {
-      window.location.assign(callbackURL);
+    if (data?.token && callbackTarget && window) {
+      navigateToTarget(callbackTarget);
     }
     return data;
   }
@@ -413,9 +392,9 @@ function createAuthMethods(lowdefy, auth) {
   // signed-out user to the home page could land them on a page they may no
   // longer see.
   async function logout({ callbackUrl } = {}) {
-    const callbackURL = resolveTargetURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveTarget({ lowdefy, target: callbackUrl });
     const window = lowdefy._internal?.globals?.window;
-    const willNavigate = Boolean(callbackURL && window);
+    const willNavigate = Boolean(callbackTarget && window);
     if (willNavigate && auth.suppressSignOutReload) {
       // The sign-out reload in the session provider would race the callback
       // navigation - suppress it for this sign-out.
@@ -423,7 +402,7 @@ function createAuthMethods(lowdefy, auth) {
     }
     const data = await unwrap(auth.signOut());
     if (willNavigate) {
-      window.location.assign(callbackURL);
+      navigateToTarget(callbackTarget);
     }
     return data;
   }
@@ -512,11 +491,11 @@ function createAuthMethods(lowdefy, auth) {
   // email path. A successful assertion is terminal - passkey never returns a
   // two-factor challenge - so there is no twoFactorRedirect branch.
   async function passkeySignIn({ callbackUrl } = {}) {
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(auth.signInPasskey());
     const window = lowdefy._internal?.globals?.window;
-    if (callbackURL && window) {
-      window.location.assign(callbackURL);
+    if (callbackTarget && window) {
+      navigateToTarget(callbackTarget);
     }
     return data;
   }
@@ -574,11 +553,11 @@ function createAuthMethods(lowdefy, auth) {
       throw new Error('SendVerificationEmail requires an "email" param.');
     }
     assertCallbackUrlNavigable({ callbackUrl, method: 'SendVerificationEmail' });
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     return unwrap(
       auth.sendVerificationEmail({
         email,
-        callbackURL,
+        callbackURL: serializeTarget(callbackTarget),
         ...rest,
         ...captchaFetchOptions(captchaToken),
       })
@@ -607,7 +586,7 @@ function createAuthMethods(lowdefy, auth) {
     // destination throws before the OTP is consumed rather than after. No
     // assertCallbackUrlNavigable: the resolved value has one consumer, the assign
     // below, so callbackUrl: false is honorable here.
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
     // An enrolled user verifying by SMS gets a challenge instead of a session, in
     // the same JSON shape the password paths return, so the navigation is the one
@@ -616,7 +595,7 @@ function createAuthMethods(lowdefy, auth) {
     // The halt keeps the app's remaining steps from re-rendering with no session
     // while the challenge page load is still in flight.
     if (data?.twoFactorRedirect) {
-      return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) ? stopChain(data) : data;
+      return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
     }
     // The two modes that mint no usable arrival stay put: disableSession returns
     // token: null, and updatePhoneNumber is a signed-in user confirming a new
@@ -625,8 +604,8 @@ function createAuthMethods(lowdefy, auth) {
     // come from the request, and updatePhoneNumber is still in rest because
     // BetterAuth needs it.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && rest.updatePhoneNumber !== true && callbackURL && window) {
-      window.location.assign(callbackURL);
+    if (data?.token && rest.updatePhoneNumber !== true && callbackTarget && window) {
+      navigateToTarget(callbackTarget);
     }
     return data;
   }
@@ -677,7 +656,7 @@ function createAuthMethods(lowdefy, auth) {
     if (!type.isString(backupCode) && !type.isString(code)) {
       throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
     }
-    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(
       type.isString(backupCode)
         ? auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest })
@@ -687,8 +666,8 @@ function createAuthMethods(lowdefy, auth) {
     // session-less mode, so a successful challenge always mints one and a failed
     // one throws to the action's catch.
     const window = lowdefy._internal?.globals?.window;
-    if (data?.token && callbackURL && window) {
-      window.location.assign(callbackURL);
+    if (data?.token && callbackTarget && window) {
+      navigateToTarget(callbackTarget);
     }
     return data;
   }

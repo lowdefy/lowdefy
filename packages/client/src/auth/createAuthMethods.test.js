@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 import { Actions } from '@lowdefy/engine';
 import createAuthMethods from './createAuthMethods.js';
+import { createUrl } from '../adapters/url.js';
 
 function setup({ signInResult, signUpResult } = {}) {
   const assign = jest.fn();
@@ -28,6 +29,15 @@ function setup({ signInResult, signUpResult } = {}) {
     },
     home: { configured: false, pageId: 'home-page' },
   };
+  // A page-kind navigation goes through router.push, which is where basePath is
+  // applied (once, through createUrl) and the auth hard-reload happens. The fake
+  // mirrors that: it records the un-prefixed push args for direct assertion and
+  // composes the final URL through the same createUrl the real router uses, so
+  // the existing URL-shape assertions on `assign` keep exercising the composition.
+  const push = jest.fn(({ pathname, query }) =>
+    assign(createUrl({ basePath: lowdefy.basePath ?? '', pathname, query }))
+  );
+  lowdefy._internal.router = { basePath: '', push, replace: jest.fn() };
   const auth = {
     authConfig: { providers: [] },
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
@@ -90,7 +100,7 @@ function setup({ signInResult, signUpResult } = {}) {
     ),
     updateResolvedUser: jest.fn(),
   };
-  return { auth, lowdefy, assign };
+  return { auth, lowdefy, assign, push };
 }
 
 test('signUp calls signUpEmail with email, password, name and callbackURL', async () => {
@@ -850,7 +860,7 @@ test('login names the offending param when an errorCallbackUrl target is ambiguo
       errorCallbackUrl: { pageId: 'expired', url: 'https://example.com/expired' },
     })
   ).rejects.toThrow(
-    "Invalid errorCallbackUrl: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."
+    /Invalid errorCallbackUrl: .*only one of 'home', 'pageId' or 'url' can be defined\./
   );
 });
 
@@ -1081,6 +1091,30 @@ test('the ?callbackUrl= query rung is not re-prefixed with basePath', async () =
   lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fapp%2Freports';
   const { login } = createAuthMethods(lowdefy, auth);
   await login({ email: 'user@example.com', password: 'password123' });
+  expect(assign.mock.calls).toEqual([['/app/reports']]);
+});
+
+test('the ?callbackUrl= query rung strips basePath and pushes the un-prefixed pathname', async () => {
+  const { auth, lowdefy, push } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fapp%2Freports';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123' });
+  // The router re-applies basePath through createUrl, so the target it receives
+  // must be un-prefixed - proof there is no /app/app/reports double-prefix.
+  expect(push.mock.calls).toEqual([[{ pathname: '/reports', query: '', forceReload: true }]]);
+});
+
+test('an absolute same-origin url callbackUrl pushes the un-prefixed pathname, not double-prefixed', async () => {
+  const { auth, lowdefy, push, assign } = setup({ signInResult: { token: 't', user: {} } });
+  lowdefy.basePath = '/app';
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: 'https://app.lowdefy.test/app/reports' },
+  });
+  expect(push.mock.calls).toEqual([[{ pathname: '/reports', query: '', forceReload: true }]]);
   expect(assign.mock.calls).toEqual([['/app/reports']]);
 });
 
@@ -1548,7 +1582,7 @@ test('login basePath-prefixes the authPages.twoFactor challenge destination', as
   ]);
 });
 
-test('login keeps the origin of an absolute authPages.twoFactor', async () => {
+test('login sends an off-origin authPages.twoFactor through assign, without the app callbackUrl cargo', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: challenge });
   auth.authConfig.authPages = { twoFactor: 'https://id.example.com/2fa' };
   const { login } = createAuthMethods(lowdefy, auth);
@@ -1557,7 +1591,10 @@ test('login keeps the origin of an absolute authPages.twoFactor', async () => {
     password: 'password123',
     callbackUrl: { url: '/dashboard' },
   });
-  expect(assign.mock.calls).toEqual([['https://id.example.com/2fa?callbackUrl=%2Fdashboard']]);
+  // An external challenge page leaves the app, so it navigates via assign and
+  // never carries the app's return target - the same drop as a non-app-relative
+  // staple site today.
+  expect(assign.mock.calls).toEqual([['https://id.example.com/2fa']]);
 });
 
 test('login carries a deep-link callbackUrl onto the two-factor challenge', async () => {
@@ -1582,6 +1619,29 @@ test('login merges the callbackUrl into an authPages.twoFactor that already carr
     callbackUrl: { url: '/dashboard' },
   });
   expect(assign.mock.calls).toEqual([['/2fa?x=1&callbackUrl=%2Fdashboard']]);
+});
+
+test('login preserves an authPages.twoFactor own query while stapling the callbackUrl cargo', async () => {
+  const { auth, lowdefy, assign, push } = setup({ signInResult: challenge });
+  auth.authConfig.authPages = { twoFactor: '/2fa?theme=dark' };
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  // Both the page's own query and the stapled cargo survive, and the router
+  // receives the merged query object un-prefixed.
+  expect(push.mock.calls).toEqual([
+    [
+      {
+        pathname: '/2fa',
+        query: { theme: 'dark', callbackUrl: '/dashboard' },
+        forceReload: true,
+      },
+    ],
+  ]);
+  expect(assign.mock.calls).toEqual([['/2fa?theme=dark&callbackUrl=%2Fdashboard']]);
 });
 
 test('a protocol-relative ?callbackUrl= query never reaches the two-factor challenge (open redirect)', async () => {
