@@ -845,6 +845,63 @@ test('validateAuthConfig does not require authPages.twoFactor when twoFactor is 
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
 
+test('validateAuthConfig throws when twoFactor.required is true without authPages.twoFactorEnrol', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true, required: true },
+      authPages: { twoFactor: '/two-factor-challenge' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "authPages.twoFactorEnrol" is required when "twoFactor.required" is true. Every unenrolled user is redirected there, so a deployment requiring enrolment without the page redirects them to nowhere.'
+  );
+});
+
+test('validateAuthConfig passes when twoFactor.required is true with authPages.twoFactorEnrol set', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: true, required: true },
+      authPages: { twoFactor: '/two-factor-challenge', twoFactorEnrol: '/two-factor-enrol' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when twoFactor.required is true but no factor can be enrolled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: false, required: true },
+      authPages: { twoFactorEnrol: '/two-factor-enrol' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "twoFactor.required" is true but no second factor can be enrolled - "twoFactor.enabled" is false and passkeys are not enabled. Every user would be locked out with no way to satisfy the requirement.'
+  );
+});
+
+test('validateAuthConfig passes when twoFactor.required is true and passkeys are the enrolment route', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { enabled: false, required: true },
+      passkey: { enabled: true },
+      authPages: { twoFactorEnrol: '/two-factor-enrol' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
 const validCaptcha = {
   enabled: true,
   provider: 'cloudflare-turnstile',

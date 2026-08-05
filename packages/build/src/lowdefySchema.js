@@ -1345,6 +1345,14 @@ export default {
                 type: 'Auth "authPages.twoFactor" should be a string.',
               },
             },
+            twoFactorEnrol: {
+              type: 'string',
+              description:
+                'Protected page where an unenrolled user registers a second factor. Unlike every other authPages role, this one does NOT imply public - the user arriving here holds a valid session.',
+              errorMessage: {
+                type: 'Auth "authPages.twoFactorEnrol" should be a string.',
+              },
+            },
             acceptInvitation: {
               type: 'string',
               errorMessage: {
