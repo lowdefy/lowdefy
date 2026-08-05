@@ -30,15 +30,16 @@ function escapeHtml(value) {
 // cascade order.
 const layerOrderScript = `(function(){var s=document.createElement("style");s.id="__lf-layer-order";s.textContent="@layer theme, base, antd, components, utilities;";document.head.prepend(s);new MutationObserver(function(){if(document.head.firstChild!==s)document.head.prepend(s)}).observe(document.head,{childList:true})})();`;
 
-// Synchronous pre-hydration background script — prevents mode-mismatch flash
-// on page load. Mirrors useDarkMode.js resolution order:
-// configDarkMode → localStorage → prefers-color-scheme.
+// Synchronous pre-hydration script setting the <html> background and
+// color-scheme — prevents a mode-mismatch flash of the page and of browser
+// chrome (scrollbars, form controls) on page load. Mirrors useDarkMode.js
+// resolution order: configDarkMode → localStorage → prefers-color-scheme.
 function darkModeScript({ configColorMode, darkBg, lightBg }) {
   return `(function(){var c=${safeScriptJson(configColorMode)};var db=${safeScriptJson(
     darkBg
   )};var lb=${safeScriptJson(
     lightBg
-  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;if(bg)document.documentElement.style.backgroundColor=bg})();`;
+  )};var d;if(c==="dark")d=true;else if(c==="light")d=false;else{try{var p=localStorage.getItem("lowdefy_darkMode");if(p==="dark")d=true;else if(p==="light")d=false;else d=window.matchMedia("(prefers-color-scheme:dark)").matches}catch(e){d=window.matchMedia("(prefers-color-scheme:dark)").matches}}var bg=d?db:lb;document.documentElement.style.colorScheme=d?"dark":"light";if(bg)document.documentElement.style.backgroundColor=bg})();`;
 }
 
 function template({

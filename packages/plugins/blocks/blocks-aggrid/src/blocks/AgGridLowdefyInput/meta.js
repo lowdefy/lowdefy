@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import createAgGridDisplayHelper from '../../createAgGridDisplayHelper.js';
+import createInputMeta from '../../createInputMeta.js';
 
-export default createAgGridDisplayHelper();
+export default createInputMeta('AgGridLowdefyInput', { size: true });

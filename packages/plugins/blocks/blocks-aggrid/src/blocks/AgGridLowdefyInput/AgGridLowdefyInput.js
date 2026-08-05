@@ -18,11 +18,11 @@ import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import antdStyles from '../../ag-grid-antd.module.css';
-import { themeMaterialAntd, useGridTheme } from '../../theme/themeLowdefy.js';
+import { sizeConfig, themeForSize, useGridTheme } from '../../theme/themeLowdefy.js';
 
 import AgGridInput from '../../AgGridInput.js';
 
-const AgGridInputMaterial = ({
+const AgGridLowdefyInput = ({
   blockId,
   events,
   loading,
@@ -33,13 +33,23 @@ const AgGridInputMaterial = ({
   validation,
   value,
 }) => {
-  const theme = useGridTheme(themeMaterialAntd, properties.themeParams);
+  // The shared module's avatar rules key on the file-theme wrapper class the legacy blocks carry,
+  // which this block does not have. Setting the vars inline is also what makes avatars track size,
+  // since this block's density is not fixed.
+  const { avatarSize, avatarFontSize } = sizeConfig(properties.size);
+  const theme = useGridTheme(themeForSize(properties.size), properties.themeParams);
 
   return (
     <div
       id={blockId}
-      className={`ag-theme-material ${antdStyles.antdTheme}`}
-      style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
+      className={antdStyles.antdTheme}
+      style={{
+        width: '100%',
+        height: properties.height ?? 500,
+        '--lf-avatar-size': `${avatarSize}px`,
+        '--lf-avatar-font-size': `${avatarFontSize}px`,
+        ...styles?.element,
+      }}
     >
       <AgGridInput
         blockId={blockId}
@@ -56,4 +66,4 @@ const AgGridInputMaterial = ({
   );
 };
 
-export default withBlockDefaults(AgGridInputMaterial);
+export default withBlockDefaults(AgGridLowdefyInput);

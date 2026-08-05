@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: aggridbalham
+id: aggridlowdefy
 type: Box
 
 blocks:
@@ -20,8 +20,8 @@ blocks:
   # BASIC RENDERING
   # ============================================
 
-  - id: aggridbalham_basic
-    type: AgGridBalham
+  - id: aggridlowdefy_basic
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -40,8 +40,8 @@ blocks:
   # PROPERTY TESTS
   # ============================================
 
-  - id: aggridbalham_height
-    type: AgGridBalham
+  - id: aggridlowdefy_height
+    type: AgGridLowdefy
     properties:
       height: 300
       columnDefs:
@@ -51,8 +51,8 @@ blocks:
         - name: Alice
         - name: Bob
 
-  - id: aggridbalham_default_col_def
-    type: AgGridBalham
+  - id: aggridlowdefy_default_col_def
+    type: AgGridLowdefy
     properties:
       defaultColDef:
         sortable: true
@@ -69,8 +69,8 @@ blocks:
         - name: Bob
           age: 30
 
-  - id: aggridbalham_empty
-    type: AgGridBalham
+  - id: aggridlowdefy_empty
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -83,8 +83,8 @@ blocks:
   # EVENT TESTS
   # ============================================
 
-  - id: aggridbalham_onrowclick
-    type: AgGridBalham
+  - id: aggridlowdefy_onrowclick
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -101,26 +101,26 @@ blocks:
         - id: set_row_click
           type: SetState
           params:
-            aggridbalham_row_clicked:
+            aggridlowdefy_row_clicked:
               _event: row.name
 
-  - id: aggridbalham_row_click_display
+  - id: aggridlowdefy_row_click_display
     type: Span
     properties:
       content:
         _if:
           test:
             _ne:
-              - _state: aggridbalham_row_clicked
+              - _state: aggridlowdefy_row_clicked
               - null
           then:
             _string.concat:
               - 'Row: '
-              - _state: aggridbalham_row_clicked
+              - _state: aggridlowdefy_row_clicked
           else: ''
 
-  - id: aggridbalham_oncellclick
-    type: AgGridBalham
+  - id: aggridlowdefy_oncellclick
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -137,26 +137,26 @@ blocks:
         - id: set_cell_click
           type: SetState
           params:
-            aggridbalham_cell_clicked:
+            aggridlowdefy_cell_clicked:
               _event: cell.value
 
-  - id: aggridbalham_cell_click_display
+  - id: aggridlowdefy_cell_click_display
     type: Span
     properties:
       content:
         _if:
           test:
             _ne:
-              - _state: aggridbalham_cell_clicked
+              - _state: aggridlowdefy_cell_clicked
               - null
           then:
             _string.concat:
               - 'Cell: '
-              - _state: aggridbalham_cell_clicked
+              - _state: aggridlowdefy_cell_clicked
           else: ''
 
-  - id: aggridbalham_onrowselected
-    type: AgGridBalham
+  - id: aggridlowdefy_onrowselected
+    type: AgGridLowdefy
     properties:
       rowSelection:
         mode: singleRow
@@ -177,30 +177,30 @@ blocks:
         - id: set_row_selected
           type: SetState
           params:
-            aggridbalham_row_selected:
+            aggridlowdefy_row_selected:
               _event: row.name
 
-  - id: aggridbalham_row_selected_display
+  - id: aggridlowdefy_row_selected_display
     type: Span
     properties:
       content:
         _if:
           test:
             _ne:
-              - _state: aggridbalham_row_selected
+              - _state: aggridlowdefy_row_selected
               - null
           then:
             _string.concat:
               - 'Selected: '
-              - _state: aggridbalham_row_selected
+              - _state: aggridlowdefy_row_selected
           else: ''
 
   # ============================================
   # SORTING & FILTERING
   # ============================================
 
-  - id: aggridbalham_sortable
-    type: AgGridBalham
+  - id: aggridlowdefy_sortable
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -221,22 +221,22 @@ blocks:
         - id: set_sort_changed
           type: SetState
           params:
-            aggridbalham_sort_changed: true
+            aggridlowdefy_sort_changed: true
 
-  - id: aggridbalham_sort_changed_display
+  - id: aggridlowdefy_sort_changed_display
     type: Span
     properties:
       content:
         _if:
           test:
             _eq:
-              - _state: aggridbalham_sort_changed
+              - _state: aggridlowdefy_sort_changed
               - true
           then: Sort changed
           else: ''
 
-  - id: aggridbalham_filterable
-    type: AgGridBalham
+  - id: aggridlowdefy_filterable
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Name
@@ -257,16 +257,16 @@ blocks:
         - id: set_filter_changed
           type: SetState
           params:
-            aggridbalham_filter_changed: true
+            aggridlowdefy_filter_changed: true
 
-  - id: aggridbalham_filter_changed_display
+  - id: aggridlowdefy_filter_changed_display
     type: Span
     properties:
       content:
         _if:
           test:
             _eq:
-              - _state: aggridbalham_filter_changed
+              - _state: aggridlowdefy_filter_changed
               - true
           then: Filter changed
           else: ''
@@ -275,8 +275,8 @@ blocks:
   # BUILT-IN CELL RENDERERS — cell.type
   # ============================================
 
-  - id: aggridbalham_cell_tag
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_tag
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Status
@@ -294,8 +294,8 @@ blocks:
         - status: Unknown
         - status: null
 
-  - id: aggridbalham_cell_tag_from
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_tag_from
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Status
@@ -309,8 +309,8 @@ blocks:
         - label: B
           color: '#ff4d4f'
 
-  - id: aggridbalham_cell_tag_array
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_tag_array
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Roles
@@ -330,8 +330,8 @@ blocks:
         - roles: []
         - roles: null
 
-  - id: aggridbalham_cell_tag_seeded
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_tag_seeded
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Tag
@@ -343,8 +343,8 @@ blocks:
         - tag: frontend
         - tag: backend
 
-  - id: aggridbalham_cell_avatar
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_avatar
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Assignee
@@ -367,8 +367,8 @@ blocks:
           name: null
           picture: null
 
-  - id: aggridbalham_cell_avatar_link
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_avatar_link
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Assignee
@@ -389,26 +389,26 @@ blocks:
         - id: capture_avatar_link
           type: SetState
           params:
-            aggridbalham_avatar_link_event:
+            aggridlowdefy_avatar_link_event:
               _event: link.pageId
 
-  - id: aggridbalham_avatar_link_display
+  - id: aggridlowdefy_avatar_link_display
     type: Span
     properties:
       content:
         _if:
           test:
             _ne:
-              - _state: aggridbalham_avatar_link_event
+              - _state: aggridlowdefy_avatar_link_event
               - null
           then:
             _string.concat:
               - 'Link: '
-              - _state: aggridbalham_avatar_link_event
+              - _state: aggridlowdefy_avatar_link_event
           else: ''
 
-  - id: aggridbalham_cell_link
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_link
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: ID
@@ -426,26 +426,26 @@ blocks:
         - id: capture_link
           type: SetState
           params:
-            aggridbalham_link_event:
+            aggridlowdefy_link_event:
               _event: link.urlQuery._id
 
-  - id: aggridbalham_link_display
+  - id: aggridlowdefy_link_display
     type: Span
     properties:
       content:
         _if:
           test:
             _ne:
-              - _state: aggridbalham_link_event
+              - _state: aggridlowdefy_link_event
               - null
           then:
             _string.concat:
               - 'Linked to: '
-              - _state: aggridbalham_link_event
+              - _state: aggridlowdefy_link_event
           else: ''
 
-  - id: aggridbalham_cell_date
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_date
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Created
@@ -462,8 +462,8 @@ blocks:
         - created_at: null
         - created_at: invalid-date
 
-  - id: aggridbalham_cell_boolean
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_boolean
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Verified
@@ -484,8 +484,8 @@ blocks:
         - verified: null
           active: null
 
-  - id: aggridbalham_cell_progress
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_progress
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Progress
@@ -498,8 +498,8 @@ blocks:
         - progress: 100
         - progress: null
 
-  - id: aggridbalham_cell_number
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_number
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Revenue
@@ -543,8 +543,8 @@ blocks:
           margin: null
           views: null
 
-  - id: aggridbalham_cell_align_override
-    type: AgGridBalham
+  - id: aggridlowdefy_cell_align_override
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Revenue
@@ -557,8 +557,8 @@ blocks:
       rowData:
         - revenue: 1000
 
-  - id: aggridbalham_ellipsis
-    type: AgGridBalham
+  - id: aggridlowdefy_ellipsis
+    type: AgGridLowdefy
     properties:
       columnDefs:
         - headerName: Notes
@@ -572,19 +572,92 @@ blocks:
         - notes: Short.
         - notes: null
 
+  # The buttons cell reaches components.Icon through the components prop the block
+  # forwards to the shared core — an icon here proves that forwarding.
+  - id: aggridlowdefy_cell_buttons
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Actions
+          field: _id
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onEditClick
+                title: Edit
+                icon: AiOutlineEdit
+      rowData:
+        - _id: TSK-001
+    events:
+      onEditClick:
+        - id: capture_button_click
+          type: SetState
+          params:
+            aggridlowdefy_button_event:
+              _event: row._id
+
+  - id: aggridlowdefy_button_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: aggridlowdefy_button_event
+              - null
+          then:
+            _string.concat:
+              - 'Edit: '
+              - _state: aggridlowdefy_button_event
+          else: ''
+
+  # ============================================
+  # SIZE — avatar CSS custom properties
+  # ============================================
+
+  - id: aggridlowdefy_avatar_small
+    type: AgGridLowdefy
+    properties:
+      size: small
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+
+  - id: aggridlowdefy_avatar_large
+    type: AgGridLowdefy
+    properties:
+      size: large
+      columnDefs:
+        - headerName: Assignee
+          field: name
+          cell:
+            type: avatar
+            nameField: name
+            idField: id
+      rowData:
+        - id: u1
+          name: Alice Johnson
+
   # ============================================
   # LOADING FLAG — runtime toggle
   # ============================================
 
-  - id: aggridbalham_loading_toggle
+  - id: aggridlowdefy_loading_toggle
     type: Switch
     properties:
       title: Loading
 
-  - id: aggridbalham_loading_grid
-    type: AgGridBalham
+  - id: aggridlowdefy_loading_grid
+    type: AgGridLowdefy
     loading:
-      _state: aggridbalham_loading_toggle
+      _state: aggridlowdefy_loading_toggle
     properties:
       columnDefs:
         - headerName: Name

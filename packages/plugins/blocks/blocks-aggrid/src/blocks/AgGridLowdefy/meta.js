@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import createAgGridDisplayHelper from '../../createAgGridDisplayHelper.js';
+import createDisplayMeta from '../../createDisplayMeta.js';
 
-export default createAgGridDisplayHelper();
+export default createDisplayMeta('AgGridLowdefy', { size: true });
