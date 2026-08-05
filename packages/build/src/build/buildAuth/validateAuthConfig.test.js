@@ -389,6 +389,34 @@ test('validateAuthConfig throws when provider "twoFactorTrusted" is not a boolea
   );
 });
 
+test('validateAuthConfig throws when twoFactor.required is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { required: 'yes' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "twoFactor.required" should be a boolean.'
+  );
+});
+
+test('validateAuthConfig rejects a role list for twoFactor.required with the boolean type error', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { required: ['admin'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "twoFactor.required" should be a boolean.'
+  );
+});
+
 test('validateAuthConfig throws when emailAndPassword is missing "enabled"', () => {
   const components = {
     auth: {

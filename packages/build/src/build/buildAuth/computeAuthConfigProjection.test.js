@@ -20,7 +20,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
   expect(computeAuthConfigProjection()).toEqual({
     emailAndPassword: { enabled: false },
     magicLink: { enabled: false },
-    twoFactor: { enabled: false },
+    twoFactor: { enabled: false, required: false },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
     captcha: { enabled: false, provider: null, siteKey: null },
@@ -55,6 +55,20 @@ test('computeAuthConfigProjection presence of twoFactor and passkey blocks impli
   });
   expect(projection.twoFactor.enabled).toBe(true);
   expect(projection.passkey.enabled).toBe(true);
+});
+
+test('computeAuthConfigProjection projects twoFactor required false when absent', () => {
+  expect(computeAuthConfigProjection({}).twoFactor).toEqual({ enabled: false, required: false });
+});
+
+test('computeAuthConfigProjection projects twoFactor required false when block present without required', () => {
+  const projection = computeAuthConfigProjection({ twoFactor: { enabled: true } });
+  expect(projection.twoFactor).toEqual({ enabled: true, required: false });
+});
+
+test('computeAuthConfigProjection projects twoFactor required true when set', () => {
+  const projection = computeAuthConfigProjection({ twoFactor: { enabled: true, required: true } });
+  expect(projection.twoFactor).toEqual({ enabled: true, required: true });
 });
 
 test('computeAuthConfigProjection respects explicit twoFactor and passkey enabled false', () => {
