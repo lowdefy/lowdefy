@@ -28,6 +28,20 @@ lowdefy: local
 # UpdateMemberOrgRole grant surface, the account-kit local module
 # contributing auth wiring from its manifest, and the _build.authConfig
 # build operator (the module's login-methods page).
+# The two-factor-lifecycle phase turns two-factor into a floor
+# (auth.twoFactor.required): an unenrolled member is redirected to
+# authPages.twoFactorEnrol on every page and refused at every
+# request/endpoint/websocket with a 403 TwoFactorEnrolmentRequiredError, until
+# they enrol either a TOTP factor or a passkey. It exercises: that enrolment
+# floor and its callbackUrl redirect; two-factor-enrol as the ONE protected
+# auth page (session-holding but factor-less), calling no Lowdefy
+# request/endpoint because an unenrolled caller is refused at all of them;
+# _user.twoFactorEnrolled resolving true once a factor is held; the two admin
+# recovery routines (ResetUserTwoFactor paired mandatorily with
+# RevokeUserSessions, and RevokeUserPasskeys with its optional passkeyId); and
+# the signed-out existence fork (a protected-by-default app sends an anonymous
+# caller to sign-in rather than /404, so a missing page never reveals its
+# non-existence).
 # See README.md for the full walkthrough and required environment variables.
 
 auth:
@@ -55,8 +69,19 @@ auth:
   # once. Passkeys run the WebAuthn ceremony inside PasskeyRegister - rpId
   # must match the host the browser sees (localhost for the dev walkthrough;
   # passkeys do not work on http://127.0.0.1).
+  #
+  # required: true makes enrolment a floor - a member who has not enrolled a
+  # second factor is redirected to authPages.twoFactorEnrol on every page and
+  # refused at every request/endpoint/websocket with a 403
+  # TwoFactorEnrolmentRequiredError until they enrol. A caller satisfies it with
+  # EITHER a TOTP enrolment OR a registered passkey (either plugin is a
+  # sufficient route, which is why validation refuses required: true only when
+  # both are off). Before turning this on for real: enrol more than one admin
+  # first - there is no escape hatch, and a locked-out sole admin's only way
+  # back is a direct database edit.
   twoFactor:
     enabled: true
+    required: true
 
   passkey:
     enabled: true
@@ -201,6 +226,12 @@ auth:
   # own authority does, per organization.
   api:
     roles:
+      # The admin-* glob already gates every admin-* endpoint, including the
+      # two 2FA recovery endpoints added this phase (admin-reset-user-two-factor,
+      # admin-revoke-user-passkeys) - no per-id entry is needed here, and adding
+      # one would only duplicate the glob. The gate decides who reaches the
+      # routine; each step's org authority (user: [reset-two-factor] /
+      # [revoke-passkeys], target-user bounded) decides whether the write lands.
       user-admin:
         - 'admin-*'
       partner:
@@ -217,7 +248,16 @@ auth:
     verifyEmail: /verify-email
     forgotPassword: /forgot-password
     resetPassword: /reset-password
+    # The two 2FA pages have OPPOSITE public-ness on purpose. two-factor-challenge
+    # is PUBLIC (kept in auth.pages.public below): a challenged sign-in holds no
+    # session, only a BetterAuth cookie. two-factor-enrol is PROTECTED (absent
+    # from that list): the enrolling caller holds a valid session and is only
+    # missing a factor. Do not "fix" one to match the other.
     twoFactor: /two-factor-challenge
+    # Required when twoFactor.required is true - the build fails without it, and
+    # every unenrolled member is redirected here with a ?callbackUrl= back to
+    # the page they were bounced from.
+    twoFactorEnrol: /two-factor-enrol
 
   # Each entry binds an auth lifecycle point to an InternalApi endpoint.
   # The endpoint's routine is the hook body; it runs in a system context
@@ -380,6 +420,10 @@ api:
   - _ref: api/admin-ban-user.yaml
   - _ref: api/admin-unban-user.yaml
   - _ref: api/admin-revoke-user-sessions.yaml
+  # Two-factor lifecycle recovery endpoints - role-gated by the admin-* glob
+  # in auth.api.roles above. Reset pairs RevokeUserSessions mandatorily.
+  - _ref: api/admin-reset-user-two-factor.yaml
+  - _ref: api/admin-revoke-user-passkeys.yaml
   - _ref: api/admin-delete-user.yaml
   - _ref: api/admin-update-user-attributes.yaml
   - _ref: api/admin-list-members.yaml
@@ -431,6 +475,9 @@ pages:
   - _ref: pages/reset-password.yaml
   - _ref: pages/security.yaml
   - _ref: pages/two-factor-challenge.yaml
+  # The one PROTECTED auth page (deliberately NOT in auth.pages.public): the
+  # enrolment floor's exemption for a session-holding, factor-less caller.
+  - _ref: pages/two-factor-enrol.yaml
   - _ref: pages/login-methods.yaml
   # Phone OTP sign-in/sign-up with the captcha gate on the send.
   - _ref: pages/phone-login.yaml
