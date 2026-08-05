@@ -76,7 +76,7 @@ When you have a page open in your browser, the agent can read its **actual live 
 
 ## Auth-protected pages
 
-The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of returning a 404. That default user carries **no roles**, so a page or request gated on a role still comes back refused or empty.
+The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of bouncing to the sign-in page. That default user carries **no roles**, so a page or request gated on a role still comes back refused or empty.
 
 To act as a specific caller, pass `user` — every tool that renders a page headless accepts it: `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator` and `lowdefy_load_state`:
 

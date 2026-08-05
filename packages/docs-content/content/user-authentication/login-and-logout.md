@@ -10,6 +10,8 @@ The authorization url usually hosts a page where the user can input their creden
 
 The `callbackUrl` parameter of the Login action specifies where the user lands after login is complete. Three sources are consulted, in order: the `callbackUrl` param, then the `?callbackUrl=` query parameter Lowdefy sets when it redirects an unauthenticated user to the sign-in page, then the app's home page. If none resolves the action throws, rather than staying silently on the sign-in page.
 
+In a protected app a signed-out visitor is sent to the sign-in page for every URL, present or absent, so a `404` means you are signed in — see [Page and API existence](/auth-upgrade#page-and-api-existence-is-no-longer-observable-before-you-sign-in).
+
 To sign in without navigating at all - a login form in a modal, or an embedded panel - set `callbackUrl: false`. This is not valid for magic-link or social/OAuth sign-in, which redirect through a hop Lowdefy does not control.
 
 The parameters are:
