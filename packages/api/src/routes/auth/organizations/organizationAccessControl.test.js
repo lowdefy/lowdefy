@@ -21,8 +21,46 @@ test('organizationAccessControl extends the member statement with list', () => {
 });
 
 test('organizationAccessControl adds the user and session resources', () => {
-  expect(statements.user).toEqual(['ban', 'delete', 'set-attributes', 'update']);
+  expect(statements.user).toEqual([
+    'ban',
+    'delete',
+    'set-attributes',
+    'update',
+    'reset-two-factor',
+    'revoke-passkeys',
+  ]);
   expect(statements.session).toEqual(['revoke']);
+});
+
+test('organizationAccessControl carries the credential recovery actions alongside the org and BetterAuth actions', () => {
+  expect(statements.user).toEqual(
+    expect.arrayContaining([
+      'ban',
+      'delete',
+      'set-attributes',
+      'update',
+      'reset-two-factor',
+      'revoke-passkeys',
+    ])
+  );
+});
+
+test('organizationAccessControl grants the credential recovery actions to owner and admin', () => {
+  expect(roles.owner.authorize({ user: ['reset-two-factor'] }).success).toBe(true);
+  expect(roles.owner.authorize({ user: ['revoke-passkeys'] }).success).toBe(true);
+  expect(roles.admin.authorize({ user: ['reset-two-factor'] }).success).toBe(true);
+  expect(roles.admin.authorize({ user: ['revoke-passkeys'] }).success).toBe(true);
+});
+
+test('organizationAccessControl grants both credential recovery actions together to owner', () => {
+  expect(roles.owner.authorize({ user: ['reset-two-factor', 'revoke-passkeys'] }).success).toBe(
+    true
+  );
+});
+
+test('organizationAccessControl denies member the credential recovery actions', () => {
+  expect(roles.member.authorize({ user: ['reset-two-factor'] }).success).toBe(false);
+  expect(roles.member.authorize({ user: ['revoke-passkeys'] }).success).toBe(false);
 });
 
 test('organizationAccessControl registers exactly the three built-in roles', () => {

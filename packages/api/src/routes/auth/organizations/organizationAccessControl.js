@@ -29,7 +29,23 @@ import {
 // catalog table stays the contract.
 const ADDED = {
   member: ['list'],
-  user: ['ban', 'delete', 'set-attributes', 'update'],
+  user: [
+    'ban',
+    'delete',
+    'set-attributes',
+    'update',
+    // Credential recovery (Decision 3). TWO actions, not one shared
+    // manage-credentials: the two steps exist separately so an operator can
+    // address the incident they actually have - "I lost my authenticator" and
+    // "my security key was stolen" have different recovery - and collapsing them
+    // here would mean any deployment wanting per-passkey revocation must also
+    // grant TOTP reset, undoing the separation at the layer where it binds
+    // hardest. Distinct actions are also the escape hatch: a deployment
+    // registering a narrower role can grant member management without credential
+    // recovery.
+    'reset-two-factor',
+    'revoke-passkeys',
+  ],
   session: ['revoke'],
 };
 
