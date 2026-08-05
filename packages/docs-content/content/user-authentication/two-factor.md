@@ -96,3 +96,130 @@ Two `TwoFactorEnable` calls that run concurrently for the same user can write tw
 The mitigation is a unique index on `userId` in the two-factor collection (`user-two-factors`), applied by the host app — no layer in Lowdefy provisions indexes. For MongoDB, see the `modules-mongodb` `user-account` index reference for how that module declares its auth indexes, rather than writing the command by hand.
 
 Be clear about what the index buys: it converts an unrecoverable silent lockout into a visible, retryable duplicate-key error. It does not fix the race.
+
+## Requiring two-factor enrolment
+
+`twoFactor.enabled` lets a member enrol a factor. `twoFactor.required` makes enrolment a floor: a member who has not enrolled cannot use the app until they do.
+
+```yaml
+auth:
+  twoFactor:
+    enabled: true
+    required: true
+  authPages:
+    twoFactor: /two-factor-challenge
+    twoFactorEnrol: /two-factor-enrol
+```
+
+A caller satisfies `required` by holding **either** a TOTP enrolment **or** a registered passkey. A passkey counts on its own: it is a phishing-resistant possession factor bound to user verification, which is exactly why Entra and Okta accept one outright. Demanding TOTP on top of a passkey is theatre — it adds no assurance and pushes the user toward the weaker of the two factors.
+
+An unenrolled caller is redirected to `authPages.twoFactorEnrol` on every page, and refused at every request, endpoint and websocket with a `TwoFactorEnrolmentRequiredError` — a **403, not a 401**. A 401 reads to the client as a dead session and bounces the user to sign-in, which is the loop the floor exists to avoid; a 403 says "you are signed in, but you are missing something".
+
+The enrolment check runs **after** the role check. Probing a page you lack the roles for still returns the opaque 404 it always did, so turning `required` on never reveals a page's existence to someone who was not authorised for it in the first place.
+
+`authPages.twoFactorEnrol` is **required when `required: true`** — the build fails without it. Every unenrolled user is redirected there, so a deployment that required enrolment without naming the page would redirect them to nowhere.
+
+Callers that carry no session pass untouched: the API strategy and the injected callers used in dev and e2e are not session-resolved members, so the enrolment floor does not apply to them.
+
+## What `required` guarantees — and what it does not
+
+> `required` guarantees that every member has enrolled a factor. It does NOT guarantee that every session presented one.
+
+Read the second sentence before you rely on the first. Here is the concrete gap. Take a user who registered a passkey and also holds a password. They sign in with the password. BetterAuth's sign-in hook opens with `if (!data?.user.twoFactorEnabled) return;`, so a passkey-only enrolment fires no challenge. The enrolment floor then computes `false || passkeyCount > 0` and reads the caller as satisfied. Nothing on this path compares the factor **presented this sign-in** against the factors the user **holds** — so a password-only sign-in clears a floor a passkey was meant to enforce.
+
+This is an accepted cost, for three reasons:
+
+- The fix is session-scoped satisfaction — comparing presented against held on every request. That is a larger feature than a per-user flag, and shipping it half-built would be worse than naming the limitation. It has a known correct answer; it is not in this release.
+- Dropping the passkey disjunct would trade a soft hole for a hard lockout: a passwordless user who enrolled only a passkey would satisfy nothing and be locked out of an app they have a perfectly good factor for.
+- The affected population **voluntarily registered a strong, phishing-resistant credential.** They are not the threat `required` defends against. `required` exists to catch members with **no second factor at all** — and every one of those is caught, because an unenrolled caller has neither a TOTP row nor a passkey and fails the floor outright.
+
+## Two-factor with a trusted OAuth provider
+
+A `twoFactorTrusted` provider's users are not challenged on that sign-in path (see **Trusting an OAuth provider**, above). Under `required`, a user who signed in that way and has not separately enrolled is unenrolled, so they are routed to `authPages.twoFactorEnrol` to enrol a TOTP their sign-in will never present.
+
+The cost, stated plainly: a deployment whose **only** sign-in path is a trusted provider gets enrolment with no challenge ever attached to it.
+
+The enrolled factor is not inert, though. It is what a password or magic-link sign-in **would** challenge, and it is what an admin reset restores. It earns its keep the moment a second sign-in path exists.
+
+## Two-factor for passwordless users
+
+The four BetterAuth two-factor endpoints that mutate a factor are password-gated: they call `shouldRequirePassword`, which demands the caller's current password unless `allowPasswordless` is set. Lowdefy sets `allowPasswordless: true`, so an OAuth or magic-link user who never set a password can still enrol TOTP.
+
+The waiver is **per user**, not per app. A caller who *does* hold a password still faces the password gate on all four endpoints — the waiver only lifts it for the users who have no password to give. There is no route difference to configure: the same enrol flow serves both.
+
+## The enrolment page
+
+`authPages.twoFactorEnrol` is the one auth page that is **not public**. On the sign-in and challenge pages the user has no session yet; here they hold a valid session and are merely missing a factor — an authorisation gap, not an identity one — so the page stays behind a session.
+
+The constraint that follows: **the enrolment page cannot call any Lowdefy request or endpoint.** An unenrolled caller is refused at every one of them with a 403, and the person on this page is unenrolled by definition. It must be self-sufficient on the client auth actions — `TwoFactorEnable`, `TwoFactorVerify` and `PasskeyRegister` — which hit `/api/auth/*` directly and are not behind the enrolment floor.
+
+Reached with no session at all, it behaves like any protected page: the user is sent to sign in with a `callbackUrl` back to the enrolment page.
+
+## Recovering a user who has lost their factor
+
+When a member loses their authenticator or has a security key stolen, an administrator restores their access with two org-scoped steps:
+
+| Step                                            | Properties            | Permission                    |
+| ----------------------------------------------- | --------------------- | ----------------------------- |
+| `ResetUserTwoFactor`                            | `userId`              | `user: ['reset-two-factor']`  |
+| `RevokeUserPasskeys`                            | `userId`, `passkeyId?`| `user: ['revoke-passkeys']`   |
+
+Both are `org`-scoped and bounded by target membership: an administrator can only reach a user who holds a member row in an organization they administer. Both permissions ship granted to `owner` and `admin`; a narrower custom role can be given member management without either of them.
+
+Three things this routine must not miss:
+
+**Pair the reset with `RevokeUserSessions`.** Clearing a factor does not end a session — an attacker who already holds one keeps it, which is precisely the incident you are recovering from. A reset without a session revocation has not recovered the account. Run all three together:
+
+```yaml
+id: admin-recover-user-two-factor
+type: Api
+routine:
+  - id: reset_two_factor
+    type: ResetUserTwoFactor
+    properties:
+      userId:
+        _payload: userId
+  - id: revoke_passkeys
+    type: RevokeUserPasskeys
+    properties:
+      userId:
+        _payload: userId
+  - id: revoke_sessions
+    type: RevokeUserSessions
+    properties:
+      userId:
+        _payload: userId
+  - ':return':
+      _step: revoke_sessions
+```
+
+**The reach is suite-wide.** `twoFactorEnabled` lives on the deployment-wide user row, and there is one enrolment per user — never one factor per organization. The membership bound governs **who** an administrator may reset, not **how far** a reset reaches: reset the user in the one organization you administer and their factor is cleared everywhere.
+
+**`ResetUserTwoFactor` also deletes the user's trust-device records.** This is load-bearing, not tidying. A device the user once ticked "trust this device" on holds a signed cookie that skips the challenge; leave the record in place and, the moment the victim re-enrols, a stolen device walks straight past the factor they just set up.
+
+One timing note on session revocation: with `session.cookieCache` enabled, a revoked session can still be honoured from its cached copy for up to the cache's `maxAge` (default 300 seconds). Lowdefy defaults `cookieCache` **off**, so a default deployment has no such window — but if you turned it on, size the exposure accordingly.
+
+## Before you turn `required` on
+
+**Enrol your administrators first — more than one of them.** Turning `required` on sends every unenrolled user, administrators included, to the enrolment page at their next request. If the only person who can run `ResetUserTwoFactor` is themselves locked out mid-enrolment, you have no in-app way back.
+
+**There is no escape hatch, by design.** No exempt identity, no environment override, no grace period. Each of those would be a permanent bypass of the floor, available to anyone who found it, so none exists.
+
+**Last-admin recovery is a database edit.** If every administrator is locked out, the only way back is to clear one administrator's factor directly in the database — the same two writes `ResetUserTwoFactor` makes:
+
+1. Delete the target's row from the `user-two-factors` collection.
+2. Set `twoFactorEnabled` to `false` on their row in the `users` collection.
+
+That administrator can then sign in and recover the others through the app.
+
+## Required index
+
+Under `required`, the engine counts a caller's passkeys on every request from anyone not yet enrolled, to decide whether they clear the floor. That read needs an index on the passkey collection:
+
+```js
+db['user-passkeys'].createIndex({ userId: 1 });
+```
+
+This index is **platform-owned but host-applied.** The engine reads it per request for any unenrolled caller under `required`; without it, that read is a full collection scan on every such request. But no layer in Lowdefy provisions indexes — the deployment applies this one, exactly as it applies the `user-two-factors` index above. (This example follows the `userId` field convention: the auth adapter maps its collections with camelCase field names, so the key is `{ userId: 1 }`, not `{ user_id: 1 }`.)
+
+An **enrolled** caller never reaches the passkey read: the floor short-circuits on `twoFactorEnabled`, which rides the session, so an enrolled member pays nothing. Once `required` has been on for a while, that is the overwhelming majority of traffic.
