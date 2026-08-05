@@ -28,7 +28,7 @@ import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 //
 // The built-in organization tier (owner/admin/member) is not a valid gate
 // reference under either policy: it reaches apps as _user.orgRoles, while
-// createAuthorize.js:29,46 matches gates against user.roles alone, which is
+// createAuthorizeOutcome.js matches gates against user.roles alone, which is
 // member.appRoles. A gate on a tier name would never match any caller.
 function buildRoleCatalog({ components }) {
   const authoredRoles = components.auth.roles ?? [];

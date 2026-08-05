@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
-import createAuthorize from '../../context/createAuthorize.js';
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
@@ -31,7 +31,7 @@ import runRoutine from './runRoutine.js';
 // call is a fresh invocation, not a fresh principal (Decision 4): it runs with
 // the SAME identity the dispatching run had, carried across the hop and
 // rehydrated here. There is no detached-specific authorization rule - nested
-// calls flow through the normal `authorize` path against the carried identity.
+// calls flow through the normal `authorizeOutcome` path against the carried identity.
 // Payload arrives serialized (dates etc. survive the HTTP hop via
 // @lowdefy/helpers serializer).
 async function runDetachedEndpoint(context, { endpointId, payload, principal }) {
@@ -40,7 +40,7 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
   context.endpointId = endpointId;
 
   // Rehydrate the dispatcher's identity carried across the CRON_SECRET-gated
-  // hop BEFORE deriving authorize and evaluateOperators, so both the auth check
+  // hop BEFORE deriving authorizeOutcome and evaluateOperators, so both the auth check
   // and the `_user` operator see the carried identity. This is a sanctioned
   // substitute writer for resolveAuthentication - the principal was resolved
   // upstream and built server-side, never from user input. A stale principal
@@ -57,7 +57,7 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
     // would be in-invocation - the run reaches nothing the dispatcher could not
     // reach synchronously.
     context.user = serializer.deserialize(principal?.user ?? null);
-    context.authorize = createAuthorize(context);
+    context.authorizeOutcome = createAuthorizeOutcome(context);
   }
   context.evaluateOperators = createEvaluateOperators(context);
 

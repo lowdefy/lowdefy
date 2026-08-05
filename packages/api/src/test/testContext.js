@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import createAuthorize from '../context/createAuthorize.js';
+import createAuthorizeOutcome from '../context/createAuthorizeOutcome.js';
 
 function testContext({
   appMeta = {},
@@ -44,7 +44,7 @@ function testContext({
     appMeta,
     auth,
     authEnforcement,
-    authorize: createAuthorize({ user }),
+    authorizeOutcome: createAuthorizeOutcome({ authEnforcement, system, user }),
     config,
     configDirectory,
     connections,
