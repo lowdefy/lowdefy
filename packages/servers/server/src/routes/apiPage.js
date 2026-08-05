@@ -44,6 +44,21 @@ async function apiPageHandler(c) {
       401
     );
   }
+  if (result.status === 'enrol_required') {
+    // 403, not the 401 the signed-out branch above uses: a 401 is the client's
+    // dead-session signal and would bounce the user to sign-in, which is the loop
+    // the enrolment gate exists to avoid.
+    const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.info({ event: 'api_page_enrol_required', pageId });
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      403
+    );
+  }
   if (result.status !== 'ok') {
     context.logger.info({ event: 'api_page_not_found', pageId });
     return c.json({ pageConfig: null }, 404);
