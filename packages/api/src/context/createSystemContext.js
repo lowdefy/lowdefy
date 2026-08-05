@@ -17,6 +17,7 @@
 import applySystemTrust from './applySystemTrust.js';
 import createEvaluateOperators from './createEvaluateOperators.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
 import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 
 // Builds a fresh off-request context for a trusted, caller-less system context -
@@ -75,6 +76,9 @@ function createSystemContext({
   // Hook routines read the retained organizations state too - a step or
   // _organization inside a hook-bound endpoint resolves the same pinned org.
   context.organization = getOrganizationBinding({ auth: auth ?? null });
+  // A system context bypasses the enrolment check outright (system === true
+  // returns early), so this exists for shape consistency, not a live read.
+  context.authEnforcement = getAuthEnforcement({ auth: auth ?? null });
   // Trusted, caller-less system context (Decisions 1, 2): user: null,
   // system: true, and authorize derived from createAuthorize - the same
   // invariant bundle the caller-less runners apply, set in one place.

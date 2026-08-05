@@ -16,6 +16,7 @@
 
 import createAuthorize from './createAuthorize.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
 import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveLocale from './resolveLocale.js';
 
@@ -33,6 +34,11 @@ function createApiContext(context) {
   // _organization operator and the org-scoped admin steps; null when auth
   // (or organizations) is not configured.
   context.organization = getOrganizationBinding({ auth: context.auth ?? null });
+
+  // The retained build-time authorization facts - the enrolment floor, the exempt
+  // enrolment page, and the unlisted-page-id default. null when auth is not
+  // configured, in which case nothing is protected and nothing is required.
+  context.authEnforcement = getAuthEnforcement({ auth: context.auth ?? null });
 
   context.authorize = createAuthorize(context);
   context.readConfigFile = createReadConfigFile(context);

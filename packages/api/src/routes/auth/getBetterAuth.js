@@ -18,6 +18,7 @@ import { betterAuth } from 'better-auth';
 
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
+import { registerAuthEnforcement } from './getAuthEnforcement.js';
 import { registerOrganizationBinding } from './organizations/getOrganizationBinding.js';
 
 let instance;
@@ -51,6 +52,10 @@ function getBetterAuth({
       secrets,
     })
   );
+
+  // The build-time authorization facts the gates read - the enrolment floor, the
+  // one page exempt from it, and the protection an unlisted page id inherits.
+  registerAuthEnforcement({ auth: instance, authJson });
 
   // Retain the organizations declaration per instance - request-time reads
   // (the _organization operator, step organizationId defaulting) resolve the
