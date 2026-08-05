@@ -31,6 +31,7 @@ function getPluginPackages({ components }) {
   getPackages(components.types.auth.callbacks);
   getPackages(components.types.auth.events);
   getPackages(components.types.auth.providers);
+  getPackages(components.types.auth.strategies);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.notifications);
@@ -62,6 +63,7 @@ function buildImportsDev({ components, context }) {
       callbacks: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.callbacks }),
       events: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.events }),
       providers: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.providers }),
+      strategies: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.strategies }),
     },
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
