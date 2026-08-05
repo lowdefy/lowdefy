@@ -65,6 +65,7 @@ export default {
     'ListMembers',
     'ListUsers',
     'RemoveMember',
+    'ResetUserTwoFactor',
     'RevokeUserSessions',
     'UnbanUser',
     'UpdateMemberAttributes',
