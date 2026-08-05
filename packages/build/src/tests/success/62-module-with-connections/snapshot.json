@@ -50,6 +50,7 @@
       "~arr": [],
       "~k": "1y"
     },
+    "pagesProtectedByDefault": false,
     "~k": "1q"
   },
   "blockPackages.json": [

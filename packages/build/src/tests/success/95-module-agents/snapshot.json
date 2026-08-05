@@ -221,6 +221,7 @@
       "~arr": [],
       "~k": "34"
     },
+    "pagesProtectedByDefault": false,
     "~k": "2w"
   },
   "blockPackages.json": [

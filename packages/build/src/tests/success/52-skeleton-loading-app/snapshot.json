@@ -49,6 +49,7 @@
       "~arr": [],
       "~k": "2h"
     },
+    "pagesProtectedByDefault": false,
     "~k": "29"
   },
   "blockPackages.json": [

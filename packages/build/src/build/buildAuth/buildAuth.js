@@ -23,6 +23,7 @@ import buildEntityAuth from './buildEntityAuth.js';
 import buildRoleCatalog from './buildRoleCatalog.js';
 import buildTrustedProviders from './buildTrustedProviders.js';
 import buildTwoFactorTrustedProviders from './buildTwoFactorTrustedProviders.js';
+import { getEntityDefaultProtected } from './getProtectedEntities.js';
 import setAuthConfigured from './setAuthConfigured.js';
 import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
@@ -39,6 +40,17 @@ function buildAuth({ components, context }) {
   buildEntityAuth({ components, context, entity: 'api' });
   buildEntityAuth({ components, context, entity: 'websockets' });
   buildEntityAuth({ components, context, entity: 'pages' });
+
+  // The protection an unlisted page id inherits, resolved once for the runtime -
+  // the signed-out page fork reads it instead of consulting page existence
+  // (Decision 7). Pages only: the request and endpoint surfaces need no such
+  // default - a session-less human gets 401 for every id in an auth'd app,
+  // present or absent, with no per-entity boolean.
+  components.auth.pagesProtectedByDefault = getEntityDefaultProtected({
+    components,
+    entity: 'pages',
+  });
+
   buildAuthPlugins({ components, context });
 
   return components;

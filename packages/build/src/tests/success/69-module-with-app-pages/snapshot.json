@@ -50,6 +50,7 @@
       "~arr": [],
       "~k": "32"
     },
+    "pagesProtectedByDefault": false,
     "~k": "2u"
   },
   "blockPackages.json": [

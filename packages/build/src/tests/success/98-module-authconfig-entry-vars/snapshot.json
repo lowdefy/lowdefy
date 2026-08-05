@@ -121,6 +121,7 @@
       "~arr": [],
       "~k": "1p"
     },
+    "pagesProtectedByDefault": false,
     "~k": "7"
   },
   "blockPackages.json": [

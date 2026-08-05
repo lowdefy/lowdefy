@@ -93,6 +93,7 @@
       "~arr": [],
       "~k": "2p"
     },
+    "pagesProtectedByDefault": false,
     "~k": "2h"
   },
   "blockPackages.json": [

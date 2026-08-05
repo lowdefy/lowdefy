@@ -35,4 +35,18 @@ function getProtectedEntities({ components, entity }) {
   return protectedIds;
 }
 
+// The protection an item id absent from the build inherits - the app's declared
+// default, resolved at build so the runtime never re-derives it from patterns
+// (Decision 7). Coarser than the config on purpose: the three modes are
+// picomatch glob lists, so an absent id can still match a declared pattern -
+// accepted, because the alternative is shipping the lists and matching globs on
+// the request path to change the answer for URLs that are wrong anyway.
+function getEntityDefaultProtected({ components, entity }) {
+  const entityConfig = components.auth[entity] ?? {};
+  if (type.isArray(entityConfig.public)) return true;
+  if (entityConfig.protected === true) return true;
+  return false;
+}
+
 export default getProtectedEntities;
+export { getEntityDefaultProtected };

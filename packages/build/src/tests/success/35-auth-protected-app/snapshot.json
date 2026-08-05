@@ -141,6 +141,7 @@
       "~arr": [],
       "~k": "3g"
     },
+    "pagesProtectedByDefault": true,
     "~k": "5"
   },
   "blockPackages.json": [

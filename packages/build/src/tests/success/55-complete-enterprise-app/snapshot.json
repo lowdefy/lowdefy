@@ -173,6 +173,7 @@
       "max": 100,
       "~k": "an"
     },
+    "pagesProtectedByDefault": true,
     "~k": "f"
   },
   "blockPackages.json": [
