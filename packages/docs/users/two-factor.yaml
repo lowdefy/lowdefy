@@ -63,33 +63,13 @@ _ref:
 
             The trade this makes: an inline two-factor challenge rendered on the login page itself is no longer possible. The challenge is always a page.
 
-            ### Reading `?callbackUrl=` on the challenge page
+            ### A challenge page routes nothing
 
-            The engine carries the destination the caller asked for onto the challenge URL as `?callbackUrl=` — the same parameter the sign-in bounce already uses — so an enrolled user who deep-linked to `/invoices/123`, was bounced to sign in and then challenged, can still be returned there. A challenge page that hard-codes its post-verify destination silently discards that deep link.
+            The engine owns both ends of the challenge hop. It navigates to `authPages.twoFactor` on every sign-in path, carrying the destination the caller asked for as `?callbackUrl=`, and `TwoFactorVerify` navigates away again after a successful verify — reading that same parameter through the same ladder as the rest of sign-in. So an enrolled user who deep-linked to `/invoices/123`, was bounced to sign in and then challenged, lands back on `/invoices/123`, and your challenge page needs no routing config for it.
 
-            Only app-relative, same-origin destinations are carried; anything else is dropped. The page does not need to re-validate the value.
+            Only app-relative, same-origin destinations are carried; anything else falls through to the home page. `basePath` needs no handling: the carried path already includes it.
 
-            Note that `_url_query: callbackUrl` arrives as a path, not a `pageId`, and the [`Link`](/Link) action's `url` param is an off-origin target — it gains an `https://` scheme when the value has no colon, so `url: /invoices/123` would resolve to the host `invoices`. Prefix the origin:
-
-            ```yaml
-            - id: to_destination
-              type: Link
-              params:
-                _if:
-                  test:
-                    _eq:
-                      - _url_query: callbackUrl
-                      - null
-                  then:
-                    pageId: dashboard
-                  else:
-                    url:
-                      _string.concat:
-                        - _location: origin
-                        - _url_query: callbackUrl
-            ```
-
-            `basePath` needs no handling either way: the carried path already includes it, and `pageId` applies it.
+            `TwoFactorVerify` takes the same `callbackUrl` param as [`Login`](/Login): an explicit target wins over the carried one, and `callbackUrl: false` stays put, for a challenge page that renders its own post-verify state instead.
 
             ### Trusting a device
 

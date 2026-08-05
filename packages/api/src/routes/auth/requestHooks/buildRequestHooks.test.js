@@ -31,7 +31,7 @@ jest.unstable_mockModule('./beginTwoFactorChallenge.js', () => ({
 
 const { default: buildRequestHooks } = await import('./buildRequestHooks.js');
 
-const pinnedOrg = { id: 'org_pinned', slug: 'team-portal', name: 'team-portal' };
+const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
 const organizations = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
 
 function createMockAuth({ invitations = [] } = {}) {

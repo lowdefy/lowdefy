@@ -1196,7 +1196,7 @@ test('non-org-client actions do not trigger the pinned policy build error', () =
   expect(() => buildPages({ components, context })).not.toThrow();
 });
 
-test('InviteMember action wired under the default pinned policy fails the build', () => {
+test('SetActiveOrganization action wired under the default pinned policy fails the build', () => {
   const components = {
     pages: [
       {
@@ -1210,9 +1210,9 @@ test('InviteMember action wired under the default pinned policy fails the build'
             events: {
               onClick: [
                 {
-                  id: 'invite_member',
-                  type: 'InviteMember',
-                  params: { email: 'invitee@example.com', role: 'admin' },
+                  id: 'set_active_organization',
+                  type: 'SetActiveOrganization',
+                  params: { organizationId: 'org-1' },
                 },
               ],
             },
@@ -1222,11 +1222,11 @@ test('InviteMember action wired under the default pinned policy fails the build'
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'InviteMember action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
   );
 });
 
-test('InviteMember action wired under the tenant policy builds cleanly', () => {
+test('SetActiveOrganization action wired under the tenant policy builds cleanly', () => {
   const components = {
     auth: { organizations: { policy: 'tenant' } },
     pages: [
@@ -1241,9 +1241,9 @@ test('InviteMember action wired under the tenant policy builds cleanly', () => {
             events: {
               onClick: [
                 {
-                  id: 'invite_member',
-                  type: 'InviteMember',
-                  params: { email: 'invitee@example.com', role: 'admin' },
+                  id: 'set_active_organization',
+                  type: 'SetActiveOrganization',
+                  params: { organizationId: 'org-1' },
                 },
               ],
             },

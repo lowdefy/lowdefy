@@ -19,297 +19,107 @@ import { jest } from '@jest/globals';
 import UpdateMemberRoles from './UpdateMemberRoles.js';
 import createMockAuth from '../../test/createMockAuth.js';
 
-const acting = { system: true, user: null };
-const organization = {
-  policy: 'pinned',
-  pinned: { id: 'org_pinned', slug: 'org-a', name: 'org-a' },
-};
+// The step floor resolves the target organization and passes the id in; the
+// defaulting and tenant-policy rules are tested there, not here.
+const organizationId = 'org-1';
 
-function createAdapter({ member, members }) {
-  return {
-    findOne: jest.fn().mockResolvedValue(member),
-    findMany: jest.fn().mockResolvedValue(members),
-  };
-}
-
-test('UpdateMemberRoles throws when demoting the only owner of an organization', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-    members: [
-      { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-      { id: 'member-2', organizationId: 'org-1', role: 'member' },
-    ],
-  });
+test('UpdateMemberRoles writes appRoles directly through the adapter, scoped to the resolved organization', async () => {
+  const updated = { id: 'member-1', appRoles: ['branch-manager'] };
+  const adapter = { findOne: jest.fn(), update: jest.fn().mockResolvedValue(updated) };
   const updateMemberRole = jest.fn();
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await expect(
-    UpdateMemberRoles({
-      acting,
-      auth,
-      organization,
-      properties: { memberId: 'member-1', role: 'member' },
-    })
-  ).rejects.toThrow('You cannot leave the organization without an owner.');
-  expect(updateMemberRole).not.toHaveBeenCalled();
-});
-
-test('UpdateMemberRoles defaults organizationId to the pinned organization when omitted', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-2', organizationId: 'org_pinned', role: 'member' },
-    members: [],
-  });
-  const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-2', role: 'admin' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-2', role: 'admin' },
-  });
-  expect(updateMemberRole.mock.calls[0][0].body.organizationId).toBe('org_pinned');
-});
-
-test('UpdateMemberRoles throws under the tenant organizations policy when organizationId is omitted', async () => {
-  const { auth } = createMockAuth();
-  await expect(
-    UpdateMemberRoles({
-      acting,
-      auth,
-      organization: { policy: 'tenant', pinned: null },
-      properties: { memberId: 'member-1', role: 'member' },
-    })
-  ).rejects.toThrow(
-    'UpdateMemberRoles requires an "organizationId" property under the "tenant" organizations policy - there is no pinned organization to default to. Set organizationId on the step properties.'
-  );
-});
-
-test('UpdateMemberRoles demotes an owner when another owner remains', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-    members: [
-      { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-      { id: 'member-2', organizationId: 'org-1', role: 'admin,owner' },
-    ],
-  });
-  const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-1', role: 'member' });
   const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
   const result = await UpdateMemberRoles({
-    acting,
     auth,
-    properties: { memberId: 'member-1', role: 'member', organizationId: 'org-1' },
+    organizationId,
+    properties: { memberId: 'member-1', appRoles: ['branch-manager'] },
   });
-  expect(result).toEqual({ id: 'member-1', role: 'member' });
-  expect(updateMemberRole.mock.calls[0][0].body).toEqual({
-    memberId: 'member-1',
-    organizationId: 'org-1',
-    role: 'member',
-  });
-});
-
-test('UpdateMemberRoles passes through when the new role set keeps owner', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-    members: [{ id: 'member-1', organizationId: 'org-1', role: 'owner' }],
-  });
-  const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-1', role: 'owner,admin' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-1', role: ['owner', 'admin'] },
-  });
-  expect(adapter.findMany).not.toHaveBeenCalled();
-  expect(updateMemberRole).toHaveBeenCalledTimes(1);
-});
-
-test('UpdateMemberRoles passes through when the target member is not an owner', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-2', organizationId: 'org-1', role: 'member' },
-    members: [],
-  });
-  const updateMemberRole = jest.fn().mockResolvedValue({ id: 'member-2', role: 'admin' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-2', role: 'admin' },
-  });
-  expect(adapter.findMany).not.toHaveBeenCalled();
-  expect(updateMemberRole).toHaveBeenCalledTimes(1);
-});
-
-test('UpdateMemberRoles detects owner demotion in comma-separated role strings', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-1', organizationId: 'org-1', role: 'admin, owner' },
-    members: [{ id: 'member-1', organizationId: 'org-1', role: 'admin, owner' }],
-  });
-  const updateMemberRole = jest.fn();
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await expect(
-    UpdateMemberRoles({
-      acting,
-      auth,
-      organization,
-      properties: { memberId: 'member-1', role: 'admin' },
-    })
-  ).rejects.toThrow('You cannot leave the organization without an owner.');
-});
-
-test('UpdateMemberRoles passes through when the member row is not found so the endpoint surfaces MEMBER_NOT_FOUND', async () => {
-  const adapter = createAdapter({ member: null, members: [] });
-  const apiError = new Error('generic');
-  apiError.status = 'BAD_REQUEST';
-  apiError.body = { code: 'MEMBER_NOT_FOUND', message: 'Member not found' };
-  const updateMemberRole = jest.fn().mockRejectedValue(apiError);
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await expect(
-    UpdateMemberRoles({
-      acting,
-      auth,
-      organization,
-      properties: { memberId: 'missing', role: 'member' },
-    })
-  ).rejects.toThrow('Member not found');
-});
-
-test('UpdateMemberRoles scopes the last-owner guard lookup to the resolved organization', async () => {
-  const adapter = createAdapter({
-    member: { id: 'member-1', organizationId: 'org-1', role: 'owner' },
-    members: [{ id: 'member-1', organizationId: 'org-1', role: 'owner' }],
-  });
-  const updateMemberRole = jest.fn();
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-  await expect(
-    UpdateMemberRoles({
-      acting,
-      auth,
-      organization,
-      properties: { memberId: 'member-1', role: 'member' },
-    })
-  ).rejects.toThrow('You cannot leave the organization without an owner.');
-  expect(adapter.findOne).toHaveBeenCalledWith({
+  expect(result).toEqual(updated);
+  expect(adapter.update).toHaveBeenCalledWith({
     model: 'member',
     where: [
       { field: 'id', value: 'member-1' },
-      { field: 'organizationId', value: 'org_pinned' },
+      { field: 'organizationId', value: 'org-1' },
     ],
+    update: { appRoles: ['branch-manager'] },
   });
+  expect(updateMemberRole).not.toHaveBeenCalled();
+});
+
+test('UpdateMemberRoles accepts an unrecognised role name without checking any catalog', async () => {
+  const adapter = { update: jest.fn().mockResolvedValue({ id: 'member-1' }) };
+  const { auth } = createMockAuth({ adapter });
+  await UpdateMemberRoles({
+    auth,
+    organizationId,
+    properties: { memberId: 'member-1', appRoles: ['no-such-role'] },
+  });
+  expect(adapter.update.mock.calls[0][0].update).toEqual({ appRoles: ['no-such-role'] });
+});
+
+test('UpdateMemberRoles clears the member app roles when appRoles is an empty array', async () => {
+  const adapter = { update: jest.fn().mockResolvedValue({ id: 'member-1', appRoles: [] }) };
+  const { auth } = createMockAuth({ adapter });
+  const result = await UpdateMemberRoles({
+    auth,
+    organizationId,
+    properties: { memberId: 'member-1', appRoles: [] },
+  });
+  expect(result).toEqual({ id: 'member-1', appRoles: [] });
+  expect(adapter.update.mock.calls[0][0].update).toEqual({ appRoles: [] });
+});
+
+test('UpdateMemberRoles does not read the member row or write the user row', async () => {
+  const adapter = {
+    findOne: jest.fn(),
+    findMany: jest.fn(),
+    update: jest.fn().mockResolvedValue({ id: 'member-1' }),
+  };
+  const { auth } = createMockAuth({ adapter });
+  await UpdateMemberRoles({
+    auth,
+    organizationId,
+    properties: { memberId: 'member-1', appRoles: ['branch-manager'] },
+  });
+  expect(adapter.findOne).not.toHaveBeenCalled();
+  expect(adapter.findMany).not.toHaveBeenCalled();
+  expect(adapter.update).toHaveBeenCalledTimes(1);
+});
+
+test('UpdateMemberRoles throws when no member matches the memberId within the resolved organization', async () => {
+  const adapter = { update: jest.fn().mockResolvedValue(null) };
+  const { auth } = createMockAuth({ adapter });
+  await expect(
+    UpdateMemberRoles({
+      auth,
+      organizationId,
+      properties: { memberId: 'member-other-org', appRoles: ['branch-manager'] },
+    })
+  ).rejects.toThrow(
+    'UpdateMemberRoles found no member "member-other-org" in organization "org-1".'
+  );
 });
 
 test('UpdateMemberRoles throws when memberId property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
-    UpdateMemberRoles({ acting, auth, organization, properties: { role: 'member' } })
+    UpdateMemberRoles({ auth, organizationId, properties: { appRoles: [] } })
   ).rejects.toThrow('UpdateMemberRoles requires a "memberId" property.');
 });
 
-test('UpdateMemberRoles throws when role property is missing', async () => {
+test('UpdateMemberRoles throws when appRoles property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
-    UpdateMemberRoles({ acting, auth, organization, properties: { memberId: 'member-1' } })
-  ).rejects.toThrow('UpdateMemberRoles requires a "role" property.');
+    UpdateMemberRoles({ auth, organizationId, properties: { memberId: 'member-1' } })
+  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array. Received undefined.');
 });
 
-// user.role denormalization sync - findOne dispatches on model and where
-// shape: the step's member prefetch queries by id, the sync queries the
-// pinned membership by userId, then the user row.
-function createSyncAdapter({ memberById, memberByUserId, userRow }) {
-  const findOne = jest.fn(async ({ model, where }) => {
-    if (model === 'member' && where.some((w) => w.field === 'id')) return memberById;
-    if (model === 'member' && where.some((w) => w.field === 'userId')) return memberByUserId;
-    if (model === 'user') return userRow;
-    return null;
-  });
-  const update = jest.fn(async () => ({}));
-  return { findOne, findMany: jest.fn().mockResolvedValue([]), update };
-}
-
-test('UpdateMemberRoles writes user.role when the granted roles include the user-admin role', async () => {
-  const adapter = createSyncAdapter({
-    memberById: { id: 'member-2', organizationId: 'org_pinned', role: 'member', userId: 'user_9' },
-    memberByUserId: {
-      id: 'member-2',
-      organizationId: 'org_pinned',
-      role: 'user-admin',
-      userId: 'user_9',
-    },
-    userRow: { id: 'user_9', role: null },
-  });
-  const updateMemberRole = jest
-    .fn()
-    .mockResolvedValue({ id: 'member-2', role: 'user-admin', userId: 'user_9' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-2', role: 'user-admin' },
-    userAdminRole: 'user-admin',
-  });
-
-  expect(adapter.update).toHaveBeenCalledWith({
-    model: 'user',
-    where: [{ field: 'id', value: 'user_9' }],
-    update: { role: 'user-admin' },
-  });
-});
-
-test('UpdateMemberRoles clears user.role when the new roles drop the user-admin role', async () => {
-  const adapter = createSyncAdapter({
-    memberById: {
-      id: 'member-2',
-      organizationId: 'org_pinned',
-      role: 'user-admin',
-      userId: 'user_9',
-    },
-    memberByUserId: {
-      id: 'member-2',
-      organizationId: 'org_pinned',
-      role: 'member',
-      userId: 'user_9',
-    },
-    userRow: { id: 'user_9', role: 'user-admin' },
-  });
-  const updateMemberRole = jest
-    .fn()
-    .mockResolvedValue({ id: 'member-2', role: 'member', userId: 'user_9' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-2', role: 'member' },
-    userAdminRole: 'user-admin',
-  });
-
-  expect(adapter.update).toHaveBeenCalledWith({
-    model: 'user',
-    where: [{ field: 'id', value: 'user_9' }],
-    update: { role: null },
-  });
-});
-
-test('UpdateMemberRoles does not touch user.role when no user-admin role is configured', async () => {
-  const adapter = createSyncAdapter({
-    memberById: { id: 'member-2', organizationId: 'org_pinned', role: 'member', userId: 'user_9' },
-    memberByUserId: null,
-    userRow: null,
-  });
-  const updateMemberRole = jest
-    .fn()
-    .mockResolvedValue({ id: 'member-2', role: 'admin', userId: 'user_9' });
-  const { auth } = createMockAuth({ adapter, organizationEndpoints: { updateMemberRole } });
-
-  await UpdateMemberRoles({
-    acting,
-    auth,
-    organization,
-    properties: { memberId: 'member-2', role: 'admin' },
-  });
-
-  expect(adapter.update).not.toHaveBeenCalled();
+test('UpdateMemberRoles throws when appRoles is a comma-separated string', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    UpdateMemberRoles({
+      auth,
+      organizationId,
+      properties: { memberId: 'member-1', appRoles: 'a,b' },
+    })
+  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array. Received "a,b".');
 });

@@ -53,6 +53,18 @@ test('validateAuthConfig throws when auth contains an unknown key', () => {
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
+test('validateAuthConfig throws when auth sets the retired userAdminRole key', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      userAdminRole: 'user-admin',
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
+});
+
 test('validateAuthConfig throws when configured without an authentication mechanism', () => {
   const components = {
     auth: {
@@ -642,88 +654,6 @@ test('validateAuthConfig throws when organizations contains an unknown property'
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
-});
-
-test('validateAuthConfig passes a userAdminRole string', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).not.toThrow();
-});
-
-test('validateAuthConfig passes userAdminRole with an explicit pinned organizations block', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      organizations: { policy: 'pinned', org: 'team-portal' },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).not.toThrow();
-});
-
-test('validateAuthConfig throws when userAdminRole is not a string', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: ['user-admin'],
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" should be a string.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is set under the tenant policy', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      organizations: { policy: 'tenant' },
-      userAdminRole: 'user-admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" applies only to the "pinned" organizations policy - user administration under "tenant" waits for a multi-tenant admin design.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is the reserved "admin" role', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'admin',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" cannot be "admin" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
-  );
-});
-
-test('validateAuthConfig throws when userAdminRole is the reserved "user" role', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      userAdminRole: 'user',
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "userAdminRole" cannot be "user" - "admin" and "user" are reserved user-level roles in the auth engine. Choose a distinct member role name.'
-  );
 });
 
 test('validateAuthConfig passes an enabled phoneNumber block with a phone.otp.send binding', () => {

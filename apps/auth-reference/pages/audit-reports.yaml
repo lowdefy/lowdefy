@@ -1,6 +1,5 @@
-# Role-gated by the auditor role (see auth.pages.roles) - exercises a
-# catalog role beyond admin, including as one part of a multi-role CSV
-# member.role value (e.g. "admin,auditor").
+# Role-gated by the auditor app role (see auth.pages.roles) - exercises a
+# second app role alongside user-admin, on the same member.appRoles array.
 id: audit-reports
 type: Box
 properties:

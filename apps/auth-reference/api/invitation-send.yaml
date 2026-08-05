@@ -19,7 +19,12 @@ routine:
               _payload: invitation.id
             email:
               _payload: invitation.email
-            role:
+            # The invitation carries the two authorities in separate fields:
+            # appRoles is the app's own role array, role is the
+            # owner/admin/member tier the minted member row will hold.
+            appRoles:
+              _payload: invitation.appRoles
+            orgRole:
               _payload: invitation.role
             organizationSlug:
               _payload: organization.slug

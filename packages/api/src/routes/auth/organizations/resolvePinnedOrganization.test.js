@@ -19,6 +19,7 @@ import { jest } from '@jest/globals';
 import getOrganizationBinding, {
   registerOrganizationBinding,
 } from './getOrganizationBinding.js';
+import OrganizationKeyError from './OrganizationKeyError.js';
 import resolvePinnedOrganization from './resolvePinnedOrganization.js';
 
 function createMockAuth({ create = jest.fn(), findOne = jest.fn() } = {}) {
@@ -30,7 +31,7 @@ function createMockAuth({ create = jest.fn(), findOne = jest.fn() } = {}) {
 test('resolvePinnedOrganization ensures and retains the pinned org for the binding', async () => {
   const findOne = jest
     .fn()
-    .mockResolvedValue({ id: 'org_1', slug: 'org-a', name: 'org-a', createdAt: new Date() });
+    .mockResolvedValue({ id: 'org-a', slug: 'org-a', name: 'org-a', createdAt: new Date() });
   const auth = createMockAuth({ findOne });
   registerOrganizationBinding({
     auth,
@@ -41,14 +42,14 @@ test('resolvePinnedOrganization ensures and retains the pinned org for the bindi
   expect(findOne).toHaveBeenCalledTimes(1);
   expect(getOrganizationBinding({ auth })).toEqual({
     policy: 'pinned',
-    pinned: { id: 'org_1', slug: 'org-a', name: 'org-a' },
+    pinned: { id: 'org-a', slug: 'org-a', name: 'org-a' },
   });
 });
 
 test('resolvePinnedOrganization is a no-op once the pinned org is retained', async () => {
   const findOne = jest
     .fn()
-    .mockResolvedValue({ id: 'org_1', slug: 'org-a', name: 'org-a', createdAt: new Date() });
+    .mockResolvedValue({ id: 'org-a', slug: 'org-a', name: 'org-a', createdAt: new Date() });
   const auth = createMockAuth({ findOne });
   registerOrganizationBinding({
     auth,
@@ -106,4 +107,22 @@ test('resolvePinnedOrganization logs an ensure failure and leaves the binding un
     { err: new Error('db down') },
     'Failed to ensure the pinned organization "org-a" for the request.'
   );
+});
+
+test('resolvePinnedOrganization rethrows a mis-keyed organization instead of warning', async () => {
+  const findOne = jest
+    .fn()
+    .mockResolvedValue({ id: '0f1b3a2c-5d6e-4f70-8a9b-1c2d3e4f5a6b', slug: 'org-a' });
+  const auth = createMockAuth({ findOne });
+  const logger = { warn: jest.fn() };
+  registerOrganizationBinding({
+    auth,
+    database: true,
+    organizations: { policy: 'pinned', org: 'org-a' },
+  });
+
+  await expect(resolvePinnedOrganization({ auth, logger })).rejects.toThrow(OrganizationKeyError);
+
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(getOrganizationBinding({ auth })).toEqual({ policy: 'pinned', pinned: null });
 });

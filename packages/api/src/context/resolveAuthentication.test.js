@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
 
 function mockAuth({ session, member }) {
@@ -90,13 +91,90 @@ test('sets context.user to null when the user holds no member row in the active 
   );
 });
 
-test('resolves roles from the active member row, splitting the CSV role string', async () => {
+test('sets context.user to null when a pinned app gets a session active in another organization', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'customer-portal' },
+    },
+    member: { id: 'member_1', role: 'admin', appRoles: ['user-admin'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toBe(null);
+  expect(findOne).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    'Session for user "user_1" has active organization "customer-portal", which is not this app\'s pinned organization "team" - resolved unauthenticated.'
+  );
+});
+
+test('resolves a session active in the pinned organization', async () => {
+  const { auth, findOne } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'team' },
+    },
+    member: { id: 'member_1', role: 'admin', appRoles: ['user-admin'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user).toEqual({
+    id: 'user_1',
+    roles: ['user-admin'],
+    orgRoles: ['admin'],
+    attributes: {},
+    activeOrganizationId: 'team',
+    organizationId: 'team',
+  });
+  expect(findOne).toHaveBeenCalled();
+});
+
+test('resolves any active organization under the tenant policy', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_9' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant', org: 'team' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.roles).toEqual(['auditor']);
+});
+
+test('resolves any active organization when no organization binding is registered', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_9' },
+    },
+    member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+  });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.roles).toEqual(['auditor']);
+});
+
+test('resolves roles from member.appRoles and orgRoles from the member role tier', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1', email: 'user@example.com' },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
-    member: { id: 'member_1', role: 'admin, branch-manager' },
+    member: { id: 'member_1', role: 'member', appRoles: ['branch-manager'] },
   });
   const context = {};
 
@@ -105,7 +183,8 @@ test('resolves roles from the active member row, splitting the CSV role string',
   expect(context.user).toEqual({
     id: 'user_1',
     email: 'user@example.com',
-    roles: ['admin', 'branch-manager'],
+    roles: ['branch-manager'],
+    orgRoles: ['member'],
     attributes: {},
     activeOrganizationId: 'org_1',
     organizationId: 'org_1',
@@ -143,23 +222,11 @@ test('sets organizationId to the active org for tenant stamping and _user: organ
   expect(context.user.organizationId).toBe(context.user.activeOrganizationId);
 });
 
-test('omits impersonatedBy from context.user when the session is not impersonated', async () => {
-  const { auth } = mockAuth({
-    session: {
-      user: { id: 'user_1' },
-      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
-    },
-    member: { id: 'member_1', role: 'member' },
-  });
-  const context = {};
-
-  await resolveAuthentication(context, { auth, headers: {} });
-
-  expect(context.user.impersonatedBy).toBeUndefined();
-  expect('impersonatedBy' in context.user).toBe(false);
-});
-
-test('carries impersonatedBy onto context.user when the admin plugin is impersonating', async () => {
+// The admin plugin's session field never reaches the caller. Nothing writes
+// user.role, so no browser session can be an impersonation in the first place,
+// and a session row still carrying the field must not resurrect a _user surface
+// no step reads.
+test('never carries impersonatedBy onto context.user, even when the session row holds it', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -171,10 +238,25 @@ test('carries impersonatedBy onto context.user when the admin plugin is imperson
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.impersonatedBy).toBe('admin_1');
+  expect('impersonatedBy' in context.user).toBe(false);
 });
 
-test('resolves a single role string to a one-element roles array', async () => {
+test('splits a multi-value member role string into orgRoles', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'owner,admin' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.orgRoles).toEqual(['owner', 'admin']);
+});
+
+test('resolves an empty roles array when the member row has no appRoles key', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -186,22 +268,23 @@ test('resolves a single role string to a one-element roles array', async () => {
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.roles).toEqual(['member']);
+  expect(context.user.roles).toEqual([]);
 });
 
-test('resolves an empty roles array when the member row has no role', async () => {
+test('resolves an empty orgRoles array when the member row has an empty role string', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
-    member: { id: 'member_1' },
+    member: { id: 'member_1', role: '', appRoles: ['auditor'] },
   });
   const context = {};
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.roles).toEqual([]);
+  expect(context.user.orgRoles).toEqual([]);
+  expect(context.user.roles).toEqual(['auditor']);
 });
 
 test('merges user and member attributes shallowly with member winning', async () => {

@@ -118,10 +118,26 @@ blocks:
       block: true
     events:
       onClick:
+        # The unauthenticated bounce puts ?callbackUrl= on this page, and
+        # PhoneNumberVerify reads it from the page it runs on - one hop further.
+        # Without carrying it the SMS path loses the deep link the password path
+        # keeps. The _if is needed because urlQuery serialises a null value
+        # rather than dropping the key, which would send a direct visitor to
+        # /phone-login?callbackUrl=null.
         - id: to_phone_login
           type: Link
           params:
             pageId: phone-login
+            urlQuery:
+              _if:
+                test:
+                  _eq:
+                    - _url_query: callbackUrl
+                    - null
+                then: null
+                else:
+                  callbackUrl:
+                    _url_query: callbackUrl
   - id: forgot_password_link
     type: Button
     properties:

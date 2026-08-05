@@ -142,7 +142,7 @@ test('UpdateUserProfile refuses unknown properties', async () => {
       properties: { userId: 'user-1', profile: { a: 1 }, email: 'new@example.com' },
     })
   ).rejects.toThrow(
-    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "name", and "image".'
+    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "name", "image", and "organizationId".'
   );
   await expect(
     UpdateUserProfile({
@@ -150,6 +150,21 @@ test('UpdateUserProfile refuses unknown properties', async () => {
       properties: { userId: 'user-1', emailVerified: true, attributes: { a: 1 } },
     })
   ).rejects.toThrow('UpdateUserProfile received unknown properties "emailVerified", "attributes".');
+});
+
+test('UpdateUserProfile accepts organizationId, which the floor reads and the step ignores', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  await UpdateUserProfile({
+    auth,
+    properties: { userId: 'user-1', name: 'New Name', organizationId: 'org_customer' },
+  });
+
+  expect(adapter.update.mock.calls[0][0].update).toEqual({ name: 'New Name' });
 });
 
 test('UpdateUserProfile throws when userId property is missing', async () => {
@@ -192,6 +207,7 @@ test('UpdateUserProfile throws when userId matches no user', async () => {
   expect(adapter.update).not.toHaveBeenCalled();
 });
 
-test('UpdateUserProfile declares the userId self-target exemption for the step interface layer', () => {
-  expect(UpdateUserProfile.meta).toEqual({ selfTargetExempt: 'userId' });
+test('UpdateUserProfile declares the userId self-target exemption inside its authority', () => {
+  expect(UpdateUserProfile.meta.authority.selfTargetExempt).toEqual('userId');
+  expect(UpdateUserProfile.meta.selfTargetExempt).toBeUndefined();
 });

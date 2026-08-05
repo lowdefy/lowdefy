@@ -17,7 +17,6 @@
 import createAcceptInvitation from './createAcceptInvitation.js';
 import createCallMethod from './createCallMethod.js';
 import createCallAPI from './createCallAPI.js';
-import createCancelInvitation from './createCancelInvitation.js';
 import createChangePassword from './createChangePassword.js';
 import createGetActions from './createGetActions.js';
 import createGetBlockId from './createGetBlockId.js';
@@ -30,8 +29,6 @@ import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
 import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
-import createImpersonateUser from './createImpersonateUser.js';
-import createInviteMember from './createInviteMember.js';
 import createLeaveOrganization from './createLeaveOrganization.js';
 import createLink from './createLink.js';
 import createLogin from './createLogin.js';
@@ -43,7 +40,6 @@ import createPasskeySignIn from './createPasskeySignIn.js';
 import createPhoneNumberSendOtp from './createPhoneNumberSendOtp.js';
 import createPhoneNumberVerify from './createPhoneNumberVerify.js';
 import createPublish from './createPublish.js';
-import createRemoveMember from './createRemoveMember.js';
 import createRequest from './createRequest.js';
 import createRequestPasswordReset from './createRequestPasswordReset.js';
 import createReset from './createReset.js';
@@ -55,15 +51,12 @@ import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
 import createSignUp from './createSignUp.js';
-import createStopImpersonating from './createStopImpersonating.js';
 import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
 import createTwoFactorDisable from './createTwoFactorDisable.js';
 import createTwoFactorEnable from './createTwoFactorEnable.js';
 import createTwoFactorVerify from './createTwoFactorVerify.js';
 import createUnsubscribe from './createUnsubscribe.js';
-import createUpdateMemberRole from './createUpdateMemberRole.js';
-import createUpdateOrganization from './createUpdateOrganization.js';
 import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
 
@@ -72,7 +65,6 @@ function getActionMethods(props) {
     acceptInvitation: createAcceptInvitation(props),
     callAPI: createCallAPI(props),
     callMethod: createCallMethod(props),
-    cancelInvitation: createCancelInvitation(props),
     changePassword: createChangePassword(props),
     displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),
@@ -86,8 +78,6 @@ function getActionMethods(props) {
     getState: createGetState(props),
     getUrlQuery: createGetUrlQuery(props),
     getUser: createGetUser(props),
-    impersonateUser: createImpersonateUser(props),
-    inviteMember: createInviteMember(props),
     leaveOrganization: createLeaveOrganization(props),
     link: createLink(props),
     login: createLogin(props),
@@ -98,7 +88,6 @@ function getActionMethods(props) {
     phoneNumberSendOtp: createPhoneNumberSendOtp(props),
     phoneNumberVerify: createPhoneNumberVerify(props),
     publish: createPublish(props),
-    removeMember: createRemoveMember(props),
     request: createRequest(props),
     requestPasswordReset: createRequestPasswordReset(props),
     reset: createReset(props),
@@ -110,15 +99,12 @@ function getActionMethods(props) {
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
     signUp: createSignUp(props),
-    stopImpersonating: createStopImpersonating(props),
     subscribe: createSubscribe(props),
     translate: createTranslate(props),
     twoFactorDisable: createTwoFactorDisable(props),
     twoFactorEnable: createTwoFactorEnable(props),
     twoFactorVerify: createTwoFactorVerify(props),
     unsubscribe: createUnsubscribe(props),
-    updateMemberRole: createUpdateMemberRole(props),
-    updateOrganization: createUpdateOrganization(props),
     updateSession: createUpdateSession(props),
     validate: createValidate(props),
   };

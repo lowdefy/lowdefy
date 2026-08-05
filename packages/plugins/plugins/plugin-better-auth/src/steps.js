@@ -25,6 +25,8 @@ export { default as RemoveMember } from './steps/RemoveMember.js';
 export { default as RevokeUserSessions } from './steps/RevokeUserSessions.js';
 export { default as UnbanUser } from './steps/UnbanUser.js';
 export { default as UpdateMemberAttributes } from './steps/UpdateMemberAttributes.js';
+export { default as UpdateMemberOrgRole } from './steps/UpdateMemberOrgRole.js';
 export { default as UpdateMemberRoles } from './steps/UpdateMemberRoles.js';
+export { default as UpdateOrganization } from './steps/UpdateOrganization.js';
 export { default as UpdateUserAttributes } from './steps/UpdateUserAttributes.js';
 export { default as UpdateUserProfile } from './steps/UpdateUserProfile.js';

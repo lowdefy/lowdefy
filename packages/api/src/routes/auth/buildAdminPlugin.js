@@ -15,38 +15,23 @@
 */
 
 import { admin } from 'better-auth/plugins';
-import { createAccessControl } from 'better-auth/plugins/access';
-import { adminAc, defaultStatements, userAc } from 'better-auth/plugins/admin/access';
-import { type } from '@lowdefy/helpers';
 
-// The admin plugin is framework-controlled - it backs the admin steps and
-// impersonation; its banned/banReason/banExpires fields land on the user
-// record. When auth.userAdminRole is configured, the plugin registers a
-// curated access control in which the user-admin role holds exactly the
-// statements backing the shipped client actions - today user: ['impersonate'].
-// The full admin statement set (set-password, set-email, ban, delete) is not
-// granted, so those /api/auth/admin/* endpoints stay unreachable for the
-// role, and impersonate-admins is deliberately excluded - a user-admin cannot
-// impersonate another user-admin.
-// The built-in "admin" and "user" roles keep their default statements: the
-// plugin's roles option replaces rather than merges the defaults, and the
-// admin steps inject acting sessions with role "admin" whose authority must
-// hold. adminRoles extends to the user-admin role so impersonating a
-// user-admin demands the excluded impersonate-admins statement.
-function buildAdminPlugin({ authConfig }) {
-  if (type.isNone(authConfig.userAdminRole)) {
-    return admin();
-  }
-  const ac = createAccessControl(defaultStatements);
-  return admin({
-    ac,
-    adminRoles: ['admin', authConfig.userAdminRole],
-    roles: {
-      admin: adminAc,
-      user: userAc,
-      [authConfig.userAdminRole]: ac.newRole({ user: ['impersonate'] }),
-    },
-  });
+// The admin plugin is registered for two things: it owns the
+// banned/banReason/banExpires fields on the user row, and it owns the endpoints
+// the BanUser, UnbanUser, DeleteUser and RevokeUserSessions steps call. Those
+// calls carry server authority - callPluginEndpoint injects an acting user with
+// role: 'admin', which the vendor's built-in admin role satisfies - and the
+// step floor is what authorizes them, per organization and bounded by the
+// target's membership there.
+//
+// So the vendor's default roles are all this needs. Nothing in Lowdefy writes
+// user.role, so no real browser session holds a role in adminRoles and no
+// browser caller can satisfy any /admin/* check; the whole surface is disabled
+// at the router besides (see ADMIN_PATHS_DISABLED in getBetterAuthConfig).
+// A custom access control would only exist to grant a real user authority the
+// platform has none to grant.
+function buildAdminPlugin() {
+  return admin();
 }
 
 export default buildAdminPlugin;

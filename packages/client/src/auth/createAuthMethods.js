@@ -440,23 +440,6 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.setActiveOrganization({ organizationId, organizationSlug }));
   }
 
-  // Impersonates a user for the session's remaining lifetime. Authorization
-  // is BetterAuth's own admin access control, enforced server-side against
-  // the caller's role - this method adds no gate of its own. Chain
-  // UpdateSession after to re-sync the client with the impersonated user.
-  async function impersonateUser({ userId } = {}) {
-    if (!type.isString(userId)) {
-      throw new Error('ImpersonateUser requires a "userId" param.');
-    }
-    return unwrap(auth.impersonateUser({ userId }));
-  }
-
-  // Ends impersonation and restores the original session. Chain
-  // UpdateSession after to re-sync the client with the original user.
-  async function stopImpersonating() {
-    return unwrap(auth.stopImpersonating());
-  }
-
   // Refreshes the BetterAuth client session store through an awaited
   // store refetch, bypassing the cookie cache (a live re-resolve) so role,
   // attribute or session changes surface immediately instead of after
@@ -484,66 +467,6 @@ function createAuthMethods(lowdefy, auth) {
       throw new Error('AcceptInvitation requires an "invitationId" param.');
     }
     return unwrap(auth.acceptInvitation({ invitationId }));
-  }
-
-  // Invites a user to the caller's active organization - no organizationId
-  // is forwarded, so BetterAuth defaults to the active org. Authorization is
-  // BetterAuth's own per-org access control, enforced server-side against
-  // the caller's member role in the active organization.
-  async function inviteMember({ email, role } = {}) {
-    if (!type.isString(email)) {
-      throw new Error('InviteMember requires an "email" param.');
-    }
-    if (!type.isString(role) && !type.isArray(role)) {
-      throw new Error('InviteMember requires a "role" param.');
-    }
-    return unwrap(auth.inviteMember({ email, role }));
-  }
-
-  // Cancels a pending invitation in the caller's active organization.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function cancelInvitation({ invitationId } = {}) {
-    if (!type.isString(invitationId)) {
-      throw new Error('CancelInvitation requires an "invitationId" param.');
-    }
-    return unwrap(auth.cancelInvitation({ invitationId }));
-  }
-
-  // Removes a member from the caller's active organization - no
-  // organizationId is forwarded, so BetterAuth defaults to the active org.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function removeMember({ memberIdOrEmail } = {}) {
-    if (!type.isString(memberIdOrEmail)) {
-      throw new Error('RemoveMember requires a "memberIdOrEmail" param.');
-    }
-    return unwrap(auth.removeMember({ memberIdOrEmail }));
-  }
-
-  // Updates a member's role in the caller's active organization - no
-  // organizationId is forwarded, so BetterAuth defaults to the active org.
-  // Authorization is BetterAuth's own per-org access control, enforced
-  // server-side against the caller's member role in the active organization.
-  async function updateMemberRole({ memberId, role } = {}) {
-    if (!type.isString(memberId)) {
-      throw new Error('UpdateMemberRole requires a "memberId" param.');
-    }
-    if (!type.isString(role) && !type.isArray(role)) {
-      throw new Error('UpdateMemberRole requires a "role" param.');
-    }
-    return unwrap(auth.updateMemberRole({ memberId, role }));
-  }
-
-  // Renames the caller's active organization - no organizationId is
-  // forwarded, so BetterAuth defaults to the active org. Authorization is
-  // BetterAuth's own per-org access control, enforced server-side against
-  // the caller's member role in the active organization.
-  async function updateOrganization({ name } = {}) {
-    if (!type.isString(name)) {
-      throw new Error('UpdateOrganization requires a "name" param.');
-    }
-    return unwrap(auth.updateOrganization({ data: { name } }));
   }
 
   // Removes the caller's own membership from the active organization.
@@ -674,27 +597,36 @@ function createAuthMethods(lowdefy, auth) {
   }
 
   // The OTP sign-in: on success BetterAuth sets the session cookie (and
-  // creates the account under signUpOnVerification). On that success, and unlike
-  // login, it does not auto-navigate - verify serves sign-in, sign-up and
-  // phone-change confirmation, and only the app knows which page follows.
-  async function phoneNumberVerify({ code, phoneNumber, ...rest } = {}) {
+  // creates the account under signUpOnVerification), and the browser navigates
+  // on the resolved callbackURL like every other method that mints a session.
+  async function phoneNumberVerify({ callbackUrl, code, phoneNumber, ...rest } = {}) {
     if (!type.isString(phoneNumber) || !type.isString(code)) {
       throw new Error('PhoneNumberVerify requires "phoneNumber" and "code" params.');
     }
+    // Resolved before the call, as login and signUp do, so a misconfigured
+    // destination throws before the OTP is consumed rather than after. No
+    // assertCallbackUrlNavigable: the resolved value has one consumer, the assign
+    // below, so callbackUrl: false is honorable here.
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await unwrap(auth.phoneNumberVerify({ phoneNumber, code, ...rest }));
     // An enrolled user verifying by SMS gets a challenge instead of a session, in
     // the same JSON shape the password paths return, so the navigation is the one
-    // Login performs. Verify also serves sign-up and phone-change confirmation,
-    // where the flag is absent and the page owns what comes next. No callbackURL
-    // rides along: verify takes no callback param, so there is no destination the
-    // caller asked for and the challenge page falls back to its own default.
+    // Login performs and the destination rides along identically.
     //
-    // The halt matters more here than on the password paths, because verify
-    // deliberately does not navigate on success - so every app has a step after
-    // it. Without the halt that step re-renders the app with no session while the
-    // challenge page load is still in flight.
+    // The halt keeps the app's remaining steps from re-rendering with no session
+    // while the challenge page load is still in flight.
     if (data?.twoFactorRedirect) {
-      return navigateToTwoFactorChallenge({ lowdefy, auth }) ? stopChain(data) : data;
+      return navigateToTwoFactorChallenge({ callbackURL, lowdefy, auth }) ? stopChain(data) : data;
+    }
+    // The two modes that mint no usable arrival stay put: disableSession returns
+    // token: null, and updatePhoneNumber is a signed-in user confirming a new
+    // number - it returns their existing session token, so a token check alone
+    // would yank them out of what is usually a modal. The discriminator has to
+    // come from the request, and updatePhoneNumber is still in rest because
+    // BetterAuth needs it.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && rest.updatePhoneNumber !== true && callbackURL && window) {
+      window.location.assign(callbackURL);
     }
     return data;
   }
@@ -718,24 +650,41 @@ function createAuthMethods(lowdefy, auth) {
 
   // Serves both enrolment confirmation and the sign-in challenge, dispatching
   // by parameter (matching login): a backupCode param verifies a backup code,
-  // otherwise code verifies TOTP. The sign-in challenge verify sets the
-  // session cookie itself - navigation after is the app's business.
-  async function twoFactorVerify({ backupCode, code, trustDevice, ...rest } = {}) {
-    if (type.isString(backupCode)) {
-      return unwrap(auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest }));
+  // otherwise code verifies TOTP.
+  //
+  // The engine owns both ends of the challenge hop, not only arrival: every
+  // sign-in path navigates to authPages.twoFactor carrying ?callbackUrl=, and
+  // this is where that value is spent. Leaving the last hop to the challenge
+  // page is the same opt-in correctness the arrival navigation exists to avoid,
+  // and the rung is awkward to consume from config besides - it already carries
+  // basePath, so a Link's pageId double-prefixes it under a subpath. With the
+  // engine finishing the hop, no app config reads the parameter at all.
+  //
+  // No stopChain: this navigation is the end of the flow rather than a departure
+  // mid-chain, so an app may legitimately have a step after it.
+  async function twoFactorVerify({ backupCode, callbackUrl, code, trustDevice, ...rest } = {}) {
+    if (!type.isString(backupCode) && !type.isString(code)) {
+      throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
     }
-    if (type.isString(code)) {
-      return unwrap(auth.twoFactorVerifyTotp({ code, trustDevice, ...rest }));
+    const callbackURL = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(
+      type.isString(backupCode)
+        ? auth.twoFactorVerifyBackupCode({ code: backupCode, trustDevice, ...rest })
+        : auth.twoFactorVerifyTotp({ code, trustDevice, ...rest })
+    );
+    // A token is the whole guard here, unlike phoneNumberVerify's: verify has no
+    // session-less mode, so a successful challenge always mints one and a failed
+    // one throws to the action's catch.
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && callbackURL && window) {
+      window.location.assign(callbackURL);
     }
-    throw new Error('TwoFactorVerify requires a "code" or "backupCode" param.');
+    return data;
   }
 
   return {
     acceptInvitation,
-    cancelInvitation,
     changePassword,
-    impersonateUser,
-    inviteMember,
     leaveOrganization,
     login,
     logout,
@@ -744,19 +693,15 @@ function createAuthMethods(lowdefy, auth) {
     passkeySignIn,
     phoneNumberSendOtp,
     phoneNumberVerify,
-    removeMember,
     requestPasswordReset,
     resetPassword,
     revokeOtherSessions,
     sendVerificationEmail,
     setActiveOrganization,
     signUp,
-    stopImpersonating,
     twoFactorDisable,
     twoFactorEnable,
     twoFactorVerify,
-    updateMemberRole,
-    updateOrganization,
     updateSession,
   };
 }

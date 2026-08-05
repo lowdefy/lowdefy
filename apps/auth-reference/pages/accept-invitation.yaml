@@ -29,12 +29,18 @@ blocks:
       html: |
         <p>Sign in (or sign up) with the invited email address first, then
         accept. Until you accept, protected pages treat you as logged out.</p>
-  - id: invitation_id_input
+        <p><b>If you were already signed in here and the invitation is for a
+        different organization</b>, accepting will sign you out of this app:
+        the accept sets your active organization to the inviting one inside
+        its own transaction, and this app admits only its own. Log in again
+        <b>at this app</b> to come back - not at the other one. Signing in
+        there would flip your session the other way again.</p>
+  # The block id IS the state key, so the onInit write from the url query
+  # fills this input.
+  - id: invitationId
     type: TextInput
     properties:
       title: Invitation id
-    value:
-      _state: invitationId
   - id: accept_button
     type: Button
     properties:
@@ -47,7 +53,7 @@ blocks:
             type: AcceptInvitation
             params:
               invitationId:
-                _state: invitation_id_input
+                _state: invitationId
           - id: refresh_after_accept
             type: UpdateSession
           - id: accept_result

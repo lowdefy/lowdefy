@@ -18,6 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 
+// organizationId is part of the authored property surface even though the step
+// forwards only the userId: the floor reads it to resolve the organization the
+// caller's user:ban authority and the target's membership are checked in. It
+// defaults to the pinned organization, so without it a second admin surface's
+// Restore control would ask whether the caller holds user: [ban] in the wrong
+// organization.
 async function UnbanUser({ acting, auth, properties }) {
   const { userId } = properties;
   if (type.isNone(userId)) {
@@ -31,5 +37,13 @@ async function UnbanUser({ acting, auth, properties }) {
     pluginId: 'admin',
   });
 }
+
+// Lifting the ban writes the same deployment-wide user row BanUser sets, so it
+// carries the same bound: org authority alone would reach every user in the
+// deployment, and targetUser makes the floor require the target to hold a member
+// row in the organization the caller administers.
+UnbanUser.meta = {
+  authority: { scope: 'org', permissions: { user: ['ban'] }, targetUser: 'userId' },
+};
 
 export default UnbanUser;

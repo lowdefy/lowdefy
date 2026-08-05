@@ -16,44 +16,17 @@
 
 import buildAdminPlugin from './buildAdminPlugin.js';
 
-test('buildAdminPlugin returns the default admin plugin when userAdminRole is not configured', () => {
-  const plugin = buildAdminPlugin({ authConfig: {} });
+test('buildAdminPlugin returns the admin plugin', () => {
+  const plugin = buildAdminPlugin();
   expect(plugin.id).toBe('admin');
+});
+
+test('buildAdminPlugin configures no access control, admin roles or roles', () => {
+  const plugin = buildAdminPlugin();
+  // admin() called with no arguments - the vendor's default roles apply, and
+  // the built-in admin role is what the steps' injected acting sessions hold.
   expect(plugin.options).toBeUndefined();
-});
-
-test('buildAdminPlugin grants the user-admin role exactly user impersonate', () => {
-  const plugin = buildAdminPlugin({ authConfig: { userAdminRole: 'user-admin' } });
-  expect(plugin.options.roles['user-admin'].statements).toEqual({ user: ['impersonate'] });
-});
-
-test('buildAdminPlugin user-admin role authorizes impersonate and nothing else', () => {
-  const plugin = buildAdminPlugin({ authConfig: { userAdminRole: 'user-admin' } });
-  const role = plugin.options.roles['user-admin'];
-  expect(role.authorize({ user: ['impersonate'] }).success).toBe(true);
-  // impersonate-admins is deliberately excluded - a user-admin cannot
-  // impersonate another user-admin.
-  expect(role.authorize({ user: ['impersonate-admins'] }).success).toBe(false);
-  // The full admin statement set stays out of reach for the role, so the
-  // matching /api/auth/admin/* endpoints stay unreachable.
-  expect(role.authorize({ user: ['set-password'] }).success).toBe(false);
-  expect(role.authorize({ user: ['set-email'] }).success).toBe(false);
-  expect(role.authorize({ user: ['ban'] }).success).toBe(false);
-  expect(role.authorize({ user: ['delete'] }).success).toBe(false);
-  expect(role.authorize({ user: ['list'] }).success).toBe(false);
-  expect(role.authorize({ session: ['revoke'] }).success).toBe(false);
-});
-
-test('buildAdminPlugin keeps the built-in admin role authority for injected acting sessions', () => {
-  const plugin = buildAdminPlugin({ authConfig: { userAdminRole: 'user-admin' } });
-  const adminRole = plugin.options.roles.admin;
-  expect(adminRole.authorize({ user: ['ban'] }).success).toBe(true);
-  expect(adminRole.authorize({ user: ['delete'] }).success).toBe(true);
-  expect(adminRole.authorize({ user: ['list'] }).success).toBe(true);
-  expect(adminRole.authorize({ session: ['revoke'] }).success).toBe(true);
-});
-
-test('buildAdminPlugin marks the user-admin role as an admin role for the impersonation target check', () => {
-  const plugin = buildAdminPlugin({ authConfig: { userAdminRole: 'user-admin' } });
-  expect(plugin.options.adminRoles).toEqual(['admin', 'user-admin']);
+  expect(plugin.options?.ac).toBeUndefined();
+  expect(plugin.options?.adminRoles).toBeUndefined();
+  expect(plugin.options?.roles).toBeUndefined();
 });

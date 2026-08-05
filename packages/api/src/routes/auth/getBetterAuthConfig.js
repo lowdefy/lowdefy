@@ -73,6 +73,35 @@ const ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED = [
   '/organization/has-permission',
 ];
 
+// The admin plugin's entire mounted HTTP surface is disabled under both org
+// policies. Its checks read the deployment-wide user.role, which nothing in
+// Lowdefy writes, so no browser caller could pass one anyway - this is defence
+// in depth against a future writer, not the load-bearing guard.
+// Disabling costs the admin steps nothing: getPluginEndpoint reaches
+// plugin.endpoints[key] directly, so their calls never travel through the
+// router that consults disabledPaths.
+// Enumerated from the endpoints better-auth@1.6.23's admin plugin mounts. Every
+// path is listed literally - the router matches exactly (see the note on
+// ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED above), so a prefix or wildcard entry
+// would disable nothing.
+const ADMIN_PATHS_DISABLED = [
+  '/admin/set-role',
+  '/admin/get-user',
+  '/admin/create-user',
+  '/admin/update-user',
+  '/admin/list-users',
+  '/admin/list-user-sessions',
+  '/admin/unban-user',
+  '/admin/ban-user',
+  '/admin/impersonate-user',
+  '/admin/stop-impersonating',
+  '/admin/revoke-user-session',
+  '/admin/revoke-user-sessions',
+  '/admin/remove-user',
+  '/admin/set-user-password',
+  '/admin/has-permission',
+];
+
 // Assembles the BetterAuthOptions object from the auth.json build artifact.
 // Build has validated the config and written all defaults, so this function
 // resolves the _secret operators and maps the Lowdefy surface onto
@@ -343,10 +372,10 @@ function getBetterAuthConfig({
     options.plugins.push(buildCaptchaPlugin({ authConfig }));
   }
 
-  // The admin plugin is framework-controlled - it backs the admin steps and
-  // impersonation. A configured auth.userAdminRole registers a curated
-  // access control (see buildAdminPlugin).
-  options.plugins.push(buildAdminPlugin({ authConfig }));
+  // The admin plugin is framework-controlled - it owns the user row's ban fields
+  // and the endpoints the ban, delete and revoke-sessions steps call. Its whole
+  // HTTP surface is disabled (see ADMIN_PATHS_DISABLED).
+  options.plugins.push(buildAdminPlugin());
 
   const {
     afterEmailVerification,
@@ -424,19 +453,16 @@ function getBetterAuthConfig({
     await sendEmail({ to: email, subject, html, text, context });
   }
 
-  options.plugins.push(
-    buildOrganizationPlugin({
-      authConfig,
-      getAuth,
-      sendInvitationEmail,
-    })
-  );
+  options.plugins.push(buildOrganizationPlugin({ getAuth, sendInvitationEmail }));
 
-  // Policy-aware lockdown of the org plugin's client HTTP endpoints (Decision 4).
-  // pinned: disable the full set (everything except accept-invitation/create).
-  // tenant: self-serve, leave the org endpoints enabled.
+  // The admin surface is off under both policies. The org plugin's client HTTP
+  // endpoints are policy-aware: pinned disables the full set (everything except
+  // accept-invitation/create); tenant is self-serve, so they stay enabled.
   const policy = authConfig.organizations?.policy ?? 'pinned';
-  options.disabledPaths = policy === 'pinned' ? ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED : [];
+  options.disabledPaths = [
+    ...ADMIN_PATHS_DISABLED,
+    ...(policy === 'pinned' ? ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED : []),
+  ];
 
   // Decision 5: default every redirect-style auth error - chiefly an OAuth
   // failure - to the resolved authPages.error page, instead of BetterAuth's

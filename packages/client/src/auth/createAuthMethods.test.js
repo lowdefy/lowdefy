@@ -32,7 +32,6 @@ function setup({ signInResult, signUpResult } = {}) {
     authConfig: { providers: [] },
     acceptInvitation: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     addPasskey: jest.fn(() => Promise.resolve({ data: { id: 'passkey-1' }, error: null })),
-    cancelInvitation: jest.fn(() => Promise.resolve({ data: { status: 'canceled' }, error: null })),
     changePassword: jest.fn(() =>
       Promise.resolve({ data: { token: null, user: {} }, error: null })
     ),
@@ -46,8 +45,6 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
-    impersonateUser: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
-    inviteMember: jest.fn(() => Promise.resolve({ data: { id: 'invitation-1' }, error: null })),
     leaveOrganization: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     phoneNumberRequestPasswordReset: jest.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
@@ -62,7 +59,6 @@ function setup({ signInResult, signUpResult } = {}) {
     refreshSession: jest.fn(() =>
       Promise.resolve({ data: { session: {}, user: { id: 'user-1' } }, error: null })
     ),
-    removeMember: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
     requestPasswordReset: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     resetPassword: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     revokeOtherSessions: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
@@ -79,7 +75,6 @@ function setup({ signInResult, signUpResult } = {}) {
     signUpEmail: jest.fn(() =>
       Promise.resolve({ data: signUpResult ?? { token: null, user: {} }, error: null })
     ),
-    stopImpersonating: jest.fn(() => Promise.resolve({ data: { session: {} }, error: null })),
     twoFactorDisable: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
     twoFactorEnable: jest.fn(() =>
       Promise.resolve({
@@ -92,10 +87,6 @@ function setup({ signInResult, signUpResult } = {}) {
     ),
     twoFactorVerifyTotp: jest.fn(() =>
       Promise.resolve({ data: { token: 't', user: {} }, error: null })
-    ),
-    updateMemberRole: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
-    updateOrganization: jest.fn(() =>
-      Promise.resolve({ data: { id: 'org-1', name: 'Acme Inc' }, error: null })
     ),
     updateResolvedUser: jest.fn(),
   };
@@ -190,48 +181,6 @@ test('login no longer handles signUp - a signUp-only call is rejected', async ()
     'Login requires a "providerId", "email" and "password", "phoneNumber" and "password", or "magicLink: true" param.'
   );
   expect(auth.signUpEmail).not.toHaveBeenCalled();
-});
-
-test('impersonateUser calls auth.impersonateUser with the userId param', async () => {
-  const { auth, lowdefy } = setup();
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await impersonateUser({ userId: 'user-1' });
-  expect(auth.impersonateUser.mock.calls).toEqual([[{ userId: 'user-1' }]]);
-});
-
-test('impersonateUser throws when userId is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await expect(impersonateUser()).rejects.toThrow('ImpersonateUser requires a "userId" param.');
-  expect(auth.impersonateUser).not.toHaveBeenCalled();
-});
-
-test('impersonateUser surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.impersonateUser = jest.fn(() =>
-    Promise.resolve({
-      data: null,
-      error: { message: 'Forbidden.', code: 'FORBIDDEN', status: 403 },
-    })
-  );
-  const { impersonateUser } = createAuthMethods(lowdefy, auth);
-  await expect(impersonateUser({ userId: 'user-1' })).rejects.toThrow('Forbidden.');
-});
-
-test('stopImpersonating calls auth.stopImpersonating with no params', async () => {
-  const { auth, lowdefy } = setup();
-  const { stopImpersonating } = createAuthMethods(lowdefy, auth);
-  await stopImpersonating();
-  expect(auth.stopImpersonating.mock.calls).toEqual([[]]);
-});
-
-test('stopImpersonating surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.stopImpersonating = jest.fn(() =>
-    Promise.resolve({ data: null, error: { message: 'No impersonation session.' } })
-  );
-  const { stopImpersonating } = createAuthMethods(lowdefy, auth);
-  await expect(stopImpersonating()).rejects.toThrow('No impersonation session.');
 });
 
 test('login with email and password navigates to callbackURL on a session response', async () => {
@@ -382,6 +331,61 @@ test('twoFactorVerify throws when neither code nor backupCode is given', async (
   expect(auth.twoFactorVerifyBackupCode).not.toHaveBeenCalled();
 });
 
+test('twoFactorVerify navigates to the resolved callbackUrl on the TOTP branch', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345', callbackUrl: { url: '/reports' } });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the resolved callbackUrl on the backup-code branch', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ backupCode: 'backup-1', callbackUrl: { url: '/reports' } });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the ?callbackUrl= the sign-in method carried onto the page', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('twoFactorVerify navigates to the ?callbackUrl= query as carried, without re-applying basePath', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Fbase%2Freports';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/base/reports']]);
+});
+
+test('twoFactorVerify with callbackUrl false stays put and does not throw', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  const data = await twoFactorVerify({ code: '012345', callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('twoFactorVerify does not navigate on a response carrying no session', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.twoFactorVerifyTotp = jest.fn(() => Promise.resolve({ data: { token: null }, error: null }));
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345', callbackUrl: { url: '/reports' } });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('a protocol-relative ?callbackUrl= query never leaves the challenge page (open redirect)', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%2Fevil.com';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
 test('twoFactorDisable calls auth.twoFactorDisable with the password', async () => {
   const { auth, lowdefy } = setup();
   const { twoFactorDisable } = createAuthMethods(lowdefy, auth);
@@ -492,117 +496,6 @@ test('acceptInvitation surfaces the error returned by the endpoint', async () =>
   await expect(acceptInvitation({ invitationId: 'invitation-1' })).rejects.toThrow(
     'Invitation not found.'
   );
-});
-
-test('inviteMember calls auth.inviteMember with email and role', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await inviteMember({ email: 'invitee@example.com', role: 'admin' });
-  expect(auth.inviteMember.mock.calls).toEqual([[{ email: 'invitee@example.com', role: 'admin' }]]);
-});
-
-test('inviteMember accepts a role array', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await inviteMember({ email: 'invitee@example.com', role: ['admin', 'user'] });
-  expect(auth.inviteMember.mock.calls).toEqual([
-    [{ email: 'invitee@example.com', role: ['admin', 'user'] }],
-  ]);
-});
-
-test('inviteMember throws when email or role is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await expect(inviteMember({ role: 'admin' })).rejects.toThrow(
-    'InviteMember requires an "email" param.'
-  );
-  await expect(inviteMember({ email: 'invitee@example.com' })).rejects.toThrow(
-    'InviteMember requires a "role" param.'
-  );
-  expect(auth.inviteMember).not.toHaveBeenCalled();
-});
-
-test('inviteMember surfaces the error returned by the endpoint', async () => {
-  const { auth, lowdefy } = setup();
-  auth.inviteMember = jest.fn(() =>
-    Promise.resolve({
-      data: null,
-      error: {
-        message: 'You are not allowed to invite users to this organization.',
-        code: 'YOU_ARE_NOT_ALLOWED_TO_INVITE_USERS_TO_THIS_ORGANIZATION',
-        status: 403,
-      },
-    })
-  );
-  const { inviteMember } = createAuthMethods(lowdefy, auth);
-  await expect(inviteMember({ email: 'invitee@example.com', role: 'admin' })).rejects.toThrow(
-    'You are not allowed to invite users to this organization.'
-  );
-});
-
-test('cancelInvitation calls auth.cancelInvitation with the invitationId param', async () => {
-  const { auth, lowdefy } = setup();
-  const { cancelInvitation } = createAuthMethods(lowdefy, auth);
-  await cancelInvitation({ invitationId: 'invitation-1' });
-  expect(auth.cancelInvitation.mock.calls).toEqual([[{ invitationId: 'invitation-1' }]]);
-});
-
-test('cancelInvitation throws when invitationId is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { cancelInvitation } = createAuthMethods(lowdefy, auth);
-  await expect(cancelInvitation()).rejects.toThrow(
-    'CancelInvitation requires an "invitationId" param.'
-  );
-  expect(auth.cancelInvitation).not.toHaveBeenCalled();
-});
-
-test('removeMember calls auth.removeMember with the memberIdOrEmail param', async () => {
-  const { auth, lowdefy } = setup();
-  const { removeMember } = createAuthMethods(lowdefy, auth);
-  await removeMember({ memberIdOrEmail: 'member-1' });
-  expect(auth.removeMember.mock.calls).toEqual([[{ memberIdOrEmail: 'member-1' }]]);
-});
-
-test('removeMember throws when memberIdOrEmail is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { removeMember } = createAuthMethods(lowdefy, auth);
-  await expect(removeMember()).rejects.toThrow('RemoveMember requires a "memberIdOrEmail" param.');
-  expect(auth.removeMember).not.toHaveBeenCalled();
-});
-
-test('updateMemberRole calls auth.updateMemberRole with memberId and role', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateMemberRole } = createAuthMethods(lowdefy, auth);
-  await updateMemberRole({ memberId: 'member-1', role: ['admin', 'user'] });
-  expect(auth.updateMemberRole.mock.calls).toEqual([
-    [{ memberId: 'member-1', role: ['admin', 'user'] }],
-  ]);
-});
-
-test('updateMemberRole throws when memberId or role is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateMemberRole } = createAuthMethods(lowdefy, auth);
-  await expect(updateMemberRole({ role: 'admin' })).rejects.toThrow(
-    'UpdateMemberRole requires a "memberId" param.'
-  );
-  await expect(updateMemberRole({ memberId: 'member-1' })).rejects.toThrow(
-    'UpdateMemberRole requires a "role" param.'
-  );
-  expect(auth.updateMemberRole).not.toHaveBeenCalled();
-});
-
-test('updateOrganization wraps the name param in the update data object', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateOrganization } = createAuthMethods(lowdefy, auth);
-  await updateOrganization({ name: 'Acme Inc' });
-  expect(auth.updateOrganization.mock.calls).toEqual([[{ data: { name: 'Acme Inc' } }]]);
-});
-
-test('updateOrganization throws when name is missing', async () => {
-  const { auth, lowdefy } = setup();
-  const { updateOrganization } = createAuthMethods(lowdefy, auth);
-  await expect(updateOrganization()).rejects.toThrow('UpdateOrganization requires a "name" param.');
-  expect(auth.updateOrganization).not.toHaveBeenCalled();
 });
 
 test('leaveOrganization resolves the active organization from the session', async () => {
@@ -788,6 +681,81 @@ test('phoneNumberVerify rethrows the BetterAuth error so onError chains fire', a
   await expect(phoneNumberVerify({ phoneNumber: '+27831234567', code: '000000' })).rejects.toThrow(
     'Invalid OTP'
   );
+});
+
+test('phoneNumberVerify navigates to an explicit callbackUrl, basePath-prefixed', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/base/reports']]);
+});
+
+test('phoneNumberVerify navigates to the ?callbackUrl= query when no param is given', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({ phoneNumber: '+27831234567', code: '123456' });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+test('phoneNumberVerify with callbackUrl false stays put and does not throw', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  const data = await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    callbackUrl: false,
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('phoneNumberVerify does not navigate with disableSession, which mints no session', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.phoneNumberVerify = jest.fn(() =>
+    Promise.resolve({ data: { token: null, user: {} }, error: null })
+  );
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    disableSession: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('phoneNumberVerify does not navigate when a signed-in user confirms a new phone number', async () => {
+  // updatePhoneNumber returns the caller's existing session token, so a token
+  // check alone would navigate away from the modal the confirmation runs in.
+  const { auth, lowdefy, assign } = setup();
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    updatePhoneNumber: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('phoneNumberVerify navigates to the challenge on a phone-number change that is challenged', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
+  auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  await phoneNumberVerify({
+    phoneNumber: '+27831234567',
+    code: '123456',
+    updatePhoneNumber: true,
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Freports']]);
 });
 
 test('login threads captchaToken as the x-captcha-response header, never the body', async () => {
@@ -1521,6 +1489,7 @@ function callActionChain({ actions, auth, lowdefy }) {
             Login: ({ methods, params }) => methods.login(params),
             Next: next,
             PhoneNumberVerify: ({ methods, params }) => methods.phoneNumberVerify(params),
+            TwoFactorVerify: ({ methods, params }) => methods.twoFactorVerify(params),
           },
           auth: createAuthMethods(lowdefy, auth),
           displayMessage: () => () => undefined,
@@ -1693,7 +1662,7 @@ test('a login that returns a session navigates to the callbackUrl and does not e
   expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
 });
 
-test('phoneNumberVerify navigates to the two-factor challenge with no callbackUrl and ends the chain', async () => {
+test('phoneNumberVerify carries the resolved callbackUrl onto the two-factor challenge and ends the chain', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
   auth.phoneNumberVerify = jest.fn(() => Promise.resolve({ data: challenge, error: null }));
@@ -1709,7 +1678,7 @@ test('phoneNumberVerify navigates to the two-factor challenge with no callbackUr
     auth,
     lowdefy,
   });
-  expect(assign.mock.calls).toEqual([['/two-factor-challenge']]);
+  expect(assign.mock.calls).toEqual([['/two-factor-challenge?callbackUrl=%2Fhome-page']]);
   expect(res.responses.verify).toEqual({
     type: 'PhoneNumberVerify',
     index: 0,
@@ -1719,7 +1688,7 @@ test('phoneNumberVerify navigates to the two-factor challenge with no callbackUr
   expect(res.responses.after).toEqual({ type: 'Next', skipped: true, index: 1 });
 });
 
-test('phoneNumberVerify does not navigate or end the chain on a successful verification', async () => {
+test('phoneNumberVerify navigates on a successful verification without ending the chain', async () => {
   const { auth, lowdefy, assign } = setup();
   auth.authConfig.authPages = { twoFactor: '/two-factor-challenge' };
   const res = await callActionChain({
@@ -1734,11 +1703,26 @@ test('phoneNumberVerify does not navigate or end the chain on a successful verif
     auth,
     lowdefy,
   });
-  expect(assign).not.toHaveBeenCalled();
+  expect(assign.mock.calls).toEqual([['/home-page']]);
   expect(res.responses.verify).toEqual({
     type: 'PhoneNumberVerify',
     index: 0,
     response: { token: 't', user: {} },
   });
+  expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
+});
+
+test('twoFactorVerify navigates on a successful challenge without ending the chain', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const res = await callActionChain({
+    actions: [
+      { id: 'verify', type: 'TwoFactorVerify', params: { code: '012345' } },
+      { id: 'after', type: 'Next' },
+    ],
+    auth,
+    lowdefy,
+  });
+  expect(assign.mock.calls).toEqual([['/reports']]);
   expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
 });
