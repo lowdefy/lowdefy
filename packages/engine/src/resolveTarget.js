@@ -98,9 +98,12 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
   if (type.isString(pageId)) {
     return { kind: 'page', pathname: `/${pageId}`, query };
   }
-  if (type.isString(url)) {
+  if (type.isString(url) && url !== '') {
     return classifyUrl({ lowdefy, url, query });
   }
+  // An empty url string is absence of a target, not the origin root: it is
+  // already excluded from the ambiguity check above, and classifying '' would
+  // dereference `new URL('https://', origin)` into a throw.
   return undefined;
 }
 
