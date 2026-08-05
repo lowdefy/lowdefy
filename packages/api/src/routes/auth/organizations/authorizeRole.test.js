@@ -52,6 +52,23 @@ test('authorizeRole answers the added actions the vendored statements do not car
   expect(authorizeRole({ permissions: { session: ['revoke'] }, role: 'admin' })).toBe(true);
 });
 
+test('authorizeRole answers the credential recovery actions per role', () => {
+  expect(authorizeRole({ permissions: { user: ['reset-two-factor'] }, role: 'admin' })).toBe(true);
+  expect(authorizeRole({ permissions: { user: ['reset-two-factor'] }, role: 'owner' })).toBe(true);
+  expect(authorizeRole({ permissions: { user: ['reset-two-factor'] }, role: 'member' })).toBe(
+    false
+  );
+  expect(authorizeRole({ permissions: { user: ['revoke-passkeys'] }, role: 'admin' })).toBe(true);
+  expect(authorizeRole({ permissions: { user: ['revoke-passkeys'] }, role: 'owner' })).toBe(true);
+  expect(authorizeRole({ permissions: { user: ['revoke-passkeys'] }, role: 'member' })).toBe(false);
+});
+
+test('authorizeRole refuses an unrecognised role for a credential recovery action', () => {
+  expect(
+    authorizeRole({ permissions: { user: ['reset-two-factor'] }, role: 'branch-manager' })
+  ).toBe(false);
+});
+
 test('authorizeRole requires every action in a resource list', () => {
   expect(
     authorizeRole({ permissions: { organization: ['update', 'delete'] }, role: 'admin' })
