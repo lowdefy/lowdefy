@@ -44,6 +44,7 @@
     },
     "twoFactor": {
       "enabled": true,
+      "required": false,
       "mfaTrustedProviderKeys": {
         "~arr": [],
         "~k": "1a"
