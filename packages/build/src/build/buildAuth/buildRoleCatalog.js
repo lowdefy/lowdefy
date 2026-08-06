@@ -27,7 +27,7 @@ import normalizeRoleCatalog from './normalizeRoleCatalog.js';
 // registers in the organization plugin's access control.
 //
 // The built-in organization tier (owner/admin/member) is not a valid gate
-// reference under either policy: it reaches apps as _user.orgRoles, while
+// reference under either policy: it reaches apps as _user.org_roles, while
 // createAuthorizeOutcome.js matches gates against user.roles alone, which is
 // member.appRoles. A gate on a tier name would never match any caller.
 function buildRoleCatalog({ components }) {
@@ -57,7 +57,7 @@ function buildRoleCatalog({ components }) {
     Object.keys(rolesMap).forEach((roleName) => {
       if (!authoredIds.has(roleName)) {
         throw new ConfigError(
-          `Auth gate references role "${roleName}", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.`,
+          `Auth gate references role "${roleName}", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.`,
           { configKey: rolesMap['~k'] ?? components.auth['~k'] }
         );
       }
