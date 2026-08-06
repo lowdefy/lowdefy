@@ -16,7 +16,7 @@
 
 /*
   One-off operator reshape of a pre-release experiment auth database into the
-  storage shape the engine reads today: app roles on member.appRoles as a
+  storage shape the engine reads today: app roles on member.app_roles as a
   native array, member.role restricted to BetterAuth's owner/admin/member
   org-authority tier, no user.role denormalization, and - under the pinned
   policy - the organization keyed by its configured slug.
@@ -42,18 +42,18 @@
   the wrong one is silently destructive. It names the policy the database was
   WRITTEN under, not the one the app runs under now.
 
-  Under pinned the whole CSV becomes appRoles and role becomes 'member',
+  Under pinned the whole CSV becomes app_roles and role becomes 'member',
   keeping a stored 'admin' as the app role it was: under that policy the
   organization plugin registered the authored catalog with empty statement
   sets and reserved none of the three built-in names, so 'admin' in a pinned
   member.role granted nothing. Running the tenant rule over it instead routes
   that name to the org tier, where it resolves against the real adminAc - so
   every holder of an app role that happens to be called admin gains authority
-  to invite, remove and re-role members - and strips the name out of appRoles,
+  to invite, remove and re-role members - and strips the name out of app_roles,
   so every page and endpoint gate that names it stops matching with no error
   anywhere. Two silent harms, opposite directions, from one missing flag.
 
-  Under tenant the built-in names go to role and the rest to appRoles. The old
+  Under tenant the built-in names go to role and the rest to app_roles. The old
   model's ambiguity is real there but already resolved: the plugin registered
   the catalog as { ...catalogRoles, ...defaultRoles }, so a built-in name
   shadowed any authored role of the same name and the org tier is what the
@@ -63,7 +63,7 @@
   invitation row in the database is reshaped. The reference apps share one auth
   database between pinned and tenant apps; reshape such a database with
   --policy pinned --org <slug> for each pinned organization FIRST, then run the
-  tenant pass - rows that already carry an appRoles array are skipped, so the
+  tenant pass - rows that already carry an app_roles array are skipped, so the
   pinned rows keep the pinned rule.
 
   Whoever held the legacy auth.userAdminRole value is granted 'owner' on role
@@ -92,11 +92,9 @@
   is the cause. In a pre-release experiment database a stale session is worth
   nothing and the ambiguity is worth less.
 
-  Field names here are the live camelCase ones - appRoles, organizationId. If
-  the snake-case data-fields work has landed in the database being reshaped
-  they are app_roles and organization_id instead; there is no ordering
-  dependency between the two, but the operator has to know which shape their
-  database is in and edit these names to match.
+  Field names here are the physical snake_case columns the adapter derives for
+  every auth model - app_roles, organization_id - matching every other native
+  read and write in this reference app.
 
   Collection names are the fixed BetterAuth-model-to-collection mapping in
   packages/api/src/routes/auth/modelNames.js.
@@ -133,10 +131,10 @@ if (!uri) {
 if (policy !== 'pinned' && policy !== 'tenant') {
   console.error(
     'Pass --policy pinned or --policy tenant - the policy the database was written under. There is no ' +
-      'default: under pinned the whole member.role CSV moves to appRoles and role becomes "member", while ' +
-      'under tenant the built-in names owner/admin/member stay on role and only the rest move to appRoles. ' +
+      'default: under pinned the whole member.role CSV moves to app_roles and role becomes "member", while ' +
+      'under tenant the built-in names owner/admin/member stay on role and only the rest move to app_roles. ' +
       'Guessing wrong under pinned hands real org authority to every holder of an app role named "admin" ' +
-      'and removes that name from appRoles, so the gates naming it stop matching silently.'
+      'and removes that name from app_roles, so the gates naming it stop matching silently.'
   );
   process.exit(1);
 }
@@ -152,7 +150,7 @@ if (policy === 'tenant' && userAdminRole) {
   process.exit(1);
 }
 
-// The pinned rule keeps a built-in name in appRoles because under that policy
+// The pinned rule keeps a built-in name in app_roles because under that policy
 // it was never the org tier. The 'member' and '' entries are dropped instead:
 // both are the old model's no-grants placeholder, in its two spellings, and
 // neither is an app role anything can gate on.
@@ -162,11 +160,11 @@ function splitRole({ role }) {
     .map((entry) => entry.trim())
     .filter(Boolean);
   if (policy === 'pinned') {
-    return { appRoles: entries.filter((entry) => entry !== 'member'), entries, role: 'member' };
+    return { app_roles: entries.filter((entry) => entry !== 'member'), entries, role: 'member' };
   }
   const builtIn = entries.filter((entry) => BUILT_IN_ROLES.includes(entry));
   return {
-    appRoles: entries.filter((entry) => !builtIn.includes(entry)),
+    app_roles: entries.filter((entry) => !builtIn.includes(entry)),
     entries,
     // BetterAuth reads role as a comma-separated list of tier names itself, so
     // a row that held more than one keeps them all: that is what it resolved
@@ -189,15 +187,15 @@ async function reshapeRoles({ collection, db, filter, noteRow }) {
   const rows = await db.collection(collection).find(filter).toArray();
   const summary = { changed: 0, samples: [], scanned: rows.length, skipped: 0 };
   for (const row of rows) {
-    // An appRoles array is the mark of a reshaped row: its role field no
+    // An app_roles array is the mark of a reshaped row: its role field no
     // longer holds the CSV, so splitting it a second time would route the org
-    // tier this script just wrote into appRoles and blank the tier.
-    const reshaped = Array.isArray(row.appRoles);
+    // tier this script just wrote into app_roles and blank the tier.
+    const reshaped = Array.isArray(row.app_roles);
     const next = reshaped ? undefined : splitRole({ role: row.role });
     // heldRoles is the row's app-role names and role the tier it ends the pass
     // with, whether this run wrote them or an earlier run did.
     noteRow?.({
-      heldRoles: next?.entries ?? row.appRoles,
+      heldRoles: next?.entries ?? row.app_roles,
       role: next?.role ?? row.role,
       row,
     });
@@ -208,13 +206,13 @@ async function reshapeRoles({ collection, db, filter, noteRow }) {
     if (dryRun && summary.samples.length < SAMPLE_LIMIT) {
       summary.samples.push(
         `${row._id}: role ${JSON.stringify(row.role ?? null)} -> role ` +
-          `${JSON.stringify(next.role)}, appRoles ${JSON.stringify(next.appRoles)}`
+          `${JSON.stringify(next.role)}, app_roles ${JSON.stringify(next.app_roles)}`
       );
     }
     if (!dryRun) {
       await db
         .collection(collection)
-        .updateOne({ _id: row._id }, { $set: { appRoles: next.appRoles, role: next.role } });
+        .updateOne({ _id: row._id }, { $set: { app_roles: next.app_roles, role: next.role } });
     }
     summary.changed += 1;
   }
@@ -245,7 +243,7 @@ try {
     oldOrgId = organization._id;
     // Sibling pinned apps share an auth database in the reference set, so
     // every pass below is scoped to this organization's rows.
-    rowFilter = { organizationId: oldOrgId };
+    rowFilter = { organization_id: oldOrgId };
     console.log(`Organization "${orgSlug}" is keyed by id ${JSON.stringify(oldOrgId)}.`);
   }
 
@@ -260,7 +258,7 @@ try {
     filter: rowFilter,
     noteRow: ({ heldRoles, role, row }) => {
       // A holder is recognised from the pre-split CSV on a row this run
-      // reshapes and from appRoles on a row an earlier run reshaped. Both
+      // reshapes and from app_roles on a row an earlier run reshaped. Both
       // matter: a run that stopped between this pass and pass 4 must still
       // grant owner on the retry, or the organization is left without one.
       if (grantOwner && heldRoles.includes(userAdminRole)) {
@@ -362,19 +360,19 @@ try {
     }
 
     // Pass 6: the references. user-members and user-invitations are the only
-    // collections holding an organizationId; the third, user-sessions, holds
-    // the id as activeOrganizationId and pass 7 drops it wholesale.
+    // collections holding an organization_id; the third, user-sessions, holds
+    // the id as active_organization_id and pass 7 drops it wholesale.
     for (const collection of ['user-members', 'user-invitations']) {
-      const filter = { organizationId: oldOrgId };
+      const filter = { organization_id: oldOrgId };
       if (dryRun) {
         const count = await db.collection(collection).countDocuments(filter);
-        console.log(`${collection}.organizationId rewrite: ${count} to change.`);
+        console.log(`${collection}.organization_id rewrite: ${count} to change.`);
         continue;
       }
       const result = await db
         .collection(collection)
-        .updateMany(filter, { $set: { organizationId: orgSlug } });
-      console.log(`${collection}.organizationId rewrite: ${result.modifiedCount} changed.`);
+        .updateMany(filter, { $set: { organization_id: orgSlug } });
+      console.log(`${collection}.organization_id rewrite: ${result.modifiedCount} changed.`);
     }
 
     // Pass 7: the sessions.
