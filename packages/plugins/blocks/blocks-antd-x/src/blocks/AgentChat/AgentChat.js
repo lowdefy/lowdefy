@@ -55,6 +55,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  // Controlled composer value, so a starter prompt (or the setInput method) can
+  // fill the box, and a send can leave typed text in place when it is rejected.
+  const [inputValue, setInputValue] = useState('');
   // Mirror the operator-evaluated sharedState object into a ref so transport.body()
   // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
@@ -233,6 +236,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         });
       }
     });
+    methods.registerMethod('setInput', (args) => {
+      setInputValue(typeof args?.text === 'string' ? args.text : '');
+    });
     methods.registerMethod('clearMessages', () => {
       setMessages([]);
     });
@@ -385,7 +391,12 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     } else {
       sendMessage({ text });
     }
-    senderRef.current?.clear();
+    // Empty the composer here, after the sends and downstream of both the
+    // onBeforeSend cancellation return and the upload await, so a send that was
+    // rejected or failed to upload leaves the user's text in the box. Resetting
+    // from the Sender's onSubmit handler instead would silently lose typed input
+    // on every rejected send.
+    setInputValue('');
   }
 
   function handleStop() {
@@ -398,6 +409,13 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
+  }
+
+  // A two-track welcome starter fills the composer instead of sending, so a
+  // generic shipped default is an editable first draft rather than a message the
+  // user never meant to send. Reuses the controlled Sender value.
+  function handleWelcomePromptFill(text) {
+    setInputValue(typeof text === 'string' ? text : '');
   }
 
   function handleSuggestionClick(suggestion) {
@@ -487,7 +505,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       }}
     >
       <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty ? (
+        {isEmpty && !welcome?.tracks ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
           <MessageList
@@ -495,6 +513,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             messages={messages}
             isStreaming={isBusy}
             config={messageDisplay}
+            welcome={welcome}
+            onWelcomePromptFill={handleWelcomePromptFill}
             addToolApprovalResponse={addToolApprovalResponse}
             onFeedback={handleFeedback}
             onRegenerate={handleRegenerate}
@@ -562,6 +582,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         )}
         <Sender
           ref={senderRef}
+          value={inputValue}
+          onChange={setInputValue}
           placeholder={sender?.placeholder ?? methods.translate('agent.sender.placeholder')}
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
