@@ -21,6 +21,10 @@ import appMeta from '../../build/appMeta.js';
 import authJson from '../../build/auth.js';
 import strategies from '../../../build/plugins/auth/strategies.js';
 
+// Secrets are process-static env, so read once at module load rather than
+// on every sessionless request.
+const secrets = getSecretsFromEnv();
+
 // API auth strategies (apiKey/jwt headers) let MCP and service clients that
 // cannot hold a session cookie authenticate. Tried only when no session
 // resolved; a match is synthesized as session.user so createAuthorize and
@@ -31,7 +35,7 @@ async function getStrategyCaller(c, logger) {
     authJson,
     logger,
     plugins: { strategies },
-    secrets: getSecretsFromEnv(),
+    secrets,
   });
   return resolveStrategyCaller({
     headers: c.req.raw.headers,

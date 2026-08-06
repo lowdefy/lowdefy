@@ -30,6 +30,16 @@ function buildMcp({ components }) {
   const mcp = components.mcp;
   const configKey = mcp['~k'] ?? components['~k'];
 
+  // Agent tools were removed from mcp; schema validation only warns on
+  // unknown properties, so a leftover "agents" key would otherwise build
+  // silently instead of surfacing the removal.
+  if (!type.isNone(mcp.agents)) {
+    throw new ConfigError(
+      'MCP agent tools are not supported. Remove "mcp.agents" from your config.',
+      { configKey }
+    );
+  }
+
   mcp.name = mcp.name ?? 'lowdefy';
   mcp.version = mcp.version ?? '1.0.0';
   mcp.endpoints = mcp.endpoints ?? [];

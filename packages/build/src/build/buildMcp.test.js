@@ -93,6 +93,14 @@ test('buildMcp throws when an endpoint has no payloadSchema', () => {
   );
 });
 
+test('buildMcp throws when mcp.agents is present', () => {
+  const context = testContext();
+  const components = { mcp: { agents: ['some-agent'] } };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP agent tools are not supported. Remove "mcp.agents" from your config.'
+  );
+});
+
 test('buildMcp throws on duplicate endpoint tool ids', () => {
   const context = testContext();
   const components = {

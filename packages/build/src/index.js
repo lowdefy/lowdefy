@@ -150,7 +150,7 @@ async function build(options) {
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
-    tryBuildStep(buildAgents, 'buildAgents', { components, context })
+    tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
