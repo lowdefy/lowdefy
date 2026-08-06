@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
-// Monorepo-specific config
-export { default as createPlaywrightConfig } from './createPlaywrightConfig.js';
-
-// Re-export shared helpers from e2e-utils
-export { getBlock, getShortcutModifier } from '@lowdefy/e2e-utils';
-
-// Keep navigateToTestPage as it's specific to monorepo test structure
-export { default as navigateToTestPage } from './navigateToTestPage.js';
+@layer components {
+  /* The picker's preset panel puts its click and hover handlers on the list item and takes only a
+     label from the block, so a preset that cannot be selected is marked in its label and the list
+     item around it is disabled here. The components layer is ordered after the antd layer, so this
+     wins over the panel's own list item styles. */
+  .ant-picker-presets li:has(.lf-picker-preset-disabled) {
+    color: var(--ant-color-text-disabled);
+    pointer-events: none;
+  }
+}

@@ -205,6 +205,20 @@ const blockState = await ldf.block('name_input').state();
 const validation = await ldf.block('email_input').validation();
 ```
 
+### Keyboard Shortcuts
+
+A `mod` shortcut resolves to Cmd or Ctrl depending on the platform the **browser** reports, which
+Playwright emulates per project — a Desktop Chrome project reports Windows even on macOS. Derive the
+key from the page rather than from `process.platform`, or the test will press a key the app is not
+listening for:
+
+```javascript
+import { getShortcutModifier } from '@lowdefy/e2e-utils';
+
+const mod = await getShortcutModifier(ldf.page);
+await ldf.page.keyboard.press(`${mod}+k`);
+```
+
 ## Complete Example
 
 ```javascript

@@ -73,6 +73,27 @@ overrides:
     rules:
       # Disable import/named as eslint-plugin-import can't resolve Playwright's TypeScript exports
       import/named: 'off'
+      # Assertions are also made through the @lowdefy/e2e-utils expect* helpers and through a block
+      # helper's expect namespace (blockHelper.expect.value(...)), both of which wrap the expect()
+      # call. The rule only sees the last identifier of the callee, so the block helper assertion
+      # names have to be listed by name.
+      playwright/expect-expect:
+        - warn
+        - assertFunctionPatterns:
+            - '^expect'
+          assertFunctionNames:
+            - closed
+            - dateDisabled
+            - dateEnabled
+            - endValue
+            - noPresets
+            - placeholder
+            - presetDisabled
+            - presetEnabled
+            - presetLabelHtml
+            - presetLabels
+            - startValue
+            - value
   # Playwright e2e utilities and block helpers
   - files:
       - 'packages/utils/e2e-utils/src/**/*.js'

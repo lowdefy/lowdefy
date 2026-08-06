@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+export { getShortcutModifier } from './keyboard.js';
 export { getBlock } from './locators.js';
 export { goto, waitForReady, waitForPage } from './navigation.js';
 export { getRequestState, getRequestResponse } from './requests.js';
