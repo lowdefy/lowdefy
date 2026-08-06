@@ -22,6 +22,7 @@
 // from "." and "./fixtures".
 
 export { escapeId } from './core/escapeId.js';
+export { getShortcutModifier } from './core/keyboard.js';
 export { getBlock } from './core/locators.js';
 export { goto, waitForReady, waitForPage } from './core/navigation.js';
 export { getRequestState, getRequestResponse } from './core/requests.js';

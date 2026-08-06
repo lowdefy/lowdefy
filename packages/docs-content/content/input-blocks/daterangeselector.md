@@ -283,6 +283,185 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+- id: drs_presets_relative
+  type: DateRangeSelector
+  properties:
+    title: Relative Ranges
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Last 7 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 14 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 14
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 30 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 30
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 90 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 90
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+- id: drs_presets_to_date
+  type: DateRangeSelector
+  properties:
+    title: Period To Date
+    label:
+      disabled: true
+    presets:
+      - label: Week to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: week
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Month to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: month
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Year to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: year
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+- id: drs_presets_fixed
+  type: DateRangeSelector
+  properties:
+    title: Fixed Ranges
+    label:
+      disabled: true
+    presets:
+      - label: 2026 Q1
+        value:
+          - 2026-01-01
+          - 2026-03-31
+      - label: 2026 Q2
+        value:
+          - 2026-04-01
+          - 2026-06-30
+      - label: 2026 Q3
+        value:
+          - 2026-07-01
+          - 2026-09-30
+      - label: 2026 Q4
+        value:
+          - 2026-10-01
+          - 2026-12-31
+- id: drs_presets_html_label
+  type: DateRangeSelector
+  properties:
+    title: Html Labels
+    label:
+      disabled: true
+    presets:
+      - label: <b>Today</b>
+        value:
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: '<span style="color: #1677ff">This month</span>'
+        value:
+          - _dayjs:
+              - now
+              - startOf: month
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - endOf: month
+              - format: YYYY-MM-DD
+- id: drs_presets_disabled_dates
+  type: DateRangeSelector
+  properties:
+    title: Presets And Disabled Dates
+    label:
+      extra: Future dates are disabled. "Last 7 days" selects the allowed part of the
+        range, and "Next 7 days" has nothing to select, so it is listed as
+        disabled.
+    disabledDates:
+      min: 2026-01-01
+      max:
+        _dayjs:
+          - now
+          - format: YYYY-MM-DD
+    presets:
+      - label: Last 7 days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+      - label: Next 7 days
+        value:
+          - _dayjs:
+              - now
+              - add:
+                  - 1
+                  - day
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+```
+
+```yaml
 - id: drs_label_default
   type: DateRangeSelector
   properties:
@@ -703,7 +882,7 @@ Date range picker for selecting start and end dates.
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
 | `disabledDates.dates` | array | - | Array of specific dates to disable. |
-| `disabledDates.ranges` | array | - | Array of date ranges to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | - | Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale's date format, or "YYYY-MM-DD" when no locale is configured. |
@@ -721,6 +900,9 @@ Date range picker for selecting start and end dates.
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `placeholder` | array | - | Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date range. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a range that starts or ends on a date disabledDates disables is narrowed to the dates it may select, so a "Last 7 days" shortcut still selects the allowed part of the last 7 days. A shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same day in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the day before or after the current one, depending on the browser timezone and the time of day. |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

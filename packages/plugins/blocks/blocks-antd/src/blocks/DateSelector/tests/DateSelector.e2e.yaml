@@ -157,3 +157,73 @@ blocks:
     properties:
       title: Clearable
       allowClear: true
+
+  # ============================================
+  # PRESETS
+  # ============================================
+
+  - id: ds_presets
+    type: DateSelector
+    properties:
+      title: Presets
+      format: YYYY-MM-DD
+      presets:
+        - label: New Year 2024
+          value: '2024-01-01'
+        - label: Mid 2024
+          value:
+            _date: '2024-06-15'
+
+  # The recommended idiom for a relative shortcut: a local time chain ending in a format step, so
+  # the preset selects the calendar date the browser shows as today rather than the UTC date.
+  - id: ds_presets_today
+    type: DateSelector
+    properties:
+      title: Presets Today
+      format: YYYY-MM-DD
+      presets:
+        - label: Today
+          value:
+            _dayjs:
+              - now
+              - format: YYYY-MM-DD
+
+  - id: ds_presets_min_now
+    type: DateSelector
+    properties:
+      title: Presets with a minimum date
+      format: YYYY-MM-DD
+      disabledDates:
+        min:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: A Week Ago
+          value:
+            _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+        - label: Today
+          value:
+            _dayjs: [now, { format: YYYY-MM-DD }]
+
+  - id: ds_disabled_ranges_from_to
+    type: DateSelector
+    properties:
+      title: Disabled ranges as from and to
+      format: YYYY-MM-DD
+      disabledDates:
+        ranges:
+          - from: '2026-03-10'
+            to: '2026-03-14'
+      presets:
+        - label: In the disabled range
+          value: '2026-03-12'
+        - label: Outside the disabled range
+          value: '2026-03-17'
+
+  - id: ds_disabled_ranges_array
+    type: DateSelector
+    properties:
+      title: Disabled ranges as an array
+      format: YYYY-MM-DD
+      disabledDates:
+        ranges:
+          - ['2026-03-10', '2026-03-14']
