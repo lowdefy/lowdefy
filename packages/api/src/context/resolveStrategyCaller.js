@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { normalizeCaller, type } from '@lowdefy/helpers';
 
 // Tries the configured API auth strategies in config order; the first
 // verifier match wins. A strategy caller is a config-derived, org-less
@@ -22,6 +22,10 @@ import { type } from '@lowdefy/helpers';
 // claim-derived roles, and attributes are the static bag shallow-merged
 // with claim-mapped values (claim wins), so _user.attributes reads the same
 // for session and strategy callers.
+//
+// normalizeCaller gives it the same snake_case key shape as the session
+// caller, over the verifier's user fields as well as the two stamped here -
+// app config reads one caller shape whichever branch resolved it.
 async function resolveStrategyCaller({ headers, logger, strategies }) {
   for (const strategy of strategies ?? []) {
     const match = await strategy.verify({ headers, logger });
@@ -34,13 +38,13 @@ async function resolveStrategyCaller({ headers, logger, strategies }) {
       { event: 'auth_strategy_authenticated', authMethod: strategy.type, strategyId: strategy.id },
       `Request authenticated by auth strategy "${strategy.id}" (${strategy.type}).`
     );
-    return {
+    return normalizeCaller({
       ...match.user,
       authMethod: strategy.type,
       strategyId: strategy.id,
       roles,
       attributes,
-    };
+    });
   }
   return null;
 }

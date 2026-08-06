@@ -63,9 +63,9 @@ function createAuthorizeOutcome({ authEnforcement, system, user }) {
       // Enrolment last, after roles. Strictly === false: the key is present only
       // on a caller resolved from a session, so API strategy callers and the
       // dev/e2e injected callers pass untouched by inheritance rather than by a
-      // carve-out (Decision 10). `!user.twoFactorEnrolled` would redirect every
+      // carve-out (Decision 10). `!user.two_factor_enrolled` would redirect every
       // one of them.
-      if (enrolmentRequired && user.twoFactorEnrolled === false) {
+      if (enrolmentRequired && user.two_factor_enrolled === false) {
         // The enrolment page itself is exempt from the enrolment check alone -
         // it is a protected page and stays one; this is not a public-ness
         // exemption (Decision 8).

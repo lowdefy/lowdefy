@@ -26,7 +26,7 @@ import {
 } from 'better-auth/client/plugins';
 import { passkeyClient } from '@better-auth/passkey/client';
 
-import { serializer } from '@lowdefy/helpers';
+import { normalizeCaller, serializer } from '@lowdefy/helpers';
 
 import rawLowdefyConfig from '../../../build/config.json';
 
@@ -69,6 +69,11 @@ const sessionScoped = (params) => ({
 // kept in a ref: while the session user is unchanged it stays authoritative
 // for the fields the session does not carry, and UpdateSession refreshes the
 // ref from /api/user after a change (e.g. SetActiveOrganization).
+//
+// Only the session half is passed through normalizeCaller. BetterAuth's store
+// returns camelCase keys whatever the columns are named, so untransformed it
+// would sit emailVerified beside the resolved caller's email_verified on one
+// object; anything arriving from the server is already snake_case.
 function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
   const resolvedUserRef = useRef(serverUser);
@@ -95,7 +100,7 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   }
   const resolved = resolvedUserRef.current;
   if (!resolved) {
-    return children({ roles: [], ...session.user }, resolvedUserRef);
+    return children({ roles: [], ...normalizeCaller(session.user) }, resolvedUserRef);
   }
   if (resolved.id !== session.user.id) {
     // The ref has not caught up with a changed session user - a sign-in as a
@@ -114,7 +119,7 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   // config without this file naming it. session.user is the floor - the client
   // store may hold a fresher one than the ref, and the resolved object wins
   // wherever both carry a key.
-  const user = { ...session.user, ...resolved };
+  const user = { ...normalizeCaller(session.user), ...resolved };
   return children(user, resolvedUserRef);
 }
 

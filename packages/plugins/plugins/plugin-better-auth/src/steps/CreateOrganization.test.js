@@ -26,8 +26,8 @@ const sessionCaller = {
     email: 'user1@example.com',
     name: 'User One',
     image: null,
-    emailVerified: true,
-    activeOrganizationId: null,
+    email_verified: true,
+    active_organization_id: null,
   },
 };
 

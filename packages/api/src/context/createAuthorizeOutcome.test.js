@@ -184,7 +184,7 @@ const enforcement = { twoFactorRequired: true, twoFactorEnrolPageId: 'enrol' };
 test('enrolment required, unenrolled, protected with no roles returns enrol_required', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false } })).toBe('enrol_required');
 });
@@ -195,7 +195,7 @@ test('enrolment required, unenrolled, protected page whose roles the caller lack
   // enrol redirect. Must never regress.
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', roles: ['role2'], twoFactorEnrolled: false },
+    user: { sub: 'sub', roles: ['role2'], two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false, roles: ['role1'] } })).toBe('deny');
 });
@@ -203,7 +203,7 @@ test('enrolment required, unenrolled, protected page whose roles the caller lack
 test('enrolment required, unenrolled, public config returns allow', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: true } })).toBe('allow');
 });
@@ -211,7 +211,7 @@ test('enrolment required, unenrolled, public config returns allow', () => {
 test('enrolment required, unenrolled, pageId equal to the enrol page is exempt', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false } }, { pageId: 'enrol' })).toBe('allow');
 });
@@ -219,7 +219,7 @@ test('enrolment required, unenrolled, pageId equal to the enrol page is exempt',
 test('enrolment required, unenrolled, a different pageId is not exempt', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false } }, { pageId: 'other' })).toBe('enrol_required');
 });
@@ -230,14 +230,14 @@ test('enrolment required, unenrolled, a config id colliding with the enrol page 
   // by carrying an id that collides with the enrol page's string.
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false }, id: 'enrol' })).toBe('enrol_required');
 });
 
-test('enrolment required, caller with no twoFactorEnrolled key passes untouched', () => {
+test('enrolment required, caller with no two_factor_enrolled key passes untouched', () => {
   // Absent key = pass untouched (strategy/injected/system callers - Decision 10).
-  // The check is strictly === false, never !user.twoFactorEnrolled.
+  // The check is strictly === false, never !user.two_factor_enrolled.
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
     user: { sub: 'sub' },
@@ -248,7 +248,7 @@ test('enrolment required, caller with no twoFactorEnrolled key passes untouched'
 test('enrolment required, enrolled caller returns allow', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: enforcement,
-    user: { sub: 'sub', twoFactorEnrolled: true },
+    user: { sub: 'sub', two_factor_enrolled: true },
   });
   expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
 });
@@ -256,7 +256,7 @@ test('enrolment required, enrolled caller returns allow', () => {
 test('enrolment off, unenrolled caller returns allow', () => {
   const authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: { twoFactorRequired: false, twoFactorEnrolPageId: 'enrol' },
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
 });
@@ -264,13 +264,13 @@ test('enrolment off, unenrolled caller returns allow', () => {
 test('authEnforcement null returns allow for enrolled and unenrolled alike', () => {
   let authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: null,
-    user: { sub: 'sub', twoFactorEnrolled: false },
+    user: { sub: 'sub', two_factor_enrolled: false },
   });
   expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
 
   authorizeOutcome = createAuthorizeOutcome({
     authEnforcement: null,
-    user: { sub: 'sub', twoFactorEnrolled: true },
+    user: { sub: 'sub', two_factor_enrolled: true },
   });
   expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
 });

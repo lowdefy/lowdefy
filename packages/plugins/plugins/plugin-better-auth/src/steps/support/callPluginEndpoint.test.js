@@ -19,6 +19,8 @@ import { jest } from '@jest/globals';
 import callPluginEndpoint from './callPluginEndpoint.js';
 import createMockAuth from '../../../test/createMockAuth.js';
 
+// The resolved caller, so snake_case - BetterAuth's own camelCase names appear
+// only on the session this file hands back to it.
 const sessionCaller = {
   system: false,
   user: {
@@ -26,8 +28,8 @@ const sessionCaller = {
     email: 'user1@example.com',
     name: 'User One',
     image: 'https://example.com/u1.png',
-    emailVerified: true,
-    activeOrganizationId: 'org-1',
+    email_verified: true,
+    active_organization_id: 'org-1',
   },
 };
 
@@ -175,7 +177,7 @@ test('callPluginEndpoint does not mutate the real auth options', async () => {
   expect(authContext.options.secondaryStorage).toEqual({ real: 'secondaryStorage' });
 });
 
-test('callPluginEndpoint for a session caller uses the caller id and activeOrganizationId', async () => {
+test('callPluginEndpoint for a session caller hands BetterAuth camelCase keys sourced from the snake_case caller', async () => {
   const banUser = jest.fn().mockResolvedValue({});
   const { auth } = createMockAuth({ adminEndpoints: { banUser } });
   await callPluginEndpoint({

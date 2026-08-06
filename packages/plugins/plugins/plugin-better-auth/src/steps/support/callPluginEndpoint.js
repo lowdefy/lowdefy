@@ -57,12 +57,15 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
     };
     activeOrganizationId = null;
   } else {
+    // This is the inbound boundary back into BetterAuth, which names its own
+    // fields in camelCase - so the keys stay camelCase while their values come
+    // off the resolved caller, which carries snake_case like any other record.
     actingUser = {
       id: acting.user.id,
       email: acting.user.email,
       name: acting.user.name,
       image: acting.user.image,
-      emailVerified: acting.user.emailVerified,
+      emailVerified: acting.user.email_verified,
       // The org plugin never reads this field, so the caller's own value rides along
       // untouched - undefined when they hold no tier. The admin plugin reads it as
       // the whole answer, so those calls get server authority instead.
@@ -70,7 +73,7 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
     };
     // Steps always name the target organization in the body; this only feeds the org
     // plugin's fallback, so a session pinned to one org can still write into another.
-    activeOrganizationId = acting.user.activeOrganizationId ?? null;
+    activeOrganizationId = acting.user.active_organization_id ?? null;
   }
 
   const actingSession = {

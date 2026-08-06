@@ -131,11 +131,11 @@ test('resolves a session active in the pinned organization', async () => {
   expect(context.user).toEqual({
     id: 'user_1',
     roles: ['user-admin'],
-    orgRoles: ['admin'],
+    org_roles: ['admin'],
     attributes: {},
-    activeOrganizationId: 'team',
-    organizationId: 'team',
-    twoFactorEnrolled: false,
+    active_organization_id: 'team',
+    organization_id: 'team',
+    two_factor_enrolled: false,
   });
   expect(findOne).toHaveBeenCalled();
 });
@@ -153,7 +153,7 @@ test('resolves any active organization under the tenant policy', async () => {
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.active_organization_id).toBe('org_9');
   expect(context.user.roles).toEqual(['auditor']);
 });
 
@@ -169,11 +169,11 @@ test('resolves any active organization when no organization binding is registere
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.activeOrganizationId).toBe('org_9');
+  expect(context.user.active_organization_id).toBe('org_9');
   expect(context.user.roles).toEqual(['auditor']);
 });
 
-test('resolves roles from member.appRoles and orgRoles from the member role tier', async () => {
+test('resolves roles from member.appRoles and org_roles from the member role tier', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1', email: 'user@example.com' },
@@ -189,15 +189,33 @@ test('resolves roles from member.appRoles and orgRoles from the member role tier
     id: 'user_1',
     email: 'user@example.com',
     roles: ['branch-manager'],
-    orgRoles: ['member'],
+    org_roles: ['member'],
     attributes: {},
-    activeOrganizationId: 'org_1',
-    organizationId: 'org_1',
-    twoFactorEnrolled: false,
+    active_organization_id: 'org_1',
+    organization_id: 'org_1',
+    two_factor_enrolled: false,
   });
 });
 
-test('sets activeOrganizationId from the session so steps can scope org operations', async () => {
+test('snake_cases the camelCase fields BetterAuth returns on the session user', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', emailVerified: true, twoFactorEnabled: true },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.email_verified).toBe(true);
+  expect(context.user.two_factor_enabled).toBe(true);
+  expect('emailVerified' in context.user).toBe(false);
+  expect('twoFactorEnabled' in context.user).toBe(false);
+});
+
+test('sets active_organization_id from the session so steps can scope org operations', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -209,10 +227,10 @@ test('sets activeOrganizationId from the session so steps can scope org operatio
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.activeOrganizationId).toBe('org_1');
+  expect(context.user.active_organization_id).toBe('org_1');
 });
 
-test('sets organizationId to the active org for tenant stamping and _user: organizationId', async () => {
+test('sets organization_id to the active org for tenant stamping and _user: organization_id', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -224,8 +242,8 @@ test('sets organizationId to the active org for tenant stamping and _user: organ
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.organizationId).toBe('org_1');
-  expect(context.user.organizationId).toBe(context.user.activeOrganizationId);
+  expect(context.user.organization_id).toBe('org_1');
+  expect(context.user.organization_id).toBe(context.user.active_organization_id);
 });
 
 // The admin plugin's session field never reaches the caller. Nothing writes
@@ -247,7 +265,7 @@ test('never carries impersonatedBy onto context.user, even when the session row 
   expect('impersonatedBy' in context.user).toBe(false);
 });
 
-test('splits a multi-value member role string into orgRoles', async () => {
+test('splits a multi-value member role string into org_roles', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -259,7 +277,7 @@ test('splits a multi-value member role string into orgRoles', async () => {
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.orgRoles).toEqual(['owner', 'admin']);
+  expect(context.user.org_roles).toEqual(['owner', 'admin']);
 });
 
 test('resolves an empty roles array when the member row has no appRoles key', async () => {
@@ -277,7 +295,7 @@ test('resolves an empty roles array when the member row has no appRoles key', as
   expect(context.user.roles).toEqual([]);
 });
 
-test('resolves an empty orgRoles array when the member row has an empty role string', async () => {
+test('resolves an empty org_roles array when the member row has an empty role string', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -289,7 +307,7 @@ test('resolves an empty orgRoles array when the member row has an empty role str
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.orgRoles).toEqual([]);
+  expect(context.user.org_roles).toEqual([]);
   expect(context.user.roles).toEqual(['auditor']);
 });
 
@@ -367,7 +385,7 @@ test('does not mutate the original session user object', async () => {
   expect(context.user).not.toBe(sessionUser);
 });
 
-test('resolves twoFactorEnrolled true and skips the passkey read when twoFactorEnabled is true', async () => {
+test('resolves two_factor_enrolled true and skips the passkey read when twoFactorEnabled is true', async () => {
   const { auth, count } = mockAuth({
     session: {
       user: { id: 'user_1', twoFactorEnabled: true },
@@ -380,11 +398,11 @@ test('resolves twoFactorEnrolled true and skips the passkey read when twoFactorE
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.twoFactorEnrolled).toBe(true);
+  expect(context.user.two_factor_enrolled).toBe(true);
   expect(count).not.toHaveBeenCalled();
 });
 
-test('resolves twoFactorEnrolled true when an unenrolled caller has a passkey on a passkey instance', async () => {
+test('resolves two_factor_enrolled true when an unenrolled caller has a passkey on a passkey instance', async () => {
   const { auth, count } = mockAuth({
     session: {
       user: { id: 'user_1', twoFactorEnabled: false },
@@ -398,14 +416,14 @@ test('resolves twoFactorEnrolled true when an unenrolled caller has a passkey on
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.twoFactorEnrolled).toBe(true);
+  expect(context.user.two_factor_enrolled).toBe(true);
   expect(count).toHaveBeenCalledWith({
     model: 'passkey',
     where: [{ field: 'userId', value: 'user_1' }],
   });
 });
 
-test('resolves twoFactorEnrolled false when an unenrolled caller has no passkey on a passkey instance', async () => {
+test('resolves two_factor_enrolled false when an unenrolled caller has no passkey on a passkey instance', async () => {
   const { auth, count } = mockAuth({
     session: {
       user: { id: 'user_1', twoFactorEnabled: false },
@@ -419,14 +437,14 @@ test('resolves twoFactorEnrolled false when an unenrolled caller has no passkey 
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.twoFactorEnrolled).toBe(false);
+  expect(context.user.two_factor_enrolled).toBe(false);
   expect(count).toHaveBeenCalledWith({
     model: 'passkey',
     where: [{ field: 'userId', value: 'user_1' }],
   });
 });
 
-test('resolves twoFactorEnrolled false and skips the passkey read on an instance with no passkey plugin', async () => {
+test('resolves two_factor_enrolled false and skips the passkey read on an instance with no passkey plugin', async () => {
   const { auth, count } = mockAuth({
     session: {
       user: { id: 'user_1', twoFactorEnabled: false },
@@ -438,11 +456,11 @@ test('resolves twoFactorEnrolled false and skips the passkey read on an instance
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.twoFactorEnrolled).toBe(false);
+  expect(context.user.two_factor_enrolled).toBe(false);
   expect(count).not.toHaveBeenCalled();
 });
 
-test('resolves twoFactorEnrolled false, not undefined, when twoFactorEnabled is absent from the session', async () => {
+test('resolves two_factor_enrolled false, not undefined, when twoFactorEnabled is absent from the session', async () => {
   const { auth } = mockAuth({
     session: {
       user: { id: 'user_1' },
@@ -454,7 +472,7 @@ test('resolves twoFactorEnrolled false, not undefined, when twoFactorEnabled is 
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.twoFactorEnrolled).toBe(false);
+  expect(context.user.two_factor_enrolled).toBe(false);
 });
 
 function mockStrategy({ attributes = {}, id, match = null, roles = [], type = 'apiKey' }) {
@@ -480,14 +498,14 @@ test('resolves a strategy caller when no session resolves', async () => {
 
   expect(context.user).toEqual({
     id: 'apiKey:partner-access:acme',
-    authMethod: 'apiKey',
-    strategyId: 'partner-access',
+    auth_method: 'apiKey',
+    strategy_id: 'partner-access',
     roles: ['partner'],
     attributes: {},
   });
 });
 
-test('omits the twoFactorEnrolled key entirely on a strategy caller', async () => {
+test('omits the two_factor_enrolled key entirely on a strategy caller', async () => {
   const { auth } = mockAuth({ session: null });
   const context = { logger: mockLogger() };
   const strategies = [
@@ -500,7 +518,7 @@ test('omits the twoFactorEnrolled key entirely on a strategy caller', async () =
 
   await resolveAuthentication(context, { auth, headers: {}, strategies });
 
-  expect('twoFactorEnrolled' in context.user).toBe(false);
+  expect('two_factor_enrolled' in context.user).toBe(false);
 });
 
 test('sets context.user to null when no session resolves and no strategy matches', async () => {
@@ -530,7 +548,7 @@ test('a resolved session wins over a presented strategy credential', async () =>
   await resolveAuthentication(context, { auth, headers: {}, strategies });
 
   expect(context.user.id).toBe('user_1');
-  expect(context.user.authMethod).toBeUndefined();
+  expect(context.user.auth_method).toBeUndefined();
   expect(strategies[0].verify).not.toHaveBeenCalled();
 });
 

@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { normalizeCaller, type } from '@lowdefy/helpers';
 
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
@@ -39,10 +39,17 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // roles. Under policy: pinned, a session whose active organization is not this
 // app's organization is treated the same way, member row there or not.
 //
+// The resolved caller is a record, so its keys are snake_case like every other
+// column an app reads - normalizeCaller applies that once over the whole
+// assembled object. The transform is not the adapter's: BetterAuth hands back
+// camelCase JS keys (emailVerified, twoFactorEnabled) whatever the columns are
+// named, so without it session.user would reintroduce camelCase beside the
+// Lowdefy-resolved keys on the same object.
+//
 // The member row carries two unrelated authorities and they stay apart.
 // context.user.roles is member.appRoles - the app's own role strings, and the
 // only source createAuthorizeOutcome matches against auth.roles page and endpoint
-// gates. context.user.orgRoles is the split of member.role - BetterAuth's
+// gates. context.user.org_roles is the split of member.role - BetterAuth's
 // owner/admin/member tier, an administrative fact about this organization that
 // no gate reads. context.user.attributes is
 // the one merged bag of authorization inputs: user.attributes (global) and
@@ -55,7 +62,7 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // _user.profile is undefined - never a synthesized {}. Strategy callers lack
 // profile exactly as they lack name and image.
 //
-// context.user.twoFactorEnrolled is the one caller fact no session field
+// context.user.two_factor_enrolled is the one caller fact no session field
 // carries: whether this person holds a factor that satisfies
 // auth.twoFactor.required. It is set only on session callers - strategy,
 // injected and system callers omit the key entirely, so the enrolment gate,
@@ -167,7 +174,9 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     });
     twoFactorEnrolled = passkeyCount > 0;
   }
-  context.user = {
+  // normalizeCaller is shallow, so the attributes bag it carries through is the
+  // merge below verbatim - app-owned keys inside it are never renamed.
+  context.user = normalizeCaller({
     ...session.user,
     // Absent on a member row minted with no app roles - never falls back to
     // member.role, which would make the two fields one dual-storage scheme.
@@ -179,13 +188,13 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     },
     activeOrganizationId,
     twoFactorEnrolled,
-    // organizationId is the caller's active org in its serialized string form -
+    // organization_id is the caller's active org in its serialized string form -
     // the value the tenant wall stamps onto and filters walled collections with,
-    // and the one operators read as _user: organizationId. It resolves under
+    // and the one operators read as _user: organization_id. It resolves under
     // both organizations policies (under pinned it always equals the pinned
     // org, since set-active-organization is disabled there).
     organizationId: activeOrganizationId,
-  };
+  });
 }
 
 export default resolveAuthentication;
