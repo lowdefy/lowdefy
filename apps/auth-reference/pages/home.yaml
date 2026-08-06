@@ -40,7 +40,7 @@ blocks:
           - 'Signed in as '
           - _user: email
   # The two authorities side by side. roles is member.appRoles - what the
-  # gates above read. orgRoles is member.role - who administers org-a. Either
+  # gates above read. org_roles is member.role - who administers org-a. Either
   # can be held without the other.
   - id: two_authorities_html
     type: Html
@@ -55,7 +55,7 @@ blocks:
         _nunjucks:
           template: |
             <p><b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
-            <b>orgRoles</b> (the org tier, member.role): {{ user.orgRoles | dump }}</p>
+            <b>org_roles</b> (the org tier, member.role): {{ user.org_roles | dump }}</p>
           on:
             user:
               _user: true

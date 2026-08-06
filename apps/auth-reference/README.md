@@ -17,7 +17,7 @@ asks: the self-service action catalog (`/security`, the password
 round-trip, 2FA, passkeys), the per-step step floor, `user.profile`
 self-service, the `account-kit` local module contributing auth wiring from
 its manifest, and the `_build.authConfig` build operator. The last section
-covers per-organization authority: `_user.roles` and `_user.orgRoles` as
+covers per-organization authority: `_user.roles` and `_user.org_roles` as
 separate fields, and the rule that an app role opens the admin UI while the
 caller's member row in the **target** organization decides whether the
 write lands. Each later phase grows this suite with a scenario.
@@ -177,8 +177,8 @@ tooling as it grows.
 Organizations are always on. This app pins **org-a** with `signup: open`;
 `auth-reference-b` pins **org-b** with the default invite-only signup;
 `auth-reference-tenant` runs `policy: tenant`. App roles now resolve from
-the active `member.appRoles` (a native array) onto `_user.roles`, the org
-tier from `member.role` onto `_user.orgRoles`, and `_user.attributes` is the
+the active `member.app_roles` (a native array) onto `_user.roles`, the org
+tier from `member.role` onto `_user.org_roles`, and `_user.attributes` is the
 shallow merge of `user.attributes` and the active member's `attributes`
 (member wins). Start with a fresh database (or drop
 the old one) so pre-phase-3 users do not confuse the wall.
@@ -191,10 +191,10 @@ the old one) so pre-phase-3 users do not confuse the wall.
     `/signup` with a fresh email. Before verifying, confirm the member row
     already exists but no session can be minted:
     `db["user-members"].find().toArray()` shows the row with
-    `role: "member"` and **no** `appRoles`, while logging in still fails
+    `role: "member"` and **no** `app_roles`, while logging in still fails
     with EMAIL_NOT_VERIFIED. Verify via Mailpit, log in - `/dashboard`
-    shows `roles: []` (app roles, `member.appRoles`) next to
-    `orgRoles: ["member"]` (the org tier, `member.role`). Role-gated pages
+    shows `roles: []` (app roles, `member.app_roles`) next to
+    `org_roles: ["member"]` (the org tier, `member.role`). Role-gated pages
     (`/admin`, `/members`) still 404: they gate on the `user-admin` app
     role, and the org tier is not a gate source - `createAuthorize` reads
     only `roles`.
@@ -218,7 +218,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
       --member-attributes '{"branches":["a","b"]}'
     ```
     On `/dashboard`, press **Refresh session (UpdateSession)** - `roles`
-    becomes `["user-admin", "auditor"]` and `orgRoles` becomes `["owner"]`
+    becomes `["user-admin", "auditor"]` and `org_roles` becomes `["owner"]`
     without a reload (the live member read; nothing is stamped on the
     session), and `attributes` shows the merged bag with the member's
     `branches` winning over the user's. `user-admin` is an ordinary app
@@ -229,7 +229,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
     the plugin's creator-protection and last-owner guards only bite while
     someone holds `owner`, so an organization with none has them all inert.
     `db["user-members"].find()` shows the two fields separately:
-    `appRoles: ["user-admin", "auditor"]` and `role: "owner"`.
+    `app_roles: ["user-admin", "auditor"]` and `role: "owner"`.
 21. **App roles are an array, and unrecognised names are kept**: on
     `/members`, use **Update a member's app roles** on your own member id
     with `user-admin` and `auditor` selected - `/audit-reports` renders
@@ -300,7 +300,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
 per-organization client endpoints are disabled for a pinned deployment`.
     `auth-reference`'s `/organizations` is read-only for that reason: it
     reads the pinned organization through the `org-info` endpoint and shows
-    your `activeOrganizationId`, `roles` and `orgRoles` in it. To exercise
+    your `activeOrganizationId`, `roles` and `org_roles` in it. To exercise
     switching, use `auth-reference-tenant`'s own copy of the page, where the
     endpoints are enabled - give a user membership in two tenant orgs
     (invite or `set-member.mjs`), switch by slug, and the page's roles line
@@ -341,11 +341,11 @@ http://localhost:3000/api/endpoints/partner-data` returns
     ```
 
     The caller is the **session user** (your user id, member-resolved
-    roles, no `authMethod`/`strategyId` fields) - the session branch is
+    roles, no `auth_method`/`strategy_id` fields) - the session branch is
     terminal, so the key is never consulted. Drop the Cookie header and the
     same call resolves the **strategy caller**
-    (`id: "apiKey:partner-access:acme"`, `authMethod: "apiKey"`,
-    `strategyId: "partner-access"`, `roles: ["partner"]`,
+    (`id: "apiKey:partner-access:acme"`, `auth_method: "apiKey"`,
+    `strategy_id: "partner-access"`, `roles: ["partner"]`,
     `attributes: {"branches":["north","east"]}`).
 
 31. **A walled-out session does not fall through to strategies**: remove
@@ -359,7 +359,7 @@ http://localhost:3000/api/endpoints/partner-data` returns
 node ../auth-strategies/scripts/mint-jwt.mjs --aud auth-reference-api
 --roles partner` - note this app's audience) and present it as
     `Authorization: Bearer` on `whoami`: the caller shows
-    `authMethod: "jwt"`, `strategyId: "service-jwt"`, and
+    `auth_method: "jwt"`, `strategy_id: "service-jwt"`, and
     `roles: ["partner"]` derived from the token's `roles` claim (the
     strategy grants no static roles). The same token reaches
     `partner-data`.
@@ -453,7 +453,7 @@ or configure "auth.email".` Restore `auth.email` (verification emails
     attributes to `{"branches":["a","b"]}`; on `/users`, update your user
     attributes to `{"region":"emea","branches":["hq"]}`. On `/dashboard`,
     press Refresh session - `roles` is `["user-admin", "auditor"]`,
-    `orgRoles` is still `["owner"]` (nothing above touched `member.role`),
+    `org_roles` is still `["owner"]` (nothing above touched `member.role`),
     and attributes show the merged bag with the member's `branches`
     winning. `UpdateMemberRoles` and the attributes steps write through the
     adapter's CRUD interface and fire **no** `user.update` or
@@ -876,11 +876,11 @@ not hold member: [list] in organization "org-a".` An app can no longer
     up, verify, and accept on `/accept-invitation?invitationId=<id>` -
     immediately after the accept,
     `db["user-members"].findOne({ userId: "<invitee id>" })` shows
-    `appRoles: ["user-admin"]` and `role: "admin"`: the accept path copied
+    `app_roles: ["user-admin"]` and `role: "admin"`: the accept path copied
     the app roles off the invitation and minted the org tier from its
     `role`, with no admin edit in between. The invitee's very first session
     resolves both - `/dashboard` shows `roles: ["user-admin"]` and
-    `orgRoles: ["admin"]`, `/members` opens (the app role), and
+    `org_roles: ["admin"]`, `/members` opens (the app role), and
     `call('list-members-ungated')` returns the member list (the org tier).
     Invite a second address with `user-admin` and the default `member` org
     role and only the first of those two is true for them.
@@ -974,12 +974,12 @@ partial-unique `users { phoneNumber: 1 }` index.
 
 Two facts decide what a caller can do, and neither derives from the other:
 
-- an **app role** on `member.appRoles` says "show me the admin UI". It
+- an **app role** on `member.app_roles` says "show me the admin UI". It
   reaches config as `_user.roles` and is the only thing `auth.pages.roles`
   and `auth.api.roles` match against.
 - the **member row in the target organization** says "you may actually
   change things". `member.role` is BetterAuth's `owner`/`admin`/`member`
-  tier, reaches config as `_user.orgRoles`, and is what every auth step's
+  tier, reaches config as `_user.org_roles`, and is what every auth step's
   declared authority is checked against - in the organization the step
   writes into, not the one the caller happens to be signed in to.
 
@@ -1017,8 +1017,8 @@ step says otherwise, with scenario 33's/48's console `call` helper.
     holds**: as the scenario-20 admin (`owner` in org-a), copy scenario
     75's member id from the member list. Under **Update a member's org
     role** pick `admin` and save - the row reloads with `role: "admin"`, and
-    signed in as them their admin writes now land while their `appRoles` are
-    untouched (`/dashboard` shows `orgRoles: ["admin"]` next to whatever
+    signed in as them their admin writes now land while their `app_roles` are
+    untouched (`/dashboard` shows `org_roles: ["admin"]` next to whatever
     `roles` they hold). Save `member` for the same member id - revoked;
     their next write is refused again. `member` is the revoked value: there
     is no fourth one, and `''` is not accepted. Then try the guard: with
@@ -1029,16 +1029,16 @@ step says otherwise, with scenario 33's/48's console `call` helper.
     is why this step goes through it rather than writing the field
     directly.
 
-77. **`_user.roles` and `_user.orgRoles` are separate, and only one is a
+77. **`_user.roles` and `_user.org_roles` are separate, and only one is a
     gate source**: as the scenario-20 admin, set your app roles to
     `user-admin` alone and your org role to `admin`. `/home` and
     `/dashboard` both show the pair: `roles: ["user-admin"]`,
-    `orgRoles: ["admin"]`. Now try to gate a page on the org tier - set
+    `org_roles: ["admin"]`. Now try to gate a page on the org tier - set
     `auth.pages.roles` in `lowdefy.yaml` to `admin: [audit-reports]` and
     restart: the **build fails** with
     `Auth gate references role "admin", which is not declared in auth.roles`,
     and the message says why - the organization tier is not a gate source, it
-    reaches apps as `_user.orgRoles`. Declare `owner` in `auth.roles` to get past that and
+    reaches apps as `_user.org_roles`. Declare `owner` in `auth.roles` to get past that and
     gate `audit-reports` on it instead: the build passes and the page
     **never opens**, for anybody, no matter what the org tier says.
     `createAuthorize` reads `roles` and nothing else. Restore the gate to
@@ -1117,7 +1117,7 @@ unenrolled caller) and the unique `user-two-factors { userId: 1 }` index.
     backup codes render once (copy them). Add the secret to an authenticator
     app, enter the current code, press **Verify code and finish enrolment**.
     You are returned to the `callbackUrl` page (`/dashboard`) and it now
-    renders. `_user.twoFactorEnrolled` reads `true` (the `/dashboard` block
+    renders. `_user.two_factor_enrolled` reads `true` (the `/dashboard` block
     that prints `_user` shows it), and
     `db.users.findOne({email: "<you>"}, {twoFactorEnabled: 1})` is `true`.
 82. **Passwordless enrol, and a passkey satisfies the floor**: sign in as a
@@ -1149,7 +1149,7 @@ http://localhost:3000/api/endpoints/partner-data` returns its report, not a
     403. Uncomment `dev.mockUser` (`roles: [user-admin]`) and restart - the
     pre-resolved dev caller reaches `/dashboard` and `/users` with no
     enrolment. Both carry no session, so the floor does not apply. (A
-    redirect/403 for either means something tested `!twoFactorEnrolled`
+    redirect/403 for either means something tested `!two_factor_enrolled`
     instead of `=== false`.) Re-comment `dev.mockUser`.
 86. **Admin reset recovers the TOTP user - and revokes their sessions**: as
     the scenario-20 admin on `/users`, in a second browser leave the scenario

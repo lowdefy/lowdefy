@@ -22,9 +22,9 @@ blocks:
               <li><b>id:</b> {{ user.id }}</li>
               <li><b>name:</b> {{ user.name }}</li>
               <li><b>email:</b> {{ user.email }}</li>
-              <li><b>emailVerified:</b> {{ user.emailVerified }}</li>
+              <li><b>email_verified:</b> {{ user.email_verified }}</li>
               <li><b>roles:</b> {{ user.roles | dump }} (the active member.appRoles - the app roles the page and endpoint gates read)</li>
-              <li><b>orgRoles:</b> {{ user.orgRoles | dump }} (the active member.role - the owner/admin/member org tier; no gate reads it)</li>
+              <li><b>org_roles:</b> {{ user.org_roles | dump }} (the active member.role - the owner/admin/member org tier; no gate reads it)</li>
               <li><b>attributes:</b> {{ user.attributes | dump }} (user.attributes merged with the active member's, member wins)</li>
               <li><b>profile.contactId:</b> {{ user.profile.contactId }} (merge-on-signup or invitation profile merge)</li>
             </ul>

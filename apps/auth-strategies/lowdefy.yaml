@@ -102,7 +102,7 @@ api:
 
   # Protected but not role-gated - any authenticated caller may call it.
   # Returns the resolved caller so the walkthrough can assert the strategy
-  # caller shape (id, authMethod, strategyId, roles, attributes).
+  # caller shape (id, auth_method, strategy_id, roles, attributes).
   - id: caller
     type: Api
     routine:
