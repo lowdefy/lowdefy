@@ -28,11 +28,11 @@ test('tenantPreflight detects a document missing the tenant field', async () => 
   const collection = 'tenantPreflightMissingField';
   await populateTestMongoDb({
     collection,
-    documents: [{ _id: 'stamped', organizationId: 'org_a' }, { _id: 'unstamped' }],
+    documents: [{ _id: 'stamped', organization_id: 'org_a' }, { _id: 'unstamped' }],
   });
   const res = await tenantPreflight({
     connection: makeConnection(collection),
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(res).toEqual({ ok: false });
 });
@@ -42,13 +42,13 @@ test('tenantPreflight detects an explicit null tenant field', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'stamped', organizationId: 'org_a' },
-      { _id: 'null-stamped', organizationId: null },
+      { _id: 'stamped', organization_id: 'org_a' },
+      { _id: 'null-stamped', organization_id: null },
     ],
   });
   const res = await tenantPreflight({
     connection: makeConnection(collection),
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(res).toEqual({ ok: false });
 });
@@ -58,13 +58,13 @@ test('tenantPreflight passes a fully stamped collection', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a' },
-      { _id: 'b1', organizationId: 'org_b' },
+      { _id: 'a1', organization_id: 'org_a' },
+      { _id: 'b1', organization_id: 'org_b' },
     ],
   });
   const res = await tenantPreflight({
     connection: makeConnection(collection),
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(res).toEqual({ ok: true });
 });
@@ -72,7 +72,7 @@ test('tenantPreflight passes a fully stamped collection', async () => {
 test('tenantPreflight passes an empty collection', async () => {
   const res = await tenantPreflight({
     connection: makeConnection('tenantPreflightEmptyCollection'),
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(res).toEqual({ ok: true });
 });
@@ -81,11 +81,11 @@ test('tenantPreflight probes a custom tenant field', async () => {
   const collection = 'tenantPreflightCustomField';
   await populateTestMongoDb({
     collection,
-    documents: [{ _id: 'a1', organization_id: 'org_a' }, { _id: 'unstamped' }],
+    documents: [{ _id: 'a1', tenant_id: 'org_a' }, { _id: 'unstamped' }],
   });
   const res = await tenantPreflight({
     connection: makeConnection(collection),
-    field: 'organization_id',
+    field: 'tenant_id',
   });
   expect(res).toEqual({ ok: false });
 });
@@ -97,7 +97,7 @@ test('tenantPreflight ignores other collections', async () => {
   });
   const res = await tenantPreflight({
     connection: makeConnection('tenantPreflightCleanCollection'),
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(res).toEqual({ ok: true });
 });

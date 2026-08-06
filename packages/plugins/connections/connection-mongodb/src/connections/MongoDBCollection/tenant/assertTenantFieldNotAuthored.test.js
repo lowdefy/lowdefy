@@ -17,51 +17,51 @@
 import { ObjectId } from 'mongodb';
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
-const field = 'organizationId';
+const field = 'organization_id';
 const position = 'a query';
 
 test('throws when the tenant field is a top-level key', () => {
   expect(() =>
-    assertTenantFieldNotAuthored({ value: { organizationId: 'org_b' }, field, position })
+    assertTenantFieldNotAuthored({ value: { organization_id: 'org_b' }, field, position })
   ).toThrow(
-    'Tenant field "organizationId" can not be set in a query on a tenant connection - the tenant wall stamps and filters it mechanically.'
+    'Tenant field "organization_id" can not be set in a query on a tenant connection - the tenant wall stamps and filters it mechanically.'
   );
 });
 
 test('throws when a dotted key is rooted in the tenant field', () => {
   expect(() =>
-    assertTenantFieldNotAuthored({ value: { 'organizationId.x': 1 }, field, position })
-  ).toThrow('Tenant field "organizationId" can not be set in a query');
+    assertTenantFieldNotAuthored({ value: { 'organization_id.x': 1 }, field, position })
+  ).toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('throws when the tenant field is nested inside $and', () => {
   expect(() =>
     assertTenantFieldNotAuthored({
-      value: { $and: [{ name: 'a' }, { organizationId: 'org_b' }] },
+      value: { $and: [{ name: 'a' }, { organization_id: 'org_b' }] },
       field,
       position,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a query');
+  ).toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('throws when the tenant field is nested inside $or', () => {
   expect(() =>
     assertTenantFieldNotAuthored({
-      value: { $or: [{ name: 'a' }, { $and: [{ organizationId: { $ne: null } }] }] },
+      value: { $or: [{ name: 'a' }, { $and: [{ organization_id: { $ne: null } }] }] },
       field,
       position,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a query');
+  ).toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('throws when the tenant field is nested inside $elemMatch', () => {
   expect(() =>
     assertTenantFieldNotAuthored({
-      value: { items: { $elemMatch: { organizationId: 'org_b' } } },
+      value: { items: { $elemMatch: { organization_id: 'org_b' } } },
       field,
       position,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a query');
+  ).toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('does not throw when the tenant field is absent', () => {
@@ -76,19 +76,19 @@ test('does not throw when the tenant field is absent', () => {
 
 test('does not throw when the tenant field appears as a value', () => {
   expect(() =>
-    assertTenantFieldNotAuthored({ value: { sortBy: 'organizationId' }, field, position })
+    assertTenantFieldNotAuthored({ value: { sortBy: 'organization_id' }, field, position })
   ).not.toThrow();
 });
 
 test('does not throw for a key that only shares the tenant field prefix', () => {
   expect(() =>
-    assertTenantFieldNotAuthored({ value: { organizationIdentifier: 'x' }, field, position })
+    assertTenantFieldNotAuthored({ value: { organization_identifier: 'x' }, field, position })
   ).not.toThrow();
 });
 
 test('does not throw for a nested subdocument path onto the field name', () => {
   expect(() =>
-    assertTenantFieldNotAuthored({ value: { 'meta.organizationId': 'x' }, field, position })
+    assertTenantFieldNotAuthored({ value: { 'meta.organization_id': 'x' }, field, position })
   ).not.toThrow();
 });
 
@@ -111,23 +111,23 @@ test('handles null and undefined values', () => {
 test('scans through arrays', () => {
   expect(() =>
     assertTenantFieldNotAuthored({
-      value: [{ a: 1 }, [{ organizationId: 'org_b' }]],
+      value: [{ a: 1 }, [{ organization_id: 'org_b' }]],
       field,
       position,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a query');
+  ).toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('scans null-prototype objects', () => {
   const nullProtoDoc = Object.create(null);
-  nullProtoDoc.organizationId = 'org_b';
+  nullProtoDoc.organization_id = 'org_b';
   expect(() => assertTenantFieldNotAuthored({ value: nullProtoDoc, field, position })).toThrow(
-    'Tenant field "organizationId" can not be set in a query'
+    'Tenant field "organization_id" can not be set in a query'
   );
   const nested = { $set: Object.create(null) };
-  nested.$set.organizationId = 'org_b';
+  nested.$set.organization_id = 'org_b';
   expect(() => assertTenantFieldNotAuthored({ value: nested, field, position })).toThrow(
-    'Tenant field "organizationId" can not be set in a query'
+    'Tenant field "organization_id" can not be set in a query'
   );
 });
 
@@ -143,7 +143,7 @@ test('uses the custom tenant field name', () => {
   );
   expect(() =>
     assertTenantFieldNotAuthored({
-      value: { organizationId: 'org_b' },
+      value: { organization_id: 'org_b' },
       field: 'tenantId',
       position: 'an update',
     })

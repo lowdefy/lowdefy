@@ -16,7 +16,7 @@
 
 import applyTenantToBulkOperations from './applyTenantToBulkOperations.js';
 
-const tenant = { field: 'organizationId', value: 'org_a' };
+const tenant = { field: 'organization_id', value: 'org_a' };
 
 test('insertOne document is stamped', () => {
   expect(
@@ -24,16 +24,16 @@ test('insertOne document is stamped', () => {
       operations: [{ insertOne: { document: { name: 'x' } } }],
       tenant,
     })
-  ).toEqual([{ insertOne: { document: { name: 'x', organizationId: 'org_a' } } }]);
+  ).toEqual([{ insertOne: { document: { name: 'x', organization_id: 'org_a' } } }]);
 });
 
 test('insertOne with authored tenant field throws', () => {
   expect(() =>
     applyTenantToBulkOperations({
-      operations: [{ insertOne: { document: { organizationId: 'org_b' } } }],
+      operations: [{ insertOne: { document: { organization_id: 'org_b' } } }],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in an insert document');
+  ).toThrow('Tenant field "organization_id" can not be set in an insert document');
 });
 
 test('replaceOne filter is merged and replacement is stamped', () => {
@@ -47,8 +47,8 @@ test('replaceOne filter is merged and replacement is stamped', () => {
   ).toEqual([
     {
       replaceOne: {
-        filter: { $and: [{ _id: 1 }, { organizationId: 'org_a' }] },
-        replacement: { name: 'y', organizationId: 'org_a' },
+        filter: { $and: [{ _id: 1 }, { organization_id: 'org_a' }] },
+        replacement: { name: 'y', organization_id: 'org_a' },
         upsert: true,
       },
     },
@@ -59,11 +59,11 @@ test('replaceOne with authored tenant field in the replacement throws', () => {
   expect(() =>
     applyTenantToBulkOperations({
       operations: [
-        { replaceOne: { filter: { _id: 1 }, replacement: { organizationId: 'org_b' } } },
+        { replaceOne: { filter: { _id: 1 }, replacement: { organization_id: 'org_b' } } },
       ],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a replacement document');
+  ).toThrow('Tenant field "organization_id" can not be set in a replacement document');
 });
 
 test('updateOne filter is merged and update is guarded', () => {
@@ -75,7 +75,7 @@ test('updateOne filter is merged and update is guarded', () => {
   ).toEqual([
     {
       updateOne: {
-        filter: { $and: [{ _id: 1 }, { organizationId: 'org_a' }] },
+        filter: { $and: [{ _id: 1 }, { organization_id: 'org_a' }] },
         update: { $set: { v: 2 } },
       },
     },
@@ -91,8 +91,8 @@ test('updateOne with upsert adds $setOnInsert', () => {
   ).toEqual([
     {
       updateOne: {
-        filter: { $and: [{ _id: 1 }, { organizationId: 'org_a' }] },
-        update: { $set: { v: 2 }, $setOnInsert: { organizationId: 'org_a' } },
+        filter: { $and: [{ _id: 1 }, { organization_id: 'org_a' }] },
+        update: { $set: { v: 2 }, $setOnInsert: { organization_id: 'org_a' } },
         upsert: true,
       },
     },
@@ -103,11 +103,11 @@ test('updateOne with authored tenant field in the update throws', () => {
   expect(() =>
     applyTenantToBulkOperations({
       operations: [
-        { updateOne: { filter: { _id: 1 }, update: { $set: { organizationId: 'org_b' } } } },
+        { updateOne: { filter: { _id: 1 }, update: { $set: { organization_id: 'org_b' } } } },
       ],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('updateMany filter is merged and update is guarded', () => {
@@ -119,7 +119,7 @@ test('updateMany filter is merged and update is guarded', () => {
   ).toEqual([
     {
       updateMany: {
-        filter: { organizationId: 'org_a' },
+        filter: { organization_id: 'org_a' },
         update: { $set: { v: 2 } },
       },
     },
@@ -132,7 +132,7 @@ test('deleteOne filter is merged', () => {
       operations: [{ deleteOne: { filter: { _id: 1 } } }],
       tenant,
     })
-  ).toEqual([{ deleteOne: { filter: { $and: [{ _id: 1 }, { organizationId: 'org_a' }] } } }]);
+  ).toEqual([{ deleteOne: { filter: { $and: [{ _id: 1 }, { organization_id: 'org_a' }] } } }]);
 });
 
 test('deleteMany filter is merged', () => {
@@ -141,16 +141,16 @@ test('deleteMany filter is merged', () => {
       operations: [{ deleteMany: { filter: {} } }],
       tenant,
     })
-  ).toEqual([{ deleteMany: { filter: { organizationId: 'org_a' } } }]);
+  ).toEqual([{ deleteMany: { filter: { organization_id: 'org_a' } } }]);
 });
 
 test('deleteOne with authored tenant field in the filter throws', () => {
   expect(() =>
     applyTenantToBulkOperations({
-      operations: [{ deleteOne: { filter: { organizationId: 'org_b' } } }],
+      operations: [{ deleteOne: { filter: { organization_id: 'org_b' } } }],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a filter');
+  ).toThrow('Tenant field "organization_id" can not be set in a filter');
 });
 
 test('a mixed batch is handled per operation kind', () => {
@@ -160,8 +160,8 @@ test('a mixed batch is handled per operation kind', () => {
       tenant,
     })
   ).toEqual([
-    { insertOne: { document: { a: 1, organizationId: 'org_a' } } },
-    { deleteMany: { filter: { $and: [{ a: 1 }, { organizationId: 'org_a' }] } } },
+    { insertOne: { document: { a: 1, organization_id: 'org_a' } } },
+    { deleteMany: { filter: { $and: [{ a: 1 }, { organization_id: 'org_a' }] } } },
   ]);
 });
 

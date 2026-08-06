@@ -52,7 +52,7 @@ const tenantPolicy = { organization: { policy: 'tenant' } };
 
 const contextWithOrg = {
   ...tenantPolicy,
-  user: { id: 'id', organizationId: 'org-1' },
+  user: { id: 'id', organization_id: 'org-1' },
 };
 
 test('a scoping-capable connection with no tenant key is scoped by default', () => {
@@ -61,7 +61,7 @@ test('a scoping-capable connection with no tenant key is scoped by default', () 
     connectionConfig: defaultConnectionConfig,
     requestConfig: defaultRequestConfig,
   });
-  expect(res).toEqual({ field: 'organizationId', value: 'org-1' });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
 });
 
 test('tenant shared returns null under the tenant policy', () => {
@@ -87,7 +87,7 @@ test('tenant shared does not require a caller organization', () => {
 
 test('tenant shared is inert under the pinned policy', () => {
   const res = resolveTenant(
-    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: tenantConnection,
       connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
@@ -149,7 +149,7 @@ test('throws ConfigError under the tenant policy when meta tenant is not exactly
 
 test('a type declaring no capability returns null under the pinned policy', () => {
   const res = resolveTenant(
-    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: plainConnection,
       connectionConfig: defaultConnectionConfig,
@@ -184,7 +184,7 @@ test('throws ConfigError when tenant shared is declared on a type without the co
 test('declared-tenant contract check applies under the pinned policy', () => {
   expect(() =>
     resolveTenant(
-      { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+      { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },
       {
         connection: plainConnection,
         connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
@@ -250,7 +250,7 @@ test('throws AuthenticationError when context has no user', () => {
   );
 });
 
-test('throws AuthenticationError when user has no organizationId', () => {
+test('throws AuthenticationError when user has no organization_id', () => {
   expect(() =>
     resolveTenant(
       { ...tenantPolicy, user: { id: 'id' } },
@@ -263,10 +263,10 @@ test('throws AuthenticationError when user has no organizationId', () => {
   ).toThrow(AuthenticationError);
 });
 
-test('throws AuthenticationError when user organizationId is an empty string', () => {
+test('throws AuthenticationError when user organization_id is an empty string', () => {
   expect(() =>
     resolveTenant(
-      { ...tenantPolicy, user: { id: 'id', organizationId: '' } },
+      { ...tenantPolicy, user: { id: 'id', organization_id: '' } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -276,10 +276,10 @@ test('throws AuthenticationError when user organizationId is an empty string', (
   ).toThrow(AuthenticationError);
 });
 
-test('throws AuthenticationError when user organizationId is not a string', () => {
+test('throws AuthenticationError when user organization_id is not a string', () => {
   expect(() =>
     resolveTenant(
-      { ...tenantPolicy, user: { id: 'id', organizationId: 42 } },
+      { ...tenantPolicy, user: { id: 'id', organization_id: 42 } },
       {
         connection: tenantConnection,
         connectionConfig: defaultConnectionConfig,
@@ -322,10 +322,10 @@ test('AuthenticationError message falls back to websocketId for websocket config
 test('tenant with a field object resolves the custom field', () => {
   const res = resolveTenant(contextWithOrg, {
     connection: tenantConnection,
-    connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
+    connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'tenant_id' } },
     requestConfig: defaultRequestConfig,
   });
-  expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
+  expect(res).toEqual({ field: 'tenant_id', value: 'org-1' });
 });
 
 test('tenant with a dotted field throws instead of enforcing on an unmatchable key', () => {
@@ -357,16 +357,16 @@ test('tenant with a missing or empty field on a drifted artifact throws', () => 
   ).toThrow('Connection "tenant.field" should be a non-empty top-level field name');
 });
 
-test('tenant value comes from context.user.organizationId', () => {
+test('tenant value comes from context.user.organization_id', () => {
   const res = resolveTenant(
-    { ...tenantPolicy, user: { id: 'other', organizationId: 'org-2' } },
+    { ...tenantPolicy, user: { id: 'other', organization_id: 'org-2' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
       requestConfig: defaultRequestConfig,
     }
   );
-  expect(res).toEqual({ field: 'organizationId', value: 'org-2' });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-2' });
 });
 
 test('tenant authored resolves the verdict with the authored marker', () => {
@@ -375,7 +375,7 @@ test('tenant authored resolves the verdict with the authored marker', () => {
     connectionConfig: defaultConnectionConfig,
     requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
   });
-  expect(res).toEqual({ field: 'organizationId', value: 'org-1', authored: true });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1', authored: true });
 });
 
 test('tenant authored still requires a caller organization', () => {
@@ -394,15 +394,15 @@ test('tenant authored still requires a caller organization', () => {
 test('tenant authored resolves the custom field with the authored marker', () => {
   const res = resolveTenant(contextWithOrg, {
     connection: tenantConnection,
-    connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'organization_id' } },
+    connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'tenant_id' } },
     requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
   });
-  expect(res).toEqual({ field: 'organization_id', value: 'org-1', authored: true });
+  expect(res).toEqual({ field: 'tenant_id', value: 'org-1', authored: true });
 });
 
 test('returns null under the pinned policy', () => {
   const res = resolveTenant(
-    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
@@ -414,7 +414,7 @@ test('returns null under the pinned policy', () => {
 
 test('returns null when no organization binding resolved', () => {
   const res = resolveTenant(
-    { user: { id: 'id', organizationId: 'org-1' } },
+    { user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
@@ -423,7 +423,7 @@ test('returns null when no organization binding resolved', () => {
   );
   expect(res).toBe(null);
   const resNullBinding = resolveTenant(
-    { organization: null, user: { id: 'id', organizationId: 'org-1' } },
+    { organization: null, user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,
@@ -447,7 +447,7 @@ test('pinned policy does not require a caller organization', () => {
 
 test('tenant authored returns null under the pinned policy', () => {
   const res = resolveTenant(
-    { organization: { policy: 'pinned' }, user: { id: 'id', organizationId: 'org-1' } },
+    { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },
     {
       connection: tenantConnection,
       connectionConfig: defaultConnectionConfig,

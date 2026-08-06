@@ -36,7 +36,7 @@ import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
-const tenant = { field: 'organizationId', value: 'org_a' };
+const tenant = { field: 'organization_id', value: 'org_a' };
 
 function makeConnection(collection, extra = {}) {
   return { databaseUri, databaseName, collection, ...extra };
@@ -54,9 +54,9 @@ test('find only returns docs for the tenant org', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a' },
-      { _id: 'a2', organizationId: 'org_a' },
-      { _id: 'b1', organizationId: 'org_b' },
+      { _id: 'a1', organization_id: 'org_a' },
+      { _id: 'a2', organization_id: 'org_a' },
+      { _id: 'b1', organization_id: 'org_b' },
     ],
   });
   const connection = makeConnection(collection, { read: true });
@@ -66,16 +66,16 @@ test('find only returns docs for the tenant org', async () => {
     tenant,
   });
   expect(res).toEqual([
-    { _id: 'a1', organizationId: 'org_a' },
-    { _id: 'a2', organizationId: 'org_a' },
+    { _id: 'a1', organization_id: 'org_a' },
+    { _id: 'a2', organization_id: 'org_a' },
   ]);
 });
 
-test('find with an authored organizationId query throws', async () => {
+test('find with an authored organization_id query throws', async () => {
   const connection = makeConnection('tenantIsolationFind', { read: true });
   await expect(
-    MongoDBFind({ request: { query: { organizationId: 'org_b' } }, connection, tenant })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in a query');
+    MongoDBFind({ request: { query: { organization_id: 'org_b' } }, connection, tenant })
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in a query');
 });
 
 test('find with a custom tenant field name only returns that tenant', async () => {
@@ -101,15 +101,15 @@ test('findOne can not fetch another org doc by _id', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', v: 'a' },
-      { _id: 'b1', organizationId: 'org_b', v: 'b' },
+      { _id: 'a1', organization_id: 'org_a', v: 'a' },
+      { _id: 'b1', organization_id: 'org_b', v: 'b' },
     ],
   });
   const connection = makeConnection(collection, { read: true });
   const walled = await MongoDBFindOne({ request: { query: { _id: 'b1' } }, connection, tenant });
   expect(walled).toEqual(null);
   const own = await MongoDBFindOne({ request: { query: { _id: 'a1' } }, connection, tenant });
-  expect(own).toEqual({ _id: 'a1', organizationId: 'org_a', v: 'a' });
+  expect(own).toEqual({ _id: 'a1', organization_id: 'org_a', v: 'a' });
 });
 
 test('aggregation only returns tenant docs and same-collection $lookup joins are walled', async () => {
@@ -117,9 +117,9 @@ test('aggregation only returns tenant docs and same-collection $lookup joins are
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', group: 'g' },
-      { _id: 'a2', organizationId: 'org_a', group: 'g' },
-      { _id: 'b1', organizationId: 'org_b', group: 'g' },
+      { _id: 'a1', organization_id: 'org_a', group: 'g' },
+      { _id: 'a2', organization_id: 'org_a', group: 'g' },
+      { _id: 'b1', organization_id: 'org_b', group: 'g' },
     ],
   });
   const connection = makeConnection(collection, { read: true });
@@ -135,7 +135,7 @@ test('aggregation only returns tenant docs and same-collection $lookup joins are
           },
         },
         { $sort: { _id: 1 } },
-        { $project: { organizationId: 1, joined: { _id: 1, organizationId: 1 } } },
+        { $project: { organization_id: 1, joined: { _id: 1, organization_id: 1 } } },
       ],
     },
     connection,
@@ -144,32 +144,32 @@ test('aggregation only returns tenant docs and same-collection $lookup joins are
   expect(res).toEqual([
     {
       _id: 'a1',
-      organizationId: 'org_a',
+      organization_id: 'org_a',
       joined: [
-        { _id: 'a1', organizationId: 'org_a' },
-        { _id: 'a2', organizationId: 'org_a' },
+        { _id: 'a1', organization_id: 'org_a' },
+        { _id: 'a2', organization_id: 'org_a' },
       ],
     },
     {
       _id: 'a2',
-      organizationId: 'org_a',
+      organization_id: 'org_a',
       joined: [
-        { _id: 'a1', organizationId: 'org_a' },
-        { _id: 'a2', organizationId: 'org_a' },
+        { _id: 'a1', organization_id: 'org_a' },
+        { _id: 'a2', organization_id: 'org_a' },
       ],
     },
   ]);
 });
 
-test('aggregation with an authored organizationId $match throws', async () => {
+test('aggregation with an authored organization_id $match throws', async () => {
   const connection = makeConnection('tenantIsolationAggregation', { read: true });
   await expect(
     MongoDBAggregation({
-      request: { pipeline: [{ $match: { organizationId: 'org_b' } }] },
+      request: { pipeline: [{ $match: { organization_id: 'org_b' } }] },
       connection,
       tenant,
     })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in a $match stage');
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in a $match stage');
 });
 
 test('aggregation with $out throws on a tenant connection even when write is allowed', async () => {
@@ -212,8 +212,8 @@ test('authored $geoNear with the org equality in query only returns tenant docs'
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', location: { type: 'Point', coordinates: [0, 0] } },
-      { _id: 'b1', organizationId: 'org_b', location: { type: 'Point', coordinates: [0, 0] } },
+      { _id: 'a1', organization_id: 'org_a', location: { type: 'Point', coordinates: [0, 0] } },
+      { _id: 'b1', organization_id: 'org_b', location: { type: 'Point', coordinates: [0, 0] } },
     ],
   });
   const { collection: testCollection, client } = await getTestCollection({ collection });
@@ -229,16 +229,16 @@ test('authored $geoNear with the org equality in query only returns tenant docs'
             distanceField: 'distance',
             // The authored tenant clause (tenant: authored) - audited against
             // the verdict, then enforced by MongoDB itself.
-            query: { organizationId: 'org_a' },
+            query: { organization_id: 'org_a' },
           },
         },
-        { $project: { organizationId: 1 } },
+        { $project: { organization_id: 1 } },
       ],
     },
     connection,
     tenant: { ...tenant, authored: true },
   });
-  expect(res).toEqual([{ _id: 'a1', organizationId: 'org_a' }]);
+  expect(res).toEqual([{ _id: 'a1', organization_id: 'org_a' }]);
 });
 
 test('authored $geoNear audit refuses a missing org equality', async () => {
@@ -259,7 +259,7 @@ test('authored $geoNear audit refuses a missing org equality', async () => {
       tenant: { ...tenant, authored: true },
     })
   ).rejects.toThrow(
-    'Request declares "tenant: authored", but its "$geoNear" stage has no "query" equality on tenant field "organizationId"'
+    'Request declares "tenant: authored", but its "$geoNear" stage has no "query" equality on tenant field "organization_id"'
   );
 });
 
@@ -295,9 +295,9 @@ test('authored $graphLookup with the org equality in restrictSearchWithMatch wal
     documents: [
       // org_a: root -> childA. org_b holds a doc that ALSO claims root as its
       // parent - without the restrict clause the traversal would leak it.
-      { _id: 'root', organizationId: 'org_a', parentId: null },
-      { _id: 'childA', organizationId: 'org_a', parentId: 'root' },
-      { _id: 'childB', organizationId: 'org_b', parentId: 'root' },
+      { _id: 'root', organization_id: 'org_a', parentId: null },
+      { _id: 'childA', organization_id: 'org_a', parentId: 'root' },
+      { _id: 'childB', organization_id: 'org_b', parentId: 'root' },
     ],
   });
   const connection = makeConnection(collection, { read: true });
@@ -314,7 +314,7 @@ test('authored $graphLookup with the org equality in restrictSearchWithMatch wal
             as: 'descendants',
             // The authored tenant clause (tenant: authored) - audited against
             // the verdict, then enforced by MongoDB on every traversal step.
-            restrictSearchWithMatch: { organizationId: 'org_a' },
+            restrictSearchWithMatch: { organization_id: 'org_a' },
           },
         },
         { $project: { 'descendants._id': 1 } },
@@ -337,18 +337,18 @@ test('insertOne stamps the tenant field on the doc', async () => {
   });
   expect(res).toEqual({ acknowledged: true, insertedId: 'insertOne' });
   const docs = await readAll(collection);
-  expect(docs).toEqual([{ _id: 'insertOne', organizationId: 'org_a', v: 1 }, { _id: 'seed' }]);
+  expect(docs).toEqual([{ _id: 'insertOne', organization_id: 'org_a', v: 1 }, { _id: 'seed' }]);
 });
 
-test('insertOne with an authored organizationId throws', async () => {
+test('insertOne with an authored organization_id throws', async () => {
   const connection = makeConnection('tenantIsolationInsertOne', { write: true });
   await expect(
     MongoDBInsertOne({
-      request: { doc: { _id: 'authored', organizationId: 'org_b' } },
+      request: { doc: { _id: 'authored', organization_id: 'org_b' } },
       connection,
       tenant,
     })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in an insert document');
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in an insert document');
 });
 
 test('insertMany stamps the tenant field on every doc', async () => {
@@ -372,8 +372,8 @@ test('insertMany stamps the tenant field on every doc', async () => {
   });
   const docs = await readAll(collection);
   expect(docs).toEqual([
-    { _id: 'many1', organizationId: 'org_a', v: 1 },
-    { _id: 'many2', organizationId: 'org_a', v: 2 },
+    { _id: 'many1', organization_id: 'org_a', v: 1 },
+    { _id: 'many2', organization_id: 'org_a', v: 2 },
     { _id: 'seed' },
   ]);
 });
@@ -391,7 +391,7 @@ test('insertConsecutiveId stamps the tenant field on the doc', async () => {
   const { collection: testCollection, client } = await getTestCollection({ collection });
   const doc = await testCollection.findOne({ _id: 'T000001' });
   await client.close();
-  expect(doc).toEqual({ _id: 'T000001', organizationId: 'org_a', v: 1 });
+  expect(doc).toEqual({ _id: 'T000001', organization_id: 'org_a', v: 1 });
 });
 
 test('updateOne can not touch another org doc', async () => {
@@ -399,8 +399,8 @@ test('updateOne can not touch another org doc', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', v: 'before' },
-      { _id: 'b1', organizationId: 'org_b', v: 'before' },
+      { _id: 'a1', organization_id: 'org_a', v: 'before' },
+      { _id: 'b1', organization_id: 'org_b', v: 'before' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
@@ -434,20 +434,20 @@ test('updateOne can not touch another org doc', async () => {
   });
   const docs = await readAll(collection);
   expect(docs).toEqual([
-    { _id: 'a1', organizationId: 'org_a', v: 'after' },
-    { _id: 'b1', organizationId: 'org_b', v: 'before' },
+    { _id: 'a1', organization_id: 'org_a', v: 'after' },
+    { _id: 'b1', organization_id: 'org_b', v: 'before' },
   ]);
 });
 
-test('updateOne with an authored organizationId in the update throws', async () => {
+test('updateOne with an authored organization_id in the update throws', async () => {
   const connection = makeConnection('tenantIsolationUpdateOne', { write: true });
   await expect(
     MongoDBUpdateOne({
-      request: { filter: { _id: 'a1' }, update: { $set: { organizationId: 'org_b' } } },
+      request: { filter: { _id: 'a1' }, update: { $set: { organization_id: 'org_b' } } },
       connection,
       tenant,
     })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in an update');
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('updateOne upsert inserts a doc carrying the tenant field', async () => {
@@ -473,7 +473,7 @@ test('updateOne upsert inserts a doc carrying the tenant field', async () => {
   const { collection: testCollection, client } = await getTestCollection({ collection });
   const doc = await testCollection.findOne({ _id: 'upserted' });
   await client.close();
-  expect(doc).toEqual({ _id: 'upserted', organizationId: 'org_a', v: 'after' });
+  expect(doc).toEqual({ _id: 'upserted', organization_id: 'org_a', v: 'after' });
 });
 
 test('updateMany only updates tenant org docs', async () => {
@@ -481,9 +481,9 @@ test('updateMany only updates tenant org docs', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', v: 'before' },
-      { _id: 'a2', organizationId: 'org_a', v: 'before' },
-      { _id: 'b1', organizationId: 'org_b', v: 'before' },
+      { _id: 'a1', organization_id: 'org_a', v: 'before' },
+      { _id: 'a2', organization_id: 'org_a', v: 'before' },
+      { _id: 'b1', organization_id: 'org_b', v: 'before' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
@@ -500,9 +500,9 @@ test('updateMany only updates tenant org docs', async () => {
   });
   const docs = await readAll(collection);
   expect(docs).toEqual([
-    { _id: 'a1', organizationId: 'org_a', v: 'after' },
-    { _id: 'a2', organizationId: 'org_a', v: 'after' },
-    { _id: 'b1', organizationId: 'org_b', v: 'before' },
+    { _id: 'a1', organization_id: 'org_a', v: 'after' },
+    { _id: 'a2', organization_id: 'org_a', v: 'after' },
+    { _id: 'b1', organization_id: 'org_b', v: 'before' },
   ]);
 });
 
@@ -511,8 +511,8 @@ test('deleteOne can not delete another org doc', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a' },
-      { _id: 'b1', organizationId: 'org_b' },
+      { _id: 'a1', organization_id: 'org_a' },
+      { _id: 'b1', organization_id: 'org_b' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
@@ -529,7 +529,7 @@ test('deleteOne can not delete another org doc', async () => {
   });
   expect(own).toEqual({ acknowledged: true, deletedCount: 1 });
   const docs = await readAll(collection);
-  expect(docs).toEqual([{ _id: 'b1', organizationId: 'org_b' }]);
+  expect(docs).toEqual([{ _id: 'b1', organization_id: 'org_b' }]);
 });
 
 test('deleteMany only deletes tenant org docs', async () => {
@@ -537,27 +537,27 @@ test('deleteMany only deletes tenant org docs', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a' },
-      { _id: 'a2', organizationId: 'org_a' },
-      { _id: 'b1', organizationId: 'org_b' },
+      { _id: 'a1', organization_id: 'org_a' },
+      { _id: 'a2', organization_id: 'org_a' },
+      { _id: 'b1', organization_id: 'org_b' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
   const res = await MongoDBDeleteMany({ request: { filter: {} }, connection, tenant });
   expect(res).toEqual({ acknowledged: true, deletedCount: 2 });
   const docs = await readAll(collection);
-  expect(docs).toEqual([{ _id: 'b1', organizationId: 'org_b' }]);
+  expect(docs).toEqual([{ _id: 'b1', organization_id: 'org_b' }]);
 });
 
-test('deleteMany with an authored organizationId filter throws', async () => {
+test('deleteMany with an authored organization_id filter throws', async () => {
   const connection = makeConnection('tenantIsolationDeleteMany', { write: true });
   await expect(
     MongoDBDeleteMany({
-      request: { filter: { organizationId: 'org_b' } },
+      request: { filter: { organization_id: 'org_b' } },
       connection,
       tenant,
     })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in a filter');
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in a filter');
 });
 
 test('versionedUpdateOne stamps the version copy and stays walled', async () => {
@@ -565,8 +565,8 @@ test('versionedUpdateOne stamps the version copy and stays walled', async () => 
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', doc_id: 'va', organizationId: 'org_a', v: 'before' },
-      { _id: 'b1', doc_id: 'vb', organizationId: 'org_b', v: 'before' },
+      { _id: 'a1', doc_id: 'va', organization_id: 'org_a', v: 'before' },
+      { _id: 'b1', doc_id: 'vb', organization_id: 'org_b', v: 'before' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
@@ -589,8 +589,8 @@ test('versionedUpdateOne stamps the version copy and stays walled', async () => 
   const orgBDocs = await testCollection.find({ doc_id: 'vb' }).toArray();
   await client.close();
   expect(versions).toEqual([
-    { doc_id: 'va', organizationId: 'org_a', v: 'after' },
-    { doc_id: 'va', organizationId: 'org_a', v: 'before' },
+    { doc_id: 'va', organization_id: 'org_a', v: 'after' },
+    { doc_id: 'va', organization_id: 'org_a', v: 'before' },
   ]);
 
   const walled = await MongoDBVersionedUpdateOne({
@@ -610,7 +610,7 @@ test('versionedUpdateOne stamps the version copy and stays walled', async () => 
     upsertedCount: 0,
   });
   // No version copy of the org_b doc was created and it is unchanged.
-  expect(orgBDocs).toEqual([{ _id: 'b1', doc_id: 'vb', organizationId: 'org_b', v: 'before' }]);
+  expect(orgBDocs).toEqual([{ _id: 'b1', doc_id: 'vb', organization_id: 'org_b', v: 'before' }]);
 });
 
 test('bulkWrite operations are walled per operation kind', async () => {
@@ -618,9 +618,9 @@ test('bulkWrite operations are walled per operation kind', async () => {
   await populateTestMongoDb({
     collection,
     documents: [
-      { _id: 'a1', organizationId: 'org_a', v: 'before' },
-      { _id: 'b1', organizationId: 'org_b', v: 'before' },
-      { _id: 'b2', organizationId: 'org_b', v: 'before' },
+      { _id: 'a1', organization_id: 'org_a', v: 'before' },
+      { _id: 'b1', organization_id: 'org_b', v: 'before' },
+      { _id: 'b2', organization_id: 'org_b', v: 'before' },
     ],
   });
   const connection = makeConnection(collection, { write: true });
@@ -647,24 +647,24 @@ test('bulkWrite operations are walled per operation kind', async () => {
   });
   const docs = await readAll(collection);
   expect(docs).toEqual([
-    { _id: 'a1', organizationId: 'org_a', v: 'after' },
-    { _id: 'b1', organizationId: 'org_b', v: 'before' },
-    { _id: 'b2', organizationId: 'org_b', v: 'before' },
-    { _id: 'bw_new', organizationId: 'org_a', v: 1 },
+    { _id: 'a1', organization_id: 'org_a', v: 'after' },
+    { _id: 'b1', organization_id: 'org_b', v: 'before' },
+    { _id: 'b2', organization_id: 'org_b', v: 'before' },
+    { _id: 'bw_new', organization_id: 'org_a', v: 1 },
   ]);
 });
 
-test('bulkWrite with an authored organizationId throws before writing', async () => {
+test('bulkWrite with an authored organization_id throws before writing', async () => {
   const connection = makeConnection('tenantIsolationBulkWrite', { write: true });
   await expect(
     MongoDBBulkWrite({
       request: {
-        operations: [{ insertOne: { document: { _id: 'bad', organizationId: 'org_b' } } }],
+        operations: [{ insertOne: { document: { _id: 'bad', organization_id: 'org_b' } } }],
       },
       connection,
       tenant,
     })
-  ).rejects.toThrow('Tenant field "organizationId" can not be set in an insert document');
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in an insert document');
 });
 
 test('insertOne changeLog record is stamped with the tenant verdict', async () => {
@@ -684,7 +684,7 @@ test('insertOne changeLog record is stamped with the tenant verdict', async () =
     logCollection,
     requestId: 'tenantLogInsertOne',
   });
-  expect(logged.organizationId).toEqual('org_a');
+  expect(logged.organization_id).toEqual('org_a');
 });
 
 test('updateOne changeLog record is stamped with the tenant verdict', async () => {
@@ -692,7 +692,7 @@ test('updateOne changeLog record is stamped with the tenant verdict', async () =
   const logCollection = 'tenantIsolationUpdateOneLog_log';
   await populateTestMongoDb({
     collection,
-    documents: [{ _id: 'u1', organizationId: 'org_a', v: 'before' }],
+    documents: [{ _id: 'u1', organization_id: 'org_a', v: 'before' }],
   });
   const connection = makeConnection(collection, {
     write: true,
@@ -708,5 +708,5 @@ test('updateOne changeLog record is stamped with the tenant verdict', async () =
     logCollection,
     requestId: 'tenantLogUpdateOne',
   });
-  expect(logged.organizationId).toEqual('org_a');
+  expect(logged.organization_id).toEqual('org_a');
 });

@@ -16,7 +16,7 @@
 
 import applyTenantToUpdate from './applyTenantToUpdate.js';
 
-const tenant = { field: 'organizationId', value: 'org_a' };
+const tenant = { field: 'organization_id', value: 'org_a' };
 
 test('object form update without upsert passes through unchanged', () => {
   const update = { $set: { v: 'after' }, $inc: { count: 1 } };
@@ -30,7 +30,7 @@ test('object form upsert adds the tenant field to $setOnInsert', () => {
   const update = { $set: { v: 'after' } };
   expect(applyTenantToUpdate({ update, tenant, upsert: true })).toEqual({
     $set: { v: 'after' },
-    $setOnInsert: { organizationId: 'org_a' },
+    $setOnInsert: { organization_id: 'org_a' },
   });
 });
 
@@ -38,62 +38,62 @@ test('object form upsert merges into an existing $setOnInsert', () => {
   const update = { $set: { v: 'after' }, $setOnInsert: { createdAt: 'now' } };
   expect(applyTenantToUpdate({ update, tenant, upsert: true })).toEqual({
     $set: { v: 'after' },
-    $setOnInsert: { createdAt: 'now', organizationId: 'org_a' },
+    $setOnInsert: { createdAt: 'now', organization_id: 'org_a' },
   });
 });
 
 test('object form throws when $set authors the tenant field', () => {
   expect(() =>
-    applyTenantToUpdate({ update: { $set: { organizationId: 'org_b' } }, tenant })
+    applyTenantToUpdate({ update: { $set: { organization_id: 'org_b' } }, tenant })
   ).toThrow(
-    'Tenant field "organizationId" can not be set in an update on a tenant connection - the tenant wall stamps and filters it mechanically.'
+    'Tenant field "organization_id" can not be set in an update on a tenant connection - the tenant wall stamps and filters it mechanically.'
   );
 });
 
 test('object form throws when $inc authors the tenant field', () => {
-  expect(() => applyTenantToUpdate({ update: { $inc: { organizationId: 1 } }, tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an update'
+  expect(() => applyTenantToUpdate({ update: { $inc: { organization_id: 1 } }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
   );
 });
 
 test('object form throws when $set authors a dotted tenant field path', () => {
   expect(() =>
-    applyTenantToUpdate({ update: { $set: { 'organizationId.x': 1 } }, tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: { $set: { 'organization_id.x': 1 } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $unset drops the tenant field', () => {
-  expect(() => applyTenantToUpdate({ update: { $unset: { organizationId: '' } }, tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an update'
+  expect(() => applyTenantToUpdate({ update: { $unset: { organization_id: '' } }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
   );
 });
 
 test('object form throws when $setOnInsert authors the tenant field', () => {
   expect(() =>
     applyTenantToUpdate({
-      update: { $setOnInsert: { organizationId: 'org_b' } },
+      update: { $setOnInsert: { organization_id: 'org_b' } },
       tenant,
       upsert: true,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $rename renames the tenant field away', () => {
   expect(() =>
-    applyTenantToUpdate({ update: { $rename: { organizationId: 'other' } }, tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: { $rename: { organization_id: 'other' } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $rename targets the tenant field', () => {
   expect(() =>
-    applyTenantToUpdate({ update: { $rename: { other: 'organizationId' } }, tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: { $rename: { other: 'organization_id' } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $rename targets a dotted tenant field path', () => {
   expect(() =>
-    applyTenantToUpdate({ update: { $rename: { other: 'organizationId.x' } }, tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: { $rename: { other: 'organization_id.x' } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form allows $rename between unrelated fields', () => {
@@ -106,75 +106,75 @@ test('pipeline form appends a final tenant $set stage', () => {
   expect(applyTenantToUpdate({ update, tenant })).toEqual([
     { $set: { v: 'after' } },
     { $unset: 'other' },
-    { $set: { organizationId: 'org_a' } },
+    { $set: { organization_id: 'org_a' } },
   ]);
 });
 
 test('pipeline form appends the tenant $set to an empty pipeline', () => {
   expect(applyTenantToUpdate({ update: [], tenant })).toEqual([
-    { $set: { organizationId: 'org_a' } },
+    { $set: { organization_id: 'org_a' } },
   ]);
 });
 
 test('pipeline form appends the tenant $set on upsert', () => {
   expect(applyTenantToUpdate({ update: [{ $set: { v: 1 } }], tenant, upsert: true })).toEqual([
     { $set: { v: 1 } },
-    { $set: { organizationId: 'org_a' } },
+    { $set: { organization_id: 'org_a' } },
   ]);
 });
 
 test('pipeline form throws when a $set stage authors the tenant field', () => {
   expect(() =>
-    applyTenantToUpdate({ update: [{ $set: { organizationId: 'org_b' } }], tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: [{ $set: { organization_id: 'org_b' } }], tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('pipeline form throws when a $replaceRoot stage authors the tenant field', () => {
   expect(() =>
     applyTenantToUpdate({
-      update: [{ $replaceRoot: { newRoot: { organizationId: 'org_b' } } }],
+      update: [{ $replaceRoot: { newRoot: { organization_id: 'org_b' } } }],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('pipeline form throws when $unset string form drops the tenant field', () => {
-  expect(() => applyTenantToUpdate({ update: [{ $unset: 'organizationId' }], tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an update'
+  expect(() => applyTenantToUpdate({ update: [{ $unset: 'organization_id' }], tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
   );
 });
 
 test('pipeline form throws when $unset string form drops a dotted tenant field path', () => {
-  expect(() => applyTenantToUpdate({ update: [{ $unset: 'organizationId.x' }], tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an update'
+  expect(() => applyTenantToUpdate({ update: [{ $unset: 'organization_id.x' }], tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
   );
 });
 
 test('pipeline form throws when $unset array form drops the tenant field', () => {
   expect(() =>
-    applyTenantToUpdate({ update: [{ $unset: ['other', 'organizationId'] }], tenant })
-  ).toThrow('Tenant field "organizationId" can not be set in an update');
+    applyTenantToUpdate({ update: [{ $unset: ['other', 'organization_id'] }], tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('pipeline form allows $unset of unrelated fields', () => {
   expect(applyTenantToUpdate({ update: [{ $unset: ['a', 'b'] }], tenant })).toEqual([
     { $unset: ['a', 'b'] },
-    { $set: { organizationId: 'org_a' } },
+    { $set: { organization_id: 'org_a' } },
   ]);
 });
 
 test('pipeline form allows $unset of a field that only shares the prefix', () => {
-  expect(applyTenantToUpdate({ update: [{ $unset: 'organizationIdentifier' }], tenant })).toEqual([
-    { $unset: 'organizationIdentifier' },
-    { $set: { organizationId: 'org_a' } },
+  expect(applyTenantToUpdate({ update: [{ $unset: 'organization_identifier' }], tenant })).toEqual([
+    { $unset: 'organization_identifier' },
+    { $set: { organization_id: 'org_a' } },
   ]);
 });
 
 test('uses the custom tenant field name', () => {
   const customTenant = { field: 'tenantId', value: 't_1' };
   expect(
-    applyTenantToUpdate({ update: { $set: { organizationId: 'kept' } }, tenant: customTenant })
-  ).toEqual({ $set: { organizationId: 'kept' } });
+    applyTenantToUpdate({ update: { $set: { organization_id: 'kept' } }, tenant: customTenant })
+  ).toEqual({ $set: { organization_id: 'kept' } });
   expect(applyTenantToUpdate({ update: [{ $set: { v: 1 } }], tenant: customTenant })).toEqual([
     { $set: { v: 1 } },
     { $set: { tenantId: 't_1' } },

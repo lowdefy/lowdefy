@@ -150,10 +150,10 @@ test('connection declaring tenant shared returns a null tenant', async () => {
 
 test('tenant connection resolves the tenant verdict from the caller organization', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
-  const context = createTestContext({ user: { id: 'id', organizationId: 'org-1' } });
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
-  expect(res.tenant).toEqual({ field: 'organizationId', value: 'org-1' });
+  expect(res.tenant).toEqual({ field: 'organization_id', value: 'org-1' });
   expect(res.connectionProperties).toEqual({ connectionProperty: 'connectionProperty' });
   expect(res.properties).toEqual({ websocketProperty: 'websocketProperty' });
 });
@@ -162,7 +162,7 @@ test('tenant connection resolves a null tenant under the pinned policy', async (
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
   const context = createTestContext({
     organization: { policy: 'pinned' },
-    user: { id: 'id', organizationId: 'org-1' },
+    user: { id: 'id', organization_id: 'org-1' },
   });
 
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
@@ -176,15 +176,15 @@ test('tenant connection with a field object resolves the custom field', async ()
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
-        tenant: { field: 'organization_id' },
+        tenant: { field: 'tenant_id' },
         properties: {},
       },
     })
   );
-  const context = createTestContext({ user: { id: 'id', organizationId: 'org-1' } });
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: {} });
-  expect(res.tenant).toEqual({ field: 'organization_id', value: 'org-1' });
+  expect(res.tenant).toEqual({ field: 'tenant_id', value: 'org-1' });
 });
 
 test('websocket tenant none opts out and returns a null tenant', async () => {
@@ -231,7 +231,7 @@ test('tenant declared on a connection type without the contract throws ConfigErr
       },
     })
   );
-  const context = createTestContext({ user: { id: 'id', organizationId: 'org-1' } });
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
   await expect(prepareChannel(context, { websocketId: 'ws1', payload: {} })).rejects.toThrow(
     ConfigError
@@ -257,7 +257,7 @@ test('properties are evaluated with the subscriber payload and user', async () =
       },
     })
   );
-  const context = createTestContext({ user: { id: 'id', organizationId: 'org-1' } });
+  const context = createTestContext({ user: { id: 'id', organization_id: 'org-1' } });
 
   const res = await prepareChannel(context, { websocketId: 'ws1', payload: { room: 7 } });
   expect(res.properties).toEqual({ room: 7, user: 'id' });

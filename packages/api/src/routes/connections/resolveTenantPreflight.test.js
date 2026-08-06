@@ -97,7 +97,7 @@ test('passes when every walled target is stamped', async () => {
   expect(mockProbe).toHaveBeenCalledTimes(1);
   expect(mockProbe).toHaveBeenCalledWith({
     connection: { databaseUri: 'uri', collection: 'user-contacts' },
-    field: 'organizationId',
+    field: 'organization_id',
   });
   expect(logger.info).toHaveBeenCalledWith(
     'Tenant preflight passed - 1 walled target carries no unstamped rows.'
@@ -111,7 +111,7 @@ test('probes caller-less - connection properties never resolve against the reque
         walled: {
           connectionId: 'walled',
           type: 'TestTenantConnection',
-          properties: { databaseUri: { _user: 'organizationId' }, collection: 'user-contacts' },
+          properties: { databaseUri: { _user: 'organization_id' }, collection: 'user-contacts' },
         },
       },
     })
@@ -122,7 +122,7 @@ test('probes caller-less - connection properties never resolve against the reque
   // so a caller is present. The memoized verdict must not depend on whoever
   // hits the cold process first, so the caller's identity never reaches the
   // probe's operator evaluation.
-  context.user = { id: 'u1', organizationId: 'org_caller' };
+  context.user = { id: 'u1', organization_id: 'org_caller' };
   context.operators = {
     _user: ({ user, params }) => user?.[params],
   };
@@ -173,7 +173,7 @@ test('refuses with one aggregated error naming every offending target', async ()
     'collection "user-contacts" (connections "contacts-a", "contacts-b")'
   );
   expect(thrown.message).toContain('collection "companies" (connections "companies")');
-  expect(thrown.message).toContain('without the tenant field "organizationId"');
+  expect(thrown.message).toContain('without the tenant field "organization_id"');
   expect(thrown.message).toContain('Backfill the field on the listed collections');
   // Deduped by evaluated target - two contacts connections share one probe.
   expect(mockProbe).toHaveBeenCalledTimes(2);
@@ -186,7 +186,7 @@ test('probes a custom tenant field', async () => {
         {
           connectionId: 'walled',
           type: 'TestTenantConnection',
-          tenant: { field: 'organization_id' },
+          tenant: { field: 'tenant_id' },
         },
       ],
     })
@@ -195,7 +195,7 @@ test('probes a custom tenant field', async () => {
   await resolveTenantPreflight(createTestContext());
   expect(mockProbe).toHaveBeenCalledWith({
     connection: { databaseUri: 'uri', collection: 'user-contacts' },
-    field: 'organization_id',
+    field: 'tenant_id',
   });
 });
 
