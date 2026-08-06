@@ -103,6 +103,16 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     regenerate,
     clearError,
   } = useChat({
+    // Key the Chat instance by conversation: without an id, useChat creates its
+    // Chat once per mount and CAPTURES that transport — the transport rebuilt by
+    // the useMemo above on a conversationId change is silently ignored, so every
+    // send posts under the mount-time conversationId. Continuing a conversation
+    // the app selected later then persists the whole transcript under the stale
+    // id (a duplicate conversation doc). Keying by id makes useChat swap Chat
+    // instances — and adopt the rebuilt transport — when the conversation
+    // changes; the clear-on-id-change and external-message-sync effects below
+    // compose with the swap unchanged.
+    id: effectiveConversationId,
     transport,
     experimental_throttle: 50,
     sendAutomaticallyWhen: (args) =>
