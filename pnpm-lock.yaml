@@ -3054,6 +3054,9 @@ importers:
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../errors
+      change-case:
+        specifier: 5.4.0
+        version: 5.4.0
       intl-messageformat:
         specifier: 11.2.7
         version: 11.2.7
