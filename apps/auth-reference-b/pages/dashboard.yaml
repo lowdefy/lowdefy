@@ -22,7 +22,7 @@ blocks:
               <li><b>email:</b> {{ user.email }}</li>
               <li><b>roles:</b> {{ user.roles | dump }}</li>
               <li><b>attributes:</b> {{ user.attributes | dump }}</li>
-              <li><b>profile.contactId:</b> {{ user.profile.contactId }}</li>
+              <li><b>contact_id:</b> {{ user.contact_id }}</li>
             </ul>
           on:
             user:

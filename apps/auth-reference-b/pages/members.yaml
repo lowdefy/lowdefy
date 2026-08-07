@@ -58,7 +58,7 @@ blocks:
   - id: invite_contact_id
     type: TextInput
     properties:
-      title: Contact id (optional - merged into user.profile on accept)
+      title: Contact id (optional - set on the user's contact_id on accept)
   - id: invite_button
     type: Button
     properties:
@@ -82,6 +82,9 @@ blocks:
                           _state: invite_email
                         role:
                           _state: invite_role
+                      # contactId is a first-class invitation field, declared
+                      # without input: false so this client-side body may
+                      # carry it at the top level - not a key inside profile.
                       - _if:
                           test:
                             _type:
@@ -89,9 +92,8 @@ blocks:
                               on:
                                 _state: invite_contact_id
                           then:
-                            profile:
-                              contactId:
-                                _state: invite_contact_id
+                            contactId:
+                              _state: invite_contact_id
                           else: {}
         - id: show_invite_response
           type: SetState
