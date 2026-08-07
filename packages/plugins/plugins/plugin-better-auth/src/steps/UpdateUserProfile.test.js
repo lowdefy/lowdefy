@@ -28,7 +28,7 @@ function createAdapter({ user = { id: 'user-1' } } = {}) {
 
 test('UpdateUserProfile merges new profile keys onto the existing profile bag', async () => {
   const adapter = createAdapter({
-    user: { id: 'user-1', profile: { contactId: 'contact-1', locale: 'en' } },
+    user: { id: 'user-1', profile: { theme: 'light', locale: 'en' } },
   });
   const { auth } = createMockAuth({ adapter });
   const result = await UpdateUserProfile({
@@ -42,14 +42,14 @@ test('UpdateUserProfile merges new profile keys onto the existing profile bag', 
   expect(adapter.update).toHaveBeenCalledWith({
     model: 'user',
     where: [{ field: 'id', value: 'user-1' }],
-    update: { profile: { contactId: 'contact-1', locale: 'de', plan: 'pro' } },
+    update: { profile: { theme: 'light', locale: 'de', plan: 'pro' } },
   });
-  expect(result.profile).toEqual({ contactId: 'contact-1', locale: 'de', plan: 'pro' });
+  expect(result.profile).toEqual({ theme: 'light', locale: 'de', plan: 'pro' });
 });
 
 test('UpdateUserProfile removes a profile key set to null', async () => {
   const adapter = createAdapter({
-    user: { id: 'user-1', profile: { contactId: 'contact-1', locale: 'en' } },
+    user: { id: 'user-1', profile: { theme: 'light', locale: 'en' } },
   });
   const { auth } = createMockAuth({ adapter });
   await UpdateUserProfile({
@@ -59,7 +59,7 @@ test('UpdateUserProfile removes a profile key set to null', async () => {
   expect(adapter.update).toHaveBeenCalledWith({
     model: 'user',
     where: [{ field: 'id', value: 'user-1' }],
-    update: { profile: { contactId: 'contact-1' } },
+    update: { profile: { theme: 'light' } },
   });
 });
 
@@ -110,17 +110,17 @@ test('UpdateUserProfile writes the profile as the bag when the user has no exist
   const { auth } = createMockAuth({ adapter });
   await UpdateUserProfile({
     auth,
-    properties: { userId: 'user-1', profile: { contactId: 'contact-1' } },
+    properties: { userId: 'user-1', profile: { plan: 'pro' } },
   });
   expect(adapter.update).toHaveBeenCalledWith({
     model: 'user',
     where: [{ field: 'id', value: 'user-1' }],
-    update: { profile: { contactId: 'contact-1' } },
+    update: { profile: { plan: 'pro' } },
   });
 });
 
 test('UpdateUserProfile sets the name and image display copies', async () => {
-  const adapter = createAdapter({ user: { id: 'user-1', profile: { contactId: 'contact-1' } } });
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { plan: 'pro' } } });
   const { auth } = createMockAuth({ adapter });
   await UpdateUserProfile({
     auth,
@@ -133,20 +133,51 @@ test('UpdateUserProfile sets the name and image display copies', async () => {
   });
 });
 
-test('UpdateUserProfile writes only profile, name, and image - never other user fields', async () => {
+test('UpdateUserProfile sets contactId as a top-level field, outside the profile bag', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+  const { auth } = createMockAuth({ adapter });
+  await UpdateUserProfile({
+    auth,
+    properties: { userId: 'user-1', contactId: 'contact-1' },
+  });
+  expect(adapter.update).toHaveBeenCalledWith({
+    model: 'user',
+    where: [{ field: 'id', value: 'user-1' }],
+    update: { contactId: 'contact-1' },
+  });
+});
+
+// The link is not a profile key, so writing both must leave the bag untouched
+// by contactId - the whole point of promoting it out of profile.
+test('UpdateUserProfile keeps contactId out of the profile merge when both are written', async () => {
+  const adapter = createAdapter({ user: { id: 'user-1', profile: { locale: 'en' } } });
+  const { auth } = createMockAuth({ adapter });
+  await UpdateUserProfile({
+    auth,
+    properties: { userId: 'user-1', contactId: 'contact-1', profile: { plan: 'pro' } },
+  });
+  expect(adapter.update.mock.calls[0][0].update).toEqual({
+    profile: { locale: 'en', plan: 'pro' },
+    contactId: 'contact-1',
+  });
+});
+
+test('UpdateUserProfile writes only profile, contactId, name, and image - never other user fields', async () => {
   const adapter = createAdapter({ user: { id: 'user-1', email: 'a@example.com' } });
   const { auth } = createMockAuth({ adapter });
   await UpdateUserProfile({
     auth,
     properties: {
       userId: 'user-1',
-      profile: { contactId: 'contact-1' },
+      profile: { plan: 'pro' },
+      contactId: 'contact-1',
       name: 'New Name',
       image: 'https://img.example/a.png',
     },
   });
   expect(adapter.update.mock.calls[0][0].update).toEqual({
-    profile: { contactId: 'contact-1' },
+    profile: { plan: 'pro' },
+    contactId: 'contact-1',
     name: 'New Name',
     image: 'https://img.example/a.png',
   });
@@ -160,7 +191,7 @@ test('UpdateUserProfile refuses unknown properties', async () => {
       properties: { userId: 'user-1', profile: { a: 1 }, email: 'new@example.com' },
     })
   ).rejects.toThrow(
-    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "name", "image", and "organizationId".'
+    'UpdateUserProfile received unknown properties "email". Allowed properties are "userId", "profile", "contactId", "name", "image", and "organizationId".'
   );
   await expect(
     UpdateUserProfile({
@@ -209,10 +240,17 @@ test('UpdateUserProfile throws when name or image is not a string', async () => 
   ).rejects.toThrow('UpdateUserProfile "image" is not a string. Received 7.');
 });
 
-test('UpdateUserProfile throws when no profile, name, or image is provided', async () => {
+test('UpdateUserProfile throws when contactId is not a string', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    UpdateUserProfile({ auth, properties: { userId: 'user-1', contactId: { id: 'contact-1' } } })
+  ).rejects.toThrow('UpdateUserProfile "contactId" is not a string. Received {"id":"contact-1"}.');
+});
+
+test('UpdateUserProfile throws when no profile, contactId, name, or image is provided', async () => {
   const { auth } = createMockAuth();
   await expect(UpdateUserProfile({ auth, properties: { userId: 'user-1' } })).rejects.toThrow(
-    'UpdateUserProfile requires at least one of "profile", "name", or "image" to write.'
+    'UpdateUserProfile requires at least one of "profile", "contactId", "name", or "image" to write.'
   );
 });
 

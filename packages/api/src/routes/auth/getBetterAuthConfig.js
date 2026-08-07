@@ -227,9 +227,20 @@ function getBetterAuthConfig({
       // profile is the opaque display-and-app-data bag written by module or
       // app logic (UpdateUserProfile) - the platform never validates,
       // indexes, or reads inside it.
+      //
+      // contactId is the link to the app's canonical record for the human
+      // behind this login. It carries profile's opaque contract, not
+      // attributes' - stored, projected onto the caller, and otherwise
+      // ignored: never validated, indexed, or read by the platform, and never
+      // resolved to whatever it points at. That is module work, and which
+      // record the name means is the module's business. A first-class field
+      // rather than a key inside profile, because a link to another entity is
+      // a different kind of thing from an opaque attribute bag - it belongs
+      // with the user's other structural facts.
       additionalFields: {
         attributes: { type: 'json', required: false, input: false },
         profile: { type: 'json', required: false, input: false },
+        contactId: { type: 'string', required: false, input: false },
       },
     },
     verification: { modelName: modelNames.verification },

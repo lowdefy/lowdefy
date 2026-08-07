@@ -55,6 +55,11 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // _user.profile is undefined - never a synthesized {}. Strategy callers lack
 // profile exactly as they lack name and image.
 //
+// user.contactId - the link to the app's canonical record for this person -
+// rides the same spread on the same argument, and is absent the same way for a
+// user with no link (never synthesized to null). The platform projects it and
+// stops there: nothing here reads it, and nothing resolves what it points at.
+//
 // context.user.twoFactorEnrolled is the one caller fact no session field
 // carries: whether this person holds a factor that satisfies
 // auth.twoFactor.required. It is set only on session callers - strategy,

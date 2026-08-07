@@ -24,7 +24,7 @@ const acting = { system: true, user: null };
 // defaulting and tenant-policy rules are tested there, not here.
 const organizationId = 'org-1';
 
-test('InviteMember passes properties including profile through as body to createInvitation', async () => {
+test('InviteMember passes properties including profile and contactId through as body to createInvitation', async () => {
   const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
   const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
   const result = await InviteMember({
@@ -35,18 +35,20 @@ test('InviteMember passes properties including profile through as body to create
       email: 'new@example.com',
       orgRole: 'member',
       resend: true,
-      profile: { contactId: 'contact-1' },
+      profile: { plan: 'pro' },
+      contactId: 'contact-1',
     },
   });
   expect(result).toEqual({ id: 'invitation-1' });
   expect(createInvitation.mock.calls[0][0].body).toEqual({
     appRoles: undefined,
     attributes: undefined,
+    contactId: 'contact-1',
     email: 'new@example.com',
     role: 'member',
     organizationId: 'org-1',
     resend: true,
-    profile: { contactId: 'contact-1' },
+    profile: { plan: 'pro' },
   });
 });
 
@@ -62,6 +64,7 @@ test('InviteMember sends role "member" when orgRole is omitted', async () => {
   expect(createInvitation.mock.calls[0][0].body).toEqual({
     appRoles: ['branch-manager'],
     attributes: undefined,
+    contactId: undefined,
     email: 'new@example.com',
     organizationId: 'org-1',
     profile: undefined,
@@ -219,4 +222,43 @@ test('InviteMember throws when profile is not a plain object', async () => {
       },
     })
   ).rejects.toThrow('InviteMember "profile" is not an object. Received "not-an-object".');
+});
+
+test('InviteMember forwards contactId in the createInvitation body', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com', contactId: 'contact-1' },
+  });
+  expect(createInvitation.mock.calls[0][0].body.contactId).toBe('contact-1');
+});
+
+test('InviteMember carries contactId as undefined in the body when omitted', async () => {
+  const createInvitation = jest.fn().mockResolvedValue({ id: 'invitation-1' });
+  const { auth } = createMockAuth({ organizationEndpoints: { createInvitation } });
+  await InviteMember({
+    acting,
+    auth,
+    organizationId,
+    properties: { email: 'new@example.com' },
+  });
+  expect(createInvitation.mock.calls[0][0].body.contactId).toBe(undefined);
+});
+
+test('InviteMember throws when contactId is not a string', async () => {
+  const { auth } = createMockAuth();
+  await expect(
+    InviteMember({
+      acting,
+      auth,
+      organizationId,
+      properties: {
+        email: 'new@example.com',
+        contactId: { id: 'contact-1' },
+      },
+    })
+  ).rejects.toThrow('InviteMember "contactId" is not a string. Received {"id":"contact-1"}.');
 });

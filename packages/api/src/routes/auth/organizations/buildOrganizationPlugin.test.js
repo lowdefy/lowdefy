@@ -131,6 +131,22 @@ test('buildOrganizationPlugin maps the user-* collection names and internal addi
   expect(plugin.options.schema.invitation.additionalFields.profile.type).toBe('json');
 });
 
+// Same reason as appRoles: toZodSchema strips input: false fields from the
+// client-side invite-member body, so an input: false contactId could never be
+// carried by an invitation.
+test('buildOrganizationPlugin declares invitation.contactId without input: false so the invite body keeps it', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.schema.invitation.additionalFields.contactId).toEqual({
+    type: 'string',
+    required: false,
+  });
+  expect('input' in plugin.options.schema.invitation.additionalFields.contactId).toBe(false);
+});
+
 test('buildOrganizationPlugin declares member.appRoles as a request-body-excluded string array', () => {
   const plugin = buildOrganizationPlugin({
     authConfig,

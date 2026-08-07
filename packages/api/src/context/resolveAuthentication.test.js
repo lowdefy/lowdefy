@@ -322,7 +322,7 @@ test('merges user and member attributes shallowly with member winning', async ()
 test('carries the user profile bag from the session user row onto the resolved caller', async () => {
   const { auth } = mockAuth({
     session: {
-      user: { id: 'user_1', profile: { contactId: 'contact_9', locale: 'en' } },
+      user: { id: 'user_1', profile: { plan: 'pro', locale: 'en' } },
       session: { id: 'sess_1', activeOrganizationId: 'org_1' },
     },
     member: { id: 'member_1', role: 'member' },
@@ -331,7 +331,7 @@ test('carries the user profile bag from the session user row onto the resolved c
 
   await resolveAuthentication(context, { auth, headers: {} });
 
-  expect(context.user.profile).toEqual({ contactId: 'contact_9', locale: 'en' });
+  expect(context.user.profile).toEqual({ plan: 'pro', locale: 'en' });
 });
 
 test('leaves profile undefined for a user with no profile writes', async () => {
@@ -348,6 +348,40 @@ test('leaves profile undefined for a user with no profile writes', async () => {
 
   expect(context.user.profile).toBe(undefined);
   expect('profile' in context.user).toBe(false);
+});
+
+// contactId is a top-level caller field, not a key inside the profile bag - a
+// consumer reading _user.profile as a display object never trips over the link.
+test('carries contactId from the session user row onto the resolved caller as a top-level field', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', contactId: 'contact_9', profile: { locale: 'en' } },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.contactId).toBe('contact_9');
+  expect(context.user.profile).toEqual({ locale: 'en' });
+});
+
+test('leaves contactId undefined for a user with no link', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.contactId).toBe(undefined);
+  expect('contactId' in context.user).toBe(false);
 });
 
 test('does not mutate the original session user object', async () => {

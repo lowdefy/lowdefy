@@ -22,13 +22,13 @@ import callPluginEndpoint from './support/callPluginEndpoint.js';
 // resolves it: the floor resolves the target organization (defaulting to the
 // pinned one), authorizes the caller there, and passes the result in.
 async function InviteMember({ acting, auth, organizationId, properties }) {
-  // appRoles, profile and attributes are registered invitation
+  // appRoles, attributes, contactId and profile are registered invitation
   // additionalFields in the engine config; accepting the invitation
   // shallow-merges profile onto the user's profile bag (invitation wins per
-  // key) and copies attributes and appRoles onto the minted member row.
-  // invitation.appRoles is declared without input: false precisely so this
-  // body may carry it.
-  const { appRoles, attributes, email, orgRole, profile, resend } = properties;
+  // key), sets contactId on the user row, and copies attributes and appRoles
+  // onto the minted member row. Each is declared without input: false
+  // precisely so this body may carry it.
+  const { appRoles, attributes, contactId, email, orgRole, profile, resend } = properties;
   if (type.isNone(email)) {
     throw new Error('InviteMember requires an "email" property.');
   }
@@ -53,6 +53,11 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
       `InviteMember "profile" is not an object. Received ${JSON.stringify(profile)}.`
     );
   }
+  if (!type.isNone(contactId) && !type.isString(contactId)) {
+    throw new Error(
+      `InviteMember "contactId" is not a string. Received ${JSON.stringify(contactId)}.`
+    );
+  }
   // An omitted orgRole must still send something: createInvitation's body
   // schema declares role as required, so undefined fails the zod body, and ''
   // passes it silently - BetterAuth filters the empty entry out before
@@ -65,6 +70,7 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
     body: {
       appRoles,
       attributes,
+      contactId,
       email,
       organizationId,
       profile,

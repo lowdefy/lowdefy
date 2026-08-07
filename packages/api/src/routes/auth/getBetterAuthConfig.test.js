@@ -1141,7 +1141,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
   );
 });
 
-test('registers the internal user additionalFields (attributes, profile)', () => {
+test('registers the internal user additionalFields (attributes, profile, contactId)', () => {
   const options = getBetterAuthConfig({
     appMeta,
     authJson: createAuthJson(),
@@ -1153,6 +1153,7 @@ test('registers the internal user additionalFields (attributes, profile)', () =>
   expect(options.user.additionalFields).toEqual({
     attributes: { type: 'json', required: false, input: false },
     profile: { type: 'json', required: false, input: false },
+    contactId: { type: 'string', required: false, input: false },
   });
 });
 

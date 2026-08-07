@@ -79,7 +79,9 @@ function buildOrganizationPlugin({ getAuth, sendInvitationEmail }) {
         // invitation winning per key. Invite-time member attributes ride the
         // invitation the same way - accepting copies them onto the minted
         // member row, so an invited user's authorization parameters hold
-        // from their first session.
+        // from their first session. contactId rides it as a third opaque
+        // copy, so an invitation can name the app record the invitee's login
+        // will point at before that person has ever signed in.
         //
         // appRoles is declared without the input: false its member counterpart
         // carries. toZodSchema drops input: false fields when isClientSide is
@@ -94,6 +96,7 @@ function buildOrganizationPlugin({ getAuth, sendInvitationEmail }) {
         additionalFields: {
           appRoles: { type: 'string[]', required: false },
           attributes: { type: 'json', required: false },
+          contactId: { type: 'string', required: false },
           profile: { type: 'json', required: false },
         },
       },

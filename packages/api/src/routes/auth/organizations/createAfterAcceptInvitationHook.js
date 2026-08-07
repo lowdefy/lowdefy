@@ -22,6 +22,8 @@ import { type } from '@lowdefy/helpers';
 // accepting shallow-merges it onto the accepting user's user.profile,
 // invitation winning per key - an opaque copy the engine never reads inside.
 // The merge is in-band: a failed copy fails the accept and the user retries.
+// invitation.contactId - the link to the app's record for this person - is the
+// third opaque copy, and rides the same user-row update as the profile merge.
 // Invite-time member attributes and app roles ride the invitation the same
 // way: accepting copies invitation.attributes and invitation.appRoles onto the
 // minted member row (one adapter-layer update, parallel to the opaque profile
@@ -38,6 +40,7 @@ import { type } from '@lowdefy/helpers';
 function createAfterAcceptInvitationHook({ getAuth }) {
   return async function afterAcceptInvitationHook({ invitation, member, user }) {
     const { adapter, internalAdapter } = await getAuth().$context;
+    const userUpdate = {};
     if (type.isObject(invitation.profile)) {
       // The hook's user is the session user, which may be a cookie-cached
       // copy - the merge base is read from the user row so a read-merge-write
@@ -46,9 +49,15 @@ function createAfterAcceptInvitationHook({ getAuth }) {
         model: 'user',
         where: [{ field: 'id', value: user.id }],
       });
-      await internalAdapter.updateUser(user.id, {
-        profile: { ...(userRow.profile ?? {}), ...invitation.profile },
-      });
+      userUpdate.profile = { ...(userRow.profile ?? {}), ...invitation.profile };
+    }
+    // contactId is a top-level user field, so it is set outright - no read, no
+    // merge. An invitation that names no link leaves an existing one standing.
+    if (type.isString(invitation.contactId)) {
+      userUpdate.contactId = invitation.contactId;
+    }
+    if (Object.keys(userUpdate).length > 0) {
+      await internalAdapter.updateUser(user.id, userUpdate);
     }
     const memberUpdate = {};
     if (type.isObject(invitation.attributes)) {
