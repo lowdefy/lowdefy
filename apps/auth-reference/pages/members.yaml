@@ -89,7 +89,7 @@ blocks:
   - id: invite_contact_id
     type: TextInput
     properties:
-      title: Contact id (optional - merged into user.profile on accept)
+      title: Contact id (optional - set on the user's contact_id on accept)
   - id: invite_button
     type: Button
     properties:

@@ -20,16 +20,20 @@ routine:
   # Merge-on-signup: link a verified new signup to an existing contact
   # rather than duplicating it. Match by verified email only - an unverified
   # match is an account-takeover vector - and only when the user carries no
-  # profile.contactId yet, so an invitation-carried link always wins.
+  # contactId yet, so an invitation-carried link always wins.
   # Email/password signups are unverified here; their match runs at
   # email.verified instead.
+  # _payload.user is the record BetterAuth is about to write, so its keys are
+  # the logical camelCase ones (contactId, emailVerified) - the adapter maps
+  # them to the snake_case columns on the way out. Only _user, the resolved
+  # caller, reads snake_case.
   - ':if':
       _and:
         - _eq:
             - _payload: user.emailVerified
             - true
         - _eq:
-            - _payload: user.profile.contactId
+            - _payload: user.contactId
             - null
     ':then':
       - id: match_contact
@@ -40,9 +44,10 @@ routine:
             email:
               _payload: user.email
       # Contacts are created with string _ids (see the contacts page), so
-      # the id lands on profile.contactId without ObjectId conversion. A
-      # before hook :returns the record with the key set inline - no step
-      # needed since the row is not written yet.
+      # the id lands on contactId without ObjectId conversion. A before hook
+      # :returns the record with the key set inline - no step needed since
+      # the row is not written yet. contactId is a first-class user field, so
+      # it is set at the top level and the profile bag is left alone.
       - ':if':
           _ne:
             - _step: match_contact
@@ -51,9 +56,8 @@ routine:
           - ':return':
               _object.assign:
                 - _payload: user
-                - profile:
-                    contactId:
-                      _step: match_contact._id
+                - contactId:
+                    _step: match_contact._id
   # Replace the record BetterAuth writes - the plain :return value is the
   # new record (the adapter wraps it as { data }).
   - ':if':

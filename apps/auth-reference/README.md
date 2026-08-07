@@ -262,7 +262,9 @@ the old one) so pre-phase-3 users do not confuse the wall.
     `/dashboard` still treats you as logged out (no member row yet). Open
     `/accept-invitation?invitationId=<id>`, accept - membership exists,
     `/dashboard` renders, and `db.users.find({email: "<invitee>"})` shows
-    the invitation's `profile.contactId` merged onto the user's profile bag.
+    the invitation's `contact_id` copied onto the user row. A native read
+    shows the physical column, so it is `contact_id` there and
+    `_user.contact_id` in config.
 24. **Expired invitation gets the normal rejection**: expire a pending
     invitation
     (`db["user-invitations"].updateOne({email: "<x>"}, {$set: {expiresAt: new Date(0)}})`),
@@ -273,13 +275,14 @@ the old one) so pre-phase-3 users do not confuse the wall.
     At create time the user is unverified so `user.create.before` skips
     the match; after clicking the Mailpit link, the `email.verified`
     binding links it - `db.users.find({email: "merge-pw@example.test"})`
-    shows `profile.contactId` (written through the `UpdateUserProfile`
-    step). For the OAuth path, create a contact for your Google address
-    and "Continue with Google" - the signup arrives verified, so
-    `user.create.before` returns the record with `profile.contactId`
-    inline. An invited user whose accept merged a `profile.contactId`
-    (scenario 23) skips the merge - the hook only matches users with no
-    `profile.contactId`.
+    shows `contact_id` (written through the `UpdateUserProfile` step's
+    `contactId` param). For the OAuth path, create a contact for your
+    Google address and "Continue with Google" - the signup arrives
+    verified, so `user.create.before` returns the record with `contactId`
+    inline (a hook payload carries BetterAuth's logical camelCase keys; the
+    adapter stores it as `contact_id`). An invited user whose accept copied
+    a `contactId` (scenario 23) skips the merge - the hook only matches
+    users with no link.
 26. **Tenant policy - lazy minting**: on `auth-reference-tenant`, sign up
     and verify a fresh user; the tenant database's `user-organizations`
     stays empty until the first login (no tenants for abandoned signups).
@@ -411,10 +414,10 @@ scenarios also use a couple of disposable signed-up-and-verified users.
     the invitation id): no `invitation.send` hook is bound by default, so
     `auth.email` sends. Then create a contact on `/contacts` for a second
     fresh email and invite it **with** the contact id - the response
-    carries `profile.contactId`. As that invitee: sign up, verify, and
+    carries `contactId`. As that invitee: sign up, verify, and
     accept on `/accept-invitation?invitationId=<id>` -
-    `db.users.find({email: "<invitee>"})` shows the merged
-    `profile.contactId` (the phase-3 accept hook, now fed by the step).
+    `db.users.find({email: "<invitee>"})` shows the copied
+    `contact_id` (the phase-3 accept hook, now fed by the step).
     Keep this invitee around: scenarios 39 and 42 act on them.
 
 35. **The two authorities fail differently on an invitation**: the org tier
@@ -491,7 +494,7 @@ caller. Set system: true...`) while the session row still committed
     `member.appRoles` carries no invariant. Only the org tier does.
 
 42. **DeleteUser cascades and leaves the contact untouched**: scenario 34's
-    invitee has a user row, an org-a member row, a merged `profile.contactId`,
+    invitee has a user row, an org-a member row, a copied `contact_id`,
     and sessions; invite the same email once more so a **pending**
     invitation row also exists (re-inviting replaces any pending
     invitation and creates a fresh one - phase-8 semantics). Note the user
@@ -750,23 +753,26 @@ virtual authenticator environment".
     as a different user to see it refuse). All three apps share the
     converted page.
 
-59. **`_user.profile` presentation**: as a fresh user with no profile
-    writes (no contact match, no invitation merge, no display-name save),
-    `/dashboard` shows `profile.contactId:` empty - `_user.profile` is
-    undefined until something writes the bag; nothing invents an empty
-    object. After any profile write it resolves on the next session
-    re-sync: the scenario-25 merge and scenario-23/34 invitation merges
-    show it landing via hooks (with the invitation-carried key winning -
-    the merge hook skips a user whose `profile.contactId` is already
-    set), and scenario 60 shows a direct write surfacing after
-    `UpdateSession`. Re-invite replaces profile like everything else on
+59. **`_user.profile` and `_user.contact_id` presentation**: the two are
+    separate fields and present separately. As a fresh user with no
+    profile writes (no display-name save, no admin profile edit),
+    `/security` shows `profile:` undefined - nothing invents an empty
+    object - and `/dashboard` shows `contact_id:` empty until a contact
+    match or an invitation copy sets the link. The link is **not** a
+    profile key, so a contact match leaves the bag undefined: that is the
+    point of promoting it to a first-class field. Both resolve on the next
+    session re-sync - the scenario-25 merge and scenario-23/34 invitation
+    copies show `contact_id` landing via hooks (the merge hook skips a
+    user whose link is already set, so an invitation-carried link wins),
+    and scenario 60 shows a direct `profile` write surfacing after
+    `UpdateSession`. Re-invite replaces the link like everything else on
     the invitation (scenario 49's semantics):
     `call('admin-invite-member', { email: '<fresh>', orgRole: 'member',
 contactId: 'contact-a' })`, then re-invite with `contactId:
 'contact-b'` -
     `db["user-invitations"].findOne({email: "<fresh>", status: "pending"})`
-    carries `profile.contactId: "contact-b"`, and accepting merges **b**
-    onto the user.
+    carries `contact_id: "contact-b"` (the physical column on a native
+    read), and accepting sets **b** on the user.
 
 60. **Display-name self-service - UpdateUserProfile without any authority**:
     as ANY plain member (no app roles, `member` in org-a), on `/security`

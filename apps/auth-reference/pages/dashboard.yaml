@@ -26,7 +26,7 @@ blocks:
               <li><b>roles:</b> {{ user.roles | dump }} (the active member.appRoles - the app roles the page and endpoint gates read)</li>
               <li><b>org_roles:</b> {{ user.org_roles | dump }} (the active member.role - the owner/admin/member org tier; no gate reads it)</li>
               <li><b>attributes:</b> {{ user.attributes | dump }} (user.attributes merged with the active member's, member wins)</li>
-              <li><b>profile.contactId:</b> {{ user.profile.contactId }} (merge-on-signup or invitation profile merge)</li>
+              <li><b>contact_id:</b> {{ user.contact_id }} (merge-on-signup or invitation copy - a first-class field, not a profile key)</li>
             </ul>
           on:
             user:

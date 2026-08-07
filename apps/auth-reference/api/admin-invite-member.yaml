@@ -33,9 +33,11 @@ routine:
               - member
           resend:
             _payload: resend
-        # contactId is a module-defined key inside the opaque profile bag,
-        # not a platform field - the invitation carries it as
-        # profile.contactId and the accept merge writes it onto the user.
+        # contactId is a first-class platform field on the invitation, beside
+        # profile and attributes - accepting sets it on the user row outright
+        # rather than merging it into the profile bag. The step param is
+        # camelCase like every action param; the column it lands in is
+        # contact_id.
         - _if:
             test:
               _type:
@@ -43,9 +45,8 @@ routine:
                 on:
                   _payload: contactId
             then:
-              profile:
-                contactId:
-                  _payload: contactId
+              contactId:
+                _payload: contactId
             else: {}
         - _if:
             test:

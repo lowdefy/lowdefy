@@ -7,15 +7,17 @@
 # Phase 3: this point carries the merge-on-signup match for email/password
 # signups, whose email is unverified at user-create time. The user row
 # already exists, so the link is written with the UpdateUserProfile step -
-# the sanctioned write path for the opaque user.profile bag (system: true
-# because a hook routine runs caller-less). An invited user whose accept
-# merged a profile.contactId skips the merge (the key is set).
+# the sanctioned write path for user.profile and the contactId link alike
+# (system: true because a hook routine runs caller-less). An invited user
+# whose accept copied a contactId skips the merge (the field is set).
+# _payload.user carries BetterAuth's logical camelCase keys, not the
+# snake_case columns - only _user, the resolved caller, reads snake_case.
 id: on-email-verified
 type: InternalApi
 routine:
   - ':if':
       _eq:
-        - _payload: user.profile.contactId
+        - _payload: user.contactId
         - null
     ':then':
       - id: match_contact_on_verified
@@ -30,17 +32,16 @@ routine:
             - _step: match_contact_on_verified
             - null
         ':then':
-          # contactId is a module-defined key inside the opaque bag - the step
-          # merges it per top-level key onto the user's existing profile.
+          # contactId is a first-class user field, so the step sets it
+          # outright - it never joins the profile bag's shallow merge.
           - id: link_contact
             type: UpdateUserProfile
             system: true
             properties:
               userId:
                 _payload: user.id
-              profile:
-                contactId:
-                  _step: match_contact_on_verified._id
+              contactId:
+                _step: match_contact_on_verified._id
   - ':try':
       - id: write_audit
         type: MongoDBInsertOne

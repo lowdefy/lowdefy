@@ -43,6 +43,17 @@ const indexes = [
     keys: { phone_number: 1 },
     options: { unique: true, partialFilterExpression: { phone_number: { $exists: true } } },
   },
+  // Module-owned, and partial for the same reason as phone_number: the link is
+  // optional, so a plain unique index would reject the second unlinked user.
+  // Unique where present is what makes the merge-on-signup match one-to-one -
+  // two users may not claim the same contact. The key is the physical column
+  // (contact_id), not the logical field name, because an index is a native
+  // read: the adapter's snake_case derive never runs over it.
+  {
+    collection: 'users',
+    keys: { contact_id: 1 },
+    options: { unique: true, partialFilterExpression: { contact_id: { $exists: true } } },
+  },
   { collection: 'user-sessions', keys: { token: 1 }, options: { unique: true } },
   { collection: 'user-sessions', keys: { user_id: 1 }, options: {} },
   {
