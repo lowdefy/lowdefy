@@ -44,9 +44,9 @@ _ref:
             | Auth UI | NextAuth built-in pages, `auth.theme` | Removed — the app provides its own pages |
             | Magic link | `EmailProvider` in `providers` | `auth.magicLink` + `auth.email` |
             | `authPages` | `signIn`, `signOut`, `error`, `verifyRequest`, `newUser` | `signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail` |
-            | OIDC profile claims | ~20 claims copied onto the session user | Only `id`, `name`, `email`, `image`, `emailVerified` |
+            | OIDC profile claims | ~20 claims copied onto the session user | Only `id`, `name`, `email`, `image`, `email_verified` |
             | `sub` | `_user.sub` = provider's OIDC subject | Removed — `_user.id` is the internal id (a different value) |
-            | Roles | On the user record via `userFields` | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.orgRoles`) |
+            | Roles | On the user record via `userFields` | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.org_roles`) |
             | Attributes | `_user.app_attributes`, `_user.global_attributes` | One merged `_user.attributes` bag |
             | Signed-out request to any URL | `/404` if the page is missing, sign-in if protected | Sign-in for every URL, in apps whose unlisted ids default to protected |
             | Missing request / endpoint id, signed out (auth'd app) | `500` (missing) vs `401` (protected) | `401` for both |
@@ -214,10 +214,10 @@ _ref:
 
             ## The session user shape
 
-            The session user carries `id`, `name`, `email`, `image`, `emailVerified`, `activeOrganizationId`, and the user record's own `profile` bag, plus three fields Lowdefy resolves from the caller's row in the active organization:
+            The session user carries `id`, `name`, `email`, `image`, `email_verified`, `active_organization_id`, and the user record's own `profile` bag, plus three fields Lowdefy resolves from the caller's row in the active organization:
 
             - **`roles`** — the app's own role names, read from the active membership's `appRoles` array. These are what page and endpoint `auth.roles` gates match, and the only thing they match.
-            - **`orgRoles`** — the organization tier, from `member.role`: `owner`, `admin` or `member`. This is an administrative fact about the active organization, and it is **not a gate source** — `createAuthorize` reads only `roles`. An app that wants a page for organization administrators gates that page on one of its own app roles, and lets the write authority answer the administration question separately, at the step.
+            - **`org_roles`** — the organization tier, from `member.role`: `owner`, `admin` or `member`. This is an administrative fact about the active organization, and it is **not a gate source** — `createAuthorize` reads only `roles`. An app that wants a page for organization administrators gates that page on one of its own app roles, and lets the write authority answer the administration question separately, at the step.
             - **`attributes`** — the one merged bag of authorization inputs: `user.attributes` (global) under the active `member.attributes` (per-organization), merged per key, member wins.
 
             **`_user.role` (singular) carries nothing.** It rides the session-user spread off the user record, and Lowdefy never writes it. It sits one character away from `roles`, so an app that gates on `_user.role` is gating on a constant — the gate either always passes or always fails, and never for the reason the author intended. Read `roles`.
@@ -230,8 +230,11 @@ _ref:
             |---|---|
             | `_user.sub` | `_user.id` — a **different value**: the internal id, not the provider subject. The provider subject lives on the `user-accounts` collection (`accountId`). |
             | `_user.picture` | `_user.image` |
-            | `_user.email_verified` | `_user.emailVerified` |
+            | `_user.email_verified` | `_user.email_verified` — unchanged; the pre-upgrade OIDC claim and the resolved caller field already share this name. |
             | `_user.roles` | Unchanged read — but roles now resolve from the active organization membership's `appRoles`, granted via invitations and auth steps, not provider claims. |
+            | `_user.orgRoles` | `_user.org_roles` — the organization tier from `member.role` (`owner`, `admin`, `member`). |
+            | `_user.twoFactorEnrolled` | `_user.two_factor_enrolled` — whether the caller holds a factor satisfying `auth.twoFactor.required`. |
+            | `_user.authMethod` | `_user.auth_method` — the strategy that authenticated the caller, on strategy-resolved callers only. |
             | `_user.app_attributes.*` | `_user.attributes.*` — per-app values live on the membership (`member.attributes`). |
             | `_user.global_attributes.*` | `_user.attributes.*` — global values live on the user (`user.attributes`); merged per key, member wins. |
             | Other OIDC claims (`given_name`, `phone_number`, `address`, ...) | Not in the session. Persist what you need at signup via an endpoint hook — profile data onto your contact collection, authorization inputs into attributes — and read it from there. |

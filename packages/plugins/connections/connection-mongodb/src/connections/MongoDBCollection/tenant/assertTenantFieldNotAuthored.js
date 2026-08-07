@@ -24,7 +24,7 @@ import { type } from '@lowdefy/helpers';
 // is not stamped, so an authored $set could move a row across the wall.
 //
 // The scan is key-based: an object key equal to the tenant field, or a dotted
-// path rooted in it (`organizationId.x`), at any depth of the tree. Values
+// path rooted in it (`organization_id.x`), at any depth of the tree. Values
 // are recursed through objects and arrays only. type.isObject classifies by
 // shape, not constructor, so null-prototype objects are scanned too - in the
 // update position this scan is the security guard, and an Object.create(null)

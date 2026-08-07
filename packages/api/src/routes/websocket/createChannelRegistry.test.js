@@ -64,7 +64,7 @@ function mockPrepareWithUserTenant({ resolver } = {}) {
   mockPrepareChannel.mockImplementation(async (context, { websocketId }) => ({
     connectionProperties: null,
     properties: { room: 1 },
-    tenant: { field: 'organizationId', value: context.user.organizationId },
+    tenant: { field: 'organization_id', value: context.user.organization_id },
     websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
     websocketResolver: resolver,
   }));
@@ -433,7 +433,7 @@ test('resolver receives tenant null when prepareChannel resolves no tenant verdi
 
 test('resolver receives the tenant verdict resolved for the channel', async () => {
   const resolver = createPendingResolver();
-  mockPrepare({ resolver, tenant: { field: 'organizationId', value: 'org-1' } });
+  mockPrepare({ resolver, tenant: { field: 'organization_id', value: 'org-1' } });
   const registry = createChannelRegistry();
   const context = createTestContext();
   const subscriber = createSubscriber('a');
@@ -441,15 +441,15 @@ test('resolver receives the tenant verdict resolved for the channel', async () =
   await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber });
   await flushMicrotasks();
 
-  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organizationId', value: 'org-1' });
+  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organization_id', value: 'org-1' });
 });
 
 test('subscribers with identical properties but different tenant verdicts get separate channels', async () => {
   const resolver = createPendingResolver();
   mockPrepareWithUserTenant({ resolver });
   const registry = createChannelRegistry();
-  const contextOrgA = { ...createTestContext(), user: { sub: 'user-1', organizationId: 'org-a' } };
-  const contextOrgB = { ...createTestContext(), user: { sub: 'user-2', organizationId: 'org-b' } };
+  const contextOrgA = { ...createTestContext(), user: { sub: 'user-1', organization_id: 'org-a' } };
+  const contextOrgB = { ...createTestContext(), user: { sub: 'user-2', organization_id: 'org-b' } };
   const subscriberA = createSubscriber('a');
   const subscriberB = createSubscriber('b');
 
@@ -467,16 +467,16 @@ test('subscribers with identical properties but different tenant verdicts get se
 
   expect(resolver).toHaveBeenCalledTimes(2);
   expect(registry.channels.size).toBe(2);
-  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organizationId', value: 'org-a' });
-  expect(resolver.mock.calls[1][0].tenant).toEqual({ field: 'organizationId', value: 'org-b' });
+  expect(resolver.mock.calls[0][0].tenant).toEqual({ field: 'organization_id', value: 'org-a' });
+  expect(resolver.mock.calls[1][0].tenant).toEqual({ field: 'organization_id', value: 'org-b' });
 });
 
 test('subscribers with identical properties and the same tenant verdict share the channel', async () => {
   const resolver = createPendingResolver();
   mockPrepareWithUserTenant({ resolver });
   const registry = createChannelRegistry();
-  const contextA = { ...createTestContext(), user: { sub: 'user-1', organizationId: 'org-a' } };
-  const contextB = { ...createTestContext(), user: { sub: 'user-2', organizationId: 'org-a' } };
+  const contextA = { ...createTestContext(), user: { sub: 'user-1', organization_id: 'org-a' } };
+  const contextB = { ...createTestContext(), user: { sub: 'user-2', organization_id: 'org-a' } };
   const subscriberA = createSubscriber('a');
   const subscriberB = createSubscriber('b');
 

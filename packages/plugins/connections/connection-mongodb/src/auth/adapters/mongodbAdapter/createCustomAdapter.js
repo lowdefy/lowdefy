@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { snakeCase } from 'change-case';
+
 import createConvertWhereClause from './createConvertWhereClause.js';
 import createSerializeId from './createSerializeId.js';
 
@@ -31,6 +33,21 @@ function createCustomAdapter({ db }) {
     getDefaultModelName,
     options,
   }) {
+    // Lowdefy stores auth columns in snake_case while BetterAuth names its
+    // fields in camelCase, so every field gets a derived physical name.
+    // fieldName is the only mapping BetterAuth honours everywhere - it is read
+    // inline by transformInput/transformOutput and through getFieldName on the
+    // where and join paths, whereas the adapter-level mapKeysTransform maps are
+    // not consulted when building join clauses. Mutating schema works because
+    // the factory shares this one object with getFieldName and the transforms,
+    // and getFieldName resolves lazily per call. id is excluded: it maps to
+    // _id via mapKeysTransform, which takes precedence over fieldName.
+    for (const model of Object.values(schema)) {
+      for (const [logicalName, field] of Object.entries(model.fields ?? {})) {
+        if (logicalName === 'id') continue;
+        field.fieldName = snakeCase(logicalName);
+      }
+    }
     const generateId = options.advanced?.database?.generateId;
     const serializeId = createSerializeId({
       customIdGenerator: typeof generateId === 'function' ? generateId : undefined,

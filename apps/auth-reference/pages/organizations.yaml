@@ -40,9 +40,9 @@ blocks:
       html:
         _nunjucks:
           template: |
-            <p><b>activeOrganizationId:</b> <code>{{ user.activeOrganizationId }}</code><br/>
+            <p><b>active_organization_id:</b> <code>{{ user.active_organization_id }}</code><br/>
             <b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
-            <b>orgRoles</b> (the org tier, member.role): {{ user.orgRoles | dump }}<br/>
+            <b>org_roles</b> (the org tier, member.role): {{ user.org_roles | dump }}<br/>
             <b>attributes:</b> {{ user.attributes | dump }}</p>
           on:
             user:

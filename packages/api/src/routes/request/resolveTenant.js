@@ -36,7 +36,7 @@ import { type } from '@lowdefy/helpers';
 //   organizations - the ONLY connection-level path out of the wall, visible
 //   in the connection file. (`tenant: true` was removed with the inversion;
 //   it restated the default and is a build error.)
-// - `tenant: { field }` -> scoped on that field instead of organizationId.
+// - `tenant: { field }` -> scoped on that field instead of organization_id.
 //
 // Connection types declare their capability as meta.tenant: true implements
 // the scoping contract, false is non-scopable (object storage, SMTP - never
@@ -55,7 +55,7 @@ import { type } from '@lowdefy/helpers';
 //   authored: true, telling the connection resolver to AUDIT the request's
 //   own tenant clause (stages the wall can not scope mechanically) instead
 //   of injecting one. Aggregation-only; other operations refuse the marker.
-// - Otherwise the caller must carry an organization (context.user.organizationId,
+// - Otherwise the caller must carry an organization (context.user.organization_id,
 //   the active org in string form). System context (hook routines, scheduled
 //   jobs) and strategy callers have none, so they fail here by design - the
 //   wall never degrades to unscoped access.
@@ -87,7 +87,7 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
   }
   const field = type.isObject(connectionConfig.tenant)
     ? connectionConfig.tenant.field
-    : 'organizationId';
+    : 'organization_id';
   // Belt-and-braces repeat of the build check: the wall stamps and matches
   // the field as a single top-level document key, so a drifted artifact with
   // a missing, empty, or dotted field must refuse rather than enforce on a
@@ -98,7 +98,7 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
       { received: field, configKey: connectionConfig['~k'] }
     );
   }
-  const value = context.user?.organizationId;
+  const value = context.user?.organization_id;
   if (!type.isString(value) || value === '') {
     const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
     throw new AuthenticationError(

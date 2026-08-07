@@ -16,8 +16,8 @@ routine:
             attributes.region:
               _payload: region
         - $project:
-            organizationId: 1
-            userId: 1
+            organization_id: 1
+            user_id: 1
             role: 1
             attributes: 1
   - ':return':

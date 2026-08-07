@@ -16,12 +16,12 @@
 
 import stampTenantOnDoc from './stampTenantOnDoc.js';
 
-const tenant = { field: 'organizationId', value: 'org_a' };
+const tenant = { field: 'organization_id', value: 'org_a' };
 
 test('stamps the tenant field onto the document', () => {
   expect(stampTenantOnDoc({ doc: { name: 'x' }, tenant })).toEqual({
     name: 'x',
-    organizationId: 'org_a',
+    organization_id: 'org_a',
   });
 });
 
@@ -32,37 +32,37 @@ test('does not mutate the original document', () => {
 });
 
 test('throws when the tenant field is authored on the document', () => {
-  expect(() => stampTenantOnDoc({ doc: { organizationId: 'org_a' }, tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an insert document on a tenant connection - the tenant wall stamps and filters it mechanically.'
+  expect(() => stampTenantOnDoc({ doc: { organization_id: 'org_a' }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an insert document on a tenant connection - the tenant wall stamps and filters it mechanically.'
   );
 });
 
 test('throws when the tenant field is authored nested in the document', () => {
-  expect(() => stampTenantOnDoc({ doc: { meta: { organizationId: 'org_b' } }, tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an insert document'
+  expect(() => stampTenantOnDoc({ doc: { meta: { organization_id: 'org_b' } }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an insert document'
   );
 });
 
 test('throws when a dotted tenant field key is authored', () => {
-  expect(() => stampTenantOnDoc({ doc: { 'organizationId.x': 1 }, tenant })).toThrow(
-    'Tenant field "organizationId" can not be set in an insert document'
+  expect(() => stampTenantOnDoc({ doc: { 'organization_id.x': 1 }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an insert document'
   );
 });
 
 test('uses the position in the error message', () => {
   expect(() =>
     stampTenantOnDoc({
-      doc: { organizationId: 'org_b' },
+      doc: { organization_id: 'org_b' },
       tenant,
       position: 'a replacement document',
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a replacement document');
+  ).toThrow('Tenant field "organization_id" can not be set in a replacement document');
 });
 
 test('uses the custom tenant field name', () => {
   const customTenant = { field: 'tenantId', value: 't_1' };
-  expect(stampTenantOnDoc({ doc: { organizationId: 'kept' }, tenant: customTenant })).toEqual({
-    organizationId: 'kept',
+  expect(stampTenantOnDoc({ doc: { organization_id: 'kept' }, tenant: customTenant })).toEqual({
+    organization_id: 'kept',
     tenantId: 't_1',
   });
   expect(() => stampTenantOnDoc({ doc: { tenantId: 't_2' }, tenant: customTenant })).toThrow(
@@ -74,7 +74,7 @@ test('refuses an authored verdict — tenant: authored is aggregation-only', () 
   expect(() =>
     stampTenantOnDoc({
       doc: { name: 'x' },
-      tenant: { field: 'organizationId', value: 'org_a', authored: true },
+      tenant: { field: 'organization_id', value: 'org_a', authored: true },
     })
   ).toThrow('"tenant: authored" applies only to aggregation requests');
 });

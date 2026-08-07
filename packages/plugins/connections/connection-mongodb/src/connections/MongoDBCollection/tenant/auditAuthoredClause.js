@@ -49,7 +49,7 @@ function auditSearchCompound({ body, field, value, stage }) {
       - equals:
           path: ${field}
           value:
-            _user: organizationId`
+            _user: organization_id`
     );
   }
 }
@@ -82,7 +82,7 @@ function auditMqlEquality({ query, field, value, stage, position }) {
       `Request declares "tenant: authored", but its "${stage}" stage has no "${position}" equality on tenant field "${field}" matching the caller's organization. The request was not run. Author the clause inside the stage:
   ${position}:
     ${field}:
-      _user: organizationId`
+      _user: organization_id`
     );
   }
 }

@@ -14,30 +14,39 @@
   limitations under the License.
 */
 
+import { normalizeCaller, type } from '@lowdefy/helpers';
+
 // The single writer of the pre-resolved-caller shape. A dev mock user, the dev
 // headless renderer cookie, and the e2e test cookie each substitute for the
-// whole resolveAuthentication step, and must match the shape it produces. That
-// output always carries roles as an array and attributes as an object (a
-// whole-bag { _user: 'attributes' } read gives {} on a real caller), so both
-// are floored here. profile, contactId, activeOrganizationId and
-// twoFactorEnrolled are only ever produced by a real user-row/member read, so
-// they are left exactly as the caller carries them - absent stays absent, and a
-// bare _user.profile read is null-safe.
-// organizationId (the tenant wall's org value) mirrors resolveAuthentication,
-// where it always equals activeOrganizationId - an injected caller declaring
+// whole resolveAuthentication step, and must match the shape it produces -
+// including its snake_case keys, so an injected caller may be authored either
+// way and still reads like a resolved one. That output always carries roles as
+// an array and attributes as an object (a whole-bag { _user: 'attributes' }
+// read gives {} on a real caller), so both are floored here. profile,
+// contact_id, active_organization_id and two_factor_enrolled are only ever
+// produced by a real user-row/member read, so they are left exactly as the
+// caller carries them - absent stays absent, and a bare _user.profile read is
+// null-safe.
+// organization_id (the tenant wall's org value) mirrors resolveAuthentication,
+// where it always equals active_organization_id - an injected caller declaring
 // either key gets both, so mock/e2e callers pass walled connections without
 // duplicating the org under two names. A caller with neither stays org-less
 // and fails closed on walled connections, same as a strategy caller.
+//
+// The floors read the raw user: roles, attributes and profile are single words
+// that snake to themselves, so an authored key and its normalized name are the
+// same key. The org floor reads the normalized object, where either authored
+// spelling has already collapsed onto one name.
 function normalizeInjectedCaller(user) {
   const normalized = {
-    ...user,
+    ...normalizeCaller(user),
     roles: user.roles ?? [],
     attributes: user.attributes ?? {},
   };
-  const organizationId = user.organizationId ?? user.activeOrganizationId;
-  if (organizationId != null) {
-    normalized.organizationId = organizationId;
-    normalized.activeOrganizationId = user.activeOrganizationId ?? organizationId;
+  const organizationId = normalized.organization_id ?? normalized.active_organization_id;
+  if (!type.isNone(organizationId)) {
+    normalized.organization_id = organizationId;
+    normalized.active_organization_id = normalized.active_organization_id ?? organizationId;
   }
   return normalized;
 }

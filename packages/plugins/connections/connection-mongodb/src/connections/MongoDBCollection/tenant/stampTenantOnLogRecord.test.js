@@ -19,8 +19,8 @@ import stampTenantOnLogRecord from './stampTenantOnLogRecord.js';
 test('stampTenantOnLogRecord stamps the tenant field onto the record', () => {
   const record = { requestId: 'r1', type: 'MongoDBInsertOne' };
   expect(
-    stampTenantOnLogRecord({ record, tenant: { field: 'organizationId', value: 'org_a' } })
-  ).toEqual({ requestId: 'r1', type: 'MongoDBInsertOne', organizationId: 'org_a' });
+    stampTenantOnLogRecord({ record, tenant: { field: 'organization_id', value: 'org_a' } })
+  ).toEqual({ requestId: 'r1', type: 'MongoDBInsertOne', organization_id: 'org_a' });
 });
 
 test('stampTenantOnLogRecord returns the record unchanged when tenant is null', () => {

@@ -16,14 +16,14 @@
 
 import applyTenantToChangeStream from './applyTenantToChangeStream.js';
 
-const tenant = { field: 'organizationId', value: 'org_a' };
+const tenant = { field: 'organization_id', value: 'org_a' };
 
 test('prepends the tenant $match against fullDocument and forces updateLookup', () => {
   expect(
     applyTenantToChangeStream({ pipeline: [{ $match: { operationType: 'insert' } }], tenant })
   ).toEqual({
     pipeline: [
-      { $match: { 'fullDocument.organizationId': 'org_a' } },
+      { $match: { 'fullDocument.organization_id': 'org_a' } },
       { $match: { operationType: 'insert' } },
     ],
     fullDocument: 'updateLookup',
@@ -32,37 +32,37 @@ test('prepends the tenant $match against fullDocument and forces updateLookup', 
 
 test('handles an undefined pipeline', () => {
   expect(applyTenantToChangeStream({ pipeline: undefined, tenant })).toEqual({
-    pipeline: [{ $match: { 'fullDocument.organizationId': 'org_a' } }],
+    pipeline: [{ $match: { 'fullDocument.organization_id': 'org_a' } }],
     fullDocument: 'updateLookup',
   });
 });
 
 test('throws when the tenant field is authored in the pipeline', () => {
   expect(() =>
-    applyTenantToChangeStream({ pipeline: [{ $match: { organizationId: 'org_b' } }], tenant })
+    applyTenantToChangeStream({ pipeline: [{ $match: { organization_id: 'org_b' } }], tenant })
   ).toThrow(
-    'Tenant field "organizationId" can not be set in a change stream pipeline on a tenant connection - the tenant wall stamps and filters it mechanically.'
+    'Tenant field "organization_id" can not be set in a change stream pipeline on a tenant connection - the tenant wall stamps and filters it mechanically.'
   );
 });
 
 test('throws when the fullDocument tenant path is authored in the pipeline', () => {
   expect(() =>
     applyTenantToChangeStream({
-      pipeline: [{ $match: { 'fullDocument.organizationId': 'org_b' } }],
+      pipeline: [{ $match: { 'fullDocument.organization_id': 'org_b' } }],
       tenant,
     })
   ).toThrow(
-    'Tenant field "fullDocument.organizationId" can not be set in a change stream pipeline'
+    'Tenant field "fullDocument.organization_id" can not be set in a change stream pipeline'
   );
 });
 
 test('throws when the tenant field is authored nested in the pipeline', () => {
   expect(() =>
     applyTenantToChangeStream({
-      pipeline: [{ $match: { $or: [{ operationType: 'insert' }, { organizationId: 'x' }] } }],
+      pipeline: [{ $match: { $or: [{ operationType: 'insert' }, { organization_id: 'x' }] } }],
       tenant,
     })
-  ).toThrow('Tenant field "organizationId" can not be set in a change stream pipeline');
+  ).toThrow('Tenant field "organization_id" can not be set in a change stream pipeline');
 });
 
 test('uses the custom tenant field name', () => {
@@ -78,7 +78,7 @@ test('refuses an authored verdict — tenant: authored is aggregation-only', () 
   expect(() =>
     applyTenantToChangeStream({
       pipeline: [],
-      tenant: { field: 'organizationId', value: 'org_a', authored: true },
+      tenant: { field: 'organization_id', value: 'org_a', authored: true },
     })
   ).toThrow('"tenant: authored" applies only to aggregation requests');
 });

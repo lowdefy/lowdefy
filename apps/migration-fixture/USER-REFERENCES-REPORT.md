@@ -15,7 +15,7 @@ paths, **C** `userFields`-projected custom fields (cross-referenced against the 
 - `pages/profile.yaml:profile/full_name` — _user read: `family_name` (A, inside `_string.concat`) → not in the session; persist onto the `contact` record via a signup endpoint hook and read from the contact collection.
 - `pages/profile.yaml:profile/username` — _user read: `preferred_username` (A) → not in the session; persist onto the `contact` record via a signup endpoint hook and read from the contact collection.
 - `pages/profile.yaml:profile/photo` — _user read: `picture` (A, inside `_string.concat`) → `_user.image` (populated by BetterAuth from the provider).
-- `pages/profile.yaml:profile/verified` — _user read: `email_verified` (A, inside `_if.test`) → `_user.emailVerified`.
+- `pages/profile.yaml:profile/verified` — _user read: `email_verified` (A, inside `_if.test`) → `_user.email_verified` — unchanged; already the caller field name.
 - `pages/profile.yaml:profile/phone` — _user read: `phone_number` (A) → not in the session; persist onto the `contact` record via a signup endpoint hook (profile/display data) and read from the contact collection.
 - `pages/profile.yaml:profile/country` — _user read: `address.country` (A, address sub-path) → not in the session; persist onto the `contact` record via a signup endpoint hook and read from the contact collection.
 - `pages/profile.yaml:profile/locale` — _user read: `locale` (A, object form with `default: en`) → not in the session; persist onto the `contact` record via a signup endpoint hook (or into attributes if it drives authorization) and read from there.

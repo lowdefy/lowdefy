@@ -61,10 +61,10 @@ function refusalError({ stageKey, field, position }) {
       - equals:
           path: ${field}
           value:
-            _user: organizationId`
+            _user: organization_id`
       : `  ${position}:
     ${field}:
-      _user: organizationId`;
+      _user: organization_id`;
   return new Error(
     `Aggregation pipelines on a tenant connection can not contain "${stageKey}" unless the request declares "tenant: authored" - the tenant wall does not scope this stage mechanically. Author the organization clause inside the stage:
 ${snippet}

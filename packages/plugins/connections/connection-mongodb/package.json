@@ -49,6 +49,7 @@
   "dependencies": {
     "@lowdefy/helpers": "5.5.1",
     "better-auth": "1.6.23",
+    "change-case": "5.4.0",
     "mongodb": "7.2.0",
     "saslprep": "1.0.3"
   },

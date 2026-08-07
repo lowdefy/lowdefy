@@ -128,7 +128,7 @@ blocks:
             params:
               code:
                 _state: totp_code
-          # Re-resolve the caller so _user.twoFactorEnrolled flips to true and
+          # Re-resolve the caller so _user.two_factor_enrolled flips to true and
           # the enrolment floor lets the callbackUrl page through.
           - id: resync_after_totp
             type: UpdateSession
@@ -183,7 +183,7 @@ blocks:
               name:
                 _state: passkey_name
           # A passkey count is read live per request, but re-sync anyway so
-          # _user.twoFactorEnrolled reflects it without a reload before the hop.
+          # _user.two_factor_enrolled reflects it without a reload before the hop.
           - id: resync_after_passkey
             type: UpdateSession
           - id: go_to_callback_after_passkey

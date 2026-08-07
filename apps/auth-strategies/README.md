@@ -85,7 +85,7 @@ call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
    ```
 
    returns the full resolved caller:
-   `{"user":{"id":"apiKey:partner-access:acme","authMethod":"apiKey","strategyId":"partner-access","roles":["partner"],"attributes":{"branches":["north","east"]}}}`.
+   `{"user":{"id":"apiKey:partner-access:acme","auth_method":"apiKey","strategy_id":"partner-access","roles":["partner"],"attributes":{"branches":["north","east"]}}}`.
 
 5. **Valid credentials, wrong roles → opaque "does not exist"**: the same
    partner key on the `api-user`-gated endpoint:
@@ -114,7 +114,7 @@ call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
 
    returns `{"data":"service-report","caller":"service-1"}` - `_user.id` is
    the token's `sub` claim. On `/api/endpoints/caller` the same token shows
-   `authMethod: jwt`, `strategyId: service-jwt`, and
+   `auth_method: jwt`, `strategy_id: service-jwt`, and
    `roles: ["api-user","reporting"]` - the strategy's static `api-user`
    unioned with the claim-derived `reporting`.
 
@@ -141,7 +141,7 @@ call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
      http://localhost:3000/api/endpoints/caller
    ```
 
-   returns `authMethod: jwt`, `strategyId: external-idp`,
+   returns `auth_method: jwt`, `strategy_id: external-idp`,
    `roles: ["api-user"]` (claim-derived via the nested
    `realm_access.roles` path - the strategy grants no static roles), and
    `attributes: {"branches":["west"]}` (claim-mapped via
@@ -153,7 +153,7 @@ call() { curl -s -X POST -H 'content-type: application/json' -d '{}' "$@"; }
 
 11. **Strategy order and header separation**: present both a valid API key
     and a valid Bearer token on `/api/endpoints/caller` - the caller is the
-    API key's (`strategyId: partner-access`), because strategies resolve in
+    API key's (`strategy_id: partner-access`), because strategies resolve in
     config order and `partner-access` is listed first. The two credentials
     never compete for one header: `apiKey` reads `X-API-Key`, `jwt` reads
     `Authorization`.

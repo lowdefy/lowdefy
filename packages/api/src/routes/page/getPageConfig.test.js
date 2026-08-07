@@ -186,7 +186,7 @@ test('getPageConfig, existing page, enrol_required, returns enrol_required with 
   const enrolContext = testContext({
     readConfigFile: mockReadConfigFile,
     authEnforcement: { twoFactorRequired: true, twoFactorEnrolPageId: 'enrol' },
-    user: { sub: 'sub', roles: [], twoFactorEnrolled: false },
+    user: { sub: 'sub', roles: [], two_factor_enrolled: false },
   });
   const res = await getPageConfig(enrolContext, { pageId: 'pageId' });
   expect(res).toEqual({ status: 'enrol_required' });

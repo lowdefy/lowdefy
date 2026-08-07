@@ -1571,6 +1571,9 @@ importers:
       better-auth:
         specifier: 1.6.23
         version: 1.6.23(@opentelemetry/api@1.9.1)(better-sqlite3@12.11.1)(mongodb@7.2.0)(mysql2@3.22.3(@types/node@24.13.3))(next@16.1.6(@opentelemetry/api@1.9.1)(@playwright/test@1.59.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(pg@8.20.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      change-case:
+        specifier: 5.4.0
+        version: 5.4.0
       mongodb:
         specifier: 7.2.0
         version: 7.2.0
@@ -3054,6 +3057,9 @@ importers:
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../errors
+      change-case:
+        specifier: 5.4.0
+        version: 5.4.0
       intl-messageformat:
         specifier: 11.2.7
         version: 11.2.7

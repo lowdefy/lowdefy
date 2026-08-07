@@ -40,7 +40,7 @@ blocks:
       html:
         _if:
           test:
-            _user: email_verified # A → _user.emailVerified
+            _user: email_verified # A → _user.email_verified
           then: Email verified
           else: Email not verified
   - id: phone

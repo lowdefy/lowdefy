@@ -24,7 +24,7 @@ lowdefy: local
 # change/reset, two-factor with TOTP + backup codes, passkeys, session
 # revocation, AcceptInvitation), user.profile self-service through
 # UpdateUserProfile, the per-step per-organization step floor, _user.roles
-# (member.appRoles) and _user.orgRoles (member.role) as separate fields, the
+# (member.appRoles) and _user.org_roles (member.role) as separate fields, the
 # UpdateMemberOrgRole grant surface, the account-kit local module
 # contributing auth wiring from its manifest, and the _build.authConfig
 # build operator (the module's login-methods page).
@@ -36,7 +36,7 @@ lowdefy: local
 # floor and its callbackUrl redirect; two-factor-enrol as the ONE protected
 # auth page (session-holding but factor-less), calling no Lowdefy
 # request/endpoint because an unenrolled caller is refused at all of them;
-# _user.twoFactorEnrolled resolving true once a factor is held; the two admin
+# _user.two_factor_enrolled resolving true once a factor is held; the two admin
 # recovery routines (ResetUserTwoFactor paired mandatorily with
 # RevokeUserSessions, and RevokeUserPasskeys with its optional passkeyId); and
 # the signed-out existence fork (a protected-by-default app sends an anonymous
@@ -163,7 +163,7 @@ auth:
   # member.appRoles, reach config as _user.roles, and are the only source the
   # page and endpoint gates below match against. They say nothing about who
   # may administer an organization - that is member.role, BetterAuth's
-  # owner/admin/member tier, which reaches config as _user.orgRoles and which
+  # owner/admin/member tier, which reaches config as _user.org_roles and which
   # no gate reads.
   #
   # There is no app-wide administering role to configure. Every auth step

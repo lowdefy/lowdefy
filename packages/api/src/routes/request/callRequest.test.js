@@ -414,7 +414,7 @@ test('tenant connection passes the tenant verdict to the resolver', async () => 
     operators,
     organization: { policy: 'tenant' },
     secrets,
-    user: { id: 'id', organizationId: 'org-1' },
+    user: { id: 'id', organization_id: 'org-1' },
   });
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
@@ -431,7 +431,7 @@ test('tenant connection passes the tenant verdict to the resolver', async () => 
 
   await callRequest(organizationContext, defaultParams);
   expect(mockTestRequest.mock.calls[0][0].tenant).toEqual({
-    field: 'organizationId',
+    field: 'organization_id',
     value: 'org-1',
   });
 });
@@ -473,7 +473,7 @@ test('tenant connection resolves a null verdict under the pinned policy', async 
     operators,
     organization: { policy: 'pinned' },
     secrets,
-    user: { id: 'id', organizationId: 'org-1' },
+    user: { id: 'id', organization_id: 'org-1' },
   });
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({

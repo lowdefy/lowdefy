@@ -112,7 +112,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.'
   );
 });
 
@@ -128,7 +128,7 @@ test('buildRoleCatalog throws when a gate references an undeclared role under pi
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.'
   );
 });
 
@@ -144,7 +144,7 @@ test('buildRoleCatalog throws for an undeclared built-in tier gate reference und
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.'
   );
 });
 
@@ -160,7 +160,7 @@ test('buildRoleCatalog throws for an undeclared built-in tier gate reference und
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+    'Auth gate references role "owner", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.'
   );
 });
 
@@ -176,7 +176,7 @@ test('buildRoleCatalog throws for an undeclared custom gate reference under tena
     },
   };
   expect(() => buildRoleCatalog({ components })).toThrow(
-    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.orgRoles.'
+    'Auth gate references role "auditor", which is not declared in auth.roles. Gate on an app role declared in auth.roles; the organization tier (owner/admin/member) is not a gate source - it reaches apps as _user.org_roles.'
   );
 });
 

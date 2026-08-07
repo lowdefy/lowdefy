@@ -11,7 +11,7 @@ The gate: prompt 07 run against this fixture must report **exactly these 19 read
 | `pages/profile.yaml` block `full_name` | `_user: family_name` | contact record |
 | `pages/profile.yaml` block `username` | `_user: preferred_username` | contact record |
 | `pages/profile.yaml` block `photo` | `_user: picture` | `_user.image` |
-| `pages/profile.yaml` block `verified` | `_user: email_verified` | `_user.emailVerified` |
+| `pages/profile.yaml` block `verified` | `_user: email_verified` | `_user.email_verified` — unchanged; already the caller field name |
 | `pages/profile.yaml` block `phone` | `_user: phone_number` | contact record |
 | `pages/profile.yaml` block `country` | `_user: address.country` | contact record |
 | `pages/profile.yaml` block `locale` | `_user: { key: locale }` (object form) | contact record or attributes |

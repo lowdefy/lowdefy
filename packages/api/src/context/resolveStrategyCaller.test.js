@@ -49,7 +49,7 @@ test('resolveStrategyCaller tries strategies in config order and the first match
   ];
   const caller = await resolveStrategyCaller({ headers: {}, logger, strategies });
   expect(caller.id).toBe('caller-2');
-  expect(caller.strategyId).toBe('second');
+  expect(caller.strategy_id).toBe('second');
   expect(strategies[2].verify).not.toHaveBeenCalled();
 });
 
@@ -66,8 +66,8 @@ test('resolveStrategyCaller builds the apiKey caller shape from static grants', 
   const caller = await resolveStrategyCaller({ headers: {}, logger, strategies });
   expect(caller).toEqual({
     id: 'apiKey:partner-access:acme',
-    authMethod: 'apiKey',
-    strategyId: 'partner-access',
+    auth_method: 'apiKey',
+    strategy_id: 'partner-access',
     roles: ['partner'],
     attributes: { branches: ['north', 'east'] },
   });
@@ -101,7 +101,7 @@ test('resolveStrategyCaller merges static attributes with claim-mapped attribute
   expect(caller.attributes).toEqual({ branches: ['claim'], region: 'eu', team: 'ops' });
 });
 
-test('resolveStrategyCaller does not let mapped user fields clobber authMethod, strategyId, roles or attributes', async () => {
+test('resolveStrategyCaller does not let mapped user fields clobber auth_method, strategy_id, roles or attributes', async () => {
   const logger = mockLogger();
   const strategies = [
     mockStrategy({
@@ -120,10 +120,40 @@ test('resolveStrategyCaller does not let mapped user fields clobber authMethod, 
     }),
   ];
   const caller = await resolveStrategyCaller({ headers: {}, logger, strategies });
-  expect(caller.authMethod).toBe('jwt');
-  expect(caller.strategyId).toBe('service-jwt');
+  expect(caller.auth_method).toBe('jwt');
+  expect(caller.strategy_id).toBe('service-jwt');
   expect(caller.roles).toEqual(['api-user']);
   expect(caller.attributes).toEqual({});
+});
+
+test('resolveStrategyCaller does not let snake_case-authored mapped user fields clobber auth_method or strategy_id', async () => {
+  const logger = mockLogger();
+  const strategies = [
+    mockStrategy({
+      id: 'service-jwt',
+      type: 'jwt',
+      match: { user: { id: 'svc', auth_method: 'spoofed', strategy_id: 'spoofed' } },
+    }),
+  ];
+  const caller = await resolveStrategyCaller({ headers: {}, logger, strategies });
+  expect(caller.auth_method).toBe('jwt');
+  expect(caller.strategy_id).toBe('service-jwt');
+});
+
+test('resolveStrategyCaller snake_cases mapped user fields without touching the attributes bag', async () => {
+  const logger = mockLogger();
+  const strategies = [
+    mockStrategy({
+      id: 'service-jwt',
+      type: 'jwt',
+      match: { user: { id: 'svc', emailVerified: true } },
+      attributes: { tenantId: 't1' },
+    }),
+  ];
+  const caller = await resolveStrategyCaller({ headers: {}, logger, strategies });
+  expect(caller.email_verified).toBe(true);
+  expect(caller).not.toHaveProperty('emailVerified');
+  expect(caller.attributes).toEqual({ tenantId: 't1' });
 });
 
 test('resolveStrategyCaller logs which strategy authenticated the request', async () => {

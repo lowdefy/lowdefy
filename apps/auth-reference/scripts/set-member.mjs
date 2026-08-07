@@ -24,11 +24,11 @@
 
   The member row carries two unrelated authorities in two fields, and this
   script writes each on its own flag:
-    --app-roles  member.appRoles, a native array of the app's own role strings.
+    --app-roles  member.app_roles, a native array of the app's own role strings.
                  They reach config as _user.roles and are what auth.pages.roles
                  and auth.api.roles gate on. Nothing validates them.
     --org-role   member.role, BetterAuth's owner/admin/member tier. It reaches
-                 config as _user.orgRoles, no gate reads it, and it is what
+                 config as _user.org_roles, no gate reads it, and it is what
                  every auth step's authority is checked against - per
                  organization, from the caller's row in the target org.
 
@@ -106,24 +106,26 @@ try {
   const organizationId = organization._id;
 
   if (remove) {
-    const result = await db.collection('user-members').deleteOne({ userId, organizationId });
+    const result = await db
+      .collection('user-members')
+      .deleteOne({ user_id: userId, organization_id: organizationId });
     console.log(`Removed ${result.deletedCount} member row for ${email} in ${orgSlug}.`);
   } else {
-    const set = { userId, organizationId };
-    if (appRoles) set.appRoles = appRoles.split(',').map((role) => role.trim());
+    const set = { user_id: userId, organization_id: organizationId };
+    if (appRoles) set.app_roles = appRoles.split(',').map((role) => role.trim());
     if (orgRole) set.role = orgRole;
     if (memberAttributes) set.attributes = JSON.parse(memberAttributes);
     await db.collection('user-members').updateOne(
-      { userId, organizationId },
+      { user_id: userId, organization_id: organizationId },
       {
         $set: set,
-        $setOnInsert: { createdAt: new Date() },
+        $setOnInsert: { created_at: new Date() },
       },
       { upsert: true }
     );
     console.log(
-      `Set member row for ${email} in ${orgSlug} (appRoles: ${JSON.stringify(
-        set.appRoles
+      `Set member row for ${email} in ${orgSlug} (app_roles: ${JSON.stringify(
+        set.app_roles
       )}, role: ${JSON.stringify(set.role)}).`
     );
   }
