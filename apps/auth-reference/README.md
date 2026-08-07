@@ -155,7 +155,7 @@ http://localhost:3000/api/endpoints/audit-login` answers "does not exist"),
     sign up and verify `after-throw@example.test`, then log in. The audit
     hook throws (deliberately, see `api/audit-login.yaml`) and the sign-in
     call surfaces an error - but the session row was already committed:
-    `db['user-sessions'].find({}).sort({createdAt: -1}).limit(1)` shows it.
+    `db['user-sessions'].find({}).sort({created_at: -1}).limit(1)` shows it.
     This is why fallible after-hook work belongs in `:try` - the audit
     write itself is wrapped so an unreachable database never breaks login.
 16. **Build validation**: each of these edits to `auth.hooks` in
@@ -267,7 +267,7 @@ the old one) so pre-phase-3 users do not confuse the wall.
     `_user.contact_id` in config.
 24. **Expired invitation gets the normal rejection**: expire a pending
     invitation
-    (`db["user-invitations"].updateOne({email: "<x>"}, {$set: {expiresAt: new Date(0)}})`),
+    (`db["user-invitations"].updateOne({email: "<x>"}, {$set: {expires_at: new Date(0)}})`),
     then sign in as that (member-less) user on org-b - inline
     MEMBERSHIP_REQUIRED; recovery is a re-invite.
 25. **Merge-on-signup (both bindings)**: create a contact on `/contacts`
@@ -505,10 +505,10 @@ caller. Set system: true...`) while the session row still committed
     mongosh auth-reference --eval '
       const email = "<invitee>"; const userId = "<deleted user id>";
       print("users:", db.users.countDocuments({ email }));
-      print("members:", db["user-members"].countDocuments({ userId }));
+      print("members:", db["user-members"].countDocuments({ user_id: userId }));
       print("invitations:", db["user-invitations"].countDocuments({ email, status: "pending" }));
-      print("sessions:", db["user-sessions"].countDocuments({ userId }));
-      print("accounts:", db["user-accounts"].countDocuments({ userId }));
+      print("sessions:", db["user-sessions"].countDocuments({ user_id: userId }));
+      print("accounts:", db["user-accounts"].countDocuments({ user_id: userId }));
       print("contacts:", db["user-contacts"].countDocuments({ email }));'
     ```
 
@@ -708,7 +708,7 @@ virtual authenticator environment".
     `secret` query param of the totpURI is the manual-entry key), enter
     the current TOTP code, and press **Verify code** - enrolment is
     confirmed (`TwoFactorVerify`'s enrolment role).
-    `db.users.findOne({email: "<you>"}, {twoFactorEnabled: 1})` shows
+    `db.users.findOne({email: "<you>"}, {two_factor_enabled: 1})` shows
     `true`, and `db["user-two-factors"]` has the secret row.
 
 54. **The 2FA sign-in challenge**: log out and sign in with email and
@@ -881,7 +881,7 @@ not hold member: [list] in organization "org-a".` An app can no longer
     **App roles** and `admin` as the **Org role**. As the invitee: sign
     up, verify, and accept on `/accept-invitation?invitationId=<id>` -
     immediately after the accept,
-    `db["user-members"].findOne({ userId: "<invitee id>" })` shows
+    `db["user-members"].findOne({ user_id: "<invitee id>" })` shows
     `app_roles: ["user-admin"]` and `role: "admin"`: the accept path copied
     the app roles off the invitation and minted the org tier from its
     `role`, with no admin edit in between. The invitee's very first session
@@ -1125,7 +1125,7 @@ unenrolled caller) and the unique `user-two-factors { userId: 1 }` index.
     You are returned to the `callbackUrl` page (`/dashboard`) and it now
     renders. `_user.two_factor_enrolled` reads `true` (the `/dashboard` block
     that prints `_user` shows it), and
-    `db.users.findOne({email: "<you>"}, {twoFactorEnabled: 1})` is `true`.
+    `db.users.findOne({email: "<you>"}, {two_factor_enabled: 1})` is `true`.
 82. **Passwordless enrol, and a passkey satisfies the floor**: sign in as a
     SECOND unenrolled user who is **passwordless** (an OAuth or magic-link
     account that never set a password) and enrol TOTP on `/two-factor-enrol`
@@ -1167,14 +1167,14 @@ http://localhost:3000/api/endpoints/partner-data` returns its report, not a
     ```sh
     mongosh auth-reference --eval '
       const userId = "<that user id>";
-      print("two-factors:", db["user-two-factors"].countDocuments({ userId }));
-      print("twoFactorEnabled:", db.users.findOne({ _id: userId }).twoFactorEnabled);
-      print("sessions:", db["user-sessions"].countDocuments({ userId }));
+      print("two-factors:", db["user-two-factors"].countDocuments({ user_id: userId }));
+      print("two_factor_enabled:", db.users.findOne({ _id: userId }).two_factor_enabled);
+      print("sessions:", db["user-sessions"].countDocuments({ user_id: userId }));
       print("trust-device:", db["user-verifications"].countDocuments({ value: userId, identifier: /^trust-device-/ }));
       print("2fa (unrelated):", db["user-verifications"].countDocuments({ value: userId, identifier: /^2fa-/ }));'
     ```
 
-    `two-factors: 0`, `twoFactorEnabled: false`, `sessions: 0`, and
+    `two-factors: 0`, `two_factor_enabled: false`, `sessions: 0`, and
     `trust-device: 0` - while any unrelated in-flight `2fa-*` verification
     rows for the same user **survive** (the reset deletes only the
     `trust-device-` records, by the identifier prefix). In the second browser,
@@ -1187,9 +1187,9 @@ http://localhost:3000/api/endpoints/partner-data` returns its report, not a
     scenario 82 passkey user. First register a second passkey for them (as
     that user, on `/security` or `/two-factor-enrol`) so there are two. Use
     **Revoke one passkey** with a specific `passkeyId` (from
-    `db["user-passkeys"].find({userId: "<id>"})`) - only that row is deleted.
+    `db["user-passkeys"].find({user_id: "<id>"})`) - only that row is deleted.
     Then **Revoke all passkeys** (no `passkeyId`) - the rest are gone.
-    Confirm `db["user-passkeys"].countDocuments({userId: "<id>"})` is `0`; on
+    Confirm `db["user-passkeys"].countDocuments({user_id: "<id>"})` is `0`; on
     the user's next request they are routed to `/two-factor-enrol` (no factor
     left). This routine revokes **no** sessions - passkey revocation is
     surgical, and ending sessions is the separate **Revoke sessions** control's
