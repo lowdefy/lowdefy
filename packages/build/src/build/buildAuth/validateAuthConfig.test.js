@@ -666,6 +666,34 @@ test('validateAuthConfig throws when org is set under the tenant policy', () => 
   );
 });
 
+test('validateAuthConfig throws when create is set under the pinned policy', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'pinned', org: 'team-portal', create: 'auto' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.create" applies only to the "tenant" policy'
+  );
+});
+
+test('validateAuthConfig throws when organizations.create is not a known creation mode', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant', create: 'self-serve' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.create" should be "auto" or "operator".'
+  );
+});
+
 test('validateAuthConfig throws when organizations.policy is not a known policy', () => {
   const components = {
     auth: {

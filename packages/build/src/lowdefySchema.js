@@ -1490,17 +1490,27 @@ export default {
             },
             signup: {
               type: 'string',
+              description:
+                'Whether the deployment admits uninvited sign-ups. Valid under both policies: "invite-only" refuses sign-ups without an invitation; "open" admits everyone.',
               enum: ['invite-only', 'open'],
               errorMessage: {
                 type: 'Auth "organizations.signup" should be a string.',
                 enum: 'Auth "organizations.signup" should be "invite-only" or "open".',
               },
             },
+            create: {
+              type: 'string',
+              enum: ['auto', 'operator'],
+              errorMessage: {
+                type: 'Auth "organizations.create" should be a string.',
+                enum: 'Auth "organizations.create" should be "auto" or "operator".',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org" and "signup".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup" and "create".',
           },
         },
         dev: {

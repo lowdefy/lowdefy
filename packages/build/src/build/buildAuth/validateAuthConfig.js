@@ -221,6 +221,12 @@ function validateAuthConfig({ components }) {
       { configKey: auth.organizations['~k'] ?? configKey }
     );
   }
+  if (auth.organizations?.policy === 'pinned' && !type.isNone(auth.organizations.create)) {
+    throw new ConfigError(
+      'Auth "organizations.create" applies only to the "tenant" policy - under "pinned" the active organization is ensured at startup, so there is no creation mode to set.',
+      { configKey: auth.organizations['~k'] ?? configKey }
+    );
+  }
 
   validateMutualExclusivity({ components, entity: 'api' });
   validateMutualExclusivity({ components, entity: 'pages' });
