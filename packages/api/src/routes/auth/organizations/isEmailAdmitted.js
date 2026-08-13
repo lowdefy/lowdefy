@@ -23,23 +23,27 @@ import findPendingInvitation from './findPendingInvitation.js';
 // session.create wall (which passes a userId), the user.create.before gate and
 // the magic-link send gate (which pass an email, before any user exists).
 //
-// Admission is restrictive only under pinned + invite-only - the internal/team
-// default. Open signup auto-joins and tenant is self-serve, so both admit
-// everyone and the predicate short-circuits to true, leaving those flows
-// untouched.
+// Admission is restrictive under invite-only (either policy). Open signup
+// auto-joins under both policies, so the predicate short-circuits to true and
+// leaves those flows untouched.
 //
-// Under pinned + invite-only an email is admitted when there is either a member
-// row in the pinned org (keyed by the given userId, or by the user resolved
-// from the email) or a pending, unexpired invitation for the email. The email
-// is lowercased once at entry to match BetterAuth's lowercased-stored user.email
-// and the org plugin's lowercased invitation storage, so no case-variant address
-// is wrongly suppressed or wrongly admitted.
+// An email is admitted when there is either a member row (keyed by the given
+// userId, or by the user resolved from the email) or a pending, unexpired
+// invitation for the email. Under pinned the scope is the pinned org; under
+// tenant it is membership-anywhere or invitation-anywhere, since admission gates
+// deployment-global account existence and there is no target org at signup time.
+// The email is lowercased once at entry to match BetterAuth's lowercased-stored
+// user.email and the org plugin's lowercased invitation storage, so no
+// case-variant address is wrongly suppressed or wrongly admitted.
 async function isEmailAdmitted({ email, userId, organizations, auth, adapter, internalAdapter }) {
-  if (organizations.policy !== 'pinned' || organizations.signup !== 'invite-only') {
+  if (organizations.signup !== 'invite-only') {
     return true;
   }
 
-  const organization = await ensureOrganization({ auth, slug: organizations.org });
+  const pinned = organizations.policy === 'pinned';
+  const organization = pinned
+    ? await ensureOrganization({ auth, slug: organizations.org })
+    : undefined;
 
   const normalizedEmail = type.isString(email) ? email.toLowerCase() : undefined;
 
@@ -59,13 +63,11 @@ async function isEmailAdmitted({ email, userId, organizations, auth, adapter, in
   }
 
   if (!type.isNone(memberUserId)) {
-    const member = await adapter.findOne({
-      model: 'member',
-      where: [
-        { field: 'userId', value: memberUserId },
-        { field: 'organizationId', value: organization.id },
-      ],
-    });
+    const where = [{ field: 'userId', value: memberUserId }];
+    if (pinned) {
+      where.push({ field: 'organizationId', value: organization.id });
+    }
+    const member = await adapter.findOne({ model: 'member', where });
     if (member) {
       return true;
     }
@@ -77,7 +79,7 @@ async function isEmailAdmitted({ email, userId, organizations, auth, adapter, in
   const invitation = await findPendingInvitation({
     adapter,
     email: invitationEmail,
-    organizationId: organization.id,
+    organizationId: pinned ? organization.id : undefined,
   });
   return !type.isNone(invitation);
 }

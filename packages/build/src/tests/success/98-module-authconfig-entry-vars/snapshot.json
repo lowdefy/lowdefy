@@ -44,6 +44,8 @@
     },
     "organizations": {
       "policy": "tenant",
+      "signup": "open",
+      "create": "auto",
       "~k": "c"
     },
     "configured": true,

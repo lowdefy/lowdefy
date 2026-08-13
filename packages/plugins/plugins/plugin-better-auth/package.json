@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.5.1",
+    "better-auth": "1.6.23",
     "jose": "^6.2.3"
   },
   "devDependencies": {

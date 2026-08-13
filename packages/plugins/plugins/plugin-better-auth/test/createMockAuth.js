@@ -15,18 +15,18 @@
 */
 
 function createMockAuth({ adapter = {}, adminEndpoints = {}, organizationEndpoints = {} } = {}) {
-  const authContext = {
-    adapter,
-    options: {
-      database: { real: 'database' },
-      secondaryStorage: { real: 'secondaryStorage' },
-      plugins: [
-        { id: 'admin', endpoints: adminEndpoints },
-        { id: 'organization', endpoints: organizationEndpoints },
-      ],
-    },
+  // In a real BetterAuth instance auth.options and (await auth.$context).options
+  // reference the same options object; the mock shares one to match.
+  const options = {
+    database: { real: 'database' },
+    secondaryStorage: { real: 'secondaryStorage' },
+    plugins: [
+      { id: 'admin', endpoints: adminEndpoints },
+      { id: 'organization', endpoints: organizationEndpoints, options: {} },
+    ],
   };
-  return { auth: { $context: Promise.resolve(authContext) }, authContext };
+  const authContext = { adapter, options };
+  return { auth: { $context: Promise.resolve(authContext), options }, authContext };
 }
 
 export default createMockAuth;

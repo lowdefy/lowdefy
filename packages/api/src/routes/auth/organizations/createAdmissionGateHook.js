@@ -30,8 +30,8 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // its code) on the error-callback redirect, so equal message and code land a
 // consistent ?error=MEMBERSHIP_REQUIRED across every provider.
 //
-// A no-op under open and tenant (isEmailAdmitted returns admitted), so it never
-// blocks a legitimate open signup or self-serve tenant creation.
+// A no-op under open (isEmailAdmitted returns admitted), so it never blocks a
+// legitimate open signup.
 function createAdmissionGateHook({ getAuth, organizations }) {
   return async function admissionGateHook(user) {
     const auth = getAuth();

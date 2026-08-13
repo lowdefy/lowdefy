@@ -165,7 +165,7 @@ test('setAuthDefaults does not overwrite explicit organizations values under pin
   });
 });
 
-test('setAuthDefaults sets no org or signup defaults under the tenant policy', () => {
+test('setAuthDefaults defaults signup to open and create to auto under the tenant policy', () => {
   const components = {
     auth: {
       configured: true,
@@ -173,7 +173,33 @@ test('setAuthDefaults sets no org or signup defaults under the tenant policy', (
     },
   };
   const res = setAuthDefaults({ components });
-  expect(res.auth.organizations).toEqual({ policy: 'tenant' });
+  expect(res.auth.organizations).toEqual({ policy: 'tenant', signup: 'open', create: 'auto' });
+});
+
+test('setAuthDefaults sets no org default under the tenant policy', () => {
+  const components = {
+    auth: {
+      configured: true,
+      organizations: { policy: 'tenant' },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations.org).toBeUndefined();
+});
+
+test('setAuthDefaults does not overwrite explicit signup or create under the tenant policy', () => {
+  const components = {
+    auth: {
+      configured: true,
+      organizations: { policy: 'tenant', signup: 'invite-only', create: 'operator' },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.organizations).toEqual({
+    policy: 'tenant',
+    signup: 'invite-only',
+    create: 'operator',
+  });
 });
 
 test('setAuthDefaults does not add emailAndPassword or magicLink blocks when absent', () => {

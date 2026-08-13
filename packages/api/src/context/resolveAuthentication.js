@@ -33,11 +33,18 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // every request so membership removal and role changes take effect
 // immediately - roles are deliberately not stamped onto the session. A
 // session whose user holds no member row in the active org resolves to
-// unauthenticated: an invitee's pre-accept session (the session.create
-// carve-out), a stale cookie from another app's deployment, and a member
-// removed mid-session are all treated as logged out, not logged-in with no
-// roles. Under policy: pinned, a session whose active organization is not this
-// app's organization is treated the same way, member row there or not.
+// unauthenticated: a stale cookie from another app's deployment and a member
+// removed mid-session are treated as logged out, not logged-in with no roles.
+// Under policy: pinned, a session whose active organization is not this app's
+// organization is treated the same way, member row there or not.
+//
+// A session carrying no active organization at all differs by policy. Under
+// pinned it resolves to unauthenticated on the same reasoning. Under tenant it
+// resolves to a caller carrying identity, no membership and no roles, marked
+// awaitingOrganization - the invited user before they accept.
+// createAuthorizeOutcome refuses that caller wherever auth.public is false, so
+// the marker widens no access; it exists so the always-public accept page can
+// tell an invited user from a stranger.
 //
 // The resolved caller is a record, so its keys are snake_case like every other
 // column an app reads - normalizeCaller applies that once over the whole
@@ -97,10 +104,35 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
   }
   const activeOrganizationId = session.session.activeOrganizationId;
   if (type.isNone(activeOrganizationId)) {
+    // A session with no active organization differs by policy. Under tenant it
+    // is the invited user before they accept - their pre-accept session carries
+    // no organization by design, because they are about to join someone else's.
+    // Resolving them to null leaves the always-public accept page unable to
+    // tell them from a stranger, and that page is the one page they can reach.
+    // They become a caller carrying identity, no membership and no roles,
+    // marked awaitingOrganization - createAuthorizeOutcome refuses that caller
+    // wherever auth.public is false, so the marker widens no access. Under
+    // pinned the state has no meaning: one organization exists, and someone
+    // outside it has no reason to be known to the app.
+    if (getRegisteredOrganization({ auth })?.policy !== 'tenant') {
+      context.logger.debug(
+        `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
+      );
+      context.user = null;
+      return;
+    }
     context.logger.debug(
-      `Session for user "${session.user.id}" has no active organization - resolved unauthenticated.`
+      `Session for user "${session.user.id}" has no active organization under tenant - resolved awaiting organization.`
     );
-    context.user = null;
+    // No member row, so no per-organization attributes and no roles of either
+    // kind - the global attributes ride alone.
+    context.user = normalizeCaller({
+      ...session.user,
+      roles: [],
+      orgRoles: [],
+      attributes: session.user.attributes ?? {},
+      awaitingOrganization: true,
+    });
     return;
   }
   // Under pinned, the active organization must be this app's organization.

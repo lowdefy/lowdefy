@@ -32,8 +32,8 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // email is dispatched and no verification token is minted. The uniform response
 // also makes the "check your email" screen identical whether or not a link was
 // sent, resisting enumeration on this path. When admitted it falls through and
-// the normal send proceeds. A no-op under open and tenant (isEmailAdmitted
-// returns admitted).
+// the normal send proceeds. A no-op under open (isEmailAdmitted returns
+// admitted).
 function createMagicLinkSendGate({ getAuth, organizations }) {
   return async function magicLinkSendGate(ctx) {
     const email = ctx.body?.email;
