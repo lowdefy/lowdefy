@@ -14,13 +14,10 @@
   limitations under the License.
 */
 
-import {
-  AuthenticationError,
-  ConfigError,
-  TwoFactorEnrolmentRequiredError,
-} from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
 
 import authorizeRequest from './authorizeRequest.js';
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 
 const logger = { debug: () => {} };
 const requestConfig = { requestId: 'req', auth: { public: false }, '~k': 'requests[0].auth' };
@@ -66,4 +63,22 @@ test('authorizeRequest throws TwoFactorEnrolmentRequiredError on enrol_required,
     return;
   }
   throw new Error('Expected TwoFactorEnrolmentRequiredError to be thrown');
+});
+
+test('forwards context.pageId so an enrol-page request is exempted and other pages are not', () => {
+  // Wires the real createAuthorizeOutcome so this exercises the pageId forwarding
+  // in authorizeRequest together with the enrol-page exemption it feeds. An
+  // unenrolled caller running a request registered on the enrol page inherits
+  // the page's exemption; the same caller on any other page hits the floor.
+  const enforcement = { twoFactorRequired: true, twoFactorEnrolPageId: 'enrol' };
+  const user = { sub: 'sub', two_factor_enrolled: false };
+  const authorizeOutcome = createAuthorizeOutcome({ authEnforcement: enforcement, user });
+
+  expect(() =>
+    authorizeRequest({ authorizeOutcome, logger, pageId: 'enrol', user }, { requestConfig })
+  ).not.toThrow();
+
+  expect(() =>
+    authorizeRequest({ authorizeOutcome, logger, pageId: 'other', user }, { requestConfig })
+  ).toThrow(TwoFactorEnrolmentRequiredError);
 });

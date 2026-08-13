@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import {
-  AuthenticationError,
-  ConfigError,
-  TwoFactorEnrolmentRequiredError,
-} from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-function authorizeRequest({ authorizeOutcome: authorize, logger, user }, { requestConfig }) {
-  const outcome = authorize(requestConfig);
+function authorizeRequest(
+  { authorizeOutcome: authorize, logger, pageId, user },
+  { requestConfig }
+) {
+  const outcome = authorize(requestConfig, { pageId });
   if (outcome !== 'allow') {
     logger.debug({
       event: 'debug_request_authorize',

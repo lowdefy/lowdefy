@@ -361,6 +361,7 @@ function getBetterAuthConfig({
   if (authConfig.twoFactor?.enabled === true) {
     options.plugins.push(
       twoFactor({
+        allowPasswordless: true,
         issuer: appMeta?.name,
         schema: { twoFactor: { modelName: modelNames.twoFactor } },
       })
