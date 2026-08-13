@@ -17,6 +17,7 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import authorizeAgent from './authorizeAgent.js';
 import authorizeApiEndpoint from '../endpoints/authorizeApiEndpoint.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import runRoutine from '../endpoints/runRoutine.js';
@@ -36,6 +37,7 @@ async function callAgent(
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
   const agentConfig = await getAgentConfig(context, { agentId });
+  authorizeAgent(context, { agentConfig });
 
   const agentContext = {
     conversationId: conversationId ?? undefined,
