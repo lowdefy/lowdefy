@@ -38,6 +38,16 @@ import { ConfigError } from '@lowdefy/errors';
 // getting the page.
 function createAuthorizeOutcome({ authEnforcement, system, user }) {
   const authenticated = !type.isNone(user);
+  // A caller awaiting an organization is signed in and holds no membership -
+  // under tenant, the invited user before they accept (resolveAuthentication).
+  // They are known so the always-public accept page can address them, and
+  // refused everywhere auth.public is false, roles or not: empty roles is not a
+  // wall (user-model Decision 2), so authenticated alone must not admit them to
+  // a role-less protected page. Strategy callers (apiKey, jwt) also hold no
+  // organization but sit deliberately outside the membership boundary, so the
+  // test is this explicit marker, never the absence of an organization. The
+  // caller is the normalizeCaller-snaked record, so the key is snake_case here.
+  const awaitingOrganization = user?.awaiting_organization === true;
   const roles = user?.roles ?? [];
   if (!Array.isArray(roles) || roles.some((role) => !type.isString(role))) {
     throw new ConfigError('user.roles must be an array of strings.', {
@@ -59,6 +69,7 @@ function createAuthorizeOutcome({ authEnforcement, system, user }) {
     if (auth.public === true) return 'allow';
     if (auth.public === false) {
       if (!authenticated) return 'deny';
+      if (awaitingOrganization) return 'deny';
       if (auth.roles && !auth.roles.some((role) => roles.includes(role))) return 'deny';
       // Enrolment last, after roles. Strictly === false: the key is present only
       // on a caller resolved from a session, so API strategy callers and the

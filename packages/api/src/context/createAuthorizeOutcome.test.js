@@ -59,6 +59,46 @@ test('authorizeOutcome role protected object', () => {
   expect(authorizeOutcome({ auth })).toBe('allow');
 });
 
+test('a caller awaiting an organization is refused wherever auth.public is false', () => {
+  const user = { sub: 'sub', roles: [], awaiting_organization: true };
+  const authorizeOutcome = createAuthorizeOutcome({ user });
+
+  // Public pages must still admit them - the accept page is public, and being
+  // addressable there is the whole point of the state.
+  expect(authorizeOutcome({ auth: { public: true } })).toBe('allow');
+  // Role-less protected pages are the case authenticated-alone would open.
+  expect(authorizeOutcome({ auth: { public: false } })).toBe('deny');
+  expect(authorizeOutcome({ auth: { public: false, roles: ['role1'] } })).toBe('deny');
+});
+
+test('the awaiting-organization marker beats any roles on the caller', () => {
+  // Nothing writes roles onto an awaiting caller today; the marker must win
+  // regardless, so a future writer cannot open a protected page by accident.
+  const user = { sub: 'sub', roles: ['role1'], awaiting_organization: true };
+  const authorizeOutcome = createAuthorizeOutcome({ user });
+
+  expect(authorizeOutcome({ auth: { public: false, roles: ['role1'] } })).toBe('deny');
+});
+
+test('a caller with no organization but no marker is authorized normally', () => {
+  // Strategy callers (apiKey, jwt) hold no organization and are deliberately
+  // outside the membership boundary.
+  const user = { id: 'apiKey:partner-access:acme', roles: ['partner'] };
+  const authorizeOutcome = createAuthorizeOutcome({ user });
+
+  expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
+  expect(authorizeOutcome({ auth: { public: false, roles: ['partner'] } })).toBe('allow');
+});
+
+test('a system context still passes with an awaiting-organization caller', () => {
+  const authorizeOutcome = createAuthorizeOutcome({
+    user: { sub: 'sub', awaiting_organization: true },
+    system: true,
+  });
+
+  expect(authorizeOutcome({ auth: { public: false } })).toBe('allow');
+});
+
 test('throws ConfigError with helpful message when auth.public is undefined', () => {
   const authorizeOutcome = createAuthorizeOutcome({});
   // Message doesn't include Received - that's formatted by logger
