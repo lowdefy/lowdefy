@@ -16,7 +16,7 @@
 
 import { randomUUID } from 'node:crypto';
 
-import { genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
+import { customSession, genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
 import { _app, _secret } from '@lowdefy/operators-js/operators/server';
@@ -35,6 +35,7 @@ import createSendEmail from './createSendEmail.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
+import sanitizeSessionResponse from './sanitizeSessionResponse.js';
 
 // Decision 4: under the "pinned" org policy, disable every mounted
 // /organization/* HTTP path EXCEPT /organization/accept-invitation (the
@@ -472,6 +473,18 @@ function getBetterAuthConfig({
   }
 
   options.plugins.push(buildOrganizationPlugin({ getAuth, sendInvitationEmail }));
+
+  // BetterAuth's default /get-session body includes the raw session token - the
+  // credential half of the httpOnly session cookie. Lowdefy is cookie-based and
+  // never reads it client-side, so strip it: a JS-readable token needlessly
+  // undoes the point of the httpOnly cookie. customSession replaces the
+  // /get-session endpoint and transforms whatever the core resolver returns, so
+  // the token is dropped whether the session came from the DB or the cookie
+  // cache. Registered last so the resolver has already applied the organization
+  // (activeOrganizationId) and twoFactor session fields before the strip.
+  options.plugins.push(
+    customSession(async (sessionResponse) => sanitizeSessionResponse(sessionResponse))
+  );
 
   // The admin surface is off under both policies. The org plugin's client HTTP
   // endpoints are policy-aware: pinned disables the full set (everything except
