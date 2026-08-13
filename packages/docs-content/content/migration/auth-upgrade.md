@@ -6,25 +6,25 @@ API auth strategies (`auth.strategies`) are purely additive — an app with no s
 
 ## Summary of breaking changes
 
-| Change | Old | New |
-|---|---|---|
-| Database required | Optional (JWT-only possible) | `auth.database` required for any login method |
-| Provider type names | `GoogleProvider`, `GitHubProvider`, ... | `Google`, `GitHub`, ... (`OpenIDConnectProvider` → `GenericOAuth`) |
-| Callbacks / events | `auth.callbacks`, `auth.events` (JS plugins) | `auth.hooks` — bindings to `InternalApi` endpoints |
-| Session strategy | `session.strategy: jwt` supported | Database sessions only; `maxAge` → `expiresIn` |
-| Collection names | `users`, `accounts`, `sessions` | `user-*` convention, fixed by the adapter |
-| `userFields` | Mapped provider claims onto the session | Removed — each mapped key has a new home (see below) |
-| Secret | `NEXTAUTH_SECRET` env var | `auth.secret` with the `_secret` operator |
-| Auth UI | NextAuth built-in pages, `auth.theme` | Removed — the app provides its own pages |
-| Magic link | `EmailProvider` in `providers` | `auth.magicLink` + `auth.email` |
-| `authPages` | `signIn`, `signOut`, `error`, `verifyRequest`, `newUser` | `signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail` |
-| OIDC profile claims | ~20 claims copied onto the session user | Only `id`, `name`, `email`, `image`, `email_verified` |
-| `sub` | `_user.sub` = provider's OIDC subject | Removed — `_user.id` is the internal id (a different value) |
-| Roles | On the user record via `userFields` | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.org_roles`) |
-| Attributes | `_user.app_attributes`, `_user.global_attributes` | One merged `_user.attributes` bag |
-| Signed-out request to any URL | `/404` if the page is missing, sign-in if protected | Sign-in for every URL, in apps whose unlisted ids default to protected |
-| Missing request / endpoint id, signed out (auth'd app) | `500` (missing) vs `401` (protected) | `401` for both |
-| 404 page | Had to serve signed-out visitors refused a protected page | Only ever serves signed-in visitors, in a protected app |
+| Change                                                 | Old                                                       | New                                                                                                                                   |
+| ------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Database required                                      | Optional (JWT-only possible)                              | `auth.database` required for any login method                                                                                         |
+| Provider type names                                    | `GoogleProvider`, `GitHubProvider`, ...                   | `Google`, `GitHub`, ... (`OpenIDConnectProvider` → `GenericOAuth`)                                                                    |
+| Callbacks / events                                     | `auth.callbacks`, `auth.events` (JS plugins)              | `auth.hooks` — bindings to `InternalApi` endpoints                                                                                    |
+| Session strategy                                       | `session.strategy: jwt` supported                         | Database sessions only; `maxAge` → `expiresIn`                                                                                        |
+| Collection names                                       | `users`, `accounts`, `sessions`                           | `user-*` convention, fixed by the adapter                                                                                             |
+| `userFields`                                           | Mapped provider claims onto the session                   | Removed — each mapped key has a new home (see below)                                                                                  |
+| Secret                                                 | `NEXTAUTH_SECRET` env var                                 | `auth.secret` with the `_secret` operator                                                                                             |
+| Auth UI                                                | NextAuth built-in pages, `auth.theme`                     | Removed — the app provides its own pages                                                                                              |
+| Magic link                                             | `EmailProvider` in `providers`                            | `auth.magicLink` + `auth.email`                                                                                                       |
+| `authPages`                                            | `signIn`, `signOut`, `error`, `verifyRequest`, `newUser`  | `signIn`, `signUp`, `error`, `forgotPassword`, `resetPassword`, `verifyEmail`                                                         |
+| OIDC profile claims                                    | ~20 claims copied onto the session user                   | Only `id`, `name`, `email`, `image`, `email_verified`                                                                                 |
+| `sub`                                                  | `_user.sub` = provider's OIDC subject                     | Removed — `_user.id` is the internal id (a different value)                                                                           |
+| Roles                                                  | On the user record via `userFields`                       | App roles on `member.appRoles` (`_user.roles`); the organization's `owner`/`admin`/`member` tier on `member.role` (`_user.org_roles`) |
+| Attributes                                             | `_user.app_attributes`, `_user.global_attributes`         | One merged `_user.attributes` bag                                                                                                     |
+| Signed-out request to any URL                          | `/404` if the page is missing, sign-in if protected       | Sign-in for every URL, in apps whose unlisted ids default to protected                                                                |
+| Missing request / endpoint id, signed out (auth'd app) | `500` (missing) vs `401` (protected)                      | `401` for both                                                                                                                        |
+| 404 page                                               | Had to serve signed-out visitors refused a protected page | Only ever serves signed-in visitors, in a protected app                                                                               |
 
 ## Upgrade steps
 
@@ -106,7 +106,7 @@ auth:
     enabled: true
     expiresIn: 300
   email:
-    connectionId: email   # an SMTP connection in connections[]
+    connectionId: email # an SMTP connection in connections[]
 ```
 
 The client signs in with the `Login` action: `params: { magicLink: true, email: ... }`.
@@ -121,7 +121,7 @@ The client signs in with the `Login` action: `params: { magicLink: true, email: 
 auth:
   email:
     connectionId: email
-    templates:            # all optional; unset → branded stock template
+    templates: # all optional; unset → branded stock template
       verifyEmail: verify-email-notification
       resetPassword: reset-password-notification
       magicLink: magic-link-notification
@@ -146,17 +146,17 @@ auth:
 
 Where old slots land:
 
-| Old | New point |
-|---|---|
-| `createUser` event | `user.create.after` |
-| `signIn` event | `session.create.after` |
-| `signOut` event | `session.delete.after` |
-| `linkAccount` event | `account.create.after` |
-| `updateUser` event | `user.update.after` |
-| `signIn` callback (allow / deny) | `session.create.before` — `:reject` vetoes the sign-in |
-| `jwt` callback | None — database sessions carry no JWT; persist data via a create hook instead |
-| `redirect` callback | None — post-login navigation is the `Login` action's `callbackUrl` |
-| `session` callback | None — the session shape is fixed; store extra data in attributes or app collections |
+| Old                              | New point                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------------ |
+| `createUser` event               | `user.create.after`                                                                  |
+| `signIn` event                   | `session.create.after`                                                               |
+| `signOut` event                  | `session.delete.after`                                                               |
+| `linkAccount` event              | `account.create.after`                                                               |
+| `updateUser` event               | `user.update.after`                                                                  |
+| `signIn` callback (allow / deny) | `session.create.before` — `:reject` vetoes the sign-in                               |
+| `jwt` callback                   | None — database sessions carry no JWT; persist data via a create hook instead        |
+| `redirect` callback              | None — post-login navigation is the `Login` action's `callbackUrl`                   |
+| `session` callback               | None — the session shape is fixed; store extra data in attributes or app collections |
 
 Custom callback/event plugin logic moves into the endpoint's routine; anything a routine can't express goes in a custom request plugin called from the routine.
 
@@ -174,7 +174,7 @@ auth:
 
 The old `signOut`, `verifyRequest`, and `newUser` keys are removed. New optional keys for email flows: `signUp`, `forgotPassword`, `resetPassword`, `verifyEmail`. `twoFactor` is a further key, and unlike those it is **required** when `auth.twoFactor.enabled` is true — the build fails without it, because the engine routes the two-factor challenge to that page itself. See [Two-Factor Authentication](/two-factor).
 
-`acceptInvitation` is a further key, naming the page that consumes an `?invitationId=` link. **Write its copy for the unauthenticated case.** Where one app sends another organization's invitations, the invitee accepts on the *sending* app, and `AcceptInvitation` sets the active organization inside its own transaction — so the accept page itself renders unauthenticated the moment the accept succeeds. That page must tell an already-signed-in invitee to sign in again **at the app they are on**, not at the app that sent the invitation: the active-organization policy runs at every session create and re-pins them here, while the production cookie prefix is shared across apps on one host, so signing in at the other app flips the shared session back the other way.
+`acceptInvitation` is a further key, naming the page that consumes an `?invitationId=` link. **Write its copy for the unauthenticated case.** Where one app sends another organization's invitations, the invitee accepts on the _sending_ app, and `AcceptInvitation` sets the active organization inside its own transaction — so the accept page itself renders unauthenticated the moment the accept succeeds. That page must tell an already-signed-in invitee to sign in again **at the app they are on**, not at the app that sent the invitation: the active-organization policy runs at every session create and re-pins them here, while the production cookie prefix is shared across apps on one host, so signing in at the other app flips the shared session back the other way.
 
 Sign-in uses the `Login` action, which dispatches by parameter — `providerId` for OAuth, `magicLink: true`, or `email` + `password`. Email/password sign-up pages use the new `SignUp` action; social and magic-link "sign-up" pages use `Login`, since those methods create the account on first sign-in. Sign-in errors now surface inline (the `Login` action returns `error.code`) rather than as a `?error=` query parameter on the error page.
 
@@ -200,33 +200,33 @@ There is no `impersonatedBy` field on the session user. Impersonation is not par
 
 Where old `_user` reads land:
 
-| Old read | New home |
-|---|---|
-| `_user.sub` | `_user.id` — a **different value**: the internal id, not the provider subject. The provider subject lives on the `user-accounts` collection (`accountId`). |
-| `_user.picture` | `_user.image` |
-| `_user.email_verified` | `_user.email_verified` — unchanged; the pre-upgrade OIDC claim and the resolved caller field already share this name. |
-| `_user.roles` | Unchanged read — but roles now resolve from the active organization membership's `appRoles`, granted via invitations and auth steps, not provider claims. |
-| `_user.orgRoles` | `_user.org_roles` — the organization tier from `member.role` (`owner`, `admin`, `member`). |
-| `_user.twoFactorEnrolled` | `_user.two_factor_enrolled` — whether the caller holds a factor satisfying `auth.twoFactor.required`. |
-| `_user.authMethod` | `_user.auth_method` — the strategy that authenticated the caller, on strategy-resolved callers only. |
-| `_user.app_attributes.*` | `_user.attributes.*` — per-app values live on the membership (`member.attributes`). |
-| `_user.global_attributes.*` | `_user.attributes.*` — global values live on the user (`user.attributes`); merged per key, member wins. |
+| Old read                                                         | New home                                                                                                                                                                             |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `_user.sub`                                                      | `_user.id` — a **different value**: the internal id, not the provider subject. The provider subject lives on the `user-accounts` collection (`accountId`).                           |
+| `_user.picture`                                                  | `_user.image`                                                                                                                                                                        |
+| `_user.email_verified`                                           | `_user.email_verified` — unchanged; the pre-upgrade OIDC claim and the resolved caller field already share this name.                                                                |
+| `_user.roles`                                                    | Unchanged read — but roles now resolve from the active organization membership's `appRoles`, granted via invitations and auth steps, not provider claims.                            |
+| `_user.orgRoles`                                                 | `_user.org_roles` — the organization tier from `member.role` (`owner`, `admin`, `member`).                                                                                           |
+| `_user.twoFactorEnrolled`                                        | `_user.two_factor_enrolled` — whether the caller holds a factor satisfying `auth.twoFactor.required`.                                                                                |
+| `_user.authMethod`                                               | `_user.auth_method` — the strategy that authenticated the caller, on strategy-resolved callers only.                                                                                 |
+| `_user.app_attributes.*`                                         | `_user.attributes.*` — per-app values live on the membership (`member.attributes`).                                                                                                  |
+| `_user.global_attributes.*`                                      | `_user.attributes.*` — global values live on the user (`user.attributes`); merged per key, member wins.                                                                              |
 | Other OIDC claims (`given_name`, `phone_number`, `address`, ...) | Not in the session. Persist what you need at signup via an endpoint hook — profile data onto your contact collection, authorization inputs into attributes — and read it from there. |
 
 ## Page and API existence is no longer observable before you sign in
 
-This is a behaviour change every app inherits, not a two-factor feature. It removes an enumeration asymmetry — a logged-out caller used to be able to tell a real-but-protected id apart from an absent one by the response they got back. That is an information leak the engine design had accepted as a documented cost of following web convention, not an access-control failure: no protected page or request was ever reachable without a session. Nothing about who can *reach* a surface changes here — only what a signed-out caller can *learn* about which surfaces exist.
+This is a behaviour change every app inherits, not a two-factor feature. It removes an enumeration asymmetry — a logged-out caller used to be able to tell a real-but-protected id apart from an absent one by the response they got back. That is an information leak the engine design had accepted as a documented cost of following web convention, not an access-control failure: no protected page or request was ever reachable without a session. Nothing about who can _reach_ a surface changes here — only what a signed-out caller can _learn_ about which surfaces exist.
 
 **The rule.** When the caller is not authenticated, existence is never consulted. A protected app answers the sign-in page for any URL a logged-out visitor asks for — whether that URL is a real protected page or a typo that matches nothing. Existence is only resolved once there is a session to resolve it against.
 
-**Which apps change, which don't.** Only apps whose *unlisted* page ids default to protected are affected. The `auth.pages.protected: [...]` shape (an explicit protected list, everything else public) is **untouched** — a logged-out visitor typing a wrong URL still gets `/404`, because unlisted ids there are public. Every other shape treats an unlisted id as protected, so a logged-out typo now lands on the sign-in page, then resolves to `/404` once the visitor authenticates — one extra hop for a wrong URL.
+**Which apps change, which don't.** Only apps whose _unlisted_ page ids default to protected are affected. The `auth.pages.protected: [...]` shape (an explicit protected list, everything else public) is **untouched** — a logged-out visitor typing a wrong URL still gets `/404`, because unlisted ids there are public. Every other shape treats an unlisted id as protected, so a logged-out typo now lands on the sign-in page, then resolves to `/404` once the visitor authenticates — one extra hop for a wrong URL.
 
-| Config | An unlisted page id is |
-|---|---|
-| `auth.pages.public: [...]` | protected |
-| `auth.pages.protected: true` | protected |
-| `auth.pages.protected: [...]` | public |
-| neither | public |
+| Config                        | An unlisted page id is |
+| ----------------------------- | ---------------------- |
+| `auth.pages.public: [...]`    | protected              |
+| `auth.pages.protected: true`  | protected              |
+| `auth.pages.protected: [...]` | public                 |
+| neither                       | public                 |
 
 **A known imprecision, so nobody files it as a bug.** The default the runtime reads for an unlisted id is a single build-resolved boolean, deliberately coarser than the glob-list config that produced it. In an app configured `auth.pages.public: ['docs/**']` (so unlisted ids default to protected), a signed-out visitor typing `docs/typo` gets the sign-in page rather than `/404`, even though the `docs/**` namespace was declared public. Every id that **is** in the build carries its own resolved decision, so no real page changes behaviour — only a URL matching nothing reads the coarse default. Shipping the pattern lists into the build artifact and re-matching globs per request was considered and rejected: the artifact exists precisely so the runtime reads a resolved decision and never re-derives access from patterns.
 
@@ -260,12 +260,12 @@ auth:
 
 All four `signup × create` combinations build; none is rejected:
 
-| `signup × create` | Behaviour |
-|---|---|
-| `open + auto` | Today's self-serve SaaS — anyone registers, each gets a personal organization minted at first sign-in. |
-| `open + operator` | Anyone registers, but organizations come only from the operator; registrants sit org-less until invited or assigned. |
-| `invite-only + operator` | The sales-led product — only invitees register, and organizations come only from the operator. |
-| `invite-only + auto` | Behaves identically to `invite-only + operator`: the mint is unreachable, because every admitted caller already holds a membership or a pending invitation. |
+| `signup × create`        | Behaviour                                                                                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `open + auto`            | Today's self-serve SaaS — anyone registers, each gets a personal organization minted at first sign-in.                                                      |
+| `open + operator`        | Anyone registers, but organizations come only from the operator; registrants sit org-less until invited or assigned.                                        |
+| `invite-only + operator` | The sales-led product — only invitees register, and organizations come only from the operator.                                                              |
+| `invite-only + auto`     | Behaves identically to `invite-only + operator`: the mint is unreachable, because every admitted caller already holds a membership or a pending invitation. |
 
 ## Bootstrapping the first administrator
 
@@ -277,7 +277,7 @@ Nothing grants organization authority implicitly. On a fresh `policy: pinned` + 
   inviterId: 'bootstrap', expiresAt: <future date>, createdAt: new Date() }
 ```
 
-**`organizationId` is the configured slug.** Under `pinned` the organization's id *is* `auth.organizations.org`, so there is no id to look up and the same document works in every environment.
+**`organizationId` is the configured slug.** Under `pinned` the organization's id _is_ `auth.organizations.org`, so there is no id to look up and the same document works in every environment.
 
 **The key is `_id`, not `id`.** The adapter maps the logical `id` to the physical `_id` inbound and back outbound, so every invitation the platform writes stores its id at `_id`. A document inserted literally as `{ id: … }` gets a driver-generated `ObjectId` `_id` plus a stray `id` field, after which the accept flow's invitation lookup never finds it — while the admission gate, which queries by email and status, happily admits the person to sign up. The result is a user who can log in, an invitation that cannot be accepted, and no error pointing at either. Use `_id`.
 
@@ -346,7 +346,7 @@ The load-bearing facts:
 
 **The founder's arc.** The pending invitation admits their sign-up at all three gates; their first session is org-less (`_user.awaiting_organization`); they follow the emailed accept link to the always-public accept page; and `acceptInvitation` mints their `owner` member from the invitation verbatim, copying its `appRoles` and `attributes`. Under `invite-only` they cannot be minted a stray personal organization in the meantime.
 
-**Recovery.** A founder who lost the email — re-run `InviteMember` with `resend: true`, which refreshes the still-pending invitation's TTL and re-sends it unchanged. An *expired* invitation — a plain `InviteMember` re-run: BetterAuth filters expired rows out of the already-invited check, so a fresh invitation mints without ceremony.
+**Recovery.** A founder who lost the email — re-run `InviteMember` with `resend: true`, which refreshes the still-pending invitation's TTL and re-sends it unchanged. An _expired_ invitation — a plain `InviteMember` re-run: BetterAuth filters expired rows out of the already-invited check, so a fresh invitation mints without ceremony.
 
 Two shorter recipes sit alongside the canonical one:
 
@@ -358,15 +358,15 @@ Two shorter recipes sit alongside the canonical one:
 
 Seven client actions are gone. An app that authors one fails at build with the unknown-action-type error; each has a named replacement, except the two that do not:
 
-| Retired action | Replacement |
-|---|---|
-| `ImpersonateUser` | **None.** The capability is retired. |
-| `StopImpersonating` | **None.** The capability is retired. |
-| `InviteMember` | The `InviteMember` step |
-| `CancelInvitation` | The `CancelInvitation` step |
-| `UpdateMemberRole` | The `UpdateMemberOrgRole` step (the `owner`/`admin`/`member` tier). App roles are the `UpdateMemberRoles` step. |
-| `RemoveMember` | The `RemoveMember` step |
-| `UpdateOrganization` | The `UpdateOrganization` step |
+| Retired action       | Replacement                                                                                                     |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `ImpersonateUser`    | **None.** The capability is retired.                                                                            |
+| `StopImpersonating`  | **None.** The capability is retired.                                                                            |
+| `InviteMember`       | The `InviteMember` step                                                                                         |
+| `CancelInvitation`   | The `CancelInvitation` step                                                                                     |
+| `UpdateMemberRole`   | The `UpdateMemberOrgRole` step (the `owner`/`admin`/`member` tier). App roles are the `UpdateMemberRoles` step. |
+| `RemoveMember`       | The `RemoveMember` step                                                                                         |
+| `UpdateOrganization` | The `UpdateOrganization` step                                                                                   |
 
 The rule that produced the list also tells you which actions will keep existing: **a client action is an operation that mutates the caller's own session, and nothing else.** So `SetActiveOrganization`, `AcceptInvitation` and `LeaveOrganization` remain — each acts on the caller. An app administering **other** people's memberships authors a routine instead, and that is what earns it the per-step authority floor, an explicitly named target organization, and both role tiers (`appRoles` and `orgRole`) rather than one fused `role`.
 
