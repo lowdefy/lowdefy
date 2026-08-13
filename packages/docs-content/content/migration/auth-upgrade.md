@@ -240,6 +240,33 @@ This is a behaviour change every app inherits, not a two-factor feature. It remo
 
 Administering an organization means holding `admin` (or `owner`) in that organization — the `member.role` tier, on the caller's own member row there. There is no app-wide administering role, and no config key that grants administration across organizations: nothing to configure. Every auth step declares the authority it requires, and the step floor authorizes the caller against their member row in the organization the step names, so a caller who administers the team organization holds nothing in the customer organization. The steps that write the deployment-wide `user` row — `UpdateUserProfile`, `UpdateUserAttributes`, `BanUser`, `UnbanUser`, `DeleteUser`, `RevokeUserSessions` — additionally require the **target** to hold a member row in that organization, so an administrator can only reach people who are members of an organization they administer.
 
+## Organization admission and creation
+
+Two knobs on `auth.organizations` govern who may sign up and where organizations come from.
+
+**`auth.organizations.signup`** (`invite-only | open`) is now live under **both** policies — its previous "ignored under tenant" framing is gone. `open` admits everyone. `invite-only` refuses a sign-up without an invitation, and under `tenant + invite-only` the admission gate admits a caller who holds a membership **anywhere** in the deployment or a pending invitation **anywhere** in it — not scoped to any one organization.
+
+**`auth.organizations.create`** (`auto | operator`) is tenant-only, and rejected under `pinned`. `auto` (the default) is today's behaviour: a personal organization is lazily minted at first sign-in. `operator` removes that mint — organizations come only from the `CreateOrganization` step, and an org-less sign-in lands in the signed-in-awaiting-organization state: `_user.awaiting_organization` is `true`, the caller is visible to public pages (so an accept page can address them) and walled everywhere `auth.public` is false.
+
+The sales-led posture is two authored lines:
+
+```yaml
+auth:
+  organizations:
+    policy: tenant
+    signup: invite-only
+    create: operator
+```
+
+All four `signup × create` combinations build; none is rejected:
+
+| `signup × create` | Behaviour |
+|---|---|
+| `open + auto` | Today's self-serve SaaS — anyone registers, each gets a personal organization minted at first sign-in. |
+| `open + operator` | Anyone registers, but organizations come only from the operator; registrants sit org-less until invited or assigned. |
+| `invite-only + operator` | The sales-led product — only invitees register, and organizations come only from the operator. |
+| `invite-only + auto` | Behaves identically to `invite-only + operator`: the mint is unreachable, because every admitted caller already holds a membership or a pending invitation. |
+
 ## Bootstrapping the first administrator
 
 Nothing grants organization authority implicitly. On a fresh `policy: pinned` + `signup: invite-only` deployment that is a closed loop: nobody can be invited, because inviting needs `invitation: ['create']` authority that nobody holds, and nobody can sign up, because the admission gate admits only members and pending invitees. Breaking the loop is one document inserted into the `user-invitations` collection, by hand, outside the platform:
@@ -271,6 +298,61 @@ Nothing grants organization authority implicitly. On a fresh `policy: pinned` + 
 **Bootstrap is per-organization, not per-deployment.** An `admin` of the team organization holds no authority in the customer organization, so that organization's first `admin` needs its own inserted invitation. After the first one, each organization is self-sustaining: its owner can invite and promote from inside the app.
 
 The field names above are the live camelCase names. If the `snake-case-data-fields` change has landed in your version, they are `organization_id`, `inviter_id`, `expires_at`, `created_at` and `app_roles`.
+
+## Provisioning tenant organizations
+
+This is the tenant sibling of [Bootstrapping the first administrator](#bootstrapping-the-first-administrator) — the same seeded-owner invitation, plus the organization row a tenant deployment needs. The platform ships no provisioning endpoint: provisioning is an app-authored recipe over existing steps. (An operator console that would wrap it is a future module, not a shipped surface.)
+
+**The canonical recipe** is an `Api` endpoint that runs `CreateOrganization` then `InviteMember` as `system: true` steps:
+
+```yaml
+# api/provision-tenant.yaml
+id: provision-tenant
+type: Api
+routine:
+  - id: create_org
+    type: CreateOrganization
+    system: true
+    properties:
+      name: { _payload: name }
+      slug: { _payload: slug }
+  - id: invite_owner
+    type: InviteMember
+    system: true
+    properties:
+      organizationId: { _step: create_org.id }
+      email: { _payload: owner_email }
+      orgRole: owner
+```
+
+Gate the endpoint in `lowdefy.yaml`:
+
+```yaml
+auth:
+  api:
+    roles:
+      provision-tenant: [operator]
+```
+
+`operator` here is a **deployment-global** role, granted to an api-strategies API-key caller — never a catalog app role a tenant admin could self-assign. Any tenant admin can assign catalog roles at invite time, so gating operator powers on a catalog role would let a tenant admin mint organizations.
+
+The load-bearing facts:
+
+**Why `orgRole: owner`.** The fabricated system acting member claims `owner`, and `createInvitation` refuses an invitation whose role contains the creator role unless the inviter holds it — so a narrowed claim would fail an owner-role invitation with `YOU_ARE_NOT_ALLOWED_TO_INVITE_USER_WITH_THIS_ROLE`. And seeding a founding `owner` rather than an `admin` is what makes every last-owner and creator guard live, for exactly the reasons the bootstrap section spells out under ["The role is `owner`, not `admin`"](#bootstrapping-the-first-administrator).
+
+**The accept-invitation email has two prerequisites**, and missing either renders the email branded with no call-to-action link: `BETTER_AUTH_URL` must pin the app's canonical origin, and `authPages.acceptInvitation` must point at the accept page. Setting `authPages.acceptInvitation` is also what registers the always-public accept page, so the recipe presupposes accept-invitation wiring is already in place. The email never names the inviter, so the fabricated system caller never appears in it.
+
+**Email verification is required before accepting** — Lowdefy's function-form `advanced.database.generateId` flips the organization plugin's verified-email requirement for the accept-by-invitation-id action, the same as [bootstrap](#bootstrapping-the-first-administrator).
+
+**The founder's arc.** The pending invitation admits their sign-up at all three gates; their first session is org-less (`_user.awaiting_organization`); they follow the emailed accept link to the always-public accept page; and `acceptInvitation` mints their `owner` member from the invitation verbatim, copying its `appRoles` and `attributes`. Under `invite-only` they cannot be minted a stray personal organization in the meantime.
+
+**Recovery.** A founder who lost the email — re-run `InviteMember` with `resend: true`, which refreshes the still-pending invitation's TTL and re-sends it unchanged. An *expired* invitation — a plain `InviteMember` re-run: BetterAuth filters expired rows out of the already-invited check, so a fresh invitation mints without ceremony.
+
+Two shorter recipes sit alongside the canonical one:
+
+**The founder already has an account** (`open + operator`, or a second organization for an existing user): `CreateOrganization { userId }` alone. Given the user id, that one step mints both the organization and its `owner` member in a single call — no invitation needed.
+
+**Hand-inserted documents** — the zero-config-change fallback, the tenant sibling of the bootstrap insert. Insert the organization row (`{ _id, name, slug, createdAt }`) and the invitation row exactly as the [bootstrap section](#bootstrapping-the-first-administrator) describes it (keyed `_id`, `role: 'owner'`, `appRoles: []`, a future `expiresAt`), with the invitation's `organizationId` set to the organization `_id` you just chose, then deliver the accept URL by hand. The bootstrap section's gotchas apply unchanged — the `id`-vs-`_id` trap, and the silent 404-but-admitted failure.
 
 ## Retired client actions
 
