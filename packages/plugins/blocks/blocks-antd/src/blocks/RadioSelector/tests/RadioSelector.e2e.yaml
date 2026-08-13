@@ -186,6 +186,76 @@ blocks:
           else: ''
 
   # ============================================
+  # COLUMNS (GRID LAYOUT)
+  # ============================================
+
+  - id: rs_columns_2
+    type: RadioSelector
+    properties:
+      columns: 2
+      options:
+        - A
+        - B
+        - C
+        - D
+
+  - id: rs_columns_3
+    type: RadioSelector
+    properties:
+      columns: 3
+      options:
+        - A
+        - B
+        - C
+        - D
+        - E
+        - F
+
+  - id: rs_columns_responsive
+    type: RadioSelector
+    properties:
+      columns:
+        xs: 1
+        md: 3
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_columns_gutter
+    type: RadioSelector
+    properties:
+      columns: 2
+      gutter:
+        - 24
+        - 12
+      options:
+        - A
+        - B
+        - C
+        - D
+
+  - id: rs_columns_unsupported
+    type: RadioSelector
+    properties:
+      columns: 5
+      options:
+        - A
+        - B
+        - C
+
+  - id: rs_columns_color
+    type: RadioSelector
+    properties:
+      columns: 2
+      options:
+        - label: Plain
+          value: plain
+        - label: Tinted
+          value: tinted
+          color: '#722ed1'
+
+  # ============================================
   # INTERACTION TESTS
   # ============================================
 
