@@ -79,6 +79,22 @@ test('twoFactor plugin version matches the pinned better-auth dependency', () =>
   expect(twoFactor().version).toBe('1.6.23');
 });
 
+test('allowPasswordless relaxes the enable-two-factor body, required without it', () => {
+  // getBetterAuthConfig instantiates twoFactor({ allowPasswordless: true }) so
+  // shouldRequirePassword waives the password for a credential-less caller
+  // (false), while still requiring it for one holding a password credential
+  // (true). That waiver is closure-private, but at 1.6.23 the flag also relaxes
+  // the enable endpoint's body schema - password becomes optional - which is the
+  // one publicly observable proxy for it. If upstream decouples the schema from
+  // the flag or drops the waiver, this fails; re-read shouldRequirePassword
+  // (utils/password.mjs) and the enableTwoFactor body against the new source.
+  expect(
+    twoFactor({ allowPasswordless: true }).endpoints.enableTwoFactor.options.body.safeParse({})
+      .success
+  ).toBe(true);
+  expect(twoFactor().endpoints.enableTwoFactor.options.body.safeParse({}).success).toBe(false);
+});
+
 test('twoFactor plugin exposes an object error code for a missing attempts record', () => {
   // This is the code beginAttempt (verify-two-factor.mjs) throws when the
   // `2fa-attempts-{identifier}` verification record is absent. The

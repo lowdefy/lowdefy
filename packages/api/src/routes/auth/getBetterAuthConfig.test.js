@@ -865,6 +865,24 @@ test('does not push the two-factor plugin when twoFactor is not enabled', () => 
   expect(options.plugins.some((p) => p.id === 'two-factor')).toBe(false);
 });
 
+test('instantiates the two-factor plugin with allowPasswordless, relaxing the enable body', () => {
+  // allowPasswordless has no `.options` surface on the plugin object; its
+  // in-repo-observable effect is that the enable endpoint accepts a body with
+  // no password. Dropping the flag makes an empty body fail to parse, so this
+  // pins the flag being wired. twoFactorPluginContract.test.js pins the
+  // upstream contract this relies on.
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ twoFactor: { enabled: true } }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const twoFactorPlugin = options.plugins.find((p) => p.id === 'two-factor');
+  expect(twoFactorPlugin.endpoints.enableTwoFactor.options.body.safeParse({}).success).toBe(true);
+});
+
 test('pushes the passkey plugin when passkey is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
