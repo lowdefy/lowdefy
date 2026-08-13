@@ -118,7 +118,9 @@ async function callAgent(
       return getEndpointConfig(context, { endpointId });
     },
     getAgentConfig: async ({ agentId }) => {
-      return getAgentConfig(context, { agentId });
+      const subAgentConfig = await getAgentConfig(context, { agentId });
+      authorizeAgent(context, { agentConfig: subAgentConfig });
+      return subAgentConfig;
     },
     getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
       const subConnectionConfig = await getConnectionConfig(context, {

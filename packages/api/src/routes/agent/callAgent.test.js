@@ -735,6 +735,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
     properties: { model: 'claude-3-5-sonnet' },
   };
   const subAgentConfig = {
+    auth: { public: true },
     agentId: 'sub-agent',
     id: 'agent:sub-agent',
     type: 'ClaudeAgent',
@@ -1029,4 +1030,56 @@ test('callAgent runs a protected agent when a session exists', async () => {
 
   await callAgent(context, { agentId: 'my-agent', pageId: 'page1', messages: [] });
   expect(mockResolver).toHaveBeenCalled();
+});
+
+test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the session', async () => {
+  const mockStream = { toUIMessageStreamResponse: jest.fn() };
+  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const agentConfig = {
+    auth: { public: true },
+    agentId: 'parent-agent',
+    id: 'agent:parent-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const protectedSubAgentConfig = {
+    auth: { public: false },
+    agentId: 'protected-sub',
+    id: 'agent:protected-sub',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-test' },
+  };
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'agents/parent-agent.json') return agentConfig;
+    if (path === 'agents/protected-sub.json') return protectedSubAgentConfig;
+    if (path === 'connections/my-anthropic.json') return connectionConfig;
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: { Anthropic: { create: mockCreate, requests: {} } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, { agentId: 'parent-agent', pageId: 'page1', messages: [] });
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+
+  await expect(resolverContext.getAgentConfig({ agentId: 'protected-sub' })).rejects.toThrow(
+    'Agent "protected-sub" does not exist.'
+  );
+  await expect(resolverContext.getAgentConfig({ agentId: 'parent-agent' })).resolves.toEqual(
+    agentConfig
+  );
 });
