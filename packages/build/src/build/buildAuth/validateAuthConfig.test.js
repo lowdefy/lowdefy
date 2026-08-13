@@ -403,6 +403,20 @@ test('validateAuthConfig throws when twoFactor.required is not a boolean', () =>
   );
 });
 
+test('validateAuthConfig throws when twoFactor.trustDevice is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      twoFactor: { trustDevice: 'no' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "twoFactor.trustDevice" should be a boolean.'
+  );
+});
+
 test('validateAuthConfig rejects a role list for twoFactor.required with the boolean type error', () => {
   const components = {
     auth: {

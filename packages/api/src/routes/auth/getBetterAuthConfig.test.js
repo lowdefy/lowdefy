@@ -883,6 +883,35 @@ test('instantiates the two-factor plugin with allowPasswordless, relaxing the en
   expect(twoFactorPlugin.endpoints.enableTwoFactor.options.body.safeParse({}).success).toBe(true);
 });
 
+test('leaves trustDeviceMaxAge unset so the plugin default applies when trustDevice is not disabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ twoFactor: { enabled: true } }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const twoFactorPlugin = options.plugins.find((p) => p.id === 'two-factor');
+  expect(twoFactorPlugin.options.trustDeviceMaxAge).toBeUndefined();
+});
+
+test('passes trustDeviceMaxAge 0 to the two-factor plugin when trustDevice is false', () => {
+  // 0 disables trust-device authoritatively: every trust record is minted
+  // already expired and its cookie as a browser delete, so no device is durably
+  // trusted and a forged trustDevice: true cannot bypass.
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({ twoFactor: { enabled: true, trustDevice: false } }),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const twoFactorPlugin = options.plugins.find((p) => p.id === 'two-factor');
+  expect(twoFactorPlugin.options.trustDeviceMaxAge).toBe(0);
+});
+
 test('pushes the passkey plugin when passkey is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,

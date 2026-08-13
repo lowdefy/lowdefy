@@ -23,6 +23,7 @@ const readablePaths = [
   'magicLink.enabled',
   'twoFactor.enabled',
   'twoFactor.required',
+  'twoFactor.trustDevice',
   'passkey.enabled',
   'phoneNumber.enabled',
   'phoneNumber.signUpOnVerification',

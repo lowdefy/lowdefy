@@ -49,7 +49,18 @@ Only app-relative, same-origin destinations are carried; anything else falls thr
 
 ### Trusting a device
 
-`TwoFactorVerify`'s `trustDevice` param sets a cookie that short-circuits the challenge on later sign-ins from the same browser. It applies on every one of the challenged paths above, not just the one it was set from.
+`TwoFactorVerify`'s `trustDevice` param sets a cookie that short-circuits the challenge on later sign-ins from the same browser. It applies on every one of the challenged paths above, not just the one it was set from. The window is 30 days.
+
+`auth.twoFactor.trustDevice` turns this off deployment-wide:
+
+```yaml
+auth:
+  twoFactor:
+    enabled: true
+    trustDevice: false
+```
+
+It defaults to `true` (the 30-day skip above). Set `false` for deployments that must challenge a second factor on **every** login. The disable is server-authoritative: no device is durably trusted, and a forged `trustDevice: true` cannot bypass it — the engine mints every trust record already expired rather than trusting the client to opt out. A device trusted before you set `false` is challenged again from its next login. The value is readable in config as `_build.authConfig: twoFactor.trustDevice`, so a challenge page can hide its own "trust this device" switch when the deployment has disabled it.
 
 ## Trusting an OAuth provider
 
@@ -145,7 +156,7 @@ The enrolled factor is not inert, though. It is what a password or magic-link si
 
 The four BetterAuth two-factor endpoints that mutate a factor are password-gated: they call `shouldRequirePassword`, which demands the caller's current password unless `allowPasswordless` is set. Lowdefy sets `allowPasswordless: true`, so an OAuth or magic-link user who never set a password can still enrol TOTP.
 
-The waiver is **per user**, not per app. A caller who *does* hold a password still faces the password gate on all four endpoints — the waiver only lifts it for the users who have no password to give. There is no route difference to configure: the same enrol flow serves both.
+The waiver is **per user**, not per app. A caller who _does_ hold a password still faces the password gate on all four endpoints — the waiver only lifts it for the users who have no password to give. There is no route difference to configure: the same enrol flow serves both.
 
 ## The enrolment page
 
@@ -159,10 +170,10 @@ Reached with no session at all, it behaves like any protected page: the user is 
 
 When a member loses their authenticator or has a security key stolen, an administrator restores their access with two org-scoped steps:
 
-| Step                                            | Properties            | Permission                    |
-| ----------------------------------------------- | --------------------- | ----------------------------- |
-| `ResetUserTwoFactor`                            | `userId`              | `user: ['reset-two-factor']`  |
-| `RevokeUserPasskeys`                            | `userId`, `passkeyId?`| `user: ['revoke-passkeys']`   |
+| Step                 | Properties             | Permission                   |
+| -------------------- | ---------------------- | ---------------------------- |
+| `ResetUserTwoFactor` | `userId`               | `user: ['reset-two-factor']` |
+| `RevokeUserPasskeys` | `userId`, `passkeyId?` | `user: ['revoke-passkeys']`  |
 
 Both are `org`-scoped and bounded by target membership: an administrator can only reach a user who holds a member row in an organization they administer. Both permissions ship granted to `owner` and `admin`; a narrower custom role can be given member management without either of them.
 

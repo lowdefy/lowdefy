@@ -95,6 +95,19 @@ test('allowPasswordless relaxes the enable-two-factor body, required without it'
   expect(twoFactor().endpoints.enableTwoFactor.options.body.safeParse({}).success).toBe(false);
 });
 
+test('twoFactor plugin stores trustDeviceMaxAge on options, and honours 0', () => {
+  // The trustDevice: false disable in getBetterAuthConfig passes
+  // trustDeviceMaxAge: 0, and verify-two-factor.mjs reads it back as
+  // getPlugin('two-factor').options?.trustDeviceMaxAge ?? 2592e3 - nullish, so 0
+  // is honoured rather than falling back to the 30-day default. This pins that
+  // the option round-trips onto `.options` as the endpoint reads it; if upstream
+  // stops storing it there, or switches the read to `|| 2592e3` (making 0 fall
+  // back to 30 days), the disable silently stops working. On failure, re-read
+  // verify-two-factor.mjs and index.mjs against the new source before touching
+  // getBetterAuthConfig's trustDeviceMaxAge wiring.
+  expect(twoFactor({ trustDeviceMaxAge: 0 }).options.trustDeviceMaxAge).toBe(0);
+});
+
 test('twoFactor plugin exposes an object error code for a missing attempts record', () => {
   // This is the code beginAttempt (verify-two-factor.mjs) throws when the
   // `2fa-attempts-{identifier}` verification record is absent. The

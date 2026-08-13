@@ -266,7 +266,19 @@ test('setAuthDefaults enables twoFactor sub-options by default when the block is
   expect(res.auth.twoFactor).toEqual({
     enabled: true,
     required: false,
+    trustDevice: true,
   });
+});
+
+test('setAuthDefaults keeps twoFactor.trustDevice false when explicitly disabled', () => {
+  const components = {
+    auth: {
+      configured: true,
+      twoFactor: { trustDevice: false },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.twoFactor.trustDevice).toBe(false);
 });
 
 test('setAuthDefaults keeps twoFactor.required true when explicitly set', () => {

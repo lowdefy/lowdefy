@@ -23,7 +23,7 @@ import beginTwoFactorChallenge from './beginTwoFactorChallenge.js';
 // the entry guards and the challenge live here and `exit` supplies the per-path
 // response: it either returns the hook's response body, or throws a redirect,
 // which runAfterHooks turns into the response.
-function createTwoFactorChallengeHook({ id, matches, exit }) {
+function createTwoFactorChallengeHook({ id, matches, exit, trustDeviceMaxAge }) {
   return {
     id,
     matches,
@@ -45,7 +45,7 @@ function createTwoFactorChallengeHook({ id, matches, exit }) {
       if (!newSession.user?.twoFactorEnabled) {
         return undefined;
       }
-      const outcome = await beginTwoFactorChallenge({ ctx, newSession });
+      const outcome = await beginTwoFactorChallenge({ ctx, newSession, trustDeviceMaxAge });
       // The trust-device cookie stood in for the second factor; the session is
       // intact, so the endpoint's own response must stand.
       if (outcome === 'trusted') {

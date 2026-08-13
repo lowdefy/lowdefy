@@ -39,6 +39,14 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   const before = [];
   const after = [];
 
+  // The effective trust-device lifetime, mirroring the value passed to the
+  // twoFactor plugin in getBetterAuthConfig. trustDevice: false sets it to 0 so
+  // beginTwoFactorChallenge - the mirror covering the non-password sign-in paths
+  // - rotates any honoured trust record already expired, exactly as the plugin
+  // does on the password path. Leaving it at the 30-day default here would let
+  // those paths keep re-extending a pre-existing trust the deployment disabled.
+  const trustDeviceMaxAge = authConfig.twoFactor?.trustDevice === false ? 0 : 2592000;
+
   if (authConfig.magicLink?.enabled === true) {
     before.push({
       id: 'magicLinkSendGate',
@@ -76,6 +84,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       createTwoFactorChallengeHook({
         id: 'magicLinkTwoFactorChallenge',
         matches: (path) => path === '/magic-link/verify',
+        trustDeviceMaxAge,
         // The browser is mid-redirect here with nothing to read a JSON flag
         // with, so this exit redirects rather than returning the password
         // path's { twoFactorRedirect: true }.
@@ -116,6 +125,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
           const { matched, providerKey } = matchOAuthCallback(path);
           return matched && !trustedProviderKeys.includes(providerKey);
         },
+        trustDeviceMaxAge,
         // Mid-redirect with no JS caller, exactly like /magic-link/verify, so the
         // same shared exit carries the destination the user asked for. Here that
         // destination came from the OAuth state rather than a query parameter,
@@ -141,6 +151,7 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       createTwoFactorChallengeHook({
         id: 'phoneNumberTwoFactorChallenge',
         matches: (path) => path === '/phone-number/verify',
+        trustDeviceMaxAge,
         // The one difference from the magic-link and OAuth exits: this endpoint
         // answers a live JS caller with JSON rather than a redirect, so it
         // reuses the password path's response shape. PhoneNumberVerify navigates

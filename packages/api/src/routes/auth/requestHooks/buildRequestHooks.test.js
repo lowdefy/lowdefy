@@ -142,6 +142,32 @@ test('buildRequestHooks challenges an enrolled user on /magic-link/verify when t
   expect(thrown.redirectTo).toBe('https://app.example.com/app/two-factor?callbackUrl=%2Finvoices');
 });
 
+test('buildRequestHooks threads the 30-day trust lifetime into the challenge when trustDevice is not disabled', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: twoFactorAuthConfig,
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  await catchAfter(hooks, createEnrolledCtx());
+
+  expect(mockBeginTwoFactorChallenge.mock.calls[0][0].trustDeviceMaxAge).toBe(2592000);
+});
+
+test('buildRequestHooks threads trustDeviceMaxAge 0 into the challenge when trustDevice is false', async () => {
+  const hooks = buildRequestHooks({
+    authConfig: { ...twoFactorAuthConfig, twoFactor: { enabled: true, trustDevice: false } },
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+
+  await catchAfter(hooks, createEnrolledCtx());
+
+  expect(mockBeginTwoFactorChallenge.mock.calls[0][0].trustDeviceMaxAge).toBe(0);
+});
+
 test('buildRequestHooks does not challenge on a path no registration claims', async () => {
   const hooks = buildRequestHooks({
     authConfig: twoFactorAuthConfig,

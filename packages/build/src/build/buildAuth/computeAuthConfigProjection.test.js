@@ -20,7 +20,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
   expect(computeAuthConfigProjection()).toEqual({
     emailAndPassword: { enabled: false },
     magicLink: { enabled: false },
-    twoFactor: { enabled: false, required: false },
+    twoFactor: { enabled: false, required: false, trustDevice: true },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
     captcha: { enabled: false, provider: null, siteKey: null },
@@ -58,17 +58,31 @@ test('computeAuthConfigProjection presence of twoFactor and passkey blocks impli
 });
 
 test('computeAuthConfigProjection projects twoFactor required false when absent', () => {
-  expect(computeAuthConfigProjection({}).twoFactor).toEqual({ enabled: false, required: false });
+  expect(computeAuthConfigProjection({}).twoFactor).toEqual({
+    enabled: false,
+    required: false,
+    trustDevice: true,
+  });
 });
 
 test('computeAuthConfigProjection projects twoFactor required false when block present without required', () => {
   const projection = computeAuthConfigProjection({ twoFactor: { enabled: true } });
-  expect(projection.twoFactor).toEqual({ enabled: true, required: false });
+  expect(projection.twoFactor).toEqual({ enabled: true, required: false, trustDevice: true });
 });
 
 test('computeAuthConfigProjection projects twoFactor required true when set', () => {
   const projection = computeAuthConfigProjection({ twoFactor: { enabled: true, required: true } });
-  expect(projection.twoFactor).toEqual({ enabled: true, required: true });
+  expect(projection.twoFactor).toEqual({ enabled: true, required: true, trustDevice: true });
+});
+
+test('computeAuthConfigProjection projects twoFactor trustDevice true by default', () => {
+  const projection = computeAuthConfigProjection({ twoFactor: { enabled: true } });
+  expect(projection.twoFactor.trustDevice).toBe(true);
+});
+
+test('computeAuthConfigProjection projects twoFactor trustDevice false when set false', () => {
+  const projection = computeAuthConfigProjection({ twoFactor: { enabled: true, trustDevice: false } });
+  expect(projection.twoFactor.trustDevice).toBe(false);
 });
 
 test('computeAuthConfigProjection respects explicit twoFactor and passkey enabled false', () => {

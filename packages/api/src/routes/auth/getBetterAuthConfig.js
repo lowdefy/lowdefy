@@ -364,6 +364,12 @@ function getBetterAuthConfig({
         allowPasswordless: true,
         issuer: appMeta?.name,
         schema: { twoFactor: { modelName: modelNames.twoFactor } },
+        // trustDevice: false disables the 30-day "trust this device" skip. There
+        // is no dedicated off switch upstream, but trustDeviceMaxAge: 0 mints
+        // every trust record already expired and its cookie as a browser delete,
+        // so no device is durably trusted and a forged trustDevice: true cannot
+        // bypass. Omitted when on, so the plugin's 30-day default applies.
+        ...(authConfig.twoFactor.trustDevice === false ? { trustDeviceMaxAge: 0 } : {}),
       })
     );
   }

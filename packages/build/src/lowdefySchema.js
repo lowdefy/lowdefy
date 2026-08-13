@@ -889,6 +889,12 @@ export default {
                 type: 'Auth "twoFactor.required" should be a boolean.',
               },
             },
+            trustDevice: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.trustDevice" should be a boolean.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "twoFactor" should be an object.',

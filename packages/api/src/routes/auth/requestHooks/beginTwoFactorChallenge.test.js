@@ -161,6 +161,38 @@ test('beginTwoFactorChallenge returns trusted and rotates the record and cookie 
   );
 });
 
+test('beginTwoFactorChallenge with trustDeviceMaxAge 0 rotates an already-expired record and a delete cookie', async () => {
+  // trustDevice disabled: the mirror still honours a pre-existing valid trust
+  // cookie once (one grace login), but rotates it to an already-expired record
+  // and a maxAge: 0 (browser delete) cookie, so the device is challenged from
+  // the next login on and the disable is not re-extended on non-password paths.
+  const trustIdentifier = 'trust-device-old';
+  const ctx = createCtx({
+    trustCookie: `${signTrust({ trustIdentifier })}!${trustIdentifier}`,
+    verificationRecord: {
+      value: USER_ID,
+      identifier: trustIdentifier,
+      expiresAt: new Date(Date.now() + 60000),
+    },
+  });
+
+  const outcome = await beginTwoFactorChallenge({
+    ctx,
+    newSession: createNewSession(),
+    trustDeviceMaxAge: 0,
+  });
+
+  expect(outcome).toBe('trusted');
+  const [rotated] = ctx.context.internalAdapter.createVerificationValue.mock.calls[0];
+  expect(rotated.expiresAt.getTime()).toBeLessThanOrEqual(Date.now());
+  expect(ctx.setSignedCookie).toHaveBeenCalledWith(
+    'better-auth.trust_device',
+    expect.any(String),
+    SECRET,
+    { maxAge: 0, path: '/' }
+  );
+});
+
 test('beginTwoFactorChallenge leaves the session intact on the trusted path', async () => {
   const trustIdentifier = 'trust-device-old';
   const ctx = createCtx({

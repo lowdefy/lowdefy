@@ -45,6 +45,7 @@
     "twoFactor": {
       "enabled": true,
       "required": false,
+      "trustDevice": true,
       "mfaTrustedProviderKeys": {
         "~arr": [],
         "~k": "1a"

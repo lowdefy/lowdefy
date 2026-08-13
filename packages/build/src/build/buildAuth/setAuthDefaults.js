@@ -115,6 +115,9 @@ function setAuthDefaults({ components }) {
     // Requiring enrolment is opt-in: presence of the block implies the feature,
     // never the deployment-wide floor.
     setDefault(auth.twoFactor, 'required', false);
+    // Trust-device is on by default, preserving the 30-day "trust this device"
+    // skip; a deployment sets false to challenge every login.
+    setDefault(auth.twoFactor, 'trustDevice', true);
   }
 
   if (!type.isNone(auth.passkey)) {

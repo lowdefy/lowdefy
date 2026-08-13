@@ -77,7 +77,16 @@ function tokensMatch(candidate, expected) {
 // - the sign-in stands and the caller must leave the endpoint's own response
 // alone - or 'challenged' when the session was torn down and the challenge
 // records and cookie were minted, in which case the caller performs its exit.
-async function beginTwoFactorChallenge({ ctx, newSession }) {
+// trustDeviceMaxAge mirrors the value passed to the twoFactor plugin, so this
+// mirror rotates a honoured trust record on the same terms the plugin's own
+// password-path hook does. At 0 (trustDevice disabled) the rotation is already
+// expired and the re-set cookie is a browser delete, so a pre-existing trust is
+// not re-extended on these non-password paths.
+async function beginTwoFactorChallenge({
+  ctx,
+  newSession,
+  trustDeviceMaxAge = TRUST_DEVICE_MAX_AGE,
+}) {
   const secret = ctx.context.secret;
   const userId = newSession.user.id;
 
@@ -85,7 +94,7 @@ async function beginTwoFactorChallenge({ ctx, newSession }) {
   // plugin does on the password path: a device the user already stepped up on
   // must not be challenged again just because they arrived by a different route.
   const trustCookieAttrs = ctx.context.createAuthCookie(TRUST_DEVICE_COOKIE_NAME, {
-    maxAge: TRUST_DEVICE_MAX_AGE,
+    maxAge: trustDeviceMaxAge,
   });
   const trustCookie = await ctx.getSignedCookie(trustCookieAttrs.name, secret);
   if (trustCookie) {
@@ -109,7 +118,7 @@ async function beginTwoFactorChallenge({ ctx, newSession }) {
         await ctx.context.internalAdapter.createVerificationValue({
           value: userId,
           identifier: newTrustIdentifier,
-          expiresAt: new Date(Date.now() + TRUST_DEVICE_MAX_AGE * 1000),
+          expiresAt: new Date(Date.now() + trustDeviceMaxAge * 1000),
         });
         await ctx.setSignedCookie(
           trustCookieAttrs.name,

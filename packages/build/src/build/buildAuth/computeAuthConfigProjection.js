@@ -37,6 +37,9 @@ function computeAuthConfigProjection(auth = {}) {
       // Strict === true so an absent twoFactor block projects false rather than
       // undefined - the projection is a curated view a module reads directly.
       required: source.twoFactor?.required === true,
+      // Default on: the module hides the "trust this device" switch and seeds it
+      // false only when a deployment explicitly sets trustDevice: false.
+      trustDevice: source.twoFactor?.trustDevice !== false,
     },
     passkey: { enabled: !type.isNone(source.passkey) && source.passkey.enabled !== false },
     phoneNumber: {
