@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
   adminClient,
@@ -66,9 +66,11 @@ const sessionScoped = (params) => ({
 //
 // Roles and merged attributes resolve server-side from the active member row
 // - the base session carries neither. The last server-resolved caller is
-// kept in a ref: while the session user is unchanged it stays authoritative
-// for the fields the session does not carry, and UpdateSession refreshes the
-// ref from /api/user after a change (e.g. SetActiveOrganization).
+// held in state: while the session user is unchanged it stays authoritative
+// for the fields the session does not carry, and UpdateSession refreshes it
+// from /api/user after a change (e.g. SetActiveOrganization). Holding it in
+// state, not a ref, re-renders Session when it changes so _user recomputes -
+// the same reactive footing the session half already stands on.
 //
 // Only the session half is passed through normalizeCaller. BetterAuth's store
 // returns camelCase keys whatever the columns are named, so untransformed it
@@ -76,7 +78,7 @@ const sessionScoped = (params) => ({
 // object; anything arriving from the server is already snake_case.
 function Session({ children, reloadSuppressedRef, serverUser }) {
   const { data: session, isPending } = authClient.useSession();
-  const resolvedUserRef = useRef(serverUser);
+  const [resolvedUser, setResolvedUser] = useState(serverUser);
   const wasAuthenticated = useRef(Boolean(serverUser));
 
   useEffect(() => {
@@ -93,14 +95,14 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
   }, [session, isPending]);
 
   if (isPending) {
-    return children(resolvedUserRef.current, resolvedUserRef);
+    return children(resolvedUser, setResolvedUser);
   }
   if (!session?.user) {
-    return children(null, resolvedUserRef);
+    return children(null, setResolvedUser);
   }
-  const resolved = resolvedUserRef.current;
+  const resolved = resolvedUser;
   if (!resolved) {
-    return children({ roles: [], ...normalizeCaller(session.user) }, resolvedUserRef);
+    return children({ roles: [], ...normalizeCaller(session.user) }, setResolvedUser);
   }
   if (resolved.id !== session.user.id) {
     // The ref has not caught up with a changed session user - a sign-in as a
@@ -112,15 +114,15 @@ function Session({ children, reloadSuppressedRef, serverUser }) {
     // the window when it lands the new caller; a flow that changes the session
     // user without chaining it leaves the previous caller rendered until the
     // next page load.
-    return children(resolved, resolvedUserRef);
+    return children(resolved, setResolvedUser);
   }
   // _user is one object with one meaning on both sides: the resolved caller is
   // spread whole, so every field resolveAuthentication emits is readable in app
   // config without this file naming it. session.user is the floor - the client
-  // store may hold a fresher one than the ref, and the resolved object wins
-  // wherever both carry a key.
+  // store may hold a fresher one than the resolved state, and the resolved
+  // object wins wherever both carry a key.
   const user = { ...normalizeCaller(session.user), ...resolved };
-  return children(user, resolvedUserRef);
+  return children(user, setResolvedUser);
 }
 
 function AuthConfigured({ authConfig, children, serverUser }) {
@@ -194,11 +196,9 @@ function AuthConfigured({ authConfig, children, serverUser }) {
   };
   return (
     <Session reloadSuppressedRef={reloadSuppressedRef} serverUser={serverUser}>
-      {(user, resolvedUserRef) => {
+      {(user, setResolvedUser) => {
         auth.user = user;
-        auth.updateResolvedUser = (resolved) => {
-          resolvedUserRef.current = resolved;
-        };
+        auth.updateResolvedUser = (resolved) => setResolvedUser(resolved);
         return children(auth);
       }}
     </Session>
