@@ -26,6 +26,7 @@ function AuthNotConfigured({ authConfig, children }) {
     addPasskey: authNotConfigured,
     changePassword: authNotConfigured,
     deletePasskey: authNotConfigured,
+    updatePasskey: authNotConfigured,
     getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
     leaveOrganization: authNotConfigured,

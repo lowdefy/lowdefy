@@ -46,6 +46,12 @@ function setup({ signInResult, signUpResult } = {}) {
       Promise.resolve({ data: { token: null, user: {} }, error: null })
     ),
     deletePasskey: jest.fn(() => Promise.resolve({ data: { status: true }, error: null })),
+    updatePasskey: jest.fn(() =>
+      Promise.resolve({
+        data: { passkey: { id: 'passkey-1', name: 'MacBook Touch ID' } },
+        error: null,
+      })
+    ),
     getResolvedUser: jest.fn(() =>
       Promise.resolve({ user: { id: 'user-1', roles: ['admin'], attributes: {} } })
     ),
@@ -469,6 +475,31 @@ test('passkeyDelete throws when passkeyId is missing', async () => {
   const { passkeyDelete } = createAuthMethods(lowdefy, auth);
   await expect(passkeyDelete()).rejects.toThrow('PasskeyDelete requires a "passkeyId" param.');
   expect(auth.deletePasskey).not.toHaveBeenCalled();
+});
+
+test('passkeyUpdate maps passkeyId onto the updatePasskey id param with the name', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyUpdate } = createAuthMethods(lowdefy, auth);
+  await passkeyUpdate({ passkeyId: 'passkey-1', name: 'MacBook Touch ID' });
+  expect(auth.updatePasskey.mock.calls).toEqual([[{ id: 'passkey-1', name: 'MacBook Touch ID' }]]);
+});
+
+test('passkeyUpdate throws when passkeyId is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyUpdate } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyUpdate({ name: 'MacBook Touch ID' })).rejects.toThrow(
+    'PasskeyUpdate requires a "passkeyId" param.'
+  );
+  expect(auth.updatePasskey).not.toHaveBeenCalled();
+});
+
+test('passkeyUpdate throws when name is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { passkeyUpdate } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyUpdate({ passkeyId: 'passkey-1' })).rejects.toThrow(
+    'PasskeyUpdate requires a "name" param.'
+  );
+  expect(auth.updatePasskey).not.toHaveBeenCalled();
 });
 
 test('revokeOtherSessions calls auth.revokeOtherSessions with no params', async () => {

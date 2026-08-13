@@ -29,6 +29,7 @@ export { default as Logout } from './actions/Logout/Logout.js';
 export { default as PasskeyDelete } from './actions/PasskeyDelete/PasskeyDelete.js';
 export { default as PasskeyRegister } from './actions/PasskeyRegister/PasskeyRegister.js';
 export { default as PasskeySignIn } from './actions/PasskeySignIn/PasskeySignIn.js';
+export { default as PasskeyUpdate } from './actions/PasskeyUpdate/PasskeyUpdate.js';
 export { default as PhoneNumberSendOtp } from './actions/PhoneNumberSendOtp/PhoneNumberSendOtp.js';
 export { default as PhoneNumberVerify } from './actions/PhoneNumberVerify/PhoneNumberVerify.js';
 export { default as Publish } from './actions/Publish/Publish.js';

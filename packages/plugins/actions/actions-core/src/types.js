@@ -31,6 +31,7 @@ export default {
     'PasskeyDelete',
     'PasskeyRegister',
     'PasskeySignIn',
+    'PasskeyUpdate',
     'PhoneNumberSendOtp',
     'PhoneNumberVerify',
     'Publish',

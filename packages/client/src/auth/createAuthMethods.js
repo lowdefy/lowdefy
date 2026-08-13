@@ -477,6 +477,19 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.deletePasskey({ id: passkeyId }));
   }
 
+  // Renames a passkey. The action param passkeyId maps onto BetterAuth's id,
+  // matching passkeyDelete. Ownership is enforced server-side, so a caller can
+  // only rename their own passkey.
+  async function passkeyUpdate({ name, passkeyId } = {}) {
+    if (!type.isString(passkeyId)) {
+      throw new Error('PasskeyUpdate requires a "passkeyId" param.');
+    }
+    if (!type.isString(name)) {
+      throw new Error('PasskeyUpdate requires a "name" param.');
+    }
+    return unwrap(auth.updatePasskey({ id: passkeyId, name }));
+  }
+
   // The BetterAuth client method runs the whole WebAuthn browser ceremony
   // itself - it fetches the registration options, prompts the authenticator
   // and verifies the result - so the ceremony runs inside the action.
@@ -681,6 +694,7 @@ function createAuthMethods(lowdefy, auth) {
     passkeyDelete,
     passkeyRegister,
     passkeySignIn,
+    passkeyUpdate,
     phoneNumberSendOtp,
     phoneNumberVerify,
     requestPasswordReset,

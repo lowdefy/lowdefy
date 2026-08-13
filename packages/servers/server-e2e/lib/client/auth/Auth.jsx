@@ -47,6 +47,7 @@ function Auth({ children, user }) {
     addPasskey: e2eNotSupported,
     changePassword: e2eNotSupported,
     deletePasskey: e2eNotSupported,
+    updatePasskey: e2eNotSupported,
     requestPasswordReset: e2eNotSupported,
     resetPassword: e2eNotSupported,
     revokeOtherSessions: e2eNotSupported,

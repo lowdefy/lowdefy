@@ -168,6 +168,7 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     addPasskey: (params) => authClient.passkey.addPasskey(params),
     changePassword: (params) => authClient.changePassword(sessionScoped(params)),
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
+    updatePasskey: (params) => authClient.passkey.updatePasskey(params),
     leaveOrganization: (params) => authClient.organization.leave(sessionScoped(params)),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
