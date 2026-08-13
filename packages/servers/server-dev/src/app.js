@@ -57,9 +57,7 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
-import iconsDynamicHandler from './routes/iconsDynamic.js';
 import jitPageHandler from './routes/jitPage.js';
-import jsEnvHandler from './routes/jsEnv.js';
 import lowdefyConfig from '../lib/build/config.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
@@ -80,11 +78,9 @@ function createApp() {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy-dev' });
 
-  // No api context: SSE/health/static-js routes had no apiWrapper before.
+  // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
   app.get('/api/ping', pingHandler);
-  app.get('/api/js/:env', jsEnvHandler);
-  app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
   // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
   // batches here and gets back the enriched agent-readable text, which the

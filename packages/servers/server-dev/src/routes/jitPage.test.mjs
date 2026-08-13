@@ -24,8 +24,10 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
 
 // No JIT build work in these tests — the route's build branch is exercised
 // elsewhere; here we only drive the getPageConfig status fork.
+const mockGetPageJitEnrichment = jest.fn(() => ({}));
 jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
   default: jest.fn(async () => undefined),
+  getPageJitEnrichment: mockGetPageJitEnrichment,
 }));
 
 jest.unstable_mockModule('../../lib/build/auth.js', () => ({
@@ -86,4 +88,20 @@ test('jitPageHandler returns the pageConfig when status is ok', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body).toEqual({ id: 'dashboard' });
+});
+
+test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'dashboard' } });
+  mockGetPageJitEnrichment.mockReturnValueOnce({
+    jsEntries: 'export default {};',
+    dynamicIcons: { FiZap: { tag: 'svg' } },
+  });
+  const res = await createApp().request('/api/page/dashboard');
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body).toEqual({
+    id: 'dashboard',
+    _jsEntries: 'export default {};',
+    _dynamicIcons: { FiZap: { tag: 'svg' } },
+  });
 });
