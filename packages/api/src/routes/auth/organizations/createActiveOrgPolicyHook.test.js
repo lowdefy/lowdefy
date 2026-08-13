@@ -67,7 +67,7 @@ function createMockAuth({
 }
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
-const tenant = { policy: 'tenant' };
+const tenant = { policy: 'tenant', signup: 'open', create: 'auto' };
 
 test('pinned: a member of the pinned org gets it as the active organization', async () => {
   const { auth } = createMockAuth({ member: { id: 'member_1', role: 'admin' } });
@@ -222,6 +222,36 @@ test('tenant: a mint losing the unique slug race reads and uses the winning org 
     model: 'member',
     data: expect.objectContaining({ organizationId: 'org_winner', role: 'owner' }),
   });
+});
+
+test('tenant invite-only: a user with no membership and no invitation is rejected with a 403 MEMBERSHIP_REQUIRED APIError', async () => {
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'tenant', signup: 'invite-only', create: 'auto' },
+  });
+  let thrown;
+  try {
+    await hook({ userId: 'user_1' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(APIError);
+  expect(thrown.body.code).toBe('MEMBERSHIP_REQUIRED');
+  expect(thrown.body.message).toBe('You have not been granted access to this application.');
+  expect(thrown.statusCode).toBe(403);
+  expect(adapter.create).not.toHaveBeenCalled();
+});
+
+test('tenant open + operator: a user with no membership and no invitation gets an org-less session and no org is minted', async () => {
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
+  const hook = createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    organizations: { policy: 'tenant', signup: 'open', create: 'operator' },
+  });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toBeUndefined();
+  expect(adapter.create).not.toHaveBeenCalled();
 });
 
 test('pinned open signup: a session for a not-yet-joined user ensures membership and sets the org active', async () => {

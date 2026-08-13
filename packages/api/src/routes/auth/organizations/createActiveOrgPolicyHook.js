@@ -34,9 +34,9 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 //
 // tenant: the active org is the user's business - the oldest membership when
 // they hold several; a user with a pending invitation gets a session but no
-// org (they proceed to accept); a fresh signup mints its own organization
-// lazily, as owner, through the org plugin's adapter layer (the endpoint
-// cannot serve the mint - see applyTenantPolicy).
+// org (they proceed to accept); a fresh signup under create: auto mints its
+// own organization lazily, as owner, through the org plugin's adapter layer
+// (the endpoint cannot serve the mint - see applyTenantPolicy).
 function createActiveOrgPolicyHook({ getAuth, organizations }) {
   async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
     const organization = await ensureOrganization({ auth, slug: organizations.org });
@@ -102,9 +102,30 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
     if (invitation) {
       // An invited user joins the inviter's tenant on accept - mint nothing.
       // If the invitation expires unaccepted, the next login lands here with
-      // no pending invitation and mints their own tenant.
+      // no pending invitation: invite-only refuses them at the neither branch,
+      // while open + operator returns an org-less session.
       return;
     }
+    // Neither a membership nor a pending invitation. What happens depends on
+    // the two admission knobs.
+    if (organizations.signup === 'invite-only') {
+      // Reached only by existing users - removed from their last org, or an
+      // invitation that expired. New uninvited users never got past the create
+      // gate. Same shape as applyPinnedPolicy, so client handling is
+      // policy-blind.
+      throw new APIError('FORBIDDEN', {
+        message: 'You have not been granted access to this application.',
+        code: 'MEMBERSHIP_REQUIRED',
+      });
+    }
+    if (organizations.create === 'operator') {
+      // open + operator: no membership, no invitation, orgs come only from the
+      // operator - return an org-less session (awaiting organization). Public
+      // pages see the caller; protected pages are walled until an org is
+      // assigned.
+      return;
+    }
+    // open + auto: mint the user's own org as owner.
     // Minted through the org plugin's own adapter layer - the same layer its
     // createOrganization endpoint drives. The endpoint itself cannot serve
     // this call at 1.6.23: a headerless system-action call cannot resolve
