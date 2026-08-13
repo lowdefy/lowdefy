@@ -19,7 +19,7 @@ import _authConfig from './authConfig.js';
 const authConfig = {
   emailAndPassword: { enabled: true },
   magicLink: { enabled: false },
-  twoFactor: { enabled: true },
+  twoFactor: { enabled: true, required: true },
   passkey: { enabled: false },
   phoneNumber: { enabled: true, signUpOnVerification: false },
   captcha: { enabled: true, provider: 'cloudflare-turnstile', siteKey: '0x4AAAAAAA' },
@@ -48,6 +48,10 @@ test('_authConfig returns magicLink.enabled boolean', () => {
 
 test('_authConfig returns twoFactor.enabled boolean', () => {
   expect(_authConfig({ authConfig, params: 'twoFactor.enabled' })).toBe(true);
+});
+
+test('_authConfig returns twoFactor.required boolean', () => {
+  expect(_authConfig({ authConfig, params: 'twoFactor.required' })).toBe(true);
 });
 
 test('_authConfig returns passkey.enabled boolean', () => {
@@ -92,7 +96,8 @@ test('_authConfig returns organizations.policy', () => {
 test('_authConfig throws for unknown path and names all readable paths', () => {
   expect(() => _authConfig({ authConfig, params: 'authPages.signIn' })).toThrow(
     '_build.authConfig received an unreadable path "authPages.signIn". Readable paths are: ' +
-      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "passkey.enabled", ' +
+      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "twoFactor.required", ' +
+      '"passkey.enabled", ' +
       '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
       '"captcha.enabled", "captcha.provider", "captcha.siteKey", ' +
       '"providers", "organizations.policy", "organizations.signup", "roles".'

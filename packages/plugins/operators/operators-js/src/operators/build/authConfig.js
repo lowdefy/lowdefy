@@ -22,6 +22,7 @@ const readablePaths = [
   'emailAndPassword.enabled',
   'magicLink.enabled',
   'twoFactor.enabled',
+  'twoFactor.required',
   'passkey.enabled',
   'phoneNumber.enabled',
   'phoneNumber.signUpOnVerification',
