@@ -18,7 +18,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function createWorkspace({ targetDir }) {
-  fs.writeFileSync(path.join(targetDir, 'pnpm-workspace.yaml'), 'packages: []\n');
+  // pnpm 11 fails installs when build scripts are ignored — same fix as the root
+  // workspace, plus sharp, which enters the server copy via next.
+  fs.writeFileSync(
+    path.join(targetDir, 'pnpm-workspace.yaml'),
+    `packages: []
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - sharp
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+`
+  );
   if (!fs.existsSync(path.join(targetDir, '.npmrc'))) {
     fs.writeFileSync(path.join(targetDir, '.npmrc'), 'strict-peer-dependencies=false\n');
   }
