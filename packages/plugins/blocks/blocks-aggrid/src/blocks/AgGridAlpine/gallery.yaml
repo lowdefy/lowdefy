@@ -1160,6 +1160,92 @@
                   - 'Delete '
                   - _event: row.name
 
+- title: Menu cell (row actions behind one trigger)
+  fullWidth: true
+  blocks:
+    - id: menu_cell_demo
+      type: AgGridAlpine
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Report
+            field: name
+          - headerName: Visibility
+            field: visibility
+            width: 130
+            cell:
+              type: tag
+              colorMap:
+                private: default
+                shared: blue
+          # Every item fires its own block-level event, the same as the buttons cell.
+          # `hiddenField` drops an item for rows it does not apply to, so one column
+          # definition serves owners and readers: TSK-003 is someone else's report, so
+          # its menu is Duplicate alone.
+          - headerName: ''
+            colId: menu
+            width: 60
+            sortable: false
+            filter: false
+            resizable: false
+            cell:
+              type: menu
+              items:
+                - eventName: onMenuRename
+                  title: Rename
+                  icon: AiOutlineEdit
+                  hiddenField: readOnly
+                - eventName: onMenuDuplicate
+                  title: Duplicate
+                  icon: AiOutlineCopy
+                - eventName: onMenuDelete
+                  title: Delete
+                  icon: AiOutlineDelete
+                  danger: true
+                  hiddenField: readOnly
+        rowData:
+          - _id: REP-001
+            name: Monthly spend by region
+            visibility: private
+            readOnly: false
+          - _id: REP-002
+            name: Open tickets by team
+            visibility: shared
+            readOnly: false
+          - _id: REP-003
+            name: Fleet utilisation (shared with you)
+            visibility: shared
+            readOnly: true
+      events:
+        onMenuRename:
+          - id: menu_rename_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Rename '
+                  - _event: row.name
+        onMenuDuplicate:
+          - id: menu_duplicate_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Duplicate '
+                  - _event: row.name
+        onMenuDelete:
+          - id: menu_delete_msg
+            type: DisplayMessage
+            params:
+              status: warning
+              content:
+                _string.concat:
+                  - 'Delete '
+                  - _event: row.name
+
 # Selector cells fire an event on change (event-only, like buttons) — the cell does not write to
 # the grid's row data. The app persists the change by updating the data bound to `rowData`. Here
 # each row's value is bound to state (with a `default`) and the event writes the new value back
