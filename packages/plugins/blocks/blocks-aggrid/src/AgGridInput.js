@@ -19,7 +19,7 @@ import { AgGridReact } from '@ag-grid-community/react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { CsvExportModule } from '@ag-grid-community/csv-export';
 
-import processColDefs from './processColDefs.js';
+import useColDefs from './useColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
 
@@ -30,6 +30,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const gridRef = useRef();
 
   const memoDefaultColDef = useMemo(() => defaultColDef);
+  const processedColDefs = useColDefs({ columnDefs, methods, gridRef });
 
   const getRowId = useCallback(
     (params) => {
@@ -212,7 +213,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         onRowDragEnd={onRowDragEnd}
         defaultColDef={memoDefaultColDef}
         modules={[ClientSideRowModelModule, CsvExportModule]}
-        columnDefs={processColDefs(columnDefs, methods)}
+        columnDefs={processedColDefs}
         ref={gridRef}
         getRowId={getRowId}
         suppressLoadingOverlay
