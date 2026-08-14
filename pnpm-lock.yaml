@@ -1552,6 +1552,9 @@ importers:
       saslprep:
         specifier: 1.0.3
         version: 1.0.3
+      uuid:
+        specifier: 13.0.0
+        version: 13.0.0
     devDependencies:
       '@lowdefy/ajv':
         specifier: 5.4.0
@@ -13553,6 +13556,10 @@ packages:
 
   uuid@11.1.1:
     resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
+    hasBin: true
+
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
     hasBin: true
 
   uuid@14.0.0:
@@ -26503,6 +26510,8 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   uuid@11.1.1: {}
+
+  uuid@13.0.0: {}
 
   uuid@14.0.0: {}
 

@@ -70,6 +70,7 @@
 - _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
+- _ref: users/reference/MultiAppMongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
 - _ref: testing/e2e-introduction.yaml

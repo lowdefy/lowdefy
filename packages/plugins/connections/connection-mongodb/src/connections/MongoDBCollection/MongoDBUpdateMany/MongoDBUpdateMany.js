@@ -18,11 +18,33 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbUpdateMany({ connection, request }) {
+async function MongodbUpdateMany({
+  blockId,
+  connection,
+  connectionId,
+  pageId,
+  payload,
+  request,
+  requestId,
+}) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const collection = await getCollection({ connection });
+  const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.updateMany(filter, update, options);
+  if (logCollection) {
+    await logCollection.insertOne({
+      args: { filter, update, options },
+      blockId,
+      connectionId,
+      pageId,
+      payload,
+      requestId,
+      response,
+      timestamp: new Date(),
+      type: 'MongoDBUpdateMany',
+      meta: connection.changeLog?.meta,
+    });
+  }
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }

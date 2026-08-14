@@ -15,6 +15,7 @@
 */
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
@@ -34,6 +35,7 @@ async function build({ context }) {
   await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
+  await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });

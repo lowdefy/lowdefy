@@ -18,11 +18,62 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbUpdateOne({ connection, request }) {
+async function MongodbUpdateOne({
+  blockId,
+  connection,
+  connectionId,
+  pageId,
+  payload,
+  request,
+  requestId,
+}) {
   const deserializedRequest = deserialize(request);
-  const { filter, update, options } = deserializedRequest;
-  const collection = await getCollection({ connection });
-  const response = await collection.updateOne(filter, update, options);
+  const { filter, update, options, disableNoMatchError } = deserializedRequest;
+  const { collection, logCollection } = await getCollection({ connection });
+  let response;
+  if (logCollection) {
+    // findOneAndUpdate instead of updateOne to capture before and after
+    // documents for the change log. The response shape matches the updateOne
+    // response so it is invariant to the connection having a changeLog.
+    const before = await collection.findOne(filter);
+    const result = await collection.findOneAndUpdate(filter, update, {
+      ...options,
+      includeResultMetadata: true,
+      returnDocument: 'after',
+    });
+    const after = result.value ?? null;
+    const upsertedId = result.lastErrorObject?.upserted ?? null;
+    const matched = result.lastErrorObject?.updatedExisting ? 1 : 0;
+    response = {
+      acknowledged: true,
+      matchedCount: matched,
+      modifiedCount: matched,
+      upsertedId,
+      upsertedCount: upsertedId ? 1 : 0,
+    };
+    // Throw before writing the log record so a no-match update never logs.
+    if (!disableNoMatchError && !options?.upsert && matched === 0 && !upsertedId) {
+      throw new Error('No matching record to update.');
+    }
+    await logCollection.insertOne({
+      args: { filter, update, options },
+      blockId,
+      connectionId,
+      pageId,
+      payload,
+      requestId,
+      before,
+      after,
+      timestamp: new Date(),
+      type: 'MongoDBUpdateOne',
+      meta: connection.changeLog?.meta,
+    });
+  } else {
+    response = await collection.updateOne(filter, update, options);
+    if (!disableNoMatchError && !options?.upsert && response.matchedCount === 0) {
+      throw new Error('No matching record to update.');
+    }
+  }
   return serialize(response);
 }
 

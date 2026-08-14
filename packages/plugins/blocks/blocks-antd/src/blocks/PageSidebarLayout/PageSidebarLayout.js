@@ -179,46 +179,47 @@ const PageSidebarLayout = ({
                         }}
                       />
                     )}
-                    <Menu
-                      blockId={`${blockId}_menu`}
-                      components={{ Icon, Link, ShortcutBadge }}
-                      basePath={basePath}
-                      classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
-                      events={events}
-                      methods={methods}
-                      menus={menus}
-                      pageId={pageId}
-                      properties={mergeObjects([
-                        {
-                          mode: 'inline',
-                          collapsed: !openSiderState,
-                        },
-                        properties.menu,
-                        properties.menuLg,
-                      ])}
-                      styles={{ element: styles.menu }}
-                      rename={{
-                        events: {
-                          onClick: 'onMenuItemClick',
-                          onSelect: 'onMenuItemSelect',
-                          onToggleMenuGroup: 'onToggleMenuGroup',
-                        },
-                      }}
-                    />
-                    {openSiderState && content.siderOpen && (
-                      <div style={{ flex: '0 0 auto' }}>{content.siderOpen()}</div>
-                    )}
-                    {!openSiderState && content.siderClosed && (
-                      <div style={{ flex: '0 0 auto' }}>{content.siderClosed()}</div>
-                    )}
-                    <div style={{ flex: '1 0 auto' }} />
+                    {/* Menu scrolls here between the fixed toggle and footer so the last item
+                        can't hide behind the footer; min-height:0 lets it shrink to scroll. */}
+                    <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }}>
+                      <Menu
+                        blockId={`${blockId}_menu`}
+                        components={{ Icon, Link, ShortcutBadge }}
+                        basePath={basePath}
+                        classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
+                        events={events}
+                        methods={methods}
+                        menus={menus}
+                        pageId={pageId}
+                        properties={mergeObjects([
+                          {
+                            mode: 'inline',
+                            collapsed: !openSiderState,
+                          },
+                          properties.menu,
+                          properties.menuLg,
+                        ])}
+                        styles={{ element: styles.menu }}
+                        rename={{
+                          events: {
+                            onClick: 'onMenuItemClick',
+                            onSelect: 'onMenuItemSelect',
+                            onToggleMenuGroup: 'onToggleMenuGroup',
+                          },
+                        }}
+                      />
+                      {openSiderState && content.siderOpen && (
+                        <div style={{ flex: '0 0 auto' }}>{content.siderOpen()}</div>
+                      )}
+                      {!openSiderState && content.siderClosed && (
+                        <div style={{ flex: '0 0 auto' }}>{content.siderClosed()}</div>
+                      )}
+                    </div>
                     <div
                       style={{
-                        position: 'sticky',
-                        bottom: 0,
-                        background:
-                          'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--ant-color-bg-container) 85%, transparent) 32px, color-mix(in srgb, var(--ant-color-bg-container) 95%, transparent) 100%)',
-                        padding: '40px 8px 8px',
+                        flex: '0 0 auto',
+                        background: 'var(--ant-color-bg-container)',
+                        padding: '8px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',

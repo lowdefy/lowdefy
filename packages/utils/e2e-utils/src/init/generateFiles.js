@@ -19,6 +19,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import allowDependencyBuild from './allowDependencyBuild.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -29,37 +30,6 @@ function copyTemplate(templateName, destPath) {
     return true;
   }
   return false;
-}
-
-function findWorkspaceRoot(startDir) {
-  let dir = startDir;
-  while (dir !== path.dirname(dir)) {
-    if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) return dir;
-    dir = path.dirname(dir);
-  }
-  return null;
-}
-
-function addOnlyBuiltDependency({ cwd, appPath, dependency }) {
-  const appDir = path.join(cwd, appPath);
-  const workspaceRoot = findWorkspaceRoot(appDir);
-
-  // In a pnpm workspace, onlyBuiltDependencies must be in the workspace root package.json
-  const targetDir = workspaceRoot ?? path.join(cwd, appPath);
-  const pkgPath = path.join(targetDir, 'package.json');
-
-  if (!fs.existsSync(pkgPath)) return;
-
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  const allowedBuilds = pkg.pnpm?.onlyBuiltDependencies ?? [];
-
-  if (!allowedBuilds.includes(dependency)) {
-    pkg.pnpm = pkg.pnpm || {};
-    pkg.pnpm.onlyBuiltDependencies = [...allowedBuilds, dependency];
-    fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-    const label = workspaceRoot ? 'workspace root package.json' : `${appPath}/package.json`;
-    console.log(`  ✓ Added ${dependency} to pnpm.onlyBuiltDependencies in ${label}`);
-  }
 }
 
 function updatePackageJson({ appPath, cwd, useExperimental, useMongoDB }) {
@@ -121,9 +91,9 @@ function updatePackageJson({ appPath, cwd, useExperimental, useMongoDB }) {
     console.log(`  ✓ Updated ${appPath}/package.json with e2e scripts and dependencies`);
   }
 
-  // mongodb-memory-server needs onlyBuiltDependencies (workspace-aware)
+  // mongodb-memory-server downloads mongod binaries in a postinstall script
   if (useMongoDB) {
-    addOnlyBuiltDependency({ cwd, appPath, dependency: 'mongodb-memory-server' });
+    allowDependencyBuild({ cwd, appPath, dependency: 'mongodb-memory-server' });
   }
 
   return updated;

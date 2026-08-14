@@ -11,6 +11,13 @@ onlyBuiltDependencies:
   - better-sqlite3
   - esbuild
 
+# allowBuilds replaces onlyBuiltDependencies in pnpm >=10.29 and pnpm 11.
+allowBuilds:
+  '@sentry/cli': true
+  '@swc/core': true
+  better-sqlite3: true
+  esbuild: true
+
 overrides:
   better-sqlite3: 12.11.1
 

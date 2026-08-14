@@ -18,6 +18,18 @@
       ]
     },
     {
+      "version": "5.5.0",
+      "from": ">=5.1.0 <5.5.0",
+      "description": "MongoDBUpdateOne throws a no-match error by default; opt out per request with disableNoMatchError",
+      "codemods": [
+        {
+          "id": "add-disable-no-match-error",
+          "description": "Add disableNoMatchError: true to existing MongoDBUpdateOne requests to preserve pre-5.5.0 behavior, with a per-request report for author review. No-op for apps using @lowdefy/community-plugin-mongodb.",
+          "path": "v5-5-0/01-add-disable-no-match-error.md"
+        }
+      ]
+    },
+    {
       "version": "5.1.0",
       "from": ">=5.0.0 <5.1.0",
       "description": "AgGrid built-in cell renderer types (tag, avatar, link, date, boolean, progress, number) + ellipsis + align",
