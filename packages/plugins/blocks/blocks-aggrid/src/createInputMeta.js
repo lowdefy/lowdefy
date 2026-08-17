@@ -20,6 +20,7 @@
 function createInputMeta(blockName) {
   return {
     category: 'input',
+    static: true,
     icons: [],
     valueType: 'array',
     cssKeys: {

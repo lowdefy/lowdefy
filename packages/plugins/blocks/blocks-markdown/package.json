@@ -34,6 +34,7 @@
     "./blocks": "./dist/blocks.js",
     "./metas": "./dist/metas.js",
     "./e2e": "./dist/e2e.js",
+    "./static": "./dist/static.js",
     "./types": "./dist/types.js"
   },
   "files": [
@@ -45,7 +46,8 @@
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/block-utils": "5.4.0",
@@ -61,12 +63,15 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@jest/globals": "28.1.3",
     "@lowdefy/block-dev-e2e": "5.4.0",
     "@lowdefy/e2e-utils": "5.4.0",
     "@playwright/test": "1.59.1",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
-    "copyfiles": "2.4.1"
+    "@swc/jest": "0.2.39",
+    "copyfiles": "2.4.1",
+    "jest": "28.1.3"
   },
   "publishConfig": {
     "access": "public"

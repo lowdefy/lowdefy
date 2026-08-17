@@ -763,6 +763,9 @@ importers:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/block-dev-e2e':
         specifier: 5.4.0
         version: link:../../../utils/block-dev-e2e
@@ -778,9 +781,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/blocks/blocks-antd:
     dependencies:
@@ -821,6 +830,9 @@ importers:
         specifier: 4.18.7
         version: 4.18.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/block-dev-e2e':
         specifier: 5.4.0
         version: link:../../../utils/block-dev-e2e
@@ -839,9 +851,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/blocks/blocks-antd-x:
     dependencies:
@@ -894,6 +912,12 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.4.0
         version: link:../../../utils/helpers
+      '@takumi-rs/core':
+        specifier: 2.5.0
+        version: 2.5.0(csstype@3.2.3)(preact@10.28.3)(react@18.2.0)
+      '@takumi-rs/helpers':
+        specifier: 2.5.0
+        version: 2.5.0(preact@10.28.3)(react@18.2.0)
       dompurify:
         specifier: 3.4.2
         version: 3.4.2
@@ -904,6 +928,9 @@ importers:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/block-dev-e2e':
         specifier: 5.4.0
         version: link:../../../utils/block-dev-e2e
@@ -919,9 +946,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/blocks/blocks-diff:
     dependencies:
@@ -996,6 +1029,9 @@ importers:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/block-dev-e2e':
         specifier: 5.4.0
         version: link:../../../utils/block-dev-e2e
@@ -1011,9 +1047,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/blocks/blocks-files:
     dependencies:
@@ -1156,6 +1198,9 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/block-dev-e2e':
         specifier: 5.4.0
         version: link:../../../utils/block-dev-e2e
@@ -1171,9 +1216,15 @@ importers:
       '@swc/core':
         specifier: 1.15.32
         version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/blocks/blocks-qr:
     dependencies:
@@ -6404,6 +6455,79 @@ packages:
 
   '@tailwindcss/postcss@4.3.1':
     resolution: {integrity: sha512-dNJuNbdEJT/SWRuXTYP1WSamelsz3ztkUsdtWQPjrexysrTpaEPM40P/71knXiXLYEojqPOEGitVLLpPMS5T6A==}
+
+  '@takumi-rs/core-darwin-arm64@2.5.0':
+    resolution: {integrity: sha512-OlUME0ox5k/1hAiqXsNmW5wwUuqk9B9Myq5ULxXor7uvMEM7V706r4yIQU+uxgeD3wm5uNLQ8Esi52EJLCWl5g==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@takumi-rs/core-darwin-x64@2.5.0':
+    resolution: {integrity: sha512-H5lrEPMCIqcEz2E5IZuvxUZvNQnMaIcAboo1OogSliKvxhNPDcQ5V3S9KMr94YqVjD1po3SJRMQMXyTIVMtPJg==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@takumi-rs/core-linux-arm64-gnu@2.5.0':
+    resolution: {integrity: sha512-wf/BkOk66qmcAoh7qp1gYW0zr4PA/vlDnmYV/tod6BSOdlNNy0aeZ4c5fNXVb0VcsDzsf4lC7x+jpOidieUnVQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@takumi-rs/core-linux-arm64-musl@2.5.0':
+    resolution: {integrity: sha512-bUBsrCPhySGBCX+Pam0odyESlWidzYJ5yqfwFHHoLsV1V08y3HtILOoGMPR/azZihcebmoedIF/L9KFahwtZpg==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@takumi-rs/core-linux-x64-gnu@2.5.0':
+    resolution: {integrity: sha512-RYwI/EsxuxtHgklvmHXfHSKAdHcY+mFMt9L7sOszcZeksvqpYJikQwZw2iiGKfMOZZsQLfi9bS9fTx6n1DKbog==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@takumi-rs/core-linux-x64-musl@2.5.0':
+    resolution: {integrity: sha512-7ujaogLt4To4F5eesNI54bolgprpTjXE3PgWS9ljnAvyW3JSErd5jbUY357Dvl85s6LNG4/vqSMXMdvAwFyppw==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@takumi-rs/core-win32-arm64-msvc@2.5.0':
+    resolution: {integrity: sha512-jdS9ZvtS520rj6nKFM7Y6QeBojJum8gGYU+XznQGidtQ+H9OI78Lpfx4Yh4j++YmrykoOwLhEwUVmoAZ4bwQyA==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@takumi-rs/core-win32-x64-msvc@2.5.0':
+    resolution: {integrity: sha512-LBHBiWi9GJTWMFsAO72IKix1wtCbo/0YrWcASyV0KvN1ZL7z3p6IQCgqw+VCyxSKmW3f7KLCdWqVx3kwtQBdLQ==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [win32]
+
+  '@takumi-rs/core@2.5.0':
+    resolution: {integrity: sha512-0HzlbCEkicLrpgiy22NWNWWTw2GYhP0yhbwhM4h6gnPw4i9JEs2kupE2npPPn/zFqs4tHZJ++K1LNalzXgHj1Q==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      csstype: '*'
+    peerDependenciesMeta:
+      csstype:
+        optional: true
+
+  '@takumi-rs/helpers@2.5.0':
+    resolution: {integrity: sha512-LSqjYZdQc/e1tjs3iOQPVLl2Tt4Ld/A8xGYsDdBDF0CkDI+oWISV/yrfsHEH3hDFigt+XS/rx0Zbe0DCOkNCWg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      preact: ^10.0.0
+      react: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      preact:
+        optional: true
+      react:
+        optional: true
 
   '@testing-library/dom@8.19.1':
     resolution: {integrity: sha512-P6iIPyYQ+qH8CvGauAqanhVnjrnRe0IZFSYCeGkSRW9q3u8bdVn2NPI+lasFyVsEQn1J/IFmp5Aax41+dAP9wg==}
@@ -18081,6 +18205,52 @@ snapshots:
       '@tailwindcss/oxide': 4.3.1
       postcss: 8.5.15
       tailwindcss: 4.3.1
+
+  '@takumi-rs/core-darwin-arm64@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-darwin-x64@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-linux-arm64-gnu@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-linux-arm64-musl@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-linux-x64-gnu@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-linux-x64-musl@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-win32-arm64-msvc@2.5.0':
+    optional: true
+
+  '@takumi-rs/core-win32-x64-msvc@2.5.0':
+    optional: true
+
+  '@takumi-rs/core@2.5.0(csstype@3.2.3)(preact@10.28.3)(react@18.2.0)':
+    dependencies:
+      '@takumi-rs/helpers': 2.5.0(preact@10.28.3)(react@18.2.0)
+    optionalDependencies:
+      '@takumi-rs/core-darwin-arm64': 2.5.0
+      '@takumi-rs/core-darwin-x64': 2.5.0
+      '@takumi-rs/core-linux-arm64-gnu': 2.5.0
+      '@takumi-rs/core-linux-arm64-musl': 2.5.0
+      '@takumi-rs/core-linux-x64-gnu': 2.5.0
+      '@takumi-rs/core-linux-x64-musl': 2.5.0
+      '@takumi-rs/core-win32-arm64-msvc': 2.5.0
+      '@takumi-rs/core-win32-x64-msvc': 2.5.0
+      csstype: 3.2.3
+    transitivePeerDependencies:
+      - preact
+      - react
+
+  '@takumi-rs/helpers@2.5.0(preact@10.28.3)(react@18.2.0)':
+    optionalDependencies:
+      preact: 10.28.3
+      react: 18.2.0
 
   '@testing-library/dom@8.19.1':
     dependencies:
