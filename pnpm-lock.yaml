@@ -90,13 +90,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -295,13 +295,13 @@ importers:
         version: link:../plugins/websockets/websockets-core
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -356,13 +356,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -414,13 +414,13 @@ importers:
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@testing-library/dom':
         specifier: 8.19.1
         version: 8.19.1
@@ -465,13 +465,13 @@ importers:
         version: link:../docs-content
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -507,13 +507,13 @@ importers:
         version: link:../plugins/operators/operators-mql
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -599,13 +599,13 @@ importers:
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@testing-library/dom':
         specifier: 8.19.1
         version: 8.19.1
@@ -642,13 +642,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -673,13 +673,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -701,13 +701,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -768,10 +768,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -829,10 +829,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -872,10 +872,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -909,10 +909,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -964,10 +964,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1001,10 +1001,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1044,10 +1044,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1078,10 +1078,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1112,10 +1112,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1161,10 +1161,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1195,10 +1195,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1289,10 +1289,10 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -1314,13 +1314,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1342,13 +1342,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1367,13 +1367,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1395,13 +1395,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1423,13 +1423,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1460,13 +1460,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1503,13 +1503,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1524,13 +1524,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1564,13 +1564,13 @@ importers:
         version: 4.3.2(jest-environment-node@28.1.3)(mongodb@7.2.0)
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1601,13 +1601,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1629,13 +1629,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1657,13 +1657,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1685,13 +1685,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1713,13 +1713,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1751,13 +1751,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1782,13 +1782,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1813,13 +1813,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1850,13 +1850,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1884,13 +1884,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1915,13 +1915,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1946,13 +1946,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -1980,13 +1980,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2014,13 +2014,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2035,13 +2035,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2093,13 +2093,13 @@ importers:
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@testing-library/dom':
         specifier: 8.19.1
         version: 8.19.1
@@ -2139,13 +2139,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2160,13 +2160,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2191,13 +2191,13 @@ importers:
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2212,13 +2212,13 @@ importers:
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2228,6 +2228,61 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+
+  packages/plugins/plugins/plugin-reports:
+    dependencies:
+      '@lowdefy/actions-core':
+        specifier: 5.4.0
+        version: link:../../actions/actions-core
+      '@lowdefy/engine':
+        specifier: 5.4.0
+        version: link:../../../engine
+      '@lowdefy/errors':
+        specifier: 5.4.0
+        version: link:../../../utils/errors
+      '@lowdefy/helpers':
+        specifier: 5.4.0
+        version: link:../../../utils/helpers
+      '@lowdefy/operators':
+        specifier: 5.4.0
+        version: link:../../../operators
+      exceljs:
+        specifier: 4.4.0
+        version: 4.4.0
+      pdfmake:
+        specifier: 0.3.11
+        version: 0.3.11
+      remark-gfm:
+        specifier: 3.0.0
+        version: 3.0.0
+      remark-parse:
+        specifier: 10.0.2
+        version: 10.0.2
+      unified:
+        specifier: 10.1.2
+        version: 10.1.2
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@lowdefy/build':
+        specifier: 5.4.0
+        version: link:../../../build
+      '@lowdefy/operators-js':
+        specifier: 5.4.0
+        version: link:../../operators/operators-js
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/websockets/websockets-core:
     dependencies:
@@ -2249,13 +2304,13 @@ importers:
         version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2778,13 +2833,13 @@ importers:
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2809,13 +2864,13 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -2861,10 +2916,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
 
   packages/utils/block-dev-e2e:
     dependencies:
@@ -2877,10 +2932,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
 
   packages/utils/block-utils:
     dependencies:
@@ -2914,13 +2969,13 @@ importers:
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@testing-library/dom':
         specifier: 8.19.1
         version: 8.19.1
@@ -2960,10 +3015,10 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -2997,13 +3052,13 @@ importers:
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -3021,13 +3076,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -3049,13 +3104,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -3067,13 +3122,13 @@ importers:
     dependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -3101,13 +3156,13 @@ importers:
         version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
@@ -3126,13 +3181,13 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
@@ -3151,13 +3206,13 @@ importers:
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
-        version: 0.8.1(@swc/core@1.15.32)
+        version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
       '@swc/core':
         specifier: 1.15.32
-        version: 1.15.32
+        version: 1.15.32(@swc/helpers@0.5.23)
       '@swc/jest':
         specifier: 0.2.39
-        version: 0.2.39(@swc/core@1.15.32)
+        version: 0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))
       clean-webpack-plugin:
         specifier: 4.0.0
         version: 4.0.0(webpack@5.94.0)
@@ -3169,10 +3224,10 @@ importers:
         version: 3.2.4
       swc-loader:
         specifier: 0.2.3
-        version: 0.2.3(@swc/core@1.15.32)(webpack@5.94.0)
+        version: 0.2.3(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.94.0)
       webpack:
         specifier: 5.94.0
-        version: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+        version: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
       webpack-cli:
         specifier: 5.1.4
         version: 5.1.4(webpack@5.94.0)
@@ -4105,6 +4160,12 @@ packages:
     resolution: {integrity: sha512-ut5V+D+fOoWPgGGNj83GGjnntO39xDy6DWxO0wb7Jp3DcMX0TfIqdzHF85VTQkerdyGmuuMD9AKAo5KiNlf/AQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  '@fast-csv/format@4.3.5':
+    resolution: {integrity: sha512-8iRn6QF3I8Ak78lNAa+Gdl5MJJBM5vRHivFtMRUWINdevNo00K7OXxS2PshawLKTejVwieIlPmK5YlLu6w4u8A==}
+
+  '@fast-csv/parse@4.3.6':
+    resolution: {integrity: sha512-uRsLYksqpbDmWaSmzvJcuApSEe38+6NQZBUsuAyMZKqHxH0g1wcJgsKUvN3WC8tewaqFjBMMGrkHmC+T7k8LvA==}
+
   '@foliojs-fork/fontkit@1.9.1':
     resolution: {integrity: sha512-U589voc2/ROnvx1CyH9aNzOQWJp127JGU1QAylXGQ7LoEAF6hMmahZLQ4eqAcgHUw+uyW4PjtCItq9qudPkK3A==}
 
@@ -4575,6 +4636,14 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@noble/ciphers@1.3.0':
+    resolution: {integrity: sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@nodable/entities@2.2.0':
     resolution: {integrity: sha512-9uGyhaQavEUMC8AIddIjau4NsnsXhou+j5sBAGojCM1oxmQpVKTWR/9JxABD6UAv12vpIms55fPZKFQEhG6uBg==}
@@ -6234,6 +6303,9 @@ packages:
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
 
+  '@swc/helpers@0.5.23':
+    resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
+
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
 
@@ -6805,6 +6877,9 @@ packages:
 
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
+
+  '@types/node@14.18.63':
+    resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
 
   '@types/node@20.6.1':
     resolution: {integrity: sha512-4LcJvuXQlv4lTHnxwyHQZ3uR9Zw2j7m1C9DfuwoTFQQP4Pmu04O6IfLYgMmHoOCt0nosItLLZAH+sOrRE0Bo8g==}
@@ -7462,6 +7537,18 @@ packages:
   anynum@1.0.1:
     resolution: {integrity: sha512-N6//FLET/tXYNM/F6ABca1oH6fWB+KlTt909Le28WMDBk8oaT4vY17DCrwg2MvmuqUKt3Ni4N5dGJ/EoBgcO6A==}
 
+  archiver-utils@2.1.0:
+    resolution: {integrity: sha512-bEL/yUb/fNNiNTuUz979Z0Yg5L+LzLxGJz8x79lYmR54fmTIb6ob/hNQgkQnIUDWIFjZVQwl9Xs356I6BAMHfw==}
+    engines: {node: '>= 6'}
+
+  archiver-utils@3.0.4:
+    resolution: {integrity: sha512-KVgf4XQVrTjhyWmx6cte4RxonPLR9onExufI1jhvw/MQ4BB6IsZD5gT8Lq+u/+pRkWna/6JoHpiQioaqFP5Rzw==}
+    engines: {node: '>= 10'}
+
+  archiver@5.3.2:
+    resolution: {integrity: sha512-+25nxyyznAXF7Nef3y0EbBeqmGZgeN/BxHX29Rs39djAfaFalmQ89SE6CWyDCHzGL0yt/ycBtNOmGTW0FyGWNw==}
+    engines: {node: '>= 10'}
+
   arg@5.0.2:
     resolution: {integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==}
 
@@ -7580,6 +7667,9 @@ packages:
   async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
 
+  async@3.2.6:
+    resolution: {integrity: sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA==}
+
   asynciterator.prototype@1.0.0:
     resolution: {integrity: sha512-wwHYEIS0Q80f5mosx3L/dfG5t5rjEa9Ft51GTaNt862EnpyGHpgz2RkZvLPp1oF5TnAiTohkEKVEu8pQPJI7Vg==}
 
@@ -7673,6 +7763,10 @@ packages:
 
   bare-events@2.5.4:
     resolution: {integrity: sha512-+gFfDkR8pj4/TrWCGUGWmJIkBwuxPS5F+a5yWjOHQt2hHvNZd5YLzadjmDUtFmMM4y429bnKLa8bYBMHcYdnQA==}
+
+  base64-js@0.0.8:
+    resolution: {integrity: sha512-3XSA2cR/h/73EzlXXdU6YNycmYI7+kicTxks4eJg2g39biHR84slg2+des+p7iHYhbRg/udIS4TD53WabcOUkw==}
+    engines: {node: '>= 0.4'}
 
   base64-js@1.3.1:
     resolution: {integrity: sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==}
@@ -7785,6 +7879,9 @@ packages:
 
   browserify-optional@1.0.1:
     resolution: {integrity: sha512-VrhjbZ+Ba5mDiSYEuPelekQMfTbhcA2DhLk2VQWqdcCROWeFqlTcXZ7yfRkXCIl8E+g4gINJYJiRB7WEtfomAQ==}
+
+  browserify-zlib@0.2.0:
+    resolution: {integrity: sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==}
 
   browserslist@4.22.1:
     resolution: {integrity: sha512-FEVc202+2iuClEhZhrWy6ZiAcRLvNMyYcxZ8raemul1DYVOVdFsbqckWLdsixQZCpJlwe77Z3UTalE7jsjnKfQ==}
@@ -8042,6 +8139,10 @@ packages:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
 
+  clone@2.1.2:
+    resolution: {integrity: sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==}
+    engines: {node: '>=0.8'}
+
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -8117,6 +8218,10 @@ packages:
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
 
+  compress-commons@4.1.2:
+    resolution: {integrity: sha512-D3uMHtGc/fcO1Gt1/L7i1e33VOvD4A9hfQLP+6ewd+BvG/gQ84Yh4oftEhAdjSMgBgwGL+jsppT7JYNpo6MHHg==}
+    engines: {node: '>= 10'}
+
   compute-scroll-into-view@3.1.1:
     resolution: {integrity: sha512-VRhuHOLoKYOy4UbilLbUzbYg93XLjv2PncJC50EuTWPA3gaja1UjBsUP/D/9/juV3vQFr6XBEzn9KCAHdUvOHw==}
 
@@ -8187,6 +8292,15 @@ packages:
 
   cose-base@2.2.0:
     resolution: {integrity: sha512-AzlgcsCbUMymkADOJtQm3wO9S3ltPfYOFD5033keQn9NJzIbtnZj+UdBJe7DYml/8TdbtHJW3j58SOnKhWY/5g==}
+
+  crc-32@1.2.2:
+    resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
+    engines: {node: '>=0.8'}
+    hasBin: true
+
+  crc32-stream@4.0.3:
+    resolution: {integrity: sha512-NT7w2JVU7DFroFdYkeq8cywxrgjPHWkdX1wjpRQXPX5Asews3tA+Ght6lddQO5Mkumffp3X7GEqku3epj2toIw==}
+    engines: {node: '>= 10'}
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
@@ -9140,6 +9254,10 @@ packages:
     resolution: {integrity: sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==}
     engines: {node: '>=18.0.0'}
 
+  exceljs@4.4.0:
+    resolution: {integrity: sha512-XctvKaEMaj1Ii9oDOqbW/6e1gXknSY4g/aLCDicOXqBE4M0nRWkUu0PTp++UPNzoFY12BNHMfs/VadKIS6llvg==}
+    engines: {node: '>=8.3.0'}
+
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
@@ -9201,6 +9319,10 @@ packages:
 
   extendable-error@0.1.7:
     resolution: {integrity: sha512-UOiS2in6/Q0FK0R0q6UY9vYpQ21mr/Qn1KOnte7vsACuNJf514WvCCUHSRCPcgjPT2bAhNIJdlE6bVap1GKmeg==}
+
+  fast-csv@4.3.6:
+    resolution: {integrity: sha512-2RNSpuwwsJGP0frGsOmTb9oUF+VkFSM4SyLTDgwf2ciHWTarN0lQTC+F2f/t5J9QjW+c65VFIAAu85GsvMIusw==}
+    engines: {node: '>=10.0.0'}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -9358,6 +9480,9 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+
+  fontkit@2.0.4:
+    resolution: {integrity: sha512-syetQadaUEDNdxdugga9CpEYVaQIxOwk7GlwZWWZ19//qW4zE5bknOKeMBDYAASwnpaSHKJITRLMF9m1fp3s6g==}
 
   for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -9914,6 +10039,9 @@ packages:
   ignore@7.0.5:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
+
+  immediate@3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -10547,6 +10675,9 @@ packages:
   js-md4@0.3.2:
     resolution: {integrity: sha512-/GDnfQYsltsjRswQhN9fhv3EMw2sCpUdrdxyWDOUK7eyD++r3gRhzgiQgc/x4MAv2i1iuQ4lxO5mvqM3vj4bwA==}
 
+  js-md5@0.8.3:
+    resolution: {integrity: sha512-qR0HB5uP6wCuRMrWPTrkMaev7MJZwJuuw4fnwAzRgP4J4/F8RwtodOKpGp4XpqsLBFzzgqIO42efFAyz2Et6KQ==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -10632,6 +10763,9 @@ packages:
   jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
+
+  jszip@3.10.1:
+    resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
 
   jwa@1.4.1:
     resolution: {integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==}
@@ -10728,6 +10862,10 @@ packages:
   layout-base@2.0.1:
     resolution: {integrity: sha512-dp3s92+uNI1hWIpPGH3jK2kxE2lMjdXdr+DH8ynZHpd6PUlH6x6cbuXnoMmiNumznqaNO31xu9e79F0uuZ0JFg==}
 
+  lazystream@1.0.1:
+    resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
+    engines: {node: '>= 0.6.3'}
+
   leac@0.6.0:
     resolution: {integrity: sha512-y+SqErxb8h7nE/fiEX07jsbuhrpO9lL8eca7/Y1nuWV2moNlXhyd59iDGcRf6moVyDMbmTNzL40SUyrFU/yDpg==}
 
@@ -10742,6 +10880,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  lie@3.3.0:
+    resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
 
   lightningcss-android-arm64@1.32.0:
     resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}
@@ -10821,6 +10962,9 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
+  linebreak@1.1.0:
+    resolution: {integrity: sha512-MHp03UImeVhB7XZtjd0E4n6+3xr5Dq/9xI/5FptGk5FrbDR3zagPa2DS6U8ks/3HjbKWG9Q1M2ufOzxV2qLYSQ==}
+
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
@@ -10855,14 +10999,39 @@ packages:
   lodash-es@4.18.1:
     resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
+  lodash.defaults@4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+
+  lodash.difference@4.5.0:
+    resolution: {integrity: sha512-dS2j+W26TQ7taQBGN8Lbbq04ssV3emRw4NY58WErlTO29pIqS0HmoT5aJ9+TUQ1N3G+JOZSji4eugsWwGp9yPA==}
+
+  lodash.escaperegexp@4.1.2:
+    resolution: {integrity: sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==}
+
+  lodash.flatten@4.4.0:
+    resolution: {integrity: sha512-C5N2Z3DgnnKr0LOpv/hKCgKdb7ZZwafIrsesve6lmzvZIRZRGaZ/l6Q8+2W7NaT+ZwO3fFlSCzCzrDCFdJfZ4g==}
+
+  lodash.groupby@4.6.0:
+    resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
+
   lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
 
   lodash.isboolean@3.0.3:
     resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
 
+  lodash.isequal@4.5.0:
+    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+
+  lodash.isfunction@3.0.9:
+    resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
+
   lodash.isinteger@4.0.4:
     resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
+
+  lodash.isnil@4.0.0:
+    resolution: {integrity: sha512-up2Mzq3545mwVnMhTDMdfoG1OurpA/s5t88JmQX809eH3C8491iu2sfKhTfhQtKY78oPNhiaHJUpT/dUDAAtng==}
 
   lodash.isnumber@3.0.3:
     resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
@@ -10872,6 +11041,9 @@ packages:
 
   lodash.isstring@4.0.1:
     resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
+
+  lodash.isundefined@3.0.1:
+    resolution: {integrity: sha512-MXB1is3s899/cD8jheYYE2V9qTHwKvt+npCwpD+1Sxm3Q3cECXCiYHjeHWXNwr6Q0SOBPrYUDxendrO6goVTEA==}
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -10884,6 +11056,12 @@ packages:
 
   lodash.throttle@4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
+
+  lodash.union@4.6.0:
+    resolution: {integrity: sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw==}
+
+  lodash.uniq@4.5.0:
+    resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -11205,6 +11383,10 @@ packages:
 
   minimatch@5.0.1:
     resolution: {integrity: sha512-nLDxIFRyhDblz3qMuq+SoRZED4+miJ/G+tdDrjkkkRnjAsBexeGpgjLEQ0blJy7rHhR2b93rhQY4SvyWu9v03g==}
+    engines: {node: '>=10'}
+
+  minimatch@5.1.9:
+    resolution: {integrity: sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw==}
     engines: {node: '>=10'}
 
   minimatch@8.0.7:
@@ -11715,6 +11897,9 @@ packages:
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
 
+  pako@1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -11799,9 +11984,16 @@ packages:
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
+  pdfkit@0.19.1:
+    resolution: {integrity: sha512-6Gzk+wDwTs4VSxsR5rCMTnIl5nlmkye1oWB0l2hDB1EX6ZNSIBroKQEv+2+fPPn+stVjyqzmsqRJVDfB9fo5DA==}
+
   pdfmake@0.2.7:
     resolution: {integrity: sha512-ClLpgx30H5G3EDvRW1MrA1Xih6YxEaSgIVFrOyBMgAAt62V+hxsyWAi6JNP7u1Fc5JKYAbpb4RRVw8Rhvmz5cQ==}
     engines: {node: '>=12'}
+
+  pdfmake@0.3.11:
+    resolution: {integrity: sha512-Uc49J9hUMyuqJk+U+PxlpBpPr96A4HOOfesGx609EPr2ue82+5/Smq/KTAkEqh0/jUGSi1fumvqZ5yAWijJTJg==}
+    engines: {node: '>=20'}
 
   peberminta@0.9.0:
     resolution: {integrity: sha512-XIxfHpEuSJbITd1H3EeQwpcZbTLHc+VVr8ANI9t5sit565tsI4/xK3KWTUFE2e6QiangUkh3B0jihzmGnNrRsQ==}
@@ -11925,6 +12117,9 @@ packages:
 
   png-js@1.0.0:
     resolution: {integrity: sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==}
+
+  png-js@1.1.0:
+    resolution: {integrity: sha512-PM/uYGzGdNSzqeOgly68+6wKQDL1SY0a/N+OEa/+br6LnHWOAJB0Npiamnodfq3jd2LS/i2fMeOKSAILjA+m5Q==}
 
   points-on-curve@0.2.0:
     resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
@@ -12338,6 +12533,9 @@ packages:
     resolution: {integrity: sha512-Lk/fICSyIhodxy1IDK2HazkeGjSmezAWX2egdtJnYhtzKEsBPJowlI6F6LPb5tqIQILrMbx22S5o3GuJavPusA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  readdir-glob@1.1.3:
+    resolution: {integrity: sha512-v05I2k7xN8zXvPD9N+z/uhXPaj0sUFCe2rcWZIpBsqxfP7xXFQ0tipAd/wjj1YxWyWtUS5IDJpOG82JKt2EAVA==}
+
   readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
@@ -12484,6 +12682,9 @@ packages:
     resolution: {integrity: sha512-I9fPXU9geO9bHOt9pHHOhOkYerIMsmVaWB0rA2AI9ERh/+x/i7MV5HKBNrg+ljO5eoPVgCcnFuRjJ9uH6I/3eg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  restructure@3.0.2:
+    resolution: {integrity: sha512-gSfoiOEA0VPE6Tukkrr7I0RBdE0s7H1eFCDBk05l1KIQT1UIKNc5JZy6jdyW6eYH3aR3g5b3PuL77rq0hvwtAw==}
+
   retry-request@7.0.2:
     resolution: {integrity: sha512-dUOvLMJ0/JJYEn8NrpOaGNE7X3vpI5XlZS/u0ANjqtcZVKnIxP7IgCFwrKTxENw29emmwug53awKtaMm4i9g5w==}
     engines: {node: '>=14'}
@@ -12585,6 +12786,10 @@ packages:
 
   sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+
+  sax@1.6.1:
+    resolution: {integrity: sha512-42tBVwLWnaQvW5zc4HbZrTuWccECCZfBi92FDuwtqxasH+JbPB3/FOKb1m222K42R4WxuxzzMsTswfzgtSu64Q==}
+    engines: {node: '>=11.0.0'}
 
   saxes@5.0.1:
     resolution: {integrity: sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==}
@@ -13869,6 +14074,10 @@ packages:
   xmldoc@1.2.0:
     resolution: {integrity: sha512-2eN8QhjBsMW2uVj7JHLHkMytpvGHLHxKXBy4J3fAT/HujsEtM6yU84iGjpESYGHg6XwK0Vu4l+KgqQ2dv2cCqg==}
 
+  xmldoc@2.0.3:
+    resolution: {integrity: sha512-6gRk4NY/Jvg67xn7OzJuxLRsGgiXBaPUQplVJ/9l99uIugxh4FTOewYz5ic8WScj7Xx/2WvhENiQKwkK9RpE4w==}
+    engines: {node: '>=12.0.0'}
+
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
@@ -13949,6 +14158,10 @@ packages:
   yoctocolors@2.1.2:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
+
+  zip-stream@4.1.1:
+    resolution: {integrity: sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ==}
+    engines: {node: '>= 10'}
 
   zod-to-json-schema@3.25.2:
     resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
@@ -15337,6 +15550,25 @@ snapshots:
 
   '@eslint/js@8.54.0': {}
 
+  '@fast-csv/format@4.3.5':
+    dependencies:
+      '@types/node': 14.18.63
+      lodash.escaperegexp: 4.1.2
+      lodash.isboolean: 3.0.3
+      lodash.isequal: 4.5.0
+      lodash.isfunction: 3.0.9
+      lodash.isnil: 4.0.0
+
+  '@fast-csv/parse@4.3.6':
+    dependencies:
+      '@types/node': 14.18.63
+      lodash.escaperegexp: 4.1.2
+      lodash.groupby: 4.6.0
+      lodash.isfunction: 3.0.9
+      lodash.isnil: 4.0.0
+      lodash.isundefined: 3.0.1
+      lodash.uniq: 4.5.0
+
   '@foliojs-fork/fontkit@1.9.1':
     dependencies:
       '@foliojs-fork/restructure': 2.0.2
@@ -15899,6 +16131,10 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@14.2.33':
     optional: true
+
+  '@noble/ciphers@1.3.0': {}
+
+  '@noble/hashes@1.8.0': {}
 
   '@nodable/entities@2.2.0': {}
 
@@ -17700,9 +17936,9 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@swc/cli@0.8.1(@swc/core@1.15.32)':
+  '@swc/cli@0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))':
     dependencies:
-      '@swc/core': 1.15.32
+      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
       '@swc/counter': 0.1.3
       '@xhmikosr/bin-wrapper': 14.4.0
       commander: 8.3.0
@@ -17751,7 +17987,7 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.15.32':
     optional: true
 
-  '@swc/core@1.15.32':
+  '@swc/core@1.15.32(@swc/helpers@0.5.23)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.26
@@ -17768,18 +18004,23 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.15.32
       '@swc/core-win32-ia32-msvc': 1.15.32
       '@swc/core-win32-x64-msvc': 1.15.32
+      '@swc/helpers': 0.5.23
 
   '@swc/counter@0.1.3': {}
+
+  '@swc/helpers@0.5.23':
+    dependencies:
+      tslib: 2.8.1
 
   '@swc/helpers@0.5.5':
     dependencies:
       '@swc/counter': 0.1.3
       tslib: 2.8.1
 
-  '@swc/jest@0.2.39(@swc/core@1.15.32)':
+  '@swc/jest@0.2.39(@swc/core@1.15.32(@swc/helpers@0.5.23))':
     dependencies:
       '@jest/create-cache-key-function': 30.3.0
-      '@swc/core': 1.15.32
+      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
       '@swc/counter': 0.1.3
       jsonc-parser: 3.2.0
 
@@ -18371,6 +18612,8 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
+  '@types/node@14.18.63': {}
+
   '@types/node@20.6.1': {}
 
   '@types/node@24.13.2':
@@ -18834,17 +19077,17 @@ snapshots:
 
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.94.0)':
     dependencies:
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.94.0)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.94.0)':
     dependencies:
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.94.0)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack@5.94.0)':
     dependencies:
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.94.0)
 
   '@xhmikosr/archive-type@8.1.0':
@@ -19128,6 +19371,42 @@ snapshots:
 
   anynum@1.0.1: {}
 
+  archiver-utils@2.1.0:
+    dependencies:
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      lazystream: 1.0.1
+      lodash.defaults: 4.2.0
+      lodash.difference: 4.5.0
+      lodash.flatten: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.union: 4.6.0
+      normalize-path: 3.0.0
+      readable-stream: 2.3.7
+
+  archiver-utils@3.0.4:
+    dependencies:
+      glob: 7.2.3
+      graceful-fs: 4.2.11
+      lazystream: 1.0.1
+      lodash.defaults: 4.2.0
+      lodash.difference: 4.5.0
+      lodash.flatten: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.union: 4.6.0
+      normalize-path: 3.0.0
+      readable-stream: 3.6.2
+
+  archiver@5.3.2:
+    dependencies:
+      archiver-utils: 2.1.0
+      async: 3.2.6
+      buffer-crc32: 0.2.13
+      readable-stream: 3.6.2
+      readdir-glob: 1.1.3
+      tar-stream: 2.2.0
+      zip-stream: 4.1.1
+
   arg@5.0.2: {}
 
   argparse@1.0.10:
@@ -19300,6 +19579,8 @@ snapshots:
 
   async-sema@3.1.1: {}
 
+  async@3.2.6: {}
+
   asynciterator.prototype@1.0.0:
     dependencies:
       has-symbols: 1.0.3
@@ -19416,6 +19697,8 @@ snapshots:
 
   bare-events@2.5.4:
     optional: true
+
+  base64-js@0.0.8: {}
 
   base64-js@1.3.1: {}
 
@@ -19553,6 +19836,10 @@ snapshots:
       ast-transform: 0.0.0
       ast-types: 0.7.8
       browser-resolve: 1.11.3
+
+  browserify-zlib@0.2.0:
+    dependencies:
+      pako: 1.0.11
 
   browserslist@4.22.1:
     dependencies:
@@ -19785,7 +20072,7 @@ snapshots:
   clean-webpack-plugin@4.0.0(webpack@5.94.0):
     dependencies:
       del: 4.1.1
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
 
   cli-cursor@4.0.0:
     dependencies:
@@ -19820,6 +20107,8 @@ snapshots:
       shallow-clone: 3.0.1
 
   clone@1.0.4: {}
+
+  clone@2.1.2: {}
 
   clsx@2.1.1: {}
 
@@ -19868,6 +20157,13 @@ snapshots:
   commander@8.3.0: {}
 
   commondir@1.0.1: {}
+
+  compress-commons@4.1.2:
+    dependencies:
+      buffer-crc32: 0.2.13
+      crc32-stream: 4.0.3
+      normalize-path: 3.0.0
+      readable-stream: 3.6.2
 
   compute-scroll-into-view@3.1.1: {}
 
@@ -19928,6 +20224,13 @@ snapshots:
   cose-base@2.2.0:
     dependencies:
       layout-base: 2.0.1
+
+  crc-32@1.2.2: {}
+
+  crc32-stream@4.0.3:
+    dependencies:
+      crc-32: 1.2.2
+      readable-stream: 3.6.2
 
   crelt@1.0.6: {}
 
@@ -21198,6 +21501,18 @@ snapshots:
     dependencies:
       eventsource-parser: 3.0.8
 
+  exceljs@4.4.0:
+    dependencies:
+      archiver: 5.3.2
+      dayjs: 1.11.20
+      fast-csv: 4.3.6
+      jszip: 3.10.1
+      readable-stream: 3.6.2
+      saxes: 5.0.1
+      tmp: 0.2.1
+      unzipper: 0.10.14
+      uuid: 8.3.2
+
   execa@5.1.1:
     dependencies:
       cross-spawn: 7.0.6
@@ -21321,6 +21636,11 @@ snapshots:
   extend@3.0.2: {}
 
   extendable-error@0.1.7: {}
+
+  fast-csv@4.3.6:
+    dependencies:
+      '@fast-csv/format': 4.3.5
+      '@fast-csv/parse': 4.3.6
 
   fast-deep-equal@3.1.3: {}
 
@@ -21478,6 +21798,18 @@ snapshots:
       debug: 4.4.3
 
   follow-redirects@1.16.0: {}
+
+  fontkit@2.0.4:
+    dependencies:
+      '@swc/helpers': 0.5.23
+      brotli: 1.3.3
+      clone: 2.1.2
+      dfa: 1.2.0
+      fast-deep-equal: 3.1.3
+      restructure: 3.0.2
+      tiny-inflate: 1.0.3
+      unicode-properties: 1.4.1
+      unicode-trie: 2.0.0
 
   for-each@0.3.3:
     dependencies:
@@ -22140,6 +22472,8 @@ snapshots:
   ignore@5.2.4: {}
 
   ignore@7.0.5: {}
+
+  immediate@3.0.6: {}
 
   import-fresh@3.3.0:
     dependencies:
@@ -22927,6 +23261,8 @@ snapshots:
 
   js-md4@0.3.2: {}
 
+  js-md5@0.8.3: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.1:
@@ -23040,6 +23376,13 @@ snapshots:
       object.assign: 4.1.4
       object.values: 1.1.7
 
+  jszip@3.10.1:
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
+
   jwa@1.4.1:
     dependencies:
       buffer-equal-constant-time: 1.0.1(patch_hash=dd1bd5e7d44b09282824ff95ac138076b146c28db0dbdcd29596779bbed11709)
@@ -23134,6 +23477,10 @@ snapshots:
 
   layout-base@2.0.1: {}
 
+  lazystream@1.0.1:
+    dependencies:
+      readable-stream: 2.3.7
+
   leac@0.6.0: {}
 
   leven@3.1.0: {}
@@ -23147,6 +23494,10 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  lie@3.3.0:
+    dependencies:
+      immediate: 3.0.6
 
   lightningcss-android-arm64@1.32.0:
     optional: true
@@ -23199,6 +23550,11 @@ snapshots:
 
   lilconfig@3.1.3: {}
 
+  linebreak@1.1.0:
+    dependencies:
+      base64-js: 0.0.8
+      unicode-trie: 2.0.0
+
   lines-and-columns@1.2.4: {}
 
   linkify-it@3.0.3:
@@ -23231,17 +23587,35 @@ snapshots:
 
   lodash-es@4.18.1: {}
 
+  lodash.defaults@4.2.0: {}
+
+  lodash.difference@4.5.0: {}
+
+  lodash.escaperegexp@4.1.2: {}
+
+  lodash.flatten@4.4.0: {}
+
+  lodash.groupby@4.6.0: {}
+
   lodash.includes@4.3.0: {}
 
   lodash.isboolean@3.0.3: {}
 
+  lodash.isequal@4.5.0: {}
+
+  lodash.isfunction@3.0.9: {}
+
   lodash.isinteger@4.0.4: {}
+
+  lodash.isnil@4.0.0: {}
 
   lodash.isnumber@3.0.3: {}
 
   lodash.isplainobject@4.0.6: {}
 
   lodash.isstring@4.0.1: {}
+
+  lodash.isundefined@3.0.1: {}
 
   lodash.merge@4.6.2: {}
 
@@ -23250,6 +23624,10 @@ snapshots:
   lodash.startcase@4.4.0: {}
 
   lodash.throttle@4.1.1: {}
+
+  lodash.union@4.6.0: {}
+
+  lodash.uniq@4.5.0: {}
 
   lodash@4.17.21: {}
 
@@ -23733,6 +24111,10 @@ snapshots:
       brace-expansion: 1.1.11
 
   minimatch@5.0.1:
+    dependencies:
+      brace-expansion: 2.0.1
+
+  minimatch@5.1.9:
     dependencies:
       brace-expansion: 2.0.1
 
@@ -24302,6 +24684,8 @@ snapshots:
 
   pako@0.2.9: {}
 
+  pako@1.0.11: {}
+
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
@@ -24388,12 +24772,27 @@ snapshots:
 
   pathe@2.0.3: {}
 
+  pdfkit@0.19.1:
+    dependencies:
+      '@noble/ciphers': 1.3.0
+      '@noble/hashes': 1.8.0
+      fontkit: 2.0.4
+      js-md5: 0.8.3
+      linebreak: 1.1.0
+      png-js: 1.1.0
+
   pdfmake@0.2.7:
     dependencies:
       '@foliojs-fork/linebreak': 1.1.1
       '@foliojs-fork/pdfkit': 0.13.0
       iconv-lite: 0.6.3
       xmldoc: 1.2.0
+
+  pdfmake@0.3.11:
+    dependencies:
+      linebreak: 1.1.0
+      pdfkit: 0.19.1
+      xmldoc: 2.0.3
 
   peberminta@0.9.0: {}
 
@@ -24505,6 +24904,10 @@ snapshots:
   pluralize@8.0.0: {}
 
   png-js@1.0.0: {}
+
+  png-js@1.1.0:
+    dependencies:
+      browserify-zlib: 0.2.0
 
   points-on-curve@0.2.0: {}
 
@@ -24992,6 +25395,10 @@ snapshots:
       process: 0.11.10
       string_decoder: 1.3.0
 
+  readdir-glob@1.1.3:
+    dependencies:
+      minimatch: 5.1.9
+
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.1
@@ -25207,6 +25614,8 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
+  restructure@3.0.2: {}
+
   retry-request@7.0.2(encoding@0.1.13):
     dependencies:
       '@types/request': 2.48.13
@@ -25335,6 +25744,8 @@ snapshots:
       sparse-bitfield: 3.0.3
 
   sax@1.2.4: {}
+
+  sax@1.6.1: {}
 
   saxes@5.0.1:
     dependencies:
@@ -25907,10 +26318,10 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  swc-loader@0.2.3(@swc/core@1.15.32)(webpack@5.94.0):
+  swc-loader@0.2.3(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.94.0):
     dependencies:
-      '@swc/core': 1.15.32
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
 
   swr@2.2.4(react@18.2.0):
     dependencies:
@@ -26043,16 +26454,16 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.15.32)(webpack@5.94.0):
+  terser-webpack-plugin@5.3.14(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.94.0):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.30
       jest-worker: 27.5.1
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
       terser: 5.43.1
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
     optionalDependencies:
-      '@swc/core': 1.15.32
+      '@swc/core': 1.15.32(@swc/helpers@0.5.23)
 
   terser-webpack-plugin@5.3.14(esbuild@0.28.0)(webpack@5.94.0(esbuild@0.28.0)):
     dependencies:
@@ -26649,7 +27060,7 @@ snapshots:
       import-local: 3.1.0
       interpret: 3.1.1
       rechoir: 0.8.0
-      webpack: 5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4)
+      webpack: 5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4)
       webpack-merge: 5.8.0
 
   webpack-merge@5.8.0:
@@ -26661,7 +27072,7 @@ snapshots:
 
   webpack-virtual-modules@0.5.0: {}
 
-  webpack@5.94.0(@swc/core@1.15.32)(webpack-cli@5.1.4):
+  webpack@5.94.0(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack-cli@5.1.4):
     dependencies:
       '@types/estree': 1.0.8
       '@webassemblyjs/ast': 1.14.1
@@ -26683,7 +27094,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.14(@swc/core@1.15.32)(webpack@5.94.0)
+      terser-webpack-plugin: 5.3.14(@swc/core@1.15.32(@swc/helpers@0.5.23))(webpack@5.94.0)
       watchpack: 2.4.4
       webpack-sources: 3.2.3
     optionalDependencies:
@@ -26890,6 +27301,10 @@ snapshots:
     dependencies:
       sax: 1.2.4
 
+  xmldoc@2.0.3:
+    dependencies:
+      sax: 1.6.1
+
   xtend@4.0.2: {}
 
   y18n@5.0.8: {}
@@ -26973,6 +27388,12 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoctocolors@2.1.2: {}
+
+  zip-stream@4.1.1:
+    dependencies:
+      archiver-utils: 3.0.4
+      compress-commons: 4.1.2
+      readable-stream: 3.6.2
 
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
