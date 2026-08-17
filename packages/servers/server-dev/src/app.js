@@ -59,6 +59,7 @@ import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
 import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpHandler from './routes/mcp.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
@@ -159,6 +160,7 @@ function createApp() {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/user', userHandler);
 

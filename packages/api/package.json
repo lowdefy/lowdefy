@@ -51,6 +51,7 @@
     "@lowdefy/nunjucks": "5.5.1",
     "@lowdefy/operators": "5.5.1",
     "@lowdefy/operators-js": "5.5.1",
+    "@modelcontextprotocol/sdk": "1.29.0",
     "better-auth": "1.6.23",
     "nodemailer": "9.0.3"
   },

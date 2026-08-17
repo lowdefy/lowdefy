@@ -282,6 +282,83 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+- id: ds_presets_relative
+  type: DateSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Today
+        value:
+          _dayjs:
+            - now
+            - format: YYYY-MM-DD
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+            - format: YYYY-MM-DD
+      - label: A week ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - week
+            - format: YYYY-MM-DD
+      - label: A month ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+- id: ds_presets_boundaries
+  type: DateSelector
+  properties:
+    title: Period Boundaries
+    label:
+      disabled: true
+    presets:
+      - label: Start of month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: End of month
+        value:
+          _dayjs:
+            - now
+            - endOf: month
+            - format: YYYY-MM-DD
+      - label: Start of year
+        value:
+          _dayjs:
+            - now
+            - startOf: year
+            - format: YYYY-MM-DD
+- id: ds_presets_fixed
+  type: DateSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: New Year's Day
+        value: 2026-01-01
+      - label: Midsummer
+        value: 2026-06-21
+      - label: Christmas
+        value: 2026-12-25
+```
+
+```yaml
 - id: label_default
   type: DateSelector
   properties:
@@ -622,7 +699,7 @@ Date picker with configurable format and disabled dates.
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
 | `disabledDates.dates` | array | - | Array of specific dates to disable. |
-| `disabledDates.ranges` | array | - | Array of date ranges to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `label` | object | - | Label properties. |
@@ -640,6 +717,9 @@ Date picker with configurable format and disabled dates.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `format` | string | - | Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale's date format, or "YYYY-MM-DD" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a date. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same day in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the day before or after the current one, depending on the browser timezone and the time of day. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

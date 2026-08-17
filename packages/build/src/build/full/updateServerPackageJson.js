@@ -38,6 +38,7 @@ async function updateServerPackageJson({ components, context }) {
   getPackages(components.types.agents);
   getPackages(components.types.auth.adapters);
   getPackages(components.types.auth.providers);
+  getPackages(components.types.auth.strategies);
   getPackages(components.types.blocks);
   getPackages(components.types.connections);
   getPackages(components.types.notifications);

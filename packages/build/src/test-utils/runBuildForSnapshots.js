@@ -169,6 +169,10 @@ const snapshotTypesMap = {
       apiKey: { package: '@lowdefy/plugin-better-auth' },
       jwt: { package: '@lowdefy/plugin-better-auth' },
     },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-next-auth' },
+      jwt: { package: '@lowdefy/plugin-next-auth' },
+    },
   },
   operators: {
     client: {

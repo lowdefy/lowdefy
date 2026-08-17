@@ -151,6 +151,8 @@ await ldf.url().expect.toMatch(/\/tickets\/\d+/);
 
 // Query params
 await ldf.urlQuery('filter').expect.toBe('active');
+// do.set navigates through the app router, so a Dynamic page re-resolves its
+// content for the new query before this resolves.
 await ldf.urlQuery('page').do.set('2');
 
 // Get raw values
@@ -203,6 +205,20 @@ await expect(locator).toHaveAttribute('data-loading', 'true');
 // Block state and validation
 const blockState = await ldf.block('name_input').state();
 const validation = await ldf.block('email_input').validation();
+```
+
+### Keyboard Shortcuts
+
+A `mod` shortcut resolves to Cmd or Ctrl depending on the platform the **browser** reports, which
+Playwright emulates per project — a Desktop Chrome project reports Windows even on macOS. Derive the
+key from the page rather than from `process.platform`, or the test will press a key the app is not
+listening for:
+
+```javascript
+import { getShortcutModifier } from '@lowdefy/e2e-utils';
+
+const mod = await getShortcutModifier(ldf.page);
+await ldf.page.keyboard.press(`${mod}+k`);
 ```
 
 ## Complete Example

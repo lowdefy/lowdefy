@@ -134,3 +134,30 @@ blocks:
     properties:
       title: Clearable
       allowClear: true
+
+  # ============================================
+  # PRESETS
+  # ============================================
+
+  - id: dts_presets
+    type: DateTimeSelector
+    properties:
+      title: Presets
+      format: YYYY-MM-DD HH:mm
+      presets:
+        - label: Noon UTC
+          value:
+            _date: '2024-06-15T12:00:00.000Z'
+        - label: Local morning
+          value: '2024-06-15 09:30'
+
+  - id: dts_presets_utc
+    type: DateTimeSelector
+    properties:
+      title: Presets Select UTC
+      format: YYYY-MM-DD HH:mm
+      selectUTC: true
+      presets:
+        - label: Noon UTC
+          value:
+            _date: '2024-06-15T12:00:00.000Z'

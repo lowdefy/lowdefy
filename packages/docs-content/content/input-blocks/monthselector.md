@@ -290,6 +290,59 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+- id: ms_presets_relative
+  type: MonthSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: Last month
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+      - label: 3 months ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 3
+                - months
+            - format: YYYY-MM-DD
+      - label: A year ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - year
+            - format: YYYY-MM-DD
+- id: ms_presets_fixed
+  type: MonthSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: Start of 2026
+        value: 2026-01-01
+      - label: Mid 2026
+        value: 2026-07-01
+      - label: End of 2026
+        value: 2026-12-01
+```
+
+```yaml
 - id: month_label_default
   type: MonthSelector
   properties:
@@ -642,11 +695,14 @@ Month picker for selecting year and month.
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
 | `disabledDates.dates` | array | - | Array of specific dates to disable. |
-| `disabledDates.ranges` | array | - | Array of date ranges to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | - | Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale's month format, or "YYYY-MM" when no locale is configured. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a month. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |

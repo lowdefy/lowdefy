@@ -233,6 +233,49 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+- id: ws_presets_relative
+  type: WeekSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This week
+        value:
+          _dayjs:
+            - now
+            - startOf: week
+            - format: YYYY-MM-DD
+      - label: Last week
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - week
+            - format: YYYY-MM-DD
+      - label: 4 weeks ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 4
+                - weeks
+            - format: YYYY-MM-DD
+- id: ws_presets_fixed
+  type: WeekSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: First week of 2026
+        value: 2026-01-01
+      - label: Week of 1 July 2026
+        value: 2026-07-01
+```
+
+```yaml
 - id: ws_lbl_default
   type: WeekSelector
   properties:
@@ -552,11 +595,14 @@ Week picker for selecting a week of the year.
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
 | `disabledDates.dates` | array | - | Array of specific dates to disable. |
-| `disabledDates.ranges` | array | - | Array of date ranges to disable. |
+| `disabledDates.ranges` | array | - | Array of date ranges to disable. A range is an object with a from and a to date, or an array of the two dates. |
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | `"YYYY-wo"` | Format in which to format the date value, eg. "wo-YYYY" will format a date value of 1999-12-26 as "52nd-1999". The format has to conform to dayjs formats. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `presets` | array | - | Shortcuts listed next to the calendar to quickly select a week. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
+| `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
+| `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same week in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: week}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the week before or after the current one, depending on the browser timezone and the time of day. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

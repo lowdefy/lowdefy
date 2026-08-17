@@ -21,6 +21,7 @@ import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createMcpServer from './routes/mcp/createMcpServer.js';
 import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
@@ -47,6 +48,7 @@ export {
   callRequest,
   createApiContext,
   createChannelRegistry,
+  createMcpServer,
   createSystemContext,
   createWebSocketConnection,
   getAuthStrategies,

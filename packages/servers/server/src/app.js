@@ -34,6 +34,7 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpHandler from './routes/mcp.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
@@ -67,7 +68,11 @@ function createApp({ serveStaticAssets = true } = {}) {
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
     app.use('*', async (c, next) => {
-      if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
+      if (
+        c.req.path.includes('/api/agent/') ||
+        c.req.path.includes('/api/mcp') ||
+        c.req.path.includes('/api/websocket')
+      ) {
         return next();
       }
       return timeout(requestTimeoutMs)(c, next);
@@ -77,7 +82,11 @@ function createApp({ serveStaticAssets = true } = {}) {
   // Next.js compressed responses by default — keep parity, but leave
   // streaming responses (agent SSE) and websocket upgrades uncompressed.
   app.use('*', async (c, next) => {
-    if (c.req.path.includes('/api/agent/') || c.req.path.includes('/api/websocket')) {
+    if (
+      c.req.path.includes('/api/agent/') ||
+      c.req.path.includes('/api/mcp') ||
+      c.req.path.includes('/api/websocket')
+    ) {
       return next();
     }
     return compress()(c, next);
@@ -103,6 +112,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/user', userHandler);
