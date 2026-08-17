@@ -21,6 +21,9 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
+import blocksStatic from '../../build/plugins/blocksStatic.js';
+import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
+import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
@@ -28,6 +31,7 @@ import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getSession from '../../lib/server/auth/session.js';
 import i18nConfig from '../../lib/build/i18n.js';
+import icons from '../../build/plugins/icons.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
@@ -69,6 +73,13 @@ function apiContext() {
       rid: getRequestId(c),
       agents,
       appMeta,
+      // Statically imported so serverless file tracing pulls the report
+      // renderers, client operators, and icons into the deployed function —
+      // a runtime-resolved import would leave them out (see design core change 2).
+      blocksStatic,
+      clientJsMap,
+      clientOperators,
+      icons,
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       connections,

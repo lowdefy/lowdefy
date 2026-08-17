@@ -20,6 +20,9 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
+import blocksStatic from '../../build/plugins/blocksStatic.js';
+import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
+import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
@@ -28,6 +31,7 @@ import fileCache from '../../lib/server/fileCache.js';
 import getE2eSecrets from '../../lib/server/getE2eSecrets.js';
 import getSession from '../../lib/server/auth/session.js';
 import i18nConfig from '../../lib/build/i18n.js';
+import icons from '../../build/plugins/icons.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
@@ -50,6 +54,10 @@ function apiContext() {
       rid: uuid(),
       agents,
       appMeta,
+      blocksStatic,
+      clientJsMap,
+      clientOperators,
+      icons,
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),

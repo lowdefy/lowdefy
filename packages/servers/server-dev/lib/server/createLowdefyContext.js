@@ -22,6 +22,9 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
+import blocksStatic from '../../build/plugins/blocksStatic.js';
+import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
+import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
@@ -29,6 +32,7 @@ import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
 import i18nConfig from '../build/i18n.js';
+import icons from '../../build/plugins/icons.js';
 import logRequest from './log/logRequest.js';
 import notifications, {
   interpolateProperties,
@@ -78,6 +82,12 @@ async function createLowdefyContext({ c }) {
     rid: uuid(),
     agents,
     appMeta,
+    // Statically imported so the reports capability can reach the renderers,
+    // client operators, and icons (see design core change 2, point 6).
+    blocksStatic,
+    clientJsMap,
+    clientOperators,
+    icons,
     buildDirectory,
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
     config,
