@@ -30,7 +30,11 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./actions": "./dist/actions.js",
+    "./connections": "./dist/connections.js",
+    "./types": "./dist/types.js",
+    "./*": "./dist/*"
   },
   "files": [
     "dist/*"
