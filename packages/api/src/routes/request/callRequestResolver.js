@@ -16,6 +16,7 @@
 
 import { RequestError, ServiceError } from '@lowdefy/errors';
 
+import createApp from './createApp.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
@@ -67,6 +68,11 @@ async function callRequestResolver(
       payload,
       request: requestProperties,
       requestId: stepOrRequestId,
+      // The `app` capability is passed only to resolvers that opt in via
+      // meta.appAccess — idiomatic beside meta.checkRead / meta.checkWrite,
+      // keeping the grant visible in the plugin's own source, not a core
+      // allowlist. It reads built page config and re-enters the app's requests.
+      ...(requestResolver.meta?.appAccess === true ? { app: createApp(context) } : {}),
     });
     return response;
   } catch (error) {
