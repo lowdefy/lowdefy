@@ -76,9 +76,7 @@ test('page id is not a string', () => {
       },
     ],
   };
-  expect(() => buildPages({ components, context })).toThrow(
-    'Page id is not a string at page 0.'
-  );
+  expect(() => buildPages({ components, context })).toThrow('Page id is not a string at page 0.');
 });
 
 test('Throw on duplicate page ids', () => {
@@ -1024,4 +1022,59 @@ test('different blockId counter for each page', () => {
       },
     ],
   });
+});
+
+test('warns on duplicate report sheet names within a page', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          { id: 'grid_1', type: 'AgGrid', report: { sheetName: 'Sales' } },
+          { id: 'grid_2', type: 'AgGrid', report: { sheetName: 'Sales' } },
+        ],
+      },
+    ],
+  };
+  buildPages({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Duplicate report sheetName "Sales" on block "grid_2" on page "page_1" — already defined on block "grid_1".'
+  );
+});
+
+test('does not warn on distinct report sheet names within a page', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          { id: 'grid_1', type: 'AgGrid', report: { sheetName: 'Sales' } },
+          { id: 'grid_2', type: 'AgGrid', report: { sheetName: 'Regions' } },
+        ],
+      },
+    ],
+  };
+  buildPages({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('throws on the reserved chromium rendering mode', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        report: { rendering: 'chromium' },
+        blocks: [],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Report "rendering: chromium" on block "page_1" on page "page_1" is reserved and not yet supported.'
+  );
 });

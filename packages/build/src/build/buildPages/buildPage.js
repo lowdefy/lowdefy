@@ -30,10 +30,7 @@ import validateRequestReferences from './validateRequestReferences.js';
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    collectExceptions(
-      context,
-      new ConfigError(`Page id missing at page ${index}.`, { configKey })
-    );
+    collectExceptions(context, new ConfigError(`Page id missing at page ${index}.`, { configKey }));
     return { failed: true };
   }
   if (!type.isString(page.id)) {
@@ -51,6 +48,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   const requests = [];
   const requestActionRefs = [];
   const shortcutRefs = [];
+  const sheetNameRefs = [];
   // Extract subscriptions before block building — validateBlock rejects the
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
@@ -69,6 +67,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     requests,
     requestActionRefs,
     shortcutRefs,
+    sheetNameRefs,
     linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
   };
@@ -114,6 +113,22 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
       );
     } else {
       seenShortcuts[shortcut] = { blockId, eventId };
+    }
+  });
+
+  // Warn on duplicate report sheet names within the page — the plugin
+  // de-duplicates at render, but a collision usually signals a config mistake.
+  const seenSheetNames = {};
+  sheetNameRefs.forEach(({ sheetName, blockId, configKey }) => {
+    if (seenSheetNames[sheetName]) {
+      context.handleWarning(
+        new ConfigWarning(
+          `Duplicate report sheetName "${sheetName}" on block "${blockId}" on page "${page.pageId}" — already defined on block "${seenSheetNames[sheetName].blockId}".`,
+          { configKey }
+        )
+      );
+    } else {
+      seenSheetNames[sheetName] = { blockId };
     }
   });
 
