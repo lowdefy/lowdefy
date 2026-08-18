@@ -62,6 +62,21 @@ function setup({ signInResult, signUpResult } = {}) {
       })
     ),
     leaveOrganization: jest.fn(() => Promise.resolve({ data: { member: {} }, error: null })),
+    listOrganizations: jest.fn(() =>
+      Promise.resolve({
+        data: [
+          { id: 'org-1', name: 'Org One', slug: 'org-one' },
+          { id: 'org-2', name: 'Org Two', slug: 'org-two' },
+        ],
+        error: null,
+      })
+    ),
+    oauth2Consent: jest.fn(() =>
+      Promise.resolve({
+        data: { redirect: true, url: 'https://client.example.com/callback?code=auth-code' },
+        error: null,
+      })
+    ),
     phoneNumberRequestPasswordReset: jest.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
     ),
@@ -537,6 +552,90 @@ test('acceptInvitation surfaces the error returned by the endpoint', async () =>
   await expect(acceptInvitation({ invitationId: 'invitation-1' })).rejects.toThrow(
     'Invitation not found.'
   );
+});
+
+test('listOrganizations calls auth.listOrganizations with no params and returns the membership rows', async () => {
+  const { auth, lowdefy } = setup();
+  const { listOrganizations } = createAuthMethods(lowdefy, auth);
+  const data = await listOrganizations();
+  expect(auth.listOrganizations.mock.calls).toEqual([[]]);
+  expect(data).toEqual([
+    { id: 'org-1', name: 'Org One', slug: 'org-one' },
+    { id: 'org-2', name: 'Org Two', slug: 'org-two' },
+  ]);
+});
+
+test('listOrganizations surfaces the error returned by the endpoint', async () => {
+  const { auth, lowdefy } = setup();
+  auth.listOrganizations = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'Endpoint disabled.', code: 'NOT_FOUND', status: 404 },
+    })
+  );
+  const { listOrganizations } = createAuthMethods(lowdefy, auth);
+  await expect(listOrganizations()).rejects.toThrow('Endpoint disabled.');
+});
+
+test('oauth2Consent accepts and returns the authorization redirect', async () => {
+  const { auth, lowdefy } = setup();
+  const { oauth2Consent } = createAuthMethods(lowdefy, auth);
+  const data = await oauth2Consent({ accept: true });
+  expect(auth.oauth2Consent.mock.calls).toEqual([[{ accept: true }]]);
+  expect(data).toEqual({
+    redirect: true,
+    url: 'https://client.example.com/callback?code=auth-code',
+  });
+});
+
+test('oauth2Consent passes narrowing params through to the consent call', async () => {
+  const { auth, lowdefy } = setup();
+  const { oauth2Consent } = createAuthMethods(lowdefy, auth);
+  await oauth2Consent({ accept: true, scope: 'openid profile', claims: { userinfo: {} } });
+  expect(auth.oauth2Consent.mock.calls).toEqual([
+    [{ accept: true, scope: 'openid profile', claims: { userinfo: {} } }],
+  ]);
+});
+
+test('oauth2Consent propagates a deny as the OAuth error redirect URI', async () => {
+  const { auth, lowdefy } = setup();
+  auth.oauth2Consent = jest.fn(() =>
+    Promise.resolve({
+      data: {
+        redirect: true,
+        url: 'https://client.example.com/callback?error=access_denied&error_description=User+denied+access',
+      },
+      error: null,
+    })
+  );
+  const { oauth2Consent } = createAuthMethods(lowdefy, auth);
+  const data = await oauth2Consent({ accept: false });
+  expect(auth.oauth2Consent.mock.calls).toEqual([[{ accept: false }]]);
+  expect(data.url).toEqual(
+    'https://client.example.com/callback?error=access_denied&error_description=User+denied+access'
+  );
+});
+
+test('oauth2Consent throws when accept is not a boolean', async () => {
+  const { auth, lowdefy } = setup();
+  const { oauth2Consent } = createAuthMethods(lowdefy, auth);
+  await expect(oauth2Consent()).rejects.toThrow('OAuthConsent requires a boolean "accept" param.');
+  await expect(oauth2Consent({ accept: 'yes' })).rejects.toThrow(
+    'OAuthConsent requires a boolean "accept" param.'
+  );
+  expect(auth.oauth2Consent).not.toHaveBeenCalled();
+});
+
+test('oauth2Consent surfaces the error returned by the endpoint', async () => {
+  const { auth, lowdefy } = setup();
+  auth.oauth2Consent = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'invalid_signature', code: 'BAD_REQUEST', status: 400 },
+    })
+  );
+  const { oauth2Consent } = createAuthMethods(lowdefy, auth);
+  await expect(oauth2Consent({ accept: true })).rejects.toThrow('invalid_signature');
 });
 
 test('leaveOrganization resolves the active organization from the session', async () => {

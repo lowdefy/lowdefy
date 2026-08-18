@@ -463,6 +463,38 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.leaveOrganization({ organizationId }));
   }
 
+  // The signed-in user's own memberships from BetterAuth's org plugin -
+  // keyed on the consent session alone, not the active organization, so a
+  // consent page can list every workspace the caller may connect. Returns
+  // the array of organization rows ({ id, name, slug, ... }). Under the
+  // pinned org policy the /organization/list route is disabled server-side
+  // and this rejects.
+  async function listOrganizations() {
+    return unwrap(auth.listOrganizations());
+  }
+
+  // Approves or denies the pending OAuth authorization request. The
+  // oauth-provider plugin redirected here with the signed authorization
+  // query in the page URL; none of it is posted back through params - the
+  // auth client's oauth-provider fetch plugin stamps it onto the request
+  // body as oauth_query from window.location.search, and the server trusts
+  // it only after verifying its signature. The consenting identity rides the
+  // session cookie. So the call must run while the page still holds the
+  // query it arrived with. Optional scope / claims params narrow the grant
+  // to a subset of what was requested; omitted, everything requested is
+  // granted. Resolves with { redirect: true, url } - url is the OAuth
+  // client's redirect URI, carrying an authorization code on accept and
+  // error=access_denied on deny. The auth client's built-in redirect fetch
+  // plugin navigates the browser there as the response lands; the url is
+  // still returned so page config owns any navigation it wants to do
+  // instead.
+  async function oauth2Consent({ accept, ...params } = {}) {
+    if (!type.isBoolean(accept)) {
+      throw new Error('OAuthConsent requires a boolean "accept" param.');
+    }
+    return unwrap(auth.oauth2Consent({ accept, ...params }));
+  }
+
   async function changePassword({ currentPassword, newPassword, revokeOtherSessions } = {}) {
     if (!type.isString(currentPassword) || !type.isString(newPassword)) {
       throw new Error('ChangePassword requires "currentPassword" and "newPassword" params.');
@@ -689,8 +721,10 @@ function createAuthMethods(lowdefy, auth) {
     acceptInvitation,
     changePassword,
     leaveOrganization,
+    listOrganizations,
     login,
     logout,
+    oauth2Consent,
     passkeyDelete,
     passkeyRegister,
     passkeySignIn,

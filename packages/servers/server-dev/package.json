@@ -46,6 +46,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
     "@ant-design/x": "2.7.0",
+    "@better-auth/oauth-provider": "1.7.0",
     "@better-auth/passkey": "1.7.0",
     "@hono/mcp": "0.3.0",
     "@hono/node-server": "2.0.4",

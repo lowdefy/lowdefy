@@ -31,9 +31,11 @@ import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
 import createLeaveOrganization from './createLeaveOrganization.js';
 import createLink from './createLink.js';
+import createListOrganizations from './createListOrganizations.js';
 import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
 import createDisplayMessage from './createDisplayMessage.js';
+import createOauth2Consent from './createOauth2Consent.js';
 import createPasskeyDelete from './createPasskeyDelete.js';
 import createPasskeyRegister from './createPasskeyRegister.js';
 import createPasskeySignIn from './createPasskeySignIn.js';
@@ -82,8 +84,10 @@ function getActionMethods(props) {
     getUser: createGetUser(props),
     leaveOrganization: createLeaveOrganization(props),
     link: createLink(props),
+    listOrganizations: createListOrganizations(props),
     login: createLogin(props),
     logout: createLogout(props),
+    oauth2Consent: createOauth2Consent(props),
     passkeyDelete: createPasskeyDelete(props),
     passkeyRegister: createPasskeyRegister(props),
     passkeySignIn: createPasskeySignIn(props),

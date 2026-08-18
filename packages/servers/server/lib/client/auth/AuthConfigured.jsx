@@ -24,6 +24,7 @@ import {
   phoneNumberClient,
   twoFactorClient,
 } from 'better-auth/client/plugins';
+import { oauthProviderClient } from '@better-auth/oauth-provider/client';
 import { passkeyClient } from '@better-auth/passkey/client';
 
 import { normalizeCaller, serializer } from '@lowdefy/helpers';
@@ -38,6 +39,7 @@ const authClient = createAuthClient({
     adminClient(),
     genericOAuthClient(),
     magicLinkClient(),
+    oauthProviderClient(),
     organizationClient(),
     passkeyClient(),
     phoneNumberClient(),
@@ -170,6 +172,16 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     deletePasskey: (params) => authClient.passkey.deletePasskey(params),
     updatePasskey: (params) => authClient.passkey.updatePasskey(params),
     leaveOrganization: (params) => authClient.organization.leave(sessionScoped(params)),
+    // The caller's memberships from the org plugin, keyed on the session
+    // alone - not the active organization. sessionScoped so the list read
+    // does not also fire the org-list atom's own refetch of the same route.
+    listOrganizations: () => authClient.organization.list(sessionScoped()),
+    // POST /oauth2/consent. The signed authorization query is not passed
+    // here - the oauthProviderClient fetch plugin stamps it onto the body as
+    // oauth_query from window.location.search, so the call must run while
+    // the page still holds the query the oauth-provider redirect arrived
+    // with.
+    oauth2Consent: (params) => authClient.oauth2.consent(params),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
