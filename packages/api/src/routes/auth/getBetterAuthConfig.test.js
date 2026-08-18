@@ -1483,3 +1483,140 @@ test('always assembles both request hook slots even with no magic link configure
   expect(typeof options.hooks.before).toBe('function');
   expect(typeof options.hooks.after).toBe('function');
 });
+
+describe('oauthProvider authorization server plugins', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+
+  afterEach(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  function createOAuthProviderAuthJson(oauthProviderOverrides = {}) {
+    return createAuthJson({
+      oauthProvider: {
+        consentPage: '/oauth/consent',
+        dynamicClientRegistration: false,
+        ...oauthProviderOverrides,
+      },
+    });
+  }
+
+  function getOAuthOptions(oauthProviderOverrides = {}, config = undefined) {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    return getBetterAuthConfig({
+      appMeta,
+      authJson: createOAuthProviderAuthJson(oauthProviderOverrides),
+      config,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+  }
+
+  test('registers no jwt, oauth-provider or cimd plugin when oauthProvider is not configured', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.plugins.some((p) => p.id === 'jwt')).toBe(false);
+    expect(options.plugins.some((p) => p.id === 'oauth-provider')).toBe(false);
+    expect(options.plugins.some((p) => p.id === 'cimd')).toBe(false);
+    expect(options.disabledPaths).not.toContain('/token');
+  });
+
+  test('throws ConfigError naming BETTER_AUTH_URL when oauthProvider is configured without a pinned origin', () => {
+    delete process.env.BETTER_AUTH_URL;
+    expect(() =>
+      getBetterAuthConfig({
+        appMeta,
+        authJson: createOAuthProviderAuthJson(),
+        getAuth,
+        logger: createLogger(),
+        plugins: createPlugins(),
+        secrets: baseSecrets,
+      })
+    ).toThrow(ConfigError);
+    expect(() =>
+      getBetterAuthConfig({
+        appMeta,
+        authJson: createOAuthProviderAuthJson(),
+        getAuth,
+        logger: createLogger(),
+        plugins: createPlugins(),
+        secrets: baseSecrets,
+      })
+    ).toThrow('Auth "oauthProvider" requires the BETTER_AUTH_URL environment variable');
+  });
+
+  test('registers the core jwt plugin before the oauth-provider with /token disabled and no session JWT header', () => {
+    const options = getOAuthOptions();
+    const jwtIndex = options.plugins.findIndex((p) => p.id === 'jwt');
+    const oauthIndex = options.plugins.findIndex((p) => p.id === 'oauth-provider');
+    expect(jwtIndex).toBeGreaterThan(-1);
+    expect(oauthIndex).toBeGreaterThan(jwtIndex);
+    const jwtPlugin = options.plugins[jwtIndex];
+    expect(jwtPlugin.options).toEqual({ disableSettingJwtHeader: true });
+    // No jwt.issuer override - the AS then issues and advertises
+    // BETTER_AUTH_URL + basePath as its issuer.
+    expect(jwtPlugin.options.jwt).toBeUndefined();
+    expect(options.disabledPaths).toContain('/token');
+  });
+
+  test('configures the oauth-provider with the closed mcp scope vocabulary and JWT access tokens', () => {
+    const options = getOAuthOptions();
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.scopes).toEqual(['mcp:read', 'mcp:write']);
+    expect(plugin.options.grantTypes).toEqual(['authorization_code', 'refresh_token']);
+    // disableJwtPlugin false is the JWT access-token mode - opaque tokens off.
+    expect(plugin.options.disableJwtPlugin).toBe(false);
+    expect(plugin.options.enforcePerClientResources).toBe(false);
+    expect(plugin.options.customAccessTokenClaims).toBeUndefined();
+    expect(plugin.options.postLogin).toBeUndefined();
+    expect(plugin.options.resources).toBeUndefined();
+    expect(plugin.options.dpop).toBeUndefined();
+  });
+
+  test('denies every HTTP resource-CRUD action through resourcePrivileges', () => {
+    const options = getOAuthOptions();
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    ['create', 'read', 'update', 'delete', 'list', 'link', 'unlink'].forEach((action) => {
+      expect(plugin.options.resourcePrivileges({ action })).toBe(false);
+    });
+  });
+
+  test('resolves the consent and login pages to absolute basePath-prefixed routes', () => {
+    const options = getOAuthOptions({}, { basePath: '/base' });
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.consentPage).toBe('https://app.example.com/base/oauth/consent');
+    expect(plugin.options.loginPage).toBe('https://app.example.com/base/login');
+  });
+
+  test('leaves dynamic client registration disabled by default', () => {
+    const options = getOAuthOptions();
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.allowDynamicClientRegistration).toBe(false);
+    expect(plugin.options.allowUnauthenticatedClientRegistration).toBe(false);
+  });
+
+  test('enables open dynamic client registration when dynamicClientRegistration is true', () => {
+    const options = getOAuthOptions({ dynamicClientRegistration: true });
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.allowDynamicClientRegistration).toBe(true);
+    expect(plugin.options.allowUnauthenticatedClientRegistration).toBe(true);
+  });
+
+  test('registers the cimd plugin alongside the oauth-provider', () => {
+    const options = getOAuthOptions();
+    expect(options.plugins.some((p) => p.id === 'cimd')).toBe(true);
+  });
+});

@@ -16,7 +16,10 @@
 
 import { randomUUID } from 'node:crypto';
 
-import { customSession, genericOAuth, magicLink, twoFactor } from 'better-auth/plugins';
+import { customSession, genericOAuth, jwt, magicLink, twoFactor } from 'better-auth/plugins';
+import { cimd } from '@better-auth/cimd';
+import { fetchClientMetadataResource } from '@better-auth/cimd/node';
+import { oauthProvider } from '@better-auth/oauth-provider';
 import { passkey } from '@better-auth/passkey';
 import { ServerParser } from '@lowdefy/operators';
 import { _app, _secret } from '@lowdefy/operators-js/operators/server';
@@ -392,6 +395,59 @@ function getBetterAuthConfig({
     options.plugins.push(buildCaptchaPlugin({ authConfig }));
   }
 
+  // The app is its own OAuth 2.1 authorization server for the per-org MCP
+  // endpoints. The AS issuer and every per-org resource URI derive from the
+  // canonical origin - a Host-derived issuer would let a spoofed Host header
+  // steer where tokens are honoured, so an unpinned origin is a startup error.
+  if (!type.isNone(authConfig.oauthProvider)) {
+    if (!type.isString(baseUrlOrigin)) {
+      throw new ConfigError(
+        'Auth "oauthProvider" requires the BETTER_AUTH_URL environment variable to be set to the app\'s canonical origin. The authorization server issuer and every per-org MCP resource URI derive from it.'
+      );
+    }
+    const oauthPagesBasePath = config.basePath ?? '';
+    options.plugins.push(
+      // The oauth-provider delegates access-token signing to the core jwt
+      // plugin and fails init without it. Only the signing keys are wanted
+      // from it: /token (session-JWT minting) is disabled via disabledPaths
+      // and disableSettingJwtHeader keeps the set-auth-jwt header off
+      // /get-session responses; /jwks stays so access tokens are verifiable.
+      // jwt.issuer is deliberately unset - the issuer then defaults to
+      // BetterAuth's baseURL + basePath, `${BETTER_AUTH_URL}${basePath}/api/auth`.
+      jwt({ disableSettingJwtHeader: true }),
+      oauthProvider({
+        loginPage: `${baseUrlOrigin}${oauthPagesBasePath}${authConfig.authPages.signIn}`,
+        consentPage: `${baseUrlOrigin}${oauthPagesBasePath}${authConfig.oauthProvider.consentPage}`,
+        // The closed MCP scope vocabulary. Without "openid" the OIDC surface
+        // (id tokens, /oauth2/userinfo, /.well-known/openid-configuration)
+        // stays dormant.
+        scopes: ['mcp:read', 'mcp:write'],
+        // No client_credentials - every access token is user-consented.
+        grantTypes: ['authorization_code', 'refresh_token'],
+        // Any registered client may request any enabled resource - access is
+        // decided by user consent and org membership, not client-resource links.
+        enforcePerClientResources: false,
+        // Resource rows are owned by the app (one per organization), never
+        // administered over HTTP.
+        resourcePrivileges: () => false,
+        ...(authConfig.oauthProvider.dynamicClientRegistration === true
+          ? {
+              // RFC 7591 open registration - the opt-in fallback for MCP
+              // clients that cannot serve a CIMD document. Such clients carry
+              // no session, so registration must be unauthenticated.
+              allowDynamicClientRegistration: true,
+              allowUnauthenticatedClientRegistration: true,
+            }
+          : {}),
+      }),
+      // CIMD is the default registration path: an MCP client identifies by an
+      // HTTPS client_id URL serving its metadata document. Registers its
+      // client discovery on the oauth-provider and advertises
+      // client_id_metadata_document_supported in the AS metadata.
+      cimd({ fetchClientMetadataResource })
+    );
+  }
+
   // The admin plugin is framework-controlled - it owns the user row's ban fields
   // and the endpoints the ban, delete and revoke-sessions steps call. Its whole
   // HTTP surface is disabled (see ADMIN_PATHS_DISABLED).
@@ -494,6 +550,10 @@ function getBetterAuthConfig({
   options.disabledPaths = [
     ...ADMIN_PATHS_DISABLED,
     ...(policy === 'pinned' ? ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED : []),
+    // The jwt plugin is registered only to sign the oauth-provider's access
+    // tokens - /token would mint a session-backed JWT for any logged-in
+    // browser, a bearer credential Lowdefy's cookie-based clients never need.
+    ...(type.isNone(authConfig.oauthProvider) ? [] : ['/token']),
   ];
 
   // Decision 5: default every redirect-style auth error - chiefly an OAuth

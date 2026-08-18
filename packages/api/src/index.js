@@ -32,6 +32,9 @@ import {
   getMcpUriPrefix,
   isWellFormedOrgSegment,
 } from './routes/mcp/getMcpUri.js';
+import getMcpResourceBinding, {
+  registerMcpResourceBinding,
+} from './routes/mcp/getMcpResourceBinding.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
@@ -61,9 +64,11 @@ export {
   getAuthStrategies,
   getBetterAuth,
   getHomeAndMenus,
+  getMcpResourceBinding,
   getMcpResourceUri,
   getMcpUriPrefix,
   isWellFormedOrgSegment,
+  registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
   logClientError,

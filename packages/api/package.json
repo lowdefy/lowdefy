@@ -40,6 +40,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@better-auth/cimd": "1.7.0",
+    "@better-auth/oauth-provider": "1.7.0",
     "@better-auth/passkey": "1.7.0",
     "@lowdefy/ajv": "5.5.1",
     "@lowdefy/build": "5.5.1",
