@@ -1097,6 +1097,7 @@ describe('policy-aware org client endpoint lockdown (disabledPaths)', () => {
     '/organization/get-active-member',
     '/organization/get-active-member-role',
     '/organization/get-full-organization',
+    '/organization/get-organization',
     '/organization/list',
     '/organization/get-invitation',
     '/organization/list-invitations',

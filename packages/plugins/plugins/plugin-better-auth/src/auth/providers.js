@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// Generated from BetterAuth's socialProviders at better-auth@1.6.23 - every
+// Generated from BetterAuth's socialProviders at better-auth@1.7.0 - every
 // built-in provider, exposed as a PascalCase Lowdefy plugin type.
 import createSocialProvider from './createSocialProvider.js';
 

@@ -165,6 +165,12 @@ test('a competing session fetch aborts an in-flight refetch, which resolves havi
   });
   const sessionAtom = client.$store.atoms.session;
   const first = sessionAtom.get().refetch({ query: { disableCookieCache: true } });
+  // The store dispatches the fetch on a microtask, and a competitor that
+  // arrives first cancels the flight before its request is ever issued -
+  // then the mock's first /get-session call would belong to the second
+  // refetch. Yield one macrotask so the first request is genuinely in
+  // flight, which is the race UpdateSession's awaited refetch loses.
+  await wait(0);
   const second = sessionAtom.get().refetch();
   await expect(first).resolves.toBeUndefined();
   await second;

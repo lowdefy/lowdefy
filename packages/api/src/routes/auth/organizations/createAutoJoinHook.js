@@ -27,12 +27,13 @@ import getHookRequestHeaders from './getHookRequestHeaders.js';
 // member row but obtains no session until verified, so joining at user-create
 // is safe.
 //
-// BetterAuth flushes after-hooks at the end of the request (confirmed at
-// 1.6.23), so a signup minting an immediate session runs the session.create
-// policy hook first - that hook also ensures membership under open signup,
-// and this one skips when the member row already exists. Both sites therefore
-// have to agree on the value they mint, and createActiveOrgPolicyHook already
-// writes 'member'.
+// BetterAuth queues after-hooks inside an endpoint's transaction scope and
+// flushes them after it completes (confirmed at 1.7.0; sign-up wraps user and
+// session creation in one runWithTransaction), so a signup minting an
+// immediate session runs the session.create policy hook first - that hook
+// also ensures membership under open signup, and this one skips when the
+// member row already exists. Both sites therefore have to agree on the value
+// they mint, and createActiveOrgPolicyHook already writes 'member'.
 function createAutoJoinHook({ getAuth, organizations }) {
   return async function autoJoinHook(user, ctx) {
     const auth = getAuth();

@@ -51,10 +51,12 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       return { data: { ...session, activeOrganizationId: organization.id } };
     }
     // Open signup ensures membership here as well as at user.create.after:
-    // BetterAuth queues after-hooks and flushes them at the end of the
-    // request (confirmed at 1.6.23), so a signup that mints an immediate
-    // session reaches this hook before the auto-join has run. The two joins
-    // are idempotent - each skips when the member row already exists.
+    // BetterAuth queues after-hooks inside an endpoint's transaction scope
+    // and flushes them after it completes (confirmed at 1.7.0; sign-up wraps
+    // user and session creation in one runWithTransaction), so a signup that
+    // mints an immediate session reaches this hook before the auto-join has
+    // run. The two joins are idempotent - each skips when the member row
+    // already exists.
     if (organizations.signup === 'open') {
       await auth.api.addMember({
         body: {
@@ -128,7 +130,7 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
     // open + auto: mint the user's own org as owner.
     // Minted through the org plugin's own adapter layer - the same layer its
     // createOrganization endpoint drives. The endpoint itself cannot serve
-    // this call at 1.6.23: a headerless system-action call cannot resolve
+    // this call at 1.7.0: a headerless system-action call cannot resolve
     // the engine's dynamic baseURL, and forwarding the firing request's
     // headers makes the endpoint demand a session that does not exist yet.
     const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');

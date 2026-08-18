@@ -40,7 +40,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@better-auth/passkey": "1.6.23",
+    "@better-auth/passkey": "1.7.0",
     "@lowdefy/ajv": "5.5.1",
     "@lowdefy/build": "5.5.1",
     "@lowdefy/connection-smtp": "5.5.1",
@@ -52,7 +52,7 @@
     "@lowdefy/operators": "5.5.1",
     "@lowdefy/operators-js": "5.5.1",
     "@modelcontextprotocol/sdk": "1.29.0",
-    "better-auth": "1.6.23",
+    "better-auth": "1.7.0",
     "nodemailer": "9.0.3"
   },
   "devDependencies": {

@@ -19,12 +19,13 @@ import { type } from '@lowdefy/helpers';
 import callPluginEndpoint from './support/callPluginEndpoint.js';
 
 // The design routes member and invitation cleanup "via the org plugin's APIs",
-// but at better-auth 1.6.23 removeMember refuses once the user row is gone (it
+// but at better-auth 1.7.0 removeMember refuses once the user row is gone (it
 // re-reads the user and 400s). The cascade therefore uses the adapter layer -
 // the same layer the engine already uses for org seeding and tenant minting.
-// The admin removeUser endpoint hard-deletes the user row and (confirmed by the
-// phase-0 probe at 1.6.23) also clears the user's session and account rows, so
-// those are not cleared here. App-owned data is left untouched.
+// The admin removeUser endpoint hard-deletes the user row and (confirmed
+// against 1.7.0's internalAdapter.deleteUser) also clears the user's session
+// and account rows, so those are not cleared here. App-owned data is left
+// untouched.
 //
 // organizationId is part of the authored property surface even though the delete
 // is deployment-wide: the floor reads it to resolve the organization the caller's

@@ -64,7 +64,7 @@ test('twoFactor plugin sign-in matcher only covers email, username and phone-num
 });
 
 test('twoFactor plugin version matches the pinned better-auth dependency', () => {
-  // Pinned in packages/api/package.json as "better-auth": "1.6.23". This is
+  // Pinned in packages/api/package.json as "better-auth": "1.7.0". This is
   // the assertion that catches drift nothing else here can see: the
   // `2fa-`/`2fa-attempts-` identifier prefixes are inline template
   // literals with no exported constant, and TWO_FACTOR_COOKIE_NAME /
@@ -76,14 +76,14 @@ test('twoFactor plugin version matches the pinned better-auth dependency', () =>
   // available for internals this deeply private. On failure, re-read
   // requestHooks/beginTwoFactorChallenge.js against the new plugin
   // source before touching the string.
-  expect(twoFactor().version).toBe('1.6.23');
+  expect(twoFactor().version).toBe('1.7.0');
 });
 
 test('allowPasswordless relaxes the enable-two-factor body, required without it', () => {
   // getBetterAuthConfig instantiates twoFactor({ allowPasswordless: true }) so
   // shouldRequirePassword waives the password for a credential-less caller
   // (false), while still requiring it for one holding a password credential
-  // (true). That waiver is closure-private, but at 1.6.23 the flag also relaxes
+  // (true). That waiver is closure-private, but at 1.7.0 the flag also relaxes
   // the enable endpoint's body schema - password becomes optional - which is the
   // one publicly observable proxy for it. If upstream decouples the schema from
   // the flag or drops the waiver, this fails; re-read shouldRequirePassword
@@ -113,7 +113,7 @@ test('twoFactor plugin exposes an object error code for a missing attempts recor
   // `2fa-attempts-{identifier}` verification record is absent. The
   // engine's interception creates that record for exactly this reason -
   // without it, the first real verification attempt made through the
-  // plugin's own endpoint would reject a legitimate code. At 1.6.23 the
+  // plugin's own endpoint would reject a legitimate code. At 1.7.0 the
   // value is an object ({ code, message, toString }), not a bare string,
   // so both existence and `.code` are asserted rather than accepting a
   // truthy check that a change to a plain string would also satisfy. If

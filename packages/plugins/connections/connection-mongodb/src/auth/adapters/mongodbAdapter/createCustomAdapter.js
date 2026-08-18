@@ -82,9 +82,9 @@ function createCustomAdapter({ db }) {
     }
 
     // The join pipeline is kept for fidelity with the upstream
-    // @better-auth/mongo-adapter: at better-auth 1.6.23 the core only passes
-    // `join` when options.experimental.joins is enabled, which Lowdefy does
-    // not set - core serves joins through its fallback path instead.
+    // @better-auth/mongo-adapter: at better-auth 1.7.0 the core only passes
+    // `join` when options.advanced.database.joins is enabled, which Lowdefy
+    // does not set - core serves joins through its fallback path instead.
     function pushJoinStages({ pipeline, model, isUnique, joinedModel, joinConfig, shouldLimit }) {
       const localField = getFieldName({ field: joinConfig.on.from, model });
       const foreignField = getFieldName({ field: joinConfig.on.to, model: joinedModel });

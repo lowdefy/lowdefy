@@ -21,7 +21,7 @@ import OrganizationKeyError from './OrganizationKeyError.js';
 // configured slug means create it, otherwise do nothing. Idempotent and
 // self-bootstrapping - a fresh environment needs no manual seed step.
 // The organization row is written through the adapter, not the plugin's
-// createOrganization endpoint: at better-auth@1.6.23 that endpoint requires
+// createOrganization endpoint: at better-auth@1.7.0 that endpoint requires
 // a creator user (it mints an owner member row), and a seeded org has no
 // creator - membership is granted by invite. Racing instances are
 // backstopped by the unique slug index.
