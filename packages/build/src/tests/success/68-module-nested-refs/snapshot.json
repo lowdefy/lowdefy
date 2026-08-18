@@ -1036,6 +1036,7 @@
       "~k": "2d"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "2c"
   },
   "menus.json": {

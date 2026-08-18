@@ -1283,6 +1283,7 @@
       "~k": "3i"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "3h"
   },
   "menus.json": {

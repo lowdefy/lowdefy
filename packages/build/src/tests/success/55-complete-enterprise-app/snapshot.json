@@ -3775,6 +3775,7 @@
       "~k": "dw"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "dv"
   },
   "menus.json": {

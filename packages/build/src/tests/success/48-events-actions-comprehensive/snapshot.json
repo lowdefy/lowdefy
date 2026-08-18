@@ -1820,6 +1820,7 @@
       "~k": "6m"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "6l"
   },
   "menus.json": {

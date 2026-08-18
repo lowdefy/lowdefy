@@ -912,6 +912,7 @@
       "~k": "1p"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1o"
   },
   "menus.json": {

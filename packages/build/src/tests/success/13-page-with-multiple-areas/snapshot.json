@@ -932,6 +932,7 @@
       "~k": "1t"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1s"
   },
   "menus.json": {

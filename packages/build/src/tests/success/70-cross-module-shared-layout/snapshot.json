@@ -940,6 +940,7 @@
       "~k": "1y"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1x"
   },
   "menus.json": {

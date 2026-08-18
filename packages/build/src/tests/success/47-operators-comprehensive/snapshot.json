@@ -1813,6 +1813,7 @@
       "~k": "5r"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "5q"
   },
   "menus.json": {

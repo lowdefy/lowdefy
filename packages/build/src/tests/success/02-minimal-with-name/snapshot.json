@@ -844,6 +844,7 @@
       "~k": "1g"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1f"
   },
   "menus.json": {

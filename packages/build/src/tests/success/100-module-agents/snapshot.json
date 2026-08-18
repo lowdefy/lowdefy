@@ -1411,6 +1411,7 @@
       "~k": "36"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "35"
   },
   "menus.json": {

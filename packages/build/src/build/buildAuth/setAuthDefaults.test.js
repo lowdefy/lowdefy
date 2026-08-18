@@ -354,3 +354,31 @@ test('setAuthDefaults keeps explicit phoneNumber values', () => {
     signUpOnVerification: { tempEmailDomain: 'phone.example.com' },
   });
 });
+
+test('setAuthDefaults defaults oauthProvider.dynamicClientRegistration to false', () => {
+  const components = {
+    auth: {
+      configured: true,
+      oauthProvider: { consentPage: '/oauth/consent' },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.oauthProvider).toEqual({
+    consentPage: '/oauth/consent',
+    dynamicClientRegistration: false,
+  });
+});
+
+test('setAuthDefaults keeps an explicit oauthProvider.dynamicClientRegistration', () => {
+  const components = {
+    auth: {
+      configured: true,
+      oauthProvider: { consentPage: '/oauth/consent', dynamicClientRegistration: true },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.oauthProvider).toEqual({
+    consentPage: '/oauth/consent',
+    dynamicClientRegistration: true,
+  });
+});

@@ -997,6 +997,7 @@
       "~k": "2a"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "29"
   },
   "menus.json": {

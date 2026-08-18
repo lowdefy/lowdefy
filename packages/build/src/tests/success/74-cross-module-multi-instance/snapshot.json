@@ -1124,6 +1124,7 @@
       "~k": "2z"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "2y"
   },
   "menus.json": {

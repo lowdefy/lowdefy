@@ -1252,6 +1252,7 @@
       "~k": "3j"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "3i"
   },
   "menus.json": {

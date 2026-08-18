@@ -124,6 +124,12 @@ function setAuthDefaults({ components }) {
     setDefault(auth.passkey, 'enabled', true);
   }
 
+  // Dynamic client registration is the opt-in fallback for unregistered MCP
+  // clients - pre-registered clients are the primary path, so default off.
+  if (!type.isNone(auth.oauthProvider)) {
+    setDefault(auth.oauthProvider, 'dynamicClientRegistration', false);
+  }
+
   if (!type.isNone(auth.phoneNumber)) {
     setDefault(auth.phoneNumber, 'otpLength', 6);
     setDefault(auth.phoneNumber, 'expiresIn', 300);

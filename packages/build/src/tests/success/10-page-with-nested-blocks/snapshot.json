@@ -928,6 +928,7 @@
       "~k": "1v"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1u"
   },
   "menus.json": {

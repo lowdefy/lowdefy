@@ -769,6 +769,7 @@
       "~k": "11"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "10"
   },
   "menus.json": {

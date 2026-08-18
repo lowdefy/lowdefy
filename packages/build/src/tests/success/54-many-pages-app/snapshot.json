@@ -1380,6 +1380,7 @@
       "~k": "4t"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "4s"
   },
   "menus.json": {

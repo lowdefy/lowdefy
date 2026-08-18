@@ -1375,6 +1375,7 @@
       "~k": "3x"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "3w"
   },
   "menus.json": {

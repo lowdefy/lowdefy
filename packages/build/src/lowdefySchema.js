@@ -900,6 +900,40 @@ export default {
             type: 'Auth "twoFactor" should be an object.',
           },
         },
+        oauthProvider: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['consentPage'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            consentPage: {
+              type: 'string',
+              description:
+                'Lowdefy page id of the OAuth consent page the authorization flow redirects to.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.consentPage" should be a string.',
+              },
+            },
+            dynamicClientRegistration: {
+              type: 'boolean',
+              description:
+                'Allow unregistered MCP clients to self-register (RFC 7591). Off by default; pre-registered clients are the primary path.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.dynamicClientRegistration" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "oauthProvider" should be an object.',
+            required: {
+              consentPage: 'Auth "oauthProvider" should have required property "consentPage".',
+            },
+            additionalProperties:
+              'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage" and "dynamicClientRegistration".',
+          },
+        },
         passkey: {
           type: 'object',
           additionalProperties: false,
@@ -1536,6 +1570,73 @@ export default {
             type: 'Auth "dev" should be an object.',
           },
         },
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'scope'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP endpoint "id" should be a string.',
+                },
+              },
+              scope: {
+                type: 'string',
+                // Closed vocabulary - apps cannot mint their own scopes.
+                enum: ['mcp:read', 'mcp:write'],
+                errorMessage: {
+                  type: 'MCP endpoint "scope" should be a string.',
+                  enum: 'MCP endpoint "scope" should be "mcp:read" or "mcp:write".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "endpoints" items should be objects with "id" and "scope" properties.',
+              required: {
+                id: 'MCP endpoint should have required property "id".',
+                scope:
+                  'MCP endpoint should have required property "scope". Set "mcp:read" or "mcp:write".',
+              },
+              additionalProperties:
+                'MCP endpoint contains an unknown property. The known properties are "id" and "scope".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+        additionalProperties:
+          'App "mcp" contains an unknown property. The known properties are "name", "version" and "endpoints".',
       },
     },
     block: {
@@ -2755,6 +2856,9 @@ export default {
     },
     auth: {
       $ref: '#/definitions/authConfig',
+    },
+    mcp: {
+      $ref: '#/definitions/mcp',
     },
     cli: {
       type: 'object',

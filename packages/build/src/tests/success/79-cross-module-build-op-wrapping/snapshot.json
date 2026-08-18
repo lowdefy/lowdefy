@@ -920,6 +920,7 @@
       "~k": "1u"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1t"
   },
   "menus.json": {

@@ -986,6 +986,7 @@
       "~k": "20"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "1z"
   },
   "menus.json": {

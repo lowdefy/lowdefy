@@ -1068,3 +1068,71 @@ test('validateAuthConfig throws when captcha.endpoints is an empty array', () =>
     'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.'
   );
 });
+
+test('validateAuthConfig passes a valid oauthProvider block', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { consentPage: '/oauth/consent', dynamicClientRegistration: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when oauthProvider has no consentPage', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { dynamicClientRegistration: false },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider" should have required property "consentPage".'
+  );
+});
+
+test('validateAuthConfig throws when oauthProvider.consentPage is not a string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { consentPage: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider.consentPage" should be a string.'
+  );
+});
+
+test('validateAuthConfig throws when oauthProvider.dynamicClientRegistration is not a boolean', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { consentPage: '/oauth/consent', dynamicClientRegistration: 'yes' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider.dynamicClientRegistration" should be a boolean.'
+  );
+});
+
+test('validateAuthConfig throws when oauthProvider contains an unknown property', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { consentPage: '/oauth/consent', scopes: ['crm:read'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage" and "dynamicClientRegistration".'
+  );
+});

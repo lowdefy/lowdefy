@@ -1535,6 +1535,7 @@
       "~k": "4e"
     },
     "configured": false,
+    "hasPublicTool": false,
     "~k": "4d"
   },
   "menus.json": {
